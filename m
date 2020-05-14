@@ -2,117 +2,96 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46323C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA8BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22F56206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 548AD206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbgENKjw (ORCPT
+        id S1726304AbgENKkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 06:39:52 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34763 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgENKjw (ORCPT
+        Thu, 14 May 2020 06:40:02 -0400
+Received: from smtp-1908.mail.infomaniak.ch ([185.125.25.8]:35641 "EHLO
+        smtp-1908.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726102AbgENKkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 06:39:52 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jZBHI-0001Uc-87; Thu, 14 May 2020 10:39:48 +0000
-Date:   Thu, 14 May 2020 12:39:47 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        Thu, 14 May 2020 06:40:01 -0400
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49N7N05RDVzlhpy6;
+        Thu, 14 May 2020 12:40:00 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49N7Mz3W0czljKBC;
+        Thu, 14 May 2020 12:39:59 +0200 (CEST)
+Subject: Re: [PATCH v17 05/10] fs,landlock: Support filesystem access-control
+To:     James Morris <jmorris@namei.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
         Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ia64: enable HAVE_COPY_THREAD_TLS, switch to
- kernel_clone_args
-Message-ID: <20200514103947.w4segr3rvwy4mjnh@wittgenstein>
-References: <20200514074606.vkc35syhdep23rzh@wittgenstein>
- <6b298416-1e64-eee7-0bb4-3b1f7f67adc6@physik.fu-berlin.de>
- <d6c94d4f-a431-9de5-7a0f-661894dbec01@physik.fu-berlin.de>
- <20200514100459.pt7dxq2faghdds2c@wittgenstein>
- <2e22b0d2-b9ce-420d-48a0-0d9134108a5c@physik.fu-berlin.de>
- <20200514101540.25hvle74w63t66fs@wittgenstein>
- <20200514101914.fu7xhgaxtb5fy2ky@wittgenstein>
- <4aad9ad5-b0e9-12b0-0ad2-ac23fceae87b@physik.fu-berlin.de>
- <20200514103259.tdfjc5ds4igpmoxj@wittgenstein>
- <666503de-d8f9-b19c-6924-ab80d36cd446@physik.fu-berlin.de>
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+References: <20200511192156.1618284-1-mic@digikod.net>
+ <20200511192156.1618284-6-mic@digikod.net>
+ <alpine.LRH.2.21.2005141335280.30052@namei.org>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <c159d845-6108-4b67-6527-405589fa5382@digikod.net>
+Date:   Thu, 14 May 2020 12:39:58 +0200
+User-Agent: 
 MIME-Version: 1.0
+In-Reply-To: <alpine.LRH.2.21.2005141335280.30052@namei.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <666503de-d8f9-b19c-6924-ab80d36cd446@physik.fu-berlin.de>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 12:35:49PM +0200, John Paul Adrian Glaubitz wrote:
-> On 5/14/20 12:32 PM, Christian Brauner wrote:
-> > Do you have a very minimalistic ia64 userspace preferably without systemd where
-> > you could simply test. That should give us an idea whether things work:
-> > 
-> > #define _GNU_SOURCE
-> > #include <sys/wait.h>
-> > #include <sys/utsname.h>
-> > #include <sched.h>
-> > #include <string.h>
-> > #include <stdio.h>
-> > #include <stdlib.h>
-> > #include <unistd.h>
-> > #include <sys/mman.h>
-> > 
-> > #define STACK_SIZE (8 * 1024 * 1024) /* standard stack size for threads in glibc */
-> > 
-> > int main(int argc, char *argv[])
-> > {
-> > 	char *stack;
-> >         pid_t pid;
-> > 
-> > 	stack = mmap(NULL, STACK_SIZE, PROT_READ | PROT_WRITE,
-> > 		     MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
-> > 	if (stack == MAP_FAILED)
-> > 		exit(EXIT_FAILURE);
-> > 
-> >         /* 
-> > 	 * Note that legacy clone() has different argument ordering on
-> >          * different architectures so this won't work everywhere.
-> >          */
-> >         pid = syscall(189 /* __NR_clone2 */, SIGCHLD, stack, STACK_SIZE, NULL, NULL);
-> >         if (pid < 0)
-> >                 exit(EXIT_FAILURE);
-> >         if (pid == 0)
-> >                 exit(EXIT_SUCCESS);
-> >         if (wait(NULL) != pid)
-> >                 exit(EXIT_FAILURE);
-> > 
-> >         exit(EXIT_SUCCESS);
-> > }
-> 
-> root@titanium:~# gcc systemd_test.c -o systemd_test
-> root@titanium:~# ./systemd_test
-> root@titanium:~# echo $?
-> 1
-> root@titanium:~#
-> 
-> I can also give you access to this machine.
 
-Yes please! :)
-My ssh key should be on
-https://launchpad.net/~cbrauner
+On 14/05/2020 05:37, James Morris wrote:
+> On Mon, 11 May 2020, Mickaël Salaün wrote:
+> 
+> 
+>> diff --git a/include/linux/fs.h b/include/linux/fs.h
+>> index 45cc10cdf6dd..2276642f8e05 100644
+>> --- a/include/linux/fs.h
+>> +++ b/include/linux/fs.h
+>> @@ -1517,6 +1517,11 @@ struct super_block {
+>>  	/* Pending fsnotify inode refs */
+>>  	atomic_long_t s_fsnotify_inode_refs;
+>>  
+>> +#ifdef CONFIG_SECURITY_LANDLOCK
+>> +	/* References to Landlock underlying objects */
+>> +	atomic_long_t s_landlock_inode_refs;
+>> +#endif
+>> +
+> 
+> This needs to be converted to the LSM API via superblock blob stacking.
+> 
+> See Casey's old patch: 
+> https://lore.kernel.org/linux-security-module/20190829232935.7099-2-casey@schaufler-ca.com/
 
-Christian
+s_landlock_inode_refs is quite similar to s_fsnotify_inode_refs, but I
+can do it once the superblock security blob patch is upstream. Is it a
+blocker for now? What is the current status of lbs_superblock?
+
+Anyway, we also need to have a call to landlock_release_inodes() in
+generic_shutdown_super(), which does not fit the LSM framework, and I
+think it is not an issue. Landlock handling of inodes is quite similar
+to fsnotify.
