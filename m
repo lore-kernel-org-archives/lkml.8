@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA581C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C91C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4B020675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D4720675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483195;
-	bh=luYS6nZhnYfPoPuRBeriezK2WomVKbkolapMTsl/qas=;
+	s=default; t=1589483199;
+	bh=zXCaOajhk9KlXAROY8NeIt77dzcPCugMr2Ks9WmjM04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TBkSmtO+yDA90OCPmsF6XDnimiREMpglzfek+8L6S/hLOnj7V4Wrr9ac9cWH1R9P+
-	 3PqSMhH6BDMHFUWkXzkKIPiQ272RQ3MA5fGWCa3kumVsD/t2Tz3O0mwccEPFYJMfPf
-	 xElPViCF1s5QOApsgMek7rd0/OUwRm2WpynbenRY=
+	b=BDWbHC8DUSDNdkIYJj+hlNj1k8SFBe8EtRnEK2mr+2PQrfeJs0ZxIoNYuRFdbjMVB
+	 HKAlft2cQ3GVncnwD71C65GBO84Th/83blWp9ljomRW6+FA3EnosUaRX9E2k1KeRx2
+	 2fv5f/Xq0rd48hmOco4BVIQMrE+8GcqlpuIHVjcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbgENTGe (ORCPT
+        id S1728816AbgENSxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:06:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53296 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:53:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbgENSxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:49 -0400
+        id S1728706AbgENSx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E12A7207D8;
-        Thu, 14 May 2020 18:53:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 282062065F;
+        Thu, 14 May 2020 18:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482428;
-        bh=luYS6nZhnYfPoPuRBeriezK2WomVKbkolapMTsl/qas=;
+        s=default; t=1589482407;
+        bh=zXCaOajhk9KlXAROY8NeIt77dzcPCugMr2Ks9WmjM04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JooYJbpa2TyUhzzTsMOMAYPwYDo329IsoZStk9c8pBWLpZ0MFVbOOOiWstnPJV3aK
-         CXhGUE7fOhqzX5G/UZ7qpqzWtyArT9tVoGy+zSPBQyj4bLy+r4IcZXio2EGKsuBITk
-         Olb1h+iFTixkqfzK0CDWF9m8PiAouQT86nAuQFMI=
+        b=R4YGV2fXqwGqiWUSkiqVCygSBMmXG7tyNMnEB0yXt6rbCXU6LJYX3fFMHTqKTCFfp
+         2krPmHKnVYudDJ8XPnfZjghobMV85KoOumSchYpI96vHxPVe82zFMNAg5BEZTHIM7y
+         tYTEpu8HwKvIcswUjdEk/nRCXNH+DOuFxbPW0AXU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 30/49] HID: quirks: Add HID_QUIRK_NO_INIT_REPORTS quirk for Dell K12A keyboard-dock
-Date:   Thu, 14 May 2020 14:52:51 -0400
-Message-Id: <20200514185311.20294-30-sashal@kernel.org>
+Cc:     Richard Clark <richard.xnu.clark@gmail.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 13/49] aquantia: Fix the media type of AQC100 ethernet controller in the driver
+Date:   Thu, 14 May 2020 14:52:34 -0400
+Message-Id: <20200514185311.20294-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
 References: <20200514185311.20294-1-sashal@kernel.org>
@@ -60,50 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Richard Clark <richard.xnu.clark@gmail.com>
 
-[ Upstream commit 1e189f267015a098bdcb82cc652d13fbf2203fa0 ]
+[ Upstream commit 6de556c31061e3b9c36546ffaaac5fdb679a2f14 ]
 
-Add a HID_QUIRK_NO_INIT_REPORTS quirk for the Dell K12A keyboard-dock,
-which can be used with various Dell Venue 11 models.
+The Aquantia AQC100 controller enables a SFP+ port, so the driver should
+configure the media type as '_TYPE_FIBRE' instead of '_TYPE_TP'.
 
-Without this quirk the keyboard/touchpad combo works fine when connected
-at boot, but when hotplugged 9 out of 10 times it will not work properly.
-Adding the quirk fixes this.
-
-Cc: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Richard Clark <richard.xnu.clark@gmail.com>
+Cc: Igor Russkikh <irusskikh@marvell.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Acked-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 3341133df3a8d..13b7222ef2c91 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1106,6 +1106,7 @@
- #define USB_DEVICE_ID_SYNAPTICS_LTS2	0x1d10
- #define USB_DEVICE_ID_SYNAPTICS_HD	0x0ac3
- #define USB_DEVICE_ID_SYNAPTICS_QUAD_HD	0x1ac3
-+#define USB_DEVICE_ID_SYNAPTICS_DELL_K12A	0x2819
- #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012	0x2968
- #define USB_DEVICE_ID_SYNAPTICS_TP_V103	0x5710
- #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5	0x81a7
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index ae64a286a68f4..90ec2390ef688 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -163,6 +163,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_LTS2), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_QUAD_HD), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_TP_V103), HID_QUIRK_NO_INIT_REPORTS },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_DELL_K12A), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOPMAX, USB_DEVICE_ID_TOPMAX_COBRAPAD), HID_QUIRK_BADPAD },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOUCHPACK, USB_DEVICE_ID_TOUCHPACK_RTS), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TPV, USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8882), HID_QUIRK_NOGET },
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
+index 74b9f3f1da813..0e8264c0b3082 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
+@@ -56,7 +56,7 @@ static const struct aq_board_revision_s hw_atl_boards[] = {
+ 	{ AQ_DEVICE_ID_D108,	AQ_HWREV_2,	&hw_atl_ops_b0, &hw_atl_b0_caps_aqc108, },
+ 	{ AQ_DEVICE_ID_D109,	AQ_HWREV_2,	&hw_atl_ops_b0, &hw_atl_b0_caps_aqc109, },
+ 
+-	{ AQ_DEVICE_ID_AQC100,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc107, },
++	{ AQ_DEVICE_ID_AQC100,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc100, },
+ 	{ AQ_DEVICE_ID_AQC107,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc107, },
+ 	{ AQ_DEVICE_ID_AQC108,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc108, },
+ 	{ AQ_DEVICE_ID_AQC109,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc109, },
 -- 
 2.20.1
 
