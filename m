@@ -2,164 +2,87 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2930AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F001E206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:53:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="RdSLSskx"
+	by mail.kernel.org (Postfix) with ESMTP id 9CC53206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725954AbgENGxO (ORCPT
+        id S1726108AbgENGxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 02:53:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725831AbgENGxN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 02:53:13 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47E34C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 23:53:13 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id m18so492620vkk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 23:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AD73/gyPw537Xp1vDJOYvLHr7JMtBDUrFsijP0WuRks=;
-        b=RdSLSskx2Wvw3alRl86UnDw5dnN1+ZHo+jEuOiDqNYvb3EfRrfuQ1fjHd8pEofVcmx
-         OSOsg5Ki+jgXdahzTq8BYmydYLkEp/D/1CWEiD9WIoLB/oyMT0/XdOe73UgI9Xo/PX8Z
-         vAsKTrb1XOhLWFCweUDfv5clUyY9/Ct0OqoS4jylDHfwnX2dZaBf96hPr9UjJyc9qJ54
-         LfhUMigof8LCnYdiDSe3krEkaZ0cdi5WNh7X76KkQjTeQbosgpRBGY0UM/FYTbyUC8gZ
-         fAmJrAfp1zGCiCU5/M/YWEfBTBFrgSdaXqABtBbjTfwTGLLBBjxmcCGYThD0EubKLklL
-         Y/WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AD73/gyPw537Xp1vDJOYvLHr7JMtBDUrFsijP0WuRks=;
-        b=iYu+o5O8g2KJ5zIWSuOoNwwMrzoyUqHKrIlcOyuZvFceNll2tLytIwHbbHivDzYRWA
-         S2qlegQY+8fsyx6wehgjtoGGLE39xYmgOg4jHLEil/qnp8RITaKFOMToJzyjYDb0QERw
-         m+xrcaW/LXchzoxECSXOy9g+1/jxNTLnEST07WHPKQ+I3k/V9j+Ku9fQyuPQwGiU+ZCp
-         5FxP0n3zWFhSaF3c6lL33EdLJsTB9j5XfOshJJEy4RgiFn6qXUU3oLElV6g9nWlkas/x
-         Y6IZKY4RXBfMhdv1hdDimSxAIwMeuRvypgFmXoyAJuSBJNZAbnfCwLWIsLU/Un4hS+zw
-         ZYYA==
-X-Gm-Message-State: AOAM5315EGvrBkRhh3nv5yLnRSy68VDunyQoGbvIGfCTPjHjpnEOJXCq
-        e9m8RZMZ7OdgTCW6xJFRLqHmaPOieK/gwsFUJCjgkw==
-X-Google-Smtp-Source: ABdhPJwqOdHWX9G/Vc1PEWvZMXQ69dsTzV+tAJwC+UvjMCX5pJg7UnTD2qxWptjx7wEK5anGtRzdU/mrdZoXOnfLCtw=
-X-Received: by 2002:a1f:a786:: with SMTP id q128mr2448341vke.86.1589439192297;
- Wed, 13 May 2020 23:53:12 -0700 (PDT)
+        Thu, 14 May 2020 02:53:23 -0400
+Received: from mga03.intel.com ([134.134.136.65]:2893 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725979AbgENGxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 02:53:20 -0400
+IronPort-SDR: bVdYOmAc+ImvTljnNUu5s3lkNOFBoJnw+I2OwvzUOGRadX5xQ8QJaQFtJGIWA6ZruaYJi1R7tP
+ nTvdvvYaFuWA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 23:53:20 -0700
+IronPort-SDR: GQ1hzhuh/TPZ67YOSApRWHc8Iy7TvflZ/UemSyzmBNp7CscHHJ8BwECoY2udEzrOPjGg9J75Hd
+ Rl8goN+obTIQ==
+X-IronPort-AV: E=Sophos;i="5.73,390,1583222400"; 
+   d="scan'208";a="297929571"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 23:53:19 -0700
+From:   ira.weiny@intel.com
+To:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V1 1/9] fs/ext4: Narrow scope of DAX check in setflags
+Date:   Wed, 13 May 2020 23:53:07 -0700
+Message-Id: <20200514065316.2500078-2-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200514065316.2500078-1-ira.weiny@intel.com>
+References: <20200514065316.2500078-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <20200514062836.190194-1-vkoul@kernel.org>
-In-Reply-To: <20200514062836.190194-1-vkoul@kernel.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Thu, 14 May 2020 12:22:33 +0530
-Message-ID: <CAHLCerN_pxkqJojJLL5ztbYCeFZ9Mco6oM-=0mdmh5iSydxrUg@mail.gmail.com>
-Subject: Re: [PATCH] net: stmmac: fix num_por initialization
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rahul Ankushrao Kawadgave <rahulak@qti.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 11:59 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> Driver missed initializing num_por which is por values that driver
+From: Ira Weiny <ira.weiny@intel.com>
 
-Nit: s/is/is one of the/ ?
+When preventing DAX and journaling on an inode.  Use the effective DAX
+check rather than the mount option.
 
-> configures to hardware. In order to get this values, add a new structure
+This will be required to support per inode DAX flags.
 
-Nit: s/this/these
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ fs/ext4/ioctl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> ethqos_emac_driver_data which holds por and num_por values and populate
-> that in driver probe.
->
-> Fixes: a7c30e62d4b8 ("net: stmmac: Add driver for Qualcomm ethqos")
-> Reported-by: Rahul Ankushrao Kawadgave <rahulak@qti.qualcomm.com>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+index bfc1281fc4cb..5813e5e73eab 100644
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -393,9 +393,9 @@ static int ext4_ioctl_setflags(struct inode *inode,
+ 	if ((jflag ^ oldflags) & (EXT4_JOURNAL_DATA_FL)) {
+ 		/*
+ 		 * Changes to the journaling mode can cause unsafe changes to
+-		 * S_DAX if we are using the DAX mount option.
++		 * S_DAX if the inode is DAX
+ 		 */
+-		if (test_opt(inode->i_sb, DAX)) {
++		if (IS_DAX(inode)) {
+ 			err = -EBUSY;
+ 			goto flags_out;
+ 		}
+-- 
+2.25.1
 
-Otherwise,
-
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-
-> ---
->  .../ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-> index e0a5fe83d8e0..bfc4a92f1d92 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-> @@ -75,6 +75,11 @@ struct ethqos_emac_por {
->         unsigned int value;
->  };
->
-> +struct ethqos_emac_driver_data {
-> +       const struct ethqos_emac_por *por;
-> +       unsigned int num_por;
-> +};
-> +
->  struct qcom_ethqos {
->         struct platform_device *pdev;
->         void __iomem *rgmii_base;
-> @@ -171,6 +176,11 @@ static const struct ethqos_emac_por emac_v2_3_0_por[] = {
->         { .offset = RGMII_IO_MACRO_CONFIG2,     .value = 0x00002060 },
->  };
->
-> +static const struct ethqos_emac_driver_data emac_v2_3_0_data = {
-> +       .por = emac_v2_3_0_por,
-> +       .num_por = ARRAY_SIZE(emac_v2_3_0_por),
-> +};
-> +
->  static int ethqos_dll_configure(struct qcom_ethqos *ethqos)
->  {
->         unsigned int val;
-> @@ -442,6 +452,7 @@ static int qcom_ethqos_probe(struct platform_device *pdev)
->         struct device_node *np = pdev->dev.of_node;
->         struct plat_stmmacenet_data *plat_dat;
->         struct stmmac_resources stmmac_res;
-> +       const struct ethqos_emac_driver_data *data;
->         struct qcom_ethqos *ethqos;
->         struct resource *res;
->         int ret;
-> @@ -471,7 +482,9 @@ static int qcom_ethqos_probe(struct platform_device *pdev)
->                 goto err_mem;
->         }
->
-> -       ethqos->por = of_device_get_match_data(&pdev->dev);
-> +       data = of_device_get_match_data(&pdev->dev);
-> +       ethqos->por = data->por;
-> +       ethqos->num_por = data->num_por;
->
->         ethqos->rgmii_clk = devm_clk_get(&pdev->dev, "rgmii");
->         if (IS_ERR(ethqos->rgmii_clk)) {
-> @@ -526,7 +539,7 @@ static int qcom_ethqos_remove(struct platform_device *pdev)
->  }
->
->  static const struct of_device_id qcom_ethqos_match[] = {
-> -       { .compatible = "qcom,qcs404-ethqos", .data = &emac_v2_3_0_por},
-> +       { .compatible = "qcom,qcs404-ethqos", .data = &emac_v2_3_0_data},
->         { }
->  };
->  MODULE_DEVICE_TABLE(of, qcom_ethqos_match);
-> --
-> 2.25.4
->
