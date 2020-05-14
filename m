@@ -2,128 +2,97 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABFCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 714EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4DF920709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:43:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vgRWK6jH"
+	by mail.kernel.org (Postfix) with ESMTP id 443B720748
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:43:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589496226;
+	bh=51ufzMz+fg40/oTc7CWo6MQoCrv8BYsmfMrnl581nTY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=wn0cWd6mEjU2AR1jyx85hwP1w4rHInKaAKGV2lrxlF2Wp13QElpdTDLtsEX7OUWct
+	 Sttc4W3lP6AavHooOUWagQSyjUyFjqOoTgKP60G8H70rNTRG7NyyRYYrbxHRMHUB+T
+	 Z/tdYGqIBiDnD2LNfY90LvpeM2e1jpC7bWvIZUdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbgENWnh (ORCPT
+        id S1728812AbgENWnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 18:43:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728229AbgENWng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 18:43:36 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8492C061A0C;
-        Thu, 14 May 2020 15:43:36 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t40so96301pjb.3;
-        Thu, 14 May 2020 15:43:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version;
-        bh=z4rDFOjoDHp3m5X99/G3ebYd8yR50/aoIzPUOG1GLcs=;
-        b=vgRWK6jHB5dSs0OdLSkzBqWuiOcjVqUf7U1pq6WxzFS3AOr5DsU09OluLm/WYODRdo
-         Y+VoaK5bpdEauvoXop/3xWI7mt45dPeGuwJD+SExWfMpWiMISoVtilmlf33/WsdFmWYr
-         VB15Dh099Z/elzl5Emo2PhsygoVhSv/3P380nkgzx4lWvXoBtVV2E12WmnHBMV1gQRKd
-         iFr5Leb36weuTSM8CE3BsKHS7WD2t4e8qT6z2y/tBZT2kU9LT7HONV6XTlf/EaeysXd9
-         xk8mdtxY2o0+d8KjRmdgRJ1Kde6x67LMfkVIE4IJEChyaV6q20t3JJ8XZm8wF9r6aGfz
-         gy9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version;
-        bh=z4rDFOjoDHp3m5X99/G3ebYd8yR50/aoIzPUOG1GLcs=;
-        b=dmz7LbtliO8pw7N4fwQgE9uP9Fn2abaEo4NTiV6KvRfX8UTB8IWxI4e+APcji/n+H1
-         xGgeyic0O1j60Hfm55TfUCxan6rMJx19RkU6x451PwYF4ZX0S0VbT4ML4tvzuuIwPyyF
-         RftnP1S1PPdk09ebkA7SmdzUjcmw4JGr7Gnd31n0xRXMq0PtQhpebPQKMYEa5bzbtYQ7
-         wafAijLmFLPMXkPmT5BRiyZ5T4i/bIzrwIZBtknzE57tdCxP9fEsbd2X6L/IXmJ9MG41
-         WJSzJpAQr97cMCzhIHk+hy1eACsFAdRg66XoZMQOpG+Foj5c9HwmQlkvUY5tL4/+CHaa
-         iBGQ==
-X-Gm-Message-State: AOAM530E8s58pwB2qAnOgOdiOgOjjBXSDnI1+eUDp0jzW2tyozaEAwLz
-        e6kUcuWTF+nLlTnTFYjeUbToCapuPNE=
-X-Google-Smtp-Source: ABdhPJxRdYS3RxsROzFtMgICDF2TbSfVVVKzTQX7K+Ozr1D8pgvkYTedmXkVgF4ITFfBsxskIhpYbQ==
-X-Received: by 2002:a17:90a:cb09:: with SMTP id z9mr264097pjt.120.1589496216213;
-        Thu, 14 May 2020 15:43:36 -0700 (PDT)
-Received: from localhost (cpc158779-hari22-2-0-cust230.20-2.cable.virginm.net. [86.22.86.231])
-        by smtp.gmail.com with ESMTPSA id mn1sm69221pjb.24.2020.05.14.15.43.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 15:43:35 -0700 (PDT)
-From:   Yuxuan Shui <yshuiv7@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     masahiroy@kernel.org, michal.lkml@markovi.net,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] kbuild: compile_h: fix compiler version detection with clang
-Date:   Thu, 14 May 2020 23:19:05 +0100
-Message-ID: <87imgykunh.fsf@m5Zedd9JOGzJrf0>
+        Thu, 14 May 2020 18:43:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728229AbgENWnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 18:43:45 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A10D820709;
+        Thu, 14 May 2020 22:43:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589496224;
+        bh=51ufzMz+fg40/oTc7CWo6MQoCrv8BYsmfMrnl581nTY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=PyvD1ol2DQSaEJYbd+Ob2sHbbIsoJw3uJK8DpO1d/0VF47syshVe0gwLm2YQT2Rlx
+         oL3BMAri0jRVs2KwhnnOC55gJxnL9D34PrgW97z+Mr/WnWubUb9EsafapkJPo8JJwi
+         yvlUWsGbhNIx0XtpuBHYHlRAhXj67/BcffXmQoPE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 8E84135229C8; Thu, 14 May 2020 15:43:44 -0700 (PDT)
+Date:   Thu, 14 May 2020 15:43:44 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Lihao Liang <lihaoliang@google.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] doc: Update comment from rsp->rcu_gp_seq to rsp->gp_seq
+Message-ID: <20200514224344.GX2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200514203434.22274-1-lihaoliang@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514203434.22274-1-lihaoliang@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Thu, May 14, 2020 at 09:34:34PM +0100, Lihao Liang wrote:
+> Signed-off-by: Lihao Liang <lihaoliang@google.com>
 
+Good eyes!!!  Applied, thank you!
 
-In some setup clang will print a line about CUDA version it detects,
-like this:
+							Thanx, Paul
 
-    Found CUDA installation: /opt/cuda, version 10.1
-
-So grepping ' version ' matches 2 lines, and results in a broken string in
-compiler.h, which doesn't compile.
-
-This commit adds a "head -n1" to fix this problem.
-
-Signed-off-by: Yuxuan Shui <yshuiv7@gmail.com>
----
- scripts/mkcompile_h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
-index 5b80a4699740..8e6b4fc6fdd9 100755
---- a/scripts/mkcompile_h
-+++ b/scripts/mkcompile_h
-@@ -62,7 +62,7 @@ UTS_VERSION="$(echo $UTS_VERSION $CONFIG_FLAGS $TIMESTAMP | cut -b -$UTS_LEN)"
-   printf '#define LINUX_COMPILE_BY "%s"\n' "$LINUX_COMPILE_BY"
-   echo \#define LINUX_COMPILE_HOST \"$LINUX_COMPILE_HOST\"
-
--  CC_VERSION=$($CC -v 2>&1 | grep ' version ' | sed 's/[[:space:]]*$//')
-+  CC_VERSION=$($CC -v 2>&1 | grep ' version ' | head -n1 | sed 's/[[:space:]]*$//')
-   LD_VERSION=$($LD -v | head -n1 | sed 's/(compatible with [^)]*)//' \
- 		      | sed 's/[[:space:]]*$//')
-   printf '#define LINUX_COMPILER "%s"\n' "$CC_VERSION, $LD_VERSION"
---
-2.26.2
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEL6EJkr0WlitWahBy06RAW+bMF/QFAl69yYwACgkQ06RAW+bM
-F/QVYA/+Iqa09i83Gi0bUr1ZSpujLj3Pke7A3qzGr1WxDx+WgeUsN466dtbmo3x3
-Gvxocu+lzO2fhJuG8/Lk3DcNUrpBaxi/qfTq5SXK0IMQmAbhIQRVVQw8Vz+C9nuk
-IatyTz5sgaBpVZlQzOs81bcfcF3Q1jlP57okNbZLIkhDk74seIRFddiY3gR3TNb1
-3VUQDmoPT7Xo0N7whzERmfzCPlrWZphDT8nh6OwOt/InJJPvB1i8235ckCZbhIty
-KFYH1nxB19QkURZ12zGxmnHJeGEXTc+Yy/NcpNH/lA1h2IvcD9qmE/E1TBoueiPy
-MrgxczwhPgjhzeNv0AwSK0JhjWEDl3Jg2GXNhngIckfn+DrEZN4WreF5fNZNctqs
-4+GOKreqGvJqXL9hUF6Pjwv/ef4zi3Py2qkJEQRxATPEf8Kk8t2Ok/Xkf+e0uRCL
-tWVlCbHtkotEjycImzNbyRGoquIfIamuidtq+k5Bs0OIGUETVK6hEng45F2PQ27E
-YHo7SXKDeQjrHHr/05ues02xecf0JRhvn/vBr8E/uddXAPEgYn25P7N5Al4KpMiV
-U7TlikB/r6V8IUfQjqki9qGaPmMGp790QNQwx/jR8hOPZ5aBN57qTcRM/NSs4vgl
-RFTwHAK9KrWpRsrU9E9s9BWXgGdTwKOjzAZpLX0jygr2iJXVjP4=
-=WfVw
------END PGP SIGNATURE-----
---=-=-=--
+> ---
+>  kernel/rcu/tree.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+> index 2d7fcb9bdd34..508c46421eb3 100644
+> --- a/kernel/rcu/tree.h
+> +++ b/kernel/rcu/tree.h
+> @@ -41,7 +41,7 @@ struct rcu_node {
+>  	raw_spinlock_t __private lock;	/* Root rcu_node's lock protects */
+>  					/*  some rcu_state fields as well as */
+>  					/*  following. */
+> -	unsigned long gp_seq;	/* Track rsp->rcu_gp_seq. */
+> +	unsigned long gp_seq;	/* Track rsp->gp_seq. */
+>  	unsigned long gp_seq_needed; /* Track furthest future GP request. */
+>  	unsigned long completedqs; /* All QSes done for this node. */
+>  	unsigned long qsmask;	/* CPUs or groups that need to switch in */
+> @@ -149,7 +149,7 @@ union rcu_noqs {
+>  /* Per-CPU data for read-copy update. */
+>  struct rcu_data {
+>  	/* 1) quiescent-state and grace-period handling : */
+> -	unsigned long	gp_seq;		/* Track rsp->rcu_gp_seq counter. */
+> +	unsigned long	gp_seq;		/* Track rsp->gp_seq counter. */
+>  	unsigned long	gp_seq_needed;	/* Track furthest future GP request. */
+>  	union rcu_noqs	cpu_no_qs;	/* No QSes yet for this CPU. */
+>  	bool		core_needs_qs;	/* Core waits for quiesc state. */
+> -- 
+> 2.26.2.761.g0e0b3e54be-goog
+> 
