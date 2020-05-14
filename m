@@ -2,101 +2,87 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EC8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACD020787
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF8D206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:32:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgENRbu (ORCPT
+        id S1726492AbgENRcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 13:31:50 -0400
-Received: from muru.com ([72.249.23.125]:54564 "EHLO muru.com"
+        Thu, 14 May 2020 13:32:15 -0400
+Received: from namei.org ([65.99.196.166]:59018 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbgENRbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 13:31:49 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 1AD9380C0;
-        Thu, 14 May 2020 17:32:37 +0000 (UTC)
-Date:   Thu, 14 May 2020 10:31:44 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv8 0/6] n_gsm serdev support and GNSS driver for droid4
-Message-ID: <20200514173144.GP37466@atomide.com>
-References: <20200512214713.40501-1-tony@atomide.com>
- <20200513190942.GA2626@duo.ucw.cz>
+        id S1726027AbgENRcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 13:32:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 04EHVcqA027184;
+        Thu, 14 May 2020 17:31:38 GMT
+Date:   Fri, 15 May 2020 03:31:38 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v17 05/10] fs,landlock: Support filesystem
+ access-control
+In-Reply-To: <c159d845-6108-4b67-6527-405589fa5382@digikod.net>
+Message-ID: <alpine.LRH.2.21.2005150329580.26489@namei.org>
+References: <20200511192156.1618284-1-mic@digikod.net> <20200511192156.1618284-6-mic@digikod.net> <alpine.LRH.2.21.2005141335280.30052@namei.org> <c159d845-6108-4b67-6527-405589fa5382@digikod.net>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513190942.GA2626@duo.ucw.cz>
+Content-Type: multipart/mixed; boundary="1665246916-621977297-1589477498=:26489"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Pavel Machek <pavel@denx.de> [200513 19:10]:
-> Hi!
-> 
-> > Here's the updated set of these patches fixed up for Johan's and
-> > Pavel's earlier comments.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--1665246916-621977297-1589477498=:26489
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+
+On Thu, 14 May 2020, Mickaël Salaün wrote:
+
+> > This needs to be converted to the LSM API via superblock blob stacking.
 > > 
-> > This series does the following:
-> > 
-> > 1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
-> > 
-> > 2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
-> >    TTY ports configured in devicetree with help of n_gsm.c
-> > 
-> > 3. Allows the use of standard Linux device drivers for dedicated
-> >    TS 27.010 channels for devices like GNSS and ALSA found on some
-> >    modems for example
+> > See Casey's old patch: 
+> > https://lore.kernel.org/linux-security-module/20190829232935.7099-2-casey@schaufler-ca.com/
 > 
-> > 4. Adds a gnss-motmdm consumer driver for the GNSS device found on
-> >    the Motorola Mapphone MDM6600 modem on devices like droid4
-> 
-> It does one thing ... it turns Droid 4 into useful phone! 
+> s_landlock_inode_refs is quite similar to s_fsnotify_inode_refs, but I
+> can do it once the superblock security blob patch is upstream. Is it a
+> blocker for now? What is the current status of lbs_superblock?
 
-Right, a minor detail I forgot :)
+Yes it is a blocker. Landlock should not be adding its own functions in 
+core code, it should be using the LSM API (and extending that as needed).
 
-> Thanks a lot. I believe these are same patches as in
-> droid4-pending-v5.7 branch, so whole series is
-> 
-> Tested-by: Pavel Machek <pavel@ucw.cz>
-> 
-> Getting this into 5.8 would be nice :-).
-> 
-> > Now without the chardev support, the /dev/gsmtty* using apps need
-> > to use "U1234AT+CFUN?" format for the packets. The advantage is
-> > less kernel code, and we keep the existing /dev/gsmtty* interface.
-> > 
-> > If we still really need the custom chardev support, that can now
-> > be added as needed with the channel specific consumer driver(s),
-> > but looks like this won't be needed based on Pavel's ofono work.
-> 
-> These work for me, and I have patched ofono with basic
-> functionality. It is no longer possible to use minicom for debugging,
-> but printf can be used instead, so that's not much of a problem.
-> 
-> I have adjusted ofono code, and moved away from normal AT support
-> code. More API changes would not be welcome :-).
+> Anyway, we also need to have a call to landlock_release_inodes() in
+> generic_shutdown_super(), which does not fit the LSM framework, and I
+> think it is not an issue. Landlock handling of inodes is quite similar
+> to fsnotify.
 
-There is no need for a new API or API changes as we now use the
-existing n_gsm tty interface for /dev/gsmtty* devices that have
-been around for years.
+fsnotify is not an LSM.
 
-Regards,
+-- 
+James Morris
+<jmorris@namei.org>
 
-Tony
-
+--1665246916-621977297-1589477498=:26489--
