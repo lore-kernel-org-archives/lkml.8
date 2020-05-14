@@ -2,134 +2,82 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9616FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77D82206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589437738;
-	bh=lUAkt5vJrfMpmMe8Jkqe96oDcybwBYVt4NwetVO5JMg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ZAh5cEdFg9v2hjeOM9aLMvol4LWMhDhOvi6sUuKZAqxHaW+auUnoZ5Y7ZDaqX6wjM
-	 saNJkskJu8tn1BK+1HU9jboAMowKV7WuPCwON2ERaaoPFV2+l1bRhUtKQAjoxbEFap
-	 DsUUC9YlS+3/ytynbGb58ZaEnBDbgsDz5mjchP88=
+	by mail.kernel.org (Postfix) with ESMTP id 5F4BC206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgENG25 (ORCPT
+        id S1726087AbgENG3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 02:28:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51770 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 02:29:54 -0400
+Received: from sauhun.de ([88.99.104.3]:48474 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726011AbgENG25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 02:28:57 -0400
-Received: from localhost.localdomain (unknown [122.182.193.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DDC2206B6;
-        Thu, 14 May 2020 06:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589437736;
-        bh=lUAkt5vJrfMpmMe8Jkqe96oDcybwBYVt4NwetVO5JMg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LVOE+Q9kRqSXL+zg+mFOQWp0z1vhkEjTU3aiJJRAlJNkxvWsxcaOLvltVzJf+GN1M
-         7quwf51+Y+6tUMPit972YNYW7NVoTnlQEL6sMdyszSJe6wBDLDLvlF7TJ6sHnHTlyq
-         y+ZS+BEosD8Ow5FNXjZenaPm150g5T/sMoGHUT+4=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rahul Ankushrao Kawadgave <rahulak@qti.qualcomm.com>
-Subject: [PATCH] net: stmmac: fix num_por initialization
-Date:   Thu, 14 May 2020 11:58:36 +0530
-Message-Id: <20200514062836.190194-1-vkoul@kernel.org>
-X-Mailer: git-send-email 2.25.4
+        id S1725876AbgENG3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 02:29:54 -0400
+Received: from localhost (p5486CC88.dip0.t-ipconnect.de [84.134.204.136])
+        by pokefinder.org (Postfix) with ESMTPSA id EC9C92C01E6;
+        Thu, 14 May 2020 08:29:51 +0200 (CEST)
+Date:   Thu, 14 May 2020 08:29:51 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Qii Wang <qii.wang@mediatek.com>
+Cc:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH] i2c: mediatek: Add i2c ac-timing adjust support
+Message-ID: <20200514062951.GA1145@kunai>
+References: <1585223676-30809-1-git-send-email-qii.wang@mediatek.com>
+ <20200512133852.GE13516@ninjato>
+ <1589418905.25512.10.camel@mhfsdcap03>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
+Content-Disposition: inline
+In-Reply-To: <1589418905.25512.10.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver missed initializing num_por which is por values that driver
-configures to hardware. In order to get this values, add a new structure
-ethqos_emac_driver_data which holds por and num_por values and populate
-that in driver probe.
 
-Fixes: a7c30e62d4b8 ("net: stmmac: Add driver for Qualcomm ethqos")
-Reported-by: Rahul Ankushrao Kawadgave <rahulak@qti.qualcomm.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- .../ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+--azLHFNyN32YCQGCU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-index e0a5fe83d8e0..bfc4a92f1d92 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-@@ -75,6 +75,11 @@ struct ethqos_emac_por {
- 	unsigned int value;
- };
- 
-+struct ethqos_emac_driver_data {
-+	const struct ethqos_emac_por *por;
-+	unsigned int num_por;
-+};
-+
- struct qcom_ethqos {
- 	struct platform_device *pdev;
- 	void __iomem *rgmii_base;
-@@ -171,6 +176,11 @@ static const struct ethqos_emac_por emac_v2_3_0_por[] = {
- 	{ .offset = RGMII_IO_MACRO_CONFIG2,	.value = 0x00002060 },
- };
- 
-+static const struct ethqos_emac_driver_data emac_v2_3_0_data = {
-+	.por = emac_v2_3_0_por,
-+	.num_por = ARRAY_SIZE(emac_v2_3_0_por),
-+};
-+
- static int ethqos_dll_configure(struct qcom_ethqos *ethqos)
- {
- 	unsigned int val;
-@@ -442,6 +452,7 @@ static int qcom_ethqos_probe(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct plat_stmmacenet_data *plat_dat;
- 	struct stmmac_resources stmmac_res;
-+	const struct ethqos_emac_driver_data *data;
- 	struct qcom_ethqos *ethqos;
- 	struct resource *res;
- 	int ret;
-@@ -471,7 +482,9 @@ static int qcom_ethqos_probe(struct platform_device *pdev)
- 		goto err_mem;
- 	}
- 
--	ethqos->por = of_device_get_match_data(&pdev->dev);
-+	data = of_device_get_match_data(&pdev->dev);
-+	ethqos->por = data->por;
-+	ethqos->num_por = data->num_por;
- 
- 	ethqos->rgmii_clk = devm_clk_get(&pdev->dev, "rgmii");
- 	if (IS_ERR(ethqos->rgmii_clk)) {
-@@ -526,7 +539,7 @@ static int qcom_ethqos_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id qcom_ethqos_match[] = {
--	{ .compatible = "qcom,qcs404-ethqos", .data = &emac_v2_3_0_por},
-+	{ .compatible = "qcom,qcs404-ethqos", .data = &emac_v2_3_0_data},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, qcom_ethqos_match);
--- 
-2.25.4
 
+> > Last question: You seem to be the one doing major updates to this
+> > driver. Thanks for that! Are you maybe interested in becoming the
+> > maintainer for this driver? I think there won't be much patches to
+> > review and reports to handle but it will speed up processing for me.
+>=20
+> Yes, It is my honor to be the maintainer for this driver.
+
+Awesome! :) Can you prepare a patch for MAINTAINERS or shall I?
+
+
+--azLHFNyN32YCQGCU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl685VsACgkQFA3kzBSg
+KbbA8w/+Iih/AnYzyX4NP+kuKMiaDnC4Lof2gegnqKBPDlccUf5qMFAxlvdj5VLg
+7fpHoLnxDUaE2VSLT94/l7djAnAiUrDK42F1rXHXfJKmfb4k9dMWI7n+yF29/95a
+87gV3x2goe1XucCmobocv2RFwJw7b4rkDkvCb5mN6bvyDBUUS4Q3mW0MGxISVdTE
+Z48dW7oyv54Y7kJoEVv3NRcrOfO/2zlrsi1zxamoU8+E5NidGwqySY21PZpq/FZm
+4un1Dt98r7nrsm+l75SAahK5AJ/6qYakeJOtwD2NyzOF6dmwOgKLDpMI82Fl5e3p
+vO37ZWYXoOeX9u7HFzEmz6CiLQ7Fomg5S6P7pWOV4JWNGbgMvkfnhzhyhZQN/y3z
++n6BX//CKk/Vo2DV7yHc/fO5ueXSP0FpAd4MErTgwUvkbeWj4kM09Q5rug3nwXcb
+6+panhqePUGmOpqdT8JvqL+bFc3NpK7eDTmbAW3r6vp06/rttRBNnyKV5R4QMTfq
+9qB1gtrcqHz1YJLI+UKW/QXIu04mGdW20TwlnQe06pV8l9/6JoPMMhgz5OnRAMd9
+z/j+zHrrH2JMV/2gO+DW7T2Eweo2ZHEJjT1OfJT5pmxfrNVpFmkMsiwFbirC0mDH
+l5EQ+idPkrsxFbHMsV/FRdladtoW5CHlB8ujb8StzFIkszZOKUI=
+=ZyXd
+-----END PGP SIGNATURE-----
+
+--azLHFNyN32YCQGCU--
