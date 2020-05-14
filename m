@@ -2,345 +2,129 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD0AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB75C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3112070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B885205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:37:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VVJT+tRd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgENOft (ORCPT
+        id S1727943AbgENOht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:35:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726051AbgENOfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:35:48 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 515202070A;
-        Thu, 14 May 2020 14:35:46 +0000 (UTC)
-Date:   Thu, 14 May 2020 10:35:44 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] tracing: A few more fixes for v5.7
-Message-ID: <20200514103544.3dfb803d@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 14 May 2020 10:37:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbgENOhs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 10:37:48 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F45C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:37:47 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id w65so1378099pfc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=myAfLnmBUwxOXrWpGmgAhuCrYyR/+Qq8ha9lCmTxobQ=;
+        b=VVJT+tRdvrHedNG3fWcxgTVWuPw1kNXTpW31v+Zdv+sQr+6lTcPgup5zkVZ9D7YNKG
+         sGXHX1XE/Ca+gIB8IBrlzNwi+Mko1SqNSHfodsk12A9YwLOnksgHlalr0gCQE/McA0Pm
+         MLAhafXzPZTcbuXIWkQRsIsTGeXX5vm6ujwTR3aC8vCv3cRiHZ6rRaDEpSJg9tFoEfF/
+         V480eHYm2hDmTpSj79PvM3VpG475Nlp4IP0mA+qnTjcS4VVyqWyvuEq61oyht9AWrW+Y
+         AqfNHZq/nAxOgWvR6YMkZL/BZA9CPzIAxtn6q6gOA4Lp2yJKaYIIgAXLrl9BjABi37/L
+         uYkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=myAfLnmBUwxOXrWpGmgAhuCrYyR/+Qq8ha9lCmTxobQ=;
+        b=Jlo3iA/aFOqLx7C2LJYUmbCFGqDc8h5ycFwk8OLSTR7nmfbRi5dE9Va4xuPI7oCQjy
+         sSWv/xywNHHOLLPh5eNJKYCWodvSKxoqWJ1pWGLnDAQy1tv9VkoPJwF/CSXRh4n6+jCn
+         7Ih5SlVNG3qAspvyUBZSlK7HSw1CLcDBMclI/gTXCaN7X6+jM0CO/JG9ODX84xuFNk+0
+         l1Z+cjm1fKOXZgRpEqupqVz8DVO+ahv1SAaSekarWmNumc9N42/RPnoNIlLhjrBTk7us
+         iFPXGJsEw/VJE3njZsaL/YiBrSHn5fBZGTqb1EHnthTCENbIxVGq/4nAVR53PpZ1NMSN
+         r2Kg==
+X-Gm-Message-State: AOAM5325yilLQ2zOBTeoLlIgIP9z7++XHeCtE3AIzYO8ci14INfpzwmD
+        AmHlU2bnrKt2rdrYImRrU4WUPw==
+X-Google-Smtp-Source: ABdhPJzMUAO/Hp/8HePC/WpyIdkcWchv8FZml1mVlO6EUQe7g4ISZjDUtlBSdcFzqCdLKZBeYAn4ig==
+X-Received: by 2002:a63:440e:: with SMTP id r14mr4398210pga.340.1589467066271;
+        Thu, 14 May 2020 07:37:46 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h14sm18053136pjc.46.2020.05.14.07.37.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 07:37:45 -0700 (PDT)
+Date:   Thu, 14 May 2020 07:36:16 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sm8250 pinctrl
+ bindings
+Message-ID: <20200514143616.GU2165@builder.lan>
+References: <20200417061907.1226490-1-bjorn.andersson@linaro.org>
+ <20200417061907.1226490-2-bjorn.andersson@linaro.org>
+ <20200429213453.GA32114@bogus>
+ <20200514060422.GL1302550@yoga>
+ <CACRpkdZpfgb0wwt2FUwqPab4XhtLXfDWOvZLdCc+NF-mVJkKYw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZpfgb0wwt2FUwqPab4XhtLXfDWOvZLdCc+NF-mVJkKYw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 14 May 07:12 PDT 2020, Linus Walleij wrote:
 
-Linus,
+> On Thu, May 14, 2020 at 8:04 AM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > On Wed 29 Apr 14:34 PDT 2020, Rob Herring wrote:
+> > > On Thu, Apr 16, 2020 at 11:19:06PM -0700, Bjorn Andersson wrote:
+> > > > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
+> > [..]
+> > > > +#PIN CONFIGURATION NODES
+> > > > +patternProperties:
+> > > > +  '^.*$':
+> > > > +    if:
+> > > > +      type: object
+> > > > +    then:
+> > >
+> > > Needs a $ref to the standard properties.
+> > >
+> > > Would be good to show a child node in the example too. (And try having
+> > > an error in a standard property type to verify you get an error).
+> > >
+> >
+> > Finally looked into this.
+> 
+> Can you send an incremental patch because otherwise I have
+> to revert the patch that I merged (maybe to trigger happy, mea culpa).
+> 
 
-Various tracing fixes:
+I appreciate that you merged this already, so I'm happy to fix this
+incrementally.
 
- - Fix a crash when having function tracing and function stack tracing on
-   the command line. The ftrace trampolines are created as executable and
-   read only. But the stack tracer tries to modify them with text_poke()
-   which expects all kernel text to still be writable at boot.
-   Keep the trampolines writable at boot, and convert them to read-only
-   with the rest of the kernel.
+> (If it's too hard I can just revert it.)
+> 
 
- - A selftest was triggering in the ring buffer iterator code, that
-   is no longer valid with the update of keeping the ring buffer
-   writable while a iterator is reading. Just bail after three failed
-   attempts to get an event and remove the warning and disabling of the
-   ring buffer.
+Afaict there are two different $refs available with standard properties
+and adding either one works, but I don't understand how to add both.
+Also $ref'ing pincfg-node.yaml means that the binding suddenly accepts
+standard properties that the hardware doesn't support, so I would like
+to be able to reduce this list somehow...
 
- - While modifying the ring buffer code, decided to remove all the
-   unnecessary BUG() calls.
+But I don't see anything preventing this from being done incrementally.
 
-
-Please pull the latest trace-v5.7-rc5 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace-v5.7-rc5
-
-Tag SHA1: fae2d408d8746a002d3fda65c71d88af2586f4bd
-Head SHA1: da4d401a6b8fda7414033f81982f64ade02c0e27
-
-
-Steven Rostedt (VMware) (3):
-      x86/ftrace: Have ftrace trampolines turn read-only at the end of system boot up
-      ring-buffer: Don't deactivate the ring buffer on failed iterator reads
-      ring-buffer: Remove all BUG() calls
-
-----
- arch/x86/include/asm/ftrace.h  |  6 ++++++
- arch/x86/kernel/ftrace.c       | 29 ++++++++++++++++++++++++++++-
- arch/x86/mm/init_64.c          |  3 +++
- include/linux/ftrace.h         | 23 +++++++++++++++++++++++
- kernel/trace/ftrace_internal.h | 22 ----------------------
- kernel/trace/ring_buffer.c     | 34 +++++++++++++---------------------
- 6 files changed, 73 insertions(+), 44 deletions(-)
----------------------------
-diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-index 85be2f506272..89af0d2c62aa 100644
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -56,6 +56,12 @@ struct dyn_arch_ftrace {
- 
- #ifndef __ASSEMBLY__
- 
-+#if defined(CONFIG_FUNCTION_TRACER) && defined(CONFIG_DYNAMIC_FTRACE)
-+extern void set_ftrace_ops_ro(void);
-+#else
-+static inline void set_ftrace_ops_ro(void) { }
-+#endif
-+
- #define ARCH_HAS_SYSCALL_MATCH_SYM_NAME
- static inline bool arch_syscall_match_sym_name(const char *sym, const char *name)
- {
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 37a0aeaf89e7..b0e641793be4 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -407,7 +407,8 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 
- 	set_vm_flush_reset_perms(trampoline);
- 
--	set_memory_ro((unsigned long)trampoline, npages);
-+	if (likely(system_state != SYSTEM_BOOTING))
-+		set_memory_ro((unsigned long)trampoline, npages);
- 	set_memory_x((unsigned long)trampoline, npages);
- 	return (unsigned long)trampoline;
- fail:
-@@ -415,6 +416,32 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	return 0;
- }
- 
-+void set_ftrace_ops_ro(void)
-+{
-+	struct ftrace_ops *ops;
-+	unsigned long start_offset;
-+	unsigned long end_offset;
-+	unsigned long npages;
-+	unsigned long size;
-+
-+	do_for_each_ftrace_op(ops, ftrace_ops_list) {
-+		if (!(ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP))
-+			continue;
-+
-+		if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
-+			start_offset = (unsigned long)ftrace_regs_caller;
-+			end_offset = (unsigned long)ftrace_regs_caller_end;
-+		} else {
-+			start_offset = (unsigned long)ftrace_caller;
-+			end_offset = (unsigned long)ftrace_epilogue;
-+		}
-+		size = end_offset - start_offset;
-+		size = size + RET_SIZE + sizeof(void *);
-+		npages = DIV_ROUND_UP(size, PAGE_SIZE);
-+		set_memory_ro((unsigned long)ops->trampoline, npages);
-+	} while_for_each_ftrace_op(ops);
-+}
-+
- static unsigned long calc_trampoline_call_offset(bool save_regs)
- {
- 	unsigned long start_offset;
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 3b289c2f75cd..8b5f73f5e207 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -54,6 +54,7 @@
- #include <asm/init.h>
- #include <asm/uv/uv.h>
- #include <asm/setup.h>
-+#include <asm/ftrace.h>
- 
- #include "mm_internal.h"
- 
-@@ -1291,6 +1292,8 @@ void mark_rodata_ro(void)
- 	all_end = roundup((unsigned long)_brk_end, PMD_SIZE);
- 	set_memory_nx(text_end, (all_end - text_end) >> PAGE_SHIFT);
- 
-+	set_ftrace_ops_ro();
-+
- #ifdef CONFIG_CPA_DEBUG
- 	printk(KERN_INFO "Testing CPA: undo %lx-%lx\n", start, end);
- 	set_memory_rw(start, (end-start) >> PAGE_SHIFT);
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index db95244a62d4..ab4bd15cbcdb 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -210,6 +210,29 @@ struct ftrace_ops {
- #endif
- };
- 
-+extern struct ftrace_ops __rcu *ftrace_ops_list;
-+extern struct ftrace_ops ftrace_list_end;
-+
-+/*
-+ * Traverse the ftrace_global_list, invoking all entries.  The reason that we
-+ * can use rcu_dereference_raw_check() is that elements removed from this list
-+ * are simply leaked, so there is no need to interact with a grace-period
-+ * mechanism.  The rcu_dereference_raw_check() calls are needed to handle
-+ * concurrent insertions into the ftrace_global_list.
-+ *
-+ * Silly Alpha and silly pointer-speculation compiler optimizations!
-+ */
-+#define do_for_each_ftrace_op(op, list)			\
-+	op = rcu_dereference_raw_check(list);			\
-+	do
-+
-+/*
-+ * Optimized for just a single item in the list (as that is the normal case).
-+ */
-+#define while_for_each_ftrace_op(op)				\
-+	while (likely(op = rcu_dereference_raw_check((op)->next)) &&	\
-+	       unlikely((op) != &ftrace_list_end))
-+
- /*
-  * Type of the current tracing.
-  */
-diff --git a/kernel/trace/ftrace_internal.h b/kernel/trace/ftrace_internal.h
-index 0456e0a3dab1..382775edf690 100644
---- a/kernel/trace/ftrace_internal.h
-+++ b/kernel/trace/ftrace_internal.h
-@@ -4,28 +4,6 @@
- 
- #ifdef CONFIG_FUNCTION_TRACER
- 
--/*
-- * Traverse the ftrace_global_list, invoking all entries.  The reason that we
-- * can use rcu_dereference_raw_check() is that elements removed from this list
-- * are simply leaked, so there is no need to interact with a grace-period
-- * mechanism.  The rcu_dereference_raw_check() calls are needed to handle
-- * concurrent insertions into the ftrace_global_list.
-- *
-- * Silly Alpha and silly pointer-speculation compiler optimizations!
-- */
--#define do_for_each_ftrace_op(op, list)			\
--	op = rcu_dereference_raw_check(list);			\
--	do
--
--/*
-- * Optimized for just a single item in the list (as that is the normal case).
-- */
--#define while_for_each_ftrace_op(op)				\
--	while (likely(op = rcu_dereference_raw_check((op)->next)) &&	\
--	       unlikely((op) != &ftrace_list_end))
--
--extern struct ftrace_ops __rcu *ftrace_ops_list;
--extern struct ftrace_ops ftrace_list_end;
- extern struct mutex ftrace_lock;
- extern struct ftrace_ops global_ops;
- 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 6f0b42ceeb00..b8e1ca48be50 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -193,7 +193,7 @@ rb_event_length(struct ring_buffer_event *event)
- 	case RINGBUF_TYPE_DATA:
- 		return rb_event_data_length(event);
- 	default:
--		BUG();
-+		WARN_ON_ONCE(1);
- 	}
- 	/* not hit */
- 	return 0;
-@@ -249,7 +249,7 @@ rb_event_data(struct ring_buffer_event *event)
- {
- 	if (extended_time(event))
- 		event = skip_time_extend(event);
--	BUG_ON(event->type_len > RINGBUF_TYPE_DATA_TYPE_LEN_MAX);
-+	WARN_ON_ONCE(event->type_len > RINGBUF_TYPE_DATA_TYPE_LEN_MAX);
- 	/* If length is in len field, then array[0] has the data */
- 	if (event->type_len)
- 		return (void *)&event->array[0];
-@@ -3727,7 +3727,7 @@ rb_update_read_stamp(struct ring_buffer_per_cpu *cpu_buffer,
- 		return;
- 
- 	default:
--		BUG();
-+		RB_WARN_ON(cpu_buffer, 1);
- 	}
- 	return;
- }
-@@ -3757,7 +3757,7 @@ rb_update_iter_read_stamp(struct ring_buffer_iter *iter,
- 		return;
- 
- 	default:
--		BUG();
-+		RB_WARN_ON(iter->cpu_buffer, 1);
- 	}
- 	return;
- }
-@@ -4020,7 +4020,7 @@ rb_buffer_peek(struct ring_buffer_per_cpu *cpu_buffer, u64 *ts,
- 		return event;
- 
- 	default:
--		BUG();
-+		RB_WARN_ON(cpu_buffer, 1);
- 	}
- 
- 	return NULL;
-@@ -4034,7 +4034,6 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct ring_buffer_event *event;
- 	int nr_loops = 0;
--	bool failed = false;
- 
- 	if (ts)
- 		*ts = 0;
-@@ -4056,19 +4055,14 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
- 		return NULL;
- 
- 	/*
--	 * We repeat when a time extend is encountered or we hit
--	 * the end of the page. Since the time extend is always attached
--	 * to a data event, we should never loop more than three times.
--	 * Once for going to next page, once on time extend, and
--	 * finally once to get the event.
--	 * We should never hit the following condition more than thrice,
--	 * unless the buffer is very small, and there's a writer
--	 * that is causing the reader to fail getting an event.
-+	 * As the writer can mess with what the iterator is trying
-+	 * to read, just give up if we fail to get an event after
-+	 * three tries. The iterator is not as reliable when reading
-+	 * the ring buffer with an active write as the consumer is.
-+	 * Do not warn if the three failures is reached.
- 	 */
--	if (++nr_loops > 3) {
--		RB_WARN_ON(cpu_buffer, !failed);
-+	if (++nr_loops > 3)
- 		return NULL;
--	}
- 
- 	if (rb_per_cpu_empty(cpu_buffer))
- 		return NULL;
-@@ -4079,10 +4073,8 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
- 	}
- 
- 	event = rb_iter_head_event(iter);
--	if (!event) {
--		failed = true;
-+	if (!event)
- 		goto again;
--	}
- 
- 	switch (event->type_len) {
- 	case RINGBUF_TYPE_PADDING:
-@@ -4117,7 +4109,7 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
- 		return event;
- 
- 	default:
--		BUG();
-+		RB_WARN_ON(cpu_buffer, 1);
- 	}
- 
- 	return NULL;
+Thanks,
+Bjorn
