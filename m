@@ -2,98 +2,126 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02222C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD37AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0F3A206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:46:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="B1ylECLI"
+	by mail.kernel.org (Postfix) with ESMTP id 85CE4206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:49:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589453367;
+	bh=ihBtKopP3k1Y1JCaSjxHNdvYIfEueCdWieJSz6SvBN4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=MTmLa3G5myG/NZNl3d+12aDwLaXqMFb0jhNuHzRacr2bPKqK9m7Fv2LZQQWmeMEnI
+	 O9uGP6fudrRgk/m9D1aJkThRhspvuJ8gsUvmi4n8e/sK7OgNon5121K6x10eHCsS91
+	 4539J2kZC0UO9NLXlSrkYxuYNOm8biFGsVX0modg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgENKqQ (ORCPT
+        id S1726199AbgENKt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 06:46:16 -0400
-Received: from smtp2.axis.com ([195.60.68.18]:64723 "EHLO smtp2.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgENKqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 06:46:15 -0400
+        Thu, 14 May 2020 06:49:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbgENKtX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 06:49:23 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A19C061A0C;
+        Thu, 14 May 2020 03:49:21 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id a9so2205663lfb.8;
+        Thu, 14 May 2020 03:49:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1223; q=dns/txt; s=axis-central1;
-  t=1589453175; x=1620989175;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/QiWqwCY0he86CmS8M6CKwlH1XkaAD8P1wAxOQ7yl8o=;
-  b=B1ylECLI8/hWe4kwqfHPLy6Kgb9spiudr8ng/vxtIoz9LMMyfZKWUccx
-   SG2F1pmEMUKWL7AhwgxghsO9QpOkfJkTIpWfD7gflrtHPK/ukebCAMhjZ
-   j6ldM+Gddado5RwBcica+PW22Ty2VG2uZc271j8ovPGaFqyUAO0meMuv1
-   qEzIhMCqBvWfoQR1gnqRXArZXJwOwrkDYFd/FHFHomsNpwt9vZKAd+u/s
-   O7lEoZF0WRQ1xC/5oxiHb4v17cFlUR05H8/YlmWZyhnNsIL7Ry0Jh/pfe
-   fgYwmZ7//R8wwPZM/htxfKfuAKLTGBGXbPmN80InMAUVSq4WgvtjZEMTn
-   g==;
-IronPort-SDR: UMWgmyq8sHVnEMDqeVGc2t7zv76i5GtdkN/IP/73570nJPpt2kmZ+BFcwYp9oN3g7OBVbm1l3v
- huRpu5fhUBp0Z4iYWpurCRZ98ucDhxRYqKh4ZwdVLAbYEHmXPdFjPMGf5VclcoYFal+dsZqfqQ
- Y0cnyF6tvBatWVX7DH7gCoKJvn86ehyVSQ0alfCM+2tmDc5lqdFSQxjk6pPPiqULeYGTKXC+dj
- cu9gKsF1u9qJ+BrLSGpQ5AUqmfzweTFYkurlIk/vrxXLzG7GmzsoXq7Rr9KQ9hetQyp98Kb9tV
- nu4=
-X-IronPort-AV: E=Sophos;i="5.73,391,1583190000"; 
-   d="scan'208";a="8479237"
-Date:   Thu, 14 May 2020 12:46:13 +0200
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     Jessica Yu <jeyu@kernel.org>, <linux@armlinux.org.uk>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel <kernel@axis.com>
-Subject: Re: [PATCH v2 1/2] module: allow arch overrides for .init section
- names
-Message-ID: <20200514104613.ckwql7s4xbgqj7ss@axis.com>
-References: <20200511114803.4475-1-vincent.whitchurch@axis.com>
- <20200511154459.GA26699@linux-8ccs.fritz.box>
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=ihBtKopP3k1Y1JCaSjxHNdvYIfEueCdWieJSz6SvBN4=;
+        b=cdbYIJYI4NcPSHfXQP07wl2UNIDAxSzXgr70FR6ySmwbSMRzx8KwYUedNTajATJy/V
+         WKHUAcz8fGKYFbQKBnpHjKNb5/BtjeFwc7j+qHSH+r6CZ6GMYgkrBDx1kpCWi97NidTH
+         rLPuqm07AeGkf/mjPYIMXanP0sJaGaY55Q81xIGQR/wNjOFkEdtTmIDay2rhpGrrjMmN
+         qviYV4EAXvXUo1D24t+bER/5c0QLaxujdOwoxc9iwoSUSYb9Z592o6ZrpEA1Fna6UdNq
+         BynEx9iqLFaPGBtBzpj5xjiWel2Ikw31NmXP/eyJrdimO2kr0qUWqZZNfNQmo+0neqix
+         rrFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=ihBtKopP3k1Y1JCaSjxHNdvYIfEueCdWieJSz6SvBN4=;
+        b=n2kWgQbgVDxbKo2s+6TawAIoVPHUg+SxZlnzuZ0zEYcHnyIeABr27R1Ko5wfpqR5vs
+         61jymtHBOuIo5g2NiVezufWLIU7LQKDD1kDvDqI1ip+1vaF9bpwRSSHEouFcb3NLbbqQ
+         9yWAKH3oFxo+SytwYsvK9lycwtnsx4ynP5Kli/negXx3aAR1k1kJvx7Po/PK2p/3610M
+         yctMvXAZmo2SpE4qmtOn5vL42qpSN4ghC5JE/WMLpFHhxmGs9rjcU5icJ9YtbMm4O07x
+         yC4B3f33SyNOdekxewc2IUrZvf3GqyZ20LB4nfA4UEKcKCX7xcQamZiGYOBK/oa8D9J+
+         Q0AA==
+X-Gm-Message-State: AOAM53208ZE6+byIRp6ZIyD0L8Cm+P/GAo8k+E9/4oszC6MGPe+EOazl
+        GKplIoOmnj13lcj9WRN8tyg=
+X-Google-Smtp-Source: ABdhPJzemH7406zwPBPhxjJ/sOFlUJLUa/CJWeWsI8Bjd4BU54bVJGKrYv8rSvofcAhwn7pE2K814w==
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr2888415lfi.21.1589453360383;
+        Thu, 14 May 2020 03:49:20 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id v4sm1276524ljj.104.2020.05.14.03.49.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 May 2020 03:49:19 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     "Sandeep Maheswaram \(Temp\)" <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v7 0/4] ADD interconnect support for Qualcomm DWC3 driver
+In-Reply-To: <a119cf75-8bda-f380-8249-173fa426279c@codeaurora.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <20200429183542.GS4525@google.com> <a119cf75-8bda-f380-8249-173fa426279c@codeaurora.org>
+Date:   Thu, 14 May 2020 13:49:15 +0300
+Message-ID: <87eerm4wr8.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200511154459.GA26699@linux-8ccs.fritz.box>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 05:45:00PM +0200, Jessica Yu wrote:
-> +++ Vincent Whitchurch [11/05/20 13:48 +0200]:
-> >ARM stores unwind information for .init.text in sections named
-> >.ARM.extab.init.text and .ARM.exidx.init.text.  Since those aren't
-> >currently recognized as init sections, they're allocated along with the
-> >core section, and relocation fails if the core and the init section are
-> >allocated from different regions and can't reach other.
-> >
-> >  final section addresses:
-> >        ...
-> >        0x7f800000 .init.text
-> >        ..
-> >        0xcbb54078 .ARM.exidx.init.text
-> >        ..
-> >
-> > section 16 reloc 0 sym '': relocation 42 out of range (0xcbb54078 ->
-> > 0x7f800000)
-> >
-> >Allow architectures to override the section name so that ARM can fix
-> >this.
-> >
-> >Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-> >---
-> >v2: Add comment and move module_init_section() next to module_exit_section().
-> 
-> Thanks, this patch looks fine to me. You could add my:
-> 
->    Acked-by: Jessica Yu <jeyu@kernel.org>
-> 
-> Alternatively, I can take this through modules-next if the second
-> patch gets a review and ack from an ARM maintainer.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Thanks!  I've put the patches in Russell's patch system.
+"Sandeep Maheswaram (Temp)" <sanm@codeaurora.org> writes:
+
+> Hi Felipe,
+>
+> Any update about landing this series.
+
+in my tree now
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl69IisACgkQzL64meEa
+mQbu6A//fIS1BToxj09T/BzusfhWqlmhP82ZlNUi/d/TwchOeTjRexbJ1nYm+i+F
++DelctoeEuZhzYlQr91ZgliYidtTH26NRBAna9Lld6pDlJg31YS8NxB1s9KNNaz5
+9s2HKUt//5ZRzvxhhZZgIvv84iE7cXviVzSzbZ/cU5PjKXJ1E8zsvrbQ9biWP7P6
+AMNP+MbwSBDH2EYz3JyjqmlsBO3oEnJ7IyZDJnMcfXiCIscf7AKYaQY6WOrEj5WH
+ioJFm/GmfJ6Nh77DAtYNjHitz45tFzWGxRbjhUKqIbCnnVMOmwJ8zJNqYH8LDk8X
+ZfEdCU3FcDO98D0izBf0PdAfypa1MFul4bLBaPNKahDjKJKQq6fKvHNMF71ORflI
+HoCy9nm0czUSAIC6i1BZjmEK9yNkMmyKpXGC3YBDw1aQbzrV4uIjZqGRfnzpAzvY
+ng03LpR1BDemQiw869vPmVkX2Y86PaFFnigKaMS2wBN6QBtt6XGePGqf5i3PYmYa
+yEMWBJgRptHAkimChB8EJd02DLeXczae3i85qPFA56Tl9OvMpldIhjD7y47kFKW3
+AseQQAFult5iMM0xIZIXgRXG1JDKajMMqHTz6j7sh/OxnHcrOaSA5mi+XPHp4F94
+z+e8VD3UHm7iHKzOIttpyeTf6l9bP4wczMPup4YhwcaB0xOMY6U=
+=/l/R
+-----END PGP SIGNATURE-----
+--=-=-=--
