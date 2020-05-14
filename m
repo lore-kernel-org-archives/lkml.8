@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96317C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ADB720675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8DC206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482908;
-	bh=dMS1BI4dhRHxWZzRrBMqPXB+b0yJ1yoqLZ7lWTjrRu8=;
+	s=default; t=1589482914;
+	bh=WCnPS7QiF7nGaLWKAw6gNpGkTwoK5y0//6jMq9R7/fs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iiozGM7V6ggpyNlLCJ4Qaq4cfOX1onGHvsDnuIwPLkfjdB1D/ca7kpp8lU9GQsIKd
-	 8TcCJITK0DKUjKHcBUY4m+uJMJiUTxdwWdEAUFHVDPw0/dASs5ooBiSgS4UV9J5Z01
-	 E1SZKTQ1X0fM5aCCVVHTvbCWu8SVEexHH+ZMxFvc=
+	b=YHe5F0giSVVuwaLp1ird1fEh4DPHApgXWMYdDGxjoLvEDlqtccqNB8181eM5wo0Kh
+	 UCNsfE3yqQiMmsJs5VfL5TiD2LdRagx5fNMnzMbIGTdSegD5cqeQxanL8KTDiQO41e
+	 jNxtRI1/E7i/j6m1dE7N05ZWrJ/bViH+hhxIEDFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbgENTBr (ORCPT
+        id S1730018AbgENTBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:01:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56028 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:01:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729375AbgENSzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:25 -0400
+        id S1729361AbgENSzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 957EA20727;
-        Thu, 14 May 2020 18:55:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B99420727;
+        Thu, 14 May 2020 18:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482525;
-        bh=dMS1BI4dhRHxWZzRrBMqPXB+b0yJ1yoqLZ7lWTjrRu8=;
+        s=default; t=1589482523;
+        bh=WCnPS7QiF7nGaLWKAw6gNpGkTwoK5y0//6jMq9R7/fs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tiLoQHIGtrR2TSQKLfTQlF2bB7VY19EHYezLRtxh1lik+OF4HlxpcoqOS82U5ZN0X
-         FiBojpGGAjH/E2IMbU9pE4Wzp145Hx5lcmVtruzTXGAlWdgUcMYTKqOTS2Wj+rn4KY
-         LWwFghuf+0Ji7LuFETcEHlm55P1GgzjKnLinBZAI=
+        b=Gkq6Vzb5T1/Q1IyC1iRtCr6bmN4IiLBNnslcTYyMXIypSidcci/wB0GbekBZ1FwfI
+         UUxBpNvMyTiV16gxmyYpXwTh8yaPD+JzRZgUgw4JdjOnDGPzvuaqZp//wUi3jyGdg9
+         CnOTQCO0VPYCsXXHT+xztffHLO4A6vLz+C+eoTVk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Hilliard <james.hilliard1@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 20/39] component: Silence bind error on -EPROBE_DEFER
-Date:   Thu, 14 May 2020 14:54:37 -0400
-Message-Id: <20200514185456.21060-20-sashal@kernel.org>
+Cc:     Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 18/39] bnxt_en: Fix VLAN acceleration handling in bnxt_fix_features().
+Date:   Thu, 14 May 2020 14:54:35 -0400
+Message-Id: <20200514185456.21060-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
 References: <20200514185456.21060-1-sashal@kernel.org>
@@ -59,51 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hilliard <james.hilliard1@gmail.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 7706b0a76a9697021e2bf395f3f065c18f51043d ]
+[ Upstream commit c72cb303aa6c2ae7e4184f0081c6d11bf03fb96b ]
 
-If a component fails to bind due to -EPROBE_DEFER we should not log an
-error as this is not a real failure.
+The current logic in bnxt_fix_features() will inadvertently turn on both
+CTAG and STAG VLAN offload if the user tries to disable both.  Fix it
+by checking that the user is trying to enable CTAG or STAG before
+enabling both.  The logic is supposed to enable or disable both CTAG and
+STAG together.
 
-Fixes messages like:
-vc4-drm soc:gpu: failed to bind 3f902000.hdmi (ops vc4_hdmi_ops): -517
-vc4-drm soc:gpu: master bind failed: -517
-
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-Link: https://lore.kernel.org/r/20200411190241.89404-1-james.hilliard1@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 5a9f6b238e59 ("bnxt_en: Enable and disable RX CTAG and RX STAG VLAN acceleration together.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/component.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/base/component.c b/drivers/base/component.c
-index 08da6160e94dd..55f0856bd9b5e 100644
---- a/drivers/base/component.c
-+++ b/drivers/base/component.c
-@@ -162,7 +162,8 @@ static int try_to_bring_up_master(struct master *master,
- 	ret = master->ops->bind(master->dev);
- 	if (ret < 0) {
- 		devres_release_group(master->dev, NULL);
--		dev_info(master->dev, "master bind failed: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_info(master->dev, "master bind failed: %d\n", ret);
- 		return ret;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 5163da01e54f8..5c954488072ec 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -6827,6 +6827,7 @@ static netdev_features_t bnxt_fix_features(struct net_device *dev,
+ 					   netdev_features_t features)
+ {
+ 	struct bnxt *bp = netdev_priv(dev);
++	netdev_features_t vlan_features;
+ 
+ 	if ((features & NETIF_F_NTUPLE) && !bnxt_rfs_capable(bp))
+ 		features &= ~NETIF_F_NTUPLE;
+@@ -6834,12 +6835,14 @@ static netdev_features_t bnxt_fix_features(struct net_device *dev,
+ 	/* Both CTAG and STAG VLAN accelaration on the RX side have to be
+ 	 * turned on or off together.
+ 	 */
+-	if ((features & (NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX)) !=
+-	    (NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX)) {
++	vlan_features = features & (NETIF_F_HW_VLAN_CTAG_RX |
++				    NETIF_F_HW_VLAN_STAG_RX);
++	if (vlan_features != (NETIF_F_HW_VLAN_CTAG_RX |
++			      NETIF_F_HW_VLAN_STAG_RX)) {
+ 		if (dev->features & NETIF_F_HW_VLAN_CTAG_RX)
+ 			features &= ~(NETIF_F_HW_VLAN_CTAG_RX |
+ 				      NETIF_F_HW_VLAN_STAG_RX);
+-		else
++		else if (vlan_features)
+ 			features |= NETIF_F_HW_VLAN_CTAG_RX |
+ 				    NETIF_F_HW_VLAN_STAG_RX;
  	}
- 
-@@ -431,8 +432,9 @@ static int component_bind(struct component *component, struct master *master,
- 		devres_release_group(component->dev, NULL);
- 		devres_release_group(master->dev, NULL);
- 
--		dev_err(master->dev, "failed to bind %s (ops %ps): %d\n",
--			dev_name(component->dev), component->ops, ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(master->dev, "failed to bind %s (ops %ps): %d\n",
-+				dev_name(component->dev), component->ops, ret);
- 	}
- 
- 	return ret;
 -- 
 2.20.1
 
