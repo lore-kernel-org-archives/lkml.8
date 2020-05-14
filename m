@@ -2,95 +2,155 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4A7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7E8206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A38AB20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbgENTSZ (ORCPT
+        id S1727987AbgENTV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:18:25 -0400
-Received: from mga17.intel.com ([192.55.52.151]:45643 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727987AbgENTSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:18:25 -0400
-IronPort-SDR: deqYmsASqCuZvMMfkelDH4OQHH7fVRarDIV3hFkhS/CuaDIt1Mn5lA39jkp91FKZSUIKoEC4KR
- RiMVNCdeMafQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 12:18:24 -0700
-IronPort-SDR: otlr/Bc1J/OkMNQtp5Gh+hPnaeW8KpTJir4maVnHF3TwNk7grY8hXpwv1+vUYyEsRuNFaDzQE/
- j61nhipb+mIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
-   d="scan'208";a="341719749"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga001.jf.intel.com with ESMTP; 14 May 2020 12:18:24 -0700
-Date:   Thu, 14 May 2020 12:18:23 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Tsirkin <mst@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, x86@kernel.org
-Subject: Re: [PATCH RFC 2/5] KVM: x86: introduce KVM_MEM_ALLONES memory
-Message-ID: <20200514191823.GA15847@linux.intel.com>
-References: <20200514180540.52407-1-vkuznets@redhat.com>
- <20200514180540.52407-3-vkuznets@redhat.com>
+        Thu, 14 May 2020 15:21:29 -0400
+Received: from smtp-bc0f.mail.infomaniak.ch ([45.157.188.15]:52189 "EHLO
+        smtp-bc0f.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727835AbgENTV2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 15:21:28 -0400
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49NLxc0FXZzlhNp2;
+        Thu, 14 May 2020 21:21:24 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49NLxZ3CmQzljTrx;
+        Thu, 14 May 2020 21:21:22 +0200 (CEST)
+Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
+ through O_MAYEXEC
+To:     Kees Cook <keescook@chromium.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20200505153156.925111-4-mic@digikod.net>
+ <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
+ <202005131525.D08BFB3@keescook>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <0e654c90-bec5-6ba1-771e-648da94ef547@digikod.net>
+Date:   Thu, 14 May 2020 21:21:21 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514180540.52407-3-vkuznets@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <202005131525.D08BFB3@keescook>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 08:05:37PM +0200, Vitaly Kuznetsov wrote:
-> PCIe config space can (depending on the configuration) be quite big but
-> usually is sparsely populated. Guest may scan it by accessing individual
-> device's page which, when device is missing, is supposed to have 'pci
-> holes' semantics: reads return '0xff' and writes get discarded. Currently,
-> userspace has to allocate real memory for these holes and fill them with
-> '0xff'. Moreover, different VMs usually require different memory.
-> 
-> The idea behind the feature introduced by this patch is: let's have a
-> single read-only page filled with '0xff' in KVM and map it to all such
-> PCI holes in all VMs. This will free userspace of obligation to allocate
-> real memory. Later, this will also allow us to speed up access to these
-> holes as we can aggressively map the whole slot upon first fault.
-> 
-> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  Documentation/virt/kvm/api.rst  | 22 ++++++---
->  arch/x86/include/uapi/asm/kvm.h |  1 +
->  arch/x86/kvm/x86.c              |  9 ++--
->  include/linux/kvm_host.h        | 15 ++++++-
->  include/uapi/linux/kvm.h        |  2 +
->  virt/kvm/kvm_main.c             | 79 +++++++++++++++++++++++++++++++--
->  6 files changed, 113 insertions(+), 15 deletions(-)
-> 
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index d871dacb984e..2b87d588a7e0 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -1236,7 +1236,8 @@ yet and must be cleared on entry.
->  
->    /* for kvm_memory_region::flags */
->    #define KVM_MEM_LOG_DIRTY_PAGES	(1UL << 0)
-> -  #define KVM_MEM_READONLY	(1UL << 1)
-> +  #define KVM_MEM_READONLY		(1UL << 1)
-> +  #define KVM_MEM_ALLONES		(1UL << 2)
 
-Why not call this KVM_MEM_PCI_HOLE or something else that better conveys
-that this is memslot is intended to emulate PCI master abort semantics?
+
+On 14/05/2020 01:27, Kees Cook wrote:
+> On Wed, May 13, 2020 at 11:37:16AM -0400, Stephen Smalley wrote:
+>> On Tue, May 5, 2020 at 11:33 AM Mickaël Salaün <mic@digikod.net> wrote:
+>>>
+>>> Enable to forbid access to files open with O_MAYEXEC.  Thanks to the
+>>> noexec option from the underlying VFS mount, or to the file execute
+>>> permission, userspace can enforce these execution policies.  This may
+>>> allow script interpreters to check execution permission before reading
+>>> commands from a file, or dynamic linkers to allow shared object loading.
+>>>
+>>> Add a new sysctl fs.open_mayexec_enforce to enable system administrators
+>>> to enforce two complementary security policies according to the
+>>> installed system: enforce the noexec mount option, and enforce
+>>> executable file permission.  Indeed, because of compatibility with
+>>> installed systems, only system administrators are able to check that
+>>> this new enforcement is in line with the system mount points and file
+>>> permissions.  A following patch adds documentation.
+>>>
+>>> For tailored Linux distributions, it is possible to enforce such
+>>> restriction at build time thanks to the CONFIG_OMAYEXEC_STATIC option.
+>>> The policy can then be configured with CONFIG_OMAYEXEC_ENFORCE_MOUNT and
+>>> CONFIG_OMAYEXEC_ENFORCE_FILE.
+>>>
+>>> Being able to restrict execution also enables to protect the kernel by
+>>> restricting arbitrary syscalls that an attacker could perform with a
+>>> crafted binary or certain script languages.  It also improves multilevel
+>>> isolation by reducing the ability of an attacker to use side channels
+>>> with specific code.  These restrictions can natively be enforced for ELF
+>>> binaries (with the noexec mount option) but require this kernel
+>>> extension to properly handle scripts (e.g., Python, Perl).  To get a
+>>> consistent execution policy, additional memory restrictions should also
+>>> be enforced (e.g. thanks to SELinux).
+>>>
+>>> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+>>> Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+>>> Cc: Aleksa Sarai <cyphar@cyphar.com>
+>>> Cc: Al Viro <viro@zeniv.linux.org.uk>
+>>> Cc: Kees Cook <keescook@chromium.org>
+>>> ---
+>>
+>>> diff --git a/fs/namei.c b/fs/namei.c
+>>> index 33b6d372e74a..70f179f6bc6c 100644
+>>> --- a/fs/namei.c
+>>> +++ b/fs/namei.c
+>>> @@ -411,10 +412,90 @@ static int sb_permission(struct super_block *sb, struct inode *inode, int mask)
+>> <snip>
+>>> +#if defined(CONFIG_SYSCTL) && !defined(CONFIG_OMAYEXEC_STATIC)
+>>> +int proc_omayexec(struct ctl_table *table, int write, void __user *buffer,
+>>> +               size_t *lenp, loff_t *ppos)
+>>> +{
+>>> +       int error;
+>>> +
+>>> +       if (write) {
+>>> +               struct ctl_table table_copy;
+>>> +               int tmp_mayexec_enforce;
+>>> +
+>>> +               if (!capable(CAP_MAC_ADMIN))
+>>> +                       return -EPERM;
+>>
+>> Not fond of using CAP_MAC_ADMIN here (or elsewhere outside of security
+>> modules).  The ability to set this sysctl is not equivalent to being
+>> able to load a MAC policy, set arbitrary MAC labels on
+>> processes/files, etc.
+> 
+> That's fair. In that case, perhaps this could just use the existing
+> _sysadmin helper? (Though I should note that these perm checks actually
+> need to be in the open, not the read/write ... I thought there was a
+> series to fix that, but I can't find it now. Regardless, that's
+> orthogonal to this series.)
+
+OK, I'll switch to CAP_SYS_ADMIN with proc_dointvec_minmax_sysadmin().
