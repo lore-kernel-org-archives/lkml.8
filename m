@@ -2,86 +2,114 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6442C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9784C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1D9820671
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:50:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iUT7/Jzi"
+	by mail.kernel.org (Postfix) with ESMTP id BC144205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:51:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589464302;
+	bh=U4WS7dpPUSnHoDDXd9I/RGkZKydgvH6uscT6wgd5yaA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NGuXY2OVBcbZ9JwE7inqSQN2omX3/Tce+Ro7JmNXeOkZRHEWOImIXPHYKfrqP1v7n
+	 vcMnBMx3SUiviJM2RY3phQ23t1vCppWvBDotU5PkIh/3u+9NxMMtvrUWiXJ7NEVnDj
+	 87OCOJFJtQWnp2T4iBPA4wfdS/N4VZc8gDKDPX6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgENNuu (ORCPT
+        id S1726166AbgENNvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:50:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726067AbgENNut (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:50:49 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 453F6C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:50:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=oUb9XRa4HSf+di+9adEfNnhbqfuLOkGDaR9A8N50SmY=; b=iUT7/JziNjm5u+tScAhcV8xfbC
-        1z3ZEoVhzeP2ZkB5SCAzzt+S0GOxdUUKKo7K8EherRQ4kR6Ja2j9KrCLu0BlZ4sMl6JxzPtcq9od3
-        +qpg+lO2Lq1reJmnkRfJ6SfoS+GP3YRxhjfWZWbMNpllNCb6j8JrGgijxpVvATOLi+flAsPqY6Qc1
-        yWU75AUYlRyh/S5kvLZ7QUeAyCjKc19SIHiKRsZHL0zjwdoY2yrjNsMYaQ+uObMhuEjrCVInyBYtz
-        XvqvO8MZOa4O7DGQZmGzS/cAOasvl7Uk2nCBwhAYWVT3trNDe41xQmoLI+ozXwgT5y2QW+eTyL2ak
-        o6GY8awA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZEFm-0000C0-Ut; Thu, 14 May 2020 13:50:27 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A7B46301A66;
-        Thu, 14 May 2020 15:50:25 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 944742B852D66; Thu, 14 May 2020 15:50:25 +0200 (CEST)
-Date:   Thu, 14 May 2020 15:50:25 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
-Message-ID: <20200514135025.GZ2978@hirez.programming.kicks-ass.net>
-References: <20200513124021.GB20278@willie-the-truck>
- <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
- <20200513165008.GA24836@willie-the-truck>
- <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com>
- <20200513174747.GB24836@willie-the-truck>
- <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com>
- <20200513212520.GC28594@willie-the-truck>
- <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com>
- <20200514110537.GC4280@willie-the-truck>
- <CANpmjNMTsY_8241bS7=XAfqvZHFLrVEkv_uM4aDUWE_kh3Rvbw@mail.gmail.com>
+        Thu, 14 May 2020 09:51:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726011AbgENNvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 09:51:41 -0400
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3D7B20756
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589464300;
+        bh=U4WS7dpPUSnHoDDXd9I/RGkZKydgvH6uscT6wgd5yaA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=10yB1NOW59ZFLk88tVol6JSCXSW16g5KS52gy+76Le+Tx7PliiJwrDveF5QUp3aAc
+         f61hKPaNOqkKM/2+UmfCiYuO4Jfs+HSy+dc4Gmiq0HieYQPdWNpKME8aLXz7MuovlT
+         /hy6GRU1SUPCaSfNSwajP+sQsgP/LEet6da+KIJY=
+Received: by mail-ot1-f46.google.com with SMTP id w22so2191944otp.5
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:51:40 -0700 (PDT)
+X-Gm-Message-State: AOAM532hsOYeLq5Rjs0YlfWhDtEGXgaQ4rmGGWirZqyUGe8n/A259ckL
+        fz+1nFLwXqnGu9PtpPuIztvvdOxjOITOkPuBHA==
+X-Google-Smtp-Source: ABdhPJzQUESjwS7Ih36p4leA1o497JSOSd1+5C+3ygMzeFo3qlL7lPTUyx4LBbQ+Ukd+XPHe6ro8V61dxXyaOPE9BZM=
+X-Received: by 2002:a9d:1441:: with SMTP id h59mr3620806oth.192.1589464299942;
+ Thu, 14 May 2020 06:51:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNMTsY_8241bS7=XAfqvZHFLrVEkv_uM4aDUWE_kh3Rvbw@mail.gmail.com>
+References: <20200513132114.6046-1-m.szyprowski@samsung.com>
+ <CGME20200513133310eucas1p176c920345e7f05f670e26e330b358d7f@eucas1p1.samsung.com>
+ <20200513133245.6408-1-m.szyprowski@samsung.com> <20200513133245.6408-19-m.szyprowski@samsung.com>
+In-Reply-To: <20200513133245.6408-19-m.szyprowski@samsung.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 14 May 2020 08:51:27 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLwEB_YMzDDQ=nt0_Tq-BGGFEW64BagPN-FbDeOnLpYCA@mail.gmail.com>
+Message-ID: <CAL_JsqLwEB_YMzDDQ=nt0_Tq-BGGFEW64BagPN-FbDeOnLpYCA@mail.gmail.com>
+Subject: Re: [PATCH v5 19/38] drm: panfrost: fix common struct sg_table
+ related issues
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        linaro-mm-sig@lists.linaro.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 03:35:58PM +0200, Marco Elver wrote:
->   4. __no_kcsan functions should never be spuriously inlined into
-> instrumented functions, causing the accesses of the __no_kcsan
-> function to be instrumented. [Satisfied by Clang >= 7. All GCC
-> versions are broken.]
+On Wed, May 13, 2020 at 8:33 AM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+>
+> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+> returns the number of the created entries in the DMA address space.
+> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+> dma_unmap_sg must be called with the original number of the entries
+> passed to the dma_map_sg().
+>
+> struct sg_table is a common structure used for describing a non-contiguous
+> memory buffer, used commonly in the DRM and graphics subsystems. It
+> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+> and DMA mapped pages (nents entry).
+>
+> It turned out that it was a common mistake to misuse nents and orig_nents
+> entries, calling DMA-mapping functions with a wrong number of entries or
+> ignoring the number of mapped entries returned by the dma_map_sg()
+> function.
+>
+> To avoid such issues, lets use a common dma-mapping wrappers operating
+> directly on the struct sg_table objects and use scatterlist page
+> iterators where possible. This, almost always, hides references to the
+> nents and orig_nents entries, making the code robust, easier to follow
+> and copy/paste safe.
+>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Reviewed-by: Steven Price <steven.price@arm.com>
+> ---
+> For more information, see '[PATCH v5 00/38] DRM: fix struct sg_table nents
+> vs. orig_nents misuse' thread:
+> https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_gem.c | 4 ++--
+>  drivers/gpu/drm/panfrost/panfrost_mmu.c | 7 +++----
+>  2 files changed, 5 insertions(+), 6 deletions(-)
 
-The current noinstr annotation implies noinline, for a similar issue, we
-need the function to be emitted in a specific section. So while yuck,
-this is not an immediate issue for us.
+Reviewed-by: Rob Herring <robh@kernel.org>
