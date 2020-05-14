@@ -3,57 +3,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B854C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA4E5206D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8647A206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589432178;
-	bh=tS6PKCuuaOVh0/HHtSVgwzL/oCVDFPvX06UPgSGQWhE=;
+	s=default; t=1589432247;
+	bh=Lte4B9W8zW8d5KMicJ/udk+nHQDdtuOAvFltY0KBD08=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MEz27BXC4p7Wqjp4/3qL/Gto81bKNDAi2/MJUBe1xxeEHDWB21Clzy5nrCqG8/8T4
-	 heE4BV0SR4ADdLUiJKtFIsw39RVhCJI84XZgfnOXld7Afo36mr1exU/wZj6wy/IrnC
-	 +B++TuBOYryrttDIpAeKMeZfHjPaIVLkXIVPhdkM=
+	b=T3n/GL7HX8IKZQZYHcOsvMIRBED2wH6BWR3sqnNLXQQBvj3DS6Jeet3oTi0ghEJit
+	 Cts07KvzUZMmlCYn+nfafv8ImJVUseYT6c3zHRavuTp9SjMzDKtOJxK/QwdJm4meeW
+	 XjLA/jnMflVFlmdlMFQ5FFFt4zLBeXCPG89QTff4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725967AbgENE4R (ORCPT
+        id S1726031AbgENE50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 00:56:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39424 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 00:57:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbgENE4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 00:56:17 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        id S1725794AbgENE50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 00:57:26 -0400
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8420020760
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:56:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3CFF20734
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589432176;
-        bh=tS6PKCuuaOVh0/HHtSVgwzL/oCVDFPvX06UPgSGQWhE=;
+        s=default; t=1589432245;
+        bh=Lte4B9W8zW8d5KMicJ/udk+nHQDdtuOAvFltY0KBD08=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=z6yd1RCNAg146bMIZgBYghDRAwc8CNO0E9GDvv6Y22+HXx7bV9FGw1JGbbLffzfNY
-         p5zT5zxdwQdwayO2C+sm7SXURaZ5Y4KAPetm7j9EjgU4lZrcGyImwlMZkC+ag3osPC
-         4KTTWpE4kEmlltBfqGJE+TqKQDPgvwsKxo1KqIls=
-Received: by mail-wr1-f50.google.com with SMTP id l11so2165204wru.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 21:56:16 -0700 (PDT)
-X-Gm-Message-State: AOAM5303WMVmnGXKR753r7W4fwS758yLEY2b/lrrXOUHPvUN2EaEKktd
-        iGGnIq4o31qZl4aEBptZrHZkfM5WsV/V5w5NeWAP7g==
-X-Google-Smtp-Source: ABdhPJwtUZFFJakPLlCkH6LG/je1q4bEiHwcCHjYcddMslsCKpxPP5mdKFwD8PzXc3D9vYl+MjTL6h4JitBekxFSjuI=
-X-Received: by 2002:adf:fe45:: with SMTP id m5mr3019712wrs.257.1589432174795;
- Wed, 13 May 2020 21:56:14 -0700 (PDT)
+        b=O5Hv25Iey76uaYgemEZ9MYmy4MpRywmODNENvrAcPnWOOrJRPge/Te6sN9Cq5W0QM
+         kuZCpppMj7/rPo1mK502CBWKBpRazvowvPpobQhb9aGPedBBlAnzrJ2v5yGJ99I3NG
+         mtyCw3Y4NRtCJ7JrW4F0mdkLCRbjR56eh2xg4KPU=
+Received: by mail-wm1-f51.google.com with SMTP id u16so30873054wmc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 21:57:25 -0700 (PDT)
+X-Gm-Message-State: AGi0PubsWLtteJVaW0euEhMC+56RLHkS4AzJygkjEFNe2dBlAlYImYW0
+        8PC3exxQAPqGl8yylYjDjF6o/8xrbi5V+mtrP7k/Hg==
+X-Google-Smtp-Source: APiQypKrIQvWFM7EQquJSqdEwgN5VUXbceYvnW5X+NMjZi66eekOuooPwPJgNozPSGt3hk+XzJQjmP7IJXx9UvGuW2Q=
+X-Received: by 2002:a1c:2bc2:: with SMTP id r185mr22240467wmr.49.1589432244035;
+ Wed, 13 May 2020 21:57:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505134354.774943181@linutronix.de> <20200505134906.021552202@linutronix.de>
-In-Reply-To: <20200505134906.021552202@linutronix.de>
+References: <20200505134926.578885807@linutronix.de> <20200505135313.410702173@linutronix.de>
+In-Reply-To: <20200505135313.410702173@linutronix.de>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 13 May 2020 21:56:03 -0700
-X-Gmail-Original-Message-ID: <CALCETrXGjAnyva+xFLjg_ceZxUqWVs9aZju=5R8bYH5iSYQvOA@mail.gmail.com>
-Message-ID: <CALCETrXGjAnyva+xFLjg_ceZxUqWVs9aZju=5R8bYH5iSYQvOA@mail.gmail.com>
-Subject: Re: [patch V4 part 3 28/29] x86/entry: Convert SIMD coprocessor error
- exception to IDTENTRY
+Date:   Wed, 13 May 2020 21:57:12 -0700
+X-Gmail-Original-Message-ID: <CALCETrUYs65iSW5eeNLMtdAWuHFbg_ywE32whSh0kJ9JVZCbVw@mail.gmail.com>
+Message-ID: <CALCETrUYs65iSW5eeNLMtdAWuHFbg_ywE32whSh0kJ9JVZCbVw@mail.gmail.com>
+Subject: Re: [patch V4 part 4 01/24] x86/int3: Ensure that poke_int3_handler()
+ is not traced
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
@@ -71,7 +71,8 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
         Brian Gerst <brgerst@gmail.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -82,17 +83,12 @@ On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
 > From: Thomas Gleixner <tglx@linutronix.de>
 >
-> Convert #XF to IDTENTRY_ERRORCODE:
->   - Implement the C entry point with DEFINE_IDTENTRY
->   - Emit the ASM stub with DECLARE_IDTENTRY
->   - Handle INVD_BUG in C
->   - Remove the ASM idtentry in 64bit
->   - Remove the open coded ASM entry code in 32bit
->   - Fixup the XEN/PV code
->   - Remove the old prototyoes
->   - Remove the RCU warning as the new entry macro ensures correctness
+> In order to ensure poke_int3_handler() is completely self contained -- this
+> is called while modifying other text, imagine the fun of hitting another
+> INT3 -- ensure that everything it uses is not traced.
 >
-> No functional change.
+> The primary means here is to force inlining; bsearch() is notrace because
+> all of lib/ is.
 
 
 Acked-by: Andy Lutomirski <luto@kernel.org>
