@@ -2,101 +2,186 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89232C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFE0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E78220722
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F65206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:24:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="lbnbOpBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgENMWS (ORCPT
+        id S1727067AbgENMY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 08:22:18 -0400
-Received: from mga12.intel.com ([192.55.52.136]:34995 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbgENMWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 08:22:17 -0400
-IronPort-SDR: jq2G9j4l+MtmXiBskeawpsxih7yy4UmJ+LGfE9+Lk1E9tY6Q3W5xMH79i5d4wHG7PLmfYN7wg4
- t4Z3FDFHyuyg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 05:22:17 -0700
-IronPort-SDR: g4YTAvFTxqNPtU0jkIbc5r78CO9/Y4ylYkQmK+EhgU7xCpQhcG80N1AgmABpc/Vg8MOpmJRO+L
- MmVc/XiEeHqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,391,1583222400"; 
-   d="scan'208";a="464312030"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 14 May 2020 05:22:12 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZCsQ-006cUm-3m; Thu, 14 May 2020 15:22:14 +0300
-Date:   Thu, 14 May 2020 15:22:14 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
+        Thu, 14 May 2020 08:24:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726659AbgENMY5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 08:24:57 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62997C061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 05:24:57 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id p12so2574957qtn.13
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 05:24:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=MDY/jqEtMAaYkrjcBwZZMUT5NqpDPZcVLijHWxBZHSY=;
+        b=lbnbOpBUQPKdKhj2u3py/03HGz9QAQfhsW70J/4zygpGvFtl8OOJJ/KJMlEjyfPGt2
+         F1AOQyEoDJP1HwOoxItNFlGL+F7fif5limeDvIbQhilhARhvXa8x2BQIPXXdICR4afIf
+         q4uZKeUukSEG42qu1q4bLsFwaG2LnilC09lm3bCUVAxgn5NW8N6sgf/EsEIMQNqpQN2x
+         FeWZcyN3qoeOCh6acZqay6yCytynnk9CvZ1tYWIh/PAYT5xW3555VdLmBMrRLJpxI9yG
+         U+ZqFBmyOpCTX1TrvZGvtwPAu0KWE3BUw7Gim4BgahsMoOuqGSnpR+oSw/SbkiQTtNz0
+         PFyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=MDY/jqEtMAaYkrjcBwZZMUT5NqpDPZcVLijHWxBZHSY=;
+        b=BFlriXLN1VNQLYflz4J4nZWv01v0oYS/ZkL6pYrrATQs/JWMHifgCLyN5DJGOBKsNr
+         oN7ejt5fxyMDcz70CJ+zaOQVZbLxWQhQmwq0KNqEvMPBJj4+TytUH9k+LZcctcI+Ad6A
+         YYAqJJSCaCK6EKT8pHSkfqXU2ZU9/4Np6MTre9mWP26BbE5TYVViO06jw6Bip2Wv8MVz
+         IWSgKFOFXem75Gyhto4fo66j3q0K7fDiMD/+dnqCCvCHk2Wq2WORSu2ZVO/F0Nq2VmiF
+         2jQFIjfbfZ7C8j0BErW9wt5d//3rEMQ5huCt7tL1LqTp6SjjvbbH7XTR8JhK8OSh4a25
+         y3CQ==
+X-Gm-Message-State: AOAM531vrijIrh0E4LexQLvHqmRX1scXVGAp2bEfY51cAgSZ+3ce7f8m
+        5OPtUfw6FcGidvyScSJSM+Cy2Q==
+X-Google-Smtp-Source: ABdhPJy6ecg3eHEDh7Mm+mkG7MxI7G9M2y1I86Os1RTwzez2Z9Qi/SSJwX7yVhb0PPWXQudP4Pm94w==
+X-Received: by 2002:ac8:1418:: with SMTP id k24mr4182324qtj.344.1589459096400;
+        Thu, 14 May 2020 05:24:56 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id i59sm2439299qtb.58.2020.05.14.05.24.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 May 2020 05:24:55 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: linux-next boot error: WARNING: suspicious RCU usage in
+ bpq_device_event
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <000000000000785a6905a59a1e4a@google.com>
+Date:   Thu, 14 May 2020 08:24:54 -0400
+Cc:     allison@lohutok.net, ap420073@gmail.com,
+        David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        "wuxu.wu" <wuxu.wu@huawei.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 11/17] spi: dw: Fix native CS being unset
-Message-ID: <20200514122214.GC185537@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200508132943.9826-12-Sergey.Semin@baikalelectronics.ru>
- <CACRpkdY=wkgnYPcqSzyzNpS6ckJZs-9kXfTfdwa1E+POzOBQGA@mail.gmail.com>
- <20200513001347.dyt357erev7vzy3l@mobilestation>
- <CACRpkdZTH1DNHvi4r48nLNWp4rqyYDZTzT12hw0eTNcYmgSr3Q@mail.gmail.com>
- <20200514115558.e6cqnuxqyqkysfn7@mobilestation>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514115558.e6cqnuxqyqkysfn7@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot <syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A19DAE77-5DCD-460A-88E5-437450CBD50B@lca.pw>
+References: <000000000000785a6905a59a1e4a@google.com>
+To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Amol Grover <frextrite@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 02:55:58PM +0300, Serge Semin wrote:
-> On Thu, May 14, 2020 at 10:31:13AM +0200, Linus Walleij wrote:
-> > On Wed, May 13, 2020 at 2:13 AM Serge Semin
-> > <Sergey.Semin@baikalelectronics.ru> wrote:
 
-> BTW I experience a problem with vger.kernel.org. For some reason a few days ago
-> it started bouncing my emails back sent to the GPIO/MIPS/SPI/kernel mailing lists.
-> I've sent multiple backward messages to the postmaster (postmaster (dog) vger.kernel.org)
-> with the bounce text, but still with no response. Could you tell me who should I
-> bother with this problem to get a help with its solution? 
 
-Perhaps, helpdesk@kernel.org ?
+> On May 14, 2020, at 7:37 AM, syzbot =
+<syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com> wrote:
+>=20
+> Hello,
+>=20
+> syzbot found the following crash on:
+>=20
+> HEAD commit:    c9529331 Add linux-next specific files for 20200514
+> git tree:       linux-next
+> console output: =
+https://syzkaller.appspot.com/x/log.txt?x=3D17119f48100000
+> kernel config:  =
+https://syzkaller.appspot.com/x/.config?x=3D404a80e135048067
+> dashboard link: =
+https://syzkaller.appspot.com/bug?extid=3Dbb82cafc737c002d11ca
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>=20
+> IMPORTANT: if you fix the bug, please add the following tag to the =
+commit:
+> Reported-by: syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> WARNING: suspicious RCU usage
+> 5.7.0-rc5-next-20200514-syzkaller #0 Not tainted
+> -----------------------------
+> drivers/net/hamradio/bpqether.c:149 RCU-list traversed in non-reader =
+section!!
 
--- 
-With Best Regards,
-Andy Shevchenko
+How about teaching the bot to always CC Madhuparna and Amol for those =
+RCU-list bug reports?
 
+>=20
+> other info that might help us debug this:
+>=20
+>=20
+> rcu_scheduler_active =3D 2, debug_locks =3D 1
+> 1 lock held by ip/3967:
+> #0: ffffffff8a7bad88 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock =
+net/core/rtnetlink.c:72 [inline]
+> #0: ffffffff8a7bad88 (rtnl_mutex){+.+.}-{3:3}, at: =
+rtnetlink_rcv_msg+0x3f9/0xad0 net/core/rtnetlink.c:5458
+>=20
+> stack backtrace:
+> Hardware name: Google Google Compute Engine/Google Compute Engine, =
+BIOS Google 01/01/2011
+> Call Trace:
+> __dump_stack lib/dump_stack.c:77 [inline]
+> dump_stack+0x18f/0x20d lib/dump_stack.c:118
+> bpq_get_ax25_dev drivers/net/hamradio/bpqether.c:149 [inline]
+> bpq_device_event+0x796/0x8ee drivers/net/hamradio/bpqether.c:538
+> notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+> call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+> call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+> call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+> call_netdevice_notifiers net/core/dev.c:2042 [inline]
+> __dev_notify_flags+0x121/0x2c0 net/core/dev.c:8279
+> dev_change_flags+0x100/0x160 net/core/dev.c:8317
+> do_setlink+0xa1c/0x35d0 net/core/rtnetlink.c:2605
+> __rtnl_newlink+0xad0/0x1590 net/core/rtnetlink.c:3273
+> rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3398
+> rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
+> netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+> netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+> netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+> netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+> sock_sendmsg_nosec net/socket.c:652 [inline]
+> sock_sendmsg+0xcf/0x120 net/socket.c:672
+> ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+> ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+> __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+> do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+> entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> RIP: 0033:0x7f76dcdfcdc7
+> Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb cd 66 0f 1f 44 00 00 8b 05 =
+4a 49 2b 00 85 c0 75 2e 48 63 ff 48 63 d2 b8 2e 00 00 00 0f 05 <48> 3d =
+00 f0 ff ff 77 01 c3 48 8b 15 a1 f0 2a 00 f7 d8 64 89 02 48
+> RSP: 002b:00007ffd45eccf28 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 000000005ebd27cd RCX: 00007f76dcdfcdc7
+> RDX: 0000000000000000 RSI: 00007ffd45eccf70 RDI: 0000000000000003
+> RBP: 00007ffd45eccf70 R08: 0000000000001000 R09: fefefeff77686d74
+> R10: 00000000000005e9 R11: 0000000000000246 R12: 00007ffd45eccfb0
+> R13: 0000561a2ddea3c0 R14: 00007ffd45ed5030 R15: 0000000000000000
+> ip (3967) used greatest stack depth: 23144 bytes left
+>=20
+>=20
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>=20
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
