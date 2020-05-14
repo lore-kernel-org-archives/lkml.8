@@ -2,524 +2,242 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB873C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8F2206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 953C020671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:47:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="awjRKSMN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EoMs487N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgENLrt (ORCPT
+        id S1727050AbgENLr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:47:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbgENLrq (ORCPT
+        Thu, 14 May 2020 07:47:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48104 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726813AbgENLr5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:47:46 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAD16C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:47:46 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id i22so7668244oik.10
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8VhPOcX/YG/xDd11JGojADleD4pmQ/W7UZw5TAje7hI=;
-        b=awjRKSMNQTza5RyEL6/a/xIfs1St8oN36Nx3KVg0pNC2Tgg3AoN/GTWp1/772dVKNh
-         dTGL/PXCq/f0ruwa4RZYRVfXfCAinFxZ6y79RppvbrWViVOW9Lq4Ck+KLHojZ13Tb4dx
-         96gJhCMlKCwadIHg8epwWhY/lzoPV3YO4xEC62M2gzdEU2oaFWOm2M5jshkLY4WGwlIX
-         +wczSerVVertY81MwB+r61ygfEhbpymGRKgUPeXj971kwwzFDS0nOAeGATG008JrAh+A
-         ifDbApTyor6UmTjy1r2k8zJ0fxdq2nyPjkdbKzPlJPC6Jf97xXQrXZtbXB33naSHJ6Yt
-         0V2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8VhPOcX/YG/xDd11JGojADleD4pmQ/W7UZw5TAje7hI=;
-        b=Ru2vZlxiSWerW4Vf51A2TKcrqjIbHRrh4Z+gXUMap6HnMf76XLV8mEf/JNCm5Md+5v
-         X0O9WL/KhXJt7pBlzek4yJI+RHmn9wXjp74r6+foE5d4Vy1WvO+KXKzgsRATRI4xXnUL
-         i48qrB269QCxBjf2TGVDQMdw2aXo62wEMVu3wAh4UiKDa7Fr4LnwvFj4Cr2jSTSm6xsV
-         LzdyqRNaDGO2AIZMDZoFQzbvDkS51okCJw8pwWdvxZnogfVsXxqhgI1TxewlPLRcbry0
-         a01sjBnPljooPnuJn1iNu3/c+L9La94FGWieFKMJDkR5r4V4YJD+edDK+dQ+OCb3AiQE
-         gkbQ==
-X-Gm-Message-State: AGi0PuYdYVKqZWwFAWpkKLlnWY9BkJeMhrL3SkRnARHu8sk1OU5xYnxu
-        FMvYfvy1H6I9lhcqGEWu+zDtLZx0DElUuPKKVaf8dw==
-X-Google-Smtp-Source: APiQypIIZirr0mlhp5xpy4rSvQu/jhtqn7g+5dNO1sunRU6rtxi09cQ2veO8qCl8xhb9IhpMUgn8Cnffs91qq6dcaz8=
-X-Received: by 2002:aca:403:: with SMTP id 3mr31487698oie.166.1589456865611;
- Thu, 14 May 2020 04:47:45 -0700 (PDT)
+        Thu, 14 May 2020 07:47:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589456874;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=056DKdN3KPKaq3Rpf9197+FNfLlAWAvO0GFOK8GoZgU=;
+        b=EoMs487NxZSWz+05f954kkjaxgLGbrc4+BYBT22lB3JbChFV+JJZ26qqUtlFCoRDwlAIrj
+        F5Zx3ddonU4mznlAz5qY0BlCMc8VClQaDi9gOOSTlE2/xB09N5NA0lbyurnMxwom6RINa6
+        0AzHKlondRUYaxGUzsrydDt5KHBttB4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-449-2pjtMo-DPcWD1-g1OZKniw-1; Thu, 14 May 2020 07:47:50 -0400
+X-MC-Unique: 2pjtMo-DPcWD1-g1OZKniw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D46E7835B40;
+        Thu, 14 May 2020 11:47:45 +0000 (UTC)
+Received: from [10.36.114.168] (ovpn-114-168.ams2.redhat.com [10.36.114.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A51201C933;
+        Thu, 14 May 2020 11:47:24 +0000 (UTC)
+Subject: Re: [virtio-dev] [PATCH v3 00/15] virtio-mem: paravirtualized memory
+From:   David Hildenbrand <david@redhat.com>
+To:     teawater <teawaterz@linux.alibaba.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        virtio-dev@lists.oasis-open.org,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        kvm@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        Samuel Ortiz <samuel.ortiz@intel.com>,
+        Robert Bradford <robert.bradford@intel.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Len Brown <lenb@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+References: <20200507103119.11219-1-david@redhat.com>
+ <7848642F-6AA7-4B5E-AE0E-DB0857C94A93@linux.alibaba.com>
+ <31c5d2f9-c104-53e8-d9c8-cb45f7507c85@redhat.com>
+ <A3BBAEEE-FBB9-4259-8BED-023CCD530021@linux.alibaba.com>
+ <389b6bdc-b196-e4b9-b6be-dcac57524fdf@redhat.com>
+ <3c82e149-6c42-690e-9d58-bb8e69870fe0@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <e48ded49-9b92-7025-a06f-49b24f1c53a6@redhat.com>
+Date:   Thu, 14 May 2020 13:47:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200508204200.13481-1-sumit.semwal@linaro.org>
- <20200508204200.13481-4-sumit.semwal@linaro.org> <20200512021509.GF57962@builder.lan>
-In-Reply-To: <20200512021509.GF57962@builder.lan>
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Thu, 14 May 2020 17:17:33 +0530
-Message-ID: <CAO_48GHBgfVrs8Nn954rKayhKHFb3u0heXu0hTeXN=ENvfgK0Q@mail.gmail.com>
-Subject: Re: [v2 3/4] regulator: qcom: Add labibb driver
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, lgirdwood@gmail.com,
-        Mark Brown <broonie@kernel.org>, robh+dt@kernel.org,
-        Nisha Kumari <nishakumari@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3c82e149-6c42-690e-9d58-bb8e69870fe0@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Bjorn,
+On 14.05.20 13:10, David Hildenbrand wrote:
+> On 14.05.20 12:12, David Hildenbrand wrote:
+>> On 14.05.20 12:02, teawater wrote:
+>>>
+>>>
+>>>> 2020年5月14日 16:48，David Hildenbrand <david@redhat.com> 写道：
+>>>>
+>>>> On 14.05.20 08:44, teawater wrote:
+>>>>> Hi David,
+>>>>>
+>>>>> I got a kernel warning with v2 and v3.
+>>>>
+>>>> Hi Hui,
+>>>>
+>>>> thanks for playing with the latest versions. Surprisingly, I can
+>>>> reproduce even by hotplugging a DIMM instead as well - that's good, so
+>>>> it's not related to virtio-mem, lol. Seems to be some QEMU setup issue
+>>>> with older machine types.
+>>>>
+>>>> Can you switch to a newer qemu machine version, especially
+>>>> pc-i440fx-5.0? Both, hotplugging DIMMs and virtio-mem works for me with
+>>>> that QEMU machine just fine.
+>>>
+>>> I still could reproduce this issue with pc-i440fx-5.0 or pc.  Did I miss anything?
+>>>
+>>
+>> Below I don't even see virtio_mem. I had to repair the image (filesystem
+>> fsck) because it was broken, can you try that as well?
+>>
+>> Also, it would be great if you could test with v4.
+>>
+> 
+> Correction, something seems to be broken either in QEMU or the kernel. Once I
+> define a DIMM so it's added and online during boot, I get these issues:
+> 
+> (I have virtio-mem v4 installed in the guest)
+> 
+> #! /bin/bash
+> sudo x86_64-softmmu/qemu-system-x86_64 \
+>     -machine pc-i440fx-5.0,accel=kvm,usb=off \
+>     -cpu host \
+>     -no-reboot \
+>     -nographic \
+>     -device ide-hd,drive=hd \
+>     -drive if=none,id=hd,file=/home/dhildenb/git/Fedora-Cloud-Base-31-1.9.x86_64.qcow2,format=qcow2 \
+>     -m 1g,slots=10,maxmem=2G \
+>     -smp 1 \
+>     -object memory-backend-ram,id=mem0,size=256m \
+>     -device pc-dimm,id=dimm0,memdev=mem0 \
+>     -s \
+>     -monitor unix:/var/tmp/monitor,server,nowait
+> 
+> 
+> Without the DIMM it seems to work just fine.
+> 
 
-Thanks very much for the review.
+And another correction. 
 
-On Tue, 12 May 2020 at 07:46, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Fri 08 May 13:41 PDT 2020, Sumit Semwal wrote:
->
-> > From: Nisha Kumari <nishakumari@codeaurora.org>
-> >
-> > Qualcomm platforms have LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost)
-> > Regulators, labibb for short, which are used as power supply for
->
-> lowercase Regulators
-ok.
->
-> > LCD Mode displays.
-> >
-> > This patch adds labibb regulator driver for pmi8998 pmic, found on
->
-> Uppercase PMIC
->
-ok.
-> > SDM845 platforms.
-> >
-> > Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
-> > Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-> >
-> > --
-> > v2: sumits: reworked the driver for more common code, and addressed
-> >     review comments from v1. This includes merging regulator_ops into
-> >     one, and allowing for future labibb variations.
-> > ---
-> >  drivers/regulator/Kconfig                 |  10 +
-> >  drivers/regulator/Makefile                |   1 +
-> >  drivers/regulator/qcom-labibb-regulator.c | 288 ++++++++++++++++++++++
-> >  3 files changed, 299 insertions(+)
-> >  create mode 100644 drivers/regulator/qcom-labibb-regulator.c
-> >
-> > diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-> > index f4b72cb098ef..58704a9fd05d 100644
-> > --- a/drivers/regulator/Kconfig
-> > +++ b/drivers/regulator/Kconfig
-> > @@ -1167,5 +1167,15 @@ config REGULATOR_WM8994
-> >         This driver provides support for the voltage regulators on the
-> >         WM8994 CODEC.
-> >
-> > +config REGULATOR_QCOM_LABIBB
-> > +     tristate "QCOM LAB/IBB regulator support"
-> > +     depends on SPMI || COMPILE_TEST
-> > +     help
-> > +       This driver supports Qualcomm's LAB/IBB regulators present on the
-> > +       Qualcomm's PMIC chip pmi8998. QCOM LAB and IBB are SPMI
-> > +       based PMIC implementations. LAB can be used as positive
-> > +       boost regulator and IBB can be used as a negative boost regulator
-> > +       for LCD display panel.
-> > +
-> >  endif
-> >
-> > diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-> > index 6610ee001d9a..5b313786c0e8 100644
-> > --- a/drivers/regulator/Makefile
-> > +++ b/drivers/regulator/Makefile
-> > @@ -87,6 +87,7 @@ obj-$(CONFIG_REGULATOR_MT6323)      += mt6323-regulator.o
-> >  obj-$(CONFIG_REGULATOR_MT6358)       += mt6358-regulator.o
-> >  obj-$(CONFIG_REGULATOR_MT6380)       += mt6380-regulator.o
-> >  obj-$(CONFIG_REGULATOR_MT6397)       += mt6397-regulator.o
-> > +obj-$(CONFIG_REGULATOR_QCOM_LABIBB) += qcom-labibb-regulator.o
-> >  obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
-> >  obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
-> >  obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
-> > diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
-> > new file mode 100644
-> > index 000000000000..a9dc7c060375
-> > --- /dev/null
-> > +++ b/drivers/regulator/qcom-labibb-regulator.c
-> > @@ -0,0 +1,288 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +// Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> > +
-> > +#include <linux/module.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/regulator/driver.h>
-> > +#include <linux/regulator/of_regulator.h>
-> > +
-> > +#define REG_PERPH_TYPE                  0x04
-> > +#define QCOM_LAB_TYPE                        0x24
-> > +#define QCOM_IBB_TYPE                        0x20
-> > +
-> > +#define REG_LABIBB_STATUS1           0x08
-> > +#define REG_LABIBB_ENABLE_CTL                0x46
-> > +#define LABIBB_STATUS1_VREG_OK_BIT   BIT(7)
-> > +#define LABIBB_CONTROL_ENABLE                BIT(7)
-> > +
-> > +#define LAB_ENABLE_CTL_MASK          BIT(7)
-> > +#define IBB_ENABLE_CTL_MASK          (BIT(7) | BIT(6))
-> > +
-> > +#define POWER_DELAY                  8000
-> > +
-> > +struct labibb_regulator {
-> > +     struct regulator_desc           desc;
-> > +     struct device                   *dev;
-> > +     struct regmap                   *regmap;
-> > +     struct regulator_dev            *rdev;
-> > +     u16                             base;
-> > +     u8                              type;
-> > +};
-> > +
-> > +struct qcom_labibb {
->
-> You pretty much use this as a local variable within probe, and then you
-> use labibb_regulator in runtime. Perhaps you can just drop it?
->
-Yes, you're right. It's probably a leftover from the re-design. I will drop it.
-> > +     struct device                   *dev;
-> > +     struct regmap                   *regmap;
-> > +     struct labibb_regulator         lab;
-> > +     struct labibb_regulator         ibb;
-> > +};
-> > +
-> > +struct labibb_regulator_data {
-> > +     u16                             base;
-> > +     const char                      *name;
-> > +     const char                      *irq_name;
-> > +     u8                              type;
-> > +};
-> > +
-> > +static int qcom_labibb_regulator_is_enabled(struct regulator_dev *rdev)
-> > +{
-> > +     int ret;
-> > +     u8 val;
-> > +     struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-> > +
-> > +     ret = regmap_bulk_read(reg->regmap, reg->base +
-> > +                            REG_LABIBB_STATUS1, &val, 1);
-> > +     if (ret < 0) {
-> > +             dev_err(reg->dev, "Read register failed ret = %d\n", ret);
-> > +             return ret;
-> > +     }
-> > +
-> > +     if (val & LABIBB_STATUS1_VREG_OK_BIT)
-> > +             return 1;
-> > +     else
-> > +             return 0;
->
->         return !!(val & LABIBB_STATUS1_VREG_OK_BIT);
->
-> > +}
-> > +
-> > +static int _check_enabled_with_retries(struct regulator_dev *rdev,
-> > +                     int retries, int enabled)
-> > +{
-> > +     int ret;
-> > +     struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-> > +
-> > +     while (retries--) {
->
-> Mark's suggestion of extending _regulator_enable_delay() to support
-> polling is_enable() seems reasonable.
->
-> The only complication I can see is that code path currently doesn't have
-> any expectations of the regulator not being operational at the end -
-> this seems to offer that possibility. So some care needs to be taken
-> there.
->
-I think when I try Mark's suggestion, there will be a need to
-communicate an error if we don't get a successful check of status
-after the requested number of retries. So yes, I will try and take
-care in the next iteration.
->
-> But doing that would allow you to use regulator_enable_regmap() as your
-> .enable function directly and you can drop
-> qcom_labibb_regulator_enable()
->
-Agreed.
-> > +             /* Wait for a small period before checking REG_LABIBB_STATUS1 */
-> > +             usleep_range(POWER_DELAY, POWER_DELAY + 200);
-> > +
-> > +             ret = qcom_labibb_regulator_is_enabled(rdev);
-> > +
-> > +             if (ret < 0) {
-> > +                     dev_err(reg->dev, "Can't read %s regulator status\n",
-> > +                             reg->desc.name);
-> > +                     return ret;
-> > +             }
-> > +
-> > +             if (ret == enabled)
-> > +                     return ret;
-> > +
-> > +     }
-> > +
-> > +     return -EINVAL;
-> > +}
-> > +
-> > +static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
-> > +{
-> > +     int ret, retries = 10;
-> > +     struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-> > +
-> > +     ret = regulator_enable_regmap(rdev);
-> > +
-> > +     if (ret < 0) {
-> > +             dev_err(reg->dev, "Write failed: enable %s regulator\n",
-> > +                     reg->desc.name);
-> > +             return ret;
-> > +     }
-> > +
-> > +     ret = _check_enabled_with_retries(rdev, retries, 1);
-> > +     if (ret < 0) {
-> > +             dev_err(reg->dev, "retries exhausted: enable %s regulator\n",
-> > +                     reg->desc.name);
-> > +             return ret;
-> > +     }
-> > +
-> > +     if (ret)
-> > +             return 0;
->
-> This looks weird; check for timeout, check for errors and then return
-> success.
+Using QEMU v5.0.0, Linux 5.7-rc5, untouched
+Fedora-Cloud-Base-32-1.6.x86_64.qcow2, I get even without any memory hotplug:
 
-Yes, it does look weird - that's because the
-_check_enabled_with_retries returns 1 if it matches what you asked to
-check (enable or disable via last argument). That should've been coded
-differently.
+#! /bin/bash
+sudo x86_64-softmmu/qemu-system-x86_64 \
+    -machine pc-i440fx-5.0,accel=kvm,usb=off \
+    -cpu host \
+    -no-reboot \
+    -nographic \
+    -device ide-hd,drive=hd \
+    -drive if=none,id=hd,file=/home/dhildenb/git/Fedora-Cloud-Base-32-1.6.x86_64.qcow2,format=qcow2 \
+    -m 5g,slots=10,maxmem=6G \
+    -smp 1 \
+    -s \
+    -kernel /home/dhildenb/git/linux/arch/x86/boot/bzImage \
+    -append "console=ttyS0 rd.shell nokaslr swiotlb=noforce" \
+    -monitor unix:/var/tmp/monitor,server,nowait
 
-It should go away with the above mentioned rework.
->
-> > +
-> > +
-> > +     dev_err(reg->dev, "Can't enable %s\n", reg->desc.name);
-> > +     return -EINVAL;
-> > +}
-> > +
-> > +static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
-> > +{
-> > +     int ret, retries = 2;
-> > +     struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-> > +
-> > +     ret = regulator_disable_regmap(rdev);
-> > +
-> > +     if (ret < 0) {
-> > +             dev_err(reg->dev, "Write failed: disable %s regulator\n",
-> > +                     reg->desc.name);
-> > +             return ret;
-> > +     }
-> > +
-> > +     ret = _check_enabled_with_retries(rdev, retries, 0);
->
-> I don't think we care about waiting for the regulator to turning off,
-> might be nice to ensure that an off/on cycle really is allowed to take
-> its time though. So specifying an desc->off_on_delay of 8200 * 2 (the
-> worst case usleep_range() * retries) should take care of this.
 
-Oh, that's neat. Will update.
->
-> And then you should be able to just use regulator_disable_regmap() as
-> your .disable function.
-+1.
->
-> > +     if (ret < 0) {
-> > +             dev_err(reg->dev, "retries exhausted: disable %s regulator\n",
-> > +                     reg->desc.name);
-> > +             return ret;
-> > +     }
-> > +
-> > +     if (!ret)
-> > +             return 0;
-> > +
-> > +     dev_err(reg->dev, "Can't disable %s\n", reg->desc.name);
-> > +     return -EINVAL;
-> > +}
-> > +
-> > +static struct regulator_ops qcom_labibb_ops = {
-> > +     .enable                 = qcom_labibb_regulator_enable,
-> > +     .disable                = qcom_labibb_regulator_disable,
-> > +     .is_enabled             = qcom_labibb_regulator_is_enabled,
-> > +};
-> > +
-> > +static int register_labibb_regulator(struct qcom_labibb *labibb,
-> > +                             const struct labibb_regulator_data *reg_data,
-> > +                             struct device_node *of_node)
-> > +{
-> > +     int ret;
-> > +     struct labibb_regulator *reg;
-> > +     struct regulator_config cfg = {};
-> > +
-> > +     if (reg_data->type == QCOM_LAB_TYPE) {
-> > +             reg = &labibb->lab;
-> > +             reg->desc.enable_mask = LAB_ENABLE_CTL_MASK;
-> > +     } else {
-> > +             reg = &labibb->ibb;
-> > +             reg->desc.enable_mask = IBB_ENABLE_CTL_MASK;
-> > +     }
-> > +
-> > +     reg->dev = labibb->dev;
-> > +     reg->base = reg_data->base;
-> > +     reg->type = reg_data->type;
-> > +     reg->regmap = labibb->regmap;
-> > +     reg->desc.enable_reg = reg->base + REG_LABIBB_ENABLE_CTL;
-> > +     reg->desc.enable_val = LABIBB_CONTROL_ENABLE;
-> > +     reg->desc.of_match = reg_data->name;
-> > +     reg->desc.name = reg_data->name;
-> > +     reg->desc.owner = THIS_MODULE;
-> > +     reg->desc.type = REGULATOR_VOLTAGE;
-> > +     reg->desc.ops = &qcom_labibb_ops;
-> > +
-> > +     cfg.dev = labibb->dev;
-> > +     cfg.driver_data = reg;
-> > +     cfg.regmap = labibb->regmap;
-> > +     cfg.of_node = of_node;
-> > +
-> > +     reg->rdev = devm_regulator_register(labibb->dev, &reg->desc,
-> > +                                                     &cfg);
->
-> Do you really need to wrap this line?
-No :) - rework leftover. Will correct.
->
-> > +     if (IS_ERR(reg->rdev)) {
-> > +             ret = PTR_ERR(reg->rdev);
-> > +             dev_err(labibb->dev,
-> > +                     "unable to register %s regulator\n", reg_data->name);
-> > +             return ret;
-> > +     }
-> > +     return 0;
->
->         return PTR_ERR_OR_ZERO(reg->rdev);
->
-> > +}
-> > +
-> > +static const struct labibb_regulator_data pmi8998_labibb_data[] = {
-> > +     {0xde00, "lab", "lab-sc-err", QCOM_LAB_TYPE},
->
-> Please shorten the interrupt to just "sc-err".
-Ok. And actually then I can remove it off from the
-labibb_regulotor_data too, since it will be the same for both the
-regulators.
->
-> > +     {0xdc00, "ibb", "ibb-sc-err", QCOM_IBB_TYPE},
-> > +     { },
-> > +};
-> > +
-> > +static const struct of_device_id qcom_labibb_match[] = {
-> > +     { .compatible = "qcom,pmi8998-lab-ibb", .data = &pmi8998_labibb_data},
-> > +     { },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, qcom_labibb_match);
-> > +
-> > +static int qcom_labibb_regulator_probe(struct platform_device *pdev)
-> > +{
-> > +     struct qcom_labibb *labibb;
-> > +     struct device_node *child;
-> > +     const struct of_device_id *match;
-> > +     const struct labibb_regulator_data *reg;
-> > +     u8 type;
-> > +     int ret;
-> > +
-> > +     labibb = devm_kzalloc(&pdev->dev, sizeof(*labibb), GFP_KERNEL);
-> > +     if (!labibb)
-> > +             return -ENOMEM;
-> > +
-> > +     labibb->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> > +     if (!labibb->regmap) {
-> > +             dev_err(&pdev->dev, "Couldn't get parent's regmap\n");
-> > +             return -ENODEV;
-> > +     }
-> > +
-> > +     labibb->dev = &pdev->dev;
-> > +
-> > +     match = of_match_device(qcom_labibb_match, &pdev->dev);
-> > +     if (!match)
-> > +             return -ENODEV;
-> > +
-> > +     for (reg = match->data; reg->name; reg++) {
-> > +             child = of_get_child_by_name(pdev->dev.of_node, reg->name);
-> > +
-> > +             /* TODO: This validates if the type of regulator is indeed
-> > +              * what's mentioned in DT.
-> > +              * I'm not sure if this is needed, but we'll keep it for now.
-> > +              */
-> > +             ret = regmap_bulk_read(labibb->regmap,
-> > +                                     reg->base + REG_PERPH_TYPE,
-> > +                                     &type, 1);
-> > +             if (ret < 0) {
-> > +                     dev_err(labibb->dev,
-> > +                             "Peripheral type read failed ret=%d\n",
-> > +                             ret);
-> > +                     return -EINVAL;
-> > +             }
-> > +
-> > +             if ((type != QCOM_LAB_TYPE) && (type != QCOM_IBB_TYPE)) {
-> > +                     dev_err(labibb->dev,
-> > +                             "qcom_labibb: unknown peripheral type\n");
-> > +                     return -EINVAL;
-> > +             } else if (type != reg->type) {
-> > +                     dev_err(labibb->dev,
-> > +                             "qcom_labibb: type read %x doesn't match DT %x\n",
-> > +                             type, reg->type);
-> > +                     return -EINVAL;
-> > +             }
-> > +
-> > +             ret = register_labibb_regulator(labibb, reg, child);
-> > +             if (ret < 0) {
-> > +                     dev_err(&pdev->dev,
-> > +                             "qcom_labibb: error registering %s regulator: %d\n",
-> > +                             child->full_name, ret);
->
-> You already printed in register_labibb_regulator() so no need to print
-> again.
-Got it.
->
-> > +                     return ret;
-> > +             }
-> > +     }
-> > +
-> > +     dev_set_drvdata(&pdev->dev, labibb);
->
-> rdev_get_drvdata() returns cfg.driver_data, so you don't need this one.
-Got it, and it ties to your other comment about struct qcom_labibb. Will update.
->
-> Regards,
-> Bjorn
->
-> > +     return 0;
-> > +}
-> > +
-> > +static struct platform_driver qcom_labibb_regulator_driver = {
-> > +     .driver         = {
-> > +             .name           = "qcom-lab-ibb-regulator",
-> > +             .of_match_table = qcom_labibb_match,
-> > +     },
-> > +     .probe          = qcom_labibb_regulator_probe,
-> > +};
-> > +module_platform_driver(qcom_labibb_regulator_driver);
-> > +
-> > +MODULE_DESCRIPTION("Qualcomm labibb driver");
-> > +MODULE_LICENSE("GPL v2");
-> > --
-> > 2.26.2
-> >
+Observe how big the initial RAM even is!
 
-Best,
-Sumit.
+
+So this is no DIMM/hotplug/virtio_mem issue. With memory hotplug, it seems to get
+more likely to trigger if "swiotlb=noforce" is not specified.
+
+"swiotlb=noforce" seems to trigger some pre-existing issue here. Without
+"swiotlb=noforce", I was only able to observe this via pc-i440fx-2.1,
+
+-- 
+Thanks,
+
+David / dhildenb
+
