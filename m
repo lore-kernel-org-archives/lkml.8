@@ -2,118 +2,146 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6494DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47460C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63764205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:11:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589415104;
-	bh=RUjSpMND5aMOfaKqLcHoLIHBP8YKcPlobA2rAbNdzyA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tvGq3Wbos6dNSBsxRu2tXBI98CtZHtbfnYc3s7BgnPwdNkEw1i1CEEBBX2vSNGn7y
-	 GYs6/Q+3TWNW9xICB2b+q5iGUD2+1iN+dz3+lKwg+BAd4Aq013e4UCnxRwiNCGHvK1
-	 soVFm+64r3rFiVkV6/UnvgVm//Lv19TcbstWKiJU=
+	by mail.kernel.org (Postfix) with ESMTP id 56DFA205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:12:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="vgZM8K82"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732944AbgENALn (ORCPT
+        id S1732986AbgENAMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 20:11:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732871AbgENALm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 20:11:42 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF44C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:11:42 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id l19so1514991lje.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:11:42 -0700 (PDT)
+        Wed, 13 May 2020 20:12:18 -0400
+Received: from mail-bn7nam10on2120.outbound.protection.outlook.com ([40.107.92.120]:65056
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732871AbgENAMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 20:12:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HcGoiDRn6oHz62lpOmjwhnFE3fAh+I/gaHXU7iVhYMJ4UuGlE+Jz56B43uJHt2GE458uO51ljAqPHvcwAD88j3bs4gXURvgLemeXMh5RWhdT6oczuZlNI7TTYXheg0M5DAkrFvwvkgNIbt+8vg/hcmCZHHDmF8uWmu/Bmw4oKBByaM0ELp/FPC72bQUuSVskY15+6LPNc4UKdOlio1VeDh9NniwwagESt6Z/flEb4oufIyfbd1xEJuSIgs/E4SCVrcmIO/wJYYHcvuCSHIuqLO3k0qUxWt5vnckZTGhR727fAelDL6gWIK08l7aC2rpCaahl5JpTDPz+pNpoD7Ey8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wx2jdNqVOv0BSQ94JD5tkM39/gGO37pcIhnpr6euQtA=;
+ b=X7p8jz5xpaTcpP0QE+hK8LbdZi3nW/ju2v8JEmjcWAWo9t/zJhHhqRWpSFTDyYMcCojgRUOUQUTw3kp6AkvVu/elAg7DE1eIB6sGt6rG/azc8uTeLGtnMWbJIMQG/6ifhXr/sHDPsP+2gdiQN21B97+36TRZbIUgjesKEj0Bei+k6VqEfINaLnrcSLtGH1aROHxhgOVAp9sV7WV31uKCFytdoOf+/TSdxbL0q4RPCb8PPVw0ZwoF4sYWTROjya4HDA2QA6n4Zqc6jyTGYN5g1SvCti87WjGt86N5qmVKKOWQ2P+UbWVpsS/aujJHbJCBS+iUvIDS/ihKD1S7qoi9kw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=utoJ2tKHLEz+lZ3hja/CgFMrWscoXl/r2VYjQKIyAGQ=;
-        b=dgAGAPUhoFn+CuYLX3qhe1jMrseuW5lWoLa9YJnJqxEirnWvTEs0V9fdT4wR2Pbuav
-         ksHfg5B1xR6nbSC/FbwhfAwAEkiYvr/0yCXzPdNE2tC1kmuWjl2FDCJU8eshKLGL7qug
-         7hQYoTeBsfOX8bFMOOk/iDCziz5PVRMkoOVPI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=utoJ2tKHLEz+lZ3hja/CgFMrWscoXl/r2VYjQKIyAGQ=;
-        b=AAV9ggVAKw1FA/XEkEyU2Mb9Ofv3IhmNTa+eUhrKSl87qVBf5z0Q+2R6WuWBVkwyma
-         EhQVwy2M0FQTiibUM4D5NNvdY8BWXOaE9qZlPA+v5rlSSgz8UINnvhOY55yE5bh1qjp4
-         Ln5pmXWbqFvllSm+P+7L0yrniJRpU00IsIsA4PFX2wgb0bVAYYj2RFs/lQTIktaISqG/
-         oJqX9HOTV8cUNAlCzN9hO9oaaU2FSxphI+utUsLsOMbLrB93EAF0hDocPF+/OTaUfI8K
-         jgxL3vuvVnRan9lVsGssEM/BmoZGtyErakAnTqVz9PjjBt6k0eT8XvPLJupFHrkVMV7T
-         tpzA==
-X-Gm-Message-State: AOAM532aDqBpQJnZjHlWQbkOK17MseFMryavK/dbhj47qivyawQ2S2YG
-        qq7MkM8COco0Xn081Vd0lRZSFoUCBaw=
-X-Google-Smtp-Source: ABdhPJywFgccVYTcROgf5j0u5LqQd47crbBSwhw9QnDZNR9yJIHoZRjQvqNpjeW2eRi5xUNJjair4Q==
-X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr879429ljm.165.1589415099959;
-        Wed, 13 May 2020 17:11:39 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id f2sm486498ljg.98.2020.05.13.17.11.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 17:11:38 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id f18so1495733lja.13
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:11:37 -0700 (PDT)
-X-Received: by 2002:a05:651c:319:: with SMTP id a25mr879037ljp.209.1589415097255;
- Wed, 13 May 2020 17:11:37 -0700 (PDT)
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wx2jdNqVOv0BSQ94JD5tkM39/gGO37pcIhnpr6euQtA=;
+ b=vgZM8K823F5ee0xMVTOBCrye9tmhwQAxh3csVrj0WQLUmcgRv9mdgSmJJE1Av7xRmKdM1JRu9yK4Paog/GGyQ2VHEBJEbqw8OhwKftuJSCJUjAkDKIrTFKxiUJ0FS0t5QHQzZk9QpV7rqeS5ylMCkqTtS11X1f+DEyoqlPDVTFk=
+Authentication-Results: amperecomputing.com; dkim=none (message not signed)
+ header.d=none;amperecomputing.com; dmarc=none action=none
+ header.from=os.amperecomputing.com;
+Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
+ BYAPR01MB4359.prod.exchangelabs.com (2603:10b6:a03:a1::25) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2979.29; Thu, 14 May 2020 00:12:11 +0000
+Received: from BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::296c:b848:8bf0:6f2c]) by BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::296c:b848:8bf0:6f2c%5]) with mapi id 15.20.2979.033; Thu, 14 May 2020
+ 00:12:11 +0000
+From:   Tuan Phan <tuanphan@os.amperecomputing.com>
+Cc:     patches@amperecomputing.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Neil Leeder <nleeder@codeaurora.org>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] ACPI/IORT: Fix PMCG node always look for a single ID mapping.
+Date:   Wed, 13 May 2020 17:12:02 -0700
+Message-Id: <1589415122-5899-1-git-send-email-tuanphan@os.amperecomputing.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR06CA0005.namprd06.prod.outlook.com
+ (2603:10b6:a03:d4::18) To BYAPR01MB4598.prod.exchangelabs.com
+ (2603:10b6:a03:8a::18)
 MIME-Version: 1.0
-References: <20200509120707.188595-2-arnd@arndb.de> <87v9l24qz6.fsf@kamboji.qca.qualcomm.com>
- <87r1vq4qev.fsf@kamboji.qca.qualcomm.com> <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
- <20200513154847.GA158356@rani.riverdale.lan> <CAK8P3a3KpM91+jv6+7KSKFRpwLqf38Lz1wbGhkFFyfDb9oahgA@mail.gmail.com>
- <20200513214128.GB6733@zn.tnic> <CAK8P3a3XPCyNM7s3vbn8JYK6swA3ZpPtTWB+uhmAE3YEX-nmig@mail.gmail.com>
- <20200513222038.GC6733@zn.tnic> <CAHk-=wgybuOF+Jp2XYWqM7Xn1CW6szWQw_FgVoFh5jx_4YoCVw@mail.gmail.com>
- <20200513233616.GD6733@zn.tnic>
-In-Reply-To: <20200513233616.GD6733@zn.tnic>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 13 May 2020 17:11:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjZXFe08MiNRevJFGDvX0O6kcQTiK8GFBS7hwUAzB+LQw@mail.gmail.com>
-Message-ID: <CAHk-=wjZXFe08MiNRevJFGDvX0O6kcQTiK8GFBS7hwUAzB+LQw@mail.gmail.com>
-Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from aptiov-dev-Latitude-E7470.amperecomputing.com (4.28.12.214) by BYAPR06CA0005.namprd06.prod.outlook.com (2603:10b6:a03:d4::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3000.20 via Frontend Transport; Thu, 14 May 2020 00:12:11 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [4.28.12.214]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 377d4864-272d-488a-d57d-08d7f79b72a8
+X-MS-TrafficTypeDiagnostic: BYAPR01MB4359:|BYAPR01MB4359:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR01MB4359C072EF6B9A06EF794F2AE0BC0@BYAPR01MB4359.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 040359335D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: t1PqXy8f5ddNgqN0hQdGrRq3HtfjG4PZt2a6dceg6uIy+2Y1guonlHfNw1rVhqaHqfcEECoCnIdbFgoq2a1HUXxjS2ExnIj4RLmo8ua1Kd4VlIsuLS/RRHGU83oLGxbdgWk/gawAPrUshJSW7dWT2wYa93qz6S+v6RdIG+fz6t5GjJSDPMYKVCV0uAYQ9+HSurrnviZBDkqrNyuuQBH88NtNDjYzv/rBAGDPmW5jzm0asH8DwpUa8v7eQdkSupV1v4xSclCCJrEMzXfkTJsdl7Lf52Tl7vMY1EHOI2be/NtiI6FYpvvlSt5ntZwnGKOyQQhST5LU8SBCgcEmtGr+Z8NzOnO3oxIG6lGMAarsn51tPeK0nVweJafoQNIT6DPnyjB91vOqlcr7C3eQCLIoRZyKBdtqBREf4VHO0t3CTt4Z3qNuIhe4szeTUOKEcOiRoMWhk6GV14N42rCdwTqXY4AoiGA1MiQJcPbslZbzkLg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(39850400004)(376002)(396003)(316002)(66946007)(8676002)(6512007)(16526019)(2906002)(2616005)(6666004)(186003)(956004)(6486002)(8936002)(54906003)(478600001)(52116002)(4326008)(66556008)(26005)(109986005)(7416002)(66476007)(6506007)(5660300002)(86362001)(266003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: B2IYuX9ryQaWnIy6Ir+f6APpfPT/97FysWgSykQeMW6IKe5scmvnZ5S2IHymuGRrn+ZUvGA/2MzIuSyKLd1Hy1u3bThqM67L0D/NqWPj5nb6M3qLfm71F3ePeTiKC6JzeFEx6sPvY6g5LKmaKt4ARpcnBn4MjfvxU7LAA6hQc899evzv95uui7cB98y738hS1h4GeRdPRVonfPeLQ6J2Zg6k73slA0SjcEAW/eNS95lCu0Rl0cZBPK8O3NpaZfNf5WOILLEN7180IWqLFydXEpyPOlNO0tTyvkdMdTXwYDlc68rAeydg5vOnWhDLFEMRVmMRUddw1tllH3wiaPXPAPH7cSxIpiewlKuZOmLYdqMLZI6Kg8LYDIrh+ME1h/xzn0eE+2mJi//H5oI+TqvpL7QOOaIl/ypg7wgx2orW8oZClCknPWICMtsO8RHG+xfo6+zOZmhrAu3nJun6q0yZKKKpyFBQo70LFJdu3TGTZ+E=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 377d4864-272d-488a-d57d-08d7f79b72a8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2020 00:12:11.6414
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: W0ib1MDl/qd0hQKmOocKr0dhAA7D4vQDvITkPxd24HQezSDngWvcRHer5vr0QJ47xuiE1aodx/pQnGt833vSS6aoUSqjCh6vhYaJMS4e8AoAd22be9BAt5fYYzrlwHJe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB4359
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 4:36 PM Borislav Petkov <bp@suse.de> wrote:
->
->
-> Looking at them, they do have an mb() too so how about this then
-> instead?
->
-> #define prevent_tail_call_optimization()        mb()
+PMCG node can have zero ID mapping if its overflow interrupt
+is wire based. The code to parse PMCG node can not assume it will
+have a single ID mapping.
 
-Yeah, I think a full mb() is likely safe, because that's pretty much
-always going to be a real instruction with real semantics, and no
-amount of link-time optimizations can move it around a call
-instruction.
+Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG")
+Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
+Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+---
+v1 -> v2:
+- Use pmcg node to detect wired base overflow interrupt.
 
-I could imagine some completely UP in-order CPU that doesn't need to
-serialize with anything at all, and even "mb()" might be empty.  I
-think you can compile old ARM kernels for that. But realistically I
-think we can ignore them at least for now - I'm not sure the link-time
-optimization will even do things like that tailcall conversion, and
-I'm not convinced that old pre-ARMv7 systems will be relevant by the
-time (if) it ever does.
+v2 -> v3:
+- Address Hanjun and Robin's comments.
 
-                   Linus
+ drivers/acpi/arm64/iort.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index ed3d2d1..12bb70e 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -414,6 +414,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
+ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+ {
+ 	struct acpi_iort_smmu_v3 *smmu;
++	struct acpi_iort_pmcg *pmcg;
+ 
+ 	switch (node->type) {
+ 	case ACPI_IORT_NODE_SMMU_V3:
+@@ -441,6 +442,10 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+ 
+ 		return smmu->id_mapping_index;
+ 	case ACPI_IORT_NODE_PMCG:
++		pmcg = (struct acpi_iort_pmcg *)node->node_data;
++		if (pmcg->overflow_gsiv || node->mapping_count == 0)
++			return -EINVAL;
++
+ 		return 0;
+ 	default:
+ 		return -EINVAL;
+-- 
+2.7.4
+
