@@ -2,173 +2,146 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DB7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F02CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 640C2206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB90C20734
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:10:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="j4jZnXQW";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="qbGdGI2f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AtLYiQNv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbgENNJ7 (ORCPT
+        id S1726726AbgENNKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:09:59 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:55222 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726037AbgENNJ6 (ORCPT
+        Thu, 14 May 2020 09:10:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51272 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726037AbgENNKg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:09:58 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 7250AC0096;
-        Thu, 14 May 2020 13:09:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1589461797; bh=PqY410pparINKO2Cwe0BlHT+uN+eXq5NOBzg5cEHjUA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=j4jZnXQWBh2PvJ0ak1QDbqShZzgCwwLW0bvfKtc26U9Tqml9/S1ER/9tlcGfcyqc9
-         iz1Szr3uf60k8gNh2HxIQBsHCTRgK7yQRHY9j6hkgXOVEReoCRbJzhRgkLoxuP/Z81
-         ivHsuTeK5crIl7QfpxZtyTSqYagmJc3jMjkVCfrpURkAdHN70WhfMyxa0bkJaeGiwP
-         ZaQ/0CCZo7+3/HNi3kDC2PJLlGnOnVG1AaLQWKJvsAozChXj3EIpCcpCmop3Cl2HLp
-         puWcgBUOFZX3C1BRWg7EQKOv2YB5JWpJH67C6gTgWxlKXUafrWqFEsDE/8+UcOvT21
-         9NMIceb+Lv0QQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 7F113A0071;
-        Thu, 14 May 2020 13:09:54 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 14 May 2020 06:09:54 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.487.0; Thu, 14 May 2020 06:09:54 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UaONgcY9Gf67gWIjPFkxsc1BnUOa5S5ZYIlWPZxhZFu0v/Zj12x4Adx2tSKNJm9805A6qHbeXNxB/VDXkunaCGPBy1wLlXB89TKGBljtguTVhjDZJO1wqpmytkSUVfEff0y4IsTUB2w5Pq1OvYNmBhIewLxVIUL7kAZHtKmitzLPdTdZ5eqAWsuQOIgfP9tOejJBbAwSaDAMTmWj/joR9OcaVh2Bs3yAH9+8Z0sfmuVum+If2M+b62bS3jZPeRB5Ja7l0OuSkX4P/9ETi5iOUa/rHYostCmbz/dVJx9Gt3NcCxgjb5PcJAZLV0n1WUTAIzU8QVfn0QCL1NS9Nktxtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xUwIrsZFMQxmveJTY9Qdbs2HOo94xevG0fxqbrKQe7c=;
- b=XrxDSKfTIFG6AhlqRRemqiRL1W1iZQpyGLunHOPU1x28N9rlO0HZgYsj+Tr90TY8QzmXgATqZHdDlxD0KkcQjKStD/Yz60RSKI4qYOqbwGrgj1ffcnYd75+aq+A02HReB20hK9e+SwE8izcR9yBf1TF/Mqi4o49+pZ4e+pJezXkKajGfCD5XuHJhLTb1MVZi6UfWBnMCk15TI2lj2h72aGMGSoHua893pg8RN3Hg4EVdu9T5y6DWJw1ezmsASAi4S+JX4nFBM4UHcKK6UKSNIH4hgQtj/9fGmxCnlOcoGU/S1/UHpmJtmIrSrL3F3dGJff4YV/S8V2I04WirelxeMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xUwIrsZFMQxmveJTY9Qdbs2HOo94xevG0fxqbrKQe7c=;
- b=qbGdGI2fLUIGKly8Qk+JfDbyfeF3MoDaaMvxilqUQAqplqnPs2SsIsJkkyJDJUVuGRj0AicjVm4tFAoYx+oiYUnx7ZXaNuvx2sxY8lnqUNfUu/81RGd2H7Eh5/Ju45oY3jgWgD2kV06f2bNk/pk6AVpO9UxBJCDFG67Lm0FDrGw=
-Received: from CY4PR1201MB0136.namprd12.prod.outlook.com
- (2603:10b6:910:1a::19) by CY4PR1201MB0053.namprd12.prod.outlook.com
- (2603:10b6:910:23::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Thu, 14 May
- 2020 13:09:51 +0000
-Received: from CY4PR1201MB0136.namprd12.prod.outlook.com
- ([fe80::8d22:7d25:8892:a09]) by CY4PR1201MB0136.namprd12.prod.outlook.com
- ([fe80::8d22:7d25:8892:a09%8]) with mapi id 15.20.3000.022; Thu, 14 May 2020
- 13:09:51 +0000
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     Claudiu Zissulescu Ianculescu <claziss@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: Re: [RFC] ARC: initial ftrace support
-Thread-Topic: [RFC] ARC: initial ftrace support
-Thread-Index: AQHWBFAKr4qHDPVDOEWWdR2Z3ElRlKhcrJAAgAhjooCAAHODgIAAZgeAgEHt42Y=
-Date:   Thu, 14 May 2020 13:09:51 +0000
-Message-ID: <CY4PR1201MB01364BE5CD799059DF7B2257DEBC0@CY4PR1201MB0136.namprd12.prod.outlook.com>
-References: <20200327155355.18668-1-Eugeniy.Paltsev@synopsys.com>
- <20200327131020.79e68313@gandalf.local.home>
- <fe7ae84c-745a-04b4-dcc0-5df8cc35ee0c@synopsys.com>
- <CAL0iMy3i5+_owqJcUKWzGNFakVV2P=oFdyAWCY2LP7YTusKP_Q@mail.gmail.com>,<CY4PR1201MB01207268EA87209A55C31D44A1C60@CY4PR1201MB0120.namprd12.prod.outlook.com>
-In-Reply-To: <CY4PR1201MB01207268EA87209A55C31D44A1C60@CY4PR1201MB0120.namprd12.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=synopsys.com;
-x-originating-ip: [5.18.247.93]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fabca5f6-1469-48cd-876f-08d7f808167a
-x-ms-traffictypediagnostic: CY4PR1201MB0053:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR1201MB005324386D1937F299257AB2DEBC0@CY4PR1201MB0053.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 040359335D
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8ssKPxeiKZfZHXuOlxjpPfJr92bvu3W++LppK7HH6P/lj5Xuh78e+gX9BO2gREO8Dz/3UoKmNwQO1ACSLPTSC7XtbuwiViokHe5sXzaxl30fwiSMMP6ViH/XZwZAQMmJkJ4I/yyKrr429fpfOYm4btKgsEZix6PtyvqZ/kckmK6TvUn07y+4h4ln1qXegU2t6mEz+TS5aT67QCsNR7AoRhoMIt7BOfSvjc68QeTHRGoBW/CX80/e523RsjiMXc5QYvmQtSPRBCtrnEQ2UOdTQGcIHRd/oYCVCwaSLOIPHqDQboQKjG8P+UoDwSwUF8VPTIa9xOl38gbVE06TaiPMUGbDdMEkMN6HYNnusVD8di7aGhuXmH3XTcyALaXIKrlDZY7UIUcIO+hmrqA39tXyxqJ0554aSisjKuOhUcGTXyu15ZXbVLFfGY/4ZmwW6YRH
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR1201MB0136.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(376002)(346002)(366004)(396003)(136003)(86362001)(9686003)(55016002)(107886003)(71200400001)(33656002)(2906002)(4326008)(316002)(53546011)(478600001)(8936002)(5660300002)(8676002)(6506007)(66446008)(66476007)(52536014)(7696005)(66556008)(76116006)(91956017)(66946007)(54906003)(26005)(186003)(6916009)(64756008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: oY/aF912f9T8YMYzMteo6WUKRFUxleLFj+01ohpNUrPk5ZCyhYwyNREE3UJbpoi78u4kgQhCH8iNaExgSkfdrEnniJJfmn9Yh7UB5V9OSdHg/p16UIVQuEUZPtIoXKswwIloGujFr0WaqS51adnT1XAyZUj8hos+rNnAaxIG75jquvE4v6x1xrGMYB0QVbR3vGAr0Lq3L9KN/vOn640zRQLi65RF1jXDH9+0APY9006Dvhb3l5rMtMzh0AA0sC2Fdw84wesk6IilaF3sST+eJyDzDD4M2D+dOXDI+2U/veF7YbrjrMkCws6kizGNw3U/5aTQKzOSogcmDcVS6KrBBq8o+EUqOd2gYJUULTgGYS8MN7DDEB5QsbgDZGWISZ9mBG8+4bwPK6ywO+StsW8ymi+oCnaiyYnRtXNocswcik6kM0eV0RrUNOL03c0ow7mJfKcXKmWLcon4b1ZS4jl8J/F3aFJQGgBGo1GkI7CVrWk=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 14 May 2020 09:10:36 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B21C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:10:34 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id 4so2749362qtb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:10:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=L3hKHnlsCcttbXQ2Cja7DwdXszoqAGcuUShjDJ8b2a4=;
+        b=AtLYiQNv1DEysHFJjO4AE/VvjKevpPBCypEQwiPFNVjqFQ22w68L43Du/CffnxdPGA
+         jvp/iaLZ/Z3/k1ikBXKLS55XSv06D34pA+FGiKJ4FydjyEIZ5q92iW+aetHq6h5+IWTD
+         r51NM5Ibj7+6xYIkx07083lipNnY5lm310IR5hXy0ew4tZD6bS4aFfEmmG1Jkh6FrnoI
+         JhOhBN7nljXG8KgUePS+fJOlNlvfj/PpiQpWt+vHcERDBBkpuw4Ll2zepwpRZWsnjmfK
+         rrlAR8Fl6A8fDbUComhxxt14Gsy/26TURlGNI8CJvv9Tzp31eQmjm+F8YBOwfxLfhCtb
+         MNpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=L3hKHnlsCcttbXQ2Cja7DwdXszoqAGcuUShjDJ8b2a4=;
+        b=OETUOBLahBolb+2MbfhBl6EWyrLQYltnG5utEhr2uKUBa0ifIDSViQgU8CxjtQ9EUm
+         UWdJx3X5er2rSQglCG5zIMf3pMXZCrnLFwefnQhvEPS69M+fLKsEmwJvDkVlmHvPhMeC
+         IbrfyeqKq8paQTrTOEWt4NG1it8RrEe6OYOZz56Hv7GnjUwnFe7Mq7Exb7sNsZ5FGHNd
+         tkD6K7S2xLVrTF8Gr/E4KZsd2WXp2lIOi52Dadhy4cvQofMWASIuifyfDYunLzchUXdS
+         sWaKWkdAKeGVD/ukfU5P3W/1I8KfppPZRaWiV05S48S0/lS1nmgYYxH2Z5uMslePCdzm
+         Uncw==
+X-Gm-Message-State: AOAM532BaqVuAxUz6m6rtUhNvHKJ9EowWNft085nGMv5TZJvYkEWo7Sy
+        jFItwWaY4QTH01MpeoYKiMc=
+X-Google-Smtp-Source: ABdhPJwjIpiMj4d42nqTKB/DSAcGUqxCsVhuTFEt/CZUO1OA4or0sPqcC+kA1oroEDadbclZMtTAyg==
+X-Received: by 2002:ac8:e8f:: with SMTP id v15mr4174645qti.391.1589461833957;
+        Thu, 14 May 2020 06:10:33 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id k3sm2581889qkb.112.2020.05.14.06.10.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 06:10:33 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id EEFB940AFD; Thu, 14 May 2020 10:10:30 -0300 (-03)
+Date:   Thu, 14 May 2020 10:10:30 -0300
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH perf/core] perf intel-pt: Fix clang build failure in
+ intel_pt_synth_pebs_sample
+Message-ID: <20200514131030.GL5583@kernel.org>
+References: <20200513234738.GA21211@embeddedor>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: fabca5f6-1469-48cd-876f-08d7f808167a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2020 13:09:51.5820
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3BVY9xR7MHrbASwkTfQTIXWoq2XuHggrE9draW8S0dWCC2E/vtGHzNB2KIx32MiB8ISn2bSsrV7L/KabPDz/LA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0053
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513234738.GA21211@embeddedor>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Claudiu,=0A=
-ping!=0A=
-=0A=
-Is is possible to switch between mcount modes (Linux-style <-> baremetal-st=
-yle) via command-line options for ARC GCC?=0A=
-=0A=
->From: Alexey Brodkin <abrodkin@synopsys.com>=0A=
->Sent: Thursday, April 2, 2020 17:15=0A=
->To: Claudiu Zissulescu Ianculescu=0A=
->Cc: linux-kernel@vger.kernel.org; Steven Rostedt; Ingo Molnar; linux-snps-=
-arc@lists.infradead.org; Eugeniy Paltsev; Vineet Gupta=0A=
->Subject: RE: [RFC] ARC: initial ftrace support=0A=
->=0A=
-> Hi Claus,=0A=
->=0A=
->> -----Original Message-----=0A=
->> From: linux-snps-arc <linux-snps-arc-bounces@lists.infradead.org> On Beh=
-alf Of Claudiu Zissulescu=0A=
->> Ianculescu=0A=
->> Sent: Thursday, April 2, 2020 11:10 AM=0A=
->> To: Vineet Gupta <vgupta@synopsys.com>=0A=
->> Cc: Alexey Brodkin <abrodkin@synopsys.com>; linux-kernel@vger.kernel.org=
-; Steven Rostedt=0A=
->> <rostedt@goodmis.org>; Ingo Molnar <mingo@redhat.com>; linux-snps-arc@li=
-sts.infradead.org; Eugeniy=0A=
->> Paltsev <paltsev@synopsys.com>=0A=
->> Subject: Re: [RFC] ARC: initial ftrace support=0A=
->>=0A=
->> Hi,=0A=
->>=0A=
->> ARC-gcc has two modes to call the mcount routines. When using elf32=0A=
->> configuration, the toolchain is set to use newlib mcount. When=0A=
->> configured for linux, gcc toolchain is using a library call to _mcall=0A=
->> (single underscore)  having blink as input argument.=0A=
->> So, using the proper linux toolchain, your patch should work.=0A=
->=0A=
->=0A=
-> Is there a chance to switch to Linux-style mcount in Elf32 toolchain with=
- a command-line=0A=
-> option?=0A=
->=0A=
-> Otherwise I guess we'll need to implement some warning which explicitly s=
-ays why Elf32=0A=
-> toolchain is not usable for building the Linux kernel... at least in case=
- with ftrace enabled.=0A=
->=0A=
->-Alexey=0A=
+Em Wed, May 13, 2020 at 06:47:38PM -0500, Gustavo A. R. Silva escreveu:
+> Fix the following build failure generated with command 
+> $ make CC=clang HOSTCC=clang -C tools/ perf:
+> 
+> util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
+>                         struct branch_stack br_stack;
+>                                             ^
+> 1 error generated.
+> 
+> Fix this by reordering the members of struct br.
+
+Yeah, I noticed that as far back as with ubuntu 16.04's clang:
+
+clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)
+
+util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU
+      extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
+                        struct branch_stack br_stack;
+                                            ^
+1 error generated.
+
+
+Will fold this with the bug introducing the problem to avoid bisection
+problems.
+
+ 
+> Clang version 11.0.0 was used.
+> 
+> Fixes: f283f293a60d ("perf tools: Replace zero-length array with flexible-array")
+> Reported-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Here to fix what I break. :)
+> 
+>  tools/perf/util/intel-pt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index f17b1e769ae4..b34179e3926f 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -1799,8 +1799,8 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
+>  
+>  	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
+>  		struct {
+> -			struct branch_stack br_stack;
+>  			struct branch_entry entries[LBRS_MAX];
+> +			struct branch_stack br_stack;
+>  		} br;
+>  
+>  		if (items->mask[INTEL_PT_LBR_0_POS] ||
+> -- 
+> 2.26.2
+> 
+
+-- 
+
+- Arnaldo
