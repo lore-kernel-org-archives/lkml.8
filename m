@@ -4,52 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C57FC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84820C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38D772065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528EC2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482922;
-	bh=h/zuaQK9kLecJ0nDipmLVxXwOQZ5+twJhwYn1AyZAqI=;
+	s=default; t=1589482924;
+	bh=tV3hihFCckYSQCju7gdBpQgm2eepXq/m+TPTUYqY16w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQYwhMSoAMOnSy4SH0YoB0ot0YQ/Pfwb88Eycnq3dJ4qMB+rtuwLDHhclocvN5Xr8
-	 bdYBYPQwKDtbLUGuy9yDOSgj+iBw8WJbOG0bnm3So3wD8lbLSmFfkt5+Vpv0P94Ok4
-	 Y2aOjQZ3y+pBT6obbVjMe0YS9p4ldz1nSGoqoWEM=
+	b=nwdVvsjUEo17D1f830SWNIUE8kditcU/k1t9xSUMpuUi1lEIu5X12p3dPajsVL6I2
+	 ZqbU3qcZyaJENFf13nUnTAAMxvfbbRf+8vLVVzRtZlySxupOZSiUxdrTSM9VKWNntk
+	 G+P/FAgsIGM+6zorv/L+A8eI2vIoDNugiZq5qADA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729338AbgENSzR (ORCPT
+        id S1729698AbgENTCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:55:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55094 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:02:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729230AbgENSyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:54:51 -0400
+        id S1729341AbgENSzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1294220767;
-        Thu, 14 May 2020 18:54:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70879207ED;
+        Thu, 14 May 2020 18:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482490;
-        bh=h/zuaQK9kLecJ0nDipmLVxXwOQZ5+twJhwYn1AyZAqI=;
+        s=default; t=1589482517;
+        bh=tV3hihFCckYSQCju7gdBpQgm2eepXq/m+TPTUYqY16w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NgwTtOLuI7c/HIQaFacUaGN5xQR6kdN6XzS1LaT8+7+4hBju9EvqK9ReMCiw+su8u
-         f+/2Kmlg1eE+PAIuqe0d8bYgTEsfW6rZm2QS2pUEBFa/wMAQeW3PH7iN5nHJ3jEFEr
-         lpYUI4xUg9vxzbLEQg4aAS8MTDGVhBx1tNxurz6M=
+        b=pFx1d6MLAZh/TPZj5moTFCXYJOW9z+Lg/FYiu+rmtAzRQ9L6+u4lj5WmVnC3UHcda
+         0IwRTpWRWa0K1cL791x6Ku6pBGHdcv3g1BjLYu2wEOoVUAbcYSSCWuizGbuZH0f5kC
+         h4iMWaa7f3g1abpILUgg5iBbyh6aSkT7p6g5WPag=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 29/31] crypto: lrw - simplify error handling in create()
-Date:   Thu, 14 May 2020 14:54:11 -0400
-Message-Id: <20200514185413.20755-29-sashal@kernel.org>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 14/39] x86/unwind/orc: Don't skip the first frame for inactive tasks
+Date:   Thu, 14 May 2020 14:54:31 -0400
+Message-Id: <20200514185456.21060-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185413.20755-1-sashal@kernel.org>
-References: <20200514185413.20755-1-sashal@kernel.org>
+In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
+References: <20200514185456.21060-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,91 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Miroslav Benes <mbenes@suse.cz>
 
-[ Upstream commit d57063103332b95eac9c118900f35700a491da08 ]
+[ Upstream commit f1d9a2abff66aa8156fbc1493abed468db63ea48 ]
 
-Simplify the error handling in the LRW template's ->create() function by
-taking advantage of crypto_drop_skcipher() now accepting (as a no-op) a
-spawn that hasn't been grabbed yet.
+When unwinding an inactive task, the ORC unwinder skips the first frame
+by default.  If both the 'regs' and 'first_frame' parameters of
+unwind_start() are NULL, 'state->sp' and 'first_frame' are later
+initialized to the same value for an inactive task.  Given there is a
+"less than or equal to" comparison used at the end of __unwind_start()
+for skipping stack frames, the first frame is skipped.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Drop the equal part of the comparison and make the behavior equivalent
+to the frame pointer unwinder.
+
+Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Jones <dsj@fb.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lore.kernel.org/r/7f08db872ab59e807016910acdbe82f744de7065.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/lrw.c | 28 +++++++++++-----------------
- 1 file changed, 11 insertions(+), 17 deletions(-)
+ arch/x86/kernel/unwind_orc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/crypto/lrw.c b/crypto/lrw.c
-index 5504d1325a56a..11d079c44cafc 100644
---- a/crypto/lrw.c
-+++ b/crypto/lrw.c
-@@ -508,15 +508,15 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 3bbb399f7ead3..8a855867e4568 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -574,7 +574,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+ 	/* Otherwise, skip ahead to the user-specified starting frame: */
+ 	while (!unwind_done(state) &&
+ 	       (!on_stack(&state->stack_info, first_frame, sizeof(long)) ||
+-			state->sp <= (unsigned long)first_frame))
++			state->sp < (unsigned long)first_frame))
+ 		unwind_next_frame(state);
  
- 	err = -EINVAL;
- 	if (alg->base.cra_blocksize != LRW_BLOCK_SIZE)
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	if (crypto_skcipher_alg_ivsize(alg))
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	err = crypto_inst_setname(skcipher_crypto_instance(inst), "lrw",
- 				  &alg->base);
- 	if (err)
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	err = -EINVAL;
- 	cipher_name = alg->base.cra_name;
-@@ -529,20 +529,20 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 
- 		len = strlcpy(ecb_name, cipher_name + 4, sizeof(ecb_name));
- 		if (len < 2 || len >= sizeof(ecb_name))
--			goto err_drop_spawn;
-+			goto err_free_inst;
- 
- 		if (ecb_name[len - 1] != ')')
--			goto err_drop_spawn;
-+			goto err_free_inst;
- 
- 		ecb_name[len - 1] = 0;
- 
- 		if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
- 			     "lrw(%s)", ecb_name) >= CRYPTO_MAX_ALG_NAME) {
- 			err = -ENAMETOOLONG;
--			goto err_drop_spawn;
-+			goto err_free_inst;
- 		}
- 	} else
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_ASYNC;
- 	inst->alg.base.cra_priority = alg->base.cra_priority;
-@@ -568,17 +568,11 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 	inst->free = free;
- 
- 	err = skcipher_register_instance(tmpl, inst);
--	if (err)
--		goto err_drop_spawn;
--
--out:
--	return err;
--
--err_drop_spawn:
--	crypto_drop_skcipher(spawn);
-+	if (err) {
- err_free_inst:
--	kfree(inst);
--	goto out;
-+		free(inst);
-+	}
-+	return err;
- }
- 
- static struct crypto_template crypto_tmpl = {
+ 	return;
 -- 
 2.20.1
 
