@@ -2,181 +2,105 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EADBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44FA22065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:14:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kMwWd2No"
+	by mail.kernel.org (Postfix) with ESMTP id 434FF2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgENUON (ORCPT
+        id S1727838AbgENUSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 16:14:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727935AbgENUOM (ORCPT
+        Thu, 14 May 2020 16:18:12 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:33331 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbgENUSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 16:14:12 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91581C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:14:11 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x77so1865506pfc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:14:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EJ2/s9c4x/GRQ86qgnYEX7vyrjQPUH1/Y15C1WKzHao=;
-        b=kMwWd2NostkcBQxxD2U1/OTKQgmVqcW4Xy3QDrqqUrjfnNW+bzK2kNLTAzDZKICpL0
-         uPtTD0Ecm07LUzRt2kHXnGDt06sdSYHkOVOjn7lgtW2iuYxRr7ZrlGcWtip9LUz7HkLo
-         Cip0q6hUfXhLmYD46xfj/SzniXQe9UjMYqFVU=
+        Thu, 14 May 2020 16:18:11 -0400
+Received: by mail-il1-f197.google.com with SMTP id b29so4376974ilb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:18:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EJ2/s9c4x/GRQ86qgnYEX7vyrjQPUH1/Y15C1WKzHao=;
-        b=XHP7A1pCpap6HnBnws9aQI7sQ8FGOiDeHzdWFr/5QD72hA4Fsc3zI4T/0PLXv5MY2Q
-         MGhpwmEzKPo7yKV6bDAHabKnEg6cBZWdO1fV2ClwO56byhGSK2FJ5MpPzMyafzjj6Rh9
-         tKiL1pUdYFZW0At7PMryolEce2C9UsF4tfzcJu1sC/TtoG3Zd1X4XEmp56zhk0Aug4Lo
-         MqT9LVT0N0gzEqrQ4oXfHqUC/aI3ff7o1BSM+39LQMYxrAjfZMUG81snnldW+rx96fyw
-         4STuoTCp1uKnZ27JeYyPxpY4aE+4Jj2jjqqbwwGDh1rvzWaLlhpjrZILzsYfluoEiWds
-         snPw==
-X-Gm-Message-State: AOAM533QF0YTzzFBTwSv7TaGIFzoJJ3hXgUnxNd32hBRLhHTsLapRGP6
-        WoImE9fqWY49vzV5cYXcAiwJSg==
-X-Google-Smtp-Source: ABdhPJyPB7gYBmXgUcIuK1YP0CJLnYLlD09/RV0gTyEYarKT7RL1tBbHatRlmAwznWOixjiH6xH/CA==
-X-Received: by 2002:a63:ad0b:: with SMTP id g11mr5570990pgf.275.1589487251084;
-        Thu, 14 May 2020 13:14:11 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id b8sm18482276pjz.51.2020.05.14.13.14.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 13:14:10 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     linux-bluetooth@vger.kernel.org, bgodavar@codeaurora.org
-Cc:     alainm@chromium.org, marcel@holtmann.org, mka@chromium.org,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Bluetooth: hci_qca: Enable WBS support for wcn3991
-Date:   Thu, 14 May 2020 13:14:04 -0700
-Message-Id: <20200514131338.v2.1.I68404fc395a3dbc57c8a89ca02490013e8003a87@changeid>
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=IPg2EsJITZG2pHDONJjjBuxNwGIW/PzUBwTlpT6HwaI=;
+        b=kt7fmXUnHbc24athZKnXz7B9MoSBA5EfqsY44OWFC6nXJ8BSLSyDNMgbiGYTBJzNr9
+         R14bXiRnkZC7OcdpKoBIZ1ZiEAHuHUFwWfVdIKYMASjfqAsRaK2/BXhgwaz57ebEfVBH
+         oEZFrddbyK9ds5YCGQu8yuwwy6g/ynWCyoMUXylV6UT7lk8v2lWrLZ+198LXMPq50Nl2
+         yJCzEGbn7Jt+hU2+MolTTp4imEhkMeexkfYPQf16KXh/VX7YyKWe3PJ9JawW3mf4v0/U
+         vonOJFxCSRTDjcMgB7Z35FBE1+AXVLs4rWJvSSdx9g58tptQ4pvuUTcmQaWHOxnedNVR
+         ElqQ==
+X-Gm-Message-State: AOAM531MZcosJc7z98PaOYV8PFcU8CbQEPHZQRrVzf4IJ2KZ+tSDznQq
+        uwNbT55wEh3A2/1C5GpX3e+2MOOTuyoYGkp5cwJs15IDkCkV
+X-Google-Smtp-Source: ABdhPJxGuvQnbzRJzfnK1FrWkVtW7RepuEfB4roh2OBItqjGz5Gf9NiC+nAr4jfLh94bvRFGGTUGVduyzpa5zafKq1Fxl8+THd+a
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a5d:8b8e:: with SMTP id p14mr5755453iol.110.1589487491247;
+ Thu, 14 May 2020 13:18:11 -0700 (PDT)
+Date:   Thu, 14 May 2020 13:18:11 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004a72f505a5a16525@google.com>
+Subject: WARNING in media_create_pad_link
+From:   syzbot <syzbot+dd320d114deb3f5bb79b@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WCN3991 supports transparent WBS (host encoded mSBC). Add a flag to the
-device match data to show WBS is supported.
+Hello,
 
-This requires the matching firmware for WCN3991 in linux-firmware:
-        1a8b0dc00f77 (qca: Enable transparent WBS for WCN3991)
+syzbot found the following crash on:
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+HEAD commit:    059e7e0f usb: raw-gadget: fix typo in uapi headers
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=10e77dfa100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b484a6e53b2b06ad
+dashboard link: https://syzkaller.appspot.com/bug?extid=dd320d114deb3f5bb79b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16cd44ac100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17b12b92100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+dd320d114deb3f5bb79b@syzkaller.appspotmail.com
+
+uvcvideo 1-1:0.0: Entity type for entity Processing 1 was not initialized!
+uvcvideo 1-1:0.0: Entity type for entity Input 255 was not initialized!
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 163 at drivers/media/mc/mc-entity.c:669 media_create_pad_link+0x500/0x650 drivers/media/mc/mc-entity.c:669
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 163 Comm: kworker/0:3 Not tainted 5.7.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ panic+0x2aa/0x6e1 kernel/panic.c:221
+ __warn.cold+0x2f/0x30 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:media_create_pad_link+0x500/0x650 drivers/media/mc/mc-entity.c:669
+Code: bc ea ff ff ff eb da e8 ee e0 37 fd 0f 0b 41 bc ea ff ff ff eb cb e8 df e0 37 fd 0f 0b 41 bc ea ff ff ff eb bc e8 d0 e0 37 fd <0f> 0b 41 bc ea ff ff ff eb ad e8 c1 e0 37 fd 0f 0b 41 bc ea ff ff
+RSP: 0018:ffff8881ce48ef70 EFLAGS: 00010293
+RAX: ff
+
+
 ---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Changes in v2:
-- Rename struct to qca_capabilities and fix enum naming
-
- drivers/bluetooth/hci_qca.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index b3fd07a6f8127..96799644f0933 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -75,6 +75,9 @@ enum qca_flags {
- 	QCA_HW_ERROR_EVENT
- };
- 
-+enum qca_capabilities {
-+	QCA_CAP_WIDEBAND_SPEECH_SUPPORTED = BIT(0),
-+};
- 
- /* HCI_IBS transmit side sleep protocol states */
- enum tx_ibs_states {
-@@ -187,10 +190,11 @@ struct qca_vreg {
- 	unsigned int load_uA;
- };
- 
--struct qca_vreg_data {
-+struct qca_device_data {
- 	enum qca_btsoc_type soc_type;
- 	struct qca_vreg *vregs;
- 	size_t num_vregs;
-+	uint32_t capabilities;
- };
- 
- /*
-@@ -1691,7 +1695,7 @@ static const struct hci_uart_proto qca_proto = {
- 	.dequeue	= qca_dequeue,
- };
- 
--static const struct qca_vreg_data qca_soc_data_wcn3990 = {
-+static const struct qca_device_data qca_soc_data_wcn3990 = {
- 	.soc_type = QCA_WCN3990,
- 	.vregs = (struct qca_vreg []) {
- 		{ "vddio", 15000  },
-@@ -1702,7 +1706,7 @@ static const struct qca_vreg_data qca_soc_data_wcn3990 = {
- 	.num_vregs = 4,
- };
- 
--static const struct qca_vreg_data qca_soc_data_wcn3991 = {
-+static const struct qca_device_data qca_soc_data_wcn3991 = {
- 	.soc_type = QCA_WCN3991,
- 	.vregs = (struct qca_vreg []) {
- 		{ "vddio", 15000  },
-@@ -1711,9 +1715,10 @@ static const struct qca_vreg_data qca_soc_data_wcn3991 = {
- 		{ "vddch0", 450000 },
- 	},
- 	.num_vregs = 4,
-+	.capabilities = QCA_CAP_WIDEBAND_SPEECH_SUPPORTED,
- };
- 
--static const struct qca_vreg_data qca_soc_data_wcn3998 = {
-+static const struct qca_device_data qca_soc_data_wcn3998 = {
- 	.soc_type = QCA_WCN3998,
- 	.vregs = (struct qca_vreg []) {
- 		{ "vddio", 10000  },
-@@ -1724,7 +1729,7 @@ static const struct qca_vreg_data qca_soc_data_wcn3998 = {
- 	.num_vregs = 4,
- };
- 
--static const struct qca_vreg_data qca_soc_data_qca6390 = {
-+static const struct qca_device_data qca_soc_data_qca6390 = {
- 	.soc_type = QCA_QCA6390,
- 	.num_vregs = 0,
- };
-@@ -1860,7 +1865,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
- {
- 	struct qca_serdev *qcadev;
- 	struct hci_dev *hdev;
--	const struct qca_vreg_data *data;
-+	const struct qca_device_data *data;
- 	int err;
- 	bool power_ctrl_enabled = true;
- 
-@@ -1948,6 +1953,12 @@ static int qca_serdev_probe(struct serdev_device *serdev)
- 		hdev->shutdown = qca_power_off;
- 	}
- 
-+	/* Wideband speech support must be set per driver since it can't be
-+	 * queried via hci.
-+	 */
-+	if (data && (data->capabilities & QCA_CAP_WIDEBAND_SPEECH_SUPPORTED))
-+		set_bit(HCI_QUIRK_WIDEBAND_SPEECH_SUPPORTED, &hdev->quirks);
-+
- 	return 0;
- }
- 
--- 
-2.26.2.761.g0e0b3e54be-goog
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
