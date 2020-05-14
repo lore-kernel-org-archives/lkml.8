@@ -2,127 +2,119 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A13C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B11BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 417492065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491CF2065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:31:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fJqBY/5F"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hEOVkHcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726113AbgENQaw (ORCPT
+        id S1726128AbgENQbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 12:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbgENQaw (ORCPT
+        Thu, 14 May 2020 12:31:52 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:58616 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbgENQbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 12:30:52 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3FF5C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 09:30:50 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q24so12664879pjd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 09:30:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NZQc8uXoIuHdBfx3/ho5SqJ2T1qFdUpk12Ew1zdXSig=;
-        b=fJqBY/5FYNxLDv9s+k1bD5kgHfZb4x4QdhSQDjvTPRce5F0WExj6Yk8EKnqN5ujCqJ
-         tYDyne4MPTY5jWebIQOLSn4f3t+eJX2+MsRSvEAzyIPPIhVwKdUf51O+c0IKkjwj16EV
-         CtEG6JwwC0NoImpoajwzZB99GDA5wBo3Sfvzo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NZQc8uXoIuHdBfx3/ho5SqJ2T1qFdUpk12Ew1zdXSig=;
-        b=PJum+tKrzXtH0s89AY1NJdRo7+QTVmNI0oYadP0Xvm8/cxJDzD4QFLHAIOtCyAYviS
-         4MJ3fheFi0ConxCHzc0iChKz4gMnaDEdltoJH5b0EZUChDa6aOSD3AukZGQbiALXgVtG
-         32tQlNWw0QQge/1DLpNXkOxbqIy3QeDo32YcTiN0g+mbVU35Ey3bbmwYGS77tjWBQ9OZ
-         Lc6l9Xm1P2GvRRw/gp+x+kCaopxOa/w8/wLNz1Tksg/kRLg9dC8t2oUhNIzu3geinZyo
-         6QaXS10KIsF+pBkTBKDDo/JUezPM/xmOWcW0vgIwSBxhDraYoe3ivdhNI0v0L/VNvm1k
-         OVmQ==
-X-Gm-Message-State: AOAM533ADuRrbPNrknj0Sd09pfBUMVNhlmDl+AQPwFbC6nbjXUm/nh2m
-        z/wGlGFd2KJKcPJzOTBBSDZyKw==
-X-Google-Smtp-Source: ABdhPJwO1LU11eYIyY6fK3UdsEdl9NAr0oC6KDbrIPekP8Jj3YE72XYnPb9U++gPLJcDiY+EjAWgtQ==
-X-Received: by 2002:a17:902:7d85:: with SMTP id a5mr4964543plm.106.1589473850143;
-        Thu, 14 May 2020 09:30:50 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id w11sm2634015pfq.100.2020.05.14.09.30.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 09:30:49 -0700 (PDT)
-Date:   Thu, 14 May 2020 09:30:48 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     linux-bluetooth@vger.kernel.org, bgodavar@codeaurora.org,
-        alainm@chromium.org, marcel@holtmann.org,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Bluetooth: hci_qca: Enable WBS support for wcn3991
-Message-ID: <20200514163048.GO4525@google.com>
-References: <20200513204111.1.I68404fc395a3dbc57c8a89ca02490013e8003a87@changeid>
+        Thu, 14 May 2020 12:31:52 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04EGQVUT016590;
+        Thu, 14 May 2020 16:31:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=nANqSi2Q0m1t+eP0SLk3THs9oGj0soI3yk//uRnNE70=;
+ b=hEOVkHcXj32/V6b6MB3lwAAN44IrxvE/LvvxO4Km4rdhziN/zMnOSzVKHN4azYpPlRxd
+ 11XjvhvDux15hKkUjITrcxwQxbKbZBTGl7T4V4Q90t8gyqC5886Y8TIZ818TkRrIF4cp
+ 8/qaJAji92yrp2XErfR1ivaRTs0ttW/WrrT6m+zlA3A7ARw7ueyHpCAd2eulRcYE3rsF
+ bt1YwDnDSUbujXqUW1V2Ye+TnZ6QfIe9V+3quHv7MbwGo4LCp3NCu7rc2DN6n+WNJEQd
+ Er/aELXNOF5rOcjGRHwD9VtQGNzVm3rQIjOcnv0qhA3bHLGUt1aG4LMMu89y4RQFFOP7 VQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 3100yg3njp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 May 2020 16:31:08 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04EGMhYx027307;
+        Thu, 14 May 2020 16:31:08 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 3100ypn02r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 May 2020 16:31:08 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04EGV46q008613;
+        Thu, 14 May 2020 16:31:04 GMT
+Received: from [192.168.2.157] (/73.164.160.178)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 14 May 2020 09:31:04 -0700
+Subject: Re: stable-rc 5.4: libhugetlbfs fallocate_stress.sh: Unable to handle
+ kernel paging request at virtual address ffff00006772f000
+To:     Michal Hocko <mhocko@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     linux- stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Hugh Dickins <hughd@google.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Prakash Sangappa <prakash.sangappa@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        lkft-triage@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>
+References: <CA+G9fYvvDjA5t+zi0Zyn2F6D=7aE-Gu-m13o47LXYYfCD3SvrA@mail.gmail.com>
+ <20200514064039.GY29153@dhcp22.suse.cz>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <f3a2db67-f7b7-1bb7-340f-24806a999192@oracle.com>
+Date:   Thu, 14 May 2020 09:31:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200514064039.GY29153@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200513204111.1.I68404fc395a3dbc57c8a89ca02490013e8003a87@changeid>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9621 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005140145
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9621 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 adultscore=0
+ cotscore=-2147483648 mlxscore=0 suspectscore=0 spamscore=0 impostorscore=0
+ mlxlogscore=999 malwarescore=0 clxscore=1011 phishscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005140145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
-
-On Wed, May 13, 2020 at 08:41:25PM -0700, Abhishek Pandit-Subedi wrote:
-> WCN3991 supports transparent WBS (host encoded mSBC). Add a flag to the
-> device match data to show WBS is supported.
-
-In general this looks good to me, a few nits inside.
-
-> This requires the matching firmware for WCN3991 in linux-firmware:
->         1a8b0dc00f77 (qca: Enable transparent WBS for WCN3991)
+On 5/13/20 11:40 PM, Michal Hocko wrote:
+> On Wed 13-05-20 23:11:40, Naresh Kamboju wrote:
+>> While running libhugetlbfs fallocate_stress.sh on stable-rc 5.4 branch kernel
+>> on arm64 hikey device. The following kernel Internal error: Oops:
+>> crash dump noticed.
 > 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
+> Is the same problem reproducible on vanilla 5.4 without any stable
+> patches?
 > 
->  drivers/bluetooth/hci_qca.c | 23 +++++++++++++++++------
->  1 file changed, 17 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index b3fd07a6f8127..305976c4dcf42 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -75,6 +75,9 @@ enum qca_flags {
->  	QCA_HW_ERROR_EVENT
->  };
->  
-> +enum qca_driver_flags {
-> +	QCA_DRV_WIDEBAND_SPEECH_SUPPORTED = 0x1,
 
-s/0x1/BIT(0)/
+Or, an earlier version of 5.4-stable?  Nothing in the changelog for 5.4.41
+looks related to this issue.  There was an arm specific hugetlb change
+"arm64: hugetlb: avoid potential NULL dereference", but that is pretty
+straight forward.
 
-> +};
-
-The 'driver'/'DRV' midfix is a bit misleading. WBS support is a device
-capability, it's not something the driver supports or doesn't. Maybe
-name it 'qca_capabilities' or similar.
-
->  /* HCI_IBS transmit side sleep protocol states */
->  enum tx_ibs_states {
-> @@ -187,10 +190,11 @@ struct qca_vreg {
->  	unsigned int load_uA;
->  };
->  
-> -struct qca_vreg_data {
-> +struct qca_device_data {
->  	enum qca_btsoc_type soc_type;
->  	struct qca_vreg *vregs;
->  	size_t num_vregs;
-> +	uint32_t flags;
-
-capabilities?
+I'm guessing this may not reproduce easily.  To help reproduce, you could
+change the
+#define FALLOCATE_ITERATIONS 100000
+in .../libhugetlbfs/tests/fallocate_stress.c to a larger number to force
+the stress test to run longer.
+-- 
+Mike Kravetz
