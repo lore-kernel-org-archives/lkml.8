@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6149C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A2BC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBCEF207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55C52074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482595;
-	bh=WdLbPh1jVdQM0eslIz62960jia9I6v4aRFvUL1SGIvA=;
+	s=default; t=1589482603;
+	bh=GQkvxY6a60MfmC9Z3Ps15B2m5edknHHKmRYox64jmQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UYd6oRL29FUDP0E0Ob7BXKcEwxfOiE6WEkxG+DTkYSFb7HU51ilTTgFv8jRt4+3Pr
-	 aNtVQovelR0NYHMrUd+PqVQk49+2zf0k81bkgIqxmJ9LwgzlLeqQ0jPS8KOyRgbxiz
-	 IQxJ3y2Y4IJDaey2rWSIJ4LIGVPT/ljYLsXfjT8g=
+	b=nhRFspTYJafmQsme55Ft9AkgXjHnqX7bnvz++9dmERSaUBhJ4mUnjgu36Vu+hb6/M
+	 Z7an3ypZSkbUYhp63QIBedcOpUKUhXuCnXTCoj6wGakw4bHP5ykJsn4ZCGIm/HD0sG
+	 GK0QcrY0vIqHVQ8b5xe0t4ZYznekLfhcaLcrMYVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbgENS4e (ORCPT
+        id S1728858AbgENS4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:56:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57118 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:56:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729625AbgENS4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:56:14 -0400
+        id S1729650AbgENS4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:56:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FCF7207DA;
-        Thu, 14 May 2020 18:56:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A13632074A;
+        Thu, 14 May 2020 18:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482574;
-        bh=WdLbPh1jVdQM0eslIz62960jia9I6v4aRFvUL1SGIvA=;
+        s=default; t=1589482576;
+        bh=GQkvxY6a60MfmC9Z3Ps15B2m5edknHHKmRYox64jmQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mrl8ehKTV0R3luxRIkXe2YNXZZyMwSHY2/kT8uVG5yLt7VYE4oxiQ53gnTywop+1U
-         xtpyfIypvYWv0AdewMbTF3VR41yQR1L074pIWJiY5HEJI+7gyW411lylHmGaVRL0ur
-         5+TBKaU2lezZnW4OhFdMXbG6jeOsyZyKiTkNFcJ4=
+        b=O23BWtX+kbHwy42eKO8Z925R45e/8pn06X7GE3WEAGgGJfS2VWWbh+f8CAtR0s1G5
+         IYZ8SwV37Iz53Gn9B/ZTRIIDJhrCLbcNIx3xfsGHwrtH6dYTXiE72mwAKiWbqLk2By
+         1b/EIZDhpBaRyWfFc0ohiF3u15iBwXgdsDIPvUSI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+Cc:     Matt Jolly <Kangie@footclan.ninja>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 19/27] net: moxa: Fix a potential double 'free_irq()'
-Date:   Thu, 14 May 2020 14:55:42 -0400
-Message-Id: <20200514185550.21462-19-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 21/27] net: usb: qmi_wwan: add support for DW5816e
+Date:   Thu, 14 May 2020 14:55:44 -0400
+Message-Id: <20200514185550.21462-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185550.21462-1-sashal@kernel.org>
 References: <20200514185550.21462-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,34 +62,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Matt Jolly <Kangie@footclan.ninja>
 
-[ Upstream commit ee8d2267f0e39a1bfd95532da3a6405004114b27 ]
+[ Upstream commit 57c7f2bd758eed867295c81d3527fff4fab1ed74 ]
 
-Should an irq requested with 'devm_request_irq' be released explicitly,
-it should be done by 'devm_free_irq()', not 'free_irq()'.
+Add support for Dell Wireless 5816e to drivers/net/usb/qmi_wwan.c
 
-Fixes: 6c821bd9edc9 ("net: Add MOXA ART SoCs ethernet driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
+Acked-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/moxa/moxart_ether.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/qmi_wwan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/moxa/moxart_ether.c b/drivers/net/ethernet/moxa/moxart_ether.c
-index 0622fd03941b8..6fe61d9343cb8 100644
---- a/drivers/net/ethernet/moxa/moxart_ether.c
-+++ b/drivers/net/ethernet/moxa/moxart_ether.c
-@@ -571,7 +571,7 @@ static int moxart_remove(struct platform_device *pdev)
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 
- 	unregister_netdev(ndev);
--	free_irq(ndev->irq, ndev);
-+	devm_free_irq(&pdev->dev, ndev->irq, ndev);
- 	moxart_mac_free_memory(ndev);
- 	free_netdev(ndev);
- 
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 97f6b8130db33..5755eec00d7f8 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -950,6 +950,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x413c, 0x81b3, 8)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card (rev3) */
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
++	{QMI_FIXED_INTF(0x413c, 0x81cc, 8)},	/* Dell Wireless 5816e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81d7, 1)},	/* Dell Wireless 5821e preproduction config */
+ 	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM support*/
 -- 
 2.20.1
 
