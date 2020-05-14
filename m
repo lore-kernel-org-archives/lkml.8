@@ -2,153 +2,116 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F687C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE135C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1056920709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:04:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589493899;
-	bh=wVYlWHo32ix4biFnX8gPYhTJNt94qOjJRYKVMHTxriY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OT1lMBM9qUMByGLkPzRECt9cSNM+S+qoKeXTAJXmWJ1qmPcn4twIIPOag6F3W8zCp
-	 wRClEs4kn06wiqaXiL32kGvhOQtZbpFyeqa+9ttvwSurYrVsC0EGFO+whFlTix8vwJ
-	 hj0cl75aMkFTZ8i3TrQpOoHosIYAe+3tGvJvNi0E=
+	by mail.kernel.org (Postfix) with ESMTP id A15E420709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:05:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HgmWWKpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgENWE6 (ORCPT
+        id S1728129AbgENWF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 18:04:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgENWE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 18:04:57 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 351622065C;
-        Thu, 14 May 2020 22:04:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589493897;
-        bh=wVYlWHo32ix4biFnX8gPYhTJNt94qOjJRYKVMHTxriY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yTzO9JVf0EPIEnb4lkoCCBtbx52fNb3IfBgx8VIupsRA4ajFa3DEORz6Vlgf21HVF
-         Pqt0kPcIxYidQuySiG14cA6GXLkTd6p/0kzOusFFV22H4V1rD+8Ie2sGn4J78/700i
-         xeB6ATQWwWv1dzqhagb6mYc2d/feorzN4rjmbrC8=
-Date:   Thu, 14 May 2020 17:09:34 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH perf/core] perf intel-pt: Fix clang build failure in
- intel_pt_synth_pebs_sample
-Message-ID: <20200514220934.GT4897@embeddedor>
-References: <20200513234738.GA21211@embeddedor>
- <20200514131030.GL5583@kernel.org>
- <20200514150601.GS4897@embeddedor>
- <CAP-5=fWTCFx80Hd_97_4AxFV4KsRyYptLbQfw=XVw_j8i-EAyg@mail.gmail.com>
+        Thu, 14 May 2020 18:05:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22979 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726046AbgENWF2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 18:05:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589493926;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WbD5g5bGH+nPMmGQ14q3KYBCwhmBSOIy/E7pqLF8qco=;
+        b=HgmWWKpP7fjRMrxT2DGzUivS9oD8pwkg5U4SezAOD9nbWE06CIFBuxs4WxLvhsueKkSAy/
+        dbxI84PLlLlho7UmJPXPASonF8xC88GeZZsfOpUg3vrhH60fiCLD+B491h6r+37SNu9XWw
+        rvCpliYZ8Duciu3lTimvQ/vJzO3vTIc=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-209-8fWapEi4NNaax3ACmlmWDg-1; Thu, 14 May 2020 18:05:24 -0400
+X-MC-Unique: 8fWapEi4NNaax3ACmlmWDg-1
+Received: by mail-qt1-f199.google.com with SMTP id k54so49419qtb.18
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 15:05:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WbD5g5bGH+nPMmGQ14q3KYBCwhmBSOIy/E7pqLF8qco=;
+        b=tV/yo9yt0K0AJHfIP4sqJnq8k4Vvr1R7X6PkYrQJXaHfeyKKuP0XXc12v5VtZ3kLv2
+         vugNBP6Mwig/rJNRMBRJQJQVloAGBrwA8Up4QyInjWx/zjyFXT0Gzl7CZd/I1Cs/wYnZ
+         JBX3mNh4LmBoe9nEFm29edVmzVEpJDzNmAPXohYe5tinZKLGzoGuhxL1OSwpiyh0mB01
+         zVsKGGJMLIPQnzEIuIkFZoiJNvlDxRCnJfc6v9hcK+VgJyS9aKLJAEsKOIUXpCjm+Jrx
+         Kqo+C5R5MUt5xRulu/Enx+yC/Tz6OB30unkwXUWZOSlBZJ7be6Vs73Pq+ZDd61qfBzmL
+         M0Rw==
+X-Gm-Message-State: AOAM531pJamxv5eUJj+KfpBnjnKX5ASTQvzZZZc77Y2eQaiW0kczUEc+
+        kMppqx5bmGKDVk2YolHGULzM3CTAeLvXAVSBensbC0FHm0uLoek23nZS4MuRM1OTXFXTqRVeUey
+        vpZljT/BihRZ4d+6dncav/r7A
+X-Received: by 2002:a37:a687:: with SMTP id p129mr551132qke.45.1589493924468;
+        Thu, 14 May 2020 15:05:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwh13mhxrDmHNJ8hptY5k7/JfPCSEmEv15VKAaaUnkUI+iGTOJzFoJ4FomI5IJPGc2XiaiEog==
+X-Received: by 2002:a37:a687:: with SMTP id p129mr551104qke.45.1589493924227;
+        Thu, 14 May 2020 15:05:24 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id y28sm373922qtc.62.2020.05.14.15.05.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 15:05:23 -0700 (PDT)
+Date:   Thu, 14 May 2020 18:05:16 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Tsirkin <mst@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, x86@kernel.org
+Subject: Re: [PATCH RFC 0/5] KVM: x86: KVM_MEM_ALLONES memory
+Message-ID: <20200514220516.GC449815@xz-x1>
+References: <20200514180540.52407-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fWTCFx80Hd_97_4AxFV4KsRyYptLbQfw=XVw_j8i-EAyg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200514180540.52407-1-vkuznets@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 12:06:48PM -0700, Ian Rogers wrote:
-> On Thu, May 14, 2020 at 8:01 AM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
-> >
-> > On Thu, May 14, 2020 at 10:10:30AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Em Wed, May 13, 2020 at 06:47:38PM -0500, Gustavo A. R. Silva escreveu:
-> > > > Fix the following build failure generated with command
-> > > > $ make CC=clang HOSTCC=clang -C tools/ perf:
-> > > >
-> > > > util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
-> > > >                         struct branch_stack br_stack;
-> > > >                                             ^
-> > > > 1 error generated.
-> > > >
-> > > > Fix this by reordering the members of struct br.
-> > >
-> > > Yeah, I noticed that as far back as with ubuntu 16.04's clang:
-> > >
-> > > clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)
-> > >
-> > > util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU
-> > >       extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
-> > >                         struct branch_stack br_stack;
-> > >                                             ^
-> > > 1 error generated.
-> > >
-> > >
-> > > Will fold this with the bug introducing the problem to avoid bisection
-> > > problems.
-> > >
-> >
-> > I agree. Also, the commit hash of the "Fixes" tag only applies to the
-> > perf/core branch and, I guess that might create confusion.
+On Thu, May 14, 2020 at 08:05:35PM +0200, Vitaly Kuznetsov wrote:
+> The idea of the patchset was suggested by Michael S. Tsirkin.
 > 
+> PCIe config space can (depending on the configuration) be quite big but
+> usually is sparsely populated. Guest may scan it by accessing individual
+> device's page which, when device is missing, is supposed to have 'pci
+> holes' semantics: reads return '0xff' and writes get discarded. Currently,
+> userspace has to allocate real memory for these holes and fill them with
+> '0xff'. Moreover, different VMs usually require different memory.
 > 
-> So while this fixes the warning I believe it breaks the intent of the code.
+> The idea behind the feature introduced by this patch is: let's have a
+> single read-only page filled with '0xff' in KVM and map it to all such
+> PCI holes in all VMs. This will free userspace of obligation to allocate
+> real memory and also allow us to speed up access to these holes as we
+> can aggressively map the whole slot upon first fault.
 > 
-> tools/perf/util/branch.h:
-> struct branch_stack {
->        u64                     nr;
->        u64                     hw_idx;
->        struct branch_entry     entries[];
-> };
+> RFC. I've only tested the feature with the selftest (PATCH5) on Intel/AMD
+> with and wiuthout EPT/NPT. I haven't tested memslot modifications yet.
 > 
-> tools/perf/util/intel-pt.c:
->                struct {
->                        struct branch_stack br_stack;
->                        struct branch_entry entries[LBRS_MAX];
->                } br;
-> 
-> The array in br is trying to extend branch_stack's entries array. You
-> might have to do something like:
-> 
-> alignas(alignof(branch_stack)) char storage[sizeof(branch_stack) +
-> sizeof(branch_entry) * LBRS_MAX];
-> struct branch_stack *br = &storage;
-> 
-> malloc/free may be nicer on the eyeballs.
-> 
+> Patches are against kvm/next.
 
-Yep, I'd go for zalloc/free. There are a couple of places where dynamic
-memory is being allocated for struct branch_stack:
+Hi, Vitaly,
 
-tools/perf/util/cs-etm.c-256-   if (etm->synth_opts.last_branch) {
-tools/perf/util/cs-etm.c:257:           size_t sz = sizeof(struct branch_stack);
-tools/perf/util/cs-etm.c-258-
-tools/perf/util/cs-etm.c-259-           sz += etm->synth_opts.last_branch_sz *
-tools/perf/util/cs-etm.c-260-                 sizeof(struct branch_entry);
-tools/perf/util/cs-etm.c-261-           tidq->last_branch = zalloc(sz);
+Could this be done in userspace with existing techniques?
 
-tools/perf/util/thread-stack.c-148-     if (br_stack_sz) {
-tools/perf/util/thread-stack.c:149:             size_t sz = sizeof(struct branch_stack);
-tools/perf/util/thread-stack.c-150-
-tools/perf/util/thread-stack.c-151-             sz += br_stack_sz * sizeof(struct branch_entry);
-tools/perf/util/thread-stack.c-152-             ts->br_stack_rb = zalloc(sz);
+E.g., shm_open() with a handle and fill one 0xff page, then remap it to
+anywhere needed in QEMU?
 
-there is even function intel_pt_alloc_br_stack().
+Thanks,
 
-Just out of curiosity, why the need of such a hack in this case (the
-on-stack extension of branch_stack's entries array)?
-
-Thanks
---
-Gustavo
+-- 
+Peter Xu
 
