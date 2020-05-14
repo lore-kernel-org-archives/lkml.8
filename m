@@ -2,263 +2,152 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE62C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6529D20575
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:52:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="rPnfypHL"
+	by mail.kernel.org (Postfix) with ESMTP id 82A892065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbgENHwy (ORCPT
+        id S1726067AbgENHxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 03:52:54 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:21232 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725878AbgENHwy (ORCPT
+        Thu, 14 May 2020 03:53:55 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:47987 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726035AbgENHxz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 03:52:54 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04E7jXLs003237;
-        Thu, 14 May 2020 00:52:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=pfpt0818;
- bh=p0U/UT02XfTdoUDIf9op35mOVWZuHekP8TFVGz1ZDjg=;
- b=rPnfypHLYFLgigPGKf4Mx/WClzb5hYR63tfkrzD/Ksg22dEkFLuv5pfoatbPDujevXVA
- hszxfLeiS9NBUR1KOdEDUFREcEyRGXAUgD202CSwVyiUaQupd0P85h0v0fUXoK8E6o6b
- KEPPcu1raiNix6fiD7EWDu5olo8VaibmODVIR0MqHYXJOLErI2lwp8OMLS1WOtX3gqDb
- sBWYMlsfmiqEEijlFJdy3LPzjrZH8A2Iy8n5T/bllgnSANoj9nMSKeW3Fq2GNIWpj2t2
- 1onOuePV5L3nUiES58zUmJ11G9xOduOMpSP85PAxzBNp/NvRf24ReLfrZ2kP+JKLm0yA +g== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 3100xah94d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 00:52:45 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 14 May
- 2020 00:52:44 -0700
-Received: from bbhushan2.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 14 May 2020 00:52:41 -0700
-From:   Bharat Bhushan <bbhushan2@marvell.com>
-To:     <virtualization@lists.linux-foundation.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <virtio-dev@lists.oasis-open.org>, <jean-philippe@linaro.org>,
-        <joro@8bytes.org>, <mst@redhat.com>, <jasowang@redhat.com>,
-        <eric.auger.pro@gmail.com>, <eric.auger@redhat.com>
-CC:     Bharat Bhushan <bbhushan2@marvell.com>
-Subject: [PATCH v6] iommu/virtio: Use page size bitmap supported by endpoint
-Date:   Thu, 14 May 2020 13:22:37 +0530
-Message-ID: <20200514075237.3941-1-bbhushan2@marvell.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 14 May 2020 03:53:55 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1jZ8gg-001z41-4Z; Thu, 14 May 2020 09:53:50 +0200
+Received: from p5b13a426.dip0.t-ipconnect.de ([91.19.164.38] helo=[192.168.178.139])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jZ8gf-001s5e-Th; Thu, 14 May 2020 09:53:50 +0200
+Subject: Re: [PATCH] ia64: enable HAVE_COPY_THREAD_TLS, switch to
+ kernel_clone_args
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200513204848.1208864-1-christian.brauner@ubuntu.com>
+ <3908561D78D1C84285E8C5FCA982C28F7F6266E0@ORSMSX115.amr.corp.intel.com>
+ <79e58d9b-5a39-390c-2f0c-0d87b63442b4@physik.fu-berlin.de>
+ <20200514074606.vkc35syhdep23rzh@wittgenstein>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <6b298416-1e64-eee7-0bb4-3b1f7f67adc6@physik.fu-berlin.de>
+Date:   Thu, 14 May 2020 09:53:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-14_01:2020-05-13,2020-05-14 signatures=0
+In-Reply-To: <20200514074606.vkc35syhdep23rzh@wittgenstein>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 91.19.164.38
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Different endpoint can support different page size, probe
-endpoint if it supports specific page size otherwise use
-global page sizes.
+Hi Christian!
 
-Device attached to domain should support a minimum of
-domain supported page sizes. If device supports more
-than domain supported page sizes then device is limited
-to use domain supported page sizes only.
+On 5/14/20 9:46 AM, Christian Brauner wrote:
+>>> My last functional ia64 machine no longer powers on. Unclear if it's just
+>>> a broken power supply or something more serious. With almost nobody
+>>> in offices/labs anymore my search for another machine is proceeding
+>>> slowly.
+>>
+>> I could test it.
+> 
+> Hey Adrian,
+> 
+> That would be excellent and much appreciated.
+> Do you think you can get it tested soon?
 
-Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
----
-v5->v6
- - property length before dereference
- - Error out on no supported page sizes (page-size-mask is zero)
- - Allow device to attach to domain even it supports
-   minimum of domain supported page sizes. In that case device
-   will use domain page sizes only.
- - added format of pgsize_bitmap
+The kernel is currently building, you should get it by the evening (CEST).
 
-v4->v5:
- - Rebase to Linux v5.7-rc4
+The machine also serves as a Debian buildd which is why it's a bit more
+busy than other servers.
 
-v3->v4:
- - Fix whitespace error
+>> As for getting a working cross-compiler for ia64 in Debian, this has
+>> been on my TODO list for a while now. Building a cross-compiler for
+>> ia64 is a bit more tricky due to it's dependency on the external
+>> libunwind.
+> 
+> I hit that roadblock as well but yeah, a cross-compiler would be
+> helpful.
 
-v2->v3:
- - Fixed error return for incompatible endpoint
- - __u64 changed to __le64 in header file
+It's not difficult, it's just a bit of annoying package work including
+some trial and error testing.
 
- drivers/iommu/virtio-iommu.c      | 63 ++++++++++++++++++++++++++++---
- include/uapi/linux/virtio_iommu.h | 14 ++++++-
- 2 files changed, 71 insertions(+), 6 deletions(-)
+Once the cross-compiler is in Debian, it will be available in Ubuntu as well.
 
-diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-index 4e1d11af23c8..cbac3047a781 100644
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -78,6 +78,7 @@ struct viommu_endpoint {
- 	struct viommu_dev		*viommu;
- 	struct viommu_domain		*vdomain;
- 	struct list_head		resv_regions;
-+	u64				pgsize_bitmap;
- };
- 
- struct viommu_request {
-@@ -415,6 +416,23 @@ static int viommu_replay_mappings(struct viommu_domain *vdomain)
- 	return ret;
- }
- 
-+static int viommu_set_pgsize_bitmap(struct viommu_endpoint *vdev,
-+				    struct virtio_iommu_probe_pgsize_mask *mask,
-+				    size_t len)
-+{
-+	u64 pgsize_bitmap;
-+
-+	if (len < sizeof(*mask))
-+		return -EINVAL;
-+
-+	pgsize_bitmap = le64_to_cpu(mask->pgsize_bitmap);
-+	if (!pgsize_bitmap)
-+		return -EINVAL;
-+
-+	vdev->pgsize_bitmap = pgsize_bitmap;
-+	return 0;
-+}
-+
- static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
- 			       struct virtio_iommu_probe_resv_mem *mem,
- 			       size_t len)
-@@ -499,6 +517,9 @@ static int viommu_probe_endpoint(struct viommu_dev *viommu, struct device *dev)
- 		case VIRTIO_IOMMU_PROBE_T_RESV_MEM:
- 			ret = viommu_add_resv_mem(vdev, (void *)prop, len);
- 			break;
-+		case VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK:
-+			ret = viommu_set_pgsize_bitmap(vdev, (void *)prop, len);
-+			break;
- 		default:
- 			dev_err(dev, "unknown viommu prop 0x%x\n", type);
- 		}
-@@ -615,7 +636,7 @@ static int viommu_domain_finalise(struct viommu_endpoint *vdev,
- 	struct viommu_dev *viommu = vdev->viommu;
- 	struct viommu_domain *vdomain = to_viommu_domain(domain);
- 
--	viommu_page_size = 1UL << __ffs(viommu->pgsize_bitmap);
-+	viommu_page_size = 1UL << __ffs(vdev->pgsize_bitmap);
- 	if (viommu_page_size > PAGE_SIZE) {
- 		dev_err(vdev->dev,
- 			"granule 0x%lx larger than system page size 0x%lx\n",
-@@ -630,7 +651,7 @@ static int viommu_domain_finalise(struct viommu_endpoint *vdev,
- 
- 	vdomain->id		= (unsigned int)ret;
- 
--	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
-+	domain->pgsize_bitmap	= vdev->pgsize_bitmap;
- 	domain->geometry	= viommu->geometry;
- 
- 	vdomain->map_flags	= viommu->map_flags;
-@@ -654,6 +675,38 @@ static void viommu_domain_free(struct iommu_domain *domain)
- 	kfree(vdomain);
- }
- 
-+/*
-+ * Check whether the endpoint's capabilities are compatible with other
-+ * endpoints in the domain. Report any inconsistency.
-+ */
-+static bool viommu_endpoint_is_compatible(struct viommu_endpoint *vdev,
-+					  struct viommu_domain *vdomain)
-+{
-+	struct device *dev = vdev->dev;
-+	u64 pgsize_bitmap;
-+
-+	if (vdomain->viommu != vdev->viommu) {
-+		dev_err(dev, "cannot attach to foreign vIOMMU\n");
-+		return false;
-+	}
-+
-+	pgsize_bitmap = vdomain->domain.pgsize_bitmap & vdev->pgsize_bitmap;
-+
-+	if (pgsize_bitmap != vdomain->domain.pgsize_bitmap) {
-+		dev_err(dev, "incompatible domain bitmap 0x%lx != 0x%llx\n",
-+			vdomain->domain.pgsize_bitmap, vdev->pgsize_bitmap);
-+		return false;
-+	}
-+
-+	/* Domain pagesize bitmap is subset of device pagesize bitmap */
-+	if (pgsize_bitmap != vdev->pgsize_bitmap) {
-+		dev_info(dev, "page size bitmap used %llx, supported %llx\n",
-+			 pgsize_bitmap, vdev->pgsize_bitmap);
-+		vdev->pgsize_bitmap = pgsize_bitmap;
-+	}
-+	return true;
-+}
-+
- static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
- {
- 	int i;
-@@ -670,9 +723,8 @@ static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 		 * owns it.
- 		 */
- 		ret = viommu_domain_finalise(vdev, domain);
--	} else if (vdomain->viommu != vdev->viommu) {
--		dev_err(dev, "cannot attach to foreign vIOMMU\n");
--		ret = -EXDEV;
-+	} else if (!viommu_endpoint_is_compatible(vdev, vdomain)) {
-+		ret = -EINVAL;
- 	}
- 	mutex_unlock(&vdomain->mutex);
- 
-@@ -886,6 +938,7 @@ static int viommu_add_device(struct device *dev)
- 
- 	vdev->dev = dev;
- 	vdev->viommu = viommu;
-+	vdev->pgsize_bitmap = viommu->pgsize_bitmap;
- 	INIT_LIST_HEAD(&vdev->resv_regions);
- 	dev_iommu_priv_set(dev, vdev);
- 
-diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
-index 48e3c29223b5..15a8327ffef5 100644
---- a/include/uapi/linux/virtio_iommu.h
-+++ b/include/uapi/linux/virtio_iommu.h
-@@ -28,7 +28,11 @@ struct virtio_iommu_range_32 {
- };
- 
- struct virtio_iommu_config {
--	/* Supported page sizes */
-+	/*
-+	 * Bitmap of supported page sizes. The least significant bit
-+	 * indicates the smallest granularity and the other bits are
-+	 * hints indicating optimal block sizes.
-+	 */
- 	__u64					page_size_mask;
- 	/* Supported IOVA range */
- 	struct virtio_iommu_range_64		input_range;
-@@ -111,6 +115,7 @@ struct virtio_iommu_req_unmap {
- 
- #define VIRTIO_IOMMU_PROBE_T_NONE		0
- #define VIRTIO_IOMMU_PROBE_T_RESV_MEM		1
-+#define VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK	2
- 
- #define VIRTIO_IOMMU_PROBE_T_MASK		0xfff
- 
-@@ -119,6 +124,13 @@ struct virtio_iommu_probe_property {
- 	__le16					length;
- };
- 
-+struct virtio_iommu_probe_pgsize_mask {
-+	struct virtio_iommu_probe_property	head;
-+	__u8					reserved[4];
-+	/* Same format as virtio_iommu_config::page_size_mask */
-+	__le64					pgsize_bitmap;
-+};
-+
- #define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
- #define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
- 
+Adrian
+
 -- 
-2.17.1
-
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
