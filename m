@@ -4,148 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B28C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80679C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D180520690
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1D220693
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:59:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="BrKd6shG"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rNyJ/WeE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgENCv4 (ORCPT
+        id S1725977AbgENC71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 22:51:56 -0400
-Received: from mail.efficios.com ([167.114.26.124]:48868 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgENCvz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 22:51:55 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 2F0EB2A1935;
-        Wed, 13 May 2020 22:51:54 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id yAUOqIp6SuWL; Wed, 13 May 2020 22:51:53 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id C75892A16C4;
-        Wed, 13 May 2020 22:51:53 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C75892A16C4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1589424713;
-        bh=RluM+yQK+xOpY5YHus0NtCagZdVL/MNnexkXbC1Zk10=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=BrKd6shGetVN8DFqTRaTV0b0y01VZ5+jyi98ZmwqkUhQzvrhVd568wRKKjZSH7j9/
-         AvT9ItTj5xV3WSSStHJd1QqoSA6dodY/jRt4rNSA8S855utitf0acbzEQ8odXNr8aJ
-         OMXbmcgPx/BXFsrCOG4pSqISj5MYdPsckWcXba/RlpJXoggiRJXlVutgMfRvvcidaq
-         2VEvN4rA2qliKooc4AG3BjD1mq9MWtgYNVk3f9Kc/51bZxHnsv9bqidV97auYxV/MY
-         2pAYvBL/Sf0Ly/sydKn3LhJ1uPcxzdEA7cBuVtmS9KXFa4x20rrST80r5XCcRgAMKi
-         QJUX4RuC3Gdvw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id nVsOAfApGQzI; Wed, 13 May 2020 22:51:53 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id B29C12A1737;
-        Wed, 13 May 2020 22:51:53 -0400 (EDT)
-Date:   Wed, 13 May 2020 22:51:53 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     rostedt <rostedt@goodmis.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, paulmck <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Message-ID: <1779765540.20682.1589424713646.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87v9kzz862.fsf@nanos.tec.linutronix.de>
-References: <20200505131602.633487962@linutronix.de> <20200505134058.560059744@linutronix.de> <1970736614.19996.1589403401588.JavaMail.zimbra@efficios.com> <20200513171047.04c2c10e@gandalf.local.home> <87v9kzz862.fsf@nanos.tec.linutronix.de>
-Subject: Re: [patch V4 part 1 05/36] x86/entry: Flip _TIF_SIGPENDING and
- _TIF_NOTIFY_RESUME handling
+        Wed, 13 May 2020 22:59:27 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57739 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725895AbgENC71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 22:59:27 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Mx8X1xhWz9sPF;
+        Thu, 14 May 2020 12:59:24 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589425165;
+        bh=4WuPgc9fJhVsh+4GTvA9+YWK+vpgizwYqNRkMBN9ABo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=rNyJ/WeEkw4Q+RFMyDMmuq5rB7LICPmjbSGHBNS1F6qE2nfWKIkDGwkV/USDWUP4B
+         R5eCAwVHaLW3wX+UVDgTkn5dfjt7ZRnaq3/+qlEhkxo4Rsn5UMqixZIb0Mbvz/q7DM
+         KX7Q52LjQCcp0etf5jrHFBY1sk5ZSHT12cUTPasBRLMNwTgmLq/uqGaUjp2iFBdruj
+         bFtJQuSf8hmxrsNklt+mISVHWnqC4Z0yZ4dUDy50mWoybhhRskyncCmgJ+BUsBWHa0
+         iGRSNpelqYa/9IhuVTpzAsk7VVaZlejRvMayrI9B5Ou5az1edPcfWf2+BqyybISMsq
+         Bj//orsLQh4Ug==
+Date:   Thu, 14 May 2020 12:59:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>
+Subject: linux-next: manual merge of the mlx5-next tree with the rdma tree
+Message-ID: <20200514125920.2c9a6509@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
-Thread-Topic: x86/entry: Flip _TIF_SIGPENDING and _TIF_NOTIFY_RESUME handling
-Thread-Index: 2EQzd3LgZ/4HR7uFV7jb8D0jmAXxWw==
+Content-Type: multipart/signed; boundary="Sig_/PoQvFm=B8iNC3=_rH+dNRLn";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On May 13, 2020, at 8:12 PM, Thomas Gleixner tglx@linutronix.de wrote:
-[...]
-> 
->>> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> 
->>> Also, color me confused: is "do_signal()" actually running any user-space,
->>> or just setting up the user-space stack for eventual return to signal
->>> handler ?
-> 
-> I'm surprised that you can't answer that question yourself. How did you
-> ever make rseq work and how did rseq_signal_deliver() end up in
-> setup_rt_frame()?
-> 
-> Hint: Tracing might answer that question
-> 
-> And to cut it short:
-> 
->    Exit to user space happnes only through ONE channel, i.e. leaving
->    prepare_exit_to usermode().
-> 
+--Sig_/PoQvFm=B8iNC3=_rH+dNRLn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[...]
+Hi all,
 
-Yes, I'm very well aware of this. But the patch commit message states:
+Today's linux-next merge of the mlx5-next tree got a conflict in:
 
-"Make sure task_work runs before any kind of userspace -- very much
-including signals -- is invoked."
+  drivers/infiniband/hw/mlx5/main.c
 
-which seems to imply that "userspace" can be "invoked" before the task_work
-runs. Which makes no sense whatsoever. Hence my confused state.
+between commit:
 
->>> Also, it might be OK, but we're changing the order of two things which
->>> have effects on each other: restartable sequences abort fixup for preemption
->>> and do_signal(), which also have effects on rseq abort.
->>> 
->>> Because those two will cause the abort to trigger, I suspect changing
->>> the order might be OK, but we really need to think this through.
-> 
-> That's a purely academic problem. The order is completely
-> irrelevant. You have to handle any order anyway:
+  2be08c308f10 ("RDMA/mlx5: Delete create QP flags obfuscation")
 
-Yes indeed, whether either a signal handler frame fixup or return IP
-fixup fires first (clearing the rseq_cs pointer in the process) is
-irrelevant, because they will have the effect on the user-space program's
-flow. And as you say, given it is run in a loop and can be preempted,
-any order can happen here, so we have to be prepared for it. This loop
-has caused me tons of headaches when stress-testing on NUMA machines by
-the way.
+from the rdma tree and commit:
 
-> That said, even for the case Andy and Peter were looking at (MCE) the
-> ordering is completely irrelevant.
+  14c129e30152 ("{IB/net}/mlx5: Simplify don't trap code")
 
-Not sure about that, see Andy's follow up.
+from the mlx5-next tree.
 
-Thanks,
+I fixed it up (the latter change included the former) and can carry the
+fix as necessary. This is now fixed as far as linux-next is concerned,
+but any non trivial conflicts should be mentioned to your upstream
+maintainer when your tree is submitted for merging.  You may also want
+to consider cooperating with the maintainer of the conflicting tree to
+minimise any particularly complex conflicts.
 
-Mathieu
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/PoQvFm=B8iNC3=_rH+dNRLn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl68tAgACgkQAVBC80lX
+0GxDOwf+MfOL7wQlzRohcYEqSIJva64w+WElB9HnDoPmMqXP6IpZj8ytk2T1A0ig
+JqZiLRaZm9dNbQ5mQBsUCSBKphpkLDSoqso5VHGafmw6crajFUQ/nIi8hQelH0b5
+nmBkZ7nc+A87coRFwNTKBeJNkLwFNcr/Uo09Cuinkft6QP0jD/BBXpXizYYcG0QK
+LJMKabDZaZgvB4CcPR/w0ogTnJBoYVocHQ4h2KvUo18SxZSrh/Vertyylo5/xhMo
+06+WjXv0BjfCC92MiRIbA8urc8yI13KaHjo3JYKSoMXENydm/RBBp5RrJosIopxL
+yQkFopymDLisYItRPheTKs1PYFLGAA==
+=QV/o
+-----END PGP SIGNATURE-----
+
+--Sig_/PoQvFm=B8iNC3=_rH+dNRLn--
