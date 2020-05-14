@@ -2,132 +2,145 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB834206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:17:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q1J8WZEF"
+	by mail.kernel.org (Postfix) with ESMTP id E035A207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgENLR7 (ORCPT
+        id S1726240AbgENLS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:17:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgENLR6 (ORCPT
+        Thu, 14 May 2020 07:18:26 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19184 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725925AbgENLSZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:17:58 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93FA8C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:17:58 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id fu13so12314731pjb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:17:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hknV+GJMZHyHLAY2im/FQF7wHV4s+FSMrkKyD2kNtOw=;
-        b=q1J8WZEFW7zcbs4kfMwHVNcPHEvHzP0sWCL1KDOejr+Oz4wbi66N2QIJHSjF4QRW3Q
-         TEDfEChsLpQbBMWtT6S0V4Je1V3/Kxw2Ii8ipz53soDuZFlMN3tvKjzxQDXY03e0FnAB
-         Jg6FI4bRC175fUnWz3QeCj9PmuQoJoo46BfEbGKM9BRYH3vJtBEeZCq24PuckXMpFn2k
-         VAYNw3kO7blN2xdlp55KlI1JN2CpIU8h97kLDnhSRNEuqNgr6zNVM7IL4CJVtAN7eM1Q
-         cEHqy92xeP6BQn5y4Ncknujhip2GTZvq/Ny62ESqPkpUVlycWaVsNKkF23F46abJzrV/
-         qbVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hknV+GJMZHyHLAY2im/FQF7wHV4s+FSMrkKyD2kNtOw=;
-        b=Xcngq+HsxnWRBEsPR8qD8Yk59Pt1K6o/30F+ab6+S50cteDk4brzkpgiy3LHkiA7N2
-         RSizSzpIvpahhNZVb+MM1K5JwYGKBkjM+4K8QKWV1ReHCSXWuMkc+6r9rvup2ERw+k1m
-         x8r2Oi0LsAthVdTfwIq5YQJ/Ukw+uVw9nZr99QYeV0akHU1u0rPWpAta7xCCDsRufCgs
-         cnVAcPDOHmQLJ8WmopW2v2Aq30pJItvFEQI+XkeGpPTuPyOblO4Gsw4UrXiuzMv0vCx6
-         lX4KF6f8QPybcn+q96gEi3CqE3vIdEiJcrA+GjtKmwON59XkMBlPS3yoa+4EINeZgtgH
-         qeFw==
-X-Gm-Message-State: AGi0PuaTR3L5P7lFTSr0ujXlbx4ozp1Yvcvw+ZTSCLxdaGQ3JCxgZggA
-        mjKoKAIcxqXYvdFp3vY45bI=
-X-Google-Smtp-Source: APiQypLarzhPpMk65VrkKnqffPBenJAa46xewdPlN9VCMxKTNk/8c6C3ICwXE0q0hf7R3DKGKlS54g==
-X-Received: by 2002:a17:90a:cc6:: with SMTP id 6mr39655685pjt.17.1589455078047;
-        Thu, 14 May 2020 04:17:58 -0700 (PDT)
-Received: from localhost ([49.205.220.80])
-        by smtp.gmail.com with ESMTPSA id g10sm2156051pfk.103.2020.05.14.04.17.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 May 2020 04:17:57 -0700 (PDT)
-Date:   Thu, 14 May 2020 16:47:55 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: ARM: static kernel in vmalloc space
-Message-ID: <20200514111755.GA4997@afzalpc>
-References: <CAK8P3a0JW9x-Wk9Ec3+zLjPHbWAvPQx8MF-xe-PnWUgEjRAuTg@mail.gmail.com>
- <20200415135407.GA6553@afzalpc>
- <20200503145017.GA5074@afzalpc>
- <CAK8P3a3OC5UO72rTDWi6+XgmExJmkATEjscq8hns8Bng06OpcQ@mail.gmail.com>
- <20200504091018.GA24897@afzalpc>
- <CAK8P3a25sZ9B+AE=EJyJZSU91CkBLLR6p2nixw_=UAbczg3RiQ@mail.gmail.com>
- <20200511142113.GA31707@afzalpc>
- <CAK8P3a0=+aBJLTvHOskTv=tba_s5b5MzWrYG8mxH3iLNy4hfBw@mail.gmail.com>
- <20200512104758.GA12980@afzalpc>
- <CAK8P3a1DQWG1+ab2+vQ2XCAKYxPUjJk5g3W3094j-adDXSQfzQ@mail.gmail.com>
+        Thu, 14 May 2020 07:18:25 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04EB3cSY072403;
+        Thu, 14 May 2020 07:17:56 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31016tfn15-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 07:17:56 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04EB52k2081275;
+        Thu, 14 May 2020 07:17:56 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31016tfmym-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 07:17:55 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04EBFwVR024933;
+        Thu, 14 May 2020 11:17:53 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma01fra.de.ibm.com with ESMTP id 3100ubhe6d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 11:17:53 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04EBHoil53805232
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 May 2020 11:17:50 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 76DFC42042;
+        Thu, 14 May 2020 11:17:50 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 08D4642047;
+        Thu, 14 May 2020 11:17:47 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.59.186])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 14 May 2020 11:17:46 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     mpe@ellerman.id.au, mikey@neuling.org
+Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
+        peterz@infradead.org, jolsa@kernel.org, oleg@redhat.com,
+        fweisbec@gmail.com, mingo@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        ravi.bangoria@linux.ibm.com
+Subject: [PATCH v6 00/16] powerpc/watchpoint: Preparation for more than one watchpoint
+Date:   Thu, 14 May 2020 16:47:25 +0530
+Message-Id: <20200514111741.97993-1-ravi.bangoria@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1DQWG1+ab2+vQ2XCAKYxPUjJk5g3W3094j-adDXSQfzQ@mail.gmail.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-14_02:2020-05-13,2020-05-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ adultscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
+ mlxlogscore=518 cotscore=-2147483648 impostorscore=0 phishscore=0
+ suspectscore=0 spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005140095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+So far, powerpc Book3S code has been written with an assumption of
+only one watchpoint. But Power10[1] is introducing second watchpoint
+register (DAWR). Even though this patchset does not enable 2nd DAWR,
+it makes the infrastructure ready so that enabling 2nd DAWR should
+just be a matter of changing count.
 
-On Tue, May 12, 2020 at 09:49:59PM +0200, Arnd Bergmann wrote:
+Existing functionality works fine with the patchset. I've tested it
+with perf, ptrace(gdb), xmon. All hw-breakpoint selftests are passing
+as well. And I've build tested for 8xx and 'AMCC 44x, 46x or 47x'.
 
-> Any idea which bit you want to try next?
+Note: kvm or PowerVM guest is not enabled yet.
 
-My plan has been to next post patches for the static kernel migration
-to vmalloc space (currently the code is rigid, taking easy route
-wherever possible & not of high quality) as that feature has an
-independent existence & adds value by itself.  And then start working
-on other steps towards VMSPLIT_4G_4G.
+v5: https://lore.kernel.org/linuxppc-dev/20200511025911.212827-1-ravi.bangoria@linux.ibm.com 
 
-Now that you mentioned about other things, i will slowly start those
-as well.
+v5->v6:
+ - Rebased to powerpc/next-test which has prefix-instruction support
+ - Adopt 'struct ppc_inst' in hw-breakpoint code as well
 
-> Creating a raw_copy_{from,to}_user()
-> based on get_user_pages()/kmap_atomic()/memcpy() is probably a good
-> next thing to do. I think it can be done one page at a time with only
-> checking for
-> get_fs(), access_ok(), and page permissions, while get_user()/put_user()
-> need to handle a few more corner cases.
+[1]: https://www-355.ibm.com/systems/power/openpower/
 
-Before starting w/ other things, i would like to align on the high
-level design,
+Ravi Bangoria (16):
+  powerpc/watchpoint: Rename current DAWR macros
+  powerpc/watchpoint: Add SPRN macros for second DAWR
+  powerpc/watchpoint: Introduce function to get nr watchpoints
+    dynamically
+  powerpc/watchpoint/ptrace: Return actual num of available watchpoints
+  powerpc/watchpoint: Provide DAWR number to set_dawr
+  powerpc/watchpoint: Provide DAWR number to __set_breakpoint
+  powerpc/watchpoint: Get watchpoint count dynamically while disabling
+    them
+  powerpc/watchpoint: Disable all available watchpoints when
+    !dawr_force_enable
+  powerpc/watchpoint: Convert thread_struct->hw_brk to an array
+  powerpc/watchpoint: Use loop for thread_struct->ptrace_bps
+  powerpc/watchpoint: Introduce is_ptrace_bp() function
+  powerpc/watchpoint: Use builtin ALIGN*() macros
+  powerpc/watchpoint: Prepare handler to handle more than one
+    watcnhpoint
+  powerpc/watchpoint: Don't allow concurrent perf and ptrace events
+  powerpc/watchpoint/xmon: Don't allow breakpoint overwriting
+  powerpc/watchpoint/xmon: Support 2nd DAWR
 
-My understanding (mostly based on your comments) as follows,
-(i currently do not have a firm grip over these things, hope to have
-it once started w/ the implementation)
+ arch/powerpc/include/asm/cputable.h       |   6 +-
+ arch/powerpc/include/asm/debug.h          |   2 +-
+ arch/powerpc/include/asm/hw_breakpoint.h  |  32 +-
+ arch/powerpc/include/asm/processor.h      |   6 +-
+ arch/powerpc/include/asm/reg.h            |   6 +-
+ arch/powerpc/include/asm/sstep.h          |   2 +
+ arch/powerpc/kernel/dawr.c                |  23 +-
+ arch/powerpc/kernel/hw_breakpoint.c       | 642 ++++++++++++++++++----
+ arch/powerpc/kernel/process.c             |  85 +--
+ arch/powerpc/kernel/ptrace/ptrace-noadv.c |  72 ++-
+ arch/powerpc/kernel/ptrace/ptrace32.c     |   4 +-
+ arch/powerpc/kernel/signal.c              |  13 +-
+ arch/powerpc/kvm/book3s_hv.c              |  12 +-
+ arch/powerpc/kvm/book3s_hv_rmhandlers.S   |  18 +-
+ arch/powerpc/xmon/xmon.c                  |  99 +++-
+ kernel/events/hw_breakpoint.c             |  16 +
+ 16 files changed, 811 insertions(+), 227 deletions(-)
 
-1. SoC w/ LPAE 
-2. TTBR1 (top 256MB) for static kernel, modules, io mappings, vmalloc,
-        kmap, fixmap & vectors
-3. TTBR0 (low 3768MB) for user space & lowmem (kernel lowmem to have
-        separate ASID)
-4. for user space to/from copy
- a. pin user pages
- b. kmap user page (can't corresponding lowmem be used instead ?)
- c. copy
+-- 
+2.26.2
 
-Main points are as above, right ?, anything missed ?, or anything more
-you want to add ?, let me know your opinion.
-
-Regards
-afzal
