@@ -2,131 +2,128 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B79F02065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A812D2065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:32:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WZ4TnpnZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgENN1x convert rfc822-to-8bit (ORCPT
+        id S1726146AbgENNcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:27:53 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:22344 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726239AbgENN1v (ORCPT
+        Thu, 14 May 2020 09:32:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23391 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726011AbgENNcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:27:51 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-113-XOFJDQnwOvSfGd4XKFaC9g-1; Thu, 14 May 2020 14:27:47 +0100
-X-MC-Unique: XOFJDQnwOvSfGd4XKFaC9g-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 14 May 2020 14:27:46 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 14 May 2020 14:27:46 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Marcelo Ricardo Leitner' <marcelo.leitner@gmail.com>,
-        'Christoph Hellwig' <hch@lst.de>
-CC:     "'David S. Miller'" <davem@davemloft.net>,
-        'Jakub Kicinski' <kuba@kernel.org>,
-        'Eric Dumazet' <edumazet@google.com>,
-        'Alexey Kuznetsov' <kuznet@ms2.inr.ac.ru>,
-        'Hideaki YOSHIFUJI' <yoshfuji@linux-ipv6.org>,
-        "'Vlad Yasevich'" <vyasevich@gmail.com>,
-        'Neil Horman' <nhorman@tuxdriver.com>,
-        "'Jon Maloy'" <jmaloy@redhat.com>,
-        'Ying Xue' <ying.xue@windriver.com>,
-        "'drbd-dev@lists.linbit.com'" <drbd-dev@lists.linbit.com>,
-        "'linux-block@vger.kernel.org'" <linux-block@vger.kernel.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'linux-rdma@vger.kernel.org'" <linux-rdma@vger.kernel.org>,
-        "'linux-nvme@lists.infradead.org'" <linux-nvme@lists.infradead.org>,
-        "'target-devel@vger.kernel.org'" <target-devel@vger.kernel.org>,
-        "'linux-afs@lists.infradead.org'" <linux-afs@lists.infradead.org>,
-        "'linux-cifs@vger.kernel.org'" <linux-cifs@vger.kernel.org>,
-        "'cluster-devel@redhat.com'" <cluster-devel@redhat.com>,
-        "'ocfs2-devel@oss.oracle.com'" <ocfs2-devel@oss.oracle.com>,
-        "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>,
-        "'linux-sctp@vger.kernel.org'" <linux-sctp@vger.kernel.org>,
-        "'ceph-devel@vger.kernel.org'" <ceph-devel@vger.kernel.org>,
-        "'rds-devel@oss.oracle.com'" <rds-devel@oss.oracle.com>,
-        "'linux-nfs@vger.kernel.org'" <linux-nfs@vger.kernel.org>
-Subject: RE: [PATCH 32/33] sctp: add sctp_sock_get_primary_addr
-Thread-Topic: [PATCH 32/33] sctp: add sctp_sock_get_primary_addr
-Thread-Index: AQHWKVDpRRlTTX4YZEat3HB6AYvqqainVRxwgAAtMyCAABBE4A==
-Date:   Thu, 14 May 2020 13:27:46 +0000
-Message-ID: <aff8f5ec8d6d44dbace63825af197086@AcuMS.aculab.com>
-References: <20200513062649.2100053-1-hch@lst.de>
- <20200513062649.2100053-33-hch@lst.de>
- <20200513180302.GC2491@localhost.localdomain>
- <d112e18bfbdd40dfb219ed2c1f2082d4@AcuMS.aculab.com>
- <c66e0309572345f5b0f32d078701f2d7@AcuMS.aculab.com>
-In-Reply-To: <c66e0309572345f5b0f32d078701f2d7@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 14 May 2020 09:32:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589463122;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=g/nCRkuyNaXAXNqjpWErasCkRfXCzT/klwC/USw0eGw=;
+        b=WZ4TnpnZxfOD9BzIE9eAf/0q0YSlXgVelKjHlAmN0oprR+ZqQ8TOkjhN0WXj1D2GnqPRFs
+        +D+UsxLAaCcW6PJrUMKEFZtX2IdSAGCDMoXH8oFYUpIlTsEMkTWRsxgv2nN/hY9bwcRW20
+        t7XRVhk7D/2Jpcr0CZJm7tt2lPe1FE8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-486-zew_sHqfPiWLNdzseJ9lRQ-1; Thu, 14 May 2020 09:32:01 -0400
+X-MC-Unique: zew_sHqfPiWLNdzseJ9lRQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1871F461;
+        Thu, 14 May 2020 13:31:59 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-117-0.rdu2.redhat.com [10.10.117.0])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F7F576E64;
+        Thu, 14 May 2020 13:31:58 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id E9FB3220206; Thu, 14 May 2020 09:31:57 -0400 (EDT)
+Date:   Thu, 14 May 2020 09:31:57 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/8] KVM: x86: interrupt based APF page-ready event
+ delivery
+Message-ID: <20200514133157.GB206709@redhat.com>
+References: <20200511164752.2158645-1-vkuznets@redhat.com>
+ <20200511164752.2158645-5-vkuznets@redhat.com>
+ <20200512142411.GA138129@redhat.com>
+ <87lflxm9sy.fsf@vitty.brq.redhat.com>
+ <20200512180704.GE138129@redhat.com>
+ <877dxgmcjv.fsf@vitty.brq.redhat.com>
+ <20200513135350.GB173965@redhat.com>
+ <87ftc3lxqc.fsf@vitty.brq.redhat.com>
+ <20200513184641.GF173965@redhat.com>
+ <87zhabdjlm.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zhabdjlm.fsf@vitty.brq.redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Laight
-> Sent: 14 May 2020 13:30
-> Subject: RE: [PATCH 32/33] sctp: add sctp_sock_get_primary_addr
+On Thu, May 14, 2020 at 10:08:37AM +0200, Vitaly Kuznetsov wrote:
+> Vivek Goyal <vgoyal@redhat.com> writes:
 > 
-> From: David Laight
-> > Sent: 14 May 2020 10:51
-> > From: Marcelo Ricardo Leitner
-> > > Sent: 13 May 2020 19:03
-> > >
-> > > On Wed, May 13, 2020 at 08:26:47AM +0200, Christoph Hellwig wrote:
-> > > > Add a helper to directly get the SCTP_PRIMARY_ADDR sockopt from kernel
-> > > > space without going through a fake uaccess.
-> > >
-> > > Same comment as on the other dlm/sctp patch.
+> > On Wed, May 13, 2020 at 04:23:55PM +0200, Vitaly Kuznetsov wrote:
 > >
-> > Wouldn't it be best to write sctp_[gs]etsockotp() that
-> > use a kernel buffer and then implement the user-space
-> > calls using a wrapper that does the copies to an on-stack
-> > (or malloced if big) buffer.
+> > [..]
+> >> >> Also,
+> >> >> kdump kernel may not even support APF so it will get very confused when
+> >> >> APF events get delivered.
+> >> >
+> >> > New kernel can just ignore these events if it does not support async
+> >> > pf? 
+> >> >
+> >> > This is somewhat similar to devices still doing interrupts in new
+> >> > kernel. And solution for that seemed to be doing a "reset" of devices
+> >> > in new kernel. We probably need similar logic where in new kernel
+> >> > we simply disable "async pf" so that we don't get new notifications.
+> >> 
+> >> Right and that's what we're doing - just disabling new notifications.
+> >
+> > Nice.
+> >
+> > So why there is a need to deliver "page ready" notifications
+> > to guest after guest has disabled async pf. Atleast kdump does not
+> > seem to need it. It will boot into second kernel anyway, irrespective
+> > of the fact whether it receives page ready or not.
 > 
-> Actually looking at __sys_setsockopt() it calls
-> BPF_CGROUP_RUN_PROG_SETSOCKOPT() which (by the look of it)
-> can copy the user buffer into malloc()ed memory and
-> cause set_fs(KERNEL_DS) be called.
-> 
-> The only way to get rid of that set_fs() is to always
-> have the buffer in kernel memory when the underlying
-> setsockopt() code is called.
+> We don't deliver anything to the guest after it disables APF (neither
+> 'page ready' for what was previously missing, nor 'page not ready' for
+> new faults), kvm_arch_can_inject_async_page_present() is just another
+> misnomer, it should be named something like
+> 'kvm_arch_can_unqueue_async_page_present()' meaning that 'page ready'
+> notification can be 'unqueued' from internal KVM queue. We will either
+> deliver it (when guest has APF enabled) or just drop it (when guest has
+> APF disabled). The only case when it has to stay in the queue is when
+> guest has APF enabled and the slot is still busy (so it didn't get to
+> process a previously delivered notification). We will try to deliver it
+> again after guest writes to MSR_KVM_ASYNC_PF_ACK.
 
-And having started to try coding __sys_setsockopt()
-and then found the compat code I suspect that would
-be a whole lot more sane if the buffer was in kernel
-and it knew that at least (say) 64 bytes were allocated.
+This makes sense. Renaming this function to make it more clear will
+help understanding code better.
 
-The whole compat_alloc_user_space() 'crap' could probably go.
-
-Actually it looks like an application can avoid whatever
-checks BPF_CGROUP_RUN_PROG_SETSOCKOPT() is trying to do
-by using the 32bit compat ioctls.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Vivek
 
