@@ -2,155 +2,91 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C543C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D8EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72E0B20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:24:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jw3JoqZc"
+	by mail.kernel.org (Postfix) with ESMTP id EB96F206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589477183;
+	bh=swTa2jeOy30xyajhmS+81o4FCN/7U8HQcKY0XCdgjF8=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=ywcQeiJAXGmBasK65GplwlR5hu9mHF7eydQVYLwXDGUMETchHJiJKKMfjXBLJ8FnZ
+	 mgVJr2fCqZI3iZL3OKfr0XPchROqka8Rgy69cp+YDTJrgKgcSjTO9JpUd0BK73zsD7
+	 049S7G79UI5AtwrmgTTKrh0P3w4uzqB8fWV78CiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgENRY6 (ORCPT
+        id S1726119AbgENR0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 13:24:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726075AbgENRY5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 13:24:57 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A1DEC061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 10:24:57 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id q9so1050453pjm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 10:24:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LHBsucMd2sTr3HvWbUbdv7RFH1xfljlHMp94He6hhIA=;
-        b=jw3JoqZcR+JkpSIRFVF6bzCezMt2ET2v0lnfG4lEuwXpjsAC//cobs0yPbOlb/wEmD
-         R2247f4DjnI796d5bBmtgO51BUOwEB/UIblYzqfETbfyf5kdcqSwulnO/KoXXQAs9Fht
-         wMuwYjYO/UH8CxTVs5CRx8Hts6qyWazW4DdC6vYV5FqGxK7kG+ingJovqls06Hm9MhCX
-         LXIpu0bhRm0+N7WLxcCPO+9oKzTwKWXNpgub58PgRUEE8z34W4Jp7XBIIdy1ssAb0Fjj
-         unayclz4Cyu6FEkrJw1MTaxnj4IIRpNvBq/NIqtPjjT50QVB3rTiKDSRaKItdfkCDrrg
-         N13A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LHBsucMd2sTr3HvWbUbdv7RFH1xfljlHMp94He6hhIA=;
-        b=jWfa+NmIarF7Yb1QRfdeu4VT+tUkaRscIh1QVnhGDyuoCrNxbWgMLvWJq4QkqZ5Pm/
-         4sVzmaxDGLsFerFL79X5kdKKs97fpfCR2YNK7ni6omd+IWNzRPy7mC3BJjR54mxOn5KM
-         4PfcaTGbYHPZDR57Gk+wGf/+63wJ4nCVHBT7YXNZzLuZrvBqUuA0oXTC0Mvh4dQ8hxrZ
-         0wUOQ1RNJU7BUxCIVD8DlRAMzIx8DdSIWbhnKoEGibBzZoX4IlD6WhZTbvIFh8eFSMKV
-         JRh4eEigBK5K3ppJXAXfgMDGgkaiyNV90W8L/L9KPUSrPvyd45ACn4F44O66TxKfS9CP
-         CSvA==
-X-Gm-Message-State: AGi0PuZYs0isbMPVLJNMtyKb2k5LBNqVxNwD4zyaCjzA1P7r8EEZeWht
-        av8sCtbZP72/pDIhoO0z5DXlUMAlxRs=
-X-Google-Smtp-Source: APiQypJtsZHdqMh3QbEvlnEnAPVD9kLl8H9v3APnId1I2aEM7HIPo4p7CBOJ4YY+WlIh4C4yplr/PQ==
-X-Received: by 2002:a17:90b:888:: with SMTP id bj8mr40059263pjb.91.1589477096443;
-        Thu, 14 May 2020 10:24:56 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e11sm2753242pfl.85.2020.05.14.10.24.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 10:24:55 -0700 (PDT)
-Date:   Thu, 14 May 2020 10:23:26 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     michael.srba@seznam.cz
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH] arm64: dts: qcom: msm8916-samsung-a3u: add nodes for
- display panel
-Message-ID: <20200514172326.GC279327@builder.lan>
-References: <20200514170129.10902-1-michael.srba@seznam.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514170129.10902-1-michael.srba@seznam.cz>
+        Thu, 14 May 2020 13:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbgENR0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 13:26:21 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A68D2065D;
+        Thu, 14 May 2020 17:26:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589477181;
+        bh=swTa2jeOy30xyajhmS+81o4FCN/7U8HQcKY0XCdgjF8=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=xNaTqkcAaG+c31MZtS6uJtEp5P0mWAxX2FI1rY8SHtaRA2fsBa7umAJs9awZw9+3m
+         RPRmMrZPmyBctpiuBPEPQzXqafwjNTWm2gtdaJggiwo6WO+MZ3oTFdO/c5iHmq2ybn
+         BzJcFOtwzEElstWCpOdwywN7hWnA9FCjoRI9ZVzE=
+Date:   Thu, 14 May 2020 18:26:19 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     mazziesaccount@gmail.com,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+In-Reply-To: <20200513143921.GA22143@localhost.localdomain>
+References: <20200513143921.GA22143@localhost.localdomain>
+Subject: Re: [PATCH] regulator: bd718x7: remove voltage change restriction from BD71847 LDOs
+Message-Id: <158947717907.53448.6753704116559690057.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 14 May 10:01 PDT 2020, michael.srba@seznam.cz wrote:
-
-> From: Michael Srba <michael.srba@seznam.cz>
+On Wed, 13 May 2020 17:39:21 +0300, Matti Vaittinen wrote:
+> The BD71837 had a HW "feature" where changing the regulator output
+> voltages of other regulators but bucks 1-4 might cause spikes if
+> regulators were enabled. Thus SW prohibit voltage changes for other
+> regulators except for bucks 1-4 when regulator is enabled.
 > 
-> This patch wires up display support on Samsung Galaxy A3 2015.
+> The HW colleagues did inadvertly fix this issue for BD71847 and
+> BD71850.
 > 
-> Signed-off-by: Michael Srba <michael.srba@seznam.cz>
-> 
-> ---
->  .../qcom/msm8916-samsung-a2015-common.dtsi    | 44 +++++++++++++++
->  .../boot/dts/qcom/msm8916-samsung-a3u-eur.dts | 54 +++++++++++++++++++
->  2 files changed, 98 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-> index af812f76e8be..2a64aa269f52 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-> @@ -72,6 +72,24 @@ phy {
->  			};
->  		};
->  
-> +		mdss@1a00000 {
-> +			dsi@1a98000 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				vdda-supply = <&pm8916_l2>;
-> +				vddio-supply = <&pm8916_l6>;
-> +
-> +				pinctrl-names = "default", "sleep";
-> +				pinctrl-0 = <&mdss_default>;
-> +				pinctrl-1 = <&mdss_sleep>;
-> +			};
-> +
-> +			dsi-phy@1a98300 {
-> +				vddio-supply = <&pm8916_l6>;
-> +			};
-> +		};
-> +
->  		wcnss@a21b000 {
->  			status = "okay";
->  		};
-> @@ -172,6 +190,32 @@ pinconf {
->  			bias-disable;
->  		};
->  	};
-> +
-> +	pmx-mdss {
-> +		mdss_default: mdss-default {
-> +			pinmux {
-> +				function = "gpio";
-> +				pins = "gpio25";
-> +			};
-> +			pinconf {
-> +				pins = "gpio25";
-> +				drive-strength = <8>;
-> +				bias-disable;
-> +			};
-> +		};
+> [...]
 
-Fyi, when you have a state with a single set of properties you don't
-need the pinmux/pinconf level here, you can directly do:
+Applied to
 
-		mdss_default: mdss-default {
-			pins = "gpio25";
-			function = "gpio";
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.8
 
-			drive-strength = <8>;
-			bias-disable;
-		};
+Thanks!
 
+[1/1] regulator: bd718x7: remove voltage change restriction from BD71847 LDOs
+      commit: 9bcbabafa19b9f27a283777eff32e7d66fcef09c
 
-But this looks good, applied towards v5.8.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Regards,
-Bjorn
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
