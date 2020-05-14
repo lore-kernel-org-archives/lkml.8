@@ -2,110 +2,197 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19762C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6792BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00F702065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 470CA206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:14:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S5Hfe/92"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgENILR (ORCPT
+        id S1726038AbgENIOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:11:17 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:49992 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725965AbgENILQ (ORCPT
+        Thu, 14 May 2020 04:14:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725935AbgENIOQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:11:16 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-94-pPKAQ0JRPGmhyT1OD-2rfA-1; Thu, 14 May 2020 09:11:13 +0100
-X-MC-Unique: pPKAQ0JRPGmhyT1OD-2rfA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 14 May 2020 09:11:12 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 14 May 2020 09:11:12 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-CC:     Borislav Petkov <bp@suse.de>, Arnd Bergmann <arnd@arndb.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: RE: gcc-10: kernel stack is corrupted and fails to boot
-Thread-Topic: gcc-10: kernel stack is corrupted and fails to boot
-Thread-Index: AQHWKZY6Y215XsBMzU2jywoKX8cjPqinObQQ
-Date:   Thu, 14 May 2020 08:11:12 +0000
-Message-ID: <d907ef9d30bc4169bf1e923fb066f7a1@AcuMS.aculab.com>
-References: <20200509120707.188595-2-arnd@arndb.de>
- <87v9l24qz6.fsf@kamboji.qca.qualcomm.com>
- <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
- <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
- <20200513154847.GA158356@rani.riverdale.lan>
- <CAK8P3a3KpM91+jv6+7KSKFRpwLqf38Lz1wbGhkFFyfDb9oahgA@mail.gmail.com>
- <20200513214128.GB6733@zn.tnic>
- <CAK8P3a3XPCyNM7s3vbn8JYK6swA3ZpPtTWB+uhmAE3YEX-nmig@mail.gmail.com>
- <20200513222038.GC6733@zn.tnic>
- <CAHk-=wgybuOF+Jp2XYWqM7Xn1CW6szWQw_FgVoFh5jx_4YoCVw@mail.gmail.com>
- <20200513233616.GD6733@zn.tnic>
- <CAHk-=wjZXFe08MiNRevJFGDvX0O6kcQTiK8GFBS7hwUAzB+LQw@mail.gmail.com>
- <CAKwvOd=o_wuiVpw5KVzLEt25W-A9Ah9fzftPZLG+yutqJmWbOg@mail.gmail.com>
- <CAHk-=wg6G+p1RRjR6UZBEuSCDs9=iWBsxrDPTEwqh+y5RayqKA@mail.gmail.com>
-In-Reply-To: <CAHk-=wg6G+p1RRjR6UZBEuSCDs9=iWBsxrDPTEwqh+y5RayqKA@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 14 May 2020 04:14:16 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87BF3C061A0C;
+        Thu, 14 May 2020 01:14:16 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id l20so269957ilj.10;
+        Thu, 14 May 2020 01:14:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nW/L8VcZBCn80T+Kxyr4Dt/TzE3U0N3QD8lxLQvkAAk=;
+        b=S5Hfe/92gHJ2Kc5wk3x43B4+o6swGaM2Z99CePQdyLGPJPMn30W1UreaPgeaV7cbVx
+         6Ksj0zhjZIigUVz3G05Ipvagq3eQpb1Q/Q/Tx8tyQa+Y3+yu0Go8cUlgCEqV6W7Cl/13
+         w0tULc6B16J+R+YpVtDBGL0dmKDdpkX/lRVs2dX0SK5Ff3zLv8WUeueCQedF96giMbNd
+         /6pcYHqFmFrjBvh+QkmsZoYCmdDYs9frT687Ym8rCKaV5JeSURUb2M9GFNDf+CfgHlRj
+         3gpOiN0aHTJt4SRY/3RyuY/0GLK+031DG3E9DyxAiHEq0GrDJ8iLgIcf7dZVSGgZlVW3
+         7i/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nW/L8VcZBCn80T+Kxyr4Dt/TzE3U0N3QD8lxLQvkAAk=;
+        b=uUBl6+o/RHM3/5bJzWZqr0Vuil9ByFu3NsDOiBTUI56A81FmhV6g9aU2zil4cf2K06
+         zl2dXqvHcvGRaDfxw5SMnpzy1Cev0Bs9aPzw8DDbP5OtUTv0zvzL+b2tuC1s52Yav2Cj
+         kVE+e2R4I+V1SigKaVBXKWxfoK5jzgpRXmzPPRB/4LViZG+KrBAvCylroEHaVAksaFy7
+         rNW47U7r9D4htfInIkmBDQubLjsDwLGSgn2r0TNrZsX7/CzISfHvZeuL2PRhniXt3ugW
+         R5+aZNmlTXl7xge74CUsapZWCaGhn7Vi785RnV7Qv48trAnexe2kMnXbz3p5ru26zPmS
+         P4dQ==
+X-Gm-Message-State: AOAM531ogXL2IUXX4V41UF0oZaaSaJdEF5Hjep0lMoF45+bGxtVwmQTk
+        339b4dj8iIIkxfL0TVnJJZF56bHgzvleluen7uk=
+X-Google-Smtp-Source: ABdhPJxcM2ITNF+8krp3jsHuj5Njt/CXRsPi+FnkXodqYy9dz/7KlWDbKIAYy/B1u704BgQzZ5vke1Oax5ReAe5a8IA=
+X-Received: by 2002:a92:84d6:: with SMTP id y83mr1157606ilk.73.1589444055744;
+ Thu, 14 May 2020 01:14:15 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20200505153156.925111-1-mic@digikod.net> <20200505153156.925111-3-mic@digikod.net>
+ <202005121407.A339D31A@keescook>
+In-Reply-To: <202005121407.A339D31A@keescook>
+From:   "Lev R. Oshvang ." <levonshe@gmail.com>
+Date:   Thu, 14 May 2020 11:14:04 +0300
+Message-ID: <CAP22eLEWW+KjD5rHosZV8vSuBB4YBLh0BQ=4-=kJQt9o=Fx1ig@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] fs: Add a MAY_EXECMOUNT flag to infer the noexec
+ mount property
+To:     Kees Cook <keescook@chromium.org>
+Cc:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMTQgTWF5IDIwMjAgMDM6MjANCj4gT24gV2Vk
-LCBNYXkgMTMsIDIwMjAgYXQgNTo1MSBQTSBOaWNrIERlc2F1bG5pZXJzDQo+IDxuZGVzYXVsbmll
-cnNAZ29vZ2xlLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBBcmUgeW91IHN1cmUgTFRPIHRyZWF0cyBl
-bXB0eSBhc20gc3RhdGVtZW50cyBkaWZmZXJlbnRseSB0aGFuIGZ1bGwNCj4gPiBtZW1vcnkgYmFy
-cmllcnMgaW4gcmVnYXJkcyB0byBwcmV2ZW50aW5nIHRhaWwgY2FsbHM/DQo+IA0KPiBJdCBoYWQg
-YmV0dGVyLg0KPiANCj4gQXQgbGluay10aW1lLCB0aGVyZSBpcyBub3RoaW5nIGxlZnQgb2YgYW4g
-ZW1wdHkgYXNtIHN0YXRlbWVudC4gU28gYnkNCj4gdGhlIHRpbWUgdGhlIGxpbmtlciBydW5zLCBp
-dCBvbmx5IHNlZXMNCj4gDQo+ICAgICBjYWxsIHh5eg0KPiAgICAgcmV0DQo+IA0KPiBpbiB0aGUg
-b2JqZWN0IGNvZGUuIEF0IHRoYXQgcG9pbnQsIGl0J3Mgc29tZXdoYXQgcmVhc29uYWJsZSBmb3Ig
-YW55DQo+IGxpbmstdGltZSBvcHRpbWl6ZXIgKG9yIGFuIG9wdGltaXppbmcgYXNzZW1ibGVyLCBm
-b3IgdGhhdCBtYXR0ZXIpIHRvDQo+IHNheSAiSSdsbCBqdXN0IHR1cm4gdGhhdCBzZXF1ZW5jZSBp
-bnRvIGEgc2ltcGxlICdqbXAgeHl6JyBpbnN0ZWFkIi4NCg0KRXhjZXB0IGlzIHNlZXM6DQoJY2Fs
-bCB4eXoNCgljYW5hcnlfY2hlY2tfY29kZQ0KCXJldA0KDQpUaGVyZSdzIGFsc28gYWxtb3N0IGNl
-cnRhaW5seSBzb21lIHN0YWNrIGZyYW1lIHRpZHl1cC4NCldoaWNoIGl0IHdvdWxkIGhhdmUgdG8g
-ZGV0ZWN0IGFuZCBjb252ZXJ0Lg0KQW5kLCBpbiBwcmluY2lwbGUsIHRoZSBmdW5jdGlvbiBpcyBh
-bGxvd2VkIHRvIGFjY2VzcyB0aGUNCnN0YWNrIHNwYWNlIHRoYW4gY29udGFpbnMgdGhlIGNhbmFy
-eS4NCg0KPiBOb3csIGRvbid0IGdldCBtZSB3cm9uZyAtIEknbSBub3QgY29udmluY2VkIGFueSBl
-eGlzdGluZyBMVE8gZG9lcw0KPiB0aGF0LiBCdXQgSSdkIGFsc28gbm90IGJlIHNob2NrZWQgYnkg
-c29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gDQo+IEluIGNvbnRyYXN0LCBpZiBpdCdzIGEgcmVhbCBt
-YigpLCB0aGUgbGlua2VyIHdvbid0IHNlZSBqdXN0IGENCj4gJ2NhbGwrcmV0IiBzZXF1ZW5jZS4g
-SXQgd2lsbCBzZWUgc29tZXRoaW5nIGxpa2UNCj4gDQo+ICAgICBjYWxsIHh5eg0KPiAgICAgbWZl
-bmNlDQo+ICAgICByZXQNCj4gDQo+IChvaywgdGhlIG1mZW5jZSBtYXkgYWN0dWFsbHkgYmUgc29t
-ZXRoaW5nIGVsc2UsIGFuZCB3ZSdsbCBoYXZlIGEgbGFiZWwNCj4gb24gaXQgYW5kIGFuIGFsdGVy
-bmF0aXZlcyB0YWJsZSBwb2ludGluZyB0byBpdCwgYnV0IHRoZSBwb2ludCBpcywNCj4gdW5saWtl
-IGFuIGVtcHR5IGFzbSwgdGhlcmUncyBzb21ldGhpbmcgX3RoZXJlXykuDQoNCk5vdCBpZiB5b3Un
-dmUgYW4gYXJjaGl0ZWN0dXJlIHRoYXQgZG9lc24ndCBoYXZlIGFueSBtZW1vcnkgYmFycmllcnMu
-DQpJbiB0aGF0IGNhc2UgbWIoKSBtYXkgbm90IGV2ZW4gYmUgYXNtKCIiKS4NCihhbHRob3VnaCBp
-dCBtaWdodCBoYXZlIHRvIGJlIGFzbSAoIiI6OjptZW1vcnkpKS4NCg0KCURhdmlkDQoNCi0NClJl
-Z2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0
-b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykN
-Cg==
+On Wed, May 13, 2020 at 12:09 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Tue, May 05, 2020 at 05:31:52PM +0200, Micka=C3=ABl Sala=C3=BCn wrote:
+> > This new MAY_EXECMOUNT flag enables to check if the underlying mount
+> > point of an inode is marked as executable.  This is useful to implement
+> > a security policy taking advantage of the noexec mount option.
+> >
+Security policy is expressed by sysadmin by mount -noexec very clear,
+I don't think there is a need
+in sysctl, wish is system-wide
 
+> > This flag is set according to path_noexec(), which checks if a mount
+> > point is mounted with MNT_NOEXEC or if the underlying superblock is
+> > SB_I_NOEXEC.
+> >
+> > Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+> > Reviewed-by: Philippe Tr=C3=A9buchet <philippe.trebuchet@ssi.gouv.fr>
+> > Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+> > Cc: Aleksa Sarai <cyphar@cyphar.com>
+> > Cc: Al Viro <viro@zeniv.linux.org.uk>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > ---
+> >  fs/namei.c         | 2 ++
+> >  include/linux/fs.h | 2 ++
+> >  2 files changed, 4 insertions(+)
+> >
+> > diff --git a/fs/namei.c b/fs/namei.c
+> > index a320371899cf..33b6d372e74a 100644
+> > --- a/fs/namei.c
+> > +++ b/fs/namei.c
+> > @@ -2849,6 +2849,8 @@ static int may_open(const struct path *path, int =
+acc_mode, int flag)
+> >               break;
+> >       }
+> >
+> > +     /* Pass the mount point executability. */
+> > +     acc_mode |=3D path_noexec(path) ? 0 : MAY_EXECMOUNT;
+> >       error =3D inode_permission(inode, MAY_OPEN | acc_mode);
+> >       if (error)
+> >               return error;
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index 313c934de9ee..79435fca6c3e 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -103,6 +103,8 @@ typedef int (dio_iodone_t)(struct kiocb *iocb, loff=
+_t offset,
+> >  #define MAY_NOT_BLOCK                0x00000080
+> >  /* the inode is opened with O_MAYEXEC */
+> >  #define MAY_OPENEXEC         0x00000100
+> > +/* the mount point is marked as executable */
+> > +#define MAY_EXECMOUNT                0x00000200
+> >
+> >  /*
+> >   * flags in file.f_mode.  Note that FMODE_READ and FMODE_WRITE must co=
+rrespond
+>
+> I find this name unintuitive, but I cannot think of anything better,
+> since I think my problem is that "MAY" doesn't map to the language I
+> want to use to describe what this flag is indicating.
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> --
+> Kees Cook
+
+
+I think that the original patch was perfect, I quite it again
+@@ -3167,6 +3167,14 @@ static int may_open(struct path *path, int
+acc_mode, int flag)
+
++
++ if ((acc_mode & MAY_OPENEXEC)
++ && (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode))
++ && (path->mnt && (path->mnt->mnt_flags & MNT_NOEXEC)))
++            return -EACCES;
++
++
++
+error =3D inode_permission(inode, MAY_OPEN | acc_mode);
+
+As I said in the inline comment above, sysadmin had already express
+security policy in a very clear way,
+mount -noexec !
+I would only check inside inode_permission() whether the file mode is
+any  ---x  permission and deny such
+open when file is opened with O_MAYEXEC under MNT_NOEXEC mount point
+
+New sysctl is indeed required to allow userspace that places scripts
+or libs under noexec mounts.
+fs.mnt_noexec_strict =3D0 (allow, e) , 1 (deny any file with --x
+permission), 2 (deny when O_MAYEXEC absent), for any file with ---x
+permissions)
