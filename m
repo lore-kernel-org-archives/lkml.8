@@ -2,35 +2,34 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71716C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3E62065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0D72065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgENJVs (ORCPT
+        id S1726191AbgENJVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 05:21:48 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:52954 "EHLO
+        Thu, 14 May 2020 05:21:49 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:52955 "EHLO
         rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgENJVs (ORCPT
+        with ESMTP id S1725878AbgENJVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 May 2020 05:21:48 -0400
 Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 04E9LQV60025255, This message is accepted by code: ctloc85258
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 04E9LPFq8025251, This message is accepted by code: ctloc85258
 Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 04E9LQV60025255
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 04E9LPFq8025251
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 14 May 2020 17:21:26 +0800
+        Thu, 14 May 2020 17:21:25 +0800
 Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
  RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 14 May 2020 17:21:26 +0800
+ 15.1.1779.2; Thu, 14 May 2020 17:21:25 +0800
 Received: from RTEXMB06.realtek.com.tw (172.21.6.99) by
  RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
@@ -43,93 +42,62 @@ To:     <linux-realtek-soc@lists.infradead.org>, <afaerber@suse.de>
 CC:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
         <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 4/7] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1195 and rtd1295.
-Date:   Thu, 14 May 2020 17:21:22 +0800
-Message-ID: <20200514092125.6875-5-tychang@realtek.com>
+Subject: [PATCH 0/7] pinctrl: update realtek DHC pinctrl driver
+Date:   Thu, 14 May 2020 17:21:18 +0800
+Message-ID: <20200514092125.6875-1-tychang@realtek.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200514092125.6875-1-tychang@realtek.com>
-References: <20200514092125.6875-1-tychang@realtek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add compatible string for RTD1195 and RTD1295.
+Hi Andreas,
 
-Signed-off-by: TY Chang <tychang@realtek.com>
----
- .../bindings/pinctrl/realtek,rtd-pinctrl.yaml | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
+This series update Realtek DHC pinctrl driver with the following details:
+
+* add missed pins
+* add pin configuration feature 
+* add realtek DHC pinctrl documentation
+* fix the warnings checked by running scripts/checkpatch.pl
+* move realtek DHC pinctrl driver to realtek directory
+* add suspend/resume callback function
+
+Cc: Andreas Färber <afaerber@suse.de>
+
+
+TY Chang (7):
+  pinctrl: realtek: rtd1295: Add missed pins.
+  pinctrl: realtek: rtd1295: Add pin configs.
+  pinctrl: realtek: rtd1195: Add missed pins and pin configs.
+  dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1195 and
+    rtd1295.
+  pinctrl: realtek: DHC: Fix pinctrl driver coding style according to
+    checkpatch.pl.
+  pinctrl: realtek: DHC: Move pinctrl drivers to realtek directory and
+    rename.
+  pinctrl: realtek: DHC: Add suspend/resume callback function.
+
+ .../bindings/pinctrl/realtek,rtd-pinctrl.yaml |  59 ++
+ drivers/pinctrl/Kconfig                       |  10 +-
+ drivers/pinctrl/Makefile                      |   2 +-
+ drivers/pinctrl/pinctrl-rtd119x.c             | 383 ---------
+ drivers/pinctrl/realtek/Kconfig               |  14 +
+ drivers/pinctrl/realtek/Makefile              |   3 +
+ drivers/pinctrl/realtek/pinctrl-rtd.c         | 600 +++++++++++++
+ .../pinctrl/{ => realtek}/pinctrl-rtd1195.h   | 490 ++++++++---
+ .../pinctrl/{ => realtek}/pinctrl-rtd1295.h   | 805 +++++++++++++++---
+ 9 files changed, 1733 insertions(+), 633 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
+ delete mode 100644 drivers/pinctrl/pinctrl-rtd119x.c
+ create mode 100644 drivers/pinctrl/realtek/Kconfig
+ create mode 100644 drivers/pinctrl/realtek/Makefile
+ create mode 100644 drivers/pinctrl/realtek/pinctrl-rtd.c
+ rename drivers/pinctrl/{ => realtek}/pinctrl-rtd1195.h (64%)
+ rename drivers/pinctrl/{ => realtek}/pinctrl-rtd1295.h (62%)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
-new file mode 100644
-index 000000000000..5af5fc8fe633
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/realtek,rtd-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Realtek DHC pin control
-+
-+maintainers:
-+  - Andreas Farber <afaerber@suse.de>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - realtek,rtd1195-iso-pinctrl
-+      - realtek,rtd1195-crt-pinctrl
-+      - realtek,rtd1295-iso-pinctrl
-+      - realtek,rtd1295-sb2-pinctrl
-+      - realtek,rtd1295-disp-pinctrl
-+      - realtek,rtd1295-cr-pinctrl
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    iso_pinctrl: pinctrl@300 {
-+        compatible = "realtek,rtd1195-iso-pinctrl";
-+        reg = <0x300 0x14>;
-+    }
-+  - |
-+    crt_pinctrl: pinctrl@300 {
-+        compatible = "realtek,rtd1195-crt-pinctrl";
-+        reg = <0x300 0x78>;
-+    }
-+  - |
-+    iso_pinctrl: pinctrl@300 {
-+        compatible = "realtek,rtd1295-iso-pinctrl";
-+        reg = <0x300 0x24>;
-+    }
-+  - |
-+    sb2_pinctrl: pinctrl@900 {
-+        compatible = "realtek,rtd1295-sb2-pinctrl";
-+        reg = <0x900 0x100>;
-+    }
-+  - |
-+    disp_pinctrl: pinctrl@4d000 {
-+        compatible = "realtek,rtd1295-disp-pinctrl";
-+        reg = <0x4d000 0x100>;
-+    };
-+  - |
-+    cr_pinctrl: pinctrl@12600 {
-+        compatible = "realtek,rtd1295-cr-pinctrl";
-+        reg = <0x12600 0x100>;
-+    };
-+
 -- 
 2.26.2
 
