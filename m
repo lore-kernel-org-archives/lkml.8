@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB416C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A78C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84401207D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 615FF207D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482605;
-	bh=fc5t0heKlO77ZO7xYLMZMq+45UatG1ff9PqplceSjG8=;
+	s=default; t=1589482612;
+	bh=Dpxlo7zgvXqki3/emE5wa7pFOsjVIK+w6rDKNfaGR60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VfsRiQGutLDqwOexHBXd76KnQF3Mq4c22S4TAaQcfyfmemTvoMggd5wPiybv4AjeS
-	 xKApft5SMi631MR1ue3Kc+dAAutff6+zCYMZ5OzNYBfdlazVZixnaVJ18Wen5O6fN1
-	 03sJt9pJj61xd0MtOBv8oQT74YjvF0yUtGBfCciY=
+	b=K2loqGbYuS+/goRjek5ajm89pDF4iVzODg7/OnXAJ39N5HCHPjuPmhqw6MxWXKePo
+	 smrXeUOmx0mNRJR5szLLtctVUGtfjFEWC9YO6Ulzyo8WAzB4SIXMqs3G8oMGoImQcN
+	 ih9lKeV7wNFVUYhM9nDwOvp3LojZY2TvmxPNtXZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgENS4p (ORCPT
+        id S1728887AbgENS4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:56:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57236 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729675AbgENS4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:56:20 -0400
+        id S1729707AbgENS42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:56:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90AA2207DA;
-        Thu, 14 May 2020 18:56:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83CE7207F7;
+        Thu, 14 May 2020 18:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482579;
-        bh=fc5t0heKlO77ZO7xYLMZMq+45UatG1ff9PqplceSjG8=;
+        s=default; t=1589482588;
+        bh=Dpxlo7zgvXqki3/emE5wa7pFOsjVIK+w6rDKNfaGR60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EC8fndeS/cr5P5/0aaYYJBp3Kcz6Cuare0ZNDf7IOE2YEKnBM/pxJafH+lixKbBvu
-         iJtQK+oqgfpHOWWfT40pG5lKV5Ye0TGDmyvFuMzGyrvAtxGCGou55Kp+VGqe/2dJ7V
-         0TOPK4NdOJtM+EI9joRAaUiVsSnKK0bsnd/RP9E4=
+        b=UUEuB8+XEzUCobGTHfOcfNzVIEVnmL/GkUTlk/sDBOSyegewsChU/rs4hVsEsP5+7
+         FOjSeNnt8l+eJwJbyss7EVu9zQ1JRGghY1o7PmaXoxr7xpT6lt+9R3H7aniKzthnQU
+         36LlIz6H0tRbAZJnEQdw1ehQSi/D1ce/HC8g5KLE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tariq Toukan <tariqt@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 23/27] net/mlx4_core: Fix use of ENOSPC around mlx4_counter_alloc()
-Date:   Thu, 14 May 2020 14:55:46 -0400
-Message-Id: <20200514185550.21462-23-sashal@kernel.org>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/14] HID: multitouch: add eGalaxTouch P80H84 support
+Date:   Thu, 14 May 2020 14:56:13 -0400
+Message-Id: <20200514185625.21753-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185550.21462-1-sashal@kernel.org>
-References: <20200514185550.21462-1-sashal@kernel.org>
+In-Reply-To: <20200514185625.21753-1-sashal@kernel.org>
+References: <20200514185625.21753-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,52 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tariq Toukan <tariqt@mellanox.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-[ Upstream commit 40e473071dbad04316ddc3613c3a3d1c75458299 ]
+[ Upstream commit f9e82295eec141a0569649d400d249333d74aa91 ]
 
-When ENOSPC is set the idx is still valid and gets set to the global
-MLX4_SINK_COUNTER_INDEX.  However gcc's static analysis cannot tell that
-ENOSPC is impossible from mlx4_cmd_imm() and gives this warning:
+Add support for P80H84 touchscreen from eGalaxy:
 
-drivers/net/ethernet/mellanox/mlx4/main.c:2552:28: warning: 'idx' may be
-used uninitialized in this function [-Wmaybe-uninitialized]
- 2552 |    priv->def_counter[port] = idx;
+  idVendor           0x0eef D-WAV Scientific Co., Ltd
+  idProduct          0xc002
+  iManufacturer           1 eGalax Inc.
+  iProduct                2 eGalaxTouch P80H84 2019 vDIVA_1204_T01 k4.02.146
 
-Also, when ENOSPC is returned mlx4_allocate_default_counters should not
-fail.
-
-Fixes: 6de5f7f6a1fa ("net/mlx4_core: Allocate default counter per port")
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/hid/hid-ids.h        | 1 +
+ drivers/hid/hid-multitouch.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/main.c b/drivers/net/ethernet/mellanox/mlx4/main.c
-index 781642d47133d..751aac54f2d55 100644
---- a/drivers/net/ethernet/mellanox/mlx4/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/main.c
-@@ -2478,6 +2478,7 @@ static int mlx4_allocate_default_counters(struct mlx4_dev *dev)
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index e1807296a1a01..33d2b5948d7fc 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -319,6 +319,7 @@
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_7349	0x7349
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_73F7	0x73f7
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001	0xa001
++#define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002	0xc002
  
- 		if (!err || err == -ENOSPC) {
- 			priv->def_counter[port] = idx;
-+			err = 0;
- 		} else if (err == -ENOENT) {
- 			err = 0;
- 			continue;
-@@ -2527,7 +2528,8 @@ int mlx4_counter_alloc(struct mlx4_dev *dev, u32 *idx)
- 				   MLX4_CMD_TIME_CLASS_A, MLX4_CMD_WRAPPED);
- 		if (!err)
- 			*idx = get_param_l(&out_param);
--
-+		if (WARN_ON(err == -ENOSPC))
-+			err = -EINVAL;
- 		return err;
- 	}
- 	return __mlx4_counter_alloc(dev, idx);
+ #define USB_VENDOR_ID_ELAN		0x04f3
+ 
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 9de379c1b3fd3..56c4a81d3ea24 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1300,6 +1300,9 @@ static const struct hid_device_id mt_devices[] = {
+ 	{ .driver_data = MT_CLS_EGALAX_SERIAL,
+ 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
+ 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001) },
++	{ .driver_data = MT_CLS_EGALAX,
++		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
++			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
+ 
+ 	/* Elitegroup panel */
+ 	{ .driver_data = MT_CLS_SERIAL,
 -- 
 2.20.1
 
