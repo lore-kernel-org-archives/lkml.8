@@ -2,153 +2,121 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32252C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09DD920727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9705C20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:46:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9M8nB17"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k1dGw+1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgENOp7 (ORCPT
+        id S1728005AbgENOpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:45:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37994 "EHLO
+        Thu, 14 May 2020 10:45:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbgENOpx (ORCPT
+        with ESMTP id S1726239AbgENOpt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:45:53 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EC73C061A0F;
-        Thu, 14 May 2020 07:45:53 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id t3so2552405otp.3;
-        Thu, 14 May 2020 07:45:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ABi21lm1YVWqXpRMwlP2aGmVIPQvBoihfVQI7RJ+5RQ=;
-        b=C9M8nB170wRNxb2gFqjdcjuJvHWeIOmGX0N7cl/Q1fPs22QPLpuR7HdjO/+5eE4gwE
-         jwrNYVJwjN5ncCRdMAS9IfhrhzM6GKGozt7NJa7Tjgf8O3nxtLArXtu3QujKL9vv+dY7
-         7WHnMw6FX71uZqXIKVz/uvNgI7t6qIxd//+5vUaI4IOmBBPaVvFOrXZNFlCud8+zEnBq
-         BGQuPlgbjXhNzGBTs0uhmTI8rfDKGE0bUeBtqkrrBZcs4hvnYt8X4bmun+h3DS/p7hsI
-         tY9TgmIrPfd5eUWxMsThcZL7A8v45VAL+W0zUqtXyspuVS/lSTu46RNvwFCxEVNtgqe2
-         hMHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ABi21lm1YVWqXpRMwlP2aGmVIPQvBoihfVQI7RJ+5RQ=;
-        b=Fcu3ZJvmlwIZbGuMstrT0o4hxYGUIpbkf2tPryA58yBNNmlzVIHGKF9C8AuUsH2lzN
-         aF24GeAO0d66yshyTcFOhz6IHXZqHeZ54yKY9ynb3GjHVQnWbbWGkmvOH5DUGpFae/fW
-         LPc0sFgzzBWO0cm5n7HoEJY4AnRWICT00rw+zefi04Xjhhk9uu1D8LR7XaPvutAezFkv
-         qrcaiKHsWRCMdmFwd9jTHFFqRo8++KR/65Qkl6BjIC2D+yiwPpUxO2VXjkq687G0dQDu
-         RDYM6WRvFd23sg8t9tQ6PHUfCz0DOkIZBOIr3EuWtBC3hfv0ENWF7GH0mFZzIqX77plK
-         ztRg==
-X-Gm-Message-State: AOAM531YVdNc8UUfDnfRCdTWC/zqDpt+eRReAo0yHe9hoIsP7I/GKGvb
-        U3nFJmQ5DxcHBgFhgjkK1Pl3GBpefLvONCj6CtU=
-X-Google-Smtp-Source: ABdhPJzz26XPZOat1SoQ12vWoBFitMxzcVkQPUSEc6Izcm6DiLLPxYe7PZqxHT9JaIz8ygeud7EBo+Laij1AF1cRYgs=
-X-Received: by 2002:a05:6830:1152:: with SMTP id x18mr3543685otq.89.1589467552395;
- Thu, 14 May 2020 07:45:52 -0700 (PDT)
+        Thu, 14 May 2020 10:45:49 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55FDFC061A0E;
+        Thu, 14 May 2020 07:45:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=9UtQoI/F5BndnEZjurerNgRQRwh1y2a1S2oOi1HN0Zo=; b=k1dGw+1XweTzOQyPUqcxUkCtT7
+        DdZjrD9zW7QEqX7gr5Z+h6NQ4j1f3Jj+vAzLLgAEKY5tIv0q1O8zeqWNb2F5RNRSqX+oo67kSO5QA
+        UeHiCtaXOoGx7Im4uAiCiyD/sqORBRzMYWw/doyQGzpIajiwTfXUOvFRta98RWyfY3P6QZ8kl5Hgs
+        H41dAhQka80hq+jDTz2UBZ4+gXPHRRbpwA9M3ewGFJPFYr4BkQQLDbboHWL5+2qCk1vBjH9eLQklK
+        c8ffme2S4ITSikIk9mSFAXCeNxE9wcz1R8RrASndwFq+R+XRhSLPmzccNKf3LZyZQPCuUqp4TtE0x
+        ZbBi4f2Q==;
+Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZF7J-0004jl-MM; Thu, 14 May 2020 14:45:46 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 3/4] appletalk: factor out a atrtr_ioctl_addrt helper
+Date:   Thu, 14 May 2020 16:45:34 +0200
+Message-Id: <20200514144535.3000410-4-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200514144535.3000410-1-hch@lst.de>
+References: <20200514144535.3000410-1-hch@lst.de>
 MIME-Version: 1.0
-References: <CAEjxPJ6pFdDfm55pv9bT3CV5DTFF9VqzRmG_Xi5bKNxPaGuOLg@mail.gmail.com>
- <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk>
- <CAEjxPJ4=ZN_jKP2nX5mrMA3OxC8XLsYEmCPCD-78H4XQw=_hCA@mail.gmail.com>
- <3611507.1589411611@warthog.procyon.org.uk> <CAEjxPJ5Dw0Lf6DnUL01XSJZF9zu-ACnmxOkC0VHxGTzGcmbpRQ@mail.gmail.com>
-In-Reply-To: <CAEjxPJ5Dw0Lf6DnUL01XSJZF9zu-ACnmxOkC0VHxGTzGcmbpRQ@mail.gmail.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Thu, 14 May 2020 10:45:40 -0400
-Message-ID: <CAEjxPJ72Y+G5wJEzYT_Ekth07nHzTS5Oh+8ss7Xc90-_Qq6wWw@mail.gmail.com>
-Subject: Re: [PATCH] keys: Make the KEY_NEED_* perms an enum rather than a mask
-To:     David Howells <dhowells@redhat.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        keyrings@vger.kernel.org, SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 8:08 AM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
->
-> On Wed, May 13, 2020 at 7:13 PM David Howells <dhowells@redhat.com> wrote:
-> >
-> > Stephen Smalley <stephen.smalley.work@gmail.com> wrote:
-> >
-> > > >  (3) An override due to CAP_SYS_ADMIN.
-> > >
-> > > CAP_SYS_ADMIN should never skip SELinux checking.  Even for Smack,
-> > > there is a separate capability (CAP_MAC_ADMIN) for that purpose.
-> >
-> > The LSM doesn't get consulted at the moment.  With this patch, it will get
-> > consulted.
-> >
-> > > >  (4) An override due to an instantiation token being present.
-> > >
-> > > Not sure what this means but again we shouldn't skip SELinux checking
-> > > based on mere possession of an object capability (not a POSIX
-> > > capability).
-> >
-> > The kernel has delegated the instantiation of a key to the calling process and
-> > has given it a temporary key of type ".request_key_auth" which it has put into
-> > force with keyctl(KEYCTL_ASSUME_AUTHORITY).
-> >
-> > This authorisation token grants the caller the ability to (a) perform
-> > operations on the key it wouldn't otherwise have permission to do, (b) use the
-> > key instantiation keyctls and (c) temporarily search the keyrings of the
-> > caller of request_key() using the creds of that caller and to read/use the
-> > keys found therein if the caller was permitted to do so.
-> >
-> > > It would be better if the permission indicated the actual operation
-> > > (e.g. KEY_NEED_INVALIDATE_SPECIAL), and the decision whether to permit
-> > > CAP_SYS_ADMIN processes to override was left to the security modules.
-> > > SELinux doesn't automatically allow CAP_SYS_ADMIN processes to do
-> > > everything.
-> >
-> > These individual permissions don't exist yet.  I have an ACL patchset that
-> > allows me to add a greater range - though there's issues with SELinux there
-> > also.
-> >
-> > Also, the keyrings are specially marked to say that the sysadmin is allowed to
-> > flush them at the moment - but that can go away with the ACL stuff.
-> >
-> > > > +       switch (need_perm) {
-> > > > +       case KEY_NEED_UNLINK:
-> > > > +       case KEY_SYSADMIN_OVERRIDE:
-> > > > +       case KEY_AUTHTOKEN_OVERRIDE:
-> > > > +       case KEY_DEFER_PERM_CHECK:
-> > > >                 return 0;
-> > >
-> > > We really shouldn't be skipping any/all checking on CAP_SYS_ADMIN or
-> > > an AUTHTOKEN; those should still be subject to MAC policy.
-> >
-> > I'm not sure how to do that.
-> >
-> > Note that KEY_NEED_UNLINK *must not* be overruled by the MAC policy.  The
-> > value is only there because lookup_user_key() requires something to be put
-> > into that parameter - it's more of a courtesy thing, I suppose.
-> >
-> > Why should AUTHTOKEN be subject to MAC policy?  The kernel has told the
-> > process to go and instantiate a key.  It shouldn't really then turn around and
-> > tell the process "oh, but you're not actually allowed to do that".
->
-> On what basis did the kernel authorize the process to instantiate the
-> key?  At what point did a security module get involved in the decision
-> as to what process(es) are authorize to instantiate a key,
-> particularly for a process with a different credential/security
-> context?
+Add a helper than can be shared with the upcoming compat ioctl handler.
 
-BTW I'm not saying you have to change this patch since IIUC it merely
-preserves the existing behavior for these special cases.  But we will
-want to address these gaps (or clarify that no real gap exists) in LSM
-control over key operations going forward.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ net/appletalk/ddp.c | 33 ++++++++++++++++++++-------------
+ 1 file changed, 20 insertions(+), 13 deletions(-)
+
+diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
+index b41375d4d295d..4177a74f65436 100644
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -867,6 +867,24 @@ static int atif_ioctl(int cmd, void __user *arg)
+ 	return copy_to_user(arg, &atreq, sizeof(atreq)) ? -EFAULT : 0;
+ }
+ 
++static int atrtr_ioctl_addrt(struct rtentry *rt)
++{
++	struct net_device *dev = NULL;
++
++	if (rt->rt_dev) {
++		char name[IFNAMSIZ];
++
++		if (copy_from_user(name, rt->rt_dev, IFNAMSIZ-1))
++			return -EFAULT;
++		name[IFNAMSIZ-1] = '\0';
++
++		dev = __dev_get_by_name(&init_net, name);
++		if (!dev)
++			return -ENODEV;
++	}
++	return atrtr_create(rt, dev);
++}
++
+ /* Routing ioctl() calls */
+ static int atrtr_ioctl(unsigned int cmd, void __user *arg)
+ {
+@@ -882,19 +900,8 @@ static int atrtr_ioctl(unsigned int cmd, void __user *arg)
+ 		return atrtr_delete(&((struct sockaddr_at *)
+ 				      &rt.rt_dst)->sat_addr);
+ 
+-	case SIOCADDRT: {
+-		struct net_device *dev = NULL;
+-		if (rt.rt_dev) {
+-			char name[IFNAMSIZ];
+-			if (copy_from_user(name, rt.rt_dev, IFNAMSIZ-1))
+-				return -EFAULT;
+-			name[IFNAMSIZ-1] = '\0';
+-			dev = __dev_get_by_name(&init_net, name);
+-			if (!dev)
+-				return -ENODEV;
+-		}
+-		return atrtr_create(&rt, dev);
+-	}
++	case SIOCADDRT:
++		return atrtr_ioctl_addrt(&rt);
+ 	}
+ 	return -EINVAL;
+ }
+-- 
+2.26.2
+
