@@ -2,199 +2,118 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C81C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2712C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B548720671
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D540206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:05:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=seznam.cz header.i=@seznam.cz header.b="IHFWVTxh"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="pPgANI9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726161AbgENREs (ORCPT
+        id S1726191AbgENRFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 13:04:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgENREr (ORCPT
+        Thu, 14 May 2020 13:05:05 -0400
+Received: from mail.efficios.com ([167.114.26.124]:54186 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbgENRFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 13:04:47 -0400
-Received: from mxa2.seznam.cz (mxa2.seznam.cz [IPv6:2a02:598:2::90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D27C061A0C;
-        Thu, 14 May 2020 10:04:46 -0700 (PDT)
-Received: from email.seznam.cz
-        by email-smtpc11b.ng.seznam.cz (email-smtpc11b.ng.seznam.cz [10.23.14.75])
-        id 3ef2742065fc20493f5bb87e;
-        Thu, 14 May 2020 19:04:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seznam.cz; s=beta;
-        t=1589475878; bh=U1RHpu2MQPEcxje/nVWl8eQg+lZOAKfXx2Xs659abiQ=;
-        h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-         Content-Transfer-Encoding;
-        b=IHFWVTxhrun3hvhbMkMoKgl8/SzmQYKKtSjGwdKu8F8i01OT5l2iSyAAFYzv2uE+W
-         YG6i5jEDUQo5ch5HdgRiU6ciO5592O2rU8TMOKWrDEKTVPR+b8VlcZ149rfg6WpsKo
-         bnKaKtsGbVsNal2IuKclpn8OQkm552aKfxpVvzCM=
-Received: from localhost.localdomain (212.69.128.228 [212.69.128.228])
-        by email-relay9.ng.seznam.cz (Seznam SMTPD 1.3.114) with ESMTP;
-        Thu, 14 May 2020 19:04:33 +0200 (CEST)  
-From:   michael.srba@seznam.cz
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Michael Srba <michael.srba@seznam.cz>
-Subject: [PATCH] arm64: dts: qcom: msm8916-samsung-a3u: add nodes for display panel
-Date:   Thu, 14 May 2020 19:01:29 +0200
-Message-Id: <20200514170129.10902-1-michael.srba@seznam.cz>
-X-Mailer: git-send-email 2.24.0
+        Thu, 14 May 2020 13:05:05 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 336062A6EC1;
+        Thu, 14 May 2020 13:05:04 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id YUwEbBenprlJ; Thu, 14 May 2020 13:05:03 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id CF9832A6A79;
+        Thu, 14 May 2020 13:05:03 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com CF9832A6A79
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1589475903;
+        bh=LQXqwpa3nj6Fc4ZCrj9+GEMOkkY0i7tuMwEgpzs19zc=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=pPgANI9yCeAOJbolI55NgwdCwA2Z46JYDTqrFyr2093oVkWPi/JniF8Lkd1QymGmD
+         r4JYCA34Jx8u/EY/1pGwDzU7TcgsP0dZKzpnunr7HLwsR4P3A9oZdbUETPAL0nPZ4l
+         zwhSHWfwOwGYFGSBIF2A0r+r8Y2MtjrUY7Z1QGoDJmgtgwyqvR5/XUhLvfOflIo2n2
+         jd9aoPOCZKnHUYjGvtxKVe+HNFBdP2NcWtk+nOfyLwjVplzdtaPn3W6+hiBrO+5ZZg
+         FpgcSd4Xtfy6K7PYJ0MMVmMTtPJFCks0GKQk6u+tcwVlcK4POp0Rb7Rw5tYZA6c1uy
+         0V/g+LfgXRq1g==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id C-79SLDiHFAQ; Thu, 14 May 2020 13:05:03 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id BBAEC2A7103;
+        Thu, 14 May 2020 13:05:03 -0400 (EDT)
+Date:   Thu, 14 May 2020 13:05:03 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, paulmck <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tony Luck <tony.luck@intel.com>
+Message-ID: <981919093.21263.1589475903673.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200514163947.GF9266@zn.tnic>
+References: <20200505131602.633487962@linutronix.de> <20200505134100.957390899@linutronix.de> <20200514141703.GD9266@zn.tnic> <1278452779.21179.1589472210183.JavaMail.zimbra@efficios.com> <20200514163947.GF9266@zn.tnic>
+Subject: Re: [patch V4 part 1 29/36] x86/mce: Send #MC singal from task work
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
+Thread-Topic: x86/mce: Send #MC singal from task work
+Thread-Index: HgI41vOZKsWdU0dWCWo+PNlydfISwg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Srba <michael.srba@seznam.cz>
+----- On May 14, 2020, at 12:39 PM, Borislav Petkov bp@alien8.de wrote:
 
-This patch wires up display support on Samsung Galaxy A3 2015.
+> On Thu, May 14, 2020 at 12:03:30PM -0400, Mathieu Desnoyers wrote:
+>> - #MC triggered, queuing task work,
+>> - unrelated signal happens to be delivered to task,
+>> - exit to usermode loop handles do_signal first,
+>> - then it runs task work.
+> 
+> How can that even happen?
+> 
+> exit_to_usermode_loop->do_signal->get_signal and that does:
+> 
+>        if (unlikely(current->task_works))
+>                task_work_run();
+> 
+> at the top.
+> 
+> So the task work will always run before the signal handler.
 
-Signed-off-by: Michael Srba <michael.srba@seznam.cz>
+OK yes, nevermind. I focused on its invocation from tracehook_notify_resume
+and missed this invocation in do_signal. My bad.
 
----
- .../qcom/msm8916-samsung-a2015-common.dtsi    | 44 +++++++++++++++
- .../boot/dts/qcom/msm8916-samsung-a3u-eur.dts | 54 +++++++++++++++++++
- 2 files changed, 98 insertions(+)
+Thanks,
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-index af812f76e8be..2a64aa269f52 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-@@ -72,6 +72,24 @@ phy {
- 			};
- 		};
- 
-+		mdss@1a00000 {
-+			dsi@1a98000 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				vdda-supply = <&pm8916_l2>;
-+				vddio-supply = <&pm8916_l6>;
-+
-+				pinctrl-names = "default", "sleep";
-+				pinctrl-0 = <&mdss_default>;
-+				pinctrl-1 = <&mdss_sleep>;
-+			};
-+
-+			dsi-phy@1a98300 {
-+				vddio-supply = <&pm8916_l6>;
-+			};
-+		};
-+
- 		wcnss@a21b000 {
- 			status = "okay";
- 		};
-@@ -172,6 +190,32 @@ pinconf {
- 			bias-disable;
- 		};
- 	};
-+
-+	pmx-mdss {
-+		mdss_default: mdss-default {
-+			pinmux {
-+				function = "gpio";
-+				pins = "gpio25";
-+			};
-+			pinconf {
-+				pins = "gpio25";
-+				drive-strength = <8>;
-+				bias-disable;
-+			};
-+		};
-+
-+		mdss_sleep: mdss-sleep {
-+			pinmux {
-+				function = "gpio";
-+				pins = "gpio25";
-+			};
-+			pinconf {
-+				pins = "gpio25";
-+				drive-strength = <2>;
-+				bias-pull-down;
-+			};
-+		};
-+	};
- };
- 
- &smd_rpm_regulators {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts b/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
-index d10f7ac5089f..b46c87289033 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
-@@ -7,4 +7,58 @@
- / {
- 	model = "Samsung Galaxy A3U (EUR)";
- 	compatible = "samsung,a3u-eur", "qcom,msm8916";
-+
-+	reg_panel_vdd3: regulator-panel-vdd3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "panel_vdd3";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+
-+		gpio = <&msmgpio 9 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&panel_vdd3_default>;
-+	};
-+};
-+
-+&dsi0 {
-+	panel@0 {
-+		reg = <0>;
-+
-+		compatible = "samsung,s6e88a0-ams452ef01";
-+
-+		vdd3-supply = <&reg_panel_vdd3>;
-+		vci-supply = <&pm8916_l17>;
-+		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&dsi0_out>;
-+			};
-+		};
-+	};
-+
-+	ports {
-+		port@1 {
-+			dsi0_out: endpoint {
-+				remote-endpoint = <&panel_in>;
-+				data-lanes = <0 1>;
-+			};
-+		};
-+	};
-+};
-+
-+&msmgpio {
-+	panel_vdd3_default: panel-vdd3-default {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio9";
-+		};
-+		pinconf {
-+			pins = "gpio9";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
- };
+Mathieu
+
+
 -- 
-2.24.0
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
