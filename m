@@ -2,111 +2,169 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE95C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0429220758
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B2220657
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WeBSVMSY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgENPnz (ORCPT
+        id S1727827AbgENPpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:43:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47162 "EHLO
+        Thu, 14 May 2020 11:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgENPnz (ORCPT
+        with ESMTP id S1726551AbgENPpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:43:55 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E36F9C061A0C;
-        Thu, 14 May 2020 08:43:54 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: nicolas)
-        with ESMTPSA id 08A7D2A2F7B
-Message-ID: <9082c3117b9e9e65f35fc7ad91009c6ce412a842.camel@collabora.com>
-Subject: Re: [PATCH] media: cedrus: Propagate OUTPUT resolution to CAPTURE
-From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To:     Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Cc:     stable@vger.kernel.org, kernel@collabora.com,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 14 May 2020 11:43:40 -0400
-In-Reply-To: <20200514153903.341287-1-nicolas.dufresne@collabora.com>
-References: <20200514153903.341287-1-nicolas.dufresne@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+        Thu, 14 May 2020 11:45:17 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A5BC05BD09
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:45:16 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ms17so12619067pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:45:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=C14dFYivD8qv8BpAvB7kTDBgmObt0Bwj81tS0Zc4/E8=;
+        b=WeBSVMSYQ4gtB5dULeEkKU/Ya0fz/EW/RpuUt7D8OeJEBKAKV2pF5kPidP02iOR39J
+         G1MttEPeItqlTkRXkO6DaVmCrP7nH7+PO7my0CuD5d86lDI5xv46HrYCZiFQuNjdOnTz
+         5lq27uwgV1aYUO8FPK6JNzqOwNdl1+mzKbYGk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=C14dFYivD8qv8BpAvB7kTDBgmObt0Bwj81tS0Zc4/E8=;
+        b=oHYCSu7tnBLIk7FBuwrMbW/4ElJI/b9tNRaAWSAWdsG0NYh2YH/7MSx2z0VRPuFguH
+         iKAPeu2c3gmfj/cutFevmoDAvpeNpFOMxCkCXtPLhSXRaECAb3hssRrcBCtz9R6LCFw2
+         MhC/8LP5PP4vGlStNDB7sRWIjVu6ujrEo0fo45KJI3nGpolQ4O21Vm/jDjW8OPUj2aX9
+         oLypAEEjGocjMWyJkDBZ2TK0MekiYwE+PWUyg34tGlEQ5AJK2aVgzOqDaQBOAMzminzE
+         3aBP59IFscgHJOb0LadCwW0gDxzCWdrIkpKiskTwOQCuGvLiabU32W6/Iyb+PP6YzW/M
+         Izsw==
+X-Gm-Message-State: AOAM530UAn8ugjQjjmmQ6GaXxUUziAbgdsZIrQSb20e40TTRASytYqzr
+        U8gKUjG8rynhmWxw/heu4pzk+A==
+X-Google-Smtp-Source: ABdhPJyhzYoT7OtYhHCXKJ4eWD6sNRzKX5qxh8oQ2rT3RB19/hswKImd/xT2ezGyqupFNS8qGCcfOg==
+X-Received: by 2002:a17:902:c113:: with SMTP id 19mr4514772pli.95.1589471115414;
+        Thu, 14 May 2020 08:45:15 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e15sm1909094pfh.23.2020.05.14.08.45.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 08:45:14 -0700 (PDT)
+Date:   Thu, 14 May 2020 08:45:13 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
+ through O_MAYEXEC
+Message-ID: <202005140830.2475344F86@keescook>
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20200505153156.925111-4-mic@digikod.net>
+ <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
+ <202005131525.D08BFB3@keescook>
+ <202005132002.91B8B63@keescook>
+ <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le jeudi 14 mai 2020 à 11:39 -0400, Nicolas Dufresne a écrit :
-> As per spec, the CAPTURE resolution should be automatically set based on
-> the OTUPUT resolution. This patch properly propagate width/height to the
-> capture when the OUTPUT format is set and override the user provided
-> width/height with configured OUTPUT resolution when the CAPTURE fmt is
-> updated.
+On Thu, May 14, 2020 at 08:22:01AM -0400, Stephen Smalley wrote:
+> On Wed, May 13, 2020 at 11:05 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Wed, May 13, 2020 at 04:27:39PM -0700, Kees Cook wrote:
+> > > Like, couldn't just the entire thing just be:
+> > >
+> > > diff --git a/fs/namei.c b/fs/namei.c
+> > > index a320371899cf..0ab18e19f5da 100644
+> > > --- a/fs/namei.c
+> > > +++ b/fs/namei.c
+> > > @@ -2849,6 +2849,13 @@ static int may_open(const struct path *path, int acc_mode, int flag)
+> > >               break;
+> > >       }
+> > >
+> > > +     if (unlikely(mask & MAY_OPENEXEC)) {
+> > > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_MOUNT &&
+> > > +                 path_noexec(path))
+> > > +                     return -EACCES;
+> > > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_FILE)
+> > > +                     acc_mode |= MAY_EXEC;
+> > > +     }
+> > >       error = inode_permission(inode, MAY_OPEN | acc_mode);
+> > >       if (error)
+> > >               return error;
+> > >
+> >
+> > FYI, I've confirmed this now. Effectively with patch 2 dropped, patch 3
+> > reduced to this plus the Kconfig and sysctl changes, the self tests
+> > pass.
+> >
+> > I think this makes things much cleaner and correct.
 > 
-> This also prevents userspace from selecting a CAPTURE resolution that is
-> too small, avoiding unwanted page faults.
+> I think that covers inode-based security modules but not path-based
+> ones (they don't implement the inode_permission hook).  For those, I
+> would tentatively guess that we need to make sure FMODE_EXEC is set on
+> the open file and then they need to check for that in their file_open
+> hooks.
 
-Side note, this patch is based on top of "Samuel Holland <samuel@sholland.org>"
-patches:
+I kept confusing myself about what order things happened in, so I made
+these handy notes about the call graph:
 
-	[PATCH v3 1/2] media: cedrus: Program output format during each run
-	[PATCH v3 2/2] media: cedrus: Implement runtime PM
+openat2(dfd, char * filename, open_how)
+    do_filp_open(dfd, filename, open_flags)
+        path_openat(nameidata, open_flags, flags)
+            do_open(nameidata, file, open_flags) 
+                may_open(path, acc_mode, open_flag)
+                    inode_permission(inode, MAY_OPEN | acc_mode)
+                        security_inode_permission(inode, acc_mode)
+                vfs_open(path, file)
+                    do_dentry_open(file, path->dentry->d_inode, open)
+                        if (unlikely(f->f_flags & FMODE_EXEC && !S_ISREG(inode->i_mode))) ...
+                        security_file_open(f)
+                        open()
 
-As the patchset also fixes concurrent decoding issues. This was tested using
-GStreamer implementation, which strictly follow the Stateless CODEC spec and
-expect OUTPUT to CAPTURE width/height propagation.
+So, it looks like adding FMODE_EXEC into f_flags in do_open() is needed in
+addition to injecting MAY_EXEC into acc_mode in do_open()? Hmmm
 
-> 
-> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> ---
->  drivers/staging/media/sunxi/cedrus/cedrus_video.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> index 16d82309e7b6..a6d6b15adc2e 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> @@ -247,6 +247,8 @@ static int cedrus_try_fmt_vid_cap(struct file *file, void
-> *priv,
->  		return -EINVAL;
->  
->  	pix_fmt->pixelformat = fmt->pixelformat;
-> +	pix_fmt->width = ctx->src_fmt.width;
-> +	pix_fmt->height = ctx->src_fmt.height;
->  	cedrus_prepare_format(pix_fmt);
->  
->  	return 0;
-> @@ -319,11 +321,14 @@ static int cedrus_s_fmt_vid_out(struct file *file, void
-> *priv,
->  		break;
->  	}
->  
-> -	/* Propagate colorspace information to capture. */
-> +	/* Propagate format information to capture. */
->  	ctx->dst_fmt.colorspace = f->fmt.pix.colorspace;
->  	ctx->dst_fmt.xfer_func = f->fmt.pix.xfer_func;
->  	ctx->dst_fmt.ycbcr_enc = f->fmt.pix.ycbcr_enc;
->  	ctx->dst_fmt.quantization = f->fmt.pix.quantization;
-> +	ctx->dst_fmt.width = ctx->src_fmt.width;
-> +	ctx->dst_fmt.height = ctx->src_fmt.height;
-> +	cedrus_prepare_format(&ctx->dst_fmt);
->  
->  	return 0;
->  }
-
+-- 
+Kees Cook
