@@ -2,246 +2,131 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3C720734
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:27:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Cw5b4Kt0"
+	by mail.kernel.org (Postfix) with ESMTP id B79F02065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:27:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgENN1O (ORCPT
+        id S1727802AbgENN1x convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:27:14 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:43670 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726011AbgENN1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:27:14 -0400
-Received: from zn.tnic (p200300EC2F0BBD00DC45039F589BC722.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:bd00:dc45:39f:589b:c722])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2CDB61EC0377;
-        Thu, 14 May 2020 15:27:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589462832;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/gUNpFf2J8YxXc2dc4jvcIV4nSmrVfwfJRbIw3Hp9zA=;
-        b=Cw5b4Kt0phDez6vovuoDcELNE1rn2Rb0qgYhKo7jNCZmoqvQWGaDSBduPb+thltajNRdgz
-        clbAbfOLrwUM+npRa7Mj3sXbe/4A5yzpF3a2wAUbHKrmt81x2u4t6MumqmAMrvvvAgBfPN
-        765zESrOT7yfhbY4p4wvG2NH/A7RFEk=
-Date:   Thu, 14 May 2020 15:27:06 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Matz <matz@suse.de>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        Jakub Jelinek <jakub@redhat.com>
-Subject: [PATCH] x86: Fix early boot crash on gcc-10, third try
-Message-ID: <20200514132706.GB9266@zn.tnic>
-References: <20200513222038.GC6733@zn.tnic>
- <CAHk-=wgybuOF+Jp2XYWqM7Xn1CW6szWQw_FgVoFh5jx_4YoCVw@mail.gmail.com>
- <20200513233616.GD6733@zn.tnic>
- <CAHk-=wjZXFe08MiNRevJFGDvX0O6kcQTiK8GFBS7hwUAzB+LQw@mail.gmail.com>
- <CAKwvOd=o_wuiVpw5KVzLEt25W-A9Ah9fzftPZLG+yutqJmWbOg@mail.gmail.com>
- <CAHk-=wg6G+p1RRjR6UZBEuSCDs9=iWBsxrDPTEwqh+y5RayqKA@mail.gmail.com>
- <CALCETrUYA60fWu+=MviKx0NmW+_ppsOcv-ShUXdbyM4EjyfzHQ@mail.gmail.com>
- <CAHk-=wgiGxRgJGS-zyer1C_x2MQUVo6iZn0=aJyuFTqJWk-mpA@mail.gmail.com>
- <20200514052234.GA1894416@rani.riverdale.lan>
- <CAK8P3a1Cfzu7L30bFP-Sf2_GbkN_10CCJsbefTXyfnGF16uHMA@mail.gmail.com>
+        Thu, 14 May 2020 09:27:53 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:22344 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726239AbgENN1v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 09:27:51 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-113-XOFJDQnwOvSfGd4XKFaC9g-1; Thu, 14 May 2020 14:27:47 +0100
+X-MC-Unique: XOFJDQnwOvSfGd4XKFaC9g-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 14 May 2020 14:27:46 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 14 May 2020 14:27:46 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Marcelo Ricardo Leitner' <marcelo.leitner@gmail.com>,
+        'Christoph Hellwig' <hch@lst.de>
+CC:     "'David S. Miller'" <davem@davemloft.net>,
+        'Jakub Kicinski' <kuba@kernel.org>,
+        'Eric Dumazet' <edumazet@google.com>,
+        'Alexey Kuznetsov' <kuznet@ms2.inr.ac.ru>,
+        'Hideaki YOSHIFUJI' <yoshfuji@linux-ipv6.org>,
+        "'Vlad Yasevich'" <vyasevich@gmail.com>,
+        'Neil Horman' <nhorman@tuxdriver.com>,
+        "'Jon Maloy'" <jmaloy@redhat.com>,
+        'Ying Xue' <ying.xue@windriver.com>,
+        "'drbd-dev@lists.linbit.com'" <drbd-dev@lists.linbit.com>,
+        "'linux-block@vger.kernel.org'" <linux-block@vger.kernel.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "'linux-rdma@vger.kernel.org'" <linux-rdma@vger.kernel.org>,
+        "'linux-nvme@lists.infradead.org'" <linux-nvme@lists.infradead.org>,
+        "'target-devel@vger.kernel.org'" <target-devel@vger.kernel.org>,
+        "'linux-afs@lists.infradead.org'" <linux-afs@lists.infradead.org>,
+        "'linux-cifs@vger.kernel.org'" <linux-cifs@vger.kernel.org>,
+        "'cluster-devel@redhat.com'" <cluster-devel@redhat.com>,
+        "'ocfs2-devel@oss.oracle.com'" <ocfs2-devel@oss.oracle.com>,
+        "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>,
+        "'linux-sctp@vger.kernel.org'" <linux-sctp@vger.kernel.org>,
+        "'ceph-devel@vger.kernel.org'" <ceph-devel@vger.kernel.org>,
+        "'rds-devel@oss.oracle.com'" <rds-devel@oss.oracle.com>,
+        "'linux-nfs@vger.kernel.org'" <linux-nfs@vger.kernel.org>
+Subject: RE: [PATCH 32/33] sctp: add sctp_sock_get_primary_addr
+Thread-Topic: [PATCH 32/33] sctp: add sctp_sock_get_primary_addr
+Thread-Index: AQHWKVDpRRlTTX4YZEat3HB6AYvqqainVRxwgAAtMyCAABBE4A==
+Date:   Thu, 14 May 2020 13:27:46 +0000
+Message-ID: <aff8f5ec8d6d44dbace63825af197086@AcuMS.aculab.com>
+References: <20200513062649.2100053-1-hch@lst.de>
+ <20200513062649.2100053-33-hch@lst.de>
+ <20200513180302.GC2491@localhost.localdomain>
+ <d112e18bfbdd40dfb219ed2c1f2082d4@AcuMS.aculab.com>
+ <c66e0309572345f5b0f32d078701f2d7@AcuMS.aculab.com>
+In-Reply-To: <c66e0309572345f5b0f32d078701f2d7@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK8P3a1Cfzu7L30bFP-Sf2_GbkN_10CCJsbefTXyfnGF16uHMA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ok,
+From: David Laight
+> Sent: 14 May 2020 13:30
+> Subject: RE: [PATCH 32/33] sctp: add sctp_sock_get_primary_addr
+> 
+> From: David Laight
+> > Sent: 14 May 2020 10:51
+> > From: Marcelo Ricardo Leitner
+> > > Sent: 13 May 2020 19:03
+> > >
+> > > On Wed, May 13, 2020 at 08:26:47AM +0200, Christoph Hellwig wrote:
+> > > > Add a helper to directly get the SCTP_PRIMARY_ADDR sockopt from kernel
+> > > > space without going through a fake uaccess.
+> > >
+> > > Same comment as on the other dlm/sctp patch.
+> >
+> > Wouldn't it be best to write sctp_[gs]etsockotp() that
+> > use a kernel buffer and then implement the user-space
+> > calls using a wrapper that does the copies to an on-stack
+> > (or malloced if big) buffer.
+> 
+> Actually looking at __sys_setsockopt() it calls
+> BPF_CGROUP_RUN_PROG_SETSOCKOPT() which (by the look of it)
+> can copy the user buffer into malloc()ed memory and
+> cause set_fs(KERNEL_DS) be called.
+> 
+> The only way to get rid of that set_fs() is to always
+> have the buffer in kernel memory when the underlying
+> setsockopt() code is called.
 
-here's the new version. Changes are:
+And having started to try coding __sys_setsockopt()
+and then found the compat code I suspect that would
+be a whole lot more sane if the buffer was in kernel
+and it knew that at least (say) 64 bytes were allocated.
 
-- It does mb() now (Linus).
-- I've added a call to prevent_tail_call_optimization() in init/main.c
-  because it does generate the stack canary there too. This is a
-  future-proof thing. (Arvind).
-- Dropped Reviewed-by tags.
-- Dropped compiler checking from the branch (Linus).
-- Added Cc:stable because gcc10 has released already, apparently.
+The whole compat_alloc_user_space() 'crap' could probably go.
 
-Testing with gcc10 passes after making sure that without it it would
-cause the tailcall optimization and fail stack check.
+Actually it looks like an application can avoid whatever
+checks BPF_CGROUP_RUN_PROG_SETSOCKOPT() is trying to do
+by using the 32bit compat ioctls.
 
-Plan is to send it to Linus on the weekend so that it makes it into 5.7.
+	David
 
-Thx.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
----
-From: Borislav Petkov <bp@suse.de>
-
-... or the odyssey of trying to disable the stack protector for the
-function which generates the stack canary value.
-
-The whole story started with Sergei reporting a boot crash with a kernel
-built with gcc-10:
-
-  Kernel panic — not syncing: stack-protector: Kernel stack is corrupted in: start_secondary
-  CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc5—00235—gfffb08b37df9 #139
-  Hardware name: Gigabyte Technology Co., Ltd. To be filled by O.E.M./H77M—D3H, BIOS F12 11/14/2013
-  Call Trace:
-    dump_stack
-    panic
-    ? start_secondary
-    __stack_chk_fail
-    start_secondary
-    secondary_startup_64
-  -—-[ end Kernel panic — not syncing: stack—protector: Kernel stack is corrupted in: start_secondary
-
-This happens because gcc-10 tail-call optimizes the last function call
-in start_secondary() - cpu_startup_entry() - and thus emits a stack
-canary check which fails because the canary value changes after the
-boot_init_stack_canary() call.
-
-To fix that, the initial attempt was to mark the one function which
-generates the stack canary with:
-
-  __attribute__((optimize("-fno-stack-protector"))) ... start_secondary(void *unused)
-
-however, using the optimize attribute doesn't work cumulatively
-as the attribute does not add to but rather replaces previously
-supplied optimization options - roughly all -fxxx options.
-
-The key one among them being -fno-omit-frame-pointer and thus leading to
-not present frame pointer - frame pointer which the kernel needs.
-
-The next attempt to prevent compilers from tail-call optimizing
-the last function call cpu_startup_entry(), shy of carving out
-start_secondary() into a separate compilation unit and building it with
--fno-stack-protector, was to add an empty asm("").
-
-This current solution was short and sweet, and reportedly, is supported
-by both compilers but we didn't get very far this time: future (LTO?)
-optimization passes could potentially eliminate this, which leads us
-to the third attempt: having an actual memory barrier there which the
-compiler cannot ignore or move around etc.
-
-That should hold for a long time, but hey we said that about the other
-two solutions too so...
-
-Reported-by: Sergei Trofimovich <slyfox@gentoo.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200314164451.346497-1-slyfox@gentoo.org
----
- arch/x86/include/asm/stackprotector.h | 7 ++++++-
- arch/x86/kernel/smpboot.c             | 8 ++++++++
- arch/x86/xen/smp_pv.c                 | 1 +
- include/linux/compiler.h              | 6 ++++++
- init/main.c                           | 2 ++
- 5 files changed, 23 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/stackprotector.h b/arch/x86/include/asm/stackprotector.h
-index 91e29b6a86a5..9804a7957f4e 100644
---- a/arch/x86/include/asm/stackprotector.h
-+++ b/arch/x86/include/asm/stackprotector.h
-@@ -55,8 +55,13 @@
- /*
-  * Initialize the stackprotector canary value.
-  *
-- * NOTE: this must only be called from functions that never return,
-+ * NOTE: this must only be called from functions that never return
-  * and it must always be inlined.
-+ *
-+ * In addition, it should be called from a compilation unit for which
-+ * stack protector is disabled. Alternatively, the caller should not end
-+ * with a function call which gets tail-call optimized as that would
-+ * lead to checking a modified canary value.
-  */
- static __always_inline void boot_init_stack_canary(void)
- {
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index fe3ab9632f3b..4f275ac7830b 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -266,6 +266,14 @@ static void notrace start_secondary(void *unused)
- 
- 	wmb();
- 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
-+
-+	/*
-+	 * Prevent tail call to cpu_startup_entry() because the stack protector
-+	 * guard has been changed a couple of function calls up, in
-+	 * boot_init_stack_canary() and must not be checked before tail calling
-+	 * another function.
-+	 */
-+	prevent_tail_call_optimization();
- }
- 
- /**
-diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
-index 8fb8a50a28b4..f2adb63b2d7c 100644
---- a/arch/x86/xen/smp_pv.c
-+++ b/arch/x86/xen/smp_pv.c
-@@ -93,6 +93,7 @@ asmlinkage __visible void cpu_bringup_and_idle(void)
- 	cpu_bringup();
- 	boot_init_stack_canary();
- 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
-+	prevent_tail_call_optimization();
- }
- 
- void xen_smp_intr_free_pv(unsigned int cpu)
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 034b0a644efc..448c91bf543b 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -356,4 +356,10 @@ static inline void *offset_to_ptr(const int *off)
- /* &a[0] degrades to a pointer: a different type from an array */
- #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
- 
-+/*
-+ * This is needed in functions which generate the stack canary, see
-+ * arch/x86/kernel/smpboot.c::start_secondary() for an example.
-+ */
-+#define prevent_tail_call_optimization()	mb()
-+
- #endif /* __LINUX_COMPILER_H */
-diff --git a/init/main.c b/init/main.c
-index a48617f2e5e5..74ac7e48ce02 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -1001,6 +1001,8 @@ asmlinkage __visible void __init start_kernel(void)
- 
- 	/* Do the rest non-__init'ed, we're now alive */
- 	arch_call_rest_init();
-+
-+	prevent_tail_call_optimization();
- }
- 
- /* Call all constructor functions linked into the kernel. */
--- 
-2.21.0
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
