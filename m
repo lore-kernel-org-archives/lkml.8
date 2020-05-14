@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAB5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4E820643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91B1206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483120;
-	bh=JsMmsJ4J2SaBxdTW5GPPIgLM1VAjhlWJyeoMW/Vs5IY=;
+	s=default; t=1589483127;
+	bh=fBpP8X/WaYW2HyxOaplXw8jXhd39XlGZggiJ4YE3d/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SE10uLL6NktyK9SiZICrGu2jC5Gg9yXRDw3lM2yQ3R07Eb+P/GuG3k8Xpo1DT7oL/
-	 A4ICNKtxYHouIpVhkrKidxZp/fLwJCASar7JuFoQY23BCV2uvQfVpm2S2+YKXZXhB0
-	 /ri4jQZN0lkJVCWO8uERoFWJ9pqh1zLuugoRWQcY=
+	b=NlsLNWX5RwvY+MhvGAw3z5e+mTLMCsGLv9mon5/j9vpzLVfc9xtIMbFD4ZHmLEOzm
+	 YrXhovq4SDT2TQU5Z5iJJyHZfMTN+QPgBjBLYtqFluMLDewHjB7cYvDzhKbfawSfPb
+	 4DyFr1A35Sk15HxiH7ke904JinnccwLuYZfLLfr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgENSyP (ORCPT
+        id S1729715AbgENTF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:54:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53676 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:05:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728895AbgENSx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:59 -0400
+        id S1728958AbgENSyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B82782076A;
-        Thu, 14 May 2020 18:53:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05B1C2065F;
+        Thu, 14 May 2020 18:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482438;
-        bh=JsMmsJ4J2SaBxdTW5GPPIgLM1VAjhlWJyeoMW/Vs5IY=;
+        s=default; t=1589482448;
+        bh=fBpP8X/WaYW2HyxOaplXw8jXhd39XlGZggiJ4YE3d/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hrs0vagwcfZBDoAB6xVdws1uSkHuIfxAGnc63Q3zsYGG4bp0JuShPv8WpmpU6X5zm
-         JqbnlRE/GlS4Nqd1CnbiBZZyPm87EyEhPqY6MuaXhRiVBbEjng7BRVbjFL5fjL7z1H
-         ahxxBKxC4hNwHi2KEk/lVVF8DGb+TJhu2JHcEwn4=
+        b=Bd5Y9axaUgqo8oVcs3hCDHSqV5K2IZ5dJWt3rnYDz0tAmEsPg/92Sg/GQmOO5+Imy
+         e9f6vx4C/lRaKzay7eFo3B25KEHHY3VcoHcMPIcWAzOvp3MZ30RMEuQ4+zAXPMSM2v
+         gufRdkQ85bp6Fl6Ge2RcbcyW1QcUKZP+WYu01j5M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Xu <peterx@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 38/49] KVM: selftests: Fix build for evmcs.h
-Date:   Thu, 14 May 2020 14:52:59 -0400
-Message-Id: <20200514185311.20294-38-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 47/49] crypto: lrw - simplify error handling in create()
+Date:   Thu, 14 May 2020 14:53:08 -0400
+Message-Id: <20200514185311.20294-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
 References: <20200514185311.20294-1-sashal@kernel.org>
@@ -61,58 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Xu <peterx@redhat.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 8ffdaf9155ebe517cdec5edbcca19ba6e7ee9c3c ]
+[ Upstream commit d57063103332b95eac9c118900f35700a491da08 ]
 
-I got this error when building kvm selftests:
+Simplify the error handling in the LRW template's ->create() function by
+taking advantage of crypto_drop_skcipher() now accepting (as a no-op) a
+spawn that hasn't been grabbed yet.
 
-/usr/bin/ld: /home/xz/git/linux/tools/testing/selftests/kvm/libkvm.a(vmx.o):/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:222: multiple definition of `current_evmcs'; /tmp/cco1G48P.o:/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:222: first defined here
-/usr/bin/ld: /home/xz/git/linux/tools/testing/selftests/kvm/libkvm.a(vmx.o):/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:223: multiple definition of `current_vp_assist'; /tmp/cco1G48P.o:/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:223: first defined here
-
-I think it's because evmcs.h is included both in a test file and a lib file so
-the structs have multiple declarations when linking.  After all it's not a good
-habit to declare structs in the header files.
-
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
-Message-Id: <20200504220607.99627-1-peterx@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kvm/include/evmcs.h  | 4 ++--
- tools/testing/selftests/kvm/lib/x86_64/vmx.c | 3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ crypto/lrw.c | 28 +++++++++++-----------------
+ 1 file changed, 11 insertions(+), 17 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/evmcs.h b/tools/testing/selftests/kvm/include/evmcs.h
-index 4912d23844bc6..e31ac9c5ead0c 100644
---- a/tools/testing/selftests/kvm/include/evmcs.h
-+++ b/tools/testing/selftests/kvm/include/evmcs.h
-@@ -217,8 +217,8 @@ struct hv_enlightened_vmcs {
- #define HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_MASK	\
- 		(~((1ull << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) - 1))
+diff --git a/crypto/lrw.c b/crypto/lrw.c
+index be829f6afc8e5..fda9414890865 100644
+--- a/crypto/lrw.c
++++ b/crypto/lrw.c
+@@ -344,15 +344,15 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
  
--struct hv_enlightened_vmcs *current_evmcs;
--struct hv_vp_assist_page *current_vp_assist;
-+extern struct hv_enlightened_vmcs *current_evmcs;
-+extern struct hv_vp_assist_page *current_vp_assist;
+ 	err = -EINVAL;
+ 	if (alg->base.cra_blocksize != LRW_BLOCK_SIZE)
+-		goto err_drop_spawn;
++		goto err_free_inst;
  
- int vcpu_enable_evmcs(struct kvm_vm *vm, int vcpu_id);
+ 	if (crypto_skcipher_alg_ivsize(alg))
+-		goto err_drop_spawn;
++		goto err_free_inst;
  
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/vmx.c b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-index f6ec97b7eaef6..8cc4a59ff369f 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-@@ -17,6 +17,9 @@
+ 	err = crypto_inst_setname(skcipher_crypto_instance(inst), "lrw",
+ 				  &alg->base);
+ 	if (err)
+-		goto err_drop_spawn;
++		goto err_free_inst;
  
- bool enable_evmcs;
+ 	err = -EINVAL;
+ 	cipher_name = alg->base.cra_name;
+@@ -365,20 +365,20 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
  
-+struct hv_enlightened_vmcs *current_evmcs;
-+struct hv_vp_assist_page *current_vp_assist;
-+
- struct eptPageTableEntry {
- 	uint64_t readable:1;
- 	uint64_t writable:1;
+ 		len = strlcpy(ecb_name, cipher_name + 4, sizeof(ecb_name));
+ 		if (len < 2 || len >= sizeof(ecb_name))
+-			goto err_drop_spawn;
++			goto err_free_inst;
+ 
+ 		if (ecb_name[len - 1] != ')')
+-			goto err_drop_spawn;
++			goto err_free_inst;
+ 
+ 		ecb_name[len - 1] = 0;
+ 
+ 		if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
+ 			     "lrw(%s)", ecb_name) >= CRYPTO_MAX_ALG_NAME) {
+ 			err = -ENAMETOOLONG;
+-			goto err_drop_spawn;
++			goto err_free_inst;
+ 		}
+ 	} else
+-		goto err_drop_spawn;
++		goto err_free_inst;
+ 
+ 	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_ASYNC;
+ 	inst->alg.base.cra_priority = alg->base.cra_priority;
+@@ -404,17 +404,11 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+ 	inst->free = free;
+ 
+ 	err = skcipher_register_instance(tmpl, inst);
+-	if (err)
+-		goto err_drop_spawn;
+-
+-out:
+-	return err;
+-
+-err_drop_spawn:
+-	crypto_drop_skcipher(spawn);
++	if (err) {
+ err_free_inst:
+-	kfree(inst);
+-	goto out;
++		free(inst);
++	}
++	return err;
+ }
+ 
+ static struct crypto_template crypto_tmpl = {
 -- 
 2.20.1
 
