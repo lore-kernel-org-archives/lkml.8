@@ -2,130 +2,107 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE2AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD41E20727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tltjcWtT"
+	by mail.kernel.org (Postfix) with ESMTP id B375E20734
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbgENVJs (ORCPT
+        id S1728237AbgENVJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 17:09:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728043AbgENVJm (ORCPT
+        Thu, 14 May 2020 17:09:51 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:44741 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728073AbgENVJo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 17:09:42 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2138C061A0C;
-        Thu, 14 May 2020 14:09:40 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id c21so7487lfb.3;
-        Thu, 14 May 2020 14:09:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EO0vr0FBuxVa7FqS3Iq4jMbQpH1iOzHD8PnLZeBEDCg=;
-        b=tltjcWtTVsozKzAf9N+yxZwewU2cNg30qCpbUSnD4xjqn3IaFYSc11cT2s/BUL/eo2
-         eXwYVd2jl6wBp8ekYPoinV7qyWBI/eE5FVU7CkPyuC6GI/SwOTI2Pq2XJYf4r+e9QBZe
-         ygFDJQSL/D8hYv2L+KzG2ZXUD8oeB42Ne3vya1sRjlz6jo3ZU3a+StfRucZXUdIkXsxo
-         FnlijK74UmStroYupJDYMm37bA8DF9v08j9v7/owoQgiy/Eqg4nj2S0ltJdI/YfsABS1
-         wmHuOppJGxLYcVHNerVfrh3N1QHnk5JJC3QvOcnEzuIgRHDB7kDzhX9+uw4uovyPCQlU
-         PwVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EO0vr0FBuxVa7FqS3Iq4jMbQpH1iOzHD8PnLZeBEDCg=;
-        b=FplEEN7y2ZZ9qDxUIWr05eKOL2ZV2jrIprdlQ7ELZMzJC7g77vwqhwT9deWlLw+QCT
-         VETDWeXB30YOCaSRoOhgbfljotBa5fyKtnrgvy5wrvKiNLTLgKcAPpNrz3LBqGQ0Csa/
-         cuaFNkGoJ20gnks01Wr14hAo8Scqmx7mnrXA5kEig1SOesHbXc3uQzOXw+1VPEER2wdi
-         NPND72zG6PBDJD2kAz9AHMOQbPMvhQeldXSM0CW2Vla10Qh4J2WRADRLCsdJMGrJlf8p
-         NJ6O8P8CmuQ6IjXIm1673z0j+Ov+vLME/Jx0Be+xksVsCye90YWeZBPPbhco/Vy8BDKW
-         g0JA==
-X-Gm-Message-State: AOAM533Y8ZIAXo+IMl3rWBTe4oKbg2DL7J6kO4ZbtoevHacRfTn9Rc3i
-        6DTk4Zhr2fSRw39BSs/fAEk=
-X-Google-Smtp-Source: ABdhPJwmXn6PJe8MV8dlPU1VcNAyZYVcG4jdW1N/ABx/HZNFEa2KXiju6MxUhsgJEX3Zjn5+oOQ5Kg==
-X-Received: by 2002:a19:d55:: with SMTP id 82mr55733lfn.89.1589490579255;
-        Thu, 14 May 2020 14:09:39 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id g3sm45215ljk.27.2020.05.14.14.09.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 14:09:38 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/4] media: staging: tegra-vde: Runtime PM is always available on Tegra
-Date:   Fri, 15 May 2020 00:08:45 +0300
-Message-Id: <20200514210847.9269-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200514210847.9269-1-digetx@gmail.com>
-References: <20200514210847.9269-1-digetx@gmail.com>
+        Thu, 14 May 2020 17:09:44 -0400
+Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Thu, 14 May 2020 14:09:39 -0700
+Received: from localhost (unknown [10.200.192.41])
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 3BC9EB23CF;
+        Thu, 14 May 2020 17:09:43 -0400 (EDT)
+Date:   Thu, 14 May 2020 14:09:42 -0700
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     Julien Thierry <jthierry@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC][PATCH 3/5] objtool: Add support for relocations without
+ addends
+Message-ID: <20200514210942.GK9040@rlwimi.vmware.com>
+Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
+        Julien Thierry <jthierry@redhat.com>, linux-kernel@vger.kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <cover.1588888003.git.mhelsley@vmware.com>
+ <17ee3f6f2a246008aaae70f92df24ae92fa0e21e.1588888003.git.mhelsley@vmware.com>
+ <f79a3872-b9ad-a966-71fb-4451e0901281@redhat.com>
+ <20200513162648.GJ9040@rlwimi.vmware.com>
+ <61c35ce2-47b3-1f62-d4ec-da9984289c5d@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <61c35ce2-47b3-1f62-d4ec-da9984289c5d@redhat.com>
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Runtime PM is always available on Tegra nowadays since commit 40b2bb1b132a
-("ARM: tegra: enforce PM requirement"), hence the case of unavailable RPM
-doesn't need to be handled.
+On Wed, May 13, 2020 at 05:55:21PM +0100, Julien Thierry wrote:
+> 
+> 
+> On 5/13/20 5:26 PM, Matt Helsley wrote:
+> > On Tue, May 12, 2020 at 06:04:50PM +0100, Julien Thierry wrote:
+> > > Hi Matt,
+> > > 
+> > > On 5/11/20 6:35 PM, Matt Helsley wrote:
+> > > > Currently objtool only collects information about relocations with
+> > > > addends. In recordmcount, which we are about to merge into objtool,
+> > > > some supported architectures do not use rela relocations. Since
+> > > > object files use one or the other the list can be reused.
+> > > > 
+> > > > Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+> > > > ---
+> > > >    tools/objtool/elf.c | 55 ++++++++++++++++++++++++++++++++++++---------
+> > > >    tools/objtool/elf.h |  5 ++++-
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/staging/media/tegra-vde/vde.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+<snip>
 
-diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
-index 803e5dda4bb5..85cbbc8f70d3 100644
---- a/drivers/staging/media/tegra-vde/vde.c
-+++ b/drivers/staging/media/tegra-vde/vde.c
-@@ -1068,17 +1068,8 @@ static int tegra_vde_probe(struct platform_device *pdev)
- 	pm_runtime_use_autosuspend(dev);
- 	pm_runtime_set_autosuspend_delay(dev, 300);
- 
--	if (!pm_runtime_enabled(dev)) {
--		err = tegra_vde_runtime_resume(dev);
--		if (err)
--			goto err_misc_unreg;
--	}
--
- 	return 0;
- 
--err_misc_unreg:
--	misc_deregister(&vde->miscdev);
--
- err_deinit_iommu:
- 	tegra_vde_iommu_deinit(vde);
- 
-@@ -1093,13 +1084,6 @@ static int tegra_vde_remove(struct platform_device *pdev)
- {
- 	struct tegra_vde *vde = platform_get_drvdata(pdev);
- 	struct device *dev = &pdev->dev;
--	int err;
--
--	if (!pm_runtime_enabled(dev)) {
--		err = tegra_vde_runtime_suspend(dev);
--		if (err)
--			return err;
--	}
- 
- 	pm_runtime_dont_use_autosuspend(dev);
- 	pm_runtime_disable(dev);
--- 
-2.26.0
+> > I'm thinking it's simpler with fewer variables. I don't think
+> > moving the cast into the switch cases makes it any clearer. It's also
+> > odd because we'll keep re-initializing relas or rels to rel_buf each loop
+> > iteration. Finally, this approach has the advantage that, when reviewing
+> > the patch, it's clear that the original code handling RELA relocation entries
+> > isn't changing -- you can see it's just shifting into one of the cases
+> > (below).
+> > 
+> > Do you still prefer introducing rel_buf?
+> 
+> On a completely personal taste, yes. I do not like having two local
+> variables in the same scope pointing at the same data but with an implied
+> "you should only use one or the other under the right circumstances".
+> 
+> But my main concern was having an allocation of a certain size and then
+> modifying the size (might have been valid if sizeof(GElf_Rel) <=
+> sizeof(GElf_Rela), but I must admit I did not bother to check). Since you've
+> addressed that issue, the rest is just a matter of taste so better left to
+> the maintainers.
 
+OK. As a sort of tie-breaker I tried to quickly find an analogous piece of code
+in objtool which I could use as a guide on maintainer preference. The
+only place I see void pointers being used is as keys for comparison
+functions. So my guess and preference is to not use a void pointer here.
+
+Cheers,
+	-Matt Helsley
