@@ -2,110 +2,145 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE345C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A08C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBBEA2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:44:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="fc6xdFKA"
+	by mail.kernel.org (Postfix) with ESMTP id C313E2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:45:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726038AbgENBoh (ORCPT
+        id S1728100AbgENBpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 21:44:37 -0400
-Received: from mail.efficios.com ([167.114.26.124]:46034 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgENBog (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 21:44:36 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 9E67A2A1317;
-        Wed, 13 May 2020 21:44:35 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id diXTWMAjP-sG; Wed, 13 May 2020 21:44:35 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 240A62A1229;
-        Wed, 13 May 2020 21:44:35 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 240A62A1229
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1589420675;
-        bh=6FThw3NNByQCnxLcP7jjvyChrbYfW3ckvc93LQYwYE8=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=fc6xdFKAcrDet33aSmzu9EWoVN7G2SwLUoqyCqvG7ztumDlWhOO5IcIn2G1iwIkdk
-         xRFJCEV0bL3b7p0tH/KQ7NhjPmM2uKijxXvSb3RrfiLjUpcwCQlUPe6D937DAL/J//
-         MMbYImZsY3prXz7ga1scJ0xyfWmBW/LKs/yoMJjfEWkVI5yB7/lPO8nlyo+DZidHOo
-         oRCp2WnELPcfzM9l1bKsZBam2mCZvA3yWQcL6834Fu4bpbMgDwomS2fhwkJPqk1uhT
-         7wvfCIWvNgt3/8xl7FnCosgbvEJvrkWNCIt5VF3xer4uh1+2z3W3CwbMrzVyQRf8zq
-         WobvLBQ/amT8g==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id IUqaYDzi7Za5; Wed, 13 May 2020 21:44:35 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 103912A112F;
-        Wed, 13 May 2020 21:44:35 -0400 (EDT)
-Date:   Wed, 13 May 2020 21:44:34 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        paulmck <paulmck@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Message-ID: <835459920.20630.1589420674977.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200505134904.166735365@linutronix.de>
-References: <20200505134354.774943181@linutronix.de> <20200505134904.166735365@linutronix.de>
-Subject: Re: [patch V4 part 3 09/29] x86/entry/32: Provide macro to emit IDT
- entry stubs
+        Wed, 13 May 2020 21:45:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:56460 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726061AbgENBpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 21:45:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6E3531B;
+        Wed, 13 May 2020 18:45:33 -0700 (PDT)
+Received: from [10.163.73.129] (unknown [10.163.73.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 924303F305;
+        Wed, 13 May 2020 18:45:30 -0700 (PDT)
+Subject: Re: [PATCH V2] arm64/cpuinfo: Move HWCAP name arrays alongside their
+ bit definitions
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
+References: <1588858150-26823-1-git-send-email-anshuman.khandual@arm.com>
+ <20200513150405.GS21779@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <0999fa28-3ee7-3f02-4def-a0c6013ec6dd@arm.com>
+Date:   Thu, 14 May 2020 07:14:58 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20200513150405.GS21779@arm.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
-Thread-Topic: x86/entry/32: Provide macro to emit IDT entry stubs
-Thread-Index: bKEXdwZ/BOfNVJVq+EaT2heUgapaxw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On May 5, 2020, at 9:44 AM, Thomas Gleixner tglx@linutronix.de wrote:
 
-[...]
 
-> +.macro idtentry vector asmsym cfunc has_error_code:req sane=0
-> +SYM_CODE_START(\asmsym)
-> +	ASM_CLAC
-> +	cld
+On 05/13/2020 08:34 PM, Dave Martin wrote:
+> On Thu, May 07, 2020 at 06:59:10PM +0530, Anshuman Khandual wrote:
+>> All HWCAP name arrays (i.e hwcap_str, compat_hwcap_str, compat_hwcap2_str)
+>> that are scanned for /proc/cpuinfo output are detached from their bit fild
+>> definitions making it difficult to corelate. This is also bit problematic
+>> because during /proc/cpuinfo dump these arrays get traversed sequentially
+>> assuming that they reflect and match HWCAP bit sequence, to test various
+>> features for a given CPU.
+>>
+>> This moves all HWCAP name arrays near their bit definitions. But first it
+>> defines all missing COMPAT_HWCAP_XXX that are present in the name string.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Brown <broonie@kernel.org>
+>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> Acked-by: Mark Rutland <mark.rutland@arm.com>
+>> ---
+>> This applies on 5.7-rc4
+>>
+>> Changes in V2:
+>>
+>> - Defined COMPAT_KERNEL_HWCAP[2] and updated the name arrays per Mark
+>> - Updated the commit message as required
+>>
+>> Changes in V1: (https://patchwork.kernel.org/patch/11532945/)
+>>
+>>  arch/arm64/include/asm/hwcap.h | 101 +++++++++++++++++++++++++++++++++
+>>  arch/arm64/kernel/cpuinfo.c    |  90 -----------------------------
+>>  2 files changed, 101 insertions(+), 90 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/hwcap.h b/arch/arm64/include/asm/hwcap.h
+>> index 0f00265248b5..589ac02e1ddd 100644
+>> --- a/arch/arm64/include/asm/hwcap.h
+>> +++ b/arch/arm64/include/asm/hwcap.h
+>> @@ -8,18 +8,27 @@
+>>  #include <uapi/asm/hwcap.h>
+>>  #include <asm/cpufeature.h>
+>>  
+>> +#define COMPAT_HWCAP_SWP	(1 << 0)
+>>  #define COMPAT_HWCAP_HALF	(1 << 1)
+>>  #define COMPAT_HWCAP_THUMB	(1 << 2)
+>> +#define COMPAT_HWCAP_26BIT	(1 << 3)
+>>  #define COMPAT_HWCAP_FAST_MULT	(1 << 4)
+>> +#define COMPAT_HWCAP_FPA	(1 << 5)
+>>  #define COMPAT_HWCAP_VFP	(1 << 6)
+>>  #define COMPAT_HWCAP_EDSP	(1 << 7)
+>> +#define COMPAT_HWCAP_JAVA	(1 << 8)
+>> +#define COMPAT_HWCAP_IWMMXT	(1 << 9)
+>> +#define COMPAT_HWCAP_CRUNCH	(1 << 10)
+>> +#define COMPAT_HWCAP_THUMBEE	(1 << 11)
+>>  #define COMPAT_HWCAP_NEON	(1 << 12)
+>>  #define COMPAT_HWCAP_VFPv3	(1 << 13)
+>> +#define COMPAT_HWCAP_VFPV3D16	(1 << 14)
+>>  #define COMPAT_HWCAP_TLS	(1 << 15)
+>>  #define COMPAT_HWCAP_VFPv4	(1 << 16)
+>>  #define COMPAT_HWCAP_IDIVA	(1 << 17)
+>>  #define COMPAT_HWCAP_IDIVT	(1 << 18)
+>>  #define COMPAT_HWCAP_IDIV	(COMPAT_HWCAP_IDIVA|COMPAT_HWCAP_IDIVT)
+>> +#define COMPAT_HWCAP_VFPD32	(1 << 19)
+>>  #define COMPAT_HWCAP_LPAE	(1 << 20)
+>>  #define COMPAT_HWCAP_EVTSTRM	(1 << 21)
+> 
+> With the possible exception of SWP (does the swp emulation allow us to
+> report this as supported?), I think all these weren't mentioned because
+> they aren't included in ARMv8 and so can never be reported.
+> 
+> If we find ourselves reporting them, there's a bug somewhere.
+> 
+> So, can we just default all obsolete string entries to NULL?
+> 
+> When generating the cpuinfo strings we could WARN and just emit an empty
+> string for that hwcap.
 
-Looking at the various interrupt and trap entry points for 32 and 64-bit
-x86, I notice a lack of consistency in use of the following instruction
-sequence at the asm entry point:
+All these above will be a change in the existing user visible behavior on
+the system and this patch never intended to create one. Hence, I will just
+defer this to maintainers on whether we should change existing /proc/cpuinfo
+output (including non-practically-possible ones on ARMv8) or even treat swap
+emulation as SWP.
 
-- ASM_CLAC,
-- cld (clear direction flag).
+But IMHO, in case we decide to go for a /proc/cpuinfo change (which I would
+be happy implement), it should be applied over and above this patch which
+just preserved existing semantics and behavior.
 
-Are they always needed, or only for interrupt handlers ?
-
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+- Anshuman
