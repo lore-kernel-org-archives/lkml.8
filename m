@@ -2,92 +2,115 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DFCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE23C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F64720727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589456597;
-	bh=rxK+cizSSGXlaiay0swh2F99pzOrtzZJl5B3WCY2uok=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pWreZPJ1GrrwrsJYXPPu9A+GPkYbAjYFP+5Txe2GnXxoa5VD56A3ILtGePDDlzv1p
-	 gcSfQ+JyPeoQsEIfcoSoEt4ikrPnaU4LHFhYq2fUOsMjpWP4lqvYINsAPOBZkZMhjO
-	 /9zkpVV7lkphWQKVaSUzsaREJ7bIbGRdjq4Fn1MA=
+	by mail.kernel.org (Postfix) with ESMTP id C4FB920767
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgENLnQ (ORCPT
+        id S1726659AbgENLnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:43:16 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43313 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgENLnP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:43:15 -0400
-Received: by mail-ot1-f67.google.com with SMTP id a68so2045964otb.10;
-        Thu, 14 May 2020 04:43:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NS81db2WlAKMw750j0Vkkc7VOtrTVlN07aaoyD593YE=;
-        b=iWd8YsJ8gMAsewHv7hUB+1DRvJfDWwQuI79cna1iibz7xp8B2GikaKruJb3hJ3O8tG
-         aIWKimf2Lk0ERlQMDdlgXmLodPgmIo4ObOkwKFfB+/QQ08kD9bg2XXoOonkROWG3pCnR
-         wk6bCUPS7JFPsBERqy59F9ZH3qoYojfe7UVzphz0RYORT+iUrwim6tp7xkJ1kuYExZfy
-         HVH5tXMM9jeXhS9OGRyAyYt5gX9npc/Ek9BdsGFHi5NkkGx+30qd+JfJFY6DkAOgiQT5
-         IuMN+sXqXRu6xOqBQkUzv5mvq/rRDnJ2Bdmq7YiKrL7HU7O6cJNGUNaf1OErDLvR3Nvp
-         Fa+w==
-X-Gm-Message-State: AOAM531KnNgTu1PfAadRPpib31ehDfxaQu4ZTKgmvQe5BVO87t7JXxa9
-        RG3c249K6leefekrXFBXUlTQ8edhepVVpqPVG1Y=
-X-Google-Smtp-Source: ABdhPJyzhN/gdsuRBgS7a7zU2LSl2miiuZORSHSpQIDzx+jZm6FIXM7zz2uaaNZ4WouoFvZQk2blbM2G/amuLKCT0A0=
-X-Received: by 2002:a9d:6356:: with SMTP id y22mr3000318otk.167.1589456594965;
- Thu, 14 May 2020 04:43:14 -0700 (PDT)
+        Thu, 14 May 2020 07:43:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48506 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbgENLnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 07:43:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 705B3ACCE;
+        Thu, 14 May 2020 11:25:57 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id EB8E81E12A8; Thu, 14 May 2020 13:25:53 +0200 (CEST)
+Date:   Thu, 14 May 2020 13:25:53 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V1 7/9] fs/ext4: Make DAX mount option a tri-state
+Message-ID: <20200514112553.GH9569@quack2.suse.cz>
+References: <20200514065316.2500078-1-ira.weiny@intel.com>
+ <20200514065316.2500078-8-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <20200513141854.18451-1-wenhu.wang@vivo.com>
-In-Reply-To: <20200513141854.18451-1-wenhu.wang@vivo.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 14 May 2020 13:43:04 +0200
-Message-ID: <CAJZ5v0jHVMA5=fYkDqSLdpvxFi8iHvxVa-ZkT71cbd4hr1ohDg@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: fix a minor typo for cpufreq_driver doc
-To:     Wang Wenhu <wenhu.wang@vivo.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@vivo.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514065316.2500078-8-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 4:26 PM Wang Wenhu <wenhu.wang@vivo.com> wrote:
->
-> Delete the duplicate "to" possibly double-typed.
->
-> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+On Wed 13-05-20 23:53:13, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> We add 'always', 'never', and 'inode' (default).  '-o dax' continue to
+> operate the same.
+> 
+> Specifically we introduce a 2nd DAX mount flag EXT4_MOUNT2_DAX_NEVER and set
+> it and EXT4_MOUNT_DAX_ALWAYS appropriately.
+> 
+> We also force EXT4_MOUNT2_DAX_NEVER if !CONFIG_FS_DAX.
+> 
+> https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
 > ---
->  include/linux/cpufreq.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-> index f7240251a949..67d5950bd878 100644
-> --- a/include/linux/cpufreq.h
-> +++ b/include/linux/cpufreq.h
-> @@ -330,7 +330,7 @@ struct cpufreq_driver {
->          *
->          * get_intermediate should return a stable intermediate frequency
->          * platform wants to switch to and target_intermediate() should set CPU
-> -        * to to that frequency, before jumping to the frequency corresponding
-> +        * to that frequency, before jumping to the frequency corresponding
->          * to 'index'. Core will take care of sending notifications and driver
->          * doesn't have to handle them in target_intermediate() or
->          * target_index().
-> --
+> Changes from RFC:
+> 	Combine remount check for DAX_NEVER with DAX_ALWAYS
+> 	Update ext4_should_enable_dax()
 
-Applied as 5.8 material with some minor subject changes, thanks!
+...
+
+> @@ -2076,13 +2079,32 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+>  		}
+>  		sbi->s_jquota_fmt = m->mount_opt;
+>  #endif
+> -	} else if (token == Opt_dax) {
+> +	} else if (token == Opt_dax || token == Opt_dax_str) {
+>  #ifdef CONFIG_FS_DAX
+> -		ext4_msg(sb, KERN_WARNING,
+> -		"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+> -		sbi->s_mount_opt |= m->mount_opt;
+> +		char *tmp = match_strdup(&args[0]);
+> +
+> +		if (!tmp || !strcmp(tmp, "always")) {
+> +			ext4_msg(sb, KERN_WARNING,
+> +				"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+> +			sbi->s_mount_opt |= EXT4_MOUNT_DAX_ALWAYS;
+> +			sbi->s_mount_opt2 &= ~EXT4_MOUNT2_DAX_NEVER;
+> +		} else if (!strcmp(tmp, "never")) {
+> +			sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_NEVER;
+> +			sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
+> +		} else if (!strcmp(tmp, "inode")) {
+> +			sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
+> +			sbi->s_mount_opt2 &= ~EXT4_MOUNT2_DAX_NEVER;
+> +		} else {
+> +			ext4_msg(sb, KERN_WARNING, "DAX invalid option.");
+> +			kfree(tmp);
+> +			return -1;
+> +		}
+> +
+> +		kfree(tmp);
+
+As I wrote in my reply to previous version of this patch, I'd prefer if we
+handled this like e.g. 'data=' mount option. I don't think any unification
+in option parsing with XFS makes sence and I'd rather keep consistent how
+ext4 handles these 'enum' options.
+
+								Honza
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
