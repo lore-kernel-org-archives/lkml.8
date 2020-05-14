@@ -2,125 +2,73 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B798C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE8892073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B8B2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726051AbgENKdF (ORCPT
+        id S1726166AbgENKe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 06:33:05 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34615 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgENKdE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 06:33:04 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jZBAi-0000rK-CJ; Thu, 14 May 2020 10:33:00 +0000
-Date:   Thu, 14 May 2020 12:32:59 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ia64: enable HAVE_COPY_THREAD_TLS, switch to
- kernel_clone_args
-Message-ID: <20200514103259.tdfjc5ds4igpmoxj@wittgenstein>
-References: <3908561D78D1C84285E8C5FCA982C28F7F6266E0@ORSMSX115.amr.corp.intel.com>
- <79e58d9b-5a39-390c-2f0c-0d87b63442b4@physik.fu-berlin.de>
- <20200514074606.vkc35syhdep23rzh@wittgenstein>
- <6b298416-1e64-eee7-0bb4-3b1f7f67adc6@physik.fu-berlin.de>
- <d6c94d4f-a431-9de5-7a0f-661894dbec01@physik.fu-berlin.de>
- <20200514100459.pt7dxq2faghdds2c@wittgenstein>
- <2e22b0d2-b9ce-420d-48a0-0d9134108a5c@physik.fu-berlin.de>
- <20200514101540.25hvle74w63t66fs@wittgenstein>
- <20200514101914.fu7xhgaxtb5fy2ky@wittgenstein>
- <4aad9ad5-b0e9-12b0-0ad2-ac23fceae87b@physik.fu-berlin.de>
+        Thu, 14 May 2020 06:34:56 -0400
+Received: from verein.lst.de ([213.95.11.211]:51216 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725925AbgENKe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 06:34:56 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 7EB1B68BEB; Thu, 14 May 2020 12:34:50 +0200 (CEST)
+Date:   Thu, 14 May 2020 12:34:50 +0200
+From:   'Christoph Hellwig' <hch@lst.de>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Christoph Hellwig' <hch@lst.de>, 'Joe Perches' <joe@perches.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
+        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: remove kernel_setsockopt and kernel_getsockopt
+Message-ID: <20200514103450.GA12901@lst.de>
+References: <20200513062649.2100053-1-hch@lst.de> <ecc165c33962d964d518c80de605af632eee0474.camel@perches.com> <756758e8f0e34e2e97db470609f5fbba@AcuMS.aculab.com> <20200514101838.GA12548@lst.de> <a76440f7305c4653877ff2abff499f4e@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4aad9ad5-b0e9-12b0-0ad2-ac23fceae87b@physik.fu-berlin.de>
+In-Reply-To: <a76440f7305c4653877ff2abff499f4e@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 12:21:13PM +0200, John Paul Adrian Glaubitz wrote:
-> On 5/14/20 12:19 PM, Christian Brauner wrote:
-> > Scratch that. It's even worse. On ia64 it is _invalid_ to pass a NULL
-> > stack. That's at least what the glibc assembly assumes:
-> > 
-> > 	cmp.eq p6,p0=0,in0
-> > 	cmp.eq p7,p0=0,in1
-> > 	mov r8=EINVAL
-> > 	mov out0=in3		/* Flags are first syscall argument.	*/
-> > 	mov out1=in1		/* Stack address.			*/
-> > (p6)	br.cond.spnt.many __syscall_error	/* no NULL function pointers */
-> > (p7)	br.cond.spnt.many __syscall_error	/* no NULL stack pointers */
-> > 	;;
-> > 	mov out2=in2		/* Stack size.				*/
-> > 
-> > so newer systemd just works by accident on ia64 if at all correctly
-> > afaict.
+On Thu, May 14, 2020 at 10:26:41AM +0000, David Laight wrote:
+> From: Christoph Hellwig
+> > Only for those were we have users, and all those are covered.
 > 
-> Hmm, interesting. I really wasn't aware of that. Thanks for the heads-up.
-> 
-> I'll ask Michael whether he can come up for a solution for that problem.
-> 
-> Maybe that's also why systemd crashes.
+> What do we tell all our users when our kernel SCTP code
+> no longer works?
 
-Do you have a very minimalistic ia64 userspace preferably without systemd where
-you could simply test. That should give us an idea whether things work:
-
-#define _GNU_SOURCE
-#include <sys/wait.h>
-#include <sys/utsname.h>
-#include <sched.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/mman.h>
-
-#define STACK_SIZE (8 * 1024 * 1024) /* standard stack size for threads in glibc */
-
-int main(int argc, char *argv[])
-{
-	char *stack;
-        pid_t pid;
-
-	stack = mmap(NULL, STACK_SIZE, PROT_READ | PROT_WRITE,
-		     MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
-	if (stack == MAP_FAILED)
-		exit(EXIT_FAILURE);
-
-        /* 
-	 * Note that legacy clone() has different argument ordering on
-         * different architectures so this won't work everywhere.
-         */
-        pid = syscall(189 /* __NR_clone2 */, SIGCHLD, stack, STACK_SIZE, NULL, NULL);
-        if (pid < 0)
-                exit(EXIT_FAILURE);
-        if (pid == 0)
-                exit(EXIT_SUCCESS);
-        if (wait(NULL) != pid)
-                exit(EXIT_FAILURE);
-
-        exit(EXIT_SUCCESS);
-}
+We only care about in-tree modules, just like for every other interface
+in the kernel.
