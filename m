@@ -2,86 +2,119 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3299CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96165206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 107212065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fkyRCUsu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p6ePzTd2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726084AbgENIFJ (ORCPT
+        id S1726010AbgENIIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:05:09 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:26663 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725935AbgENIFJ (ORCPT
+        Thu, 14 May 2020 04:08:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725925AbgENIIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:05:09 -0400
-X-UUID: 4fb1093cbcec4f18b37bac5a7521f79b-20200514
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=mrYggCzs9Es3fAAe5f56aAmDrVDKZRIo+656NWVNAmE=;
-        b=fkyRCUsuWECnwmFc3f1cZXB24o/Glfzc2EQM5fLKOFMBPDIK7BEpRcyM51QiQdYGDlwyCu8ufO+euJxRm6XqxY4Tdfa0UAbehr5MPvGAjBbSTuEbh6x/h6T9MlrGz4bNaohU7K9pW4WKg3suI9K2fx3fHwhOA2Ur1pi+Kv2jq8A=;
-X-UUID: 4fb1093cbcec4f18b37bac5a7521f79b-20200514
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 930876128; Thu, 14 May 2020 16:05:05 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 14 May 2020 16:05:01 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 14 May 2020 16:05:01 +0800
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Sergey Organov <sorganov@gmail.com>,
-        Macpaul Lin <macpaul.lin@mediatek.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>,
-        Stan Lu <stan.lu@mediatek.com>
-Subject: [PATCH] usb: gadget: u_serial: fix coverity warning: negative index at array
-Date:   Thu, 14 May 2020 16:05:00 +0800
-Message-ID: <1589443500-3990-1-git-send-email-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Thu, 14 May 2020 04:08:13 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4DFEC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:08:12 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id y24so31375012wma.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:08:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+dBTttPdObnoAHm8o3XOpB6wiom9rFH5IVHvtwcE0HI=;
+        b=p6ePzTd27zTHt8YXadOh+yoHGm+Jq5Ilo3RFJ0ldQcG6r0KUmypuXk5qeszLRta7cQ
+         y8Mk/1VZCW+nO+tGbNExaZIOLHdDrvGHs5SuUwYqtIFvLaJzyIWWxVfLJUEu0iduxz0v
+         mDl2sk29sX7F8ZHh/tR9P7FwKia5yfSQyzT2g5ExKjASfyYsNho75mLvE60R39UKSgSO
+         Lu6eTJNxpQOQ+9+BaCWnmo6uKWNLDmBWIGP7hWAxe/jlo+ZiIH03E/m99g1EM/2Nh0bB
+         Mt61DMfCMIYUXvLKb/muchhMzPavtv8rY52o0c5ykqUWGZUvJn7fwDsSB6oLa29h2yDX
+         dbTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+dBTttPdObnoAHm8o3XOpB6wiom9rFH5IVHvtwcE0HI=;
+        b=EfDWyk2mqjL3fAM30woXHlQe5NAjcaXEEGkK5U7/A36LC+2bLkB1WabMO00Uj97IbW
+         f7WMFP7cEBpyiw78VrCybDwV9UVP+qrCY38xHCD3EqzgBzEsuKLtq9FBDwerYfxpejAd
+         YCYbyC8iGjrtMJDNgO2S/AwyEZ4QkLkgAhN59nqYulqirER0A/F2fKAqDPaUhO09WVui
+         zGj90v5BO1kYbS2D8YoCKMDOz8IqUmXK8Ji/fgbce3c8wig3TLgIhj5ZoHg8+S16oChX
+         UWGuIKVEnqaRyK+jSZVH/pC8XgTPekzSKwW2TEXKZ3KzHVazunuDEWXl6HQ68GyyMENR
+         5QuQ==
+X-Gm-Message-State: AOAM533CkGpBLXw0owaW2MrwhCcdR+Cxvhz5FQaMAXkihO/rkAIlDCHW
+        D9lSNycZmO+jBKQ5DRSfBR4UKg==
+X-Google-Smtp-Source: ABdhPJxp4IlgGcuqBONSjUjvyjF5xuOobYyR62/UafK9OpqwbPrMPajEW49YlhsRquv+6SOQWVf3iA==
+X-Received: by 2002:a1c:4806:: with SMTP id v6mr1080870wma.20.1589443691089;
+        Thu, 14 May 2020 01:08:11 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:ddb0:8d90:9d95:ff51? ([2a01:e34:ed2f:f020:ddb0:8d90:9d95:ff51])
+        by smtp.googlemail.com with ESMTPSA id g187sm10106409wmf.30.2020.05.14.01.08.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 01:08:10 -0700 (PDT)
+Subject: Re: [v4,7/7] thermal: mediatek: use spinlock to protect PTPCORESEL
+To:     Michael Kao <michael.kao@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, hsinyi@chromium.org,
+        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200323121537.22697-1-michael.kao@mediatek.com>
+ <20200323121537.22697-8-michael.kao@mediatek.com>
+ <1589439322.11120.2.camel@mtksdccf07>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <09278638-aa39-c130-95ff-7e9de34cc4eb@linaro.org>
+Date:   Thu, 14 May 2020 10:08:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1589439322.11120.2.camel@mtksdccf07>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBpc3N1ZSBoYXMgYmVlbiByZXBvcnRlZCBieSBjb3Zlcml0eSBzY2FubmVyLg0KUmVwbGFj
-ZSAiaW50IHBvcnRudW0iIGJ5ICJ1bnNpZ25lZCBpbnQiLCB0aGlzIHZvaWQgbmVnYXRpdmUgaW5k
-ZXggYXQNCmFycmF5Lg0KDQpTaWduZWQtb2ZmLWJ5OiBTdGFuIEx1IDxzdGFuLmx1QG1lZGlhdGVr
-LmNvbT4NClNpZ25lZC1vZmYtYnk6IE1hY3BhdWwgTGluIDxtYWNwYXVsLmxpbkBtZWRpYXRlay5j
-b20+DQotLS0NCiBkcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vdV9zZXJpYWwuYyB8ICAgIDQg
-KystLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQoN
-CmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vdV9zZXJpYWwuYyBiL2Ry
-aXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi91X3NlcmlhbC5jDQppbmRleCA4MTY3ZDM3Li41Mzk1
-MWYyIDEwMDY0NA0KLS0tIGEvZHJpdmVycy91c2IvZ2FkZ2V0L2Z1bmN0aW9uL3Vfc2VyaWFsLmMN
-CisrKyBiL2RyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi91X3NlcmlhbC5jDQpAQCAtNTg3LDcg
-KzU4Nyw3IEBAIHN0YXRpYyBpbnQgZ3Nfc3RhcnRfaW8oc3RydWN0IGdzX3BvcnQgKnBvcnQpDQog
-ICovDQogc3RhdGljIGludCBnc19vcGVuKHN0cnVjdCB0dHlfc3RydWN0ICp0dHksIHN0cnVjdCBm
-aWxlICpmaWxlKQ0KIHsNCi0JaW50CQlwb3J0X251bSA9IHR0eS0+aW5kZXg7DQorCXVuc2lnbmVk
-IGludAlwb3J0X251bSA9IHR0eS0+aW5kZXg7DQogCXN0cnVjdCBnc19wb3J0CSpwb3J0Ow0KIAlp
-bnQJCXN0YXR1cyA9IDA7DQogDQpAQCAtMTIxMSw3ICsxMjExLDcgQEAgaW50IGdzZXJpYWxfYWxs
-b2NfbGluZV9ub19jb25zb2xlKHVuc2lnbmVkIGNoYXIgKmxpbmVfbnVtKQ0KIAlzdHJ1Y3QgZ3Nf
-cG9ydAkJCSpwb3J0Ow0KIAlzdHJ1Y3QgZGV2aWNlCQkJKnR0eV9kZXY7DQogCWludAkJCQlyZXQ7
-DQotCWludAkJCQlwb3J0X251bTsNCisJdW5zaWduZWQgaW50CQkJcG9ydF9udW07DQogDQogCWNv
-ZGluZy5kd0RURVJhdGUgPSBjcHVfdG9fbGUzMig5NjAwKTsNCiAJY29kaW5nLmJDaGFyRm9ybWF0
-ID0gODsNCi0tIA0KMS43LjkuNQ0K
+On 14/05/2020 08:55, Michael Kao wrote:
+> On Mon, 2020-03-23 at 20:15 +0800, Michael Kao wrote:
+>> From: "michael.kao" <michael.kao@mediatek.com>
+>>
+>> The driver of thermal and svs will use the
+>> same register for the project which should select
+>> bank before reading sensor value.
+>>
+>> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+>> ---
+>>  drivers/thermal/mtk_thermal.c | 9 ++++-----
+>>  1 file changed, 4 insertions(+), 5 deletions(-)
+>>
 
+[ ... ]
+
+> Hi Matthias,
+
+Those patches fall under the thermal framework umbrella.
+
+Thanks
+  -- Daniel
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
