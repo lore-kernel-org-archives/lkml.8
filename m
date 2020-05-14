@@ -2,80 +2,75 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE94C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41AD320671
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FAE42070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:06:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bE86Yvyf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FFVssbIp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbgENOGC (ORCPT
+        id S1727030AbgENOGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:06:02 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44321 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726146AbgENOGC (ORCPT
+        Thu, 14 May 2020 10:06:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726087AbgENOGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:06:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589465160;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NbY83E69uffAESaWml+T0AXcFZ6rmqCOkFWMnK8Nufs=;
-        b=bE86YvyfZvtUCPkzAdLoxdk4poU67w0zrR+nhpvgnNTiOFGAPkXR7K4GylpCwTJHG0tovd
-        r26yCRpPZans0fpd1zLlLjfWeJ97VOvX6Cyvj0sQR9RBesGbxCRpz2Iu9gcKB1a2SqTtrW
-        Nm5VPRKM0I0Ecw+odcfqxGOQ+FzGypA=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-134-JnYc5_S1P5WlPb0cZcqGqA-1; Thu, 14 May 2020 10:05:57 -0400
-X-MC-Unique: JnYc5_S1P5WlPb0cZcqGqA-1
-Received: by mail-qt1-f200.google.com with SMTP id e44so3648229qta.9
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:05:57 -0700 (PDT)
+        Thu, 14 May 2020 10:06:43 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C523C061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:06:42 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j5so4313902wrq.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:06:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LNkj51r2L9rZ0K9EyWV0hvRQYzmcF5SBVqNFyVyFPAo=;
+        b=FFVssbIpXryFajjJXelTChxllm6xJFU04WJDqYHF38lQ/dFAnf2M7LYURSvd2MAZLH
+         1aFzJ5ydJ+ryiTLpYI4YhCocurxWwXswgOTYigjFTMJstIFj/kqzctDv7RL4JFBcM55O
+         +ZKs8WrMfnD+KDmRrrXs8Z/FeIbgrcGT3m7Rn28Ve7jUxrDRv4iah9/vpyOz9A7RC9kx
+         ilf3YTjrAeBfYkZnxl7oVDtVX5zOe0QTre9YKfBEldQO+nq+dZRH1JJTuU7lnGhbE/UG
+         yM7qAoLViyV1mRjKxwVf5+28hiHEm9lkR5c2ODp4AA2GEtpKS1GdNnrVQVkyTtf5kSgh
+         78OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NbY83E69uffAESaWml+T0AXcFZ6rmqCOkFWMnK8Nufs=;
-        b=Pkx1DdPnzGcBs9pYGsRwTP8Au0NK/Ynyjhqt/2waUbf0Z3aAxrM/DQA/xj3r+CarVJ
-         d4Kbx6VubXgf+gUonOS5WUTnThLu94uhjVIICmsQsb0dXquqYiH/4fLkDt+7GQTQdKFq
-         Re6kEbOmwIiRbbsdvF3SzmmomieJVamvymAKv4BzOub3W+s9xhPV2BQ3NPagL8diFtCz
-         H0Dor2ezZH8f05dAxEI5lFlnUNHweoD0mWq6BLiP2uXyD5vRzlqY4Z10GwZ5vY11hiaC
-         JSyAFuOb5WWpe8q+p7ravu5qkSo12or1cKAcyqreaBSYHkplUE2IfaBhc17Dmg7YSECW
-         Rmvg==
-X-Gm-Message-State: AOAM531MtiknxvmgypqNxzPYuQjBZHWnpWAVwAMDt6/VE447L6eglqCw
-        xxR8RrLoFh9obp9VWz4vNiHRebZCkk96ysoNcWKrWMDBAqMH32jlTdfR9Lcn3syy9fxwj8z+XTD
-        j3zZC4q8W3tbaoFVTBQJgSuIt
-X-Received: by 2002:a05:620a:4c9:: with SMTP id 9mr4749672qks.487.1589465156872;
-        Thu, 14 May 2020 07:05:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyo2fADFfavryjF15PayRQMc7FxwNus8UzpkWG2jA0/z5miZ85649I/y0hblRMmuuaFVkmfuQ==
-X-Received: by 2002:a05:620a:4c9:: with SMTP id 9mr4749650qks.487.1589465156577;
-        Thu, 14 May 2020 07:05:56 -0700 (PDT)
-Received: from dev.jcline.org.com ([136.56.87.133])
-        by smtp.gmail.com with ESMTPSA id z65sm2536791qkc.91.2020.05.14.07.05.55
+        bh=LNkj51r2L9rZ0K9EyWV0hvRQYzmcF5SBVqNFyVyFPAo=;
+        b=aP/yfu948JF4/kopyhih0Z0GLQta7ZynX8wTLcPK4wI87rnAnAy1M5hm/6pyuI6rRO
+         WwvA5sIOq6KKVmNy9Rw129kGzIbcdgheS12PpwjYqYghtXtpl8rUr51+vIJnwwg4OvA7
+         FCXrEithXwH6Qr6pwQKihCh9BpQDJ1QQCS11y0fZoY9supE2E34AzxpPnRSujMkYlZ2Y
+         Ph2ENpLLMml7ZZhAu7q1HVzIWsId7Kb9/ROL1d8cXk8a+XY26O4bevmzwmep1Kjy4UJk
+         UasnLNbkEpV1q0DAAN3A0Ns4dqalMuSDyAVrHurapY9gcGwe/WKUs65CrvVb+UgzoePf
+         YmNA==
+X-Gm-Message-State: AOAM533Bpx9d0dpYsVhzeuqK7kDmSyCJgkctVYKSi9qqm1WOQ+bjf4YW
+        fxO0p955vNnZzZu6JKpHRna21w==
+X-Google-Smtp-Source: ABdhPJwWfEo76YwG+HFwYeVUwbduEOE4F024tHFCHqVD7jVePGd1AlpWVV1SVylPxSX56t17X0n1JQ==
+X-Received: by 2002:a5d:5388:: with SMTP id d8mr5583058wrv.242.1589465200349;
+        Thu, 14 May 2020 07:06:40 -0700 (PDT)
+Received: from localhost.localdomain ([37.120.32.219])
+        by smtp.gmail.com with ESMTPSA id t22sm10487621wmj.37.2020.05.14.07.06.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 07:05:55 -0700 (PDT)
-From:   Jeremy Cline <jcline@redhat.com>
-To:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>
-Cc:     Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jeremy Cline <jcline@redhat.com>,
-        "Frank Ch . Eigler" <fche@redhat.com>
-Subject: [PATCH RESEND] lockdown: Allow unprivileged users to see lockdown status
-Date:   Thu, 14 May 2020 10:05:46 -0400
-Message-Id: <20200514140546.826698-1-jcline@redhat.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200220151738.1492852-1-jcline@redhat.com>
-References: <20200220151738.1492852-1-jcline@redhat.com>
+        Thu, 14 May 2020 07:06:39 -0700 (PDT)
+From:   Robert Foss <robert.foss@linaro.org>
+To:     bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        Robert Foss <robert.foss@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: c630: Add WiFi node
+Date:   Thu, 14 May 2020 16:06:06 +0200
+Message-Id: <20200514140606.1343766-1-robert.foss@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20191018055841.3729591-1-bjorn.andersson@linaro.org>
+References: <20191018055841.3729591-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,32 +78,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A number of userspace tools, such as systemtap, need a way to see the
-current lockdown state so they can gracefully deal with the kernel being
-locked down. The state is already exposed in
-/sys/kernel/security/lockdown, but is only readable by root. Adjust the
-permissions so unprivileged users can read the state.
+> Specify regulators and enable the &wifi node. The firmware uses the 8
+> bit version of the host capability message, so specify this quirk.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Fixes: 000d388ed3bb ("security: Add a static lockdown policy LSM")
-Cc: Frank Ch. Eigler <fche@redhat.com>
-Signed-off-by: Jeremy Cline <jcline@redhat.com>
----
- security/lockdown/lockdown.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 5a952617a0eba..87cbdc64d272c 100644
---- a/security/lockdown/lockdown.c
-+++ b/security/lockdown/lockdown.c
-@@ -150,7 +150,7 @@ static int __init lockdown_secfs_init(void)
- {
- 	struct dentry *dentry;
- 
--	dentry = securityfs_create_file("lockdown", 0600, NULL, NULL,
-+	dentry = securityfs_create_file("lockdown", 0644, NULL, NULL,
- 					&lockdown_ops);
- 	return PTR_ERR_OR_ZERO(dentry);
- }
--- 
-2.26.2
-
+Reviewed-by: Robert Foss <robert.foss@linaro.org>
