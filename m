@@ -2,109 +2,102 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B749C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE032206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C2620709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgENIlC (ORCPT
+        id S1726199AbgENIlF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:41:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725925AbgENIlB (ORCPT
+        Thu, 14 May 2020 04:41:05 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:59793 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbgENIlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:41:01 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71EB2C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:41:01 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1jZ9QJ-0004ZI-Cl; Thu, 14 May 2020 10:40:59 +0200
-Message-ID: <ab384507b90474b0030d8ce64fdcfe868b52c3cb.camel@pengutronix.de>
-Subject: Re: [PATCH 2/3] drm/etnaviv: Don't ignore errors on getting clocks
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>
-Date:   Thu, 14 May 2020 10:40:58 +0200
-In-Reply-To: <20200514082755.GN1551@shell.armlinux.org.uk>
-References: <20200513150007.1315395-1-lkundrak@v3.sk>
-         <20200513150007.1315395-3-lkundrak@v3.sk>
-         <CAOMZO5B582=tZ_YBCyVYFtGh=z5hZKFxP7XoUHEmH3jZsk2uYQ@mail.gmail.com>
-         <CAOMZO5BdiXCVXs+8jP7PoRvgKd1sxCu4KhjvJBvL=Qig2WOs4g@mail.gmail.com>
-         <1e15be39906034a95b86c026e060ed9866586d94.camel@pengutronix.de>
-         <20200514082755.GN1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+        Thu, 14 May 2020 04:41:04 -0400
+Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MBjA4-1jN5ft3hN6-00C8pc; Thu, 14 May 2020 10:41:02 +0200
+Received: by mail-qt1-f175.google.com with SMTP id c24so2187935qtw.7;
+        Thu, 14 May 2020 01:41:01 -0700 (PDT)
+X-Gm-Message-State: AOAM530fr7v+iKSyffKHRPC7yZsfG/Plt00n5G2TARXFsJBj5OIR20nJ
+        KifMz6ePIxY74VG7iujxrYqwQMEsIe3skax+k+s=
+X-Google-Smtp-Source: ABdhPJwB7vmKaUp0FKDv8huqQRaoInxKmxgkm5ozO0puX8Rje5ZD18zAJ70BVQAgyVCL/R9BA8Zev1+sEBFBUwscWtc=
+X-Received: by 2002:ac8:2bce:: with SMTP id n14mr3166722qtn.18.1589445660699;
+ Thu, 14 May 2020 01:41:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200513214128.GB6733@zn.tnic> <CAK8P3a3XPCyNM7s3vbn8JYK6swA3ZpPtTWB+uhmAE3YEX-nmig@mail.gmail.com>
+ <20200513222038.GC6733@zn.tnic> <CAHk-=wgybuOF+Jp2XYWqM7Xn1CW6szWQw_FgVoFh5jx_4YoCVw@mail.gmail.com>
+ <20200513233616.GD6733@zn.tnic> <CAHk-=wjZXFe08MiNRevJFGDvX0O6kcQTiK8GFBS7hwUAzB+LQw@mail.gmail.com>
+ <CAKwvOd=o_wuiVpw5KVzLEt25W-A9Ah9fzftPZLG+yutqJmWbOg@mail.gmail.com>
+ <CAHk-=wg6G+p1RRjR6UZBEuSCDs9=iWBsxrDPTEwqh+y5RayqKA@mail.gmail.com>
+ <CALCETrUYA60fWu+=MviKx0NmW+_ppsOcv-ShUXdbyM4EjyfzHQ@mail.gmail.com>
+ <CAHk-=wgiGxRgJGS-zyer1C_x2MQUVo6iZn0=aJyuFTqJWk-mpA@mail.gmail.com> <20200514052234.GA1894416@rani.riverdale.lan>
+In-Reply-To: <20200514052234.GA1894416@rani.riverdale.lan>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 14 May 2020 10:40:44 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1Cfzu7L30bFP-Sf2_GbkN_10CCJsbefTXyfnGF16uHMA@mail.gmail.com>
+Message-ID: <CAK8P3a1Cfzu7L30bFP-Sf2_GbkN_10CCJsbefTXyfnGF16uHMA@mail.gmail.com>
+Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:jnIzLBrM0jEQrCHlkxywVLSVaOZWWYcJv/R42h3em7OZYlF+nHl
+ UAJzPzfI33NKpGKTgAd6YhVqLcAOdNE12Ord7Jy+2OYgl20Pn3NSknwpZdQxyUXSMQRcEtV
+ hygOKa7mISMC4u0gk59ZnN20QwZJWglOQgw7G6QlOHIbZz5WN1SWZG/GIL6CM0eD1YWpJOk
+ q5M9sM6xW/6o1X18ns3EA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:k/Fz5z3nB+E=:DGTbgR0BxrGmcoN73g2Jet
+ LFczIlbQyDBbbQHNdj40gCjZWegupJBxqQnr9r3+C89LuXjOKMEoBilRq7BPsKDAE4RbZEroa
+ uwGIY/lNIbs9sI2tD1aFbZVHmtWVq6c4WAq9Vnwem0SHNjlP2QVh00Y15mlvW860lBdIIwL7d
+ Xgzez/yVwUYWdbHI6duW8YFt5lMVQH1AyPH9BHnStMQF5Bl1NCw7apjlm4xRQvzFZArXIW9w9
+ xuCw0RyZHQ5BBZVB36WiOh4T4R46fQ7T0IEzdnXsAKN1hdbfDFhzkfsxOcDAhmA4mQVgMxmdi
+ XcTClGOgnT+I06HjxBGh+BMkPQOJPUZb4yKVdq93lPRv+RdlHLT7uLvs6miXn/yv3xHjJufek
+ JxRT/IaDZ9+uacz//ER80VTXWoEgykIsMAHGhCip45mgWwui49vfr3hTbbNBby1M+aEE67S/X
+ havj63hH6fTSbtkKZcqexRqUkqH9a0MYgVA0CmQLBQ3Ev/+8M81ZdPU0Ysj24ST12mvklJYyT
+ PhZBapOQlh0TlHMNMLMucw/dlYACBzmaUXV7QYM52cuZOI0GQzPip9GJqWJLsPlmy/JZakbtn
+ 7Aj9x2tNgPo8bWSiud0fDi2RNRXVt+GMSdnnJ9B2XCxtyqh2CeR3TaVUBC4sbJwMeejx+e4Vz
+ u9nDHTaqKWjqSWWfp7kv8bKjhhdTm4NqzmYB1mdZyAbOI2Al/5B277gFICLvOlKUPVlmaN7yo
+ gAIgdOLaWSpjq/n4RuyQakJYkcm46OSptnjfUT1nJnFtLQY8sLjckFO1yqvDQaHqaRQ/lgbg7
+ eW1J6pd+xijWbjB/S+d7pKrWPTeGVJUvybd4tlaWVDp0pglf5I=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, den 14.05.2020, 09:27 +0100 schrieb Russell King - ARM Linux admin:
-> On Thu, May 14, 2020 at 10:18:02AM +0200, Lucas Stach wrote:
-> > Am Mittwoch, den 13.05.2020, 23:41 -0300 schrieb Fabio Estevam:
-> > > On Wed, May 13, 2020 at 2:09 PM Fabio Estevam <festevam@gmail.com> wrote:
-> > > 
-> > > > The binding doc Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-> > > > says that only the 'reg' clock could be optional, the others are
-> > > > required.
-> > > 
-> > > arch/arm/boot/dts/dove.dtsi only uses the 'core' clock.
-> > > arch/arm/boot/dts/stm32mp157.dtsi uses 'bus' and 'core'
-> > > 
-> > > Maybe the binding needs to be updated and it seems that using
-> > > devm_clk_get_optional() like you propose is safe.
-> > 
-> > The binding is correct as-is. We want to require those clocks to be
-> > present, but the dove DT was added before the binding was finalized, so
-> > the driver still treats the clocks as optional to not break
-> > compatibility with old DTs. Maybe this warrants a comment in the
-> > code...
-> 
-> The binding doc in mainline says:
-> 
->   clocks:
->     items:
->       - description: AXI/master interface clock
->       - description: GPU core clock
->       - description: Shader clock (only required if GPU has feature PIPE_3D)
->       - description: AHB/slave interface clock (only required if GPU can gate slave interface independently)
->     minItems: 1
->     maxItems: 4
-> 
->   clock-names:
->     items:
->       enum: [ bus, core, shader, reg ]
->     minItems: 1
->     maxItems: 4
-> 
-> which looks correct to me - and means that Dove is compliant with that.
+On Thu, May 14, 2020 at 7:22 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> On Wed, May 13, 2020 at 09:52:07PM -0700, Linus Torvalds wrote:
+> > On Wed, May 13, 2020, 20:50 Andy Lutomirski <luto@amacapital.net> wrote:
+> The gcc docs [1,2] at least don't inspire much confidence that this will
+> continue working with plain asm("") though:
+>
+> "Note that GCC’s optimizers can move asm statements relative to other
+> code, including across jumps."
+> ...
+> "Note that the compiler can move even volatile asm instructions relative
+> to other code, including across jump instructions."
+>
+> Even if we don't include an instruction in it I think it should at least
+> have a memory clobber, to stop the compiler from deciding that it can be
+> moved before the call so it can do the tail-call optimization.
 
-The YAML binding actually did loose something in translation here,
-which I didn't notice. Previously all those clocks were listed under
-"Required properties", with the exceptions listed in parenthesis. So
-the Dove GPU, which is a combined 2D/3D core should have axi, core and
-shader clocks specified.
+I think LTO would still be able to notice that cpu_startup_entry() can
+be annotated __attribute__((noreturn)) and optimize the callers
+accordingly, which in turn would allow a tail call again after dead code
+elimination.
 
-Regards,
-Lucas
-
+     Arnd
