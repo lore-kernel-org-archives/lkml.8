@@ -2,103 +2,173 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38323C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA9CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2BC2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 562612065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:51:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nLRO8G6F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fAoerFnO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgENLvG (ORCPT
+        id S1727095AbgENLvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:51:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38868 "EHLO
+        Thu, 14 May 2020 07:51:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbgENLvF (ORCPT
+        with ESMTP id S1726232AbgENLvS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:51:05 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C1A3C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:51:05 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id g22so643313oop.13
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:51:05 -0700 (PDT)
+        Thu, 14 May 2020 07:51:18 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B8C9C061A0C;
+        Thu, 14 May 2020 04:51:16 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id b6so1010335uak.6;
+        Thu, 14 May 2020 04:51:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cmu4YBAvToliFfVDxWezHK86Ml4PH9h8T7/JXeAmCJ4=;
-        b=nLRO8G6FIBf9L+JTs57c/5HLTs2IGDh6RfDLTrlqsfZ4Y5xnO3QIRXBsY8O3mbds5W
-         aMzUhZ7DRuDa08RO1VMFv5matROJEvlY0AHZj6nB6XBeM9ddd7pRekdkOnKVsyGA1+zv
-         QSE9mRl1UjVeLqFTlTGMylOpBSQddi4BhUpdF5nh5vv6+yVMpq9Nx1B3hppV5rGL8CGR
-         5smct6dgZDV1FUPAUmiuxCkCJZS2FlPb3zQuIJeu4iWRTrk27GyzNEWlBzMCJqRGIH/l
-         KWBjujikL4fqPR0FIkQdi0uKIBAw6CdPIrdDhLzMs6oj1Q3npjB5Oa4jN1mQmFm7RT0O
-         c+7w==
+        bh=fz/sODwE4TRlAOUOF7rSWmB5p5vCnF20YLXRpjtRNR8=;
+        b=fAoerFnOqYJzGocVX8Id2ilnoOiWw9tjf6UV3fKEYbOvg/kHrbnP/C65NbI59Xi0v4
+         UxhU3GHuwaHdeJztSATlKlF9pKzjvjuw4mhzkkdTOCQR8BLxUPcGGM7p5toepgNmjsKH
+         XTW8A+gOuYLB3pBMRrN/Jz9lQ0NTXe0SbQZ7d8+Lh5sUo5nCpQzJ7Ixk2nfuYLaPuLc8
+         u7E9ivRsvS87+z0XhwvuRAxP4jN3mUuEi/gn9h/l64H4GWHihtLGm3qNS+Jul7EZOBIo
+         eBnwqDOe16oXRAG26LmjNVwlLFzWWnWEAlhg9btfai30pziMNZAycFz/gKGHiIz8qdNI
+         Hd5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cmu4YBAvToliFfVDxWezHK86Ml4PH9h8T7/JXeAmCJ4=;
-        b=J3pJzYyTDtGWrP9DqkevLX/ERcXhrh+CRBKI97PaMc19tDR1DHPhghktYpVyJYbeO3
-         LQ3T+cl+//acQC/Rn0JNK8xv6CFzBGe/VMyNQQOuJEPuXSy4t68OlF+SlWMsmu3HozN0
-         ZLFMzcnDdvmcHC8R0LlHmpoeNzi9KaIkRQe3j4b0dUuYfqe8Iafii9+SVgR+HKGS2NsZ
-         fhMaGqNO/pHIaL3C6jwvk0W0SWUlY3xtwedS6X3mhQtZOC+/5u5odryJ6wbOXgGk5wSY
-         X+XBwr5gcW9JwyDsptWie3LZO8hZd4DQ4X/hP/09UmEeeeuAJQLMKsBDXAhz/dxS5hym
-         Lhbw==
-X-Gm-Message-State: AOAM532nUx/j8AXzh4fpzgfR21qNTkwEyEQkLEKM/mLG4VDEQFEwWDxu
-        mOol04TMlekU4jfZwwaiwtpbbXuiRiRFtpTokZ8dCw==
-X-Google-Smtp-Source: ABdhPJwi768XB+CazWxT5hYz1aNguKPDsIEcNgh+EmH5hm/Rc5enKl91gVcVBT3HBzucHTUyzTL+pmJixYK3SgaRBdU=
-X-Received: by 2002:a4a:b4c1:: with SMTP id g1mr3275917ooo.58.1589457064720;
- Thu, 14 May 2020 04:51:04 -0700 (PDT)
+        bh=fz/sODwE4TRlAOUOF7rSWmB5p5vCnF20YLXRpjtRNR8=;
+        b=BygGTQxtemxo1Wh451nDiyPAutXZyNESwp/1tWGL2/BPguM2RuA5IxuR9kDIAr4is4
+         qGp3t1ZONdjHbtfLWXetcG2KX73gBzP88bqBBn3h9iN8rAx9fegubZuqmU3zNUrScBxp
+         cAykiLcupWtX6vaRi9+sRfsWWbeRv29PDVuYGIwL0EK7d0GOpbb2XCR+APOfMO1d3Uld
+         QA6lOK8K7vRsEuWn6GT3RNUnumvulm8M0msxVca6qmW1NjNBy6lWkx9NfvSj9b4vYWXI
+         GOnLTzuf6gvV1DnqbhSj2RgXPeSACigiEMAbFqvIHdcYM7P2/eIsAtPfzWJaue2GuTo5
+         nV3Q==
+X-Gm-Message-State: AOAM533RQ8hGYKZiZwtC2yyN7ZWS6a8CWiEd6vBE/D5QmdqK7ju4kGOg
+        mzftmuV/4baXagBkQRokSoZsL7/lzC/R83hBz4k=
+X-Google-Smtp-Source: ABdhPJxSk3G3P52SjjYVN5dey+t6hO6IzipIL9onpZ2v3nEYxcmFje21OU68uGtXk/NMjDQSpwIAtCNk2p/z79SJzCM=
+X-Received: by 2002:ab0:1ea:: with SMTP id 97mr3527388ual.106.1589457075715;
+ Thu, 14 May 2020 04:51:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200508204200.13481-1-sumit.semwal@linaro.org>
- <20200508204200.13481-5-sumit.semwal@linaro.org> <20200511104922.GD8216@sirena.org.uk>
-In-Reply-To: <20200511104922.GD8216@sirena.org.uk>
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Thu, 14 May 2020 17:20:53 +0530
-Message-ID: <CAO_48GHXNYT7KT+7U_TNT5GtensREckKEVhD3nBTriaAePAr=A@mail.gmail.com>
-Subject: Re: [v2 4/4] regulator: qcom: labibb: Add SC interrupt handling
-To:     Mark Brown <broonie@kernel.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lgirdwood@gmail.com, robh+dt@kernel.org,
-        Nisha Kumari <nishakumari@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
+References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
+ <20190731131045.GB147138@dtor-ws> <20190802104633.GA14823@kroah.com>
+ <CACvgo52+Uqx4GJFwadJoFzzt5EMc69HcW-+K9uxv9t25TtSDBg@mail.gmail.com> <20200514071631.GA1566388@kroah.com>
+In-Reply-To: <20200514071631.GA1566388@kroah.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Thu, 14 May 2020 12:48:32 +0100
+Message-ID: <CACvgo52Mqag6wzWqJPMqbtbSsqDgPyyG33huAd+cQgFKQhfQUw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] drivers, provide a way to add sysfs groups easily
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, x86@kernel.org,
+        linux-input@vger.kernel.org,
+        linux-fbdev <linux-fbdev@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        platform-driver-x86@vger.kernel.org,
+        Tony Prisk <linux@prisktech.co.nz>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Gong <richard.gong@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        LAKML <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Mark,
-
-Thanks for the review comments.
-
-On Mon, 11 May 2020 at 16:19, Mark Brown <broonie@kernel.org> wrote:
+On Thu, 14 May 2020 at 08:16, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Sat, May 09, 2020 at 02:12:00AM +0530, Sumit Semwal wrote:
+> On Wed, May 13, 2020 at 11:18:15PM +0100, Emil Velikov wrote:
+> > Hi Greg,
+> >
+> > On Fri, 2 Aug 2019 at 11:46, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> >
+> > >
+> > > I have now done this with patch 1/10.  Here's the pull info if any
+> > > subsystem maintainer wants to suck this into their tree to provide the
+> > > ability for drivers to add/remove attribute groups easily.
+> > >
+> > > This is part of my driver-core tree now, and will go to Linus for
+> > > 5.4-rc1, along with a few platform drivers that have been acked by their
+> > > various subsystem maintainers that convert them to use this new
+> > > functionality.
+> > >
+> > > If anyone has any questions about this, please let me know.
+> > >
+> > > thanks,
+> > >
+> > > greg k-h
+> > >
+> > > -------------------
+> > >
+> > > The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+> > >
+> > >   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+> > >
+> > > are available in the Git repository at:
+> > >
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/dev_groups_all_drivers
+> > >
+> > > for you to fetch changes up to 23b6904442d08b7dbed7622ed33b236d41a3aa8b:
+> > >
+> > >   driver core: add dev_groups to all drivers (2019-08-02 12:37:53 +0200)
+> > >
+> > > ----------------------------------------------------------------
+> > > dev_groups added to struct driver
+> > >
+> > > Persistent tag for others to pull this branch from
+> > >
+> > > This is the first patch in a longer series that adds the ability for the
+> > > driver core to create and remove a list of attribute groups
+> > > automatically when the device is bound/unbound from a specific driver.
+> > >
+> > > See:
+> > >         https://lore.kernel.org/r/20190731124349.4474-2-gregkh@linuxfoundation.org
+> > > for details on this patch, and examples of how to use it in other
+> > > drivers.
+> > >
+> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > >
+> > > ----------------------------------------------------------------
+> > > Dmitry Torokhov (1):
+> > >       driver core: add dev_groups to all drivers
+> > >
+> > >  drivers/base/dd.c      | 14 ++++++++++++++
+> > >  include/linux/device.h |  3 +++
+> > >  2 files changed, 17 insertions(+)
+> > > _______________________________________________
+> >
+> > Was planning to re-spin DRM a series which uses .dev_groups, although
+> > I cannot see the core patch.
+> > Did the it get reverted or simply fell though the cracks?
 >
-> > +static irqreturn_t labibb_sc_err_handler(int irq, void *_reg)
-> > +{
-> > +     int ret, count;
-> > +     u16 reg;
-> > +     u8 sc_err_mask;
-> > +     unsigned int val;
-> > +     struct labibb_regulator *labibb_reg = (struct labibb_regulator *)_reg;
-> > +     bool in_sc_err, reg_en, scp_done = false;
-> > +
-> > +     if (irq == labibb_reg->sc_irq)
-> > +             reg = labibb_reg->base + REG_LABIBB_STATUS1;
-> > +     else
-> > +             return IRQ_HANDLED;
+> Nope, it's in there:
+>         23b6904442d0 ("driver core: add dev_groups to all drivers")
+> which showed up in the 5.4 kernel release.
 >
-> Why would we be registering the interrupt handler when it's not valid?
-Agreed, will correct.
+> Lots of other subsystems have already been converted to use this, do you
+> not see it in your tree?
+>
+A case of PEBKAC it seems - I was looking at a 5.3 checkout somehow.
 
-Best,
-Sumit.
+Thanks for the core work. Will check/merge the fbdev patches over the
+next few days and polish drm land.
+
+-Emil
