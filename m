@@ -2,102 +2,112 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E706C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A104CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB2F2065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC512065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:45:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZYUKUu/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hTYxQXk0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgENToG (ORCPT
+        id S1728470AbgENTpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:44:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727794AbgENToG (ORCPT
+        Thu, 14 May 2020 15:45:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45122 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727124AbgENTpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:44:06 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44754C061A0C;
-        Thu, 14 May 2020 12:44:05 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id 202so210523lfe.5;
-        Thu, 14 May 2020 12:44:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BMdjGqJJ8ssmFnmYzHxNscWHpY/RONcr7JQJoulgYjI=;
-        b=KZYUKUu/8Tkdkzh69ywETAYQUBPnp9MPKTcz+dyyV+ArC3oijPVh2o5ZJ/mmUhIajq
-         cmO+Lpav++xun9s8fNG1Exb1bSETkJw5jKfVEv0KGtHFJBAqkz8yuZ4nPMwdL6PYb8cH
-         HKpr8RhBdGaJsSCAMEvcaeu0NuJidn4djo6PCjQSr1uY8Vf+2pHj7nZLfIsh2z8wnWIq
-         kCZF3kDM1NQ/8RemewbQsGG0uUxNl8hvy5MMjeriRqEomiprDwMaKoD1+6Gs8jqlyI+b
-         /NFoplWonx+XNCumbv9vWSHBA2W3W53xR1pVqJDDOeTS3qBDq6GNf6RvIG5l//GY+ivc
-         gRVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BMdjGqJJ8ssmFnmYzHxNscWHpY/RONcr7JQJoulgYjI=;
-        b=ED2qHzifLur5m8PhtAbc9wbxudZBUoyMFUMV8pfVlJolwWzvLPfxMt58djpeUw0zhP
-         zNRyz1Azd3ajMcWWpk50O6W3/Jao80/WFxoNwHnecTI82MlKOl8EomPK/QTH/RNT08EG
-         iPfESK7Sv3YYBVSWXa0a/EeylrNkAVDFG5Ojt2ebQDP4+MdiiOdA1f/GsOS/5Ogw81B5
-         NubNUAnb2whDRvmmeryQCS0poq7XN1t8jRGEIMayJqzBXy04YYmTjCJkwn+XhQfcFapT
-         KjEiu7GQgP2DHq0Fl5zAKirotHlRZLXy3tU+tbKzHJ0kmwFey7APovo9ZjcFEv65K28k
-         9w/Q==
-X-Gm-Message-State: AOAM531e5eyBffeZy1mM5KSJ/H8muoBi/L5IQX1bhRemfut2VARjY3ri
-        XhGHb0AcCS+Q22CzGV7dnPkvQRe7
-X-Google-Smtp-Source: ABdhPJyu22xVU0I89ReSZT3aNK9UsV93o7/8h2UhjxQWejmC0P0POzC4pPB2E137f99YjKU4Cq0jdg==
-X-Received: by 2002:a19:bc4:: with SMTP id 187mr2547325lfl.211.1589485443545;
-        Thu, 14 May 2020 12:44:03 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id 192sm1995664ljj.41.2020.05.14.12.44.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 12:44:00 -0700 (PDT)
-Subject: Re: [PATCH v5 05/10] input: elants: refactor
- elants_i2c_execute_command()
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Rob Herring <robh+dt@kernel.org>,
-        Scott Liu <scott.liu@emc.com.tw>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1587923061.git.mirq-linux@rere.qmqm.pl>
- <6c576f688b385235c65b461410a917080d27e825.1587923061.git.mirq-linux@rere.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4d99b640-6e22-7a81-62ef-4097c43c5bbc@gmail.com>
-Date:   Thu, 14 May 2020 22:43:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 15:45:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589485508;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DvOZYPZ0dznaZyOMKG5Ibf44TW+ApRdGE4+b9bGQgYQ=;
+        b=hTYxQXk0PoCcG72j/PIXOtWHYpehlDv0vNe+EKqRhSbGx0xBgImwbo15yux6twCLbk4rMT
+        R6vzNxPYgKGiGZf4dZtySFsfBu2XkjrSmF1EvlppkoFxAWA1DlCcSh7YayYyx3QqBxDECv
+        ulCIVMu0oBTEXbVO/gDLsmt//k0/lXw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-ydCz80sUPZuLkv0pCXsM4g-1; Thu, 14 May 2020 15:45:04 -0400
+X-MC-Unique: ydCz80sUPZuLkv0pCXsM4g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D1B31005510;
+        Thu, 14 May 2020 19:45:02 +0000 (UTC)
+Received: from treble (ovpn-117-14.rdu2.redhat.com [10.10.117.14])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EA55D100164D;
+        Thu, 14 May 2020 19:44:59 +0000 (UTC)
+Date:   Thu, 14 May 2020 14:44:57 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Miroslav Benes <mbenes@suse.cz>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>
+Subject: Re: [PATCH 4.19 41/48] x86/unwind/orc: Prevent unwinding before ORC
+ initialization
+Message-ID: <20200514194457.wipphhvyhzcshcup@treble>
+References: <20200513094351.100352960@linuxfoundation.org>
+ <20200513094402.645961403@linuxfoundation.org>
+ <20200513215210.GB27858@amd>
 MIME-Version: 1.0
-In-Reply-To: <6c576f688b385235c65b461410a917080d27e825.1587923061.git.mirq-linux@rere.qmqm.pl>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20200513215210.GB27858@amd>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.04.2020 20:47, Michał Mirosław пишет:
-> Apply some DRY-ing to elants_i2c_execute_command() callers.  This pulls
-> polling and error printk()s into a single function.
+On Wed, May 13, 2020 at 11:52:10PM +0200, Pavel Machek wrote:
+> Hi!
 > 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
-> v4: return 0 on success; use %pe for error code
-> ---
+> > From: Josh Poimboeuf <jpoimboe@redhat.com>
+> > 
+> > commit 98d0c8ebf77e0ba7c54a9ae05ea588f0e9e3f46e upstream.
+> > 
+> > If the unwinder is called before the ORC data has been initialized,
+> > orc_find() returns NULL, and it tries to fall back to using frame
+> > pointers.  This can cause some unexpected warnings during boot.
+> > 
+> > Move the 'orc_init' check from orc_find() to __unwind_init(), so that it
+> > doesn't even try to unwind from an uninitialized state.
+> 
+> > @@ -563,6 +560,9 @@ EXPORT_SYMBOL_GPL(unwind_next_frame);
+> >  void __unwind_start(struct unwind_state *state, struct task_struct *task,
+> >  		    struct pt_regs *regs, unsigned long *first_frame)
+> >  {
+> > +	if (!orc_init)
+> > +		goto done;
+> > +
+> >  	memset(state, 0, sizeof(*state));
+> >  	state->task = task;
+> >  
+> 
+> As this returns the *state to the caller, should the "goto done" move
+> below the memset? Otherwise we are returning partialy-initialized
+> struct, which is ... weird.
 
-Hello Michał,
+Yeah, it is a little weird.  In most cases it should be fine, but there
+is an edge case where if there's a corrupt ORC table and this returns
+early, 'arch_stack_walk_reliable() -> unwind_error()' could check an
+uninitialized value.
 
-This patch needs to be rebased on a newer linux-next once again :)
+Also the __unwind_start() error handling needs to set that error bit
+anyway, in its error cases.  I'll fix it up.
+
+-- 
+Josh
+
