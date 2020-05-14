@@ -2,182 +2,114 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16318C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4222CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E97AC20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KhKOrURf"
+	by mail.kernel.org (Postfix) with ESMTP id 2B03A20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbgENIdD (ORCPT
+        id S1726105AbgENIhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:33:03 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38234 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgENIdC (ORCPT
+        Thu, 14 May 2020 04:37:48 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59457 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbgENIhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:33:02 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04E8WnZ3068680;
-        Thu, 14 May 2020 03:32:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589445169;
-        bh=wrWLvX+xcYZYuneU7uYoZ1aOivxAyjgi4GYVUlhf1Q4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KhKOrURfWnQVdsjIlbR/3PfgYp5We+af2YG6S+gPmL4vi9BJ4PowkNJyZQvRMF2Fc
-         i2rYPeIJIwzt6bOqcaMyUSZhP+maipvFv4KAXMQqwILJzAbbxTsr2W1CANRRIZ/yJe
-         u8DX2sD4Mwr4+x9M5MtTwbEcmIMKnlazx51cY1mk=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04E8Wn0A077981
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 May 2020 03:32:49 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
- May 2020 03:32:48 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 14 May 2020 03:32:48 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04E8Wlsi004421;
-        Thu, 14 May 2020 03:32:47 -0500
-Subject: Re: [PATCH -next] dmaengine: ti: k3-udma: Use PTR_ERR_OR_ZERO() to
- simplify code
-To:     Samuel Zou <zou_wei@huawei.com>, <dan.j.williams@intel.com>,
-        <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588757146-38858-1-git-send-email-zou_wei@huawei.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <f9ae33c9-5a8a-d10a-5bb3-ecf9ee5d81f5@ti.com>
-Date:   Thu, 14 May 2020 11:33:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 14 May 2020 04:37:45 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jZ9N6-0000Ln-N0; Thu, 14 May 2020 08:37:40 +0000
+Date:   Thu, 14 May 2020 10:37:39 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ia64: enable HAVE_COPY_THREAD_TLS, switch to
+ kernel_clone_args
+Message-ID: <20200514083739.m2idxcxof4jyreck@wittgenstein>
+References: <20200513204848.1208864-1-christian.brauner@ubuntu.com>
+ <3908561D78D1C84285E8C5FCA982C28F7F6266E0@ORSMSX115.amr.corp.intel.com>
+ <79e58d9b-5a39-390c-2f0c-0d87b63442b4@physik.fu-berlin.de>
+ <20200514074606.vkc35syhdep23rzh@wittgenstein>
+ <6b298416-1e64-eee7-0bb4-3b1f7f67adc6@physik.fu-berlin.de>
+ <20200514075808.krdtypxpag4tfa74@wittgenstein>
+ <917c9b03-cfd0-4bcf-d6a6-6aef7489b27b@physik.fu-berlin.de>
 MIME-Version: 1.0
-In-Reply-To: <1588757146-38858-1-git-send-email-zou_wei@huawei.com>
-Content-Type: multipart/mixed;
-        boundary="------------E105EE2BC1BE5753D91002F5"
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <917c9b03-cfd0-4bcf-d6a6-6aef7489b27b@physik.fu-berlin.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------E105EE2BC1BE5753D91002F5
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 14, 2020 at 10:24:25AM +0200, John Paul Adrian Glaubitz wrote:
+> Hi!
+> 
+> On 5/14/20 9:58 AM, Christian Brauner wrote:
+> >> The machine also serves as a Debian buildd which is why it's a bit more
+> >> busy than other servers.
+> > 
+> > Oh? Does it also produce Debian images for ia64 similar to what is done
+> > for sparc64?
+> 
+> Yes, it's actually the same person who does this - me ;).
 
-Hi Samuel,
+Well thank you very much. Thanks to this I was able to test my sparc
+patches in qemu. :)
 
-On 06/05/2020 12.25, Samuel Zou wrote:
-> Fixes coccicheck warnings:
->=20
-> drivers/dma/ti/k3-udma.c:1294:1-3: WARNING: PTR_ERR_OR_ZERO can be used=
+> 
+> These images should work just fine:
+> 
+> > https://cdimage.debian.org/cdimage/ports/2020-04-19/
 
-> drivers/dma/ti/k3-udma.c:1311:1-3: WARNING: PTR_ERR_OR_ZERO can be used=
+Oh I didn't find these images when searching for them. They would be
+super helpful but there's no qemu for ia64 anymore that's useable. I had
+tried building qemu from an old source based on a gsoc project for an
+ia64 port but that turned out to be more involved than writing ia64
+assembly itself. :)
 
-> drivers/dma/ti/k3-udma.c:1376:1-3: WARNING: PTR_ERR_OR_ZERO can be used=
+> 
+> The latest snapshot is currently broken due to a regression in initramfs-tools.
+> 
+> >>>> As for getting a working cross-compiler for ia64 in Debian, this has
+> >>>> been on my TODO list for a while now. Building a cross-compiler for
+> >>>> ia64 is a bit more tricky due to it's dependency on the external
+> >>>> libunwind.
+> >>>
+> >>> I hit that roadblock as well but yeah, a cross-compiler would be
+> >>> helpful.
+> >>
+> >> It's not difficult, it's just a bit of annoying package work including
+> >> some trial and error testing.
+> >>
+> >> Once the cross-compiler is in Debian, it will be available in Ubuntu as well.
+> > 
+> > Would that based on a recent gcc? I vaguely remember a post somwhere
+> > that gcc 10 or 11 was planning to drop support for ia64?
+> 
+> Yes, that would be the latest gcc. There are no plans at the moment to
+> drop ia64 from gcc as the backend is already ported to MODE_CC.
+> 
+> m68k was on the brink of being removed, but I started a Bountysource campaign
+> to convert it from cc0 to MODE_CC and it was eventually saved ;).
+> 
+> > https://www.bountysource.com/issues/80706251-m68k-convert-the-backend-to-mode_cc-so-it-can-be-kept-in-future-releases
 
-
-Thanks for the patch, I have missed it as I was not in CC for it.
-scripts/get_maintainer.pl would have tipped for a wider recipient list..
-
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
-> ---
->  drivers/dma/ti/k3-udma.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> index 0a04174..f5775ca 100644
-> --- a/drivers/dma/ti/k3-udma.c
-> +++ b/drivers/dma/ti/k3-udma.c
-> @@ -1291,10 +1291,8 @@ static int udma_get_tchan(struct udma_chan *uc)
->  	}
-> =20
->  	uc->tchan =3D __udma_reserve_tchan(ud, uc->config.channel_tpl, -1);
-> -	if (IS_ERR(uc->tchan))
-> -		return PTR_ERR(uc->tchan);
-> =20
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(uc->tchan);
->  }
-> =20
->  static int udma_get_rchan(struct udma_chan *uc)
-> @@ -1308,10 +1306,8 @@ static int udma_get_rchan(struct udma_chan *uc)
->  	}
-> =20
->  	uc->rchan =3D __udma_reserve_rchan(ud, uc->config.channel_tpl, -1);
-> -	if (IS_ERR(uc->rchan))
-> -		return PTR_ERR(uc->rchan);
-> =20
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(uc->rchan);
->  }
-> =20
->  static int udma_get_chan_pair(struct udma_chan *uc)
-> @@ -1373,10 +1369,8 @@ static int udma_get_rflow(struct udma_chan *uc, =
-int flow_id)
->  	}
-> =20
->  	uc->rflow =3D __udma_get_rflow(ud, flow_id);
-> -	if (IS_ERR(uc->rflow))
-> -		return PTR_ERR(uc->rflow);
-> =20
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(uc->rflow);
->  }
-> =20
->  static void udma_put_rchan(struct udma_chan *uc)
->=20
-
-- P=C3=A9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
---------------E105EE2BC1BE5753D91002F5
-Content-Type: application/pgp-keys; name="pEpkey.asc"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment; filename="pEpkey.asc"
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-mQENBFki4nsBCAD3BM+Ogt951JlaDloruEjoZk/Z+/37CjP0fY2mqLhBOzkpx95u
-X1Fquf0KfVk+ZzCd25XGOZEtpZNlXfbxRr2iRWPS5RW2FeLYGvg2TTJCpSr+ugKu
-OOec6KECCUotGbGhpYwBrbarJNEwDcAzPK7UJYa1rhWOmkpZJ1hXF1hUghB84q35
-8DmN4sGLcsIbVdRFZ1tWFh4vGBFV9LsoDZIrnnANb6/XMX78s+tr3RG3GZBaFPl8
-jO5IIv0UIGNUKaYlNVFYthjGCzOqtstHchWuK9eQkR7m1+Vc+ezh1qK0VJydIcjn
-OtoMZZL7RAz13LB9vmcJjbQPnI7dJojz/M7zABEBAAG0JlBldGVyIFVqZmFsdXNp
-IDxwZXRlci51amZhbHVzaUB0aS5jb20+iQFOBBMBCAA4FiEE+dBcpRFvJjZw+uta
-LCayis85LN4FAlki4nsCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQLCay
-is85LN4QjggAzxxxXqiWpA3vuj9yrlGLft3BeGKWqF8+RzdeRvshtNdpGeIFf+r5
-AJVR71R1w89Qeb4DGXus7qsKiafdFGG7yxbuhw8a5wUm+ZncBXA+ETn3OyVtl8g8
-r/ZcPX420jClBNTVuL0sSnyqDFDrt5f+uAFOIwsnHdpns174Zu9QhgYxdvdZ+jMh
-Psb745O9EVeNvdfUIRdrVjb4IhJKNIzkb0Tulsz5xeCJReUYpxZU1jzEq3YZqIou
-+fi+oS4wlJuSoxKKTmIXtSeEy/weStF1XHMo6vLYqzaK4FyIuclqeuYUYSVy2425
-7TMXugaI+O85AEI6KW8MCcu1NucSfAWUabkBDQRZIuJ7AQgAypKq8iIugpHxWA2c
-Ck6MQdPBT6cOEVK0tjeHaHAVOUPiw9Pq+ssMifdIkDdqXNZ3RLH/X2svYvd8c81C
-egqshfB8nkJ5EKmQc9d7s0EwnYT8OwsoVb3c2WXnsdcKEyu2nHgyeJEUpPpMPyLc
-+PWhoREifttab4sOPktepdnUbvrDK/gkjHmiG6+L2owSn637N+Apo3/eQuDajfEu
-kybxK19ReRcp6dbqWSBGSeNB32c/zv1ka37bTMNVUY39Rl+/8lA/utLfrMeACHRO
-FGO1BexMASKUdmlB0v9n4BaJFGrAJYAFJBNHLCDemqkU7gjaiimuHSjwuP0Wk7Ct
-KQJfVQARAQABiQE2BBgBCAAgFiEE+dBcpRFvJjZw+utaLCayis85LN4FAlki4nsC
-GwwACgkQLCayis85LN7kCwgAoy9r3ZQfJNOXO1q/YQfpEELHn0p8LpwliSDUS1xL
-sswyxtZS8LlW8PjlTXuBLu38Vfr0vGav7oyV7TkhnKT3oBOLXanyZqwgyZSKNEGB
-PB4v3Fo7YTzpfSofiwuz03uyfjTxiMGjonxSb+YxM7HBHfzjrOKKlg02fK+lWNZo
-m5lXugeWD7U6JJguNdYfr+U4zYIblelUImcIE+wnR0oLzUEVDIWSpVrl/OqS3Rzo
-mw8wBsHksTHrbgUnKL0SCzYc90BTeKbyjEBnVDr+dlfbxRxkB8h9RMPMdjodvXzS
-Gfsa9V/k4XAsh7iX9EUVBbnmjA61ySxU/w98h96jMuteTg=3D=3D
-=3DeQmw
------END PGP PUBLIC KEY BLOCK-----
-
---------------E105EE2BC1BE5753D91002F5--
+Oh that's pretty neat. Thanks!
+Christian
