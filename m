@@ -2,98 +2,115 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24060C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3A6D206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D0120675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:24:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="APoDLN1H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iIm3W3vx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726161AbgENIYe (ORCPT
+        id S1726184AbgENIYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:24:34 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:7167 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbgENIYc (ORCPT
+        Thu, 14 May 2020 04:24:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725935AbgENIYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:24:32 -0400
+        Thu, 14 May 2020 04:24:41 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E5F1C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:24:41 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id a21so2482186ljj.11
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:24:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589444671; x=1620980671;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=Y+cXdg9Qo1H96MCRH7eYIOX2wOTvR23creB9YMwHzfU=;
-  b=APoDLN1HHwGrOnYzqKOqTf7X4FeR2JjxaDvsznHQnGSkU0WXUzXeNeB0
-   IkYiTn2hecW//v/22yA2KQ4PVXizu9Y60AS8zNc1E8P6g4EtHBB5bvtO2
-   NTvxwXksf4Iqt5ITpTJ+mU86W4OhDW9J7XpsPQZoj0VG0ylnWgbcJQtaG
-   c=;
-IronPort-SDR: Xu+2oUY3Iw1hkCFXsh+6slLDlFF6J6naMpRbcGMolQd8boxqI+Gh7mDZwCfotKFfD0wJnNH1jQ
- 8krGVkNqAv2A==
-X-IronPort-AV: E=Sophos;i="5.73,390,1583193600"; 
-   d="scan'208";a="30273858"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 14 May 2020 08:24:17 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id 7D41E1A0BA0;
-        Thu, 14 May 2020 08:24:16 +0000 (UTC)
-Received: from EX13D01UWB003.ant.amazon.com (10.43.161.94) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 14 May 2020 08:23:55 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13d01UWB003.ant.amazon.com (10.43.161.94) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 14 May 2020 08:23:55 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
- Thu, 14 May 2020 08:23:55 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "keescook@chromium.org" <keescook@chromium.org>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>
-Subject: Re:  [PATCH v6 1/6] arch/x86/kvm: Refactor l1d flush lifecycle
- management
-Thread-Topic: [PATCH v6 1/6] arch/x86/kvm: Refactor l1d flush lifecycle
- management
-Thread-Index: AQHWKckBKZ/YfhdRx0ysPvoF1MaPYw==
-Date:   Thu, 14 May 2020 08:23:54 +0000
-Message-ID: <97582933b9df4cecc460a0d5af21e333f8149173.camel@amazon.com>
-References: <20200510014803.12190-1-sblbir@amazon.com>
-         <20200510014803.12190-2-sblbir@amazon.com>
-         <87o8qs2c10.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87o8qs2c10.fsf@nanos.tec.linutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.215]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3B8C10832EE76247BF555B777AF9E72D@amazon.com>
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jkb8BxKnl71QcTSlAQifB2QDBHTd1utKf7Tuku0XIK4=;
+        b=iIm3W3vxPyvQT8hBr8kR8u+6yVBH0h6bfGPXKdobARfet5qpx6e2NJwbGUoVD4BTiz
+         kvpn1tyKA+LwVUJc8z8fF1ZwXlCreaNrldq4vaEDBNH9cKFjh4tAUHQkvEkgZrv38eDN
+         o2gz3Js+ZsuW3daffpbxtnkSsvbVGjH/1ch+B53s3SDAzYlJpVIgVSGq9BIdUF43U3J3
+         PYEdm9THYdzNqhqnu0YtajA3OhEFK2moz2+zytOAdmmOqgbfZNV8YpRwBfYf+FcYfKP1
+         slXNCbKogiAPZuvMbATklfcba8DSvlZ/NhggKTK4KlzEC8fEhJbI/SNZCFcSB3u8yrD/
+         oIKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jkb8BxKnl71QcTSlAQifB2QDBHTd1utKf7Tuku0XIK4=;
+        b=UQ9reeEHXY1w4DQEW4rkf/HYRPO/a1HS4t5rID6RKgN1FFdpfEo2kAecexUZSZTUzS
+         qQhX1zlafUv8WaGZkbNJysCDVnVqWM6/CmcPbA2jATINCztUROPV/GoPSKuxiDK921DX
+         lUYzdj3z4ox3KO4bGgGzp/YWTAylxnz04wTJ2hxbStsszAa/FdHW4v8aVj5bwVZcTcjn
+         ao0Syx4e9CH4ARSs5sbpUUjE7VdukDwB71DWKC3ZWoYhaWvXUBMDHASXSrMjxdGRa4UH
+         GyDg4kukORu+7xgBnHNEIl+e1Mdfd2tMzUYEcpV8ncrMICPIWmxBm0gUEbSpXW0z94Rp
+         zNYQ==
+X-Gm-Message-State: AOAM532Cwly5v0gLRrvl/h5azsv+DEl4n/736UCuws0fIGKdm2QfLqLR
+        QO28JUFu9TmIYEw4gheHH3GIbZloNBiku/jxcVm68A==
+X-Google-Smtp-Source: ABdhPJzbR0lONsL+LHNQ562bI+zZx3vzCrNYamk5GJI5zjbv9WVScZ7rOiUe3C6sarzGNmAWB4jF6RMUNqx0dbXgSxU=
+X-Received: by 2002:a2e:8805:: with SMTP id x5mr2073815ljh.223.1589444679816;
+ Thu, 14 May 2020 01:24:39 -0700 (PDT)
 MIME-Version: 1.0
+References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com> <1589267017-17294-4-git-send-email-dillon.minfei@gmail.com>
+In-Reply-To: <1589267017-17294-4-git-send-email-dillon.minfei@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 14 May 2020 10:24:28 +0200
+Message-ID: <CACRpkda5VjjBdbruXTi33QBNb=VU6vK2zDE8yyQXoWw7=NQFeg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] ARM: dts: stm32: enable ltdc binding with ili9341
+ on stm32429-disco board
+To:     dillon.minfei@gmail.com
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA1LTEzIGF0IDE1OjM1ICswMjAwLCBUaG9tYXMgR2xlaXhuZXIgd3JvdGU6
-DQo+IENBVVRJT046IFRoaXMgZW1haWwgb3JpZ2luYXRlZCBmcm9tIG91dHNpZGUgb2YgdGhlIG9y
-Z2FuaXphdGlvbi4gRG8NCj4gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5s
-ZXNzIHlvdSBjYW4gY29uZmlybSB0aGUgc2VuZGVyDQo+IGFuZCBrbm93IHRoZSBjb250ZW50IGlz
-IHNhZmUuDQo+IA0KPiANCj4gDQo+IEJhbGJpciBTaW5naCA8c2JsYmlyQGFtYXpvbi5jb20+IHdy
-aXRlczoNCj4gDQo+ID4gU3ViamVjdDogW1BBVENIIHY2IDEvNl0gYXJjaC94ODYva3ZtOiBSZWZh
-Y3Rvci4uLi4NCj4gDQo+IGFyY2gveDg2L2t2bTogaXMgcmVhbGx5IG5vdCB0aGUgY29ycmVjdCBz
-dWJzeXN0ZW0gcHJlZml4Li4uDQo+IA0KPiBJJ2xsIGZpeCBpdCB1cCB0aGlzIHRpbWUuDQoNClRo
-YW5rcywgbm90ZWQhDQoNCkJhbGJpciBTaW5naC4NCg==
+On Tue, May 12, 2020 at 9:04 AM <dillon.minfei@gmail.com> wrote:
+
+> From: dillon min <dillon.minfei@gmail.com>
+>
+> Enable the ltdc & ili9341 on stm32429-disco board.
+>
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+
+This mostly looks good but...
+
+> +&spi5 {
+> +       status = "okay";
+> +       pinctrl-0 = <&spi5_pins>;
+> +       pinctrl-names = "default";
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +       cs-gpios = <&gpioc 2 GPIO_ACTIVE_LOW>;
+> +       dmas = <&dma2 3 2 0x400 0x0>,
+> +              <&dma2 4 2 0x400 0x0>;
+> +       dma-names = "rx", "tx";
+
+These DMA assignments seem to be SoC things and should
+rather be in the DTS(I) file where &spi5 is defined, right?
+stm32f429.dtsi I suppose?
+
+It is likely the same no matter which device is using spi5.
+
+Yours,
+Linus Walleij
