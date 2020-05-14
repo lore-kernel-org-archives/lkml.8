@@ -2,98 +2,175 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E61C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB63820643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589468510;
-	bh=R1T/vmvwwNTrikwodjjN+Hsr7qyr3/jAir0fcjlAId8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ehIAeHSN4UpTj4QO6iIXn6FVwxKLQEs85C7XgwzkMpgRCsHw6xIHT/ZDiIPm5LAW/
-	 DTjIaqdwn8ghGza7EuKWJpgLYGjk0ZnPsZTdVqv5rPqsW8wvg4mDhuQTFq7axMLSw2
-	 2z9ETnNI/LgEOiz4SR/xMxmnZkEkNXvfN3GMvmy0=
+	by mail.kernel.org (Postfix) with ESMTP id 07CFA20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:01:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qlDHdijn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbgENPB0 (ORCPT
+        id S1728379AbgENPBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:01:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726707AbgENPBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:01:24 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57F3E205CB;
-        Thu, 14 May 2020 15:01:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589468484;
-        bh=R1T/vmvwwNTrikwodjjN+Hsr7qyr3/jAir0fcjlAId8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W9wWS/DuC253QiJZHyyXgZtdyzL4jjwYXy+l5WtrxmxKTApA9vfRh3puW7Us25uL5
-         2rUX8rtd0c6+RQg/vePl4zT7LT7haQHJoJNLSHzVgyLe2tFkkM3tJWyjkdE7QuJgna
-         Ol2FAhB+RkG5wprlvlAgnIHC1V5BBAy1mX6IfK8c=
-Date:   Thu, 14 May 2020 10:06:01 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH perf/core] perf intel-pt: Fix clang build failure in
- intel_pt_synth_pebs_sample
-Message-ID: <20200514150601.GS4897@embeddedor>
-References: <20200513234738.GA21211@embeddedor>
- <20200514131030.GL5583@kernel.org>
+        Thu, 14 May 2020 11:01:53 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50688 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728179AbgENPBZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 11:01:25 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EF0nSS032711;
+        Thu, 14 May 2020 10:00:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589468449;
+        bh=OhjPHWsUFAWL/KJMF2c/CnYvdk0xBfUI7XUvcqOCtQU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=qlDHdijnNFZIr7W8uVcbyYlnzXDBhGy7hNJ94uFXqRK01yQNqGG4+Hmh3Cbux4WnF
+         7YJmc8E7174IW1gz+RomtD0lWYQk+4pnsmvwURgb/wNkb86XABrH5DPdWgUdNIHKh6
+         5/CLjhfWioMPWf1Hpy4RyhqKXIFTfc29FDwQEkUw=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EF0n7P118907
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 May 2020 10:00:49 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
+ May 2020 10:00:48 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 14 May 2020 10:00:48 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EExgAv019279;
+        Thu, 14 May 2020 10:00:44 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, <linux-pci@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-ntb@googlegroups.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 13/19] PCI: endpoint: Add pci_epc_ops to map MSI irq
+Date:   Thu, 14 May 2020 20:29:21 +0530
+Message-ID: <20200514145927.17555-14-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200514145927.17555-1-kishon@ti.com>
+References: <20200514145927.17555-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514131030.GL5583@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 10:10:30AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, May 13, 2020 at 06:47:38PM -0500, Gustavo A. R. Silva escreveu:
-> > Fix the following build failure generated with command 
-> > $ make CC=clang HOSTCC=clang -C tools/ perf:
-> > 
-> > util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
-> >                         struct branch_stack br_stack;
-> >                                             ^
-> > 1 error generated.
-> > 
-> > Fix this by reordering the members of struct br.
-> 
-> Yeah, I noticed that as far back as with ubuntu 16.04's clang:
-> 
-> clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)
-> 
-> util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU
->       extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
->                         struct branch_stack br_stack;
->                                             ^
-> 1 error generated.
-> 
-> 
-> Will fold this with the bug introducing the problem to avoid bisection
-> problems.
-> 
+Add pci_epc_ops to map physical address to MSI address and return MSI
+data. The physical address is an address in the outbound region. This is
+required to implement doorbell functionality of NTB (non transparent
+bridge) wherein EPC on either side of the interface (primary and
+secondary) can directly write to the physical address (in outbound
+region) of the other interface to ring doorbell using MSI.
 
-I agree. Also, the commit hash of the "Fixes" tag only applies to the
-perf/core branch and, I guess that might create confusion.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/pci/endpoint/pci-epc-core.c | 40 +++++++++++++++++++++++++++++
+ include/linux/pci-epc.h             |  7 +++++
+ 2 files changed, 47 insertions(+)
 
-Thanks
---
-Gustavo
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index bd8f372c506f..3f481a12d43d 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -314,6 +314,46 @@ int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no,
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_raise_irq);
+ 
++/**
++ * pci_epc_map_msi_irq() - Map physical address to MSI address and return
++ *                         MSI data
++ * @epc: the EPC device which has the MSI capability
++ * @func_no: the physical endpoint function number in the EPC device
++ * @vfunc_no: the virtual endpoint function number in the physical function
++ * @phys_addr: the physical address of the outbound region
++ * @interrupt_num: the MSI interrupt number
++ * @entry_size: Size of Outbound address region for each interrupt
++ * @msi_data: the data that should be written in order to raise MSI interrupt
++ *            with interrupt number as 'interrupt num'
++ *
++ * Invoke to map physical address to MSI address and return MSI data. The
++ * physical address should be an address in the outbound region. This is
++ * required to implement doorbell functionality of NTB wherein EPC on either
++ * side of the interface (primary and secondary) can directly write to the
++ * physical address (in outbound region) of the other interface to ring
++ * doorbell.
++ */
++int pci_epc_map_msi_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
++			phys_addr_t phys_addr, u8 interrupt_num, u32 entry_size,
++			u32 *msi_data)
++{
++	int ret;
++
++	if (IS_ERR_OR_NULL(epc))
++		return -EINVAL;
++
++	if (!epc->ops->map_msi_irq)
++		return -EINVAL;
++
++	mutex_lock(&epc->lock);
++	ret = epc->ops->map_msi_irq(epc, func_no, vfunc_no, phys_addr,
++				    interrupt_num, entry_size, msi_data);
++	mutex_unlock(&epc->lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(pci_epc_map_msi_irq);
++
+ /**
+  * pci_epc_get_msi() - get the number of MSI interrupt numbers allocated
+  * @epc: the EPC device to which MSI interrupts was requested
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index e7614dda4e0e..59cd4c967329 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -55,6 +55,7 @@ pci_epc_interface_string(enum pci_epc_interface_type type)
+  * @get_msix: ops to get the number of MSI-X interrupts allocated by the RC
+  *	     from the MSI-X capability register
+  * @raise_irq: ops to raise a legacy, MSI or MSI-X interrupt
++ * @map_msi_irq: ops to map physical address to MSI address and return MSI data
+  * @start: ops to start the PCI link
+  * @stop: ops to stop the PCI link
+  * @owner: the module owner containing the ops
+@@ -77,6 +78,9 @@ struct pci_epc_ops {
+ 	int	(*get_msix)(struct pci_epc *epc, u8 func_no);
+ 	int	(*raise_irq)(struct pci_epc *epc, u8 func_no,
+ 			     enum pci_epc_irq_type type, u16 interrupt_num);
++	int	(*map_msi_irq)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
++			       phys_addr_t phys_addr, u8 interrupt_num,
++			       u32 entry_size, u32 *msi_data);
+ 	int	(*start)(struct pci_epc *epc);
+ 	void	(*stop)(struct pci_epc *epc);
+ 	const struct pci_epc_features* (*get_features)(struct pci_epc *epc,
+@@ -216,6 +220,9 @@ int pci_epc_get_msi(struct pci_epc *epc, u8 func_no);
+ int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts,
+ 		     enum pci_barno, u32 offset);
+ int pci_epc_get_msix(struct pci_epc *epc, u8 func_no);
++int pci_epc_map_msi_irq(struct pci_epc *epc, u8 func_no,
++			phys_addr_t phys_addr, u8 interrupt_num,
++			u32 entry_size, u32 *msi_data);
+ int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no,
+ 		      enum pci_epc_irq_type type, u16 interrupt_num);
+ int pci_epc_start(struct pci_epc *epc);
+-- 
+2.17.1
+
