@@ -2,158 +2,95 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C3FC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2758720675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7E8206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgENTQX (ORCPT
+        id S1728065AbgENTSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:16:23 -0400
-Received: from smtp-42ac.mail.infomaniak.ch ([84.16.66.172]:43509 "EHLO
-        smtp-42ac.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727835AbgENTQT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:16:19 -0400
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49NLqj360nzlhjYr;
-        Thu, 14 May 2020 21:16:17 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49NLqf39VKzljTrt;
-        Thu, 14 May 2020 21:16:14 +0200 (CEST)
-Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
- through O_MAYEXEC
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        John Johansen <john.johansen@canonical.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-References: <20200505153156.925111-1-mic@digikod.net>
- <20200505153156.925111-4-mic@digikod.net>
- <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
- <202005131525.D08BFB3@keescook> <202005132002.91B8B63@keescook>
- <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
- <202005140830.2475344F86@keescook>
- <CAEjxPJ4R_juwvRbKiCg5OGuhAi1ZuVytK4fKCDT_kT6VKc8iRg@mail.gmail.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <b740d658-a2da-5773-7a10-59a0ca52ac6b@digikod.net>
-Date:   Thu, 14 May 2020 21:16:13 +0200
-User-Agent: 
+        Thu, 14 May 2020 15:18:25 -0400
+Received: from mga17.intel.com ([192.55.52.151]:45643 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727987AbgENTSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 15:18:25 -0400
+IronPort-SDR: deqYmsASqCuZvMMfkelDH4OQHH7fVRarDIV3hFkhS/CuaDIt1Mn5lA39jkp91FKZSUIKoEC4KR
+ RiMVNCdeMafQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 12:18:24 -0700
+IronPort-SDR: otlr/Bc1J/OkMNQtp5Gh+hPnaeW8KpTJir4maVnHF3TwNk7grY8hXpwv1+vUYyEsRuNFaDzQE/
+ j61nhipb+mIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
+   d="scan'208";a="341719749"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga001.jf.intel.com with ESMTP; 14 May 2020 12:18:24 -0700
+Date:   Thu, 14 May 2020 12:18:23 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Tsirkin <mst@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, x86@kernel.org
+Subject: Re: [PATCH RFC 2/5] KVM: x86: introduce KVM_MEM_ALLONES memory
+Message-ID: <20200514191823.GA15847@linux.intel.com>
+References: <20200514180540.52407-1-vkuznets@redhat.com>
+ <20200514180540.52407-3-vkuznets@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAEjxPJ4R_juwvRbKiCg5OGuhAi1ZuVytK4fKCDT_kT6VKc8iRg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514180540.52407-3-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 14/05/2020 18:10, Stephen Smalley wrote:
-> On Thu, May 14, 2020 at 11:45 AM Kees Cook <keescook@chromium.org> wrote:
->>
->> On Thu, May 14, 2020 at 08:22:01AM -0400, Stephen Smalley wrote:
->>> On Wed, May 13, 2020 at 11:05 PM Kees Cook <keescook@chromium.org> wrote:
->>>>
->>>> On Wed, May 13, 2020 at 04:27:39PM -0700, Kees Cook wrote:
->>>>> Like, couldn't just the entire thing just be:
->>>>>
->>>>> diff --git a/fs/namei.c b/fs/namei.c
->>>>> index a320371899cf..0ab18e19f5da 100644
->>>>> --- a/fs/namei.c
->>>>> +++ b/fs/namei.c
->>>>> @@ -2849,6 +2849,13 @@ static int may_open(const struct path *path, int acc_mode, int flag)
->>>>>               break;
->>>>>       }
->>>>>
->>>>> +     if (unlikely(mask & MAY_OPENEXEC)) {
->>>>> +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_MOUNT &&
->>>>> +                 path_noexec(path))
->>>>> +                     return -EACCES;
->>>>> +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_FILE)
->>>>> +                     acc_mode |= MAY_EXEC;
->>>>> +     }
->>>>>       error = inode_permission(inode, MAY_OPEN | acc_mode);
->>>>>       if (error)
->>>>>               return error;
->>>>>
->>>>
->>>> FYI, I've confirmed this now. Effectively with patch 2 dropped, patch 3
->>>> reduced to this plus the Kconfig and sysctl changes, the self tests
->>>> pass.
->>>>
->>>> I think this makes things much cleaner and correct.
->>>
->>> I think that covers inode-based security modules but not path-based
->>> ones (they don't implement the inode_permission hook).  For those, I
->>> would tentatively guess that we need to make sure FMODE_EXEC is set on
->>> the open file and then they need to check for that in their file_open
->>> hooks.
->>
->> I kept confusing myself about what order things happened in, so I made
->> these handy notes about the call graph:
->>
->> openat2(dfd, char * filename, open_how)
->>     do_filp_open(dfd, filename, open_flags)
->>         path_openat(nameidata, open_flags, flags)
->>             do_open(nameidata, file, open_flags)
->>                 may_open(path, acc_mode, open_flag)
->>                     inode_permission(inode, MAY_OPEN | acc_mode)
->>                         security_inode_permission(inode, acc_mode)
->>                 vfs_open(path, file)
->>                     do_dentry_open(file, path->dentry->d_inode, open)
->>                         if (unlikely(f->f_flags & FMODE_EXEC && !S_ISREG(inode->i_mode))) ...
->>                         security_file_open(f)
->>                         open()
->>
->> So, it looks like adding FMODE_EXEC into f_flags in do_open() is needed in
->> addition to injecting MAY_EXEC into acc_mode in do_open()? Hmmm
+On Thu, May 14, 2020 at 08:05:37PM +0200, Vitaly Kuznetsov wrote:
+> PCIe config space can (depending on the configuration) be quite big but
+> usually is sparsely populated. Guest may scan it by accessing individual
+> device's page which, when device is missing, is supposed to have 'pci
+> holes' semantics: reads return '0xff' and writes get discarded. Currently,
+> userspace has to allocate real memory for these holes and fill them with
+> '0xff'. Moreover, different VMs usually require different memory.
 > 
-> Just do both in build_open_flags() and be done with it? Looks like he
-> was already setting FMODE_EXEC in patch 1 so we just need to teach
-> AppArmor/TOMOYO to check for it and perform file execute checking in
-> that case if !current->in_execve?
+> The idea behind the feature introduced by this patch is: let's have a
+> single read-only page filled with '0xff' in KVM and map it to all such
+> PCI holes in all VMs. This will free userspace of obligation to allocate
+> real memory. Later, this will also allow us to speed up access to these
+> holes as we can aggressively map the whole slot upon first fault.
+> 
+> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  Documentation/virt/kvm/api.rst  | 22 ++++++---
+>  arch/x86/include/uapi/asm/kvm.h |  1 +
+>  arch/x86/kvm/x86.c              |  9 ++--
+>  include/linux/kvm_host.h        | 15 ++++++-
+>  include/uapi/linux/kvm.h        |  2 +
+>  virt/kvm/kvm_main.c             | 79 +++++++++++++++++++++++++++++++--
+>  6 files changed, 113 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index d871dacb984e..2b87d588a7e0 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -1236,7 +1236,8 @@ yet and must be cleared on entry.
+>  
+>    /* for kvm_memory_region::flags */
+>    #define KVM_MEM_LOG_DIRTY_PAGES	(1UL << 0)
+> -  #define KVM_MEM_READONLY	(1UL << 1)
+> +  #define KVM_MEM_READONLY		(1UL << 1)
+> +  #define KVM_MEM_ALLONES		(1UL << 2)
 
-I can postpone the file permission check for another series to make this
-one simpler (i.e. mount noexec only). Because it depends on the sysctl
-setting, it is OK to add this check later, if needed. In the meantime,
-AppArmor and Tomoyo could be getting ready for this.
+Why not call this KVM_MEM_PCI_HOLE or something else that better conveys
+that this is memslot is intended to emulate PCI master abort semantics?
