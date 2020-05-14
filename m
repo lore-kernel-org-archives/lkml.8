@@ -2,84 +2,103 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC415C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64727C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B88A120727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C489206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:07:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BHM3/sHL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgENNEP (ORCPT
+        id S1726117AbgENNHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:04:15 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:58910 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgENNEO (ORCPT
+        Thu, 14 May 2020 09:07:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725955AbgENNHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:04:14 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4DA46803087B;
-        Thu, 14 May 2020 13:04:09 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1H7tDBhNpUNg; Thu, 14 May 2020 16:04:08 +0300 (MSK)
-Date:   Thu, 14 May 2020 16:04:07 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        SoC Team <soc@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no
- IRQ specified in DT
-Message-ID: <20200514130407.guyk3r4ltjvszy5s@mobilestation>
-References: <20200513140031.25633-1-lars.povlsen@microchip.com>
- <20200513140031.25633-2-lars.povlsen@microchip.com>
- <20200513142050.GH4803@sirena.org.uk>
+        Thu, 14 May 2020 09:07:21 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9F48C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:07:20 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id r25so24452088oij.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:07:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8NV16GFiBJNWCA0OVx7TbffCUg4QNsB+1OOfXXBvkrE=;
+        b=BHM3/sHLyHFtZ7CWU6vrg7iC1dP7OaBu6AlwERvOEbdy+sktUiTjSSoZeflxfx2UPK
+         +DbFveiaLHQVJa6xozL6NSuk0ge7HqIxE6UuvPIuE4P0XfK+9wDjWNTBzAc87Hv8TpGp
+         NW6pgR4YZI+qDuZLhXMc4pNDYTTq2P25kwqDY/4BVCxHsON4MnQXdiFu4KBjt+Db+O5r
+         n8uU0fs7eCyA309jWThGwpxDoXsc0d1s8UkFV1zOkQYvO/1zpdpvGh+pO3+qvvozjJTH
+         c7Qaz8ghzHoqmbUwPlTxxzAxchBzzUbWU/Nzxw9HetUwy8t3g/R1Z/ShncVL7aBr8oVM
+         FC7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8NV16GFiBJNWCA0OVx7TbffCUg4QNsB+1OOfXXBvkrE=;
+        b=PUZOHtOKZAh61oNZkG+7Mn6tWxHmM4eYttHrnMs9eqs6IsyttDk6OJQ4swhJeeER/o
+         c8B+BDisWLicVPq/T38qx6IMmvNLA+kqU87OnRJC6G2+ezFqYpNCo1A+7z8yX1sttf59
+         us4iG8mLNBwv1vU/07P+3ugUwFr4MhGYKH0EmyFLSiMrDZrz8H7SpAFEjXNsbND/rzzR
+         qHRqX2+z2ztA7iJ1LLCfnG8E7pnqYPL3CFniWBfsrKeUVgRFthLmTJFsGUNzFyWLecSt
+         amX8oKCMJAGuRsDPc2b4ZifbXl0BhN8x4Io5scYbUJFOfckGW229PSnyuYsfb1lFLEbz
+         pJaw==
+X-Gm-Message-State: AGi0PuZkbdu3yW5JpXeBm2D9dqxRYDFiFWqi8fqVeawvBC8PmFykuhJt
+        J+9MmDav/Dmp7JnH1E0lIbv6a4P6EISUs+nsS/nmdQ==
+X-Google-Smtp-Source: APiQypLh3YOlCumYeNfR0wBo1cSOvrScMD4+LC8kqWJLvd4YTjxxwL3dmtu58EkQWEzaq4z0cF3O1J1SolCmY7kZy/U=
+X-Received: by 2002:aca:3254:: with SMTP id y81mr10461078oiy.172.1589461639927;
+ Thu, 14 May 2020 06:07:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200513142050.GH4803@sirena.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <CANpmjNNeSnrAgfkskE5Y0NNu3-DS6hk+SwjkBunrr8FRxwwT-Q@mail.gmail.com>
+ <20200513111057.GN2957@hirez.programming.kicks-ass.net> <CANpmjNMariz3-keqwUsLHVrpk2r7ThLSKtkhHxTDa3SEGeznhA@mail.gmail.com>
+ <20200513123243.GO2957@hirez.programming.kicks-ass.net> <20200513124021.GB20278@willie-the-truck>
+ <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
+ <20200513132440.GN2978@hirez.programming.kicks-ass.net> <CANpmjNM5dD1VH0hoQwsZYEL=mhWunKwAEJMQgASzHSN019OCnw@mail.gmail.com>
+ <20200514112142.GV2978@hirez.programming.kicks-ass.net> <20200514120104.GD4280@willie-the-truck>
+ <20200514122735.GW2978@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200514122735.GW2978@hirez.programming.kicks-ass.net>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 14 May 2020 15:07:08 +0200
+Message-ID: <CANpmjNPmZv6TBQJ93TRuxCxJCpvJy8+XS5u9+ucOE2eEebEw9Q@mail.gmail.com>
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark
+On Thu, 14 May 2020 at 14:27, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, May 14, 2020 at 01:01:04PM +0100, Will Deacon wrote:
+>
+> > > +#if __has_feature(undefined_sanitizer)
+> >
+> > Hmm, this might want to be __has_feature(undefined_behavior_sanitizer)
+> > (and damn is that hard for a Brit to type out!)
+>
+> (I know right, it should be behaviour, dammit!)
+>
+> I tried without the condition, eg.:
+>
+> +#define __no_sanitize_undefined \
+> +               __attribute__((no_sanitize("undefined")))
+>
+> and it still generated UBSAN gunk.
 
-On Wed, May 13, 2020 at 03:20:50PM +0100, Mark Brown wrote:
-> On Wed, May 13, 2020 at 04:00:22PM +0200, Lars Povlsen wrote:
-> > With this change a SPI controller can be added without having a IRQ
-> > associated, and causing all transfers to be polled. For SPI controllers
-> > without DMA, this can significantly improve performance by less
-> > interrupt handling overhead.
-> 
-> This overlaps substantially with some work that Serge Semin (CCed) has
-> in progress, please coordinate with him.
+Which ubsan calls are left? I'm trying to reproduce.
 
-Thanks for copying me these mails. I haven't been Cc'ed in the series and
-hasn't been subscribed to the SPI mailing list, so I would have definitely
-missed that.
-
-I would like to coordinate my efforts with Lars. I'll have the patchset reviewed
-soon in addition providing my comments/suggestions of how to make it useful for
-both mine and Lars solution.
-
-One thing I can tell about the mem_ops he implemented, is that they aren't
-mem_ops, but dirmap (as you remember it's also implemented in my code, but with
-alignment specific), and the exec_mem_op partly consists of a code, which belong
-to the supports_op() callback. The rest of my comments will be inlined in the
-patches.
-
--Sergey
+Thanks,
+-- Marco
