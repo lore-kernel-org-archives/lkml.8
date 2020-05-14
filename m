@@ -2,37 +2,38 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE60C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27FD2206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013A0206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgENOct (ORCPT
+        id S1727858AbgENOcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:32:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:37680 "EHLO foss.arm.com"
+        Thu, 14 May 2020 10:32:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:37698 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbgENOcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:32:48 -0400
+        id S1726067AbgENOcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 10:32:50 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC7641045;
-        Thu, 14 May 2020 07:32:47 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 184C611D4;
+        Thu, 14 May 2020 07:32:50 -0700 (PDT)
 Received: from seattle-bionic.arm.com.Home (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF6423F71E;
-        Thu, 14 May 2020 07:32:46 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F7883F71E;
+        Thu, 14 May 2020 07:32:49 -0700 (PDT)
 From:   Oliver Swede <oli.swede@arm.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>
 Cc:     Robin Murphy <robin.murphy@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 01/13] arm64: Allow passing fault address to fixup handlers
-Date:   Thu, 14 May 2020 14:32:15 +0000
-Message-Id: <20200514143227.605-2-oli.swede@arm.com>
+Subject: [PATCH v3 03/13] arm64: Import latest version of Cortex Strings' memcmp
+Date:   Thu, 14 May 2020 14:32:17 +0000
+Message-Id: <20200514143227.605-4-oli.swede@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200514143227.605-1-oli.swede@arm.com>
 References: <20200514143227.605-1-oli.swede@arm.com>
@@ -43,124 +44,378 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sam Tebbs <sam.tebbs@arm.com>
 
-Extend fixup_exception() to optionally place the faulting address in a
-register when returning to a fixup handler. Since A64 instructions must
-be 4-byte-aligned, we can mimic the IA-64 implementation and encode a
-flag in the lower bits of the offset field to indicate handlers which
-expect an address. This will allow us to use more efficient offset
-addressing modes in usercopy routines, rather than updating the base
-register on every access just for the sake of inferring where a fault
-occurred in order to compute the return value upon failure.
+Import the latest version of Cortex Strings' memcmp function.
 
-The choice of x15 is somewhat arbitrary, but with the consideration that
-as the highest-numbered temporary register with no possible 'special'
-role in the ABI, it is most likely not used by hand-written assembly
-code, and thus a minimally-invasive option for imported routines.
+The upstream source is src/aarch64/memcmp.S as of commit f77e4c932b4f
+in https://git.linaro.org/toolchain/cortex-strings.git.
 
 Signed-off-by: Sam Tebbs <sam.tebbs@arm.com>
-[ rm: split into separate patch, use UL(), expand commit message ]
+[ rm: update attribution, expand commit message ]
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Oliver Swede <oli.swede@arm.com>
 ---
- arch/arm64/include/asm/assembler.h |  9 +++++++++
- arch/arm64/include/asm/extable.h   | 10 +++++++++-
- arch/arm64/mm/extable.c            | 13 +++++++++----
- arch/arm64/mm/fault.c              |  2 +-
- 4 files changed, 28 insertions(+), 6 deletions(-)
+ arch/arm64/lib/memcmp.S | 333 ++++++++++++++--------------------------
+ 1 file changed, 117 insertions(+), 216 deletions(-)
 
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index 0bff325117b4..7017aeb4b29a 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -18,6 +18,7 @@
- #include <asm/cpufeature.h>
- #include <asm/cputype.h>
- #include <asm/debug-monitors.h>
-+#include <asm/extable.h>
- #include <asm/page.h>
- #include <asm/pgtable-hwdef.h>
- #include <asm/ptrace.h>
-@@ -129,6 +130,14 @@ alternative_endif
- 	.popsection
- 	.endm
- 
-+/*
-+ * Emit an entry into the exception table.
-+ * The fixup handler will receive the faulting address in x15
-+ */
-+	.macro		_asm_extable_faultaddr, from, to
-+	_asm_extable	\from, \to + FIXUP_WITH_ADDR
-+	.endm
-+
- #define USER(l, x...)				\
- 9999:	x;					\
- 	_asm_extable	9999b, l
-diff --git a/arch/arm64/include/asm/extable.h b/arch/arm64/include/asm/extable.h
-index 56a4f68b262e..4c4955f2bb44 100644
---- a/arch/arm64/include/asm/extable.h
-+++ b/arch/arm64/include/asm/extable.h
-@@ -2,6 +2,12 @@
- #ifndef __ASM_EXTABLE_H
- #define __ASM_EXTABLE_H
- 
-+#include <linux/const.h>
-+
-+#define FIXUP_WITH_ADDR UL(1)
-+
-+#ifndef __ASSEMBLY__
-+
+diff --git a/arch/arm64/lib/memcmp.S b/arch/arm64/lib/memcmp.S
+index c0671e793ea9..580dd0b12ccb 100644
+--- a/arch/arm64/lib/memcmp.S
++++ b/arch/arm64/lib/memcmp.S
+@@ -1,13 +1,12 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
  /*
-  * The exception table consists of pairs of relative offsets: the first
-  * is the relative offset to an instruction that is allowed to fault,
-@@ -22,5 +28,7 @@ struct exception_table_entry
+- * Copyright (C) 2013 ARM Ltd.
+- * Copyright (C) 2013 Linaro.
++ * Copyright (c) 2013, 2018 Linaro Limited. All rights reserved.
++ * Copyright (c) 2017 ARM Ltd. All rights reserved.
+  *
+- * This code is based on glibc cortex strings work originally authored by Linaro
+- * be found @
++ * This code is based on glibc Cortex Strings work originally authored by
++ * Linaro, found at:
+  *
+- * http://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/
+- * files/head:/src/aarch64/
++ * https://git.linaro.org/toolchain/cortex-strings.git
+  */
  
- #define ARCH_HAS_RELATIVE_EXTABLE
+ #include <linux/linkage.h>
+@@ -25,223 +24,125 @@
+ *  x0 - a compare result, maybe less than, equal to, or greater than ZERO
+ */
  
--extern int fixup_exception(struct pt_regs *regs);
-+extern int fixup_exception(struct pt_regs *regs, unsigned long addr);
++#define L(l) .L ## l
 +
-+#endif
- #endif
-diff --git a/arch/arm64/mm/extable.c b/arch/arm64/mm/extable.c
-index 81e694af5f8c..e6578c2814b5 100644
---- a/arch/arm64/mm/extable.c
-+++ b/arch/arm64/mm/extable.c
-@@ -6,13 +6,18 @@
- #include <linux/extable.h>
- #include <linux/uaccess.h>
+ /* Parameters and result.  */
+-src1		.req	x0
+-src2		.req	x1
+-limit		.req	x2
+-result		.req	x0
++#define src1		x0
++#define src2		x1
++#define limit		x2
++#define result		w0
  
--int fixup_exception(struct pt_regs *regs)
-+int fixup_exception(struct pt_regs *regs, unsigned long addr)
- {
- 	const struct exception_table_entry *fixup;
+ /* Internal variables.  */
+-data1		.req	x3
+-data1w		.req	w3
+-data2		.req	x4
+-data2w		.req	w4
+-has_nul		.req	x5
+-diff		.req	x6
+-endloop		.req	x7
+-tmp1		.req	x8
+-tmp2		.req	x9
+-tmp3		.req	x10
+-pos		.req	x11
+-limit_wd	.req	x12
+-mask		.req	x13
++#define data1		x3
++#define data1w		w3
++#define data1h		x4
++#define data2		x5
++#define data2w		w5
++#define data2h		x6
++#define tmp1		x7
++#define tmp2		x8
  
- 	fixup = search_exception_tables(instruction_pointer(regs));
--	if (fixup)
--		regs->pc = (unsigned long)&fixup->fixup + fixup->fixup;
+ SYM_FUNC_START_WEAK_PI(memcmp)
+-	cbz	limit, .Lret0
+-	eor	tmp1, src1, src2
+-	tst	tmp1, #7
+-	b.ne	.Lmisaligned8
+-	ands	tmp1, src1, #7
+-	b.ne	.Lmutual_align
+-	sub	limit_wd, limit, #1 /* limit != 0, so no underflow.  */
+-	lsr	limit_wd, limit_wd, #3 /* Convert to Dwords.  */
+-	/*
+-	* The input source addresses are at alignment boundary.
+-	* Directly compare eight bytes each time.
+-	*/
+-.Lloop_aligned:
+-	ldr	data1, [src1], #8
+-	ldr	data2, [src2], #8
+-.Lstart_realigned:
+-	subs	limit_wd, limit_wd, #1
+-	eor	diff, data1, data2	/* Non-zero if differences found.  */
+-	csinv	endloop, diff, xzr, cs	/* Last Dword or differences.  */
+-	cbz	endloop, .Lloop_aligned
 -
-+	if (fixup) {
-+		unsigned long offset = fixup->fixup;
-+		if (offset & FIXUP_WITH_ADDR) {
-+			regs->regs[15] = addr;
-+			offset &= ~FIXUP_WITH_ADDR;
-+		}
-+		regs->pc = (unsigned long)&fixup->fixup + offset;
-+	}
- 	return fixup != NULL;
- }
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index c9cedc0432d2..2c648343ab40 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -297,7 +297,7 @@ static void __do_kernel_fault(unsigned long addr, unsigned int esr,
- 	 * Are we prepared to handle this kernel fault?
- 	 * We are almost certainly not prepared to handle instruction faults.
- 	 */
--	if (!is_el1_instruction_abort(esr) && fixup_exception(regs))
-+	if (!is_el1_instruction_abort(esr) && fixup_exception(regs, addr))
- 		return;
+-	/* Not reached the limit, must have found a diff.  */
+-	tbz	limit_wd, #63, .Lnot_limit
+-
+-	/* Limit % 8 == 0 => the diff is in the last 8 bytes. */
+-	ands	limit, limit, #7
+-	b.eq	.Lnot_limit
+-	/*
+-	* The remained bytes less than 8. It is needed to extract valid data
+-	* from last eight bytes of the intended memory range.
+-	*/
+-	lsl	limit, limit, #3	/* bytes-> bits.  */
+-	mov	mask, #~0
+-CPU_BE( lsr	mask, mask, limit )
+-CPU_LE( lsl	mask, mask, limit )
+-	bic	data1, data1, mask
+-	bic	data2, data2, mask
+-
+-	orr	diff, diff, mask
+-	b	.Lnot_limit
+-
+-.Lmutual_align:
+-	/*
+-	* Sources are mutually aligned, but are not currently at an
+-	* alignment boundary. Round down the addresses and then mask off
+-	* the bytes that precede the start point.
+-	*/
+-	bic	src1, src1, #7
+-	bic	src2, src2, #7
+-	ldr	data1, [src1], #8
+-	ldr	data2, [src2], #8
+-	/*
+-	* We can not add limit with alignment offset(tmp1) here. Since the
+-	* addition probably make the limit overflown.
+-	*/
+-	sub	limit_wd, limit, #1/*limit != 0, so no underflow.*/
+-	and	tmp3, limit_wd, #7
+-	lsr	limit_wd, limit_wd, #3
+-	add	tmp3, tmp3, tmp1
+-	add	limit_wd, limit_wd, tmp3, lsr #3
+-	add	limit, limit, tmp1/* Adjust the limit for the extra.  */
+-
+-	lsl	tmp1, tmp1, #3/* Bytes beyond alignment -> bits.*/
+-	neg	tmp1, tmp1/* Bits to alignment -64.  */
+-	mov	tmp2, #~0
+-	/*mask off the non-intended bytes before the start address.*/
+-CPU_BE( lsl	tmp2, tmp2, tmp1 )/*Big-endian.Early bytes are at MSB*/
+-	/* Little-endian.  Early bytes are at LSB.  */
+-CPU_LE( lsr	tmp2, tmp2, tmp1 )
+-
+-	orr	data1, data1, tmp2
+-	orr	data2, data2, tmp2
+-	b	.Lstart_realigned
+-
+-	/*src1 and src2 have different alignment offset.*/
+-.Lmisaligned8:
+-	cmp	limit, #8
+-	b.lo	.Ltiny8proc /*limit < 8: compare byte by byte*/
+-
+-	and	tmp1, src1, #7
+-	neg	tmp1, tmp1
+-	add	tmp1, tmp1, #8/*valid length in the first 8 bytes of src1*/
+-	and	tmp2, src2, #7
+-	neg	tmp2, tmp2
+-	add	tmp2, tmp2, #8/*valid length in the first 8 bytes of src2*/
+-	subs	tmp3, tmp1, tmp2
+-	csel	pos, tmp1, tmp2, hi /*Choose the maximum.*/
+-
+-	sub	limit, limit, pos
+-	/*compare the proceeding bytes in the first 8 byte segment.*/
+-.Ltinycmp:
+-	ldrb	data1w, [src1], #1
+-	ldrb	data2w, [src2], #1
+-	subs	pos, pos, #1
+-	ccmp	data1w, data2w, #0, ne  /* NZCV = 0b0000.  */
+-	b.eq	.Ltinycmp
+-	cbnz	pos, 1f /*diff occurred before the last byte.*/
+-	cmp	data1w, data2w
+-	b.eq	.Lstart_align
+-1:
+-	sub	result, data1, data2
+-	ret
+-
+-.Lstart_align:
+-	lsr	limit_wd, limit, #3
+-	cbz	limit_wd, .Lremain8
+-
+-	ands	xzr, src1, #7
+-	b.eq	.Lrecal_offset
+-	/*process more leading bytes to make src1 aligned...*/
+-	add	src1, src1, tmp3 /*backwards src1 to alignment boundary*/
+-	add	src2, src2, tmp3
+-	sub	limit, limit, tmp3
+-	lsr	limit_wd, limit, #3
+-	cbz	limit_wd, .Lremain8
+-	/*load 8 bytes from aligned SRC1..*/
+-	ldr	data1, [src1], #8
+-	ldr	data2, [src2], #8
+-
+-	subs	limit_wd, limit_wd, #1
+-	eor	diff, data1, data2  /*Non-zero if differences found.*/
+-	csinv	endloop, diff, xzr, ne
+-	cbnz	endloop, .Lunequal_proc
+-	/*How far is the current SRC2 from the alignment boundary...*/
+-	and	tmp3, tmp3, #7
+-
+-.Lrecal_offset:/*src1 is aligned now..*/
+-	neg	pos, tmp3
+-.Lloopcmp_proc:
+-	/*
+-	* Divide the eight bytes into two parts. First,backwards the src2
+-	* to an alignment boundary,load eight bytes and compare from
+-	* the SRC2 alignment boundary. If all 8 bytes are equal,then start
+-	* the second part's comparison. Otherwise finish the comparison.
+-	* This special handle can garantee all the accesses are in the
+-	* thread/task space in avoid to overrange access.
+-	*/
+-	ldr	data1, [src1,pos]
+-	ldr	data2, [src2,pos]
+-	eor	diff, data1, data2  /* Non-zero if differences found.  */
+-	cbnz	diff, .Lnot_limit
+-
+-	/*The second part process*/
+-	ldr	data1, [src1], #8
+-	ldr	data2, [src2], #8
+-	eor	diff, data1, data2  /* Non-zero if differences found.  */
+-	subs	limit_wd, limit_wd, #1
+-	csinv	endloop, diff, xzr, ne/*if limit_wd is 0,will finish the cmp*/
+-	cbz	endloop, .Lloopcmp_proc
+-.Lunequal_proc:
+-	cbz	diff, .Lremain8
+-
+-/* There is difference occurred in the latest comparison. */
+-.Lnot_limit:
+-/*
+-* For little endian,reverse the low significant equal bits into MSB,then
+-* following CLZ can find how many equal bits exist.
+-*/
+-CPU_LE( rev	diff, diff )
+-CPU_LE( rev	data1, data1 )
+-CPU_LE( rev	data2, data2 )
+-
+-	/*
+-	* The MS-non-zero bit of DIFF marks either the first bit
+-	* that is different, or the end of the significant data.
+-	* Shifting left now will bring the critical information into the
+-	* top bits.
+-	*/
+-	clz	pos, diff
+-	lsl	data1, data1, pos
+-	lsl	data2, data2, pos
+-	/*
+-	* We need to zero-extend (char is unsigned) the value and then
+-	* perform a signed subtraction.
+-	*/
+-	lsr	data1, data1, #56
+-	sub	result, data1, data2, lsr #56
++	subs	limit, limit, 8
++	b.lo	L(less8)
++
++	ldr	data1, [src1], 8
++	ldr	data2, [src2], 8
++	cmp	data1, data2
++	b.ne	L(return)
++
++	subs	limit, limit, 8
++	b.gt	L(more16)
++
++	ldr	data1, [src1, limit]
++	ldr	data2, [src2, limit]
++	b	L(return)
++
++L(more16):
++	ldr	data1, [src1], 8
++	ldr	data2, [src2], 8
++	cmp	data1, data2
++	bne	L(return)
++
++	/* Jump directly to comparing the last 16 bytes for 32 byte (or less)
++	   strings.  */
++	subs	limit, limit, 16
++	b.ls	L(last_bytes)
++
++	/* We overlap loads between 0-32 bytes at either side of SRC1 when we
++	   try to align, so limit it only to strings larger than 128 bytes.  */
++	cmp	limit, 96
++	b.ls	L(loop16)
++
++	/* Align src1 and adjust src2 with bytes not yet done.  */
++	and	tmp1, src1, 15
++	add	limit, limit, tmp1
++	sub	src1, src1, tmp1
++	sub	src2, src2, tmp1
++
++	/* Loop performing 16 bytes per iteration using aligned src1.
++	   Limit is pre-decremented by 16 and must be larger than zero.
++	   Exit if <= 16 bytes left to do or if the data is not equal.  */
++	.p2align 4
++L(loop16):
++	ldp	data1, data1h, [src1], 16
++	ldp	data2, data2h, [src2], 16
++	subs	limit, limit, 16
++	ccmp	data1, data2, 0, hi
++	ccmp	data1h, data2h, 0, eq
++	b.eq	L(loop16)
++
++	cmp	data1, data2
++	bne	L(return)
++	mov	data1, data1h
++	mov	data2, data2h
++	cmp	data1, data2
++	bne	L(return)
++
++	/* Compare last 1-16 bytes using unaligned access.  */
++L(last_bytes):
++	add	src1, src1, limit
++	add	src2, src2, limit
++	ldp	data1, data1h, [src1]
++	ldp	data2, data2h, [src2]
++	cmp	data1, data2
++	bne	L(return)
++	mov	data1, data1h
++	mov	data2, data2h
++	cmp	data1, data2
++
++	/* Compare data bytes and set return value to 0, -1 or 1.  */
++L(return):
++#ifndef __AARCH64EB__
++	rev	data1, data1
++	rev	data2, data2
++#endif
++	cmp	data1, data2
++L(ret_eq):
++	cset	result, ne
++	cneg	result, result, lo
+ 	ret
  
- 	if (WARN_RATELIMIT(is_spurious_el1_translation_fault(addr, esr, regs),
+-.Lremain8:
+-	/* Limit % 8 == 0 =>. all data are equal.*/
+-	ands	limit, limit, #7
+-	b.eq	.Lret0
+-
+-.Ltiny8proc:
+-	ldrb	data1w, [src1], #1
+-	ldrb	data2w, [src2], #1
+-	subs	limit, limit, #1
+-
+-	ccmp	data1w, data2w, #0, ne  /* NZCV = 0b0000. */
+-	b.eq	.Ltiny8proc
+-	sub	result, data1, data2
+-	ret
+-.Lret0:
+-	mov	result, #0
++	.p2align 4
++	/* Compare up to 8 bytes.  Limit is [-8..-1].  */
++L(less8):
++	adds	limit, limit, 4
++	b.lo	L(less4)
++	ldr	data1w, [src1], 4
++	ldr	data2w, [src2], 4
++	cmp	data1w, data2w
++	b.ne	L(return)
++	sub	limit, limit, 4
++L(less4):
++	adds	limit, limit, 4
++	beq	L(ret_eq)
++L(byte_loop):
++	ldrb	data1w, [src1], 1
++	ldrb	data2w, [src2], 1
++	subs	limit, limit, 1
++	ccmp	data1w, data2w, 0, ne	/* NZCV = 0b0000.  */
++	b.eq	L(byte_loop)
++	sub	result, data1w, data2w
+ 	ret
+ SYM_FUNC_END_PI(memcmp)
+ EXPORT_SYMBOL_NOKASAN(memcmp)
 -- 
 2.17.1
 
