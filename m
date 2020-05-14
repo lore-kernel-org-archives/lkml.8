@@ -2,209 +2,207 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B97C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 464DE2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8437720722
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:48:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="osEpHVY3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgENMrL (ORCPT
+        id S1726304AbgENMsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 08:47:11 -0400
-Received: from mga17.intel.com ([192.55.52.151]:8972 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbgENMrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 08:47:10 -0400
-IronPort-SDR: VOzoPN31QcvJx73rKnjaX+ye2l/qFwLksJQpaLbAdlTUlFhIwPCDlmz2VwpFkOmDZR/igvhj3i
- uEuj/QF8yGfg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 05:47:09 -0700
-IronPort-SDR: av5Re4jD3u5L9XXPeZB1/hAQvfb+CJci9mOlMSaJ00Dzx2Wy4tlhk/hoZ52eB/2otlGoCaoyqv
- wtUvbIlVDLsA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,391,1583222400"; 
-   d="scan'208";a="262824607"
-Received: from dpschroe-mobl1.amr.corp.intel.com (HELO [10.254.66.46]) ([10.254.66.46])
-  by orsmga003.jf.intel.com with ESMTP; 14 May 2020 05:47:08 -0700
-Subject: Re: [PATCH] ASoC: Intel: kbl_rt5663_rt5514_max98927: Split
- be_hw_params_fixup function
-To:     Lukasz Majczak <lma@semihalf.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, Radoslaw Biernacki <rad@semihalf.com>,
-        Ross Zwisler <zwisler@google.com>,
-        linux-kernel@vger.kernel.org, Bob Brandt <brndt@google.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Alex Levin <levinale@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-References: <20200513192020.544928-1-lma@semihalf.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <52ab4557-e551-ce20-247c-681c2a0d1ad1@linux.intel.com>
-Date:   Thu, 14 May 2020 07:47:07 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 08:48:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725955AbgENMsq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 08:48:46 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F3D8C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 05:48:46 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id fu13so12403438pjb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 05:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=HH9s1RO49ZtqpXezfn4WcfsL3Wu1eFjXG3a4er9M5VM=;
+        b=osEpHVY3rjAZwkvGBQY6IZcjr+rWAvBBT3RR2pRCeF8WQqqjBUcFijQ2A1iO4kddqZ
+         cGXn0Vybzjm5R+LuztSsPhQouakQyqEMsBeXFhyv+6rf8lg3reNxZFCiW3/eqQKp0IlF
+         fMLZ/2w4qfZDRCenzSetTk/2Kx3ILp8b+M4mObysfC7J+jcb0hOWINsIOuPU+qwiU+/4
+         6opd3ZsAdTqC/4MboMI3ou9/eUjY+hOx2QbPa3m25L/2PB1ifPfqBNR4hlwD1nKqTwHJ
+         L8ln7mINjlXveb0G4HGo32bwGC81ztYrCjy6GdOqWHRnfVJxWwsQIevDwAZrk3VKCWOA
+         3C8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=HH9s1RO49ZtqpXezfn4WcfsL3Wu1eFjXG3a4er9M5VM=;
+        b=Y93q6nZ9A+AgxLmypExnaz0s3C7cwfAxLKFx5tpwywXeEm8lmFrREd56IX8kn+FJ3A
+         /oCiWT2uOIuyGi1ELfSrpDvRp56TaST6U/vy18WdNm/94tM0L+penEtzfechxcGJCDq1
+         VUxqT84cfat2aeugNDfygip9eZfkYxTwYeHKoKPSIxPNs4uCUb/xsXjhwbiESm7g1NFO
+         xjNbwnBYRxg/I/ck+67C71ATT72gP9RwYfym+1Vg+0lZwfGY6hkToZkhSM19yO9f2AmU
+         grN7Blxq+swzrE7TZDCOSeDrE3bJEiIQgNeCAOkEGRYprR3SZ5AOS6011J9wF8ZmUBuL
+         QFbg==
+X-Gm-Message-State: AOAM530P+QCXj4+D1VJzi4vB517q+0B6sxMmdyRBH/KSD1AKuD3SCrmO
+        85z4j54WCLN2JsmBGiCrLh7oLdgkxlNs
+X-Google-Smtp-Source: ABdhPJxdddKbpOXRE7WZ+kpkkncGEFB3l+dgPbB0dnOaYGPN7BHIpGk9Y0Z1bXstUpFiVvx4TZRSqQ==
+X-Received: by 2002:a17:902:d70f:: with SMTP id w15mr4121397ply.55.1589460525640;
+        Thu, 14 May 2020 05:48:45 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:406:efde:ac17:556c:1ce3:639f])
+        by smtp.gmail.com with ESMTPSA id t21sm2126873pgu.39.2020.05.14.05.48.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 May 2020 05:48:44 -0700 (PDT)
+Date:   Thu, 14 May 2020 18:18:31 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Hyun Kwon <hyunk@xilinx.com>, Rob Herring <robh+dt@kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Subject: Re: [PATCH v9 2/4] media: i2c: Add MAX9286 driver
+Message-ID: <20200514124831.GG2877@Mani-XPS-13-9360>
+References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200512155105.1068064-3-kieran.bingham+renesas@ideasonboard.com>
+ <20200512181706.GA21014@Mani-XPS-13-9360>
+ <11aca587-9438-4fba-081c-b82631e96989@ideasonboard.com>
+ <20200514101356.GF2877@Mani-XPS-13-9360>
+ <d492cbcb-3b13-82b8-8e5d-0f49320170a2@ideasonboard.com>
+ <CAMuHMdWSEY2q1f1iobrSXHYWzweV9yjk4i1ROj2Yde7DJMiabQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200513192020.544928-1-lma@semihalf.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdWSEY2q1f1iobrSXHYWzweV9yjk4i1ROj2Yde7DJMiabQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/13/20 2:20 PM, Lukasz Majczak wrote:
-> Split be_hw_params_fixup function for different codecs as current common
-> function, leads to crash while trying to get snd_soc_dpcm with
-> container_of() macro in kabylake_ssp_fixup().
-> The crash call path looks as below:
-> soc_pcm_hw_params()
-> snd_soc_dai_hw_params(codec_dai, substream, &codec_params);
-> rtd->dai_link->be_hw_params_fixup(rtd, params)
-> kabylake_ssp_fixup()
-> In this case, codec_params is just a copy of an internal structure and is
-> not embedded into struct snd_soc_dpcm thus we cannot use
-> container_of() on it.
-
-This looks like a nice/welcome change, we've had these unexplained 
-crashes on KBL since 4.19 (reported by Guenter and me). I thought they 
-were topology related.
-
-If indeed this fixes the issue, it might be worth applying in to all 
-stable releases?
-
-Since we have the same code structure for the other kbl drivers, would 
-it also make sense to apply the same fixes there:
-
-kbl_da7219_max98927.c:  struct snd_soc_dpcm *dpcm = container_of(
-kbl_rt5663_max98927.c:  struct snd_soc_dpcm *dpcm = container_of(
-
-
+On Thu, May 14, 2020 at 01:59:35PM +0200, Geert Uytterhoeven wrote:
+> Hi Kieran,
 > 
-> Signed-off-by: Lukasz Majczak <lma@semihalf.com>
-> ---
->   .../intel/boards/kbl_rt5663_rt5514_max98927.c | 68 +++++++++++--------
->   1 file changed, 39 insertions(+), 29 deletions(-)
+> On Thu, May 14, 2020 at 1:47 PM Kieran Bingham
+> <kieran.bingham+renesas@ideasonboard.com> wrote:
+> > On 14/05/2020 11:13, Manivannan Sadhasivam wrote:
+> > > On Thu, May 14, 2020 at 11:02:53AM +0100, Kieran Bingham wrote:
+> > >> On 12/05/2020 19:17, Manivannan Sadhasivam wrote:
+> > >>> On Tue, May 12, 2020 at 04:51:03PM +0100, Kieran Bingham wrote:
+> > >>>> The MAX9286 is a 4-channel GMSL deserializer with coax or STP input and
+> > >>>> CSI-2 output. The device supports multicamera streaming applications,
+> > >>>> and features the ability to synchronise the attached cameras.
+> > >>>>
+> > >>>> CSI-2 output can be configured with 1 to 4 lanes, and a control channel
+> > >>>> is supported over I2C, which implements an I2C mux to facilitate
+> > >>>> communications with connected cameras across the reverse control
+> > >>>> channel.
+> > >>>>
+> > >>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > >>>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> > >>>> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > >>>> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 > 
-> diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> index 1b1f8d7a4ea3..2e0ae724122c 100644
-> --- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> +++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> @@ -328,46 +328,55 @@ static const struct snd_soc_ops kabylake_rt5663_fe_ops = {
->   	.startup = kbl_fe_startup,
->   };
->   
-> -static int kabylake_ssp_fixup(struct snd_soc_pcm_runtime *rtd,
-> -					struct snd_pcm_hw_params *params)
-> +static void kabylake_ssp_fixup(struct snd_soc_pcm_runtime *rtd,
-> +	struct snd_pcm_hw_params *params, snd_pcm_format_t pcm_fmt)
->   {
->   	struct snd_interval *rate = hw_param_interval(params,
->   			SNDRV_PCM_HW_PARAM_RATE);
-> -	struct snd_interval *chan = hw_param_interval(params,
-> +	struct snd_interval *channels = hw_param_interval(params,
->   			SNDRV_PCM_HW_PARAM_CHANNELS);
->   	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
-> -	struct snd_soc_dpcm *dpcm = container_of(
-> -			params, struct snd_soc_dpcm, hw_params);
-> -	struct snd_soc_dai_link *fe_dai_link = dpcm->fe->dai_link;
-> -	struct snd_soc_dai_link *be_dai_link = dpcm->be->dai_link;
->   
->   	/*
->   	 * The ADSP will convert the FE rate to 48k, stereo, 24 bit
->   	 */
-> -	if (!strcmp(fe_dai_link->name, "Kbl Audio Port") ||
-> -	    !strcmp(fe_dai_link->name, "Kbl Audio Headset Playback") ||
-> -	    !strcmp(fe_dai_link->name, "Kbl Audio Capture Port")) {
-> -		rate->min = rate->max = 48000;
-> -		chan->min = chan->max = 2;
-> -		snd_mask_none(fmt);
-> -		snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S24_LE);
-> -	} else if (!strcmp(fe_dai_link->name, "Kbl Audio DMIC cap")) {
-> -		if (params_channels(params) == 2 ||
-> -				DMIC_CH(dmic_constraints) == 2)
-> -			chan->min = chan->max = 2;
-> -		else
-> -			chan->min = chan->max = 4;
-> -	}
-> -	/*
-> -	 * The speaker on the SSP0 supports S16_LE and not S24_LE.
-> -	 * thus changing the mask here
-> -	 */
-> -	if (!strcmp(be_dai_link->name, "SSP0-Codec"))
-> -		snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S16_LE);
->   
-> +	rate->min = rate->max = 48000;
-> +	channels->min = channels->max = 2;
-> +
-> +	snd_mask_none(fmt);
-> +	snd_mask_set_format(fmt, pcm_fmt);
-> +}
-> +
-> +static int kabylake_ssp0_fixup(struct snd_soc_pcm_runtime *rtd,
-> +	struct snd_pcm_hw_params *params)
-> +{
-> +	kabylake_ssp_fixup(rtd, params, SNDRV_PCM_FORMAT_S16_LE);
->   	return 0;
->   }
->   
-> +static int kabylake_ssp1_fixup(struct snd_soc_pcm_runtime *rtd,
-> +	struct snd_pcm_hw_params *params)
-> +{
-> +
-> +	kabylake_ssp_fixup(rtd, params, SNDRV_PCM_FORMAT_S24_LE);
-> +	return 0;
-> +}
-> +
-> +static int kabylake_dmic_cap_fixup(struct snd_soc_pcm_runtime *rtd,
-> +	struct snd_pcm_hw_params *params)
-> +{
-> +	struct snd_interval *channels = hw_param_interval(params,
-> +			SNDRV_PCM_HW_PARAM_CHANNELS);
-> +
-> +	if (params_channels(params) == 2 ||
-> +			DMIC_CH(dmic_constraints) == 2)
-> +		channels->min = channels->max = 2;
-> +	else
-> +		channels->min = channels->max = 4;
-> +
-> +	return 0;
-> +}
->   static int kabylake_rt5663_hw_params(struct snd_pcm_substream *substream,
->   	struct snd_pcm_hw_params *params)
->   {
-> @@ -582,6 +591,7 @@ static struct snd_soc_dai_link kabylake_dais[] = {
->   		.dpcm_capture = 1,
->   		.nonatomic = 1,
->   		.dynamic = 1,
-> +		.be_hw_params_fixup = kabylake_dmic_cap_fixup,
->   		.ops = &kabylake_dmic_ops,
->   		SND_SOC_DAILINK_REG(dmic, dummy, platform),
->   	},
-> @@ -618,7 +628,7 @@ static struct snd_soc_dai_link kabylake_dais[] = {
->   			SND_SOC_DAIFMT_NB_NF |
->   			SND_SOC_DAIFMT_CBS_CFS,
->   		.ignore_pmdown_time = 1,
-> -		.be_hw_params_fixup = kabylake_ssp_fixup,
-> +		.be_hw_params_fixup = kabylake_ssp0_fixup,
->   		.dpcm_playback = 1,
->   		.dpcm_capture = 1,
->   		.ops = &kabylake_ssp0_ops,
-> @@ -632,7 +642,7 @@ static struct snd_soc_dai_link kabylake_dais[] = {
->   		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
->   			SND_SOC_DAIFMT_CBS_CFS,
->   		.ignore_pmdown_time = 1,
-> -		.be_hw_params_fixup = kabylake_ssp_fixup,
-> +		.be_hw_params_fixup = kabylake_ssp1_fixup,
->   		.ops = &kabylake_rt5663_ops,
->   		.dpcm_playback = 1,
->   		.dpcm_capture = 1,
+> > >>>> --- /dev/null
+> > >>>> +++ b/drivers/media/i2c/max9286.c
 > 
+> > >>>> +static int max9286_register_gpio(struct max9286_priv *priv)
+> > >>>> +{
+> > >>>> +  struct device *dev = &priv->client->dev;
+> > >>>> +  struct gpio_chip *gpio = &priv->gpio;
+> > >>>> +  int ret;
+> > >>>> +
+> > >>>> +  static const char * const names[] = {
+> > >>>> +          "GPIO0OUT",
+> > >>>> +          "GPIO1OUT",
+> > >>>> +  };
+> > >>>> +
+> > >>>> +  /* Configure the GPIO */
+> > >>>> +  gpio->label = dev_name(dev);
+> > >>>
+> > >>> So if you have more than one MAX9286 in a system, all gpiochips will appear
+> > >>> with the same name. I'd recommend to append the index to distinguish properly.
+> > >>
+> > >> Ah yes, that's a good point, and I think I've even seen that.
+> > >>
+> > >> I'll fix it now.
+> >
+> > Oh, in fact actually this doesn't.
+> >
+> > gpiodetect prints:
+> >
+> > gpiochip10 [4-004c] (2 lines)
+> > gpiochip11 [4-006c] (2 lines)
+> >
+> > and mostly references them as gpiochip10 and gpiochip11.
+> 
+> Indeed, dev_name() should be different for each instance.
+> 
+
+Ah, my bad! Somehow I got confused that this delivers static name... Sorry for
+the noise, Kieran.
+
+> > However,
+> >
+> > > [    2.318533] gpio gpiochip11: Detected name collision for GPIO name 'GPIO0OUT'
+> > > [    2.325739] gpio gpiochip11: Detected name collision for GPIO name 'GPIO1OUT'
+> >
+> > That seems to be more of a problem for the gpio library, so I think I'll
+> > just drop the const names. I don't think they add much value.
+> 
+
+Well, I should've pointed this instead of above...
+
+(lack of coffee)
+
+> These are the line names.  If they're not unique, a warning is printed,
+> but they are still registered.
+> So probably you want to use kasprintf("%s.%s", dev_name(dev), names[i]) to
+> generate names.
+> 
+
+Ack.
+
+I think you should CC Linus W for next iteration to get review for gpiolib
+implementation.
+
+Thanks,
+Mani
+
+> See "[PATCH] gpiolib: Document that GPIO line names are not globally unique"
+> (https://lore.kernel.org/linux-gpio/20200511101828.30046-1-geert+renesas@glider.be/)
+> to clear up the details.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
