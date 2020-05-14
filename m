@@ -2,142 +2,79 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB19C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88554206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71E27206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:13:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skogtun.org header.i=@skogtun.org header.b="EEuQ+q9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726056AbgENJMs (ORCPT
+        id S1726119AbgENJNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 05:12:48 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:46738 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725935AbgENJMr (ORCPT
+        Thu, 14 May 2020 05:13:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725935AbgENJNU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 05:12:47 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04E99c4n002908;
-        Thu, 14 May 2020 05:12:30 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 3100x5xpkv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 05:12:30 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 04E9CTEK003195
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 14 May 2020 05:12:29 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 14 May
- 2020 02:12:27 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 14 May 2020 02:12:27 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04E9CPuJ011728;
-        Thu, 14 May 2020 05:12:25 -0400
-From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-CC:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: [PATCH] iio: dac: ad5764: Replace indio_dev->mlock with own device lock
-Date:   Thu, 14 May 2020 12:12:12 +0300
-Message-ID: <20200514091215.80958-1-sergiu.cuciurean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 14 May 2020 05:13:20 -0400
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA09DC061A0C;
+        Thu, 14 May 2020 02:13:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=skogtun.org
+        ; s=ds201912; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=KDx+FlTyn73Rfh8BtAIM8TPjZDA+d19GZ+//31gul5Q=; b=EEuQ+q9xcrqkTTt6mSAiraCok3
+        RfFJxZmNILOU0mBOEOhJNcCZkvFQ7K8sDaI/fJPZFA5vd1dy5cjyd7eQAEySc2c1WLXSZ8naKvOzi
+        6CKwwFz+FAltIyejm+jPYqJbKpf5mJs2LxZuwF30+j4MY0XUSGyFokFkKSGctf4Bug/B07kfW4Npb
+        OMmawrtHarbf4zFhBuNDF9h+zcSZLJA00i58RBkCrZrjhEAsSTC+kvzCeSFFlMZdaM5gcYH5pbvxL
+        5U8xLYJAws22X8rKFumnGYHmIzWzMJxhOTZSG8PG0hh1SBokJ0Nqy888RgCGBm+M9Fb/QldiUGrSQ
+        Gk9r6CgQ==;
+Received: from [2a01:79c:cebf:7fb0:d967:6cf9:736f:4613] (port=44740)
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <harald@skogtun.org>)
+        id 1jZ9vX-0002gK-KQ; Thu, 14 May 2020 11:13:15 +0200
+Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
+To:     Kalle Valo <kvalo@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200509120707.188595-1-arnd@arndb.de>
+ <20200509120707.188595-2-arnd@arndb.de>
+ <87v9l24qz6.fsf@kamboji.qca.qualcomm.com>
+ <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
+ <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
+ <CAK8P3a1dxJAHCZ19=sPUkDi5wLWeJ6KKtD09Wmjqkz27TQN6Xw@mail.gmail.com>
+ <87zhacrokl.fsf@kamboji.qca.qualcomm.com>
+ <CAK8P3a1mMcpVE5kLv-krjL_ZjqfRXDK4e3fChzuom_QFRtTJqw@mail.gmail.com>
+ <87v9kzsvg8.fsf@kamboji.qca.qualcomm.com>
+From:   Harald Arnesen <harald@skogtun.org>
+Message-ID: <443d4178-f22e-81dd-36ea-d3c7b4b0c933@skogtun.org>
+Date:   Thu, 14 May 2020 11:13:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-14_01:2020-05-13,2020-05-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- malwarescore=0 suspectscore=0 cotscore=-2147483648 mlxscore=0 spamscore=0
- lowpriorityscore=0 mlxlogscore=753 phishscore=0 priorityscore=1501
- clxscore=1015 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005140082
+In-Reply-To: <87v9kzsvg8.fsf@kamboji.qca.qualcomm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As part of the general cleanup of indio_dev->mlock, this change replaces
-it with a local lock on the device's state structure.
+Kalle Valo [13.05.2020 17:31]:
 
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
----
- drivers/iio/dac/ad5764.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+> Great, so it's not a problem due to my setup.
 
-diff --git a/drivers/iio/dac/ad5764.c b/drivers/iio/dac/ad5764.c
-index f7ab211604a1..5b0f0fe354f6 100644
---- a/drivers/iio/dac/ad5764.c
-+++ b/drivers/iio/dac/ad5764.c
-@@ -46,6 +46,7 @@ struct ad5764_chip_info {
-  * @spi:		spi_device
-  * @chip_info:		chip info
-  * @vref_reg:		vref supply regulators
-+ * @lock		lock to protect the data buffer during SPI ops
-  * @data:		spi transfer buffers
-  */
- 
-@@ -53,6 +54,7 @@ struct ad5764_state {
- 	struct spi_device		*spi;
- 	const struct ad5764_chip_info	*chip_info;
- 	struct regulator_bulk_data	vref_reg[2];
-+	struct mutex			lock;
- 
- 	/*
- 	 * DMA (thus cache coherency maintenance) requires the
-@@ -126,11 +128,11 @@ static int ad5764_write(struct iio_dev *indio_dev, unsigned int reg,
- 	struct ad5764_state *st = iio_priv(indio_dev);
- 	int ret;
- 
--	mutex_lock(&indio_dev->mlock);
-+	mutex_lock(&st->lock);
- 	st->data[0].d32 = cpu_to_be32((reg << 16) | val);
- 
- 	ret = spi_write(st->spi, &st->data[0].d8[1], 3);
--	mutex_unlock(&indio_dev->mlock);
-+	mutex_unlock(&st->lock);
- 
- 	return ret;
- }
-@@ -151,7 +153,7 @@ static int ad5764_read(struct iio_dev *indio_dev, unsigned int reg,
- 		},
- 	};
- 
--	mutex_lock(&indio_dev->mlock);
-+	mutex_lock(&st->lock);
- 
- 	st->data[0].d32 = cpu_to_be32((1 << 23) | (reg << 16));
- 
-@@ -159,7 +161,7 @@ static int ad5764_read(struct iio_dev *indio_dev, unsigned int reg,
- 	if (ret >= 0)
- 		*val = be32_to_cpu(st->data[1].d32) & 0xffff;
- 
--	mutex_unlock(&indio_dev->mlock);
-+	mutex_unlock(&st->lock);
- 
- 	return ret;
- }
-@@ -295,6 +297,8 @@ static int ad5764_probe(struct spi_device *spi)
- 	indio_dev->num_channels = AD5764_NUM_CHANNELS;
- 	indio_dev->channels = st->chip_info->channels;
- 
-+	mutex_init(&st->lock);
-+
- 	if (st->chip_info->int_vref == 0) {
- 		st->vref_reg[0].supply = "vrefAB";
- 		st->vref_reg[1].supply = "vrefCD";
+I see the same thing on two machines, using a self-compiled gcc 10.1.0.
+Glad to hear it's not just me. Switched back to 9.3.0 for the time being.
 -- 
-2.17.1
-
+Hilsen Harald
