@@ -2,92 +2,124 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90370C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5619C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EEAB2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B5920575
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgENPjX (ORCPT
+        id S1727098AbgENPkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:39:23 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33190 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbgENPjX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:39:23 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: nicolas)
-        with ESMTPSA id F13C12A0609
-From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Cc:     stable@vger.kernel.org, kernel@collabora.com,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] media: cedrus: Propagate OUTPUT resolution to CAPTURE
-Date:   Thu, 14 May 2020 11:39:03 -0400
-Message-Id: <20200514153903.341287-1-nicolas.dufresne@collabora.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 14 May 2020 11:40:23 -0400
+Received: from 8bytes.org ([81.169.241.247]:42986 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgENPkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 11:40:22 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 87CCC26F; Thu, 14 May 2020 17:40:21 +0200 (CEST)
+Date:   Thu, 14 May 2020 17:40:20 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Tom Murphy <murphyt7@tcd.ie>
+Subject: Re: amd kdump failure with iommu=nopt
+Message-ID: <20200514154020.GN18353@8bytes.org>
+References: <20200514031838.2oklmyrc3n5it2ox@cantor>
+ <20200514153623.GM18353@8bytes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514153623.GM18353@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per spec, the CAPTURE resolution should be automatically set based on
-the OTUPUT resolution. This patch properly propagate width/height to the
-capture when the OUTPUT format is set and override the user provided
-width/height with configured OUTPUT resolution when the CAPTURE fmt is
-updated.
+On Thu, May 14, 2020 at 05:36:23PM +0200, Joerg Roedel wrote:
+> This commit also removes the deferred attach of the device to its new
+> domain. Does the attached diff fix the problem for you?
+> +static int __iommu_attach_device_no_defer(struct iommu_domain *domain,
+> +					  struct device *dev)
+> +{
+>  	if (unlikely(domain->ops->attach_dev == NULL))
+>  		return -ENODEV;
+>  
+>  	ret = domain->ops->attach_dev(domain, dev);
+>  	if (!ret)
+>  		trace_attach_device_to_domain(dev);
+> +
+>  	return ret;
+>  }
 
-This also prevents userspace from selecting a CAPTURE resolution that is
-too small, avoiding unwanted page faults.
+Sorry, this didn't compile, here is an updated version that actually
+compiles:
 
-Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
----
- drivers/staging/media/sunxi/cedrus/cedrus_video.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-index 16d82309e7b6..a6d6b15adc2e 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-@@ -247,6 +247,8 @@ static int cedrus_try_fmt_vid_cap(struct file *file, void *priv,
- 		return -EINVAL;
- 
- 	pix_fmt->pixelformat = fmt->pixelformat;
-+	pix_fmt->width = ctx->src_fmt.width;
-+	pix_fmt->height = ctx->src_fmt.height;
- 	cedrus_prepare_format(pix_fmt);
- 
- 	return 0;
-@@ -319,11 +321,14 @@ static int cedrus_s_fmt_vid_out(struct file *file, void *priv,
- 		break;
- 	}
- 
--	/* Propagate colorspace information to capture. */
-+	/* Propagate format information to capture. */
- 	ctx->dst_fmt.colorspace = f->fmt.pix.colorspace;
- 	ctx->dst_fmt.xfer_func = f->fmt.pix.xfer_func;
- 	ctx->dst_fmt.ycbcr_enc = f->fmt.pix.ycbcr_enc;
- 	ctx->dst_fmt.quantization = f->fmt.pix.quantization;
-+	ctx->dst_fmt.width = ctx->src_fmt.width;
-+	ctx->dst_fmt.height = ctx->src_fmt.height;
-+	cedrus_prepare_format(&ctx->dst_fmt);
- 
- 	return 0;
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 4050569188be..f54ebb964271 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1889,13 +1889,19 @@ void iommu_domain_free(struct iommu_domain *domain)
  }
--- 
-2.26.2
-
+ EXPORT_SYMBOL_GPL(iommu_domain_free);
+ 
+-static int __iommu_attach_device(struct iommu_domain *domain,
+-				 struct device *dev)
++static bool __iommu_is_attach_deferred(struct iommu_domain *domain,
++				       struct device *dev)
++{
++	if (!domain->ops->is_attach_deferred)
++		return false;
++
++	return domain->ops->is_attach_deferred(domain, dev);
++}
++
++static int __iommu_attach_device_no_defer(struct iommu_domain *domain,
++					  struct device *dev)
+ {
+ 	int ret;
+-	if ((domain->ops->is_attach_deferred != NULL) &&
+-	    domain->ops->is_attach_deferred(domain, dev))
+-		return 0;
+ 
+ 	if (unlikely(domain->ops->attach_dev == NULL))
+ 		return -ENODEV;
+@@ -1903,9 +1909,19 @@ static int __iommu_attach_device(struct iommu_domain *domain,
+ 	ret = domain->ops->attach_dev(domain, dev);
+ 	if (!ret)
+ 		trace_attach_device_to_domain(dev);
++
+ 	return ret;
+ }
+ 
++static int __iommu_attach_device(struct iommu_domain *domain,
++				 struct device *dev)
++{
++	if (__iommu_is_attach_deferred(domain, dev))
++		return 0;
++
++	return __iommu_attach_device_no_defer(domain, dev);
++}
++
+ int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
+ {
+ 	struct iommu_group *group;
+@@ -2023,7 +2039,12 @@ EXPORT_SYMBOL_GPL(iommu_get_domain_for_dev);
+  */
+ struct iommu_domain *iommu_get_dma_domain(struct device *dev)
+ {
+-	return dev->iommu_group->default_domain;
++	struct iommu_domain *domain = dev->iommu_group->default_domain;
++
++	if (__iommu_is_attach_deferred(domain, dev))
++		__iommu_attach_device_no_defer(domain, dev);
++
++	return domain;
+ }
+ 
+ /*
