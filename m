@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B329CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5F3C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 939352065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE41C20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482361;
-	bh=rZe7RgQTbU2+URaYJ7uJtJiULLuneyg1T7kqNoH9dDs=;
+	s=default; t=1589482363;
+	bh=ZeaT1UWrh+ajkitvCxbSYqAIcX3Pf1/t8+3JjVNaooo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CMqhNpteWX8zlRQFSevo9jl3SucRRCjez5fRgShSi8el54zkGIzatGSygjybx3tUX
-	 l8yDnqBsy+PiUdiRn1pHuN3puObO5jR6yM2Lg6CrL2gYsql6jfPztapjtq5Okaa4yo
-	 90dTlPBjHhMhfQ+/Bim9gjTtM5GcxnDkFncKwp5M=
+	b=CDQyKkZREZgFfb/qSi3Hs2QmlWItI4DTVoyXTLzqfm/DOtlgbg0VZ67OOPMgDeV1A
+	 fn9ZJWGIZ/vcaEMGEZnairG9VT/YbQsRCdCvvp/ic5GnAZmMhq5s3u4SUuFqGSvZth
+	 JgP/OnDtnbIujYYU4ZzFRtQiTH6S4i0r2rxl7jFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgENSwk (ORCPT
+        id S1728426AbgENSwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:52:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50656 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:52:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbgENSw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:28 -0400
+        id S1728332AbgENSwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:52:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9445A2065F;
-        Thu, 14 May 2020 18:52:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A506B20727;
+        Thu, 14 May 2020 18:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482348;
-        bh=rZe7RgQTbU2+URaYJ7uJtJiULLuneyg1T7kqNoH9dDs=;
+        s=default; t=1589482350;
+        bh=ZeaT1UWrh+ajkitvCxbSYqAIcX3Pf1/t8+3JjVNaooo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5ema0BkftWmgk/+vgR3MqKmZziiNnNs7fF/tmd27iR4Tes6kOU9bX07UsR1FWepf
-         qN4rydXQhW5zMT4eySvdvUUZD+iDcstG1p/A+UmaecGbtFeB+MF2OLk8HhTGDtvp/8
-         8Y7822FHlY+WIqpCJXHOtGnrvekYrgesWYW9kosQ=
+        b=1nZEFq75p9yo4Yurv4HWpOxpCDzJm/WQeq8ZcnkewcpX0RJ1CyUbagIIS/JXXY2Xz
+         FCbgdEiUvGGFcjFWbiX4ywHKk8knpv7DABh2kUYz24plvq7fxRoY/2CjJTc83G+3k8
+         RkKsYPYrSFad4aje3pzs0k7oNQ7ssGkK+ooxLt78=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Clay McClure <clay@daemons.net>, Arnd Bergmann <arnd@arndb.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 30/62] net: Make PTP-specific drivers depend on PTP_1588_CLOCK
-Date:   Thu, 14 May 2020 14:51:15 -0400
-Message-Id: <20200514185147.19716-30-sashal@kernel.org>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Lance Digby <ldigby@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 32/62] virtio-blk: handle block_device_operations callbacks after hot unplug
+Date:   Thu, 14 May 2020 14:51:17 -0400
+Message-Id: <20200514185147.19716-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -63,146 +63,214 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Clay McClure <clay@daemons.net>
+From: Stefan Hajnoczi <stefanha@redhat.com>
 
-[ Upstream commit b6d49cab44b567b3e0a5544b3d61e516a7355fad ]
+[ Upstream commit 90b5feb8c4bebc76c27fcaf3e1a0e5ca2d319e9e ]
 
-Commit d1cbfd771ce8 ("ptp_clock: Allow for it to be optional") changed
-all PTP-capable Ethernet drivers from `select PTP_1588_CLOCK` to `imply
-PTP_1588_CLOCK`, "in order to break the hard dependency between the PTP
-clock subsystem and ethernet drivers capable of being clock providers."
-As a result it is possible to build PTP-capable Ethernet drivers without
-the PTP subsystem by deselecting PTP_1588_CLOCK. Drivers are required to
-handle the missing dependency gracefully.
+A userspace process holding a file descriptor to a virtio_blk device can
+still invoke block_device_operations after hot unplug.  This leads to a
+use-after-free accessing vblk->vdev in virtblk_getgeo() when
+ioctl(HDIO_GETGEO) is invoked:
 
-Some PTP-capable Ethernet drivers (e.g., TI_CPSW) factor their PTP code
-out into separate drivers (e.g., TI_CPTS_MOD). The above commit also
-changed these PTP-specific drivers to `imply PTP_1588_CLOCK`, making it
-possible to build them without the PTP subsystem. But as Grygorii
-Strashko noted in [1]:
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000090
+  IP: [<ffffffffc00e5450>] virtio_check_driver_offered_feature+0x10/0x90 [virtio]
+  PGD 800000003a92f067 PUD 3a930067 PMD 0
+  Oops: 0000 [#1] SMP
+  CPU: 0 PID: 1310 Comm: hdio-getgeo Tainted: G           OE  ------------   3.10.0-1062.el7.x86_64 #1
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+  task: ffff9be5fbfb8000 ti: ffff9be5fa890000 task.ti: ffff9be5fa890000
+  RIP: 0010:[<ffffffffc00e5450>]  [<ffffffffc00e5450>] virtio_check_driver_offered_feature+0x10/0x90 [virtio]
+  RSP: 0018:ffff9be5fa893dc8  EFLAGS: 00010246
+  RAX: ffff9be5fc3f3400 RBX: ffff9be5fa893e30 RCX: 0000000000000000
+  RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff9be5fbc10b40
+  RBP: ffff9be5fa893dc8 R08: 0000000000000301 R09: 0000000000000301
+  R10: 0000000000000000 R11: 0000000000000000 R12: ffff9be5fdc24680
+  R13: ffff9be5fbc10b40 R14: ffff9be5fbc10480 R15: 0000000000000000
+  FS:  00007f1bfb968740(0000) GS:ffff9be5ffc00000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000090 CR3: 000000003a894000 CR4: 0000000000360ff0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   [<ffffffffc016ac37>] virtblk_getgeo+0x47/0x110 [virtio_blk]
+   [<ffffffff8d3f200d>] ? handle_mm_fault+0x39d/0x9b0
+   [<ffffffff8d561265>] blkdev_ioctl+0x1f5/0xa20
+   [<ffffffff8d488771>] block_ioctl+0x41/0x50
+   [<ffffffff8d45d9e0>] do_vfs_ioctl+0x3a0/0x5a0
+   [<ffffffff8d45dc81>] SyS_ioctl+0xa1/0xc0
 
-On Wed, Apr 22, 2020 at 02:16:11PM +0300, Grygorii Strashko wrote:
+A related problem is that virtblk_remove() leaks the vd_index_ida index
+when something still holds a reference to vblk->disk during hot unplug.
+This causes virtio-blk device names to be lost (vda, vdb, etc).
 
-> Another question is that CPTS completely nonfunctional in this case and
-> it was never expected that somebody will even try to use/run such
-> configuration (except for random build purposes).
+Fix these issues by protecting vblk->vdev with a mutex and reference
+counting vblk so the vd_index_ida index can be removed in all cases.
 
-In my view, enabling a PTP-specific driver without the PTP subsystem is
-a configuration error made possible by the above commit. Kconfig should
-not allow users to create a configuration with missing dependencies that
-results in "completely nonfunctional" drivers.
-
-I audited all network drivers that call ptp_clock_register() but merely
-`imply PTP_1588_CLOCK` and found five PTP-specific drivers that are
-likely nonfunctional without PTP_1588_CLOCK:
-
-    NET_DSA_MV88E6XXX_PTP
-    NET_DSA_SJA1105_PTP
-    MACB_USE_HWSTAMP
-    CAVIUM_PTP
-    TI_CPTS_MOD
-
-Note how these symbols all reference PTP or timestamping in their name;
-this is a clue that they depend on PTP_1588_CLOCK.
-
-Change them from `imply PTP_1588_CLOCK` [2] to `depends on PTP_1588_CLOCK`.
-I'm not using `select PTP_1588_CLOCK` here because PTP_1588_CLOCK has
-its own dependencies, which `select` would not transitively apply.
-
-Additionally, remove the `select NET_PTP_CLASSIFY` from CPTS_TI_MOD;
-PTP_1588_CLOCK already selects that.
-
-[1]: https://lore.kernel.org/lkml/c04458ed-29ee-1797-3a11-7f3f560553e6@ti.com/
-
-[2]: NET_DSA_SJA1105_PTP had never declared any type of dependency on
-PTP_1588_CLOCK (`imply` or otherwise); adding a `depends on PTP_1588_CLOCK`
-here seems appropriate.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Nicolas Pitre <nico@fluxnic.net>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Fixes: d1cbfd771ce8 ("ptp_clock: Allow for it to be optional")
-Signed-off-by: Clay McClure <clay@daemons.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 48e4043d4529 ("virtio: add virtio disk geometry feature")
+Reported-by: Lance Digby <ldigby@redhat.com>
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+Link: https://lore.kernel.org/r/20200430140442.171016-1-stefanha@redhat.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/Kconfig    | 2 +-
- drivers/net/dsa/sja1105/Kconfig      | 1 +
- drivers/net/ethernet/cadence/Kconfig | 2 +-
- drivers/net/ethernet/cavium/Kconfig  | 2 +-
- drivers/net/ethernet/ti/Kconfig      | 3 +--
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/block/virtio_blk.c | 86 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 78 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/Kconfig b/drivers/net/dsa/mv88e6xxx/Kconfig
-index 6435020d690dd..51185e4d7d15e 100644
---- a/drivers/net/dsa/mv88e6xxx/Kconfig
-+++ b/drivers/net/dsa/mv88e6xxx/Kconfig
-@@ -24,8 +24,8 @@ config NET_DSA_MV88E6XXX_PTP
- 	bool "PTP support for Marvell 88E6xxx"
- 	default n
- 	depends on NET_DSA_MV88E6XXX_GLOBAL2
-+	depends on PTP_1588_CLOCK
- 	imply NETWORK_PHY_TIMESTAMPING
--	imply PTP_1588_CLOCK
- 	help
- 	  Say Y to enable PTP hardware timestamping on Marvell 88E6xxx switch
- 	  chips that support it.
-diff --git a/drivers/net/dsa/sja1105/Kconfig b/drivers/net/dsa/sja1105/Kconfig
-index 0fe1ae173aa1a..68c3086af9af8 100644
---- a/drivers/net/dsa/sja1105/Kconfig
-+++ b/drivers/net/dsa/sja1105/Kconfig
-@@ -20,6 +20,7 @@ tristate "NXP SJA1105 Ethernet switch family support"
- config NET_DSA_SJA1105_PTP
- 	bool "Support for the PTP clock on the NXP SJA1105 Ethernet switch"
- 	depends on NET_DSA_SJA1105
-+	depends on PTP_1588_CLOCK
- 	help
- 	  This enables support for timestamping and PTP clock manipulations in
- 	  the SJA1105 DSA driver.
-diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
-index 53b50c24d9c95..2c4c12b03502d 100644
---- a/drivers/net/ethernet/cadence/Kconfig
-+++ b/drivers/net/ethernet/cadence/Kconfig
-@@ -35,8 +35,8 @@ config MACB
- config MACB_USE_HWSTAMP
- 	bool "Use IEEE 1588 hwstamp"
- 	depends on MACB
-+	depends on PTP_1588_CLOCK
- 	default y
--	imply PTP_1588_CLOCK
- 	---help---
- 	  Enable IEEE 1588 Precision Time Protocol (PTP) support for MACB.
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 0736248999b0d..d52f33881ab6e 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -32,6 +32,15 @@ struct virtio_blk_vq {
+ } ____cacheline_aligned_in_smp;
  
-diff --git a/drivers/net/ethernet/cavium/Kconfig b/drivers/net/ethernet/cavium/Kconfig
-index 6a700d34019e3..4520e7ee00fe1 100644
---- a/drivers/net/ethernet/cavium/Kconfig
-+++ b/drivers/net/ethernet/cavium/Kconfig
-@@ -54,7 +54,7 @@ config	THUNDER_NIC_RGX
- config CAVIUM_PTP
- 	tristate "Cavium PTP coprocessor as PTP clock"
- 	depends on 64BIT && PCI
--	imply PTP_1588_CLOCK
-+	depends on PTP_1588_CLOCK
- 	---help---
- 	  This driver adds support for the Precision Time Protocol Clocks and
- 	  Timestamping coprocessor (PTP) found on Cavium processors.
-diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-index bf98e0fa7d8be..cd6eda83e1f8c 100644
---- a/drivers/net/ethernet/ti/Kconfig
-+++ b/drivers/net/ethernet/ti/Kconfig
-@@ -89,9 +89,8 @@ config TI_CPTS
- config TI_CPTS_MOD
- 	tristate
- 	depends on TI_CPTS
-+	depends on PTP_1588_CLOCK
- 	default y if TI_CPSW=y || TI_KEYSTONE_NETCP=y || TI_CPSW_SWITCHDEV=y
--	select NET_PTP_CLASSIFY
--	imply PTP_1588_CLOCK
- 	default m
+ struct virtio_blk {
++	/*
++	 * This mutex must be held by anything that may run after
++	 * virtblk_remove() sets vblk->vdev to NULL.
++	 *
++	 * blk-mq, virtqueue processing, and sysfs attribute code paths are
++	 * shut down before vblk->vdev is set to NULL and therefore do not need
++	 * to hold this mutex.
++	 */
++	struct mutex vdev_mutex;
+ 	struct virtio_device *vdev;
  
- config TI_KEYSTONE_NETCP
+ 	/* The disk structure for the kernel. */
+@@ -43,6 +52,13 @@ struct virtio_blk {
+ 	/* Process context for config space updates */
+ 	struct work_struct config_work;
+ 
++	/*
++	 * Tracks references from block_device_operations open/release and
++	 * virtio_driver probe/remove so this object can be freed once no
++	 * longer in use.
++	 */
++	refcount_t refs;
++
+ 	/* What host tells us, plus 2 for header & tailer. */
+ 	unsigned int sg_elems;
+ 
+@@ -294,10 +310,55 @@ static int virtblk_get_id(struct gendisk *disk, char *id_str)
+ 	return err;
+ }
+ 
++static void virtblk_get(struct virtio_blk *vblk)
++{
++	refcount_inc(&vblk->refs);
++}
++
++static void virtblk_put(struct virtio_blk *vblk)
++{
++	if (refcount_dec_and_test(&vblk->refs)) {
++		ida_simple_remove(&vd_index_ida, vblk->index);
++		mutex_destroy(&vblk->vdev_mutex);
++		kfree(vblk);
++	}
++}
++
++static int virtblk_open(struct block_device *bd, fmode_t mode)
++{
++	struct virtio_blk *vblk = bd->bd_disk->private_data;
++	int ret = 0;
++
++	mutex_lock(&vblk->vdev_mutex);
++
++	if (vblk->vdev)
++		virtblk_get(vblk);
++	else
++		ret = -ENXIO;
++
++	mutex_unlock(&vblk->vdev_mutex);
++	return ret;
++}
++
++static void virtblk_release(struct gendisk *disk, fmode_t mode)
++{
++	struct virtio_blk *vblk = disk->private_data;
++
++	virtblk_put(vblk);
++}
++
+ /* We provide getgeo only to please some old bootloader/partitioning tools */
+ static int virtblk_getgeo(struct block_device *bd, struct hd_geometry *geo)
+ {
+ 	struct virtio_blk *vblk = bd->bd_disk->private_data;
++	int ret = 0;
++
++	mutex_lock(&vblk->vdev_mutex);
++
++	if (!vblk->vdev) {
++		ret = -ENXIO;
++		goto out;
++	}
+ 
+ 	/* see if the host passed in geometry config */
+ 	if (virtio_has_feature(vblk->vdev, VIRTIO_BLK_F_GEOMETRY)) {
+@@ -313,11 +374,15 @@ static int virtblk_getgeo(struct block_device *bd, struct hd_geometry *geo)
+ 		geo->sectors = 1 << 5;
+ 		geo->cylinders = get_capacity(bd->bd_disk) >> 11;
+ 	}
+-	return 0;
++out:
++	mutex_unlock(&vblk->vdev_mutex);
++	return ret;
+ }
+ 
+ static const struct block_device_operations virtblk_fops = {
+ 	.owner  = THIS_MODULE,
++	.open = virtblk_open,
++	.release = virtblk_release,
+ 	.getgeo = virtblk_getgeo,
+ };
+ 
+@@ -657,6 +722,10 @@ static int virtblk_probe(struct virtio_device *vdev)
+ 		goto out_free_index;
+ 	}
+ 
++	/* This reference is dropped in virtblk_remove(). */
++	refcount_set(&vblk->refs, 1);
++	mutex_init(&vblk->vdev_mutex);
++
+ 	vblk->vdev = vdev;
+ 	vblk->sg_elems = sg_elems;
+ 
+@@ -822,8 +891,6 @@ static int virtblk_probe(struct virtio_device *vdev)
+ static void virtblk_remove(struct virtio_device *vdev)
+ {
+ 	struct virtio_blk *vblk = vdev->priv;
+-	int index = vblk->index;
+-	int refc;
+ 
+ 	/* Make sure no work handler is accessing the device. */
+ 	flush_work(&vblk->config_work);
+@@ -833,18 +900,21 @@ static void virtblk_remove(struct virtio_device *vdev)
+ 
+ 	blk_mq_free_tag_set(&vblk->tag_set);
+ 
++	mutex_lock(&vblk->vdev_mutex);
++
+ 	/* Stop all the virtqueues. */
+ 	vdev->config->reset(vdev);
+ 
+-	refc = kref_read(&disk_to_dev(vblk->disk)->kobj.kref);
++	/* Virtqueues are stopped, nothing can use vblk->vdev anymore. */
++	vblk->vdev = NULL;
++
+ 	put_disk(vblk->disk);
+ 	vdev->config->del_vqs(vdev);
+ 	kfree(vblk->vqs);
+-	kfree(vblk);
+ 
+-	/* Only free device id if we don't have any users */
+-	if (refc == 1)
+-		ida_simple_remove(&vd_index_ida, index);
++	mutex_unlock(&vblk->vdev_mutex);
++
++	virtblk_put(vblk);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.20.1
 
