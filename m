@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAD8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F20C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B4FE206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5372065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482459;
-	bh=yZx8IoApBkq2HBfZAmAmE4O1STPr9mF1BzXL3Xc/YRU=;
+	s=default; t=1589482465;
+	bh=Rh2fTYQfbtq2e4tgM/2ICblYH83hEQ5MpFqNJ7lM7z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wU18mTr0AdJBYrLsMNwhkxPwnelkWc7LfXMeWVrGQ1hNFM0mlePz4aurI+waWkkQG
-	 R39iTVTDZ7irkg7xQwcsySUJ5+SDHPXY1t9WKy/ZBR6S/BbqMKd6T/DEMpWLKs2OG3
-	 ZOF0ih95uEEK7Ve1KP0jbDBia1Q9aajdWM/Ew3PY=
+	b=s/+NVtITqTkopKVn0MCTR73/Ob+e1CLQ/y8v/fIPHvzzm10/Wn3VyHjgUpCFH+rtp
+	 l3JINuj6eSdP4m9lm5XnYGeQmJtgs7j5RM5t+d4x2tbDQ0w1Jp6O/Mf+J1Ew3ELQI6
+	 WuT/2ENbNTT5w6/I6aKQHT4SuDR3R0ulqZ7pqwn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgENSyS (ORCPT
+        id S1729035AbgENSyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:54:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53818 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:54:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728923AbgENSyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:54:03 -0400
+        id S1728939AbgENSyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1317F2076A;
-        Thu, 14 May 2020 18:54:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04E972076A;
+        Thu, 14 May 2020 18:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482442;
-        bh=yZx8IoApBkq2HBfZAmAmE4O1STPr9mF1BzXL3Xc/YRU=;
+        s=default; t=1589482444;
+        bh=Rh2fTYQfbtq2e4tgM/2ICblYH83hEQ5MpFqNJ7lM7z8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2OdpIVDMiL8ZHBPk9sDQZvynI1zJzlBBjOja9Snbgbg28bccLSkcl7Av8SEf5dz9N
-         OoY8h9EONlPwGBDQp3zv1GF8Y48Ej3McHduk6jrynnDY8xDafIsrhn7NnBUpMlJqzH
-         sCcJTOlWeL6mtX2IvJ2D2z7zXqIrF8z8vf9S5Cz4=
+        b=T15YdilF/Wfxvcecf5nWLwVagArUFHxVDaJ7o9JMNhGITTB+wOGl9z2HCnaCFn22F
+         hAuJsVO1ppangEL/EzpOfYOL3CtJtdm+6++mzpThZhdZoq49p6i+XnzU2cQUnkArQT
+         2HpF3oRgV63shzQuZhMWyoTdmETdaJNxEk7Xwnqw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 41/49] Stop the ad-hoc games with -Wno-maybe-initialized
-Date:   Thu, 14 May 2020 14:53:02 -0400
-Message-Id: <20200514185311.20294-41-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 43/49] gcc-10: disable 'array-bounds' warning for now
+Date:   Thu, 14 May 2020 14:53:04 -0400
+Message-Id: <20200514185311.20294-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
 References: <20200514185311.20294-1-sashal@kernel.org>
@@ -60,120 +60,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 78a5255ffb6a1af189a83e493d916ba1c54d8c75 ]
+[ Upstream commit 44720996e2d79e47d508b0abe99b931a726a3197 ]
 
-We have some rather random rules about when we accept the
-"maybe-initialized" warnings, and when we don't.
+This is another fine warning, related to the 'zero-length-bounds' one,
+but hitting the same historical code in the kernel.
 
-For example, we consider it unreliable for gcc versions < 4.9, but also
-if -O3 is enabled, or if optimizing for size.  And then various kernel
-config options disabled it, because they know that they trigger that
-warning by confusing gcc sufficiently (ie PROFILE_ALL_BRANCHES).
+Because C didn't historically support flexible array members, we have
+code that instead uses a one-sized array, the same way we have cases of
+zero-sized arrays.
 
-And now gcc-10 seems to be introducing a lot of those warnings too, so
-it falls under the same heading as 4.9 did.
+The one-sized arrays come from either not wanting to use the gcc
+zero-sized array extension, or from a slight convenience-feature, where
+particularly for strings, the size of the structure now includes the
+allocation for the final NUL character.
 
-At the same time, we have a very straightforward way to _enable_ that
-warning when wanted: use "W=2" to enable more warnings.
+So with a "char name[1];" at the end of a structure, you can do things
+like
 
-So stop playing these ad-hoc games, and just disable that warning by
-default, with the known and straight-forward "if you want to work on the
-extra compiler warnings, use W=123".
+       v = my_malloc(sizeof(struct vendor) + strlen(name));
 
-Would it be great to have code that is always so obvious that it never
-confuses the compiler whether a variable is used initialized or not?
-Yes, it would.  In a perfect world, the compilers would be smarter, and
-our source code would be simpler.
+and avoid the "+1" for the terminator.
 
-That's currently not the world we live in, though.
+Yes, the modern way to do that is with a flexible array, and using
+'offsetof()' instead of 'sizeof()', and adding the "+1" by hand.  That
+also technically gets the size "more correct" in that it avoids any
+alignment (and thus padding) issues, but this is another long-term
+cleanup thing that will not happen for 5.7.
+
+So disable the warning for now, even though it's potentially quite
+useful.  Having a slew of warnings that then hide more urgent new issues
+is not an improvement.
 
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile             |  7 +++----
- init/Kconfig         | 18 ------------------
- kernel/trace/Kconfig |  1 -
- 3 files changed, 3 insertions(+), 23 deletions(-)
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/Makefile b/Makefile
-index 388b7b49a52d0..68708ae07fbd3 100644
+index 49c74e8b55df4..8c8ad7e25e15e 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -707,10 +707,6 @@ else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
- KBUILD_CFLAGS += -Os
- endif
+@@ -859,6 +859,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
  
--ifdef CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED
--KBUILD_CFLAGS   += -Wno-maybe-uninitialized
--endif
--
- # Tell gcc to never replace conditional load with a non-conditional one
- KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
- KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
-@@ -861,6 +857,9 @@ KBUILD_CFLAGS += -Wno-pointer-sign
- # disable stringop warnings in gcc 8+
- KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+ # We'll want to enable this eventually, but it's not going away for 5.7 at least
+ KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
++KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
  
-+# Enabled with W=2, disabled by default as noisy
-+KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
-+
- # disable invalid "can't wrap" optimizations for signed / pointers
- KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
- 
-diff --git a/init/Kconfig b/init/Kconfig
-index 0bffc8fdbf3da..6db3e310a5e42 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -36,22 +36,6 @@ config TOOLS_SUPPORT_RELR
- config CC_HAS_ASM_INLINE
- 	def_bool $(success,echo 'void foo(void) { asm inline (""); }' | $(CC) -x c - -c -o /dev/null)
- 
--config CC_HAS_WARN_MAYBE_UNINITIALIZED
--	def_bool $(cc-option,-Wmaybe-uninitialized)
--	help
--	  GCC >= 4.7 supports this option.
--
--config CC_DISABLE_WARN_MAYBE_UNINITIALIZED
--	bool
--	depends on CC_HAS_WARN_MAYBE_UNINITIALIZED
--	default CC_IS_GCC && GCC_VERSION < 40900  # unreliable for GCC < 4.9
--	help
--	  GCC's -Wmaybe-uninitialized is not reliable by definition.
--	  Lots of false positive warnings are produced in some cases.
--
--	  If this option is enabled, -Wno-maybe-uninitialzed is passed
--	  to the compiler to suppress maybe-uninitialized warnings.
--
- config CONSTRUCTORS
- 	bool
- 	depends on !UML
-@@ -1226,14 +1210,12 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
- config CC_OPTIMIZE_FOR_PERFORMANCE_O3
- 	bool "Optimize more for performance (-O3)"
- 	depends on ARC
--	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  Choosing this option will pass "-O3" to your compiler to optimize
- 	  the kernel yet more for performance.
- 
- config CC_OPTIMIZE_FOR_SIZE
- 	bool "Optimize for size (-Os)"
--	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  Choosing this option will pass "-Os" to your compiler resulting
- 	  in a smaller kernel.
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index e08527f50d2a9..f3f2fc8ad81aa 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -371,7 +371,6 @@ config PROFILE_ANNOTATED_BRANCHES
- config PROFILE_ALL_BRANCHES
- 	bool "Profile all if conditionals" if !FORTIFY_SOURCE
- 	select TRACE_BRANCH_PROFILING
--	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  This tracer profiles all branch conditions. Every if ()
- 	  taken in the kernel is recorded whether it hit or miss.
+ # Enabled with W=2, disabled by default as noisy
+ KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
 -- 
 2.20.1
 
