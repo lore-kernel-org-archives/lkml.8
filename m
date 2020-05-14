@@ -2,145 +2,81 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F19DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78087C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 263FA20734
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4FD20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589452078;
-	bh=8YB9PkihPxyIdTMoNW95kPZVAuM1cjE/7vhXPSTIK6A=;
+	s=default; t=1589452083;
+	bh=UVkexWXSk7D55Q+F3hBDCNoDXQXYDBpoqQ+P+4xna0o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bEIQiUeN/7TMMew0Tz64K/Yo/VaKwNirGczOhBMvqtEvMaaS8W7S47HZseSyqEB6w
-	 UPmP0QWKMA9V81VIjEliHZPcBKT54LM4ergqcKFiahirM9XIzNvAb6HnCebwBLk/bZ
-	 aXl4OlDUK/xuySdXUkslLxM+6uO2Vbh48zb8xpew=
+	b=nmvVhxFxTmOw6etjK7gJyhcakLynHWh0cHFuYLqeb7tOkVCmPczV/Ko1L68hIf7CO
+	 852UUQBBojuSYM1KKooL3v1bMYtRc0iXFw5GelWjq4CF8LpQJygBpy37VnKLkyKugX
+	 Y/Q68sbrEJScSeJKQTYP8knopWiYLX19B8NajLbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgENK15 (ORCPT
+        id S1726860AbgENK2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 06:27:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55914 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 06:28:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbgENK1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 06:27:54 -0400
+        id S1726494AbgENK1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 06:27:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3C9A20734;
-        Thu, 14 May 2020 10:27:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21BAC20727;
+        Thu, 14 May 2020 10:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589452073;
-        bh=8YB9PkihPxyIdTMoNW95kPZVAuM1cjE/7vhXPSTIK6A=;
+        s=default; t=1589452075;
+        bh=UVkexWXSk7D55Q+F3hBDCNoDXQXYDBpoqQ+P+4xna0o=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z958oHucrRPdewqJv4Gvyp12/z5HkOQ/5iRnCCEMxauRv6a9Gum/JsyXEO9hVeonn
-         LeYX3KtpbsiqpvCUULsndaaqF0yUVMDsq0uZ52Dtw4kLAzvISzWugYxsisv/0eJMjY
-         bajxmRGO6M5HGRqZeSfStnIFQpCsf3MCtHIxfAVs=
-Date:   Thu, 14 May 2020 11:24:58 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v13 5/5] usb: xhci: provide a debugfs hook for erasing rom
-Message-ID: <20200514092458.GA1591384@kroah.com>
-References: <20200506060025.1535960-1-vkoul@kernel.org>
- <20200506060025.1535960-6-vkoul@kernel.org>
- <caa2c5f4-a858-d699-27af-7b0c22b4dc40@linux.intel.com>
- <20200513124554.GA1083139@kroah.com>
+        b=Lh6kiO+mhflzQlaTQo3EmyOzwhQFe/513hif+1Oeb7GCApSDtWYYYS/inkXNQHxG1
+         igyKuhbPMFp2s3HkEYitF7o1JT7/S6Zbl1LExgQ0ZOt5pd7yraCXpKqKJjyC9UMHCd
+         0Ta6dzHMGtJePRTb5YsB40mhRz51f8bhYFE/u5Hk=
+Date:   Thu, 14 May 2020 11:46:45 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     f.fainelli@gmail.com, netdev@vger.kernel.org,
+        stable@vger.kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH stable-5.4.y] net: dsa: Do not make user port errors fatal
+Message-ID: <20200514094645.GA1700086@kroah.com>
+References: <20200513174145.10048-1-f.fainelli@gmail.com>
+ <20200513.125546.1487344805837197413.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513124554.GA1083139@kroah.com>
+In-Reply-To: <20200513.125546.1487344805837197413.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 02:45:54PM +0200, Greg Kroah-Hartman wrote:
-> On Wed, May 13, 2020 at 03:36:19PM +0300, Mathias Nyman wrote:
-> > On 6.5.2020 9.00, Vinod Koul wrote:
-> > > run "echo 1 > /sys/kernel/debug/renesas-usb/rom_erase" to erase
-> > > firmware when driver is loaded.
-> > > 
-> > > Subsequent init of driver shall reload the firmware
-> > > 
-> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > ---
-> > >  drivers/usb/host/xhci-pci-renesas.c | 33 +++++++++++++++++++++++++++++
-> > >  1 file changed, 33 insertions(+)
-> > > 
-> > > diff --git a/drivers/usb/host/xhci-pci-renesas.c b/drivers/usb/host/xhci-pci-renesas.c
-> > > index f7d2445d30ec..fa32ec352dc8 100644
-> > > --- a/drivers/usb/host/xhci-pci-renesas.c
-> > > +++ b/drivers/usb/host/xhci-pci-renesas.c
-> > > @@ -2,6 +2,7 @@
-> > >  /* Copyright (C) 2019-2020 Linaro Limited */
-> > >  
-> > >  #include <linux/acpi.h>
-> > > +#include <linux/debugfs.h>
-> > >  #include <linux/firmware.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/pci.h>
-> > > @@ -170,6 +171,8 @@ static int renesas_fw_verify(const void *fw_data,
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static void debugfs_init(struct pci_dev *pdev);
-> > > +
-> > >  static bool renesas_check_rom(struct pci_dev *pdev)
-> > >  {
-> > >  	u16 rom_status;
-> > > @@ -183,6 +186,7 @@ static bool renesas_check_rom(struct pci_dev *pdev)
-> > >  	rom_status &= RENESAS_ROM_STATUS_ROM_EXISTS;
-> > >  	if (rom_status) {
-> > >  		dev_dbg(&pdev->dev, "External ROM exists\n");
-> > > +		debugfs_init(pdev);
-> > >  		return true; /* External ROM exists */
-> > >  	}
-> > >  
-> > > @@ -449,6 +453,34 @@ static void renesas_rom_erase(struct pci_dev *pdev)
-> > >  	dev_dbg(&pdev->dev, "ROM Erase... Done success\n");
-> > >  }
-> > >  
-> > > +static int debugfs_rom_erase(void *data, u64 value)
-> > > +{
-> > > +	struct pci_dev *pdev = data;
-> > > +
-> > > +	if (value == 1) {
-> > > +		dev_dbg(&pdev->dev, "Userspace requested ROM erase\n");
-> > > +		renesas_rom_erase(pdev);
-> > > +		return 0;
-> > > +	}
-> > > +	return -EINVAL;
-> > > +}
-> > > +DEFINE_DEBUGFS_ATTRIBUTE(rom_erase_ops, NULL, debugfs_rom_erase, "%llu\n");
-> > > +
-> > > +static struct dentry *debugfs_root;
-> > > +
-> > > +static void debugfs_init(struct pci_dev *pdev)
-> > > +{
-> > > +	debugfs_root = debugfs_create_dir("renesas_usb", NULL);
-> > 
-> > This will create a renesas_usb directory right under debugfs root.
-> > xhci has its own struct dentry xhci_debugfs_root; 
-> > Use that as parent instead
+On Wed, May 13, 2020 at 12:55:46PM -0700, David Miller wrote:
+> From: Florian Fainelli <f.fainelli@gmail.com>
+> Date: Wed, 13 May 2020 10:41:45 -0700
 > 
-> Ah, I misssed that, a follow-on patch can do this, right?
+> > commit 86f8b1c01a0a537a73d2996615133be63cdf75db upstream
+> > 
+> > Prior to 1d27732f411d ("net: dsa: setup and teardown ports"), we would
+> > not treat failures to set-up an user port as fatal, but after this
+> > commit we would, which is a regression for some systems where interfaces
+> > may be declared in the Device Tree, but the underlying hardware may not
+> > be present (pluggable daughter cards for instance).
+> > 
+> > Fixes: 1d27732f411d ("net: dsa: setup and teardown ports")
+> > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> > Signed-off-by: David S. Miller <davem@davemloft.net>
+> 
+> Greg, please queue this up.
 
-Actually, a whole new series with this changed is good, I didn't take
-these for now, for some reason I thought I had.
-
-thanks,
+Now queued up, thanks.
 
 greg k-h
