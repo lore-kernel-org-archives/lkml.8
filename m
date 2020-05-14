@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D569C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC6B92065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D228620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482884;
-	bh=wyDYTAczmcn/GLNndn5Dk4wpiaPeH7UZWEJm/nuK1+U=;
+	s=default; t=1589482890;
+	bh=xKqNhfofCfsb6sZSc/K19nM7f9VNbEQR3BZ1CS7Z254=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y9ktW6bi3TNkXU1mx1gHfXJALrEkO3KdVoIoGBNpzg3OLqka44bIIAucF4F0Ea0ok
-	 zo8qGaEkI4W4CUDSRyXWARFkoYvChRXRqjQ172crKTWHQhtcXAtTdoDyHs5ZHtCNoJ
-	 Mq0PSoMApjjVfWKXTqJ45FNEbxFhDucmzFfWQ9Xg=
+	b=H3s4Fp5kOUq5PzoamOC9P69rlNjDc3TneWK0gQ5NCvLvEjx/YqEAm5PBjULz3AV+L
+	 Oq/9ZY7/jKQmU2yTgv5eeDKzZqWiTzg0nkri/n5vWpwRTfrTk3z4EfngAJ+b7L5ipw
+	 upARq0xwm43Y6d9Fo1OgTGfvCYT0/Kuo6ili0apI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbgENTBX (ORCPT
+        id S1729979AbgENTBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:01:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56152 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:01:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728466AbgENSza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:30 -0400
+        id S1727795AbgENSz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D89A2074A;
-        Thu, 14 May 2020 18:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A5CD20767;
+        Thu, 14 May 2020 18:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482530;
-        bh=wyDYTAczmcn/GLNndn5Dk4wpiaPeH7UZWEJm/nuK1+U=;
+        s=default; t=1589482529;
+        bh=xKqNhfofCfsb6sZSc/K19nM7f9VNbEQR3BZ1CS7Z254=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vQDMke5W/oONy6XZyRBRrsihcD2N3x7xjSfPYAs+wcUBgUnh9tH/r4TPhxD7oAapA
-         6Lhow3KToPRlOxZxpgZIeLsNWPWFsaz5Cu8d51d35DBdFLioPzZd3Ifsut9hjzYZTp
-         e+uDVW0s883zbyi9YUVFDVnRk+c35YL2fql76POY=
+        b=lkg+EhPvPX/GXpF2Byik7xI9neNwoTeVfEAVhCOVT2Tr25oKc5G1uEyQGzAiCuVwt
+         YBdqSmTbZSHMD6P45MU5FudaNQbkOEVst+CTnZ/1vrV/ZmuwR/L4e+4TjPfePqVlV6
+         wFTsI6U+iPOhVVRybPaNl49t0GVuIojCe0rF2zIg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julia Lawall <Julia.Lawall@inria.fr>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 24/39] dp83640: reverse arguments to list_add_tail
-Date:   Thu, 14 May 2020 14:54:41 -0400
-Message-Id: <20200514185456.21060-24-sashal@kernel.org>
+Cc:     Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 23/39] net/mlx5: Fix command entry leak in Internal Error State
+Date:   Thu, 14 May 2020 14:54:40 -0400
+Message-Id: <20200514185456.21060-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
 References: <20200514185456.21060-1-sashal@kernel.org>
@@ -59,36 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Lawall <Julia.Lawall@inria.fr>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-[ Upstream commit 865308373ed49c9fb05720d14cbf1315349b32a9 ]
+[ Upstream commit cece6f432cca9f18900463ed01b97a152a03600a ]
 
-In this code, it appears that phyter_clocks is a list head, based on
-the previous list_for_each, and that clock->list is intended to be a
-list element, given that it has just been initialized in
-dp83640_clock_init.  Accordingly, switch the arguments to
-list_add_tail, which takes the list head as the second argument.
+Processing commands by cmd_work_handler() while already in Internal
+Error State will result in entry leak, since the handler process force
+completion without doorbell. Forced completion doesn't release the entry
+and event completion will never arrive, so entry should be released.
 
-Fixes: cb646e2b02b27 ("ptp: Added a clock driver for the National Semiconductor PHYTER.")
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 73dd3a4839c1 ("net/mlx5: Avoid using pending command interface slots")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83640.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
-index afebdc2f0b94d..c52c016676af3 100644
---- a/drivers/net/phy/dp83640.c
-+++ b/drivers/net/phy/dp83640.c
-@@ -1110,7 +1110,7 @@ static struct dp83640_clock *dp83640_clock_get_bus(struct mii_bus *bus)
- 		goto out;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+index dd6522b5737b3..950ea980808b9 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+@@ -865,6 +865,10 @@ static void cmd_work_handler(struct work_struct *work)
+ 		MLX5_SET(mbox_out, ent->out, syndrome, drv_synd);
+ 
+ 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
++		/* no doorbell, no need to keep the entry */
++		free_ent(cmd, ent->idx);
++		if (ent->callback)
++			free_cmd(ent);
+ 		return;
  	}
- 	dp83640_clock_init(clock, bus);
--	list_add_tail(&phyter_clocks, &clock->list);
-+	list_add_tail(&clock->list, &phyter_clocks);
- out:
- 	mutex_unlock(&phyter_clocks_lock);
  
 -- 
 2.20.1
