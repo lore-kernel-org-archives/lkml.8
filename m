@@ -2,302 +2,138 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFC0C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA588C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD3A6206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B534D206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:19:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="N/e/huZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgENQSY (ORCPT
+        id S1726038AbgENQTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 12:18:24 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4785 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726088AbgENQSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 12:18:23 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EEAEA8ABD276537A7522;
-        Fri, 15 May 2020 00:18:17 +0800 (CST)
-Received: from [127.0.0.1] (10.67.102.197) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Fri, 15 May 2020
- 00:17:57 +0800
-Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-CC:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        "Stephen Rothwell" <sfr@canb.auug.org.au>,
-        Helge Deller <deller@gmx.de>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        <yzaikin@google.com>, <linux-fsdevel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, <gregkh@linuxfoundation.org>
-References: <20200511111123.68ccbaa3@canb.auug.org.au>
- <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
- <20200512003305.GX11244@42.do-not-panic.com>
- <87y2pxs73w.fsf@x220.int.ebiederm.org>
- <20200512172413.GC11244@42.do-not-panic.com>
- <87k11hrqzc.fsf@x220.int.ebiederm.org>
- <20200512220341.GE11244@42.do-not-panic.com>
- <3ccd08a5-cac6-3ca1-ed33-3cb62c982443@huawei.com>
- <20200513125057.GM11244@42.do-not-panic.com>
- <2f8363b3-781e-b065-82f4-f84e6e787fad@huawei.com>
-Message-ID: <aaae0a1e-8b80-7d31-d747-a2e350e3b247@huawei.com>
-Date:   Fri, 15 May 2020 00:17:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <2f8363b3-781e-b065-82f4-f84e6e787fad@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.102.197]
-X-CFilter-Loop: Reflected
+        Thu, 14 May 2020 12:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgENQTg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 12:19:36 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D172C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 09:19:36 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id y25so1518458pfn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 09:19:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=3+sj8Y+Mzr1j1P1P/nbqTLTnFDHWmPPgkXsU5sEA7Z8=;
+        b=N/e/huZ6btUGYbWK1Tar6juPyELlg9sZ9YtRRal5GmqUMsDO/Mloqv4TFysMyTjTyy
+         62QCf5P/CY2DJxug8jwaBKL0x9IMlPVit5iQH/1ZudG588GT/6bSjfycVeYHJrLDHF7L
+         92DrI/LQKeEAF4/QEXTpnyLMUmxQt4b7ibnVrgfCyjshxsQLDYqvSgRivW1oyOOQ2OCz
+         o66caulfTHMSzE1CdY4vORB9FfkbIgllPBI+rfpEKgteFWSrwpcDujCgH8JUdGk8L0J1
+         7WMAYCuK3DkdQfb7dWsBWdSmzhdTgTq7ufA/Oyblna/o4/Ob055EmiPk3qPOENDlyfrZ
+         8eOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=3+sj8Y+Mzr1j1P1P/nbqTLTnFDHWmPPgkXsU5sEA7Z8=;
+        b=F6eVnyNBwjueO5x3iKXS631XXDzQvqcqwBT82ofJJNav2dIh9VsOfz2C0EconJSMZn
+         L3bKoeL1tQh3KnTntCPMmB0HIePl047XHwwzwxuE48J5My9aG0othKbDdriiMFbiGIhg
+         aQbTh0ekvvHtT2CrHDJoFetuW8ahS7F+BttmXxdfFdchLLhA00X4i14sUmtew4iTl9Zo
+         pXv3ioFpuJ//N8zcvFvEePjkH87xEMI9OHsUirP6+Yv9Dg0gAC/uVPVJ2GLPj17EbDpb
+         C8N3R7wfGpRUngMXHeekhWpKn5PjjKffy40q0x4a7bz6HVh/ZciZK/TO5BexkAIDptFf
+         UDxQ==
+X-Gm-Message-State: AOAM533h7MqOkxnuTWGFzEGZD7AtPMsnS1RVbj/UowN7CqMr+64TlONQ
+        7ICFe8lg8HFO3ZukuIsKYdSkyw==
+X-Google-Smtp-Source: ABdhPJySVoFGAIOBhD0O2omMuSmdS5yCUPdhxrrL0m5SdSFTjytVpC1OjgYFTKmT9z67J0FdacOhDA==
+X-Received: by 2002:a62:34c1:: with SMTP id b184mr5032916pfa.73.1589473175462;
+        Thu, 14 May 2020 09:19:35 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:1c47:1b32:8edf:77f5? ([2601:646:c200:1ef2:1c47:1b32:8edf:77f5])
+        by smtp.gmail.com with ESMTPSA id c2sm2712246pfp.118.2020.05.14.09.19.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 09:19:34 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [patch V4 part 1 29/36] x86/mce: Send #MC singal from task work
+Date:   Thu, 14 May 2020 09:19:32 -0700
+Message-Id: <19476304-8EA8-4B68-9894-3056308035EE@amacapital.net>
+References: <1278452779.21179.1589472210183.JavaMail.zimbra@efficios.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, paulmck <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <JGross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tony Luck <tony.luck@intel.com>
+In-Reply-To: <1278452779.21179.1589472210183.JavaMail.zimbra@efficios.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/14 14:05, Xiaoming Ni wrote:
-> On 2020/5/13 20:50, Luis Chamberlain wrote:
->> On Wed, May 13, 2020 at 12:04:02PM +0800, Xiaoming Ni wrote:
->>> On 2020/5/13 6:03, Luis Chamberlain wrote:
->>>> On Tue, May 12, 2020 at 12:40:55PM -0500, Eric W. Biederman wrote:
->>>>> Luis Chamberlain <mcgrof@kernel.org> writes:
->>>>>
->>>>>> On Tue, May 12, 2020 at 06:52:35AM -0500, Eric W. Biederman wrote:
->>>>>>> Luis Chamberlain <mcgrof@kernel.org> writes:
->>>>>>>
->>>>>>>> +static struct ctl_table fs_base_table[] = {
->>>>>>>> +    {
->>>>>>>> +        .procname    = "fs",
->>>>>>>> +        .mode        = 0555,
->>>>>>>> +        .child        = fs_table,
->>>>>>>> +    },
->>>>>>>> +    { }
->>>>>>>> +};
->>>>>>>     ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
->>>>>>>>> +static int __init fs_procsys_init(void)
->>>>>>>> +{
->>>>>>>> +    struct ctl_table_header *hdr;
->>>>>>>> +
->>>>>>>> +    hdr = register_sysctl_table(fs_base_table);
->>>>>>>                 ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl 
->>>>>>> instead.
->>>>>>>     AKA
->>>>>>>           hdr = register_sysctl("fs", fs_table);
->>>>>>
->>>>>> Ah, much cleaner thanks!
->>>>>
->>>>> It is my hope you we can get rid of register_sysctl_table one of these
->>>>> days.  It was the original interface but today it is just a
->>>>> compatibility wrapper.
->>>>>
->>>>> I unfortunately ran out of steam last time before I finished 
->>>>> converting
->>>>> everything over.
->>>>
->>>> Let's give it one more go. I'll start with the fs stuff.
->>>>
->>>>     Luis
->>>>
->>>> .
->>>>
->>>
->>> If we register each feature in its own feature code file using 
->>> register() to
->>> register the sysctl interface. To avoid merge conflicts when different
->>> features modify sysctl.c at the same time.
->>> that is, try to Avoid mixing code with multiple features in the same 
->>> code
->>> file.
->>>
->>> For example, the multiple file interfaces defined in sysctl.c by the
->>> hung_task feature can  be moved to hung_task.c.
->>>
->>> Perhaps later, without centralized sysctl.c ?
->>> Is this better?
->>>
->>> Thanks
->>> Xiaoming Ni
->>>
+
+
+> On May 14, 2020, at 9:03 AM, Mathieu Desnoyers <mathieu.desnoyers@efficios=
+.com> wrote:
+>=20
+> =EF=BB=BF----- On May 14, 2020, at 10:17 AM, Borislav Petkov bp@alien8.de w=
+rote:
+>=20
+>> + Tony.
+>>=20
+>>> On Tue, May 05, 2020 at 03:16:31PM +0200, Thomas Gleixner wrote:
+>>> From: Peter Zijlstra <peterz@infradead.org>
+>>>=20
+>>> Convert #MC over to using task_work_add(); it will run the same code
+>>> slightly later, on the return to user path of the same exception.
+>>>=20
+>>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>>> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 >>> ---
->>>   include/linux/sched/sysctl.h |  8 +----
->>>   kernel/hung_task.c           | 78
->>> +++++++++++++++++++++++++++++++++++++++++++-
->>>   kernel/sysctl.c              | 50 ----------------------------
->>>   3 files changed, 78 insertions(+), 58 deletions(-)
->>>
->>> diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
->>> index d4f6215..bb4e0d3 100644
->>> --- a/include/linux/sched/sysctl.h
->>> +++ b/include/linux/sched/sysctl.h
->>> @@ -7,14 +7,8 @@
->>>   struct ctl_table;
->>>
->>>   #ifdef CONFIG_DETECT_HUNG_TASK
->>> -extern int         sysctl_hung_task_check_count;
->>> -extern unsigned int  sysctl_hung_task_panic;
->>> +/* used for block/ */
->>>   extern unsigned long sysctl_hung_task_timeout_secs;
->>> -extern unsigned long sysctl_hung_task_check_interval_secs;
->>> -extern int sysctl_hung_task_warnings;
->>> -extern int proc_dohung_task_timeout_secs(struct ctl_table *table, int
->>> write,
->>> -                     void __user *buffer,
->>> -                     size_t *lenp, loff_t *ppos);
->>>   #else
->>>   /* Avoid need for ifdefs elsewhere in the code */
->>>   enum { sysctl_hung_task_timeout_secs = 0 };
->>> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
->>> index 14a625c..53589f2 100644
->>> --- a/kernel/hung_task.c
->>> +++ b/kernel/hung_task.c
->>> @@ -20,10 +20,10 @@
->>>   #include <linux/utsname.h>
->>>   #include <linux/sched/signal.h>
->>>   #include <linux/sched/debug.h>
->>> +#include <linux/kmemleak.h>
->>>   #include <linux/sched/sysctl.h>
->>>
->>>   #include <trace/events/sched.h>
->>> -
->>>   /*
->>>    * The number of tasks checked:
->>>    */
->>> @@ -296,8 +296,84 @@ static int watchdog(void *dummy)
->>>       return 0;
->>>   }
->>>
->>> +/*
->>> + * This is needed for proc_doulongvec_minmax of
->>> sysctl_hung_task_timeout_secs
->>> + * and hung_task_check_interval_secs
->>> + */
->>> +static unsigned long hung_task_timeout_max = (LONG_MAX / HZ);
->>
->> This is not generic so it can stay in this file.
->>
->>> +static int __maybe_unused neg_one = -1;
->>
->> This is generic so we can share it, I suggest we just rename this
->> for now to sysctl_neg_one, export it to a symbol namespace,
->> EXPORT_SYMBOL_NS_GPL(sysctl_neg_one, SYSCTL) and then import it with
->> MODULE_IMPORT_NS(SYSCTL)
+>>> arch/x86/kernel/cpu/mce/core.c |   56 ++++++++++++++++++++++------------=
+-------
+>>> include/linux/sched.h          |    6 ++++
+>>> 2 files changed, 37 insertions(+), 25 deletions(-)
+>>=20
+>> I like this:
+>>=20
+>> Reviewed-by: Borislav Petkov <bp@suse.de>
+>=20
+> What I am not fully grasping here is whether this patch preserves the inst=
+ruction
+> pointer (and possibly other relevant information for siginfo_t) triggering=
+ the
+> exception in a scenario where we have:
+>=20
+> - #MC triggered, queuing task work,
+> - unrelated signal happens to be delivered to task,
+> - exit to usermode loop handles do_signal first,
+> - then it runs task work.
 
-When I made the patch, I found that only sysctl_writes_strict and 
-hung_task_warnings use the neg_one variable, so is it necessary to merge 
-and generate the SYSCTL_NEG_ONE variable?
-
-In addition, the SYSCTL symbol namespace has not been created yet. Do I 
-just need to add a new member -1 to the sysctl_vals array?
-
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index b6f5d45..acae1fa 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -23,7 +23,7 @@
-  static const struct inode_operations proc_sys_dir_operations;
-
-  /* shared constants to be used in various sysctls */
--const int sysctl_vals[] = { 0, 1, INT_MAX };
-+const int sysctl_vals[] = { 0, 1, INT_MAX, -1 };
-  EXPORT_SYMBOL(sysctl_vals);
-
-  /* Support for permanently empty directories */
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index 02fa844..6d741d6 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -41,6 +41,7 @@
-  #define SYSCTL_ZERO    ((void *)&sysctl_vals[0])
-  #define SYSCTL_ONE     ((void *)&sysctl_vals[1])
-  #define SYSCTL_INT_MAX ((void *)&sysctl_vals[2])
-+#define SYSCTL_NEG_ONE       ((void *)&sysctl_vals[3])
-
-  extern const int sysctl_vals[];
-
-Thanks
-Xiaoming Ni
-
-
->>
->>
->>> +static struct ctl_table hung_task_sysctls[] = {
->>
->> We want to wrap this around with CONFIG_SYSCTL, so a cleaner solution
->> is something like this:
->>
->> diff --git a/kernel/Makefile b/kernel/Makefile
->> index a42ac3a58994..689718351754 100644
->> --- a/kernel/Makefile
->> +++ b/kernel/Makefile
->> @@ -88,7 +88,9 @@ obj-$(CONFIG_KCOV) += kcov.o
->>   obj-$(CONFIG_KPROBES) += kprobes.o
->>   obj-$(CONFIG_FAIL_FUNCTION) += fail_function.o
->>   obj-$(CONFIG_KGDB) += debug/
->> -obj-$(CONFIG_DETECT_HUNG_TASK) += hung_task.o
->> +obj-$(CONFIG_DETECT_HUNG_TASK) += hung_tasks.o
->> +hung_tasks-y := hung_task.o
->> +hung_tasks-$(CONFIG_SYSCTL) += hung_task_sysctl.o
->>   obj-$(CONFIG_LOCKUP_DETECTOR) += watchdog.o
->>   obj-$(CONFIG_HARDLOCKUP_DETECTOR_PERF) += watchdog_hld.o
->>   obj-$(CONFIG_SECCOMP) += seccomp.o
->>
->>> +/* get /proc/sys/kernel root */
->>> +static struct ctl_table sysctls_root[] = {
->>> +    {
->>> +        .procname       = "kernel",
->>> +        .mode           = 0555,
->>> +        .child          = hung_task_sysctls,
->>> +    },
->>> +    {}
->>> +};
->>> +
->>
->> And as per Eric, this is not needed, we can simplify this more, as noted
->> below.
->>
->>> +static int __init hung_task_sysctl_init(void)
->>> +{
->>> +    struct ctl_table_header *srt = register_sysctl_table(sysctls_root);
->>
->> You want instead something like::
->>
->>          struct ctl_table_header *srt;
->>
->>     srt = register_sysctl("kernel", hung_task_sysctls);
->>> +
->>> +    if (!srt)
->>> +        return -ENOMEM;
->>> +    kmemleak_not_leak(srt);
->>> +    return 0;
->>> +}
->>> +
->>
->>>   static int __init hung_task_init(void)
->>>   {
->>> +    int ret = hung_task_sysctl_init();
->>> +
->>> +    if (ret != 0)
->>> +        return ret;
->>> +
->>
->> And just #ifdef this around CONFIG_SYSCTL.
->>
->>    Luis
->>
->> .
->>
-> 
-> Thank you for your guidance, I will send the patch later
-> 
-> Xiaoming Ni
-> 
-
-
+If anyone wants to ponder this, I suspect that we have lots of delightful bu=
+gs in our handling of cr2, trapnr, and error_code in signals. We should move=
+ them to the sigcontext, at least in kernel, and fix up ucontext when we del=
+iver the signal.  The current code can=E2=80=99t possibly be correct.=
