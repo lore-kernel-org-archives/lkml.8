@@ -2,109 +2,130 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C459C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B80C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 025A420675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF5320675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:22:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcYhIWBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgENUWA (ORCPT
+        id S1728053AbgENUWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 16:22:00 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:40878 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgENUV7 (ORCPT
+        Thu, 14 May 2020 16:22:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727785AbgENUWo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 16:21:59 -0400
-Received: by mail-oo1-f65.google.com with SMTP id r1so1012676oog.7;
-        Thu, 14 May 2020 13:21:57 -0700 (PDT)
+        Thu, 14 May 2020 16:22:44 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8D83C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:22:43 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id s1so222478qkf.9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :organization:user-agent:mime-version;
+        bh=8SQfuyaOZCvYd3/hde0Ei4fxfgVmOiAcZ6vRF2d2JVE=;
+        b=gcYhIWBaR1AtQHmn73GDdqf4cmf06P2RorZZ+lJaHkQvztImOUbI1C3E6Puqu6QxbK
+         7baCEyHpUEcrWmU5ArIf11t0b/ueGsaNMpb5vlGMReUostX5qqUCVJ2p2Ym+5tG4JPiZ
+         Ilqp+aTsG/+xF+K0yIo7W+tOES2qnQkw8QXyjUEhcp2cu5FxG8ayztFUwlVNcz4ChylJ
+         sAElY2aLOQN06fHcMhOOZ1lI39o85P0hn8zI71rvhBmlOHcEMNl/UFEOIJ4ykPsa0+DW
+         2OAoNetAOp6DtBDRwyWBSSbstkYEkkV+Yd2b7xMpOtLMqwLZfBpwoL7X97D+Hkziouwy
+         vV/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rlIQF5j5vsfBPOtZybt4E5c1BhvLEXxG3/+FEaTp6cQ=;
-        b=DumUi0JZRpcBebsYX6Et40ImnssPFQE5Ipg7MSQoZyKi0jH71bysjM5tykoybrC+Om
-         Pu/1P0663FeGAc0i5kwned78sR5rFX84RxAUNjqVUa0EmlB8j/9bIgM6KVTHSCsohp0Z
-         84P6B/UpYKwY9Qz5hyqCVBz4UEsZ24U/np3w8+QtLaQmgYJ6qqyDnyT3PgSDPbuy6Vsa
-         mrmM0DPk9wbd3JpoebUBFTRtgBGnq+TSna80qu0EuGQWTF5w5LK9U7RyvISYXHZtj4VT
-         vTUH4gj90oliEHk57uWdqIIsSJ5SeoNIJYUhP6KhlW+PM+S7mGjLlYXBGXqZFKa+DVG0
-         Ib9g==
-X-Gm-Message-State: AOAM533qQ9hwEoVmg2PmNH70k1egCjsPxbqoSCIZNhb7jJQh26oiF7Ht
-        u/QpEyZS8p3FHf601x2xAGJTbr6rhMjqbe74Gns=
-X-Google-Smtp-Source: ABdhPJwHZYLoAUW61n9j258U9+ByCYD6QyGX6G3qS+2hqB9LkqYOP+sHVtDrwpGhxf2U+Oq5OCAoTbA4VCmhRTC+280=
-X-Received: by 2002:a4a:d44a:: with SMTP id p10mr5187382oos.11.1589487717414;
- Thu, 14 May 2020 13:21:57 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version;
+        bh=8SQfuyaOZCvYd3/hde0Ei4fxfgVmOiAcZ6vRF2d2JVE=;
+        b=M5UJ7kLRytgjOtzE8/UK0i7ryJwzOo5pg1DoqxDXeAOonbqmaIRkswfkQQDuqzfnvW
+         TAq2f8FY2czrLDp+7xMd847NLxECYqMalQ7SxVAzemskYC4l5tag75Jp5SnUbzOxZhJf
+         rFbJRmFMFsPB4Rqdcyz2+ATJcLgQTSnytld2xCuhYz5k0SXkNQgrApN+kDf17VvaLWw9
+         i1Y0OKuP/sprtFoFCsmvn2ysS6/zcxeBVG6FKCt839ScOeu0584NtPRedz4s/uNvRlZk
+         y/alK+9KdqMwHQDeul5lnrvCOpN2ohLJHlZeeKEQyXdoyaEDxCwDC6/8bpx87LKHO9wk
+         xESA==
+X-Gm-Message-State: AOAM532yGwSvWtdB176AoXGjawiQPwZYdYJMM1nhkE8CBhp7YsVLr4Sj
+        /7P6EGd3S3Mxet/OFNgyt6w=
+X-Google-Smtp-Source: ABdhPJzU+tYb9m69rF7oG6STN0UmKcUTKGXF3ue8PYs+Pz4IZ+fPFF6AbRmFYnY6ysKWucTlMen1vg==
+X-Received: by 2002:a37:4b4f:: with SMTP id y76mr145366qka.292.1589487762952;
+        Thu, 14 May 2020 13:22:42 -0700 (PDT)
+Received: from LeoBras (179-125-143-209.dynamic.desktop.com.br. [179.125.143.209])
+        by smtp.gmail.com with ESMTPSA id g66sm3348344qkb.122.2020.05.14.13.22.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 13:22:41 -0700 (PDT)
+Message-ID: <251d086383fc5a94a5f9dc7c348339413f705458.camel@gmail.com>
+Subject: Re: [PATCH 1/1] powerpc/rtas: Implement reentrant rtas call
+From:   Leonardo Bras <leobras.c@gmail.com>
+To:     Nathan Lynch <nathanl@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Nadav Amit <namit@vmware.com>
+Date:   Thu, 14 May 2020 17:22:26 -0300
+In-Reply-To: <875zcy2v8o.fsf@linux.ibm.com>
+References: <20200408223901.760733-1-leonardo@linux.ibm.com>
+         <87ftdb87jf.fsf@linux.ibm.com>
+         <ba97d52df60ac9c4a4afc2c03121a8c263aa5a15.camel@linux.ibm.com>
+         <875zcy2v8o.fsf@linux.ibm.com>
+Organization: IBM
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-EPXKkKrztE/RJuZN2zTS"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-References: <20200509234124.GM23230@ZenIV.linux.org.uk> <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
- <CGME20200509234610eucas1p258be307cde10392b26c322354db78a9b@eucas1p2.samsung.com>
- <20200509234557.1124086-11-viro@ZenIV.linux.org.uk> <6f89732b-fba9-a947-6c61-5d1680747f3b@samsung.com>
- <20200514140720.GB23230@ZenIV.linux.org.uk> <f6fcfa46-6271-45ea-37c2-62bcf0a607cb@samsung.com>
- <20200514174131.GD23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200514174131.GD23230@ZenIV.linux.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 May 2020 22:21:46 +0200
-Message-ID: <CAMuHMdV78Y2Y_vkvbs2nt5LjM7D9te3ozr71_o2uGoNHSK4u=Q@mail.gmail.com>
-Subject: Re: [PATCH 11/20] amifb: get rid of pointless access_ok() calls
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Al,
 
-On Thu, May 14, 2020 at 7:43 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Thu, May 14, 2020 at 04:25:35PM +0200, Bartlomiej Zolnierkiewicz wrote:
-> > Thank you for in-detail explanations, for this patch:
-> >
-> > Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> >
-> > Could you also please take care of adding missing checks for {get,put}_user()
-> > failures later?
->
-> Umm...  OK; put_user() side is trivial -  the interesting part is what to do
-> about get_user() failures halfway through.  Right now it treats them as
-> "we'd read zeroes".  On anything else I would say "screw it, memdup_user()
-> the damn thing on the way in and copy from there", but... Amiga has how
-> much RAM, again?
+--=-EPXKkKrztE/RJuZN2zTS
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In theory, up to 3.5 GiB ;-)
-In practice, 16 MiB is already a lot (mine has 12).
+On Thu, 2020-05-14 at 14:04 -0500, Nathan Lynch wrote:
+> I checked with partition firmware development and these calls can be
+> used concurrently with arbitrary other RTAS calls, which confirms your
+> interpretation. Thanks for bearing with me.
 
-> OTOH, from my reading of that code it does appear to be limited to
-> 4Kb of data to copy, so it's probably OK...  Hell knows - I'm really
-> confused by those #ifdef __mc68000__ in there; the driver *is*
-> amiga-only:
-> obj-$(CONFIG_FB_AMIGA)            += amifb.o c2p_planar.o
-> config FB_AMIGA
->         tristate "Amiga native chipset support"
->         depends on FB && AMIGA
-> and AMIGA is defined only in arch/m68k/Kconfig.machine.  So how the
-> hell can it *not* be true?  OTOH, it looks like hand-optimized
-> asm equivalents of C they have in #else, so that #else might be
-> meant to document what's going on...
+I was not aware of how I could get this information.=20
+It was of great help!
 
-These #ifdefs are relics from APUS (Amiga Power-Up System), which
-added a PPC board.  APUS support was killed off a long time ago,
-when arch/ppc/ was still king, but these #ifdefs were missed, because
-they didn't test for CONFIG_APUS.
+Thank you for your contribution!
 
-Gr{oetje,eeting}s,
+--=-EPXKkKrztE/RJuZN2zTS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-                        Geert
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+iQJIBAABCAAyFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl69qIIUHGxlb2JyYXMu
+Y0BnbWFpbC5jb20ACgkQlQYWtz9SttT40g//RNI2FQvkeWJdspK33RxnVszosgPu
+Lk03U8D3Ca/7opCRu9imULxme2ZKN9fhdMuDTEVTZ/C6ePnvjZzW7nTsR+a9PPvf
+poRp1ax1tO9MUKpvgTYp2B90juREk/QXG6zlkRqX8DXtpYvTUP8V5eaTu2caDux0
+nUaidimSlHC91rBNy8RIcDUbYK528eqSy0NGDO1Ne6vnx8+Nldia8m7wEZ1phfbi
++2HkT6pPBLdBNz99u5tyoRMwst/oYpXyZxn76dIN1YfDWMr1MvykORh2L1U00Bi1
+F+mc37I59b7qjMoaPaLIdUe0xHHld3LWnTy8QzAl3Bc38HU1tr7ArZbtqKEk13ra
+za+NI3BUFp/kWCjnc3gS/YFIEvHQFSytI1b9MGVtfek6a5VaGMzndbqD+Jq7Oxb3
+Lajb28yhcsWClaNt/9Ahh5cV2wEQFq/+BMpzIt0xHu1XOsrKzF8IgK5VZgJynnew
+Z5anm6d1v1sv8A1S4morQgeNTVHWt5UPGkUuNLHTst8lCw/ZxZ3f5C1vSAC/+JD/
+qFNShRviePOrW2Lhcw4PJ/6MHIVFhBkI/PA1FvDBO6ikB+9dyheim4dt6Khqa7CE
+tWmEdPtQvUGahm9pitZaSrDtDcEhh6hKgjfQ2oYgUuy4zWpWj3khldRfOZ4Yj5nw
+mERoUCtRtutfCT4=
+=FQdj
+-----END PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=-EPXKkKrztE/RJuZN2zTS--
+
