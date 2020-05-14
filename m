@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6F6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE02C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A387B206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA1920727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483048;
-	bh=vrzhGL7SuHBe2px6S5O4M+HMKDdLb8UmSBWBYruGUag=;
+	s=default; t=1589483055;
+	bh=1doIepixfBvAmZeI1g5ivNd1DvuwcCmBcvuTbbMX9vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y29WilHhYoiPKMu0vPOO0EhzaS0M6vx28QM14mfgBMbAVBTV5k7OA+1enC644abKS
-	 LohZRpVhs2nyV1wlQCH+hTy1LgMmL+grhFRq039gPwardh4qFycM4ntGzvZz0SiQeq
-	 Fkx+ftWrG2qF1ds3uJbDBKWKlKP8VbYYZx1cRit4=
+	b=hoUxE3IYUC72EOURFSxHudaKlVw2Vcdfi7uT4S5kPk/aMsn1af2FjviqqVKY9GRUc
+	 bLiFv0ezQh3Y7/YoR4XDDqhL0vex3PfTKT2gKZGMTQSZW/W84m0BnJ0i74bnA9FiBH
+	 WH6P06fL4oa/jKK/DFcrnA0VF3kLYDL/mm24jubc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgENSyf (ORCPT
+        id S1728804AbgENTEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:54:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54176 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:04:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728995AbgENSyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:54:18 -0400
+        id S1729102AbgENSye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A11A206F1;
-        Thu, 14 May 2020 18:54:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF469206F1;
+        Thu, 14 May 2020 18:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482457;
-        bh=vrzhGL7SuHBe2px6S5O4M+HMKDdLb8UmSBWBYruGUag=;
+        s=default; t=1589482473;
+        bh=1doIepixfBvAmZeI1g5ivNd1DvuwcCmBcvuTbbMX9vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P72OhY2gIQ/qajSpIoShhel8GPCUl+1X4beML//vmJISkiK+wtVPW6/EBWT3UhGOa
-         JOhi2+X5H/5Mub57+mYp8mcO5UEOBchzSaObsPpb4hon20BAnJIZ3JM9kxVYZumZwI
-         Z2Q3Jhhb/HGRono+aU6eCm/zqvw01RlTFQIVhR58=
+        b=1CGvdFys0Cgz1LFCFWs0kwkZVHh1Gmwp5AJJYnJvVWgjAjj+UhqWtS585caPwwdMm
+         +l66bV/ohiO2e1FGqKqVoYg9mOSa1+CwhekNmIrW7oHdRyLnEG4mBWHJ0Qa8MqkETA
+         30eMVmT2Wi9d/5QehStGFTZ89lGPSmo5D+h7UC9Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Pierret=20=28fepitre=29?= 
-        <frederic.pierret@qubes-os.org>, Kees Cook <keescook@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        kernel-hardening@lists.openwall.com
-Subject: [PATCH AUTOSEL 4.19 02/31] gcc-common.h: Update for GCC 10
-Date:   Thu, 14 May 2020 14:53:44 -0400
-Message-Id: <20200514185413.20755-2-sashal@kernel.org>
+Cc:     Daniel Playfair Cal <daniel.playfair.cal@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 16/31] HID: i2c-hid: reset Synaptics SYNA2393 on resume
+Date:   Thu, 14 May 2020 14:53:58 -0400
+Message-Id: <20200514185413.20755-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185413.20755-1-sashal@kernel.org>
 References: <20200514185413.20755-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,85 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frédéric Pierret (fepitre) <frederic.pierret@qubes-os.org>
+From: Daniel Playfair Cal <daniel.playfair.cal@gmail.com>
 
-[ Upstream commit c7527373fe28f97d8a196ab562db5589be0d34b9 ]
+[ Upstream commit 538f67407e2c0e5ed2a46e7d7ffa52f2e30c7ef8 ]
 
-Remove "params.h" include, which has been dropped in GCC 10.
+On the Dell XPS 9570, the Synaptics SYNA2393 touchpad generates spurious
+interrupts after resuming from suspend until it receives some input or
+is reset. Add it to the quirk I2C_HID_QUIRK_RESET_ON_RESUME so that it
+is reset when resuming from suspend.
 
-Remove is_a_helper() macro, which is now defined in gimple.h, as seen
-when running './scripts/gcc-plugin.sh g++ g++ gcc':
+More information about the bug can be found in this mailing list
+discussion: https://www.spinics.net/lists/linux-input/msg59530.html
 
-In file included from <stdin>:1:
-./gcc-plugins/gcc-common.h:852:13: error: redefinition of ‘static bool is_a_helper<T>::test(U*) [with U = const gimple; T = const ggoto*]’
-  852 | inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
-      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from ./gcc-plugins/gcc-common.h:125,
-                 from <stdin>:1:
-/usr/lib/gcc/x86_64-redhat-linux/10/plugin/include/gimple.h:1037:1: note: ‘static bool is_a_helper<T>::test(U*) [with U = const gimple; T = const ggoto*]’ previously declared here
- 1037 | is_a_helper <const ggoto *>::test (const gimple *gs)
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Add -Wno-format-diag to scripts/gcc-plugins/Makefile to avoid
-meaningless warnings from error() formats used by plugins:
-
-scripts/gcc-plugins/structleak_plugin.c: In function ‘int plugin_init(plugin_name_args*, plugin_gcc_version*)’:
-scripts/gcc-plugins/structleak_plugin.c:253:12: warning: unquoted sequence of 2 consecutive punctuation characters ‘'-’ in format [-Wformat-diag]
-  253 |   error(G_("unknown option '-fplugin-arg-%s-%s'"), plugin_name, argv[i].key);
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Signed-off-by: Frédéric Pierret (fepitre) <frederic.pierret@qubes-os.org>
-Link: https://lore.kernel.org/r/20200407113259.270172-1-frederic.pierret@qubes-os.org
-[kees: include -Wno-format-diag for plugin builds]
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Daniel Playfair Cal <daniel.playfair.cal@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/gcc-plugins/Makefile     | 1 +
- scripts/gcc-plugins/gcc-common.h | 4 ++++
+ drivers/hid/hid-ids.h              | 3 +++
+ drivers/hid/i2c-hid/i2c-hid-core.c | 2 ++
  2 files changed, 5 insertions(+)
 
-diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
-index aa0d0ec6936d7..9e95862f27882 100644
---- a/scripts/gcc-plugins/Makefile
-+++ b/scripts/gcc-plugins/Makefile
-@@ -11,6 +11,7 @@ else
-   HOST_EXTRACXXFLAGS += -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=gnu++98 -fno-rtti
-   HOST_EXTRACXXFLAGS += -fno-exceptions -fasynchronous-unwind-tables -ggdb
-   HOST_EXTRACXXFLAGS += -Wno-narrowing -Wno-unused-variable
-+  HOST_EXTRACXXFLAGS += -Wno-format-diag
-   export HOST_EXTRACXXFLAGS
- endif
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 2a9cec9764cf9..e071fd3c6b2b0 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1064,6 +1064,9 @@
+ #define USB_DEVICE_ID_SYMBOL_SCANNER_2	0x1300
+ #define USB_DEVICE_ID_SYMBOL_SCANNER_3	0x1200
  
-diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
-index 17f06079a7123..9ad76b7f3f10e 100644
---- a/scripts/gcc-plugins/gcc-common.h
-+++ b/scripts/gcc-plugins/gcc-common.h
-@@ -35,7 +35,9 @@
- #include "ggc.h"
- #include "timevar.h"
- 
-+#if BUILDING_GCC_VERSION < 10000
- #include "params.h"
-+#endif
- 
- #if BUILDING_GCC_VERSION <= 4009
- #include "pointer-set.h"
-@@ -847,6 +849,7 @@ static inline gimple gimple_build_assign_with_ops(enum tree_code subcode, tree l
- 	return gimple_build_assign(lhs, subcode, op1, op2 PASS_MEM_STAT);
- }
- 
-+#if BUILDING_GCC_VERSION < 10000
- template <>
- template <>
- inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
-@@ -860,6 +863,7 @@ inline bool is_a_helper<const greturn *>::test(const_gimple gs)
- {
- 	return gs->code == GIMPLE_RETURN;
- }
-+#endif
- 
- static inline gasm *as_a_gasm(gimple stmt)
- {
++#define I2C_VENDOR_ID_SYNAPTICS     0x06cb
++#define I2C_PRODUCT_ID_SYNAPTICS_SYNA2393   0x7a13
++
+ #define USB_VENDOR_ID_SYNAPTICS		0x06cb
+ #define USB_DEVICE_ID_SYNAPTICS_TP	0x0001
+ #define USB_DEVICE_ID_SYNAPTICS_INT_TP	0x0002
+diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+index f2c8c59fc5823..f17ebbe53abf0 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-core.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -187,6 +187,8 @@ static const struct i2c_hid_quirks {
+ 		 I2C_HID_QUIRK_BOGUS_IRQ },
+ 	{ USB_VENDOR_ID_ALPS_JP, HID_ANY_ID,
+ 		 I2C_HID_QUIRK_RESET_ON_RESUME },
++	{ I2C_VENDOR_ID_SYNAPTICS, I2C_PRODUCT_ID_SYNAPTICS_SYNA2393,
++		 I2C_HID_QUIRK_RESET_ON_RESUME },
+ 	{ USB_VENDOR_ID_ITE, I2C_DEVICE_ID_ITE_LENOVO_LEGION_Y720,
+ 		I2C_HID_QUIRK_BAD_INPUT_SIZE },
+ 	{ 0, 0 }
 -- 
 2.20.1
 
