@@ -2,101 +2,135 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF684C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 869AC206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:23:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lA/ox8Sx"
+	by mail.kernel.org (Postfix) with ESMTP id DE3CD206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:23:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgENGXX (ORCPT
+        id S1726471AbgENGXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 02:23:23 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17957 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgENGXU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 02:23:20 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ebce38d0000>; Wed, 13 May 2020 23:22:05 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 13 May 2020 23:23:20 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 13 May 2020 23:23:20 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 14 May
- 2020 06:23:19 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 14 May 2020 06:23:19 +0000
-Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ebce3d40000>; Wed, 13 May 2020 23:23:18 -0700
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [PATCH V3 8/8] phy: tegra: xusb: Enable charger detect for Tegra210
-Date:   Thu, 14 May 2020 11:52:43 +0530
-Message-ID: <1589437363-16727-9-git-send-email-nkristam@nvidia.com>
+        Thu, 14 May 2020 02:23:32 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:36940 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726098AbgENGXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 02:23:00 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B758620022F;
+        Thu, 14 May 2020 08:22:57 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E6986200247;
+        Thu, 14 May 2020 08:22:53 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8178D402B4;
+        Thu, 14 May 2020 14:22:48 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        robh+dt@kernel.org, tremyfr@gmail.com, p.bruenn@beckhoff.com,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 2/2] dt-bindings: rtc: Convert MXC RTC V2 to json-schema
+Date:   Thu, 14 May 2020 14:13:25 +0800
+Message-Id: <1589436805-22923-2-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589437363-16727-1-git-send-email-nkristam@nvidia.com>
-References: <1589437363-16727-1-git-send-email-nkristam@nvidia.com>
-X-NVConfidentiality: public
-MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589437325; bh=JdPaxz2ZR9EpiOJ34rlWuJacCo/o+9AwhoQ7gUgbCD0=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=lA/ox8SxdSZPpf4kFOKT66rKuEUPjPRp5Z529kTxlsOWY9EiprkxtJ8J95THi+8XO
-         4NTKnJGf5O6gQD9zgXUBZBBu5u1Dht7YzNYd/quhzyCHIdQKPEXxIODekYNPBO/p5l
-         H3AdBDPTT1ynLaQE+/eeNu/U4oHEWqe2kw8YGzJxSIk82G/DNR1zsx21zfcmNmVI1D
-         hRotYw+4orN/8bKXfXFWBglgh0CWXILjsL/db9GrxIBSok01IQJluM/Tr/9GseFeOr
-         InPR18rmSUueH02D0x+72F4fc7+0oA4CJ9TxZ9aOqHYw4X64JRY3sQO3hl2H8mNS32
-         qp3gCkwGuI8Zg==
+In-Reply-To: <1589436805-22923-1-git-send-email-Anson.Huang@nxp.com>
+References: <1589436805-22923-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra210 SoC supports charger detect, set corresponding soc flag.
+Convert the MXC RTC V2 binding to DT schema format using json-schema.
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-V3:
- - Used supports_charger_detect name instead of charger_detect.
- - Added Acked-by updates to commit message.
----
-V2:
- - Patch re-based.
----
- drivers/phy/tegra/xusb-tegra210.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/rtc/rtc-mxc_v2.txt         | 17 --------
+ .../devicetree/bindings/rtc/rtc-mxc_v2.yaml        | 46 ++++++++++++++++++++++
+ 2 files changed, 46 insertions(+), 17 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rtc/rtc-mxc_v2.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mxc_v2.yaml
 
-diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
-index 80c4349..db2a1ab 100644
---- a/drivers/phy/tegra/xusb-tegra210.c
-+++ b/drivers/phy/tegra/xusb-tegra210.c
-@@ -2353,6 +2353,7 @@ const struct tegra_xusb_padctl_soc tegra210_xusb_padctl_soc = {
- 	.supply_names = tegra210_xusb_padctl_supply_names,
- 	.num_supplies = ARRAY_SIZE(tegra210_xusb_padctl_supply_names),
- 	.need_fake_usb3_port = true,
-+	.supports_charger_detect = true,
- };
- EXPORT_SYMBOL_GPL(tegra210_xusb_padctl_soc);
- 
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-mxc_v2.txt b/Documentation/devicetree/bindings/rtc/rtc-mxc_v2.txt
+deleted file mode 100644
+index 79d7e87..0000000
+--- a/Documentation/devicetree/bindings/rtc/rtc-mxc_v2.txt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-* i.MX53 Secure Real Time Clock (SRTC)
+-
+-Required properties:
+-- compatible: should be: "fsl,imx53-rtc"
+-- reg: physical base address of the controller and length of memory mapped
+-  region.
+-- clocks: should contain the phandle for the rtc clock
+-- interrupts: rtc alarm interrupt
+-
+-Example:
+-
+-rtc@53fa4000 {
+-	compatible = "fsl,imx53-rtc";
+-	reg = <0x53fa4000 0x4000>;
+-	interrupts = <24>;
+-	clocks = <&clks IMX5_CLK_SRTC_GATE>;
+-};
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-mxc_v2.yaml b/Documentation/devicetree/bindings/rtc/rtc-mxc_v2.yaml
+new file mode 100644
+index 0000000..2d1a306
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-mxc_v2.yaml
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rtc/rtc-mxc_v2.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: i.MX53 Secure Real Time Clock (SRTC)
++
++allOf:
++  - $ref: "rtc.yaml#"
++
++maintainers:
++  - Patrick Bruenn <p.bruenn@beckhoff.com>
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx53-rtc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx5-clock.h>
++
++    rtc@53fa4000 {
++        compatible = "fsl,imx53-rtc";
++        reg = <0x53fa4000 0x4000>;
++        interrupts = <24>;
++        clocks = <&clks IMX5_CLK_SRTC_GATE>;
++    };
 -- 
 2.7.4
 
