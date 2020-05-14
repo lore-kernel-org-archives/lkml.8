@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B385BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151EDC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E63C2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25C520675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482820;
-	bh=+LKZG9LSuFijEBrU+nF23DPHydaXVUmj3LMpIiofhBo=;
+	s=default; t=1589482822;
+	bh=bHdvG3V+cRt4VsuuMeScm5UtgDdc/bM/8nMMg9log5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k6VKXhGoW7tU8MxgvqNX+V7KXQdlNOP0+rwtM6UZA4/uQXVyQChgt1GSLp3CI8GmL
-	 nE9e87tBZkTI642GlMUicUEhfszUk+i/hrEaS7JDgE1Z9Wprzydc76Jdoz0SUJVmqp
-	 FkqEgcFx+ju9pzRX0hg9vZFgyfphjiVOFV5zwaNU=
+	b=spF6yyMcUC0CygMqWNlrYM4NRqKiYZK462jCunN1e7EdOBXyLINa9Agx+BEGIBF+X
+	 MTV6plEcIDYbWT+4Ofu8PXrneIobotyVl34M+S/DDUZmSVma5ELo1qS7Bgbj+YvHh5
+	 gHWth99R3cD0tkwD61HBBv24JhDtOHkWXw6ctP9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbgENSzt (ORCPT
+        id S1729515AbgENTAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:55:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56212 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:00:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729415AbgENSzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:36 -0400
+        id S1729495AbgENSzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A27B20727;
-        Thu, 14 May 2020 18:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 623AE206DC;
+        Thu, 14 May 2020 18:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482535;
-        bh=+LKZG9LSuFijEBrU+nF23DPHydaXVUmj3LMpIiofhBo=;
+        s=default; t=1589482548;
+        bh=bHdvG3V+cRt4VsuuMeScm5UtgDdc/bM/8nMMg9log5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OGCBC2KzsfCOFNiD39oH7PP6F2gJckV3NM0AAJk6fslQfwSNo3xuOANWWZJJnCnil
-         ZvKGHmSEiUZRfLJ5uZ53Y/ksyb/IZsNvb3FsZjMx7DNMkcwwEUEdvx3zzymhLTrTV7
-         U6Q5oPLOCi0jhe3TdTas5aeVgUk1e5asy3oPncnw=
+        b=fvGD8EZD5czHaGF7wtjfIb2gotMsaqAEeoEdSknAv8jntH77aR8ZKNf9SX3i+qGXD
+         4d2qd8UkODduYnGQxyaLqltb07p1wAhnR0HZfhIjt61vjKVvExw1slcH5GhzhapgE7
+         ARKzWe6eHrhA2EBd0JFRMzCnVKWk+nJa1jFNu0zg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Leon Romanovsky <leon@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 29/39] x86/apic: Move TSC deadline timer debug printk
-Date:   Thu, 14 May 2020 14:54:46 -0400
-Message-Id: <20200514185456.21060-29-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 39/39] crypto: xts - simplify error handling in ->create()
+Date:   Thu, 14 May 2020 14:54:56 -0400
+Message-Id: <20200514185456.21060-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
 References: <20200514185456.21060-1-sashal@kernel.org>
@@ -59,130 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit c84cb3735fd53c91101ccdb191f2e3331a9262cb ]
+[ Upstream commit 732e540953477083082e999ff553622c59cffd5f ]
 
-Leon reported that the printk_once() in __setup_APIC_LVTT() triggers a
-lockdep splat due to a lock order violation between hrtimer_base::lock and
-console_sem, when the 'once' condition is reset via
-/sys/kernel/debug/clear_warn_once after boot.
+Simplify the error handling in the XTS template's ->create() function by
+taking advantage of crypto_drop_skcipher() now accepting (as a no-op) a
+spawn that hasn't been grabbed yet.
 
-The initial printk cannot trigger this because that happens during boot
-when the local APIC timer is set up on the boot CPU.
-
-Prevent it by moving the printk to a place which is guaranteed to be only
-called once during boot.
-
-Mark the deadline timer check related functions and data __init while at
-it.
-
-Reported-by: Leon Romanovsky <leon@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87y2qhoshi.fsf@nanos.tec.linutronix.de
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ crypto/xts.c | 28 +++++++++++-----------------
+ 1 file changed, 11 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 6415b4aead546..48ab5fdd10442 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -353,8 +353,6 @@ static void __setup_APIC_LVTT(unsigned int clocks, int oneshot, int irqen)
- 		 * According to Intel, MFENCE can do the serialization here.
- 		 */
- 		asm volatile("mfence" : : : "memory");
+diff --git a/crypto/xts.c b/crypto/xts.c
+index e31828ed00466..c8ab2e0cda47c 100644
+--- a/crypto/xts.c
++++ b/crypto/xts.c
+@@ -525,15 +525,15 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+ 
+ 	err = -EINVAL;
+ 	if (alg->base.cra_blocksize != XTS_BLOCK_SIZE)
+-		goto err_drop_spawn;
++		goto err_free_inst;
+ 
+ 	if (crypto_skcipher_alg_ivsize(alg))
+-		goto err_drop_spawn;
++		goto err_free_inst;
+ 
+ 	err = crypto_inst_setname(skcipher_crypto_instance(inst), "xts",
+ 				  &alg->base);
+ 	if (err)
+-		goto err_drop_spawn;
++		goto err_free_inst;
+ 
+ 	err = -EINVAL;
+ 	cipher_name = alg->base.cra_name;
+@@ -546,20 +546,20 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+ 
+ 		len = strlcpy(ctx->name, cipher_name + 4, sizeof(ctx->name));
+ 		if (len < 2 || len >= sizeof(ctx->name))
+-			goto err_drop_spawn;
++			goto err_free_inst;
+ 
+ 		if (ctx->name[len - 1] != ')')
+-			goto err_drop_spawn;
++			goto err_free_inst;
+ 
+ 		ctx->name[len - 1] = 0;
+ 
+ 		if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
+ 			     "xts(%s)", ctx->name) >= CRYPTO_MAX_ALG_NAME) {
+ 			err = -ENAMETOOLONG;
+-			goto err_drop_spawn;
++			goto err_free_inst;
+ 		}
+ 	} else
+-		goto err_drop_spawn;
++		goto err_free_inst;
+ 
+ 	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_ASYNC;
+ 	inst->alg.base.cra_priority = alg->base.cra_priority;
+@@ -583,17 +583,11 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+ 	inst->free = free;
+ 
+ 	err = skcipher_register_instance(tmpl, inst);
+-	if (err)
+-		goto err_drop_spawn;
 -
--		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
- 		return;
- 	}
- 
-@@ -553,7 +551,7 @@ static DEFINE_PER_CPU(struct clock_event_device, lapic_events);
- #define DEADLINE_MODEL_MATCH_REV(model, rev)	\
- 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)rev }
- 
--static u32 hsx_deadline_rev(void)
-+static __init u32 hsx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x3a; /* EP */
-@@ -563,7 +561,7 @@ static u32 hsx_deadline_rev(void)
- 	return ~0U;
+-out:
+-	return err;
+-
+-err_drop_spawn:
+-	crypto_drop_skcipher(&ctx->spawn);
++	if (err) {
+ err_free_inst:
+-	kfree(inst);
+-	goto out;
++		free(inst);
++	}
++	return err;
  }
  
--static u32 bdx_deadline_rev(void)
-+static __init u32 bdx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x00000011;
-@@ -575,7 +573,7 @@ static u32 bdx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static u32 skx_deadline_rev(void)
-+static __init u32 skx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x03: return 0x01000136;
-@@ -588,7 +586,7 @@ static u32 skx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static const struct x86_cpu_id deadline_match[] = {
-+static const struct x86_cpu_id deadline_match[] __initconst = {
- 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_HASWELL_X,	hsx_deadline_rev),
- 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_X,	0x0b000020),
- 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_BROADWELL_XEON_D,	bdx_deadline_rev),
-@@ -610,18 +608,19 @@ static const struct x86_cpu_id deadline_match[] = {
- 	{},
- };
- 
--static void apic_check_deadline_errata(void)
-+static __init bool apic_validate_deadline_timer(void)
- {
- 	const struct x86_cpu_id *m;
- 	u32 rev;
- 
--	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER) ||
--	    boot_cpu_has(X86_FEATURE_HYPERVISOR))
--		return;
-+	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
-+		return false;
-+	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-+		return true;
- 
- 	m = x86_match_cpu(deadline_match);
- 	if (!m)
--		return;
-+		return true;
- 
- 	/*
- 	 * Function pointers will have the MSB set due to address layout,
-@@ -633,11 +632,12 @@ static void apic_check_deadline_errata(void)
- 		rev = (u32)m->driver_data;
- 
- 	if (boot_cpu_data.microcode >= rev)
--		return;
-+		return true;
- 
- 	setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
- 	pr_err(FW_BUG "TSC_DEADLINE disabled due to Errata; "
- 	       "please update microcode to version: 0x%x (or later)\n", rev);
-+	return false;
- }
- 
- /*
-@@ -1914,7 +1914,8 @@ void __init init_apic_mappings(void)
- {
- 	unsigned int new_apicid;
- 
--	apic_check_deadline_errata();
-+	if (apic_validate_deadline_timer())
-+		pr_debug("TSC deadline timer available\n");
- 
- 	if (x2apic_mode) {
- 		boot_cpu_physical_apicid = read_apic_id();
+ static struct crypto_template crypto_tmpl = {
 -- 
 2.20.1
 
