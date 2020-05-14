@@ -2,94 +2,128 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F90C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CABFCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83DB020734
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DF920709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:43:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RZ4s9HiG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vgRWK6jH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgENWnV (ORCPT
+        id S1728795AbgENWnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 18:43:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56326 "EHLO
+        Thu, 14 May 2020 18:43:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728229AbgENWnU (ORCPT
+        by vger.kernel.org with ESMTP id S1728229AbgENWng (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 18:43:20 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 688B3C061A0C;
-        Thu, 14 May 2020 15:43:20 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49NRQZ5bMbz9sTD;
-        Fri, 15 May 2020 08:43:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589496199;
-        bh=aAaREl4wtg8m5bBBhlWrMHr+r5xP6gQjE/JEICeZG3E=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RZ4s9HiGzxEgAqvB5xZBrLAwG2138vTNReky3++q8UxUblS81Q/9jEgkdGpXNmLTr
-         jVNJmbaBbPM+NAOdgNAX7hxlEtJOhvWuhKqGutN0C9g3eXKhLcHYywB9EYcLDCPchc
-         xuTg36JRQ03Qa47NoAqBWxHPFpfzbU+etvb+xo6CiofvlAZVqL+o+g4zdsAAJUhV4E
-         8nQtf9m/fjbfHRN7HmDDI2N7YSVqNF2Bzpc5i8jAtGes2HWKv2Ym69vKQxYJ33eDAU
-         C+Y22ASqVs+jNoT8ULIb5iffQ6aqkmy32HLhBuvK6uEITBkAYNKdN3IFgFqTZca55s
-         kL5Z2PNdUTn6g==
-Date:   Fri, 15 May 2020 08:43:17 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commits in the rcu tree
-Message-ID: <20200515084317.7deae61a@canb.auug.org.au>
+        Thu, 14 May 2020 18:43:36 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8492C061A0C;
+        Thu, 14 May 2020 15:43:36 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t40so96301pjb.3;
+        Thu, 14 May 2020 15:43:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version;
+        bh=z4rDFOjoDHp3m5X99/G3ebYd8yR50/aoIzPUOG1GLcs=;
+        b=vgRWK6jHB5dSs0OdLSkzBqWuiOcjVqUf7U1pq6WxzFS3AOr5DsU09OluLm/WYODRdo
+         Y+VoaK5bpdEauvoXop/3xWI7mt45dPeGuwJD+SExWfMpWiMISoVtilmlf33/WsdFmWYr
+         VB15Dh099Z/elzl5Emo2PhsygoVhSv/3P380nkgzx4lWvXoBtVV2E12WmnHBMV1gQRKd
+         iFr5Leb36weuTSM8CE3BsKHS7WD2t4e8qT6z2y/tBZT2kU9LT7HONV6XTlf/EaeysXd9
+         xk8mdtxY2o0+d8KjRmdgRJ1Kde6x67LMfkVIE4IJEChyaV6q20t3JJ8XZm8wF9r6aGfz
+         gy9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version;
+        bh=z4rDFOjoDHp3m5X99/G3ebYd8yR50/aoIzPUOG1GLcs=;
+        b=dmz7LbtliO8pw7N4fwQgE9uP9Fn2abaEo4NTiV6KvRfX8UTB8IWxI4e+APcji/n+H1
+         xGgeyic0O1j60Hfm55TfUCxan6rMJx19RkU6x451PwYF4ZX0S0VbT4ML4tvzuuIwPyyF
+         RftnP1S1PPdk09ebkA7SmdzUjcmw4JGr7Gnd31n0xRXMq0PtQhpebPQKMYEa5bzbtYQ7
+         wafAijLmFLPMXkPmT5BRiyZ5T4i/bIzrwIZBtknzE57tdCxP9fEsbd2X6L/IXmJ9MG41
+         WJSzJpAQr97cMCzhIHk+hy1eACsFAdRg66XoZMQOpG+Foj5c9HwmQlkvUY5tL4/+CHaa
+         iBGQ==
+X-Gm-Message-State: AOAM530E8s58pwB2qAnOgOdiOgOjjBXSDnI1+eUDp0jzW2tyozaEAwLz
+        e6kUcuWTF+nLlTnTFYjeUbToCapuPNE=
+X-Google-Smtp-Source: ABdhPJxRdYS3RxsROzFtMgICDF2TbSfVVVKzTQX7K+Ozr1D8pgvkYTedmXkVgF4ITFfBsxskIhpYbQ==
+X-Received: by 2002:a17:90a:cb09:: with SMTP id z9mr264097pjt.120.1589496216213;
+        Thu, 14 May 2020 15:43:36 -0700 (PDT)
+Received: from localhost (cpc158779-hari22-2-0-cust230.20-2.cable.virginm.net. [86.22.86.231])
+        by smtp.gmail.com with ESMTPSA id mn1sm69221pjb.24.2020.05.14.15.43.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 15:43:35 -0700 (PDT)
+From:   Yuxuan Shui <yshuiv7@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     masahiroy@kernel.org, michal.lkml@markovi.net,
+        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] kbuild: compile_h: fix compiler version detection with clang
+Date:   Thu, 14 May 2020 23:19:05 +0100
+Message-ID: <87imgykunh.fsf@m5Zedd9JOGzJrf0>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/mcZlU9e8Bi.SUIOyAez9_CP";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/mcZlU9e8Bi.SUIOyAez9_CP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+--=-=-=
+Content-Type: text/plain
 
-Hi all,
-Commits
 
-  b2998782ded4 ("Documentation/litmus-tests: Clarify about the RCU pre-init=
-ialization test")
-  663f9202eb8a ("Documentation/litmus-tests: Merge atomic's README into top=
--level one")
-  f5eff20366f6 ("tools/memory-model: Fix reference to litmus test in recipe=
-s.txt")
+In some setup clang will print a line about CUDA version it detects,
+like this:
 
-are missing a Signed-off-by from their committer.
+    Found CUDA installation: /opt/cuda, version 10.1
 
---=20
-Cheers,
-Stephen Rothwell
+So grepping ' version ' matches 2 lines, and results in a broken string in
+compiler.h, which doesn't compile.
 
---Sig_/mcZlU9e8Bi.SUIOyAez9_CP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+This commit adds a "head -n1" to fix this problem.
+
+Signed-off-by: Yuxuan Shui <yshuiv7@gmail.com>
+---
+ scripts/mkcompile_h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
+index 5b80a4699740..8e6b4fc6fdd9 100755
+--- a/scripts/mkcompile_h
++++ b/scripts/mkcompile_h
+@@ -62,7 +62,7 @@ UTS_VERSION="$(echo $UTS_VERSION $CONFIG_FLAGS $TIMESTAMP | cut -b -$UTS_LEN)"
+   printf '#define LINUX_COMPILE_BY "%s"\n' "$LINUX_COMPILE_BY"
+   echo \#define LINUX_COMPILE_HOST \"$LINUX_COMPILE_HOST\"
+
+-  CC_VERSION=$($CC -v 2>&1 | grep ' version ' | sed 's/[[:space:]]*$//')
++  CC_VERSION=$($CC -v 2>&1 | grep ' version ' | head -n1 | sed 's/[[:space:]]*$//')
+   LD_VERSION=$($LD -v | head -n1 | sed 's/(compatible with [^)]*)//' \
+ 		      | sed 's/[[:space:]]*$//')
+   printf '#define LINUX_COMPILER "%s"\n' "$CC_VERSION, $LD_VERSION"
+--
+2.26.2
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl69yYUACgkQAVBC80lX
-0GwOGAf+IkvkuLZuGvdy1FqMcRh1VgWgSvXseITJvxc2NBISGHpDS8L9YO9Ltv9H
-2z0yHN7CAXe/nfKdVeUd6tmclx1cBIJiriEzzcCcPXa3+bZ2O4i4D5uvjTUwYY0i
-Bc2KvgD/D9tjouJ7rQ4TyK7jJz8hx9cHDGG0uPj1ve4FF4dUntE1LaJ0satevSAU
-6JNfnu50R/0TTD1/2ZX211Gnt6cR5ukKTO7pniUf6wILiXg5VX/LHcpzHVlf19p3
-oBapgYZqxycSsTnnodJMgP4I91Rv3xmLw0bYr7K1oK5nzEC3ZOm7aAj+912Y72rF
-v7TTI8Rr3fYF8yGd7hzWBGSCIKzFxA==
-=vHT/
+iQIzBAEBCAAdFiEEL6EJkr0WlitWahBy06RAW+bMF/QFAl69yYwACgkQ06RAW+bM
+F/QVYA/+Iqa09i83Gi0bUr1ZSpujLj3Pke7A3qzGr1WxDx+WgeUsN466dtbmo3x3
+Gvxocu+lzO2fhJuG8/Lk3DcNUrpBaxi/qfTq5SXK0IMQmAbhIQRVVQw8Vz+C9nuk
+IatyTz5sgaBpVZlQzOs81bcfcF3Q1jlP57okNbZLIkhDk74seIRFddiY3gR3TNb1
+3VUQDmoPT7Xo0N7whzERmfzCPlrWZphDT8nh6OwOt/InJJPvB1i8235ckCZbhIty
+KFYH1nxB19QkURZ12zGxmnHJeGEXTc+Yy/NcpNH/lA1h2IvcD9qmE/E1TBoueiPy
+MrgxczwhPgjhzeNv0AwSK0JhjWEDl3Jg2GXNhngIckfn+DrEZN4WreF5fNZNctqs
+4+GOKreqGvJqXL9hUF6Pjwv/ef4zi3Py2qkJEQRxATPEf8Kk8t2Ok/Xkf+e0uRCL
+tWVlCbHtkotEjycImzNbyRGoquIfIamuidtq+k5Bs0OIGUETVK6hEng45F2PQ27E
+YHo7SXKDeQjrHHr/05ues02xecf0JRhvn/vBr8E/uddXAPEgYn25P7N5Al4KpMiV
+U7TlikB/r6V8IUfQjqki9qGaPmMGp790QNQwx/jR8hOPZ5aBN57qTcRM/NSs4vgl
+RFTwHAK9KrWpRsrU9E9s9BWXgGdTwKOjzAZpLX0jygr2iJXVjP4=
+=WfVw
 -----END PGP SIGNATURE-----
-
---Sig_/mcZlU9e8Bi.SUIOyAez9_CP--
+--=-=-=--
