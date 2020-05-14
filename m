@@ -4,59 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34760C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE62C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10DD720575
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6529D20575
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:52:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="TuXbyN+t"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="rPnfypHL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbgENHwD (ORCPT
+        id S1726032AbgENHwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 03:52:03 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:15116 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725878AbgENHwC (ORCPT
+        Thu, 14 May 2020 03:52:54 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:21232 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725878AbgENHwy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 03:52:02 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04E7kFxW027478;
-        Thu, 14 May 2020 00:51:59 -0700
+        Thu, 14 May 2020 03:52:54 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04E7jXLs003237;
+        Thu, 14 May 2020 00:52:46 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=pfpt0818; bh=p0U/UT02XfTdoUDIf9op35mOVWZuHekP8TFVGz1ZDjg=;
- b=TuXbyN+toTOfF7So1evvV7jLnbMEUF+3HSmnSYVzBXa55ywr9xjWGIsxTT7cmbi+cwn1
- GUkL1bzU0H8aIyhcKZyoldYFcgBFxso8xEHBosjuASSr9ja0pQeu+tUYy2Pc0jvQkb/K
- UPiE2dwcyvc0TioBpMAFlr9XuYc/2nZNaz9ZGyo5x5TbMgFmPDvR7Dc9DUvhMimA+wVm
- v5KtuIsnffoepYzgfZN+ybscd5kdNJinNAjHQflSVZOkCEBrjrouSSt3/76Y+dNGMl6w
- J7V/Ej9ms8zzVgXafsIaz2KwU09kLVzPi8K7QEYiLEUe5e6WXDWMWB6pffHAuj1V4iPa iQ== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 3100xk190s-1
+ subject : date : message-id : mime-version : content-type; s=pfpt0818;
+ bh=p0U/UT02XfTdoUDIf9op35mOVWZuHekP8TFVGz1ZDjg=;
+ b=rPnfypHLYFLgigPGKf4Mx/WClzb5hYR63tfkrzD/Ksg22dEkFLuv5pfoatbPDujevXVA
+ hszxfLeiS9NBUR1KOdEDUFREcEyRGXAUgD202CSwVyiUaQupd0P85h0v0fUXoK8E6o6b
+ KEPPcu1raiNix6fiD7EWDu5olo8VaibmODVIR0MqHYXJOLErI2lwp8OMLS1WOtX3gqDb
+ sBWYMlsfmiqEEijlFJdy3LPzjrZH8A2Iy8n5T/bllgnSANoj9nMSKeW3Fq2GNIWpj2t2
+ 1onOuePV5L3nUiES58zUmJ11G9xOduOMpSP85PAxzBNp/NvRf24ReLfrZ2kP+JKLm0yA +g== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 3100xah94d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 00:51:59 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 14 May
- 2020 00:51:56 -0700
-Received: from bbhushan2.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 14 May 2020 00:51:55 -0700
+        Thu, 14 May 2020 00:52:45 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 14 May
+ 2020 00:52:44 -0700
+Received: from bbhushan2.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 14 May 2020 00:52:41 -0700
 From:   Bharat Bhushan <bbhushan2@marvell.com>
 To:     <virtualization@lists.linux-foundation.org>,
         <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <virtio-dev@lists.oasis-open.org>
+        <virtio-dev@lists.oasis-open.org>, <jean-philippe@linaro.org>,
+        <joro@8bytes.org>, <mst@redhat.com>, <jasowang@redhat.com>,
+        <eric.auger.pro@gmail.com>, <eric.auger@redhat.com>
 CC:     Bharat Bhushan <bbhushan2@marvell.com>
 Subject: [PATCH v6] iommu/virtio: Use page size bitmap supported by endpoint
-Date:   Thu, 14 May 2020 13:21:51 +0530
-Message-ID: <20200514075152.3892-1-bbhushan2@marvell.com>
+Date:   Thu, 14 May 2020 13:22:37 +0530
+Message-ID: <20200514075237.3941-1-bbhushan2@marvell.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <jean-philippe@linaro.org, joro@8bytes.org, mst@redhat.com,
- jasowang@redhat.com, eric.auger.pro@gmail.com, eric.auger@redhat.com>
-References: <jean-philippe@linaro.org, joro@8bytes.org, mst@redhat.com,
- jasowang@redhat.com, eric.auger.pro@gmail.com, eric.auger@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
