@@ -2,109 +2,95 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE91C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9810206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7ABA206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgENGx7 (ORCPT
+        id S1726848AbgENGyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 02:53:59 -0400
-Received: from mga07.intel.com ([134.134.136.100]:24100 "EHLO mga07.intel.com"
+        Thu, 14 May 2020 02:54:21 -0400
+Received: from mga06.intel.com ([134.134.136.31]:7541 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726034AbgENGxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 02:53:21 -0400
-IronPort-SDR: umbg94bAomxyBiYfb35fxpqDOJQRiU/MfLwnxlZ4tzWB3hv3XAH8OpLyq1+0GOIFykn30lvQF2
- pegeQ6uUWYDw==
+        id S1725831AbgENGyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 02:54:20 -0400
+IronPort-SDR: 535MA8ZtMIyBUW8vsjtnyrkCsLFKvd83ypr1HKa4W+h6d3+Xl40iJNFMcBL2CHKwBznJug7GcX
+ FF6UPMTtTh3w==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 23:53:20 -0700
-IronPort-SDR: CoA/uy7sbXze7imXWR7ydgQ0P4Is3UOhFPWglk63t2c+7NwhmPaBBESk82Mk2xQUBWg3U7Ad1v
- u4OeNWSqJGag==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 23:54:19 -0700
+IronPort-SDR: nkEHClJUy5EN+12cO0GzcE+PG208sms75zq0FJ0TdmRIzrrgwGUM96plY7ZyhTWvdnE0t9cXYq
+ m6AAfNnjSqPA==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,390,1583222400"; 
-   d="scan'208";a="298613492"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 23:53:20 -0700
-From:   ira.weiny@intel.com
-To:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V1 2/9] fs/ext4: Disallow verity if inode is DAX
-Date:   Wed, 13 May 2020 23:53:08 -0700
-Message-Id: <20200514065316.2500078-3-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200514065316.2500078-1-ira.weiny@intel.com>
-References: <20200514065316.2500078-1-ira.weiny@intel.com>
+   d="scan'208";a="372145228"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 13 May 2020 23:54:16 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 14 May 2020 09:54:15 +0300
+Date:   Thu, 14 May 2020 09:54:15 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] kobject: Make sure the parent does not get released
+ before its children
+Message-ID: <20200514065415.GA1511@kuha.fi.intel.com>
+References: <20200513151840.36400-1-heikki.krogerus@linux.intel.com>
+ <CAFd5g44d+VCSimjboPkf-NF1eCdbq6Uy+pabNftB8p5Lj2yc1A@mail.gmail.com>
+ <e51d4ce4-42ba-8c89-21b4-082c7158a9a9@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e51d4ce4-42ba-8c89-21b4-082c7158a9a9@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On Wed, May 13, 2020 at 04:14:51PM -0700, Randy Dunlap wrote:
+> On 5/13/20 2:30 PM, Brendan Higgins wrote:
+> > On Wed, May 13, 2020 at 8:18 AM Heikki Krogerus
+> > <heikki.krogerus@linux.intel.com> wrote:
+> >>
+> >> In the function kobject_cleanup(), kobject_del(kobj) is
+> >> called before the kobj->release(). That makes it possible to
+> >> release the parent of the kobject before the kobject itself.
+> >>
+> >> To fix that, adding function __kboject_del() that does
+> >> everything that kobject_del() does except release the parent
+> >> reference. kobject_cleanup() then calls __kobject_del()
+> >> instead of kobject_del(), and separately decrements the
+> >> reference count of the parent kobject after kobj->release()
+> >> has been called.
+> >>
+> >> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> >> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> >> Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
+> >> Cc: Brendan Higgins <brendanhiggins@google.com>
+> >> Cc: Randy Dunlap <rdunlap@infradead.org>
+> >> Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
+> >> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > 
+> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> > Tested-by: Brendan Higgins <brendanhiggins@google.com>
+> > 
+> 
+> Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> Tested-by: Randy Dunlap <rdunlap@infradead.org>
 
-Verity and DAX are incompatible.  Changing the DAX mode due to a verity
-flag change is wrong without a corresponding address_space_operations
-update.
+Thanks guys. Sorry about the mix-up.
 
-Make the 2 options mutually exclusive by returning an error if DAX was
-set first.
+Br,
 
-(Setting DAX is already disabled if Verity is set first.)
-
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
----
-Changes:
-	remove WARN_ON_ONCE
-	Add documentation for DAX/Verity exclusivity
----
- Documentation/filesystems/ext4/verity.rst | 7 +++++++
- fs/ext4/verity.c                          | 3 +++
- 2 files changed, 10 insertions(+)
-
-diff --git a/Documentation/filesystems/ext4/verity.rst b/Documentation/filesystems/ext4/verity.rst
-index 3e4c0ee0e068..51ab1aa17e59 100644
---- a/Documentation/filesystems/ext4/verity.rst
-+++ b/Documentation/filesystems/ext4/verity.rst
-@@ -39,3 +39,10 @@ is encrypted as well as the data itself.
- 
- Verity files cannot have blocks allocated past the end of the verity
- metadata.
-+
-+Verity and DAX
-+--------------
-+
-+Verity and DAX are not compatible and attempts to set both of these flags on a
-+file will fail.
-+
-diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
-index dc5ec724d889..f05a09fb2ae4 100644
---- a/fs/ext4/verity.c
-+++ b/fs/ext4/verity.c
-@@ -113,6 +113,9 @@ static int ext4_begin_enable_verity(struct file *filp)
- 	handle_t *handle;
- 	int err;
- 
-+	if (IS_DAX(inode))
-+		return -EINVAL;
-+
- 	if (ext4_verity_in_progress(inode))
- 		return -EBUSY;
- 
 -- 
-2.25.1
-
+heikki
