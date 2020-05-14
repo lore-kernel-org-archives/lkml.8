@@ -2,157 +2,134 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E884AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F564C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBB6F206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:39:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q8byuDEV"
+	by mail.kernel.org (Postfix) with ESMTP id 10A7B2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbgENLjH (ORCPT
+        id S1726184AbgENLkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:39:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgENLjG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:39:06 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A91C061A0C;
-        Thu, 14 May 2020 04:39:05 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id c83so643535oob.6;
-        Thu, 14 May 2020 04:39:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZSwtCexk9nrc5wXHZb6xl7x3Ukus0pVklq+X0lXtP9M=;
-        b=q8byuDEV/HBaHutEfKPBCsOyJyKXLTe4fdppUu5YAyVeuJZ/cfy0kQWEcbAeRjIVy6
-         AZkToLQ6x/5AVr9U+gRwDb9fIvkuXhFu+VIWabcrx71puBIQSHn8hH7/T08WuZAGb2B7
-         Yn2cYkz3VxMdDJbOOAyk7jH906xTaQoGoFsaxjiRg+KFqP1wIS1AldxFzTqZs2TIC8F3
-         HdlclyNH5C5/2cRr3L16eW33oGDt2+ZZuwoot7brtKW68FMdUhy5Vm/2oO1mPQ2NKV8s
-         yuUbUGhQxHy2Dmp+DUlMBgnV8IwEZIzwfAfefoJkjWWveDDJSK548DuLRV7v6Pqr5Zw0
-         Rb2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZSwtCexk9nrc5wXHZb6xl7x3Ukus0pVklq+X0lXtP9M=;
-        b=GyP6RAwYDOtM+3PHRAcfKsm43Z6NW3oa8fItvWLIaRsxlfuJxoSsxhBWeba2Gw77C/
-         uFjRleKQKXh/EPL1c1gddIp5L8XwsBrBE1SWp1a/CtsBzcvqUmqL5GgQoWBP+8xaK0rq
-         T8RSRWKv0mOJkCA0jhxAX7zuSyz+3WSmf4aId+Go2scos+aObo1r1iYdnByP2colVfNQ
-         gMI9rvGDfDFsPz/teHyLPh34TRT5OK/1Xqlmvui6OkxetfclZ7m2CrDwlYPbOZKQfucx
-         oeRK4UQNPRXdv0yx/Ms3UdsG1EmlutByhEU39Mo0WvH2EyRKe9IvWdAa1Adib4kIlEC0
-         2OkQ==
-X-Gm-Message-State: AOAM53091IgKJ0NF6oUEpQVcQru4eywk1sv5BiVv2EGgX2Z/sKHzf7Lx
-        FsTurW0a2vljfcQ8NReN8Ru2adAsPL9i3Yk/qEc=
-X-Google-Smtp-Source: ABdhPJzpF/j77VZ1mUAB6oImvLDs5y+yw8Ffqf9KnZIjayJc7xQ/fTQmYbxSeR6K0/KuM1T7We9orB4e+Fb4bfMi4ag=
-X-Received: by 2002:a4a:a50e:: with SMTP id v14mr3145833ook.27.1589456345130;
- Thu, 14 May 2020 04:39:05 -0700 (PDT)
+        Thu, 14 May 2020 07:40:39 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:51860 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725925AbgENLkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 07:40:39 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn98kLr1eYKQ0AA--.4S3;
+        Thu, 14 May 2020 19:40:21 +0800 (CST)
+Subject: Re: [PATCH] MIPS: update tlb even if pte entry has no change
+To:     Mike Rapoport <rppt@linux.ibm.com>
+References: <1589422677-11455-1-git-send-email-maobibo@loongson.cn>
+ <20200514093359.GB1059226@linux.ibm.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <1abd8a86-6e04-b69b-6f25-c3ff8201ea5d@loongson.cn>
+Date:   Thu, 14 May 2020 19:40:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-References: <20200511091142.208787-1-daniel.vetter@ffwll.ch>
- <20200511091142.208787-3-daniel.vetter@ffwll.ch> <CAFCwf10m14ModSuRbQAsWf5CSJvTeP7YRzcokD=o+m2Pa0TqKg@mail.gmail.com>
- <CAPM=9tyukFdDiM6-Mxd+ouXCt9Z4t6LRZwxq7DGoX9drrHnMdQ@mail.gmail.com> <CAKMK7uF=SzeEBtZ9xH+jPzeML4V0QQuwBnPVw+OL+MUgTaaLzQ@mail.gmail.com>
-In-Reply-To: <CAKMK7uF=SzeEBtZ9xH+jPzeML4V0QQuwBnPVw+OL+MUgTaaLzQ@mail.gmail.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Thu, 14 May 2020 14:38:38 +0300
-Message-ID: <CAFCwf110j5EDNH9nvrVX9fQ5JkEt5B217snyiTyfpFz8yAkxNg@mail.gmail.com>
-Subject: Re: [Intel-gfx] [PATCH 3/3] misc/habalabs: don't set default fence_ops->wait
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, Olof Johansson <olof@lixom.net>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200514093359.GB1059226@linux.ibm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxn98kLr1eYKQ0AA--.4S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWUCw1UAw1rXF15CrW8tFb_yoW8ZrWrpF
+        Z7A3ZagFZ7J34Ik3ySqrn8KFy3G3y8KFs7KryxKF1Yy3ZI9F1rGrWfK3yFkrWrZa9rKa18
+        uFW09F4DWa12y3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvKb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7
+        Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+        0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+        17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+        C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF
+        0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
+        VjvjDU0xZFpf9x07beAp5UUUUU=
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 9:12 AM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
->
-> On Tue, May 12, 2020 at 4:14 AM Dave Airlie <airlied@gmail.com> wrote:
-> >
-> > On Mon, 11 May 2020 at 19:37, Oded Gabbay <oded.gabbay@gmail.com> wrote:
-> > >
-> > > On Mon, May 11, 2020 at 12:11 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
-> > > >
-> > > > It's the default.
-> > > Thanks for catching that.
-> > >
-> > > >
-> > > > Also so much for "we're not going to tell the graphics people how to
-> > > > review their code", dma_fence is a pretty core piece of gpu driver
-> > > > infrastructure. And it's very much uapi relevant, including piles of
-> > > > corresponding userspace protocols and libraries for how to pass these
-> > > > around.
-> > > >
-> > > > Would be great if habanalabs would not use this (from a quick look
-> > > > it's not needed at all), since open source the userspace and playing
-> > > > by the usual rules isn't on the table. If that's not possible (because
-> > > > it's actually using the uapi part of dma_fence to interact with gpu
-> > > > drivers) then we have exactly what everyone promised we'd want to
-> > > > avoid.
-> > >
-> > > We don't use the uapi parts, we currently only using the fencing and
-> > > signaling ability of this module inside our kernel code. But maybe I
-> > > didn't understand what you request. You want us *not* to use this
-> > > well-written piece of kernel code because it is only used by graphics
-> > > drivers ?
-> > > I'm sorry but I don't get this argument, if this is indeed what you meant.
-> >
-> > We would rather drivers using a feature that has requirements on
-> > correct userspace implementations of the feature have a userspace that
-> > is open source and auditable.
-> >
-> > Fencing is tricky, cross-device fencing is really tricky, and having
-> > the ability for a closed userspace component to mess up other people's
-> > drivers, think i915 shared with closed habana userspace and shared
-> > fences, decreases ability to debug things.
-> >
-> > Ideally we wouldn't offer users known untested/broken scenarios, so
-> > yes we'd prefer that drivers that intend to expose a userspace fencing
-> > api around dma-fence would adhere to the rules of the gpu drivers.
-> >
-> > I'm not say you have to drop using dma-fence, but if you move towards
-> > cross-device stuff I believe other drivers would be correct in
-> > refusing to interact with fences from here.
->
-> The flip side is if you only used dma-fence.c "because it's there",
-> and not because it comes with an uapi attached and a cross-driver
-> kernel internal contract for how to interact with gpu drivers, then
-> there's really not much point in using it. It's a custom-rolled
-> wait_queue/event thing, that's all. Without the gpu uapi and gpu
-> cross-driver contract it would be much cleaner to just use wait_queue
-> directly, and that's a construct all kernel developers understand, not
-> just gpu folks. From a quick look at least habanalabs doesn't use any
-> of these uapi/cross-driver/gpu bits.
-> -Daniel
 
-Hi Daniel,
-I want to say explicitly that we don't use the dma-buf uapi parts, nor
-we intend to use them to communicate with any GPU device. We only use
-it as simple completion mechanism as it was convenient to use.
-I do understand I can exchange that mechanism with a simpler one, and
-I will add an internal task to do it (albeit not in a very high
-priority) and upstream it, its just that it is part of our data path
-so we need to thoroughly validate it first.
 
-Thanks,
-Oded
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+On 05/14/2020 05:33 PM, Mike Rapoport wrote:
+> On Thu, May 14, 2020 at 10:17:57AM +0800, Bibo Mao wrote:
+>> From: bibo mao <maobibo@loongson.cn>
+>>
+>> If there are two threads reading the same memory and tlb miss happens,
+>> one thread fills pte entry, the other reads new pte value during page fault
+>> handling. PTE value may be updated before page faul, so the process need
+>> need update tlb still.
+>>
+>> Also this patch define flush_tlb_fix_spurious_fault as empty, since it not
+>> necessary to flush the page for all CPUs
+> 
+> I'm not familiar enough with MIPS TLB workings, but it seems that adding
+> a MIPS version of ptep_set_access_flags() and relaxing
+> flush_tlb_fix_spurious_fault() are two separate patches.
+
+Well, will split it into two patches.
+
+
+regards
+bibo, mao
+> 
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>  arch/mips/include/asm/pgtable.h | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>
+>> diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
+>> index aab0ec1..d0a4940 100644
+>> --- a/arch/mips/include/asm/pgtable.h
+>> +++ b/arch/mips/include/asm/pgtable.h
+>> @@ -635,6 +635,26 @@ static inline pmd_t pmd_mknotpresent(pmd_t pmd)
+>>  	return pmd;
+>>  }
+>>  
+>> +#define flush_tlb_fix_spurious_fault(vma, address) do { } while (0)
+>> +
+>> +#define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
+>> +int ptep_set_access_flags(struct vm_area_struct *vma,
+>> +			unsigned long address, pte_t *ptep,
+>> +			pte_t entry, int dirty)
+>> +{
+>> +	int changed = !pte_same(*ptep, entry);
+>> +
+>> +	if (changed)
+>> +		set_pte_at(vma->vm_mm, address, ptep, entry);
+>> +	else
+>> +		/* update tlb with latest pte entry still, tlb entry is old
+>> +		 * since there is page fault
+>> +		 */
+>> +		update_mmu_cache(vma, address, ptep);
+>> +
+>> +	return changed;
+>> +}
+>> +
+>>  /*
+>>   * The generic version pmdp_huge_get_and_clear uses a version of pmd_clear() with a
+>>   * different prototype.
+>> -- 
+>> 1.8.3.1
+>>
+> 
+
