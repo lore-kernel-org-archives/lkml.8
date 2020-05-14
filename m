@@ -4,68 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C12C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB2E420722
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8723020722
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:40:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N/j6Xr/H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="itfwljKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgENUka (ORCPT
+        id S1727992AbgENUkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 16:40:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37112 "EHLO
+        Thu, 14 May 2020 16:40:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728030AbgENUk0 (ORCPT
+        by vger.kernel.org with ESMTP id S1726076AbgENUkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 16:40:26 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 523F1C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:40:26 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id hi11so13079346pjb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:40:26 -0700 (PDT)
+        Thu, 14 May 2020 16:40:25 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30620C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:40:25 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d184so1899723pfd.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:40:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LYKG+gPEFw9rTlwwtHvknuJBiWyt3JtNpuAesPtjSaQ=;
-        b=N/j6Xr/HTfj8RV8QAidBt37S2c0i7E8uRZ5YJyOWAw499sJ1EUXrzu7F4WT6GJPlF9
-         aeglZhU5PjNKvdjCSd2awrbNLLETqgHIHx19k+IVrKiS8Tk6NUnmX5CM1dKWk2u0SMgB
-         y6FGMqKjH2SgpD5Yahx8ew98VV7QDHTOw2Xo6Oi4ImEKpsJnbMd9eZyWGdur2e2uOofd
-         VyhruT5IxF/g2Ue3cp4pf4Zro4LVRz9wDp7T8ItGA2FVlfQaJtEmH5quBKya/NEtvpD4
-         bBhlgG9DtStnwfsI5PYYAmv1XKfftHn2iOZYzad2FNkkuK0a7SUUYjyfZh8iufZ0TVM2
-         aWnQ==
+        bh=orFzK+6AOl9Sz0N2w3p5SSg3SPmMkMh0jb6dZXjNAFs=;
+        b=itfwljKE6dCaMRKBfaZdVJiDDpQn+H0q3OXHX0xEW0fAzV9TtKcwxa9k1icTMbgtZ0
+         A9k5X9GRE6zHz1wJCAzI89aHn7KR/PTPtPxV3J2e+VHBcFhOErNlUKDVywPVq20aPhZ2
+         vhFniAOOlpLdUP11cqpognmTQA0TE5CHef7034Z14rpHGwtzLEvhED6S46TaQoG9wPTJ
+         Q36C/kBerR+9jXx0XTSbivpZx1ADQI3vOxWoQ2hrggQ6AjtserhKuzhX23jLf6qOg0T4
+         CUfXaDJXbTG6wfe38nGgPUIikJDfRuFMczF4O+C0ftU03AgK+/ME+/xArEdUgQa8CuZz
+         SsLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LYKG+gPEFw9rTlwwtHvknuJBiWyt3JtNpuAesPtjSaQ=;
-        b=tye31IsgF2R2nWVOZBLX0RjVLZKl0eP/H30uE0X06MNLnARdqTcL23QLiJIndUJXjf
-         mdVmdchOdPRw1Wa+869mCi578uZauZDydM8DNJfuzCGMWzqT6/PG/krgG0AQCtcavdHr
-         Uf892qow2KRx1potm1I300uLw4Kj2AgwT5q1aEK1AHuM5kMI80RDuGVWTR92JKj8+coT
-         t7tamJ6JYxQ4QUkf1vWcAP76RJ/EwRLbXhvop23GXPiTfo476ILsqFKpFUtDHEwJQQ2P
-         /Cqi9vHe23N5FRwt2Bfrp9g6tLgeKAIiXXZg+bWryL2q/jB+t8AxhAVYSzjgLqmDxlDY
-         QjVw==
-X-Gm-Message-State: AOAM5336FDDp4PIAfG1NgUE7gZimpvdigh/6s3LShs8wZl8z2tSXPJL1
-        MBnHDYXlhvBYXS3LlIyKU3rB/g==
-X-Google-Smtp-Source: ABdhPJw0BRcE+Hcz9YmDGTnJ+mTJbIMDLAj4d1Ig+s808slxOgxGDQocpMaaLrHWrevAeUO6c1cEgg==
-X-Received: by 2002:a17:902:c213:: with SMTP id 19mr374929pll.172.1589488825761;
-        Thu, 14 May 2020 13:40:25 -0700 (PDT)
+        bh=orFzK+6AOl9Sz0N2w3p5SSg3SPmMkMh0jb6dZXjNAFs=;
+        b=fkLDYflYEHHFMZaafeuqVZf7iOu8O+K9cdOpwWX+riTmQ6Q9fmc6wlXtClCAj3Gba8
+         gTab0BrdKG4ivnpykjjlMr3DpuZfarvHG5bCeh1vXWWCBLTOZNNOYv+Ep2A1T5qXExgz
+         DIn7eo8EPwSFoEdiLWh3Xc38HCgrUg50NOWg2i3dq4yDi4ybQ23VARIrsIy67mjSjXSe
+         vTkT+fJQKtw2zQpHg5/NRozZ7phrV+1JmjxJpcauDBR7BxlwH+iPpDJyoIZAvu7DlfeV
+         UmfikfsJRLP04ufmrsHgYp6AbNL58ZxmGhVm6L8ml/hLqfPe/6jBmPjWEX+4l8c3J7oy
+         N5Cw==
+X-Gm-Message-State: AOAM531LwSfrOOxUZxrCZSnWj/qvaHVAWe/OBgYdeoJLr1j5i8ETiPey
+        NckRYnb64cGJdf3sTpb7lc7TMQ==
+X-Google-Smtp-Source: ABdhPJwmToiAUSfM51heHoivdVVzk95N7v0Ac6EJD2j0gDVBAEZT/9rq66kWhN1DDxZLb2zR4zRESA==
+X-Received: by 2002:a65:5186:: with SMTP id h6mr5926004pgq.453.1589488824707;
+        Thu, 14 May 2020 13:40:24 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id d124sm76062pfa.98.2020.05.14.13.40.24
+        by smtp.gmail.com with ESMTPSA id d124sm76062pfa.98.2020.05.14.13.40.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 13:40:25 -0700 (PDT)
+        Thu, 14 May 2020 13:40:24 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     ohad@wizery.com, bjorn.andersson@linaro.org
 Cc:     arnaud.pouliquen@st.com, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/2] rpmsg: core: Add support to retrieve name extension
-Date:   Thu, 14 May 2020 14:40:22 -0600
-Message-Id: <20200514204022.24233-3-mathieu.poirier@linaro.org>
+Subject: [PATCH v5 1/2] rpmsg: core: Add wildcard match for name service
+Date:   Thu, 14 May 2020 14:40:21 -0600
+Message-Id: <20200514204022.24233-2-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514204022.24233-1-mathieu.poirier@linaro.org>
 References: <20200514204022.24233-1-mathieu.poirier@linaro.org>
@@ -76,155 +76,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After adding support for rpmsg device name extension, this patch
-provides a function that returns the extension portion of an rpmsg
-device name.  That way users of the name extension functionality don't
-have to write the same boiler plate code to extract the information.
+Adding the capability to supplement the base definition published
+by an rpmsg_driver with a postfix description so that it is possible
+for several entity to use the same service.
 
-Suggested-by: Suman Anna <s-anna@ti.com>;
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 ---
- drivers/rpmsg/rpmsg_core.c | 95 ++++++++++++++++++++++++++++++++++++++
- include/linux/rpmsg.h      | 13 ++++++
- 2 files changed, 108 insertions(+)
+ drivers/rpmsg/rpmsg_core.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-index 5e01e8dede6b..9583eb936607 100644
+index a6361cad608b..5e01e8dede6b 100644
 --- a/drivers/rpmsg/rpmsg_core.c
 +++ b/drivers/rpmsg/rpmsg_core.c
-@@ -439,6 +439,101 @@ static int rpmsg_dev_match(struct device *dev, struct device_driver *drv)
- 	return of_driver_match_device(dev, drv);
- }
- 
-+/**
-+ * rpmsg_device_get_name_extension() - get the name extension of a rpmsg device
-+ * @rpdev: the rpmsg device to work with
-+ * @skip: how many characters in the extension should be skipped over
-+ *
-+ * With function rpmsg_id_match() allowing for extension of the base driver name
-+ * in order to differentiate services, this function returns the extension part
-+ * of an rpmsg device name.  As such and with the following rpmsg driver device
-+ * id table and rpmsg device names:
-+ *
-+ * static struct rpmsg_device_id rpmsg_driver_sample_id_table[] = {
-+ *      { .name = "rpmsg-client-sample" },
-+ *      { },
-+ * }
-+ *
-+ * rpdev1->id.name == "rpmsg-client-sample";
-+ * rpdev2->id.name == "rpmsg-client-sample_instance0";
-+ *
-+ * Calling rpmsg_device_get_name_extension() will yields the following:
-+ *
-+ * rpmsg_device_get_name_extension(rpdev1, 0) == NULL;
-+ * rpmsg_device_get_name_extension(rpdev2, 0) == "_instance0";
-+ * rpmsg_device_get_name_extension(rpdev2, 1) == "instance0";
-+ *
-+ *
-+ * Return: The name extension if found, NULL if the name of the RPMSG device
-+ *	   equals the name of the RPMSG driver and an error if no match is
-+ *	   found or a validation problem has occurred.
-+ */
-+const char *rpmsg_device_get_name_extension(struct rpmsg_device *rpdev,
-+					    unsigned int skip)
-+{
-+	const char *drv_name, *dev_name, *extension;
-+	const struct rpmsg_device_id *ids;
-+	struct device *dev = &rpdev->dev;
-+	struct rpmsg_driver *rpdrv;
-+	bool match = false;
-+	unsigned int i;
-+
-+	if (!dev->driver)
-+		return ERR_PTR(-EINVAL);
-+
-+	rpdrv = to_rpmsg_driver(dev->driver);
-+
-+	/*
-+	 * No point in going further if the device doesn't have name or
-+	 * the driver doesn't have a table to work with.
-+	 */
-+	if (!rpdev->id.name[0] || !rpdrv->id_table)
-+		return ERR_PTR(-EINVAL);
-+
-+	ids = rpdrv->id_table;
-+	dev_name = rpdev->id.name;
-+
-+	/*
-+	 * See if any name in the driver's table match the beginning
-+	 * of the rpmsg device's name.
-+	 */
-+	for (i = 0; ids[i].name[0]; i++) {
-+		drv_name = ids[i].name;
-+		if (strncmp(drv_name,
-+			    dev_name, strlen(drv_name)) == 0) {
-+			match = true;
-+			break;
-+		}
-+	}
-+
-+	/*
-+	 * A match was not found, return an error to differentiate with cases
-+	 * where a match was found but the name has no extension (see below).
-+	 */
-+	if (!match)
-+		return ERR_PTR(-ENOENT);
-+
-+	 /* No name extension to return if device and driver are the same */
-+	if (strlen(dev_name) == strlen(drv_name))
-+		return NULL;
-+
-+	/*
-+	 * Make sure we were not requested to skip past the end
-+	 * of the device name.
-+	 */
-+	if (strlen(drv_name) + skip >= strlen(dev_name))
-+		return ERR_PTR(-EINVAL);
-+
-+	/*
-+	 * Move past the base name published by the driver and
-+	 * skip any extra characters if needed.
-+	 */
-+	extension = dev_name + strlen(drv_name) + skip;
-+
-+	return extension;
-+}
-+EXPORT_SYMBOL(rpmsg_device_get_name_extension);
-+
- static int rpmsg_uevent(struct device *dev, struct kobj_uevent_env *env)
+@@ -399,7 +399,25 @@ ATTRIBUTE_GROUPS(rpmsg_dev);
+ static inline int rpmsg_id_match(const struct rpmsg_device *rpdev,
+ 				  const struct rpmsg_device_id *id)
  {
- 	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
-diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
-index 9fe156d1c018..9537b95ad30a 100644
---- a/include/linux/rpmsg.h
-+++ b/include/linux/rpmsg.h
-@@ -135,6 +135,9 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
- __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
- 			poll_table *wait);
- 
-+const char *rpmsg_device_get_name_extension(struct rpmsg_device *dev,
-+					    unsigned int skip);
+-	return strncmp(id->name, rpdev->id.name, RPMSG_NAME_SIZE) == 0;
++	size_t len = min_t(size_t, strlen(id->name), RPMSG_NAME_SIZE);
 +
- #else
- 
- static inline int register_rpmsg_device(struct rpmsg_device *dev)
-@@ -242,6 +245,16 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
- 	return 0;
++	/*
++	 * Allow for wildcard matches.  For example if rpmsg_driver::id_table
++	 * is:
++	 *
++	 * static struct rpmsg_device_id rpmsg_driver_sample_id_table[] = {
++	 *      { .name = "rpmsg-client-sample" },
++	 *      { },
++	 * }
++	 *
++	 * Then it is possible to support "rpmsg-client-sample*", i.e:
++	 *	rpmsg-client-sample
++	 *	rpmsg-client-sample_instance0
++	 *	rpmsg-client-sample_instance1
++	 *	...
++	 *	rpmsg-client-sample_instanceX
++	 */
++	return strncmp(id->name, rpdev->id.name, len) == 0;
  }
  
-+static inline
-+const char *rpmsg_device_get_name_extension(struct rpmsg_device *dev,
-+					    unsigned int skip)
-+{
-+	/* This shouldn't be possible */
-+	WARN_ON(1);
-+
-+	return NULL;
-+}
-+
- #endif /* IS_ENABLED(CONFIG_RPMSG) */
- 
- /* use a macro to avoid include chaining to get THIS_MODULE */
+ /* match rpmsg channel and rpmsg driver */
 -- 
 2.20.1
 
