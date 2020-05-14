@@ -2,182 +2,187 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E039C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B01C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4E3206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hjj886e8"
+	by mail.kernel.org (Postfix) with ESMTP id 8FA9F20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589482992;
+	bh=39JQOiKDe87OkHljTMEZNJW5VgFu4fdf8O+cgyKTnZ0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xDCu4y4Fo8nxy777vC2jvlwDueogfmJCWPs0PoRwCylMK9KRvDGdTqGq0y7RUSpkS
+	 pr2X29qIzUfCnZjnLp7OWpOVjLcOUbDHV42oJLpmMKXTkoibKU7kBOWTmIp5vmGfVS
+	 +IdVb6/4v2Z9GuRj/wveyXljyYqfbq4ZhIW7XBhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730071AbgENTDI (ORCPT
+        id S1729251AbgENSyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:03:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45187 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730062AbgENTDG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:03:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589482985;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=2eOJy4laohP6xg+8A1hLlhQR4abouEEHiBpBsBK1Fng=;
-        b=hjj886e8k1v/bZ8eEpkK7+M+hKBrVMpHmTxP1di1/8Nxcdg0QTinEdfFiusdYJI5BbvwIQ
-        3Rh36ifmXCukTxKGzxAoe3A4/5n5ndzIj3FDH5EXUe74NWtaQcND5CroEA7/l51X0hS12u
-        H/RkIc8qZaos0c8tWRHoOf9Hqm1wBNI=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-295-EAdZ_RIlOEuonFmTCBzjIw-1; Thu, 14 May 2020 15:02:55 -0400
-X-MC-Unique: EAdZ_RIlOEuonFmTCBzjIw-1
-Received: by mail-qt1-f197.google.com with SMTP id c20so4654533qtw.11
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 12:02:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=2eOJy4laohP6xg+8A1hLlhQR4abouEEHiBpBsBK1Fng=;
-        b=LC7DvrMkn5J/za4yJYST5D/9qreiO/LGNqSYN+hqtFMTf8elL6WGZbSD1Thv24BtsA
-         k8uLNfcviKtyttkcmfv0oB36v2+VDdaHxCuUiFUnkoEILzvftFvWl+SC3brQm1dGUSFR
-         8aFIUhf56x19/BqZMj+b5Tb+tI/j7cj3HZEeaG6J+WIu1UJLMmfdr+/IjZOHRCrmdXZo
-         qAH0PTXswDMRI/k32GZ5g1bbitZrHmrXtL2TW8hlHTmkNhikiZnlDWcQ6CVmcct0EvFZ
-         /15/4HOnX/Logn0lGQPL4/le9nYtN+o+BKjlcjEf+xobiTnDS9JuqowLE6GlcpUfgH2C
-         gfAw==
-X-Gm-Message-State: AOAM531c6oKvqX1BNuO1VmqI7u8CazdYTfvBkUYcd2PI558PYlCnd1Dy
-        7PtpEf+NebSn+t5ZvidG3/mxU9ujHWuX1kzB+vE55pMgZgjD5GKTADkz440BZ/KSkyvtzjbdAnQ
-        UeXGYbnERNo2G6mfl2mj6tTMV
-X-Received: by 2002:ac8:1b58:: with SMTP id p24mr6333928qtk.29.1589482974703;
-        Thu, 14 May 2020 12:02:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwqPwbX6QW79CMjPsIoDBx8Qxq0c+7FfBXcMz8FzBF9t3LMhNJFhfsG5B/dObcvNwywLNEMVQ==
-X-Received: by 2002:ac8:1b58:: with SMTP id p24mr6333894qtk.29.1589482974377;
-        Thu, 14 May 2020 12:02:54 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id z60sm3267882qtc.30.2020.05.14.12.02.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 12:02:53 -0700 (PDT)
-Date:   Thu, 14 May 2020 12:02:52 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Tom Murphy <murphyt7@tcd.ie>
-Subject: Re: amd kdump failure with iommu=nopt
-Message-ID: <20200514190252.ykwdpu7qwzsxjvlp@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Tom Murphy <murphyt7@tcd.ie>
-References: <20200514031838.2oklmyrc3n5it2ox@cantor>
- <20200514153623.GM18353@8bytes.org>
- <20200514154020.GN18353@8bytes.org>
+        Thu, 14 May 2020 14:54:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54820 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729144AbgENSyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:40 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3408320767;
+        Thu, 14 May 2020 18:54:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589482479;
+        bh=39JQOiKDe87OkHljTMEZNJW5VgFu4fdf8O+cgyKTnZ0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=q1Cyv3WQ6+qRS2fI/z/4hFIPcA+cA6A9BgykrzkAFtiVnpA7lpgHYEdZAdV8heolb
+         gA+uziEQeXXXbwBaUjqrDxaAPMIpZn34okfLMpXkdIXfI6mA9+c7dGdo11/aekEHDe
+         4vBh6wiA/MZLOuhJwQApPDJE1Dd2ts5poH9G35Ug=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Leon Romanovsky <leon@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 20/31] x86/apic: Move TSC deadline timer debug printk
+Date:   Thu, 14 May 2020 14:54:02 -0400
+Message-Id: <20200514185413.20755-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200514185413.20755-1-sashal@kernel.org>
+References: <20200514185413.20755-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200514154020.GN18353@8bytes.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu May 14 20, Joerg Roedel wrote:
->On Thu, May 14, 2020 at 05:36:23PM +0200, Joerg Roedel wrote:
->> This commit also removes the deferred attach of the device to its new
->> domain. Does the attached diff fix the problem for you?
->> +static int __iommu_attach_device_no_defer(struct iommu_domain *domain,
->> +					  struct device *dev)
->> +{
->>  	if (unlikely(domain->ops->attach_dev == NULL))
->>  		return -ENODEV;
->>
->>  	ret = domain->ops->attach_dev(domain, dev);
->>  	if (!ret)
->>  		trace_attach_device_to_domain(dev);
->> +
->>  	return ret;
->>  }
->
->Sorry, this didn't compile, here is an updated version that actually
->compiles:
->
->
->diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->index 4050569188be..f54ebb964271 100644
->--- a/drivers/iommu/iommu.c
->+++ b/drivers/iommu/iommu.c
->@@ -1889,13 +1889,19 @@ void iommu_domain_free(struct iommu_domain *domain)
-> }
-> EXPORT_SYMBOL_GPL(iommu_domain_free);
->
->-static int __iommu_attach_device(struct iommu_domain *domain,
->-				 struct device *dev)
->+static bool __iommu_is_attach_deferred(struct iommu_domain *domain,
->+				       struct device *dev)
->+{
->+	if (!domain->ops->is_attach_deferred)
->+		return false;
->+
->+	return domain->ops->is_attach_deferred(domain, dev);
->+}
->+
->+static int __iommu_attach_device_no_defer(struct iommu_domain *domain,
->+					  struct device *dev)
-> {
-> 	int ret;
->-	if ((domain->ops->is_attach_deferred != NULL) &&
->-	    domain->ops->is_attach_deferred(domain, dev))
->-		return 0;
->
-> 	if (unlikely(domain->ops->attach_dev == NULL))
-> 		return -ENODEV;
->@@ -1903,9 +1909,19 @@ static int __iommu_attach_device(struct iommu_domain *domain,
-> 	ret = domain->ops->attach_dev(domain, dev);
-> 	if (!ret)
-> 		trace_attach_device_to_domain(dev);
->+
-> 	return ret;
-> }
->
->+static int __iommu_attach_device(struct iommu_domain *domain,
->+				 struct device *dev)
->+{
->+	if (__iommu_is_attach_deferred(domain, dev))
->+		return 0;
->+
->+	return __iommu_attach_device_no_defer(domain, dev);
->+}
->+
-> int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
-> {
-> 	struct iommu_group *group;
->@@ -2023,7 +2039,12 @@ EXPORT_SYMBOL_GPL(iommu_get_domain_for_dev);
->  */
-> struct iommu_domain *iommu_get_dma_domain(struct device *dev)
-> {
->-	return dev->iommu_group->default_domain;
->+	struct iommu_domain *domain = dev->iommu_group->default_domain;
->+
->+	if (__iommu_is_attach_deferred(domain, dev))
->+		__iommu_attach_device_no_defer(domain, dev);
->+
->+	return domain;
-> }
->
-> /*
->_______________________________________________
->iommu mailing list
->iommu@lists.linux-foundation.org
->https://lists.linuxfoundation.org/mailman/listinfo/iommu
->
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Yes, that works.
+[ Upstream commit c84cb3735fd53c91101ccdb191f2e3331a9262cb ]
 
-Tested-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Leon reported that the printk_once() in __setup_APIC_LVTT() triggers a
+lockdep splat due to a lock order violation between hrtimer_base::lock and
+console_sem, when the 'once' condition is reset via
+/sys/kernel/debug/clear_warn_once after boot.
+
+The initial printk cannot trigger this because that happens during boot
+when the local APIC timer is set up on the boot CPU.
+
+Prevent it by moving the printk to a place which is guaranteed to be only
+called once during boot.
+
+Mark the deadline timer check related functions and data __init while at
+it.
+
+Reported-by: Leon Romanovsky <leon@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/87y2qhoshi.fsf@nanos.tec.linutronix.de
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/apic/apic.c | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 1ca76ca944bad..53dc8492f02ff 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -345,8 +345,6 @@ static void __setup_APIC_LVTT(unsigned int clocks, int oneshot, int irqen)
+ 		 * According to Intel, MFENCE can do the serialization here.
+ 		 */
+ 		asm volatile("mfence" : : : "memory");
+-
+-		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
+ 		return;
+ 	}
+ 
+@@ -545,7 +543,7 @@ static DEFINE_PER_CPU(struct clock_event_device, lapic_events);
+ #define DEADLINE_MODEL_MATCH_REV(model, rev)	\
+ 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)rev }
+ 
+-static u32 hsx_deadline_rev(void)
++static __init u32 hsx_deadline_rev(void)
+ {
+ 	switch (boot_cpu_data.x86_stepping) {
+ 	case 0x02: return 0x3a; /* EP */
+@@ -555,7 +553,7 @@ static u32 hsx_deadline_rev(void)
+ 	return ~0U;
+ }
+ 
+-static u32 bdx_deadline_rev(void)
++static __init u32 bdx_deadline_rev(void)
+ {
+ 	switch (boot_cpu_data.x86_stepping) {
+ 	case 0x02: return 0x00000011;
+@@ -567,7 +565,7 @@ static u32 bdx_deadline_rev(void)
+ 	return ~0U;
+ }
+ 
+-static u32 skx_deadline_rev(void)
++static __init u32 skx_deadline_rev(void)
+ {
+ 	switch (boot_cpu_data.x86_stepping) {
+ 	case 0x03: return 0x01000136;
+@@ -580,7 +578,7 @@ static u32 skx_deadline_rev(void)
+ 	return ~0U;
+ }
+ 
+-static const struct x86_cpu_id deadline_match[] = {
++static const struct x86_cpu_id deadline_match[] __initconst = {
+ 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_HASWELL_X,	hsx_deadline_rev),
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_X,	0x0b000020),
+ 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_BROADWELL_XEON_D,	bdx_deadline_rev),
+@@ -602,18 +600,19 @@ static const struct x86_cpu_id deadline_match[] = {
+ 	{},
+ };
+ 
+-static void apic_check_deadline_errata(void)
++static __init bool apic_validate_deadline_timer(void)
+ {
+ 	const struct x86_cpu_id *m;
+ 	u32 rev;
+ 
+-	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER) ||
+-	    boot_cpu_has(X86_FEATURE_HYPERVISOR))
+-		return;
++	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
++		return false;
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
++		return true;
+ 
+ 	m = x86_match_cpu(deadline_match);
+ 	if (!m)
+-		return;
++		return true;
+ 
+ 	/*
+ 	 * Function pointers will have the MSB set due to address layout,
+@@ -625,11 +624,12 @@ static void apic_check_deadline_errata(void)
+ 		rev = (u32)m->driver_data;
+ 
+ 	if (boot_cpu_data.microcode >= rev)
+-		return;
++		return true;
+ 
+ 	setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
+ 	pr_err(FW_BUG "TSC_DEADLINE disabled due to Errata; "
+ 	       "please update microcode to version: 0x%x (or later)\n", rev);
++	return false;
+ }
+ 
+ /*
+@@ -2023,7 +2023,8 @@ void __init init_apic_mappings(void)
+ {
+ 	unsigned int new_apicid;
+ 
+-	apic_check_deadline_errata();
++	if (apic_validate_deadline_timer())
++		pr_debug("TSC deadline timer available\n");
+ 
+ 	if (x2apic_mode) {
+ 		boot_cpu_physical_apicid = read_apic_id();
+-- 
+2.20.1
 
