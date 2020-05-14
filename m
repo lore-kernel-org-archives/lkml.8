@@ -2,121 +2,114 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D36C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99718C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF372206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:00:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BUmWCsco"
+	by mail.kernel.org (Postfix) with ESMTP id 7431F20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:02:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589490149;
+	bh=BpiNhcYdcKddO8cs3Vt8IZUscWTK1/Is8oqrDfZkC6w=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=zC/nyZdy8QS/QbBkG+f3f1cV4I4JDvV6gI57sBIjfejIZrguaDkvDR4/bicBekvlx
+	 Zxsb3j0KfA9rOoXzH5RpL0N9rJ9Lgf5DJec+QszFnOlv8MgXgmSVmWJK5HT/FYzw2H
+	 hlKAQ7OgpNmIfmMJePcGXGCyUEuyC7Vt8KXzSe9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgENVAk (ORCPT
+        id S1727904AbgENVC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 17:00:40 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54236 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgENVAk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 17:00:40 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EL0XZZ084868;
-        Thu, 14 May 2020 16:00:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589490033;
-        bh=c3ng3n5AaYJdWpIwj65f56Oxw0Dl7RViG5iPPiEH66Q=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=BUmWCscolmuRhy/3BjEc92xI23rDjEZKho6zBds1DsTqeHXIMtIhrcwUMmo/X3BMz
-         bRkpWM+1SrnrxDCC6jlJA9vlOjxwBDRpmebIAIypW3v4GXaxK4ofRF3A5+6eAqoneY
-         3h8K2T1w8ZX2IdiYdwfktwjWgvjuUUt6E6NjdnyU=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EL0XHL093253
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 May 2020 16:00:33 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
- May 2020 16:00:33 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 14 May 2020 16:00:33 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EL0WZw082129;
-        Thu, 14 May 2020 16:00:32 -0500
-Subject: Re: [PATCH net-next 1/2] dt-bindings: net: dp83822: Add TI dp83822
- phy
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200514173055.15013-1-dmurphy@ti.com>
- <20200514173055.15013-2-dmurphy@ti.com> <20200514183912.GW499265@lunn.ch>
- <2f03f066-38d0-a7c7-956d-e14356ca53b3@ti.com>
- <20200514205028.GA499265@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <b79f8df0-add8-4ebb-1784-36cc6c50b285@ti.com>
-Date:   Thu, 14 May 2020 15:51:06 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 17:02:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726201AbgENVC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 17:02:28 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4298206F1;
+        Thu, 14 May 2020 21:02:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589490148;
+        bh=BpiNhcYdcKddO8cs3Vt8IZUscWTK1/Is8oqrDfZkC6w=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=hyfFgR+GL76NQf566ZtlB+WOryIov5DSxhUL5b5JUGfd+iX0ldBn3aeIuHEmGYr5F
+         EJi9Wz7J28FNtt08VJYBztNyXwTQJ6uHS1pGhU4g7jeCKpOQ1WCr4QwXnoluVb/vcF
+         CFUnP5fIMuLO3vUY90BKaBpUzqs5HHWHXbnfeD0k=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200514205028.GA499265@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1589267017-17294-5-git-send-email-dillon.minfei@gmail.com>
+References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com> <1589267017-17294-5-git-send-email-dillon.minfei@gmail.com>
+Subject: Re: [PATCH v3 4/5] clk: stm32: Fix stm32f429 ltdc driver loading hang in clk set rate. keep ltdc clk running after kernel startup
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        dillon.minfei@gmail.com
+To:     airlied@linux.ie, alexandre.torgue@st.com, daniel@ffwll.ch,
+        dillon.minfei@gmail.com, mcoquelin.stm32@gmail.com,
+        mturquette@baylibre.com, robh+dt@kernel.org, sam@ravnborg.org,
+        thierry.reding@gmail.com
+Date:   Thu, 14 May 2020 14:02:27 -0700
+Message-ID: <158949014721.215346.12197373767247910756@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
+Quoting dillon.minfei@gmail.com (2020-05-12 00:03:36)
+> From: dillon min <dillon.minfei@gmail.com>
+>=20
+> as store stm32f4_rcc_register_pll return to the wrong offset of clks,
 
-On 5/14/20 3:50 PM, Andrew Lunn wrote:
->>> Hi Dan
->>>
->>> You say 10/100 Mbps Ethernet PHY, but then list RGMII?
->> Copied from the data sheet.
-> O.K. So maybe it can connect over RGMII, but then only run 100Mbps
-> over it, rather than 1G.
-Yes.  This is not a 1Gbps PHY.  Max is 100Mbps.
->
->> The LED_1 pin can be strapped to be an input to the chip for signal loss
->> detection.  This is an optional feature of the PHY.
->>
->> This property defines the polarity for the 822 LED_1/GPIO input pin.
->>
->> The LOS is not required to be connected to the PHY.  If the preferred method
->> is to use the SFP framework and Processor GPIOs then I can remove this from
->> the patch set.
->>
->> And if a user would like to use the feature then they can add it.
-> Well, both options are supported by the hardware. So i'm wondering if
-> we need to support both. So one property indicating the LOS is
-> actually connected to the PHY and a second indicating the polarity?
+Use () on functions, i.e. stm32f4_rcc_register_pll().
 
-Why would we need 2?  The SFP core would need to know that the LOS is 
-connected to the PHY.
+> so ltdc gate clk is null. need change clks[PLL_VCO_SAI] to clks[PLL_SAI]
 
-The PHY is strapped to configure the LED_1 as a GPIO input.  I am not 
-seeing a register that we can force this configuration.
+And quote variables like 'clks[PLL_VCO_SAI]'
 
-Data sheet says
+>=20
+> add CLK_IGNORE_UNUSED for ltdc to make sure clk not be freed by
+> clk_disable_unused
 
-Note: To enable 100Base-FX Signal Detection on LED_1 (pin #24), strap 
-SD_EN = '1'
+clk_disable_unused() doesn't free anything. Why does ltdc not need to be
+turned off if it isn't used? Is it critical to system operation? Should
+it be marked with the critical clk flag then? The CLK_IGNORE_UNUSED flag
+is almost always wrong to use.
 
-So we can read the straps to see if the PHY is connected as the LOS 
-input and set the polarity.  But if we are in fiber mode and that pin is 
-not strapped for LOS then this setting takes no affect on the PHY.  So 
-even reading the straps just allows us to bypass the polarity write.
-
-Dan
-
->
-> 	 Andrew
+>=20
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> ---
+>  drivers/clk/clk-stm32f4.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
+> index 18117ce..0ba73de 100644
+> --- a/drivers/clk/clk-stm32f4.c
+> +++ b/drivers/clk/clk-stm32f4.c
+> @@ -129,7 +129,8 @@ static const struct stm32f4_gate_data stm32f429_gates=
+[] __initconst =3D {
+>         { STM32F4_RCC_APB2ENR, 20,      "spi5",         "apb2_div" },
+>         { STM32F4_RCC_APB2ENR, 21,      "spi6",         "apb2_div" },
+>         { STM32F4_RCC_APB2ENR, 22,      "sai1",         "apb2_div" },
+> -       { STM32F4_RCC_APB2ENR, 26,      "ltdc",         "apb2_div" },
+> +       { STM32F4_RCC_APB2ENR, 26,      "ltdc",         "apb2_div",
+> +               CLK_IGNORE_UNUSED },
+>  };
+> =20
+>  static const struct stm32f4_gate_data stm32f469_gates[] __initconst =3D {
+> @@ -1757,7 +1758,7 @@ static void __init stm32f4_rcc_init(struct device_n=
+ode *np)
+>         clks[PLL_VCO_I2S] =3D stm32f4_rcc_register_pll("vco_in",
+>                         &data->pll_data[1], &stm32f4_clk_lock);
+> =20
+> -       clks[PLL_VCO_SAI] =3D stm32f4_rcc_register_pll("vco_in",
+> +       clks[PLL_SAI] =3D stm32f4_rcc_register_pll("vco_in",
+>                         &data->pll_data[2], &stm32f4_clk_lock);
+> =20
+>         for (n =3D 0; n < MAX_POST_DIV; n++) {
