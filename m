@@ -2,169 +2,200 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AF9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81919C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0FAA2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D2B2065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:11:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ME8yQCgb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O18fRYkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgENQKs (ORCPT
+        id S1727930AbgENQLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 12:10:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51378 "EHLO
+        Thu, 14 May 2020 12:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgENQKs (ORCPT
+        with ESMTP id S1726073AbgENQLi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 12:10:48 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE62CC061A0C;
-        Thu, 14 May 2020 09:10:43 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id c12so24004768oic.1;
-        Thu, 14 May 2020 09:10:43 -0700 (PDT)
+        Thu, 14 May 2020 12:11:38 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F0F6C061A0C;
+        Thu, 14 May 2020 09:11:37 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id b18so1532738ilf.2;
+        Thu, 14 May 2020 09:11:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D5CbZd976r0FX8cps+cJg5GK1CX9lUZ+rR6vnN8xQ1g=;
-        b=ME8yQCgbH2SZIDcdab7oOsHlv314+eYedrIFbgnDiv53fMIMW6h9hp1VKmEFSyrYZI
-         ZSs829U1wHjFRgb8Z16vo5mQfCn03DReReAjYmZtQ2fcNZlTCtKTUnI1QwBesLOPRl0W
-         d6vcjzwONEDKS9hHqk07r5NGbdWF3yHtjy/r+Rr5V0YC3Dp2aEo4V12d2OectxjEIosS
-         WdY7O9cXLsRXiweqFenSDiCPZmyIDpM4iTXd71EmDlwoyHHu3I7PSr8magZZobs/ZFZB
-         fiIstOhiEvBiglPKnuaRHDddwv4WaI/VifjsX4Xw/CdRzk8xvmHD8S4XS0Uz/yRBSm0f
-         gNeA==
+         :cc:content-transfer-encoding;
+        bh=pWAwL4iY43kHKyzq6JgPam8fDxHVDDtXpG7mRg32aJE=;
+        b=O18fRYkJuCVHLzSDHMiTV/YEvTTqeLQpSzk7AUAl1veaDpHB0AhDrBCf6pG6NOIJ69
+         IVKsNZ3fA75gmbzuDAe9ruH9MEFZd4RjPd5l7XMXsa9JnQglfU6WlqT5lKEfreMB5mpa
+         yLiuZhfm1eIS1G/957nwLkHVLS+MHbLeJ+wOrXDXNXNqjYGERRRjU4frvhsoaaEfctCs
+         TOK4ipsoWjopZW/F3wg+NJ2uwwRe8hgMBHYVXkuqgOqby141+OUTgLvFgNbfg3CODLo9
+         TdoiXHXOZy+3W9snj2LFBt6LX/eRdGwR20ISOpHddhvO3HEKQmYx8gnopiazWe6kaubv
+         UEXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D5CbZd976r0FX8cps+cJg5GK1CX9lUZ+rR6vnN8xQ1g=;
-        b=pcG74EqGa3HTz9NLzLGwtB1vzr8JkBWiP82bMyF5J+Olxs2771Hxu490B7w9qqd8iO
-         2xeXbnOxCWNjKlPzlVpiM0TOjdfO2BirarUbZ01Xs9xVayD5MyAYd3dgUdat5GEgAW46
-         xKvvHaHBxSJ5D88VnMyC5FYae5+CWPQTW5OBO5Xv9d7GSrqMfU9tFVJIR2EjIkv4RsQB
-         iTtF7LLp9U9TaUPgmKqJtw+V8ZyzcerzaaYSDefifhozyZzSF/gEWzFU8+BlsZsHtHO7
-         ggtBnNZOoMDoLf/uIz2aGp1jBdpg7YIeQyOXoPD44079O1baAgu6D2P5R41KjMRlbqcj
-         5yWA==
-X-Gm-Message-State: AGi0PuaDKdl5VQO8o9wwHt9zkzkyL4VOkSoS4ZANkOdkny6ehVmMN58z
-        neXRoTaoj1FFi8iaMQ/oVaXmGD91CO1c9j1vMJQ=
-X-Google-Smtp-Source: APiQypKtIw3xzkHAtALvSyqt4k9eNzYlxJoUxyheJsa+r6YEEdui4LketFU7MqwuU2v/F0vGykL4KdxDlzE9Lo0hTmQ=
-X-Received: by 2002:aca:5e0b:: with SMTP id s11mr29579870oib.160.1589472642862;
- Thu, 14 May 2020 09:10:42 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pWAwL4iY43kHKyzq6JgPam8fDxHVDDtXpG7mRg32aJE=;
+        b=CK/IU3wAf7Ml7o/oouS4rFRY3+v0USZnpEHo30+KjSo5UuJbSgq3qwyTd37ReQDCzG
+         BS1+2Lv/UzDrljWE75OekhkJH/sJvFps0z6j95f/Ocj91WdjmFs9tGN2y4Sr0PM1yt58
+         cHraaJeDyriwLePOTXxzKebFYQMkhl+4hutVLqXqm5ZHzUeHq3OdZp1ZDHA2JDqyR+Xp
+         bS8Y+GrIj7a35rqDHLjwyd5hyUL3O4S9BoQz/jaZhEErfx89C5GQ2M1CTiRHbW5FhFXm
+         weIB2fU/sULEJ+m4EmAgp/KzTPSd/KhxidR9gM/nmG1UnUmTY7RvOwtoPZP4OqeFzjCd
+         qJzA==
+X-Gm-Message-State: AOAM530SHhqYJ+IAkVQkGiC542wOYKYcCrfv8m8cXzWcm2ZishK84uwC
+        beqz0OP6KE0RcoThHZba6tiOWqP2/uBDBoN4U73wHDfn/Es=
+X-Google-Smtp-Source: ABdhPJx6Rsp5ROFxXwYlYudzEUx9ly+h8b+Qj8M+Twx/mohFFLUuzJpw12Ch5e3R3mp3ipZq22gY7LfKaKb8NlNe79A=
+X-Received: by 2002:a05:6e02:68e:: with SMTP id o14mr1854794ils.184.1589472696421;
+ Thu, 14 May 2020 09:11:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505153156.925111-1-mic@digikod.net> <20200505153156.925111-4-mic@digikod.net>
- <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
- <202005131525.D08BFB3@keescook> <202005132002.91B8B63@keescook>
- <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com> <202005140830.2475344F86@keescook>
-In-Reply-To: <202005140830.2475344F86@keescook>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Thu, 14 May 2020 12:10:31 -0400
-Message-ID: <CAEjxPJ4R_juwvRbKiCg5OGuhAi1ZuVytK4fKCDT_kT6VKc8iRg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
- through O_MAYEXEC
-To:     Kees Cook <keescook@chromium.org>
-Cc:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
+ <1589267017-17294-6-git-send-email-dillon.minfei@gmail.com>
+ <CACRpkdbZoMDC-D12CByKJUZbu4shqixC=QrKwJUd8x=nyK7seQ@mail.gmail.com>
+ <CAL9mu0LVsePqifEC+-FR+NxvuZT3UGpU86KhzaTqb7w_Px0z2g@mail.gmail.com> <CACRpkdbcD7i+kNoJ9YP5XXTtLi12=yzW5OBNzet5oRdwPYz=dA@mail.gmail.com>
+In-Reply-To: <CACRpkdbcD7i+kNoJ9YP5XXTtLi12=yzW5OBNzet5oRdwPYz=dA@mail.gmail.com>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Thu, 14 May 2020 16:11:00 +0800
+Message-ID: <CAL9mu0Kdc4TqcGB7JYDWkOJqwvxX1m_026aB0iprkHTzN4HXoQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] drm/panel: Add ilitek ili9341 driver
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 11:45 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, May 14, 2020 at 08:22:01AM -0400, Stephen Smalley wrote:
-> > On Wed, May 13, 2020 at 11:05 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Wed, May 13, 2020 at 04:27:39PM -0700, Kees Cook wrote:
-> > > > Like, couldn't just the entire thing just be:
-> > > >
-> > > > diff --git a/fs/namei.c b/fs/namei.c
-> > > > index a320371899cf..0ab18e19f5da 100644
-> > > > --- a/fs/namei.c
-> > > > +++ b/fs/namei.c
-> > > > @@ -2849,6 +2849,13 @@ static int may_open(const struct path *path, int acc_mode, int flag)
-> > > >               break;
-> > > >       }
-> > > >
-> > > > +     if (unlikely(mask & MAY_OPENEXEC)) {
-> > > > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_MOUNT &&
-> > > > +                 path_noexec(path))
-> > > > +                     return -EACCES;
-> > > > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_FILE)
-> > > > +                     acc_mode |= MAY_EXEC;
-> > > > +     }
-> > > >       error = inode_permission(inode, MAY_OPEN | acc_mode);
-> > > >       if (error)
-> > > >               return error;
-> > > >
-> > >
-> > > FYI, I've confirmed this now. Effectively with patch 2 dropped, patch 3
-> > > reduced to this plus the Kconfig and sysctl changes, the self tests
-> > > pass.
-> > >
-> > > I think this makes things much cleaner and correct.
-> >
-> > I think that covers inode-based security modules but not path-based
-> > ones (they don't implement the inode_permission hook).  For those, I
-> > would tentatively guess that we need to make sure FMODE_EXEC is set on
-> > the open file and then they need to check for that in their file_open
-> > hooks.
->
-> I kept confusing myself about what order things happened in, so I made
-> these handy notes about the call graph:
->
-> openat2(dfd, char * filename, open_how)
->     do_filp_open(dfd, filename, open_flags)
->         path_openat(nameidata, open_flags, flags)
->             do_open(nameidata, file, open_flags)
->                 may_open(path, acc_mode, open_flag)
->                     inode_permission(inode, MAY_OPEN | acc_mode)
->                         security_inode_permission(inode, acc_mode)
->                 vfs_open(path, file)
->                     do_dentry_open(file, path->dentry->d_inode, open)
->                         if (unlikely(f->f_flags & FMODE_EXEC && !S_ISREG(inode->i_mode))) ...
->                         security_file_open(f)
->                         open()
->
-> So, it looks like adding FMODE_EXEC into f_flags in do_open() is needed in
-> addition to injecting MAY_EXEC into acc_mode in do_open()? Hmmm
+Hi Linus,
 
-Just do both in build_open_flags() and be done with it? Looks like he
-was already setting FMODE_EXEC in patch 1 so we just need to teach
-AppArmor/TOMOYO to check for it and perform file execute checking in
-that case if !current->in_execve?
+Linus Walleij <linus.walleij@linaro.org> =E4=BA=8E2020=E5=B9=B45=E6=9C=8814=
+=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8810:08=E5=86=99=E9=81=93=EF=BC=
+=9A
+>
+> On Thu, May 14, 2020 at 12:22 PM dillon min <dillon.minfei@gmail.com> wro=
+te:
+>
+> > > > +       /* Gamma */
+> > > > +       mipi_dbi_command(dbi, ILI9341_3GAMMA_EN, 0x00);
+> > > > +       mipi_dbi_command(dbi, MIPI_DCS_SET_GAMMA_CURVE, 0x01);
+> > > > +       mipi_dbi_command(dbi, ILI9341_PGAMMA,
+> > > > +                        0x0f, 0x31, 0x2b, 0x0c, 0x0e, 0x08, 0x4e, =
+0xf1,
+> > > > +                        0x37, 0x07, 0x10, 0x03, 0x0e, 0x09, 0x00);
+> > > > +       mipi_dbi_command(dbi, ILI9341_NGAMMA,
+> > > > +                        0x00, 0x0e, 0x14, 0x03, 0x11, 0x07, 0x31, =
+0xc1,
+> > > > +                        0x48, 0x08, 0x0f, 0x0c, 0x31, 0x36, 0x0f);
+> > >
+> > > It seems to be copies of the stuff above, but why is there a differen=
+t
+> > > gamma if you use DBI?
+>
+> > for dbi interface, currently i just copy the code from tiny/ili9341.c.
+> > as so many boards use this driver now, like raspberry pi, etc
+> > i'm afraid it's will not work after modification. so, just leave the
+> > original code there.
+>
+> OK if you move it to ili9341_config it will be clear which panels
+> need this gamma and which panels need another gamma.
+>
+> I think there should be one ili9341_config for the new st,*
+> variant and one for the old DBI variant.
+>
+Okay, it's a good idea to setup two different configs.  ili9341_dbi_config,
+ili9341_dpi_config. first for old dbi variant, second for dpi variant.
+
+> > anther question:
+> > is there any panel driver have dbi & dpi or dpi & dsi supported? which
+> > i mean support
+> > two different panel interface in one driver.
+> > thanks
+>
+> Usually you split the driver in three files becuase a driver can
+> only list one initcall, and also it makes it modularized.
+>
+> There is nothing in-tree but look at my branch here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/=
+log/?h=3Dux500-skomer-v5.7-rc1
+>
+> You see how I split up the s6e63m0 driver in one SPI part
+> and one DSI part:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/=
+commit/?h=3Dux500-skomer-v5.7-rc1&id=3D6c0e1fb5df5fa8fa857dee65f6c0f54d06d1=
+58a7
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/=
+commit/?h=3Dux500-skomer-v5.7-rc1&id=3Dcfbf562cc709b53b62f5fbc7fedf176ffa17=
+b088
+>
+> The overall idea should work the same with DBI.
+>
+> Yours,
+> Linus Walleij
+>
+> Yours,
+> Linus Walleij
+
+Thanks for share, but i thinks it's not suitable to my case. the difference=
+ is
+for panel s6e63m0
+1 spi only for panel register configuration
+2 dpi for rgb video data transfer (drm_panel_init(..., DRM_MODE_CONNECTOR_D=
+PI);)
+
+my case:
+1 support ili9341 by drm mipi dbi (only spi bus,  "3/4 line serial
+interface", pdf chap 7.6.1), Ie, raspberry pi + ili9341 + spi
+2 support ili9341 by spi & dpi (spi for register set, dpi for rgb
+data, "6/16/18 bit parallel rgb interface", pdf chap 7.6.8)
+   Ie, stm32f429+ili9341+ltdc+spi
+these two communication type has no dependency with each other.
+
+DBI has much more difference than DPI & SPI, or DSI & SPI in drm.
+   drm_mipi_dbi support both panel register configuration and video
+data transfer via spi
+   with or without dc pins.
+   also the registration to drm is difference, for dbi is
+mipi_dbi_dev_init and drm_fbdev_generic_setup
+   for panel driver is drm_panel_init and drm_panel_add
+at soc's view, we can drive ili9341 to work just by drm mipi dbi
+(actually it's dbi -> spi bus) without host's lcd or dsi controller
+but for some panel can't transfer video data by spi, and with dpi or
+dsi interface, must connect to host's lcd or dsi controller.
+
+so, for ilitek-ili9341 , it's use different dts binding drive to
+register different client type (dbi, or dpi & spi) to drm.
+actually, there is a driver tiny/ili9341.c support this panel by spi
+bus only already. but, from Sam's suggestion, should extend this
+driver
+to support dpi & spi interface, this is the background of panel-ilitek-ili9=
+341.c
+
+thanks.
+
+best regards.
+
+dillon
