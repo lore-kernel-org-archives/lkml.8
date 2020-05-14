@@ -2,196 +2,170 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE12C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86900C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3739E206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:28:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589466529;
-	bh=c9L1O1InlStlIGidxd6wkgttvIpBEDDoT/skiDV3RvQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lsrUEGA2+Fm31Ir0CWbWkZfScEN9YK8RjMCxXei9BKTU8fsaC2tfmiMAXXF0xRAiC
-	 TksWtlBQQA8ECtNg2OjXn57oJoumTDQM97bxXaz8hC7SZtalW29iQ+Ni0bzhKIJSBa
-	 N6hQDDmontioT4sS2JNRjAqvwBCrbzY6rrwz/GOw=
+	by mail.kernel.org (Postfix) with ESMTP id 526AA20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:28:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BMf5ILAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgENO2s (ORCPT
+        id S1727861AbgENO25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:28:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726051AbgENO2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:28:47 -0400
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CAB82078C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 14:28:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589466526;
-        bh=c9L1O1InlStlIGidxd6wkgttvIpBEDDoT/skiDV3RvQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JxDecQBn7l1dJvcoAMtJKzjbkyoPCFe3jN6GE9bIN4vNpmS0jZ4BL8QmgWPYGhjdx
-         98XZLTISx3rmSGgsqNb9oJHtZnynI6zR0DVGcAvfrbFtKT3rANG5o1pYzdwIFJnaVV
-         3fYXikXicKhyaywo187A9P+UdGinb8CG40vHH6cI=
-Received: by mail-ed1-f53.google.com with SMTP id g9so2527052edr.8
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:28:46 -0700 (PDT)
-X-Gm-Message-State: AOAM533Tn3CP4+LAoWZjuPfY+fBAyCMBlsn+qAlXS7TM2Q16TbJ5OVjz
-        XeM5+5/GVuEPoyOVjlyI/xYCLWCXKdChg/Tqsg==
-X-Google-Smtp-Source: ABdhPJwIyb+lTea2pZcVEwHLHdT4AKiwC3a2Q/WIWGftFZnpe494JxoCIClrf22bFDtgFzG2+qSq9oUl8aupkmV1SZA=
-X-Received: by 2002:a50:ea87:: with SMTP id d7mr4038661edo.48.1589466524869;
- Thu, 14 May 2020 07:28:44 -0700 (PDT)
+        Thu, 14 May 2020 10:28:57 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1175 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726051AbgENO25 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 10:28:57 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ebd551f0000>; Thu, 14 May 2020 07:26:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 14 May 2020 07:28:56 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 14 May 2020 07:28:56 -0700
+Received: from [10.2.172.156] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 14 May
+ 2020 14:28:55 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+CC:     <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] mm/vmstat: Add events for THP migration without split
+Date:   Thu, 14 May 2020 10:28:53 -0400
+X-Mailer: MailMate (1.13.1r5685)
+Message-ID: <67C72AD3-120C-4825-B67B-AECD4245EC4E@nvidia.com>
+In-Reply-To: <1589257372-29576-1-git-send-email-anshuman.khandual@arm.com>
+References: <1589257372-29576-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-References: <20200501152335.1805790-1-enric.balletbo@collabora.com>
- <20200501152335.1805790-8-enric.balletbo@collabora.com> <CAFqH_53h=3OXzwLnw1XT3rHYkMPOPNFBdQdPeFmNubN9qq_Twg@mail.gmail.com>
-In-Reply-To: <CAFqH_53h=3OXzwLnw1XT3rHYkMPOPNFBdQdPeFmNubN9qq_Twg@mail.gmail.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Thu, 14 May 2020 22:28:33 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-pOUuM7LQ1jm6gqpg8acMqDWOHxGucY5XOjq0ctGUkzA@mail.gmail.com>
-Message-ID: <CAAOTY_-pOUuM7LQ1jm6gqpg8acMqDWOHxGucY5XOjq0ctGUkzA@mail.gmail.com>
-Subject: Re: [PATCH v4 7/7] drm/mediatek: mtk_dsi: Create connector for bridges
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_CCB29A76-A65E-4F13-92D6-59BC5B189DEC_=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589466399; bh=OGgSR5gx2J6NyZmuHH/rWO4iXUFj+kkkfJWi2YkP9jc=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=BMf5ILAuRsX0OduG1sqZnhNAIRPq1gAK1FJmBU6AkOJDFqFpdysAFRk5LMLrximJz
+         bNAVrYKUNUd9/TgCA8H7a7ymoz4xHMyvAj0mjdvdENTPaAqtBCS7jBDtGA2XyzQjmc
+         Gve5RYhNIrk7MAlWrFsXXAd1AVdjZ1BKhf+5z23Nco78hdzfLP5V0bX3nkqHvppgbV
+         08qFzgs7ESSHJ96c9saFbak8wCbVzv/EuICxTYBe8P5Rx7GRRMaFsVW2FLgAlisEcU
+         vrWHm6SPC1YcNl0/dXyr/Akr/UP29fUQOAm51uP05es0C1c9bLw8l4z3Bc1BVvpihZ
+         G2sfTbUi93b9g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Enric:
+--=_MailMate_CCB29A76-A65E-4F13-92D6-59BC5B189DEC_=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Enric Balletbo Serra <eballetbo@gmail.com> =E6=96=BC 2020=E5=B9=B45=E6=9C=
-=8814=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8812:41=E5=AF=AB=E9=81=93=
-=EF=BC=9A
+On 12 May 2020, at 0:22, Anshuman Khandual wrote:
+
+> Add the following new trace events which will help in validating migrat=
+ion
+> events involving PMD based THP pages.
 >
-> Hi Chun-Kuang,
+> 1. THP_PMD_MIGRATION_ENTRY_SET
+> 2. THP_PMD_MIGRATION_ENTRY_REMOVE
 >
-> Missatge de Enric Balletbo i Serra <enric.balletbo@collabora.com> del
-> dia dv., 1 de maig 2020 a les 17:25:
-> >
-> > Use the drm_bridge_connector helper to create a connector for pipelines
-> > that use drm_bridge. This allows splitting connector operations across
-> > multiple bridges when necessary, instead of having the last bridge in
-> > the chain creating the connector and handling all connector operations
-> > internally.
-> >
-> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> There are no clear method to confirm whether a THP migration happened w=
+ith
+> out involving it's split. These trace events along with PGMIGRATE_SUCCE=
+SS
+> and PGMIGRATE_FAILURE will provide additional insights. After this chan=
+ge,
 >
-> A gentle ping on this, I think that this one is the only one that
-> still needs a review in the series.
-
-This is what I reply in patch v3:
-
-I think the panel is wrapped into next_bridge here,
-
-if (panel) {
-    dsi->next_bridge =3D devm_drm_panel_bridge_add(dev, panel);
-
-so the next_bridge is a panel_bridge, in its attach function
-panel_bridge_attach(),
-according to the flag DRM_BRIDGE_ATTACH_NO_CONNECTOR, if not exist,
-it would create connector and attach connector to panel.
-
-I'm not sure this flag would exist or not, but for both case, it's strange.
-If exist, you create connector in this patch but no where to attach
-connector to panel.
-If not exist, the next_brige would create one connector and this brige
-would create another connector.
-
-I think in your case, mtk_dsi does not directly connect to a panel, so
-I need a exact explain. Or someone could test this on a
-directly-connect-panel platform.
-
-Regards,
-Chun-Kuang.
-
+> A single 2M THP (2K base page) when migrated
 >
-> Thanks,
->  Enric
+> 1. Without split
 >
-> > ---
-> >
-> > Changes in v4: None
-> > Changes in v3:
-> > - Move the bridge.type line to the patch that adds drm_bridge support. =
-(Laurent Pinchart)
-> >
-> > Changes in v2: None
-> >
-> >  drivers/gpu/drm/mediatek/mtk_dsi.c | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/media=
-tek/mtk_dsi.c
-> > index 4f3bd095c1ee..471fcafdf348 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > @@ -17,6 +17,7 @@
-> >
-> >  #include <drm/drm_atomic_helper.h>
-> >  #include <drm/drm_bridge.h>
-> > +#include <drm/drm_bridge_connector.h>
-> >  #include <drm/drm_mipi_dsi.h>
-> >  #include <drm/drm_of.h>
-> >  #include <drm/drm_panel.h>
-> > @@ -183,6 +184,7 @@ struct mtk_dsi {
-> >         struct drm_encoder encoder;
-> >         struct drm_bridge bridge;
-> >         struct drm_bridge *next_bridge;
-> > +       struct drm_connector *connector;
-> >         struct phy *phy;
-> >
-> >         void __iomem *regs;
-> > @@ -977,10 +979,19 @@ static int mtk_dsi_encoder_init(struct drm_device=
- *drm, struct mtk_dsi *dsi)
-> >          */
-> >         dsi->encoder.possible_crtcs =3D 1;
-> >
-> > -       ret =3D drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0)=
-;
-> > +       ret =3D drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL,
-> > +                               DRM_BRIDGE_ATTACH_NO_CONNECTOR);
-> >         if (ret)
-> >                 goto err_cleanup_encoder;
-> >
-> > +       dsi->connector =3D drm_bridge_connector_init(drm, &dsi->encoder=
-);
-> > +       if (IS_ERR(dsi->connector)) {
-> > +               DRM_ERROR("Unable to create bridge connector\n");
-> > +               ret =3D PTR_ERR(dsi->connector);
-> > +               goto err_cleanup_encoder;
-> > +       }
-> > +       drm_connector_attach_encoder(dsi->connector, &dsi->encoder);
-> > +
-> >         return 0;
-> >
-> >  err_cleanup_encoder:
-> > --
-> > 2.26.2
-> >
-> >
-> > _______________________________________________
-> > Linux-mediatek mailing list
-> > Linux-mediatek@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> ................
+> pgmigrate_success 1
+> pgmigrate_fail 0
+> ................
+> thp_pmd_migration_entry_set 1
+> thp_pmd_migration_entry_remove 1
+> ................
+>
+> 2. With split
+>
+> ................
+> pgmigrate_success 512
+> pgmigrate_fail 0
+> ................
+> thp_pmd_migration_entry_set 0
+> thp_pmd_migration_entry_remove 0
+> ................
+>
+> pgmigrate_success as 1 instead of 512, provides a hint for possible THP=
+
+> migration event. But then it gets mixed with normal page migrations ove=
+r
+> time. These additional trace events provide required co-relation.
+
+To track successful THP migrations, the code below should work, right?
+
+diff --git a/mm/migrate.c b/mm/migrate.c
+index b1092876e537..d394f5331288 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1220,6 +1220,8 @@ static ICE_noinline int unmap_and_move(new_page_t g=
+et_new_page,
+         * we want to retry.
+         */
+        if (rc =3D=3D MIGRATEPAGE_SUCCESS) {
++               if (PageTransHuge(newpage))
++                       count_vm_event(THP_PMD_MIGRATION_SUCCESS);
+                put_page(page);
+                if (reason =3D=3D MR_MEMORY_FAILURE) {
+                        /*
+
+Maybe you could give more details on why you want to add the THP migratio=
+n event and
+how you are going to use the event in your use case. That would be very h=
+elpful to this
+code review. Are you going to do anything if you see THP migration failur=
+es?
+
+Thanks.
+
+=E2=80=94
+Best Regards,
+Yan Zi
+
+--=_MailMate_CCB29A76-A65E-4F13-92D6-59BC5B189DEC_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl69VaUPHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKl+kP/RvAsnjpBdzFa4nok58lz5bwn+wwXw+LmbBm
+qXOUo6mTy5zfB7MpB07loMJm9rh9PsBGbmMlUL3fuchA2UofWs6PU0VwydJUto6v
+YDyxj3/Wd5gd65wkEtNjQziQ5y2t5dEXDDX63HW5drbJPG6VR1AKAAwxhYfRw5Ao
+cjeJS1hFvplf/SX4sZEOaqoc/b72V5mq4fJ4eDQk0h2GKDI0S4rkYn1MYvYFziuc
+vScp76N6tFP3k7LRxoWNftW7iE8xP3oIE98xS0k7lPr1TCIo0s9SDf/wwJTMp2+p
+UvmTemGIwGuIkTqTjsNEmyeoEYv0dC4xl71i8fAJX0ms3VEy+apKxH2RNGGfKIxG
+M5iRuM1Ar+4b+S17GCKUgkb6BgbTsm1kiKa8+9V6B10M7LKLFpRQNioeidv+77qi
+yqs+d38Y75b1w8ZklJ3b2mKHSukbmsPs0F8MiKlgr3USxGx6XqNRa6ZNBFgyddVj
+BTkSrsyPPcWabYkwt4gGTd9RRKM4NHgeLG9FDAm+QK2bZJLrTpZgMivYbKfjkUct
+zqzQHIthMrkXQ7kTWCHhO1BE6wLdW2naClzkIvQMxjDPeoxlKuaB0Xj0q3EKfR3K
+0sUkRyOJ0BMc22frfiDR0QQgouTIevQg94meTIic5nqNDU+fB6W97f1ksL/cU2cO
+CtfSXJlC
+=iRZb
+-----END PGP SIGNATURE-----
+
+--=_MailMate_CCB29A76-A65E-4F13-92D6-59BC5B189DEC_=--
