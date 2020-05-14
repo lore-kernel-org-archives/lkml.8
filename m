@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A85C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA11EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE84420727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 814B620727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482717;
-	bh=AaG/Kbi5od21eNCWlwJuZhmK5c2eLLCkNMUr9nuuBg8=;
+	s=default; t=1589482725;
+	bh=D7ZT3DtQwy5V14UoU3ySOFYsTs2UdOQ7++/hr78Jk/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VlPq2NiJza9jFZHdHt9lapUDQQZATdOMSfs82fGh2KmRA7ua9V5nHColGtg5IJEQD
-	 e/06EdONVk2kCfpcpiY2qndRXrREXEgQt6GdcGnhVePNaoY6HUnnMq1xIprupQn83/
-	 PXn2cPeAPzyVBEP7+4c3RYtxDiKdZUcvweFFuWAU=
+	b=caXC/VVUwnHWVVb573L4v0JhFgC0lrvOQeuzXz7GX00MidQJ7N7UXhFyAhUn2aTvv
+	 xHUErwuxAmmmsXYV57Rl6DcGAkAiUf5eGQn06/T9AWrIsGTLhEgTDgWDiIWn5cAR1+
+	 PUd277r24TmnRdNwpfLxxjs+v6DC9YBkeSQCShCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbgENS6h (ORCPT
+        id S1729911AbgENS6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:58:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57310 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:58:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729692AbgENS4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:56:23 -0400
+        id S1728410AbgENS4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:56:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42783207ED;
-        Thu, 14 May 2020 18:56:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B92120727;
+        Thu, 14 May 2020 18:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482582;
-        bh=AaG/Kbi5od21eNCWlwJuZhmK5c2eLLCkNMUr9nuuBg8=;
+        s=default; t=1589482581;
+        bh=D7ZT3DtQwy5V14UoU3ySOFYsTs2UdOQ7++/hr78Jk/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y9nq2Uj6c93StkCFCaa6D7R1Hlf1J28o2Qwuu+WVs70O+G3dedyB26FuOeA+nTWlk
-         tr1aPBj54THVAHYudhz4b+ZLGCInTESceDBUAlVEUOFbpih4YLamjhAFdmM0gPlNYp
-         YTIqqR+bai9lQESaKOaMgASmV7v97ZsMtQYP+aec=
+        b=wwdk9y51f+F/NHXTtchEs4ucn6vWeZketWsgphg4+TH//2TMzF/hbwtlEBtPFj2ld
+         i/wxn9btVKGWOUuqhw1UFKImZR9FBXP5iKcOrl5QYL3BtqQureEFBvWRZv6KuPVINI
+         0l+yo1HXEeW0bBp5AAFo1AclHjghi1I1P/pbtz/E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 26/27] ARM: futex: Address build warning
-Date:   Thu, 14 May 2020 14:55:49 -0400
-Message-Id: <20200514185550.21462-26-sashal@kernel.org>
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 25/27] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
+Date:   Thu, 14 May 2020 14:55:48 -0400
+Message-Id: <20200514185550.21462-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185550.21462-1-sashal@kernel.org>
 References: <20200514185550.21462-1-sashal@kernel.org>
@@ -60,68 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 8101b5a1531f3390b3a69fa7934c70a8fd6566ad ]
+[ Upstream commit 3bd12da7f50b8bc191fcb3bab1f55c582234df59 ]
 
-Stephen reported the following build warning on a ARM multi_v7_defconfig
-build with GCC 9.2.1:
+asus-nb-wmi does not add any extra functionality on these Asus
+Transformer books. They have detachable keyboards, so the hotkeys are
+send through a HID device (and handled by the hid-asus driver) and also
+the rfkill functionality is not used on these devices.
 
-kernel/futex.c: In function 'do_futex':
-kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
- 1676 |   return oldval == cmparg;
-      |          ~~~~~~~^~~~~~~~~
-kernel/futex.c:1652:6: note: 'oldval' was declared here
- 1652 |  int oldval, ret;
-      |      ^~~~~~
+Besides not adding any extra functionality, initializing the WMI interface
+on these devices actually has a negative side-effect. For some reason
+the \_SB.ATKD.INIT() function which asus_wmi_platform_init() calls drives
+GPO2 (INT33FC:02) pin 8, which is connected to the front facing webcam LED,
+high and there is no (WMI or other) interface to drive this low again
+causing the LED to be permanently on, even during suspend.
 
-introduced by commit a08971e9488d ("futex: arch_futex_atomic_op_inuser()
-calling conventions change").
+This commit adds a blacklist of DMI system_ids on which not to load the
+asus-nb-wmi and adds these Transformer books to this list. This fixes
+the webcam LED being permanently on under Linux.
 
-While that change should not make any difference it confuses GCC which
-fails to work out that oldval is not referenced when the return value is
-not zero.
-
-GCC fails to properly analyze arch_futex_atomic_op_inuser(). It's not the
-early return, the issue is with the assembly macros. GCC fails to detect
-that those either set 'ret' to 0 and set oldval or set 'ret' to -EFAULT
-which makes oldval uninteresting. The store to the callsite supplied oldval
-pointer is conditional on ret == 0.
-
-The straight forward way to solve this is to make the store unconditional.
-
-Aside of addressing the build warning this makes sense anyway because it
-removes the conditional from the fastpath. In the error case the stored
-value is uninteresting and the extra store does not matter at all.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87pncao2ph.fsf@nanos.tec.linutronix.de
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/futex.h | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
-index cc414382dab4b..561b2ba6bc284 100644
---- a/arch/arm/include/asm/futex.h
-+++ b/arch/arm/include/asm/futex.h
-@@ -162,8 +162,13 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 	preempt_enable();
- #endif
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 0fd7e40b86a0d..8137aa3437068 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -561,9 +561,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
+ 	.detect_quirks = asus_nb_wmi_quirks,
+ };
  
--	if (!ret)
--		*oval = oldval;
-+	/*
-+	 * Store unconditionally. If ret != 0 the extra store is the least
-+	 * of the worries but GCC cannot figure out that __futex_atomic_op()
-+	 * is either setting ret to -EFAULT or storing the old value in
-+	 * oldval which results in a uninitialized warning at the call site.
-+	 */
-+	*oval = oldval;
++static const struct dmi_system_id asus_nb_wmi_blacklist[] __initconst = {
++	{
++		/*
++		 * asus-nb-wm adds no functionality. The T100TA has a detachable
++		 * USB kbd, so no hotkeys and it has no WMI rfkill; and loading
++		 * asus-nb-wm causes the camera LED to turn and _stay_ on.
++		 */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
++		},
++	},
++	{
++		/* The Asus T200TA has the same issue as the T100TA */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
++		},
++	},
++	{} /* Terminating entry */
++};
  
- 	return ret;
+ static int __init asus_nb_wmi_init(void)
+ {
++	if (dmi_check_system(asus_nb_wmi_blacklist))
++		return -ENODEV;
++
+ 	return asus_wmi_register_driver(&asus_nb_wmi_driver);
  }
+ 
 -- 
 2.20.1
 
