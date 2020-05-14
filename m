@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D46C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 05:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 05:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6101205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 05:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDAB205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 05:03:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="niezh88G";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="RxJW/0nA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="e6kOZwoC";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="o6c5jBRb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgENFDb (ORCPT
+        id S1726192AbgENFDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 01:03:31 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:54630 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbgENFDP (ORCPT
+        Thu, 14 May 2020 01:03:35 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:35471 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbgENFDV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 01:03:15 -0400
+        Thu, 14 May 2020 01:03:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589432594; x=1620968594;
+  t=1589432600; x=1620968600;
   h=from:to:cc:subject:date:message-id:references:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=mSFKxGNK3tcU0apiuObjXoQJ+Y0Rf/5QEWeyIXgG9QU=;
-  b=niezh88G21eae5hFZzhzTVc1icCRL/gcb/UI4eQidr+NPQ53GWRtjiYX
-   uZJQJT2b/73oHdYH6tA9DUeroq2R0JFXvrbmCiSjVRLRGTf1XfLvSdRPS
-   rkh4+1d0+t+QBKpTKGQpq7b3zD6wcb8mlXR4TSiBTj34aDxdDajYI5yWk
-   tW2+ru4Cc6tm41rm69yTEmf0PXDClr4BWOIu866dLfdi5Hlr8Yy4CrQIK
-   D6kwvj7yr4mslWjOzd07A/fIsqXKpPMewLW17YosHC8j7WOvDSruoxE11
-   5fTNTzuuIsNeIIU1t5xZjkASpo54ic59ckVD8N8nNcykOeqv4HdE/eM41
-   g==;
-IronPort-SDR: cxLuRPIpnYDjDji4CdbSo9m23HywaqaCC8q2T6e48K6+nf5lHJy/I5Puk4N8nVmQwFK53ustIO
- z3ttkzc89XZp9xDiT4obhO9XoLFe1oAMvemjJkx5y1xE5Up6ufvw23E95vD/ycSkVdp3gbqjI3
- MHV6/IcjTuWC+D+Y5QTi4rhHZ507UKj5iGa7mEJJOmg1SKNyf99TNbkX1wKQtoyxGRE8ZbnVWV
- 2wnGKTvMqtABeP7u5w1f2n5MGfdGyWg/a4CponPL5hBzgn9iEaxMr5z88gSfNQZn/+D+n5PNiR
- hi8=
+  bh=+YVMvm9pRYREiIzIQWVBMuBAx7EqbPvCLveGl6UB6Ok=;
+  b=e6kOZwoCinbC+RVtZ4qfWpGZublwZylX2k6PSUtJcSgcD7BHBcwz0Mz2
+   4Mka1GOD4nyLvi8jfqSfmuAJYYbq18UNitRcLyVIcYuuEN6mXLM+lGCZl
+   yT6oE6PUt36NkTYmqX+msIfs8ezVWcihQCqxlcDwDtHLSnGIoeB93/vp4
+   AtAPNbPYbgh5dJuFwv4MD1TTmHmQixXMlDgAav7GVVshm5YUrR8n6pgE3
+   OOqbEURghxzoy707gBpXHyZqJ15DZxeqVBN+xbks2/nfzGF8nT69jZjwE
+   efDxI22h2Rp+XS4MqMNy+mZuoRdRQoWg+7qYWd0a067alr55Oz7gkTINB
+   Q==;
+IronPort-SDR: D/5IThzsK4Rd0y8X9emAdEUl/SFGt/2CJL4Whk3F+tbu/4jSr7pvnbkThKo4oZNYDz7vUazAEJ
+ 4MidPV8fA4FvEpE1szQaCM2GaY8PAOZT2x7ZjZtPmn1MFIA4RK/s9wW4x8xa/nnE9kCyK6TtuP
+ WSsP8an9j/TGY8BO6mkZaJ1MLCL2vFbyCe/i8Y/gCgpwNKq/gshx9DB1yiJFPT6mZ8t6C68ZPs
+ n/WoCrrdf1og97jDIJcrgoBvhoIjMYK7b97W6bIZ/4gaBsxzniPgzifn/Ob8U9csTHivaCjuBC
+ nYM=
 X-IronPort-AV: E=Sophos;i="5.73,390,1583218800"; 
-   d="scan'208";a="76601054"
+   d="scan'208";a="79551121"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 22:03:14 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 22:03:17 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 13 May 2020 22:03:13 -0700
+ 15.1.1713.5; Wed, 13 May 2020 22:03:17 -0700
 Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
  email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Wed, 13 May 2020 22:03:16 -0700
+ Transport; Wed, 13 May 2020 22:03:20 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kgZEFt9HKtG/wyeBuvXHSRKrLfiD4IgeBENOr884+RSzefJX3QYqG3mEcHKRoZwWuEaqOW3pEqVyL2IqXUaL2Sz77/VgJh/8wRXFKL0oxV6RidG1ycAlmUU/esOPUCvEaaZou5V+Le4qgWh4DhLiyW+pz+HDa+lSGXR/qtjBn/HLqgF3WeHk/UVRJjHwzhUxQg3LNVtDfHhn9+JxIOMlj/ON4oOsWvOUYa+J/jEExSZeOBGpKM7ou8NSl7UU/RR4rbl0tYOi7Rb9XxK78RfmQKDphGxyKKON9tF5CIZDz+EBR3xdcXSWNhLCeh8bnnuEV9AMjDUbXKPoKhvB3Jj0Xw==
+ b=ZERY6ryP5KsGnZmmfFi4FqPZmiB7RzjqmC/yknOGnHMtoEcxCn4POS57IEEJoncxqOig+9+jQOl86Wb6nWecYjIiJhPD9Jhvo43EUkUe0bw6TPd7xh8krAPe0pfL81LP8uJHBGwJIZngRRdJBCIQCYSfb2+CXakohpKGRSRdj0Xeh5lRv0jR5xs5fukMZ4wbeFrdv+s+Xqt2br9Os0DBRJ2q9Jb8EtAveRmIj9LQRAICjPOQTAGZvTDodHTrBpytZU4bgKuXPh/UaVPsJCIPX9pds/ifKj5FIRnC+cj7IOLOLOLFXDPqQxG0u2cjMgboquxK4S1nfKKEs1n2hP04kg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DfPoTcRLO6itAxRwyOhpuxBtGL4L/TP4rLhumQT/DAM=;
- b=MZ2CcrHrIvRzABd5KSu9b4wy6pbdxEgDPqu2OmT26PkjrDAZO2hszCkXo5v02ygiJTxcIq6K9zsle5TcVV9O+tpKBAqUNZ/mvK8MR5gpvzbPLvb/TT4K+yRvqKd5bxoS8Uv4tI+afNfUqAFBEXiC4C28BGPDVEwoVOQFvLSArfOQbYOH6LwzcJgJrMfHXu7OJ+vmpEPNvUyuFDIjWGyE+tDz11dZzpndlJXiiB83SDX5E8Vdy/OKlPY+tjeLhHfJFVaMrjjxcAo5SVe2YU0qcpzu2bv4ddH407T66cy20d/opfZK9t91ZwcObAfXPDYx7G9ojoz9nOEoFYOQebu88Q==
+ bh=OC+EAvpAO+0aQRN7D/Yvy10ctQQHTaEK9Z1GkajQiEE=;
+ b=XOWsj1rk7Ow2wCjIXzbzl9jDkkQdXndsh1E4pwAQiSgU5e2ZD30Zf0jjRw4gtR49p0W70pZDzi8r44HUch9bVPxja0sLjcyjUdwPHyJDXcA/JjZwRfhRmmyBkVFmREbMBNZqCENaMdynTviVASoNi58+b63Z+0RB2Om7hgTY3qwBZ6Um+4EfqBjWEF2r+Q2zAykbMTWpGRqwJvIHXkVVgA+uvaZ7gaoo6qI2lDQfc6NMR6D1P5UlNnXR2m0FyOSnRdIO7BrhDbzx7I2N4yD12ix1RsNC2wOpdvDPZgY/KjgrB3tTefX2/U7fCrpfgaZ9hs5h1klMtz6/y2D9AnO2ww==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microchip.com; dmarc=pass action=none
  header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
@@ -68,17 +68,17 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DfPoTcRLO6itAxRwyOhpuxBtGL4L/TP4rLhumQT/DAM=;
- b=RxJW/0nAyQzI0/AjCkZWlS8SReFur8MGXurQgmBEGWKiEqYLbTrXlkUkywt464+n0TroQ0ESmGCd3743vx98qHZLvewXZgLDs34rLajxHnkChLl2Rz7tCGNjxAj49eoObm1PMjZbcvtlHigSA2QWD3bs5arfqWccFjU+SpvmxsU=
+ bh=OC+EAvpAO+0aQRN7D/Yvy10ctQQHTaEK9Z1GkajQiEE=;
+ b=o6c5jBRbSxPsZ8u9BT6H+kypNXGj2vvqOgSuzvsAM+OZXxPw04uyqZjptEAp4+TNN8AWlBdoBq2ZsR7DVqVStiFvYlSzGHHsuyjFayJPYqGH5QgsHyoE8t1HVqPZPuMlxUZK7ea/fe+Vyj6+TWEvHo5ijzZ+YaTG1NKQqIN0Kaw=
 Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
  by BY5PR11MB4483.namprd11.prod.outlook.com (2603:10b6:a03:1bc::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24; Thu, 14 May
- 2020 05:03:13 +0000
+ 2020 05:03:16 +0000
 Received: from BY5PR11MB4419.namprd11.prod.outlook.com
  ([fe80::d847:5d58:5325:c536]) by BY5PR11MB4419.namprd11.prod.outlook.com
  ([fe80::d847:5d58:5325:c536%7]) with mapi id 15.20.3000.022; Thu, 14 May 2020
- 05:03:13 +0000
+ 05:03:16 +0000
 From:   <Tudor.Ambarus@microchip.com>
 To:     <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
         <Nicolas.Ferre@microchip.com>
@@ -86,13 +86,12 @@ CC:     <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <Codrin.Ciubotariu@microchip.com>,
         <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 09/16] ARM: dts: at91: sama5d2: Add DMA bindings for the flx3
- SPI function
-Thread-Topic: [PATCH 09/16] ARM: dts: at91: sama5d2: Add DMA bindings for the
- flx3 SPI function
-Thread-Index: AQHWKaz4TQSCVge1sUO+XxKHywxFMg==
-Date:   Thu, 14 May 2020 05:03:12 +0000
-Message-ID: <20200514050301.147442-10-tudor.ambarus@microchip.com>
+Subject: [PATCH 14/16] ARM: dts: at91: sama5d2_xplained: Add alias for DBGU
+Thread-Topic: [PATCH 14/16] ARM: dts: at91: sama5d2_xplained: Add alias for
+ DBGU
+Thread-Index: AQHWKaz6EKQYTGVqKUifmquBLv69cw==
+Date:   Thu, 14 May 2020 05:03:16 +0000
+Message-ID: <20200514050301.147442-15-tudor.ambarus@microchip.com>
 References: <20200514050301.147442-1-tudor.ambarus@microchip.com>
 In-Reply-To: <20200514050301.147442-1-tudor.ambarus@microchip.com>
 Accept-Language: en-US
@@ -103,28 +102,28 @@ authentication-results: bootlin.com; dkim=none (message not signed)
  header.d=none;bootlin.com; dmarc=none action=none header.from=microchip.com;
 x-originating-ip: [94.177.32.156]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b1adc88e-431c-4cc1-32f4-08d7f7c41ab8
+x-ms-office365-filtering-correlation-id: c8793658-1b2d-459d-4a3d-08d7f7c41cf5
 x-ms-traffictypediagnostic: BY5PR11MB4483:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR11MB44834D6340E07E909267A4EBF0BC0@BY5PR11MB4483.namprd11.prod.outlook.com>
+x-microsoft-antispam-prvs: <BY5PR11MB448320A51FD6A75A418D0DF2F0BC0@BY5PR11MB4483.namprd11.prod.outlook.com>
 x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
 x-forefront-prvs: 040359335D
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GiySZp603Uj7/ZREf6sv3wpE9+j2R43P9pzrpkvIk5My6cEAGBd5ixC93lZrsHbNT8VICE1R1DZZtqYfygupO+I288LJmbvJaqAG6iID6xBbKIhk+f7OroDKJ3SlWjOvbsbm+kUtflV+rzgu3nbOn7liX1SXjkFHAzEZBSgVTFkdm4ZwAuiHoe5dq12yfIGRAauNZ6PGBThnvZM6MuW0yKBbZNvodEs33h/i0FSHFf8DzrdeKwXEImP45D6/NklaiXFw75L37WGQe28hR83QuhEeZLAr4fpRKGTOg3xiNFkxPKHNuNattEjOlDbKUY+BZgbolHBSN+Cg9R82HAlN7TarNpuS2A+3p/D5o9qj415Q3ihkq8VGHY4XSGvFhgEHU8Zcd63x9AM90VKoGbmcEGFrPrG8ulBBcl6IB1YOgImjM52oDO6Bj5uDbQmfhynF
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(346002)(396003)(136003)(39860400002)(6506007)(76116006)(6486002)(26005)(66446008)(8676002)(6512007)(86362001)(66946007)(2616005)(64756008)(8936002)(478600001)(66476007)(66556008)(186003)(1076003)(4326008)(2906002)(71200400001)(6636002)(54906003)(316002)(107886003)(5660300002)(36756003)(110136005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: qRa+1N2RAC663xj1u897D9103zKMGTavz1G8J4Ut+5igIJMExgMTB+KZOQFcKdreJeIhSBymX1qVbaltMBUVeLBbYADwhWJkSrws08gohmHPJiPRCwbfyE8lhWIgqCoV5jB3eitfb38Sp686MlMTrv7T83JpoOZmUkuCF5PMm/+Z01cA+NdDw2P6uF09MkXv4qXINHIOiKz+sjrsE1AFz9C/qA3vwZNC4f8X/RN49/2/xImT3SiyMHlneKHG4sQqLvQH4N7NuqHma0HT7gxvOSAZSKKO8pCwV4/+KETzg1Bm2sROhOcO9tabfa1KU9JFQJJhnx4tX8dIM9Ob+xnXyG8ax5312OOFoWr24AvrRU36OAKMjh5Hb/V7dZdWAB/7ITfX/YHVPezkeyU7Zs/QBiuQyyUXPNbFx4/z72bEQAHyDvBgbQmWwg4QRxNVPVSKwzeC5OP49xu+LDuZx+tsJvP5qa5Cgg5Uu1TSYhV7kAEATnR9tIjIF41Y9BzPealF
+x-microsoft-antispam-message-info: rmQHOyHsW84DtwSyQr+ArfOLOQxODdxL0Ybp+AxqKhEbj4OnUOodN2cW5aBuiw/uMtghx+2Mst983eN5ROnyMUiufV4t3nS2BAQAeBqyYtpPbws7O0mpjBmQktZncDTYWKZfl3MstM7vYYl3co2j2sPe9IFzf+B6qUl9nKtUoF7fYJN+RpiRXkzgaLPYaJNUbzYBuvTpLybL0KBDjTqyVE+tcsaWEH1zuol/pO9E+9TODpsMMMRGnMzRdQhKibrtSM162842U8D+QSy3Fz/CCBDZmMAaJRGKGNl+DN3oKOpRtJCLLKZUHCPmpzj+L883LmyzcHQa5vwD0PNSrWhWjuoqSUoisPENrKeAihAyUy0CxxLt2Lty0CsXxO9HrhHBi/XJ38H8Cu2XCAFCyPWTlY1FYj9DmLe3ia6D6BggOdEni496vMe+DJ/Qh2Bw/ibN
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(346002)(396003)(136003)(39860400002)(6506007)(76116006)(6486002)(26005)(66446008)(8676002)(6512007)(86362001)(66946007)(2616005)(64756008)(8936002)(478600001)(66476007)(66556008)(186003)(1076003)(4326008)(2906002)(4744005)(71200400001)(6636002)(54906003)(316002)(107886003)(5660300002)(36756003)(110136005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 4HEXe7xZws3I8BXXbI/77zLoJkR/KXjB3E/Yx1U9/HgFPXT4I/96U0Ksx9JrS6RdRzdVsvHQMSeu3/nA+JAvH4q3D1zXXlxLkf9soYS02jEHKz9bZ43LhGgLxdFh7mv83sr49Z6TSTAscowlS+9qAzewT5ENtUjz1nhBTMedHLikgFuscZsucqtyPHEUJy2qlwmiIoapUEcfqUrPqDOI1IbgMIOlzmmi/U8dKAwsQMb4sgUKFUcvAbVMrLSLkAlmV+M5i5FaHOLdYqzRKP9wTDowErN63NcmJMPpWfI93fqhYdc4v1e11afXNIvgqqW1vDEDJpnGQZneFidxD6vZLKPZ89Aj00eaGDRXwhKFa2nIAlbFCH21wRw0L4jiXrjNz7VLGsAPp3LQ2LUH4d8tETPrzA81qwDf6tdbsLeuvIaNlUSCFNQROqVBqj0MBI5zEE5lmZ/PshnF1Q3hbJxw7mj09KARighGU9xf76aM2G42XMCvxYWxT6qlun920lh+
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1adc88e-431c-4cc1-32f4-08d7f7c41ab8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2020 05:03:12.7995
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8793658-1b2d-459d-4a3d-08d7f7c41cf5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2020 05:03:16.6413
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VAgoe3+n8DP/EoT7f2yALsVsBKvwLn8uc0HFeKs1mmCGDu/8dqltP3RJfk23vrOCS3blYOXowJVeNabt97+/JVxB/aQ7h+JTqgYkdIWr8A4=
+X-MS-Exchange-CrossTenant-userprincipalname: gzfDLuBoIW03uF9qOc7f3yRSWBRkm1xPqjbrVMI7YBzaD68/HB9JnN1wvtoQXPnKZNdhUuEwWQOSNe/CfWKM6BCwoNzGxO0XOR38T1OKUd0=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4483
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -133,64 +132,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-Spare boards of duplicating the DMA bindings. Describe the flx3
-DMA bindings in the SoC dtsi. Users that don't want to use DMA
-for their flexcom functions have to overwrite the flexcom DMA
-bindings in their board device tree.
+The aliases should be defined in the board dts rather than in the
+SoC dtsi. Don't rely on the aliases defined in the SoC dtsi and define
+the alias for the Serial DBGU in the board dts file. sama5d2 boards use
+the "serial0" alias for the Serial DBGU, do the same for sama5d2_xplained.
 
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 1 +
- arch/arm/boot/dts/at91-sama5d2_icp.dts      | 1 +
- arch/arm/boot/dts/sama5d2.dtsi              | 9 +++++++++
- 3 files changed, 11 insertions(+)
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dt=
-s/at91-sama5d27_som1_ek.dts
-index 6ad66d034305..1aa8b79d618b 100644
---- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-@@ -179,6 +179,7 @@
- 				};
+diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dt=
+s/at91-sama5d2_xplained.dts
+index da4442715ea5..01ffbddd4ab8 100644
+--- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+@@ -16,6 +16,10 @@
+ 	model =3D "Atmel SAMA5D2 Xplained";
+ 	compatible =3D "atmel,sama5d2-xplained", "atmel,sama5d2", "atmel,sama5";
 =20
- 				spi5: spi@400 {
-+					dmas =3D <0>, <0>;
- 					pinctrl-names =3D "default";
- 					pinctrl-0 =3D <&pinctrl_flx3_default>;
- 					status =3D "disabled"; /* Conflict with isc. */
-diff --git a/arch/arm/boot/dts/at91-sama5d2_icp.dts b/arch/arm/boot/dts/at9=
-1-sama5d2_icp.dts
-index 4a01ab8e7e70..559d8ae93af9 100644
---- a/arch/arm/boot/dts/at91-sama5d2_icp.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_icp.dts
-@@ -167,6 +167,7 @@
- 	status =3D "okay";
-=20
- 	spi5: spi@400 {
-+		dmas =3D <0>, <0>;
- 		pinctrl-names =3D "default";
- 		pinctrl-0 =3D <&pinctrl_mikrobus1_spi &pinctrl_mikrobus1_spi_cs>;
- 		status =3D "okay";
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dts=
-i
-index 66aa8d6502d3..5a0162915ae7 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -919,6 +919,15 @@
- 					interrupts =3D <22 IRQ_TYPE_LEVEL_HIGH 7>;
- 					clocks =3D <&pmc PMC_TYPE_PERIPHERAL 22>;
- 					clock-names =3D "spi_clk";
-+					dmas =3D <&dma0
-+						(AT91_XDMAC_DT_MEM_IF(0) |
-+						 AT91_XDMAC_DT_PER_IF(1) |
-+						 AT91_XDMAC_DT_PERID(17))>,
-+					       <&dma0
-+						(AT91_XDMAC_DT_MEM_IF(0) |
-+						 AT91_XDMAC_DT_PER_IF(1) |
-+						 AT91_XDMAC_DT_PERID(18))>;
-+					dma-names =3D "tx", "rx";
- 					atmel,fifo-size =3D <16>;
- 					status =3D "disabled";
- 				};
++	aliases {
++		serial0 =3D &uart1;	/* DBGU */
++	};
++
+ 	chosen {
+ 		stdout-path =3D "serial0:115200n8";
+ 	};
 --=20
 2.23.0
