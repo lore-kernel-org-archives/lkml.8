@@ -2,156 +2,181 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7732C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0CFA2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44FA22065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:14:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kMwWd2No"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgENUNo (ORCPT
+        id S1727982AbgENUON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 16:13:44 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:59634 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbgENUNo (ORCPT
+        Thu, 14 May 2020 16:14:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727935AbgENUOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 16:13:44 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 74AA11C0288; Thu, 14 May 2020 22:13:41 +0200 (CEST)
-Date:   Thu, 14 May 2020 22:13:40 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Miroslav Benes <mbenes@suse.cz>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: [PATCH 4.19 41/48] x86/unwind/orc: Prevent unwinding before ORC
- initialization
-Message-ID: <20200514201340.GA14148@amd>
-References: <20200513094351.100352960@linuxfoundation.org>
- <20200513094402.645961403@linuxfoundation.org>
- <20200513215210.GB27858@amd>
- <20200514194457.wipphhvyhzcshcup@treble>
+        Thu, 14 May 2020 16:14:12 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91581C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:14:11 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x77so1865506pfc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:14:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EJ2/s9c4x/GRQ86qgnYEX7vyrjQPUH1/Y15C1WKzHao=;
+        b=kMwWd2NostkcBQxxD2U1/OTKQgmVqcW4Xy3QDrqqUrjfnNW+bzK2kNLTAzDZKICpL0
+         uPtTD0Ecm07LUzRt2kHXnGDt06sdSYHkOVOjn7lgtW2iuYxRr7ZrlGcWtip9LUz7HkLo
+         Cip0q6hUfXhLmYD46xfj/SzniXQe9UjMYqFVU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EJ2/s9c4x/GRQ86qgnYEX7vyrjQPUH1/Y15C1WKzHao=;
+        b=XHP7A1pCpap6HnBnws9aQI7sQ8FGOiDeHzdWFr/5QD72hA4Fsc3zI4T/0PLXv5MY2Q
+         MGhpwmEzKPo7yKV6bDAHabKnEg6cBZWdO1fV2ClwO56byhGSK2FJ5MpPzMyafzjj6Rh9
+         tKiL1pUdYFZW0At7PMryolEce2C9UsF4tfzcJu1sC/TtoG3Zd1X4XEmp56zhk0Aug4Lo
+         MqT9LVT0N0gzEqrQ4oXfHqUC/aI3ff7o1BSM+39LQMYxrAjfZMUG81snnldW+rx96fyw
+         4STuoTCp1uKnZ27JeYyPxpY4aE+4Jj2jjqqbwwGDh1rvzWaLlhpjrZILzsYfluoEiWds
+         snPw==
+X-Gm-Message-State: AOAM533QF0YTzzFBTwSv7TaGIFzoJJ3hXgUnxNd32hBRLhHTsLapRGP6
+        WoImE9fqWY49vzV5cYXcAiwJSg==
+X-Google-Smtp-Source: ABdhPJyPB7gYBmXgUcIuK1YP0CJLnYLlD09/RV0gTyEYarKT7RL1tBbHatRlmAwznWOixjiH6xH/CA==
+X-Received: by 2002:a63:ad0b:: with SMTP id g11mr5570990pgf.275.1589487251084;
+        Thu, 14 May 2020 13:14:11 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id b8sm18482276pjz.51.2020.05.14.13.14.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 13:14:10 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     linux-bluetooth@vger.kernel.org, bgodavar@codeaurora.org
+Cc:     alainm@chromium.org, marcel@holtmann.org, mka@chromium.org,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] Bluetooth: hci_qca: Enable WBS support for wcn3991
+Date:   Thu, 14 May 2020 13:14:04 -0700
+Message-Id: <20200514131338.v2.1.I68404fc395a3dbc57c8a89ca02490013e8003a87@changeid>
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
-Content-Disposition: inline
-In-Reply-To: <20200514194457.wipphhvyhzcshcup@treble>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+WCN3991 supports transparent WBS (host encoded mSBC). Add a flag to the
+device match data to show WBS is supported.
 
---ReaqsoxgOBHFXBhH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This requires the matching firmware for WCN3991 in linux-firmware:
+        1a8b0dc00f77 (qca: Enable transparent WBS for WCN3991)
 
-Hi!
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+---
 
-> > > From: Josh Poimboeuf <jpoimboe@redhat.com>
-> > >=20
-> > > commit 98d0c8ebf77e0ba7c54a9ae05ea588f0e9e3f46e upstream.
-> > >=20
-> > > If the unwinder is called before the ORC data has been initialized,
-> > > orc_find() returns NULL, and it tries to fall back to using frame
-> > > pointers.  This can cause some unexpected warnings during boot.
-> > >=20
-> > > Move the 'orc_init' check from orc_find() to __unwind_init(), so that=
- it
-> > > doesn't even try to unwind from an uninitialized state.
-> >=20
-> > > @@ -563,6 +560,9 @@ EXPORT_SYMBOL_GPL(unwind_next_frame);
-> > >  void __unwind_start(struct unwind_state *state, struct task_struct *=
-task,
-> > >  		    struct pt_regs *regs, unsigned long *first_frame)
-> > >  {
-> > > +	if (!orc_init)
-> > > +		goto done;
-> > > +
-> > >  	memset(state, 0, sizeof(*state));
-> > >  	state->task =3D task;
-> > > =20
-> >=20
-> > As this returns the *state to the caller, should the "goto done" move
-> > below the memset? Otherwise we are returning partialy-initialized
-> > struct, which is ... weird.
->=20
-> Yeah, it is a little weird.  In most cases it should be fine, but there
-> is an edge case where if there's a corrupt ORC table and this returns
-> early, 'arch_stack_walk_reliable() -> unwind_error()' could check an
-> uninitialized value.
->=20
-> Also the __unwind_start() error handling needs to set that error bit
-> anyway, in its error cases.  I'll fix it up.
+Changes in v2:
+- Rename struct to qca_capabilities and fix enum naming
 
-I did this in the mean time. It moves goto around memset, and I
-believe that 8 in get_reg should have been sizeof(long) [not that it
-matters, x86-32 is protected by build bug on.]
+ drivers/bluetooth/hci_qca.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-
-Best regards,
-								Pavel
-
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 169b96492b7c..90cb3cb2b4f1 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -375,7 +375,7 @@ static bool deref_stack_iret_regs(struct unwind_state *=
-state, unsigned long addr
- static bool get_reg(struct unwind_state *state, unsigned int reg_off,
- 		    unsigned long *val)
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index b3fd07a6f8127..96799644f0933 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -75,6 +75,9 @@ enum qca_flags {
+ 	QCA_HW_ERROR_EVENT
+ };
+ 
++enum qca_capabilities {
++	QCA_CAP_WIDEBAND_SPEECH_SUPPORTED = BIT(0),
++};
+ 
+ /* HCI_IBS transmit side sleep protocol states */
+ enum tx_ibs_states {
+@@ -187,10 +190,11 @@ struct qca_vreg {
+ 	unsigned int load_uA;
+ };
+ 
+-struct qca_vreg_data {
++struct qca_device_data {
+ 	enum qca_btsoc_type soc_type;
+ 	struct qca_vreg *vregs;
+ 	size_t num_vregs;
++	uint32_t capabilities;
+ };
+ 
+ /*
+@@ -1691,7 +1695,7 @@ static const struct hci_uart_proto qca_proto = {
+ 	.dequeue	= qca_dequeue,
+ };
+ 
+-static const struct qca_vreg_data qca_soc_data_wcn3990 = {
++static const struct qca_device_data qca_soc_data_wcn3990 = {
+ 	.soc_type = QCA_WCN3990,
+ 	.vregs = (struct qca_vreg []) {
+ 		{ "vddio", 15000  },
+@@ -1702,7 +1706,7 @@ static const struct qca_vreg_data qca_soc_data_wcn3990 = {
+ 	.num_vregs = 4,
+ };
+ 
+-static const struct qca_vreg_data qca_soc_data_wcn3991 = {
++static const struct qca_device_data qca_soc_data_wcn3991 = {
+ 	.soc_type = QCA_WCN3991,
+ 	.vregs = (struct qca_vreg []) {
+ 		{ "vddio", 15000  },
+@@ -1711,9 +1715,10 @@ static const struct qca_vreg_data qca_soc_data_wcn3991 = {
+ 		{ "vddch0", 450000 },
+ 	},
+ 	.num_vregs = 4,
++	.capabilities = QCA_CAP_WIDEBAND_SPEECH_SUPPORTED,
+ };
+ 
+-static const struct qca_vreg_data qca_soc_data_wcn3998 = {
++static const struct qca_device_data qca_soc_data_wcn3998 = {
+ 	.soc_type = QCA_WCN3998,
+ 	.vregs = (struct qca_vreg []) {
+ 		{ "vddio", 10000  },
+@@ -1724,7 +1729,7 @@ static const struct qca_vreg_data qca_soc_data_wcn3998 = {
+ 	.num_vregs = 4,
+ };
+ 
+-static const struct qca_vreg_data qca_soc_data_qca6390 = {
++static const struct qca_device_data qca_soc_data_qca6390 = {
+ 	.soc_type = QCA_QCA6390,
+ 	.num_vregs = 0,
+ };
+@@ -1860,7 +1865,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
  {
--	unsigned int reg =3D reg_off/8;
-+	unsigned int reg =3D reg_off/sizeof(long);
-=20
- 	if (!state->regs)
- 		return false;
-@@ -589,12 +589,12 @@ EXPORT_SYMBOL_GPL(unwind_next_frame);
- void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 		    struct pt_regs *regs, unsigned long *first_frame)
- {
--	if (!orc_init)
--		goto done;
--
- 	memset(state, 0, sizeof(*state));
- 	state->task =3D task;
-=20
-+	if (!orc_init)
-+		goto done;
-+=09
- 	/*
- 	 * Refuse to unwind the stack of a task while it's executing on another
- 	 * CPU.  This check is racy, but that's ok: the unwinder has other
+ 	struct qca_serdev *qcadev;
+ 	struct hci_dev *hdev;
+-	const struct qca_vreg_data *data;
++	const struct qca_device_data *data;
+ 	int err;
+ 	bool power_ctrl_enabled = true;
+ 
+@@ -1948,6 +1953,12 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 		hdev->shutdown = qca_power_off;
+ 	}
+ 
++	/* Wideband speech support must be set per driver since it can't be
++	 * queried via hci.
++	 */
++	if (data && (data->capabilities & QCA_CAP_WIDEBAND_SPEECH_SUPPORTED))
++		set_bit(HCI_QUIRK_WIDEBAND_SPEECH_SUPPORTED, &hdev->quirks);
++
+ 	return 0;
+ }
+ 
+-- 
+2.26.2.761.g0e0b3e54be-goog
 
-
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---ReaqsoxgOBHFXBhH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl69pnQACgkQMOfwapXb+vJT4wCgnKFI6MrEHmzkLntrelInmSqf
-fMsAoKAofZLJUHurE9J5j6kxvotwlvYv
-=nT2r
------END PGP SIGNATURE-----
-
---ReaqsoxgOBHFXBhH--
