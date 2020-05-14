@@ -2,83 +2,167 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B03EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB56C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56960207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383A420709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbgENIjk (ORCPT
+        id S1726094AbgENIk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:39:40 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:7709 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725946AbgENIjk (ORCPT
+        Thu, 14 May 2020 04:40:28 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:42632 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725946AbgENIk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:39:40 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Thu, 14 May 2020 01:39:35 -0700
-Received: from [0.0.0.0] (oddjob.vmware.com [10.253.4.32])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 24D28B2723;
-        Thu, 14 May 2020 04:39:35 -0400 (EDT)
-Subject: Re: [Linux-graphics-maintainer] [PATCH] drm/vmwgfx: Return true in
- function vmw_fence_obj_signaled()
-To:     Jason Yan <yanaijie@huawei.com>,
-        <linux-graphics-maintainer@vmware.com>, <thellstrom@vmware.com>,
-        <airlied@linux.ie>, <daniel@ffwll.ch>, <sumit.semwal@linaro.org>,
-        <chris@chris-wilson.co.uk>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linaro-mm-sig@lists.linaro.org>
-References: <20200507110714.37589-1-yanaijie@huawei.com>
-From:   Roland Scheidegger <sroland@vmware.com>
-Message-ID: <0b30cc20-95d4-009b-6c77-f1119d396e8b@vmware.com>
-Date:   Thu, 14 May 2020 10:39:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.2.1
+        Thu, 14 May 2020 04:40:28 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04E8bowu002503;
+        Thu, 14 May 2020 04:39:52 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3100y96fub-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 04:39:52 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 04E8dpSn060813
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 14 May 2020 04:39:51 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 14 May 2020 04:39:50 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 14 May 2020 04:39:50 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 14 May 2020 04:39:50 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04E8dkWE009877;
+        Thu, 14 May 2020 04:39:47 -0400
+From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+CC:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        "Stefan Popa" <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        "Hartmut Knaack" <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: [PATCH] iio: dac: ad5360: Replace indio_dev->mlock with own device lock
+Date:   Thu, 14 May 2020 11:39:19 +0300
+Message-ID: <20200514083921.51966-1-sergiu.cuciurean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200507110714.37589-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: sroland@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-14_01:2020-05-13,2020-05-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 cotscore=-2147483648
+ phishscore=0 priorityscore=1501 adultscore=0 mlxscore=0 malwarescore=0
+ clxscore=1011 impostorscore=0 mlxlogscore=783 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005140077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've pulled that into our tree, thanks!
+As part of the general cleanup of indio_dev->mlock, this change replaces
+it with a local lock on the device's state structure.
+This also changes some internal functions to pass the pointer to the
+state-struct vs a ref to indio_dev just to access the state-struct again.
 
-Roland
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+---
+ drivers/iio/dac/ad5360.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-Am 07.05.20 um 13:07 schrieb Jason Yan:
-> Fix the following coccicheck warning:
-> 
-> drivers/gpu/drm/vmwgfx/vmwgfx_fence.c:518:9-10: WARNING: return of 0/1
-> in function 'vmw_fence_obj_signaled' with return type bool
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  drivers/gpu/drm/vmwgfx/vmwgfx_fence.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_fence.c b/drivers/gpu/drm/vmwgfx/vmwgfx_fence.c
-> index 178a6cd1a06f..0f8d29397157 100644
-> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_fence.c
-> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_fence.c
-> @@ -515,7 +515,7 @@ bool vmw_fence_obj_signaled(struct vmw_fence_obj *fence)
->  	struct vmw_fence_manager *fman = fman_from_fence(fence);
->  
->  	if (test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence->base.flags))
-> -		return 1;
-> +		return true;
->  
->  	vmw_fences_update(fman);
->  
-> 
+diff --git a/drivers/iio/dac/ad5360.c b/drivers/iio/dac/ad5360.c
+index 2ac428b957e3..3e0c9e84e8da 100644
+--- a/drivers/iio/dac/ad5360.c
++++ b/drivers/iio/dac/ad5360.c
+@@ -67,6 +67,7 @@ struct ad5360_chip_info {
+  * @chip_info:		chip model specific constants, available modes etc
+  * @vref_reg:		vref supply regulators
+  * @ctrl:		control register cache
++ * @lock		lock to protect the data buffer during SPI ops
+  * @data:		spi transfer buffers
+  */
+ 
+@@ -75,6 +76,7 @@ struct ad5360_state {
+ 	const struct ad5360_chip_info	*chip_info;
+ 	struct regulator_bulk_data	vref_reg[3];
+ 	unsigned int			ctrl;
++	struct mutex			lock;
+ 
+ 	/*
+ 	 * DMA (thus cache coherency maintenance) requires the
+@@ -205,10 +207,11 @@ static int ad5360_write(struct iio_dev *indio_dev, unsigned int cmd,
+ 	unsigned int addr, unsigned int val, unsigned int shift)
+ {
+ 	int ret;
++	struct ad5360_state *st = iio_priv(indio_dev);
+ 
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&st->lock);
+ 	ret = ad5360_write_unlocked(indio_dev, cmd, addr, val, shift);
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 
+ 	return ret;
+ }
+@@ -229,7 +232,7 @@ static int ad5360_read(struct iio_dev *indio_dev, unsigned int type,
+ 		},
+ 	};
+ 
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&st->lock);
+ 
+ 	st->data[0].d32 = cpu_to_be32(AD5360_CMD(AD5360_CMD_SPECIAL_FUNCTION) |
+ 		AD5360_ADDR(AD5360_REG_SF_READBACK) |
+@@ -240,7 +243,7 @@ static int ad5360_read(struct iio_dev *indio_dev, unsigned int type,
+ 	if (ret >= 0)
+ 		ret = be32_to_cpu(st->data[1].d32) & 0xffff;
+ 
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 
+ 	return ret;
+ }
+@@ -261,7 +264,7 @@ static int ad5360_update_ctrl(struct iio_dev *indio_dev, unsigned int set,
+ 	struct ad5360_state *st = iio_priv(indio_dev);
+ 	unsigned int ret;
+ 
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&st->lock);
+ 
+ 	st->ctrl |= set;
+ 	st->ctrl &= ~clr;
+@@ -269,7 +272,7 @@ static int ad5360_update_ctrl(struct iio_dev *indio_dev, unsigned int set,
+ 	ret = ad5360_write_unlocked(indio_dev, AD5360_CMD_SPECIAL_FUNCTION,
+ 			AD5360_REG_SF_CTRL, st->ctrl, 0);
+ 
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 
+ 	return ret;
+ }
+@@ -479,6 +482,8 @@ static int ad5360_probe(struct spi_device *spi)
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 	indio_dev->num_channels = st->chip_info->num_channels;
+ 
++	mutex_init(&st->lock);
++
+ 	ret = ad5360_alloc_channels(indio_dev);
+ 	if (ret) {
+ 		dev_err(&spi->dev, "Failed to allocate channel spec: %d\n", ret);
+-- 
+2.17.1
 
