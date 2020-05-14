@@ -2,140 +2,207 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7A7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3754BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A43562053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1452054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UjKhf5Pa"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="maNq0y5Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgENSYP (ORCPT
+        id S1726797AbgENS3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:24:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726075AbgENSYO (ORCPT
+        Thu, 14 May 2020 14:29:25 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3075 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgENS3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:24:14 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A031EC061A0C;
-        Thu, 14 May 2020 11:24:14 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j21so1597636pgb.7;
-        Thu, 14 May 2020 11:24:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GXa6PnUFgbyMdN1EyBLqwHTz+uuzg6SBgnPWkS0r0LY=;
-        b=UjKhf5Pakj1PRT2NUS7T0x8Kgcqe78a2NffVX1sDTbpyleID7QctCe0xL3M1PwYVI+
-         zAtYsgoWZ+BVedXbsyLsbRowGEIlXg5ThyW9kwLH/SLYw+bk2dHUbTCPLeBNGQWBssrG
-         UPjunlYTOxPrA3Cs8ADgHno5puyVV+fVJmgiIqhX4/WrQjaUPNpQG8uYaEEBFSCOiKT2
-         9LsRek5xLBc5g+pxyRjj74BtsUh3d/mnqTbPj0QaxTUu6qf0pS6AMKcyeCMkOhoPB49z
-         UWxYETWuYgN9157+ikH2iilGAiuZa8Kk32VM9ACbJtlqpcbXPs8NShkV+j6c4Z9t0lZx
-         0C+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GXa6PnUFgbyMdN1EyBLqwHTz+uuzg6SBgnPWkS0r0LY=;
-        b=DQuHjspBqXZympN6glwLBetq7jSOX+nL2e3Ag1kEB785eWMfhWzxTh4ut8RPNCSf02
-         6Xq5GrrFfxj2Y3WUSUA7r+8wTeXWQBYmmdTB/o++p5QvJqkBaXBvh7tDt32dgd/K+wcA
-         KBvfvOao0Ejf8Vml73dh9QUXK6ZJySNeFS1pHWTR6Bt6aNg+c54KvSX9eIgcmRfu2RBL
-         UUkBX9smv4AvXwLQLas3ONU+zivl+PuDW2fQ60OUa7yUHLCorsw+Dxdus44pj6HFLYnR
-         34Dishy3visfR+P/UPjolfll5fp3Jj7epO0ZMNXLkUo4+HYQN7MojburR7v2d+b6jDUt
-         IM3g==
-X-Gm-Message-State: AOAM5329COQmuIORebOLHnSLFADpEccIBJdFZpKJ4t8E6vXn09blsuFt
-        ZOaCmMyxBX+N+nCr/bAOZOI=
-X-Google-Smtp-Source: ABdhPJzPQ03vkAOu8tmw3l1XdUBZ55aD3PqOv1MJlYavj27ZNUI11YU1DU52ijPUkQMTDSd+QF5MjQ==
-X-Received: by 2002:a63:3756:: with SMTP id g22mr5098342pgn.304.1589480654120;
-        Thu, 14 May 2020 11:24:14 -0700 (PDT)
-Received: from workstation-kernel-dev ([103.87.56.31])
-        by smtp.gmail.com with ESMTPSA id x185sm2863248pfx.155.2020.05.14.11.24.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 11:24:12 -0700 (PDT)
-Date:   Thu, 14 May 2020 23:54:06 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: WARNING: suspicious RCU usage with PROVE_RCU_LIST=y
-Message-ID: <20200514182406.GA28808@workstation-kernel-dev>
-References: <20200406114134.GA1010@workstation-kernel-dev>
+        Thu, 14 May 2020 14:29:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ebd8d7a0001>; Thu, 14 May 2020 11:27:06 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 14 May 2020 11:29:24 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 14 May 2020 11:29:24 -0700
+Received: from [10.2.88.73] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 14 May
+ 2020 18:29:23 +0000
+Subject: Re: [RFC] mm/vmstat: Add events for THP migration without split
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, <linux-mm@kvack.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Zi Yan <ziy@nvidia.com>, <linux-kernel@vger.kernel.org>
+References: <1589257372-29576-1-git-send-email-anshuman.khandual@arm.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <8be2c517-ba87-400b-dfbe-461bd6065c2d@nvidia.com>
+Date:   Thu, 14 May 2020 11:29:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406114134.GA1010@workstation-kernel-dev>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1589257372-29576-1-git-send-email-anshuman.khandual@arm.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589480826; bh=it1oMCn8dC/MVjc5q48LqltF3VvVRaM29QWnpwrpMPU=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=maNq0y5YePD1L5K6yg2TWQLsywK0aC25HynSPI6O9f0sjCsx4L2Oa9+Qxa9O3mV4T
+         Ry7b4v8DsqRsYHklDhMI5s3DskEPxObgCgotbGrE4D5gFItHlR4z7V5wTuNiIpHYs+
+         MJiX03W+gL0YpzRZAhCuiUfizQ57uwiZkCdhkN7cDVmGdWOVHqT7C3bwXf20RSt3BK
+         hsJRYRqizKAMZ1T0tW0dWSNnZmEJMxNp+rnep7U9TQlK33VA8fux0YY83Vu0fQy9Bi
+         uzEX35ZbUcFnpZCnsqDI9QkfeQYhUz81TYveX5hi6o3wbc1Z4MFsRHH4psTiHmeYS6
+         i18QVPz0x2lew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 05:11:34PM +0530, Amol Grover wrote:
-> Hello,
+On 2020-05-11 21:22, Anshuman Khandual wrote:
+> Add the following new trace events which will help in validating migration
+> events involving PMD based THP pages.
 > 
-> With respect to the patch https://lore.kernel.org/patchwork/patch/1202512/
-> I boot tested with CONFIG_PROVE_RCU_LIST=y and encountered a susppicious RCU
-> usage warning in "security/apparmor/include/lib.h". I thought of going forward
-> and fix it myself, however, while going through the stack trace and the actual
-> code, I found that the function (__lookupn_profile) is required to be called
-> with rcu_read_locK() but the splat proves it otherwise.
+> 1. THP_PMD_MIGRATION_ENTRY_SET
+> 2. THP_PMD_MIGRATION_ENTRY_REMOVE
 > 
-> [   12.727582] =============================
-> [   12.727599] WARNING: suspicious RCU usage
-> [   12.727601] 5.5.4-stable #17 Tainted: G            E     
-> [   12.727602] -----------------------------
-> [   12.727604] security/apparmor/include/lib.h:191 RCU-list traversed in non-reader section!!
-> [   12.727605] 
->                other info that might help us debug this:
+> There are no clear method to confirm whether a THP migration happened with
+> out involving it's split. These trace events along with PGMIGRATE_SUCCESS
+> and PGMIGRATE_FAILURE will provide additional insights. After this change,
 > 
-> [   12.727606] 
->                rcu_scheduler_active = 2, debug_locks = 1 
-> [   12.727608] 2 locks held by apparmor_parser/506:
-> [   12.727609]  #0: ffff9f0687562490 (sb_writers#10){.+.+}, at: vfs_write+0x140/0x1a0
-> [   12.727614]  #1: ffff9f0687f09ca8 (&ns->lock){+.+.}, at: aa_replace_profiles+0x17a/0xdd0
-> [   12.727619] 
->                stack backtrace:
-> [   12.727621] CPU: 3 PID: 506 Comm: apparmor_parser Tainted: G            E     5.5.4-stable #17 
-> [   12.727622] Hardware name: Gigabyte Technology Co., Ltd. Z170-D3H/Z170-D3H-CF, BIOS F21 03/06/2017
-> [   12.727623] Call Trace:
-> [   12.727627]  dump_stack+0x8f/0xd0
-> [   12.727630]  __lookupn_profile+0x19c/0x1a0
-> [   12.727632]  ? aa_unpack+0x51b/0x580
-> [   12.727636]  __lookup_replace+0x34/0xc0
-> [   12.727640]  aa_replace_profiles+0x2a0/0xdd0
-> [   12.727649]  policy_update+0x106/0x370
-> [   12.727653]  profile_replace+0xa3/0x110
-> [   12.727657]  vfs_write+0xb9/0x1a0
-> [   12.727661]  ksys_write+0x68/0xe0
-> [   12.727666]  do_syscall_64+0x5c/0xe0
-> [   12.727669]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [   12.727671] RIP: 0033:0x7ff83fec7f93
-> [   12.727673] Code: 75 05 48 83 c4 58 c3 e8 eb 41 ff ff 66 2e 0f 1f 84 00 00 00 00 00 90 64 8b 04 25 18 00 00 00 85 c0 75 14 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 55 c3 0f 1f 40 00 48 83 ec 28 48 89 54 24 18
-> [   12.727674] RSP: 002b:00007ffcebb5c398 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> [   12.727676] RAX: ffffffffffffffda RBX: 0000000000007131 RCX: 00007ff83fec7f93
-> [   12.727677] RDX: 0000000000007131 RSI: 00005610fd804a40 RDI: 0000000000000006
-> [   12.727678] RBP: 00005610fd804a40 R08: 0000000000007131 R09: 00005610fd802f38
-> [   12.727680] R10: fffffffffffffa8a R11: 0000000000000246 R12: 0000000000000000
-> [   12.727681] R13: 0000000000000006 R14: 00005610fd7dd490 R15: 0000000000007131
-> 
-> Thanks
-> Amol
 
-Hello,
 
-Just a friendly request to please go through the above _bug_.
+Hi Anshuman,
 
-Thanks
-Amol
+It's very nice to see this work, and I think that reporting a bit more
+about THP migration stats is going to make development and performance
+debugging a lot more efficient (and pleasant).
+
+
+> A single 2M THP (2K base page) when migrated
+> 
+> 1. Without split
+> 
+> ................
+> pgmigrate_success 1
+> pgmigrate_fail 0
+> ................
+> thp_pmd_migration_entry_set 1
+> thp_pmd_migration_entry_remove 1
+> ................
+> 
+
+I do think we should decouple the trace event name(s) just a *little* more,
+from the mechanisms used to migrate THPs. In other words, let's report
+the number of THP migration successes, and name it accordingly--rather
+than "set" and "remove", which are pretty low-level and furthermore
+depend on today's exact code.
+
+Maybe Zi Yan's recommended name is exactly right, in fact:
+
+     THP_PMD_MIGRATION_SUCCESS
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
+
+> 2. With split
+> 
+> ................
+> pgmigrate_success 512
+> pgmigrate_fail 0
+> ................
+> thp_pmd_migration_entry_set 0
+> thp_pmd_migration_entry_remove 0
+> ................
+> 
+> pgmigrate_success as 1 instead of 512, provides a hint for possible THP
+> migration event. But then it gets mixed with normal page migrations over
+> time. These additional trace events provide required co-relation.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Zi Yan <ziy@nvidia.com>
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> This is an indirect way for counting PMD migrations without split. Is there
+> a better method possible ? Just request for comments at the moment.
+> 
+>   include/linux/vm_event_item.h | 4 ++++
+>   mm/migrate.c                  | 1 +
+>   mm/rmap.c                     | 1 +
+>   mm/vmstat.c                   | 4 ++++
+>   4 files changed, 10 insertions(+)
+> 
+> diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
+> index ffef0f279747..4b25102cf3ad 100644
+> --- a/include/linux/vm_event_item.h
+> +++ b/include/linux/vm_event_item.h
+> @@ -91,6 +91,10 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
+>   		THP_ZERO_PAGE_ALLOC_FAILED,
+>   		THP_SWPOUT,
+>   		THP_SWPOUT_FALLBACK,
+> +#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
+> +		THP_PMD_MIGRATION_ENTRY_SET,
+> +		THP_PMD_MIGRATION_ENTRY_REMOVE,
+> +#endif
+>   #endif
+>   #ifdef CONFIG_MEMORY_BALLOON
+>   		BALLOON_INFLATE,
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 7160c1556f79..8d50d55cbe97 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -228,6 +228,7 @@ static bool remove_migration_pte(struct page *page, struct vm_area_struct *vma,
+>   		if (!pvmw.pte) {
+>   			VM_BUG_ON_PAGE(PageHuge(page) || !PageTransCompound(page), page);
+>   			remove_migration_pmd(&pvmw, new);
+> +			count_vm_event(THP_PMD_MIGRATION_ENTRY_REMOVE);
+>   			continue;
+>   		}
+>   #endif
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index f79a206b271a..3c1fe3f45cb5 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1418,6 +1418,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+>   			VM_BUG_ON_PAGE(PageHuge(page) || !PageTransCompound(page), page);
+>   
+>   			set_pmd_migration_entry(&pvmw, page);
+> +			count_vm_event(THP_PMD_MIGRATION_ENTRY_SET);
+>   			continue;
+>   		}
+>   #endif
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index 96d21a792b57..a5254b7ee531 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -1274,6 +1274,10 @@ const char * const vmstat_text[] = {
+>   	"thp_zero_page_alloc_failed",
+>   	"thp_swpout",
+>   	"thp_swpout_fallback",
+> +#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
+> +	"thp_pmd_migration_entry_set",
+> +	"thp_pmd_migration_entry_remove",
+> +#endif
+>   #endif
+>   #ifdef CONFIG_MEMORY_BALLOON
+>   	"balloon_inflate",
+> 
+
