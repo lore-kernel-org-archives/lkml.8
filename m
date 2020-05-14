@@ -2,253 +2,293 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC57920659
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9876020659
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:54:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="M6mF41Y/"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="GAh06vgy";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Ctpgh7SQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732545AbgENAxp (ORCPT
+        id S1732572AbgENAyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 20:53:45 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:45969 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729522AbgENAxD (ORCPT
+        Wed, 13 May 2020 20:54:10 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:28760 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727033AbgENAyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 20:53:03 -0400
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200514005259epoutp02513ced29f3ebef65a5cad710b3f2f4cd~Ovt4NHsnb1745417454epoutp02C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 00:52:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200514005259epoutp02513ced29f3ebef65a5cad710b3f2f4cd~Ovt4NHsnb1745417454epoutp02C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589417579;
-        bh=kDIy4u6dKypJDeZVrGE9ZKceZgeyPXJh8PvB97xxnQM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M6mF41Y/BtfiekB8Pcgc6PuFg9Q79qhHnXtdISoM+7aWmDV90MvtjOeuGumyBF5r4
-         QjBGAfxh50HRY8I1n5VZ06Pq7Ti0CPE8z/Wq+8rPwK5na0daMVFi91DksXsUmzZkN7
-         irxJoDW0QgpL+CG4DGdFXt2OLz31tOQhxCcuL2F8=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200514005258epcas5p3724cb2da48af76bb5a8a43dc904bca0a~Ovt3vNDKD1578415784epcas5p3v;
-        Thu, 14 May 2020 00:52:58 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D2.7E.23389.A669CBE5; Thu, 14 May 2020 09:52:58 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200514005258epcas5p14733cec8b9ca92e518a8d5a0c27f3f0b~Ovt3PWUKk0561005610epcas5p10;
-        Thu, 14 May 2020 00:52:58 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200514005258epsmtrp2e3521a4d4c066e0c7deda812d688fdfd~Ovt3ObrY81522815228epsmtrp2F;
-        Thu, 14 May 2020 00:52:58 +0000 (GMT)
-X-AuditID: b6c32a4b-7adff70000005b5d-e5-5ebc966a2298
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7F.C3.18461.A669CBE5; Thu, 14 May 2020 09:52:58 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-        [107.108.73.139]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200514005256epsmtip2145bd29b7cd6852b8b9df882a496eb46~Ovt1Tgrin3258132581epsmtip2t;
-        Thu, 14 May 2020 00:52:56 +0000 (GMT)
-From:   Alim Akhtar <alim.akhtar@samsung.com>
-To:     robh@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
-        krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
-        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
-        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH v9 03/10] scsi: ufs: add quirk to enable host controller
- without hce
-Date:   Thu, 14 May 2020 06:09:07 +0530
-Message-Id: <20200514003914.26052-4-alim.akhtar@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200514003914.26052-1-alim.akhtar@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSaUwTURSFfTPTYWhSHIvEy6ppQAUVJIoZE1GMNZmESDAx/pCIVp1U2W0F
-        NwQqiNJaAoIbkqIGlOIC1BErIpS6rzWiaI0gChg1pkqLonGplsH477v3nvPOzc2jcKlGFEBt
-        ytjCqTIUaTJSTLRcC58+K+VQW/Lsn65ops/QQjLvvz8lGWfjKRFTc/2hiLHZmrwYO3+DYEz9
-        3SKmq7WaZI7Y2jFG98xMMqdv/cYYd5vZi6m7aEdxErarVI+xpoYSkr1Qm88W3ekg2KHBFwRb
-        yjcg1mUKYfdadFgitUq8YAOXtimHU0UtXCveWPXOSmY1hWzbrRnGCtBd0CJvCui5cLG+kPCw
-        lL6CQG9O0iLxX3YicFXUIqH4iqDpvhb9c5TXHyWEwVUET3rtuFAUYdB79qOXR0XSM6DnMI95
-        eCLtC9e/Fo+6cfo5Bn1GuRZRlC+9Egy8ytMm6DAYvvB2VCKhF0Ab7/ASwibDmSYL7mFvOhb4
-        4ZsiTxbQeyjo7ikkBZEcut32se184cMtfswcAC7HVdKTBXQq7G+dI7Rzoc5wkxB4EVieVBMe
-        CU6HQ2NrlLClD+h/DGCCUwL7iqWCOgwKHU/HnIFQrtOJBGbh4APj2BHLEFgO+ZWh4Kr/jx5H
-        qAH5c1nqdCWnjsmak8FtjVQr0tXZGcrI9ZnpJjT6SyLizehN3+dIK8IoZEVA4bKJkoTGK8lS
-        yQbF9h2cKnONKjuNU1tRIEXIJkn6NXyylFYqtnCpHJfFqf5NMco7oABbfGDgfPjqztxUeYWf
-        PnjSq7jQ2J1xbNKvc76f/OeF3RtXW/iWPvxyJFHWY4zC+vFd28ROB1LeLg0aGiAua6Jqlijr
-        oUA3v+Sb5VtXRczJkaROO559zcZXyU8Vxc5cwVu1d+vyHO2mUsullFh3ztTg/HVJPu7qmEWS
-        GFPc/vC8nt3ez97Mfj6BSD79SNPhrKmsEF96PBhtMKMZPoPjwyIMna5fvS0lmcuXbbfd7z+m
-        +ei/wm8uk98+1dk269Hk41SQsfxHZXPx1ub6O90JS43GsikhrzdPCa4D5syJFKNONhSf0yzP
-        bQ91G9a25HUVDQd2JOrXVH45cHnau/koPkQlI9QbFdERuEqt+AOsnPX1lAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMLMWRmVeSWpSXmKPExsWy7bCSvG7WtD1xBldu8lk8mLeNzeLlz6ts
-        Fp/WL2O1mH/kHKvF+fMb2C1ubjnKYrHp8TVWi8u75rBZzDi/j8mi+/oONovlx/8xWfzfs4Pd
-        YunWm4wOvB6X+3qZPDat6mTz2Lyk3qPl5H4Wj49Pb7F49G1ZxejxeZOcR/uBbqYAjigum5TU
-        nMyy1CJ9uwSujFkvDrEVbJCraGr8wtTAeEqii5GTQ0LARGLiipksXYxcHEICuxkl7nY0MUIk
-        pCWub5zADmELS6z895wdoqiJSeL77/1gRWwC2hJ3p29hArFFgIqOfGsDizMLPGOSOPWwFMQW
-        FgiR2Lb7G9ggFgFViS+bn4HV8ArYSOzZ8g5qgbzE6g0HmEFsTgFbiS1fjrGC2EJANcvWLGOc
-        wMi3gJFhFaNkakFxbnpusWGBYV5quV5xYm5xaV66XnJ+7iZGcDhrae5g3L7qg94hRiYOxkOM
-        EhzMSiK8fut3xwnxpiRWVqUW5ccXleakFh9ilOZgURLnvVG4ME5IID2xJDU7NbUgtQgmy8TB
-        KdXAZBYq9CWkROPE5MSm4FPbJ1rdC1yr8mJihpvi9trKPyvV9VJ65r+8K6xvXLGigNXU43Ky
-        fJH3x9PcfTaXvmodbkm4G6x4NiftWnLJ7J0zFuYlPY4Utn4pxxIjnmd1pTvEML37wWbOvr7H
-        Bml3p8wJDHlWJ7i65UCAxYdNhUzye280H2D3EFfmOjn7tWPsOiOlwLXhVpd/vzTZM6H/9uQl
-        nruPPXh3kvnPVNMFGpM/TYn8/HLTirzFehzzrq379dS5V3htQMBe8Y/HpzHJ2hiLtTXvPHZ0
-        W5uigrYx2+u7khkbVd41SMT6Lnk7vzzy8KdZE1d88/+zTPxBl0f0qft+OmvZymY9SG1IXjRN
-        1HYhkxJLcUaioRZzUXEiAIDAqmPWAgAA
-X-CMS-MailID: 20200514005258epcas5p14733cec8b9ca92e518a8d5a0c27f3f0b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200514005258epcas5p14733cec8b9ca92e518a8d5a0c27f3f0b
-References: <20200514003914.26052-1-alim.akhtar@samsung.com>
-        <CGME20200514005258epcas5p14733cec8b9ca92e518a8d5a0c27f3f0b@epcas5p1.samsung.com>
+        Wed, 13 May 2020 20:54:08 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04E0jIhr015659;
+        Wed, 13 May 2020 17:53:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=lQVzE2g6e8U94x3Pz4L2SOl1lFQMeVwRN94gqCqWfnE=;
+ b=GAh06vgyZgokvAuSDPVEVJT4OvQTfp6/5LXChrAMRrXnwe01Fyf7sqMaaCrZQZAWKaP3
+ KGAZpzTHA6N/5wOiswGEooF/OV4qeJoUcB237hdKOKJjwYE472QAEkm3u1DCVDrrX0jQ
+ RhpQg9Lp6xhrE5NI+4yi6lXgzwFvLWe8Yyk= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 3100x70csp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 13 May 2020 17:53:47 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Wed, 13 May 2020 17:53:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OFmMaseGS8RHr8ylyxu6aXqQQCpSQ+SFPws0++MBTG3QD1pNT1S7ZRXlPoj2fos7brI7WL00lbgEgNMiLF70oz8LCXPBE3OKyNRbzw4U5gSdLf2XtaqrE2lrM5zsQ8lij+H5h8nWpeOwHoAG//DWEZBJ1w8veSBgtpIInlft0IScAmTSFkY3ORjA3MVBOwFXxskLUYVw8TPqOC0U0tEWnxODjOw8eitnpOgAUKbwdblawk9r+mkxcE/T8nEpivsFfJ5SRyxfWpLcIL58g6ZtxsnPt57cHzGL10a+0iAutp75cXTwJw3SEg5H8K9sQmhz5MRA+OTtCn+xBnUL34G4LA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lQVzE2g6e8U94x3Pz4L2SOl1lFQMeVwRN94gqCqWfnE=;
+ b=I42Lc2mXyxgMZ8N4DExnVWmWlP3965VY4Q5s9PUQCwIjnvXlMDNltpPqymAoalbsUBTGLxFknibyTRjBXey9jw5/ytIqAz9BbyF1KtrADF+dJUOmjXUyvW2Oxct7KNcrv9Clx0QV2lmTLgv5sJt4+0C5XjrF2n+geve+2kThAaW7pjsIUcPLZkGqbdVyInD/QEp1wB8an1kxCoi1SSuHAmtFF9IhM/Vkti87WQDKuX1z6KLZe9wwJiA4ANKeJZc83+HaYkr05XrI788akWgNh9Y1T4xjOSrIVFAZgmfkkOQuTu/i/tgQTw9irSCLh0qOg9JNeUpsOsnns6rcRBFlhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lQVzE2g6e8U94x3Pz4L2SOl1lFQMeVwRN94gqCqWfnE=;
+ b=Ctpgh7SQ6sN7BWA/GVf/ADzMrklfbeO/7HiCB7uMCUy0LWaiuXHaYMnAoPIawOgTnsWQzYuphpBKV8Ah6LvtsKXCFP+K6DRoW7mbkQE8gk754DvYvtXZTyCyRagICZoBqwbkH/jeadZydVvguYoA4yi4K5PQQzTH5/iwIrrQ1pk=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BYAPR15MB2853.namprd15.prod.outlook.com (2603:10b6:a03:fb::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.29; Thu, 14 May
+ 2020 00:53:45 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::4922:9927:5d6c:5301]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::4922:9927:5d6c:5301%7]) with mapi id 15.20.2979.033; Thu, 14 May 2020
+ 00:53:44 +0000
+Subject: Re: [PATCH v2 bpf-next 6/7] bpf: add support for %pT format specifier
+ for bpf_trace_printk() helper
+To:     Alan Maguire <alan.maguire@oracle.com>, <ast@kernel.org>,
+        <daniel@iogearbox.net>, <bpf@vger.kernel.org>
+CC:     <joe@perches.com>, <linux@rasmusvillemoes.dk>,
+        <arnaldo.melo@gmail.com>, <kafai@fb.com>, <songliubraving@fb.com>,
+        <andriin@fb.com>, <john.fastabend@gmail.com>,
+        <kpsingh@chromium.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+References: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com>
+ <1589263005-7887-7-git-send-email-alan.maguire@oracle.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <040b71a1-9bbf-9a55-6f1a-e7b8c36f8c6e@fb.com>
+Date:   Wed, 13 May 2020 17:53:42 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
+In-Reply-To: <1589263005-7887-7-git-send-email-alan.maguire@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR05CA0064.namprd05.prod.outlook.com
+ (2603:10b6:a03:74::41) To BYAPR15MB4088.namprd15.prod.outlook.com
+ (2603:10b6:a02:c3::18)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from macbook-pro-52.local.dhcp.thefacebook.com (2620:10d:c090:400::5:d8fa) by BYAPR05CA0064.namprd05.prod.outlook.com (2603:10b6:a03:74::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11 via Frontend Transport; Thu, 14 May 2020 00:53:43 +0000
+X-Originating-IP: [2620:10d:c090:400::5:d8fa]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: dd3a2fa7-5c34-4925-6e4d-08d7f7a140d8
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2853:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB28535B414C1EEC2969ABD461D3BC0@BYAPR15MB2853.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:1186;
+X-Forefront-PRVS: 040359335D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uV2tu2u6qFMy5e1vbg2A1xjjEhWFxhe4QPAyKnHSxIayzSuBuDAjraBkUBqoa406ZQbyHFnHDLiyMhcbbR+NMWQXrvDlzgrHlylUyFEmzt1YSQSiczWzAxhuaD5Iwps4SzGkv8nxC5lhxiJeMeSBOhMF6+NJAfKPdL3bh/dBN2Hsy1ESnPpV3HK06N3eFmnIgeoQns2PQ91qQa6UtJ1SHH5gSeuBZ0B4mlhXEJn+1lYPVu5l9eCjGAwjVzHg0tCQvj1BoXud9n15wioJWEWLDxoYZPk7S5nVClH2H2olfwUwQZUoW/JPiK9HSdm9Hd4i+TCAS/J5xi81ZJJ27xTpM5XO/hGPJ3wXvpcWGLEkwJMlJGGgPwaBiz0f5g23fwGXoPPC1bwOkt/vYBO6FpKyEN6CnwNcgBi28UeDlxgZ2QwaOUxFGAJksIJbjLYjeSTuUAvlpDaR2RM1q83cpTZH+yIVban9Qr+Mp0OGZv2flLZJ6bj4tZHiiLC8OavoeGC1
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(39860400002)(346002)(376002)(136003)(396003)(316002)(2616005)(66946007)(86362001)(31686004)(66476007)(36756003)(16526019)(4326008)(186003)(66556008)(6506007)(5660300002)(478600001)(6512007)(6486002)(2906002)(7416002)(8936002)(52116002)(8676002)(31696002)(53546011)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: Y47q2rfiHCJNiP4VvCoE+viIyS5YFSsliHscrEdV92hA0rGxdI3ufzMAds0Hn62gx+qFAkLCVbSjoq+Cqh+YVNUsE/qqvqtgRxOlNt3oeJZUcmr3OVCYbvKr6So9SVmWZIXSH7oE1cywiT/cu+bw4NyLoMgVIIgaPFncXwPVPyI9gbKqdAPh9d5Frmkzss1SP17uB9ZjmuFRBEcar5hy2RiT+vJRiA25nqZpbPpX4O/hrYxjp3Sz2YinM/5AIpP858E4o4Yv81/3p/Fuib6gH/7TZDPO5IDMRP2M+8w0pj8iv/DHVSkoMESDW45cC8F0nAOFr6mMgB8++EpUzoltdQn+QI1pf2e1midN3puiVRgzwVFWN80lKqE7uABE+y2ASNOqVo+jc6Fhujf8N8rFz/gAtC/Fut3gqvWQ9qbAkFMCxPr41IriSTSurvsar4igaX2+EUD0gkKdGGFc1K/huEq0j/a5REnP54tmNEd66n6+ogrOoz3pyfGQs22u1EWlcbhBX2+blzlZVwqOdOn9yQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd3a2fa7-5c34-4925-6e4d-08d7f7a140d8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2020 00:53:44.7634
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JUI2Bdt0rNCD4Ef1rYz8vE3nJ0uV2FmSe3NxtuvIznJhyBUUmaoAZMnG7lh+Mi/e
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2853
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-13_09:2020-05-13,2020-05-13 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ cotscore=-2147483648 lowpriorityscore=0 spamscore=0 adultscore=0
+ impostorscore=0 mlxlogscore=999 priorityscore=1501 bulkscore=0
+ clxscore=1015 malwarescore=0 mlxscore=0 suspectscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005140005
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some host controllers don't support host controller enable via HCE.
 
-Reviewed-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- drivers/scsi/ufs/ufshcd.c | 76 +++++++++++++++++++++++++++++++++++++--
- drivers/scsi/ufs/ufshcd.h |  6 ++++
- 2 files changed, 80 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 0e9704da58bd..ee30ed6cc805 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -3534,6 +3534,52 @@ static int ufshcd_dme_link_startup(struct ufs_hba *hba)
- 			"dme-link-startup: error code %d\n", ret);
- 	return ret;
- }
-+/**
-+ * ufshcd_dme_reset - UIC command for DME_RESET
-+ * @hba: per adapter instance
-+ *
-+ * DME_RESET command is issued in order to reset UniPro stack.
-+ * This function now deal with cold reset.
-+ *
-+ * Returns 0 on success, non-zero value on failure
-+ */
-+static int ufshcd_dme_reset(struct ufs_hba *hba)
-+{
-+	struct uic_command uic_cmd = {0};
-+	int ret;
-+
-+	uic_cmd.command = UIC_CMD_DME_RESET;
-+
-+	ret = ufshcd_send_uic_cmd(hba, &uic_cmd);
-+	if (ret)
-+		dev_err(hba->dev,
-+			"dme-reset: error code %d\n", ret);
-+
-+	return ret;
-+}
-+
-+/**
-+ * ufshcd_dme_enable - UIC command for DME_ENABLE
-+ * @hba: per adapter instance
-+ *
-+ * DME_ENABLE command is issued in order to enable UniPro stack.
-+ *
-+ * Returns 0 on success, non-zero value on failure
-+ */
-+static int ufshcd_dme_enable(struct ufs_hba *hba)
-+{
-+	struct uic_command uic_cmd = {0};
-+	int ret;
-+
-+	uic_cmd.command = UIC_CMD_DME_ENABLE;
-+
-+	ret = ufshcd_send_uic_cmd(hba, &uic_cmd);
-+	if (ret)
-+		dev_err(hba->dev,
-+			"dme-reset: error code %d\n", ret);
-+
-+	return ret;
-+}
- 
- static inline void ufshcd_add_delay_before_dme_cmd(struct ufs_hba *hba)
- {
-@@ -4251,7 +4297,7 @@ static inline void ufshcd_hba_stop(struct ufs_hba *hba, bool can_sleep)
- }
- 
- /**
-- * ufshcd_hba_enable - initialize the controller
-+ * ufshcd_hba_execute_hce - initialize the controller
-  * @hba: per adapter instance
-  *
-  * The controller resets itself and controller firmware initialization
-@@ -4260,7 +4306,7 @@ static inline void ufshcd_hba_stop(struct ufs_hba *hba, bool can_sleep)
-  *
-  * Returns 0 on success, non-zero value on failure
-  */
--int ufshcd_hba_enable(struct ufs_hba *hba)
-+static int ufshcd_hba_execute_hce(struct ufs_hba *hba)
- {
- 	int retry;
- 
-@@ -4308,6 +4354,32 @@ int ufshcd_hba_enable(struct ufs_hba *hba)
- 
- 	return 0;
- }
-+
-+int ufshcd_hba_enable(struct ufs_hba *hba)
-+{
-+	int ret;
-+
-+	if (hba->quirks & UFSHCI_QUIRK_BROKEN_HCE) {
-+		ufshcd_set_link_off(hba);
-+		ufshcd_vops_hce_enable_notify(hba, PRE_CHANGE);
-+
-+		/* enable UIC related interrupts */
-+		ufshcd_enable_intr(hba, UFSHCD_UIC_MASK);
-+		ret = ufshcd_dme_reset(hba);
-+		if (!ret) {
-+			ret = ufshcd_dme_enable(hba);
-+			if (!ret)
-+				ufshcd_vops_hce_enable_notify(hba, POST_CHANGE);
-+			if (ret)
-+				dev_err(hba->dev,
-+					"Host controller enable failed with non-hce\n");
-+		}
-+	} else {
-+		ret = ufshcd_hba_execute_hce(hba);
-+	}
-+
-+	return ret;
-+}
- EXPORT_SYMBOL_GPL(ufshcd_hba_enable);
- 
- static int ufshcd_disable_tx_lcc(struct ufs_hba *hba, bool peer)
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 53096642f9a8..f8d08cb9caf7 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -529,6 +529,12 @@ enum ufshcd_quirks {
- 	 * that the interrupt aggregation timer and counter are reset by s/w.
- 	 */
- 	UFSHCI_QUIRK_SKIP_RESET_INTR_AGGR		= 1 << 7,
-+
-+	/*
-+	 * This quirks needs to be enabled if host controller cannot be
-+	 * enabled via HCE register.
-+	 */
-+	UFSHCI_QUIRK_BROKEN_HCE				= 1 << 8,
- };
- 
- enum ufshcd_caps {
--- 
-2.17.1
+On 5/11/20 10:56 PM, Alan Maguire wrote:
+> Allow %pT[cNx0] format specifier for BTF-based display of data associated
+> with pointer.
+> 
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> ---
+>   include/uapi/linux/bpf.h       | 27 ++++++++++++++++++++++-----
+>   kernel/trace/bpf_trace.c       | 21 ++++++++++++++++++---
+>   tools/include/uapi/linux/bpf.h | 27 ++++++++++++++++++++++-----
+>   3 files changed, 62 insertions(+), 13 deletions(-)
+> 
+> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> index 9d1932e..ab3c86c 100644
+> --- a/include/uapi/linux/bpf.h
+> +++ b/include/uapi/linux/bpf.h
+> @@ -695,7 +695,12 @@ struct bpf_stack_build_id {
+>    * 		to file *\/sys/kernel/debug/tracing/trace* from DebugFS, if
+>    * 		available. It can take up to three additional **u64**
+>    * 		arguments (as an eBPF helpers, the total number of arguments is
+> - * 		limited to five).
+> + *		limited to five), and also supports %pT (BTF-based type
+> + *		printing), as long as BPF_READ lockdown is not active.
+> + *		"%pT" takes a "struct __btf_ptr *" as an argument; it
+> + *		consists of a pointer value and specified BTF type string or id
+> + *		used to select the type for display.  For more details, see
+> + *		Documentation/core-api/printk-formats.rst.
+>    *
+>    * 		Each time the helper is called, it appends a line to the trace.
+>    * 		Lines are discarded while *\/sys/kernel/debug/tracing/trace* is
+> @@ -731,10 +736,10 @@ struct bpf_stack_build_id {
+>    * 		The conversion specifiers supported by *fmt* are similar, but
+>    * 		more limited than for printk(). They are **%d**, **%i**,
+>    * 		**%u**, **%x**, **%ld**, **%li**, **%lu**, **%lx**, **%lld**,
+> - * 		**%lli**, **%llu**, **%llx**, **%p**, **%s**. No modifier (size
+> - * 		of field, padding with zeroes, etc.) is available, and the
+> - * 		helper will return **-EINVAL** (but print nothing) if it
+> - * 		encounters an unknown specifier.
+> + *		**%lli**, **%llu**, **%llx**, **%p**, **%pT[cNx0], **%s**.
+> + *		Only %pT supports modifiers, and the helper will return
+> + *		**-EINVAL** (but print nothing) if it encouters an unknown
+> + *		specifier.
+>    *
+>    * 		Also, note that **bpf_trace_printk**\ () is slow, and should
+>    * 		only be used for debugging purposes. For this reason, a notice
+> @@ -4058,4 +4063,16 @@ struct bpf_pidns_info {
+>   	__u32 pid;
+>   	__u32 tgid;
+>   };
+> +
+> +/*
+> + * struct __btf_ptr is used for %pT (typed pointer) display; the
+> + * additional type string/BTF id are used to render the pointer
+> + * data as the appropriate type.
+> + */
+> +struct __btf_ptr {
+> +	void *ptr;
+> +	const char *type;
+> +	__u32 id;
+> +};
+> +
+>   #endif /* _UAPI__LINUX_BPF_H__ */
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index d961428..c032c58 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -321,9 +321,12 @@ static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
+>   	return &bpf_probe_write_user_proto;
+>   }
+>   
+> +#define isbtffmt(c)	\
+> +	(c == 'T' || c == 'c' || c == 'N' || c == 'x' || c == '0')
+> +
+>   /*
+>    * Only limited trace_printk() conversion specifiers allowed:
+> - * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %s
+> + * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %pT %s
+>    */
+>   BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
+>   	   u64, arg2, u64, arg3)
+> @@ -361,8 +364,20 @@ static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
+>   			i++;
+>   		} else if (fmt[i] == 'p' || fmt[i] == 's') {
+>   			mod[fmt_cnt]++;
+> -			/* disallow any further format extensions */
+> -			if (fmt[i + 1] != 0 &&
+> +			/*
+> +			 * allow BTF type-based printing, and disallow any
+> +			 * further format extensions.
+> +			 */
+> +			if (fmt[i] == 'p' && fmt[i + 1] == 'T') {
+> +				int ret;
+> +
+> +				ret = security_locked_down(LOCKDOWN_BPF_READ);
+> +				if (unlikely(ret < 0))
+> +					return ret;
+> +				i++;
+> +				while (isbtffmt(fmt[i]))
+> +					i++;
 
+The pointer passed to the helper may not be valid pointer. I think you
+need to do a probe_read_kernel() here. Do an atomic memory allocation
+here should be okay as this is mostly for debugging only.
+
+
+> +			} else if (fmt[i + 1] != 0 &&
+>   			    !isspace(fmt[i + 1]) &&
+>   			    !ispunct(fmt[i + 1]))
+>   				return -EINVAL;
+> diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+> index 9d1932e..ab3c86c 100644
+> --- a/tools/include/uapi/linux/bpf.h
+> +++ b/tools/include/uapi/linux/bpf.h
+> @@ -695,7 +695,12 @@ struct bpf_stack_build_id {
+>    * 		to file *\/sys/kernel/debug/tracing/trace* from DebugFS, if
+>    * 		available. It can take up to three additional **u64**
+>    * 		arguments (as an eBPF helpers, the total number of arguments is
+> - * 		limited to five).
+> + *		limited to five), and also supports %pT (BTF-based type
+> + *		printing), as long as BPF_READ lockdown is not active.
+> + *		"%pT" takes a "struct __btf_ptr *" as an argument; it
+> + *		consists of a pointer value and specified BTF type string or id
+> + *		used to select the type for display.  For more details, see
+> + *		Documentation/core-api/printk-formats.rst.
+>    *
+>    * 		Each time the helper is called, it appends a line to the trace.
+>    * 		Lines are discarded while *\/sys/kernel/debug/tracing/trace* is
+> @@ -731,10 +736,10 @@ struct bpf_stack_build_id {
+>    * 		The conversion specifiers supported by *fmt* are similar, but
+>    * 		more limited than for printk(). They are **%d**, **%i**,
+>    * 		**%u**, **%x**, **%ld**, **%li**, **%lu**, **%lx**, **%lld**,
+> - * 		**%lli**, **%llu**, **%llx**, **%p**, **%s**. No modifier (size
+> - * 		of field, padding with zeroes, etc.) is available, and the
+> - * 		helper will return **-EINVAL** (but print nothing) if it
+> - * 		encounters an unknown specifier.
+> + *		**%lli**, **%llu**, **%llx**, **%p**, **%pT[cNx0], **%s**.
+> + *		Only %pT supports modifiers, and the helper will return
+> + *		**-EINVAL** (but print nothing) if it encouters an unknown
+> + *		specifier.
+>    *
+>    * 		Also, note that **bpf_trace_printk**\ () is slow, and should
+>    * 		only be used for debugging purposes. For this reason, a notice
+> @@ -4058,4 +4063,16 @@ struct bpf_pidns_info {
+>   	__u32 pid;
+>   	__u32 tgid;
+>   };
+> +
+> +/*
+> + * struct __btf_ptr is used for %pT (typed pointer) display; the
+> + * additional type string/BTF id are used to render the pointer
+> + * data as the appropriate type.
+> + */
+> +struct __btf_ptr {
+> +	void *ptr;
+> +	const char *type;
+> +	__u32 id;
+> +};
+> +
+>   #endif /* _UAPI__LINUX_BPF_H__ */
+> 
