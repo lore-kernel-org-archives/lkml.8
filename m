@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE804C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A91C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD14220643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868C920643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483308;
-	bh=KuXimrsHA3zb0KgBizYd4QVjSY3d7N/R9dZqKgNYgYg=;
+	s=default; t=1589483313;
+	bh=Nq/lZfg+QlhWGRQesG+N0mdw+neI0bArwUPu2n8rJ18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tcByPCamsjfUuySqPs3FKbhWT6kvV3aHWma8IQqDwITEkw5iSLRooAhiy8i34drwd
-	 7bxzrQ0tno64zIvlM6ZUD0LFrVn+8xz0OHwlJ+pFsuUd1GDYOGpIX+z3kp7Aiz6UAA
-	 OYLffLxmedbD/zeBM3EdlHRzPGkObwKdvpdx5nkw=
+	b=qOvSkl3GG6FHxf/Bbyq0Ip4vlIpqfl2tv1mQdlv4h4bSU7Q2/uwz91Hhxm/Hjc76P
+	 hdVUNcpyxxFbV7AzYr5j/m+Qmp+EVwMNqf7BAriRs6yO7tEqErQ4DSjUXLV1lWANp4
+	 c+oPIGLYeCz4JsvwggYxjCi8J98fsYqTKgCNlkYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbgENSxR (ORCPT
+        id S1729357AbgENTIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:53:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52000 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:08:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728559AbgENSxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:04 -0400
+        id S1728620AbgENSxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF5BE20727;
-        Thu, 14 May 2020 18:53:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3333A2074A;
+        Thu, 14 May 2020 18:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482383;
-        bh=KuXimrsHA3zb0KgBizYd4QVjSY3d7N/R9dZqKgNYgYg=;
+        s=default; t=1589482395;
+        bh=Nq/lZfg+QlhWGRQesG+N0mdw+neI0bArwUPu2n8rJ18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d70w3SQQI4V43ciCzRlpOARZFsHYLYLyAI56BYRtpESrhsrFtOL0MFVU4C52wuI5t
-         IAscvocbs5Hs3o1+xYT7eCkmnMghzQK6V6PXww+fEWdKGEi9xnHjC+x5LYPHrGINDe
-         dNad4k4IqMyfzNkr4SHyNBPpyHcNa97D04sAD8fQ=
+        b=d8KfGRWD+wJ/KmxT2Oj9B0WTGKOxyFctOpBIkziYRYYzlMzd94ndxsdQx5EKw09jm
+         YXkB3lrmPPBYNUh8dwM2tdgGDr79NeVKvc2YtRHXfDZUMC5nVXp/nZO+Vl1AKG2Vd1
+         JdD/sNIqKx38+G0sO+lgNWhm7MmDaOajm6mKVJpA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 60/62] crypto: lrw - simplify error handling in create()
-Date:   Thu, 14 May 2020 14:51:45 -0400
-Message-Id: <20200514185147.19716-60-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 02/49] net: drop_monitor: use IS_REACHABLE() to guard net_dm_hw_report()
+Date:   Thu, 14 May 2020 14:52:23 -0400
+Message-Id: <20200514185311.20294-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
-References: <20200514185147.19716-1-sashal@kernel.org>
+In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
+References: <20200514185311.20294-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,91 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit d57063103332b95eac9c118900f35700a491da08 ]
+[ Upstream commit 1cd9b3abf5332102d4d967555e7ed861a75094bf ]
 
-Simplify the error handling in the LRW template's ->create() function by
-taking advantage of crypto_drop_skcipher() now accepting (as a no-op) a
-spawn that hasn't been grabbed yet.
+In net/Kconfig, NET_DEVLINK implies NET_DROP_MONITOR.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+The original behavior of the 'imply' keyword prevents NET_DROP_MONITOR
+from being 'm' when NET_DEVLINK=y.
+
+With the planned Kconfig change that relaxes the 'imply', the
+combination of NET_DEVLINK=y and NET_DROP_MONITOR=m would be allowed.
+
+Use IS_REACHABLE() to avoid the vmlinux link error for this case.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/lrw.c | 28 +++++++++++-----------------
- 1 file changed, 11 insertions(+), 17 deletions(-)
+ include/net/drop_monitor.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/crypto/lrw.c b/crypto/lrw.c
-index 63c485c0d8a66..376d7ed3f1f87 100644
---- a/crypto/lrw.c
-+++ b/crypto/lrw.c
-@@ -343,15 +343,15 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+diff --git a/include/net/drop_monitor.h b/include/net/drop_monitor.h
+index 2ab668461463e..f68bc373544a9 100644
+--- a/include/net/drop_monitor.h
++++ b/include/net/drop_monitor.h
+@@ -19,7 +19,7 @@ struct net_dm_hw_metadata {
+ 	struct net_device *input_dev;
+ };
  
- 	err = -EINVAL;
- 	if (alg->base.cra_blocksize != LRW_BLOCK_SIZE)
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	if (crypto_skcipher_alg_ivsize(alg))
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	err = crypto_inst_setname(skcipher_crypto_instance(inst), "lrw",
- 				  &alg->base);
- 	if (err)
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	err = -EINVAL;
- 	cipher_name = alg->base.cra_name;
-@@ -364,20 +364,20 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 
- 		len = strlcpy(ecb_name, cipher_name + 4, sizeof(ecb_name));
- 		if (len < 2 || len >= sizeof(ecb_name))
--			goto err_drop_spawn;
-+			goto err_free_inst;
- 
- 		if (ecb_name[len - 1] != ')')
--			goto err_drop_spawn;
-+			goto err_free_inst;
- 
- 		ecb_name[len - 1] = 0;
- 
- 		if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
- 			     "lrw(%s)", ecb_name) >= CRYPTO_MAX_ALG_NAME) {
- 			err = -ENAMETOOLONG;
--			goto err_drop_spawn;
-+			goto err_free_inst;
- 		}
- 	} else
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_ASYNC;
- 	inst->alg.base.cra_priority = alg->base.cra_priority;
-@@ -403,17 +403,11 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 	inst->free = free;
- 
- 	err = skcipher_register_instance(tmpl, inst);
--	if (err)
--		goto err_drop_spawn;
--
--out:
--	return err;
--
--err_drop_spawn:
--	crypto_drop_skcipher(spawn);
-+	if (err) {
- err_free_inst:
--	kfree(inst);
--	goto out;
-+		free(inst);
-+	}
-+	return err;
- }
- 
- static struct crypto_template crypto_tmpl = {
+-#if IS_ENABLED(CONFIG_NET_DROP_MONITOR)
++#if IS_REACHABLE(CONFIG_NET_DROP_MONITOR)
+ void net_dm_hw_report(struct sk_buff *skb,
+ 		      const struct net_dm_hw_metadata *hw_metadata);
+ #else
 -- 
 2.20.1
 
