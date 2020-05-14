@@ -2,104 +2,192 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAC5A2065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589418016;
-	bh=iL3qRo6PKMlX7MXjMuhMdIo6UsuawSg8IZnaTVQPWcw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pb4rLZQi8MEygFNqBri15qUZpH2YU46mCqJ7oqQK9EvzbAp5ol2DauXQgKiAomUVs
-	 4pcML26Xv4eH9p2RzZLUfYFhkbI+ArkX8KK5lWpJSc0pMgdaTSDf1lqnw+Uc7hbwGu
-	 Z8YhKjSZaWIDQRdFsyg5pLxUXBI8D6znWVXRY8IE=
+	by mail.kernel.org (Postfix) with ESMTP id 1548C2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:02:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgENBAP (ORCPT
+        id S1726051AbgENBC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 21:00:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59754 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 21:02:28 -0400
+Received: from mga12.intel.com ([192.55.52.136]:54506 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbgENBAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 21:00:15 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5F482054F;
-        Thu, 14 May 2020 01:00:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589418014;
-        bh=iL3qRo6PKMlX7MXjMuhMdIo6UsuawSg8IZnaTVQPWcw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eMXyaK/bX8VY/yTLe5XB8JtMJrtcjjev1fGQABBIMNzXe1l1nVaonllA6Js7jUFE/
-         roA4DNirFqPNV8zYvxpE5SZpnZrPScPhYauQnT6eTn3ErV59izLzTc8zoDjhqVpUBV
-         xIAKU4KFe9w7hOY+jhok+DYEHeqUtAEj9JByg/IQ=
-Date:   Thu, 14 May 2020 10:00:09 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Christoph Hellwig <hch@lst.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-parisc@vger.kernel.org,
-        linux-um <linux-um@lists.infradead.org>,
-        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 11/18] maccess: remove strncpy_from_unsafe
-Message-Id: <20200514100009.a8e6aa001f0ace5553c7904f@kernel.org>
-In-Reply-To: <CAHk-=wjBKGLyf1d53GwfUTZiK_XPdujwh+u2XSpD2HWRV01Afw@mail.gmail.com>
-References: <20200513160038.2482415-1-hch@lst.de>
-        <20200513160038.2482415-12-hch@lst.de>
-        <CAHk-=wj=u+nttmd1huNES2U=9nePtmk7WgR8cMLCYS8wc=rhdA@mail.gmail.com>
-        <20200513192804.GA30751@lst.de>
-        <0c1a7066-b269-9695-b94a-bb5f4f20ebd8@iogearbox.net>
-        <20200514082054.f817721ce196f134e6820644@kernel.org>
-        <CAHk-=wjBKGLyf1d53GwfUTZiK_XPdujwh+u2XSpD2HWRV01Afw@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1725925AbgENBC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 21:02:27 -0400
+IronPort-SDR: ZVX797FBOzzWSRRkN9FyyIBDzjeWDd4dhnv0KEgJmGMeY8rrK9514vxX6F1xcIcU6mQGjhLm4n
+ maGbxT37JL6Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 18:02:27 -0700
+IronPort-SDR: vejgvzA8ElnatyBbGq5Yk3x7aJmddwFE43yalkoKiZyRJVGbZCjtnvH7KN49EAuDbWO+QSQmWh
+ CP+RQZsvJIrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,389,1583222400"; 
+   d="scan'208";a="409887144"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 13 May 2020 18:02:27 -0700
+Received: from [10.249.66.53] (vramuthx-mobl1.gar.corp.intel.com [10.249.66.53])
+        by linux.intel.com (Postfix) with ESMTP id 0D32E580646;
+        Wed, 13 May 2020 18:02:19 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v6 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+References: <20200513104615.7905-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200513104615.7905-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200513153405.GS185537@smile.fi.intel.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <9d3fc773-d7ed-f2cd-808e-78748c43b81b@linux.intel.com>
+Date:   Thu, 14 May 2020 09:02:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200513153405.GS185537@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 16:59:40 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> On Wed, May 13, 2020 at 4:21 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >
-> >
-> > For trace_kprobe.c current order (kernel -> user fallback) is preferred
-> > because it has another function dedicated for user memory.
+Hi Andy,
+On 13/5/2020 11:34 pm, Andy Shevchenko wrote:
+> On Wed, May 13, 2020 at 06:46:15PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> This patch adds the new IP of Nand Flash Controller(NFC) support
+>> on Intel's Lightning Mountain(LGM) SoC.
+>>
+>> DMA is used for burst data transfer operation, also DMA HW supports
+>> aligned 32bit memory address and aligned data access by default.
+>> DMA burst of 8 supported. Data register used to support the read/write
+>> operation from/to device.
+>>
+>> NAND controller driver implements ->exec_op() to replace legacy hooks,
+>> these specific call-back method to execute NAND operations.
 > 
-> Well, then it should just use the "strict" kernel-only one for the
-> non-user memory.
+> ...
 > 
-> But yes, if there are legacy interfaces, then we might want to say
-> "these continue to work for the legacy case on platforms where we can
-> tell which kind of pointer it is from the bit pattern".
+>> +static int ebu_nand_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct ebu_nand_controller *ebu_host;
+>> +	struct nand_chip *nand;
+>> +	struct mtd_info *mtd;
+>> +	struct resource *res;
+>> +	char *resname;
+>> +	int ret, i;
+>> +	u32 reg;
+>> +
+>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
+>> +	if (!ebu_host)
+>> +		return -ENOMEM;
+>> +
+>> +	ebu_host->dev = dev;
+>> +	nand_controller_init(&ebu_host->controller);
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
+>> +	ebu_host->ebu = devm_ioremap_resource(&pdev->dev, res);
+> 
+> devm_platform_ioremap_resource_byname
+> 
+>> +	if (IS_ERR(ebu_host->ebu))
+>> +		return PTR_ERR(ebu_host->ebu);
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
+>> +	ebu_host->hsnand = devm_ioremap_resource(&pdev->dev, res);
+> 
+> devm_platform_ioremap_resource_byname
+Thanks for the review comments
+As Boris suggested , split into 2 API's.
 
-Yes, that was why I changed my mind and send reviewed-by last time.
+> 
+>> +	if (IS_ERR(ebu_host->hsnand))
+>> +		return PTR_ERR(ebu_host->hsnand);
+>> +
+>> +	ret = device_property_read_u32(dev, "nand,cs", &reg);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to get chip select: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +	ebu_host->cs_num = reg;
+>> +
+>> +	for (i = 0; i < MAX_CS; i++) {
+>> +		resname = devm_kasprintf(dev, GFP_KERNEL, "nand_cs%d", i);
+>> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> +						   resname);
+> 
+> if res is NULL?
+Noted.
+> 
+>> +		ebu_host->cs[i].chipaddr = devm_ioremap_resource(dev, res);
+>> +		ebu_host->cs[i].nand_pa = res->start;
+>> +			if (IS_ERR(ebu_host->cs[i].chipaddr))
+>> +				return PTR_ERR(ebu_host->cs[i].chipaddr);
+> 
+> Something happened with ordering / indentation along these lines...
+Noted.
+> 
+>> +	}
+>> +
+> 
+>> +	for (i = 0; i < MAX_CS; i++) {
+>> +		resname = devm_kasprintf(dev, GFP_KERNEL, "addr_sel%d", i);
+>> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> +						   resname);
+> 
+> if res is NULL?
+Noted.
 
-https://lore.kernel.org/bpf/20200511142716.f1ff6fc55220012982c47fec@kernel.org/
-
-> But we should likely at least disallow it entirely on platforms where
-> we really can't - or pick one hardcoded choice. On sparc, you really
-> _have_ to specify one or the other.
-
-OK. BTW, is there any way to detect the kernel/user space overlap on
-memory layout statically? If there, I can do it. (I don't like
-"if (CONFIG_X86)" thing....)
-Or, maybe we need CONFIG_ARCH_OVERLAP_ADDRESS_SPACE?
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Regards
+Vadivel
+> 
+>> +		ebu_host->cs[i].addr_sel = res->start;
+>> +		writel(ebu_host->cs[i].addr_sel | EBU_ADDR_MASK(5) |
+>> +		       EBU_ADDR_SEL_REGEN, ebu_host->ebu + EBU_ADDR_SEL(i));
+>> +	}
+> 
+>> +	return ret;
+>> +}
+> 
+> ...
+> 
+>> +static int ebu_nand_remove(struct platform_device *pdev)
+>> +{
+>> +	struct ebu_nand_controller *ebu_host = platform_get_drvdata(pdev);
+>> +
+> 
+>> +	if (ebu_host) {
+> 
+> How it can be NULL here?
+> 
+>> +		mtd_device_unregister(nand_to_mtd(&ebu_host->chip));
+>> +		nand_cleanup(&ebu_host->chip);
+>> +		ebu_nand_disable(&ebu_host->chip);
+>> +
+>> +		if (ebu_host->dma_rx || ebu_host->dma_tx)
+>> +			ebu_dma_cleanup(ebu_host);
+>> +
+>> +		clk_disable_unprepare(ebu_host->clk);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> 
+> 
