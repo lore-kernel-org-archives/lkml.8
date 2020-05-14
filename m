@@ -2,127 +2,149 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 419DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B07FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2154D206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C5F206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:53:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="aqMOulBA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1/r/aHf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgENMxf (ORCPT
+        id S1726645AbgENMxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 08:53:35 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:12874 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725955AbgENMxe (ORCPT
+        Thu, 14 May 2020 08:53:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725955AbgENMxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 08:53:34 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04ECqOfG012268;
-        Thu, 14 May 2020 14:53:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=nHSWD3rAvd4p9vuLYKA3ZWiKVn+Vm2Lf+IPFO5a7YEk=;
- b=aqMOulBAvl+8xoCgiDgMnbTqfEe79LvSFqONLc7j5PE6Hpuh1hW6OjVpaMaDDCalnUim
- asRk0IBE6JIzsW0gKEpec3FgCSv+4gBMntCJHSqfdnBmCy5rXRn5/tgT0Debk3c5oZVg
- ywFW1sS8IYwPOP1RK4gTQBxMzEoJh1T4kbeURsD6gyvIBPzugWOuT+NJL2j9OX5m1SME
- zZZumUCD5bLXiTFkt0v+jhyyatlDh0HlK3Fu6fHTi5xeEXGr972vRrahzpV5PveXxKWX
- 31xMuAnpAko1YAR9rsPFP0oh3/YyYzbjxVRINoHrOfZwEgFT8YHKIW0oAi8azE1Hor+A bg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vpkb2f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 14:53:08 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 442B5100034;
-        Thu, 14 May 2020 14:53:05 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 18F0F2BAE4E;
-        Thu, 14 May 2020 14:53:05 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 14 May
- 2020 14:52:56 +0200
-Subject: Re: [PATCH v3 3/5] ARM: dts: stm32: enable ltdc binding with ili9341
- on stm32429-disco board
-To:     Linus Walleij <linus.walleij@linaro.org>, <dillon.minfei@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
- <1589267017-17294-4-git-send-email-dillon.minfei@gmail.com>
- <CACRpkda5VjjBdbruXTi33QBNb=VU6vK2zDE8yyQXoWw7=NQFeg@mail.gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <a4ebd7cd-5756-0683-135f-0f96be8a4a7b@st.com>
-Date:   Thu, 14 May 2020 14:52:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 08:53:36 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 471ADC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 05:53:36 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id a11so1058997uah.12
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 05:53:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lAir05Eo5P9ux6gvYCphk9uuOIJoYrt4qmvNbEYiFrs=;
+        b=f1/r/aHfC9g71wQLKLx9qJqzfaRQgGxEr8wZgUFPTg0bvVKSEj9c1ComzA+KxXFBgi
+         psHsRZ2OdE9PubDJuoqdi4qg1Ch7Z9um+GkBfcLNqT1k1wVz9ZLuMaJ8Q1ZiRTfGWY46
+         EAhE07VszzPoOudVzsEwUM5P8llatySPpqlv7D+KnLEq2jeQzJ2L1AH4gK6unTZVb7wg
+         RdTl0/9rCTWxHF2JTuEZtodIReoret4aPHd9l3WCIhs1tx5lMIClir1N8zK8eztNSF49
+         dNukeITkWEWPQ/eJIpu/8KYz3XQ1t/SwkAdjE9YU85tXib7fpA9SCDCKTx8eG7v+mpZ6
+         zYDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lAir05Eo5P9ux6gvYCphk9uuOIJoYrt4qmvNbEYiFrs=;
+        b=r/dlAp0kvRviQtthUbKGJWjltpHFtYy0NiGa+Z/7MKsbEJ8N6R12C03jXWKX9+A9go
+         0qDuOFUcSxA831LebSNheDznEueyS5LchF2dKuY5lB8gslVwlT65eZOr2NLUZDf1eJ+G
+         L6G8pXmksOT2qctXMnj7dJCLJXhRVEUWNYtMR7cFt/Uw5qqzT5Fuuw0dfqcCF8L86TJK
+         TUuN+CEfBFbgEA7yhPB7dQNpo8wMHuvTqmsVT4nVyQtuDY1pzcvw38XoiR4eGhhajInp
+         5IunwRQSZIVCfheJ091yiRfkSt7qC/3ORLhGTOL4pHfnD2zH3R8f2sY2FEgZb5z2Fk6R
+         S/cQ==
+X-Gm-Message-State: AOAM531i0Nj0Abjj8xOHA5rhN25fhyjy442VJEKzBqJOZlC5YD9XIJUD
+        mVnOvS8tTU4k1n8mbZKFF5GQ4WSRc8a+buRjCV8=
+X-Google-Smtp-Source: ABdhPJxhyXjcjWUiMhsuzaEhLnVDWUEaS0KTIweQ+2fS1GhHKM7jEjT7Uye7bgVjnXU8reznyiKHvcxwSg6v2eCLA50=
+X-Received: by 2002:ab0:6f0b:: with SMTP id r11mr2968555uah.47.1589460815268;
+ Thu, 14 May 2020 05:53:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkda5VjjBdbruXTi33QBNb=VU6vK2zDE8yyQXoWw7=NQFeg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-14_03:2020-05-14,2020-05-14 signatures=0
+References: <125a8c31e106dc68e6d3e3395cecc766db7fb897.camel@gmail.com>
+ <20200513070847.GM2571@lahna.fi.intel.com> <CAD2FfiHsUjLC1K=HvF74LbRaKoc_zz6bOmGLQrQbW4CywWCP9A@mail.gmail.com>
+ <20200513091100.GY2571@lahna.fi.intel.com> <CAD2FfiGNErUhz=7DH6Z37X573hSkJkzbOEXbb++X+Ey5WLc9=Q@mail.gmail.com>
+ <20200513162513.GI2571@lahna.fi.intel.com> <c4602e6768377179ff3204ea0c2d5944e6d35844.camel@gmail.com>
+ <20200514121536.GS2571@lahna.fi.intel.com>
+In-Reply-To: <20200514121536.GS2571@lahna.fi.intel.com>
+From:   Richard Hughes <hughsient@gmail.com>
+Date:   Thu, 14 May 2020 13:53:23 +0100
+Message-ID: <CAD2FfiEEzL0D5uRWgt=Hb6ngD2KY_NrZYJFAYtJi4CmS08zpfA@mail.gmail.com>
+Subject: Re: [PATCH] mfd: Export LPC attributes for the system SPI chip
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     ptyser@xes-inc.com, Lee Jones <lee.jones@linaro.org>,
+        tudor.ambarus@microchip.com,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        allison@lohutok.net, tglx@linutronix.de, jethro@fortanix.com,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 14 May 2020 at 13:15, Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> > +What:                /sys/kernel/security/firmware/bioswe
+> Should this still be "firmware_protections" or similar. Plain "firmware"
+> sounds again too generic. Maybe its just me..
 
+It's not always going to be protections provided by the firmware; it
+might also be restrictions put on the firmware. My first choice was
+/sys/kernel/security/firmware_security/ but having the double
+'security' just looked redundant.
 
-On 5/14/20 10:24 AM, Linus Walleij wrote:
-> On Tue, May 12, 2020 at 9:04 AM <dillon.minfei@gmail.com> wrote:
-> 
->> From: dillon min <dillon.minfei@gmail.com>
->>
->> Enable the ltdc & ili9341 on stm32429-disco board.
->>
->> Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> 
-> This mostly looks good but...
-> 
->> +&spi5 {
->> +       status = "okay";
->> +       pinctrl-0 = <&spi5_pins>;
->> +       pinctrl-names = "default";
->> +       #address-cells = <1>;
->> +       #size-cells = <0>;
->> +       cs-gpios = <&gpioc 2 GPIO_ACTIVE_LOW>;
->> +       dmas = <&dma2 3 2 0x400 0x0>,
->> +              <&dma2 4 2 0x400 0x0>;
->> +       dma-names = "rx", "tx";
-> 
-> These DMA assignments seem to be SoC things and should
-> rather be in the DTS(I) file where &spi5 is defined, right?
-> stm32f429.dtsi I suppose?
+> > +     LPC_SPT,        /* Sunrise Point */
+> > +     LPC_KBL,        /* Kaby Lake */
+> > +     LPC_TGL,        /* Tiger Lake */
+>
+> These all have the SPI-NOR controller as separate PCI device (as ICL and
+> others).
 
-I agree with Linus, DMA have to be defined in SoC dtsi. And if a board 
-doesn't want to use it, we use the "delete-property".
+For Sunrise Point I see:
 
-> 
-> It is likely the same no matter which device is using spi5.
-> 
-> Yours,
-> Linus Walleij
-> 
+00:1f.0 ISA bridge [0601]: Intel Corporation CM236 Chipset LPC/eSPI
+Controller [8086:a150] (rev 31)
+00:1f.0 ISA bridge [0601]: Intel Corporation Sunrise Point LPC
+Controller/eSPI Controller [8086:9d4e] (rev 21)
+
+For Kaby Lake I see:
+
+00:1f.0 ISA bridge [0601]: Intel Corporation HM175 Chipset LPC/eSPI
+Controller [8086:a152] (rev 31)",
+
+You're indeed correct about Tiger Lake, my apologies.
+
+> > +     [LPC_SPT] = {
+> > +             .name = "Sunrise Point",
+> > +             .spi_type = INTEL_SPI_LPC,
+> > +     },
+>
+> So all of these have LCP/eSPI controller but the SPI-NOR controller is
+> not accessible through it - it is a separate PCI device.
+
+I have a Sunrise Point system here -- the lspci is here:
+https://people.freedesktop.org/~hughsient/temp/lspci.txt
+
+Is the SPI-NOR controller perhaps hidden? If I read the BCR @ 0xdc
+from the 00:1f.0 ISB bridge I get the expected BIOS_WE, BLE and
+SMM_BWP results.
+
+> Like you said, Evolution seems to mangle these.
+
+I'll use git for future patches, thanks.
+
+> > +             pci_read_config_dword(dev, BCR, &bcr);
+> > +             info->writeable = !!(bcr & BCR_WPD);
+> > +             break;
+> > +
+> > +     case INTEL_SPI_LPC:
+>
+> So instead of this, you can add the security attributes to the existing
+> entries where we are sure there is SPI-NOR controller behind LPC. Here
+> it is not the case and further..
+
+Sooo I'd use INTEL_SPI_LPT? On my system RCBA isn't set, and so "if
+(!res->start)" bails out with  return -ENODEV;"
+
+> Otherwise this looks good, nice work :)
+
+I thank you for your patience so far, what I've got the hang of this I
+promise to start being more useful.
+
+Richard.
