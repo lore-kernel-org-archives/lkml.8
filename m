@@ -2,212 +2,69 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164B7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BDDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E273E205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:52:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589467972;
-	bh=KyMeowribavtsIbTUR+vWwY63ali5afdWjqtehs4ado=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZRpcCtcNodkgS8/N5S61cVIiJDKhzXmubI6+Ci/XXVu7PibyrlA/K1jjClQVRBzoX
-	 2MKizFEg1A6bLYB5quw+Vy5PMf62e1G2CInDy4m6QTgQIXobA+oRIbcjTqqgTVdmK6
-	 WUfYJr/Kvi/IUYBK3ch8OkYtkuhDqgyWqP2vPkew=
+	by mail.kernel.org (Postfix) with ESMTP id AD70920643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgENOww (ORCPT
+        id S1727067AbgENOyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:52:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726190AbgENOwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:52:51 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FD6A20657;
-        Thu, 14 May 2020 14:52:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589467970;
-        bh=KyMeowribavtsIbTUR+vWwY63ali5afdWjqtehs4ado=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jO+lD2cCU6q+5tJVkwkyOBKh8wI3TB5mInfIHe4hmQgT8JBiuB9lCqG8j40WAUs2e
-         GBE/X3aXCrtmqPdF7LYRETB7jvg2CCP1UwQonVipOc7Lb97gzY0+t4ax94t/WeNM0h
-         vketF0DJ9519leZRWWEsKTbZZQSFsyacHizFkUxo=
-Received: by mail-oi1-f170.google.com with SMTP id o24so24768110oic.0;
-        Thu, 14 May 2020 07:52:50 -0700 (PDT)
-X-Gm-Message-State: AGi0PubBBLONm6r65UiOs4vWocSk31JKMsHxmNubiQ6Fsv99dZ2WrGBX
-        +/STx0pzUmOYumYn+grT3uHAqejfR+WRMEOxvw==
-X-Google-Smtp-Source: APiQypLD1q0aJ+FQry7uiKJF40s+kUkpHEeLYwhAf8rdZYNoqrECkbbBawOpUYBN2DKPnQ4iPCEQXyF96LsbhjXfFTU=
-X-Received: by 2002:aca:1904:: with SMTP id l4mr31504767oii.106.1589467969912;
- Thu, 14 May 2020 07:52:49 -0700 (PDT)
+        Thu, 14 May 2020 10:54:31 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:59192 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726051AbgENOyb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 10:54:31 -0400
+Received: from callcc.thunk.org (pool-100-0-195-244.bstnma.fios.verizon.net [100.0.195.244])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 04EEsFEX007807
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 10:54:16 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 84958420304; Thu, 14 May 2020 10:54:15 -0400 (EDT)
+Date:   Thu, 14 May 2020 10:54:15 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: Re: [PATCH] ext4: Fix buffer_head refcnt leak when ext4_iget() fails
+Message-ID: <20200514145415.GU1596452@mit.edu>
+References: <1587618568-13418-1-git-send-email-xiyuyang19@fudan.edu.cn>
 MIME-Version: 1.0
-References: <20200501073949.120396-1-john.stultz@linaro.org>
- <20200501073949.120396-4-john.stultz@linaro.org> <20200501102143.xcckvsfecumbei3c@DESKTOP-E1NTVVP.localdomain>
- <47e7eded-7240-887a-39e1-97c55bf752e7@arm.com> <CALAqxLU6kmvJ+xPCFzc3N+RNMv4g=L9bmzgE0wrOXefiGfPoHg@mail.gmail.com>
- <20200504090628.d2q32dwyg6em5pp7@DESKTOP-E1NTVVP.localdomain>
- <20200512163714.GA22577@bogus> <20200513104401.lhh2m5avlasev6mj@DESKTOP-E1NTVVP.localdomain>
-In-Reply-To: <20200513104401.lhh2m5avlasev6mj@DESKTOP-E1NTVVP.localdomain>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 14 May 2020 09:52:35 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+V-YA9B7i+9U0as3oXNC=HLPHmZ2NrPzNJu5CXpvD3tg@mail.gmail.com>
-Message-ID: <CAL_Jsq+V-YA9B7i+9U0as3oXNC=HLPHmZ2NrPzNJu5CXpvD3tg@mail.gmail.com>
-Subject: Re: [RFC][PATCH 3/4] dma-buf: cma_heap: Extend logic to export CMA
- regions tagged with "linux,cma-heap"
-To:     Brian Starkey <brian.starkey@arm.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-mm <linux-mm@kvack.org>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587618568-13418-1-git-send-email-xiyuyang19@fudan.edu.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 5:44 AM Brian Starkey <brian.starkey@arm.com> wrote:
->
-> Hi Rob,
->
-> On Tue, May 12, 2020 at 11:37:14AM -0500, Rob Herring wrote:
-> > On Mon, May 04, 2020 at 10:06:28AM +0100, Brian Starkey wrote:
-> > > On Fri, May 01, 2020 at 12:01:40PM -0700, John Stultz wrote:
-> > > > On Fri, May 1, 2020 at 4:08 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> > > > >
-> > > > > On 2020-05-01 11:21 am, Brian Starkey wrote:
-> > > > > > Hi John,
-> > > > > >
-> > > > > > On Fri, May 01, 2020 at 07:39:48AM +0000, John Stultz wrote:
-> > > > > >> This patch reworks the cma_heap initialization so that
-> > > > > >> we expose both the default CMA region and any CMA regions
-> > > > > >> tagged with "linux,cma-heap" in the device-tree.
-> > > > > >>
-> > > > > >> Cc: Rob Herring <robh+dt@kernel.org>
-> > > > > >> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> > > > > >> Cc: "Andrew F. Davis" <afd@ti.com>
-> > > > > >> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> > > > > >> Cc: Liam Mark <lmark@codeaurora.org>
-> > > > > >> Cc: Pratik Patel <pratikp@codeaurora.org>
-> > > > > >> Cc: Laura Abbott <labbott@redhat.com>
-> > > > > >> Cc: Brian Starkey <Brian.Starkey@arm.com>
-> > > > > >> Cc: Chenbo Feng <fengc@google.com>
-> > > > > >> Cc: Alistair Strachan <astrachan@google.com>
-> > > > > >> Cc: Sandeep Patil <sspatil@google.com>
-> > > > > >> Cc: Hridya Valsaraju <hridya@google.com>
-> > > > > >> Cc: Christoph Hellwig <hch@lst.de>
-> > > > > >> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > > > >> Cc: Robin Murphy <robin.murphy@arm.com>
-> > > > > >> Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > > > >> Cc: devicetree@vger.kernel.org
-> > > > > >> Cc: dri-devel@lists.freedesktop.org
-> > > > > >> Cc: linux-mm@kvack.org
-> > > > > >> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > > > > >> ---
-> > > > > >>   drivers/dma-buf/heaps/cma_heap.c | 18 +++++++++---------
-> > > > > >>   1 file changed, 9 insertions(+), 9 deletions(-)
-> > > > > >>
-> > > > > >> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
-> > > > > >> index 626cf7fd033a..dd154e2db101 100644
-> > > > > >> --- a/drivers/dma-buf/heaps/cma_heap.c
-> > > > > >> +++ b/drivers/dma-buf/heaps/cma_heap.c
-> > > > > >> @@ -141,6 +141,11 @@ static int __add_cma_heap(struct cma *cma, void *data)
-> > > > > >>   {
-> > > > > >>      struct cma_heap *cma_heap;
-> > > > > >>      struct dma_heap_export_info exp_info;
-> > > > > >> +    struct cma *default_cma = dev_get_cma_area(NULL);
-> > > > > >> +
-> > > > > >> +    /* We only add the default heap and explicitly tagged heaps */
-> > > > > >> +    if (cma != default_cma && !cma_dma_heap_enabled(cma))
-> > > > > >> +            return 0;
-> > > > > >
-> > > > > > Thinking about the pl111 thread[1], I'm wondering if we should also
-> > > > > > let drivers call this directly to expose their CMA pools, even if they
-> > > > > > aren't tagged for dma-heaps in DT. But perhaps that's too close to
-> > > > > > policy.
-> > > > >
-> > > > > That sounds much like what my first thoughts were - apologies if I'm
-> > > > > wildly off-base here, but as far as I understand:
-> > > > >
-> > > > > - Device drivers know whether they have their own "memory-region" or not.
-> > > > > - Device drivers already have to do *something* to participate in dma-buf.
-> > > > > - Device drivers know best how they make use of both the above.
-> > > > > - Therefore couldn't it be left to drivers to choose whether to register
-> > > > > their CMA regions as heaps, without having to mess with DT at all?
-> >
-> > +1, but I'm biased toward any solution not using DT. :)
-> >
-> > > > I guess I'm not opposed to this. But I guess I'd like to see some more
-> > > > details? You're thinking the pl111 driver would add the
-> > > > "memory-region" node itself?
-> > > >
-> > > > Assuming that's the case, my only worry is what if that memory-region
-> > > > node isn't a CMA area, but instead something like a carveout? Does the
-> > > > driver need to parse enough of the dt to figure out where to register
-> > > > the region as a heap?
-> > >
-> > > My thinking was more like there would already be a reserved-memory
-> > > node in DT for the chunk of memory, appropriately tagged so that it
-> > > gets added as a CMA region.
-> > >
-> > > The device's node would have "memory-region=<&blah>;" and would use
-> > > of_reserved_mem_device_init() to link up dev->cma_area to the
-> > > corresponding cma region.
-> > >
-> > > So far, that's all in-place already. The bit that's missing is
-> > > exposing that dev->cma_area to userspace as a dma_heap - so we could
-> > > just have "int cma_heap_add(struct cma *cma)" or "int
-> > > cma_heap_dev_add(struct device *dev)" or something exported for
-> > > drivers to expose their device-assigned cma region if they wanted to.
-> > >
-> > > I don't think this runs into the lifetime problems of generalised
-> > > heaps-as-modules either, because the CMA region will never go away
-> > > even if the driver does.
-> > >
-> > > Alongside that, I do think the completely DT-driven approach can be
-> > > useful too - because there may be regions which aren't associated with
-> > > any specific device driver, that we want exported as heaps.
-> >
-> > And they are associated with the hardware description rather than the
-> > userspace environment?
->
-> I'm not sure how to answer that. We already have CMA regions being
-> created from device-tree, so we're only talking about explicitly
-> exposing those to userspace.
+On Thu, Apr 23, 2020 at 01:09:27PM +0800, Xiyu Yang wrote:
+> ext4_orphan_get() invokes ext4_read_inode_bitmap(), which returns a
+> reference of the specified buffer_head object to "bitmap_bh" with
+> increased refcnt.
+> 
+> When ext4_orphan_get() returns, local variable "bitmap_bh" becomes
+> invalid, so the refcount should be decreased to keep refcount balanced.
+> 
+> The reference counting issue happens in one exception handling path of
+> ext4_orphan_get(). When ext4_iget() fails, the function forgets to
+> decrease the refcnt increased by ext4_read_inode_bitmap(), causing a
+> refcnt leak.
+> 
+> Fix this issue by calling brelse() when ext4_iget() fails.
+> 
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 
-It's easier to argue that how much CMA memory a system/device needs is
-h/w description as that's more a function of devices and frame sizes.
-But exposing to userspace or not is an OS architecture decision. It's
-not really any different than a kernel vs. userspace driver question.
-What's exposed by UIO or spi-dev is purely a kernel thing.
+Applied, thanks.
 
-> Are you thinking that userspace should be deciding whether they get
-> exposed or not? I don't know how userspace would discover them in
-> order to make that decision.
-
-Or perhaps the kernel should be deciding. Expose to userspace what the
-kernel doesn't need or drivers decide?
-
-It's hard to argue against 1 new property. It's death by a 1000 cuts though.
-
-Rob
+					- Ted
