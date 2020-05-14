@@ -2,609 +2,524 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAED7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A13B3206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F8F2206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:47:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cwdhDpb/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="awjRKSMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbgENLrm (ORCPT
+        id S1726891AbgENLrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:47:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38318 "EHLO
+        Thu, 14 May 2020 07:47:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbgENLrl (ORCPT
+        with ESMTP id S1726667AbgENLrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:47:41 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB95BC061A0C;
-        Thu, 14 May 2020 04:47:40 -0700 (PDT)
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 91D8C9A8;
-        Thu, 14 May 2020 13:47:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1589456859;
-        bh=Zr6kJjf4W5Hjcm57PaJPXghzi9Krv99yDkMaWzA3YEY=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=cwdhDpb/VIHHi2fCZSHrlQef6Y9aY8Mfg9NK4cM4JW/Gt9/pauPGZVZ2TPVjWza2A
-         uQWl2BJ+/qyedygZ4sHD1MyGPrLAHl8vyqN1R01ZeZl2O8LTm5ccIo6NeSSNoFrTxF
-         JgaC0g2nvy+HC8jzfQy3yoKsjPrEYIM+5+GYSFuI=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v9 2/4] media: i2c: Add MAX9286 driver
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        sakari.ailus@iki.fi, Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>, Rob Herring <robh+dt@kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
- <20200512155105.1068064-3-kieran.bingham+renesas@ideasonboard.com>
- <20200512181706.GA21014@Mani-XPS-13-9360>
- <11aca587-9438-4fba-081c-b82631e96989@ideasonboard.com>
- <20200514101356.GF2877@Mani-XPS-13-9360>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <f46ed5fc-4eb0-8841-25b8-ef6c45e7ac87@ideasonboard.com>
-Date:   Thu, 14 May 2020 12:47:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 07:47:46 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAD16C061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:47:46 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id i22so7668244oik.10
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:47:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8VhPOcX/YG/xDd11JGojADleD4pmQ/W7UZw5TAje7hI=;
+        b=awjRKSMNQTza5RyEL6/a/xIfs1St8oN36Nx3KVg0pNC2Tgg3AoN/GTWp1/772dVKNh
+         dTGL/PXCq/f0ruwa4RZYRVfXfCAinFxZ6y79RppvbrWViVOW9Lq4Ck+KLHojZ13Tb4dx
+         96gJhCMlKCwadIHg8epwWhY/lzoPV3YO4xEC62M2gzdEU2oaFWOm2M5jshkLY4WGwlIX
+         +wczSerVVertY81MwB+r61ygfEhbpymGRKgUPeXj971kwwzFDS0nOAeGATG008JrAh+A
+         ifDbApTyor6UmTjy1r2k8zJ0fxdq2nyPjkdbKzPlJPC6Jf97xXQrXZtbXB33naSHJ6Yt
+         0V2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8VhPOcX/YG/xDd11JGojADleD4pmQ/W7UZw5TAje7hI=;
+        b=Ru2vZlxiSWerW4Vf51A2TKcrqjIbHRrh4Z+gXUMap6HnMf76XLV8mEf/JNCm5Md+5v
+         X0O9WL/KhXJt7pBlzek4yJI+RHmn9wXjp74r6+foE5d4Vy1WvO+KXKzgsRATRI4xXnUL
+         i48qrB269QCxBjf2TGVDQMdw2aXo62wEMVu3wAh4UiKDa7Fr4LnwvFj4Cr2jSTSm6xsV
+         LzdyqRNaDGO2AIZMDZoFQzbvDkS51okCJw8pwWdvxZnogfVsXxqhgI1TxewlPLRcbry0
+         a01sjBnPljooPnuJn1iNu3/c+L9La94FGWieFKMJDkR5r4V4YJD+edDK+dQ+OCb3AiQE
+         gkbQ==
+X-Gm-Message-State: AGi0PuYdYVKqZWwFAWpkKLlnWY9BkJeMhrL3SkRnARHu8sk1OU5xYnxu
+        FMvYfvy1H6I9lhcqGEWu+zDtLZx0DElUuPKKVaf8dw==
+X-Google-Smtp-Source: APiQypIIZirr0mlhp5xpy4rSvQu/jhtqn7g+5dNO1sunRU6rtxi09cQ2veO8qCl8xhb9IhpMUgn8Cnffs91qq6dcaz8=
+X-Received: by 2002:aca:403:: with SMTP id 3mr31487698oie.166.1589456865611;
+ Thu, 14 May 2020 04:47:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200514101356.GF2877@Mani-XPS-13-9360>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+References: <20200508204200.13481-1-sumit.semwal@linaro.org>
+ <20200508204200.13481-4-sumit.semwal@linaro.org> <20200512021509.GF57962@builder.lan>
+In-Reply-To: <20200512021509.GF57962@builder.lan>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Thu, 14 May 2020 17:17:33 +0530
+Message-ID: <CAO_48GHBgfVrs8Nn954rKayhKHFb3u0heXu0hTeXN=ENvfgK0Q@mail.gmail.com>
+Subject: Re: [v2 3/4] regulator: qcom: Add labibb driver
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     agross@kernel.org, lgirdwood@gmail.com,
+        Mark Brown <broonie@kernel.org>, robh+dt@kernel.org,
+        Nisha Kumari <nishakumari@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/05/2020 11:13, Manivannan Sadhasivam wrote:
-> Hi Kieran,
-> 
-> On Thu, May 14, 2020 at 11:02:53AM +0100, Kieran Bingham wrote:
->> Hi Mani,
->>
->> On 12/05/2020 19:17, Manivannan Sadhasivam wrote:
->>> On Tue, May 12, 2020 at 04:51:03PM +0100, Kieran Bingham wrote:
->>>> The MAX9286 is a 4-channel GMSL deserializer with coax or STP input and
->>>> CSI-2 output. The device supports multicamera streaming applications,
->>>> and features the ability to synchronise the attached cameras.
->>>>
->>>> CSI-2 output can be configured with 1 to 4 lanes, and a control channel
->>>> is supported over I2C, which implements an I2C mux to facilitate
->>>> communications with connected cameras across the reverse control
->>>> channel.
->>>>
->>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->>>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->>>> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
->>>> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
->>>>
->>>> --
->>>> v2:
->>>>  - Fix MAINTAINERS entry
->>>>
->>>> This posting is released with the following modifications to work
->>>> without Sakari's VC developments:
->>>>  - max9286_g_mbus_config() re-instated
->>>>  - max9286_get_frame_desc() is not bus/csi aware
->>>>  - max9286_{get,set}_routing() removed
->>>>
->>>> v3:
->>>>  - Initialise notifier with v4l2_async_notifier_init
->>>>  - Update for new mbus csi2 format V4L2_MBUS_CSI2_DPHY
->>>>
->>>> v4: - Re-introduce required code to function with the VC series.
->>>>
->>>>  - Implement max9286_get_routing, max9286_set_routing
->>>>  - Remove max9286_g_mbus_config
->>>>
->>>> v5: (internal release)
->>>>  - Fix printk formatting for hex value
->>>>  - max9286->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE (add |)
->>>>  - MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER -> MEDIA_ENT_F_VID_IF_BRIDGE
->>>>  - Remove 'device is bound' workaround
->>>>
->>>> v6:
->>>>  - v4l2_subdev_krouting instead of v4l2_subdev_routing separated
->>>>    to allow integration without the VC/V4L2-Mux series.
->>>>  - convert sd_to_max9286 to inline function
->>>>  - rename max9286_device to max9286_priv
->>>>  - Cleanup the v4l2_async_notifier
->>>>  - Extend MODULE_AUTHOR
->>>>  - Replace of_graph_get_endpoint_by_regs with fwnode_graph_get_endpoint_by_id
->>>>  - Pass default bus type when parsing fwnode endpoint (Manivannan Sadhasivam)
->>>>  - Use new YAML file reference in MAINTAINERS
->>>>  - Parse new i2c-mux node in max9286_get_i2c_by_id
->>>>    (This could/should be refactored to parse these separately first)
->>>>  - Spelling and calculation fixes in the FSYNC_LOCKED check comments
->>>>  - Identify each enabled i2c-mux channel in a single pass
->>>>  - max9286: Improve mux-state readbility [v2]
->>>>  - Fix frame sync lock durations
->>>>  - Add comment to describe /why/ we must open the mux in s_stream
->>>>  - use -EXDEV as return code for failed link synchronisation.
->>>>  - Fix reference counting of the dt nodeS
->>>>  - Convert to probe_new for I2C
->>>>  - Remove redundant max9286_i2c_mux_state
->>>>  - Provide optional enable-gpio (max9286-pwdn)
->>>>
->>>> v7:
->>>>  [Kieran]
->>>>  - Ensure powerdown lines are optional
->>>>  - Add a 4ms power-up delay
->>>>  - Add max9286_check_config_link() to core
->>>>  - Add GPIO chip controller for GPIO0OUT and GPIO1OUT
->>>>  - Fix GPIO registration
->>>>  - max9286: Split out async registration
->>>>    (fixes regulator -EPROBE_DEFERs failures)
->>>>  - Collect all V4L2 registrations
->>>>  - balance v4l2_async refcnting
->>>>  - Rename max9286_v4l2_async_ => max9286_v4l2_notifier_
->>>>
->>>>  [Jacopo]
->>>>  - Remove redundanct MAXIM_I2C_SPEED macros
->>>>  - Move notifiers operations
->>>>  - Add delay after reverse channel reconfiguration
->>>>  - Move link setup to completion
->>>>  - Fix up max9286_check_config_link() implementation
->>>>  - Remove redundant dual configuration of reverse channel
->>>>
->>>> v8:
->>>>
->>>> [Kieran]
->>>>  - Update the bound_sources mask on unbind
->>>>  - Convert probe kzalloc usage to devm_ variant
->>>>  - Fix up cleanup path from GPIO PowerDown registration
->>>>  - cleanup GPIO device registration fail path
->>>>  - Convert to use devm_regulator_get()
->>>>  - Fit max9286_parse_dt print on one line
->>>>  - Move multi-device workarounds out of upstream driver
->>>>  - Remove I2C mod-table
->>>>  - Lock format changes
->>>>  - Describe pad index usage
->>>>  - Remove poc_enabled workaround
->>>>  - Rename the max9286_gpio to be more explicit on it's actions.
->>>>  - Move max9286_init_format call
->>>>  - Rework probe sequence and simplify error paths.
->>>>  - Simplify i2c comments
->>>>  - Implement Pixelrate control
->>>>  - Disable overlap window
->>>>
->>>> [Jacopo]
->>>>  - Adapt Kconfig to latest upstream changes
->>>>  - Put of node on error
->>>>  - Calculate pixel rate
->>>>  - Simplify overlap window disablement
->>>>
->>>> v9:
->>>>
->>>> [Kieran]
->>>>  - Kconfig: Depend on OF
->>>>  - Re-sort addition to Makefile
->>>> ---
->>>>  MAINTAINERS                 |   10 +
->>>>  drivers/media/i2c/Kconfig   |   13 +
->>>>  drivers/media/i2c/Makefile  |    1 +
->>>>  drivers/media/i2c/max9286.c | 1332 +++++++++++++++++++++++++++++++++++
->>>>  4 files changed, 1356 insertions(+)
->>>>  create mode 100644 drivers/media/i2c/max9286.c
->>>>
->>>> diff --git a/MAINTAINERS b/MAINTAINERS
->>>> index a7bb6e22d5da..99e3bf7760fd 100644
->>>> --- a/MAINTAINERS
->>>> +++ b/MAINTAINERS
->>>> @@ -10274,6 +10274,16 @@ F:	Documentation/hwmon/max6697.rst
->>>>  F:	drivers/hwmon/max6697.c
->>>>  F:	include/linux/platform_data/max6697.h
->>>>  
->>>> +MAX9286 QUAD GMSL DESERIALIZER DRIVER
->>>> +M:	Jacopo Mondi <jacopo+renesas@jmondi.org>
->>>> +M:	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->>>> +M:	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
->>>> +M:	Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
->>>> +L:	linux-media@vger.kernel.org
->>>> +S:	Maintained
->>>> +F:	Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
->>>> +F:	drivers/media/i2c/max9286.c
->>>> +
->>>>  MAX9860 MONO AUDIO VOICE CODEC DRIVER
->>>>  M:	Peter Rosin <peda@axentia.se>
->>>>  L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
->>>> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
->>>> index 3abc80373ec0..2e390f41f6da 100644
->>>> --- a/drivers/media/i2c/Kconfig
->>>> +++ b/drivers/media/i2c/Kconfig
->>>> @@ -464,6 +464,19 @@ config VIDEO_VPX3220
->>>>  	  To compile this driver as a module, choose M here: the
->>>>  	  module will be called vpx3220.
->>>>  
->>>> +config VIDEO_MAX9286
->>>> +	tristate "Maxim MAX9286 GMSL deserializer support"
->>>> +	depends on I2C && I2C_MUX
->>>> +	depends on OF
->>>> +	select V4L2_FWNODE
->>>> +	select VIDEO_V4L2_SUBDEV_API
->>>> +	select MEDIA_CONTROLLER
->>>> +	help
->>>> +	  This driver supports the Maxim MAX9286 GMSL deserializer.
->>>> +
->>>> +	  To compile this driver as a module, choose M here: the
->>>> +	  module will be called max9286.
->>>> +
->>>>  comment "Video and audio decoders"
->>>>  
->>>>  config VIDEO_SAA717X
->>>> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
->>>> index 77bf7d0b691f..f0b001ee4b05 100644
->>>> --- a/drivers/media/i2c/Makefile
->>>> +++ b/drivers/media/i2c/Makefile
->>>> @@ -117,6 +117,7 @@ obj-$(CONFIG_VIDEO_IMX274)	+= imx274.o
->>>>  obj-$(CONFIG_VIDEO_IMX290)	+= imx290.o
->>>>  obj-$(CONFIG_VIDEO_IMX319)	+= imx319.o
->>>>  obj-$(CONFIG_VIDEO_IMX355)	+= imx355.o
->>>> +obj-$(CONFIG_VIDEO_MAX9286)	+= max9286.o
->>>>  obj-$(CONFIG_VIDEO_ST_MIPID02) += st-mipid02.o
->>>>  
->>>>  obj-$(CONFIG_SDR_MAX2175) += max2175.o
->>>> diff --git a/drivers/media/i2c/max9286.c b/drivers/media/i2c/max9286.c
->>>> new file mode 100644
->>>> index 000000000000..481d65f2b51d
->>>> --- /dev/null
->>>> +++ b/drivers/media/i2c/max9286.c
->>>> @@ -0,0 +1,1332 @@
->>>> +// SPDX-License-Identifier: GPL-2.0+
->>>> +/*
->>>> + * Maxim MAX9286 GMSL Deserializer Driver
->>>> + *
->>>> + * Copyright (C) 2017-2019 Jacopo Mondi
->>>> + * Copyright (C) 2017-2019 Kieran Bingham
->>>> + * Copyright (C) 2017-2019 Laurent Pinchart
->>>> + * Copyright (C) 2017-2019 Niklas Söderlund
->>>> + * Copyright (C) 2016 Renesas Electronics Corporation
->>>> + * Copyright (C) 2015 Cogent Embedded, Inc.
->>>> + */
->>>> +
->>>> +#include <linux/delay.h>
->>>> +#include <linux/device.h>
->>>> +#include <linux/fwnode.h>
->>>> +#include <linux/gpio/consumer.h>
->>>> +#include <linux/gpio/driver.h>
->>>> +#include <linux/i2c.h>
->>>> +#include <linux/i2c-mux.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/mutex.h>
->>>> +#include <linux/of_graph.h>
->>>> +#include <linux/regulator/consumer.h>
->>>> +#include <linux/slab.h>
->>>> +
->>>> +#include <media/v4l2-async.h>
->>>> +#include <media/v4l2-ctrls.h>
->>>> +#include <media/v4l2-device.h>
->>>> +#include <media/v4l2-fwnode.h>
->>>> +#include <media/v4l2-subdev.h>
->>>> +
->>>> +/* Register 0x00 */
->>>> +#define MAX9286_MSTLINKSEL_AUTO		(7 << 5)
->>>> +#define MAX9286_MSTLINKSEL(n)		((n) << 5)
->>>> +#define MAX9286_EN_VS_GEN		BIT(4)
->>>> +#define MAX9286_LINKEN(n)		(1 << (n))
->>>> +/* Register 0x01 */
->>>> +#define MAX9286_FSYNCMODE_ECU		(3 << 6)
->>>> +#define MAX9286_FSYNCMODE_EXT		(2 << 6)
->>>> +#define MAX9286_FSYNCMODE_INT_OUT	(1 << 6)
->>>> +#define MAX9286_FSYNCMODE_INT_HIZ	(0 << 6)
->>>> +#define MAX9286_GPIEN			BIT(5)
->>>> +#define MAX9286_ENLMO_RSTFSYNC		BIT(2)
->>>> +#define MAX9286_FSYNCMETH_AUTO		(2 << 0)
->>>> +#define MAX9286_FSYNCMETH_SEMI_AUTO	(1 << 0)
->>>> +#define MAX9286_FSYNCMETH_MANUAL	(0 << 0)
->>>> +#define MAX9286_REG_FSYNC_PERIOD_L	0x06
->>>> +#define MAX9286_REG_FSYNC_PERIOD_M	0x07
->>>> +#define MAX9286_REG_FSYNC_PERIOD_H	0x08
->>>> +/* Register 0x0a */
->>>> +#define MAX9286_FWDCCEN(n)		(1 << ((n) + 4))
->>>> +#define MAX9286_REVCCEN(n)		(1 << (n))
->>>> +/* Register 0x0c */
->>>> +#define MAX9286_HVEN			BIT(7)
->>>> +#define MAX9286_EDC_6BIT_HAMMING	(2 << 5)
->>>> +#define MAX9286_EDC_6BIT_CRC		(1 << 5)
->>>> +#define MAX9286_EDC_1BIT_PARITY		(0 << 5)
->>>> +#define MAX9286_DESEL			BIT(4)
->>>> +#define MAX9286_INVVS			BIT(3)
->>>> +#define MAX9286_INVHS			BIT(2)
->>>> +#define MAX9286_HVSRC_D0		(2 << 0)
->>>> +#define MAX9286_HVSRC_D14		(1 << 0)
->>>> +#define MAX9286_HVSRC_D18		(0 << 0)
->>>> +/* Register 0x0f */
->>>> +#define MAX9286_0X0F_RESERVED		BIT(3)
->>>> +/* Register 0x12 */
->>>> +#define MAX9286_CSILANECNT(n)		(((n) - 1) << 6)
->>>> +#define MAX9286_CSIDBL			BIT(5)
->>>> +#define MAX9286_DBL			BIT(4)
->>>> +#define MAX9286_DATATYPE_USER_8BIT	(11 << 0)
->>>> +#define MAX9286_DATATYPE_USER_YUV_12BIT	(10 << 0)
->>>> +#define MAX9286_DATATYPE_USER_24BIT	(9 << 0)
->>>> +#define MAX9286_DATATYPE_RAW14		(8 << 0)
->>>> +#define MAX9286_DATATYPE_RAW11		(7 << 0)
->>>> +#define MAX9286_DATATYPE_RAW10		(6 << 0)
->>>> +#define MAX9286_DATATYPE_RAW8		(5 << 0)
->>>> +#define MAX9286_DATATYPE_YUV422_10BIT	(4 << 0)
->>>> +#define MAX9286_DATATYPE_YUV422_8BIT	(3 << 0)
->>>> +#define MAX9286_DATATYPE_RGB555		(2 << 0)
->>>> +#define MAX9286_DATATYPE_RGB565		(1 << 0)
->>>> +#define MAX9286_DATATYPE_RGB888		(0 << 0)
->>>> +/* Register 0x15 */
->>>> +#define MAX9286_VC(n)			((n) << 5)
->>>> +#define MAX9286_VCTYPE			BIT(4)
->>>> +#define MAX9286_CSIOUTEN		BIT(3)
->>>> +#define MAX9286_0X15_RESV		(3 << 0)
->>>> +/* Register 0x1b */
->>>> +#define MAX9286_SWITCHIN(n)		(1 << ((n) + 4))
->>>> +#define MAX9286_ENEQ(n)			(1 << (n))
->>>> +/* Register 0x27 */
->>>> +#define MAX9286_LOCKED			BIT(7)
->>>> +/* Register 0x31 */
->>>> +#define MAX9286_FSYNC_LOCKED		BIT(6)
->>>> +/* Register 0x34 */
->>>> +#define MAX9286_I2CLOCACK		BIT(7)
->>>> +#define MAX9286_I2CSLVSH_1046NS_469NS	(3 << 5)
->>>> +#define MAX9286_I2CSLVSH_938NS_352NS	(2 << 5)
->>>> +#define MAX9286_I2CSLVSH_469NS_234NS	(1 << 5)
->>>> +#define MAX9286_I2CSLVSH_352NS_117NS	(0 << 5)
->>>> +#define MAX9286_I2CMSTBT_837KBPS	(7 << 2)
->>>> +#define MAX9286_I2CMSTBT_533KBPS	(6 << 2)
->>>> +#define MAX9286_I2CMSTBT_339KBPS	(5 << 2)
->>>> +#define MAX9286_I2CMSTBT_173KBPS	(4 << 2)
->>>> +#define MAX9286_I2CMSTBT_105KBPS	(3 << 2)
->>>> +#define MAX9286_I2CMSTBT_84KBPS		(2 << 2)
->>>> +#define MAX9286_I2CMSTBT_28KBPS		(1 << 2)
->>>> +#define MAX9286_I2CMSTBT_8KBPS		(0 << 2)
->>>> +#define MAX9286_I2CSLVTO_NONE		(3 << 0)
->>>> +#define MAX9286_I2CSLVTO_1024US		(2 << 0)
->>>> +#define MAX9286_I2CSLVTO_256US		(1 << 0)
->>>> +#define MAX9286_I2CSLVTO_64US		(0 << 0)
->>>> +/* Register 0x3b */
->>>> +#define MAX9286_REV_TRF(n)		((n) << 4)
->>>> +#define MAX9286_REV_AMP(n)		((((n) - 30) / 10) << 1) /* in mV */
->>>> +#define MAX9286_REV_AMP_X		BIT(0)
->>>> +/* Register 0x3f */
->>>> +#define MAX9286_EN_REV_CFG		BIT(6)
->>>> +#define MAX9286_REV_FLEN(n)		((n) - 20)
->>>> +/* Register 0x49 */
->>>> +#define MAX9286_VIDEO_DETECT_MASK	0x0f
->>>> +/* Register 0x69 */
->>>> +#define MAX9286_LFLTBMONMASKED		BIT(7)
->>>> +#define MAX9286_LOCKMONMASKED		BIT(6)
->>>> +#define MAX9286_AUTOCOMBACKEN		BIT(5)
->>>> +#define MAX9286_AUTOMASKEN		BIT(4)
->>>> +#define MAX9286_MASKLINK(n)		((n) << 0)
->>>> +
->>>> +/*
->>>> + * The sink and source pads are created to match the OF graph port numbers so
->>>> + * that their indexes can be used interchangeably.
->>>> + */
->>>> +#define MAX9286_NUM_GMSL		4
->>>> +#define MAX9286_N_SINKS			4
->>>> +#define MAX9286_N_PADS			5
->>>> +#define MAX9286_SRC_PAD			4
->>>> +
->>>> +struct max9286_source {
->>>> +	struct v4l2_async_subdev asd;
->>>> +	struct v4l2_subdev *sd;
->>>> +	struct fwnode_handle *fwnode;
->>>> +};
->>>> +
->>>> +#define asd_to_max9286_source(_asd) \
->>>> +	container_of(_asd, struct max9286_source, asd)
->>>> +
->>>> +struct max9286_priv {
->>>> +	struct i2c_client *client;
->>>> +	struct gpio_desc *gpiod_pwdn;
->>>> +	struct v4l2_subdev sd;
->>>> +	struct media_pad pads[MAX9286_N_PADS];
->>>> +	struct regulator *regulator;
->>>> +
->>>> +	struct gpio_chip gpio;
->>>> +	u8 gpio_state;
->>>> +
->>>> +	struct i2c_mux_core *mux;
->>>> +	unsigned int mux_channel;
->>>> +	bool mux_open;
->>>> +
->>>> +	struct v4l2_ctrl_handler ctrls;
->>>> +	struct v4l2_ctrl *pixelrate;
->>>> +
->>>> +	struct v4l2_mbus_framefmt fmt[MAX9286_N_SINKS];
->>>> +
->>>> +	/* Protects controls and fmt structures */
->>>> +	struct mutex mutex;
->>>> +
->>>> +	unsigned int nsources;
->>>> +	unsigned int source_mask;
->>>> +	unsigned int route_mask;
->>>> +	unsigned int bound_sources;
->>>> +	unsigned int csi2_data_lanes;
->>>> +	struct max9286_source sources[MAX9286_NUM_GMSL];
->>>> +	struct v4l2_async_notifier notifier;
->>>> +};
->>>> +
->>>
->>> [...]
->>>
->>>> +static int max9286_register_gpio(struct max9286_priv *priv)
->>>> +{
->>>> +	struct device *dev = &priv->client->dev;
->>>> +	struct gpio_chip *gpio = &priv->gpio;
->>>> +	int ret;
->>>> +
->>>> +	static const char * const names[] = {
->>>> +		"GPIO0OUT",
->>>> +		"GPIO1OUT",
->>>> +	};
->>>> +
->>>> +	/* Configure the GPIO */
->>>> +	gpio->label = dev_name(dev);
->>>
->>> So if you have more than one MAX9286 in a system, all gpiochips will appear
->>> with the same name. I'd recommend to append the index to distinguish properly.
->>
->> Ah yes, that's a good point, and I think I've even seen that.
->>
->> I'll fix it now.
->>
->>>
->>>> +	gpio->parent = dev;
->>>> +	gpio->owner = THIS_MODULE;
->>>> +	gpio->of_node = dev->of_node;
->>>> +	gpio->ngpio = 2;
->>>> +	gpio->base = -1;
->>>> +	gpio->set = max9286_gpio_set;
->>>> +	gpio->get = max9286_gpio_get;
->>>> +	gpio->can_sleep = true;
->>>> +	gpio->names = names;
->>>> +
->>>> +	/* GPIO values default to high */
->>>> +	priv->gpio_state = BIT(0) | BIT(1);
->>>> +
->>>> +	ret = devm_gpiochip_add_data(dev, gpio, priv);
->>>> +	if (ret)
->>>> +		dev_err(dev, "Unable to create gpio_chip\n");
->>>> +
->>>> +	return ret;
->>>> +}
->>>> +
->>>
->>> [...]
->>>
->>>> +static int max9286_parse_dt(struct max9286_priv *priv)
->>>> +{
->>>> +	struct device *dev = &priv->client->dev;
->>>> +	struct device_node *i2c_mux;
->>>> +	struct device_node *node = NULL;
->>>> +	unsigned int i2c_mux_mask = 0;
->>>> +
->>>> +	of_node_get(dev->of_node);
->>>
->>> Why this is needed?
->>
->> Hrm .. I recall adding it to solve dt reference balancing.
->>
->> I wish I'd added a comment at the time ... as I can't recall the details
->> now.
->>
-> 
-> I understand that it is for the refcount balancing but I certainly don't see
-> a need for it.
+Hello Bjorn,
 
-I'll go through and try to validate this again now.
+Thanks very much for the review.
 
->  
->>>> +	i2c_mux = of_find_node_by_name(dev->of_node, "i2c-mux");
->>>> +	if (!i2c_mux) {
->>>> +		dev_err(dev, "Failed to find i2c-mux node\n");
->>>> +		of_node_put(dev->of_node);
->>>> +		return -EINVAL;
->>>> +	}
->>>> +
-> [...]
->>>
->>> [...]
->>>
->>>> +static int max9286_remove(struct i2c_client *client)
->>>> +{
->>>> +	struct max9286_priv *priv = i2c_get_clientdata(client);
->>>> +
->>>> +	i2c_mux_del_adapters(priv->mux);
->>>> +
->>>> +	max9286_v4l2_unregister(priv);
->>>> +
->>>> +	regulator_disable(priv->regulator);
->>>> +
->>>> +	gpiod_set_value_cansleep(priv->gpiod_pwdn, 0);
->>>
->>> Usual power down sequence is to pull the power down gpio low and then turn off
->>> the regulators. This helps in clearing up the internal state machine properly.
->>
->> Do you mean usual, among drivers using regulators? or usual for the max9286?
->>
-> 
-> Usual for devices exposing shutdown gpios and powered by an external regulator.
-> 
->> I have a platform which controls the regulators for the cameras
->> (priv->regulator) through one of the GPIOs provided by the MAX9286.
->>
->> If we powerdown the max9286 first, then we will not be able to change
->> the GPIO value on the gpio controlled regulator.
->>
-> 
-> Hmm, I didn't think of this usecase. Let's keep it as it is.
+On Tue, 12 May 2020 at 07:46, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Fri 08 May 13:41 PDT 2020, Sumit Semwal wrote:
+>
+> > From: Nisha Kumari <nishakumari@codeaurora.org>
+> >
+> > Qualcomm platforms have LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost)
+> > Regulators, labibb for short, which are used as power supply for
+>
+> lowercase Regulators
+ok.
+>
+> > LCD Mode displays.
+> >
+> > This patch adds labibb regulator driver for pmi8998 pmic, found on
+>
+> Uppercase PMIC
+>
+ok.
+> > SDM845 platforms.
+> >
+> > Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
+> > Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+> >
+> > --
+> > v2: sumits: reworked the driver for more common code, and addressed
+> >     review comments from v1. This includes merging regulator_ops into
+> >     one, and allowing for future labibb variations.
+> > ---
+> >  drivers/regulator/Kconfig                 |  10 +
+> >  drivers/regulator/Makefile                |   1 +
+> >  drivers/regulator/qcom-labibb-regulator.c | 288 ++++++++++++++++++++++
+> >  3 files changed, 299 insertions(+)
+> >  create mode 100644 drivers/regulator/qcom-labibb-regulator.c
+> >
+> > diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> > index f4b72cb098ef..58704a9fd05d 100644
+> > --- a/drivers/regulator/Kconfig
+> > +++ b/drivers/regulator/Kconfig
+> > @@ -1167,5 +1167,15 @@ config REGULATOR_WM8994
+> >         This driver provides support for the voltage regulators on the
+> >         WM8994 CODEC.
+> >
+> > +config REGULATOR_QCOM_LABIBB
+> > +     tristate "QCOM LAB/IBB regulator support"
+> > +     depends on SPMI || COMPILE_TEST
+> > +     help
+> > +       This driver supports Qualcomm's LAB/IBB regulators present on the
+> > +       Qualcomm's PMIC chip pmi8998. QCOM LAB and IBB are SPMI
+> > +       based PMIC implementations. LAB can be used as positive
+> > +       boost regulator and IBB can be used as a negative boost regulator
+> > +       for LCD display panel.
+> > +
+> >  endif
+> >
+> > diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+> > index 6610ee001d9a..5b313786c0e8 100644
+> > --- a/drivers/regulator/Makefile
+> > +++ b/drivers/regulator/Makefile
+> > @@ -87,6 +87,7 @@ obj-$(CONFIG_REGULATOR_MT6323)      += mt6323-regulator.o
+> >  obj-$(CONFIG_REGULATOR_MT6358)       += mt6358-regulator.o
+> >  obj-$(CONFIG_REGULATOR_MT6380)       += mt6380-regulator.o
+> >  obj-$(CONFIG_REGULATOR_MT6397)       += mt6397-regulator.o
+> > +obj-$(CONFIG_REGULATOR_QCOM_LABIBB) += qcom-labibb-regulator.o
+> >  obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
+> >  obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
+> >  obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
+> > diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
+> > new file mode 100644
+> > index 000000000000..a9dc7c060375
+> > --- /dev/null
+> > +++ b/drivers/regulator/qcom-labibb-regulator.c
+> > @@ -0,0 +1,288 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +// Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/regulator/driver.h>
+> > +#include <linux/regulator/of_regulator.h>
+> > +
+> > +#define REG_PERPH_TYPE                  0x04
+> > +#define QCOM_LAB_TYPE                        0x24
+> > +#define QCOM_IBB_TYPE                        0x20
+> > +
+> > +#define REG_LABIBB_STATUS1           0x08
+> > +#define REG_LABIBB_ENABLE_CTL                0x46
+> > +#define LABIBB_STATUS1_VREG_OK_BIT   BIT(7)
+> > +#define LABIBB_CONTROL_ENABLE                BIT(7)
+> > +
+> > +#define LAB_ENABLE_CTL_MASK          BIT(7)
+> > +#define IBB_ENABLE_CTL_MASK          (BIT(7) | BIT(6))
+> > +
+> > +#define POWER_DELAY                  8000
+> > +
+> > +struct labibb_regulator {
+> > +     struct regulator_desc           desc;
+> > +     struct device                   *dev;
+> > +     struct regmap                   *regmap;
+> > +     struct regulator_dev            *rdev;
+> > +     u16                             base;
+> > +     u8                              type;
+> > +};
+> > +
+> > +struct qcom_labibb {
+>
+> You pretty much use this as a local variable within probe, and then you
+> use labibb_regulator in runtime. Perhaps you can just drop it?
+>
+Yes, you're right. It's probably a leftover from the re-design. I will drop it.
+> > +     struct device                   *dev;
+> > +     struct regmap                   *regmap;
+> > +     struct labibb_regulator         lab;
+> > +     struct labibb_regulator         ibb;
+> > +};
+> > +
+> > +struct labibb_regulator_data {
+> > +     u16                             base;
+> > +     const char                      *name;
+> > +     const char                      *irq_name;
+> > +     u8                              type;
+> > +};
+> > +
+> > +static int qcom_labibb_regulator_is_enabled(struct regulator_dev *rdev)
+> > +{
+> > +     int ret;
+> > +     u8 val;
+> > +     struct labibb_regulator *reg = rdev_get_drvdata(rdev);
+> > +
+> > +     ret = regmap_bulk_read(reg->regmap, reg->base +
+> > +                            REG_LABIBB_STATUS1, &val, 1);
+> > +     if (ret < 0) {
+> > +             dev_err(reg->dev, "Read register failed ret = %d\n", ret);
+> > +             return ret;
+> > +     }
+> > +
+> > +     if (val & LABIBB_STATUS1_VREG_OK_BIT)
+> > +             return 1;
+> > +     else
+> > +             return 0;
+>
+>         return !!(val & LABIBB_STATUS1_VREG_OK_BIT);
+>
+> > +}
+> > +
+> > +static int _check_enabled_with_retries(struct regulator_dev *rdev,
+> > +                     int retries, int enabled)
+> > +{
+> > +     int ret;
+> > +     struct labibb_regulator *reg = rdev_get_drvdata(rdev);
+> > +
+> > +     while (retries--) {
+>
+> Mark's suggestion of extending _regulator_enable_delay() to support
+> polling is_enable() seems reasonable.
+>
+> The only complication I can see is that code path currently doesn't have
+> any expectations of the regulator not being operational at the end -
+> this seems to offer that possibility. So some care needs to be taken
+> there.
+>
+I think when I try Mark's suggestion, there will be a need to
+communicate an error if we don't get a successful check of status
+after the requested number of retries. So yes, I will try and take
+care in the next iteration.
+>
+> But doing that would allow you to use regulator_enable_regmap() as your
+> .enable function directly and you can drop
+> qcom_labibb_regulator_enable()
+>
+Agreed.
+> > +             /* Wait for a small period before checking REG_LABIBB_STATUS1 */
+> > +             usleep_range(POWER_DELAY, POWER_DELAY + 200);
+> > +
+> > +             ret = qcom_labibb_regulator_is_enabled(rdev);
+> > +
+> > +             if (ret < 0) {
+> > +                     dev_err(reg->dev, "Can't read %s regulator status\n",
+> > +                             reg->desc.name);
+> > +                     return ret;
+> > +             }
+> > +
+> > +             if (ret == enabled)
+> > +                     return ret;
+> > +
+> > +     }
+> > +
+> > +     return -EINVAL;
+> > +}
+> > +
+> > +static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
+> > +{
+> > +     int ret, retries = 10;
+> > +     struct labibb_regulator *reg = rdev_get_drvdata(rdev);
+> > +
+> > +     ret = regulator_enable_regmap(rdev);
+> > +
+> > +     if (ret < 0) {
+> > +             dev_err(reg->dev, "Write failed: enable %s regulator\n",
+> > +                     reg->desc.name);
+> > +             return ret;
+> > +     }
+> > +
+> > +     ret = _check_enabled_with_retries(rdev, retries, 1);
+> > +     if (ret < 0) {
+> > +             dev_err(reg->dev, "retries exhausted: enable %s regulator\n",
+> > +                     reg->desc.name);
+> > +             return ret;
+> > +     }
+> > +
+> > +     if (ret)
+> > +             return 0;
+>
+> This looks weird; check for timeout, check for errors and then return
+> success.
 
-Aha indeed it's not clear (especially as the variable is just
-'regulator'). The regulator being controlled here does not power the
-max9286, but the cameras attached to the max9286 which can be powered up
-/ down separately to the max9286.
+Yes, it does look weird - that's because the
+_check_enabled_with_retries returns 1 if it matches what you asked to
+check (enable or disable via last argument). That should've been coded
+differently.
 
---
-Kieran
+It should go away with the above mentioned rework.
+>
+> > +
+> > +
+> > +     dev_err(reg->dev, "Can't enable %s\n", reg->desc.name);
+> > +     return -EINVAL;
+> > +}
+> > +
+> > +static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
+> > +{
+> > +     int ret, retries = 2;
+> > +     struct labibb_regulator *reg = rdev_get_drvdata(rdev);
+> > +
+> > +     ret = regulator_disable_regmap(rdev);
+> > +
+> > +     if (ret < 0) {
+> > +             dev_err(reg->dev, "Write failed: disable %s regulator\n",
+> > +                     reg->desc.name);
+> > +             return ret;
+> > +     }
+> > +
+> > +     ret = _check_enabled_with_retries(rdev, retries, 0);
+>
+> I don't think we care about waiting for the regulator to turning off,
+> might be nice to ensure that an off/on cycle really is allowed to take
+> its time though. So specifying an desc->off_on_delay of 8200 * 2 (the
+> worst case usleep_range() * retries) should take care of this.
 
-> 
-> Thanks,
-> Mani
-> 
->> (Currently it doesn't expose as a gpio regulator, but just a gpio-hog -
->> but thats a different matter)
->>
->> --
->> Kieran
->>
->>
->>>
->>> Thanks,
->>> Mani
->>>
->>>> +
->>>> +	max9286_cleanup_dt(priv);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static const struct of_device_id max9286_dt_ids[] = {
->>>> +	{ .compatible = "maxim,max9286" },
->>>> +	{},
->>>> +};
->>>> +MODULE_DEVICE_TABLE(of, max9286_dt_ids);
->>>> +
->>>> +static struct i2c_driver max9286_i2c_driver = {
->>>> +	.driver	= {
->>>> +		.name		= "max9286",
->>>> +		.of_match_table	= of_match_ptr(max9286_dt_ids),
->>>> +	},
->>>> +	.probe_new	= max9286_probe,
->>>> +	.remove		= max9286_remove,
->>>> +};
->>>> +
->>>> +module_i2c_driver(max9286_i2c_driver);
->>>> +
->>>> +MODULE_DESCRIPTION("Maxim MAX9286 GMSL Deserializer Driver");
->>>> +MODULE_AUTHOR("Jacopo Mondi, Kieran Bingham, Laurent Pinchart, Niklas Söderlund, Vladimir Barinov");
->>>> +MODULE_LICENSE("GPL");
->>>> -- 
->>>> 2.25.1
->>>>
->>
+Oh, that's neat. Will update.
+>
+> And then you should be able to just use regulator_disable_regmap() as
+> your .disable function.
++1.
+>
+> > +     if (ret < 0) {
+> > +             dev_err(reg->dev, "retries exhausted: disable %s regulator\n",
+> > +                     reg->desc.name);
+> > +             return ret;
+> > +     }
+> > +
+> > +     if (!ret)
+> > +             return 0;
+> > +
+> > +     dev_err(reg->dev, "Can't disable %s\n", reg->desc.name);
+> > +     return -EINVAL;
+> > +}
+> > +
+> > +static struct regulator_ops qcom_labibb_ops = {
+> > +     .enable                 = qcom_labibb_regulator_enable,
+> > +     .disable                = qcom_labibb_regulator_disable,
+> > +     .is_enabled             = qcom_labibb_regulator_is_enabled,
+> > +};
+> > +
+> > +static int register_labibb_regulator(struct qcom_labibb *labibb,
+> > +                             const struct labibb_regulator_data *reg_data,
+> > +                             struct device_node *of_node)
+> > +{
+> > +     int ret;
+> > +     struct labibb_regulator *reg;
+> > +     struct regulator_config cfg = {};
+> > +
+> > +     if (reg_data->type == QCOM_LAB_TYPE) {
+> > +             reg = &labibb->lab;
+> > +             reg->desc.enable_mask = LAB_ENABLE_CTL_MASK;
+> > +     } else {
+> > +             reg = &labibb->ibb;
+> > +             reg->desc.enable_mask = IBB_ENABLE_CTL_MASK;
+> > +     }
+> > +
+> > +     reg->dev = labibb->dev;
+> > +     reg->base = reg_data->base;
+> > +     reg->type = reg_data->type;
+> > +     reg->regmap = labibb->regmap;
+> > +     reg->desc.enable_reg = reg->base + REG_LABIBB_ENABLE_CTL;
+> > +     reg->desc.enable_val = LABIBB_CONTROL_ENABLE;
+> > +     reg->desc.of_match = reg_data->name;
+> > +     reg->desc.name = reg_data->name;
+> > +     reg->desc.owner = THIS_MODULE;
+> > +     reg->desc.type = REGULATOR_VOLTAGE;
+> > +     reg->desc.ops = &qcom_labibb_ops;
+> > +
+> > +     cfg.dev = labibb->dev;
+> > +     cfg.driver_data = reg;
+> > +     cfg.regmap = labibb->regmap;
+> > +     cfg.of_node = of_node;
+> > +
+> > +     reg->rdev = devm_regulator_register(labibb->dev, &reg->desc,
+> > +                                                     &cfg);
+>
+> Do you really need to wrap this line?
+No :) - rework leftover. Will correct.
+>
+> > +     if (IS_ERR(reg->rdev)) {
+> > +             ret = PTR_ERR(reg->rdev);
+> > +             dev_err(labibb->dev,
+> > +                     "unable to register %s regulator\n", reg_data->name);
+> > +             return ret;
+> > +     }
+> > +     return 0;
+>
+>         return PTR_ERR_OR_ZERO(reg->rdev);
+>
+> > +}
+> > +
+> > +static const struct labibb_regulator_data pmi8998_labibb_data[] = {
+> > +     {0xde00, "lab", "lab-sc-err", QCOM_LAB_TYPE},
+>
+> Please shorten the interrupt to just "sc-err".
+Ok. And actually then I can remove it off from the
+labibb_regulotor_data too, since it will be the same for both the
+regulators.
+>
+> > +     {0xdc00, "ibb", "ibb-sc-err", QCOM_IBB_TYPE},
+> > +     { },
+> > +};
+> > +
+> > +static const struct of_device_id qcom_labibb_match[] = {
+> > +     { .compatible = "qcom,pmi8998-lab-ibb", .data = &pmi8998_labibb_data},
+> > +     { },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, qcom_labibb_match);
+> > +
+> > +static int qcom_labibb_regulator_probe(struct platform_device *pdev)
+> > +{
+> > +     struct qcom_labibb *labibb;
+> > +     struct device_node *child;
+> > +     const struct of_device_id *match;
+> > +     const struct labibb_regulator_data *reg;
+> > +     u8 type;
+> > +     int ret;
+> > +
+> > +     labibb = devm_kzalloc(&pdev->dev, sizeof(*labibb), GFP_KERNEL);
+> > +     if (!labibb)
+> > +             return -ENOMEM;
+> > +
+> > +     labibb->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> > +     if (!labibb->regmap) {
+> > +             dev_err(&pdev->dev, "Couldn't get parent's regmap\n");
+> > +             return -ENODEV;
+> > +     }
+> > +
+> > +     labibb->dev = &pdev->dev;
+> > +
+> > +     match = of_match_device(qcom_labibb_match, &pdev->dev);
+> > +     if (!match)
+> > +             return -ENODEV;
+> > +
+> > +     for (reg = match->data; reg->name; reg++) {
+> > +             child = of_get_child_by_name(pdev->dev.of_node, reg->name);
+> > +
+> > +             /* TODO: This validates if the type of regulator is indeed
+> > +              * what's mentioned in DT.
+> > +              * I'm not sure if this is needed, but we'll keep it for now.
+> > +              */
+> > +             ret = regmap_bulk_read(labibb->regmap,
+> > +                                     reg->base + REG_PERPH_TYPE,
+> > +                                     &type, 1);
+> > +             if (ret < 0) {
+> > +                     dev_err(labibb->dev,
+> > +                             "Peripheral type read failed ret=%d\n",
+> > +                             ret);
+> > +                     return -EINVAL;
+> > +             }
+> > +
+> > +             if ((type != QCOM_LAB_TYPE) && (type != QCOM_IBB_TYPE)) {
+> > +                     dev_err(labibb->dev,
+> > +                             "qcom_labibb: unknown peripheral type\n");
+> > +                     return -EINVAL;
+> > +             } else if (type != reg->type) {
+> > +                     dev_err(labibb->dev,
+> > +                             "qcom_labibb: type read %x doesn't match DT %x\n",
+> > +                             type, reg->type);
+> > +                     return -EINVAL;
+> > +             }
+> > +
+> > +             ret = register_labibb_regulator(labibb, reg, child);
+> > +             if (ret < 0) {
+> > +                     dev_err(&pdev->dev,
+> > +                             "qcom_labibb: error registering %s regulator: %d\n",
+> > +                             child->full_name, ret);
+>
+> You already printed in register_labibb_regulator() so no need to print
+> again.
+Got it.
+>
+> > +                     return ret;
+> > +             }
+> > +     }
+> > +
+> > +     dev_set_drvdata(&pdev->dev, labibb);
+>
+> rdev_get_drvdata() returns cfg.driver_data, so you don't need this one.
+Got it, and it ties to your other comment about struct qcom_labibb. Will update.
+>
+> Regards,
+> Bjorn
+>
+> > +     return 0;
+> > +}
+> > +
+> > +static struct platform_driver qcom_labibb_regulator_driver = {
+> > +     .driver         = {
+> > +             .name           = "qcom-lab-ibb-regulator",
+> > +             .of_match_table = qcom_labibb_match,
+> > +     },
+> > +     .probe          = qcom_labibb_regulator_probe,
+> > +};
+> > +module_platform_driver(qcom_labibb_regulator_driver);
+> > +
+> > +MODULE_DESCRIPTION("Qualcomm labibb driver");
+> > +MODULE_LICENSE("GPL v2");
+> > --
+> > 2.26.2
+> >
 
+Best,
+Sumit.
