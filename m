@@ -2,82 +2,71 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53216C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54526C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33235205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36327205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgENNyv (ORCPT
+        id S1727098AbgENNzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:54:51 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:56442 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgENNyv (ORCPT
+        Thu, 14 May 2020 09:55:07 -0400
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:8080 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgENNzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:54:51 -0400
-Received: from 89-64-84-17.dynamic.chello.pl (89.64.84.17) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id d4c883bd97bc7369; Thu, 14 May 2020 15:54:48 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     viresh.kumar@linaro.org, Souvik.Chakravarty@arm.com,
-        Thanu.Rangarajan@arm.com, Sudeep.Holla@arm.com,
-        guohanjun@huawei.com, john.garry@huawei.com,
-        jonathan.cameron@huawei.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/3] cpufreq: fix the return value in 'cpufreq_boost_set_sw()'
-Date:   Thu, 14 May 2020 15:54:47 +0200
-Message-ID: <28914151.3vfbF0e6KZ@kreacher>
-In-Reply-To: <1588929064-30270-2-git-send-email-wangxiongfeng2@huawei.com>
-References: <1588929064-30270-1-git-send-email-wangxiongfeng2@huawei.com> <1588929064-30270-2-git-send-email-wangxiongfeng2@huawei.com>
+        Thu, 14 May 2020 09:55:07 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee85ebd4da51e7-ea7f2; Thu, 14 May 2020 21:54:45 +0800 (CST)
+X-RM-TRANSID: 2ee85ebd4da51e7-ea7f2
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [192.168.0.101] (unknown[112.1.172.85])
+        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65ebd4da1bca-3a1cb;
+        Thu, 14 May 2020 21:54:44 +0800 (CST)
+X-RM-TRANSID: 2ee65ebd4da1bca-3a1cb
+Subject: Re: [PATCH v3] ipmi:bt-bmc: Fix error handling and status check
+To:     minyard@acm.org
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+References: <20200505102906.17196-1-tangbin@cmss.chinamobile.com>
+ <20200505114907.GK9902@minyard.net>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <bfb981ec-eedc-3635-007c-4921c9307072@cmss.chinamobile.com>
+Date:   Thu, 14 May 2020 21:55:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200505114907.GK9902@minyard.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, May 8, 2020 11:11:02 AM CEST Xiongfeng Wang wrote:
-> When I try to add SW BOOST support for CPPC, I got the following error:
-> cpufreq: cpufreq_boost_trigger_state: Cannot enable BOOST
-> cpufreq: store_boost: Cannot enable BOOST!
-> 
-> It is because return value 1 of 'freq_qos_update_request()' means the
-> effective constraint value has changed, not a error code on failures.
-> But for 'cpufreq_driver.set_boost()', a nonzero return value means
-> failure. So change 'ret' to zero when 'freq_qos_update_request()'
-> returns a positive value.
-> 
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> ---
->  drivers/cpufreq/cpufreq.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 4adac3a..475fb1b 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -2522,6 +2522,8 @@ static int cpufreq_boost_set_sw(int state)
->  		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
->  		if (ret < 0)
->  			break;
-> +		else
-> +			ret = 0;
->  	}
->  
->  	return ret;
->
+Hi Corey：
 
-I would change cpufreq_boost_trigger_state() to take the 1 into account properly
-instead.
+On 2020/5/5 19:49, Corey Minyard wrote:
+> On Tue, May 05, 2020 at 06:29:06PM +0800, Tang Bin wrote:
+> Ok, this is included in my tree.
 
-Thanks!
+I just checked that this patch has been merged into the linux-next 
+branch, and I saw the modification of you
+
+by this patch.  I have learned a lot from you through communication.
+
+Thank you again!
+
+Tang Bin
+
+
 
 
 
