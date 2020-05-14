@@ -2,126 +2,131 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3CAC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C3AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4452120728
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:42:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lpZCseNN"
+	by mail.kernel.org (Postfix) with ESMTP id D167E20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:43:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589463838;
+	bh=y4VzPym1d+/Z4xemvKYw47+MBhvwt35MP+RtdYnYgFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PmUY7XWf/k+ZFZBNMZ5vogU9tLJVZtjYWuZPsX2zXSkfH2dTP11qPgvoPIvIWxV4U
+	 50u0eaEFX5wo8slC3Gy2HzYqE8e+4OQXamj9lchNpBPghxHBxFMPYNydzdnfRlpeFC
+	 Dg0eaBWhJzf0ma4RA1NZEfPRadJDLaNoVJNk+Djw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgENNmt (ORCPT
+        id S1726582AbgENNn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:42:49 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:61750 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726197AbgENNmt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:42:49 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04EDgMxu028132;
-        Thu, 14 May 2020 15:42:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=tD1qvdb0EwmAv9XocfBUyYNcHtOhYgnwwbYe5684NcY=;
- b=lpZCseNN1q8B2O++L5FqZEfrupQp8UmuSICipi2VpYbbXdKqjviuS4uNBmOQ1Qk1/JYn
- FC0+aT7IZOR+0AaKhzk+Ozpgl88d1a5y1MBWH1j0sjx/T8Vy7mAFxLIZkKAuH5DBT24e
- w8vnJeOoFwf7/cYeADMBCKg6OvlIrAm70cghUtpnyO8Px5h4+ovsh1x/0sNyYzBPay55
- GNVpTBzYrzgrxIYjV346YgPOw8M8x1YuBl3tdk9ASS/dhGkQVptEBfcXiG2r4Y/3xJqM
- b1YktOvA+/Pa6WYvOrUBAuOptDbM+z10mLDDQLjERCoYWeW9MwohkWsITtdfWVTKKrAK eQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vnbg0g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 15:42:33 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0CF2C100034;
-        Thu, 14 May 2020 15:42:33 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA8332BE24D;
-        Thu, 14 May 2020 15:42:32 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 14 May
- 2020 15:42:27 +0200
-Subject: Re: [PATCH 00/15] Fix STM32 DT issues on v5.7-rc4
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <gregkh@linuxfoundation.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
-References: <20200513145935.22493-1-benjamin.gaignard@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <caef6641-b7c2-881a-a331-3d05f6f4bba6@st.com>
-Date:   Thu, 14 May 2020 15:42:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 09:43:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726011AbgENNn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 09:43:57 -0400
+Received: from localhost (unknown [122.182.193.86])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73A9720727;
+        Thu, 14 May 2020 13:43:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589463837;
+        bh=y4VzPym1d+/Z4xemvKYw47+MBhvwt35MP+RtdYnYgFA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IJbGJe2wq1Li8vFevWYTNVN7S8uiBSoYVpBYDeEzXLwSmfvKnxM1gm3vNqNM9TQf4
+         i37jRjCerc0nXX56O21u20NQy1qKhXfcfX6Mv0YIASFHWtF+XhRlR71ByQ4sciqmrH
+         A0BnFg5Y08mLSnYDgDnAJH1mTVhdJ9AbtTqudBhg=
+Date:   Thu, 14 May 2020 19:13:53 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: db820c: fix audio configuration
+Message-ID: <20200514134353.GT14092@vkoul-mobl>
+References: <20200417092327.7341-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-14_04:2020-05-14,2020-05-14 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417092327.7341-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin
-
-On 5/13/20 4:59 PM, Benjamin Gaignard wrote:
-> This series fixes issues hight lighted by dtbs_check on STM32 devicetrees.
-> The patches has been developped on top of v5.7-rc4 tag.
+On 17-04-20, 10:23, Srinivas Kandagatla wrote:
+> After patch f864edff110d ("ASoC: qdsp6: q6routing: remove default routing")
+> and 9b60441692d9 ("ASoC: qdsp6: q6asm-dai: only enable dais from device tree")
+> asm dais and routing needs to be properly specified at device tree level.
 > 
-> Benjamin Gaignard (15):
->    ARM: dts: stm32: remove useless interrupt-names property on stm32f429
->    ARM: dts: stm32: update pwm pinctrl node names for stm32f4
->    ARM: dts: stm32: update led nodes names for stm32f249-disco
->    ARM: dts: stm32: update led nodes names for stm32f469-disco
->    ARM: dts: stm32: remove useless interrupt-names property on stm32f746
->    ARM: dts: stm32: update led nodes names for stm32f429-eval
->    ARM: dts: stm32: update led nodes names for stm32f769-disco
->    ARM: dts: stm32: update led nodes names for stm32f746-eval
->    ARM: dts: stm32: remove useless interrupt-names property on stm32f743
->    ARM: dts: stm32: Update nodes names for stm32h743 pinctrl
->    ARM: dts: stm32: Update nodes names for stm32mp15 pinctrl
->    ARM: dts: stm32: Add missing #address and #size cells on spi node for
->      stm32mp151
->    ARM: dts: stm32: update led nodes names for stm32f746-eval
->    dt-bindings: pinctrl: stm32: Add missing interrupts property
->    dt-bindings: usb: dwc2: Fix issues for stm32mp15x SoC
+> This patch fixes this.
 
-For dts(i) part, it looks good to me. I let Rob to review before taking 
-the whole series.
+Can we add the Fixes tag here please?
 
-thanks
-alex
+Other than that lgtm:
 
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 22 +++++++++++++++++++-
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi        |  2 ++
+>  2 files changed, 23 insertions(+), 1 deletion(-)
 > 
->   .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml          |  3 +++
->   Documentation/devicetree/bindings/usb/dwc2.yaml                |  6 ++++--
->   arch/arm/boot/dts/stm32429i-eval.dts                           |  8 ++++----
->   arch/arm/boot/dts/stm32746g-eval.dts                           |  8 ++++----
->   arch/arm/boot/dts/stm32f4-pinctrl.dtsi                         |  4 ++--
->   arch/arm/boot/dts/stm32f429-disco.dts                          |  4 ++--
->   arch/arm/boot/dts/stm32f429.dtsi                               |  1 -
->   arch/arm/boot/dts/stm32f469-disco.dts                          |  8 ++++----
->   arch/arm/boot/dts/stm32f746.dtsi                               |  1 -
->   arch/arm/boot/dts/stm32f769-disco.dts                          |  4 ++--
->   arch/arm/boot/dts/stm32h743-pinctrl.dtsi                       | 10 +++++-----
->   arch/arm/boot/dts/stm32h743.dtsi                               |  1 -
->   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi                       |  6 +++---
->   arch/arm/boot/dts/stm32mp151.dtsi                              |  2 ++
->   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi                         |  2 +-
->   15 files changed, 36 insertions(+), 32 deletions(-)
-> 
+> diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+> index 4692b7ad16b7..cf217b6b2b39 100644
+> --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+> @@ -908,10 +908,30 @@
+>  	status = "okay";
+>  };
+>  
+> +&q6asmdai {
+> +	dai@0 {
+> +		reg = <0>;
+> +		direction = <2>;
+> +	};
+> +
+> +	dai@1 {
+> +		reg = <1>;
+> +		direction = <2>;
+> +	};
+> +
+> +	dai@2 {
+> +		reg = <2>;
+> +		direction = <1>;
+> +	};
+> +};
+> +
+>  &sound {
+>  	compatible = "qcom,apq8096-sndcard";
+>  	model = "DB820c";
+> -	audio-routing =	"RX_BIAS", "MCLK";
+> +	audio-routing =	"RX_BIAS", "MCLK",
+> +		"MM_DL1",  "MultiMedia1 Playback",
+> +		"MM_DL2",  "MultiMedia2 Playback",
+> +		"MultiMedia3 Capture", "MM_UL3";
+>  
+>  	mm1-dai-link {
+>  		link-name = "MultiMedia1";
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index 14827adebd94..98634d5c4440 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -2066,6 +2066,8 @@
+>  						reg = <APR_SVC_ASM>;
+>  						q6asmdai: dais {
+>  							compatible = "qcom,q6asm-dais";
+> +							#address-cells = <1>;
+> +							#size-cells = <0>;
+>  							#sound-dai-cells = <1>;
+>  							iommus = <&lpass_q6_smmu 1>;
+>  						};
+> -- 
+> 2.21.0
+
+-- 
+~Vinod
