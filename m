@@ -2,81 +2,89 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF15CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5097EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 898E8206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A15206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589458190;
+	bh=9TkmUAdX2RQ+u5zgcMGocI9dwuWZ53GZK+S2e9ICxjY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1o/yyjjX7ca891CW//bRIovCUUitL1p2uLdefeXH2o5z9EXLYFvfbWYMkyDU90m76
+	 +BU/qtYyIGoHaq6U6khBzPif+QfHztx9qUs76hQCfpjEISgxnqr6WD/G6GQNwjaHux
+	 sYMxZFyEj8HIrSQVoXdc+xhEua5d2tj+DEHpZ8Ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgENMI6 (ORCPT
+        id S1727043AbgENMJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 08:08:58 -0400
-Received: from smtprelay0116.hostedemail.com ([216.40.44.116]:40704 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726891AbgENMI5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 08:08:57 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 99D5A18224D7E;
-        Thu, 14 May 2020 12:08:55 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: taste99_13733fd571143
-X-Filterd-Recvd-Size: 2031
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 14 May 2020 12:08:53 +0000 (UTC)
-Message-ID: <c44df8c581014158b7b2753f446ea27741f40c94.camel@perches.com>
-Subject: Re: [PATCH v3] mm: Add kvfree_sensitive() for freeing sensitive
- data objects
-From:   Joe Perches <joe@perches.com>
-To:     Matthew Wilcox <willy@infradead.org>,
-        Balbir Singh <bsingharora@gmail.com>
-Cc:     Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>
-Date:   Thu, 14 May 2020 05:08:52 -0700
-In-Reply-To: <20200514120018.GA16070@bombadil.infradead.org>
-References: <20200407200318.11711-1-longman@redhat.com>
-         <1158ff38-c65d-379f-8ae7-6f507d9fc8dd@gmail.com>
-         <20200514120018.GA16070@bombadil.infradead.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Thu, 14 May 2020 08:09:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgENMJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 08:09:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF48C206A5;
+        Thu, 14 May 2020 12:09:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589458187;
+        bh=9TkmUAdX2RQ+u5zgcMGocI9dwuWZ53GZK+S2e9ICxjY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NAQksCZ2qHv+5x3AQC+zmCumpoQNZV3vfkvc+6WxQaygncoy4cPeEar5Lo5WuQDyv
+         s/0rbz9abTxLkyqpTsXi1RD1vgyNp4LdbHTqYhWYBdHW+iJxX4uCquQJlgmwsBaAAP
+         SzDZ5wS1LdvjlZvf6o+6KTkW4YkqBnCAM7N3WDfE=
+Date:   Thu, 14 May 2020 14:09:44 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hillf Danton <hdanton@sina.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] USB: usbfs: fix mmap dma mismatch
+Message-ID: <20200514120944.GA2005274@kroah.com>
+References: <20200514112711.1858252-1-gregkh@linuxfoundation.org>
+ <20200514115829.GA15995@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514115829.GA15995@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-14 at 05:00 -0700, Matthew Wilcox wrote:
-> On Thu, May 14, 2020 at 09:00:40PM +1000, Balbir Singh wrote:
-> > I wonder if the right thing to do is also to disable pre-emption, just so that the thread does not linger on with sensitive data.
-> > 
-> > void kvfree_sensitive(const void *addr, size_t len)
-> > {
-> > 	preempt_disable();
-> > 	if (likely(!ZERO_OR_NULL_PTR(addr))) {
-> > 		memzero_explicit((void *)addr, len);
-> > 		kvfree(addr);
-> > 	}
-> > 	preempt_enable();
-> > }
-> > EXPORT_SYMBOL(kvfree_sensitive);
+On Thu, May 14, 2020 at 01:58:29PM +0200, Christoph Hellwig wrote:
+> On Thu, May 14, 2020 at 01:27:11PM +0200, Greg Kroah-Hartman wrote:
+> > +	if (hcd->localmem_pool || !hcd_uses_dma(hcd)) {
+> > +		if (remap_pfn_range(vma, vma->vm_start,
+> > +				    virt_to_phys(usbm->mem) >> PAGE_SHIFT,
+> > +				    size, vma->vm_page_prot) < 0) {
+> > +			dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
+> > +			return -EAGAIN;
+> > +		}
+> > +	} else {
+> > +		if (dma_mmap_coherent(hcd->self.sysdev, vma, mem, dma_handle,
+> > +				      size)) {
+> > +			dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
+> > +			return -EAGAIN;
+> > +		}
 > 
-> If it's _that_ sensitive then the caller should have disabled preemption.
-> Because preemption could otherwise have occurred immediately before
-> kvfree_sensitive() was called.
+> What about a goto label to share the error handling path?
 
-static inline ?
+I thought about that, but that's a bit messier than the duplicated lines
+here :)
 
+> Otherwise looks good:
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+
+thanks for the review, and the help with this.
+
+greg k-h
