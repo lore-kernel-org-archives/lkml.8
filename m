@@ -2,90 +2,155 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD49C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C60DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C46182065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:05:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589475938;
-	bh=YW9wuTxuRvYF57tgugoM+Q4D773LEH8szJcXifA1DpU=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=olr1FPizLxZC4gC22+wabYAkGruV/sD+UmpHH70PIs25BSU52SIL4+T9H9oP2l50R
-	 zESqkM9vsdhFIWFcugjNQ4YihLpNEbQ4tubk8oAGK4C+2qejiXASQPmJnXhsPUhmBw
-	 6jZcYs5yNXzsfPOOvDd8/+ni1KqjNXXTnHca4Vd0=
+	by mail.kernel.org (Postfix) with ESMTP id 52B4820727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgENRFi (ORCPT
+        id S1726494AbgENRFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 13:05:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbgENRFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 13:05:37 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72C112065F;
-        Thu, 14 May 2020 17:05:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589475937;
-        bh=YW9wuTxuRvYF57tgugoM+Q4D773LEH8szJcXifA1DpU=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=VSFr/FWRfpW8XQKjLi8GnhOj6GcgNR7W+29Dzelr7M0k1jsiDgAk9uIOU4Pkp/Dp3
-         fEYyM1iEqQ7k6I8TTt/jksD5k4X2P079gge+Dgp6Q4MD5NGSyFLZpgWXdwk9FHb5Kt
-         VoLhw+BQcMLEWny2kTBy6kxBuljDquTHDq1RjzJ4=
-Date:   Thu, 14 May 2020 18:05:34 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     tiwai@suse.com, lgirdwood@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        perex@perex.cz
-Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-In-Reply-To: <20200513200549.12213-1-dmurphy@ti.com>
-References: <20200513200549.12213-1-dmurphy@ti.com>
-Subject: Re: [PATCH v2 1/3] ASoC: tlv320adcx140: Add controls for PDM clk
-Message-Id: <158947592846.11145.4394826289935781391.b4-ty@kernel.org>
+        Thu, 14 May 2020 13:05:54 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:44680 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgENRFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 13:05:54 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jZHIl-0003QE-Tz; Thu, 14 May 2020 11:05:43 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jZHIg-0001u3-Tt; Thu, 14 May 2020 11:05:43 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87eerszyim.fsf_-_@x220.int.ebiederm.org>
+        <ee83587b-8a1c-3c4f-cc0f-7bc98afabae1@I-love.SAKURA.ne.jp>
+        <CAHk-=wgQ2ovXMW=5ZHCpowkE1PwPQSL7oV4YXzBxd6eqNRXxnQ@mail.gmail.com>
+        <87sgg6v8we.fsf@x220.int.ebiederm.org>
+        <202005111428.B094E3B76A@keescook>
+        <874kslq9jm.fsf@x220.int.ebiederm.org>
+        <202005121218.ED0B728DA@keescook>
+        <87lflwq4hu.fsf@x220.int.ebiederm.org>
+        <202005121606.5575978B@keescook> <202005121625.20B35A3@keescook>
+        <202005121649.4ED677068@keescook>
+        <87sgg2ftuj.fsf@x220.int.ebiederm.org>
+        <a2169b6f-b527-7e35-2d41-1e9cd1f8436c@schaufler-ca.com>
+Date:   Thu, 14 May 2020 12:02:03 -0500
+In-Reply-To: <a2169b6f-b527-7e35-2d41-1e9cd1f8436c@schaufler-ca.com> (Casey
+        Schaufler's message of "Thu, 14 May 2020 09:56:43 -0700")
+Message-ID: <87a72ae9h0.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1jZHIg-0001u3-Tt;;;mid=<87a72ae9h0.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19U5VniQZLoRrI8j+4OZt8+5E011NvXjrA=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 3/5] exec: Remove recursion from search_binary_handler
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 15:05:47 -0500, Dan Murphy wrote:
-> Add ALSA controls to configure the PDM clocks.
-> The clocks need to be configurable to accommodate various microphones
-> that use clocks for low power/low resolution modes to high power/high
-> resolution modes.
+Casey Schaufler <casey@schaufler-ca.com> writes:
 
-Applied to
+> On 5/14/2020 7:56 AM, Eric W. Biederman wrote:
+>> Kees Cook <keescook@chromium.org> writes:
+>>
+>>> On Tue, May 12, 2020 at 04:47:14PM -0700, Kees Cook wrote:
+>>>> And now I wonder if qemu actually uses the resulting AT_EXECFD ...
+>>> It does, though I'm not sure if this is to support crossing mount points,
+>>> dropping privileges, or something else, since it does fall back to just
+>>> trying to open the file.
+>>>
+>>>     execfd = qemu_getauxval(AT_EXECFD);
+>>>     if (execfd == 0) {
+>>>         execfd = open(filename, O_RDONLY);
+>>>         if (execfd < 0) {
+>>>             printf("Error while loading %s: %s\n", filename, strerror(errno));
+>>>             _exit(EXIT_FAILURE);
+>>>         }
+>>>     }
+>> My hunch is that the fallback exists from a time when the kernel did not
+>> implement AT_EXECFD, or so that qemu can run on kernels that don't
+>> implement AT_EXECFD.  It doesn't really matter unless the executable is
+>> suid, or otherwise changes privileges.
+>>
+>>
+>> I looked into this a bit to remind myself why exec works the way it
+>> works, with changing privileges.
+>>
+>> The classic attack is pointing a symlink at a #! script that is suid or
+>> otherwise changes privileges.  The kernel will open the script and set
+>> the privileges, read the interpreter from the first line, and proceed to
+>> exec the interpreter.  The interpreter will then open the script using
+>> the pathname supplied by the kernel.  The name of the symlink.
+>> Before the interpreter reopens the script the attack would replace
+>> the symlink with a script that does something else, but gets to run
+>> with the privileges of the script.
+>>
+>>
+>> Defending against that time of check vs time of use attack is why
+>> bprm_fill_uid, and cap_bprm_set_creds use the credentials derived from
+>> the interpreter instead of the credentials derived from the script.
+>>
+>>
+>> The other defense is to replace the pathname of the executable that the
+>> intepreter will open with /dev/fd/N.
+>>
+>> All of this predates Linux entirely.  I do remember this was fixed at
+>> some point in Linux but I don't remember the details.  I can just read
+>> the solution that was picked in the code.
+>>
+>>
+>>
+>> All of this makes me wonder how are the LSMs protected against this
+>> attack.
+>>
+>> Let's see the following LSMS implement brpm_set_creds:
+>> tomoyo   - Abuses bprm_set_creds to call tomoyo_load_policy [ safe ]
+>> smack    - Requires CAP_MAC_ADMIN to smack setxattrs        [ vulnerable? ]
+>>            Uses those xattrs in smack_bprm_set_creds
+>
+> What is the concern? If the xattrs change after the check,
+> the behavior should still be consistent.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
+The concern is that there are xattrs set on a #! script.  Someone
+replaces the script after smack reads the xattr and sets bprm->cred but
+before the interpreter reopens the script.
 
-Thanks!
+In short if there is one script with xattrs set. I can run any script as
+if those xattrs were set on it.
 
-[1/3] ASoC: tlv320adcx140: Add controls for PDM clk
-      commit: 7cfa610205d95357f9eface292dc70fce7571f65
-[2/3] ASoC: tlv320adcx140: Add device tree property for PDM edges
-      commit: 75b0adbb0806a141b0b5f074cd6bd58bb9870c0d
-[3/3] ASoC: tlv320adcx140: Configure PDM sampling edge
-      commit: 79fc48e41e39d7a98c5f8ae37f613d7ff9953c86
+I don't know the smack security model well enough to know if that
+is a problem or not.  It looks like it may be a concern because smack
+limits who can mess with it's security xattrs.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Eric
