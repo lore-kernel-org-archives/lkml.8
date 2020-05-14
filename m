@@ -2,138 +2,111 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A321D206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BCF62065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:10:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lBQzs4Ok"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SzRXsrDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbgENIJ4 (ORCPT
+        id S1726108AbgENIKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:09:56 -0400
-Received: from ozlabs.org ([203.11.71.1]:33443 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgENIJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:09:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49N42n4fVfz9sV7;
-        Thu, 14 May 2020 18:09:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589443793;
-        bh=4aGWmO0/dUYLpFjFgNKfhytFTVAq3ckc61Jr4U5Y99o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lBQzs4OkNobWyzWWr36uaXvOsLw0a3DT4jOgIdL8Ce6scd3BrflCJ+Np9lYaGAz2D
-         8TKI4g/3aIqzOtlwnwHV4VBpkLTBFc3DOAlFObPzeBo74Rbi46Tjv0nVoHIaJ+QQ3N
-         2KUqYXoo19gYcMzmKn32KeQjEi6yfnG/MHtnru1SbQZulkrWiixWngUWkGqmj/RnJ1
-         xeUbvc4kdFRqEkycAMTzo54uUyQOGE8Q3roCyUPDJYDJaGBpE8O7ucXoMo7e7ZYdHN
-         e38ROCoYhr6UfResuP0PKm8w4ZlL+GoSAS3X8KFJBttmsZzuM716AYWKA7QXZFIQJU
-         CBSDP1iyLzycQ==
-Date:   Thu, 14 May 2020 18:09:48 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the fsinfo tree with the kbuild
- tree
-Message-ID: <20200514180948.5d5b38a5@canb.auug.org.au>
-In-Reply-To: <20200512190614.1bebd8ba@canb.auug.org.au>
-References: <20200512190614.1bebd8ba@canb.auug.org.au>
+        Thu, 14 May 2020 04:10:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24009 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725886AbgENIKg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 04:10:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589443834;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QauBrq1Oc2T93JfbGvTvQs0eWJrFDhKFCSa33hfTtB8=;
+        b=SzRXsrDhGjwV4XTQNlxA/roBy9002Vl9mUCGmL4mKQgKUFkvJOE/CcT9XYISmTaG7DlIqK
+        CHmGb62mxi/leRe0dGul2EgyXKFjrYZi9pN2Vn0TBT0X+QYHRYQUNSthYdvPGNVru6hNJg
+        nkb1RQaSJcR8EzWalG5GZ5GeJwNJXU4=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-437-z9G0ftqCPKGHBoJSNFzTMQ-1; Thu, 14 May 2020 04:10:31 -0400
+X-MC-Unique: z9G0ftqCPKGHBoJSNFzTMQ-1
+Received: by mail-wr1-f72.google.com with SMTP id u5so1144810wrt.22
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:10:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=QauBrq1Oc2T93JfbGvTvQs0eWJrFDhKFCSa33hfTtB8=;
+        b=ZCYF+FrYl3vDgAYUfclHipsz7vn2h6ZBisMOtBzlGJQxZZHskVayd+u871hbUSOXTP
+         GycLU2fGRgwXcL5Sh9jweDmR01J8E5w+EXrCKNPIskSYYjfUeV3I5LIQ3oVm62xFUk9x
+         kyIzeRDTF/M5VZFKbXAY+PRyjCCxdsvkzB5/2WYEnq4k4Vxv/dbbOT96ZnxNz2dx/d73
+         Xu1UQc0Ah9xfm0nNZ42bKH7AWJQmkM6biXJASSBD1+5efyU78bimb/p8n78rT+kRoTo7
+         qyzuNsf0pOxjVCuXIiiJ/QDSXHEPnolR50d50zYO9hh2Nf3hoVmRrIaNIim4XL3+9PkK
+         I9eg==
+X-Gm-Message-State: AGi0Pua9rhBEbRikG54+su91Qv2diduQdQ2CaMDjOwrdsazZUcmis1hu
+        9VZqfLgTtZ4rfzwrSR/GESNf7LSgW5UFVpVzXgHQ7Vl/8qe5gwbphNF1ff2A1Vyn13sNVw2tZCF
+        9zlZXSCgX52O8xKo/FDwfkVVB
+X-Received: by 2002:a1c:7d92:: with SMTP id y140mr31881514wmc.10.1589443830807;
+        Thu, 14 May 2020 01:10:30 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJwb1WVmE7Jc2Wey4S0cB1B25rXmq0PGyqTviLPNT4mX4xK+tt4EGXSfkCN81V7zVXLqXxdag==
+X-Received: by 2002:a1c:7d92:: with SMTP id y140mr31881503wmc.10.1589443830591;
+        Thu, 14 May 2020 01:10:30 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id l13sm2818996wrm.55.2020.05.14.01.10.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 01:10:29 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>, x86@kernel.org
+Subject: Re: [PATCH v2 0/3] x86/idt: Minor alloc_intr_gate() sanitization
+In-Reply-To: <87imgz1wvz.fsf@nanos.tec.linutronix.de>
+References: <20200428093824.1451532-1-vkuznets@redhat.com> <87imh0kn5t.fsf@vitty.brq.redhat.com> <87imgz1wvz.fsf@nanos.tec.linutronix.de>
+Date:   Thu, 14 May 2020 10:10:28 +0200
+Message-ID: <87wo5fdjij.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Yqm7nm8mU2ZpmaDp9lVNewB";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Yqm7nm8mU2ZpmaDp9lVNewB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-Hi all,
-
-On Tue, 12 May 2020 19:06:14 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+> Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+>> Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+>>
+>>> This series is a successor of "[PATCH] x86/idt: Keep spurious entries unset
+>>> in system_vectors".
+>>>
+>>> The original issue I tried to address was that /proc/interrupts output
+>>> was always containing all possible system vectors, including non allocated
+>>> ones (e.g. 'Hypervisor callback interrupts' on bare metal). Thomas
+>>> suggested to expand this cosmetic change to making alloc_intr_gate()
+>>> __init.
+>>>
+>>> Vitaly Kuznetsov (3):
+>>>   x86/xen: Split HVM vector callback setup and interrupt gate allocation
+>>>   x86/idt: Annotate alloc_intr_gate() with __init
+>>>   x86/idt: Keep spurious entries unset in system_vectors
+>>>
+>>
+>> Ping?
 >
-> Today's linux-next merge of the fsinfo tree got a conflict in:
->=20
->   samples/vfs/Makefile
->=20
-> between commit:
->=20
->   757172f3d6f9 ("samples: vfs: build sample programs for target architect=
-ure")
->=20
-> from the kbuild tree and commits:
->=20
->   51d01aee410b ("fsinfo: Add fsinfo() syscall to query filesystem informa=
-tion")
->   d3ee0e9da65d ("fsinfo: sample: Mount listing program")
->=20
-> from the fsinfo tree.
->=20
-> I fixed it up (I think - see below) and can carry the fix as necessary.
-> This is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+> It's in my pile and I just did not come around to merge it.
+>
 
-The new resolution is below.
+No problem, just wanted to make sure it didn't slip through the
+cracks. I see tip-bot already queued it, thanks!
 
---=20
-Cheers,
-Stephen Rothwell
+-- 
+Vitaly
 
-diff --cc samples/vfs/Makefile
-index 00b6824f9237,4a6e3058812e..000000000000
---- a/samples/vfs/Makefile
-+++ b/samples/vfs/Makefile
-@@@ -1,5 -1,15 +1,5 @@@
-  # SPDX-License-Identifier: GPL-2.0-only
-- userprogs :=3D test-fsmount test-statx
- -# List of programs to build
-++userprogs :=3D test-fsinfo test-fsmount test-mntinfo test-statx
- +always-y :=3D $(userprogs)
- =20
- -hostprogs :=3D \
- -	test-fsinfo \
- -	test-fsmount \
- -	test-mntinfo \
- -	test-statx
- -
- -always-y :=3D $(hostprogs)
- -
- -HOSTCFLAGS_test-fsinfo.o +=3D -I$(objtree)/usr/include
- -HOSTCFLAGS_test-fsmount.o +=3D -I$(objtree)/usr/include
- -HOSTCFLAGS_test-mntinfo.o +=3D -I$(objtree)/usr/include
- -HOSTCFLAGS_test-statx.o +=3D -I$(objtree)/usr/include
- +userccflags +=3D -I usr/include
-
---Sig_/Yqm7nm8mU2ZpmaDp9lVNewB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl68/MwACgkQAVBC80lX
-0GxN7QgAh5CmfDufNHqbspJYg3AuK7g7M1KLotEQtxFMdk94uW0KiGHVizHi/5cp
-hImffKDwEomGTE9g4x36jQBN/q3BSuIk9eMr6DfUgstyOrGOJYUnM8rmpHC7bdu+
-3AobbZ5naazNw8NFc0bwUcU6hOkrMYRa388Vx9slj5xvROFBm1Zxj1pNbKd7+Cer
-BwOLUXTLna5KiwwesRMaM/6BaN73yUPJSHa9UVqYCbCvuT+BN/P9cli1PKFNm0Z5
-GZMDMHOwudfNw6vL4RvyrrxZFQvw+g83pNlDD5eD2XDgjvDQVBf2Evxgo1Hqsi0c
-m09XWFmnAoBWF1KiQyiVxCAZNwmZXQ==
-=4tFB
------END PGP SIGNATURE-----
-
---Sig_/Yqm7nm8mU2ZpmaDp9lVNewB--
