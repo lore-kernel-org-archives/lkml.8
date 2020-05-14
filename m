@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C12EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0304120675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F692065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482422;
-	bh=7Z0Hc+SaDoyfUvHDdqpilIVCAGEhOiZemi8d5z5qKDA=;
+	s=default; t=1589482431;
+	bh=GhghCcoDvbJQIGvjkJPA5Hu7V937m8QplLeAIJ30tjo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F/W1DxprRujJxNKgZjWBNGUb9WnPqBMbVk9R3+IcXxVheKa7IFNO5An6qlYUxsVZT
-	 hWnZD9bB0NfvQ9zv/2cL8uwfDf0bida/80yfoqsP6ND0ZhuM9b0ukw04I11kxGiDxT
-	 wINFOAPpRtppwlIilhqWK5+o+eMp12Vk7N93Isjw=
+	b=tMzzy5P5gmH5DxBJKOrbKjveVP4zUq8psYxxOtpUqmma+05Han33xgfmgArq2z7eL
+	 q3vW3pk0rPAOXeh+spI/SAENRxV/V9J6NxQLT0OLOlhFg+MLuj0emgosKiWJaNiI68
+	 nTabKn5PgV04Ld+br4oEW7RvSbLJMT2maxVvmDUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgENSxl (ORCPT
+        id S1728854AbgENSxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52648 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:53:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728691AbgENSx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:27 -0400
+        id S1728751AbgENSxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB90D20675;
-        Thu, 14 May 2020 18:53:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3084F2065F;
+        Thu, 14 May 2020 18:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482406;
-        bh=7Z0Hc+SaDoyfUvHDdqpilIVCAGEhOiZemi8d5z5qKDA=;
+        s=default; t=1589482414;
+        bh=GhghCcoDvbJQIGvjkJPA5Hu7V937m8QplLeAIJ30tjo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TXeNPkxCft3zKvQw1uLnRcMQf/x2kGlx5qe5bTvqBcvnzrPAR5F2ejqvO7YYCyOyu
-         Mwrpzk5K9UYse0qbVqqL8H0DdXc3KfLvltaeNUp04g5gq860gG8EeM7o6p6McZzWiL
-         9oXvwsDZjzusskhtkCW89BpjkSHlfoszYuov30Xg=
+        b=YvJTCqQ41V4xO/c3vWLXVAuTVr1RckdCfv15Yh9rOaoLO4fOLLY3lteRcQ1ORblt/
+         DVELr12I8pCKV/uIDt6VoHkIWESOcsa1wgrVDnMkfsPiJLFYCQFjyyokY6tB8Dzn0T
+         eiVTY0sLhqhOjRCOo9CCTS6ZovbzUJpn3alurVzk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefano Garzarella <sgarzare@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 12/49] vhost/vsock: fix packet delivery order to monitoring devices
-Date:   Thu, 14 May 2020 14:52:33 -0400
-Message-Id: <20200514185311.20294-12-sashal@kernel.org>
+Cc:     Daniel Playfair Cal <daniel.playfair.cal@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 19/49] HID: i2c-hid: reset Synaptics SYNA2393 on resume
+Date:   Thu, 14 May 2020 14:52:40 -0400
+Message-Id: <20200514185311.20294-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
 References: <20200514185311.20294-1-sashal@kernel.org>
@@ -60,45 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Daniel Playfair Cal <daniel.playfair.cal@gmail.com>
 
-[ Upstream commit 107bc0766b9feb5113074c753735a3f115c2141f ]
+[ Upstream commit 538f67407e2c0e5ed2a46e7d7ffa52f2e30c7ef8 ]
 
-We want to deliver packets to monitoring devices before it is
-put in the virtqueue, to avoid that replies can appear in the
-packet capture before the transmitted packet.
+On the Dell XPS 9570, the Synaptics SYNA2393 touchpad generates spurious
+interrupts after resuming from suspend until it receives some input or
+is reset. Add it to the quirk I2C_HID_QUIRK_RESET_ON_RESUME so that it
+is reset when resuming from suspend.
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+More information about the bug can be found in this mailing list
+discussion: https://www.spinics.net/lists/linux-input/msg59530.html
+
+Signed-off-by: Daniel Playfair Cal <daniel.playfair.cal@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/vsock.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/hid/hid-ids.h              | 3 +++
+ drivers/hid/i2c-hid/i2c-hid-core.c | 2 ++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index 6c089f655707f..ca68a27b98edd 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -181,14 +181,14 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
- 			break;
- 		}
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 48eba9c4f39a4..3341133df3a8d 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1089,6 +1089,9 @@
+ #define USB_DEVICE_ID_SYMBOL_SCANNER_2	0x1300
+ #define USB_DEVICE_ID_SYMBOL_SCANNER_3	0x1200
  
--		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
--		added = true;
--
--		/* Deliver to monitoring devices all correctly transmitted
--		 * packets.
-+		/* Deliver to monitoring devices all packets that we
-+		 * will transmit.
- 		 */
- 		virtio_transport_deliver_tap_pkt(pkt);
- 
-+		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
-+		added = true;
++#define I2C_VENDOR_ID_SYNAPTICS     0x06cb
++#define I2C_PRODUCT_ID_SYNAPTICS_SYNA2393   0x7a13
 +
- 		pkt->off += payload_len;
- 		total_len += payload_len;
- 
+ #define USB_VENDOR_ID_SYNAPTICS		0x06cb
+ #define USB_DEVICE_ID_SYNAPTICS_TP	0x0001
+ #define USB_DEVICE_ID_SYNAPTICS_INT_TP	0x0002
+diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+index 479934f7d2411..b525b2715e074 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-core.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -179,6 +179,8 @@ static const struct i2c_hid_quirks {
+ 		 I2C_HID_QUIRK_BOGUS_IRQ },
+ 	{ USB_VENDOR_ID_ALPS_JP, HID_ANY_ID,
+ 		 I2C_HID_QUIRK_RESET_ON_RESUME },
++	{ I2C_VENDOR_ID_SYNAPTICS, I2C_PRODUCT_ID_SYNAPTICS_SYNA2393,
++		 I2C_HID_QUIRK_RESET_ON_RESUME },
+ 	{ USB_VENDOR_ID_ITE, I2C_DEVICE_ID_ITE_LENOVO_LEGION_Y720,
+ 		I2C_HID_QUIRK_BAD_INPUT_SIZE },
+ 	{ 0, 0 }
 -- 
 2.20.1
 
