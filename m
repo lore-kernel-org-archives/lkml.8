@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE68C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E57C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3C022074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8D920809
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482644;
-	bh=6Ly//qbmGHF5tOi7alD1KKEOuaslBZFnnLYFfbhmq3s=;
+	s=default; t=1589482646;
+	bh=cXe103MZdqM3avjFhQIUYBeg23UVSH5A3ks/8xqjwx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pR6Bg5VYQ+V4rohgCYCd9/0oSVxSZNqzH6xIidFvrsaShDcCUjxyNE629P1ln3jAv
-	 CAdUxcSIawnQJiTLwQxIzHajFl2KLsWXEKcibdM29JoXGmDkbLFK0msq8RXMotzHic
-	 bGlZp2OP3Y07LcZIlkrBmYi5SC/jH47bjXuyucow=
+	b=mBwnPLxpxMoU5fyS31Mc9BQs0TDnzZow8SZJAF5WCFbT3HgOeaKKzlAOM5HHOmN0E
+	 jH8YwXMvUX/5jEZeMDJnxUWGOa+trXfo3C1fb68IIbLBb2pABAxXV3xj9XlGBPpEp3
+	 bZ74vIlV1OrKUbHtVD9c7hpdSKi2879g4tXxIrkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbgENS5X (ORCPT
+        id S1729841AbgENS5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:57:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57738 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:57:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729764AbgENS4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:56:41 -0400
+        id S1729760AbgENS4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:56:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEB2520810;
-        Thu, 14 May 2020 18:56:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1513207D5;
+        Thu, 14 May 2020 18:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482600;
-        bh=6Ly//qbmGHF5tOi7alD1KKEOuaslBZFnnLYFfbhmq3s=;
+        s=default; t=1589482599;
+        bh=cXe103MZdqM3avjFhQIUYBeg23UVSH5A3ks/8xqjwx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nmAgKedNCsqIaCk3i3UQ+WXjdxTEk6mRsyKjyuFfMnAlWKwtBAnXV9m+gqFIQ+v2O
-         aFbG94so+P9Z7qFhoArfvMLvkgZ7ytreFOr9iBY9kP2U26fL74RAllFisEZ8CZB5ih
-         UngsNbvcgE/HTrwkro6tVODsWWLFVDgQq+BAbSSY=
+        b=Yx7Bp6jTS/Apv8qhPSCEC9XX+hVKD9vbherpB9CBAOy4gmb3iogcRnSaX3qpNASm2
+         P+BhNtOXV5Ejwav1lyvCnoHxUb0m3HFVUswN6vtYzG6yPm/qOTy9ta+s8ccg+ywHwl
+         oYRSr0+JJ9Pxyhma81GjelznsXIfwnMvvsiUwetA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 12/14] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
-Date:   Thu, 14 May 2020 14:56:23 -0400
-Message-Id: <20200514185625.21753-12-sashal@kernel.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 11/14] USB: core: Fix misleading driver bug report
+Date:   Thu, 14 May 2020 14:56:22 -0400
+Message-Id: <20200514185625.21753-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185625.21753-1-sashal@kernel.org>
 References: <20200514185625.21753-1-sashal@kernel.org>
@@ -61,71 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit 3bd12da7f50b8bc191fcb3bab1f55c582234df59 ]
+[ Upstream commit ac854131d9844f79e2fdcef67a7707227538d78a ]
 
-asus-nb-wmi does not add any extra functionality on these Asus
-Transformer books. They have detachable keyboards, so the hotkeys are
-send through a HID device (and handled by the hid-asus driver) and also
-the rfkill functionality is not used on these devices.
+The syzbot fuzzer found a race between URB submission to endpoint 0
+and device reset.  Namely, during the reset we call usb_ep0_reinit()
+because the characteristics of ep0 may have changed (if the reset
+follows a firmware update, for example).  While usb_ep0_reinit() is
+running there is a brief period during which the pointers stored in
+udev->ep_in[0] and udev->ep_out[0] are set to NULL, and if an URB is
+submitted to ep0 during that period, usb_urb_ep_type_check() will
+report it as a driver bug.  In the absence of those pointers, the
+routine thinks that the endpoint doesn't exist.  The log message looks
+like this:
 
-Besides not adding any extra functionality, initializing the WMI interface
-on these devices actually has a negative side-effect. For some reason
-the \_SB.ATKD.INIT() function which asus_wmi_platform_init() calls drives
-GPO2 (INT33FC:02) pin 8, which is connected to the front facing webcam LED,
-high and there is no (WMI or other) interface to drive this low again
-causing the LED to be permanently on, even during suspend.
+------------[ cut here ]------------
+usb 2-1: BOGUS urb xfer, pipe 2 != type 2
+WARNING: CPU: 0 PID: 9241 at drivers/usb/core/urb.c:478
+usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
 
-This commit adds a blacklist of DMI system_ids on which not to load the
-asus-nb-wmi and adds these Transformer books to this list. This fixes
-the webcam LED being permanently on under Linux.
+Now, although submitting an URB while the device is being reset is a
+questionable thing to do, it shouldn't count as a driver bug as severe
+as submitting an URB for an endpoint that doesn't exist.  Indeed,
+endpoint 0 always exists, even while the device is in its unconfigured
+state.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To prevent these misleading driver bug reports, this patch updates
+usb_disable_endpoint() to avoid clearing the ep_in[] and ep_out[]
+pointers when the endpoint being disabled is ep0.  There's no danger
+of leaving a stale pointer in place, because the usb_host_endpoint
+structure being pointed to is stored permanently in udev->ep0; it
+doesn't get deallocated until the entire usb_device structure does.
+
+Reported-and-tested-by: syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2005011558590.903-100000@netrider.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/usb/core/message.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index cccf250cd1e33..ee64c9512a3a9 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -551,9 +551,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
- 	.detect_quirks = asus_nb_wmi_quirks,
- };
+diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+index 747343c61398b..f083ecfddd1b1 100644
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -1080,11 +1080,11 @@ void usb_disable_endpoint(struct usb_device *dev, unsigned int epaddr,
  
-+static const struct dmi_system_id asus_nb_wmi_blacklist[] __initconst = {
-+	{
-+		/*
-+		 * asus-nb-wm adds no functionality. The T100TA has a detachable
-+		 * USB kbd, so no hotkeys and it has no WMI rfkill; and loading
-+		 * asus-nb-wm causes the camera LED to turn and _stay_ on.
-+		 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
-+		},
-+	},
-+	{
-+		/* The Asus T200TA has the same issue as the T100TA */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
-+		},
-+	},
-+	{} /* Terminating entry */
-+};
- 
- static int __init asus_nb_wmi_init(void)
- {
-+	if (dmi_check_system(asus_nb_wmi_blacklist))
-+		return -ENODEV;
-+
- 	return asus_wmi_register_driver(&asus_nb_wmi_driver);
- }
- 
+ 	if (usb_endpoint_out(epaddr)) {
+ 		ep = dev->ep_out[epnum];
+-		if (reset_hardware)
++		if (reset_hardware && epnum != 0)
+ 			dev->ep_out[epnum] = NULL;
+ 	} else {
+ 		ep = dev->ep_in[epnum];
+-		if (reset_hardware)
++		if (reset_hardware && epnum != 0)
+ 			dev->ep_in[epnum] = NULL;
+ 	}
+ 	if (ep) {
 -- 
 2.20.1
 
