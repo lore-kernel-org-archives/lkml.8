@@ -2,102 +2,268 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFDA8206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:51:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589467882;
-	bh=E0a+apJr31FkSRWpqsCDpRfntjbRBD8yeqKP6BnYfGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=flmnn1MEEjP/xfXaAXh9bBx7r9iGYF+RYBikabxHmhQVcOq51lcFzrznwHi4mbPHo
-	 bIVYaWIy1KHcs40mSoKY2t4BgzVe+tAOh0iCI9/7uTp7dCmAxdywr9+0yuG2hbJme/
-	 MMIGdBcsLtm0E7V9jB+zE0y9bo+hqXxCSutkzJG4=
+	by mail.kernel.org (Postfix) with ESMTP id CFF0D20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:51:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bHVMonzJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbgENOvW (ORCPT
+        id S1728055AbgENOvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:51:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38848 "EHLO
+        Thu, 14 May 2020 10:51:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgENOvT (ORCPT
+        with ESMTP id S1728017AbgENOvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 May 2020 10:51:19 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98C78C061A0C;
-        Thu, 14 May 2020 07:51:17 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id l3so1788038qvo.7;
-        Thu, 14 May 2020 07:51:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aNtTa2d+n4621gDfYTPbcUqqYbeIm8uB0/qear6cWpg=;
-        b=QeELnO1WNJbZma6EEnHeMi9LPg6qMoJehC+wk+8XY7BwCHhBJHE3zUOcgdbrSSnsxE
-         hszjO+n7oLZR3ozCX/Frm7E5wqFeNhikXHOg0kZDTUEUTjbcqvWlCOh/B6ncBE62iIjZ
-         QfCSBa5O0hsIhlEHRBPV2+XpEaoZSKpM4XFSe8TU2dV2Sw4bY7I3SYMEYWG8kgpjbHjQ
-         BwUWXlmwGLeuAgz1kvr3rZwFnblqwDY789h3F2COPvbxYxOeS0iwb2zXrKRFnqUpCYA8
-         hGASsSrtmA0K9nRnOyT3+NrQIjXbvfAZyRW4PjnyM3hMyl0zypiqiYHiNPDqlCUCH1zK
-         mG1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=aNtTa2d+n4621gDfYTPbcUqqYbeIm8uB0/qear6cWpg=;
-        b=k5L7s3Z1Yge/Ezwv0xALbKehSy0EGxCnNk04ZX3+Af8EF2kjD1mIvzOxvc7oVtGLnj
-         aQ1ARNEhGz++HQuzPUJ6HZFQnZmWMcjE7DGnRB5T2BaLiNr/0524ysLpuKPEJseVkSvX
-         Q6A5ChlqwtaxuUpKGMVyzymgyJL0p52N4jmrVjlhhRrHoySLazFRZTZVmMWxNpgQ3b/C
-         3KV6yoBfoaftDRNdcR9CAb28fX9Pl9CT9G+zL9LN65OrANJTrWRFEy3MvNt6zEUi94Vr
-         btvhktMLssROj9jobSn952uiSEf/jUuY8VCDLLCFFWuTqXZrA02AVj8daG+tRoABZYsh
-         /GDg==
-X-Gm-Message-State: AOAM5337O9XV68aM83oo4ZJy5rrGFEGUwjY4W7X7+s/iYqfEiqo6dYqI
-        K6ijOFWFLxSGPrr7frO6/q5mC/9EnD8=
-X-Google-Smtp-Source: ABdhPJw7cclIwTgpzaD7MAC6RXRqYWlqzeZnNk0O3UghwCaxqW1QxUitfWlT15ZSc2SfonojOLuZXw==
-X-Received: by 2002:a05:6214:1543:: with SMTP id t3mr3002030qvw.122.1589467876536;
-        Thu, 14 May 2020 07:51:16 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:97a6])
-        by smtp.gmail.com with ESMTPSA id n20sm2623277qtk.89.2020.05.14.07.51.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 07:51:15 -0700 (PDT)
-Date:   Thu, 14 May 2020 10:51:14 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, newella@fb.com
-Subject: Re: [PATCH block/for-linus] iocost: don't let vrate run wild while
- there's no saturation signal
-Message-ID: <20200514145114.GG16815@mtj.duckdns.org>
-References: <20191015001811.GI18794@devbig004.ftw2.facebook.com>
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AFE4C061A0E;
+        Thu, 14 May 2020 07:51:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=0AUA+C35O90CNEqWuihWhLytXpVCKHU/MNxz8OyW+Og=; b=bHVMonzJJM6bd2Mw7qZZA5RVCZ
+        9jYWddGzIR+yhHBBMOuK+6jTVuWG1SJszeWgxI3AOw5g5bHTUNKy5P8XagOC2kEVilXlIsprTCZnd
+        TDpbJxzExaTxflRi6AksqgxgsIRtexQCgx6h3XGoNwtqn9ejWyH6d3yrYMfcE8rIXtFmNEeKlMlbi
+        DPAEo18rOkVOYop4WksH37rCcY8WeDq4QTAzchGeDM3352feOsvq/0qiB8W0jtgYZbjYgzJyntJWX
+        iQYryH/StjDY/YPcWm+HFoJcvkImjOMHe5OY2TjY50jdT7WwMi+FYheV45QE6hFE2qHOwU0fVdGVv
+        bMHIBDNg==;
+Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZFCd-0007w2-ON; Thu, 14 May 2020 14:51:16 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] ipv6: symbol_get to access a sit symbol
+Date:   Thu, 14 May 2020 16:51:01 +0200
+Message-Id: <20200514145101.3000612-5-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200514145101.3000612-1-hch@lst.de>
+References: <20200514145101.3000612-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015001811.GI18794@devbig004.ftw2.facebook.com>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 05:18:11PM -0700, Tejun Heo wrote:
-> When the QoS targets are met and nothing is being throttled, there's
-> no way to tell how saturated the underlying device is - it could be
-> almost entirely idle, at the cusp of saturation or anywhere inbetween.
-> Given that there's no information, it's best to keep vrate as-is in
-> this state.  Before 7cd806a9a953 ("iocost: improve nr_lagging
-> handling"), this was the case - if the device isn't missing QoS
-> targets and nothing is being throttled, busy_level was reset to zero.
-...
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Reported-by: Andy Newell <newella@fb.com>
-> Fixes: 7cd806a9a953 ("iocost: improve nr_lagging handling")
+Instead of going through the ioctl handler from kernel space, use
+symbol_get to the newly factored out ipip6_set_dstaddr helper, bypassing
+addrconf.c entirely.
 
-Jens, this one fell through the cracks. It still applies with only a small
-offset. Can you please apply?
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/net/addrconf.h |  1 -
+ include/net/ipv6.h     |  2 ++
+ net/ipv6/addrconf.c    | 66 ------------------------------------------
+ net/ipv6/af_inet6.c    | 20 ++++++++++++-
+ net/ipv6/sit.c         | 41 ++++++++++++++++++++++++++
+ 5 files changed, 62 insertions(+), 68 deletions(-)
 
-Thanks.
-
+diff --git a/include/net/addrconf.h b/include/net/addrconf.h
+index fdb07105384ca..569eb03ae2440 100644
+--- a/include/net/addrconf.h
++++ b/include/net/addrconf.h
+@@ -76,7 +76,6 @@ void addrconf_cleanup(void);
+ 
+ int addrconf_add_ifaddr(struct net *net, void __user *arg);
+ int addrconf_del_ifaddr(struct net *net, void __user *arg);
+-int addrconf_set_dstaddr(struct net *net, void __user *arg);
+ 
+ int ipv6_chk_addr(struct net *net, const struct in6_addr *addr,
+ 		  const struct net_device *dev, int strict);
+diff --git a/include/net/ipv6.h b/include/net/ipv6.h
+index 955badd1e8ffc..1b983f32c87ce 100644
+--- a/include/net/ipv6.h
++++ b/include/net/ipv6.h
+@@ -1080,6 +1080,8 @@ struct in6_addr *fl6_update_dst(struct flowi6 *fl6,
+ 				const struct ipv6_txoptions *opt,
+ 				struct in6_addr *orig);
+ 
++int ipip6_set_dstaddr(struct net *net, void __user *arg);
++
+ /*
+  *	socket options (ipv6_sockglue.c)
+  */
+diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+index fd885f06c4ed6..02186f00f91c5 100644
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -2783,72 +2783,6 @@ void addrconf_prefix_rcv(struct net_device *dev, u8 *opt, int len, bool sllao)
+ 	in6_dev_put(in6_dev);
+ }
+ 
+-/*
+- *	Set destination address.
+- *	Special case for SIT interfaces where we create a new "virtual"
+- *	device.
+- */
+-int addrconf_set_dstaddr(struct net *net, void __user *arg)
+-{
+-	struct in6_ifreq ireq;
+-	struct net_device *dev;
+-	int err = -EINVAL;
+-
+-	rtnl_lock();
+-
+-	err = -EFAULT;
+-	if (copy_from_user(&ireq, arg, sizeof(struct in6_ifreq)))
+-		goto err_exit;
+-
+-	dev = __dev_get_by_index(net, ireq.ifr6_ifindex);
+-
+-	err = -ENODEV;
+-	if (!dev)
+-		goto err_exit;
+-
+-#if IS_ENABLED(CONFIG_IPV6_SIT)
+-	if (dev->type == ARPHRD_SIT) {
+-		const struct net_device_ops *ops = dev->netdev_ops;
+-		struct ifreq ifr;
+-		struct ip_tunnel_parm p;
+-
+-		err = -EADDRNOTAVAIL;
+-		if (!(ipv6_addr_type(&ireq.ifr6_addr) & IPV6_ADDR_COMPATv4))
+-			goto err_exit;
+-
+-		memset(&p, 0, sizeof(p));
+-		p.iph.daddr = ireq.ifr6_addr.s6_addr32[3];
+-		p.iph.saddr = 0;
+-		p.iph.version = 4;
+-		p.iph.ihl = 5;
+-		p.iph.protocol = IPPROTO_IPV6;
+-		p.iph.ttl = 64;
+-		ifr.ifr_ifru.ifru_data = (__force void __user *)&p;
+-
+-		if (ops->ndo_do_ioctl) {
+-			mm_segment_t oldfs = get_fs();
+-
+-			set_fs(KERNEL_DS);
+-			err = ops->ndo_do_ioctl(dev, &ifr, SIOCADDTUNNEL);
+-			set_fs(oldfs);
+-		} else
+-			err = -EOPNOTSUPP;
+-
+-		if (err == 0) {
+-			err = -ENOBUFS;
+-			dev = __dev_get_by_name(net, p.name);
+-			if (!dev)
+-				goto err_exit;
+-			err = dev_open(dev, NULL);
+-		}
+-	}
+-#endif
+-
+-err_exit:
+-	rtnl_unlock();
+-	return err;
+-}
+-
+ static int ipv6_mc_config(struct sock *sk, bool join,
+ 			  const struct in6_addr *addr, int ifindex)
+ {
+diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
+index 345baa0a754f4..3ec9734c7bb11 100644
+--- a/net/ipv6/af_inet6.c
++++ b/net/ipv6/af_inet6.c
+@@ -538,6 +538,19 @@ int inet6_getname(struct socket *sock, struct sockaddr *uaddr,
+ }
+ EXPORT_SYMBOL(inet6_getname);
+ 
++static int inet6_ioctl_set_dstaddr(struct net *net, void __user *arg)
++{
++	int (*set_dstaddr)(struct net *, void __user *);
++	int err;
++
++	set_dstaddr = symbol_get(ipip6_set_dstaddr);
++	if (!set_dstaddr)
++		return -EOPNOTSUPP;
++	err = set_dstaddr(net, arg);
++	symbol_put(ipip6_set_dstaddr);
++	return err;
++}
++
+ int inet6_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ {
+ 	struct sock *sk = sock->sk;
+@@ -554,7 +567,12 @@ int inet6_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 	case SIOCDIFADDR:
+ 		return addrconf_del_ifaddr(net, (void __user *) arg);
+ 	case SIOCSIFDSTADDR:
+-		return addrconf_set_dstaddr(net, (void __user *) arg);
++		/* Special case for SIT interfaces where we create a new
++		 * "virtual" device.
++		 */
++		if (!IS_ENABLED(CONFIG_IPV6_SIT))
++			return -ENODEV;
++		return inet6_ioctl_set_dstaddr(net, (void __user *) arg);
+ 	default:
+ 		if (!sk->sk_prot->ioctl)
+ 			return -ENOIOCTLCMD;
+diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
+index 98954830c40ba..cb2cfa297f72e 100644
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -274,6 +274,47 @@ static struct ip_tunnel *ipip6_tunnel_locate(struct net *net,
+ 	return NULL;
+ }
+ 
++int ipip6_set_dstaddr(struct net *net, void __user *arg)
++{
++	struct ip_tunnel_parm p = { };
++	struct in6_ifreq ireq;
++	struct net_device *tunnel_dev, *new_dev;
++	int err;
++
++	rtnl_lock();
++	err = -EFAULT;
++	if (copy_from_user(&ireq, arg, sizeof(struct in6_ifreq)))
++		goto out_unlock;
++
++	err = -ENODEV;
++	tunnel_dev = __dev_get_by_index(net, ireq.ifr6_ifindex);
++	if (!tunnel_dev || tunnel_dev->type != ARPHRD_SIT)
++		goto out_unlock;
++
++	err = -EADDRNOTAVAIL;
++	if (!(ipv6_addr_type(&ireq.ifr6_addr) & IPV6_ADDR_COMPATv4))
++		goto out_unlock;
++
++	p.iph.daddr = ireq.ifr6_addr.s6_addr32[3];
++	p.iph.version = 4;
++	p.iph.ihl = 5;
++	p.iph.protocol = IPPROTO_IPV6;
++	p.iph.ttl = 64;
++	p.iph.frag_off |= htons(IP_DF);
++
++	err = -ENOBUFS;
++	if (!ipip6_tunnel_locate(dev_net(tunnel_dev), &p, true))
++		goto out_unlock;
++	new_dev = __dev_get_by_name(net, p.name);
++	if (!new_dev)
++		goto out_unlock;
++	err = dev_open(new_dev, NULL);
++out_unlock:
++	rtnl_unlock();
++	return err;
++}
++EXPORT_SYMBOL_GPL(ipip6_set_dstaddr);
++
+ #define for_each_prl_rcu(start)			\
+ 	for (prl = rcu_dereference(start);	\
+ 	     prl;				\
 -- 
-tejun
+2.26.2
+
