@@ -2,101 +2,156 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7732C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFCB2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0CFA2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgENUMD (ORCPT
+        id S1727929AbgENUNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 16:12:03 -0400
-Received: from mga17.intel.com ([192.55.52.151]:50069 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbgENUMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 16:12:03 -0400
-IronPort-SDR: f6VJMqpyNQnFXOYsA3gpv1ZVmEQWAD2TET9jw1am37ZfxrM/xDL9j/hXwm+a56MinDzRufPVtK
- z7uKZkWdUuLg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 13:12:02 -0700
-IronPort-SDR: 3YwbjKvUIn8yjyXLkPLXwcFHK6Z3y60aShjP7PRQCK2VPMeH32Wif231YQZsmZiPc8e8+k1IzP
- uORq3w5aSpHA==
-X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
-   d="scan'208";a="280974194"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.254.66.120]) ([10.254.66.120])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 13:12:02 -0700
-Subject: Re: [PATCH V3 2/4] x86/resctrl: Enumerate per-thread MBA
-To:     Babu Moger <babu.moger@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>
-Cc:     "kuo-lang.tseng@intel.com" <kuo-lang.tseng@intel.com>,
-        "ravi.v.shankar@intel.com" <ravi.v.shankar@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <cover.1588808537.git.reinette.chatre@intel.com>
- <3a9c21e1b8108094d9132ca0c0271e8c7b93c847.1588808538.git.reinette.chatre@intel.com>
- <eefd2231-cdbe-1250-3069-bb9204c940c1@amd.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <e8b35231-f94e-ba25-125d-12819478bb24@intel.com>
-Date:   Thu, 14 May 2020 13:12:01 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 14 May 2020 16:13:44 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:59634 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726035AbgENUNo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 16:13:44 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 74AA11C0288; Thu, 14 May 2020 22:13:41 +0200 (CEST)
+Date:   Thu, 14 May 2020 22:13:40 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Miroslav Benes <mbenes@suse.cz>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>
+Subject: Re: [PATCH 4.19 41/48] x86/unwind/orc: Prevent unwinding before ORC
+ initialization
+Message-ID: <20200514201340.GA14148@amd>
+References: <20200513094351.100352960@linuxfoundation.org>
+ <20200513094402.645961403@linuxfoundation.org>
+ <20200513215210.GB27858@amd>
+ <20200514194457.wipphhvyhzcshcup@treble>
 MIME-Version: 1.0
-In-Reply-To: <eefd2231-cdbe-1250-3069-bb9204c940c1@amd.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
+Content-Disposition: inline
+In-Reply-To: <20200514194457.wipphhvyhzcshcup@treble>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Babu,
 
-On 5/14/2020 12:04 PM, Babu Moger wrote:
-> 
-> 
->> -----Original Message-----
->> From: Reinette Chatre <reinette.chatre@intel.com>
->> Sent: Wednesday, May 6, 2020 6:50 PM
->> To: tglx@linutronix.de; fenghua.yu@intel.com; bp@alien8.de;
->> tony.luck@intel.com
->> Cc: kuo-lang.tseng@intel.com; ravi.v.shankar@intel.com; mingo@redhat.com;
->> Moger, Babu <Babu.Moger@amd.com>; hpa@zytor.com; x86@kernel.org;
->> linux-kernel@vger.kernel.org; Reinette Chatre <reinette.chatre@intel.com>
->> Subject: [PATCH V3 2/4] x86/resctrl: Enumerate per-thread MBA
->>
->> From: Fenghua Yu <fenghua.yu@intel.com>
->>
+--ReaqsoxgOBHFXBhH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-...
+Hi!
 
->> diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
->> index 62b137c3c97a..bccfc9ff3cc1 100644
->> --- a/arch/x86/kernel/cpu/scattered.c
->> +++ b/arch/x86/kernel/cpu/scattered.c
->> @@ -35,6 +35,7 @@ static const struct cpuid_bit cpuid_bits[] = {
->>  	{ X86_FEATURE_CDP_L3,		CPUID_ECX,  2, 0x00000010, 1
->> },
->>  	{ X86_FEATURE_CDP_L2,		CPUID_ECX,  2, 0x00000010, 2
->> },
->>  	{ X86_FEATURE_MBA,		CPUID_EBX,  3, 0x00000010, 0 },
->> +	{ X86_FEATURE_PER_THREAD_MBA,	CPUID_ECX,  0, 0x00000010, 3
->> },
-> 
-> This is a CPUID feature. You can actually detect this feature without
-> checking vendor model in patch @1. This patch looks good to me.
-> 
+> > > From: Josh Poimboeuf <jpoimboe@redhat.com>
+> > >=20
+> > > commit 98d0c8ebf77e0ba7c54a9ae05ea588f0e9e3f46e upstream.
+> > >=20
+> > > If the unwinder is called before the ORC data has been initialized,
+> > > orc_find() returns NULL, and it tries to fall back to using frame
+> > > pointers.  This can cause some unexpected warnings during boot.
+> > >=20
+> > > Move the 'orc_init' check from orc_find() to __unwind_init(), so that=
+ it
+> > > doesn't even try to unwind from an uninitialized state.
+> >=20
+> > > @@ -563,6 +560,9 @@ EXPORT_SYMBOL_GPL(unwind_next_frame);
+> > >  void __unwind_start(struct unwind_state *state, struct task_struct *=
+task,
+> > >  		    struct pt_regs *regs, unsigned long *first_frame)
+> > >  {
+> > > +	if (!orc_init)
+> > > +		goto done;
+> > > +
+> > >  	memset(state, 0, sizeof(*state));
+> > >  	state->task =3D task;
+> > > =20
+> >=20
+> > As this returns the *state to the caller, should the "goto done" move
+> > below the memset? Otherwise we are returning partialy-initialized
+> > struct, which is ... weird.
+>=20
+> Yeah, it is a little weird.  In most cases it should be fine, but there
+> is an edge case where if there's a corrupt ORC table and this returns
+> early, 'arch_stack_walk_reliable() -> unwind_error()' could check an
+> uninitialized value.
+>=20
+> Also the __unwind_start() error handling needs to set that error bit
+> anyway, in its error cases.  I'll fix it up.
 
-This feature is different from the feature introduced in patch 1.
+I did this in the mean time. It moves goto around memset, and I
+believe that 8 in get_reg should have been sizeof(long) [not that it
+matters, x86-32 is protected by build bug on.]
 
-Reinette
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+
+Best regards,
+								Pavel
+
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 169b96492b7c..90cb3cb2b4f1 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -375,7 +375,7 @@ static bool deref_stack_iret_regs(struct unwind_state *=
+state, unsigned long addr
+ static bool get_reg(struct unwind_state *state, unsigned int reg_off,
+ 		    unsigned long *val)
+ {
+-	unsigned int reg =3D reg_off/8;
++	unsigned int reg =3D reg_off/sizeof(long);
+=20
+ 	if (!state->regs)
+ 		return false;
+@@ -589,12 +589,12 @@ EXPORT_SYMBOL_GPL(unwind_next_frame);
+ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+ 		    struct pt_regs *regs, unsigned long *first_frame)
+ {
+-	if (!orc_init)
+-		goto done;
+-
+ 	memset(state, 0, sizeof(*state));
+ 	state->task =3D task;
+=20
++	if (!orc_init)
++		goto done;
++=09
+ 	/*
+ 	 * Refuse to unwind the stack of a task while it's executing on another
+ 	 * CPU.  This check is racy, but that's ok: the unwinder has other
+
+
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--ReaqsoxgOBHFXBhH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl69pnQACgkQMOfwapXb+vJT4wCgnKFI6MrEHmzkLntrelInmSqf
+fMsAoKAofZLJUHurE9J5j6kxvotwlvYv
+=nT2r
+-----END PGP SIGNATURE-----
+
+--ReaqsoxgOBHFXBhH--
