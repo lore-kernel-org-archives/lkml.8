@@ -2,103 +2,183 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2746BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 143C820748
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9AAF20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:45:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blFSU6/k"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lX99B1uR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgENOoZ (ORCPT
+        id S1728047AbgENOpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:44:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37754 "EHLO
+        Thu, 14 May 2020 10:45:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgENOoY (ORCPT
+        with ESMTP id S1726763AbgENOpt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:44:24 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98384C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:44:24 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id x77so1411524pfc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:44:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3517NpCaDBacg/Dwp902mIgUINgvR6pFPGbL/kslfaY=;
-        b=blFSU6/kX50CoVlrbhPDy8DHQmKvZ1iW5M5e060phVc6yrJAI7mhafMTdfQ8a5yg8K
-         kek6m1LiF3MDFjjFB7XMLpcjP1b9fqTCsBplPrLzh4BzDHMECFlXzJ/v6D5aNI58YqSr
-         zdol8qDrATXLReGmRCXdVRXEgxpVJqqJVH0+svDutlfjhKLEGTuwFY3uUpvF8xQU1K++
-         6vnZuE4QNeEhxUt5c7ryXSZcdtH+lGXE2bT3GAl8WnVbDe/ABhm8gAeiGVfLLW9Kf+UD
-         05RdbAQ3f9Hk5nCbXPcQTSu4Ox7vTPoXvCk+Bb+0RHi3LoGRwiFUEMMUPKMRGvu+6UyP
-         6QfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3517NpCaDBacg/Dwp902mIgUINgvR6pFPGbL/kslfaY=;
-        b=dwUdk7JzHsjtjI6kn5DcDiI2EVBXGGTIs59Oy4BA6pNKnipnRwjUXGVtj1U/DkGnne
-         W7WGSFTCfBM5eSviA16B46lv0j8rPZETEf1Oy1WZn/0JajgpwzI/Fla8n9nbNWu+wEDo
-         xrgFuhtCG/TS0gOXLn5Y5OHn0kSS/FlidSVXI4ZHmsImwGsfX72fuWuGa2oDHhBngmZM
-         qBxY6H6JvYTB9YXRUnhjHZhrefZLb+YHo/mRabVvZxzLP9Q3S+fiAKQCwmxckTg8o3WZ
-         SMnhw4UpIF2G6a6OhpbY65eWj147bN3mNpuio1b+C+N/qLOAlKBp0CyX6HrVEuXm3zg7
-         WE3Q==
-X-Gm-Message-State: AOAM530O46+mvxVvNL1FfntksUc+XPedXvlWDFyTHCoWJCbG1cdkZQ7c
-        YlCoMG5sNUGvDUc/gwDGw+o=
-X-Google-Smtp-Source: ABdhPJzTN+o4BlFp6Ad0119sdkLFW5d512QRy4tNm/IM3mh2dtrtu8tX3mFraIaxR60CiEHH6aB7Sg==
-X-Received: by 2002:aa7:8c0a:: with SMTP id c10mr5081607pfd.177.1589467464241;
-        Thu, 14 May 2020 07:44:24 -0700 (PDT)
-Received: from localhost ([49.207.51.148])
-        by smtp.gmail.com with ESMTPSA id o21sm18060707pjr.37.2020.05.14.07.44.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 May 2020 07:44:23 -0700 (PDT)
-Date:   Thu, 14 May 2020 20:14:21 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: ARM: static kernel in vmalloc space
-Message-ID: <20200514144421.GA6090@afzalpc>
-References: <CAK8P3a3OC5UO72rTDWi6+XgmExJmkATEjscq8hns8Bng06OpcQ@mail.gmail.com>
- <20200504091018.GA24897@afzalpc>
- <CAK8P3a25sZ9B+AE=EJyJZSU91CkBLLR6p2nixw_=UAbczg3RiQ@mail.gmail.com>
- <20200511142113.GA31707@afzalpc>
- <CAK8P3a0=+aBJLTvHOskTv=tba_s5b5MzWrYG8mxH3iLNy4hfBw@mail.gmail.com>
- <20200512104758.GA12980@afzalpc>
- <CAK8P3a1DQWG1+ab2+vQ2XCAKYxPUjJk5g3W3094j-adDXSQfzQ@mail.gmail.com>
- <20200514111755.GA4997@afzalpc>
- <CAK8P3a2PNZY-9L9+SFDLtrp731ZGo6Nbs-7jY6E2PwWXa0kfKw@mail.gmail.com>
- <20200514133545.GA5020@afzalpc>
+        Thu, 14 May 2020 10:45:49 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69A30C061A0F;
+        Thu, 14 May 2020 07:45:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=2BVQNCsHDXBi7WB9eP+yVXJsjaG+q+SsuFZ3NmsMQQw=; b=lX99B1uRP3pYmKlIgzDP5dMwJd
+        4sl6qkveBzbWRcCpWh6rKL+2GmtW305SQ5q5U9RfPnEP4ILAaHpnO356HJu0e3lzvilfuf1DilPIF
+        XaElNNUtP5CfvwQMzwDHxtl3E1mjT5MN0ExENrMVuOjSeCMh3cAWsixJqTwLDCGEGXpfyrzV9GSrN
+        2JJDuVyT6vCsiuF4r2E1Y2PxeaMbrMOA6UBs2JCbjLetLRYADWLU97RIjRQrrFtcDorjf9TLzRk7m
+        +ht9UdxNhLPRJ3FpEaKwD/bDtoEmAqjnr3Av33/YrGiyQfxQA9D4WvOAp40UjepwQNqrzArNqjVQY
+        gsAAgk0A==;
+Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZF7E-0004dC-31; Thu, 14 May 2020 14:45:40 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/4] ipv6: lift copy_from_user out of ipv6_route_ioctl
+Date:   Thu, 14 May 2020 16:45:32 +0200
+Message-Id: <20200514144535.3000410-2-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200514144535.3000410-1-hch@lst.de>
+References: <20200514144535.3000410-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514133545.GA5020@afzalpc>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Prepare for better compat ioctl handling by moving the user copy out
+of ipv6_route_ioctl.
 
-On Thu, May 14, 2020 at 07:05:45PM +0530, afzal mohammed wrote:
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/net/ip6_route.h |  3 ++-
+ net/ipv6/af_inet6.c     | 16 +++++++++------
+ net/ipv6/route.c        | 44 +++++++++++++++--------------------------
+ 3 files changed, 28 insertions(+), 35 deletions(-)
 
-> So if we make VMSPLIT_4G_4G, depends on !HIGH_MEMORY (w/ mention of
-> caveat in Kconfig help that this is meant for platforms w/ <=4GB), then
-> we can do copy_{from,to}_user the same way currently do, and no need to
-> do the user page pinning & kmap, right ?
+diff --git a/include/net/ip6_route.h b/include/net/ip6_route.h
+index e525f003e6197..2a5277758379e 100644
+--- a/include/net/ip6_route.h
++++ b/include/net/ip6_route.h
+@@ -118,7 +118,8 @@ void ip6_route_init_special_entries(void);
+ int ip6_route_init(void);
+ void ip6_route_cleanup(void);
+ 
+-int ipv6_route_ioctl(struct net *net, unsigned int cmd, void __user *arg);
++int ipv6_route_ioctl(struct net *net, unsigned int cmd,
++		struct in6_rtmsg *rtmsg);
+ 
+ int ip6_route_add(struct fib6_config *cfg, gfp_t gfp_flags,
+ 		  struct netlink_ext_ack *extack);
+diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
+index 345baa0a754f4..066a85531edcd 100644
+--- a/net/ipv6/af_inet6.c
++++ b/net/ipv6/af_inet6.c
+@@ -542,19 +542,23 @@ int inet6_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ {
+ 	struct sock *sk = sock->sk;
+ 	struct net *net = sock_net(sk);
++	void __user *argp = (void __user *)arg;
+ 
+ 	switch (cmd) {
+ 	case SIOCADDRT:
+-	case SIOCDELRT:
+-
+-		return ipv6_route_ioctl(net, cmd, (void __user *)arg);
++	case SIOCDELRT: {
++		struct in6_rtmsg rtmsg;
+ 
++		if (copy_from_user(&rtmsg, argp, sizeof(rtmsg)))
++			return -EFAULT;
++		return ipv6_route_ioctl(net, cmd, &rtmsg);
++	}
+ 	case SIOCSIFADDR:
+-		return addrconf_add_ifaddr(net, (void __user *) arg);
++		return addrconf_add_ifaddr(net, argp);
+ 	case SIOCDIFADDR:
+-		return addrconf_del_ifaddr(net, (void __user *) arg);
++		return addrconf_del_ifaddr(net, argp);
+ 	case SIOCSIFDSTADDR:
+-		return addrconf_set_dstaddr(net, (void __user *) arg);
++		return addrconf_set_dstaddr(net, argp);
+ 	default:
+ 		if (!sk->sk_prot->ioctl)
+ 			return -ENOIOCTLCMD;
+diff --git a/net/ipv6/route.c b/net/ipv6/route.c
+index 4292653af533b..d4c344e6d1ac6 100644
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -4334,41 +4334,29 @@ static void rtmsg_to_fib6_config(struct net *net,
+ 	};
+ }
+ 
+-int ipv6_route_ioctl(struct net *net, unsigned int cmd, void __user *arg)
++int ipv6_route_ioctl(struct net *net, unsigned int cmd, struct in6_rtmsg *rtmsg)
+ {
+ 	struct fib6_config cfg;
+-	struct in6_rtmsg rtmsg;
+ 	int err;
+ 
+-	switch (cmd) {
+-	case SIOCADDRT:		/* Add a route */
+-	case SIOCDELRT:		/* Delete a route */
+-		if (!ns_capable(net->user_ns, CAP_NET_ADMIN))
+-			return -EPERM;
+-		err = copy_from_user(&rtmsg, arg,
+-				     sizeof(struct in6_rtmsg));
+-		if (err)
+-			return -EFAULT;
++	if (cmd != SIOCADDRT && cmd != SIOCDELRT)
++		return -EINVAL;
++	if (!ns_capable(net->user_ns, CAP_NET_ADMIN))
++		return -EPERM;
+ 
+-		rtmsg_to_fib6_config(net, &rtmsg, &cfg);
++	rtmsg_to_fib6_config(net, rtmsg, &cfg);
+ 
+-		rtnl_lock();
+-		switch (cmd) {
+-		case SIOCADDRT:
+-			err = ip6_route_add(&cfg, GFP_KERNEL, NULL);
+-			break;
+-		case SIOCDELRT:
+-			err = ip6_route_del(&cfg, NULL);
+-			break;
+-		default:
+-			err = -EINVAL;
+-		}
+-		rtnl_unlock();
+-
+-		return err;
++	rtnl_lock();
++	switch (cmd) {
++	case SIOCADDRT:
++		err = ip6_route_add(&cfg, GFP_KERNEL, NULL);
++		break;
++	case SIOCDELRT:
++		err = ip6_route_del(&cfg, NULL);
++		break;
+ 	}
+-
+-	return -EINVAL;
++	rtnl_unlock();
++	return err;
+ }
+ 
+ /*
+-- 
+2.26.2
 
-i think user page pinning is still required, but kmap can be avoided
-by using lowmem corresponding to that page, right ?, or am i
-completely wrong ?
-
-Regards
-afzal
