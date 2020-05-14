@@ -2,89 +2,138 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5097EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9557FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24A15206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:09:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589458190;
-	bh=9TkmUAdX2RQ+u5zgcMGocI9dwuWZ53GZK+S2e9ICxjY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1o/yyjjX7ca891CW//bRIovCUUitL1p2uLdefeXH2o5z9EXLYFvfbWYMkyDU90m76
-	 +BU/qtYyIGoHaq6U6khBzPif+QfHztx9qUs76hQCfpjEISgxnqr6WD/G6GQNwjaHux
-	 sYMxZFyEj8HIrSQVoXdc+xhEua5d2tj+DEHpZ8Ig=
+	by mail.kernel.org (Postfix) with ESMTP id 785BB206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgENMJt (ORCPT
+        id S1727780AbgENMKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 08:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbgENMJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 08:09:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF48C206A5;
-        Thu, 14 May 2020 12:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589458187;
-        bh=9TkmUAdX2RQ+u5zgcMGocI9dwuWZ53GZK+S2e9ICxjY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NAQksCZ2qHv+5x3AQC+zmCumpoQNZV3vfkvc+6WxQaygncoy4cPeEar5Lo5WuQDyv
-         s/0rbz9abTxLkyqpTsXi1RD1vgyNp4LdbHTqYhWYBdHW+iJxX4uCquQJlgmwsBaAAP
-         SzDZ5wS1LdvjlZvf6o+6KTkW4YkqBnCAM7N3WDfE=
-Date:   Thu, 14 May 2020 14:09:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hillf Danton <hdanton@sina.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH] USB: usbfs: fix mmap dma mismatch
-Message-ID: <20200514120944.GA2005274@kroah.com>
-References: <20200514112711.1858252-1-gregkh@linuxfoundation.org>
- <20200514115829.GA15995@lst.de>
+        Thu, 14 May 2020 08:10:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726050AbgENMKF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 08:10:05 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2341FC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 05:10:05 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jZCgb-0003BD-K7; Thu, 14 May 2020 14:10:01 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jZCgZ-0004mB-9G; Thu, 14 May 2020 14:09:59 +0200
+Date:   Thu, 14 May 2020 14:09:59 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH net-next v1] net: phy: tja11xx: add cable-test support
+Message-ID: <20200514120959.b24cszsmkjvfzss6@pengutronix.de>
+References: <20200513123440.19580-1-o.rempel@pengutronix.de>
+ <20200513133925.GD499265@lunn.ch>
+ <20200513174011.kl6l767cimeo6dpy@pengutronix.de>
+ <20200513180140.GK499265@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gajm7flkp5ezd5xr"
 Content-Disposition: inline
-In-Reply-To: <20200514115829.GA15995@lst.de>
+In-Reply-To: <20200513180140.GK499265@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 13:50:05 up 181 days,  3:08, 197 users,  load average: 0.14, 0.08,
+ 0.08
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 01:58:29PM +0200, Christoph Hellwig wrote:
-> On Thu, May 14, 2020 at 01:27:11PM +0200, Greg Kroah-Hartman wrote:
-> > +	if (hcd->localmem_pool || !hcd_uses_dma(hcd)) {
-> > +		if (remap_pfn_range(vma, vma->vm_start,
-> > +				    virt_to_phys(usbm->mem) >> PAGE_SHIFT,
-> > +				    size, vma->vm_page_prot) < 0) {
-> > +			dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
-> > +			return -EAGAIN;
-> > +		}
-> > +	} else {
-> > +		if (dma_mmap_coherent(hcd->self.sysdev, vma, mem, dma_handle,
-> > +				      size)) {
-> > +			dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
-> > +			return -EAGAIN;
-> > +		}
-> 
-> What about a goto label to share the error handling path?
 
-I thought about that, but that's a bit messier than the duplicated lines
-here :)
+--gajm7flkp5ezd5xr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Otherwise looks good:
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+On Wed, May 13, 2020 at 08:01:40PM +0200, Andrew Lunn wrote:
+> > What would be the best place to do a test before the link is getting up?
+> > Can it be done in the phy core, or it should be done in the PHY driver?
+> >=20
+> > So far, no action except of logging these errors is needed.=20
+>=20
+> You could do it in the config_aneg callback.
 
-thanks for the review, and the help with this.
+In this case I get two test cycles if the test was requested from user
+space: from .cable_test_get_status and from .config_aneg
 
-greg k-h
+> A kernel log entry is not very easy to use. You might want to see how
+> easy it is to send a cable test result to userspace. Anything which is
+> interested in this information can then listen for it. All the needed
+> code is there, you will just need to rearrange it a bit.
+
+Indeed. I discovered" ethtool --monitor" for me. And the code is some
+thing like this:
+	ethnl_cable_test_alloc(phydev);
+	phydev->drv->cable_test_start(phydev);
+	usleep_range(100, 200);
+	phydev->drv->cable_test_get_status(phydev, &finished);
+	if (finished)
+		ethnl_cable_test_finished(phydev);
+
+
+Beside, what do you think about new result codes:
+  ETHTOOL_A_CABLE_RESULT_CODE_POLARITY - if cable polarity is wrong (-
+  connected to +)
+  ETHTOOL_A_CABLE_RESULT_CODE_ACTIVE_PARTNER - the link partner is active.
+     The TJA1102 is able to detect it if partner link is master.
+
+Regards,
+Oleksij
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--gajm7flkp5ezd5xr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl69NRMACgkQ4omh9DUa
+UbNEnhAAu3NAVDNkJoC3+NmPL1wXsVPuDQpQvL07ZQ7CWXY7he1iC7CMDN/CkEeg
+PebzI10BA7AbFVjBCAtPRFtIDC9brvS3OLy2VwLsv8Kca7XheAAE66fdihWxcRQg
+smHbrb9zBtjPsmSGv3PlHqlBxHJaenz9D1fyONvOOpIBB1NY+zjrcHr01FZLSEN0
+0rsDIifNM9Gs5ffNvlC5Egzkrib50XFx5boZXcM2ZVTydZ6hj1lh7sqSr0+IXakY
+5uFynAp+eCalvJ/qkkcrkqubuEibahNlmz0KQCU4xGZ7FWvjmozAa8B86RmG6xuB
+GP18d7kXT8pIoBDlfCxnqCJ5dC+rbM5sWyEH65amYPCl/55pJmK00Q0t0zFjh5CN
+4CPHC3S4Lk2FR05UMIF4Jw06trTpOr5UN1DmtV+Ef0p0tL+GqkwSKYtaelmRbFdX
+1Jcv9xpvQcarfMpMFDKXhaKl+lS3nDpUbfCuA9nzdNv/nxY5H51oQFcANV9HGCXG
+D7LqMRjRe4glCiS9YqVMSK+3P7N/Tiq6JlTcueMktzdPtLIwDuTN/Yigi810cum7
+p5+/TFrhJpE1frvjwRZuiUcKQpVwZyHRkMducjFG+wpJZiAvcE0mOfM/anPNjlEW
+R3EEbTaVlCguHvx5KKbXeFosDr5haLNEOCkPi+NBHC5ljh5s1SI=
+=hMfY
+-----END PGP SIGNATURE-----
+
+--gajm7flkp5ezd5xr--
