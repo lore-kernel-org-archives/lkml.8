@@ -2,155 +2,100 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4A7C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B410C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A38AB20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF06920643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:27:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BxGiiWoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgENTV3 (ORCPT
+        id S1728210AbgENT1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:21:29 -0400
-Received: from smtp-bc0f.mail.infomaniak.ch ([45.157.188.15]:52189 "EHLO
-        smtp-bc0f.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727835AbgENTV2 (ORCPT
+        Thu, 14 May 2020 15:27:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57570 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725975AbgENT1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:21:28 -0400
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49NLxc0FXZzlhNp2;
-        Thu, 14 May 2020 21:21:24 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49NLxZ3CmQzljTrx;
-        Thu, 14 May 2020 21:21:22 +0200 (CEST)
-Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
- through O_MAYEXEC
-To:     Kees Cook <keescook@chromium.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-References: <20200505153156.925111-1-mic@digikod.net>
- <20200505153156.925111-4-mic@digikod.net>
- <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
- <202005131525.D08BFB3@keescook>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <0e654c90-bec5-6ba1-771e-648da94ef547@digikod.net>
-Date:   Thu, 14 May 2020 21:21:21 +0200
-User-Agent: 
+        Thu, 14 May 2020 15:27:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589484467;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=y5h6nPrhEzpYCzdipFANUUrKCuB7CVP+YlT+ibTkEPU=;
+        b=BxGiiWoWe55Isd6mrnI+QloqX4KFZv67wN8+pGBiWVheoau7Ls96ivT2Omm9gYgsW2YkoI
+        lonMKXWNcxZL7RiIaHYCSonQ/mnYHHB2lRw5sPDfiuxOLJz+qVRqIsyDfQ6r1CMssR0R1N
+        oZnT8ik+A4cBTX7JMeL5va6r+9zlXa4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-171--HXsfovRPfaR3hf9MfvoDg-1; Thu, 14 May 2020 15:27:43 -0400
+X-MC-Unique: -HXsfovRPfaR3hf9MfvoDg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8948107ACCD;
+        Thu, 14 May 2020 19:27:41 +0000 (UTC)
+Received: from treble (ovpn-117-14.rdu2.redhat.com [10.10.117.14])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 15E6C5D9CA;
+        Thu, 14 May 2020 19:27:39 +0000 (UTC)
+Date:   Thu, 14 May 2020 14:27:38 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Miroslav Benes <mbenes@suse.cz>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>
+Subject: Re: [PATCH 4.19 37/48] x86/entry/64: Fix unwind hints in register
+ clearing code
+Message-ID: <20200514192738.nolajgjg56of4nat@treble>
+References: <20200513094351.100352960@linuxfoundation.org>
+ <20200513094401.325580400@linuxfoundation.org>
+ <20200513214856.GA27858@amd>
 MIME-Version: 1.0
-In-Reply-To: <202005131525.D08BFB3@keescook>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200513214856.GA27858@amd>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 14/05/2020 01:27, Kees Cook wrote:
-> On Wed, May 13, 2020 at 11:37:16AM -0400, Stephen Smalley wrote:
->> On Tue, May 5, 2020 at 11:33 AM Mickaël Salaün <mic@digikod.net> wrote:
->>>
->>> Enable to forbid access to files open with O_MAYEXEC.  Thanks to the
->>> noexec option from the underlying VFS mount, or to the file execute
->>> permission, userspace can enforce these execution policies.  This may
->>> allow script interpreters to check execution permission before reading
->>> commands from a file, or dynamic linkers to allow shared object loading.
->>>
->>> Add a new sysctl fs.open_mayexec_enforce to enable system administrators
->>> to enforce two complementary security policies according to the
->>> installed system: enforce the noexec mount option, and enforce
->>> executable file permission.  Indeed, because of compatibility with
->>> installed systems, only system administrators are able to check that
->>> this new enforcement is in line with the system mount points and file
->>> permissions.  A following patch adds documentation.
->>>
->>> For tailored Linux distributions, it is possible to enforce such
->>> restriction at build time thanks to the CONFIG_OMAYEXEC_STATIC option.
->>> The policy can then be configured with CONFIG_OMAYEXEC_ENFORCE_MOUNT and
->>> CONFIG_OMAYEXEC_ENFORCE_FILE.
->>>
->>> Being able to restrict execution also enables to protect the kernel by
->>> restricting arbitrary syscalls that an attacker could perform with a
->>> crafted binary or certain script languages.  It also improves multilevel
->>> isolation by reducing the ability of an attacker to use side channels
->>> with specific code.  These restrictions can natively be enforced for ELF
->>> binaries (with the noexec mount option) but require this kernel
->>> extension to properly handle scripts (e.g., Python, Perl).  To get a
->>> consistent execution policy, additional memory restrictions should also
->>> be enforced (e.g. thanks to SELinux).
->>>
->>> Signed-off-by: Mickaël Salaün <mic@digikod.net>
->>> Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
->>> Cc: Aleksa Sarai <cyphar@cyphar.com>
->>> Cc: Al Viro <viro@zeniv.linux.org.uk>
->>> Cc: Kees Cook <keescook@chromium.org>
->>> ---
->>
->>> diff --git a/fs/namei.c b/fs/namei.c
->>> index 33b6d372e74a..70f179f6bc6c 100644
->>> --- a/fs/namei.c
->>> +++ b/fs/namei.c
->>> @@ -411,10 +412,90 @@ static int sb_permission(struct super_block *sb, struct inode *inode, int mask)
->> <snip>
->>> +#if defined(CONFIG_SYSCTL) && !defined(CONFIG_OMAYEXEC_STATIC)
->>> +int proc_omayexec(struct ctl_table *table, int write, void __user *buffer,
->>> +               size_t *lenp, loff_t *ppos)
->>> +{
->>> +       int error;
->>> +
->>> +       if (write) {
->>> +               struct ctl_table table_copy;
->>> +               int tmp_mayexec_enforce;
->>> +
->>> +               if (!capable(CAP_MAC_ADMIN))
->>> +                       return -EPERM;
->>
->> Not fond of using CAP_MAC_ADMIN here (or elsewhere outside of security
->> modules).  The ability to set this sysctl is not equivalent to being
->> able to load a MAC policy, set arbitrary MAC labels on
->> processes/files, etc.
+On Wed, May 13, 2020 at 11:48:56PM +0200, Pavel Machek wrote:
+> On Wed 2020-05-13 11:45:03, Greg Kroah-Hartman wrote:
+> > From: Josh Poimboeuf <jpoimboe@redhat.com>
+> > 
+> > commit 06a9750edcffa808494d56da939085c35904e618 upstream.
+> > 
+> > The PUSH_AND_CLEAR_REGS macro zeroes each register immediately after
+> > pushing it.  If an NMI or exception hits after a register is cleared,
+> > but before the UNWIND_HINT_REGS annotation, the ORC unwinder will
+> > wrongly think the previous value of the register was zero.  This can
+> > confuse the unwinding process and cause it to exit early.
+> > 
+> > Because ORC is simpler than DWARF, there are a limited number of unwind
+> > annotation states, so it's not possible to add an individual unwind hint
+> > after each push/clear combination.  Instead, the register clearing
+> > instructions need to be consolidated and moved to after the
+> > UNWIND_HINT_REGS annotation.
 > 
-> That's fair. In that case, perhaps this could just use the existing
-> _sysadmin helper? (Though I should note that these perm checks actually
-> need to be in the open, not the read/write ... I thought there was a
-> series to fix that, but I can't find it now. Regardless, that's
-> orthogonal to this series.)
+> This actually makes kernel entry/exit slower, due to poor instruction
+> scheduling. And that is a bit of hot path... Is it strictly
+> neccessary? Not everyone needs ORC scheduler. Should it be somehow
+> optional?
 
-OK, I'll switch to CAP_SYS_ADMIN with proc_dointvec_minmax_sysadmin().
+I didn't measure a difference beyond the noise level, did you?
+
+-- 
+Josh
+
