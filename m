@@ -2,114 +2,123 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9784C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC144205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 729DA20671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589464302;
-	bh=U4WS7dpPUSnHoDDXd9I/RGkZKydgvH6uscT6wgd5yaA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NGuXY2OVBcbZ9JwE7inqSQN2omX3/Tce+Ro7JmNXeOkZRHEWOImIXPHYKfrqP1v7n
-	 vcMnBMx3SUiviJM2RY3phQ23t1vCppWvBDotU5PkIh/3u+9NxMMtvrUWiXJ7NEVnDj
-	 87OCOJFJtQWnp2T4iBPA4wfdS/N4VZc8gDKDPX6A=
+	s=default; t=1589464444;
+	bh=bNrG9XA/HjyOs+0yCswb5zYOyQkr7H9bUyY9HpZXdFs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=eQHecNpM+RYDV/IiINbiZR2piMZNeMU9sAvlDbM/An/NvIW9MN6nPgOsy+hSt7iVh
+	 2GMIK9ok5M3EnkDl9aZ8TJvu12mjIhWlY+CR3lYFcZBdLyxSTUd9SyNIyQFj9Q0rCo
+	 jm54KtYIUyCMFwyPMi1gM6Zu29FLVVbSSo/6G9zU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgENNvl (ORCPT
+        id S1726240AbgENNyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:51:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46294 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 09:54:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726011AbgENNvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:51:41 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726073AbgENNyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 09:54:03 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3D7B20756
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:51:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97198205CB;
+        Thu, 14 May 2020 13:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589464300;
-        bh=U4WS7dpPUSnHoDDXd9I/RGkZKydgvH6uscT6wgd5yaA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=10yB1NOW59ZFLk88tVol6JSCXSW16g5KS52gy+76Le+Tx7PliiJwrDveF5QUp3aAc
-         f61hKPaNOqkKM/2+UmfCiYuO4Jfs+HSy+dc4Gmiq0HieYQPdWNpKME8aLXz7MuovlT
-         /hy6GRU1SUPCaSfNSwajP+sQsgP/LEet6da+KIJY=
-Received: by mail-ot1-f46.google.com with SMTP id w22so2191944otp.5
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:51:40 -0700 (PDT)
-X-Gm-Message-State: AOAM532hsOYeLq5Rjs0YlfWhDtEGXgaQ4rmGGWirZqyUGe8n/A259ckL
-        fz+1nFLwXqnGu9PtpPuIztvvdOxjOITOkPuBHA==
-X-Google-Smtp-Source: ABdhPJzQUESjwS7Ih36p4leA1o497JSOSd1+5C+3ygMzeFo3qlL7lPTUyx4LBbQ+Ukd+XPHe6ro8V61dxXyaOPE9BZM=
-X-Received: by 2002:a9d:1441:: with SMTP id h59mr3620806oth.192.1589464299942;
- Thu, 14 May 2020 06:51:39 -0700 (PDT)
+        s=default; t=1589464442;
+        bh=bNrG9XA/HjyOs+0yCswb5zYOyQkr7H9bUyY9HpZXdFs=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=QWJYt4wEUS1rFbebQVlFjN3m/eKsEr/xBfs4ECKjTfE9k0eMwRGO9qWMyqUaRxlLG
+         mU2TXve7ph1ssgyQpd6zlo8pGFNEOe2np32uwSi+akKIG7pSOB1AwVI3Obmi+qiRK5
+         DtHJmMgY1HOkFUyDjEJaduNRfKNFlfnmFH+UeeO4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 1F57C35229C5; Thu, 14 May 2020 06:54:02 -0700 (PDT)
+Date:   Thu, 14 May 2020 06:54:02 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Amol Grover <frextrite@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: Default enable RCU list lockdep debugging with PROVE_RCU
+Message-ID: <20200514135402.GI2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200514222535.259cb69e@canb.auug.org.au>
+ <ADC503BE-32C0-46BB-A65E-59FFEC30ED57@lca.pw>
+ <20200514133328.GG2869@paulmck-ThinkPad-P72>
+ <ADE40EB3-1B1C-4CCF-9B8A-1F2BC585BCFB@lca.pw>
 MIME-Version: 1.0
-References: <20200513132114.6046-1-m.szyprowski@samsung.com>
- <CGME20200513133310eucas1p176c920345e7f05f670e26e330b358d7f@eucas1p1.samsung.com>
- <20200513133245.6408-1-m.szyprowski@samsung.com> <20200513133245.6408-19-m.szyprowski@samsung.com>
-In-Reply-To: <20200513133245.6408-19-m.szyprowski@samsung.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 14 May 2020 08:51:27 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLwEB_YMzDDQ=nt0_Tq-BGGFEW64BagPN-FbDeOnLpYCA@mail.gmail.com>
-Message-ID: <CAL_JsqLwEB_YMzDDQ=nt0_Tq-BGGFEW64BagPN-FbDeOnLpYCA@mail.gmail.com>
-Subject: Re: [PATCH v5 19/38] drm: panfrost: fix common struct sg_table
- related issues
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        linaro-mm-sig@lists.linaro.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ADE40EB3-1B1C-4CCF-9B8A-1F2BC585BCFB@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 8:33 AM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
->
-> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-> returns the number of the created entries in the DMA address space.
-> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-> dma_unmap_sg must be called with the original number of the entries
-> passed to the dma_map_sg().
->
-> struct sg_table is a common structure used for describing a non-contiguous
-> memory buffer, used commonly in the DRM and graphics subsystems. It
-> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-> and DMA mapped pages (nents entry).
->
-> It turned out that it was a common mistake to misuse nents and orig_nents
-> entries, calling DMA-mapping functions with a wrong number of entries or
-> ignoring the number of mapped entries returned by the dma_map_sg()
-> function.
->
-> To avoid such issues, lets use a common dma-mapping wrappers operating
-> directly on the struct sg_table objects and use scatterlist page
-> iterators where possible. This, almost always, hides references to the
-> nents and orig_nents entries, making the code robust, easier to follow
-> and copy/paste safe.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Reviewed-by: Steven Price <steven.price@arm.com>
-> ---
-> For more information, see '[PATCH v5 00/38] DRM: fix struct sg_table nents
-> vs. orig_nents misuse' thread:
-> https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
-> ---
->  drivers/gpu/drm/panfrost/panfrost_gem.c | 4 ++--
->  drivers/gpu/drm/panfrost/panfrost_mmu.c | 7 +++----
->  2 files changed, 5 insertions(+), 6 deletions(-)
+On Thu, May 14, 2020 at 09:44:28AM -0400, Qian Cai wrote:
+> 
+> 
+> > On May 14, 2020, at 9:33 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > 
+> > On Thu, May 14, 2020 at 08:31:13AM -0400, Qian Cai wrote:
+> >> 
+> >> 
+> >>> On May 14, 2020, at 8:25 AM, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >>> 
+> >>> Hi Paul,
+> >>> 
+> >>> This patch in the rcu tree
+> >>> 
+> >>> d13fee049fa8 ("Default enable RCU list lockdep debugging with PROVE_RCU")
+> >>> 
+> >>> is causing whack-a-mole in the syzbot testing of linux-next.  Because
+> >>> they always do a debug build of linux-next, no testing is getting done. :-(
+> >>> 
+> >>> Can we find another way to find all the bugs that are being discovered
+> >>> (very slowly)?
+> >> 
+> >> Alternatively, could syzbot to use PROVE_RCU=n temporarily because it can’t keep up with it? I personally found PROVE_RCU_LIST=y is still useful for my linux-next testing, and don’t want to lose that coverage overnight.
+> > 
+> > The problem is that PROVE_RCU is exactly PROVE_LOCKING, and asking people
+> > to test without PROVE_LOCKING is a no-go in my opinion.  But of course
+> > on the other hand if there is no testing of RCU list lockdep debugging,
+> > those issues will never be found, let alone fixed.
+> > 
+> > One approach would be to do as Stephen asks (either remove d13fee049fa8
+> > or pull it out of -next) and have testers force-enable the RCU list
+> > lockdep debugging.
+> > 
+> > Would that work for you?
+> 
+> Alternatively, how about having
+> 
+> PROVE_RCU_LIST=n if DEBUG_AID_FOR_SYZBOT
+> 
+> since it is only syzbot can’t keep up with it?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Sound good to me, assuming that this works for the syzkaller guys.
+Or could there be a "select PROVE_RCU_LIST" for the people who would
+like to test it.
+
+Alternatively, if we revert d13fee049fa8 from -next, I could provide
+you a script that updates your .config to set both RCU_EXPERT and
+PROVE_RCU_LIST.
+
+There are a lot of ways to appraoch this.
+
+So what would work best for everyone?
+
+							Thanx, Paul
