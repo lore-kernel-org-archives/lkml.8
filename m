@@ -2,132 +2,175 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C79C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021A1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EEDF20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:18:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYqSa8L/"
+	by mail.kernel.org (Postfix) with ESMTP id DD40E20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbgENJSW (ORCPT
+        id S1726141AbgENJSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 05:18:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725878AbgENJSV (ORCPT
+        Thu, 14 May 2020 05:18:30 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:36816 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725878AbgENJSa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 05:18:21 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89AADC061A0C;
-        Thu, 14 May 2020 02:18:20 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id j2so31609ilr.5;
-        Thu, 14 May 2020 02:18:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ydoBtyjQkZ71HME1rY9/L3edxtQ8UTZXOUoGaJuGgqs=;
-        b=ZYqSa8L/3MIGZtdjLm0uDEAUX9qw4WfHyEd/Xw3RGOzYb1CkiCmu64wr9INtmjvKAv
-         emNDZI8PC9mqxdaFO/x+7iDPFrRBkDTofku3oFwDsonyzK71UUmM/f2Ph34IYVB1ePui
-         TRYJEkf6+HZ5dpJwh+khw4qEqdRQ1Yz4UtEMkaULjMFHZPky5finqqVyz2JPi5d/Mocq
-         Ga+oJmmuDjPRydwsVFRhLCydvb7MAqHM/hyGTEJ+1CxinGcEilDhOARv4nY1Mia/4k5g
-         0CjcHoE1TsdomFZGSZaCa096y7nxhGm4PrO3r+27z96mUV9fH7IfZq7KcSOXdK64+inC
-         4q8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ydoBtyjQkZ71HME1rY9/L3edxtQ8UTZXOUoGaJuGgqs=;
-        b=XgmuF3P3HSIQdiZq5nvGM4PC5volrhSK+Q/k92hEYAGIVfZRHAnpWUgxmfRp6au2Oh
-         0dvouz+a3Y4fsC1JkBUpzl6BvgeLT0zTf6g4kZWOwcx7O876cxfa2IuxYkwoo6TlOE36
-         t3Y+DLdSfRm3khn8hWL33GiDSWAf1QRc3gD9UBNRt4bRESkQOHX9OMmU5qbHm1BUEwW7
-         qzQdeBSptNF2Qc0WTYa3X9o+MzY4q4iLDcDGQ87k6XLWqYo/Bo+p9/xWEegp6xXyMKof
-         Fumtlfqmp/NkRD280Fh7GmZEEOrThMXZcqrdM9tqv1Q9SIL/UI20FGJm2/m+QAXvdzkQ
-         K01w==
-X-Gm-Message-State: AOAM533o0QBL2hhJZzYJ6TnpB9MJdY90kVxfQ7jEDSuewK2GTFNS5XmE
-        j6d27Znb8zQac4sNanHXbKObRJPzt8eIuwnJ3Xw=
-X-Google-Smtp-Source: ABdhPJx7BSQgQE4F6HtJZDnTuhUIhxQY0EfiByegZhfXtsPPqB/OWed28lLtaW/x8ef7ztWZ46mbWs3Tdl5vZCAZRP0=
-X-Received: by 2002:a92:3556:: with SMTP id c83mr3346133ila.218.1589447900002;
- Thu, 14 May 2020 02:18:20 -0700 (PDT)
+        Thu, 14 May 2020 05:18:30 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04E9FWkg031581;
+        Thu, 14 May 2020 05:18:13 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3100x5xq2p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 05:18:13 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 04E9IBca057628
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 14 May 2020 05:18:12 -0400
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 14 May 2020 02:18:10 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 14 May 2020 02:18:10 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04E9I7CS011829;
+        Thu, 14 May 2020 05:18:07 -0400
+From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+CC:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: [PATCH] iio: dac: ad5421: Replace indio_dev->mlock with own device lock
+Date:   Thu, 14 May 2020 12:17:53 +0300
+Message-ID: <20200514091756.81425-1-sergiu.cuciurean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
- <1589267017-17294-4-git-send-email-dillon.minfei@gmail.com> <CACRpkda5VjjBdbruXTi33QBNb=VU6vK2zDE8yyQXoWw7=NQFeg@mail.gmail.com>
-In-Reply-To: <CACRpkda5VjjBdbruXTi33QBNb=VU6vK2zDE8yyQXoWw7=NQFeg@mail.gmail.com>
-From:   dillon min <dillon.minfei@gmail.com>
-Date:   Thu, 14 May 2020 17:17:42 +0800
-Message-ID: <CAL9mu0JZdgJ0yjULUHkXzU0CyKeMi0dcA1L7PxPiZucpuuyQ9Q@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] ARM: dts: stm32: enable ltdc binding with ili9341
- on stm32429-disco board
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-14_01:2020-05-13,2020-05-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ malwarescore=0 suspectscore=0 cotscore=-2147483648 mlxscore=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=873 phishscore=0 priorityscore=1501
+ clxscore=1015 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005140083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Linus,
+As part of the general cleanup of indio_dev->mlock, this change replaces
+it with a local lock on the device's state structure.
 
-thanks for reviewing.
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+---
+ drivers/iio/dac/ad5421.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-On Thu, May 14, 2020 at 4:24 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Tue, May 12, 2020 at 9:04 AM <dillon.minfei@gmail.com> wrote:
->
-> > From: dillon min <dillon.minfei@gmail.com>
-> >
-> > Enable the ltdc & ili9341 on stm32429-disco board.
-> >
-> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
->
-> This mostly looks good but...
->
-> > +&spi5 {
-> > +       status = "okay";
-> > +       pinctrl-0 = <&spi5_pins>;
-> > +       pinctrl-names = "default";
-> > +       #address-cells = <1>;
-> > +       #size-cells = <0>;
-> > +       cs-gpios = <&gpioc 2 GPIO_ACTIVE_LOW>;
-> > +       dmas = <&dma2 3 2 0x400 0x0>,
-> > +              <&dma2 4 2 0x400 0x0>;
-> > +       dma-names = "rx", "tx";
->
-> These DMA assignments seem to be SoC things and should
-> rather be in the DTS(I) file where &spi5 is defined, right?
-> stm32f429.dtsi I suppose?
->
-> It is likely the same no matter which device is using spi5.
->
-> Yours,
-> Linus Walleij
+diff --git a/drivers/iio/dac/ad5421.c b/drivers/iio/dac/ad5421.c
+index 63063e85cd0a..fec27764cea8 100644
+--- a/drivers/iio/dac/ad5421.c
++++ b/drivers/iio/dac/ad5421.c
+@@ -62,12 +62,14 @@
+  * @current_range:	current range which the device is configured for
+  * @data:		spi transfer buffers
+  * @fault_mask:		software masking of events
++ * @lock	lock to protect the data buffer during SPI ops
+  */
+ struct ad5421_state {
+ 	struct spi_device		*spi;
+ 	unsigned int			ctrl;
+ 	enum ad5421_current_range	current_range;
+ 	unsigned int			fault_mask;
++	struct mutex			lock;
+ 
+ 	/*
+ 	 * DMA (thus cache coherency maintenance) requires the
+@@ -142,11 +144,12 @@ static int ad5421_write_unlocked(struct iio_dev *indio_dev,
+ static int ad5421_write(struct iio_dev *indio_dev, unsigned int reg,
+ 	unsigned int val)
+ {
++	struct ad5421_state *st = iio_priv(indio_dev);
+ 	int ret;
+ 
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&st->lock);
+ 	ret = ad5421_write_unlocked(indio_dev, reg, val);
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 
+ 	return ret;
+ }
+@@ -166,7 +169,7 @@ static int ad5421_read(struct iio_dev *indio_dev, unsigned int reg)
+ 		},
+ 	};
+ 
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&st->lock);
+ 
+ 	st->data[0].d32 = cpu_to_be32((1 << 23) | (reg << 16));
+ 
+@@ -174,7 +177,7 @@ static int ad5421_read(struct iio_dev *indio_dev, unsigned int reg)
+ 	if (ret >= 0)
+ 		ret = be32_to_cpu(st->data[1].d32) & 0xffff;
+ 
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 
+ 	return ret;
+ }
+@@ -185,14 +188,14 @@ static int ad5421_update_ctrl(struct iio_dev *indio_dev, unsigned int set,
+ 	struct ad5421_state *st = iio_priv(indio_dev);
+ 	unsigned int ret;
+ 
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&st->lock);
+ 
+ 	st->ctrl &= ~clr;
+ 	st->ctrl |= set;
+ 
+ 	ret = ad5421_write_unlocked(indio_dev, AD5421_REG_CTRL, st->ctrl);
+ 
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 
+ 	return ret;
+ }
+@@ -400,12 +403,12 @@ static int ad5421_write_event_config(struct iio_dev *indio_dev,
+ 		return -EINVAL;
+ 	}
+ 
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&st->lock);
+ 	if (state)
+ 		st->fault_mask |= mask;
+ 	else
+ 		st->fault_mask &= ~mask;
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 
+ 	return 0;
+ }
+@@ -491,6 +494,8 @@ static int ad5421_probe(struct spi_device *spi)
+ 	indio_dev->channels = ad5421_channels;
+ 	indio_dev->num_channels = ARRAY_SIZE(ad5421_channels);
+ 
++	mutex_init(&st->lock);
++
+ 	st->ctrl = AD5421_CTRL_WATCHDOG_DISABLE |
+ 			AD5421_CTRL_AUTO_FAULT_READBACK;
+ 
+-- 
+2.17.1
 
-Yes, the dma assignments can be moved to stm32f429.dtsi file.
-i will change it.
-
-thanks.
-
-best regards.
-
-dillon,
