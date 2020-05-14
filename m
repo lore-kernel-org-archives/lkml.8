@@ -2,62 +2,63 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C122C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FD3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A439207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E3C20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:39:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="oMQv2N5U"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="XxKndpMw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbgENIjH (ORCPT
+        id S1726316AbgENIjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:39:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37126 "EHLO
+        Thu, 14 May 2020 04:39:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725878AbgENIjG (ORCPT
+        by vger.kernel.org with ESMTP id S1725878AbgENIjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:39:06 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49688C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:39:06 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id d207so10817965wmd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:39:06 -0700 (PDT)
+        Thu, 14 May 2020 04:39:10 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56004C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:39:08 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id s8so2738058wrt.9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:39:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tnuTV/zXdDzicY2b17ET4DFOi9wOJQg8YIzv1AfW3WE=;
-        b=oMQv2N5Uoee4PNvjxqELJOdtY+6u6I9dJbzTAYSosIwOc1NbOr3Go3jCOQYIOyNs9a
-         iWubTq/HyBgZ7wxkH3Fv9mCtq1R7BylmqgFJN3A8aQcEQgTbO+jddHUOv8ev/9/mN0Tg
-         Y/y3NFdhrrD0BvVUBvR2XnVP/758zyG8c/u5HpuRAHGtf8wWaqc4sKMOLtw7b7gOYQbk
-         9HB31ok5iClkiZ618qlcnXN1xXRIAwsjdqz6jxnsV5cEkLGSLAOy8K/UWW1ZaTWXLjjl
-         mHmCu2pS3SRcVvGFucmB8C831De63G4rsEA+dZU0h/ne17J+s6WR4mCQAp0Uj9CLDePt
-         iqWg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gnBehs8n8X8G6+U4IGEmmNfIUqdPo2J9oO97C9jFfas=;
+        b=XxKndpMwCiexb5RR5u9emCO2sqm5Su+FxxmWcuaPNPltZ45A7G2YqUjxL5tOY3scHr
+         z8QORk2QOPUMojy3fXVjcBw9rGR5s3+zfgYR79vRBk0rAEdMf7kyEsK8f9Z1uZoV/CXT
+         uAlKehXR7We08RxjMgFhHWLAeavUDo1vepWK90NtiGKV+ZayZQeD324F/3JKB6JqZw9e
+         dBm/3nilOlqhNqxM/kI+PlLzkYpz6DhO1OTdh4VvdkYfv0chGtj7u8k1j7RtKzPzPKlJ
+         jI2Tu9fqQeGxyfBzUzeSHEBF9ARskuxaCfZjzKUj85QhVOxwFME2cv4AJP0HqJvHPhBQ
+         Y9+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tnuTV/zXdDzicY2b17ET4DFOi9wOJQg8YIzv1AfW3WE=;
-        b=CC2lHhhlxdFa+lhyXCUC05VDgvwqV6j4TOS080NAUzQnbLIHFvmOeJmQjqKO0y+gEY
-         jamTFqOO6STduvGa6UJ4ocGgdYoMvXD2rxRWtU49VWmE2tXYYMyoeXuzQKQmyw2bUe2P
-         hCskqt1Qa4ZVcWz76aWzETLgMSDcW+iK8+vgp9FWAOps/Erk2QvNdCD8lzXiNqTcQONK
-         JYe1rwgI0S0/R9xUo/pODBpYZIry7Crse4i9Jbti0HYLrvNahTDNLhXbQWFCpxJh41NO
-         yTWKxPMQSu7u1o2WpmZu7XOx/qwHURf4Z3aAFh7ltPMaMUCoCje0aEi3e/1bquhixirJ
-         0j3g==
-X-Gm-Message-State: AGi0PuaGZGTl6+iDaN2f+I85qEBQk0nEfMcv34i54d4eN/BqqAbSxFTN
-        2IQUF8FODBQTjp7Rs2fkq2k9RQ==
-X-Google-Smtp-Source: APiQypJdRVNG7dbrl/q2cvp5LB+HckmtujXzbpUZ+iYZXFAJE2euKPihQf6Ut4igAb6LJPAXXs3O8g==
-X-Received: by 2002:a1c:7f86:: with SMTP id a128mr47570067wmd.95.1589445544981;
-        Thu, 14 May 2020 01:39:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gnBehs8n8X8G6+U4IGEmmNfIUqdPo2J9oO97C9jFfas=;
+        b=lhh0Hy7U6dFgkJHF6e2Y0YkGlEdTMBC8ZcXYL2p6RnFH8tlh6FcNCxwipP7TKCkEoC
+         G2xi5eYHqSRcnD92XQzABdQioXwcj6GrMnxRmGNzO8Q/4G2Rtaew7/vCx7jzD/A39Lf2
+         9nafnjT7S24EFXH0dYegxdikI55j/hPn1B6KE23A3aN8fnE0kZw1+2cBLdcHF8rv5phK
+         Bv0rUoyMPZHWS32uih6fNQWpfQLq2WuReP3pSKjHc9/An7LIBlYzNxJrbuMwJC+LeQpC
+         F4omiUMwdRbarVDNQk5KuTNb0kkLZck5cAoz5gyAxmPKV8aeFc7Whj63I29ujMJ+wkKt
+         DJiw==
+X-Gm-Message-State: AOAM5339RU8yhfqGj88v6Ao9S/JaFTBZKRZq/uXys2voF3rZZ4M/duhB
+        JHD2a4Ze5yQkBcNryFgh//I2tXSK4Qk=
+X-Google-Smtp-Source: ABdhPJzuicQc9lXXLGz7we6zHzn9LdHpBsCJDJMMCDJ+vgVRkix00VVg08XP1GrDYeVxDuuk2yiOLw==
+X-Received: by 2002:adf:fac5:: with SMTP id a5mr4387775wrs.210.1589445547012;
+        Thu, 14 May 2020 01:39:07 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id z7sm2975922wrl.88.2020.05.14.01.39.03
+        by smtp.gmail.com with ESMTPSA id z7sm2975922wrl.88.2020.05.14.01.39.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 01:39:04 -0700 (PDT)
+        Thu, 14 May 2020 01:39:06 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Jonathan Cameron <jic23@kernel.org>,
@@ -70,10 +71,12 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v5 0/2] irq/irq_sim: improve the API
-Date:   Thu, 14 May 2020 10:38:59 +0200
-Message-Id: <20200514083901.23445-1-brgl@bgdev.pl>
+Subject: [PATCH v5 1/2] irq: make irq_domain_reset_irq_data() available even for non-V2 users
+Date:   Thu, 14 May 2020 10:39:00 +0200
+Message-Id: <20200514083901.23445-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200514083901.23445-1-brgl@bgdev.pl>
+References: <20200514083901.23445-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,58 +86,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The interrupt simulator API exposes a lot of custom data structures and
-functions and doesn't reuse the interfaces already exposed by the irq
-subsystem. This series tries to address it.
+irq_domain_reset_irq_data() doesn't modify the parent data, so it can be
+made available even if irq domain hierarchy is not being built. We'll
+subsequently use it in irq_sim code.
 
-First, we make irq_domain_reset_irq_data() available to non-V2 domain API
-users - that'll be used in the subsequent patch. Next we overhaul the
-public interfaces - we hide all specific data structures and instead
-rely on the irq_domain struct and virtual interrupt numberspace.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ include/linux/irqdomain.h |  2 +-
+ kernel/irq/irqdomain.c    | 24 ++++++++++++------------
+ 2 files changed, 13 insertions(+), 13 deletions(-)
 
-The end effect is that we limit the interrupt simulator API to two
-functions (plus one device managed variant) and zero new structures.
-
-v1: https://lkml.org/lkml/2019/8/12/558
-
-v1 -> v2:
-- instead of just making the new data structures opaque for users, remove
-  them entirely in favor of irq_domain
-- call irq_set_handler() & irq_domain_reset_irq_data() when unmapping
-  the simulated interrupt
-- fix a memory leak in error path
-- make it possible to use irq_find_matching_fwnode() with the simulator
-  domain
-- correctly use irq_create_mapping() and irq_find_mapping(): only use the
-  former at init-time and the latter at interrupt-time
-
-v2 -> v3:
-- drop the controverial changes to irq_domain code and only leave the
-  changes to irq_sim and its users with the plan to revisit the former
-  at a later time
-
-v3 -> v4:
-- add the Ack from Jonathan
-- remove redundant parts of patch 1/2
-
-v4 -> v5:
-- add the review tags from Linus
-- use the irq_set_irqchip_state interface and drop irq_sim_fire() entirely
-  as suggested by Marc
-
-Bartosz Golaszewski (2):
-  irq: make irq_domain_reset_irq_data() available even for non-V2 users
-  irq/irq_sim: simplify the API
-
- drivers/gpio/gpio-mockup.c          |  53 ++++--
- drivers/iio/dummy/iio_dummy_evgen.c |  34 ++--
- include/linux/irq_sim.h             |  33 +---
- include/linux/irqdomain.h           |   2 +-
- kernel/irq/Kconfig                  |   1 +
- kernel/irq/irq_sim.c                | 267 +++++++++++++++++-----------
- kernel/irq/irqdomain.c              |  24 +--
- 7 files changed, 250 insertions(+), 164 deletions(-)
-
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 8d062e86d954..b37350c4fe37 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -450,6 +450,7 @@ extern void irq_domain_set_info(struct irq_domain *domain, unsigned int virq,
+ 				irq_hw_number_t hwirq, struct irq_chip *chip,
+ 				void *chip_data, irq_flow_handler_t handler,
+ 				void *handler_data, const char *handler_name);
++extern void irq_domain_reset_irq_data(struct irq_data *irq_data);
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+ extern struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
+ 			unsigned int flags, unsigned int size,
+@@ -491,7 +492,6 @@ extern int irq_domain_set_hwirq_and_chip(struct irq_domain *domain,
+ 					 irq_hw_number_t hwirq,
+ 					 struct irq_chip *chip,
+ 					 void *chip_data);
+-extern void irq_domain_reset_irq_data(struct irq_data *irq_data);
+ extern void irq_domain_free_irqs_common(struct irq_domain *domain,
+ 					unsigned int virq,
+ 					unsigned int nr_irqs);
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 35b8d97c3a1d..e2aa128ea3ee 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1047,6 +1047,18 @@ int irq_domain_alloc_descs(int virq, unsigned int cnt, irq_hw_number_t hwirq,
+ 	return virq;
+ }
+ 
++/**
++ * irq_domain_reset_irq_data - Clear hwirq, chip and chip_data in @irq_data
++ * @irq_data:	The pointer to irq_data
++ */
++void irq_domain_reset_irq_data(struct irq_data *irq_data)
++{
++	irq_data->hwirq = 0;
++	irq_data->chip = &no_irq_chip;
++	irq_data->chip_data = NULL;
++}
++EXPORT_SYMBOL_GPL(irq_domain_reset_irq_data);
++
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+ /**
+  * irq_domain_create_hierarchy - Add a irqdomain into the hierarchy
+@@ -1247,18 +1259,6 @@ void irq_domain_set_info(struct irq_domain *domain, unsigned int virq,
+ }
+ EXPORT_SYMBOL(irq_domain_set_info);
+ 
+-/**
+- * irq_domain_reset_irq_data - Clear hwirq, chip and chip_data in @irq_data
+- * @irq_data:	The pointer to irq_data
+- */
+-void irq_domain_reset_irq_data(struct irq_data *irq_data)
+-{
+-	irq_data->hwirq = 0;
+-	irq_data->chip = &no_irq_chip;
+-	irq_data->chip_data = NULL;
+-}
+-EXPORT_SYMBOL_GPL(irq_domain_reset_irq_data);
+-
+ /**
+  * irq_domain_free_irqs_common - Clear irq_data and free the parent
+  * @domain:	Interrupt domain to match
 -- 
 2.25.0
 
