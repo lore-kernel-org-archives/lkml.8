@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D70D9C433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51B6C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B24CE20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACD020675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483456;
-	bh=/eryEzJwcM6AO6qAExUDhUQLSZNz2j9Mo1ilCofKZ7M=;
+	s=default; t=1589483461;
+	bh=X5J/cOekaw0vJkG0Lx9XCnZIakgENEiU8hA54KZohQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I2a4CmVp4tiCF8Fkmfuu89oiw4r1aaFf5cyXAXY9vHNFcqo4enp5m/AYDwmzHaNGm
-	 5scUOLdLFui5rKUZ2up6anVf/MtSqxrG5ka8xS+ttAfTjDPOU8jCi50bEUM9KsM7bt
-	 HCh3gOVx1pSG4Io+FD2wds+Rs5kT2mEoHXA2kfD4=
+	b=REWPaFKRmKaET5rw+Yit+Me24YOkG3h0vNUmuE2sgkWfu3GYheCzXvJlB4ctvIzcf
+	 tD6axcroPVBd7LYrFSf3dgW8t4zfspnm39ESEd44BikvNHDMVhyihQVR395dr3vFD/
+	 SDXUWEIaKqnpaTia24B7jLfriq9azKv3gVtluurM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbgENTK4 (ORCPT
+        id S1730317AbgENTLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:10:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50574 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728271AbgENSwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:25 -0400
+        id S1728295AbgENSwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:52:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E807F207C3;
-        Thu, 14 May 2020 18:52:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98307206F1;
+        Thu, 14 May 2020 18:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482344;
-        bh=/eryEzJwcM6AO6qAExUDhUQLSZNz2j9Mo1ilCofKZ7M=;
+        s=default; t=1589482342;
+        bh=X5J/cOekaw0vJkG0Lx9XCnZIakgENEiU8hA54KZohQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MTAK48SFcyVjThfV7RwGZJSnPxjIi/PeWpAIn3bm4R0Y5YTNPCuHbYfVyuu8b7qHv
-         zo4CAh0Q1ltODkPRjy15VHEN6fsFodmMLQCnNV66vhB0Rim/Odom9GteEisQk8h1SY
-         Z2ZUj1ApuxapdmiCHTdw7OPraUMLWFv7m/xMSgdw=
+        b=fc3Q+alJS2RJFMpaZhVVYf+lFvVg3NepCj5wrKwQ8URs7EK6NVRdJ6Uhe6B8b6HnM
+         0NLHMW0j7VyyaIA8ibxB2Xj3hSUPKhzSUiJE2goVhXVRHfOSXFNdimV9Fu4HTa6sCX
+         9d4oizqAGMGpNgCgzjaQsLXeRbYpM1xo9P5/GsrQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Leon Romanovsky <leon@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 28/62] x86/apic: Move TSC deadline timer debug printk
-Date:   Thu, 14 May 2020 14:51:13 -0400
-Message-Id: <20200514185147.19716-28-sashal@kernel.org>
+Cc:     Alan Maguire <alan.maguire@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 26/62] ftrace/selftest: make unresolved cases cause failure if --fail-unresolved set
+Date:   Thu, 14 May 2020 14:51:11 -0400
+Message-Id: <20200514185147.19716-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -59,130 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Alan Maguire <alan.maguire@oracle.com>
 
-[ Upstream commit c84cb3735fd53c91101ccdb191f2e3331a9262cb ]
+[ Upstream commit b730d668138cb3dd9ce78f8003986d1adae5523a ]
 
-Leon reported that the printk_once() in __setup_APIC_LVTT() triggers a
-lockdep splat due to a lock order violation between hrtimer_base::lock and
-console_sem, when the 'once' condition is reset via
-/sys/kernel/debug/clear_warn_once after boot.
+Currently, ftracetest will return 1 (failure) if any unresolved cases
+are encountered.  The unresolved status results from modules and
+programs not being available, and as such does not indicate any
+issues with ftrace itself.  As such, change the behaviour of
+ftracetest in line with unsupported cases; if unsupported cases
+happen, ftracetest still returns 0 unless --fail-unsupported.  Here
+--fail-unresolved is added and the default is to return 0 if
+unresolved results occur.
 
-The initial printk cannot trigger this because that happens during boot
-when the local APIC timer is set up on the boot CPU.
-
-Prevent it by moving the printk to a place which is guaranteed to be only
-called once during boot.
-
-Mark the deadline timer check related functions and data __init while at
-it.
-
-Reported-by: Leon Romanovsky <leon@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87y2qhoshi.fsf@nanos.tec.linutronix.de
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ tools/testing/selftests/ftrace/ftracetest | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 5f973fed3c9ff..e289722b04f63 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -352,8 +352,6 @@ static void __setup_APIC_LVTT(unsigned int clocks, int oneshot, int irqen)
- 		 * According to Intel, MFENCE can do the serialization here.
- 		 */
- 		asm volatile("mfence" : : : "memory");
--
--		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
- 		return;
- 	}
- 
-@@ -552,7 +550,7 @@ static DEFINE_PER_CPU(struct clock_event_device, lapic_events);
- #define DEADLINE_MODEL_MATCH_REV(model, rev)	\
- 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)rev }
- 
--static u32 hsx_deadline_rev(void)
-+static __init u32 hsx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x3a; /* EP */
-@@ -562,7 +560,7 @@ static u32 hsx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static u32 bdx_deadline_rev(void)
-+static __init u32 bdx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x00000011;
-@@ -574,7 +572,7 @@ static u32 bdx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static u32 skx_deadline_rev(void)
-+static __init u32 skx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x03: return 0x01000136;
-@@ -587,7 +585,7 @@ static u32 skx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static const struct x86_cpu_id deadline_match[] = {
-+static const struct x86_cpu_id deadline_match[] __initconst = {
- 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_HASWELL_X,	hsx_deadline_rev),
- 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_X,	0x0b000020),
- 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_BROADWELL_D,	bdx_deadline_rev),
-@@ -609,18 +607,19 @@ static const struct x86_cpu_id deadline_match[] = {
- 	{},
- };
- 
--static void apic_check_deadline_errata(void)
-+static __init bool apic_validate_deadline_timer(void)
- {
- 	const struct x86_cpu_id *m;
- 	u32 rev;
- 
--	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER) ||
--	    boot_cpu_has(X86_FEATURE_HYPERVISOR))
--		return;
-+	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
-+		return false;
-+	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-+		return true;
- 
- 	m = x86_match_cpu(deadline_match);
- 	if (!m)
--		return;
-+		return true;
- 
- 	/*
- 	 * Function pointers will have the MSB set due to address layout,
-@@ -632,11 +631,12 @@ static void apic_check_deadline_errata(void)
- 		rev = (u32)m->driver_data;
- 
- 	if (boot_cpu_data.microcode >= rev)
--		return;
-+		return true;
- 
- 	setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
- 	pr_err(FW_BUG "TSC_DEADLINE disabled due to Errata; "
- 	       "please update microcode to version: 0x%x (or later)\n", rev);
-+	return false;
- }
- 
- /*
-@@ -2098,7 +2098,8 @@ void __init init_apic_mappings(void)
- {
- 	unsigned int new_apicid;
- 
--	apic_check_deadline_errata();
-+	if (apic_validate_deadline_timer())
-+		pr_debug("TSC deadline timer available\n");
- 
- 	if (x2apic_mode) {
- 		boot_cpu_physical_apicid = read_apic_id();
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+index 144308a757b70..19e9236dec5e2 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -17,6 +17,7 @@ echo "		-v|--verbose Increase verbosity of test messages"
+ echo "		-vv        Alias of -v -v (Show all results in stdout)"
+ echo "		-vvv       Alias of -v -v -v (Show all commands immediately)"
+ echo "		--fail-unsupported Treat UNSUPPORTED as a failure"
++echo "		--fail-unresolved Treat UNRESOLVED as a failure"
+ echo "		-d|--debug Debug mode (trace all shell commands)"
+ echo "		-l|--logdir <dir> Save logs on the <dir>"
+ echo "		            If <dir> is -, all logs output in console only"
+@@ -112,6 +113,10 @@ parse_opts() { # opts
+       UNSUPPORTED_RESULT=1
+       shift 1
+     ;;
++    --fail-unresolved)
++      UNRESOLVED_RESULT=1
++      shift 1
++    ;;
+     --logdir|-l)
+       LOG_DIR=$2
+       shift 2
+@@ -176,6 +181,7 @@ KEEP_LOG=0
+ DEBUG=0
+ VERBOSE=0
+ UNSUPPORTED_RESULT=0
++UNRESOLVED_RESULT=0
+ STOP_FAILURE=0
+ # Parse command-line options
+ parse_opts $*
+@@ -280,7 +286,7 @@ eval_result() { # sigval
+     $UNRESOLVED)
+       prlog "	[${color_blue}UNRESOLVED${color_reset}]"
+       UNRESOLVED_CASES="$UNRESOLVED_CASES $CASENO"
+-      return 1 # this is a kind of bug.. something happened.
++      return $UNRESOLVED_RESULT # depends on use case
+     ;;
+     $UNTESTED)
+       prlog "	[${color_blue}UNTESTED${color_reset}]"
 -- 
 2.20.1
 
