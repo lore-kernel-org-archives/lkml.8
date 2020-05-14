@@ -2,131 +2,120 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F7FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF4CC206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D4A2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgENLhU (ORCPT
+        id S1726471AbgENLh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:37:20 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:39720 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbgENLhT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:37:19 -0400
-Received: by mail-il1-f200.google.com with SMTP id q2so2899486ild.6
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:37:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=4Mof+U9cD9u9+KN0Yeu8IB5SFQ1hpQEdck5Z1RIH1b8=;
-        b=bkTCW6LCGWqT0pM/l7Cnj3l/mybjDtfE7olKessuYszKlUGwy1Hy2ZToEAXw2s/4Si
-         dHk5hHdee7OMaoIR7IH7/dZY82uEnK+Ow2WJLVf2+E0v/WDVDDixPnBeSJmcgZ7wrnta
-         fMet3UKN7GdkIyvT538giziD676kpDQG0ejaXd37i8Ab2J5Pdqz7ug79idG2xy93QzvW
-         h2/pSF6Fb7nLu+s/m8FaqR+UMi4IAe94UmPKjBVlPL4/aGsG0zvGKdOwpqqQe8nXu7CB
-         uz2B6PS5V40LIEyhnNV5HI32zBIhYIHzbf70t5NcRgkC5hqMqGtB8ovUSLxHnjQd9xXN
-         R49g==
-X-Gm-Message-State: AGi0PuZoZKVnuEIZRFgSRdVM8QqxKV9NiiV0DJuH/lXPoVimitmyZwON
-        7DGmV+nhExhLIAk5KlKF9Wa4toUGOa9w3Q6tI8tO8QkG0v48
-X-Google-Smtp-Source: APiQypLuqE7mcXIlYj421PfwWvs20jce8sEeawo0C4lsAdsiUQeSoUMxGO9mNZ6AJQivuPzseLDRxcH6iG3Vm1TYrDrybJ/muj2D
+        Thu, 14 May 2020 07:37:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:34772 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbgENLh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 07:37:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7633530E;
+        Thu, 14 May 2020 04:37:26 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [10.119.48.101])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AD693F305;
+        Thu, 14 May 2020 04:37:26 -0700 (PDT)
+Subject: Re: [PATCH] USB: usbfs: fix mmap dma mismatch
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Hillf Danton <hdanton@sina.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com,
+        stable <stable@vger.kernel.org>
+References: <20200514112711.1858252-1-gregkh@linuxfoundation.org>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <9cc0a324-c3d8-44f4-4e65-b6938ab8cb06@arm.com>
+Date:   Thu, 14 May 2020 06:37:25 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:b88e:: with SMTP id p14mr3883256jam.36.1589456238302;
- Thu, 14 May 2020 04:37:18 -0700 (PDT)
-Date:   Thu, 14 May 2020 04:37:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000785a6905a59a1e4a@google.com>
-Subject: linux-next boot error: WARNING: suspicious RCU usage in bpq_device_event
-From:   syzbot <syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, ap420073@gmail.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, netdev@vger.kernel.org,
-        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200514112711.1858252-1-gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-syzbot found the following crash on:
+So looking at hcd_buffer_alloc() again, there are 4 cases, 
+localmem_pool, hcd_uses_dma, dma_pool_alloc and dma_alloc_coherent 
+directly. The dma_pool_alloc appears to just be using 
+dma_alloc_coherent, so its really three cases.
 
-HEAD commit:    c9529331 Add linux-next specific files for 20200514
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17119f48100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=404a80e135048067
-dashboard link: https://syzkaller.appspot.com/bug?extid=bb82cafc737c002d11ca
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Those three cases appear to be handled below:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com
+So:
 
-=============================
-WARNING: suspicious RCU usage
-5.7.0-rc5-next-20200514-syzkaller #0 Not tainted
------------------------------
-drivers/net/hamradio/bpqether.c:149 RCU-list traversed in non-reader section!!
+Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
 
-other info that might help us debug this:
+I'm testing it now...
 
 
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by ip/3967:
- #0: ffffffff8a7bad88 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
- #0: ffffffff8a7bad88 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x3f9/0xad0 net/core/rtnetlink.c:5458
-
-stack backtrace:
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- bpq_get_ax25_dev drivers/net/hamradio/bpqether.c:149 [inline]
- bpq_device_event+0x796/0x8ee drivers/net/hamradio/bpqether.c:538
- notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
- call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
- call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
- call_netdevice_notifiers net/core/dev.c:2042 [inline]
- __dev_notify_flags+0x121/0x2c0 net/core/dev.c:8279
- dev_change_flags+0x100/0x160 net/core/dev.c:8317
- do_setlink+0xa1c/0x35d0 net/core/rtnetlink.c:2605
- __rtnl_newlink+0xad0/0x1590 net/core/rtnetlink.c:3273
- rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3398
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
- ___sys_sendmsg+0x100/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x7f76dcdfcdc7
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb cd 66 0f 1f 44 00 00 8b 05 4a 49 2b 00 85 c0 75 2e 48 63 ff 48 63 d2 b8 2e 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 a1 f0 2a 00 f7 d8 64 89 02 48
-RSP: 002b:00007ffd45eccf28 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 000000005ebd27cd RCX: 00007f76dcdfcdc7
-RDX: 0000000000000000 RSI: 00007ffd45eccf70 RDI: 0000000000000003
-RBP: 00007ffd45eccf70 R08: 0000000000001000 R09: fefefeff77686d74
-R10: 00000000000005e9 R11: 0000000000000246 R12: 00007ffd45eccfb0
-R13: 0000561a2ddea3c0 R14: 00007ffd45ed5030 R15: 0000000000000000
-ip (3967) used greatest stack depth: 23144 bytes left
+Thanks,
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On 5/14/20 6:27 AM, Greg Kroah-Hartman wrote:
+> In commit 2bef9aed6f0e ("usb: usbfs: correct kernel->user page attribute
+> mismatch") we switched from always calling remap_pfn_range() to call
+> dma_mmap_coherent() to handle issues with systems with non-coherent USB host
+> controller drivers.  Unfortunatly, as syzbot quickly told us, not all the world
+> is host controllers with DMA support, so we need to check what host controller
+> we are attempting to talk to before doing this type of allocation.
+> 
+> Thanks to Christoph for the quick idea of how to fix this.
+> 
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Hillf Danton <hdanton@sina.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jeremy Linton <jeremy.linton@arm.com>
+> Reported-by: syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com
+> Fixes: 2bef9aed6f0e ("usb: usbfs: correct kernel->user page attribute mismatch")
+> Cc: stable <stable@vger.kernel.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>   drivers/usb/core/devio.c | 16 +++++++++++++---
+>   1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
+> index b9db9812d6c5..d93d94d7ff50 100644
+> --- a/drivers/usb/core/devio.c
+> +++ b/drivers/usb/core/devio.c
+> @@ -251,9 +251,19 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
+>   	usbm->vma_use_count = 1;
+>   	INIT_LIST_HEAD(&usbm->memlist);
+>   
+> -	if (dma_mmap_coherent(hcd->self.sysdev, vma, mem, dma_handle, size)) {
+> -		dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
+> -		return -EAGAIN;
+> +	if (hcd->localmem_pool || !hcd_uses_dma(hcd)) {
+> +		if (remap_pfn_range(vma, vma->vm_start,
+> +				    virt_to_phys(usbm->mem) >> PAGE_SHIFT,
+> +				    size, vma->vm_page_prot) < 0) {
+> +			dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
+> +			return -EAGAIN;
+> +		}
+> +	} else {
+> +		if (dma_mmap_coherent(hcd->self.sysdev, vma, mem, dma_handle,
+> +				      size)) {
+> +			dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
+> +			return -EAGAIN;
+> +		}
+>   	}
+>   
+>   	vma->vm_flags |= VM_IO;
+> 
+
