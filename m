@@ -2,204 +2,120 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B45C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C89C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75DC6207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:41:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="tF/iESut"
+	by mail.kernel.org (Postfix) with ESMTP id E260F207BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:43:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589424226;
+	bh=UwFK1JSh04uU+EKtoD0SWRBNbvLzPgcTZDGhixl8HcA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=S+oSSkZWQEQkWONFmopcnVbNZXObJd9EGY2Jahda3I6tu1BFD7uDLnFW/iQPCrUJG
+	 4QXysX/hrKdnoEb/G+clFmQIVLaHKstqJ4kgYk5VY7m8AemrtvhDZehmOzGtTJd+Sf
+	 XTEEbETylwFaionqPAIyuNBdwt9fcOoJb3EvIoEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbgENClT (ORCPT
+        id S1725932AbgENCnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 22:41:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37922 "EHLO
+        Wed, 13 May 2020 22:43:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725895AbgENClT (ORCPT
+        by vger.kernel.org with ESMTP id S1725874AbgENCnp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 22:41:19 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E1FC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 19:41:18 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id t8so1004210qvw.5
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 19:41:18 -0700 (PDT)
+        Wed, 13 May 2020 22:43:45 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A2EC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 19:43:45 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id b6so1843350ljj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 19:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KLNMURY1HIlbAzrkLrAtdhSWRbezGbA/8tIoq51rm1I=;
-        b=tF/iESutHw2ygT+gJ6RIvMj0G7kzpPqwx14VsBrRv6A2AO486D5Pp7V/n/k2FON4LR
-         CI/6zVQfrJhr/CWJ4z7ImG+0VjgJ1Mi7p8A9ydvaxzSqFx/1bFU18XstWvd0Ezh8UHuw
-         Zije9465zXym8aIpIcrXxj23B79yZEW9FbZVw=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L3In83ZNtvhCqrpK0vVjzsKNvprMyvL+zJ9ohua4z10=;
+        b=RJxI7nc5/+qicT+av7MVnCPyCWQNYqEmo+1I8aEDjYrcgsKm1JO+ximEumc2BGCHG6
+         IRKjgEiRjwQuoza3oL4WOrhIpbRc8zh7pT5r3iUQzrEjc7+dcHsaKetaMFqukCgIbr+Y
+         1swtCFlefWtGVUfsLBR/jTXuJr1SgZ0x45QhE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KLNMURY1HIlbAzrkLrAtdhSWRbezGbA/8tIoq51rm1I=;
-        b=fPp910+jlOokNvi51cTGwy1LbM2oM9hBxj+Dr0HnRM2Mf807MX9K5DE6GnyGIwiofD
-         7YZYYT5HhUY0cwNzHCyZ+Lm+MsiPj/ZEEQQsdUfHQ2bZEPKd6SJ3i6ly49WvSUALRSOF
-         K063JJkug1iX2+G76zDxXybXDp2STDYCvxT0btSfXtkEz1u+qkkmJC+Ggf3l6KlIPnUY
-         3zVmClNw29S7LxQZzyFy5u1HlKpunTgiGZSKOX/bQHGKhg4owY9shwAU608Y3vhmS8Ud
-         TzAbsIsG1UwZNhrGcR5E3c35t/C9DOIqVikIgWMlwgzQhtyO6onChjdljFReY4FZ5S8K
-         oL7g==
-X-Gm-Message-State: AOAM533u3ypHuGu/676+ikV/ikMCkPGu0kX9r+G/kd3Eux4o3a4flHiQ
-        xRnN4QeAbL1yP3JNME/X5oa0QA==
-X-Google-Smtp-Source: ABdhPJyAGxD54Yg+fb1o5Nxdmhm+S7+56mOursXIuv8jDwEXKiHcvWMY3PMKsHIDKle3OjMFJoSzhA==
-X-Received: by 2002:ad4:53a2:: with SMTP id j2mr2685796qvv.159.1589424077931;
-        Wed, 13 May 2020 19:41:17 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id h22sm1104944qtn.23.2020.05.13.19.41.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 19:41:17 -0700 (PDT)
-Date:   Wed, 13 May 2020 22:41:16 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 3 11/29] rcu: Provide rcu_irq_exit_preempt()
-Message-ID: <20200514024116.GA231286@google.com>
-References: <20200505134354.774943181@linutronix.de>
- <20200505134904.364456424@linutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L3In83ZNtvhCqrpK0vVjzsKNvprMyvL+zJ9ohua4z10=;
+        b=WazOw1lSKPioK2lPoQAY4LVzSHNd+Dhg6+UAp4hbSXrpBjgqg/40eNfLXCLZ+KawnT
+         JUwquuGhvvviuHPZcTCLWKrVMw3OXVlAc+J1j6PmxrNE7C8HHGa/xhhs06gdPOf6hzd0
+         V5Aa3NKwHDw+IWv+W6CivHom59Xy7rA9ljTSGAREQ3++pBHVTobK+aYg7TvWWnOlt89c
+         b2xh8tJTeFgolUFL/gNSQOnX8E7fC3THWhyFNSIleG0wxIYU2qahsiVQFUxrB+kGc8qr
+         KeQtBZllOcDkE1UMFXF9eKVcKg6kjwaBS9/frphl7b7do43sXiQLqTuZltT5f8lNzQv4
+         6jaw==
+X-Gm-Message-State: AOAM531P6xxqXEFm4d3UCiG3IiB6F9073nPg2GmqIVTQx1K3Uig7nDgL
+        NsROlV4or+wHWCrGuvEN2U3ngQCtzpc=
+X-Google-Smtp-Source: ABdhPJzaOENhdDJCrE1kvuOJHW8TqOb55NqDnPw+NTDyIhSrdrP6veWL7AQRgNTkIOi/V1oFZbRImQ==
+X-Received: by 2002:a2e:5847:: with SMTP id x7mr1201812ljd.61.1589424222614;
+        Wed, 13 May 2020 19:43:42 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id b25sm605236ljp.105.2020.05.13.19.43.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 19:43:40 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id r17so1257801lff.9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 19:43:40 -0700 (PDT)
+X-Received: by 2002:a19:6e4e:: with SMTP id q14mr1567307lfk.192.1589424220085;
+ Wed, 13 May 2020 19:43:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505134904.364456424@linutronix.de>
+References: <20200513160038.2482415-1-hch@lst.de> <20200513160038.2482415-12-hch@lst.de>
+ <CAHk-=wj=u+nttmd1huNES2U=9nePtmk7WgR8cMLCYS8wc=rhdA@mail.gmail.com>
+ <20200513192804.GA30751@lst.de> <0c1a7066-b269-9695-b94a-bb5f4f20ebd8@iogearbox.net>
+ <20200514082054.f817721ce196f134e6820644@kernel.org> <CAHk-=wjBKGLyf1d53GwfUTZiK_XPdujwh+u2XSpD2HWRV01Afw@mail.gmail.com>
+ <20200514100009.a8e6aa001f0ace5553c7904f@kernel.org>
+In-Reply-To: <20200514100009.a8e6aa001f0ace5553c7904f@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 13 May 2020 19:43:24 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjP8ysEZnNFi_+E1ZEFGpcbAN8kbYHrCnC93TX6XX+jEQ@mail.gmail.com>
+Message-ID: <CAHk-=wjP8ysEZnNFi_+E1ZEFGpcbAN8kbYHrCnC93TX6XX+jEQ@mail.gmail.com>
+Subject: Re: [PATCH 11/18] maccess: remove strncpy_from_unsafe
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Christoph Hellwig <hch@lst.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-parisc@vger.kernel.org,
+        linux-um <linux-um@lists.infradead.org>,
+        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On Wed, May 13, 2020 at 6:00 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> > But we should likely at least disallow it entirely on platforms where
+> > we really can't - or pick one hardcoded choice. On sparc, you really
+> > _have_ to specify one or the other.
+>
+> OK. BTW, is there any way to detect the kernel/user space overlap on
+> memory layout statically? If there, I can do it. (I don't like
+> "if (CONFIG_X86)" thing....)
+> Or, maybe we need CONFIG_ARCH_OVERLAP_ADDRESS_SPACE?
 
-On Tue, May 05, 2020 at 03:44:05PM +0200, Thomas Gleixner wrote:
+I think it would be better to have a CONFIG variable that
+architectures can just 'select' to show that they are ok with separate
+kernel and user addresses.
 
-Thank you for CC'ing me.
+Because I don't think we have any way to say that right now as-is. You
+can probably come up with hacky ways to approximate it, ie something
+like
 
-> Interrupts and exceptions invoke rcu_irq_enter() on entry and need to
-> invoke rcu_irq_exit() before they either return to the interrupted code or
-> invoke the scheduler due to preemption.
-> 
-> The general assumption is that RCU idle code has to have preemption
-> disabled so that a return from interrupt cannot schedule. So the return
-> from interrupt code invokes rcu_irq_exit() and preempt_schedule_irq().
-> 
-> If there is any imbalance in the rcu_irq/nmi* invocations or RCU idle code
-> had preemption enabled then this goes unnoticed until the CPU goes idle or
-> some other RCU check is executed.
-> 
-> Provide rcu_irq_exit_preempt() which can be invoked from the
-> interrupt/exception return code in case that preemption is enabled. It
-> invokes rcu_irq_exit() and contains a few sanity checks in case that
-> CONFIG_PROVE_RCU is enabled to catch such issues directly.
+    if (TASK_SIZE_MAX > PAGE_OFFSET)
+        .... they overlap ..
 
-Could you let me know which patch or part in the multi-part series is using it?
+which would almost work, but..
 
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-> ---
->  include/linux/rcutiny.h |    1 +
->  include/linux/rcutree.h |    1 +
->  kernel/rcu/tree.c       |   21 +++++++++++++++++++++
->  3 files changed, 23 insertions(+)
-> 
-> --- a/include/linux/rcutiny.h
-> +++ b/include/linux/rcutiny.h
-> @@ -71,6 +71,7 @@ static inline void rcu_irq_enter(void) {
->  static inline void rcu_irq_exit_irqson(void) { }
->  static inline void rcu_irq_enter_irqson(void) { }
->  static inline void rcu_irq_exit(void) { }
-> +static inline void rcu_irq_exit_preempt(void) { }
->  static inline void exit_rcu(void) { }
->  static inline bool rcu_preempt_need_deferred_qs(struct task_struct *t)
->  {
-> --- a/include/linux/rcutree.h
-> +++ b/include/linux/rcutree.h
-> @@ -46,6 +46,7 @@ void rcu_idle_enter(void);
->  void rcu_idle_exit(void);
->  void rcu_irq_enter(void);
->  void rcu_irq_exit(void);
-> +void rcu_irq_exit_preempt(void);
->  void rcu_irq_enter_irqson(void);
->  void rcu_irq_exit_irqson(void);
->  
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -706,6 +706,27 @@ void noinstr rcu_irq_exit(void)
->  	rcu_nmi_exit();
->  }
->  
-> +/**
-> + * rcu_irq_exit_preempt - Inform RCU that current CPU is exiting irq
-> + *			  towards in kernel preemption
-> + *
-> + * Same as rcu_irq_exit() but has a sanity check that scheduling is safe
-> + * from RCU point of view. Invoked from return from interrupt before kernel
-> + * preemption.
-> + */
-> +void rcu_irq_exit_preempt(void)
-> +{
-> +	lockdep_assert_irqs_disabled();
-> +	rcu_nmi_exit();
-> +
-> +	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) <= 0,
-> +			 "RCU dynticks_nesting counter underflow/zero!");
-
-Makes sense.
-
-> +	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 0,
-> +			 "RCU dynticks_nmi_nesting counter underflow/zero!");
-
-This new function will be called only from the outer-most IRQ that
-interrupted kernel mode (process context). Right? If so, a better (more
-specific) check for the second RCU_LOCKDEP_WARN above is:
-
-RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nmi_nesting) != DYNTICK_IRQ_NONIDLE,
-			 "Bad RCU dynticks_nmi_nesting counter\n");
-
-That will make sure, it is only called from outer-most rcu_irq_exit() and
-interrupting kernel mode.
-
-Or, if [1] is merged, then we could just combine the checks into one check.
-	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) != 1,
-			 "Bad RCU dynticks_nmi_nesting counter\n");
-
-> +	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
-> +			 "RCU in extended quiescent state!");
-
-Makes sense.
-
-BTW, I wonder if a better place to do this "don't enter scheduler while RCU
-is not watching" is rcu_note_context_switch()...
-
-thanks,
-
- - Joel
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git/commit/?h=rcu-dynticks-may4-rebased&id=b48863c234295d8ec956b50f6cf5ae0a0269f48d
-
-> +}
-> +
->  /*
->   * Wrapper for rcu_irq_exit() where interrupts are enabled.
->   *
-> 
+                 Linus
