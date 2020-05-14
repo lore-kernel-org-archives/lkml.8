@@ -2,190 +2,144 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 170E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D980F206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DEB206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:08:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXh7ffCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgENMGk (ORCPT
+        id S1727043AbgENMIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 08:06:40 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2210 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726160AbgENMGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 08:06:39 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id EA559415B56C1C9A6CF1;
-        Thu, 14 May 2020 13:06:37 +0100 (IST)
-Received: from [127.0.0.1] (10.47.3.198) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Thu, 14 May
- 2020 13:06:36 +0100
-Subject: Re: [PATCH v3 0/2] irqchip/gic-v3-its: Balance LPI affinity across
- CPUs
-From:   John Garry <john.garry@huawei.com>
-To:     Marc Zyngier <maz@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Jason Cooper <jason@lakedaemon.net>,
-        chenxiang <chenxiang66@hisilicon.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>
-References: <20200316115433.9017-1-maz@kernel.org>
- <9171c554-50d2-142b-96ae-1357952fce52@huawei.com>
- <80b673a7-1097-c5fa-82c0-1056baa5309d@huawei.com>
- <f2971d1c-50f8-bf5a-8b16-8d84a631b0ba@huawei.com>
-Message-ID: <7c05b08b-2edc-7f97-0175-898e9772673e@huawei.com>
-Date:   Thu, 14 May 2020 13:05:43 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Thu, 14 May 2020 08:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726660AbgENMIv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 08:08:51 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B9DC061A0C;
+        Thu, 14 May 2020 05:08:50 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id o7so24332965oif.2;
+        Thu, 14 May 2020 05:08:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A+X9SCzjiHq5xXgLxlXuhaaCXkfZMoRwiWFaO63ED7k=;
+        b=LXh7ffCZ7cFjoQko7M2UBg/zWq9p8aiPR4eTHds9VYRdP1309rHAnoalOJjBr6ct7V
+         +0sQS3y3xK3pOva3kdEuZIdgv76Bl7sL/iSq+BcPnLZhA9NLY7TKn1+thhpQ/oWWrHsB
+         VLL0qE6Ex4lnVSR5TLvsMdnSzRhng1i/ALcL+I9hsvl5HlHxyvMXYSKYC3jzOO31bPGd
+         JbBtNi0uxGrtGsAKckHXlPyJssie6gwIQ6ph+GUxyUEYSWGGdV3Qn3rgjKRMk1O0sSad
+         wx1toFTSknj55aWQiV85BilRi7oKURdVecJotHMaNv2G/ooYLS8MQU1MEMqBnWk+kMuX
+         f5jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A+X9SCzjiHq5xXgLxlXuhaaCXkfZMoRwiWFaO63ED7k=;
+        b=kckoFkEbgvGRtDwYwhkUvFlqdX3kngxI9RN1jr/IKllx9E692RWnB8b6yeuSvelNPC
+         3FKE501weeWfAEU4YSPYCz2yUAQ1dOzSHwQVZgbr5sa5oFPvL02SRBb+CsiPVkCgakkT
+         yPMCVRHq8hT5Tmp1QrkOHCb6D8KnhfMtfSPtgK7uFqAmH6narOdfsksjp5wLK9bUJjMO
+         aeIgBaPNvFcwwhYFvTZJ/kZNm6zmLfMqrLEd9vQs9OgIMJBGU8ba6rh1Ne8t1+U5c2OO
+         r87riGUyEK/4jAT1pV9zrGK2sgGObJFt4mvNglCCBZZRjaram2d6q7800iQtQRDw1p9V
+         bTYA==
+X-Gm-Message-State: AGi0PuYX8SZrXNaaB2d3SWkx9d2hBiMYSY0D20s2wDAQ/5erUmEcVA6m
+        PGJr+1s8fb7gpFOhir/KtFHIuJYJiXsaGSzlkoQ=
+X-Google-Smtp-Source: APiQypLdoNDtunLrzwY6UJBNb235eqap5Q5UO40EngNC8q2E7hBU6FcwYjZpL5ZutjYp3Tl1ArRVXwI9XIMfB500shk=
+X-Received: by 2002:aca:5e0b:: with SMTP id s11mr28806064oib.160.1589458130415;
+ Thu, 14 May 2020 05:08:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f2971d1c-50f8-bf5a-8b16-8d84a631b0ba@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.3.198]
-X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <CAEjxPJ6pFdDfm55pv9bT3CV5DTFF9VqzRmG_Xi5bKNxPaGuOLg@mail.gmail.com>
+ <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk>
+ <CAEjxPJ4=ZN_jKP2nX5mrMA3OxC8XLsYEmCPCD-78H4XQw=_hCA@mail.gmail.com> <3611507.1589411611@warthog.procyon.org.uk>
+In-Reply-To: <3611507.1589411611@warthog.procyon.org.uk>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Thu, 14 May 2020 08:08:39 -0400
+Message-ID: <CAEjxPJ5Dw0Lf6DnUL01XSJZF9zu-ACnmxOkC0VHxGTzGcmbpRQ@mail.gmail.com>
+Subject: Re: [PATCH] keys: Make the KEY_NEED_* perms an enum rather than a mask
+To:     David Howells <dhowells@redhat.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        keyrings@vger.kernel.org, SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> 
-> +       its_inc_lpi_count(d, cpu);
-> +
->          return IRQ_SET_MASK_OK_DONE;
->   }
-> 
-> Results look ok:
->      nvme.use_threaded_interrupts=1    =0*
-> Before    950K IOPs            1000K IOPs
-> After    1100K IOPs            1150K IOPs
-> 
-> * as mentioned before, this is quite unstable and causes lockups. JFYI, 
-> there was an attempt to fix this:
-> 
-> https://lore.kernel.org/linux-nvme/20191209175622.1964-1-kbusch@kernel.org/
-> 
+On Wed, May 13, 2020 at 7:13 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Stephen Smalley <stephen.smalley.work@gmail.com> wrote:
+>
+> > >  (3) An override due to CAP_SYS_ADMIN.
+> >
+> > CAP_SYS_ADMIN should never skip SELinux checking.  Even for Smack,
+> > there is a separate capability (CAP_MAC_ADMIN) for that purpose.
+>
+> The LSM doesn't get consulted at the moment.  With this patch, it will get
+> consulted.
+>
+> > >  (4) An override due to an instantiation token being present.
+> >
+> > Not sure what this means but again we shouldn't skip SELinux checking
+> > based on mere possession of an object capability (not a POSIX
+> > capability).
+>
+> The kernel has delegated the instantiation of a key to the calling process and
+> has given it a temporary key of type ".request_key_auth" which it has put into
+> force with keyctl(KEYCTL_ASSUME_AUTHORITY).
+>
+> This authorisation token grants the caller the ability to (a) perform
+> operations on the key it wouldn't otherwise have permission to do, (b) use the
+> key instantiation keyctls and (c) temporarily search the keyrings of the
+> caller of request_key() using the creds of that caller and to read/use the
+> keys found therein if the caller was permitted to do so.
+>
+> > It would be better if the permission indicated the actual operation
+> > (e.g. KEY_NEED_INVALIDATE_SPECIAL), and the decision whether to permit
+> > CAP_SYS_ADMIN processes to override was left to the security modules.
+> > SELinux doesn't automatically allow CAP_SYS_ADMIN processes to do
+> > everything.
+>
+> These individual permissions don't exist yet.  I have an ACL patchset that
+> allows me to add a greater range - though there's issues with SELinux there
+> also.
+>
+> Also, the keyrings are specially marked to say that the sysadmin is allowed to
+> flush them at the moment - but that can go away with the ACL stuff.
+>
+> > > +       switch (need_perm) {
+> > > +       case KEY_NEED_UNLINK:
+> > > +       case KEY_SYSADMIN_OVERRIDE:
+> > > +       case KEY_AUTHTOKEN_OVERRIDE:
+> > > +       case KEY_DEFER_PERM_CHECK:
+> > >                 return 0;
+> >
+> > We really shouldn't be skipping any/all checking on CAP_SYS_ADMIN or
+> > an AUTHTOKEN; those should still be subject to MAC policy.
+>
+> I'm not sure how to do that.
+>
+> Note that KEY_NEED_UNLINK *must not* be overruled by the MAC policy.  The
+> value is only there because lookup_user_key() requires something to be put
+> into that parameter - it's more of a courtesy thing, I suppose.
+>
+> Why should AUTHTOKEN be subject to MAC policy?  The kernel has told the
+> process to go and instantiate a key.  It shouldn't really then turn around and
+> tell the process "oh, but you're not actually allowed to do that".
 
-Hi Marc,
-
-Just wondering if we can try to get this series over the line?
-
-So I tested the patches on v5.7-rc5, and get similar performance 
-improvement to above.
-
-I did apply a couple of patches, below, to remedy the issues I 
-experienced for my D06CS.
-
-Thanks,
-John
-
-
----->8
-
-
-[PATCH 1/2] irqchip/gic-v3-its: Don't double account for target CPU
-  assignment
-
-In its_set_affinity(), when a managed irq is already assigned to a CPU,
-we may needlessly reassign the irq to another CPU.
-
-This is because when selecting the target CPU, being the least loaded 
-CPU in the mask, we account of that irq still being assigned to a CPU;
-thereby we may unfairly select another CPU.
-
-Modify this behaviour to pre-decrement the current target CPU LPI count
-when finding the least loaded CPU.
-
-Alternatively we may be able to just bail out early when the current 
-target CPU already falls within the requested mask.
-
----
-  drivers/irqchip/irq-gic-v3-its.c | 6 ++++--
-  1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c 
-b/drivers/irqchip/irq-gic-v3-its.c
-index 73f5c12..2b18feb 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1636,6 +1636,8 @@ static int its_set_affinity(struct irq_data *d, 
-const struct cpumask *mask_val,
-  	if (irqd_is_forwarded_to_vcpu(d))
-  		return -EINVAL;
-
-+	its_dec_lpi_count(d, its_dev->event_map.col_map[id]);
-+
-  	if (!force)
-  		cpu = its_select_cpu(d, mask_val);
-  	else
-@@ -1646,14 +1648,14 @@ static int its_set_affinity(struct irq_data *d, 
-const struct cpumask *mask_val,
-
-  	/* don't set the affinity when the target cpu is same as current one */
-  	if (cpu != its_dev->event_map.col_map[id]) {
--		its_inc_lpi_count(d, cpu);
--		its_dec_lpi_count(d, its_dev->event_map.col_map[id]);
-  		target_col = &its_dev->its->collections[cpu];
-  		its_send_movi(its_dev, target_col, id);
-  		its_dev->event_map.col_map[id] = cpu;
-  		irq_data_update_effective_affinity(d, cpumask_of(cpu));
-  	}
-
-+	its_inc_lpi_count(d, cpu);
-+
-  	return IRQ_SET_MASK_OK_DONE;
-  }
-
----
-
-
-[PATCH 2/2] irqchip/gic-v3-its: Handle no overlap of non-managed irq
-  affinity mask
-
-In selecting the target CPU for a non-managed interrupt, we may select a
-target CPU outside the requested affinity mask.
-
-This is because there may be no overlap of the ITS node mask and the
-requested CPU affinity mask. The requested affinity mask may be coming 
-from userspace or some drivers which try to set irq affinity, see [0].
-
-In this case, just ignore the ITS node cpumask. This is a deviation from
-what Thomas described. Having said that, I am not sure if the interrupt 
-is ever bound to a node for us.
-
-[0] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/hisilicon/hisi_uncore_pmu.c#n417
-
----
-  drivers/irqchip/irq-gic-v3-its.c | 4 ----
-  1 file changed, 4 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c 
-b/drivers/irqchip/irq-gic-v3-its.c
-index 2b18feb..12d5d4b4 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1584,10 +1584,6 @@ static int its_select_cpu(struct irq_data *d,
-  			cpumask_and(tmpmask, cpumask_of_node(node), aff_mask);
-  			cpumask_and(tmpmask, tmpmask, cpu_online_mask);
-
--			/* If that doesn't work, try the nodemask itself */
--			if (cpumask_empty(tmpmask))
--				cpumask_and(tmpmask, cpumask_of_node(node), cpu_online_mask);
--
-  			cpu = cpumask_pick_least_loaded(d, tmpmask);
-  			if (cpu < nr_cpu_ids)
-  				goto out;
+On what basis did the kernel authorize the process to instantiate the
+key?  At what point did a security module get involved in the decision
+as to what process(es) are authorize to instantiate a key,
+particularly for a process with a different credential/security
+context?
