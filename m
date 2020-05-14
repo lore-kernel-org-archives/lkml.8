@@ -2,155 +2,212 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FF9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 164B7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2A420643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:51:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rtRDYrb4"
+	by mail.kernel.org (Postfix) with ESMTP id E273E205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:52:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589467972;
+	bh=KyMeowribavtsIbTUR+vWwY63ali5afdWjqtehs4ado=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZRpcCtcNodkgS8/N5S61cVIiJDKhzXmubI6+Ci/XXVu7PibyrlA/K1jjClQVRBzoX
+	 2MKizFEg1A6bLYB5quw+Vy5PMf62e1G2CInDy4m6QTgQIXobA+oRIbcjTqqgTVdmK6
+	 WUfYJr/Kvi/IUYBK3ch8OkYtkuhDqgyWqP2vPkew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgENOvR (ORCPT
+        id S1726948AbgENOww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:51:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgENOvN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:51:13 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2788FC061A0C;
-        Thu, 14 May 2020 07:51:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=TpVloFu6IYpJ0w9TRJEpII9AVAYGVXsstbhPcZAAyj0=; b=rtRDYrb4y/t7TRIpTg+hKWZdQ/
-        o+96IAlIwgi9xsGLHJx5TYq0sULQtqnfNoh7aKWN7FztTWdKNO3ySElMEmyLRDyP61E3d4ojiwGIW
-        iKL3h2I8pJ+jdG6V4OAAl4F9ph6aWwoy7dR7vuERvaV14Ly4nWoK58L/QTrDjdqQ8SaBsFGXS3bY/
-        rt+ELRvLrScd6qefcuI2krS4LI2Ndb0NK6e+T4Rx3Goo4JrsNg8VqR077rYxxIYcRQ9twvHtJSO0N
-        n9pDXaYDAZTuFmRy2O5OpU7e1Ij69ObD2kQJH/mg95VYVxLppff8q+GWgGGmZxiyXlIMD8S1QbqsZ
-        6Ke1Ghig==;
-Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZFCX-0007tO-Nz; Thu, 14 May 2020 14:51:10 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] ipv4: consolidate the VIFF_TUNNEL handling in ipmr_new_tunnel
-Date:   Thu, 14 May 2020 16:50:59 +0200
-Message-Id: <20200514145101.3000612-3-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200514145101.3000612-1-hch@lst.de>
-References: <20200514145101.3000612-1-hch@lst.de>
+        Thu, 14 May 2020 10:52:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbgENOwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 10:52:51 -0400
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FD6A20657;
+        Thu, 14 May 2020 14:52:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589467970;
+        bh=KyMeowribavtsIbTUR+vWwY63ali5afdWjqtehs4ado=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jO+lD2cCU6q+5tJVkwkyOBKh8wI3TB5mInfIHe4hmQgT8JBiuB9lCqG8j40WAUs2e
+         GBE/X3aXCrtmqPdF7LYRETB7jvg2CCP1UwQonVipOc7Lb97gzY0+t4ax94t/WeNM0h
+         vketF0DJ9519leZRWWEsKTbZZQSFsyacHizFkUxo=
+Received: by mail-oi1-f170.google.com with SMTP id o24so24768110oic.0;
+        Thu, 14 May 2020 07:52:50 -0700 (PDT)
+X-Gm-Message-State: AGi0PubBBLONm6r65UiOs4vWocSk31JKMsHxmNubiQ6Fsv99dZ2WrGBX
+        +/STx0pzUmOYumYn+grT3uHAqejfR+WRMEOxvw==
+X-Google-Smtp-Source: APiQypLD1q0aJ+FQry7uiKJF40s+kUkpHEeLYwhAf8rdZYNoqrECkbbBawOpUYBN2DKPnQ4iPCEQXyF96LsbhjXfFTU=
+X-Received: by 2002:aca:1904:: with SMTP id l4mr31504767oii.106.1589467969912;
+ Thu, 14 May 2020 07:52:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200501073949.120396-1-john.stultz@linaro.org>
+ <20200501073949.120396-4-john.stultz@linaro.org> <20200501102143.xcckvsfecumbei3c@DESKTOP-E1NTVVP.localdomain>
+ <47e7eded-7240-887a-39e1-97c55bf752e7@arm.com> <CALAqxLU6kmvJ+xPCFzc3N+RNMv4g=L9bmzgE0wrOXefiGfPoHg@mail.gmail.com>
+ <20200504090628.d2q32dwyg6em5pp7@DESKTOP-E1NTVVP.localdomain>
+ <20200512163714.GA22577@bogus> <20200513104401.lhh2m5avlasev6mj@DESKTOP-E1NTVVP.localdomain>
+In-Reply-To: <20200513104401.lhh2m5avlasev6mj@DESKTOP-E1NTVVP.localdomain>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 14 May 2020 09:52:35 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+V-YA9B7i+9U0as3oXNC=HLPHmZ2NrPzNJu5CXpvD3tg@mail.gmail.com>
+Message-ID: <CAL_Jsq+V-YA9B7i+9U0as3oXNC=HLPHmZ2NrPzNJu5CXpvD3tg@mail.gmail.com>
+Subject: Re: [RFC][PATCH 3/4] dma-buf: cma_heap: Extend logic to export CMA
+ regions tagged with "linux,cma-heap"
+To:     Brian Starkey <brian.starkey@arm.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F. Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-mm <linux-mm@kvack.org>, nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also move the dev_set_allmulti call and the error handling into the
-ioctl helper.  This allows reusing already looked up tunnel_dev pointer
-and the set up argument structure for the deletion in the error handler.
+On Wed, May 13, 2020 at 5:44 AM Brian Starkey <brian.starkey@arm.com> wrote:
+>
+> Hi Rob,
+>
+> On Tue, May 12, 2020 at 11:37:14AM -0500, Rob Herring wrote:
+> > On Mon, May 04, 2020 at 10:06:28AM +0100, Brian Starkey wrote:
+> > > On Fri, May 01, 2020 at 12:01:40PM -0700, John Stultz wrote:
+> > > > On Fri, May 1, 2020 at 4:08 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> > > > >
+> > > > > On 2020-05-01 11:21 am, Brian Starkey wrote:
+> > > > > > Hi John,
+> > > > > >
+> > > > > > On Fri, May 01, 2020 at 07:39:48AM +0000, John Stultz wrote:
+> > > > > >> This patch reworks the cma_heap initialization so that
+> > > > > >> we expose both the default CMA region and any CMA regions
+> > > > > >> tagged with "linux,cma-heap" in the device-tree.
+> > > > > >>
+> > > > > >> Cc: Rob Herring <robh+dt@kernel.org>
+> > > > > >> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> > > > > >> Cc: "Andrew F. Davis" <afd@ti.com>
+> > > > > >> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> > > > > >> Cc: Liam Mark <lmark@codeaurora.org>
+> > > > > >> Cc: Pratik Patel <pratikp@codeaurora.org>
+> > > > > >> Cc: Laura Abbott <labbott@redhat.com>
+> > > > > >> Cc: Brian Starkey <Brian.Starkey@arm.com>
+> > > > > >> Cc: Chenbo Feng <fengc@google.com>
+> > > > > >> Cc: Alistair Strachan <astrachan@google.com>
+> > > > > >> Cc: Sandeep Patil <sspatil@google.com>
+> > > > > >> Cc: Hridya Valsaraju <hridya@google.com>
+> > > > > >> Cc: Christoph Hellwig <hch@lst.de>
+> > > > > >> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > > > >> Cc: Robin Murphy <robin.murphy@arm.com>
+> > > > > >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > > > >> Cc: devicetree@vger.kernel.org
+> > > > > >> Cc: dri-devel@lists.freedesktop.org
+> > > > > >> Cc: linux-mm@kvack.org
+> > > > > >> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > > > > >> ---
+> > > > > >>   drivers/dma-buf/heaps/cma_heap.c | 18 +++++++++---------
+> > > > > >>   1 file changed, 9 insertions(+), 9 deletions(-)
+> > > > > >>
+> > > > > >> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
+> > > > > >> index 626cf7fd033a..dd154e2db101 100644
+> > > > > >> --- a/drivers/dma-buf/heaps/cma_heap.c
+> > > > > >> +++ b/drivers/dma-buf/heaps/cma_heap.c
+> > > > > >> @@ -141,6 +141,11 @@ static int __add_cma_heap(struct cma *cma, void *data)
+> > > > > >>   {
+> > > > > >>      struct cma_heap *cma_heap;
+> > > > > >>      struct dma_heap_export_info exp_info;
+> > > > > >> +    struct cma *default_cma = dev_get_cma_area(NULL);
+> > > > > >> +
+> > > > > >> +    /* We only add the default heap and explicitly tagged heaps */
+> > > > > >> +    if (cma != default_cma && !cma_dma_heap_enabled(cma))
+> > > > > >> +            return 0;
+> > > > > >
+> > > > > > Thinking about the pl111 thread[1], I'm wondering if we should also
+> > > > > > let drivers call this directly to expose their CMA pools, even if they
+> > > > > > aren't tagged for dma-heaps in DT. But perhaps that's too close to
+> > > > > > policy.
+> > > > >
+> > > > > That sounds much like what my first thoughts were - apologies if I'm
+> > > > > wildly off-base here, but as far as I understand:
+> > > > >
+> > > > > - Device drivers know whether they have their own "memory-region" or not.
+> > > > > - Device drivers already have to do *something* to participate in dma-buf.
+> > > > > - Device drivers know best how they make use of both the above.
+> > > > > - Therefore couldn't it be left to drivers to choose whether to register
+> > > > > their CMA regions as heaps, without having to mess with DT at all?
+> >
+> > +1, but I'm biased toward any solution not using DT. :)
+> >
+> > > > I guess I'm not opposed to this. But I guess I'd like to see some more
+> > > > details? You're thinking the pl111 driver would add the
+> > > > "memory-region" node itself?
+> > > >
+> > > > Assuming that's the case, my only worry is what if that memory-region
+> > > > node isn't a CMA area, but instead something like a carveout? Does the
+> > > > driver need to parse enough of the dt to figure out where to register
+> > > > the region as a heap?
+> > >
+> > > My thinking was more like there would already be a reserved-memory
+> > > node in DT for the chunk of memory, appropriately tagged so that it
+> > > gets added as a CMA region.
+> > >
+> > > The device's node would have "memory-region=<&blah>;" and would use
+> > > of_reserved_mem_device_init() to link up dev->cma_area to the
+> > > corresponding cma region.
+> > >
+> > > So far, that's all in-place already. The bit that's missing is
+> > > exposing that dev->cma_area to userspace as a dma_heap - so we could
+> > > just have "int cma_heap_add(struct cma *cma)" or "int
+> > > cma_heap_dev_add(struct device *dev)" or something exported for
+> > > drivers to expose their device-assigned cma region if they wanted to.
+> > >
+> > > I don't think this runs into the lifetime problems of generalised
+> > > heaps-as-modules either, because the CMA region will never go away
+> > > even if the driver does.
+> > >
+> > > Alongside that, I do think the completely DT-driven approach can be
+> > > useful too - because there may be regions which aren't associated with
+> > > any specific device driver, that we want exported as heaps.
+> >
+> > And they are associated with the hardware description rather than the
+> > userspace environment?
+>
+> I'm not sure how to answer that. We already have CMA regions being
+> created from device-tree, so we're only talking about explicitly
+> exposing those to userspace.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- net/ipv4/ipmr.c | 53 ++++++++++++-------------------------------------
- 1 file changed, 13 insertions(+), 40 deletions(-)
+It's easier to argue that how much CMA memory a system/device needs is
+h/w description as that's more a function of devices and frame sizes.
+But exposing to userspace or not is an OS architecture decision. It's
+not really any different than a kernel vs. userspace driver question.
+What's exposed by UIO or spi-dev is purely a kernel thing.
 
-diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
-index 84541c601cfab..6bf2a88abe86e 100644
---- a/net/ipv4/ipmr.c
-+++ b/net/ipv4/ipmr.c
-@@ -419,37 +419,6 @@ static void ipmr_free_table(struct mr_table *mrt)
- 
- /* Service routines creating virtual interfaces: DVMRP tunnels and PIMREG */
- 
--static void ipmr_del_tunnel(struct net_device *dev, struct vifctl *v)
--{
--	struct net *net = dev_net(dev);
--
--	dev_close(dev);
--
--	dev = __dev_get_by_name(net, "tunl0");
--	if (dev) {
--		const struct net_device_ops *ops = dev->netdev_ops;
--		struct ifreq ifr;
--		struct ip_tunnel_parm p;
--
--		memset(&p, 0, sizeof(p));
--		p.iph.daddr = v->vifc_rmt_addr.s_addr;
--		p.iph.saddr = v->vifc_lcl_addr.s_addr;
--		p.iph.version = 4;
--		p.iph.ihl = 5;
--		p.iph.protocol = IPPROTO_IPIP;
--		sprintf(p.name, "dvmrp%d", v->vifc_vifi);
--		ifr.ifr_ifru.ifru_data = (__force void __user *)&p;
--
--		if (ops->ndo_do_ioctl) {
--			mm_segment_t oldfs = get_fs();
--
--			set_fs(KERNEL_DS);
--			ops->ndo_do_ioctl(dev, &ifr, SIOCDELTUNNEL);
--			set_fs(oldfs);
--		}
--	}
--}
--
- /* Initialize ipmr pimreg/tunnel in_device */
- static bool ipmr_init_vif_indev(const struct net_device *dev)
- {
-@@ -507,12 +476,22 @@ static struct net_device *ipmr_new_tunnel(struct net *net, struct vifctl *v)
- 	if (dev_open(new_dev, NULL))
- 		goto out_unregister;
- 	dev_hold(new_dev);
-+	err = dev_set_allmulti(new_dev, 1);
-+	if (err) {
-+		dev_close(new_dev);
-+		set_fs(KERNEL_DS);
-+		tunnel_dev->netdev_ops->ndo_do_ioctl(tunnel_dev, &ifr,
-+				SIOCDELTUNNEL);
-+		set_fs(oldfs);
-+		dev_put(new_dev);
-+		new_dev = ERR_PTR(err);
-+	}
- 	return new_dev;
- 
- out_unregister:
- 	unregister_netdevice(new_dev);
- out:
--	return NULL;
-+	return ERR_PTR(-ENOBUFS);
- }
- 
- #if defined(CONFIG_IP_PIMSM_V1) || defined(CONFIG_IP_PIMSM_V2)
-@@ -864,14 +843,8 @@ static int vif_add(struct net *net, struct mr_table *mrt,
- 		break;
- 	case VIFF_TUNNEL:
- 		dev = ipmr_new_tunnel(net, vifc);
--		if (!dev)
--			return -ENOBUFS;
--		err = dev_set_allmulti(dev, 1);
--		if (err) {
--			ipmr_del_tunnel(dev, vifc);
--			dev_put(dev);
--			return err;
--		}
-+		if (IS_ERR(dev))
-+			return PTR_ERR(dev);
- 		break;
- 	case VIFF_USE_IFINDEX:
- 	case 0:
--- 
-2.26.2
+> Are you thinking that userspace should be deciding whether they get
+> exposed or not? I don't know how userspace would discover them in
+> order to make that decision.
 
+Or perhaps the kernel should be deciding. Expose to userspace what the
+kernel doesn't need or drivers decide?
+
+It's hard to argue against 1 new property. It's death by a 1000 cuts though.
+
+Rob
