@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 993B9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE59EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70CAA20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AACD520643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483209;
-	bh=X5J/cOekaw0vJkG0Lx9XCnZIakgENEiU8hA54KZohQg=;
+	s=default; t=1589483215;
+	bh=e923IeQUkDFGtCFMSIPljVav9gG9Zf2cBBiEpAXaqGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ONJOaaTYsOGFaT+rEIXof/9ufzU7MpjcLksVF5HP981rg9LKZuCdSRBK5T3URezFL
-	 btHOAxhQjzm1ix0zmnXyQZL1I1UK+F7orrb2x0ezkMxJ57gGrHHlXJH3rQ8vUiLtNG
-	 SHDSlwCEUxC1kiAG/3n/uji2YSu565OtKW7Ook3E=
+	b=sh/iT+BWehOwDnQtTylxqMbW/Q2eqXYc4YknbOVeph6yRK14lpd1pCKvSSezYiidO
+	 9jJApeK/gsgqGgilONzWcTiZ69IqEF0KP9ngGjOWqeQ+SbIMAlMi3Ck3I8KPyQvwzy
+	 mpBumvtR0ax4lcDPiwqJQwZd24H696TCTPKVcUG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbgENTGs (ORCPT
+        id S1729505AbgENTGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:06:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53196 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:06:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728812AbgENSxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:44 -0400
+        id S1728802AbgENSxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACB6B207C3;
-        Thu, 14 May 2020 18:53:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38209206F1;
+        Thu, 14 May 2020 18:53:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482423;
-        bh=X5J/cOekaw0vJkG0Lx9XCnZIakgENEiU8hA54KZohQg=;
+        s=default; t=1589482422;
+        bh=e923IeQUkDFGtCFMSIPljVav9gG9Zf2cBBiEpAXaqGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ktk3WVfzi9HlG1BEh0+/mp+AvefgJBmc/IWmTcV+O/4xu8/K3YK+pzoJVJKChccVn
-         7qPT3d2r4GEBfxN5FTcmeLUFIYA7ROx/2MEdjsL3yDX2lrjM8NHO/HW1IsXDpJsVbh
-         f3ReWoVSgTrpeK2UxjHJ0G5nbImSGmzKJ3CtO2IY=
+        b=R0jY+ysfrW2oBJAEqm7mUlIieaxpxNJ1bqmHVTv7mUHMUCVES97eqc8NczYjgqtRx
+         29IOvjMXb9rHHZlT/arPjslzckhSKKa8HktIbyhIBHeD15+6hmVKOCE3kio0m3Phf4
+         f5dqpcBax915WUu59Q+PBGdMndIChr7duDiOvJvI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 26/49] ftrace/selftest: make unresolved cases cause failure if --fail-unresolved set
-Date:   Thu, 14 May 2020 14:52:47 -0400
-Message-Id: <20200514185311.20294-26-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 25/49] ftrace/selftests: workaround cgroup RT scheduling issues
+Date:   Thu, 14 May 2020 14:52:46 -0400
+Message-Id: <20200514185311.20294-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
 References: <20200514185311.20294-1-sashal@kernel.org>
@@ -64,66 +63,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alan Maguire <alan.maguire@oracle.com>
 
-[ Upstream commit b730d668138cb3dd9ce78f8003986d1adae5523a ]
+[ Upstream commit 57c4cfd4a2eef8f94052bd7c0fce0981f74fb213 ]
 
-Currently, ftracetest will return 1 (failure) if any unresolved cases
-are encountered.  The unresolved status results from modules and
-programs not being available, and as such does not indicate any
-issues with ftrace itself.  As such, change the behaviour of
-ftracetest in line with unsupported cases; if unsupported cases
-happen, ftracetest still returns 0 unless --fail-unsupported.  Here
---fail-unresolved is added and the default is to return 0 if
-unresolved results occur.
+wakeup_rt.tc and wakeup.tc tests in tracers/ subdirectory
+fail due to the chrt command returning:
 
+ chrt: failed to set pid 0's policy: Operation not permitted.
+
+To work around this, temporarily disable grout RT scheduling
+during ftracetest execution.  Restore original value on
+test run completion.  With these changes in place, both
+tests consistently pass.
+
+Fixes: c575dea2c1a5 ("selftests/ftrace: Add wakeup_rt tracer testcase")
+Fixes: c1edd060b413 ("selftests/ftrace: Add wakeup tracer testcase")
 Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/ftrace/ftracetest | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/testing/selftests/ftrace/ftracetest | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
 diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-index 144308a757b70..19e9236dec5e2 100755
+index 063ecb290a5a3..144308a757b70 100755
 --- a/tools/testing/selftests/ftrace/ftracetest
 +++ b/tools/testing/selftests/ftrace/ftracetest
-@@ -17,6 +17,7 @@ echo "		-v|--verbose Increase verbosity of test messages"
- echo "		-vv        Alias of -v -v (Show all results in stdout)"
- echo "		-vvv       Alias of -v -v -v (Show all commands immediately)"
- echo "		--fail-unsupported Treat UNSUPPORTED as a failure"
-+echo "		--fail-unresolved Treat UNRESOLVED as a failure"
- echo "		-d|--debug Debug mode (trace all shell commands)"
- echo "		-l|--logdir <dir> Save logs on the <dir>"
- echo "		            If <dir> is -, all logs output in console only"
-@@ -112,6 +113,10 @@ parse_opts() { # opts
-       UNSUPPORTED_RESULT=1
-       shift 1
-     ;;
-+    --fail-unresolved)
-+      UNRESOLVED_RESULT=1
-+      shift 1
-+    ;;
-     --logdir|-l)
-       LOG_DIR=$2
-       shift 2
-@@ -176,6 +181,7 @@ KEEP_LOG=0
- DEBUG=0
- VERBOSE=0
- UNSUPPORTED_RESULT=0
-+UNRESOLVED_RESULT=0
- STOP_FAILURE=0
- # Parse command-line options
- parse_opts $*
-@@ -280,7 +286,7 @@ eval_result() { # sigval
-     $UNRESOLVED)
-       prlog "	[${color_blue}UNRESOLVED${color_reset}]"
-       UNRESOLVED_CASES="$UNRESOLVED_CASES $CASENO"
--      return 1 # this is a kind of bug.. something happened.
-+      return $UNRESOLVED_RESULT # depends on use case
-     ;;
-     $UNTESTED)
-       prlog "	[${color_blue}UNTESTED${color_reset}]"
+@@ -29,8 +29,25 @@ err_ret=1
+ # kselftest skip code is 4
+ err_skip=4
+ 
++# cgroup RT scheduling prevents chrt commands from succeeding, which
++# induces failures in test wakeup tests.  Disable for the duration of
++# the tests.
++
++readonly sched_rt_runtime=/proc/sys/kernel/sched_rt_runtime_us
++
++sched_rt_runtime_orig=$(cat $sched_rt_runtime)
++
++setup() {
++  echo -1 > $sched_rt_runtime
++}
++
++cleanup() {
++  echo $sched_rt_runtime_orig > $sched_rt_runtime
++}
++
+ errexit() { # message
+   echo "Error: $1" 1>&2
++  cleanup
+   exit $err_ret
+ }
+ 
+@@ -39,6 +56,8 @@ if [ `id -u` -ne 0 ]; then
+   errexit "this must be run by root user"
+ fi
+ 
++setup
++
+ # Utilities
+ absdir() { # file_path
+   (cd `dirname $1`; pwd)
+@@ -235,6 +254,7 @@ TOTAL_RESULT=0
+ 
+ INSTANCE=
+ CASENO=0
++
+ testcase() { # testfile
+   CASENO=$((CASENO+1))
+   desc=`grep "^#[ \t]*description:" $1 | cut -f2 -d:`
+@@ -406,5 +426,7 @@ prlog "# of unsupported: " `echo $UNSUPPORTED_CASES | wc -w`
+ prlog "# of xfailed: " `echo $XFAILED_CASES | wc -w`
+ prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
+ 
++cleanup
++
+ # if no error, return 0
+ exit $TOTAL_RESULT
 -- 
 2.20.1
 
