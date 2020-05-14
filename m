@@ -2,90 +2,138 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66F0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB19320671
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A7C20671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:08:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dj7/g773"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgENOHZ (ORCPT
+        id S1727839AbgENOIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:07:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60154 "EHLO
+        Thu, 14 May 2020 10:08:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgENOHY (ORCPT
+        with ESMTP id S1726707AbgENOIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:07:24 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F12C061A0C;
-        Thu, 14 May 2020 07:07:24 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZEW8-008HXc-IU; Thu, 14 May 2020 14:07:20 +0000
-Date:   Thu, 14 May 2020 15:07:20 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 11/20] amifb: get rid of pointless access_ok() calls
-Message-ID: <20200514140720.GB23230@ZenIV.linux.org.uk>
-References: <20200509234124.GM23230@ZenIV.linux.org.uk>
- <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
- <CGME20200509234610eucas1p258be307cde10392b26c322354db78a9b@eucas1p2.samsung.com>
- <20200509234557.1124086-11-viro@ZenIV.linux.org.uk>
- <6f89732b-fba9-a947-6c61-5d1680747f3b@samsung.com>
+        Thu, 14 May 2020 10:08:12 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12AE8C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:08:12 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id j3so3646980ljg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:08:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4tjpLfreP4k0pSGmLfKu7J4qVyl2PfcgR+DBUFuyQfI=;
+        b=Dj7/g773oDlRsTiNUR7xo2qlLm/wu1orsMurVYbTiR6KmugblKgadVSe7mPERK4aCL
+         vEPNEYTpo0FsOvkLTFcAR67KlJyF7Lm0tYMvWEFjNfuewnDqxPfak/mLCAwyBwyRj2ir
+         q0by15fYjqzhJnUNE1ONVJGr3vLUxaVTcB05C/nT5aCMA95AP0XrrQXYs66hWza3MVLf
+         R+msddyOYrqaHHXoL1h2Zg7FvdZ9e0msvkVGT4lgti3NVlNIlsRBi9Wq6iHo7+nPlyp+
+         J4SOOLifvlUKFSIzHAfmGa1qomnjT8z0ZSZ1URkY4VQZLOT1r8zjI6FEv5Gh00Bgxe6d
+         cS2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4tjpLfreP4k0pSGmLfKu7J4qVyl2PfcgR+DBUFuyQfI=;
+        b=WW64coZG4UEYECie2wwd6BeIGwgBGbVEJPVKmzP/y3OYtOTo6k3jcCOg+qm/ND7W1q
+         b3hhMnreEYj10IOJfy7KISbD4vgLZj5ylzIrbstMaPeTuFI/nrBAvcSH6/+jRjS4lvXt
+         1OGq9lh3QRp//TKvWyDiYSPxV9s7HOIpyq1T2QTVwRsq+174TNCszdphEXQ8SVKclRtp
+         Z9AzBKzPtXBAds4I71U2iw7UtBDhRzmA/DnMwXps+7QnoG2An0BzZNx7N0e/0C0XcfvO
+         WFv3XvXlO5vH+lka+czy8cff++O7KgCfrHhnvFokJvE7sRJzQslyPmEcbcC//L3jVDlf
+         O7fQ==
+X-Gm-Message-State: AOAM532jSucC/S1Fg4mFOSbPudkIo+giTtTcVXvlZ2E4LL98iaOjI9wk
+        KqBfAxmGdBaV0Bueji5HbBNkJgBwwQIsz5UWJ56xhg==
+X-Google-Smtp-Source: ABdhPJx5t1yZM5yB0Se02KNKlQ3Kf5olZkwfnoQ7/EcJOQjcx6eZpQDoXhQSKSv4wdy91TSKQPnH1L4MsQ9yfH5F0tc=
+X-Received: by 2002:a2e:531e:: with SMTP id h30mr2030382ljb.168.1589465290360;
+ Thu, 14 May 2020 07:08:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6f89732b-fba9-a947-6c61-5d1680747f3b@samsung.com>
+References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
+ <1589267017-17294-6-git-send-email-dillon.minfei@gmail.com>
+ <CACRpkdbZoMDC-D12CByKJUZbu4shqixC=QrKwJUd8x=nyK7seQ@mail.gmail.com> <CAL9mu0LVsePqifEC+-FR+NxvuZT3UGpU86KhzaTqb7w_Px0z2g@mail.gmail.com>
+In-Reply-To: <CAL9mu0LVsePqifEC+-FR+NxvuZT3UGpU86KhzaTqb7w_Px0z2g@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 14 May 2020 16:07:57 +0200
+Message-ID: <CACRpkdbcD7i+kNoJ9YP5XXTtLi12=yzW5OBNzet5oRdwPYz=dA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] drm/panel: Add ilitek ili9341 driver
+To:     dillon min <dillon.minfei@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 03:45:09PM +0200, Bartlomiej Zolnierkiewicz wrote:
-> 
-> Hi Al,
-> 
-> On 5/10/20 1:45 AM, Al Viro wrote:
-> > From: Al Viro <viro@zeniv.linux.org.uk>
-> > 
-> > addresses passed only to get_user() and put_user()
-> 
-> This driver lacks checks for {get,put}_user() return values so it will
-> now return 0 ("success") even if {get,put}_user() fails.
-> 
-> Am I missing something?
+On Thu, May 14, 2020 at 12:22 PM dillon min <dillon.minfei@gmail.com> wrote:
 
-"now" is interesting, considering
-/* We let the MMU do all checking */
-static inline int access_ok(const void __user *addr,
-                            unsigned long size)
-{
-        return 1;
-}
-in arch/m68k/include/asm/uaccess_mm.h
+> > > +       /* Gamma */
+> > > +       mipi_dbi_command(dbi, ILI9341_3GAMMA_EN, 0x00);
+> > > +       mipi_dbi_command(dbi, MIPI_DCS_SET_GAMMA_CURVE, 0x01);
+> > > +       mipi_dbi_command(dbi, ILI9341_PGAMMA,
+> > > +                        0x0f, 0x31, 0x2b, 0x0c, 0x0e, 0x08, 0x4e, 0xf1,
+> > > +                        0x37, 0x07, 0x10, 0x03, 0x0e, 0x09, 0x00);
+> > > +       mipi_dbi_command(dbi, ILI9341_NGAMMA,
+> > > +                        0x00, 0x0e, 0x14, 0x03, 0x11, 0x07, 0x31, 0xc1,
+> > > +                        0x48, 0x08, 0x0f, 0x0c, 0x31, 0x36, 0x0f);
+> >
+> > It seems to be copies of the stuff above, but why is there a different
+> > gamma if you use DBI?
 
-Again, access_ok() is *NOT* about checking if memory is readable/writable/there
-in the first place.  All it does is a static check that address is in
-"userland" range - on architectures that have kernel and userland sharing the
-address space.  On architectures where we have separate ASI or equivalents
-thereof for kernel and for userland the fscker is always true.
+> for dbi interface, currently i just copy the code from tiny/ili9341.c.
+> as so many boards use this driver now, like raspberry pi, etc
+> i'm afraid it's will not work after modification. so, just leave the
+> original code there.
 
-If MMU will prevent access to kernel memory by uaccess insns for given address
-range, access_ok() is fine with it.  It does not do anything else.
+OK if you move it to ili9341_config it will be clear which panels
+need this gamma and which panels need another gamma.
 
-And yes, get_user()/put_user() callers should handle the fact that those can
-fail.  Which they bloody well can _after_ _success_ of access_ok().  And
-without any races whatsoever.
+I think there should be one ili9341_config for the new st,*
+variant and one for the old DBI variant.
 
-IOW, the lack of such checks is a bug, but it's quite independent from the
-bogus access_ok() call.  On any architecture.  mmap() something, munmap()
-it and pass the address where it used to be to that ioctl().  Failing
-get_user()/put_user() is guaranteed, so's succeeding access_ok().
+> anther question:
+> is there any panel driver have dbi & dpi or dpi & dsi supported? which
+> i mean support
+> two different panel interface in one driver.
+> thanks
 
-And that code is built only on amiga, so access_ok() always succeeds, anyway.
+Usually you split the driver in three files becuase a driver can
+only list one initcall, and also it makes it modularized.
+
+There is nothing in-tree but look at my branch here:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/log/?h=ux500-skomer-v5.7-rc1
+
+You see how I split up the s6e63m0 driver in one SPI part
+and one DSI part:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/commit/?h=ux500-skomer-v5.7-rc1&id=6c0e1fb5df5fa8fa857dee65f6c0f54d06d158a7
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git/commit/?h=ux500-skomer-v5.7-rc1&id=cfbf562cc709b53b62f5fbc7fedf176ffa17b088
+
+The overall idea should work the same with DBI.
+
+Yours,
+Linus Walleij
+
+Yours,
+Linus Walleij
