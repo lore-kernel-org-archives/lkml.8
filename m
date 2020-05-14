@@ -2,179 +2,131 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A40C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E377C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 356EB20734
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:46:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iPSYU1NF"
+	by mail.kernel.org (Postfix) with ESMTP id 6DF4520734
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:47:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589496457;
+	bh=iQBGql9/hs9lhCfJ/JyxvS/wQesl/AufJOUCGqFFWQ8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=HM1hsc6bVw1t3zyzqQPIWpHd8bnZrOcydnz4d8n35pY0Iw+b0p5+mZqT9aFk8yVCM
+	 VNnhWzqaGBroqCABkOxPF+buu2gE5NuxZxOtYgFzqN6Vs+eBdbtaoJ5qenVvW5rlGc
+	 sfBjaAgBXALk8qIMw27bbF7EW72W0l6esYUd6Sh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgENWqS (ORCPT
+        id S1728873AbgENWrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 18:46:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728229AbgENWqS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 18:46:18 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A5FC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 15:46:17 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id o134so128658ybg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 15:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=POuXew2dZTfo+AAdAXA/gMfQxAYaYlVBrbHqZq4eBQI=;
-        b=iPSYU1NFFmECEfZZoetjsu3C8g7e+tEssoRwhVZyOSA85xhQMR/pjPT9cXHmdmOxE+
-         /KJgAc7ucvmkGmvYfpFKk7bDn3qUbQEAjklSh54N85axgBUtOZ41y7f/TJ80mTb2wWNK
-         WWeowifC7Cd0cTdTD2DbiLNU4cS9jGI7tYugf+UaSLISm7d7b/dDWBnxpWy0dLiw4YZX
-         agge5yeKaOs+STLbz2DJbN4gJB1oYk2/00Y63q+m2UB6hrWotMtieVoGz9vJWpFldMHw
-         jA3iPtfNMGKYj/HYpcDRzgMz8iPKOzzvD3CvCPx3HN++K8laH7BpYPzZcU3I0duIDVL4
-         Q9Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=POuXew2dZTfo+AAdAXA/gMfQxAYaYlVBrbHqZq4eBQI=;
-        b=m6qfKc4BVgrh78dIAptwiDPcApmaR5ulfy47bCqK6QsC+/wbveXfckUknKzPRpj+kK
-         aF9sHBaommeHe4Kwqs+g7Yr78gCl2HR4tp4OF50Vpyg4lVle334jEM+nToUexCr2AOog
-         zAIo6JW1IBU6NjVvN+BNXEa1aUuz91LfimkIJ3uQDRkoZ9MzU51PAjyaa9xVTfSmDsTQ
-         gC7y+L2hKe9qvIzSvbrsxgZ4CYMrAdnCVWsj7FKnTHGYhFN8NH4qLBnMPGp6hMjR+89b
-         BhMFMAh2S1qdwOdqOlKHCwocbWS3qF6oN1zE+pI2VrPs58X/drYVaDrVctgm1PAzoKys
-         Bp8A==
-X-Gm-Message-State: AOAM530ZAKvvaFWLGCCWrBLzoI5CPIzOGm3MRRBu016xQDH/gohQzWwh
-        8iRC4EXjfm3IZmLTUsjShlHXIycpuKOnGDglo8mn4A==
-X-Google-Smtp-Source: ABdhPJzrhS5iga/Jep70n6Eujt0J+XcfIlwwM4+SMNTF+7FwI83KwV2QrBSrdeoVZMMx1Ksx+kKDt/KqPHdJfvPk0DY=
-X-Received: by 2002:a25:c08b:: with SMTP id c133mr943269ybf.286.1589496376951;
- Thu, 14 May 2020 15:46:16 -0700 (PDT)
+        Thu, 14 May 2020 18:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728229AbgENWrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 18:47:36 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B66320709;
+        Thu, 14 May 2020 22:47:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589496455;
+        bh=iQBGql9/hs9lhCfJ/JyxvS/wQesl/AufJOUCGqFFWQ8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=ibZRUddvhZ1wDWv1IkPJnerw0O6RDh4blVoFd375pCwbmKBVOq5sVFF0dtdkbvxdF
+         Ja1jhAHAr/D2x8rdRM/Tx8b1VCYqzIgyZyIP5TSs9UhQfqBTd8wSuPDb9yci3UmV1o
+         UJYxVXWhy42JbmNyWHxK6WLj0UuBr7N6qBCLD9PQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 6265235229C6; Thu, 14 May 2020 15:47:35 -0700 (PDT)
+Date:   Thu, 14 May 2020 15:47:35 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 08/10] rcu: Allow to deactivate nocb on a CPU
+Message-ID: <20200514224735.GA2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-9-frederic@kernel.org>
+ <20200513183831.GV2869@paulmck-ThinkPad-P72>
+ <20200513224525.GA18303@lenoir>
+ <20200514154707.GL2869@paulmck-ThinkPad-P72>
+ <20200514223021.GA4071@lenoir>
 MIME-Version: 1.0
-References: <20200513234738.GA21211@embeddedor> <20200514131030.GL5583@kernel.org>
- <20200514150601.GS4897@embeddedor> <CAP-5=fWTCFx80Hd_97_4AxFV4KsRyYptLbQfw=XVw_j8i-EAyg@mail.gmail.com>
- <20200514220934.GT4897@embeddedor>
-In-Reply-To: <20200514220934.GT4897@embeddedor>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 14 May 2020 15:46:05 -0700
-Message-ID: <CAP-5=fV5URsHn+SpW8N4XjkKT1vt2T1Us5FsqaJsoOW0zn=OxQ@mail.gmail.com>
-Subject: Re: [PATCH perf/core] perf intel-pt: Fix clang build failure in intel_pt_synth_pebs_sample
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514223021.GA4071@lenoir>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 3:04 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> On Thu, May 14, 2020 at 12:06:48PM -0700, Ian Rogers wrote:
-> > On Thu, May 14, 2020 at 8:01 AM Gustavo A. R. Silva
-> > <gustavoars@kernel.org> wrote:
-> > >
-> > > On Thu, May 14, 2020 at 10:10:30AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > Em Wed, May 13, 2020 at 06:47:38PM -0500, Gustavo A. R. Silva escreveu:
-> > > > > Fix the following build failure generated with command
-> > > > > $ make CC=clang HOSTCC=clang -C tools/ perf:
-> > > > >
-> > > > > util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
-> > > > >                         struct branch_stack br_stack;
-> > > > >                                             ^
-> > > > > 1 error generated.
-> > > > >
-> > > > > Fix this by reordering the members of struct br.
-> > > >
-> > > > Yeah, I noticed that as far back as with ubuntu 16.04's clang:
-> > > >
-> > > > clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)
-> > > >
-> > > > util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU
-> > > >       extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
-> > > >                         struct branch_stack br_stack;
-> > > >                                             ^
-> > > > 1 error generated.
-> > > >
-> > > >
-> > > > Will fold this with the bug introducing the problem to avoid bisection
-> > > > problems.
-> > > >
-> > >
-> > > I agree. Also, the commit hash of the "Fixes" tag only applies to the
-> > > perf/core branch and, I guess that might create confusion.
-> >
-> >
-> > So while this fixes the warning I believe it breaks the intent of the code.
-> >
-> > tools/perf/util/branch.h:
-> > struct branch_stack {
-> >        u64                     nr;
-> >        u64                     hw_idx;
-> >        struct branch_entry     entries[];
-> > };
-> >
-> > tools/perf/util/intel-pt.c:
-> >                struct {
-> >                        struct branch_stack br_stack;
-> >                        struct branch_entry entries[LBRS_MAX];
-> >                } br;
-> >
-> > The array in br is trying to extend branch_stack's entries array. You
-> > might have to do something like:
-> >
-> > alignas(alignof(branch_stack)) char storage[sizeof(branch_stack) +
-> > sizeof(branch_entry) * LBRS_MAX];
-> > struct branch_stack *br = &storage;
-> >
-> > malloc/free may be nicer on the eyeballs.
-> >
->
-> Yep, I'd go for zalloc/free. There are a couple of places where dynamic
-> memory is being allocated for struct branch_stack:
->
-> tools/perf/util/cs-etm.c-256-   if (etm->synth_opts.last_branch) {
-> tools/perf/util/cs-etm.c:257:           size_t sz = sizeof(struct branch_stack);
-> tools/perf/util/cs-etm.c-258-
-> tools/perf/util/cs-etm.c-259-           sz += etm->synth_opts.last_branch_sz *
-> tools/perf/util/cs-etm.c-260-                 sizeof(struct branch_entry);
-> tools/perf/util/cs-etm.c-261-           tidq->last_branch = zalloc(sz);
->
-> tools/perf/util/thread-stack.c-148-     if (br_stack_sz) {
-> tools/perf/util/thread-stack.c:149:             size_t sz = sizeof(struct branch_stack);
-> tools/perf/util/thread-stack.c-150-
-> tools/perf/util/thread-stack.c-151-             sz += br_stack_sz * sizeof(struct branch_entry);
-> tools/perf/util/thread-stack.c-152-             ts->br_stack_rb = zalloc(sz);
->
-> there is even function intel_pt_alloc_br_stack().
->
-> Just out of curiosity, why the need of such a hack in this case (the
-> on-stack extension of branch_stack's entries array)?
+On Fri, May 15, 2020 at 12:30:23AM +0200, Frederic Weisbecker wrote:
+> On Thu, May 14, 2020 at 08:47:07AM -0700, Paul E. McKenney wrote:
+> > On Thu, May 14, 2020 at 12:45:26AM +0200, Frederic Weisbecker wrote:
+> > This last seems best to me.  The transition from CBLIST_NOT_OFFLOADED
+> > to CBLIST_OFFLOADING of course needs to be on the CPU in question with
+> > at least bh disabled.  Probably best to be holding rcu_nocb_lock(),
+> > but that might just be me being overly paranoid.
+> 
+> So that's in the case of offloading, right? Well, I don't think we'd
+> need to even disable bh nor lock nocb. We just need the current CPU
+> to see the local update of cblist->offloaded = CBLIST_OFFLOADING
+> before the kthread is unparked:
+> 
+>     cblist->offloaded = CBLIST_OFFLOADING;
+>     /* Make sure subsequent softirq lock nocb */
+>     barrier();
+>     kthread_unpark(rdp->nocb_cb_thread);
+> 
+> Now, although that guarantees that nocb_cb will see CBLIST_OFFLOADING
+> upon unparking, it's not guaranteed that the nocb_gp will see it on its
+> next round. Ok so eventually you're right, I should indeed lock nocb...
 
-My guess would be that the lbr size is an architectural constant and
-so avoiding malloc/free in what could be a hot loop was desirable.
-As this is part of a larger patch set, is this the only place this
-problem has been encountered? Perhaps a macro could perform the
-complicated stack allocation I suggested. It may be nice to save
-cycles if code this pattern is widespread and the code hot.
+I suspect that our future selves would hate us much less if we held
+that lock.  ;-)
 
-Thanks,
-Ian
+> > > > > +static long rcu_nocb_rdp_deoffload(void *arg)
+> > > > > +{
+> > > > > +	struct rcu_data *rdp = arg;
+> > > > > +
+> > > > > +	WARN_ON_ONCE(rdp->cpu != raw_smp_processor_id());
+> > > > > +	__rcu_nocb_rdp_deoffload(rdp);
+> > > > > +
+> > > > > +	return 0;
+> > > > > +}
+> > > > 
+> > > > For example, is the problem caused by invocations of this
+> > > > rcu_nocb_rdp_deoffload() function?
+> > > 
+> > > How so?
+> > 
+> > It looked to me like it wasn't excluding either rcu_barrier() or CPU
+> > hotplug.  It might also not have been pinning onto the CPU in question,
+> > but that might just be me misremembering.  Then again, I didn't see a
+> > call to it, so maybe its callers set things up appropriately.
+> > 
+> > OK, I will bite...  What is the purpose of rcu_nocb_rdp_deoffload()?  ;-)
+> 
+> Ah it's called using work_on_cpu() which launch a workqueue on the
+> target and waits for completion. And that whole thing is protected
+> inside the barrier mutex and hotplug.
 
-> Thanks
-> --
-> Gustavo
->
+Ah!  Yet again, color me blind.
+
+							Thanx, Paul
+
+> > Agreed!  And I do believe that concurrent callback execution will
+> > prove better than a possibly indefinite gap in callback execution.
+> 
+> Mutual agreement! :-)
+> 
+> Thanks.
