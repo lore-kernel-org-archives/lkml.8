@@ -2,104 +2,125 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18421C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A712EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE5992065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:45:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hFuUonEO"
+	by mail.kernel.org (Postfix) with ESMTP id 92C592065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbgENTpi (ORCPT
+        id S1728514AbgENTq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:45:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56778 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727124AbgENTph (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:45:37 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8425EC061A0C;
-        Thu, 14 May 2020 12:45:37 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w10so4917171ljo.0;
-        Thu, 14 May 2020 12:45:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=y33CB2RjXQSPflCbv7sglflbYuRAcYzmH0WsL8hN1T8=;
-        b=hFuUonEOnaooHkyNnKdFyJwtoTY4PSn4SDBC2E89lEkADliphTvBIyK3w3tw0Nr3wZ
-         PHjQNjrsMy4yBj43blR56wpbaNTNd1FIOzFHyE5CW2xj5uYcvbrH4YsDKnWCn5hvyuVC
-         4/GSQ0RQH10CkvxSuQkXuncFWiNsRgrhxmb4DTZ6wh37Tbnt4mpQlYJMnpTCPLuKz2Cg
-         lr3Ovn7uk8UPosjRYqF386eg6BRlvz8j5TA06cbTyI2f/GANAzQyNSNW8MqZ5qc6VLy8
-         7qowvDDjVbWBmguG3e1GHhSaWonoCEOOxs3x39qdXmQgalRATRBiRwZQisiZRpmG9PMP
-         SoyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=y33CB2RjXQSPflCbv7sglflbYuRAcYzmH0WsL8hN1T8=;
-        b=JKWK0pWvSgVVyDSsaBKuZLGIyU3IEhqGELwgNKbRXja/4azyc7hc8gkDY66PNaX3I0
-         xGY0Ibi1Nr7peFr6qhSRFKzv9fF50wgl7/sskSvdkKl9h6s3MwoQS7o49SR90gPdxq1t
-         Njt16iptmQEHrH4B/sA5OVVWFpo2w27oyLQHkPoK3cLnN5YoqAxoRppUKIASO4CWIw/g
-         Ww6z0DNa8NzdFMwFLfBBdbS+QevUaaH6G42Gai0iY/t/VrrgvS2r5pQn0dpK4JXuQKls
-         3KSFNwuJ67LWH0SK6CK2p2GhWz+j72EY+vd7IMPhpRaErdmW1Sz5ZvAPr9/AcdcNb/Wa
-         TaxA==
-X-Gm-Message-State: AOAM531CUESnnuP9G82iviIM5t5gC70Er2pgF4tMr1fedKHO7flmxsVQ
-        mV5Se46PlunThHor7NCNNr7CazZB
-X-Google-Smtp-Source: ABdhPJykqJyO1P02hFRHS2axd71wSZUSY02vBScCk8tKoEpJbOnF6CLfArfBlAH4BQxZD5PfeNIr1Q==
-X-Received: by 2002:a05:651c:28c:: with SMTP id b12mr3765580ljo.167.1589485535792;
-        Thu, 14 May 2020 12:45:35 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id m11sm2405321lfo.55.2020.05.14.12.45.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 12:45:33 -0700 (PDT)
-Subject: Re: [PATCH v5 00/10] input: elants: Support Asus TF300T touchscreen
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Rob Herring <robh+dt@kernel.org>,
-        Scott Liu <scott.liu@emc.com.tw>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1587923061.git.mirq-linux@rere.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b1396e50-8fab-701d-cfcf-4fdfd83846f6@gmail.com>
-Date:   Thu, 14 May 2020 22:45:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 15:46:27 -0400
+Received: from mga06.intel.com ([134.134.136.31]:64955 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727124AbgENTq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 15:46:26 -0400
+IronPort-SDR: 7ohElgzrERaYD5cL4ZsH66kypUVifQqRSj5fOT7yh9sQCLbYwY2IHif76utv9JDSLRddW81NC5
+ NdOPEGl03Ljg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 12:46:25 -0700
+IronPort-SDR: flsIJHe9UI6UCiP5a+x7YBC+A6tXzkxifMrWzGrk8lM66Gxh34vkP5RWv/UrwXOzigfoh2gPDJ
+ pQ2qVTf+3KUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
+   d="scan'208";a="307200453"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 May 2020 12:46:25 -0700
+Date:   Thu, 14 May 2020 12:46:24 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Tsirkin <mst@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, x86@kernel.org
+Subject: Re: [PATCH RFC 4/5] KVM: x86: aggressively map PTEs in
+ KVM_MEM_ALLONES slots
+Message-ID: <20200514194624.GB15847@linux.intel.com>
+References: <20200514180540.52407-1-vkuznets@redhat.com>
+ <20200514180540.52407-5-vkuznets@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <cover.1587923061.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514180540.52407-5-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.04.2020 20:47, Michał Mirosław пишет:
-> This series cleans up the driver a bit and implements changes needed to
-> support EKTF3624-based touchscreen used in Asus TF300T and similar
-> Tegra3-based tablets.
+On Thu, May 14, 2020 at 08:05:39PM +0200, Vitaly Kuznetsov wrote:
+> All PTEs in KVM_MEM_ALLONES slots point to the same read-only page
+> in KVM so instead of mapping each page upon first access we can map
+> everything aggressively.
 > 
+> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
-> v2: extended with Dmitry's patches (replaced v1 patches 3 and 4)
-> v3: rebased for v5.7-rc1
-> v4: rebased onto v5.7-rc2+ (current Linus' master)
->     update "remove unused axes" and "refactor
->       elants_i2c_execute_command()" patches after review
->     add David's patch converting DT binding to YAML
-> v5: rebased onto dtor/input/for-linus
+>  arch/x86/kvm/mmu/mmu.c         | 20 ++++++++++++++++++--
+>  arch/x86/kvm/mmu/paging_tmpl.h | 23 +++++++++++++++++++++--
+>  2 files changed, 39 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 3db499df2dfc..e92ca9ed3ff5 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4154,8 +4154,24 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+>  		goto out_unlock;
+>  	if (make_mmu_pages_available(vcpu) < 0)
+>  		goto out_unlock;
+> -	r = __direct_map(vcpu, gpa, write, map_writable, max_level, pfn,
+> -			 prefault, is_tdp && lpage_disallowed);
+> +
+> +	if (likely(!(slot->flags & KVM_MEM_ALLONES) || write)) {
 
-Hello Johnny,
+The 'write' check is wrong.  More specifically, patch 2/5 is missing code
+to add KVM_MEM_ALLONES to memslot_is_readonly().  If we end up going with
+an actual kvm_allones_pg backing, writes to an ALLONES memslots should be
+handled same as writes to RO memslots; MMIO occurs but no MMIO spte is
+created.
 
-Could you please help with reviewing this series? Thanks in advance!
+> +		r = __direct_map(vcpu, gpa, write, map_writable, max_level, pfn,
+> +				 prefault, is_tdp && lpage_disallowed);
+> +	} else {
+> +		/*
+> +		 * KVM_MEM_ALLONES are 4k only slots fully mapped to the same
+> +		 * readonly 'allones' page, map all PTEs aggressively here.
+> +		 */
+> +		for (gfn = slot->base_gfn; gfn < slot->base_gfn + slot->npages;
+> +		     gfn++) {
+> +			r = __direct_map(vcpu, gfn << PAGE_SHIFT, write,
+> +					 map_writable, max_level, pfn, prefault,
+> +					 is_tdp && lpage_disallowed);
+
+IMO this is a waste of memory and TLB entries.  Why not treat the access as
+the MMIO it is and emulate the access with a 0xff return value?  I think
+it'd be a simple change to have __kvm_read_guest_page() stuff 0xff, i.e. a
+kvm_allones_pg wouldn't be needed.  I would even vote to never create an
+MMIO SPTE.  The guest has bigger issues if reading from a PCI hole is
+performance sensitive.
+
+Regarding memory, looping wantonly on __direct_map() will eventually trigger
+the BUG_ON() in mmu_memory_cache_alloc().  mmu_topup_memory_caches() only
+ensures there are enough objects available to map a single translation, i.e.
+one entry per level, sans the root[*].
+
+[*] The gorilla math in mmu_topup_memory_caches() is horrendously misleading,
+    e.g. the '8' pages is really 2*(ROOT_LEVEL - 1), but the 2x part has been
+    obsolete for the better part of a decade, and the '- 1' wasn't actually
+    originally intended or needed, but is now required because of 5-level
+    paging.  I have the beginning of a series to clean up that mess; it was
+    low on my todo list because I didn't expect anyone to be mucking with
+    related code :-)
+
+> +			if (r)
+> +				break;
+> +		}
+> +	}
