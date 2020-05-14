@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35ABC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6F0C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A04920675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5E42065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482881;
-	bh=mnsnQNLchygybflZZZL8c9OSGC7fBb4sSVWGNXqw1kc=;
+	s=default; t=1589482880;
+	bh=qulwPbZkzE4NFTAAUi2Qdb36dRGHKbHi3E8aGXOWyBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BKChE62kBp7ls/wzGyI6fwpTEgc5WZBhH8FrCsT0nxQh63aW+iJCgHuDc7bZpnWmN
-	 cylLMo81Cb0Lhh8hMArHYobZP8jiRoPmexKD1IJDottyEGkBA2n98GLOiBfK8jJ8dA
-	 HB3xoOVxj1neeXSmbV598ZOcmH8U3F6E25fTyMhc=
+	b=dmkfHU/PFZHvVChPgqjwGK/NfJONXHKOtvbB4uN9sO6A3HyjJmkiHRr+sWz6pYSMG
+	 cuM/Z/6wHJIg6tm8PuR2xcrX/cHRm3T67JURS3W0Z3XfmFRDXKT0oQGHO9n2ypLXya
+	 KhDg8qGrbS9aRhJPSyu9RVYqka7p5gylWxmKGiao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbgENSza (ORCPT
+        id S1729401AbgENSzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55438 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:55:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729290AbgENSzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:05 -0400
+        id S1729326AbgENSzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF1D4207D4;
-        Thu, 14 May 2020 18:55:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 106F9207F9;
+        Thu, 14 May 2020 18:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482504;
-        bh=mnsnQNLchygybflZZZL8c9OSGC7fBb4sSVWGNXqw1kc=;
+        s=default; t=1589482512;
+        bh=qulwPbZkzE4NFTAAUi2Qdb36dRGHKbHi3E8aGXOWyBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=twrzYFTjIZFf15o1O5YIWGWIIQV4icvIqpluvttbNRrv9c6DPpxDIW9/gbSGkh8Mj
-         yr7sT/vR4SCN79VocwK8aRM2y0NrJIri+19eVA4TlJNO5P0bzuSW5bbusKg3DifVbx
-         hTGn5VJ+o6JMvNIhtRiJmNcXB4C+Ox+UEZH18NmQ=
+        b=eokYUBXCwqkjaCYLg/aGwj5LkQC4qV8Kp91O7oAjDwKI1/MGiamWUDlAbJrg2k2Gz
+         ue6Ds34gIg83Vn8AvcjqrK7wz4GY4dO9FR5Svvo4M7snz1vU0NfSYB945JTYY0kCus
+         IlviC8oXAJHCSaeQ12modxq+wkIa3rvYcg61P3Yc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/39] batman-adv: Fix refcnt leak in batadv_store_throughput_override
-Date:   Thu, 14 May 2020 14:54:23 -0400
-Message-Id: <20200514185456.21060-6-sashal@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 11/39] x86/entry/64: Fix unwind hints in register clearing code
+Date:   Thu, 14 May 2020 14:54:28 -0400
+Message-Id: <20200514185456.21060-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
 References: <20200514185456.21060-1-sashal@kernel.org>
@@ -62,48 +65,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit 6107c5da0fca8b50b4d3215e94d619d38cc4a18c ]
+[ Upstream commit 06a9750edcffa808494d56da939085c35904e618 ]
 
-batadv_show_throughput_override() invokes batadv_hardif_get_by_netdev(),
-which gets a batadv_hard_iface object from net_dev with increased refcnt
-and its reference is assigned to a local pointer 'hard_iface'.
+The PUSH_AND_CLEAR_REGS macro zeroes each register immediately after
+pushing it.  If an NMI or exception hits after a register is cleared,
+but before the UNWIND_HINT_REGS annotation, the ORC unwinder will
+wrongly think the previous value of the register was zero.  This can
+confuse the unwinding process and cause it to exit early.
 
-When batadv_store_throughput_override() returns, "hard_iface" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
+Because ORC is simpler than DWARF, there are a limited number of unwind
+annotation states, so it's not possible to add an individual unwind hint
+after each push/clear combination.  Instead, the register clearing
+instructions need to be consolidated and moved to after the
+UNWIND_HINT_REGS annotation.
 
-The issue happens in one error path of
-batadv_store_throughput_override(). When batadv_parse_throughput()
-returns NULL, the refcnt increased by batadv_hardif_get_by_netdev() is
-not decreased, causing a refcnt leak.
-
-Fix this issue by jumping to "out" label when batadv_parse_throughput()
-returns NULL.
-
-Fixes: 0b5ecc6811bd ("batman-adv: add throughput override attribute to hard_ifaces")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: 3f01daecd545 ("x86/entry/64: Introduce the PUSH_AND_CLEAN_REGS macro")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Jones <dsj@fb.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lore.kernel.org/r/68fd3d0bc92ae2d62ff7879d15d3684217d51f08.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/entry/calling.h | 38 +++++++++++++++++++++-----------------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
-diff --git a/net/batman-adv/sysfs.c b/net/batman-adv/sysfs.c
-index e44a7f29d598e..ed789845d195c 100644
---- a/net/batman-adv/sysfs.c
-+++ b/net/batman-adv/sysfs.c
-@@ -1081,7 +1081,7 @@ static ssize_t batadv_store_throughput_override(struct kobject *kobj,
- 	ret = batadv_parse_throughput(net_dev, buff, "throughput_override",
- 				      &tp_override);
- 	if (!ret)
--		return count;
-+		goto out;
+diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
+index 557c1bdda311b..1dbc62a96b859 100644
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -98,13 +98,6 @@ For 32-bit we have the following conventions - kernel is built with
+ #define SIZEOF_PTREGS	21*8
  
- 	old_tp_override = atomic_read(&hard_iface->bat_v.throughput_override);
- 	if (old_tp_override == tp_override)
+ .macro PUSH_AND_CLEAR_REGS rdx=%rdx rax=%rax save_ret=0
+-	/*
+-	 * Push registers and sanitize registers of values that a
+-	 * speculation attack might otherwise want to exploit. The
+-	 * lower registers are likely clobbered well before they
+-	 * could be put to use in a speculative execution gadget.
+-	 * Interleave XOR with PUSH for better uop scheduling:
+-	 */
+ 	.if \save_ret
+ 	pushq	%rsi		/* pt_regs->si */
+ 	movq	8(%rsp), %rsi	/* temporarily store the return address in %rsi */
+@@ -117,29 +110,40 @@ For 32-bit we have the following conventions - kernel is built with
+ 	pushq   %rcx		/* pt_regs->cx */
+ 	pushq   \rax		/* pt_regs->ax */
+ 	pushq   %r8		/* pt_regs->r8 */
+-	xorl	%r8d, %r8d	/* nospec   r8 */
+ 	pushq   %r9		/* pt_regs->r9 */
+-	xorl	%r9d, %r9d	/* nospec   r9 */
+ 	pushq   %r10		/* pt_regs->r10 */
+-	xorl	%r10d, %r10d	/* nospec   r10 */
+ 	pushq   %r11		/* pt_regs->r11 */
+-	xorl	%r11d, %r11d	/* nospec   r11*/
+ 	pushq	%rbx		/* pt_regs->rbx */
+-	xorl    %ebx, %ebx	/* nospec   rbx*/
+ 	pushq	%rbp		/* pt_regs->rbp */
+-	xorl    %ebp, %ebp	/* nospec   rbp*/
+ 	pushq	%r12		/* pt_regs->r12 */
+-	xorl	%r12d, %r12d	/* nospec   r12*/
+ 	pushq	%r13		/* pt_regs->r13 */
+-	xorl	%r13d, %r13d	/* nospec   r13*/
+ 	pushq	%r14		/* pt_regs->r14 */
+-	xorl	%r14d, %r14d	/* nospec   r14*/
+ 	pushq	%r15		/* pt_regs->r15 */
+-	xorl	%r15d, %r15d	/* nospec   r15*/
+ 	UNWIND_HINT_REGS
++
+ 	.if \save_ret
+ 	pushq	%rsi		/* return address on top of stack */
+ 	.endif
++
++	/*
++	 * Sanitize registers of values that a speculation attack might
++	 * otherwise want to exploit. The lower registers are likely clobbered
++	 * well before they could be put to use in a speculative execution
++	 * gadget.
++	 */
++	xorl	%edx,  %edx	/* nospec dx  */
++	xorl	%ecx,  %ecx	/* nospec cx  */
++	xorl	%r8d,  %r8d	/* nospec r8  */
++	xorl	%r9d,  %r9d	/* nospec r9  */
++	xorl	%r10d, %r10d	/* nospec r10 */
++	xorl	%r11d, %r11d	/* nospec r11 */
++	xorl	%ebx,  %ebx	/* nospec rbx */
++	xorl	%ebp,  %ebp	/* nospec rbp */
++	xorl	%r12d, %r12d	/* nospec r12 */
++	xorl	%r13d, %r13d	/* nospec r13 */
++	xorl	%r14d, %r14d	/* nospec r14 */
++	xorl	%r15d, %r15d	/* nospec r15 */
++
+ .endm
+ 
+ .macro POP_REGS pop_rdi=1 skip_r11rcx=0
 -- 
 2.20.1
 
