@@ -2,113 +2,131 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F419D206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3CC206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:03:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiSjcqLv"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="n6Sz4IPk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725999AbgENHCY (ORCPT
+        id S1726066AbgENHDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 03:02:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbgENHCX (ORCPT
+        Thu, 14 May 2020 03:03:54 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:11775 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725925AbgENHDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 03:02:23 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65EC0C061A0C;
-        Thu, 14 May 2020 00:02:22 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id s20so821693plp.6;
-        Thu, 14 May 2020 00:02:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=exf19t930SX+cfRNGe3IOO9qF0esqQVEBJnT+ceqQ/8=;
-        b=UiSjcqLv1eEZMcvmQdBlNM5ZyA8GwZxaoMw9FDpacqki9xA2V/XiBs03oWn0+JpTvr
-         U2lS4lW8M7veY9L3habkuCeBuEk2nK3kwVsZ2K5f/NAIS7dErrdJg12dVvgXn4tX/Run
-         s2j2m4+t1Rh54mWaYSuiNGIeC11p/VWoJMHkXVOvCT5haLvCbopVP8BhFhduvokHT8pS
-         bTTJq2j8+5IE4NkpAd+8+g8dbxcTr02nwfVX4BhJb+cmJfx6lu3KcA74lvOAZuKO3pOh
-         k5zmgkmUMvINjGYMgwgk5wI5U+0MLBBbXTz/B9oMoucy6h6nFOdB5VgIU6fF/vzGejOP
-         qnjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=exf19t930SX+cfRNGe3IOO9qF0esqQVEBJnT+ceqQ/8=;
-        b=ZDqb0XzS+H7jHLGw8muXs7x5+MkmxDvBnVSGXW/ygtl4MASFJe6DImsbskANYw7n9V
-         lGLENLlVq8cdQSvuLp0FLhO436pW/sy9xnodB+4QMXhbOU/STgKBQ35UzZkU95FbslX5
-         NYyjhbUqxo51GPIKCX4cWsNTPvR0rBCmbxaUeKXy7igRKizPNZF+ZMKe8/2nsjXO+6I1
-         rZ7yeoNet4FKk1B0jqdMPgZWg3WVW5HERmboA9wngoWywUR4zjLELgLH4CMZ44dwFT0C
-         mH6paAEKy/d5Koy//rL+M0Bheqgm91VJeDwJQ12OY0EE9KvLmNjfTu4Sfsq+KKBs3jRI
-         XDag==
-X-Gm-Message-State: AOAM5325qP4kW7BVA3P0/xUxCAhVFPzmjBpXz2Qx31xa7+xyMr7hjZbw
-        8nFt2k5hT2+Q6BlNVIZplg==
-X-Google-Smtp-Source: ABdhPJxCYR2LmEz5QYdvaLfhTkPuGVvRQAIsEbKTvtGgBIEY6YC9lI6Y4UDTOB9L9yVvyTO172nIAQ==
-X-Received: by 2002:a17:902:8c8f:: with SMTP id t15mr2735774plo.183.1589439741756;
-        Thu, 14 May 2020 00:02:21 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4071:5b5:d53:89fb:f860:f992:54ab])
-        by smtp.gmail.com with ESMTPSA id i128sm1446807pfc.149.2020.05.14.00.02.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 00:02:20 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sfr@canb.auug.org.au, frextrite@gmail.com, joel@joelfernandes.org,
-        paulmck@kernel.org, cai@lca.pw,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH net] ipv6: Fix suspicious RCU usage warning in ip6mr
-Date:   Thu, 14 May 2020 12:32:04 +0530
-Message-Id: <20200514070204.3108-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 14 May 2020 03:03:54 -0400
+X-UUID: fcb38e2b35a447638b004c071c864383-20200514
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=dUbZ4h/pak8n0CVkjJFglNd+gPQf1JMPki21rpI0rB4=;
+        b=n6Sz4IPkrLAZYE/pA3143h6ZlgvdagIG5IWiBhuXBr2jSZQ0o9lfvwDsWcZPlVKmdw5ECq7EKIpCvIQo4zlnPcc7TX1xiZJM1S/sztzUFj9mdZb+Hvs9rHb5kXAVyEqKVr8nIigjGoEfef0duvVSuwaojy+NweWy+8kvQ9esy2c=;
+X-UUID: fcb38e2b35a447638b004c071c864383-20200514
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1275437998; Thu, 14 May 2020 15:03:42 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 14 May
+ 2020 15:03:41 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 14 May 2020 15:03:41 +0800
+Message-ID: <1589439742.5899.2.camel@mhfsdcap03>
+Subject: Re: [PATCH V3 6/8] phy: tegra: xusb: Add support for charger detect
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Date:   Thu, 14 May 2020 15:02:22 +0800
+In-Reply-To: <1589437363-16727-7-git-send-email-nkristam@nvidia.com>
+References: <1589437363-16727-1-git-send-email-nkristam@nvidia.com>
+         <1589437363-16727-7-git-send-email-nkristam@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 630653DF28017AEEC4A91D6B8F0C31D2D6B4094032B02BF0A5F4434F43D9BF9A2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-
-This patch fixes the following warning:
-
-=============================
-WARNING: suspicious RCU usage
-5.7.0-rc4-next-20200507-syzkaller #0 Not tainted
------------------------------
-net/ipv6/ip6mr.c:124 RCU-list traversed in non-reader section!!
-
-ipmr_new_table() returns an existing table, but there is no table at
-init. Therefore the condition: either holding rtnl or the list is empty
-is used.
-
-Fixes: d13fee049f ("Default enable RCU list lockdep debugging with .."): WARNING: suspicious RCU usage
-Reported-by: kernel test robot <lkp@intel.com>
-Suggested-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- net/ipv6/ip6mr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/ipv6/ip6mr.c b/net/ipv6/ip6mr.c
-index 65a54d74acc1..fbe282bb8036 100644
---- a/net/ipv6/ip6mr.c
-+++ b/net/ipv6/ip6mr.c
-@@ -98,7 +98,7 @@ static void ipmr_expire_process(struct timer_list *t);
- #ifdef CONFIG_IPV6_MROUTE_MULTIPLE_TABLES
- #define ip6mr_for_each_table(mrt, net) \
- 	list_for_each_entry_rcu(mrt, &net->ipv6.mr6_tables, list, \
--				lockdep_rtnl_is_held())
-+				lockdep_rtnl_is_held() ||  list_empty(&net->ipv6.mr6_tables))
- 
- static struct mr_table *ip6mr_mr_table_iter(struct net *net,
- 					    struct mr_table *mrt)
--- 
-2.17.1
+T24gVGh1LCAyMDIwLTA1LTE0IGF0IDExOjUyICswNTMwLCBOYWdhcmp1bmEgS3Jpc3RhbSB3cm90
+ZToNCj4gUGVyZm9ybSBjaGFyZ2VyLWRldGVjdCBvcGVyYXRpb24gaWYgY29ycmVzcG9uZGluZyBk
+dCBwcm9wZXJ0eSBpcyBlbmFibGVkLg0KPiBVcGRhdGUgdXNiLXBoeSB3aXRoIHRoZSBkZXRlY3Rl
+ZCBjaGFyZ2VyIHN0YXRlIGFuZCBtYXggY3VycmVudCB2YWx1ZXMuDQo+IFJlZ2lzdGVyIGNoYXJn
+ZXItZGV0ZWN0IEFQSSdzIG9mIHVzYi1waHkgdG8gcHJvdmlkZSBuZWVkZWQgZnVuY3Rpb25hbGl0
+aWVzLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogTmFnYXJqdW5hIEtyaXN0YW0gPG5rcmlzdGFtQG52
+aWRpYS5jb20+DQo+IC0tLQ0KPiBWMzoNCj4gIC0gQWxsaWdoZWQgZnVuY3Rpb25zIGFuZCBpdHMg
+YXJndW1lbnRzLg0KPiAgLSByZXBsYWNlZCBzcGFjZWQgYnkgdGFicyBmb3IgTUFDUk8gZGVmaW5p
+dGlvbiBhbGxpZ25tZW50cy4NCj4gIC0gVW5pZmllZCBwcmltYXJ5IGFuZCBzZWNvbmRhcnkgY2hh
+cmdlciBkZXRlY3QgQVBJJ3MuDQo+ICAtIFVzZWQgcmVhZGxfcG9sbF90aW1lb3V0IGluc3RlYWQg
+b2Ygd2hpbGUgbG9vcCBjb25kaXRpb24gY2hlY2sgZm9yIHJlZ2lzdGVyLg0KPiAgLSBGaXhlZCBv
+dGhlciBjb21tZW50cyBhcyBwZXIgaW5wdXRzIGZyb20gVGhpZXJyeS4NCj4gLS0tDQo+IFYyOg0K
+PiAgLSBQYXRjaCByZS1iYXNlZC4NCj4gLS0tDQo+ICBkcml2ZXJzL3BoeS90ZWdyYS9NYWtlZmls
+ZSB8ICAgMiArLQ0KPiAgZHJpdmVycy9waHkvdGVncmEvY2QuYyAgICAgfCAyODMgKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICBkcml2ZXJzL3BoeS90ZWdy
+YS94dXNiLmMgICB8ICA4MCArKysrKysrKysrKysrDQo+ICBkcml2ZXJzL3BoeS90ZWdyYS94dXNi
+LmggICB8ICAgNyArKw0KPiAgNCBmaWxlcyBjaGFuZ2VkLCAzNzEgaW5zZXJ0aW9ucygrKSwgMSBk
+ZWxldGlvbigtKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGh5L3RlZ3JhL2NkLmMN
+Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BoeS90ZWdyYS9NYWtlZmlsZSBiL2RyaXZlcnMv
+cGh5L3RlZ3JhL01ha2VmaWxlDQo+IGluZGV4IDg5Yjg0MDYuLmJlZmRmYzQgMTAwNjQ0DQo+IC0t
+LSBhL2RyaXZlcnMvcGh5L3RlZ3JhL01ha2VmaWxlDQo+ICsrKyBiL2RyaXZlcnMvcGh5L3RlZ3Jh
+L01ha2VmaWxlDQo+IEBAIC0xLDcgKzEsNyBAQA0KPiAgIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
+cjogR1BMLTIuMC1vbmx5DQo+ICBvYmotJChDT05GSUdfUEhZX1RFR1JBX1hVU0IpICs9IHBoeS10
+ZWdyYS14dXNiLm8NCj4gIA0KPiAtcGh5LXRlZ3JhLXh1c2IteSArPSB4dXNiLm8NCj4gK3BoeS10
+ZWdyYS14dXNiLXkgKz0geHVzYi5vIGNkLm8NCj4gIHBoeS10ZWdyYS14dXNiLSQoQ09ORklHX0FS
+Q0hfVEVHUkFfMTI0X1NPQykgKz0geHVzYi10ZWdyYTEyNC5vDQo+ICBwaHktdGVncmEteHVzYi0k
+KENPTkZJR19BUkNIX1RFR1JBXzEzMl9TT0MpICs9IHh1c2ItdGVncmExMjQubw0KPiAgcGh5LXRl
+Z3JhLXh1c2ItJChDT05GSUdfQVJDSF9URUdSQV8yMTBfU09DKSArPSB4dXNiLXRlZ3JhMjEwLm8N
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L3RlZ3JhL2NkLmMgYi9kcml2ZXJzL3BoeS90ZWdy
+YS9jZC5jDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAuLmZkZGJlNGMN
+Cj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9kcml2ZXJzL3BoeS90ZWdyYS9jZC5jDQo+IEBAIC0w
+LDAgKzEsMjgzIEBADQo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiAr
+LyoNCj4gKyAqIENvcHlyaWdodCAoYykgMjAyMCwgTlZJRElBIENPUlBPUkFUSU9OLiAgQWxsIHJp
+Z2h0cyByZXNlcnZlZC4NCj4gKyAqLw0KPiArDQo+ICsjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4N
+Cj4gKyNpbmNsdWRlIDxsaW51eC9pb3BvbGwuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUu
+aD4NCj4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gKyNpbmNsdWRlIDxs
+aW51eC9waHkvcGh5Lmg+DQo+ICsNCj4gKyNpbmNsdWRlICJ4dXNiLmgiDQo+ICsNCj4gKy8qIERh
+dGEgY29udGFjdCBkZXRlY3Rpb24gdGltZW91dCAqLw0KPiArI2RlZmluZSBURENEX1RJTUVPVVRf
+TVMJCQkJNDAwDQo+ICsNCj4gKyNkZWZpbmUgVVNCMl9CQVRURVJZX0NIUkdfT1RHUEFEWF9DVEww
+KHgpCSgweDgwICsgKHgpICogMHg0MCkNCj4gKyNkZWZpbmUgIFBEX0NIRwkJCQkJKDEgPDwgMCkN
+Cj4gKyNkZWZpbmUgIFZEQ0RfREVUX0ZJTFRFUl9FTgkJCSgxIDw8IDQpDQo+ICsjZGVmaW5lICBW
+REFUX0RFVAkJCQkoMSA8PCA1KQ0KPiArI2RlZmluZSAgVkRBVF9ERVRfRklMVEVSX0VOCQkJKDEg
+PDwgOCkNCj4gKyNkZWZpbmUgIE9QX1NJTktfRU4JCQkJKDEgPDwgOSkNCj4gKyNkZWZpbmUgIE9Q
+X1NSQ19FTgkJCQkoMSA8PCAxMCkNCj4gKyNkZWZpbmUgIE9OX1NJTktfRU4JCQkJKDEgPDwgMTEp
+DQo+ICsjZGVmaW5lICBPTl9TUkNfRU4JCQkJKDEgPDwgMTIpDQo+ICsjZGVmaW5lICBPUF9JX1NS
+Q19FTgkJCQkoMSA8PCAxMykNCj4gKyNkZWZpbmUgIFpJUF9GSUxURVJfRU4JCQkJKDEgPDwgMjEp
+DQo+ICsjZGVmaW5lICBaSU5fRklMVEVSX0VOCQkJCSgxIDw8IDI1KQ0KPiArI2RlZmluZSAgRENE
+X0RFVEVDVEVECQkJCSgxIDw8IDI2KQ0KVXNlIEJJVCgpID8NCj4gKw0KPiArI2RlZmluZSBVU0Iy
+X0JBVFRFUllfQ0hSR19PVEdQQURYX0NUTDEoeCkJKDB4ODQgKyAoeCkgKiAweDQwKQ0KPiArI2Rl
+ZmluZSAgUERfVlJFRwkJCQkoMSA8PCA2KQ0KPiArI2RlZmluZSAgVlJFR19MRVYoeCkJCQkJKCgo
+eCkgJiAweDMpIDw8IDcpDQo+ICsjZGVmaW5lICBWUkVHX0RJUih4KQkJCQkoKCh4KSAmIDB4Mykg
+PDwgMTEpDQo+ICsjZGVmaW5lICBWUkVHX0RJUl9JTgkJCQlWUkVHX0RJUigxKQ0KPiArI2RlZmlu
+ZSAgVlJFR19ESVJfT1VUCQkJCVZSRUdfRElSKDIpDQo+ICsjZGVmaW5lICBVU0JPUF9SUERfT1ZS
+RAkJCQkoMSA8PCAxNikNCj4gKyNkZWZpbmUgIFVTQk9QX1JQRF9PVlJEX1ZBTAkJCSgxIDw8IDE3
+KQ0KPiArI2RlZmluZSAgVVNCT1BfUlBVX09WUkQJCQkJKDEgPDwgMTgpDQo+ICsjZGVmaW5lICBV
+U0JPUF9SUFVfT1ZSRF9WQUwJCQkoMSA8PCAxOSkNCj4gKyNkZWZpbmUgIFVTQk9OX1JQRF9PVlJE
+CQkJCSgxIDw8IDIwKQ0KPiArI2RlZmluZSAgVVNCT05fUlBEX09WUkRfVkFMCQkJKDEgPDwgMjEp
+DQo+ICsjZGVmaW5lICBVU0JPTl9SUFVfT1ZSRAkJCQkoMSA8PCAyMikNCj4gKyNkZWZpbmUgIFVT
+Qk9OX1JQVV9PVlJEX1ZBTAkJCSgxIDw8IDIzKQ0KPiArDQo+ICsjZGVmaW5lIFhVU0JfUEFEQ1RM
+X1VTQjJfT1RHX1BBRFhfQ1RMMCh4KQkoMHg4OCArICh4KSAqIDB4NDApDQo+ICsjZGVmaW5lICBV
+U0IyX09UR19QRDIJCQkJKDEgPDwgMjcpDQo+ICsjZGVmaW5lICBVU0IyX09UR19QRDJfT1ZSRF9F
+TgkJCSgxIDw8IDI4KQ0KPiArI2RlZmluZSAgVVNCMl9PVEdfUERfWkkJCQkJKDEgPDwgMjkpDQo+
+ICsNCj4gKyNkZWZpbmUgWFVTQl9QQURDVExfVVNCMl9CQVRURVJZX0NIUkdfVERDRF9EQk5DX1RJ
+TUVSXzAgKDB4MjgwKQ0KPiArI2RlZmluZSAgIFREQ0RfREJOQyh4KQkJCQkoKCh4KSAmIDB4N2Zm
+KSA8PCAwKQ0KPiArDQo+ICtzdGF0aWMgdm9pZA0KPiArdGVncmFfeHVzYl9wYWRjdGxfc2V0X2Rl
+Ym91bmNlX3RpbWUoc3RydWN0IHRlZ3JhX3h1c2JfcGFkY3RsICpwYWRjdGwsDQo+ICsJCQkJICAg
+IHUzMiBkZWJvdW5jZSkNCg0K
 
