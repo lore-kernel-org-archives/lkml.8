@@ -2,225 +2,101 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 392BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51C4520657
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:39:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="wkHOhdSe"
+	by mail.kernel.org (Postfix) with ESMTP id 0759A20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589481791;
+	bh=BeBb7bNCglxE5Wm/tjXIDeZkke/2v4+gPrRjkPF3Ago=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QtihH9GQLkE8zJX6hO6ixnPy9Ew9k9dnZ4fwSyYFqaGAiGwd+hkhDoMN2Bqqi4SIi
+	 lhi8iz0Tr8DOGxE3p/kWVnfY0KNAeCw+JV69ojrqbQn8r/12N0OtKsIdRgxAEg1ppH
+	 QWjr/v4ksjTSua6KiBUMgQQ2GKjUntnjK8JmT5i8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbgENSjs (ORCPT
+        id S1727124AbgENSnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:39:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727785AbgENSjs (ORCPT
+        Thu, 14 May 2020 14:43:10 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34940 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726667AbgENSnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:39:48 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B03BC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:39:48 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id v17so3234591ote.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:39:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0n2QC4pZht4On7Hf8BM9MQmCusanOijIGIVj0WQ7O4Y=;
-        b=wkHOhdSexBTMTj/0UKt+MD8bMtQVtvQuZFiJRX+rahutlZ20r+ZS7Zlpzh6RWESIPA
-         sKynQ1cn1CfmybZJBTG+RPrZ3GSMsuFru/0H1LExriaEQAQvWro7s/QaAS7+R4IT2AD1
-         kjP62gcBkUG5fVaZl8TAfU0qcUacL1zcSMnfxSKJPAw9lEkYKpp33gltOE2GRd5aDeK9
-         Fwi2uBINqyCM1lbDN46wd9Hv5EWLnhWx+78Woaj1uiKfnuyDpzXhaKVkzXCZW72lqf1V
-         v1W3E8izbdudvkOOV/umnnH0t555WO15WjZ3cEjgkXkq1OOiXyOGvCqQlBDWZufzHXjr
-         BmIQ==
+        Thu, 14 May 2020 14:43:09 -0400
+Received: by mail-ot1-f65.google.com with SMTP id k110so3227723otc.2;
+        Thu, 14 May 2020 11:43:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0n2QC4pZht4On7Hf8BM9MQmCusanOijIGIVj0WQ7O4Y=;
-        b=m1Jed6gohiemEqXQ4+qw3QAXseiiQtzIbXGnJwyjwedVfZFtb7TAQphVHJ22eQDw8J
-         2QIQDxhXrmlzHo6Oz10dYbqolZAeVbruTzyo/QlAVxjRDzdr/0K/CbGtT5QyQKxN2Mug
-         U/Zd2sw8sLIJaBphbKDHR0Vluh7l+t0Vhao039A6A5ORJCkOBcAFd0D1ZbjgmwRg/16z
-         QJ/nZJGlQFzRqIFzmDNzFuBYdv5PoaqKsG+1RLHjt6lVCcQmoKL/moHsSYiDBNaRQM+K
-         CwvyR9DNf4lrr2EJa9ZNs6uEhwExIMLHkXc9JiXAXVXcB07sEzItOZKdcAUPQFBbLfsU
-         V5DA==
-X-Gm-Message-State: AOAM533JkQ0n1648ViYgU3YOTEPVLnt1jk9KHAS2E743HEUhDp6hHx8i
-        hVlYK1BxQLV4zYPH+KZElGjLgw==
-X-Google-Smtp-Source: ABdhPJzUi+2/5kUM5jB4TBphH0ruI7xC5XhSSjSOXdF3paZ7fYazHOU5dPlZNvxyrsSK+5a21hxF9w==
-X-Received: by 2002:a9d:20e2:: with SMTP id x89mr4800294ota.110.1589481587267;
-        Thu, 14 May 2020 11:39:47 -0700 (PDT)
-Received: from [192.168.86.21] ([136.62.4.88])
-        by smtp.gmail.com with ESMTPSA id 90sm975745otl.1.2020.05.14.11.39.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 11:39:46 -0700 (PDT)
-Subject: Re: [PATCH 3/5] exec: Remove recursion from search_binary_handler
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>, dalias@libc.org
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <87eerszyim.fsf_-_@x220.int.ebiederm.org>
- <ee83587b-8a1c-3c4f-cc0f-7bc98afabae1@I-love.SAKURA.ne.jp>
- <CAHk-=wgQ2ovXMW=5ZHCpowkE1PwPQSL7oV4YXzBxd6eqNRXxnQ@mail.gmail.com>
- <87sgg6v8we.fsf@x220.int.ebiederm.org>
- <f33135b7-caa2-94f3-7563-fab6a1f5da0f@landley.net>
- <87ftc3lcmw.fsf@x220.int.ebiederm.org>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <705e28f9-b8ec-4986-bf00-e2892f0272bc@landley.net>
-Date:   Thu, 14 May 2020 13:46:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LGIrY8SDvuTjzejIhxpj+PL53sSxg728mdDpAEJQxe8=;
+        b=VjMLuS9LaTLFpJxYAiOTvbA77irUT3TzEmddQKQiW48weKq+0ztjMvoUGxDmSvGofA
+         5HVk9GHmSMrWwg2ZxR8R+AalcuzWy4Kxg4xGaqEgV/X1hyhS2cUKv6SxCj01SmOUOJeU
+         9DdM6OU8glQtxAg6TwTchBI0rllF+xjlhCAMo7iFeu5cKhS1Mff2OqxMmnnryAkpvIlc
+         YPnghLK5Lmj8nilC7eV9qodckZooxEMYJlvlc/o29EcK0R0FJ0UHHNCJ3iMvoKUptDUQ
+         FQYB23iCcXJwRgTy48tDNlfaiXeOSn2ISPXtHPsDlzg/KmpGpJWwmGEXOg4lUk/pcsBY
+         KPlQ==
+X-Gm-Message-State: AOAM531ZLX7uoEa7knaT7m/VyrRHC4SYyiEoy7qCAS5xA/RFxWMUhmTs
+        VIpXHmGdoT1u/LrCR2kHHQ==
+X-Google-Smtp-Source: ABdhPJx/47NNA/05up2GtjIFWDb9o6IjAicvuuijIfSOZFUWsZZdtOa4nLGqRlZMFhvFdlQEXu78YQ==
+X-Received: by 2002:a05:6830:2147:: with SMTP id r7mr4711948otd.325.1589481788330;
+        Thu, 14 May 2020 11:43:08 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i7sm974717otr.80.2020.05.14.11.43.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 11:43:07 -0700 (PDT)
+Received: (nullmailer pid 8968 invoked by uid 1000);
+        Thu, 14 May 2020 18:43:06 -0000
+Date:   Thu, 14 May 2020 13:43:06 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>, linux-mmc@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 2/9] dt-bindings: irqchip: renesas-irqc: Document
+ r8a7742 bindings
+Message-ID: <20200514184306.GA8929@bogus>
+References: <1588794695-27852-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588794695-27852-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <87ftc3lcmw.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588794695-27852-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/20 4:59 PM, Eric W. Biederman wrote:
-> Careful with your terminology.  ELF sections are for .o's For
-> executables ELF have segments.  And reading through the code it is the
-> program segments that are independently relocatable.
+On Wed,  6 May 2020 20:51:28 +0100, Lad Prabhakar wrote:
+> Document SoC specific bindings for RZ/G1H (r8a7742) SoC.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v1->v2:
+> * No change
+> ---
+> 
+>  .../devicetree/bindings/interrupt-controller/renesas,irqc.yaml   | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Sorry, I have trouble keeping this stuff straight when it's not in front of me.
-(I have a paperback copy of the old "linkers and loaders" book and it was the
-driest thing I have _ever_ slogged through. Back before the Linux Foundation ate
-the FSG I was pushing https://refspecs.linuxbase.org/ to include missing ABI
-supplement, I have copies of ones it doesn't collected from now long-dead sites...)
-
-But more recently I've just made puppy eyes at Rich Felker to have him fix this
-stuff for me, because I do _not_ retain the terminology here. REL vs RELA vs
-PLT, can you have a PLT without a GOT...?
-
-> There is a flag but it is defined per architecture and I don't think one
-> of the architectures define it.
-
-They all check for one, but I don't remember there being a #define.
-
-I have a todo item to check more architectures' fdpic binaries, this was from
-sh2eb (ala j-core):
-
-  https://github.com/landley/toybox/commit/d61aeaf9e#diff-4442ddbb8949R65
-
-There was the out of tree arm fdpic toolchain from the french guys for cortex-m,
-and the original frv paper, and in theory blackfin but nothing they touched ever
-got merged upstream anywhere:
-
-In _theory_ you could do fdpic for x86, but as with u-boot for x86 nobody ever
-bothers because it's got an x86-only solution. (And then the x86 version of
-stuff gets pushed to other platforms because all our device tree files were
-GPLed so of course acpi for arm became a thing. Sigh...)
-
-> I looked at ARM and apparently with an MMU ARM turns fdpic binaries into
-> PIE executables.  I am not certain why.
-
-Falling back to a more widely tested codepath, I expect. Also maybe it saves 3
-registers if all 4 are using the same base register? Map them linearly and it
-becomes "single base + offset"? Which of course looses the extra ASLR benefits
-the security people wanted, but "undoing what the security people want in the
-name of an unmeasurable microbenchmark optimization" is a proud tradition.
-
-Just because the 4 segments are compiled as independently relocatable doesn't
-mean they HAVE to be. (You'd think the code would be using different register
-numbers to index stuff so you'd STILL be using 4 registers, but I haven't looked
-at what arm's doing...)
-
-> The registers passed to the entry point are also different for both
-> cases.
-
-From the same machine code chunks? I boggle at what the ld.so fixup is doing then...
-
-> I think it would have been nice if the fdpic support had used a
-> different ELF type, instead of a different depending on using a
-> different architecture.
-
-This is what you get when a blackfin developer talks to the gnu/binutils developers:
-
-  https://sourceware.org/legacy-ml/binutils/2008-04/msg00350.html
-
-> All that aside the core dumping code looks to be essentially the same
-> between binfmt_elf.c and binfmt_elf_fdpic.c.  Do you think people would
-> be interested in refactoring binfmt_elf.c and binfmt_elf_fdpic.c so that
-> they could share the same core dumping code?
-
-I think merging the two of them together entirely would be a good idea, and
-anything that can collapse together I'm happy to regression test on sh2.
-
-I also note that qemu-sh4eb can run these binaries, maybe I can whip up a
-qemu-system-sh4eb that runs a nommu fdpic userspace...
-
-[hours later]
-
-Ok, here's me asking Rich Felker a question:
-
->>> So fdpic binaries run under qemu-sh2eb and there's a qemu-system-sh2eb that
->>> SHOULD also be able to run them under the r2d board emulation, and the kernel
->>> builds fine under the sh2eb compiler but I can't enable fdpic support without
->>> CONFIG_NOMMU, and if I yank that dependency from Kconfig (which only sh2 has,
->>> arm and such do fdpic with or without mmu) the build breaks with:
->>>
->>> /home/landley/toybox/clean/ccc/sh2eb-linux-muslfdpic-cross/bin/sh2eb-linux-muslfdpic-ld:
->>> fs/binfmt_elf_fdpic.o: in function `load_elf_fdpic_binary':
->>> binfmt_elf_fdpic.c:(.text+0x1734): undefined reference to
->>> `elf_fdpic_arch_lay_out_mm'
->>>
->>> The problem is if I switch off CONFIG_MMU in the kernel, buckets of stuff in the
->>> r2d board kernel config changes and suddenly I don't get serial output from the
->>> qemu-system-sh2eb -M r2d boot anymore. Before it was running the kernel but just
->>> failing to run init...
-
-And his response:
-
->> I don't think qemu-system-sh4eb can boot a nommu kernel. But you don't
->> need to in order to do userspace-only testing. Just build a normal
->> sh4eb kernel. It doesn't need CONFIG_BINFMT_ELF_FDPIC. The normal ELF
->> loader can load FDPIC just fine, because a valid FDPIC ELF file is a
->> valid ELF file, just with more constraints (in same sense a square is
->> a rectangle). The normal ELF loader won't independently float the text
->> and data segments, but that's okay because your emulated system has an
->> MMU and can just map them adjacently like they show up in the ELF file
->> with their untransformed addresses.
->> 
->> Now that I think about it, it's possible that the ARM folks broke this
->> when adding support for enabling CONFIG_BINFMT_ELF_FDPIC with MMU. If
->> so, and you find you really do need the FDPIC loader now because they
->> made the normal ELF loader refuse to do it, I think it will suffice to
->> copy the ARM version of elf_fdpic_arch_lay_out_mm from
->> arch/arm/kernel/elf.c to somewhere it will be compiled on SH.
-
-I.E. testing the kernel fdpic loader under qemu is NOT EASY (because the fdpic
-loader refuses to build in a with-mmu context, and the relevant board emulations
-refuse to build without), but it can fall back to the conventional ELF loader
-which collates the segments and treats fdpic as PIE? (Which... is how qemu-sh2eb
-application emulation is loading them...?)
-
-Which was news to me...
-
-> Eric
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
