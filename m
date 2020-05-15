@@ -2,166 +2,310 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482A5C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FCBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2606C206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589524798;
-	bh=93lBsLTBqlQejJikWc3upfa85v4ns9u2hhd3qLSyww0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KMgLkiXeXQwKwNIrv84xtdS351WNO8ddhg4t5BbcCnJLvaG721ChraBot+Mth+U7c
-	 5XwAkHVLrf5efDXLhgER+wodIGpv1f6iszYs7QqZikfwtvNsRAWyyfGsC0v9NaIopL
-	 2BcOhU24/fmWdHL6Vz9GKOUa1nBNnXbV2QQqCfYY=
+	by mail.kernel.org (Postfix) with ESMTP id 4444D20760
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:42:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="0aGc2/3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgEOGj5 (ORCPT
+        id S1726586AbgEOGmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:39:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgEOGj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:39:57 -0400
-Received: from localhost (unknown [122.178.196.30])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 339DE2065F;
-        Fri, 15 May 2020 06:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589524795;
-        bh=93lBsLTBqlQejJikWc3upfa85v4ns9u2hhd3qLSyww0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1hFvoudcCdvBbJVFrvhJpkAapPz7B/Gc13HDjme8Hcvka9bgKYhZuT7MlPtINkXiG
-         ToOdyuEwEAprJ/1uNeHuZMNSAKzFLEK8VsJ0cL/GHH1RpCwTqcpxHCnpB70EOflmMT
-         HdMOR4/GbLixWrWGuUOLV5TqURAh2vLT6GytoRAw=
-Date:   Fri, 15 May 2020 12:09:50 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200515063950.GI333670@vkoul-mobl>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
- <20200508114153.GK185537@smile.fi.intel.com>
- <20200512140820.ssjv6pl7busqqi3t@mobilestation>
- <20200512191208.GG185537@smile.fi.intel.com>
+        Fri, 15 May 2020 02:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726215AbgEOGmO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 02:42:14 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79885C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:42:12 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id z3so301924vka.10
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:42:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BA59quelcDIdRO9l949jW9ARAKnurXI4XEzSqUYELU8=;
+        b=0aGc2/3Oe8lE6W0GmBwKdtVn9A80fXiRgafCdAIrbNICAcWPA7bdshiQbSgWb+GY+c
+         QXHSadz9Alk0IWk1K5O52dnHgeLOcDNrTOCRfeUCPq7f/aNQONzwN9xx0mqmxKns2dpa
+         YQTBOSFnMib+b4loR0XIYQFU8dw7mptMNHNj72JKS3RrCDYBLSU/2W9tHNkj9JAhjUEf
+         hqXKJ9oNvxsGbenMKAFNlQXvtnkCmXedDaB4jSSeZG2bn4sS1KLAWf4FaFOhkUKbz5h6
+         lYNwGan+ItmduuXW+cesj+198/pDHKJgXy1irGQBotwHxwio5GymDrz50Jh17K11X6oL
+         e0wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BA59quelcDIdRO9l949jW9ARAKnurXI4XEzSqUYELU8=;
+        b=aHo/B9BAldne2ba2SZwTcm/CNA8OfDuUBR8sE2Fpl6qf0gVjJp+4IzTWU/iLn5FfBF
+         yJmrhHivCN+lER4fxxwdwxV0OUnqaGve/MdRDoYZOdBhPhtkbx3e5bmvwfdvuEYThUGt
+         aP4LpIMWYGcDyvX79xE/mxNLnvn3OZXm2sywxGwWUEJLFe5yXbxk8kxDsV66Ia/8oh+m
+         pAA7OqRH8sMjjgczLsfPbGiqZV/vRSlZbUnQzXCftZMBn/uuDxyooteq6QIchID8EB6B
+         ZO18MV7XpkhHdvT+bAtFDBRK6Qvq2Gflc1lzWd5HTXisugmLlsxuth+klR7lgd8P8YkT
+         3XiA==
+X-Gm-Message-State: AOAM531t+7WYmqHzc4W+i/gm1DpmfG6N7DQIXm5TsQMQK1Vs9ywuJ5Ws
+        gYOz5fdqfWMILKviR/8y+3ZQE/RqKsCRJD4tEff/hQ==
+X-Google-Smtp-Source: ABdhPJy97WG9tZErtAsULFfSPQ2I8f+58cBdq2w509U3NXrskksxpY2YjHa+yvY7hNCX5KBgDaNNsncGxmdr5WGEM/I=
+X-Received: by 2002:a1f:1386:: with SMTP id 128mr799240vkt.46.1589524930544;
+ Thu, 14 May 2020 23:42:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512191208.GG185537@smile.fi.intel.com>
+References: <20200512132613.31507-1-narmstrong@baylibre.com> <20200512132613.31507-4-narmstrong@baylibre.com>
+In-Reply-To: <20200512132613.31507-4-narmstrong@baylibre.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Fri, 15 May 2020 12:11:29 +0530
+Message-ID: <CAHLCerPiC3QS5u5CGX20q_5aUk4sN5knF4043_=WjtbhDDGuUg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] thermal: add support for the MCU controlled FAN on
+ Khadas boards
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-05-20, 22:12, Andy Shevchenko wrote:
-> On Tue, May 12, 2020 at 05:08:20PM +0300, Serge Semin wrote:
-> > On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
-> > > On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
-> > > > IP core of the DW DMA controller may be synthesized with different
-> > > > max burst length of the transfers per each channel. According to Synopsis
-> > > > having the fixed maximum burst transactions length may provide some
-> > > > performance gain. At the same time setting up the source and destination
-> > > > multi size exceeding the max burst length limitation may cause a serious
-> > > > problems. In our case the system just hangs up. In order to fix this
-> > > > lets introduce the max burst length platform config of the DW DMA
-> > > > controller device and don't let the DMA channels configuration code
-> > > > exceed the burst length hardware limitation. Depending on the IP core
-> > > > configuration the maximum value can vary from channel to channel.
-> > > > It can be detected either in runtime from the DWC parameter registers
-> > > > or from the dedicated dts property.
-> > > 
-> > > I'm wondering what can be the scenario when your peripheral will ask something
-> > > which is not supported by DMA controller?
-> > 
-> > I may misunderstood your statement, because seeing your activity around my
-> > patchsets including the SPI patchset and sometimes very helpful comments,
-> > this question answer seems too obvious to see you asking it.
-> > 
-> > No need to go far for an example. See the DW APB SSI driver. Its DMA module
-> > specifies the burst length to be 16, while not all of ours channels supports it.
-> > Yes, originally it has been developed for the Intel Midfield SPI, but since I
-> > converted the driver into a generic code we can't use a fixed value. For instance
-> > in our hardware only two DMA channels of total 16 are capable of bursting up to
-> > 16 bytes (data items) at a time, the rest of them are limited with up to 4 bytes
-> > burst length. While there are two SPI interfaces, each of which need to have two
-> > DMA channels for communications. So I need four channels in total to allocate to
-> > provide the DMA capability for all interfaces. In order to set the SPI controller
-> > up with valid optimized parameters the max-burst-length is required. Otherwise we
-> > can end up with buffers overrun/underrun.
-> 
-> Right, and we come to the question which channel better to be used by SPI and
-> the rest devices. Without specific filter function you can easily get into a
-> case of inverted optimizations, when SPI got channels with burst = 4, while
-> it's needed 16, and other hardware otherwise. Performance wise it's worse
-> scenario which we may avoid in the first place, right?
+On Tue, May 12, 2020 at 6:56 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> The new Khadas VIM2 and VIM3 boards controls the cooling fan via the
+> on-board microcontroller.
+>
+> This implements the FAN control as thermal devices and as cell of the Khadas
+> MCU MFD driver.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/thermal/Kconfig          |  10 ++
+>  drivers/thermal/Makefile         |   1 +
+>  drivers/thermal/khadas_mcu_fan.c | 174 +++++++++++++++++++++++++++++++
+>  3 files changed, 185 insertions(+)
+>  create mode 100644 drivers/thermal/khadas_mcu_fan.c
+>
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 91af271e9bb0..72b3960cc5ac 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -490,4 +490,14 @@ config SPRD_THERMAL
+>         help
+>           Support for the Spreadtrum thermal sensor driver in the Linux thermal
+>           framework.
+> +
+> +config KHADAS_MCU_FAN_THERMAL
+> +       tristate "Khadas MCU controller FAN cooling support"
+> +       depends on OF || COMPILE_TEST
 
-If one has channels which are different and described as such in DT,
-then I think it does make sense to specify in your board-dt about the
-specific channels you would require...
-> 
-> > > Peripheral needs to supply a lot of configuration parameters specific to the
-> > > DMA controller in use (that's why we have struct dw_dma_slave).
-> > > So, seems to me the feasible approach is supply correct data in the first place.
-> > 
-> > How to supply a valid data if clients don't know the DMA controller limitations
-> > in general?
-> 
-> This is a good question. DMA controllers are quite different and having unified
-> capabilities structure for all is almost impossible task to fulfil. That's why
-> custom filter function(s) can help here. Based on compatible string you can
-> implement whatever customized quirks like two functions, for example, to try 16
-> burst size first and fallback to 4 if none was previously found.
-> 
-> > > If you have specific channels to acquire then you probably need to provide a
-> > > custom xlate / filter functions. Because above seems a bit hackish workaround
-> > > of dynamic channel allocation mechanism.
-> > 
-> > No, I don't have a specific channel to acquire and in general you may use any
-> > returned from the DMA subsystem (though some platforms may need a dedicated
-> > channels to use, in this case xlate / filter is required). In our SoC any DW DMAC
-> > channel can be used for any DMA-capable peripherals like SPI, I2C, UART. But the
-> > their DMA settings must properly and optimally configured. It can be only done
-> > if you know the DMA controller parameters like max burst length, max block-size,
-> > etc.
-> > 
-> > So no. The change proposed by this patch isn't workaround, but a useful feature,
-> > moreover expected to be supported by the generic DMA subsystem.
-> 
-> See above.
-> 
-> > > But let's see what we can do better. Since maximum is defined on the slave side
-> > > device, it probably needs to define minimum as well, otherwise it's possible
-> > > that some hardware can't cope underrun bursts.
-> > 
-> > There is no need to define minimum if such limit doesn't exists except a
-> > natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
-> > added such capability into the generic DMA subsystem so far.
-> 
-> There is a contract between provider and consumer about DMA resource. That's
-> why both sides should participate in fulfilling it. Theoretically it may be a
-> hardware that doesn't support minimum burst available in DMA by a reason. For
-> such we would need minimum to be provided as well.
+Could you add a depends on the some board/SoC Kconfig option here so
+this doesn't show up for non-Amlogic/non-Khadas boards?
 
-Agreed and if required caps should be extended to tell consumer the
-minimum values supported.
+Looks OK otherwise.
 
--- 
-~Vinod
+> +       select MFD_CORE
+> +       select REGMAP
+> +       help
+> +         If you say yes here you get support for the FAN controlled
+> +         by the Microcontroller found on the Khadas VIM boards.
+> +
+>  endif
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 8c8ed7b79915..460428c2122c 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -60,3 +60,4 @@ obj-$(CONFIG_ZX2967_THERMAL)  += zx2967_thermal.o
+>  obj-$(CONFIG_UNIPHIER_THERMAL) += uniphier_thermal.o
+>  obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
+>  obj-$(CONFIG_SPRD_THERMAL)     += sprd_thermal.o
+> +obj-$(CONFIG_KHADAS_MCU_FAN_THERMAL)   += khadas_mcu_fan.o
+> diff --git a/drivers/thermal/khadas_mcu_fan.c b/drivers/thermal/khadas_mcu_fan.c
+> new file mode 100644
+> index 000000000000..044d4aba8be2
+> --- /dev/null
+> +++ b/drivers/thermal/khadas_mcu_fan.c
+> @@ -0,0 +1,174 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Khadas MCU Controlled FAN driver
+> + *
+> + * Copyright (C) 2020 BayLibre SAS
+> + * Author(s): Neil Armstrong <narmstrong@baylibre.com>
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/khadas-mcu.h>
+> +#include <linux/regmap.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/thermal.h>
+> +
+> +#define MAX_LEVEL 3
+> +
+> +struct khadas_mcu_fan_ctx {
+> +       struct khadas_mcu *mcu;
+> +       unsigned int level;
+> +       struct thermal_cooling_device *cdev;
+> +};
+> +
+> +static int khadas_mcu_fan_set_level(struct khadas_mcu_fan_ctx *ctx,
+> +                                   unsigned int level)
+> +{
+> +       int ret;
+> +
+> +       ret = regmap_write(ctx->mcu->map, KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG,
+> +                          level);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ctx->level = level;
+> +
+> +       return 0;
+> +}
+> +
+> +static int khadas_mcu_fan_get_max_state(struct thermal_cooling_device *cdev,
+> +                                       unsigned long *state)
+> +{
+> +       struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
+> +
+> +       if (!ctx)
+> +               return -EINVAL;
+> +
+> +       *state = MAX_LEVEL;
+> +
+> +       return 0;
+> +}
+> +
+> +static int khadas_mcu_fan_get_cur_state(struct thermal_cooling_device *cdev,
+> +                                       unsigned long *state)
+> +{
+> +       struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
+> +
+> +       if (!ctx)
+> +               return -EINVAL;
+> +
+> +       *state = ctx->level;
+> +
+> +       return 0;
+> +}
+> +
+> +static int
+> +khadas_mcu_fan_set_cur_state(struct thermal_cooling_device *cdev,
+> +                            unsigned long state)
+> +{
+> +       struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
+> +
+> +       if (!ctx || (state > MAX_LEVEL))
+> +               return -EINVAL;
+> +
+> +       if (state == ctx->level)
+> +               return 0;
+> +
+> +       return khadas_mcu_fan_set_level(ctx, state);
+> +}
+> +
+> +static const struct thermal_cooling_device_ops khadas_mcu_fan_cooling_ops = {
+> +       .get_max_state = khadas_mcu_fan_get_max_state,
+> +       .get_cur_state = khadas_mcu_fan_get_cur_state,
+> +       .set_cur_state = khadas_mcu_fan_set_cur_state,
+> +};
+> +
+> +static int khadas_mcu_fan_probe(struct platform_device *pdev)
+> +{
+> +       struct khadas_mcu *mcu = dev_get_drvdata(pdev->dev.parent);
+> +       struct thermal_cooling_device *cdev;
+> +       struct device *dev = &pdev->dev;
+> +       struct khadas_mcu_fan_ctx *ctx;
+> +       int ret;
+> +
+> +       ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +       if (!ctx)
+> +               return -ENOMEM;
+> +       ctx->mcu = mcu;
+> +       platform_set_drvdata(pdev, ctx);
+> +
+> +       cdev = devm_thermal_of_cooling_device_register(dev->parent,
+> +                       dev->parent->of_node, "khadas-mcu-fan", ctx,
+> +                       &khadas_mcu_fan_cooling_ops);
+> +       if (IS_ERR(cdev)) {
+> +               ret = PTR_ERR(cdev);
+> +               dev_err(dev,
+> +                               "Failed to register khadas-mcu-fan as cooling device: %d\n",
+> +                               ret);
+> +               return ret;
+> +       }
+> +       ctx->cdev = cdev;
+> +       thermal_cdev_update(cdev);
+> +
+> +       return 0;
+> +}
+> +
+> +static int khadas_mcu_fan_disable(struct device *dev)
+> +{
+> +       struct khadas_mcu_fan_ctx *ctx = dev_get_drvdata(dev);
+> +       unsigned int level_save = ctx->level;
+> +       int ret;
+> +
+> +       ret = khadas_mcu_fan_set_level(ctx, 0);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ctx->level = level_save;
+> +
+> +       return 0;
+> +}
+> +
+> +static void khadas_mcu_fan_shutdown(struct platform_device *pdev)
+> +{
+> +       khadas_mcu_fan_disable(&pdev->dev);
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int khadas_mcu_fan_suspend(struct device *dev)
+> +{
+> +       return khadas_mcu_fan_disable(dev);
+> +}
+> +
+> +static int khadas_mcu_fan_resume(struct device *dev)
+> +{
+> +       struct khadas_mcu_fan_ctx *ctx = dev_get_drvdata(dev);
+> +
+> +       return khadas_mcu_fan_set_level(ctx, ctx->level);
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(khadas_mcu_fan_pm, khadas_mcu_fan_suspend,
+> +                        khadas_mcu_fan_resume);
+> +
+> +static const struct platform_device_id khadas_mcu_fan_id_table[] = {
+> +       { .name = "khadas-mcu-fan-ctrl", },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(platform, khadas_mcu_fan_id_table);
+> +
+> +static struct platform_driver khadas_mcu_fan_driver = {
+> +       .probe          = khadas_mcu_fan_probe,
+> +       .shutdown       = khadas_mcu_fan_shutdown,
+> +       .driver = {
+> +               .name           = "khadas-mcu-fan-ctrl",
+> +               .pm             = &khadas_mcu_fan_pm,
+> +       },
+> +       .id_table       = khadas_mcu_fan_id_table,
+> +};
+> +
+> +module_platform_driver(khadas_mcu_fan_driver);
+> +
+> +MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
+> +MODULE_DESCRIPTION("Khadas MCU FAN driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.22.0
+>
