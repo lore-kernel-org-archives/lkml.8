@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBDDC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99638C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 670DE207CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82015207C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgEPAM1 (ORCPT
+        id S1728374AbgEPAMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 20:12:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41084 "EHLO
+        Fri, 15 May 2020 20:12:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727924AbgEPAKu (ORCPT
+        by vger.kernel.org with ESMTP id S1727976AbgEPAK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 20:10:50 -0400
+        Fri, 15 May 2020 20:10:56 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03B39C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 17:10:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED280C05BD0A
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 17:10:55 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jZkPA-00028W-Um; Sat, 16 May 2020 02:10:17 +0200
+        id 1jZkPR-0002NH-FY; Sat, 16 May 2020 02:10:33 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 7DC6DFF834;
-        Sat, 16 May 2020 02:10:15 +0200 (CEST)
-Message-Id: <20200515235125.110889386@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id DF98DFF834;
+        Sat, 16 May 2020 02:10:32 +0200 (CEST)
+Message-Id: <20200515235126.522540101@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sat, 16 May 2020 01:45:54 +0200
+Date:   Sat, 16 May 2020 01:46:08 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V6 07/37] x86/entry: Provide helpers for execute on irqstack
+Subject: [patch V6 21/37] x86/entry: Add IRQENTRY_IRQ macro
 References: <20200515234547.710474468@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -72,130 +72,126 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Device interrupt handlers and system vector handlers are executed on the
-interrupt stack. The stack switch happens in the low level assembly entry
-code. This conflicts with the efforts to consolidate the exit code in C to
-ensure correctness vs. RCU and tracing.
-
-As there is no way to move #DB away from IST due to the MOV SS issue, the
-requirements vs. #DB and NMI for switching to the interrupt stack do not
-exist anymore. The only requirement is that interrupts are disabled.
-
-That allows to move the stack switching to C code which simplifies the
-entry/exit handling further because it allows to switch stacks after
-handling the entry and on exit before handling RCU, return to usermode and
-kernel preemption in the same way as for regular exceptions.
-
-The initial attempt of having the stack switching in inline ASM caused too
-much headache vs. objtool and the unwinder. After analysing the use cases
-it was agreed on that having the stack switch in ASM for the price of an
-indirect call is acceptable as the main users are indirect call heavy
-anyway and the few system vectors which are empty shells (scheduler IPI and
-KVM posted interrupt vectors) can run from the regular stack.
-
-Provide helper functions to check whether the interrupt stack is already
-active and whether stack switching is required.
-
-64 bit only for now. 32 bit has a variant of that already. Once this is
-cleaned up the two implementations might be consolidated as a cleanup on
-top.
+Provide a seperate IDTENTRY macro for device interrupts. Similar to
+IDTENTRY_ERRORCODE with the addition of invoking irq_enter/exit_rcu() and
+providing the errorcode as a 'u8' argument to the C function, which
+truncates the sign extended vector number.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index ce113d5613b6..5ad4893ac31c 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -751,6 +751,20 @@ SYM_CODE_START(\asmsym)
+ SYM_CODE_END(\asmsym)
+ .endm
+ 
++.macro idtentry_irq vector cfunc
++	.p2align CONFIG_X86_L1_CACHE_SHIFT
++SYM_CODE_START_LOCAL(asm_\cfunc)
++	ASM_CLAC
++	SAVE_ALL switch_stacks=1
++	ENCODE_FRAME_POINTER
++	movl	%esp, %eax
++	movl	PT_ORIG_EAX(%esp), %edx		/* get the vector from stack */
++	movl	$-1, PT_ORIG_EAX(%esp)		/* no syscall to restart */
++	call	\cfunc
++	jmp	handle_exception_return
++SYM_CODE_END(asm_\cfunc)
++.endm
++
+ /*
+  * Include the defines which emit the idt entries which are shared
+  * shared between 32 and 64 bit.
 diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 902691b35e7e..3b8da9f09297 100644
+index 9c8529035e58..613f606e6dbf 100644
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -1106,6 +1106,45 @@ SYM_CODE_START_LOCAL_NOALIGN(.Lbad_gs)
- SYM_CODE_END(.Lbad_gs)
- 	.previous
+@@ -528,6 +528,20 @@ SYM_CODE_END(\asmsym)
+ .endm
  
-+/*
-+ * rdi: New stack pointer points to the top word of the stack
-+ * rsi: Function pointer
-+ * rdx: Function argument (can be NULL if none)
+ /*
++ * Interrupt entry/exit.
++ *
++ + The interrupt stubs push (vector) onto the stack, which is the error_code
++ * position of idtentry exceptions, and jump to one of the two idtentry points
++ * (common/spurious).
++ *
++ * common_interrupt is a hotpath, align it to a cache line
 + */
-+SYM_FUNC_START(asm_call_on_stack)
-+	/*
-+	 * Save the frame pointer unconditionally. This allows the ORC
-+	 * unwinder to handle the stack switch.
-+	 */
-+	pushq		%rbp
-+	mov		%rsp, %rbp
++.macro idtentry_irq vector cfunc
++	.p2align CONFIG_X86_L1_CACHE_SHIFT
++	idtentry \vector asm_\cfunc \cfunc has_error_code=1
++.endm
 +
-+	/*
-+	 * The unwinder relies on the word at the top of the new stack
-+	 * page linking back to the previous RSP.
-+	 */
-+	mov		%rsp, (%rdi)
-+	mov		%rdi, %rsp
-+	/* Move the argument to the right place */
-+	mov		%rdx, %rdi
++/*
+  * MCE and DB exceptions
+  */
+ #define CPU_TSS_IST(x) PER_CPU_VAR(cpu_tss_rw) + (TSS_ist + (x) * 8)
+diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
+index 1fad257372e3..5ea35a9f4562 100644
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -163,6 +163,49 @@ __visible noinstr void func(struct pt_regs *regs)
+ #define DEFINE_IDTENTRY_RAW_ERRORCODE(func)				\
+ __visible noinstr void func(struct pt_regs *regs, unsigned long error_code)
+ 
++/**
++ * DECLARE_IDTENTRY_IRQ - Declare functions for device interrupt IDT entry
++ *			  points (common/spurious)
++ * @vector:	Vector number (ignored for C)
++ * @func:	Function name of the entry point
++ *
++ * Maps to DECLARE_IDTENTRY_ERRORCODE()
++ */
++#define DECLARE_IDTENTRY_IRQ(vector, func)				\
++	DECLARE_IDTENTRY_ERRORCODE(vector, func)
 +
-+1:
-+	.pushsection .discard.instr_begin
-+	.long 1b - .
-+	.popsection
++/**
++ * DEFINE_IDTENTRY_IRQ - Emit code for device interrupt IDT entry points
++ * @func:	Function name of the entry point
++ *
++ * The vector number is pushed by the low level entry stub and handed
++ * to the function as error_code argument which needs to be truncated
++ * to an u8 because the push is sign extending.
++ *
++ * On 64bit dtentry_enter/exit() are invoked in the ASM entry code before
++ * and after switching to the interrupt stack. On 32bit this happens in C.
++ *
++ * irq_enter/exit_rcu() are invoked before the function body and the
++ * KVM L1D flush request is set.
++ */
++#define DEFINE_IDTENTRY_IRQ(func)					\
++static __always_inline void __##func(struct pt_regs *regs, u8 vector);	\
++									\
++__visible noinstr void func(struct pt_regs *regs,			\
++			    unsigned long error_code)			\
++{									\
++	idtentry_enter(regs);						\
++	instrumentation_begin();					\
++	irq_enter_rcu();						\
++	kvm_set_cpu_l1tf_flush_l1d();					\
++	__##func (regs, (u8)error_code);				\
++	irq_exit_rcu();							\
++	lockdep_hardirq_exit();						\
++	instrumentation_end();						\
++	idtentry_exit(regs);						\
++}									\
++									\
++static __always_inline void __##func(struct pt_regs *regs, u8 vector)
+ 
+ #ifdef CONFIG_X86_64
+ /**
+@@ -295,6 +338,10 @@ __visible noinstr void func(struct pt_regs *regs,			\
+ #define DECLARE_IDTENTRY_RAW_ERRORCODE(vector, func)			\
+ 	DECLARE_IDTENTRY_ERRORCODE(vector, func)
+ 
++/* Entries for common/spurious (device) interrupts */
++#define DECLARE_IDTENTRY_IRQ(vector, func)				\
++	idtentry_irq vector func
 +
-+	CALL_NOSPEC	rsi
-+
-+2:
-+	.pushsection .discard.instr_end
-+	.long 2b - .
-+	.popsection
-+
-+	/* Restore the previous stack pointer from RBP. */
-+	leaveq
-+	ret
-+SYM_FUNC_END(asm_call_on_stack)
-+
- /* Call softirq on interrupt stack. Interrupts are off. */
- .pushsection .text, "ax"
- SYM_FUNC_START(do_softirq_own_stack)
-diff --git a/arch/x86/include/asm/irq_stack.h b/arch/x86/include/asm/irq_stack.h
-new file mode 100644
-index 000000000000..d58135152ee8
---- /dev/null
-+++ b/arch/x86/include/asm/irq_stack.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_IRQ_STACK_H
-+#define _ASM_X86_IRQ_STACK_H
-+
-+#include <linux/ptrace.h>
-+
-+#include <asm/processor.h>
-+
-+#ifdef CONFIG_X86_64
-+static __always_inline bool irqstack_active(void)
-+{
-+	return __this_cpu_read(irq_count) != -1;
-+}
-+
-+void asm_call_on_stack(void *sp, void *func, void *arg);
-+
-+static __always_inline void run_on_irqstack(void *func, void *arg)
-+{
-+	void *tos = __this_cpu_read(hardirq_stack_ptr);
-+
-+	lockdep_assert_irqs_disabled();
-+
-+	__this_cpu_add(irq_count, 1);
-+	asm_call_on_stack(tos - 8, func, arg);
-+	__this_cpu_sub(irq_count, 1);
-+}
-+
-+#else /* CONFIG_X86_64 */
-+static inline bool irqstack_active(void) { return false; }
-+static inline void run_on_irqstack(void *func, void *arg) { }
-+#endif /* !CONFIG_X86_64 */
-+
-+static __always_inline bool irq_needs_irq_stack(struct pt_regs *regs)
-+{
-+	if (IS_ENABLED(CONFIG_X86_32))
-+		return false;
-+	return !user_mode(regs) && !irqstack_active();
-+}
-+
-+#endif
+ #ifdef CONFIG_X86_64
+ # define DECLARE_IDTENTRY_MCE(vector, func)				\
+ 	idtentry_mce_db vector asm_##func func
 
