@@ -2,111 +2,91 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04706C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA9FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB574206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D14206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:24:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="tnbqvvlN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIriAWOy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgEOJVv (ORCPT
+        id S1728026AbgEOJYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:21:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42772 "EHLO
+        Fri, 15 May 2020 05:24:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727905AbgEOJVv (ORCPT
+        by vger.kernel.org with ESMTP id S1727825AbgEOJYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:21:51 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1433FC05BD09
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 02:21:51 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e25so1472160ljg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 02:21:50 -0700 (PDT)
+        Fri, 15 May 2020 05:24:11 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B05EC061A0C;
+        Fri, 15 May 2020 02:24:10 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id l19so1454979lje.10;
+        Fri, 15 May 2020 02:24:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=I1nraDclARKrCA29EVoPDtpaaicLZToHhlMTKQVzenY=;
-        b=tnbqvvlNgJUlMgPaXVcmYwDPK1ZEltSB+hMIiSEw01VJoPtGPO20Ffto2m7KVmVXm4
-         3oOBH/hZoik3rHCGm+MoRfEYmaf5YHzr9fnPJB35wGze/FhI0C2KW0csgYmk29VigNpy
-         obyyOVX3oZelWh2wm5TNJiCKbGm6OagkvYcNmzbTVZtDOiCqoMaV6kY7SS8PlRCyRDXE
-         +Uj0Qksx0yjiMcFuOlQss4KfmcNhvPHojuf10StzL++Vje/ARhyjWUp4NlFsr2M8oYzk
-         59wMBZ+NTnNBLNtPB3p/+EKJKiIsZl01EwQ2BV4R6ecnz6e2fUqdIN8oiDjahqJYOzpG
-         ilqQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b4HN69hvAxNrKtFX3cEwdX4CzgjCipjYhqqjmfpMvn4=;
+        b=hIriAWOy1p+4acNH2XQv3Jh4M5FeOOMDWHmGL+S0YJbxS7YXk+DdQwX19nvR5qM30+
+         s4W/K7FdDJ26TyBi4Bv7/pGymP8dnU/zG482HsOSaUK56eqT1unCNMC6KvnczGOjy1cR
+         LWDqKZyqUrT1do0HYwd89K9n4yJ5OAYGX3ar8gvnVky2qFXwtmhdJSx41VQv/vLSyfPZ
+         /0KPRofovYl3n/onlgTU+ikybQb3is85/Dv1VPbtL3+mfW8b2WE4eJtvRS0xIn3MKkqR
+         2e1FUfDgv8isaMmI+OqwZ1y2qyPy5Jpg13iolFJ+gPHTX+qy4QBtGe1yenG7gX8DXFrE
+         tpDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=I1nraDclARKrCA29EVoPDtpaaicLZToHhlMTKQVzenY=;
-        b=G5YNYNY6PhmN5GA+ir36biUabR9JVIVc9UVqChVd5fjK33Unm5yw27GVFbELrWzA6N
-         WLIv9DMt19OAevNKDDIsw+LHOT9E//sY5AW/6yABObrLZXrLAjPJty6TshDdgNpU5VrB
-         7HDOjHTpQkCgTfsqQ4Rz6T3hik43PatuWj+nY4dUT6ulDRA40e5bUAmRay2z9zPpGcWm
-         T6M3Yt+bxljY4R1FIUwNEYdjWfNnMarJpAcBwSmnIiuP22PJ9NMHxZz4ImqphKeWB2xV
-         2lYN522pJkMo0CDpbKwD8ylz8vahggNZJb/3ny3bLptd6BKLzqH79fnR8UDkGJ/vVqzW
-         HNzg==
-X-Gm-Message-State: AOAM531vn6ScNQy6JsrB6eMtqFdmfW2Fznz5FsIgNhVs0oMSsQqJ2p7g
-        aQ45aY5tmLDTptQ5GTxSQnatQINt2d+bWw==
-X-Google-Smtp-Source: ABdhPJyRyE45vtKnuPofzX0MqtQD/YgUetIHt8yKvb3J4GkUiZya6GMEdYU/kHj+T3EdCgDpkUCH3w==
-X-Received: by 2002:a2e:9641:: with SMTP id z1mr1517068ljh.215.1589534509054;
-        Fri, 15 May 2020 02:21:49 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:46b9:e14c:2541:1887:9a5d:d412? ([2a00:1fa0:46b9:e14c:2541:1887:9a5d:d412])
-        by smtp.gmail.com with ESMTPSA id 125sm971515lfc.75.2020.05.15.02.21.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 02:21:48 -0700 (PDT)
-Subject: Re: [PATCH] xhci: Fix log mistake of xhci_start
-To:     jiahao <jiahao243@gmail.com>, mathias.nyman@intel.com,
-        gregkh@linuxfoundation.org, jiahao@xiaomi.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1589521506-19492-1-git-send-email-jiahao@xiaomi.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <95a9f0ea-05d0-f1c9-9665-8c8bb0c9c8fe@cogentembedded.com>
-Date:   Fri, 15 May 2020 12:21:36 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b4HN69hvAxNrKtFX3cEwdX4CzgjCipjYhqqjmfpMvn4=;
+        b=gIgsNI6mYtQWzdh1p3XemSbZv6CnRiMZEzrLm8qq63c4QqP1OzKYhDXG7H/s/Vw8l7
+         +cclwg9gf1TZ2MJMKc+6/TlC6CExUrXEbLrnriV1Iw0VKvgFjiEqxSKSOvUcCaU1Ol19
+         0cuJTcmK4Ju0bGLHDvTTssxkxFTCNrsa6yq/6a56PP9ay/B7lx1B81FVgQ3GbImBWqCh
+         eQBeCviWEZW/yjOqj8bi2hbb2VV0g3pj840Z7kK/M2Bb7WWkm4tc8PW6+w8rN9p03aud
+         WHBd1IMxJ/cJjkASzFXWgHDBh9b1DmeF4/h6BWhiZLqtNsKl/F8inIHt9/dgKAJz+GEA
+         zCjw==
+X-Gm-Message-State: AOAM533T4ogwx3qzj3gOqtDTjHtgwO+TFlOLy64UmB3VcJ9YsTM9+8zq
+        hSbs3nH6vRsIfXeOOnQPsYJNzGouGyJ46OB9gII=
+X-Google-Smtp-Source: ABdhPJxqhBbSrg8tCxhJyS+sWLLZoa8qH+jxXWgEv6AhM+XGSKLzKOru+Paq7nMeAOnXyRyIVIudd62cmmzQTAW5g6Y=
+X-Received: by 2002:a2e:b8c9:: with SMTP id s9mr1791449ljp.100.1589534648591;
+ Fri, 15 May 2020 02:24:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1589521506-19492-1-git-send-email-jiahao@xiaomi.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200515021731.cb5y557wsxf66fo3@debian.debian-2> <SN4PR0401MB35985CFC199D20362EBFD8E09BBD0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+In-Reply-To: <SN4PR0401MB35985CFC199D20362EBFD8E09BBD0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+From:   Bo YU <tsu.yubo@gmail.com>
+Date:   Fri, 15 May 2020 17:23:56 +0800
+Message-ID: <CAKq8=3KyewqQLdo-GjERuOfKe5ZrmQ+bRPfFRWiyZkjdEVvSeA@mail.gmail.com>
+Subject: Re: [PATCH -next] fs/btrfs: Fix unlocking in btrfs_ref_tree_mod
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+Cc:     "clm@fb.com" <clm@fb.com>,
+        "josef@toxicpanda.com" <josef@toxicpanda.com>,
+        "sterba@suse.com" <sterba@suse.com>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.05.2020 8:45, jiahao wrote:
-
-> It is obvious that XCHI_MAX_HALT_USEC is usec,
->   not milliseconds; Replace 'milliseconds' with
-
-     I don't see 'milliseconds', only 'microseconds'...
-
-> 'usec' of the debug message.
-> 
-> Signed-off-by: jiahao <jiahao@xiaomi.com>
-> ---
->   drivers/usb/host/xhci.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> index bee5dec..d011472 100644
-> --- a/drivers/usb/host/xhci.c
-> +++ b/drivers/usb/host/xhci.c
-> @@ -147,7 +147,7 @@ int xhci_start(struct xhci_hcd *xhci)
->   			STS_HALT, 0, XHCI_MAX_HALT_USEC);
->   	if (ret == -ETIMEDOUT)
->   		xhci_err(xhci, "Host took too long to start, "
-> -				"waited %u microseconds.\n",
-> +				"waited %u usec.\n",
->   				XHCI_MAX_HALT_USEC);
->   	if (!ret)
->   		/* clear state flags. Including dying, halted or removing */
-> 
-
-MBR, Sergei
+Hi,
+On Fri, May 15, 2020 at 5:03 PM Johannes Thumshirn
+<Johannes.Thumshirn@wdc.com> wrote:
+>
+> On 15/05/2020 04:17, Bo YU wrote:
+> > It adds spin_lock() in add_block_entry() but out path does not unlock
+> > it.
+>
+> Which call path doesn't unlock it? There is an out_unlock label with a
+> spin_unlock() right above your insert. So either coverity messed something
+> up or the call path that needs the unlock has to jump to out_unlock instead
+> of out.
+This is out label without unlocking it. It will be offered spin_lock
+in add_block_entry()
+for be. But here I was worried about that unlock it in if() whether it
+is right or not.
