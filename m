@@ -2,126 +2,200 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A43CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4562074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F582074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbgEOMi1 (ORCPT
+        id S1726234AbgEOMjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:38:27 -0400
-Received: from mga07.intel.com ([134.134.136.100]:3357 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgEOMi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:38:27 -0400
-IronPort-SDR: vmOVCjeoYqyfrZoIZVeVOihqSQ793G60qjiJ/U0NJkRU38JxaIsfhz2VFf5JJ3qziU7RmfIzBu
- OhkVoQ2emEqg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 05:38:26 -0700
-IronPort-SDR: AOM6JheAe7dIdYRzcBx6pLczsGNik9Ktz+q65bTBzKNtWzIDkpRPxkH5ij8g0VhpKWCkej5+wM
- vd8cUu4QS8dA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="253785230"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 15 May 2020 05:38:22 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZZbc-006rEO-7B; Fri, 15 May 2020 15:38:24 +0300
-Date:   Fri, 15 May 2020 15:38:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        "wuxu.wu" <wuxu.wu@huawei.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Clement Leger <cleger@kalray.eu>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 07/19] spi: dw: Discard unused void priv pointer
-Message-ID: <20200515123824.GB185537@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-8-Sergey.Semin@baikalelectronics.ru>
+        Fri, 15 May 2020 08:39:37 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2213 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726144AbgEOMjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 08:39:35 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 99373C53B16BC22619C7;
+        Fri, 15 May 2020 13:39:33 +0100 (IST)
+Received: from [127.0.0.1] (10.47.1.24) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Fri, 15 May
+ 2020 13:39:32 +0100
+Subject: Re: [PATCH] libata: Use per port sync for detach
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, <axboe@kernel.dk>
+CC:     "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200515110916.11556-1-kai.heng.feng@canonical.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <555101fd-71bc-fa0b-98c2-69249bb3eda6@huawei.com>
+Date:   Fri, 15 May 2020 13:38:38 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515104758.6934-8-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200515110916.11556-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.1.24]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 01:47:46PM +0300, Serge Semin wrote:
-> Seeing the "void *priv" member of the dw_spi data structure is unused
-> let's remove it. The glue-layers can embed the DW APB SSI controller
-> descriptor into their private data object. MMIO driver for instance
-> already utilizes that design pattern.
+On 15/05/2020 12:09, Kai-Heng Feng wrote:
+> Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
+> detach") may cause system freeze during suspend.
+> 
+> Using async_synchronize_full() in PM callbacks is wrong, since async
+> callbacks that are already scheduled may wait for not-yet-scheduled
+> callbacks, causes a circular dependency.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+It would be nice to describe this circular dependency a bit more.
 
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
+> Instead of using big hammer like async_synchronize_full(), use async
+> cookie to make sure port probe are synced, without affecting other
+> scheduled PM callbacks.
+
+oh, I thought that we could avoid the hassle of per-port cookie 
+management. Sorry.
+
+Did you check if the original issue which I tried to remedy is still 
+suppressed?
+
+I tried your patch, and got this:
+
+[   28.190587] ------------[ cut here ]------------
+[   28.195194] WARNING: CPU: 79 PID: 1 at drivers/ata/libata-core.c:5888 
+ata_hos
+t_detach+0x238/0x248
+[   28.204025] Modules linked in:
+[   28.207072] CPU: 79 PID: 1 Comm: swapper/0 Tainted: G        W 
+  5.7.0-
+rc5-g644cd6f-dirty #84
+[   28.216076] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 
+2280-V2 CS V
+3.B220.02 03/27/2020
+[   28.224906] pstate: 20c00009 (nzCv daif +PAN +UAO)
+[   28.229677] pc : ata_host_detach+0x238/0x248
+[   28.233929] lr : ata_host_detach+0x12c/0x248
+[   28.238181] sp : ffff0026dc74f980
+[   28.241481] x29: ffff0026dc74f980 x28: 0000000000000000
+[   28.246769] x27: ffff2026c541c010 x26: 00000000000038e0
+[   28.252059] x25: 0000000000003590 x24: ffff0026d3a0a018
+[   28.257350] x23: 0000000000000001 x22: ffff0026d3a0a000
+[   28.262638] x21: 0000000000013ec0 x20: ffff2026c541c000
+[   28.267928] x19: ffff2026c541c020 x18: 0000000000000000
+[   28.273215] x17: 0000000000000000 x16: 0000000000000000
+[   28.278504] x15: 00000000000006c0 x14: 0000000000000000
+[   28.283792] x13: 0000000000000000 x12: 1fffe004da744317
+[   28.289081] x11: ffff8004da744317 x10: dfffa00000000000
+[   28.294370] x9 : ffff8004da744318 x8 : ffff0026d3a218bc
+[   28.299657] x7 : 0000000000000001 x6 : ffff8004da744318
+[   28.304945] x5 : ffff8004da744318 x4 : dfffa00000000000
+[   28.310233] x3 : ffffa00075ea18b4 x2 : 0000000000000003
+[   28.315521] x1 : 0000000000000000 x0 : 0000000000400200
+[   28.320808] Call trace:
+[   28.323246]  ata_host_detach+0x238/0x248
+[   28.327153]  ata_pci_remove_one+0x24/0x38
+[   28.331147]  ahci_remove_one+0x54/0x88
+[   28.334881]  pci_device_remove+0x70/0x148
+[   28.338874]  really_probe+0x17c/0x570
+[   28.342522]  driver_probe_device+0x80/0x150
+[   28.346690]  device_driver_attach+0x9c/0xa8
+[   28.350856]  __driver_attach+0xac/0x118
+[   28.354677]  bus_for_each_dev+0xf0/0x168
+[   28.358584]  driver_attach+0x34/0x48
+[   28.362146]  bus_add_driver+0x240/0x300
+[   28.365966]  driver_register+0xc0/0x1e0
+[   28.369787]  __pci_register_driver+0xb4/0xd0
+[   28.374039]  ahci_pci_driver_init+0x24/0x30
+[   28.378205]  do_one_initcall+0xb8/0x268
+[   28.382027]  kernel_init_freeable+0x294/0x30c
+[   28.386366]  kernel_init+0x14/0x120
+[   28.389841]  ret_from_fork+0x10/0x1c
+[   28.393400] ---[ end trace 9972785c7052048f ]---
+[   28.435826] ahci 0000:b4:03.0: SSS flag set, parallel bus scan disabled
+
+
+Thanks,
+John
+
 > 
+> Fixes: 130f4caf145c ("libata: Ensure ata_port probe has completed before detach")
+> BugLink: https://bugs.launchpad.net/bugs/1867983
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
+>   drivers/ata/libata-core.c | 6 +++---
+>   include/linux/libata.h    | 3 +++
+>   2 files changed, 6 insertions(+), 3 deletions(-)
 > 
-> Changelog v2:
-> - It's a new patch created as a result of more thorough driver study.
-> ---
->  drivers/spi/spi-dw.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-> index 60e9e430ce7b..b6ab81e0c747 100644
-> --- a/drivers/spi/spi-dw.h
-> +++ b/drivers/spi/spi-dw.h
-> @@ -147,8 +147,6 @@ struct dw_spi {
->  	dma_addr_t		dma_addr; /* phy address of the Data register */
->  	const struct dw_spi_dma_ops *dma_ops;
->  
-> -	/* Bus interface info */
-> -	void			*priv;
->  #ifdef CONFIG_DEBUG_FS
->  	struct dentry *debugfs;
->  #endif
-> -- 
-> 2.25.1
-> 
+> diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+> index beca5f91bb4c..4a698f6388cd 100644
+> --- a/drivers/ata/libata-core.c
+> +++ b/drivers/ata/libata-core.c
+> @@ -42,7 +42,6 @@
+>   #include <linux/workqueue.h>
+>   #include <linux/scatterlist.h>
+>   #include <linux/io.h>
+> -#include <linux/async.h>
+>   #include <linux/log2.h>
+>   #include <linux/slab.h>
+>   #include <linux/glob.h>
+> @@ -5778,7 +5777,7 @@ int ata_host_register(struct ata_host *host, struct scsi_host_template *sht)
+>   	/* perform each probe asynchronously */
+>   	for (i = 0; i < host->n_ports; i++) {
+>   		struct ata_port *ap = host->ports[i];
+> -		async_schedule(async_port_probe, ap);
+> +		ap->cookie = async_schedule(async_port_probe, ap);
+>   	}
+>   
+>   	return 0;
+> @@ -5921,7 +5920,8 @@ void ata_host_detach(struct ata_host *host)
+>   	int i;
+>   
+>   	/* Ensure ata_port probe has completed */
+> -	async_synchronize_full();
+> +	for (i = 0; i < host->n_ports; i++)
+> +		async_synchronize_cookie(host->ports[i]->cookie);
+>   
+>   	for (i = 0; i < host->n_ports; i++)
 
--- 
-With Best Regards,
-Andy Shevchenko
+Is it possible to combine these "for" loops?
 
+>   		ata_port_detach(host->ports[i]);
+> diff --git a/include/linux/libata.h b/include/linux/libata.h
+> index cffa4714bfa8..ae6dfc107ea8 100644
+> --- a/include/linux/libata.h
+> +++ b/include/linux/libata.h
+> @@ -22,6 +22,7 @@
+>   #include <linux/acpi.h>
+>   #include <linux/cdrom.h>
+>   #include <linux/sched.h>
+> +#include <linux/async.h>
+>   
+
+alphabetic?
+
+>   /*
+>    * Define if arch has non-standard setup.  This is a _PCI_ standard
+> @@ -872,6 +873,8 @@ struct ata_port {
+>   	struct timer_list	fastdrain_timer;
+>   	unsigned long		fastdrain_cnt;
+>   
+> +	async_cookie_t		cookie;
+> +
+>   	int			em_message_type;
+>   	void			*private_data;
+>   
+> 
 
