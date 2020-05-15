@@ -2,28 +2,29 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98153C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65757C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8237E206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5180D206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgEOR5R (ORCPT
+        id S1726713AbgEOR5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:57:17 -0400
-Received: from lists.gateworks.com ([108.161.130.12]:58788 "EHLO
+        Fri, 15 May 2020 13:57:20 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:58792 "EHLO
         lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgEOR5Q (ORCPT
+        with ESMTP id S1726444AbgEOR5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:57:16 -0400
+        Fri, 15 May 2020 13:57:17 -0400
 Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
         by lists.gateworks.com with esmtp (Exim 4.82)
         (envelope-from <tharvey@gateworks.com>)
-        id 1jZeci-0004Pt-5A; Fri, 15 May 2020 17:59:52 +0000
+        id 1jZecj-0004Pt-MB; Fri, 15 May 2020 17:59:53 +0000
 From:   Tim Harvey <tharvey@gateworks.com>
 To:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>,
@@ -32,158 +33,274 @@ To:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Robert Jones <rjones@gateworks.com>
 Cc:     Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH v11 0/3] Add support for the Gateworks System Controller
-Date:   Fri, 15 May 2020 10:57:05 -0700
-Message-Id: <1589565428-28886-1-git-send-email-tharvey@gateworks.com>
+Subject: [PATCH v11 1/3] dt-bindings: mfd: Add Gateworks System Controller bindings
+Date:   Fri, 15 May 2020 10:57:06 -0700
+Message-Id: <1589565428-28886-2-git-send-email-tharvey@gateworks.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589565428-28886-1-git-send-email-tharvey@gateworks.com>
+References: <1589565428-28886-1-git-send-email-tharvey@gateworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds support for the Gateworks System Controller used on Gateworks
-Laguna, Ventana, and Newport product families.
+This patch adds documentation of device-tree bindings for the
+Gateworks System Controller (GSC).
 
-The GSC is an MSP430 I2C slave controller whose firmware embeds the following
-features:
- - I/O expander (16 GPIO's emulating a PCA955x)
- - EEPROM (enumating AT24)
- - RTC (enumating DS1672)
- - HWMON
- - Interrupt controller with tamper detect, user pushbotton
- - Watchdog controller capable of full board power-cycle
- - Power Control capable of full board power-cycle
-
-see http://trac.gateworks.com/wiki/gsc for more details
-
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 v11:
- - mfd: fix compile error
+ - no change
 
 v10:
- - mfd: fix typo and gramatical errors in Kconfig and comment block
- - mfd: drop unused i2c device-id table
- - mfd: added Lee's ack in s-o-b
+ - no change
 
 v9:
- - rebase against 5.7-rc2
- - dt-binding: remove allOf: see https://lkml.org/lkml/2020/4/15/1930
- - dt-binding: encorporate Lee's review comments for item descriptions
- - dt-binding: added Reviewed-by: Rob Herring <robh@kernel.org>
- - mfd: cleanup gsc_powerdown() by using BIT(), put_unaligned_le32(), and
-   avoid unnecessary assignments
- - mfd: rename GSC_CTRL_1 SLEEP related defines to simplify
- - mfd: add better description and sub-module info to driver description
- - mfd: whitespace changes per review
- - mfd: remove unused irq_data pointer in ddata
- - mfd: remove unnecesary i2c_set_clientdata
- - mfd: use devm_i2c_new_dummy_device to avoid need of free's
- - mfd: change regsiter definitions to enum
- - mfd: export gsc_{read,write} instead of sharing them via ddata
- - hwmon: use exported gsc_{read,write}
- - hwmon: added Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+ - added Reviewed-by: Rob Herring <robh@kernel.org>
+ - remove allOf: see https://lkml.org/lkml/2020/4/15/1930
+ - encorporate Lee's review comments for item descriptions
 
 v8:
- - mfd: whitespace fixes
- - mfd: describe sub-devices in Kconfig
- - mfd: add error print for invalid command
- - mfd: update copyright
- - mfd: use devm_of_platform_populate
- - mfd: use probe_new
- - mfd: move hwmon's regmap init to hwmon
- - hwmon: move hwmon's regmap init to hwmon
- - dt-bindings: add register to fan-controller node name
+ - add register to fan-controller node name
 
 v7:
- - dt-bindings: change divider from mili-ohms to ohms
- - dt-bindings: add constraints for voltage divider and offset
- - dt-bindings: remove unnecessary ref for offset
- - dt-bindings: renamed fan to fan-controller and changed base prop to reg
- - mfd:  remove irq from private data struct
- - hwmon: fix whitespace in Kconfig
- - hwmon: remove unnecessary device pointer in private data
- - hwmon: change divider from mili-ohms to ohms
- - hwmon: move fan base property to reg
+ - change divider from mili-ohms to ohms
+ - add constraints for voltage divider and offset
+ - remove unnecessary ref for offset
+ - renamed fan to fan-controller and changed base prop to reg
 
 v6:
- - hwmon: fix size of info field
- - hwmon: improve pwm output control documentation
- - hwmon: include unit suffix in divider and offset
- - hwmon: change subnode name to gsc-adc
- - hwmon: change to fan subnode
- - hwmon: fix voltage offset
- - dt-bindings: fix commit message typo
- - dt-bindings: drop invalid description from #interrupt-cells property
- - dt-bindings: fix adc pattern property
- - dt-bindings: add unit suffix
- - dt-bindings: replace hwmon/adc with adc/channel
- - dt-bindings: changed adc type to gw,mode
- - dt-bindings: add unit suffix and drop ref for voltage-divider
- - dt-bindings: add unit suffix for voltage-offset
- - dt-bindings: moved fan to its own subnode with base register
+ - fix typo
+ - drop invalid description from #interrupt-cells property
+ - fix adc pattern property
+ - add unit suffix
+ - replace hwmon/adc with adc/channel
+ - changed adc type to mode and enum int
+ - add unit suffix and drop ref for voltage-divider
+ - moved fan to its own subnode with base register
 
 v5:
- - fix checkpatch issues
- - fix dt_binding_check issues
- - address feedback from v4
+ - resolve dt_binding_check issues
 
 v4:
- - hwmon: move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
- - hwmon: remove unncessary resolution/scaling properties for ADCs
- - bindings: update to yaml Documentation
- - removed watchdog driver
+ - move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+ - remove unncessary resolution/scaling properties for ADCs
+ - update to yaml
+ - remove watchdog
 
 v3:
- - removed unnecessary input driver
- - added wdt driver
- - bindings: encorporated feedback from mailng list
- - hwmon:
- - encoroprated feedback from mailng list
- - added support for raw ADC voltage input used in newer GSC firmware
-
-v2:
- - change license comment block style
- - remove COMPILE_TEST
- - fixed whitespace issues
- - replaced a printk with dev_err
- - remove DEBUG
- - simplify regmap_bulk_read err check
- - remove break after returns in switch statement
- - fix fan setpoint buffer address
- - remove unnecessary parens
- - consistently use struct device *dev pointer
- - add validation for hwmon child node props
- - move parsing of of to own function
- - use strlcpy to ensure null termination
- - fix static array sizes and removed unnecessary initializers
- - dynamically allocate channels
- - fix fan input label
- - support platform data
-
-Tim Harvey (3):
-  dt-bindings: mfd: Add Gateworks System Controller bindings
-  mfd: add Gateworks System Controller core driver
-  hwmon: add Gateworks System Controller support
-
- .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 196 +++++++++++
- Documentation/hwmon/gsc-hwmon.rst                  |  53 +++
- Documentation/hwmon/index.rst                      |   1 +
- MAINTAINERS                                        |  11 +
- drivers/hwmon/Kconfig                              |   9 +
- drivers/hwmon/Makefile                             |   1 +
- drivers/hwmon/gsc-hwmon.c                          | 390 +++++++++++++++++++++
- drivers/mfd/Kconfig                                |  15 +
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/gateworks-gsc.c                        | 277 +++++++++++++++
- include/linux/mfd/gsc.h                            |  76 ++++
- include/linux/platform_data/gsc_hwmon.h            |  44 +++
- 12 files changed, 1074 insertions(+)
+ - replaced _ with -
+ - remove input bindings
+ - added full description of hwmon
+ - fix unit address of hwmon child nodes
+---
+ .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 196 +++++++++++++++++++++
+ 1 file changed, 196 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
- create mode 100644 Documentation/hwmon/gsc-hwmon.rst
- create mode 100644 drivers/hwmon/gsc-hwmon.c
- create mode 100644 drivers/mfd/gateworks-gsc.c
- create mode 100644 include/linux/mfd/gsc.h
- create mode 100644 include/linux/platform_data/gsc_hwmon.h
 
+diff --git a/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+new file mode 100644
+index 00000000..487a844
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+@@ -0,0 +1,196 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/gateworks-gsc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Gateworks System Controller
++
++description: |
++  The Gateworks System Controller (GSC) is a device present across various
++  Gateworks product families that provides a set of system related features
++  such as the following (refer to the board hardware user manuals to see what
++  features are present)
++   - Watchdog Timer
++   - GPIO
++   - Pushbutton controller
++   - Hardware monitor with ADC's for temperature and voltage rails and
++     fan controller
++
++maintainers:
++  - Tim Harvey <tharvey@gateworks.com>
++  - Robert Jones <rjones@gateworks.com>
++
++properties:
++  $nodename:
++    pattern: "gsc@[0-9a-f]{1,2}"
++  compatible:
++    const: gw,gsc
++
++  reg:
++    description: I2C device address
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 1
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  adc:
++    type: object
++    description: Optional hardware monitoring module
++
++    properties:
++      compatible:
++        const: gw,gsc-adc
++
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++    patternProperties:
++      "^channel@[0-9]+$":
++        type: object
++        description: |
++          Properties for a single ADC which can report cooked values
++          (i.e. temperature sensor based on thermister), raw values
++          (i.e. voltage rail with a pre-scaling resistor divider).
++
++        properties:
++          reg:
++            description: Register of the ADC
++            maxItems: 1
++
++          label:
++            description: Name of the ADC input
++
++          gw,mode:
++            description: |
++              conversion mode:
++                0 - temperature, in C*10
++                1 - pre-scaled voltage value
++                2 - scaled voltage based on an optional resistor divider
++                    and optional offset
++            $ref: /schemas/types.yaml#/definitions/uint32
++            enum: [0, 1, 2]
++
++          gw,voltage-divider-ohms:
++            description: Values of resistors for divider on raw ADC input
++            maxItems: 2
++            items:
++             minimum: 1000
++             maximum: 1000000
++
++          gw,voltage-offset-microvolt:
++            description: |
++              A positive voltage offset to apply to a raw ADC
++              (i.e. to compensate for a diode drop).
++            minimum: 0
++            maximum: 1000000
++
++        required:
++          - gw,mode
++          - reg
++          - label
++
++    required:
++      - compatible
++      - "#address-cells"
++      - "#size-cells"
++
++patternProperties:
++  "^fan-controller@[0-9a-f]+$":
++    type: object
++    description: Optional fan controller
++
++    properties:
++      compatible:
++        const: gw,gsc-fan
++
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      reg:
++        description: The fan controller base address
++        maxItems: 1
++
++    required:
++      - compatible
++      - reg
++      - "#address-cells"
++      - "#size-cells"
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - "#interrupt-cells"
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        gsc@20 {
++            compatible = "gw,gsc";
++            reg = <0x20>;
++            interrupt-parent = <&gpio1>;
++            interrupts = <4 GPIO_ACTIVE_LOW>;
++            interrupt-controller;
++            #interrupt-cells = <1>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            adc {
++                compatible = "gw,gsc-adc";
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                channel@0 { /* A0: Board Temperature */
++                    reg = <0x00>;
++                    label = "temp";
++                    gw,mode = <0>;
++                };
++
++                channel@2 { /* A1: Input Voltage (raw ADC) */
++                    reg = <0x02>;
++                    label = "vdd_vin";
++                    gw,mode = <1>;
++                    gw,voltage-divider-ohms = <22100 1000>;
++                    gw,voltage-offset-microvolt = <800000>;
++                };
++
++                channel@b { /* A2: Battery voltage */
++                    reg = <0x0b>;
++                    label = "vdd_bat";
++                    gw,mode = <1>;
++                };
++            };
++
++            fan-controller@2c {
++                #address-cells = <1>;
++                #size-cells = <0>;
++                compatible = "gw,gsc-fan";
++                reg = <0x2c>;
++            };
++        };
++    };
 -- 
 2.7.4
 
