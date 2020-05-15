@@ -2,216 +2,130 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A3DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC25FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5493A206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB60920709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:33:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="InESy3K+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YnXpcSYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgEOUdq (ORCPT
+        id S1726668AbgEOUd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:33:46 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26407 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726168AbgEOUdq (ORCPT
+        Fri, 15 May 2020 16:33:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55758 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726168AbgEOUd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:33:46 -0400
+        Fri, 15 May 2020 16:33:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589574824;
+        s=mimecast20190719; t=1589574836;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=Z0URSfyjQn+MHlcb800j3Sa3BIzicVCgeHSk6dmzRT8=;
-        b=InESy3K+u8jzOQ6CX/pr6qE/0SnI6NssTCnmlSqSeI47uHbHdvh3XKI3P+4eOrXhSA2/CU
-        tn0shBUDb+quGkQ6vswygCVGlayuZ+WvWeb5PQiqo6CVc6v03g6Yn5VJ6bAOb/sh35NjgI
-        q0OOBOg/BYnu9ajbk8gUsXbH6+wEris=
+        bh=YepsSy2nLjL3UBd0hK7w9B2v+2qjHsLKYJjpSq7VWdI=;
+        b=YnXpcSYSI4+F6EqxUNRf5q5tr2HNAnkYwC07qCXu1g/sY52cEaWpC40NGvlhEoT0l9j5rS
+        u7j4/KscBWJTnxl7H7oYTLTlOP2yhbog5r1uaU8iN+C5gRi8FjBqFV0qJcYtzCOqvVZAF7
+        uzMgCPdnMkpKIGKcuJ0ZWnUBjT8jvlU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-492-9teukHFTM2KeaYrqquK1iw-1; Fri, 15 May 2020 16:33:42 -0400
-X-MC-Unique: 9teukHFTM2KeaYrqquK1iw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-378-77DuAAtVN5i8PC8RuTtcZA-1; Fri, 15 May 2020 16:33:55 -0400
+X-MC-Unique: 77DuAAtVN5i8PC8RuTtcZA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B13418A0760;
-        Fri, 15 May 2020 20:33:41 +0000 (UTC)
-Received: from treble (ovpn-117-151.rdu2.redhat.com [10.10.117.151])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7B1BA5D9D3;
-        Fri, 15 May 2020 20:33:40 +0000 (UTC)
-Date:   Fri, 15 May 2020 15:33:38 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Matt Helsley <mhelsley@vmware.com>
-Cc:     linux-kernel@vger.kernel.org,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 22339460;
+        Fri, 15 May 2020 20:33:53 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-114-113.rdu2.redhat.com [10.10.114.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 86A3A60C05;
+        Fri, 15 May 2020 20:33:52 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 1E9DD220206; Fri, 15 May 2020 16:33:52 -0400 (EDT)
+Date:   Fri, 15 May 2020 16:33:52 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC][PATCH 3/5] objtool: Add support for relocations without
- addends
-Message-ID: <20200515203338.ehdgnvh7nqcczj4t@treble>
-References: <cover.1588888003.git.mhelsley@vmware.com>
- <17ee3f6f2a246008aaae70f92df24ae92fa0e21e.1588888003.git.mhelsley@vmware.com>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
+ token info
+Message-ID: <20200515203352.GC235744@redhat.com>
+References: <20200511164752.2158645-1-vkuznets@redhat.com>
+ <20200511164752.2158645-3-vkuznets@redhat.com>
+ <20200512152709.GB138129@redhat.com>
+ <87o8qtmaat.fsf@vitty.brq.redhat.com>
+ <20200512155339.GD138129@redhat.com>
+ <20200512175017.GC12100@linux.intel.com>
+ <20200513125241.GA173965@redhat.com>
+ <0733213c-9514-4b04-6356-cf1087edd9cf@redhat.com>
+ <20200515184646.GD17572@linux.intel.com>
+ <d84b6436-9630-1474-52e5-ffcc4d2bd70a@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <17ee3f6f2a246008aaae70f92df24ae92fa0e21e.1588888003.git.mhelsley@vmware.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <d84b6436-9630-1474-52e5-ffcc4d2bd70a@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 10:35:11AM -0700, Matt Helsley wrote:
-> Currently objtool only collects information about relocations with
-> addends. In recordmcount, which we are about to merge into objtool,
-> some supported architectures do not use rela relocations. Since
-> object files use one or the other the list can be reused.
+On Fri, May 15, 2020 at 09:18:07PM +0200, Paolo Bonzini wrote:
+> On 15/05/20 20:46, Sean Christopherson wrote:
+> >> The new one using #VE is not coming very soon (we need to emulate it for
+> >> <Broadwell and AMD processors, so it's not entirely trivial) so we are
+> >> going to keep "page not ready" delivery using #PF for some time or even
+> >> forever.  However, page ready notification as #PF is going away for good.
+> > 
+> > And isn't hardware based EPT Violation #VE going to require a completely
+> > different protocol than what is implemented today?  For hardware based #VE,
+> > KVM won't intercept the fault, i.e. the guest will need to make an explicit
+> > hypercall to request the page.
 > 
-> Signed-off-by: Matt Helsley <mhelsley@vmware.com>
-> ---
->  tools/objtool/elf.c | 55 ++++++++++++++++++++++++++++++++++++---------
->  tools/objtool/elf.h |  5 ++++-
->  2 files changed, 49 insertions(+), 11 deletions(-)
+> Yes, but it's a fairly simple hypercall to implement.
 > 
-> diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-> index c4857fa3f1d1..cd841e3df87d 100644
-> --- a/tools/objtool/elf.c
-> +++ b/tools/objtool/elf.c
-> @@ -465,12 +465,14 @@ static int read_relas(struct elf *elf)
+> >> That said, type1/type2 is quite bad. :)  Let's change that to page not
+> >> present / page ready.
+> > 
+> > Why even bother using 'struct kvm_vcpu_pv_apf_data' for the #PF case?  VMX
+> > only requires error_code[31:16]==0 and SVM doesn't vet it at all, i.e. we
+> > can (ab)use the error code to indicate an async #PF by setting it to an
+> > impossible value, e.g. 0xaaaa (a is for async!).  That partciular error code
+> > is even enforced by the SDM, which states:
+> 
+> Possibly, but it's water under the bridge now.
+> And the #PF mechanism also has the problem with NMIs that happen before
+> the error code is read
+> and page faults happening in the handler (you may connect some dots now).
 
-This should probably be called read_relocs() now.
+I understood that following was racy.
 
-And 'struct rela' should probably be 'struct reloc'.  And I hate to say
-it but all the 'rela' based variable/function names should also probably
-be changed...
+do_async_page_fault <--- kvm injected async page fault
+  NMI happens (Before kvm_read_and_reset_pf_reason() is done)
+   ->do_async_page_fault() (This is regular page fault but it will read
+   			    reason from shared area and will treat itself
+			    as async page fault)
 
-All the renaming might be disruptive for backports, but still I think it
-would be a good idea.  It probably belongs in its own commit.  If it can
-be done programmatically with 'sed -i' or so, with the exact command in
-the commit log, even better :-)
+So this is racy.
 
->  	unsigned long nr_rela, max_rela = 0, tot_rela = 0;
->  
->  	list_for_each_entry(sec, &elf->sections, list) {
-> -		if (sec->sh.sh_type != SHT_RELA)
-> +		if ((sec->sh.sh_type != SHT_RELA) &&
-> +		     (sec->sh.sh_type != SHT_REL))
->  			continue;
+But if we get rid of the notion of reading from shared region in page
+fault handler, will we not get rid of this race.
 
-The alignment is slightly off, should be:
+I am assuming that error_code is not racy as it is pushed on stack.
+What am I missing.
 
-		if ((sec->sh.sh_type != SHT_RELA) &&
-		    (sec->sh.sh_type != SHT_REL))
-			continue;
-
->  
-> -		sec->base = find_section_by_name(elf, sec->name + 5);
-> +		sec->base = find_section_by_name(elf, sec->name +
-> +				((sec->sh.sh_type != SHT_REL) ? 5 : 4));
-
-I think there's actually a cleaner way to do this, which we probably
-should have been doing in the first place:
-
-		sec->base = find_section_by_index(elf, sec->sh.sh_info);
-
-(completely not tested, btw)
-
-> @@ -486,13 +488,26 @@ static int read_relas(struct elf *elf)
->  			}
->  			memset(rela, 0, sizeof(*rela));
->  
-> -			if (!gelf_getrela(sec->data, i, &rela->rela)) {
-> -				WARN_ELF("gelf_getrela");
-> -				return -1;
-> +			switch(sec->sh.sh_type) {
-> +			case SHT_REL:
-> +				if (!gelf_getrel(sec->data, i, &rela->rel)) {
-> +					WARN_ELF("gelf_getrel");
-> +					return -1;
-> +				}
-> +				rela->addend = 0;
-> +				break;
-> +			case SHT_RELA:
-> +				if (!gelf_getrela(sec->data, i, &rela->rela)) {
-> +					WARN_ELF("gelf_getrela");
-> +					return -1;
-> +				}
-> +				rela->addend = rela->rela.r_addend;
-> +				break;
-> +			default:
-> +				break;
-
-The default should never happen, but might as well return -1 for extra
-robustness.
-
-> @@ -717,17 +732,27 @@ int elf_rebuild_rela_section(struct section *sec)
->  	struct rela *rela;
->  	int nr, idx = 0, size;
->  	GElf_Rela *relas;
-> +	GElf_Rel *rels;
->  
->  	nr = 0;
->  	list_for_each_entry(rela, &sec->rela_list, list)
->  		nr++;
->  
-> +	/*
-> +	 * Allocate a buffer for relocations with addends but also use
-> +	 * it for other relocations too. The section type determines
-> +	 * the size of the section, the buffer used, and the entries.
-> +	 */
->  	size = nr * sizeof(*relas);
->  	relas = malloc(size);
->  	if (!relas) {
->  		perror("malloc");
->  		return -1;
->  	}
-> +	rels = (void *)relas;
-> +	if (sec->sh.sh_type == SHT_REL) {
-> +		size = nr * sizeof(*rels);
-> +	}
->  
->  	sec->data->d_buf = relas;
->  	sec->data->d_size = size;
-> @@ -736,9 +761,19 @@ int elf_rebuild_rela_section(struct section *sec)
->  
->  	idx = 0;
->  	list_for_each_entry(rela, &sec->rela_list, list) {
-> -		relas[idx].r_offset = rela->offset;
-> -		relas[idx].r_addend = rela->addend;
-> -		relas[idx].r_info = GELF_R_INFO(rela->sym->idx, rela->type);
-> +		switch(sec->sh.sh_type) {
-> +		case SHT_REL:
-> +			rels[idx].r_offset = rela->offset;
-> +			rels[idx].r_info = GELF_R_INFO(rela->sym->idx, rela->type);
-> +			break;
-> +		case SHT_RELA:
-> +			relas[idx].r_addend = rela->addend;
-> +			relas[idx].r_offset = rela->offset;
-> +			relas[idx].r_info = GELF_R_INFO(rela->sym->idx, rela->type);
-> +			break;
-> +		default:
-> +			break;
-> +		}
->  		idx++;
-
-There's a lot of trickiness going on here, in a valiant attempt to share
-code, but really most of the code ends up not being shared anyway.
-
-I think it would be a lot cleaner to just create a new "rel" version of
-this function.
-
-Then there could be a top-level
-
-	elf_rebuild_reloc_section()
-
-which calls the appropriate "rel" or "rela" variant.
-
--- 
-Josh
+Thanks
+Vivek
 
