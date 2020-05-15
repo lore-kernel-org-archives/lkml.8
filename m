@@ -2,149 +2,96 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84561C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA57C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66FC42074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7EA2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HcDTPoeC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgEOKd3 (ORCPT
+        id S1728144AbgEOKh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:33:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53976 "EHLO
+        Fri, 15 May 2020 06:37:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728110AbgEOKd2 (ORCPT
+        with ESMTP id S1728013AbgEOKh5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:33:28 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBBE6C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 03:33:27 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1jZXeg-00074l-0A; Fri, 15 May 2020 12:33:26 +0200
-Message-ID: <ed4688343e443ff76644051be544c70fd8c5345b.camel@pengutronix.de>
-Subject: Re: [PATCH] drm/etnaviv: fix perfmon domain interation
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Christian Gmeiner <christian.gmeiner@gmail.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>
-Date:   Fri, 15 May 2020 12:33:24 +0200
-In-Reply-To: <CAH9NwWc6zUvoJ0xep9zO2Ocm8BzR7nRNx9=EQuwb5DXsX-J0Zw@mail.gmail.com>
-References: <20200511123846.96594-1-christian.gmeiner@gmail.com>
-         <CAH9NwWcJNhUVkzd0KAfJyxNZJ9a71KLzipW+qRwhgEWUmnnxmg@mail.gmail.com>
-         <X0BDAQ.L99CTJZCDEJE3@crapouillou.net>
-         <a51cb70623c4c2441bb8df8385f56c99392b8435.camel@pengutronix.de>
-         <CAH9NwWc6zUvoJ0xep9zO2Ocm8BzR7nRNx9=EQuwb5DXsX-J0Zw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Fri, 15 May 2020 06:37:57 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6B97C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 03:37:56 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id h17so2929834wrc.8
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 03:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=zEDoa0ErUN0eUS6B2B7vnP3z3yrneo9SzbNz15AHHe0=;
+        b=HcDTPoeCeZeSpmHFbMii2sqY6AviN41u9cVuhqLZJLVoMoFkQjsTZ5sYC4+wtjF8xt
+         m4N3SLRK9QRZGbU1yG3a5winKeta1hmFvxZYO9YJPGxHKN78wdARZX5a9q/PTWRyNa7a
+         EMmSOF7D2MlyeT3PV2t0b21IZ+6LykoxRxrOTJh7xQz5/mgh+g020M2qwjxG41bzb01m
+         j5VDRyWBPAExLdCHzdOXAqACJANoAkwVHInWUi0C4kYmR57vwMkSyvq03+Tzj1OqTAJy
+         JtXTODmQqvKyP/dPEiAQ12TKpY4bEOH3ZGC1MSp3ROzpIQ21mtwhqaLDIUCWw860Jw5B
+         zKkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=zEDoa0ErUN0eUS6B2B7vnP3z3yrneo9SzbNz15AHHe0=;
+        b=DeYu425jKUWlKG59ZSuZBDMWDHTGszBQRPn6F+Yzmfffhbggms631S1dol19biXVeq
+         u/cWPCU6OvS+5fU9VV5iHdZQ0gsX4Npdj4lnqTwAS5BII4Wem27VzJR/RW0PJJ/a9fvZ
+         pR6WOTcMgx+hEHGPQFK7lUyiFGxk/50zwGGKZS8XhU5gS3fUlu1yzBFRb42JXUKkvIxj
+         TH7b4w1RfSi/qPC1ehcMMThjoq3xT84x5FZTu13KG3Rc9AHqluWVwZyelTyAYc0swdUb
+         6xZttdR8XdOocVUAvYKWuBBlpoHlmRef8qOGTCzdLJfTzcWr4wRXkvkHu5M15mlbdahA
+         Kb5g==
+X-Gm-Message-State: AOAM532z6Adsz8sb513wBaS/IdLVZWYt3jvWZeD/Z1gd/hJsYCRFBsRH
+        vp0XKe2vJXDNQ11OTM362RQbNw==
+X-Google-Smtp-Source: ABdhPJxabsjhlpvKL6bWFNg3Y2HG16tYqQaXbfKMvfkg/Bm//7xyFBik9FL5B39SmPkdQPNKkt8SmQ==
+X-Received: by 2002:adf:decb:: with SMTP id i11mr3816868wrn.172.1589539075499;
+        Fri, 15 May 2020 03:37:55 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id h137sm55242856wme.0.2020.05.15.03.37.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 03:37:54 -0700 (PDT)
+Date:   Fri, 15 May 2020 11:37:53 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: sprd: Remove unnecessary spi_bus_type setting
+Message-ID: <20200515103753.GI271301@dell>
+References: <88f48e38c4f3e2130de0f58564562453d7ee57f2.1588153213.git.baolin.wang7@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <88f48e38c4f3e2130de0f58564562453d7ee57f2.1588153213.git.baolin.wang7@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, den 15.05.2020, 12:27 +0200 schrieb Christian Gmeiner:
-> Am Fr., 15. Mai 2020 um 12:24 Uhr schrieb Lucas Stach <l.stach@pengutronix.de>:
-> > Am Freitag, den 15.05.2020, 12:12 +0200 schrieb Paul Cercueil:
-> > > Hi Christian,
-> > > 
-> > > Le ven. 15 mai 2020 à 12:09, Christian Gmeiner
-> > > <christian.gmeiner@gmail.com> a écrit :
-> > > > Am Mo., 11. Mai 2020 um 14:38 Uhr schrieb Christian Gmeiner
-> > > > <christian.gmeiner@gmail.com>:
-> > > > >  The GC860 has one GPU device which has a 2d and 3d core. In this
-> > > > > case
-> > > > >  we want to expose perfmon information for both cores.
-> > > > > 
-> > > > >  The driver has one array which contains all possible perfmon domains
-> > > > >  with some meta data - doms_meta. Here we can see that for the GC860
-> > > > >  two elements of that array are relevant:
-> > > > > 
-> > > > >    doms_3d: is at index 0 in the doms_meta array with 8 perfmon
-> > > > > domains
-> > > > >    doms_2d: is at index 1 in the doms_meta array with 1 perfmon
-> > > > > domain
-> > > > > 
-> > > > >  The userspace driver wants to get a list of all perfmon domains and
-> > > > >  their perfmon signals. This is done by iterating over all domains
-> > > > > and
-> > > > >  their signals. If the userspace driver wants to access the domain
-> > > > > with
-> > > > >  id 8 the kernel driver fails and returns invalid data from doms_3d
-> > > > > with
-> > > > >  and invalid offset.
-> > > > > 
-> > > > >  This results in:
-> > > > >    Unable to handle kernel paging request at virtual address 00000000
-> > > > > 
-> > > > >  On such a device it is not possible to use the userspace driver at
-> > > > > all.
-> > > > > 
-> > > > >  The fix for this off-by-one error is quite simple.
-> > > > > 
-> > > > >  Reported-by: Paul Cercueil <paul@crapouillou.net>
-> > > > >  Tested-by: Paul Cercueil <paul@crapouillou.net>
-> > > > >  Fixes: ed1dd899baa3 ("drm/etnaviv: rework perfmon query
-> > > > > infrastructure")
-> > > > >  Cc: stable@vger.kernel.org
-> > > > >  Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-> > > > >  ---
-> > > > >   drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 2 +-
-> > > > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > >  diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > > > > b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > > > >  index e6795bafcbb9..35f7171e779a 100644
-> > > > >  --- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > > > >  +++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > > > >  @@ -453,7 +453,7 @@ static const struct etnaviv_pm_domain
-> > > > > *pm_domain(const struct etnaviv_gpu *gpu,
-> > > > >                  if (!(gpu->identity.features & meta->feature))
-> > > > >                          continue;
-> > > > > 
-> > > > >  -               if (meta->nr_domains < (index - offset)) {
-> > > > >  +               if ((meta->nr_domains - 1) < (index - offset)) {
-> > > > >                          offset += meta->nr_domains;
-> > > > >                          continue;
-> > > > >                  }
-> > > > >  --
-> > > > >  2.26.2
-> > > > > 
-> > > > 
-> > > > ping
-> > > 
-> > > I'll merge it tomorrow if there's no further feedback.
-> > 
-> > Huh? Etnaviv patches are going through the etnaviv tree.
-> > 
-> > We now have two different solutions to the same issue. I first want to
-> > dig into the code to see why two developers can get confused enough by
-> > the code to come up with totally different fixes.
-> > 
+On Wed, 29 Apr 2020, Baolin Wang wrote:
+
+> The spi_register_driver() will set the spi_bus_type for the spi_driver,
+> thus remove the redundant setting in this driver.
 > 
-> You will see that the solutions are not totally different. I really hoped to
-> get this fixed in the 5.7 release.. but I think its now too late.
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> ---
+>  drivers/mfd/sprd-sc27xx-spi.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-I didn't have time to look at the full picture, yet. We still have at
-least a week until the final 5.7 release, why would it be too late to
-get a fix upstream?
+Applied, thanks.
 
-Regards,
-Lucas
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
