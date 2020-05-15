@@ -2,176 +2,121 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16707C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893A0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB5B9206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68E1F20727
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:55:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589561747;
+	bh=0/7iM39p9XwrUUVm7bhTJrs/zPCmSekTi8cTWkQq95k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UQ229kxT4gwpqNCRMzv1laZ4NWZ7GFdt9Sg/X6HthuWCh/58PLu767530qJ7Tdjsx
+	 Kqtfm1RBtKwFZKUNh61rD237H3ofriRgBPnPe0Kar96XDb0VNNMtXCNsBjz1sRCKg8
+	 faJU72LRn+M5fChlrtXRTFVd4tBTdRLIAwes+uIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgEOQzf (ORCPT
+        id S1726298AbgEOQzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:55:35 -0400
-Received: from mailomta32-re.btinternet.com ([213.120.69.125]:13414 "EHLO
-        re-prd-fep-049.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726183AbgEOQze (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:55:34 -0400
-Received: from re-prd-rgout-002.btmx-prd.synchronoss.net ([10.2.54.5])
-          by re-prd-fep-049.btinternet.com with ESMTP
-          id <20200515165532.IPEA8801.re-prd-fep-049.btinternet.com@re-prd-rgout-002.btmx-prd.synchronoss.net>;
-          Fri, 15 May 2020 17:55:32 +0100
-Authentication-Results: btinternet.com;
-    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
-X-Originating-IP: [31.53.141.224]
-X-OWM-Source-IP: 31.53.141.224 (GB)
-X-OWM-Env-Sender: j.oldman998@btinternet.com
-X-VadeSecure-score: verdict=clean score=0/300, class=clean
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduhedrleekgddutdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuueftkffvkffujffvgffngfevqffopdfqfgfvnecuuegrihhlohhuthemuceftddunecunecujfgurhephffvufffkffosedttdertdertddtnecuhfhrohhmpeflohhhnhcuqfhlughmrghnuceojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqeenucggtffrrghtthgvrhhnpeegfedthfefueeihffgkeefteehuddttdefudetveelveefvdefhfejieejhffggfenucfkphepfedurdehfedrudeguddrvddvgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopehhvghnrhihrdhhohhmvgdpihhnvghtpeefuddrheefrddugedurddvvdegpdhmrghilhhfrhhomhepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoeguvghvvghlsegurhhivhgvrhguvghvrdhoshhuohhslhdrohhrgheqpdhrtghpthhtohepoehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrgheqpdhrtghpthhtohepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoehkrghirdhhvghnghdrfhgvnhhgsegtrghnohhnihgtrghlrdgtohhmqedprhgtphhtthhopeeolhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgqe
-X-RazorGate-Vade-Verdict: clean 0
-X-RazorGate-Vade-Classification: clean
-Received: from henry.home (31.53.141.224) by re-prd-rgout-002.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
-        id 5E3A15B610AAE225; Fri, 15 May 2020 17:55:32 +0100
-From:   John Oldman <john.oldman@polehill.co.uk>
-To:     gregkh@linuxfoundation.org
-Cc:     kai.heng.feng@canonical.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        John Oldman <john.oldman@polehill.co.uk>
-Subject: [PATCH] Staging: rtl8723bs: os_de: if-else coding style issue
-Date:   Fri, 15 May 2020 17:54:31 +0100
-Message-Id: <20200515165431.12819-1-john.oldman@polehill.co.uk>
-X-Mailer: git-send-email 2.17.1
+        Fri, 15 May 2020 12:55:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726183AbgEOQzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 12:55:46 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BED80206C0;
+        Fri, 15 May 2020 16:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589561745;
+        bh=0/7iM39p9XwrUUVm7bhTJrs/zPCmSekTi8cTWkQq95k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AJxxCaWVqeouHtl3c7wPbjtaVN3NZPYpeGzbOR/+Hb4qan6cL/xVL8Tj0yv0EX0uq
+         XjnP8p57YVI7qyawia6bsVg5jwq/aYURaMonNxezMNzoX8L/dlvTapzBjUyJ2wwsUV
+         I2/XAjUIzgyM6tRb5P5mpbPNJxEAeAn+4/ui3+tI=
+Date:   Fri, 15 May 2020 17:55:42 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Clement Leger <cleger@kalray.eu>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 12/19] spi: dw: Fix Rx-only DMA transfers
+Message-ID: <20200515165542.GK5066@sirena.org.uk>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-13-Sergey.Semin@baikalelectronics.ru>
+ <20200515144050.GI1634618@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OOq1TgGhe8eTwFBO"
+Content-Disposition: inline
+In-Reply-To: <20200515144050.GI1634618@smile.fi.intel.com>
+X-Cookie: Avoid contact with eyes.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Coding style issues:
-This patch clears the checkpatch.pl "braces {} are not necessary for
-single statement blocks" and "else_should_follow_close_brace"
-warnings.
 
-Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
----
-v1: First attempt
-v2: Followed The rule is that "if one side of the if else statement
-has curly braces then all sides get curly braces even if they're
-just one line long."
+--OOq1TgGhe8eTwFBO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- drivers/staging/rtl8723bs/os_dep/os_intfs.c | 33 ++++++++-------------
- 1 file changed, 12 insertions(+), 21 deletions(-)
+On Fri, May 15, 2020 at 05:40:50PM +0300, Andy Shevchenko wrote:
+> On Fri, May 15, 2020 at 01:47:51PM +0300, Serge Semin wrote:
+> > Tx-only DMA transfers are working perfectly fine since in this case
+> > the code just ignores the Rx FIFO overflow interrupts. But it turns
+> > out the SPI Rx-only transfers are broken since nothing pushing any
+> > data to the shift registers, so the Rx FIFO is left empty and the
+> > SPI core subsystems just returns a timeout error. Since DW DMAC
+> > driver doesn't support something like cyclic write operations of
+> > a single byte to a device register, the only way to support the
+> > Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
+> > This is what we intend to fix in this commit by setting the
+> > SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/os_intfs.c b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-index d29f59bbb613..50a3c2c3a8d2 100644
---- a/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-+++ b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-@@ -1057,9 +1057,9 @@ static int pm_netdev_open(struct net_device *pnetdev, u8 bnormal)
- 			status = _netdev_open(pnetdev);
- 			mutex_unlock(&(adapter_to_dvobj(padapter)->hw_init_mutex));
- 		}
--	}
--	else
-+	} else {
- 		status =  (_SUCCESS == ips_netdrv_open(padapter)) ? (0) : (-1);
-+	}
- 
- 	return status;
- }
-@@ -1192,8 +1192,7 @@ void rtw_dev_unload(struct adapter *padapter)
- 		padapter->bup = false;
- 
- 		DBG_871X("<=== %s\n", __func__);
--	}
--	else {
-+	} else {
- 		RT_TRACE(_module_hci_intfs_c_, _drv_notice_, ("%s: bup ==false\n", __func__));
- 		DBG_871X("%s: bup ==false\n", __func__);
- 	}
-@@ -1223,8 +1222,7 @@ static int rtw_suspend_free_assoc_resource(struct adapter *padapter)
- 		rtw_disassoc_cmd(padapter, 0, false);
- 		/* s2-2.  indicate disconnect to os */
- 		rtw_indicate_disconnect(padapter);
--	}
--	else if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
-+	} else if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
- 		rtw_sta_flush(padapter);
- 	}
- 
-@@ -1270,9 +1268,8 @@ void rtw_suspend_wow(struct adapter *padapter)
- 		padapter->bDriverStopped = false;	/* for 32k command */
- 
- 		/*  2. disable interrupt */
--		if (padapter->intf_stop) {
-+		if (padapter->intf_stop)
- 			padapter->intf_stop(padapter);
--		}
- 
- 		/*  2.1 clean interrupt */
- 		if (padapter->HalFunc.clear_interrupt)
-@@ -1448,14 +1445,13 @@ int rtw_suspend_common(struct adapter *padapter)
- 
- 	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE) == true) {
- 	#ifdef CONFIG_WOWLAN
--		if (check_fwstate(pmlmepriv, _FW_LINKED)) {
-+		if (check_fwstate(pmlmepriv, _FW_LINKED))
- 			pwrpriv->wowlan_mode = true;
--		} else if (pwrpriv->wowlan_pno_enable == true) {
-+		else if (pwrpriv->wowlan_pno_enable == true)
- 			pwrpriv->wowlan_mode |= pwrpriv->wowlan_pno_enable;
--		}
- 
- 		if (pwrpriv->wowlan_mode == true)
--		rtw_suspend_wow(padapter);
-+			rtw_suspend_wow(padapter);
- 		else
- 			rtw_suspend_normal(padapter);
- 
-@@ -1522,9 +1518,8 @@ int rtw_resume_process_wow(struct adapter *padapter)
- 
- 		pwrpriv->bFwCurrentInPSMode = false;
- 
--		if (padapter->intf_stop) {
-+		if (padapter->intf_stop)
- 			padapter->intf_stop(padapter);
--		}
- 
- 		if (padapter->HalFunc.clear_interrupt)
- 			padapter->HalFunc.clear_interrupt(padapter);
-@@ -1541,18 +1536,15 @@ int rtw_resume_process_wow(struct adapter *padapter)
- 		padapter->HalFunc.SetHwRegHandler(padapter, HW_VAR_WOWLAN, (u8 *)&poidparam);
- 
- 		psta = rtw_get_stainfo(&padapter->stapriv, get_bssid(&padapter->mlmepriv));
--		if (psta) {
-+		if (psta)
- 			set_sta_rate(padapter, psta);
--		}
--
- 
- 		padapter->bDriverStopped = false;
- 		DBG_871X("%s: wowmode resuming, DriverStopped:%d\n", __func__, padapter->bDriverStopped);
- 		rtw_start_drv_threads(padapter);
- 
--		if (padapter->intf_start) {
-+		if (padapter->intf_start)
- 			padapter->intf_start(padapter);
--		}
- 
- 		/*  start netif queue */
- 		if (pnetdev) {
-@@ -1656,9 +1648,8 @@ int rtw_resume_process_ap_wow(struct adapter *padapter)
- 	DBG_871X("%s: wowmode resuming, DriverStopped:%d\n", __func__, padapter->bDriverStopped);
- 	rtw_start_drv_threads(padapter);
- 
--	if (padapter->intf_start) {
-+	if (padapter->intf_start)
- 		padapter->intf_start(padapter);
--	}
- 
- 	/*  start netif queue */
- 	if (pnetdev) {
--- 
-2.17.1
+> I'm fine with this if Mark considers this right thing to do.
+> So, conditionally
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+Yes, this is good - it's quite a common issue that controllers have and
+the main reason the flag exists is to provide a standard fix for it.
+
+--OOq1TgGhe8eTwFBO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6+yY0ACgkQJNaLcl1U
+h9CAAAf/VoOquW8qpM2Mev4sXK326Cw9c9Y5irgLR/QgbJE/PtM5OLNFb6l19Loa
+Ouj1JDOLwnqmwSknOUhfnYW7q9gJk9ON/t1JQ1gFajn42r8UismqAHhCl6jx/paS
+o7h1JZic1BYcg+QOdqpRCXjKVnC1DLKKU39uL2ENJgVjp7cS5kDNkjmQItrbwChg
+WZJOcew5M0AhOdtPrlzOO9Z7JzxTvsMZ0Tcugqx9crZV27gBiqW6B+N7K/UniL9k
+UWCv/zKfTp04dnihvEm3damKRpjHexESoivXysUc6u6ZjB1ev64wOvHozmb0lA8C
+z7rEhPsy3j1h9SYIMLJMYDuNFU3/iA==
+=KJzl
+-----END PGP SIGNATURE-----
+
+--OOq1TgGhe8eTwFBO--
