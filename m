@@ -6,84 +6,104 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50865C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9FB3206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE49F206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:09:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xVbecPPq"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Z/39Jpll"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgEOVG3 (ORCPT
+        id S1726703AbgEOVJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:06:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgEOVG2 (ORCPT
+        Fri, 15 May 2020 17:09:12 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:39349 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726238AbgEOVJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:06:28 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC634C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 14:06:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rVW8KezM3i3HcZ5WoaIxiJ9RRMgtGJtV0/SuZwNn25U=; b=xVbecPPq9oJGttjPZ+wLz1nfl
-        0Wyv5gVizqqLjk/7dSGcf05+nUTO/+vUG57jxAUcdyZSrAf/NrRiL0dovMKAXqDhv719/HOf50ieD
-        6S3IJTlNoGIlQo+Mhx01Qzlt0bf00oR6z5WDhWcNorOZiSEaxOiUDpqdQNznYVH6XiCNqkvWCVxkx
-        8GNzLn6CrD4aOEW7oJ/KDIxD27cge6AsPgrjclDCAeumWWbdw1+/eKFpgZjEHAMhGI66xeP3wVJ1e
-        1e2YVtALC/wbMPk1YbXxb6GuSheNlok+UT6JvYteYh44uEvUoDakiiNUBEc8rQQ4Oc6e5H6KfR4w2
-        XU2rHKvxQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60910)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jZhX2-0006kl-Mb; Fri, 15 May 2020 22:06:17 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jZhX1-0001rt-5y; Fri, 15 May 2020 22:06:11 +0100
-Date:   Fri, 15 May 2020 22:06:11 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     ebiederm@xmission.com, kexec@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: kexec: arm: possible overwrite of initrd
-Message-ID: <20200515210611.GS1551@shell.armlinux.org.uk>
-References: <20200515135712.GA5979@Red>
+        Fri, 15 May 2020 17:09:10 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589576949; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
+ Subject: Sender; bh=tMa0XjTHFu9sNkikzcNxomTk26A/Z3fbNKIPFzqYgHI=; b=Z/39Jpll4mjCqh5OZqUX0Uak4PgDbdyrCFDxkziwR4VwOZV1MVACdBt8jzpMdID2RqF9prQg
+ LPqSATHN3kptSrttoOTU1IMCaDcDTex3JWTPFBEq2bsH+Cuq5ObDHAyMlPkluW3kQ9bk/p7x
+ K0y8gKo+cljKStnuk6QV/PWbF5c=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebf04ee.7f628e639538-smtp-out-n02;
+ Fri, 15 May 2020 21:09:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E2E1FC43636; Fri, 15 May 2020 21:09:01 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B082CC433F2;
+        Fri, 15 May 2020 21:09:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B082CC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [RFC PATCH 3/8] qaic: Create char dev
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     arnd@arndb.de, manivannan.sadhasivam@linaro.org,
+        bjorn.andersson@linaro.org, wufan@codeaurora.org,
+        pratanan@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
+ <1589465266-20056-4-git-send-email-jhugo@codeaurora.org>
+ <20200514141211.GA2643665@kroah.com>
+ <0421a64a-10f3-08df-9ef1-14fdb570db0d@codeaurora.org>
+ <20200514155615.GA2963499@kroah.com>
+ <4be546d3-b571-0659-0140-f34ec88f95ff@codeaurora.org>
+Message-ID: <4683046a-c6b5-30a5-ef02-2f610523ae1c@codeaurora.org>
+Date:   Fri, 15 May 2020 15:08:59 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515135712.GA5979@Red>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <4be546d3-b571-0659-0140-f34ec88f95ff@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 03:57:12PM +0200, Corentin Labbe wrote:
-> Hello
+On 5/14/2020 10:24 AM, Jeffrey Hugo wrote:
+> On 5/14/2020 9:56 AM, Greg KH wrote:
+>> Please use misc.
 > 
-> Following https://lkml.org/lkml/2020/4/6/96 I was able to boot my Cubieboard4 via kexec reliabily.
+> Ok, will investigate.
+> 
 
-You can try increasing the kernel size that kexec thinks the kernel
-needs, but it should be extremely accurate with modern kexec.
+Misc looks like it'll work, and I'm expecting to have that in the next 
+revision.  However, a few of us looked at misc vs chardev, and didn't 
+see much of a difference.
 
---image-size $((0x01dc8154 + 0x10000))
+We were hoping you'd be kind enough to educate us on the considerations 
+between the two, in-case we missed something that ends up being very 
+relevant.  We attempted to find relevant documentation within the 
+kernel, and in Linux Device Drivers 3rd edition, but did not find any 
+besides just reading the misc dev code.  If we missed something, please 
+point us to it.
 
-will add 64k on top of what you currently have.  Note where the first
-figure comes from (you'll find it in the debug output, see
-"Resulting kernel space").
+By going with a misc device, we see two possible limitations -
 
-The best I can say is try playing around with that - but, kexec's
-calculations should be spot on to stop the booting kernel from
-overwriting the initrd.
+1. You don't have your own major number, so userspace may have to do a 
+bit more work to identify your device.  However, given that the driver 
+assigns the device name, one would think that the device name would be 
+pretty unique.  So, it seems like this would have a minor impact to udev 
+rules.
 
-The only way to debug that is to get the booted kernel to hexdump the
-initrd so it's possible to see what happened to it.
+2. There are a limited number of dynamic minor numbers for misc devs 
+(64), so if you are expecting more devices than that, a misc dev is not 
+appropiate.  Also, these minors are shared with other misc dev users, so 
+depending on the system configuration, you might have significantly less 
+than 64 minors available for use.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
