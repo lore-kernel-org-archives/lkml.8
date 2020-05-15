@@ -2,77 +2,98 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8173C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96DCD20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EAB02070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:44:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lTfU4JiL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgEOSnC (ORCPT
+        id S1726680AbgEOSoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 14:43:02 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:35469 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726238AbgEOSnC (ORCPT
+        Fri, 15 May 2020 14:44:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726206AbgEOSoU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 14:43:02 -0400
-Received: (qmail 14280 invoked by uid 500); 15 May 2020 14:43:01 -0400
-Date:   Fri, 15 May 2020 14:43:01 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] USB: EHCI: ehci-mv: fix less than zero comparison
- of an unsigned int
-Message-ID: <20200515184301.GA13795@rowland.harvard.edu>
-References: <20200515165453.104028-1-colin.king@canonical.com>
- <20200515172121.GA5498@rowland.harvard.edu>
- <342e8fc0-c961-d9f0-f2d1-bd455ce06d86@canonical.com>
+        Fri, 15 May 2020 14:44:20 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4481C061A0C;
+        Fri, 15 May 2020 11:44:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=eFWvwLKFGzyiQJFsBdanngzoQxBkkdEj+F7mphDLxWo=; b=lTfU4JiLO4rvJaOgBk2NqxYW3T
+        r7Kubiu5kiBwMf7d1hoMbm0czYSTR9RH9Kms3OSitDKBTX1a53oSE57RFovvFwN0YaEPjoFuUc/9n
+        lAnw4XnNRIRCeGwfzN9s/qYZSF8kdXKQQ3Fr9M9Ij+J1A4QmBI16m/czKM4ARCjvpY0oP/ezuFSPk
+        TOfDeFiEMIqTrtZ30ED6vqh8O2YQjW8dp+BOTi8k7xslvQjBNJ24tjD/MDRPsufRY4EWb012d0DK4
+        8ATYyVr/WmqUmT1ZQPQrSi0Huu4+3s4d06hGb+JVg0OaMwWNhxPvVIdAYeGOekKbML0my53lEPx0C
+        azFjaYAQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZfJO-0001Ee-Vd; Fri, 15 May 2020 18:43:58 +0000
+Date:   Fri, 15 May 2020 11:43:58 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Karstens, Nate" <Nate.Karstens@garmin.com>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        David Laight <David.Laight@aculab.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Changli Gao <xiaosuo@gmail.com>,
+        "a.josey@opengroup.org" <a.josey@opengroup.org>
+Subject: Re: [PATCH v2] Implement close-on-fork
+Message-ID: <20200515184358.GH16070@bombadil.infradead.org>
+References: <20200515152321.9280-1-nate.karstens@garmin.com>
+ <20200515155730.GF16070@bombadil.infradead.org>
+ <5b1929aa9f424e689c7f430663891827@garmin.com>
+ <1589559950.3653.11.camel@HansenPartnership.com>
+ <4964fe0ccdf7495daf4045c195b14ed6@garmin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <342e8fc0-c961-d9f0-f2d1-bd455ce06d86@canonical.com>
+In-Reply-To: <4964fe0ccdf7495daf4045c195b14ed6@garmin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 06:26:04PM +0100, Colin Ian King wrote:
-> On 15/05/2020 18:21, Alan Stern wrote:
-> > On Fri, May 15, 2020 at 05:54:53PM +0100, Colin King wrote:
-> >> From: Colin Ian King <colin.king@canonical.com>
-> >>
-> >> The comparison of hcd->irq to less than zero for an error check will
-> >> never be true because hcd->irq is an unsigned int.  Fix this by
-> >> assigning the int retval to the return of platform_get_irq and checking
-> >> this for the -ve error condition and assigning hcd->irq to retval.
-> >>
-> >> Addresses-Coverity: ("Unsigned compared against 0")
-> >> Fixes: c856b4b0fdb5 ("USB: EHCI: ehci-mv: fix error handling in mv_ehci_probe()")
-> >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> >> ---
-> > 
-> > Thanks to Coverity for spotting this.  Any reason why it didn't spot 
-> > exactly the same mistake in the ohci-da8xx.c driver?
+On Fri, May 15, 2020 at 06:28:20PM +0000, Karstens, Nate wrote:
+> Our first attempt, which was to use the pthread_atfork() handlers, failed because system() is not required to call the handlers.
 > 
-> No idea, it is curious that it can spot one error but miss another.
-> Sometimes I see these issues on the next scan, so it maybe the database
-> diff'ing is awry.
-> 
-> > 
-> > Also, why wasn't the patch CC'ed for the stable series?
-> 
-> My bad on that. Human error
+> Most of the feedback we're getting on this seems to say "don't use system(), it is unsafe for threaded applications". Is that documented anywhere? The man page says it is "MT-Safe".
 
-Actually the question itself was my mistake.  I didn't notice that your 
-patch was a fix to something that was just merged and hadn't been CC'ed 
-to stable.
+https://pubs.opengroup.org/onlinepubs/9699919799/functions/system.html
 
-Alan Stern
+> Aside from that, even if we remove all uses of system() from our application (which we already have), then our application, like many other applications, needs to use third-party shared libraries. There is nothing that prevents those libraries from using system(). We can audit those libraries and go back with the vendor with a request to replace system() with a standard fork/exec, but they will also want documentation supporting that.
+
+They might also be using any number of other interfaces which aren't
+thread-safe.
+
+> If the feedback from the community is truly and finally that system() should not be used in these applications, then is there support for updating the man page to better communicate that?
+
+Yes, absolutely.
+
+I think you're mischaracterising our feedback.  It's not "We don't want
+to fix this interface".  It's "We don't want to slow down everything else
+to fix this interface (and by the way there are lots of other problems
+with this interface that you aren't even trying to address)".
