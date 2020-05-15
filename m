@@ -2,96 +2,104 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4870C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B4042078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:53:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lBrSiIXH"
+	by mail.kernel.org (Postfix) with ESMTP id D1B0F206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgEOIxP (ORCPT
+        id S1728050AbgEOIyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:53:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727116AbgEOIxO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:53:14 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19816C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 01:53:14 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id z6so285047ooz.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 01:53:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dPqMiI17LOUe2nKh0vdLBm3601Jfamy6/fV1SlLaYgs=;
-        b=lBrSiIXHPPzqbQXkQfMzB4upzKLZwIfjYe3KXVYeeYOku2ihD1cIyXITPTc463DnhK
-         kpzSUi/+CaynNnMyOl3yQnf7TdGJ8qSiUDxrRxdmVdfIh+l2vcbJ3exWnZo6rEJHbvfE
-         xczw8lYq7b4VcW7ZN2GuX91TJvka1HmFx7r7QDM/NXBzNIpBWCJPEypk+KIQfeA/G/Er
-         nI/HxwRHXloYhThPaBdV/UaNr/wf9LZbhygIERuwcD0YEDDBXS7eD+jpq0uNztkBfgq8
-         a87ryFCBz1ULAnCJYLEgz+Z7SUS6+4OUGF7Dymo0ckjKFQDeZ8f1JSE384ncQC3VDtzf
-         noNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dPqMiI17LOUe2nKh0vdLBm3601Jfamy6/fV1SlLaYgs=;
-        b=KiEaEPuM/WsXlkZUM7KVyUgbTwnNcbOAbPfi0JHbK1rA0+UmCeqxKeU9YTWw3V37mX
-         sUrxWq3VkwU50I+dTl6VaWT4JaGbYGI3jYor4Yve+vFzIeGmeZQbZwMZbXyIw+qA/nRQ
-         3oodU2GtfA7yS1kiNBgh3Ql/HtADcURK1RfnpXZd97T79TRyQA0SUlj6CYUdaBWuZdL7
-         miuq2WBwikxzOXDpTRok0AbU1E/b+2kaWuIpi6lAysC5rK+kEMc9qvMa0M80R+70PYF5
-         5acZiU5O8+h6T6rtlGjwY+iudmH7JqmRbjSPoKDmV2usoTMyfZ2vW0yhryBc9evUvTCB
-         NDTg==
-X-Gm-Message-State: AOAM533JpPRsXLldnAV/BhuN9a9uGKDgp+sL+/I8ZpzhfcM82I4aVFze
-        BbrIMIbg0/LVq4HfvnHjKfUu42p2fP4qCTZwjZvfkA==
-X-Google-Smtp-Source: ABdhPJyfvXUA8lQ8XP5wykD/if2cBbfoaZJWEKhUEomcApBXwi9LlIMUwePsKHZppv0vzHh+EVrb+lvApcU1PMkJJyQ=
-X-Received: by 2002:a4a:615d:: with SMTP id u29mr1649801ooe.15.1589532793051;
- Fri, 15 May 2020 01:53:13 -0700 (PDT)
+        Fri, 15 May 2020 04:54:14 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:48878 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727116AbgEOIyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 04:54:13 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxb2ixWL5eHQ41AA--.8S3;
+        Fri, 15 May 2020 16:54:10 +0800 (CST)
+Subject: Re: [PATCH v2 2/2] MIPS: Fix build errors under
+ CONFIG_HAVE_STD_PC_SERIAL_PORT
+To:     jiaxun.yang@flygoat.com,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+References: <1589512985-27419-1-git-send-email-yangtiezhu@loongson.cn>
+ <1589512985-27419-2-git-send-email-yangtiezhu@loongson.cn>
+ <20200515073938.GA8289@alpha.franken.de>
+ <7715fe64-5d28-f8c8-3b04-0bf2b9f16497@loongson.cn>
+ <5AA0EB3A-DF33-4BE7-804C-45F6B51A0CF7@flygoat.com>
+Cc:     Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <db6fda56-27da-3705-1270-805e61defe4b@loongson.cn>
+Date:   Fri, 15 May 2020 16:54:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-References: <20200515053500.215929-1-saravanak@google.com>
-In-Reply-To: <20200515053500.215929-1-saravanak@google.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 15 May 2020 01:52:37 -0700
-Message-ID: <CAGETcx-7qnNXug4PGssdXciy0BZrspXP0njJG+GFGFgie_Dwnw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] Optimize fw_devlink parsing
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>
-Cc:     Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ji Luo <ji.luo@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5AA0EB3A-DF33-4BE7-804C-45F6B51A0CF7@flygoat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Dxb2ixWL5eHQ41AA--.8S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw18GFy8AFW5Kr4UJrW8WFg_yoWkArX_Wr
+        1jkr9rCw4rZw4Yy34DKws3JF9FgrZrCrW8Wa4Igw4Iq3s0vFy3Grs5G34SqF4rWr48Arsx
+        CF4rZa9IkwsI9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbsAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CEbIxv
+        r21lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
+        8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
+        xVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
+        8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2
+        z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+        UI43ZEXa7VUjxwIDUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 10:35 PM Saravana Kannan <saravanak@google.com> wrote:
+On 05/15/2020 04:19 PM, Jiaxun Yang wrote:
 >
-> When fw_devlink is enabled on hardware with a large number of device
-> tree nodes, the initial device addition done in
-> of_platform_default_populate_init() can be very inefficient. This is
-> because most devices will fail to find all their suppliers when they are
-> added and will keep trying to parse their device tree nodes and link to
-> any newly added devices
+> 于 2020年5月15日 GMT+08:00 下午3:54:46, Tiezhu Yang <yangtiezhu@loongson.cn> 写到:
+>> On 05/15/2020 03:39 PM, Thomas Bogendoerfer wrote:
+>>> On Fri, May 15, 2020 at 11:23:05AM +0800, Tiezhu Yang wrote:
+>>>> When CONFIG_HAVE_STD_PC_SERIAL_PORT is set, include linux/module.h to fix
+>>>> the following build errors:
+>>> how are you doing this ? To me it looks like this CONFIG option isn't
+>>> used anymore.
+>> Because I will use arch/mips/kernel/8250-platform.c in the near future,
+>> so make MACH_LOONGSON64 selects HAVE_STD_PC_SERIAL_PORT, then
+>> I find the build errors.
+> Please never use it.
+> If you are willing to add serial port then please do it
+> in devicetree.
+> Platform devices in wild is dangerous and it will break everything.
+
+Hi Jiaxun,
+
+OK, Thanks for your suggestion. I will rethink my plan.
+
+Hi Thomas,
+
+Because CONFIG_HAVE_STD_PC_SERIAL_PORT is not used anymore,
+(1) Is it necessary to fix this possible build error?
+or
+(2) Should we remove this arch/mips/kernel/8250-platform.c?
+
+Thanks,
+Tiezhu Yang
+
 >
-> This was an item on my TODO list that I'm finally getting around to. On
-> hardware I'm testing on, this saved 1.216 _seconds_!
+>> Thanks,
+>> Tiezhu Yang
+>>
+>>> Thomas.
+>>>
 
-Correction. It went from 1.216 _seconds_ to 61 _milliseconds_! So
-about 95% reduction in time.
-
--Saravana
