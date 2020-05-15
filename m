@@ -2,111 +2,78 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADD3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 04:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7731C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 04:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2070C2065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 04:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D752075F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 04:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgEOEmI (ORCPT
+        id S1726144AbgEOEse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 00:42:08 -0400
-Received: from mga09.intel.com ([134.134.136.24]:14758 "EHLO mga09.intel.com"
+        Fri, 15 May 2020 00:48:34 -0400
+Received: from mx.socionext.com ([202.248.49.38]:25905 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbgEOEl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 00:41:27 -0400
-IronPort-SDR: PLNerIxd+1+148hztX+l65E4DwI8OLrSpNoNBDJOj5bXqTD/g2xzSv8VZYWc5QLPYgGouAyeoo
- Tn5JpbAKQJXw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 21:41:27 -0700
-IronPort-SDR: oj0y3Ftz/O+KUXaXmCj1JEMLNjqitpMfToxOJcRJ5eTtWNO1d+1XkofQxM8WIYcdsLGpnKjTc4
- 5D/QOfNmPkOg==
-X-IronPort-AV: E=Sophos;i="5.73,394,1583222400"; 
-   d="scan'208";a="253687729"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 21:41:26 -0700
-From:   ira.weiny@intel.com
-To:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/9] fs/ext4: Disallow verity if inode is DAX
-Date:   Thu, 14 May 2020 21:41:14 -0700
-Message-Id: <20200515044121.2987940-3-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200515044121.2987940-1-ira.weiny@intel.com>
-References: <20200515044121.2987940-1-ira.weiny@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1725899AbgEOEse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 00:48:34 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 15 May 2020 13:48:32 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id D5487180B60;
+        Fri, 15 May 2020 13:48:32 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 15 May 2020 13:48:32 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 39C231A0E67;
+        Fri, 15 May 2020 13:48:32 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH 0/5] PCI: uniphier: Add features for UniPhier PCIe host controller
+Date:   Fri, 15 May 2020 13:48:20 +0900
+Message-Id: <1589518105-18368-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+This series adds some features for UniPhier PCIe host controller.
 
-Verity and DAX are incompatible.  Changing the DAX mode due to a verity
-flag change is wrong without a corresponding address_space_operations
-update.
+- Add support for PME and AER invoked by MSI interrupt
+- Add iATU register view support for PCIe version >= 4.80
+- Add an error message when failing to get phy driver
 
-Make the 2 options mutually exclusive by returning an error if DAX was
-set first.
-
-(Setting DAX is already disabled if Verity is set first.)
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+This adds a new function called by MSI handler in DesignWare PCIe framework,
+that invokes PME and AER funcions to detect the factor from SoC-dependent
+registers.
 
 ---
-Changes:
-	remove WARN_ON_ONCE
-	Add documentation for DAX/Verity exclusivity
----
- Documentation/filesystems/ext4/verity.rst | 7 +++++++
- fs/ext4/verity.c                          | 3 +++
- 2 files changed, 10 insertions(+)
 
-diff --git a/Documentation/filesystems/ext4/verity.rst b/Documentation/filesystems/ext4/verity.rst
-index 3e4c0ee0e068..51ab1aa17e59 100644
---- a/Documentation/filesystems/ext4/verity.rst
-+++ b/Documentation/filesystems/ext4/verity.rst
-@@ -39,3 +39,10 @@ is encrypted as well as the data itself.
- 
- Verity files cannot have blocks allocated past the end of the verity
- metadata.
-+
-+Verity and DAX
-+--------------
-+
-+Verity and DAX are not compatible and attempts to set both of these flags on a
-+file will fail.
-+
-diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
-index dc5ec724d889..f05a09fb2ae4 100644
---- a/fs/ext4/verity.c
-+++ b/fs/ext4/verity.c
-@@ -113,6 +113,9 @@ static int ext4_begin_enable_verity(struct file *filp)
- 	handle_t *handle;
- 	int err;
- 
-+	if (IS_DAX(inode))
-+		return -EINVAL;
-+
- 	if (ext4_verity_in_progress(inode))
- 		return -EBUSY;
- 
+Kunihiko Hayashi (5):
+  PCI: dwc: Add msi_host_isr() callback
+  PCI: uniphier: Add misc interrupt handler to invoke PME and AER
+  dt-bindings: PCI: uniphier: Add iATU register description
+  PCI: uniphier: Add iATU register support
+  PCI: uniphier: Add error message when failed to get phy
+
+ .../devicetree/bindings/pci/uniphier-pcie.txt      |  1 +
+ drivers/pci/controller/dwc/pcie-designware-host.c  |  8 +--
+ drivers/pci/controller/dwc/pcie-designware.h       |  1 +
+ drivers/pci/controller/dwc/pcie-uniphier.c         | 62 +++++++++++++++++-----
+ 4 files changed, 56 insertions(+), 16 deletions(-)
+
 -- 
-2.25.1
+2.7.4
 
