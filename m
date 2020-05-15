@@ -2,53 +2,49 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC83C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C64C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED6F720759
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9336920709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IrKApeK6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GQ5HIPvn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgEONRP (ORCPT
+        id S1726726AbgEONRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51262 "EHLO
+        Fri, 15 May 2020 09:17:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbgEONRG (ORCPT
+        with ESMTP id S1726657AbgEONRG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 May 2020 09:17:06 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A53A1C05BD0C;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AAC3C05BD0B;
         Fri, 15 May 2020 06:17:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=luxQMNxsjlyzL3dO3H8OF5FGGq+cc+hC23qWt+yodv4=; b=IrKApeK6phIQeXhoHj4kPI5S8S
-        XeGzPvU83JQejjMGg8APALZX1J1Q5EbV23IP/xOwbnUm1FMW2R4QIcamD1sleFTdLT3RYG0kx2fBW
-        bF9dq4KaFOXTD/Bqa0Vjf4PggEMMpTkKBoKcx3Jx1j+ENl2bbpz7yOC3eFHY0fq43mnn7x2b59Or7
-        bsNeUPBYbk79pxc31kviLIYJmuXH2YhyG/qbfxhx3p+86UO9tuU9/I//9EKKRAOnBAFC72tuhCOUA
-        gQhA19GX5d4X8Cpjvq7YmvG2bswxh09rloovGJNylk1BERy9swl/lARgJygMaRkRZ/kUrCvgSpZpq
-        Onefk2EQ==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=k90TBNQgWTgEitfazyj+QfWiSZyPPjE12/Z3ipkKF8Q=; b=GQ5HIPvn6Z7Txw2XcXT8hul23V
+        L7knopxh5wcff0wj8YH6Uwwal1XTrN5YDmFlXkszO4ARQrANvxftI2baTwSDbJMN1XaCF2Qfxbg13
+        9lcGCfW2dozkvCI1EO/sMU3k57UBgVuHVQULFIO5YK7+3Ircb9nSGtIvUP7PZsliPPXjG0FstBVWX
+        nHrGFvheSmeiGD+USrl/I0arzF4JCrM9a7N1IHe05hYppoxt341NmkTzixcl/yUXAq7j7Jy3rQU7p
+        VaewEabwEVrEJ0lWdsU6Yscc9K5iyws+1/Vsy8aD7QTFtP50bvJwduASNEL6dSt7u1SyHY2jsJrFz
+        6AFXI9rQ==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZaD1-0005qC-2E; Fri, 15 May 2020 13:17:03 +0000
+        id 1jZaCy-0005RI-5y; Fri, 15 May 2020 13:17:00 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
-Cc:     William Kucharski <william.kucharski@oracle.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v4 36/36] mm: Align THP mappings for non-DAX
-Date:   Fri, 15 May 2020 06:16:56 -0700
-Message-Id: <20200515131656.12890-37-willy@infradead.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 00/36] Large pages in the page cache
+Date:   Fri, 15 May 2020 06:16:20 -0700
+Message-Id: <20200515131656.12890-1-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200515131656.12890-1-willy@infradead.org>
-References: <20200515131656.12890-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,90 +52,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: William Kucharski <william.kucharski@oracle.com>
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-When we have the opportunity to use transparent huge pages to map a
-file, we want to follow the same rules as DAX.
+This patch set does not pass xfstests.  Test at your own risk.  It is
+based on the readahead rewrite which is in Andrew's tree.  I've fixed a
+lot of issues in the last two weeks, but generic/013 will still crash it.
 
-Signed-off-by: William Kucharski <william.kucharski@oracle.com>
-[Inline __thp_get_unmapped_area() into thp_get_unmapped_area()]
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- mm/huge_memory.c | 40 +++++++++++++---------------------------
- 1 file changed, 13 insertions(+), 27 deletions(-)
+The primary idea here is that a large part of the overhead in dealing
+with individual pages is that there's just so darned many of them.
+We would be better off dealing with fewer, larger pages, even if they
+don't get to be the size necessary for the CPU to use a larger TLB entry.
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 15a86b06befc..e78686b628ae 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -535,30 +535,30 @@ bool is_transparent_hugepage(struct page *page)
- }
- EXPORT_SYMBOL_GPL(is_transparent_hugepage);
- 
--static unsigned long __thp_get_unmapped_area(struct file *filp,
--		unsigned long addr, unsigned long len,
--		loff_t off, unsigned long flags, unsigned long size)
-+unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
-+		unsigned long len, unsigned long pgoff, unsigned long flags)
- {
-+	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
- 	loff_t off_end = off + len;
--	loff_t off_align = round_up(off, size);
-+	loff_t off_align = round_up(off, PMD_SIZE);
- 	unsigned long len_pad, ret;
- 
--	if (off_end <= off_align || (off_end - off_align) < size)
--		return 0;
-+	if (off_end <= off_align || (off_end - off_align) < PMD_SIZE)
-+		goto regular;
- 
--	len_pad = len + size;
-+	len_pad = len + PMD_SIZE;
- 	if (len_pad < len || (off + len_pad) < off)
--		return 0;
-+		goto regular;
- 
- 	ret = current->mm->get_unmapped_area(filp, addr, len_pad,
- 					      off >> PAGE_SHIFT, flags);
- 
- 	/*
--	 * The failure might be due to length padding. The caller will retry
--	 * without the padding.
-+	 * The failure might be due to length padding.  Retry without
-+	 * the padding.
- 	 */
- 	if (IS_ERR_VALUE(ret))
--		return 0;
-+		goto regular;
- 
- 	/*
- 	 * Do not try to align to THP boundary if allocation at the address
-@@ -567,23 +567,9 @@ static unsigned long __thp_get_unmapped_area(struct file *filp,
- 	if (ret == addr)
- 		return addr;
- 
--	ret += (off - ret) & (size - 1);
-+	ret += (off - ret) & (PMD_SIZE - 1);
- 	return ret;
--}
--
--unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
--		unsigned long len, unsigned long pgoff, unsigned long flags)
--{
--	unsigned long ret;
--	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
--
--	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
--		goto out;
--
--	ret = __thp_get_unmapped_area(filp, addr, len, off, flags, PMD_SIZE);
--	if (ret)
--		return ret;
--out:
-+regular:
- 	return current->mm->get_unmapped_area(filp, addr, len, pgoff, flags);
- }
- EXPORT_SYMBOL_GPL(thp_get_unmapped_area);
+v4:
+ - Fix thp_size typo
+ - Fix the iomap page_mkwrite() path to operate on the head page, even
+   though the vm_fault has a pointer to the tail page
+ - Fix iomap_finish_ioend() to use bio_for_each_thp_segment_all()
+ - Rework PageDoubleMap (see first two patches for details)
+ - Fix page_cache_delete() to handle shadow entries being stored to a THP
+ - Fix the assertion in pagecache_get_page() to handle tail pages
+ - Change PageReadahead from NO_COMPOUND to ONLY_HEAD
+ - Handle PageReadahead being set on head pages
+ - Handle total_mapcount correctly (Kirill)
+ - Pull the FS_LARGE_PAGES check out into mapping_large_pages()
+ - Fix page size assumption in truncate_cleanup_page()
+ - Avoid splitting large pages unnecessarily on truncate
+ - Disable the page cache truncation introduced as part of the read-only
+   THP patch set
+ - Call compound_head() in iomap buffered write paths -- we retrieve a
+   (potentially) tail page from the page cache and need to use that for
+   flush_dcache_page(), but we expect to operate on a head page in most
+   of the iomap code
+
+Kirill A. Shutemov (1):
+  mm: Fix total_mapcount assumption of page size
+
+Matthew Wilcox (Oracle) (34):
+  mm: Move PageDoubleMap bit
+  mm: Simplify PageDoubleMap with PF_SECOND policy
+  mm: Allow hpages to be arbitrary order
+  mm: Introduce thp_size
+  mm: Introduce thp_order
+  mm: Introduce offset_in_thp
+  fs: Add a filesystem flag for large pages
+  fs: Do not update nr_thps for large page mappings
+  fs: Introduce i_blocks_per_page
+  fs: Make page_mkwrite_check_truncate thp-aware
+  fs: Support THPs in zero_user_segments
+  bio: Add bio_for_each_thp_segment_all
+  iomap: Support arbitrarily many blocks per page
+  iomap: Support large pages in iomap_adjust_read_range
+  iomap: Support large pages in read paths
+  iomap: Support large pages in write paths
+  iomap: Inline data shouldn't see large pages
+  iomap: Handle tail pages in iomap_page_mkwrite
+  xfs: Support large pages
+  mm: Make prep_transhuge_page return its argument
+  mm: Add __page_cache_alloc_order
+  mm: Allow large pages to be added to the page cache
+  mm: Allow large pages to be removed from the page cache
+  mm: Remove page fault assumption of compound page size
+  mm: Avoid splitting large pages
+  mm: Fix truncation for pages of arbitrary size
+  mm: Support storing shadow entries for large pages
+  mm: Support retrieving tail pages from the page cache
+  mm: Support tail pages in wait_for_stable_page
+  mm: Add DEFINE_READAHEAD
+  mm: Make page_cache_readahead_unbounded take a readahead_control
+  mm: Make __do_page_cache_readahead take a readahead_control
+  mm: Allow PageReadahead to be set on head pages
+  mm: Add large page readahead
+
+William Kucharski (1):
+  mm: Align THP mappings for non-DAX
+
+ drivers/nvdimm/btt.c       |   4 +-
+ drivers/nvdimm/pmem.c      |   6 +-
+ fs/ext4/verity.c           |   4 +-
+ fs/f2fs/verity.c           |   4 +-
+ fs/iomap/buffered-io.c     | 121 +++++++++++++++++--------------
+ fs/jfs/jfs_metapage.c      |   2 +-
+ fs/xfs/xfs_aops.c          |   4 +-
+ fs/xfs/xfs_super.c         |   2 +-
+ include/linux/bio.h        |  13 ++++
+ include/linux/bvec.h       |  23 ++++++
+ include/linux/fs.h         |  28 +------
+ include/linux/highmem.h    |  15 +++-
+ include/linux/huge_mm.h    |  25 +++++--
+ include/linux/mm.h         |  97 +++++++++++++------------
+ include/linux/page-flags.h |  46 ++++--------
+ include/linux/pagemap.h    |  96 +++++++++++++++++++++---
+ mm/filemap.c               |  87 ++++++++++++++--------
+ mm/highmem.c               |  62 +++++++++++++++-
+ mm/huge_memory.c           |  58 +++++++--------
+ mm/internal.h              |  13 ++--
+ mm/memory.c                |   7 +-
+ mm/page-writeback.c        |   1 +
+ mm/page_io.c               |   2 +-
+ mm/page_vma_mapped.c       |   4 +-
+ mm/readahead.c             | 145 ++++++++++++++++++++++++++++---------
+ mm/truncate.c              |   6 +-
+ mm/vmscan.c                |   5 +-
+ 27 files changed, 565 insertions(+), 315 deletions(-)
+
 -- 
 2.26.2
-
