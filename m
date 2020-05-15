@@ -2,171 +2,114 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB59FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAD8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87DC5206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:46:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="PTkng51f"
+	by mail.kernel.org (Postfix) with ESMTP id EE3BE206DC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589511051;
+	bh=RzJEhITZbWZpNq+mY9foajRd7R6ugOd0UfGm2M8BNsk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MrKWqbxr2mWV+1OzFapiDewLWg1klAA9iQKNxEABfGBDbci97g22bQXO51QX0eA0/
+	 Fi6NzObJzDNXsFZQHufgV2dyv2jvqPdRDiKq8JadsWmkFYatT+WvYR4Gn1wlu3CkH+
+	 EsRN2hnKmr8Myz3u2dc6y47Me6CBlIjGPhOFwnhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgEOCqi (ORCPT
+        id S1728166AbgEOCuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 22:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgEOCqi (ORCPT
+        Thu, 14 May 2020 22:50:50 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39987 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgEOCut (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 22:46:38 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EAFFC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 19:46:36 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id f13so1172113qkh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 19:46:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=OMpUBY+Si2XPNxmdOWfPlfJqlBqAS2OaH/pPmfUEX/c=;
-        b=PTkng51fM68rwc22zFEzlpUa9DppOiQ+C1BBsMl2ykCflNw18tmzb7azXQO1wnkOON
-         HYdWD35Bw/dDMb/S2hWCEWI4+o3x/1OQtJcjQUNbXVv+e13FkmkIMNT0Iv3N1jh8mqRB
-         RGswpRMnb39gbHE9eMGVBlxDfdYaNAvPL4qqDw6ydAmnCp8XDyTVV4AKkwrhz2K3yIjB
-         eJ88K4ah439ZSvJnlKXZ07uXlBRt7VTlbjYSWN3FkCeRAJIPQR9S49nupGJghhxfOdyQ
-         QJxkg4JTESbFI25BI0L2TQC76veBKXnzDHFgELDJyo4vt95yJZw7VJNJtsgX/Yy8jZeC
-         z5uw==
+        Thu, 14 May 2020 22:50:49 -0400
+Received: by mail-ot1-f66.google.com with SMTP id d26so779867otc.7;
+        Thu, 14 May 2020 19:50:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=OMpUBY+Si2XPNxmdOWfPlfJqlBqAS2OaH/pPmfUEX/c=;
-        b=Rgqi1mHpHUyyhEJwOCPkrXJxsIRJeEAx+AEBpgvriZMRPMXfyGI33H++gawo648pFM
-         wLYl5L/7cGEWg6z8X66hcYRODRAWfziy0yztRHy9TmEj8xknQlrD0EhuLy4m5P3/ur8E
-         EamHcKCG4i4/+5MVm+XclfOq/ICLklitRwejViCuciz48kdNJf3JMhII3wGC/Wg4JNJ0
-         QXhVCZc2R2JXukIO4/RxrdyzocBod55xFd7WaKJbI7fZsuspYZSmXLHFkkN9q/MFU2PF
-         f53cMIWV9c+RD+bL7Y882azon8Bi5zri7Q9ueDlCdsT5+ml0T3NcvaUMjy72iB46MUWO
-         wNvg==
-X-Gm-Message-State: AOAM533JXsMyW5itfYEbqsUTk7nN2/B8Wkmb3AiTNPwmoagZq1C5bY7S
-        SNtW5WyzL82LkQJ8FQqo+9lJCw==
-X-Google-Smtp-Source: ABdhPJyeJRjlSg+dZoU6FPF+wM4IstAEXfuMBvDliuUpEd/HD5ke4KJOK5d8lhBESLsuHt/FIwr1Zw==
-X-Received: by 2002:a37:84a:: with SMTP id 71mr1345992qki.56.1589510795700;
-        Thu, 14 May 2020 19:46:35 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id k73sm597467qke.132.2020.05.14.19.46.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 May 2020 19:46:35 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: memory offline infinite loop after soft offline
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20191021031641.GA8007@hori.linux.bs1.fc.nec.co.jp>
-Date:   Thu, 14 May 2020 22:46:33 -0400
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DE0721DF-9E5C-4719-B382-01A4A74C04AD@lca.pw>
-References: <20191018063222.GA15406@hori.linux.bs1.fc.nec.co.jp>
- <64DC81FB-C1D2-44F2-981F-C6F766124B91@lca.pw>
- <20191021031641.GA8007@hori.linux.bs1.fc.nec.co.jp>
-To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Oscar Salvador <osalvador@suse.de>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ozglBc+sLmCi94fyi9hM4nMjLfjck0uiAKDPMtJ/ktQ=;
+        b=ECr0/UAyKyFFDJ2ku3XmPI+IYNoD1zjVfsHkXTU2ANlRVHZ7cWvSfbHLwLqLA5cUjY
+         vKdcBSdLDbpY2qiojfBzO5Jvu6FcYhDmwPi6YOpUlgIo9wJ8RJcSr6F4p9T0QKAalWob
+         yFpd0XwOpIHnTRoZqAS1QQR70nfhZ98klOnUFf4FILfn4QKiiXxStBtctn+rmTQ8lHcj
+         H34xjdQA/aAV5Kp1CmtaO6INa3715cnwGMFGg6/pBpMKygs1vVSDQU1kJNyLNbx03cvD
+         ZiomcyYOdIdjCexPmshbyprfnu1HfHe+RAqg6O+s9x8975NhwsrVGv40zE1v15kGeLNb
+         MPlQ==
+X-Gm-Message-State: AOAM531svvF5TG5dhnjmLUyBgVQRJZqOpJbqQbsDQcoj/lkOIRkppxiL
+        qvWrbtwzjIaOW0YAyZrW1w==
+X-Google-Smtp-Source: ABdhPJyf3I3BEvGznd2LmPlqdpXGJf9rz4M+SJAOYC+ZrQGj/mDBIoUotlVom7IQ3onC2yi+Xbff4w==
+X-Received: by 2002:a9d:7414:: with SMTP id n20mr773057otk.61.1589511048634;
+        Thu, 14 May 2020 19:50:48 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o17sm237457otp.79.2020.05.14.19.50.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 19:50:48 -0700 (PDT)
+Received: (nullmailer pid 30844 invoked by uid 1000);
+        Fri, 15 May 2020 02:50:47 -0000
+Date:   Thu, 14 May 2020 21:50:47 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sarthak Garg <sartgarg@codeaurora.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        vbadigan@codeaurora.org, stummala@codeaurora.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH V1 1/7] dt-bindings: mmc: Add information for DLL
+ register properties
+Message-ID: <20200515025047.GA27895@bogus>
+References: <1588838535-6050-1-git-send-email-sartgarg@codeaurora.org>
+ <1588838535-6050-2-git-send-email-sartgarg@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588838535-6050-2-git-send-email-sartgarg@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 07, 2020 at 01:32:08PM +0530, Sarthak Garg wrote:
+> Add information regarding DLL register properties for getting target
+> specific configurations. These DLL register settings may vary from
+> target to target.
+> 
+> Also new compatible string value for sm8250 target.
+> 
+> Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> index 5445931..b8e1d2b 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -17,6 +17,7 @@ Required properties:
+>  		"qcom,msm8916-sdhci", "qcom,sdhci-msm-v4"
+>  		"qcom,msm8992-sdhci", "qcom,sdhci-msm-v4"
+>  		"qcom,msm8996-sdhci", "qcom,sdhci-msm-v4"
+> +		"qcom,sm8250-sdhci", "qcom,sdhci-msm-v5"
+>  		"qcom,sdm845-sdhci", "qcom,sdhci-msm-v5"
+>  		"qcom,qcs404-sdhci", "qcom,sdhci-msm-v5"
+>  		"qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+> @@ -46,6 +47,13 @@ Required properties:
+>  	"cal"	- reference clock for RCLK delay calibration (optional)
+>  	"sleep"	- sleep clock for RCLK delay calibration (optional)
+>  
+> +- qcom,ddr-config: Certain chipsets and platforms require particular settings
+> +	for the DDR_CONFIG register. Use this field to specify the register
+> +	value as per the Hardware Programming Guide.
+> +
+> +- qcom,dll-config: Chipset and Platform specific value. Use this field to
+> +	specify the DLL_CONFIG register value as per Hardware Programming Guide.
 
-
-> On Oct 20, 2019, at 11:16 PM, Naoya Horiguchi =
-<n-horiguchi@ah.jp.nec.com> wrote:
->=20
-> On Fri, Oct 18, 2019 at 07:56:09AM -0400, Qian Cai wrote:
->>=20
->>=20
->>    On Oct 18, 2019, at 2:35 AM, Naoya Horiguchi =
-<n-horiguchi@ah.jp.nec.com>
->>    wrote:
->>=20
->>=20
->>    You're right, then I don't see how this happens. If the error =
-hugepage was
->>    isolated without having PG_hwpoison set, it's unexpected and =
-problematic.
->>    I'm testing myself with v5.4-rc2 (simply ran move_pages12 and did =
-hotremove
->>    /hotadd)
->>    but don't reproduce the issue yet.  Do we need specific kernel =
-version/
->>    config
->>    to trigger this?
->>=20
->>=20
->> This is reproducible on linux-next with the config. Not sure if it is
->> reproducible on x86.
->>=20
->> =
-https://raw.githubusercontent.com/cailca/linux-mm/master/powerpc.config
->>=20
->> and kernel cmdline if that matters
->>=20
->> page_poison=3Don page_owner=3Don numa_balancing=3Denable \
->> systemd.unified_cgroup_hierarchy=3D1 debug_guardpage_minorder=3D1 \
->> page_alloc.shuffle=3D1
->=20
-> Thanks for the info.
->=20
->>=20
->> BTW, where does the code set PG_hwpoison for the head page?
->=20
-> Precisely speaking, soft offline only sets PG_hwpoison after the =
-target
-> hugepage is successfully dissolved (then it's not a hugepage any =
-more),
-> so PG_hwpoison is set on the raw page in =
-set_hwpoison_free_buddy_page().
->=20
-> In move_pages12 case, madvise(MADV_SOFT_OFFLINE) is called for the =
-range
-> of 2 hugepages, so the expected result is that page offset 0 and 512
-> are marked as PG_hwpoison after injection.
->=20
-> Looking at your dump_page() output, the end_pfn is page offset 1
-> ("page:c00c000800458040" is likely to point to pfn 0x11601.)
-> The page belongs to high order buddy free page, but doesn't have
-> PageBuddy nor PageHWPoison because it was not the head page or
-> the raw error page.
->=20
->> Unfortunately, this does not solve the problem. It looks to me that =
-in           =20
->> soft_offline_huge_page(), set_hwpoison_free_buddy_page() will only =
-set           =20
->> PG_hwpoison for buddy pages, so the even the compound_head() has no =
-PG_hwpoison  =20
->> set.                                                                  =
-           =20
->=20
-> Your analysis is totally correct, and this behavior will be fixed by
-> the change (https://lkml.org/lkml/2019/10/17/551) in Oscar's rework.
-> The raw error page will be taken off from buddy system and the other
-> subpages are properly split into lower orderer pages (we'll properly
-> manage PageBuddy flags). So all possible cases would be covered by
-> branches in __test_page_isolated_in_pageblock.
-
-Naoya, Oscar, it looks like this series was stuck.
-
-https://lkml.org/lkml/2019/10/17/551
-
-I can still reproduce this issue as today. Maybe it is best we could =
-post a single patch (which one?) to fix the loop first?
-
-
-
-
+Board specific or SoC specific? If the latter, imply this from the 
+compatible string.
