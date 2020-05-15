@@ -2,127 +2,149 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7BBF204EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:29:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZkBlAm2i"
+	by mail.kernel.org (Postfix) with ESMTP id 2F203204EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgEOC35 (ORCPT
+        id S1727873AbgEOCbH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 22:29:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726176AbgEOC34 (ORCPT
+        Thu, 14 May 2020 22:31:07 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34473 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726176AbgEOCbG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 22:29:56 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D67EC05BD09
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 19:29:56 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id a7so237771uak.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 19:29:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3JifzVBQeOFFZWECIooC1r1MBLb2LpZu3OhDsGzyQwI=;
-        b=ZkBlAm2iPlEcr/Yn4qDW9Yq6BXZNd/Rv6CWBamTR7L/fNW4uy8Bxdam5xyBgH6mbo1
-         T9Ggd5HVo4MANHIcEtjG+/EYbItWYAcFGy6VOaG4l12Ns/5lLWeKwxJvDB7zq3rfA+q8
-         W+9nwtTERzKqQY51VK5fKIGpSe5CpsH5S4Cxk=
+        Thu, 14 May 2020 22:31:06 -0400
+Received: from mail-pj1-f70.google.com ([209.85.216.70])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jZQ7r-0007iT-GP
+        for linux-kernel@vger.kernel.org; Fri, 15 May 2020 02:31:03 +0000
+Received: by mail-pj1-f70.google.com with SMTP id o9so652846pjw.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 19:31:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3JifzVBQeOFFZWECIooC1r1MBLb2LpZu3OhDsGzyQwI=;
-        b=QhCj8DqGL4VxKX9mkBtBPsJOtY1ilz8NQzRbuRY5IvSmNBTKvULh6XO8aTfhMxIxXn
-         o7QpXCF5aacruUIwp+U1ONperr6019iDgAvyGonUkUPrfFV3ejn5zPd/30LLZEe82fui
-         qZ8j3uq9H3wp0BnO0RDrx0/phnYwhhrgArTiyvalL2tgg3UsVpzv4Aa7OzeukTk/2bhB
-         rkQJol/C8SWzdf2qgnhRx0X5AQo58gqK1TtgPovHu6Y3BYHW4sLfEv6DmMsocTzhUdKS
-         lrVGrdEx497l1dI3OUSmcgloezFfIpKtfETOkjFEOXvnX4+X5tOMiMqb0U7Q5EYBu11X
-         Qlfg==
-X-Gm-Message-State: AOAM532lhtuDhb5pHplxslofW5vzn7kdVzd6i4oQr2TxVXsf1cMVzxnE
-        +ympZMxDw9xpNZLIK7gIICINm/4vtZI=
-X-Google-Smtp-Source: ABdhPJxpqNU8VzLKmgUn899ubOvABUTke8L/7uAgReFw830n2vF0SkuQm4XHN5QNKz3+1AleLr2Itg==
-X-Received: by 2002:ab0:2045:: with SMTP id g5mr1197061ual.35.1589509794927;
-        Thu, 14 May 2020 19:29:54 -0700 (PDT)
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
-        by smtp.gmail.com with ESMTPSA id y1sm191471vsn.23.2020.05.14.19.29.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 19:29:53 -0700 (PDT)
-Received: by mail-vk1-f178.google.com with SMTP id o8so178983vkd.12
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 19:29:52 -0700 (PDT)
-X-Received: by 2002:a1f:2c41:: with SMTP id s62mr1100387vks.40.1589509792456;
- Thu, 14 May 2020 19:29:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200504104917.v6.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
-In-Reply-To: <20200504104917.v6.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 14 May 2020 19:29:41 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UbcUersNDYK9LQiGb55PUN-HSwxjCZdxo6QqUV=N=UTQ@mail.gmail.com>
-Message-ID: <CAD=FV=UbcUersNDYK9LQiGb55PUN-HSwxjCZdxo6QqUV=N=UTQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/5] soc: qcom: rpmh-rsc: Correctly ignore
- CPU_CLUSTER_PM notifications
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=s8tcOcdPYeTodwqSl1QkZZy/pKZuDq5Dfiay8LkuQI4=;
+        b=F5fWCrwa8e/Ukt9BoGQDIAsZi21z+HlRJahrSoJ2NyG9877PostQcPHmIFcmilYolA
+         9KplWeU68KBMpzIaO3UUfKTdt+x6IKm7oym9vde3Nmo6rBWl31Bp2Ns9F1CCGO+5DWSN
+         ch+25V34w7c2D2Rj0JVE6on72lrquPpCP2ot6T1qOlfGUmOyIRsyUae9H307iasdYrT2
+         CfQbVxS+VFzo4taWMCTYFmTlNZrKq68oeQWNTneMCeoCvuYI5n8f9QKpz5Cf0HjP+nfQ
+         o+Cp8WMsQVBcMmWO+dYX/b3WemX5J0BDHraF8PpV7uxwOZ3rjWrKfVXdhptuZxYN3BsE
+         2xzA==
+X-Gm-Message-State: AOAM530nRFKjkIE0Y02y092DmniNqFpY8iW5D2QJ9mP0ZjBHYqp/dP3C
+        hsRTouN89aTJlJiEoiTC9lohKgcjfk48eDTNgCiEeOOVu1sTw7629eI4JJDrk5NDhUjrH1KeTQ6
+        5Ougcu7nghXBAp/7xOor/0YzrrqP/RjiAFGGri9lARw==
+X-Received: by 2002:a17:902:b401:: with SMTP id x1mr1530869plr.334.1589509862028;
+        Thu, 14 May 2020 19:31:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxbeP3r9puf7vMybibvhliGHuQC/LsBElDPmuxYS58JCZt6ir1uAtpEWJco+HN6Kzp8W3KFFQ==
+X-Received: by 2002:a17:902:b401:: with SMTP id x1mr1530832plr.334.1589509861600;
+        Thu, 14 May 2020 19:31:01 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id c22sm459697pfc.127.2020.05.14.19.30.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 May 2020 19:31:00 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] usb: core: hub: limit HUB_QUIRK_DISABLE_AUTOSUSPEND to
+ USB5534B
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200514220246.13290-1-erosca@de.adit-jv.com>
+Date:   Fri, 15 May 2020 10:30:57 +0800
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-stable <stable@vger.kernel.org>,
+        Hardik Gajjar <hgajjar@de.adit-jv.com>,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <FB436128-70A8-4558-808C-E068834EBF4F@canonical.com>
+References: <20200514220246.13290-1-erosca@de.adit-jv.com>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Mon, May 4, 2020 at 10:50 AM Douglas Anderson <dianders@chromium.org> wrote:
->
-> Our switch statement doesn't have entries for CPU_CLUSTER_PM_ENTER,
-> CPU_CLUSTER_PM_ENTER_FAILED, and CPU_CLUSTER_PM_EXIT and doesn't have
-> a default.  This means that we'll try to do a flush in those cases but
-> we won't necessarily be the last CPU down.  That's not so ideal since
-> our (lack of) locking assumes we're on the last CPU.
->
-> Luckily this isn't as big a problem as you'd think since (at least on
-> the SoC I tested) we don't get these notifications except on full
-> system suspend.  ...and on full system suspend we get them on the last
-> CPU down.  That means that the worst problem we hit is flushing twice.
-> Still, it's good to make it correct.
->
-> Fixes: 985427f997b6 ("soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches")
-> Reported-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+> On May 15, 2020, at 06:02, Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> 
+> On Tue, May 12, 2020 at 09:36:07PM +0800, Kai-Heng Feng wrote [1]:
+>> This patch prevents my Raven Ridge xHCI from getting runtime suspend.
+> 
+> The problem described in v5.6 commit 1208f9e1d758c9 ("USB: hub: Fix the
+> broken detection of USB3 device in SMSC hub") applies solely to the
+> USB5534B hub [2] present on the Kingfisher Infotainment Carrier Board,
+> manufactured by Shimafuji Electric Inc [3].
+> 
+> Despite that, the aforementioned commit applied the quirk to _all_ hubs
+> carrying vendor ID 0x424 (i.e. SMSC), of which there are more [4] than
+> initially expected. Consequently, the quirk is now enabled on platforms
+> carrying SMSC/Microchip hub models which potentially don't exhibit the
+> original issue.
+> 
+> To avoid reports like [1], further limit the quirk's scope to
+> USB5534B [2], by employing both Vendor and Product ID checks.
+> 
+> Tested on H3ULCB + Kingfisher rev. M05.
+> 
+> [1] https://lore.kernel.org/linux-renesas-soc/73933975-6F0E-40F5-9584-D2B8F615C0F3@canonical.com/
+> [2] https://www.microchip.com/wwwproducts/en/USB5534B
+> [3] http://www.shimafuji.co.jp/wp/wp-content/uploads/2018/08/SBEV-RCAR-KF-M06Board_HWSpecificationEN_Rev130.pdf
+> [4] https://devicehunt.com/search/type/usb/vendor/0424/device/any
+> 
+> Fixes: 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
+> Cc: stable@vger.kernel.org # v4.14+
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Alan Stern <stern@rowland.harvard.edu>
+> Cc: Hardik Gajjar <hgajjar@de.adit-jv.com>
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: linux-usb@vger.kernel.org
+> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+
 > ---
->
-> Changes in v6:
-> - Release the lock on cluster notifications.
->
-> Changes in v5:
-> - Corrently => Correctly
->
-> Changes in v4:
-> - ("...Corrently ignore CPU_CLUSTER_PM notifications") split out for v4.
->
-> Changes in v3: None
-> Changes in v2: None
->
->  drivers/soc/qcom/rpmh-rsc.c | 3 +++
->  1 file changed, 3 insertions(+)
+> drivers/usb/core/hub.c | 6 +++++-
+> 1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index 2b6565c06c23..fc748c731832 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -39,6 +39,7 @@
+> 
+> #define USB_VENDOR_GENESYS_LOGIC		0x05e3
+> #define USB_VENDOR_SMSC				0x0424
+> +#define USB_PRODUCT_USB5534B			0x5534
+> #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
+> #define HUB_QUIRK_DISABLE_AUTOSUSPEND		0x02
+> 
+> @@ -5621,8 +5622,11 @@ static void hub_event(struct work_struct *work)
+> }
+> 
+> static const struct usb_device_id hub_id_table[] = {
+> -    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR | USB_DEVICE_ID_MATCH_INT_CLASS,
+> +    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
+> +                   | USB_DEVICE_ID_MATCH_PRODUCT
+> +                   | USB_DEVICE_ID_MATCH_INT_CLASS,
+>       .idVendor = USB_VENDOR_SMSC,
+> +      .idProduct = USB_PRODUCT_USB5534B,
+>       .bInterfaceClass = USB_CLASS_HUB,
+>       .driver_info = HUB_QUIRK_DISABLE_AUTOSUSPEND},
+>     { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
+> -- 
+> 2.26.2
+> 
 
-The bugfixes in this series seem somewhat important to land.  Is there
-something delaying them?  Are we waiting for some tags from Maulik?
-
--Doug
