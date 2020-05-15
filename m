@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA235C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C67CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94A7E20787
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD7520709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:18:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KB8xI84b"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d7HGG80t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgEONRs (ORCPT
+        id S1727097AbgEONRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:17:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51246 "EHLO
+        Fri, 15 May 2020 09:17:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbgEONRD (ORCPT
+        with ESMTP id S1726601AbgEONRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 May 2020 09:17:03 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A09F8C05BD1A;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B985DC05BD1C;
         Fri, 15 May 2020 06:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=J5D9xGGBSFhSBZQFLLkizdfmJQQ9VTJ9BzrD2DVYvp4=; b=KB8xI84bU5Vdya+GCcFphefntf
-        wvsHkKCp9bbfGbppQcNHNf0QFh6cqNy4qevBWrUv4XigrxvTYt7pGT1ayXXp4iY3XnLHKuwQuTgVn
-        QIzGJ1AceBBekhcvWCH1Ey8JApsbu6mRWmarzmhSBEmWCSYI0vBqmRGwRrNqEMHeODJo1ezIfjIgU
-        AruDLjDFMPNoMYqmC7XcY4WSlT2NlmNV0h9XIQlL2yPwQjDbFk05SXROE3H+VMm8LdAwB4WDt1/hV
-        6hzYPKZtpgqcgsn38IPEnXi0ikz1GiuytgTqR/ieyDBB+VSJ7/9N0Id2VTIRrHEMx45Wodh+KySa8
-        O3CPAJ5A==;
+        bh=ZvCAGtrDAcAsja+QmzFW6sNRVbIwR7f84uLooOJs50k=; b=d7HGG80tN6Vh0xs+XPqofRQTkN
+        i/9CY2TSUURCgYZW5bGV8/giGx3/aly85rxPadBm4xbWWLgM6wFvC2thkJustR6QhfFx5i7yn/Di0
+        FX2ui0TDSmccfhzmkim/jmUucgw/+u5R77FPvbdTc6FC/Yvg/32pdcNVXOix4Dfe3qeM8PsCNpboJ
+        cCXRrLFl0gMKfoEtilibzrFQ7gzOW6CAtNDkgmGz0dj0nMebnWH/0eWoA7U3lhpsRB/0ahj3TxCTB
+        mUhR8D8RpfMS4T8ClglEYnxh9D19HReKYb+vd9cdJobXp2orwiULHG5mooly4YHOqbx7ROrcp008+
+        nkjvNPQQ==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZaD0-0005li-Du; Fri, 15 May 2020 13:17:02 +0000
+        id 1jZaD0-0005mT-Fs; Fri, 15 May 2020 13:17:02 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 28/36] mm: Support storing shadow entries for large pages
-Date:   Fri, 15 May 2020 06:16:48 -0700
-Message-Id: <20200515131656.12890-29-willy@infradead.org>
+Subject: [PATCH v4 29/36] mm: Support retrieving tail pages from the page cache
+Date:   Fri, 15 May 2020 06:16:49 -0700
+Message-Id: <20200515131656.12890-30-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200515131656.12890-1-willy@infradead.org>
 References: <20200515131656.12890-1-willy@infradead.org>
@@ -57,52 +57,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-If the page is being replaced with a NULL, we can do a single large store,
-but for now we have to use a loop to store one shadow entry in each entry.
+page->index is not meaningful for tail pages; we have to use
+page_to_index() in this assertion.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- mm/filemap.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ mm/filemap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 9c760dd7208e..0ec7f25a07b2 100644
+index 0ec7f25a07b2..56eb086acef8 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
-@@ -120,22 +120,27 @@ static void page_cache_delete(struct address_space *mapping,
- 				   struct page *page, void *shadow)
- {
- 	XA_STATE(xas, &mapping->i_pages, page->index);
--	unsigned int nr = 1;
-+	unsigned int i, nr = 1, entries = 1;
- 
- 	mapping_set_update(&xas, mapping);
- 
- 	/* hugetlb pages are represented by a single entry in the xarray */
- 	if (!PageHuge(page)) {
--		xas_set_order(&xas, page->index, compound_order(page));
--		nr = compound_nr(page);
-+		entries = nr = hpage_nr_pages(page);
-+		if (!shadow) {
-+			xas_set_order(&xas, page->index, thp_order(page));
-+			entries = 1;
-+		}
+@@ -1655,7 +1655,7 @@ struct page *pagecache_get_page(struct address_space *mapping, pgoff_t index,
+ 			put_page(page);
+ 			goto repeat;
+ 		}
+-		VM_BUG_ON_PAGE(page->index != index, page);
++		VM_BUG_ON_PAGE(page_to_index(page) != index, page);
  	}
  
- 	VM_BUG_ON_PAGE(!PageLocked(page), page);
- 	VM_BUG_ON_PAGE(PageTail(page), page);
--	VM_BUG_ON_PAGE(nr != 1 && shadow, page);
- 
--	xas_store(&xas, shadow);
--	xas_init_marks(&xas);
-+	for (i = 0; i < entries; i++) {
-+		xas_store(&xas, shadow);
-+		xas_init_marks(&xas);
-+		xas_next(&xas);
-+	}
- 
- 	page->mapping = NULL;
- 	/* Leave page->index set: truncation lookup relies upon it */
+ 	if (fgp_flags & FGP_ACCESSED)
 -- 
 2.26.2
 
