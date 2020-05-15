@@ -2,90 +2,284 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71742C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84097C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5176A207C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69248207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:52:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgEOOvx (ORCPT
+        id S1726642AbgEOOwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:51:53 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:46947 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgEOOvw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:51:52 -0400
-X-Originating-IP: 90.65.91.255
-Received: from localhost (lfbn-lyo-1-1912-bdcst.w90-65.abo.wanadoo.fr [90.65.91.255])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id D2319240032;
-        Fri, 15 May 2020 14:51:49 +0000 (UTC)
-Date:   Fri, 15 May 2020 16:51:49 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Tudor.Ambarus@microchip.com
-Cc:     Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Codrin.Ciubotariu@microchip.com
-Subject: Re: [PATCH 00/16] ARM: dts: at91: sama5d2: Rework Flexcom definitions
-Message-ID: <20200515145149.GU34497@piout.net>
-References: <20200514050301.147442-1-tudor.ambarus@microchip.com>
+        Fri, 15 May 2020 10:52:01 -0400
+Received: from mga05.intel.com ([192.55.52.43]:27030 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgEOOwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 10:52:00 -0400
+IronPort-SDR: mcba1R6OENUDv8qeuAeBMuMpKFu0TewZVwf+BZOafk94r9SFtOGRSamz1cyOB9MEYbptMUIm6Z
+ veTCvgsM9VBg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 07:51:59 -0700
+IronPort-SDR: HwPk1H61Q+H4zsEv20ReDwzqDvKEXNvgEDK9TQ2yu/lH1xQmk6pcwVrQyzaEjrKy38GcLsoRkW
+ sro0LQ8ZJSxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="341999325"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 15 May 2020 07:51:52 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZbgn-006tLt-NT; Fri, 15 May 2020 17:51:53 +0300
+Date:   Fri, 15 May 2020 17:51:53 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Eddie James <eajames@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Raymond Tan <raymond.tan@intel.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 13/19] spi: dw: Move Non-DMA code to the DW PCIe-SPI
+ driver
+Message-ID: <20200515145153.GJ1634618@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-14-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514050301.147442-1-tudor.ambarus@microchip.com>
+In-Reply-To: <20200515104758.6934-14-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/05/2020 05:03:06+0000, Tudor.Ambarus@microchip.com wrote:
-> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+On Fri, May 15, 2020 at 01:47:52PM +0300, Serge Semin wrote:
+> This is a preparation patch before adding the DW DMA support into the
+> DW SPI MMIO driver. We need to unpin the Non-DMA-specific code from the
+> intended to be generic DW APB SSI DMA code. This isn't that hard,
+> since the most part of the spi-dw-mid.c driver in fact implements a
+> generic DMA interface for the DW SPI controller driver. The only Intel
+> MID specifics concern getting the max frequency from the MRST Clock
+> Control Unit and fetching the DMA controller channels from
+> corresponding PCIe DMA controller. Since first one is related with the
+> SPI interface configuration we moved it' implementation into the
+> DW PCIe-SPI driver module. After that former spi-dw-mid.c file
+> can be just renamed to be the DW SPI DMA module optionally compiled in to
+> the DW APB SSI core driver.
+
+Cc list here is huge!
+
+I think this patch should go immediately after bunch of fixes.
+
+...
+
+> -obj-$(CONFIG_SPI_DESIGNWARE)		+= spi-dw.o
+> +obj-$(CONFIG_SPI_DESIGNWARE)		+= spi-dw-core.o
+> +spi-dw-core-y				:= spi-dw.o
+> +spi-dw-core-$(CONFIG_SPI_DW_DMA)	+= spi-dw-dma.o
+
+We may leave module name the same, right?
+
+obj-$(CONFIG_SPI_DESIGNWARE)		+= spi-dw.o
+spi-dw-y				:= spi-dw-core.o
+spi-dw-$(CONFIG_SPI_DW_DMA)		+= spi-dw-dma.o
+
+>  obj-$(CONFIG_SPI_DW_MMIO)		+= spi-dw-mmio.o
+> -obj-$(CONFIG_SPI_DW_PCI)		+= spi-dw-midpci.o
+> -spi-dw-midpci-objs			:= spi-dw-pci.o spi-dw-mid.o
+> +obj-$(CONFIG_SPI_DW_PCI)		+= spi-dw-pci.o
+
+> -/* Some specific info for SPI0 controller on Intel MID */
+> -
+> -/* HW info for MRST Clk Control Unit, 32b reg per controller */
+> -#define MRST_SPI_CLK_BASE	100000000	/* 100m */
+> -#define MRST_CLK_SPI_REG	0xff11d86c
+> -#define CLK_SPI_BDIV_OFFSET	0
+> -#define CLK_SPI_BDIV_MASK	0x00000007
+> -#define CLK_SPI_CDIV_OFFSET	9
+> -#define CLK_SPI_CDIV_MASK	0x00000e00
+> -#define CLK_SPI_DISABLE_OFFSET	8
+> -
+> -int dw_spi_mid_init_mfld(struct dw_spi *dws)
+> -{
+> -	void __iomem *clk_reg;
+> -	u32 clk_cdiv;
+> -
+> -	clk_reg = ioremap(MRST_CLK_SPI_REG, 16);
+> -	if (!clk_reg)
+> -		return -ENOMEM;
+> -
+> -	/* Get SPI controller operating freq info */
+> -	clk_cdiv = readl(clk_reg + dws->bus_num * sizeof(u32));
+> -	clk_cdiv &= CLK_SPI_CDIV_MASK;
+> -	clk_cdiv >>= CLK_SPI_CDIV_OFFSET;
+> -	dws->max_freq = MRST_SPI_CLK_BASE / (clk_cdiv + 1);
+> -
+> -	iounmap(clk_reg);
+> -
+> -	/* Register hook to configure CTRLR0 */
+> -	dws->update_cr0 = dw_spi_update_cr0;
+> -
+> -	dw_spi_mid_setup_dma_mfld(dws);
+> -	return 0;
+> -}
+> -
+> -int dw_spi_mid_init_generic(struct dw_spi *dws)
+> -{
+> -	/* Register hook to configure CTRLR0 */
+> -	dws->update_cr0 = dw_spi_update_cr0;
+> -
+> -	dw_spi_mid_setup_dma_generic(dws);
+> -	return 0;
+> -}
+> +EXPORT_SYMBOL_GPL(dw_spi_mid_setup_dma_generic);
+> diff --git a/drivers/spi/spi-dw-pci.c b/drivers/spi/spi-dw-pci.c
+> index dde54a918b5d..c13707b8493e 100644
+> --- a/drivers/spi/spi-dw-pci.c
+> +++ b/drivers/spi/spi-dw-pci.c
+> @@ -15,6 +15,15 @@
+>  
+>  #define DRIVER_NAME "dw_spi_pci"
+>  
+> +/* HW info for MRST Clk Control Unit, 32b reg per controller */
+> +#define MRST_SPI_CLK_BASE	100000000	/* 100m */
+> +#define MRST_CLK_SPI_REG	0xff11d86c
+> +#define CLK_SPI_BDIV_OFFSET	0
+> +#define CLK_SPI_BDIV_MASK	0x00000007
+> +#define CLK_SPI_CDIV_OFFSET	9
+> +#define CLK_SPI_CDIV_MASK	0x00000e00
+> +#define CLK_SPI_DISABLE_OFFSET	8
+> +
+>  struct spi_pci_desc {
+>  	int	(*setup)(struct dw_spi *);
+>  	u16	num_cs;
+> @@ -22,20 +31,55 @@ struct spi_pci_desc {
+>  	u32	max_freq;
+>  };
+>  
+> +static int spi_mid_init(struct dw_spi *dws)
+> +{
+> +	void __iomem *clk_reg;
+> +	u32 clk_cdiv;
+> +
+> +	clk_reg = ioremap(MRST_CLK_SPI_REG, 16);
+> +	if (!clk_reg)
+> +		return -ENOMEM;
+> +
+> +	/* Get SPI controller operating freq info */
+> +	clk_cdiv = readl(clk_reg + dws->bus_num * sizeof(u32));
+> +	clk_cdiv &= CLK_SPI_CDIV_MASK;
+> +	clk_cdiv >>= CLK_SPI_CDIV_OFFSET;
+> +	dws->max_freq = MRST_SPI_CLK_BASE / (clk_cdiv + 1);
+> +
+> +	iounmap(clk_reg);
+> +
+> +	/* Register hook to configure CTRLR0 */
+> +	dws->update_cr0 = dw_spi_update_cr0;
+> +
+> +	dw_spi_mid_setup_dma_mfld(dws);
+> +
+> +	return 0;
+> +}
+> +
+> +static int spi_generic_init(struct dw_spi *dws)
+> +{
+> +	/* Register hook to configure CTRLR0 */
+> +	dws->update_cr0 = dw_spi_update_cr0;
+> +
+> +	dw_spi_mid_setup_dma_generic(dws);
+> +
+> +	return 0;
+> +}
+> +
+>  static struct spi_pci_desc spi_pci_mid_desc_1 = {
+> -	.setup = dw_spi_mid_init_mfld,
+> +	.setup = spi_mid_init,
+>  	.num_cs = 5,
+>  	.bus_num = 0,
+>  };
+>  
+>  static struct spi_pci_desc spi_pci_mid_desc_2 = {
+> -	.setup = dw_spi_mid_init_mfld,
+> +	.setup = spi_mid_init,
+>  	.num_cs = 2,
+>  	.bus_num = 1,
+>  };
+>  
+>  static struct spi_pci_desc spi_pci_ehl_desc = {
+> -	.setup = dw_spi_mid_init_generic,
+> +	.setup = spi_generic_init,
+>  	.num_cs = 2,
+>  	.bus_num = -1,
+>  	.max_freq = 100000000,
+> diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+> index d0c8b7d3a5d2..75fdcc5e7642 100644
+> --- a/drivers/spi/spi-dw.h
+> +++ b/drivers/spi/spi-dw.h
+> @@ -265,8 +265,16 @@ extern u32 dw_spi_update_cr0_v1_01a(struct spi_controller *master,
+>  				    struct spi_device *spi,
+>  				    struct spi_transfer *transfer);
+>  
+> -/* platform related setup */
+> -extern int dw_spi_mid_init_mfld(struct dw_spi *dws);
+> -extern int dw_spi_mid_init_generic(struct dw_spi *dws);
+> +#ifdef CONFIG_SPI_DW_DMA
+> +
+> +extern void dw_spi_mid_setup_dma_mfld(struct dw_spi *dws);
+> +extern void dw_spi_mid_setup_dma_generic(struct dw_spi *dws);
+> +
+
+I would drop blank lines and extern keywords.
+
+> +#else
+
+> +
+> +static inline void dw_spi_mid_setup_dma_mfld(struct dw_spi *dws) {}
+> +static inline void dw_spi_mid_setup_dma_generic(struct dw_spi *dws) {}
+> +
+
+Ditto for blank lines.
+
+> +#endif /* !CONFIG_SPI_DW_DMA */
+>  
+>  #endif /* DW_SPI_HEADER_H */
+> -- 
+> 2.25.1
 > 
-> Rework the sama5d2 SoC flexcom definitions. The Flexcom IPs are
-> in the SoC. Move all the flexcom nodes together with their function
-> definitions in the SoC dtsi. Boards will just fill the pins and enable
-> the desired functions. With this we remove the duplication of the
-> flexcom definitions across the sama5d2 boards.
-> 
-> Round the flexcom support and add the missing flexcom definitions.
-> All the flexcom functions are now defined.
-> 
-> Apart of the aliases and the new flx0 i2c function on sama5d2_xplained,
-> the only functional change that this patch set adds, is that it uart5,
-> uart6 and uart7 inherit the atmel,fifo-size = <32>; optional property.
-> These nodes have both the FIFO size described and the DMA enabled.
-> uart5 was tested on sama5d27-wlsom1-ek. On uart6 and uart7 a
-> Bluetooth module can be connected. Tested BT uart7 on sama5d2-icp.
-> 
-> Tudor Ambarus (16):
->   ARM: dts: at91: sama5d2: Fix the label numbering for flexcom functions
->   ARM: dts: at91: sama5d2: Move flx4 definitions in the SoC dtsi
->   ARM: dts: at91: sama5d2: Move flx3 definitions in the SoC dtsi
->   ARM: dts: at91: sama5d2: Move flx2 definitions in the SoC dtsi
->   ARM: dts: at91: sama5d2: Move flx1 definitions in the SoC dtsi
->   ARM: dts: at91: sama5d2: Move flx0 definitions in the SoC dtsi
->   ARM: dts: at91: sama5d2: Specify the FIFO size for the Flexcom UART
->   ARM: dts: at91: sama5d2: Add DMA bindings for the SPI and UART flx4
->     functions
->   ARM: dts: at91: sama5d2: Add DMA bindings for the flx3 SPI function
->   ARM: dts: at91: sama5d2: Add DMA bindings for the flx1 I2C function
->   ARM: dts: at91: sama5d2: Add DMA bindings for the SPI and I2C flx0
->     functions
->   ARM: dts: at91: sama5d2: Add missing flexcom definitions
->   ARM: dts: at91: sama5d2: Remove i2s and tcb aliases from SoC dtsi
->   ARM: dts: at91: sama5d2_xplained: Add alias for DBGU
->   ARM: dts: at91: sama5d2_xplained: Describe the flx0 I2C function
->   ARM: dts: at91: sama5d2_ptc_ek: Add comments to describe the aliases
-> 
-Applied, thanks.
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+With Best Regards,
+Andy Shevchenko
+
+
