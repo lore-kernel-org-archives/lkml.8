@@ -2,68 +2,66 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4592CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AF2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B86A20756
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C71206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgEORzv (ORCPT
+        id S1726494AbgEOR4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:55:51 -0400
-Received: from mga04.intel.com ([192.55.52.120]:17940 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbgEORzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:55:50 -0400
-IronPort-SDR: iSBZmHUl0AyrPoSGEk2gU4+OSPIJ2896RYl/sRZOoTlPb3ULpmHVhErE0n3oQFl6EYAbb9UcNN
- UeCpHOdbcdQA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 10:55:50 -0700
-IronPort-SDR: kOXZFks6zNMq5aNddunKZXfcLmzxdbvtqz0sta1Cx4xMRY6kxz5uq0JTPAh0XyuhTsgCaC6rYQ
- 51ThK6E2oI4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,396,1583222400"; 
-   d="scan'208";a="464978376"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga006.fm.intel.com with ESMTP; 15 May 2020 10:55:50 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 29E68301AAA; Fri, 15 May 2020 10:55:50 -0700 (PDT)
-Date:   Fri, 15 May 2020 10:55:50 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        luto@kernel.org, hpa@zytor.com, dave.hansen@intel.com,
-        tony.luck@intel.com, ravi.v.shankar@intel.com,
-        chang.seok.bae@intel.com
-Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
-Message-ID: <20200515175550.GP3538@tassilo.jf.intel.com>
-References: <20200511045311.4785-1-sashal@kernel.org>
- <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com>
- <20200515164013.GF29995@sasha-vm>
+        Fri, 15 May 2020 13:56:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726219AbgEOR4U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:56:20 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94A2BC061A0C;
+        Fri, 15 May 2020 10:56:20 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 16FB77DE;
+        Fri, 15 May 2020 17:56:20 +0000 (UTC)
+Date:   Fri, 15 May 2020 11:56:19 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Corey Minyard <minyard@acm.org>,
+        Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>,
+        Pragat Pandya <pragat.pandya@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Harald Seiler <hws@denx.de>,
+        openipmi-developer@lists.sourceforge.net
+Subject: Re: [PATCH 04/14] docs: move IPMI.txt to the driver API book
+Message-ID: <20200515115619.6e9b9ea1@lwn.net>
+In-Reply-To: <ae4edbc6753dc522cb93de36800978e3b58e0cfb.1588345503.git.mchehab+huawei@kernel.org>
+References: <cover.1588345503.git.mchehab+huawei@kernel.org>
+        <ae4edbc6753dc522cb93de36800978e3b58e0cfb.1588345503.git.mchehab+huawei@kernel.org>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515164013.GF29995@sasha-vm>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Indeed, we've seen a few hacks that basically just enable FSGSBASE:
-> 
-> - https://github.com/oscarlab/graphene-sgx-driver
-> - https://github.com/occlum/enable_rdfsbase
-> 
-> And would very much like to get rid of them...
+On Fri,  1 May 2020 17:37:48 +0200
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-These are insecure and open root holes without the patches
-used here.
+> The IPMI is under drivers/char. This doc describes the kAPI
+> part of the IPMI (mainly).
+> 
+> So, move it to the driver-api directory and add it to the
+> corresponding index.rst file.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
--Andi
+Applied this one (and the fixups in patch 5), thanks.
+
+jon
