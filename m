@@ -2,128 +2,95 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD7AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5466C206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4C9207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728038AbgEOJpW (ORCPT
+        id S1728102AbgEOJzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:45:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727116AbgEOJpW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:45:22 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFF6C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 02:45:22 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 428AA379; Fri, 15 May 2020 11:45:20 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, jroedel@suse.de,
-        Jerry Snitselaar <jsnitsel@redhat.com>
-Subject: [PATCH] iommu: Implement deferred domain attachment
-Date:   Fri, 15 May 2020 11:45:19 +0200
-Message-Id: <20200515094519.20338-1-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 15 May 2020 05:55:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45156 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727927AbgEOJzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 05:55:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 306D9AD31;
+        Fri, 15 May 2020 09:55:06 +0000 (UTC)
+Date:   Fri, 15 May 2020 11:55:01 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Orson Zhai <orsonzhai@gmail.com>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Orson Zhai <orson.unisoc@gmail.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Orson Zhai <orson.zhai@unisoc.com>
+Subject: Re: [PATCH V2] dynamic_debug: Add an option to enable dynamic debug
+ for modules only
+Message-ID: <20200515095501.GU17734@linux-b0ei>
+References: <1587408228-10861-1-git-send-email-orson.unisoc@gmail.com>
+ <20200420191014.GE121146@unreal>
+ <CA+H2tpGgGtW_8Z8fV9to39JwA_KrcfAeBC+KN87v0xKnZHt2_w@mail.gmail.com>
+ <20200422142552.GA492196@unreal>
+ <CA+H2tpGR7tywhkexa31AD_FkhyxQgVq_L+b0DbvXzwr6yT8j9Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+H2tpGR7tywhkexa31AD_FkhyxQgVq_L+b0DbvXzwr6yT8j9Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Thu 2020-04-23 00:02:48, Orson Zhai wrote:
+> On Wed, Apr 22, 2020 at 10:25 PM Leon Romanovsky <leon@kernel.org> wrote:
+> >
+> > On Wed, Apr 22, 2020 at 09:06:08PM +0800, Orson Zhai wrote:
+> > > On Tue, Apr 21, 2020 at 3:10 AM Leon Romanovsky <leon@kernel.org> wrote:
+> > > My motivation came from the concept of GKI (Generic Kernel Image) in Android.
+> > > Google will release a common kernel image (binary) to all of the Android system
+> > > vendors in the world instead of letting them to build their owns as before.
+> > > Every SoC vendor's device drivers will be provided in kernel modules only.
+> > > By my patch, the driver owners could debug their modules in field (say
+> > > production releases)
+> > > without having to enable dynamic debug for the whole GKI.
+> >
+> > Will Google release that binary with CONFIG_DYNAMIC_DEBUG_CORE disabled?
+> >
+> In Google's plan, there will be only one GKI (no debug version) for
+> one Android version per kernel version per year.
 
-The IOMMU core code has support for deferring the attachment of a domain
-to a device. This is needed in kdump kernels where the new domain must
-not be attached to a device before the device driver takes it over.
+Are there plans to use modules with debug messages enabled on production
+systems?
 
-But this needs support from the dma-ops code too, to actually do the
-late attachment when there are DMA-API calls for the device. This got
-lost in the AMD IOMMU driver after converting it to the dma-iommu code.
+IMHO, the debug messages are primary needed during development and
+when fixing bugs. I am sure that developers will want to enable many
+more features that will help with debugging and which will be disabled
+on production systems.
 
-Do the late attachment in the dma-iommu code-path to fix the issue.
+I expect that Google will not release only the single binary. They
+should release also the sources and build configuration. Then
+developers might build their own versions with the needed debugging
+features enabled.
 
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Tom Murphy <murphyt7@tcd.ie>
-Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Tested-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Fixes: be62dbf554c5 ("iommu/amd: Convert AMD iommu driver to the dma-iommu api")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/iommu.c | 33 +++++++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 4050569188be..f54ebb964271 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1889,13 +1889,19 @@ void iommu_domain_free(struct iommu_domain *domain)
- }
- EXPORT_SYMBOL_GPL(iommu_domain_free);
- 
--static int __iommu_attach_device(struct iommu_domain *domain,
--				 struct device *dev)
-+static bool __iommu_is_attach_deferred(struct iommu_domain *domain,
-+				       struct device *dev)
-+{
-+	if (!domain->ops->is_attach_deferred)
-+		return false;
-+
-+	return domain->ops->is_attach_deferred(domain, dev);
-+}
-+
-+static int __iommu_attach_device_no_defer(struct iommu_domain *domain,
-+					  struct device *dev)
- {
- 	int ret;
--	if ((domain->ops->is_attach_deferred != NULL) &&
--	    domain->ops->is_attach_deferred(domain, dev))
--		return 0;
- 
- 	if (unlikely(domain->ops->attach_dev == NULL))
- 		return -ENODEV;
-@@ -1903,9 +1909,19 @@ static int __iommu_attach_device(struct iommu_domain *domain,
- 	ret = domain->ops->attach_dev(domain, dev);
- 	if (!ret)
- 		trace_attach_device_to_domain(dev);
-+
- 	return ret;
- }
- 
-+static int __iommu_attach_device(struct iommu_domain *domain,
-+				 struct device *dev)
-+{
-+	if (__iommu_is_attach_deferred(domain, dev))
-+		return 0;
-+
-+	return __iommu_attach_device_no_defer(domain, dev);
-+}
-+
- int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
- {
- 	struct iommu_group *group;
-@@ -2023,7 +2039,12 @@ EXPORT_SYMBOL_GPL(iommu_get_domain_for_dev);
-  */
- struct iommu_domain *iommu_get_dma_domain(struct device *dev)
- {
--	return dev->iommu_group->default_domain;
-+	struct iommu_domain *domain = dev->iommu_group->default_domain;
-+
-+	if (__iommu_is_attach_deferred(domain, dev))
-+		__iommu_attach_device_no_defer(domain, dev);
-+
-+	return domain;
- }
- 
- /*
--- 
-2.25.1
-
+Best Regards,
+Petr
