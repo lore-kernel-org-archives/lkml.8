@@ -2,233 +2,131 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FEBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F922207C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A608206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:50:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgEOIrr (ORCPT
+        id S1727833AbgEOIuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:47:47 -0400
-Received: from outbound-smtp44.blacknight.com ([46.22.136.52]:44103 "EHLO
-        outbound-smtp44.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727050AbgEOIrq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:47:46 -0400
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp44.blacknight.com (Postfix) with ESMTPS id 430FBF8391
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:47:43 +0100 (IST)
-Received: (qmail 17997 invoked from network); 15 May 2020 08:47:43 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 15 May 2020 08:47:42 -0000
-Date:   Fri, 15 May 2020 09:47:40 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Jirka Hladky <jhladky@redhat.com>, Phil Auld <pauld@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Fri, 15 May 2020 04:50:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41220 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727050AbgEOIuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 04:50:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BF189AC77;
+        Fri, 15 May 2020 08:50:25 +0000 (UTC)
+Date:   Fri, 15 May 2020 10:50:21 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Douglas Shakshober <dshaks@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-Message-ID: <20200515084740.GJ3758@techsingularity.net>
-References: <CAE4VaGBGbTT8dqNyLWAwuiqL8E+3p1_SqP6XTTV71wNZMjc9Zg@mail.gmail.com>
- <20200320163843.GD3818@techsingularity.net>
- <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
- <20200507155422.GD3758@techsingularity.net>
- <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
- <20200508092212.GE3758@techsingularity.net>
- <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
- <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
- <20200513153023.GF3758@techsingularity.net>
- <20200514153122.GE2978@hirez.programming.kicks-ass.net>
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Petr Mladek <pmladek@suse.com>
+Subject: [PATCH] printk/kdb: Redirect printk messages into kdb in any context
+Message-ID: <20200515085021.GS17734@linux-b0ei>
+References: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org>
+ <20200512142533.ta4uejwmq5gchtlx@holly.lan>
+ <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
+ <20200514084230.GO17734@linux-b0ei>
+ <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514153122.GE2978@hirez.programming.kicks-ass.net>
+In-Reply-To: <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 05:31:22PM +0200, Peter Zijlstra wrote:
-> On Wed, May 13, 2020 at 04:30:23PM +0100, Mel Gorman wrote:
-> > Complete shot in the dark but restore adjust_numa_imbalance() and try
-> > this
-> > 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 1a9983da4408..0b31f4468d5b 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -2393,7 +2393,7 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
-> >  	struct rq_flags rf;
-> >  
-> >  #if defined(CONFIG_SMP)
-> > -	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
-> > +	if (sched_feat(TTWU_QUEUE)) {
-> 
-> just saying that this has the risk of regressing other workloads, see:
-> 
->   518cd6234178 ("sched: Only queue remote wakeups when crossing cache boundaries")
-> 
+kdb is able to stop kernel even in NMI context where printk() is redirected
+to the printk_safe() lockless variant. Move the check and redirect to kdb
+even in this case.
 
-Sure, I didn't really think that this was appropriate but it was the best I
-had at the time. This can be a lot more targetted but it took me a while
-to put together a picture as it was difficult for me to analyse. I was
-going to post this as a seperate RFC but given this thread, what do you
-think of this?
-
----8<---
-sched: Wake cache-local tasks via wake_list if wakee CPU is polling
-
-There are two separate method for waking a task from idle, one for
-tasks running on CPUs that share a cache and one for when the caches are
-separate. The methods can loosely be called local and remote even though
-this is not directly related to NUMA and instead is due to the expected
-cost of accessing data that is cache-hot on another CPU. The "local" costs
-are expected to be relatively cheap as they share the LLC in comparison to
-a remote IPI that is potentially required when using the "remote" wakeup.
-The problem is that the local wakeup is not always cheaper and it appears
-to have degraded even further around the 4.19 mark.
-
-There appears to be a couple of reasons why it can be slower.
-
-The first is specific to pairs of tasks where one or both rapidly enters
-idle. For example, on netperf UDP_STREAM, the client sends a bunch of
-packets, wakes the server, the server processes some packets and goes
-back to sleep. There is a relationship between the tasks but it's not
-strictly synchronous. The timing is different if the client/server are on
-separate NUMA nodes and netserver is more likely to enter idle (measured
-as server entering idle 10% more times when tasks are local vs remote
-but machine-specific). However, the wakeups are so rapid that the wakeup
-happens while the server is descheduling. That forces the waker to spin
-on smp_cond_load_acquire for longer. In this case, it can be cheaper to
-add the task to the rq->wake_list even if that potentially requires an IPI.
-
-The second is that the local wakeup path is simply not always
-that fast. Using ftrace, the cost of the locks, update_rq_clock and
-ttwu_do_activate was measured as roughly 4.5 microseconds. While it's
-a single instance, the cost of the "remote" wakeup for try_to_wake_up
-was roughly 2.5 microseconds versus 6.2 microseconds for the "fast" local
-wakeup. When there are tens of thousands of wakeups per second, these costs
-accumulate and manifest as a throughput regression in netperf UDP_STREAM.
-
-The essential difference in costs comes down to whether the CPU is fully
-idle, a task is descheduling or polling in poll_idle(). This patch
-special cases ttwu_queue() to use the "remote" method if the CPUs
-task is polling as it's generally cheaper to use the wake_list in that
-case than the local method because an IPI should not be required. As it is
-race-prone, a reschedule IPI may still be sent but in that case the local
-wakeup would also have to send a reschedule IPI so it should be harmless.
-
-The benefit is not universal as it requires the specific pattern of wakeups
-that happen when the wakee is likely to be descheduling. netperf UDP_STREAM
-is one of the more obvious examples and it is more obvious since the
-load balancer was reconciled and the client and server are more likely to
-be running on the same NUMA node which is why it was missed for so long.
-
-netperf-udp
-                                  5.7.0-rc5              5.7.0-rc5
-                                    vanilla          wakelist-v1r1
-Hmean     send-64         211.25 (   0.00%)      228.61 *   8.22%*
-Hmean     send-128        413.49 (   0.00%)      458.00 *  10.77%*
-Hmean     send-256        786.31 (   0.00%)      879.30 *  11.83%*
-Hmean     send-1024      3055.75 (   0.00%)     3429.45 *  12.23%*
-Hmean     send-2048      6052.79 (   0.00%)     6878.99 *  13.65%*
-Hmean     send-3312      9208.09 (   0.00%)    10832.19 *  17.64%*
-Hmean     send-4096     11268.45 (   0.00%)    12968.39 *  15.09%*
-Hmean     send-8192     17943.12 (   0.00%)    19886.07 *  10.83%*
-Hmean     send-16384    29732.94 (   0.00%)    32297.44 *   8.63%*
-Hmean     recv-64         211.25 (   0.00%)      228.61 *   8.22%*
-Hmean     recv-128        413.49 (   0.00%)      458.00 *  10.77%*
-Hmean     recv-256        786.31 (   0.00%)      879.30 *  11.83%*
-Hmean     recv-1024      3055.75 (   0.00%)     3429.45 *  12.23%*
-Hmean     recv-2048      6052.79 (   0.00%)     6878.99 *  13.65%*
-Hmean     recv-3312      9208.09 (   0.00%)    10832.19 *  17.64%*
-Hmean     recv-4096     11268.45 (   0.00%)    12968.39 *  15.09%*
-Hmean     recv-8192     17943.12 (   0.00%)    19886.06 *  10.83%*
-Hmean     recv-16384    29731.75 (   0.00%)    32296.08 *   8.62%*
-
-It's less obvious on something like TCP_STREAM as there is a stricter
-relationship between the client and server but with the patch, it's
-much less variable
-
-netperf-tcp
-                             5.7.0-rc5              5.7.0-rc5
-                               vanilla          wakelist-v1r1
-Hmean     64         769.28 (   0.00%)      779.96 *   1.39%*
-Hmean     128       1497.54 (   0.00%)     1509.33 *   0.79%*
-Hmean     256       2806.00 (   0.00%)     2787.59 (  -0.66%)
-Hmean     1024      9700.80 (   0.00%)     9720.02 (   0.20%)
-Hmean     2048     17071.28 (   0.00%)    16968.92 (  -0.60%)
-Hmean     3312     22976.20 (   0.00%)    23012.80 (   0.16%)
-Hmean     4096     25885.74 (   0.00%)    26152.49 *   1.03%*
-Hmean     8192     34014.83 (   0.00%)    33878.67 (  -0.40%)
-Hmean     16384    39482.14 (   0.00%)    40307.22 (   2.09%)
-Stddev    64           2.60 (   0.00%)        0.17 (  93.31%)
-Stddev    128          3.69 (   0.00%)        1.52 (  58.97%)
-Stddev    256         31.06 (   0.00%)       14.76 (  52.47%)
-Stddev    1024        96.50 (   0.00%)       46.43 (  51.89%)
-Stddev    2048       115.98 (   0.00%)       62.59 (  46.03%)
-Stddev    3312       293.28 (   0.00%)       41.92 (  85.71%)
-Stddev    4096       173.45 (   0.00%)      123.19 (  28.98%)
-Stddev    8192       783.59 (   0.00%)      129.62 (  83.46%)
-Stddev    16384     1012.37 (   0.00%)      252.08 (  75.10%)
-
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Reported-by: Sumit Garg <sumit.garg@linaro.org>
+Tested-by: Sumit Garg <sumit.garg@linaro.org>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 ---
- kernel/sched/core.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+Sending as proper patch for review.
+Adding Sergey into CC and John into CC.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 9a2fbf98fd6f..59077c7c6660 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2380,13 +2380,32 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
- 	struct rq_flags rf;
+kernel/printk/printk.c      | 14 +-------------
+ kernel/printk/printk_safe.c |  7 +++++++
+ 2 files changed, 8 insertions(+), 13 deletions(-)
+
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 9a9b6156270b..63a1aa377cd9 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -35,7 +35,6 @@
+ #include <linux/memblock.h>
+ #include <linux/syscalls.h>
+ #include <linux/crash_core.h>
+-#include <linux/kdb.h>
+ #include <linux/ratelimit.h>
+ #include <linux/kmsg_dump.h>
+ #include <linux/syslog.h>
+@@ -2036,18 +2035,7 @@ EXPORT_SYMBOL(vprintk);
  
- #if defined(CONFIG_SMP)
--	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
-+	if (sched_feat(TTWU_QUEUE)) {
-+		/*
-+		 * A remote wakeup is often expensive as can require
-+		 * an IPI and the wakeup path is slow. However, in
-+		 * the specific case where the target CPU is idle
-+		 * and polling, the CPU is active and rapidly checking
-+		 * if a reschedule is needed. In this case, the idle
-+		 * task just needs to be marked for resched and p
-+		 * will rapidly be requeued which is less expensive
-+		 * than the direct wakeup path.
-+		 */
-+		if (cpus_share_cache(smp_processor_id(), cpu)) {
-+			struct thread_info *ti = task_thread_info(p);
-+			typeof(ti->flags) val = READ_ONCE(ti->flags);
-+
-+			if (val & _TIF_POLLING_NRFLAG)
-+				goto activate;
-+		}
-+
- 		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
- 		ttwu_queue_remote(p, cpu, wake_flags);
- 		return;
- 	}
- #endif
+ int vprintk_default(const char *fmt, va_list args)
+ {
+-	int r;
+-
+-#ifdef CONFIG_KGDB_KDB
+-	/* Allow to pass printk() to kdb but avoid a recursion. */
+-	if (unlikely(kdb_trap_printk && kdb_printf_cpu < 0)) {
+-		r = vkdb_printf(KDB_MSGSRC_PRINTK, fmt, args);
+-		return r;
+-	}
+-#endif
+-	r = vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, 0, fmt, args);
+-
+-	return r;
++	return vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, 0, fmt, args);
+ }
+ EXPORT_SYMBOL_GPL(vprintk_default);
  
-+activate:
- 	rq_lock(rq, &rf);
- 	update_rq_clock(rq);
- 	ttwu_do_activate(rq, p, wake_flags, &rf);
+diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
+index d9a659a686f3..7ccb821d0bfe 100644
+--- a/kernel/printk/printk_safe.c
++++ b/kernel/printk/printk_safe.c
+@@ -6,6 +6,7 @@
+ #include <linux/preempt.h>
+ #include <linux/spinlock.h>
+ #include <linux/debug_locks.h>
++#include <linux/kdb.h>
+ #include <linux/smp.h>
+ #include <linux/cpumask.h>
+ #include <linux/irq_work.h>
+@@ -359,6 +360,12 @@ void __printk_safe_exit(void)
+ 
+ __printf(1, 0) int vprintk_func(const char *fmt, va_list args)
+ {
++#ifdef CONFIG_KGDB_KDB
++	/* Allow to pass printk() to kdb but avoid a recursion. */
++	if (unlikely(kdb_trap_printk && kdb_printf_cpu < 0))
++		return vkdb_printf(KDB_MSGSRC_PRINTK, fmt, args);
++#endif
++
+ 	/*
+ 	 * Try to use the main logbuf even in NMI. But avoid calling console
+ 	 * drivers that might have their own locks.
+-- 
+2.26.1
+
