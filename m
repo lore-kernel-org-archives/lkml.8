@@ -2,111 +2,100 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE64C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16CC620709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3852070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589575464;
+	bh=N7sHR+WmOKrHS7sx3jSkXYhCK2mvTbDrj0hGOsattK8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ao+fWHosm86p5mbtBvTLlTUHC/OGknZrcJ5CoKWCkWPtcjMp4pPFl9xu/V8WKWfF8
+	 hIIVpGZmegIILW3/q+pusrqC6goEsyf9rr8/OjNC8EPveX73jgekRjIXDZUNEvvzDS
+	 mvUQr0kh0NKFvAy4QPL3wCIFwK+JKEU29M0g/kWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgEOUnn (ORCPT
+        id S1726674AbgEOUoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:43:43 -0400
-Received: from mga06.intel.com ([134.134.136.31]:54172 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbgEOUnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:43:43 -0400
-IronPort-SDR: mNCkszfwk4KQHK2Lz6zEGNhkiVKp+GSUZjs+ja2ronjKAYmgvG47Xs+T8HdUjtLVDRCoDSwdqm
- xhbELYhOGfNg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 13:43:42 -0700
-IronPort-SDR: C/gpw8Hg3aXmhOkQDX7IUHG1v0S+g5qIRBnJsr7Y+/NmNAq9VKvrzCW5T1qa5mt+WqpIHY8BJc
- Q0RPRwBIrFSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,396,1583222400"; 
-   d="scan'208";a="372798275"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga001.fm.intel.com with ESMTP; 15 May 2020 13:43:41 -0700
-Date:   Fri, 15 May 2020 13:43:41 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
- token info
-Message-ID: <20200515204341.GF17572@linux.intel.com>
-References: <20200511164752.2158645-1-vkuznets@redhat.com>
- <20200511164752.2158645-3-vkuznets@redhat.com>
- <20200512152709.GB138129@redhat.com>
- <87o8qtmaat.fsf@vitty.brq.redhat.com>
- <20200512155339.GD138129@redhat.com>
- <20200512175017.GC12100@linux.intel.com>
- <20200513125241.GA173965@redhat.com>
- <0733213c-9514-4b04-6356-cf1087edd9cf@redhat.com>
- <20200515184646.GD17572@linux.intel.com>
- <d84b6436-9630-1474-52e5-ffcc4d2bd70a@redhat.com>
+        Fri, 15 May 2020 16:44:24 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34302 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgEOUoX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 16:44:23 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f6so1556771pgm.1;
+        Fri, 15 May 2020 13:44:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=31jlI11UdSuUne5CytA8aXHN1DKoQTYg2m0ehqqjq1w=;
+        b=Nr+wW/S0YqcnjY3rjCXDlQrzv69mSln+17NZYJDLMkCwVVBL60VVJL9eMr6Fjr6FRe
+         y1vMkFjtrFGZvpZYEa4V3B+VFXvBeYsjOW2yFXWIfCdbaw8qGUfXgEfA8JnEd77NpHkM
+         K1exf67FVJxF5dISa4eBFkR92IPx3QOCu6wdB7WU5RtOb9BL2gYFfQ/2I/ChL48SUQ3u
+         G2LvSldXyL79rsseNGTBQ7rylGTgVizsuMJ2MFwUO3d691/WAldvB4HSwfzwa9T3iPO2
+         zG6gdZZVIqOLNwHh3qh2ljcXbfk/ikpthkFBFGZEobrRlhhfFTdOM5Qc2nNrK74Ow5no
+         boWw==
+X-Gm-Message-State: AOAM531L1yg6BCFa3ACHakiMnjYtZArjgDej+/Xw3filWH3cQxXlEKmD
+        DlxfYWMHZ6LKoL7ZCdGelQBK/j14GqeJ1A==
+X-Google-Smtp-Source: ABdhPJw7XG8gdnNFvqQp/E+s55309E2Xi/QpwKoZegblz+akssDO8WQKCDIfy7AdJqwWny83PlCUZA==
+X-Received: by 2002:a62:e70b:: with SMTP id s11mr5672379pfh.32.1589575462477;
+        Fri, 15 May 2020 13:44:22 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id f6sm2707575pfd.175.2020.05.15.13.44.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 13:44:21 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id B5A6B40246; Fri, 15 May 2020 20:44:20 +0000 (UTC)
+Date:   Fri, 15 May 2020 20:44:20 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH v5 2/7] firmware: add offset to request_firmware_into_buf
+Message-ID: <20200515204420.GB11244@42.do-not-panic.com>
+References: <20200508002739.19360-1-scott.branden@broadcom.com>
+ <20200508002739.19360-3-scott.branden@broadcom.com>
+ <20200513003301.GH11244@42.do-not-panic.com>
+ <3919bb12-522d-11fd-302b-91dc0fcff363@broadcom.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d84b6436-9630-1474-52e5-ffcc4d2bd70a@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <3919bb12-522d-11fd-302b-91dc0fcff363@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 09:18:07PM +0200, Paolo Bonzini wrote:
-> On 15/05/20 20:46, Sean Christopherson wrote:
-> > Why even bother using 'struct kvm_vcpu_pv_apf_data' for the #PF case?  VMX
-> > only requires error_code[31:16]==0 and SVM doesn't vet it at all, i.e. we
-> > can (ab)use the error code to indicate an async #PF by setting it to an
-> > impossible value, e.g. 0xaaaa (a is for async!).  That partciular error code
-> > is even enforced by the SDM, which states:
-> 
-> Possibly, but it's water under the bridge now.
+On Wed, May 13, 2020 at 11:35:06AM -0700, Scott Branden wrote:
+> On 2020-05-12 5:33 p.m., Luis Chamberlain wrote:
+> > On Thu, May 07, 2020 at 05:27:34PM -0700, Scott Branden wrote:
+> > flags? But its a single variable enum!
+> fw_opt is an existing enum which doesn't really act like an enum.
+> It is a series of BIT defines in an enum that are then OR'd together in the
+> (existing) code?
 
-Why is that?  I thought we were redoing the entire thing because the current
-ABI is unfixably broken?  In other words, since the guest needs to change,
-why are we keeping any of the current async #PF pieces?  E.g. why keep using
-#PF instead of usurping something like #NP?
-
-> And the #PF mechanism also has the problem with NMIs that happen before the
-> error code is read and page faults happening in the handler.
-
-Hrm, I think there's no unfixable problem except for a pathological
-#PF->NMI->#DB->#PF scenario.  But it is a problem :-(
-
-FWIW, the error code isn't a problem, CR2 is the killer.  The issue Andy
-originally pointed out is
-
-  #PF: async page fault (KVM_PV_REASON_PAGE_NOT_PRESENT)
-     NMI: before CR2 or KVM_PF_REASON_PAGE_NOT_PRESENT
-       #PF: normal page fault (NMI handler accesses user memory, e.g. perf)
-
-With current async #PF, the problem is that CR2 and apf_reason are out of
-sync, not that CR2 or the error code are lost.  E.g. the above could also
-happen with a regular #PF on both ends, and obviously that works just fine.
-
-In other words, the error code doesn't suffer the same problem because it's
-pushed on the stack, not shoved into a static memory location.
-
-CR2 is the real problem, even though it's saved by the NMI handler.  The
-simple case where the NMI handler hits an async #PF before it can save CR2
-is avoidable by KVM not injecting #PF if NMIs are blocked.  The pathological
-case would be if there's a #DB at the beginning of the NMI handler; the IRET
-from the #DB would unblock NMIs and then open up the guest to hitting an
-async #PF on the NMI handler before CR2 is saved by the guest. :-(
+Indeed, in retrospect that is odd, it should be a u32 then. Please feel
+free to fix.
+ 
+  Luis
