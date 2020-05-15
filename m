@@ -2,81 +2,108 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C1EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9600C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C079D206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF899206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:57:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HWM2/1Du"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgEOHyy (ORCPT
+        id S1726922AbgEOH5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 03:54:54 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:37676 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726711AbgEOHyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 03:54:53 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxJurHSr5eyAg1AA--.5S3;
-        Fri, 15 May 2020 15:54:48 +0800 (CST)
-Subject: Re: [PATCH v2 2/2] MIPS: Fix build errors under
- CONFIG_HAVE_STD_PC_SERIAL_PORT
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-References: <1589512985-27419-1-git-send-email-yangtiezhu@loongson.cn>
- <1589512985-27419-2-git-send-email-yangtiezhu@loongson.cn>
- <20200515073938.GA8289@alpha.franken.de>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <7715fe64-5d28-f8c8-3b04-0bf2b9f16497@loongson.cn>
-Date:   Fri, 15 May 2020 15:54:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Fri, 15 May 2020 03:57:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57860 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726694AbgEOH5a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 03:57:30 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64DF3C05BD09
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:57:30 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k7so587069pjs.5
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:57:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZyzW1H8AFFYElgNpg92Xk3JWxRZpBy2j9yutlr0YjsE=;
+        b=HWM2/1Du2WgTucuJQpwh98ZrRlroWxqg15O5s2SpAAGHKSWILrVa0LrWXciiMeLDbm
+         dHKCyvUnu7aEVyi+PSvgBB3lT1L6ms806WxRI7BvHHoUTTqEndaAEdj5b/pkalA1MJ0U
+         66B/Po2dzZDRD7fRfnOF9jpHeXir0aWwiZovv6OWW+mJkIM6QZCNX+c1pMXkijbrPk7i
+         H5CMH9GcPO60vokgnukC1QNN4vDyKQkijVYmiNpzz5njzwKIuYr+oJaislpmOdPVmCDO
+         zQNyXOlV0jO5KigMzAtxOTk54UKJYTSGP9V8OIS6p6J3lhZRHOdCQ9xfvq76FHB7CKJj
+         /geg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZyzW1H8AFFYElgNpg92Xk3JWxRZpBy2j9yutlr0YjsE=;
+        b=B8W665yrDbOPbQStppVrb9Gm9w1tRrP27o96Ricp0fThL0JSSqaSr34Nn30UcAtlIa
+         LQnP1kNJA1xy8wSk3xpxUy3nit89RpQN5d7oBiUU02FFWfmT4fK06uJJmEChmVvK4wno
+         F9py4ofybrtmYqQuNWcXwAS5uEv/wgQFLVOzfE5e1cHoGHB27dBk2in0ll7W1jrqBt5q
+         KTX1JmeujXUeAwXJMTov40+6s7f0KxW2nV7XP8OU4RfeiW/AYC1Q40acps5BylUhhfYe
+         A7EJ9nRcuqs2w5n134wS6OXxHVd1ByrGOTo/SnYFsnaQyvNPwZRz3dsOj2jej/pQRRt0
+         2Irw==
+X-Gm-Message-State: AOAM532p02aI/kmMmXY5fYcml2CRJNaqjZwt+CttoOpeNzTxqmSd2S4N
+        sfs/qBfaRBbb4+puMFfiaXlACQ==
+X-Google-Smtp-Source: ABdhPJyoEn77D99k5JFEmPox0/Sh0OVxYkzLK8U5vnIaAotAEhqOhnvr845CAGGuRKRTrA/vUU8D8A==
+X-Received: by 2002:a17:90b:3790:: with SMTP id mz16mr2056475pjb.179.1589529449691;
+        Fri, 15 May 2020 00:57:29 -0700 (PDT)
+Received: from localhost ([122.167.130.103])
+        by smtp.gmail.com with ESMTPSA id 140sm1218633pfw.96.2020.05.15.00.57.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 May 2020 00:57:28 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     k.konieczny@samsung.com, peron.clem@gmail.com,
+        m.szyprowski@samsung.com, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>, broonie@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] opp: core: add regulators enable and disable
+Date:   Fri, 15 May 2020 13:27:19 +0530
+Message-Id: <cover.1589528491.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
 MIME-Version: 1.0
-In-Reply-To: <20200515073938.GA8289@alpha.franken.de>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9AxJurHSr5eyAg1AA--.5S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYT7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
-        cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87
-        Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
-        6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72
-        CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0
-        xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026x
-        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-        JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_
-        WFyUJVCq3wCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
-        4UJbIYCTnIWIevJa73UjIFyTuYvjfUeeOJUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/15/2020 03:39 PM, Thomas Bogendoerfer wrote:
-> On Fri, May 15, 2020 at 11:23:05AM +0800, Tiezhu Yang wrote:
->> When CONFIG_HAVE_STD_PC_SERIAL_PORT is set, include linux/module.h to fix
->> the following build errors:
-> how are you doing this ? To me it looks like this CONFIG option isn't
-> used anymore.
+Hi,
 
-Because I will use arch/mips/kernel/8250-platform.c in the near future,
-so make MACH_LOONGSON64 selects HAVE_STD_PC_SERIAL_PORT, then
-I find the build errors.
+This series reintroduces the usage of regulator_enable/disable() to the
+OPP core after the previous attempt was reverted [1] shortly after getting
+applied. This time the regulator is enabled only after it is configured
+by the OPP core.
 
-Thanks,
-Tiezhu Yang
+Marek, Kamil and Clément: Can you guys please test this out and report
+if this doesn't work as expected ?
 
->
-> Thomas.
->
+--
+viresh
+
+[1] https://lore.kernel.org/lkml/20191017102758.8104-1-m.szyprowski@samsung.com/
+
+Kamil Konieczny (1):
+  opp: core: add regulators enable and disable
+
+Viresh Kumar (1):
+  opp: Reorder the code for !target_freq case
+
+ drivers/opp/core.c | 39 ++++++++++++++++++++++++++++++++++-----
+ drivers/opp/opp.h  |  2 ++
+ 2 files changed, 36 insertions(+), 5 deletions(-)
+
+-- 
+2.25.0.rc1.19.g042ed3e048af
 
