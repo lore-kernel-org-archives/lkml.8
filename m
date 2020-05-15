@@ -2,147 +2,229 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965B7C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEBCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71C852075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:43:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FKqNBS+H"
+	by mail.kernel.org (Postfix) with ESMTP id ABFE42078C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgEOOn4 (ORCPT
+        id S1726646AbgEOOoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:43:56 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49692 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726144AbgEOOn4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:43:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589553834;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hR6lCjnUOV2j2gabpoQGpgvPB5RUTChOvM8hrmj3dmQ=;
-        b=FKqNBS+Hk2mCfqAwAmbGul8UIk4bHZNzykfRliiIOevpZKtEjqovYdjFurgvll+3ESpg7O
-        tUKsHbA1tJfjocp1RsZDry4W7TCQvZkKUWCJiy7yHB0hU6M8UN0H+tgHv9uYjYV782gQi5
-        rz7370VMZ89t6UqoJ5Pk0U/+zFY6+Xo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-IBhV3vZSOp6wkLbJJ_diLA-1; Fri, 15 May 2020 10:43:52 -0400
-X-MC-Unique: IBhV3vZSOp6wkLbJJ_diLA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C02C78018A2;
-        Fri, 15 May 2020 14:43:47 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-77.ams2.redhat.com [10.36.112.77])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8C92A5C241;
-        Fri, 15 May 2020 14:43:39 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Christian Heimes <christian@python.org>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        John Johansen <john.johansen@canonical.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        "Lev R. Oshvang ." <levonshe@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Subject: Re: How about just O_EXEC? (was Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec through O_MAYEXEC)
-References: <20200505153156.925111-4-mic@digikod.net>
-        <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
-        <202005131525.D08BFB3@keescook> <202005132002.91B8B63@keescook>
-        <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
-        <202005140830.2475344F86@keescook>
-        <CAEjxPJ4R_juwvRbKiCg5OGuhAi1ZuVytK4fKCDT_kT6VKc8iRg@mail.gmail.com>
-        <b740d658-a2da-5773-7a10-59a0ca52ac6b@digikod.net>
-        <202005142343.D580850@keescook>
-        <87a729wpu1.fsf@oldenburg2.str.redhat.com>
-        <202005150732.17C5EE0@keescook>
-Date:   Fri, 15 May 2020 16:43:37 +0200
-In-Reply-To: <202005150732.17C5EE0@keescook> (Kees Cook's message of "Fri, 15
-        May 2020 07:37:16 -0700")
-Message-ID: <87r1vluuli.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Fri, 15 May 2020 10:44:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55800 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbgEOOoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 10:44:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4A59CAC7D;
+        Fri, 15 May 2020 14:44:13 +0000 (UTC)
+Date:   Fri, 15 May 2020 16:44:39 +0200
+From:   Cyril Hrubis <chrubis@suse.cz>
+To:     ltp@lists.linux.it, linux-kernel@vger.kernel.org,
+        libc-alpha@sourceware.org
+Cc:     lwn@lwn.net, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org
+Subject: [LTP] [ANNOUNCE] The Linux Test Project has been released for MAY
+ 2020
+Message-ID: <20200515144439.GA3267@yuki.lan>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Kees Cook:
+Good news everyone,
 
-> On Fri, May 15, 2020 at 10:43:34AM +0200, Florian Weimer wrote:
->> * Kees Cook:
->> 
->> > Maybe I've missed some earlier discussion that ruled this out, but I
->> > couldn't find it: let's just add O_EXEC and be done with it. It actually
->> > makes the execve() path more like openat2() and is much cleaner after
->> > a little refactoring. Here are the results, though I haven't emailed it
->> > yet since I still want to do some more testing:
->> > https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=kspp/o_exec/v1
->> 
->> I think POSIX specifies O_EXEC in such a way that it does not confer
->> read permissions.  This seems incompatible with what we are trying to
->> achieve here.
->
-> I was trying to retain this behavior, since we already make this
-> distinction between execve() and uselib() with the MAY_* flags:
->
-> execve():
->         struct open_flags open_exec_flags = {
->                 .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
->                 .acc_mode = MAY_EXEC,
->
-> uselib():
->         static const struct open_flags uselib_flags = {
->                 .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
->                 .acc_mode = MAY_READ | MAY_EXEC,
->
-> I tried to retain this in my proposal, in the O_EXEC does not imply
-> MAY_READ:
+the Linux Test Project test suite stable release for *May 2020* has been
+released.
 
-That doesn't quite parse for me, sorry.
+Since the last release 327 patches by 26 authors were merged.
 
-The point is that the script interpreter actually needs to *read* those
-files in order to execute them.
+NOTABLE CHANGES
+===============
 
-Thanks,
-Florian
+* New tests
+  - fanotify16: FAN_MODIFY_DIR test
+  - ioctl_loop01: LO_FLAGS_AUTOCLEAR and LO_FLAGS_PARTSCAN test
+  - ioctl_loop02: LO_FLAGS_READ_ONLY and LOOP_CHANGE_FD test
+  - ioctl_loop03: LOOP_CHANGE_FD test with WR mode
+  - ioctl_loop04: LOOP_SET_CAPACITY ioctl test
+  - ioctl_loop05: LOOP_SET_DIRECT_IO ioctl test
+  - ioctl_loop06: LOOP_SET_BLOCK_SIZE error test
+  - ioctl_loop07: LOOP_SET/GET_STATUS64 sizelimit field test
+  - pipe2_02: test for pipe2 O_CLOEXEC flag
+  - pipe2_04: test for pipe2 with/without O_NONBLOCK mode
+  - timerfd04: time namespace test
+  - timens01: time namespace test
+  - clock_gettime03: time namespace test
+  - clock_nanosleep03: time namespace test
+  - sysinfo03: time namespace test
+  - clone301, clone301: clone3() syscall tests
+  - bind04: Connection tests for stream-oriented sockets (SOCK_STREAM and SOCK_SEQPACKET)
+  - bind05: Connection tests for datagram-oriented sockets (SOCK_DGRAM)
+  - fcntl37: add error test for fcntl with F_SETPIPE_SZ
+  - openat201, openat202, openat203: openat2() syscall tests
+  - open_tree01, open_tree02: open_tree() syscall tests
+  - fspick01, fspick02: fspick() syscall tests
+  - move_mount01, move_mount02: move_mount() syscall tests
+  - fsmount01, fsmount02: fsmount() syscall tests
+  - fsconfig01, fsconfig02: fsconfig() syscall tests
+  - fsopen01, fsopen02: fsopen() syscall tests
+  - pty04: Test data transmission with SLIP line discipline
+  - fallocate06: test for misaligned fallocate()
+  - io_pgetevents01, io_pgetevents02: io_pgetevents() syscall tests
+  - pidfd_open01, pidfd_open02, pidfd_open03: pidfd_open() syscall tests
+  - vmsplice04: vmsplice() test with SPLICE_F_NONBLOCK
+  - pipe12: add new test for pipe when write bytes > pipe size
 
+* New regression tests
+  - pty04: Added SLCAN ldisc and check for CVE-2020-11494
+  - setsockopt05: Test for CVE-2017-1000112
+  - ptrace09: Test for CVE-2018-8897
+  - snd_seq01: Test for CVE-2018-7566
+  - bind06: Test for CVE-2018-18559
+  - ptrace08: Test for CVE-2018-1000199
+  - ioctl_sg01: Test for CVE-2018-1000204
+  - sendmsg03: Test for CVE-2017-17712
+  - timerfd_settime02: Test for CVE-2017-10661
+  - connect02: Test for CVE 2018-9568
+               and also for setsockopt(IP_ADDRFORM) kernel bug
+               (82c9ae440857 ipv6: fix restrict IPV6_ADDRFORM operation)
+  - fanotify15: Add a test case for inode marks
+              (f367a62a7cad fanotify: merge duplicate events on parent and child)
+  - fanotify09: Check merging of events on directories
+             (55bf882c7f13 fanotify: fix merging marks masks with FAN_ONDIR)
+  - add_key05: add maxbytes/maxkeys test under unprivileged user
+               (a08bf91ce28e "KEYS: allow reaching the keys quotas exactly")
+  - pipe13: test for pipe to wake up all readers
+            (6551d5c56eb0 "pipe: make sure to wake up everybody when the last reader/writer closes")
+  - quotactl07: test for Q_XQTUOTARM
+            (3dd4d40b4208 "xfs: Sanity check flags of Q_XQUOTARM call")
+  - pty03: test for slip/slcan data race
+           (0ace17d568241 "can, slip: Protect tty->disc_data in write_wakeup and close with RCU")
+
+* Increased coverage
+  - readv01: new test cases added to the test
+  - add_key02: add the "big_key" key type
+
+* First half of time64 tests for 64bit timer syscalls has landed in this
+  relese, second half is going to be part of the next one1
+
+* Additional 12 tests were converted to the new test library
+
+* Removed tests
+  - epoll2: these depended on Portable Coroutine Library and were not even
+            compiled by default for a long time
+
+* Fixes for gcc-10 that enables -fno-common by default
+
+* LTP now supports ARC CPUs
+
+* Skip oversleep checks in timer tests under VM
+
++ The usual amount of fixes and cleanups.
+
+
+NOTABLE CHANGES IN NETWORK TESTS
+================================
+brought to you by Petr Vorel
+
+* New netlink based route change tests
+
+* Fixes
+  - nfs: detect disabled UDP
+  - rpc: cleanup unused tests
+  - detect libtirpc with pkg-config
+
+* Rewrite to new API
+  - bind02, socketcall0[2-4], test_1_to_1_initmsg_connect (SCTP)
+  - rpcinfo01.sh, rpc01.sh, sendfile01.sh, xinetd_tests.sh
+
+DOWNLOAD AND LINKS
+==================
+
+The latest version of the test-suite contains 3000+ tests for the Linux
+and can be downloaded at:
+
+https://github.com/linux-test-project/ltp/releases/tag/20200515
+
+The project pages as well as GIT repository are hosted on GitHub:
+
+https://github.com/linux-test-project/ltp
+http://linux-test-project.github.io/
+
+If you ever wondered how to write a LTP testcase, don't miss our developer
+documentation at:
+
+https://github.com/linux-test-project/ltp/wiki/C-Test-Case-Tutorial
+https://github.com/linux-test-project/ltp/wiki/Test-Writing-Guidelines
+https://github.com/linux-test-project/ltp/wiki/BuildSystem
+
+Patches, new tests, bugs, comments or questions should go to to our mailing
+list at ltp@lists.linux.it.
+
+
+CREDITS
+=======
+
+Many thanks to the people contributing to this release:
+
+git shortlog -s -e -n 20200120..
+
+   105  Petr Vorel <pvorel@suse.cz>
+    49  Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+    38  Viresh Kumar <viresh.kumar@linaro.org>
+    35  Martin Doucha <mdoucha@suse.cz>
+    33  Cyril Hrubis <chrubis@suse.cz>
+    11  Richard Palethorpe <rpalethorpe@suse.com>
+    10  Jan Stancek <jstancek@redhat.com>
+     6  Li Wang <liwang@redhat.com>
+     6  Petr Vorel <petr.vorel@gmail.com>
+     5  Amir Goldstein <amir73il@gmail.com>
+     4  Jorik Cronenberg <jcronenberg@suse.de>
+     4  Zou Wei <zou_wei@huawei.com>
+     3  Joerg Vehlow <joerg.vehlow@aox-tech.de>
+     3  Po-Hsu Lin <po-hsu.lin@canonical.com>
+     2  Alexey Kodanev <alexey.kodanev@oracle.com>
+     2  Jozef Pupava <jpupava@suse.com>
+     2  Xiao Yang <yangx.jy@cn.fujitsu.com>
+     1  Anibal Limon <anibal.limon@linux.intel.com>
+     1  Chen Li <chenli@uniontech.com>
+     1  Jozef Pupava <jpupava@suse.cz>
+     1  Khem Raj <raj.khem@gmail.com>
+     1  Ronald Monthero <rmonther@redhat.com>
+     1  Sean T Allen <sean@seantallen.com>
+     1  Vikas Kumar <vikas.kumar2@arm.com>
+     1  Vineet Gupta <Vineet.Gupta1@synopsys.com>
+     1  Zorro Lang <zlang@redhat.com>
+
+And also thanks to patch reviewers:
+
+git log 20200120.. | grep -Ei '(reviewed|acked)-by:' | sed 's/.*by: //' | sort | uniq -c | sort -n -r
+
+    137 Cyril Hrubis <chrubis@suse.cz>
+     62 Petr Vorel <pvorel@suse.cz>
+     56 Li Wang <liwang@redhat.com>
+     26 Jan Stancek <jstancek@redhat.com>
+     17 Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+     12 Alexey Kodanev <alexey.kodanev@oracle.com>
+      8 Xiao Yang <ice_yangxiao@163.com>
+      4 Martin Doucha <mdoucha@suse.cz>
+      4 Jan Kara <jack@suse.cz>
+      3 Richard Palethorpe <rpalethorpe@suse.com>
+      3 Matthew Bobrowski <mbobrowski@mbobrowski.org>
+      2 Xiao Yang <yangx.jy@cn.fujitsu.com>
+      2 Viresh Kumar <viresh.kumar@linaro.org>
+      1 Yang Xu <xuyang_jy_0410@163.com>
+      1 Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
+
+-- 
+Cyril Hrubis
+chrubis@suse.cz
