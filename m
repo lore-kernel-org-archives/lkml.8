@@ -2,122 +2,141 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BCDC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E430C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D19E8206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:00:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="alnaWxEK"
+	by mail.kernel.org (Postfix) with ESMTP id 0405520643
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:00:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589529621;
+	bh=Lrg29hVRGlCPrHHmbYcVcsFCxxxwqFtQRLOD6b5xnYo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Yl255ew6jNnar/fZelNXpkuO3XOBshddwmkVQctcbgbrjh3pnNysjkERYRJ9QPytq
+	 W5MKobD1vq6eLpZgS4sUfP/virKbrlE3PWI57EleKavUKpNi0QE3Rgf/OhZacORV3s
+	 DWadKqNZZtMXAV4Xs0NCzuSlhdcScXc3m6FXzDoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgEOIAC (ORCPT
+        id S1727853AbgEOIAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:00:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726665AbgEOIAB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:00:01 -0400
-Received: from mo6-p03-ob.smtp.rzone.de (mo6-p03-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5303::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B616DC061A0C;
-        Fri, 15 May 2020 01:00:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589529599;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=bU5sZyM8w1KL+vZGRsgMWFgVeXL93IV+Cv0ulYGm/2A=;
-        b=alnaWxEKpSA1rBoOXT48vSrULu+RI/e0xU9nCHnHdNqFFUxURjBx/tqciU56QRYToV
-        lvvNzBP0USnQxUNjHyNOZzserzEEtxrlralZhKQs69D8sV+v5tSnksi/kE7gDfUf2QOh
-        bmjr/IRKqF+Rz/mNI42AX/0FiOV/WYsCEA2aquMHqrXk+1zs42Z3Y7fRRWHAc2h+E+fg
-        dfWya5oxkzcYQtFjGvvsJIi69fdWBi4DptQ1qPDzSFL9PVnA5GPYRM1YgHDhDG7BdJQB
-        VZ3fTnEpXqRdhwOz+Xcw+xs4/1+uYVPIXyqi7WklPvHbYwJs+fMR+wUivSoxWHP58UxB
-        lHSA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vtwDOvBTU="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id R0acebw4F7xbYgL
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 15 May 2020 09:59:37 +0200 (CEST)
-Subject: Re: [PATCH v7 01/12] dt-bindings: add img,pvrsgx.yaml for Imagination GPUs
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200505155311.GA18025@bogus>
-Date:   Fri, 15 May 2020 09:59:36 +0200
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DD3BF759-4F3D-4147-9A80-DB6C18B13400@goldelico.com>
-References: <cover.1587760454.git.hns@goldelico.com> <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com> <20200505155311.GA18025@bogus>
-To:     Rob Herring <robh@kernel.org>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 15 May 2020 04:00:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42428 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726671AbgEOIAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 04:00:19 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7429205CB;
+        Fri, 15 May 2020 08:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589529618;
+        bh=Lrg29hVRGlCPrHHmbYcVcsFCxxxwqFtQRLOD6b5xnYo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NVL1ClV+Sf8z/LLTyPfAPgLsrbfvrui0OPb0oiN0r2sFmT2HTGCY9ZL41659B+T+Z
+         g1Mkjy4xPFqndZ2U7GrGhq1Y9IlERJv+KJC8Eq+sMIWnW5nMTdKiLGgIoke92hUkJJ
+         MA7S8k5YVMBd7HLwxBJz/0zxW6YevjCAcu4te5Wk=
+Received: by pali.im (Postfix)
+        id A01805F0; Fri, 15 May 2020 10:00:16 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Cathy Luo <cluo@marvell.com>,
+        Avinash Patil <patila@marvell.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mwifiex: Fix memory corruption in dump_station
+Date:   Fri, 15 May 2020 09:59:24 +0200
+Message-Id: <20200515075924.13841-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The mwifiex_cfg80211_dump_station() uses static variable for iterating
+over a linked list of all associated stations (when the driver is in UAP
+role). This has a race condition if .dump_station is called in parallel
+for multiple interfaces. This corruption can be triggered by registering
+multiple SSIDs and calling, in parallel for multiple interfaces
+    iw dev <iface> station dump
 
-> Am 05.05.2020 um 17:53 schrieb Rob Herring <robh@kernel.org>:
->=20
-> On Fri, Apr 24, 2020 at 10:34:04PM +0200, H. Nikolaus Schaller wrote:
->> The Imagination PVR/SGX GPU is part of several SoC from
->> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
->> Allwinner A83 and others.
->>=20
->> With this binding, we describe how the SGX processor is
->> interfaced to the SoC (registers and interrupt).
->>=20
->> The interface also consists of clocks, reset, power but
->> information from data sheets is vague and some SoC integrators
->> (TI) deciced to use a PRCM wrapper (ti,sysc) which does
->> all clock, reset and power-management through registers
->> outside of the sgx register block.
->>=20
->> Therefore all these properties are optional.
->>=20
->> Tested by make dt_binding_check
->>=20
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 150 =
-++++++++++++++++++
->> 1 file changed, 150 insertions(+)
->> +    oneOf:
->> +      - description: SGX530-121 based SoC
->> +        items:
->> +          - enum:
->> +            - ti,omap3-sgx530-121 # BeagleBoard A/B/C, OpenPandora =
-600MHz and similar
->=20
-> Should be indented 2 more here and elsewhere where you have a list=20
-> under a list.
+[16750.719775] Unable to handle kernel paging request at virtual address dead000000000110
+...
+[16750.899173] Call trace:
+[16750.901696]  mwifiex_cfg80211_dump_station+0x94/0x100 [mwifiex]
+[16750.907824]  nl80211_dump_station+0xbc/0x278 [cfg80211]
+[16750.913160]  netlink_dump+0xe8/0x320
+[16750.916827]  netlink_recvmsg+0x1b4/0x338
+[16750.920861]  ____sys_recvmsg+0x7c/0x2b0
+[16750.924801]  ___sys_recvmsg+0x70/0x98
+[16750.928564]  __sys_recvmsg+0x58/0xa0
+[16750.932238]  __arm64_sys_recvmsg+0x28/0x30
+[16750.936453]  el0_svc_common.constprop.3+0x90/0x158
+[16750.941378]  do_el0_svc+0x74/0x90
+[16750.944784]  el0_sync_handler+0x12c/0x1a8
+[16750.948903]  el0_sync+0x114/0x140
+[16750.952312] Code: f9400003 f907f423 eb02007f 54fffd60 (b9401060)
+[16750.958583] ---[ end trace c8ad181c2f4b8576 ]---
 
-added for patch v8 series.
+This patch drops the use of the static iterator, and instead every time
+the function is called iterates to the idx-th position of the
+linked-list.
 
-BR and thanks,
-Nikolaus
+It would be better to convert the code not to use linked list for
+associated stations storage (since the chip has a limited number of
+associated stations anyway - it could just be an array). Such a change
+may be proposed in the future. In the meantime this patch can backported
+into stable kernels in this simple form.
+
+Fixes: 8baca1a34d4c ("mwifiex: dump station support in uap mode")
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index 1566d2197906..12bfd653a405 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -1496,7 +1496,8 @@ mwifiex_cfg80211_dump_station(struct wiphy *wiphy, struct net_device *dev,
+ 			      int idx, u8 *mac, struct station_info *sinfo)
+ {
+ 	struct mwifiex_private *priv = mwifiex_netdev_get_priv(dev);
+-	static struct mwifiex_sta_node *node;
++	struct mwifiex_sta_node *node;
++	int i;
+ 
+ 	if ((GET_BSS_ROLE(priv) == MWIFIEX_BSS_ROLE_STA) &&
+ 	    priv->media_connected && idx == 0) {
+@@ -1506,13 +1507,10 @@ mwifiex_cfg80211_dump_station(struct wiphy *wiphy, struct net_device *dev,
+ 		mwifiex_send_cmd(priv, HOST_CMD_APCMD_STA_LIST,
+ 				 HostCmd_ACT_GEN_GET, 0, NULL, true);
+ 
+-		if (node && (&node->list == &priv->sta_list)) {
+-			node = NULL;
+-			return -ENOENT;
+-		}
+-
+-		node = list_prepare_entry(node, &priv->sta_list, list);
+-		list_for_each_entry_continue(node, &priv->sta_list, list) {
++		i = 0;
++		list_for_each_entry(node, &priv->sta_list, list) {
++			if (i++ != idx)
++				continue;
+ 			ether_addr_copy(mac, node->mac_addr);
+ 			return mwifiex_dump_station_info(priv, node, sinfo);
+ 		}
+-- 
+2.20.1
 
