@@ -2,180 +2,185 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B132C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E61C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 558C12065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:32:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yOpRlpg1"
+	by mail.kernel.org (Postfix) with ESMTP id 9DF2220759
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbgEOLcd (ORCPT
+        id S1726202AbgEOLdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:32:33 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56060 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725986AbgEOLcd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:32:33 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04FBWJTN029039;
-        Fri, 15 May 2020 06:32:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589542339;
-        bh=FBPM0tfxUgFMucOY7ciuW2TKyNmhw7Ptun8SfEM32Yc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=yOpRlpg1yqyCCA+cY2AyJMwySObitQn8jVweWkNL4ELVevQBhMk8yXp/XUTZdVJXL
-         1pEoHYIA+A3PyqX1kjhRpvTVUxqbShngkBwiGdgzvVvUmzdtyIQ34AMHMdHYQUnzMa
-         2TuHg8XxGflf6y7R2u+1bJ7FtvmGiPt40HRv+y6M=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04FBWJBP121748;
-        Fri, 15 May 2020 06:32:19 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 15
- May 2020 06:32:18 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 15 May 2020 06:32:19 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04FBWGIv063336;
-        Fri, 15 May 2020 06:32:17 -0500
-Subject: Re: linux-next: manual merge of the drm-misc tree with the
- drm-misc-fixes tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-References: <20200421115241.704f2fbf@canb.auug.org.au>
- <c299b6d5-a786-1620-2863-8814a1242cf8@ti.com>
- <20200423131727.1e0f2d9f@canb.auug.org.au>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <4b46d98a-e8ca-0140-b082-3af88e1bc1fc@ti.com>
-Date:   Fri, 15 May 2020 14:32:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 15 May 2020 07:33:00 -0400
+Received: from mga17.intel.com ([192.55.52.151]:20782 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725986AbgEOLc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:32:59 -0400
+IronPort-SDR: XqeWr7S/fqOBGflO8ApSAhWwiaBR2ZEZjVT78CRk11D6mgUgoqR6Zfnxghtl5zZvaiwWCdOH1T
+ i6BerGzpoS/g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 04:32:58 -0700
+IronPort-SDR: 0gS0OaFJiuv3OfG2ljoqjSB4HKx6CLP4K3KFhfm6vWhg8PAp9Nw/f+wW4k3a8VLZLakldEI3/w
+ +/CncU4PobkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="464700264"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 15 May 2020 04:32:55 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZYaH-006qe0-KA; Fri, 15 May 2020 14:32:57 +0300
+Date:   Fri, 15 May 2020 14:32:57 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     akpm@linux-foundation.org, vilhelm.gray@gmail.com,
+        michal.simek@xilinx.com, arnd@arndb.de, rrichter@marvell.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        yamada.masahiro@socionext.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        linux-arch@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v6 0/4] Introduce the for_each_set_clump macro
+Message-ID: <20200515113257.GP185537@smile.fi.intel.com>
+References: <cover.1589497311.git.syednwaris@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200423131727.1e0f2d9f@canb.auug.org.au>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1589497311.git.syednwaris@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
-
-On 23/04/2020 06:17, Stephen Rothwell wrote:
-> Hi all,
+On Fri, May 15, 2020 at 04:46:03AM +0530, Syed Nayyar Waris wrote:
+> This patchset introduces a new generic version of for_each_set_clump. 
+> The previous version of for_each_set_clump8 used a fixed size 8-bit
+> clump, but the new generic version can work with clump of any size but
+> less than or equal to BITS_PER_LONG. The patchset utilizes the new macro 
+> in several GPIO drivers.
 > 
-> On Tue, 21 Apr 2020 09:10:25 +0300 Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
->>
->> On 21/04/2020 04:52, Stephen Rothwell wrote:
->>>
->>> Today's linux-next merge of the drm-misc tree got a conflict in:he drm-misc tree with the drm-misc-fixes tree
->>>
->>>     drivers/gpu/drm/tidss/tidss_encoder.c
->>>
->>> between commit:
->>>
->>>     9da67433f64e ("drm/tidss: fix crash related to accessing freed memory")
->>>
->>> from the drm-misc-fixes tree and commit:
->>>
->>>     b28ad7deb2f2 ("drm/tidss: Use simple encoder")
->>>
->>> from the drm-misc tree.
->>>
->>> I fixed it up (I just used the latter version of this file) and can
->>
->> We need to use "drm/tidss: fix crash related to accessing freed memory" version.
->>
->>> carry the fix as necessary. This is now fixed as far as linux-next is
->>> concerned, but any non trivial conflicts should be mentioned to your
->>> upstream maintainer when your tree is submitted for merging.  You may
->>> also want to consider cooperating with the maintainer of the conflicting
->>> tree to minimise any particularly complex conflicts.
->>
->> I have fixed this with drm-misc's dim tool, so I presume the conflict goes away when drm-misc-fixes
->> is merged to drm-fixes, and drm-fixes is then at some point merged to drm-misc-next.
->>
->> It was a bit bad timing with the "drm/tidss: Use simple encoder", which removes the plumbing I
->> needed to implement the fix. So I effectively revert the "drm/tidss: Use simple encoder".
->>
->>    Tomi
->>
+> The earlier 8-bit for_each_set_clump8 facilitated a
+> for-loop syntax that iterates over a memory region entire groups of set
+> bits at a time.
 > 
-> This is now a conflict between the drm and drm-misc-fixes trees.
+> For example, suppose you would like to iterate over a 32-bit integer 8
+> bits at a time, skipping over 8-bit groups with no set bit, where
+> XXXXXXXX represents the current 8-bit group:
+> 
+>     Example:        10111110 00000000 11111111 00110011
+>     First loop:     10111110 00000000 11111111 XXXXXXXX
+>     Second loop:    10111110 00000000 XXXXXXXX 00110011
+>     Third loop:     XXXXXXXX 00000000 11111111 00110011
+> 
+> Each iteration of the loop returns the next 8-bit group that has at
+> least one set bit.
+> 
+> But with the new for_each_set_clump the clump size can be different from 8 bits.
+> Moreover, the clump can be split at word boundary in situations where word 
+> size is not multiple of clump size. Following are examples showing the working 
+> of new macro for clump sizes of 24 bits and 6 bits.
+> 
+> Example 1:
+> clump size: 24 bits, Number of clumps (or ports): 10
+> bitmap stores the bit information from where successive clumps are retrieved.
+> 
+>      /* bitmap memory region */
+>         0x00aa0000ff000000;  /* Most significant bits */
+>         0xaaaaaa0000ff0000;
+>         0x000000aa000000aa;
+>         0xbbbbabcdeffedcba;  /* Least significant bits */
+> 
+> Different iterations of for_each_set_clump:-
+> 'offset' is the bit position and 'clump' is the 24 bit clump from the
+> above bitmap.
+> Iteration first:        offset: 0 clump: 0xfedcba
+> Iteration second:       offset: 24 clump: 0xabcdef
+> Iteration third:        offset: 48 clump: 0xaabbbb
+> Iteration fourth:       offset: 96 clump: 0xaa
+> Iteration fifth:        offset: 144 clump: 0xff
+> Iteration sixth:        offset: 168 clump: 0xaaaaaa
+> Iteration seventh:      offset: 216 clump: 0xff
+> Loop breaks because in the end the remaining bits (0x00aa) size was less
+> than clump size of 24 bits.
+> 
+> In above example it can be seen that in iteration third, the 24 bit clump
+> that was retrieved was split between bitmap[0] and bitmap[1]. This example 
+> also shows that 24 bit zeroes if present in between, were skipped (preserving
+> the previous for_each_set_macro8 behaviour). 
+> 
+> Example 2:
+> clump size = 6 bits, Number of clumps (or ports) = 3.
+> 
+>      /* bitmap memory region */
+>         0x00aa0000ff000000;  /* Most significant bits */
+>         0xaaaaaa0000ff0000;
+>         0x0f00000000000000;
+>         0x0000000000000ac0;  /* Least significant bits */
+> 
+> Different iterations of for_each_set_clump:
+> 'offset' is the bit position and 'clump' is the 6 bit clump from the
+> above bitmap.
+> Iteration first:        offset: 6 clump: 0x2b
+> Loop breaks because 6 * 3 = 18 bits traversed in bitmap.
+> Here 6 * 3 is clump size * no. of clumps.
 
-The fix ("drm/tidss: fix crash related to accessing freed memory") is in v5.7-rc3, and the conflicting change ("drm/tidss: Use simple encoder") in drm-next.
+Thank you!
 
-The conflict resolution in linux-next drops the fix and take the change from drm-next, which causes crash on module removal.
+Overall looks good to me, though I gave tags per individual patches (I'm not
+familiar with that GPIO drivers, so, I may not tag them).
 
-Here's the diff I made on top of linux-next to fix it. Essentially dropping the simple-encoder change, and reapplying the fix. This should be fixed in drm-next when Dave next time pulls in Linus' branch.
-
-diff --git a/drivers/gpu/drm/tidss/tidss_encoder.c b/drivers/gpu/drm/tidss/tidss_encoder.c
-index 4c0558286f5e..e624cdcbb567 100644
---- a/drivers/gpu/drm/tidss/tidss_encoder.c
-+++ b/drivers/gpu/drm/tidss/tidss_encoder.c
-@@ -56,25 +56,38 @@ static int tidss_encoder_atomic_check(struct drm_encoder *encoder,
- 	return 0;
- }
- 
-+static void tidss_encoder_destroy(struct drm_encoder *encoder)
-+{
-+	drm_encoder_cleanup(encoder);
-+	kfree(encoder);
-+}
-+
- static const struct drm_encoder_helper_funcs encoder_helper_funcs = {
- 	.atomic_check = tidss_encoder_atomic_check,
- };
- 
-+static const struct drm_encoder_funcs encoder_funcs = {
-+	.destroy = tidss_encoder_destroy,
-+};
-+
- struct drm_encoder *tidss_encoder_create(struct tidss_device *tidss,
- 					 u32 encoder_type, u32 possible_crtcs)
- {
- 	struct drm_encoder *enc;
- 	int ret;
- 
--	enc = devm_kzalloc(tidss->dev, sizeof(*enc), GFP_KERNEL);
-+	enc = kzalloc(sizeof(*enc), GFP_KERNEL);
- 	if (!enc)
- 		return ERR_PTR(-ENOMEM);
- 
- 	enc->possible_crtcs = possible_crtcs;
- 
--	ret = drm_simple_encoder_init(&tidss->ddev, enc, encoder_type);
--	if (ret < 0)
-+	ret = drm_encoder_init(&tidss->ddev, enc, &encoder_funcs,
-+			       encoder_type, NULL);
-+	if (ret < 0) {
-+		kfree(enc);
- 		return ERR_PTR(ret);
-+	}
- 
- 	drm_encoder_helper_add(enc, &encoder_helper_funcs);
- 
-
-
- Tomi
+> 
+> Changes in v6:
+>  - [Patch 2/4]: Make 'for loop' inside test_for_each_set_clump more
+>    succinct.
+> 
+> Changes in v5:
+>  - [Patch 4/4]: Minor change: Hardcode value for better code readability.
+> 
+> Changes in v4:
+>  - [Patch 2/4]: Use 'for' loop in test function of for_each_set_clump.
+>  - [Patch 3/4]: Minor change: Inline value for better code readability.
+>  - [Patch 4/4]: Minor change: Inline value for better code readability.
+> 
+> Changes in v3:
+>  - [Patch 3/4]: Change datatype of some variables from u64 to unsigned long
+>    in function thunderx_gpio_set_multiple.
+> 
+> CHanges in v2:
+>  - [Patch 2/4]: Unify different tests for 'for_each_set_clump'. Pass test data as
+>    function parameters.
+>  - [Patch 2/4]: Remove unnecessary bitmap_zero calls.
+> 
+> Syed Nayyar Waris (4):
+>   bitops: Introduce the the for_each_set_clump macro
+>   lib/test_bitmap.c: Add for_each_set_clump test cases
+>   gpio: thunderx: Utilize for_each_set_clump macro
+>   gpio: xilinx: Utilize for_each_set_clump macro
+> 
+>  drivers/gpio/gpio-thunderx.c      |  11 ++-
+>  drivers/gpio/gpio-xilinx.c        |  62 ++++++-------
+>  include/asm-generic/bitops/find.h |  19 ++++
+>  include/linux/bitmap.h            |  61 +++++++++++++
+>  include/linux/bitops.h            |  13 +++
+>  lib/find_bit.c                    |  14 +++
+>  lib/test_bitmap.c                 | 142 ++++++++++++++++++++++++++++++
+>  7 files changed, 288 insertions(+), 34 deletions(-)
+> 
+> 
+> base-commit: 5f458e572071a54841b93f41e25fbe8ded82df79
+> -- 
+> 2.26.2
+> 
 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+With Best Regards,
+Andy Shevchenko
+
+
