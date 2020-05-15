@@ -2,121 +2,144 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46E43205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 767B62065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:00:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q0F5P6QR"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="Uk6/UvGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgEOU4x (ORCPT
+        id S1726584AbgEOVAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:56:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbgEOU4q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:56:46 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB05AC05BD09
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:56:45 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id b190so1561789pfg.6
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:56:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=orFzK+6AOl9Sz0N2w3p5SSg3SPmMkMh0jb6dZXjNAFs=;
-        b=Q0F5P6QRitFiue2wR/cDiIouQJpg6OlMJOAvhOfJJJV+BCkRlICHzFBZNVMRT9R79n
-         prN8/iO9zCtF66LVtSXtG8imACYZs01Q4RF/4bHHCZXUq0vEigqUvK56ZWhZCY+6jQDb
-         RtOKwQM+tY1YAHd+htG7fa6bFaM0G2w4saA7Db60YYgHMhUgtz0SZ3fJ/9HkHV625Zmw
-         l5/6sdMVBK3xLrqyiwjY+ZGXgVCdSGLNfAWzBi6WdpX3QhAJEBKZNLBir767ShjgfdwN
-         l5rOwQoE4LOK6tCfNTl/4jpuVlp5rTMHIo2pLNBKNAL1RZGMVfTYn/wBT6YnEcp78pfg
-         AMQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=orFzK+6AOl9Sz0N2w3p5SSg3SPmMkMh0jb6dZXjNAFs=;
-        b=m2zdSWO+oGtTtd/z2nCUpHb6CEeqlwPIrDitMak5KX1RFExlEnHGmHWin58M2ERaE8
-         9QiDxiGIj/6PMkCnKCsKlfywaa7tTLwWGn+lZWBXKDhXb2QzZCAqM15170iYEldHLm00
-         /aYvqssjI5CPsB60wgzv9ME4bn4x0Dgj1lJkUa7Yr8j8BWZ9HnK3iIynqRi7dDZK+/1Q
-         AaYk0ZjqKAJn2aKbWNInsyGxhseLcnnpSgH7cjbffP5Gper543iDD3HB+JseuTlKt+RD
-         UsjMSYAPyBrgmmSPVlkfVBqNeUNvQm+kL77t43dZ6fQNDwbHEwtk2S50Vc329Oerhalr
-         GFZA==
-X-Gm-Message-State: AOAM532c4f06YRwdz9j5zvCM6yD3kDU91XRy9d/2auBCVMyB/lgyyX0m
-        sR4tnmH/bxuTrbi5cX+iJ+Su5g==
-X-Google-Smtp-Source: ABdhPJyub8f4D2Sr5kKDWE0uzENCZouJxFMX5Ocsix4afISxccL4y7n7H4oSTBKCRjEoe36DNjepUw==
-X-Received: by 2002:a62:1b84:: with SMTP id b126mr5815239pfb.123.1589576205487;
-        Fri, 15 May 2020 13:56:45 -0700 (PDT)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id z13sm2208903pjz.42.2020.05.15.13.56.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 13:56:44 -0700 (PDT)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     ohad@wizery.com, bjorn.andersson@linaro.org
-Cc:     arnaud.pouliquen@st.com, s-anna@ti.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 1/3] rpmsg: core: Add wildcard match for name service
-Date:   Fri, 15 May 2020 14:56:40 -0600
-Message-Id: <20200515205642.13529-2-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200515205642.13529-1-mathieu.poirier@linaro.org>
-References: <20200515205642.13529-1-mathieu.poirier@linaro.org>
+        Fri, 15 May 2020 17:00:15 -0400
+Received: from mail-eopbgr700123.outbound.protection.outlook.com ([40.107.70.123]:46494
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726179AbgEOVAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 17:00:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=m7xZoPmCHAmP4rBmHKxJWwRDvSG1hK7YB1IYgm7Wds5UkVCI/lQVOtDw72Xdf5tvLeIXR4ZxakSp68Q1jjBNo/2aryccXbpKSNqfGN8GdF6XgzBAKSZvLKAez95mWKGCwVUOGHLtyXwkhEJK334w55NmNpb9rTsUzRRsJ5EXnDuR3A/YdRMimn191x1a+FWS6cYrYikL1tbz188UlgVpFsCLHk6tSXNbO23/2YrF392GiaLeux5QydhEDA+eUFgieOUgiJKbLjRZLC/wYEusjik8k9B/gMcR7V/BvU2PX8xF2i1Zp1S8F5S0Br77piVV6Va/lg4iPaQH89tGJVR1MA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kSBDTuXiaHo9aT/QtqBty5tOFAYvdXFMGTSGniVPr4Q=;
+ b=kj1N5xcaV+y+qLiwM7bjv7mZGP76+ypAosclNWYxHVd6VeLpdCGZhpXVQtA4sTLTMBRy4DC8pepvqeHcl8MSNBgEkWnyZMNuwksw+I2Ct7V3g8pkIMQ/+KTGfr3ybGB/E+nXrBfFhT/dvNq9injEp4ho2y8KsCuCOYwPLzimdmvBPW2/PpVgz3Rj78F3Bra9UotZ0Gj1bds0LjpVsY2aZ9dgJh31QmxOsyiEuXFfY1nL+LNIzI8jKHoT35HtGJGaQ3LfI2XZWSOV4YcGBr4vOXMam/pk4O20ReLdHPQgyYFNR2FJdf+l0TA2i/lrU1/HWcJeghUEnepjRDFaBEqvsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kSBDTuXiaHo9aT/QtqBty5tOFAYvdXFMGTSGniVPr4Q=;
+ b=Uk6/UvGloMPvZKcElMUWpmnFmGX5oVFcTuOra9NLAfY3D7fTxo53+yRsJbhlLxkIS8Qixs9rI7l0V0+kXVvuGpqy2VVdlZB9Qtavykzd+qosQqgPtJ2rt0zWWrhHYpx7MsRRG16BhjPQRu+3uvm/t1aHu89H4mv98RAGFktuo2Y=
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
+ by CH2PR13MB3336.namprd13.prod.outlook.com (2603:10b6:610:28::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.11; Fri, 15 May
+ 2020 21:00:11 +0000
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493]) by CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493%6]) with mapi id 15.20.3021.010; Fri, 15 May 2020
+ 21:00:11 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Please pull NFS client bugfixes
+Thread-Topic: [GIT PULL] Please pull NFS client bugfixes
+Thread-Index: AQHWKvvSr3FikOQ3nUyYLv26edod/g==
+Date:   Fri, 15 May 2020 21:00:11 +0000
+Message-ID: <550cfc745cc5ee9dcae06db50594088aad09fb45.camel@hammerspace.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linux-foundation.org; dkim=none (message not signed)
+ header.d=none;linux-foundation.org; dmarc=none action=none
+ header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 624039fd-4151-4cf9-3412-08d7f912f514
+x-ms-traffictypediagnostic: CH2PR13MB3336:
+x-microsoft-antispam-prvs: <CH2PR13MB3336F66EC8A05596D68AE974B8BD0@CH2PR13MB3336.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1060;
+x-forefront-prvs: 04041A2886
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0OjQy4RSc7Hb8Xx12VXjPDlvgoszhlzzTlTR8SohT1AUVdszjhno7daOhIcQO1npJFvLAY2vwq6TXimSUE13E8EN/tZha8XV4tlGAAHLkX4dVG2H/qAozud70B2kCGc/T/aoaC+Jn8iuxD7zLyn5oKUSvM1skuDSGPbXd2FsJDWlPz2rLp/kFfyILX4oKx+Y7M4s0Et61adpjhDUtZltjTLepU2YdNUavsNnKYO8WNWMekpDO2dapLFv25ulzZ9BfDFhUjbJMBQuwEI/NYsXvqEvFzupoJDFbwccmtU2YNEyH0RqFPHY6DDDHCRh0zrW9B6uzIXYdFIwUme9VIa9gw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(366004)(39830400003)(396003)(136003)(86362001)(6486002)(4326008)(2906002)(6512007)(71200400001)(316002)(8936002)(6916009)(8676002)(5660300002)(478600001)(2616005)(6506007)(26005)(76116006)(54906003)(36756003)(186003)(66946007)(66556008)(66446008)(64756008)(66476007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: zh0H3fAgzBW4dof1myumfjzWH843mhK/+4LJAoRVzpvUk3Vh5wo+QlHfEJ+duEVp1Ung2dNnQ0vRdAEfG3ZMJ++eCxnIbM9RV578pNHBpJn25QZAqa77a0gwzGp4swVP+4alRXxamPUZw9xjHdo4nbT6CKlDYEvgC3hfYju3uznX/+6pA1xea2+UbghQNqC6SVPLqRmct78qOUhJvOmy0aaecbpLvFXu1VqBVSAhSByYhnrNS8vr5XL0ZlU5BHTWU78XvloplURK25h0dTpDaeSuZ6ElDGQPIbbo5uHdDBgfcD7wQ+aaCuGtVEWquHQIQdu6FrZndVR3YHRYaj/827VcjM9pa11XNxlqsQZU++6KkndrRcY6Vqb9yVBaUSwXkV3HQS2tHWZsY65oHn2xKnqP3KlXXyKHs87Llnr92VBQ5DW6z18qRYXNWgoxGVGx/WS+7dzqanBpwbN684AYVVB4/iavbBZGZT4PKQqFl6w=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <15D9406854603C45A518657C4A2B7DA4@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 624039fd-4151-4cf9-3412-08d7f912f514
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2020 21:00:11.1804
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3no9XuJVds2oejCqG50ERqFnNHTRe036/gmLi/a/IfWElTo0chbin7ksWWOK7uqXtKCfdeUon/F1OmspGz10Hg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3336
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding the capability to supplement the base definition published
-by an rpmsg_driver with a postfix description so that it is possible
-for several entity to use the same service.
-
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
----
- drivers/rpmsg/rpmsg_core.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-index a6361cad608b..5e01e8dede6b 100644
---- a/drivers/rpmsg/rpmsg_core.c
-+++ b/drivers/rpmsg/rpmsg_core.c
-@@ -399,7 +399,25 @@ ATTRIBUTE_GROUPS(rpmsg_dev);
- static inline int rpmsg_id_match(const struct rpmsg_device *rpdev,
- 				  const struct rpmsg_device_id *id)
- {
--	return strncmp(id->name, rpdev->id.name, RPMSG_NAME_SIZE) == 0;
-+	size_t len = min_t(size_t, strlen(id->name), RPMSG_NAME_SIZE);
-+
-+	/*
-+	 * Allow for wildcard matches.  For example if rpmsg_driver::id_table
-+	 * is:
-+	 *
-+	 * static struct rpmsg_device_id rpmsg_driver_sample_id_table[] = {
-+	 *      { .name = "rpmsg-client-sample" },
-+	 *      { },
-+	 * }
-+	 *
-+	 * Then it is possible to support "rpmsg-client-sample*", i.e:
-+	 *	rpmsg-client-sample
-+	 *	rpmsg-client-sample_instance0
-+	 *	rpmsg-client-sample_instance1
-+	 *	...
-+	 *	rpmsg-client-sample_instanceX
-+	 */
-+	return strncmp(id->name, rpdev->id.name, len) == 0;
- }
- 
- /* match rpmsg channel and rpmsg driver */
--- 
-2.20.1
-
+SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgMmVmOTZhNWJi
+MTJiZTYyZWY3NWI1ODI4YzBhYWI4MzhlYmIyOWNiODoNCg0KICBMaW51eCA1LjctcmM1ICgyMDIw
+LTA1LTEwIDE1OjE2OjU4IC0wNzAwKQ0KDQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3Np
+dG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQubGludXgtbmZzLm9yZy9wcm9qZWN0cy90cm9uZG15L2xp
+bnV4LW5mcy5naXQgdGFncy9uZnMtZm9yLTUuNy01DQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdl
+cyB1cCB0byA4ZWVkMjkyYmM4Y2JmNzM3ZTQ2ZmIxYzExOWQ0YzhmNmRjYjAwNjUwOg0KDQogIE5G
+U3YzOiBmaXggcnBjIHJlY2VpdmUgYnVmZmVyIHNpemUgZm9yIE1PVU5UIGNhbGwgKDIwMjAtMDUt
+MTQgMTg6NDI6NDQgLTA0MDApDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCk5GUyBjbGllbnQgYnVnZml4ZXMgZm9yIExp
+bnV4IDUuNw0KDQpIaWdobGlnaHRzIGluY2x1ZGU6DQoNClN0YWJsZSBmaXhlczoNCi0gbmZzOiBm
+aXggTlVMTCBkZWZlcmVuY2UgaW4gbmZzNF9nZXRfdmFsaWRfZGVsZWdhdGlvbg0KDQpCdWdmaXhl
+czoNCi0gRml4IGNvcnJ1cHRpb24gb2YgdGhlIHJldHVybiB2YWx1ZSBpbiBjYWNoZWZpbGVzX3Jl
+YWRfb3JfYWxsb2NfcGFnZXMoKQ0KLSBGaXggc2V2ZXJhbCBmc2NhY2hlIGNvb2tpZSBpc3N1ZXMN
+Ci0gRml4IGEgZnNjYWNoZSBxdWV1aW5nIHJhY2UgdGhhdCBjYW4gdHJpZ2dlciBhIEJVR19PTg0K
+LSBORlM6IEZpeCAyIHVzZS1hZnRlci1mcmVlIHJlZ3Jlc3Npb25zIGR1ZSB0byB0aGUgUlBDX1RB
+U0tfQ1JFRF9OT1JFRiBmbGFnDQotIFNVTlJQQzogRml4IGEgdXNlLWFmdGVyLWZyZWUgcmVncmVz
+c2lvbiBpbiBycGNfZnJlZV9jbGllbnRfd29yaygpDQotIFNVTlJQQzogRml4IGEgcmFjZSB3aGVu
+IHRlYXJpbmcgZG93biB0aGUgcnBjIGNsaWVudCBkZWJ1Z2ZzIGRpcmVjdG9yeQ0KLSBTVU5SUEM6
+IFNpZ25hbGxlZCBBU1lOQyB0YXNrcyBuZWVkIHRvIGV4aXQNCi0gTkZTdjM6IGZpeCBycGMgcmVj
+ZWl2ZSBidWZmZXIgc2l6ZSBmb3IgTU9VTlQgY2FsbA0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpDaHVjayBMZXZlciAo
+MSk6DQogICAgICBTVU5SUEM6IFNpZ25hbGxlZCBBU1lOQyB0YXNrcyBuZWVkIHRvIGV4aXQNCg0K
+RGF2ZSBXeXNvY2hhbnNraSAoMyk6DQogICAgICBORlM6IEZpeCBmc2NhY2hlIHN1cGVyX2Nvb2tp
+ZSBpbmRleF9rZXkgZnJvbSBjaGFuZ2luZyBhZnRlciB1bW91bnQNCiAgICAgIE5GUzogRml4IGZz
+Y2FjaGUgc3VwZXJfY29va2llIGFsbG9jYXRpb24NCiAgICAgIE5GU3Y0OiBGaXggZnNjYWNoZSBj
+b29raWUgYXV4X2RhdGEgdG8gZW5zdXJlIGNoYW5nZV9hdHRyIGlzIGluY2x1ZGVkDQoNCkRhdmlk
+IEhvd2VsbHMgKDEpOg0KICAgICAgY2FjaGVmaWxlczogRml4IGNvcnJ1cHRpb24gb2YgdGhlIHJl
+dHVybiB2YWx1ZSBpbiBjYWNoZWZpbGVzX3JlYWRfb3JfYWxsb2NfcGFnZXMoKQ0KDQpKLiBCcnVj
+ZSBGaWVsZHMgKDIpOg0KICAgICAgbmZzOiBmaXggTlVMTCBkZWZlcmVuY2UgaW4gbmZzNF9nZXRf
+dmFsaWRfZGVsZWdhdGlvbg0KICAgICAgU1VOUlBDOiAnRGlyZWN0b3J5IHdpdGggcGFyZW50ICdy
+cGNfY2xudCcgYWxyZWFkeSBwcmVzZW50IScNCg0KTGVpIFh1ZSAoMSk6DQogICAgICBjYWNoZWZp
+bGVzOiBGaXggcmFjZSBiZXR3ZWVuIHJlYWRfd2FpdGVyIGFuZCByZWFkX2NvcGllciBpbnZvbHZp
+bmcgb3AtPnRvX2RvDQoNCk5laWxCcm93biAoMSk6DQogICAgICBTVU5SUEM6IGZpeCB1c2UtYWZ0
+ZXItZnJlZSBpbiBycGNfZnJlZV9jbGllbnRfd29yaygpDQoNCk9sZ2EgS29ybmlldnNrYWlhICgx
+KToNCiAgICAgIE5GU3YzOiBmaXggcnBjIHJlY2VpdmUgYnVmZmVyIHNpemUgZm9yIE1PVU5UIGNh
+bGwNCg0KVHJvbmQgTXlrbGVidXN0ICgzKToNCiAgICAgIE1lcmdlIHRhZyAnZnNjYWNoZS1maXhl
+cy0yMDIwMDUwOC0yJyBvZiBnaXQ6Ly9naXQua2VybmVsLm9yZy8uLi4vZGhvd2VsbHMvbGludXgt
+ZnMNCiAgICAgIE5GUzogRG9uJ3QgdXNlIFJQQ19UQVNLX0NSRURfTk9SRUYgd2l0aCBkZWxlZ3Jl
+dHVybg0KICAgICAgTkZTL3BuZnM6IERvbid0IHVzZSBSUENfVEFTS19DUkVEX05PUkVGIHdpdGgg
+cG5mcw0KDQogZnMvY2FjaGVmaWxlcy9yZHdyLmMgfCAxMiArKysrKystLS0tLS0NCiBmcy9uZnMv
+ZnNjYWNoZS5jICAgICB8IDM5ICsrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQ0KIGZzL25mcy9tb3VudF9jbG50LmMgIHwgIDMgKystDQogZnMvbmZzL25mczRwcm9jLmMgICAg
+fCAgMiArLQ0KIGZzL25mcy9uZnM0c3RhdGUuYyAgIHwgIDIgKy0NCiBmcy9uZnMvcGFnZWxpc3Qu
+YyAgICB8ICA1ICsrKy0tDQogZnMvbmZzL3BuZnNfbmZzLmMgICAgfCAgMyArKy0NCiBmcy9uZnMv
+c3VwZXIuYyAgICAgICB8ICAxIC0NCiBmcy9uZnMvd3JpdGUuYyAgICAgICB8ICA0ICsrLS0NCiBu
+ZXQvc3VucnBjL2NsbnQuYyAgICB8ICA5ICsrKysrKystLQ0KIDEwIGZpbGVzIGNoYW5nZWQsIDQy
+IGluc2VydGlvbnMoKyksIDM4IGRlbGV0aW9ucygtKQ0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxp
+bnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBo
+YW1tZXJzcGFjZS5jb20NCg0KDQo=
