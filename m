@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AFDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7267920709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBBF20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589578206;
-	bh=cUY2MYf8Vi4iPR12ZtvJCMa4sy7jljuDCoYRYB9Zc/g=;
+	s=default; t=1589578214;
+	bh=LIfEaLR4Btf7fZsQI0hmTN4QqTI8byeX+bqlA3HfH+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=upsGLC2h1oVUMx6+BsJuZJHovXgSPSvZExC0Sl/Bx1dBAnTvOXfOt9DyIKgYIVMs1
-	 C1YNxk7cSdA7f/NEo4/HjCbLCit+nVAVe3IHfZVDrfm2A1R3OZ6ISfzuHms1rEYvBr
-	 RlIXStg/UhctGrjSQ86oxT5hRC3TiJnRW2gKMyU8=
+	b=thzZ11xA0Ew8tMAV6l+d6lzutKpjWDkJYE2Z4gweFVr8BI2tvBkyqvqK40CngBF4N
+	 YpseWXIqa3JlHBFQnGd47nPVGVPeJBQotek+Mw1MZIJHL/iXohtibE6T/LwKwpMKcY
+	 iKNO8uDL8joFiJnfEjgLEmeErFjZODGRcrXsSJMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbgEOVaF (ORCPT
+        id S1728199AbgEOVaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:30:05 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41782 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727858AbgEOV3C (ORCPT
+        Fri, 15 May 2020 17:30:14 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:53439 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbgEOV25 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:29:02 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 23so1592594pfy.8;
-        Fri, 15 May 2020 14:29:01 -0700 (PDT)
+        Fri, 15 May 2020 17:28:57 -0400
+Received: by mail-pj1-f67.google.com with SMTP id hi11so1478795pjb.3;
+        Fri, 15 May 2020 14:28:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xBkpYn0OGRXJFLEKv1YJxgMkLUAuINcwhwjSKqfiGiY=;
-        b=m30sbDf77Zi/njTeLobRWD016F37cTQ8m/G0f51ZK5biDp25HiBDwGAxuo2WImwvbb
-         d4BoLWrZb5scx0nhWdgCa+RQ0d+aS/v37Nkg6W5gB0i7YPZHx6iXODjiHcKUG9imGugm
-         baK23zRzhw+xFwa9PrH9vu/Mp05p1iIH/VO8GUVE/GRD1QIwFGXWxLz80hDxxHvDrO8f
-         mgXnyVBpDLS7yXqo2qNW5W3Opx1v4kvA+hBcJRGlT2AwjlS96oTdZT7k+uC1bDS05fWr
-         5HWQXuAg+GXrA1PhJ+f0dW95ghV3wnUESHltzegIu+g53gP7lgmtyXIStNBDmK4O0ExB
-         l9Tw==
-X-Gm-Message-State: AOAM5336AFOIF49CJJ/Lo4SqpHT724gjcPOW8qwhJqcnG5IL3oUenlZG
-        lgGV4zeb1LpFrdJH4CltuZI=
-X-Google-Smtp-Source: ABdhPJySutDUwh/Hlrvw1b9svILaoMn5tvR1dnM8imuIRFA9bR+HSq1C9aBBC60X0+Qj6CPPZAUuwA==
-X-Received: by 2002:a63:42c4:: with SMTP id p187mr5038674pga.153.1589578141509;
-        Fri, 15 May 2020 14:29:01 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id y7sm2681182pfq.21.2020.05.15.14.28.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=sfS8RWQILq5pTxsiwJfRKnCbiFfxKVOF+i1nmZH/cEc=;
+        b=cHahCf7CLkL4kfpfmih1x5N6/feF48MZgbx5eEkuYk65j8O4PaHb6eGXgGVz6LR7Ax
+         IP/gmHiRc4/myy7Jf7XuiqKBvz16JY5DjMaecLMP7ArLVctpv2MbxXavfj5GbqysxNaU
+         rpuUwy2gzGV0e3Cc02KA4DVsy3yq0Q3RcR7n/3UFfJL02omregaz9H3u09/vcD967rVY
+         s+BNyAt6zdHovGQAp6XFEY7Xp2FdmxBruWnSxoCJpzT55RvME9UGGQjgTaLWYGzyjw/k
+         ayVmozkwT2YB1EWWmQKiVT8ggkf5W52W+jXASD2Hq2tmgs0xlCtX4NDK2wokgbg1n9jd
+         yTVw==
+X-Gm-Message-State: AOAM531QRFWiKi0nXQ+eITvPE/PjeQcfDW5KUSeM5BWaVezO5WuRu8wT
+        TaibqIPa4uRPiCbEFLInBYw=
+X-Google-Smtp-Source: ABdhPJyDXHKz7boZGvqXqSLG3GjzTod1lFNdJn6sXhTEjxoVmBj7l/4U3APnTK6uCHCt/7oLvtItAA==
+X-Received: by 2002:a17:902:dc84:: with SMTP id n4mr5635258pld.281.1589578135789;
         Fri, 15 May 2020 14:28:55 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id v7sm2644511pfm.146.2020.05.15.14.28.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 14:28:51 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 053B742337; Fri, 15 May 2020 21:28:50 +0000 (UTC)
+        id B9C4A41DAB; Fri, 15 May 2020 21:28:49 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     jeyu@kernel.org
 Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
@@ -63,12 +63,10 @@ Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
         mchehab+samsung@kernel.org, kvalo@codeaurora.org,
         davem@davemloft.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Ariel Elior <aelior@marvell.com>,
-        GR-everest-linux-l2@marvell.com,
-        Igor Russkikh <irusskikh@marvell.com>
-Subject: [PATCH v2 09/15] qed: use new module_firmware_crashed()
-Date:   Fri, 15 May 2020 21:28:40 +0000
-Message-Id: <20200515212846.1347-10-mcgrof@kernel.org>
+        Michael Chan <michael.chan@broadcom.com>
+Subject: [PATCH v2 04/15] bnxt: use new module_firmware_crashed()
+Date:   Fri, 15 May 2020 21:28:35 +0000
+Message-Id: <20200515212846.1347-5-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200515212846.1347-1-mcgrof@kernel.org>
 References: <20200515212846.1347-1-mcgrof@kernel.org>
@@ -87,26 +85,24 @@ a reboot.
 
 Using a taint flag allows us to annotate when this happens clearly.
 
-Cc: Ariel Elior <aelior@marvell.com>
-Cc: GR-everest-linux-l2@marvell.com
-Reviewed-by: Igor Russkikh <irusskikh@marvell.com>
+Cc: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_mcp.c | 1 +
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.c b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-index 9624616806e7..aea200d465ef 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-@@ -566,6 +566,7 @@ _qed_mcp_cmd_and_union(struct qed_hwfn *p_hwfn,
- 		DP_NOTICE(p_hwfn,
- 			  "The MFW failed to respond to command 0x%08x [param 0x%08x].\n",
- 			  p_mb_params->cmd, p_mb_params->param);
-+		module_firmware_crashed();
- 		qed_mcp_print_cpu_info(p_hwfn, p_ptt);
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index dd0c3f227009..5ba1bd0734e9 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -3503,6 +3503,7 @@ static int bnxt_get_dump_data(struct net_device *dev, struct ethtool_dump *dump,
  
- 		spin_lock_bh(&p_hwfn->mcp_info->cmd_lock);
+ 	dump->flag = bp->dump_flag;
+ 	if (dump->flag == BNXT_DUMP_CRASH) {
++		module_firmware_crashed();
+ #ifdef CONFIG_TEE_BNXT_FW
+ 		return tee_bnxt_copy_coredump(buf, 0, dump->len);
+ #endif
 -- 
 2.26.2
 
