@@ -2,201 +2,120 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4972AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1606420643
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:35:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NfimAyTC"
+	by mail.kernel.org (Postfix) with ESMTP id 2C9F420643
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgEOVf4 (ORCPT
+        id S1727834AbgEOVge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:35:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726228AbgEOVf4 (ORCPT
+        Fri, 15 May 2020 17:36:34 -0400
+Received: from 9.mo69.mail-out.ovh.net ([46.105.56.78]:37851 "EHLO
+        9.mo69.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbgEOVgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:35:56 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F22E4C05BD0A
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 14:35:55 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id o8so1841702ybc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 14:35:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sVQVIr84sLsAtEf+Ll1fioJb9v8WVaNtHmGOv4kP0R8=;
-        b=NfimAyTC/aIkfOHS2ufqPSllOkeKqp1ZK6kze94gN6kn1ADBKZD3dHs2eXsMiGzBR1
-         15TmsMiq4KlpeHxxUJ5YdLeKyW23BftJ/gMJmVwlsAn9wcJ8hNxPhlPYwpt5prr5Plzx
-         X43QaZjtrMfGtVTJ/ubc6mkEj6Ge5py3FKjasFZ+0KDaHQnCgsGN1GjqHijFAE+tqSUr
-         I0o2HfrLoen8lac1vJSzfPD+hjfINdbvGmnNZ+aYkTJtddLFqxcCrbqe6UPzgZVuVVHV
-         xDLercuanoXp8rDUc6rnzIa3P8yb045tTQv7jF96E3NAAxmFtOEQvwlMc35NBfkuYpr+
-         Seqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sVQVIr84sLsAtEf+Ll1fioJb9v8WVaNtHmGOv4kP0R8=;
-        b=XjxWbISpn+ZkzMhjIuVHSa+N9vHLiwL7kj3JtUQkkGYFfoUIThRYtnVrqriALozZ6v
-         8CZRVU8zUDPQH7uZ5ONBJH5UC5UX4W3ZxRbP7sNB01QIVtYpZYhIPEtpBUqWFFZP3+nr
-         v6vYkmjXaokqgEqGCLbjBWVcY2UvVzNjbfvTJoD0BTG92bDS5QAMt1Xfl1GYaRPiJPsF
-         JuHlPjdU45gv0XNKywr3UV5wlcUlTSREmCBY99Ym2eO+F3rhUvFYpolnOOp/6S8zEeNw
-         D7xx52PxFY/heCZdGSdWvbnjOYMEF4zJiZGl0mITSFIszQuDvPvPgoq6Jem01rCh1xE4
-         dmQQ==
-X-Gm-Message-State: AOAM533hJNMRdn37pcTFI8wAx6cDc/fZhrm5Oz7c+bUKruETzktPSPuZ
-        AjaYdh0fgSPPUEC71e2+aufQ+/ASAaHa3ypwIL/i0Q==
-X-Google-Smtp-Source: ABdhPJzO8Z79WAQPa+P8cIWRu5FYqccxVpUsubtP/BCBp9spOPnwntRjPW/UivBlIqcTjuFF/pHj3glO1AKf2bwUZSU=
-X-Received: by 2002:a25:d450:: with SMTP id m77mr9073716ybf.177.1589578554699;
- Fri, 15 May 2020 14:35:54 -0700 (PDT)
+        Fri, 15 May 2020 17:36:33 -0400
+Received: from player730.ha.ovh.net (unknown [10.110.208.124])
+        by mo69.mail-out.ovh.net (Postfix) with ESMTP id 324A58D1ED
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 23:17:22 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player730.ha.ovh.net (Postfix) with ESMTPSA id 6DB3312444F3A;
+        Fri, 15 May 2020 21:17:17 +0000 (UTC)
+Date:   Fri, 15 May 2020 23:17:01 +0200
+From:   Stephen Kitt <steve@sk2.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: sysctl/kernel: document unaligned controls
+Message-ID: <20200515231701.7dc1e6b2@heffalump.sk2.org>
+In-Reply-To: <20200515203601.401a46a9@heffalump.sk2.org>
+References: <20200515160406.8649-1-steve@sk2.org>
+        <20200515112735.67ee1148@lwn.net>
+        <20200515203601.401a46a9@heffalump.sk2.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200515165007.217120-1-irogers@google.com> <20200515165007.217120-8-irogers@google.com>
- <20200515194115.GA3577540@krava>
-In-Reply-To: <20200515194115.GA3577540@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 15 May 2020 14:35:43 -0700
-Message-ID: <CAP-5=fUp4ECBntUamWK53LhTbT9W5w5A0frFyOMxoWK0Q2o60A@mail.gmail.com>
-Subject: Re: [PATCH v2 7/7] perf expr: Migrate expr ids table to a hashmap
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/9ft7adtb_zW.icq2dphbXhV"; protocol="application/pgp-signature"
+X-Ovh-Tracer-Id: 495958913122520453
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrleekgdduheejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtsehgtderreertdejnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeevledvueefvdeivefftdeugeekveethefftdffteelheejkeejjeduffeiudetkeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeeftddrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 12:41 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Fri, May 15, 2020 at 09:50:07AM -0700, Ian Rogers wrote:
->
-> SNIP
->
-> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> > index b071df373f8b..37be5a368d6e 100644
-> > --- a/tools/perf/util/metricgroup.c
-> > +++ b/tools/perf/util/metricgroup.c
-> > @@ -85,8 +85,7 @@ static void metricgroup__rblist_init(struct rblist *metric_events)
-> >
-> >  struct egroup {
-> >       struct list_head nd;
-> > -     int idnum;
-> > -     const char **ids;
-> > +     struct expr_parse_ctx pctx;
-> >       const char *metric_name;
-> >       const char *metric_expr;
-> >       const char *metric_unit;
-> > @@ -94,19 +93,21 @@ struct egroup {
-> >  };
-> >
-> >  static struct evsel *find_evsel_group(struct evlist *perf_evlist,
-> > -                                   const char **ids,
-> > -                                   int idnum,
-> > +                                   struct expr_parse_ctx *pctx,
-> >                                     struct evsel **metric_events,
-> >                                     bool *evlist_used)
-> >  {
-> >       struct evsel *ev;
-> > -     int i = 0, j = 0;
-> >       bool leader_found;
-> > +     const size_t idnum = hashmap__size(&pctx->ids);
-> > +     size_t i = 0;
-> > +     int j = 0;
-> > +     double *val_ptr;
-> >
-> >       evlist__for_each_entry (perf_evlist, ev) {
-> >               if (evlist_used[j++])
-> >                       continue;
-> > -             if (!strcmp(ev->name, ids[i])) {
-> > +             if (hashmap__find(&pctx->ids, ev->name, (void **)&val_ptr)) {
->
-> hum, you sure it's doing the same thing as before?
->
-> hashmap__find will succede all the time in here, while the
-> previous code was looking for the start of the group ...
-> the logic in here is little convoluted, so maybe I'm
-> missing some point in here ;-)
+--Sig_/9ft7adtb_zW.icq2dphbXhV
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-If we have a metric like "A + B" and another like "C / D" then by
-we'll generate a string (the extra_events strbuf in the code) like
-"{A,B}:W,{C,D}:W" from __metricgroup__add_metric. This will turn into
-an evlist in metricgroup__parse_groups of A,B,C,D. The code is trying
-to associate the events A,B with the first metric and C,D with the
-second. The code doesn't support sharing of events and events are
-marked as used and can't be part of other metrics. The evlist order is
-also reflective of the order of metrics, so if there were metrics "A +
-B + C" and "A + B", as the first metric is first in the evlist we
-don't run the risk of C being placed with A and B in a different
-group.
+On Fri, 15 May 2020 20:36:01 +0200, Stephen Kitt <steve@sk2.org> wrote:
 
-The old code used the order of events to match within a metric and say
-for metric "A+B+C" we want to match A then B, and so on. The new code
-acts more like a set, so "A + B + C" becomes a set containing A, B and
-C, we check A is in the set then B and then C. For both pieces of code
-they are only working because of the evlist_used "bitmap" and that the
-order in the evlists and metrics matches.
+> On Fri, 15 May 2020 11:27:35 -0600, Jonathan Corbet <corbet@lwn.net> wrot=
+e:
+> > On Fri, 15 May 2020 18:04:06 +0200
+> > Stephen Kitt <steve@sk2.org> wrote:
+> >  =20
+> > > diff --git a/Documentation/index.rst b/Documentation/index.rst
+> > > index 9599c0f3eea8..17c38d899572 100644
+> > > --- a/Documentation/index.rst
+> > > +++ b/Documentation/index.rst
+> > > @@ -143,6 +143,7 @@ Architecture-agnostic documentation
+> > >     :maxdepth: 2
+> > > =20
+> > >     asm-annotations
+> > > +   unaligned-memory-access
+> > > =20
+> > >  Architecture-specific documentation
+> > >  -----------------------------------
+> > > diff --git a/Documentation/unaligned-memory-access.txt
+> > > b/Documentation/unaligned-memory-access.rst similarity index 100%
+> > > rename from Documentation/unaligned-memory-access.txt
+> > > rename to Documentation/unaligned-memory-access.rst   =20
+> >=20
+> > Adding this to the toctree is great, but I'd just as soon not leave it =
+in
+> > the top-level directory while we do that.  Since you're renaming it
+> > anyway, can you move it into process/?  It's not a perfect fit, but tha=
+t's
+> > where that type of material has been going so far. =20
+>=20
+> I can indeed. Should it still be listed in the main toctree, or in the
+> process toctree?
 
-The current code could just use ordering to match first n1 events with
-the first metric, the next n2 events with the second and so on. So
-both the find now, and the strcmp before always return true in this
-branch.
+Never mind, I found the answer, =E2=80=9Csome overall technical guides that=
+ have been
+put here for now for lack of a better place=E2=80=9D ;-).
 
-In the RFC patch set I want to share events and so I do checks related
-to the group leader so that I know when moving from one group to
-another in the evlist. The find/strcmp becomes load bearing as I will
-re-use events as long as they match.
-https://lore.kernel.org/lkml/20200508053629.210324-14-irogers@google.com/
+Regards,
 
-> jirka
->
-> >                       if (!metric_events[i])
-> >                               metric_events[i] = ev;
-> >                       i++;
-> > @@ -118,7 +119,8 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
-> >                       memset(metric_events, 0,
-> >                               sizeof(struct evsel *) * idnum);
+Stephen
 
-This re-check was unnecessary in the old code and unnecessary even
-more so now as the hashmap_find is given exactly the same arguments.
-I'll remove it in v3 while addressing Andrii's memory leak fixes.
+--Sig_/9ft7adtb_zW.icq2dphbXhV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Thanks,
-Ian
+-----BEGIN PGP SIGNATURE-----
 
-> > -                     if (!strcmp(ev->name, ids[i])) {
-> > +                     if (hashmap__find(&pctx->ids, ev->name,
-> > +                                       (void **)&val_ptr)) {
-> >                               if (!metric_events[i])
-> >                                       metric_events[i] = ev;
->
-> SNIP
->
+iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl6/Bs0ACgkQgNMC9Yht
+g5ywhw/7Bu2YpW1FvW89RSQHRuV7ZdECufLxUkKFP7tUo+q0ocnt9pY4qiQfJCuu
+nZCJUtCjNX9eietABq9szmiOg5wXuJCDSgcJ/WGEcZ+FSqXsMIod8/rnnycOcdAr
+7ofwrWGUNkN51sDYowtNK2+/kaRj1xDIwKmciR1qI3P6EX2owLf7G6mrzm7V3QBi
+lfrEZKOjzfurMGosMDH27oomJKSZXzrGiR8ozJcX23jiAIw2R6Vt+wlBG6oyeM6x
+NKHibprJFNU6eXlQRHaxjo1Q/eSYv2y4KmkISvy6J26cJuW3RgxJWbVAUq7V4dDE
+D1t7f09GWYPBv5iZewZvJAUkE+UhwwPUvWZ0OvWT/3rg13ddsaI4dB9ywQdN0Iy4
+hs9izvpZlZEj/jUxumm99F3Y2gOac0xwVUSg45qwuy/RvK81ZNTL9f84UA2T37pp
+fN2YY6KXQHsKwda4WqeDS7GstgmU1GXWlE2iR1d/MRwo0TsrP4FuiV/g/HGmUeed
+Pg0jftUKnkjdZ52Ch2TNmSYhyBqDib84y/nhuDvoUyG5TJxIE8bjWF4xg7iiXFhq
+6PAbgg5pYuhgqWaJECiHd+GGYf7SvnyYP8LswYoYdhXdn3W5Rh+4q0iaFiNA3P+1
+mFDzvfgGShFzjK2Sntg6+a0l9c2Sf6QNBi4krTRooB44gM50JZw=
+=7I5b
+-----END PGP SIGNATURE-----
+
+--Sig_/9ft7adtb_zW.icq2dphbXhV--
