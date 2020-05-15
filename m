@@ -2,122 +2,103 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD9BE205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E706F2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:11:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="ZmqiM4bI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgEOJKJ (ORCPT
+        id S1728007AbgEOJLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:10:09 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2211 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726922AbgEOJKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:10:08 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id DB2A597F4B563AF90316;
-        Fri, 15 May 2020 10:10:06 +0100 (IST)
-Received: from [127.0.0.1] (10.47.1.24) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Fri, 15 May
- 2020 10:10:05 +0100
-Subject: Re: [PATCH 2/2] perf test: Improve pmu event metric testing
-To:     Ian Rogers <irogers@google.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-References: <20200513062236.854-1-irogers@google.com>
- <20200513062236.854-2-irogers@google.com>
- <ac88604a-56c2-b632-57c2-3bee316dcea7@huawei.com>
- <CAP-5=fVkD+0wCMcBBHWM8djsnn2KsshOyK_XcjNDTsiVo04vwQ@mail.gmail.com>
- <5264e16c-fb1a-4bbc-96b5-1d867e38902e@huawei.com>
- <CAP-5=fWt58UVTTj_qvirMhMOaUbur+HzxrTi5u1qvCA1ft9BEw@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <799e8dde-6f56-7add-a177-3e21c0de03fc@huawei.com>
-Date:   Fri, 15 May 2020 10:09:10 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 15 May 2020 05:11:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726922AbgEOJLA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 05:11:00 -0400
+Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E181EC061A0C;
+        Fri, 15 May 2020 02:10:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589533857;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=5rOBFNRSIm8wOG/3ZTXTdyUjSY/V30dWRh3affiRjZo=;
+        b=ZmqiM4bIncVzBB4IViZsPHc+iMbDAkEidtyCdmA6xmPNkxaCstxJne/PRDsvlrelaK
+        dSLwRZwWfuEXE9pM+TKQjOrvt7g+N5d27qPVoPPRgOuptx7puheA/AH2J3AcWGvQkD0M
+        CTzA6r6WvRTG0BUUfeTE+/BBGoV4UUl/UPMb/SDcGbziVT/HuLgTCWZdbwVmJ1S5SqMC
+        FfW+cIoCZASVKDiAECFS2FfCAmpToN4G16Es16X4ZSLMPUPicgeRqcd29cZg3f2X+KZX
+        dSSu0Pl48AfAj8ipZHIUbgSclgGO3XKdRnDysGHDieJ668xJVo6MHIwIifnnjusiDMWJ
+        xnGA==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPaJfSc9C1S"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id u08bf3w4F9Aj0s8
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 15 May 2020 11:10:45 +0200 (CEST)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 1/2] hwrng: iproc-rng200 - Set the quality value
+Date:   Fri, 15 May 2020 11:10:45 +0200
+Message-ID: <3640422.T8yoyu11Ch@tauon.chronox.de>
+In-Reply-To: <dleftjimgx8tc3.fsf%l.stelmach@samsung.com>
+References: <4493123.C11H8YMYNy@tauon.chronox.de> <CGME20200515090158eucas1p1b653fc50f1ad4f0f6c92525ab3188d45@eucas1p1.samsung.com> <dleftjimgx8tc3.fsf%l.stelmach@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fWt58UVTTj_qvirMhMOaUbur+HzxrTi5u1qvCA1ft9BEw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.1.24]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/05/2020 00:02, Ian Rogers wrote:
-> On Thu, May 14, 2020 at 2:00 AM John Garry <john.garry@huawei.com> wrote:
->>
->> On 13/05/2020 17:10, Ian Rogers wrote:
->>>> Out of interest, if we could move the validation of metrics to jevents,
->>>> how much functionality would we still have here?
->>> If we add checking to jevents then the MetricExpr would be known to be
->>> valid, however, the events (aka ids) within the expression could be
->>> invalid.
->>
->> So I think that has some value. I mean, just to detect syntax errors,
->> like those remedied in "perf metrics: fix parse errors in power8 metrics".
->>
->>> I'm not sure we could realistically check the events at
->>> jevents (build) time as there is no guarantee that the machine we run
->>> on is the same as the one we compile on.
->>
->> But we could at least check that there are event aliases for that CPU,
->> right? (by examining the JSONs for that cpu). If the event alias does
->> not actually match on the target CPU, then that can't be helped.
-> 
-> Agreed, I think there will be some cases where something more can be
-> done. Jiri has proposed fake pmus as well:
-> https://www.spinics.net/lists/linux-perf-users/msg11760.html
-> I don't know how much sense it makes trying to get this in jevents, as
-> long as 'perf test' is run.
+Am Freitag, 15. Mai 2020, 11:01:48 CEST schrieb Lukasz Stelmach:
 
-At a glance, that does not look like something we would want in jevents. 
-But rather the metric expr parsing error detection and alias checking.
+Hi Lukasz,
 
-About jirka's patch:
 
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -485,6 +485,102 @@ static int test_parsing(void)
-  	return ret == 0 ? TEST_OK : TEST_SKIP;
-  }
+As I mentioned, all that is or seems to be analyzed here is the quality of the 
+cryptographic post-processing. Thus none of the data can be used for getting 
+an idea of the entropy content.
 
-+
-+static struct test_metric metrics[] = {
-+	{ .metric = "imx8_ddr0@read\\-cycles@ * 4 * 4", },
-+	{ .metric = 
-"imx8_ddr0@axid\\-read\\,axi_mask\\=0xffff\\,axi_id\\=0x0000@ * 4", },
-+	{ .metric = "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100", },
-+	{ .metric = "(imx8_ddr0@read\\-cycles@ + imx8_ddr0@write\\-cycles@)", },
-+};
+That said, the ent value indeed looks too low which seems to be an issue in 
+the tool itself.
 
-Maybe we could add these to pmu-events/arch/test/test_cpu/metric.json, 
-and get at them that way.
+Note, for an entropy assessment commonly at least 1 million traces from the 
+raw noise source are needed.
 
-Thanks,
-John
+See for examples on how such entropy assessments are conducted in the LRNG 
+documentation [1] or the Linux /dev/random implementation in [2]
+
+[1] appendix C of https://www.chronox.de/lrng/doc/lrng.pdf
+
+[2] chapter 6 of https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/
+Publications/Studies/LinuxRNG/LinuxRNG_EN.pdf
+
+Ciao
+Stephan
+
+
