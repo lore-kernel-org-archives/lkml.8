@@ -2,175 +2,136 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0233E20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:56:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IUb2sBzE"
+	by mail.kernel.org (Postfix) with ESMTP id 6C8C020709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:56:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbgEOK4P (ORCPT
+        id S1726228AbgEOK4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:56:15 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:59782 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726000AbgEOK4O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:56:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589540174; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=pVlXqk0xHFLVzrs5HUJtO3mE2JlonL9O1pnYqUk/Gac=;
- b=IUb2sBzEbd9FWwkcql8RLXs0kJdxa0YXLaRpIN0Tq6zb7E/f2LRwBDzycU5FkR67URjd3tXc
- SJuJlTVwGBPj8YZWc7rlV1CP9X5QqHrP6yfLZOFZ3qvvEtHyiZuvV/FACmBGzdgsjK2ObUxV
- TZ8ievdl9TNNKOgskLkOubCr1Mo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebe7547.7f277fa72d50-smtp-out-n01;
- Fri, 15 May 2020 10:56:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B2DAAC432C2; Fri, 15 May 2020 10:56:06 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E62DC433D2;
-        Fri, 15 May 2020 10:55:59 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 15 May 2020 16:25:59 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc7180: Support ETMv4 power
- management
-In-Reply-To: <b0a2ac4ffefe7d3e216a83ab56867620f120ff08.1589539293.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1589539293.git.saiprakash.ranjan@codeaurora.org>
- <b0a2ac4ffefe7d3e216a83ab56867620f120ff08.1589539293.git.saiprakash.ranjan@codeaurora.org>
-Message-ID: <56a5563205da61c47eb4f8bbf6120e28@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Fri, 15 May 2020 06:56:52 -0400
+Received: from mga09.intel.com ([134.134.136.24]:29753 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725980AbgEOK4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 06:56:51 -0400
+IronPort-SDR: FqAscLUA2hEzO+ya5AJRGn+/bGJY0DXFFmietN5ErDNeZKprfWj3omUDZu07BawZw3LsmeDb43
+ /WL/hSJhtZmQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 03:56:50 -0700
+IronPort-SDR: jLkaikoZ73kKNWmoysRWcdGNbUmdICjc8PJkEm9mTk8eafFwSLzxvLRsjNeT0JoiZ1tZqXHBnt
+ 8NVdbQc1ptoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="281183729"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga002.jf.intel.com with ESMTP; 15 May 2020 03:56:46 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org
+Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v7 0/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
+Date:   Fri, 15 May 2020 18:55:35 +0800
+Message-Id: <20200515105537.4876-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+This patch adds the new IP of Nand Flash Controller(NFC) support
+on Intel's Lightning Mountain(LGM) SoC.
 
-On 2020-05-15 16:21, Sai Prakash Ranjan wrote:
-> Now that deep idle states are properly supported on SC7180,
-> we need to add "coresight-loses-context-with-cpu" property
-> to avoid failure of trace session because of losing context
-> on entering deep idle states.
-> 
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
-> 
-> Resending this because the last patch sent here -
-> https://lore.kernel.org/patchwork/patch/1230367/
-> seems to have added "coresight-loses-context-with-cpu" to
-> replicator node instead of etm7 node.
-> 
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 4069bb1c93af..8b3707347547 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1656,6 +1656,7 @@
-> 
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
-> +			arm,coresight-loses-context-with-cpu;
-> 
->  			out-ports {
->  				port {
-> @@ -1674,6 +1675,7 @@
-> 
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
-> +			arm,coresight-loses-context-with-cpu;
-> 
->  			out-ports {
->  				port {
-> @@ -1692,6 +1694,7 @@
-> 
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
-> +			arm,coresight-loses-context-with-cpu;
-> 
->  			out-ports {
->  				port {
-> @@ -1710,6 +1713,7 @@
-> 
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
-> +			arm,coresight-loses-context-with-cpu;
-> 
->  			out-ports {
->  				port {
-> @@ -1728,6 +1732,7 @@
-> 
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
-> +			arm,coresight-loses-context-with-cpu;
-> 
->  			out-ports {
->  				port {
-> @@ -1746,6 +1751,7 @@
-> 
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
-> +			arm,coresight-loses-context-with-cpu;
-> 
->  			out-ports {
->  				port {
-> @@ -1764,6 +1770,7 @@
-> 
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
-> +			arm,coresight-loses-context-with-cpu;
-> 
->  			out-ports {
->  				port {
-> @@ -1782,6 +1789,7 @@
-> 
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
-> +			arm,coresight-loses-context-with-cpu;
-> 
->  			out-ports {
->  				port {
+DMA is used for burst data transfer operation, also DMA HW supports
+aligned 32bit memory address and aligned data access by default.
+DMA burst of 8 supported. Data register used to support the read/write
+operation from/to device.
 
+NAND controller also supports in-built HW ECC engine.
 
-The previous version of this patch in QCOM tree seems to have added the
-property to replicator node instead of etm7 node, can you please drop
-that from the tree and apply this one?
+NAND controller driver implements ->exec_op() to replace legacy hooks,
+these specific call-back method to execute NAND operations.
 
-Thanks,
-Sai
+---
+v7:
+  - indentation issue is fixed
+  - add error check for retrieve the resource from dt
+  - Rob's review comments addressed 
+  - dt-schema build issue fixed with upgraded dt-schema
+v6:
+  - update EBU_ADDR_SELx register base value build it from DT
+  - Add tabs in in Kconfig
+  - Rob's review comments addressed in YAML file
+  - add addr_sel0 and addr_sel1 reg-names in YAML example
+v5:
+  - replace by 'HSNAND_CLE_OFFS | HSNAND_CS_OFFS' to NAND_WRITE_CMD and NAND_WRITE_ADDR
+  - remove the unused macros
+  - update EBU_ADDR_MASK(x) macro
+  - update the EBU_ADDR_SELx register values to be written
+  - add the example in YAML file
+v4:
+  - add ebu_nand_cs structure for multiple-CS support
+  - mask/offset encoding for 0x51 value
+  - update macro HSNAND_CTL_ENABLE_ECC
+  - drop the op argument and un-used macros.
+  - updated the datatype and macros
+  - add function disable nand module
+  - remove ebu_host->dma_rx = NULL;
+  - rename MMIO address range variables to ebu and hsnand
+  - implement ->setup_data_interface()
+  - update label err_cleanup_nand and err_cleanup_dma
+  - add return value check in the nand_remove function
+  - add/remove tabs and spaces as per coding standard
+  - encoded CS ids by reg property
+v3:
+  - Add depends on MACRO in Kconfig
+  - file name update in Makefile
+  - file name update to intel-nand-controller
+  - modification of MACRO divided like EBU, HSNAND and NAND
+  - add NAND_ALE_OFFS, NAND_CLE_OFFS and NAND_CS_OFFS
+  - rename lgm_ to ebu_ and _va suffix is removed in the whole file
+  - rename structure and varaibles as per review comments.
+  - remove lgm_read_byte(), lgm_dev_ready() and cmd_ctrl() un-used function
+  - update in exec_op() as per review comments
+  - rename function lgm_dma_exit() by lgm_dma_cleanup()
+  - hardcoded magic value  for base and offset replaced by MACRO defined
+  - mtd_device_unregister() + nand_cleanup() instead of nand_release()
+v2:
+  - implement the ->exec_op() to replaces the legacy hook-up.
+  - update the commit message
+  - YAML compatible string update to intel, lgm-nand-controller
+  - add MIPS maintainers and xway_nand driver author in CC
+
+v1:
+ - initial version
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
+  mtd: rawnand: Add NAND controller support on Intel LGM SoC
+
+ .../devicetree/bindings/mtd/intel,lgm-nand.yaml    |  91 +++
+ drivers/mtd/nand/raw/Kconfig                       |   8 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/intel-nand-controller.c       | 748 +++++++++++++++++++++
+ 4 files changed, 848 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+ create mode 100644 drivers/mtd/nand/raw/intel-nand-controller.c
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.11.0
+
