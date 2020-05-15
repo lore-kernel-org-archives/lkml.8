@@ -2,119 +2,139 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A76E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A19E8206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EEFD206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:01:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="sRTS6j6j";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="o2itdzwi"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="lbJ/D6GG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgEOQBY (ORCPT
+        id S1726727AbgEOQBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:01:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726188AbgEOQBX (ORCPT
+        Fri, 15 May 2020 12:01:42 -0400
+Received: from mail.efficios.com ([167.114.26.124]:45108 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbgEOQBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:01:23 -0400
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [IPv6:2001:67c:2050::465:101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E200C061A0C;
-        Fri, 15 May 2020 09:01:23 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 49NtSJ0n4HzKmbx;
-        Fri, 15 May 2020 18:01:20 +0200 (CEST)
-Authentication-Results: hefe.heinlein-support.de (amavisd-new);
-        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
-        header.d=mailbox.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1589558477;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=w+PiomkJZ7jFlkkfl58ZR6NQt9BMVrpVorVvSHDPZaw=;
-        b=sRTS6j6jk30aT41zShAFepRc/3rbvP/wYZahNFeKTxVJ6cklLf9FMD+BBtWNGEhJFfrzsO
-        leps9WG5KF5OEjNZqi3dwSDADYZB0MXhcCTfp8lz9cMckj2sY7NMnCvpu5onuc8vdCmz8X
-        gwx3F37OdcewiaULU8PxrOTj6pMjMU2gemue4K0VXVVbQcxXnihXRk47qrHjTiVpCYuT9i
-        u5ajJraZ62lvJC1USWkKhaMSOcYnAads3ML1Orv5jHW9gOWylXIGdS6JM4HXXHbnKWbsih
-        ofFZ7eDDnOns7v5zmM4cTlagy91IgCTRgsQoLHWp/M0wLA+OcmxSluSDascb6w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
-        content-transfer-encoding:content-type:content-type:mime-version
-        :references:in-reply-to:message-id:date:date:subject:subject
-        :from:from:received; s=mail20150812; t=1589558473; bh=HJg1YQnjJH
-        2FjMqqiNGWACpqo0E0oCOo3cQeEbiw2ec=; b=o2itdzwiOSFh8Rnmlpsdpgfbfv
-        Lhq9YyJ9VPIJ15xisCIJzijEfLbWCzUJzcTooy0D0A7JrSW7F9hqmyZWnmipOk6s
-        LWeK2TDm/5Peftg1asRnq6AZMuEFXWs0EfEMr3rJ5DzeBLxZR3Y8H3rJGR2TxvEx
-        zvzHKRQ5B2K0JsIGe5iJOatmqfcPQ2RFqHFXNaB/BSu4HbzsQAEuNIwHG9n+x7OD
-        lx3jxIL1rR1bt27TiEhA95FG/Qy0UGflexboLTRCcYYmofGBXindkLlcbVIF41r5
-        o2328UvWmvnVTsP4FOUugK9R7VFaH9SeuVxkbHC1+4WCkOa2Dc9VU4C4DHSQ==
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id kSmbJmCzHMgm; Fri, 15 May 2020 18:01:13 +0200 (CEST)
-From:   =?UTF-8?q?Bernhard=20=C3=9Cbelacker?= <bernhardu@mailbox.org>
-To:     Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Bernhard=20=C3=9Cbelacker?= <bernhardu@mailbox.org>,
-        Otmar Meier <otmarjun.meier@nexgo.de>
-Subject: [PATCH v2] platform/x86: touchscreen_dmi: Add info for the Trekstor Yourbook C11B
-Date:   Fri, 15 May 2020 17:59:12 +0200
-Message-Id: <20200515155912.48032-1-bernhardu@mailbox.org>
-In-Reply-To: <CAHp75VfAeyMnwoJi8P0d4Gs5dziUQYhPGzS2fmev00UiRZ6vaQ@mail.gmail.com>
-References: <CAHp75VfAeyMnwoJi8P0d4Gs5dziUQYhPGzS2fmev00UiRZ6vaQ@mail.gmail.com>
+        Fri, 15 May 2020 12:01:42 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id E905A2B0445;
+        Fri, 15 May 2020 12:01:40 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id WvDpZCgW7c8G; Fri, 15 May 2020 12:01:40 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 7EB7E2B02F4;
+        Fri, 15 May 2020 12:01:40 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 7EB7E2B02F4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1589558500;
+        bh=/aqNzZiWyuXVYAibug7RythgCs3Q8Lsdz16EIlb5Tyc=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=lbJ/D6GGU42tlfpmNiHbQmDA2jyTSVHkD/r+v0Ne6vau2uECkEqiFySquEg8nEv1D
+         2AdQRYRiVjNh4N+VOr+gQuozwq0PAEyDjRC9blnkdYY+TTXLKY6xywrtaBCSI8EEeE
+         qqODC6wnpJNxyN4RxClpXpoi68+XowlC9eyVuQFxDvFf1Llpeogc/wj/VwhZb7aXxW
+         uvD603+ZbHACpuc54Kred4ERD9IcIsD56scysS/I5aaDwNMZTU9oYofyIf9NOvaXQ/
+         LG7wjA+KRmEzQs2LANQrbTQGMZjg7a26S1S48aZACJqU6qk1ttlH5bJTkEmDjkmON8
+         Pg96C+qJ+uDGQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id yIvyBPwYL-ii; Fri, 15 May 2020 12:01:40 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 6B6552B0798;
+        Fri, 15 May 2020 12:01:40 -0400 (EDT)
+Date:   Fri, 15 May 2020 12:01:40 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, paulmck <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, maz@kernel.org
+Message-ID: <1964654436.22367.1589558500351.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200515154525.GA23334@willie-the-truck>
+References: <20200505131602.633487962@linutronix.de> <20200505134100.771491291@linutronix.de> <427895535.20271.1589412514423.JavaMail.zimbra@efficios.com> <20200515140438.GA5974@lenoir> <20200515154525.GA23334@willie-the-truck>
+Subject: Re: [patch V4 part 1 27/36] arm64: Prepare arch_nmi_enter() for
+ recursion
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: D45021768
-X-Rspamd-Score: -5.40 / 15.00 / 15.00
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
+Thread-Topic: arm64: Prepare arch_nmi_enter() for recursion
+Thread-Index: Vn2wlOV3s1hSS0xvlByawy7gmci5vg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add touchscreen info for the Trekstor Yourbook C11B. It seems to
-use the same touchscreen as the Primebook C11, so we only add a new DMI
-match.
+----- On May 15, 2020, at 11:45 AM, Will Deacon will@kernel.org wrote:
 
-Cc: Otmar Meier <otmarjun.meier@nexgo.de>
-Reported-and-tested-by: Otmar Meier <otmarjun.meier@nexgo.de>
-Signed-off-by: Bernhard Übelacker <bernhardu@mailbox.org>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/touchscreen_dmi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> On Fri, May 15, 2020 at 04:04:39PM +0200, Frederic Weisbecker wrote:
+>> On Wed, May 13, 2020 at 07:28:34PM -0400, Mathieu Desnoyers wrote:
+>> > ----- On May 5, 2020, at 9:16 AM, Thomas Gleixner tglx@linutronix.de wrote:
+>> > 
+>> > > +#define arch_nmi_enter()						\
+>> > [...]							\
+>> > > +	___hcr = read_sysreg(hcr_el2);					\
+>> > > +	if (!(___hcr & HCR_TGE)) {					\
+>> > > +		write_sysreg(___hcr | HCR_TGE, hcr_el2);		\
+>> > > +		isb();							\
+>> > 
+>> > Why is there an isb() above ^ ....
+>> > 
+>> > > +	}								\
+>> > > +	/*								\
+>> > [...]
+>> > > -#define arch_nmi_exit()								\
+>> > [...]
+>> > > +	/*								\
+>> > > +	 * Make sure ___ctx->cnt release is visible before we		\
+>> > > +	 * restore the sysreg. Otherwise a new NMI occurring		\
+>> > > +	 * right after write_sysreg() can be fooled and think		\
+>> > > +	 * we secured things for it.					\
+>> > > +	 */								\
+>> > > +	barrier();							\
+>> > > +	if (!___ctx->cnt && !(___hcr & HCR_TGE))			\
+>> > > +		write_sysreg(___hcr, hcr_el2);				\
+>> > 
+>> > And not here ?
+>> 
+>> I have to defer to Will on this detail...
+> 
+> I think it's because we have to make sure that the register update has
+> taken effect before we can safely run the NMI handler (and so an ISB is
+> needed), but on the return path the exception return back to the interrupted
+> context has an implicit ISB so there's no need for an extra one here.
+> 
+> Make sense?
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 87591cea127a..f9d9045cdf40 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -1197,6 +1197,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_BIOS_VERSION, "TREK.G.WI71C.JGBMRBA05"),
- 		},
- 	},
-+	{
-+		/* Trekstor Yourbook C11B (same touchscreen as the Primebook C11) */
-+		.driver_data = (void *)&trekstor_primebook_c11_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "YOURBOOK C11B"),
-+		},
-+	},
- 	{
- 		/* Vinga Twizzle J116 */
- 		.driver_data = (void *)&vinga_twizzle_j116_data,
+Sure, as long as instructions executed between write_sysreg() and return
+from exception do not care, which I think should be the case.
+
+Thanks,
+
+Mathieu
+
 -- 
-2.26.2
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
