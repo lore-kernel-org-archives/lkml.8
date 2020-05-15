@@ -2,94 +2,117 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A83C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5C4920709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:44:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=juliacomputing-com.20150623.gappssmtp.com header.i=@juliacomputing-com.20150623.gappssmtp.com header.b="EL/0ZmnD"
+	by mail.kernel.org (Postfix) with ESMTP id DDD8E20671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:47:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589575624;
+	bh=o8jhoxy+OmoDCNcJwHU/bJPp4E8NrrFSVYgpX7Vyyc8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pvQo7x4pjSE4DboFtblmIpwB/zmPU8oagDH934glzrPJlazC48dUx1e4AEWjVnP+P
+	 oD2eL9Q1LUg1KsfdlRBxw1z6jeDprsr2uxlApKBYpNuvhyNzdfn8DclCDGDoMee137
+	 Djrl/rwGU7Qrqx4NeFwaOMamisFAOKevvGNefARk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgEOUoh (ORCPT
+        id S1726374AbgEOUrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:44:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgEOUog (ORCPT
+        Fri, 15 May 2020 16:47:04 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45269 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgEOUrD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:44:36 -0400
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B20C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:44:36 -0700 (PDT)
-Received: by mail-io1-xd32.google.com with SMTP id k6so4201654iob.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=juliacomputing-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZTVysy0/5xwOZqQ9WQNRID/d39HXhyeJhmjEaIIRaN0=;
-        b=EL/0ZmnD4zV1ZPVNKBHoMD1mSHsptMNDFEbmH7JnUu6LaQ4VfgO5knsXEh6MYEQeTP
-         x6WwPmOekh+ZPaXQD8Z+xo3BOmxB1tO9oq7+xNZt4nHq9JzRRo/kB/noGdLRWBT72wr+
-         P1ivq1K9uQcrV08TEjn7FnTOvnTXXcCdBMwtjmWlzmm3YoB2Sh/3c0hh1k1Gm23ytsuc
-         SJIJKF34mbRnjxY5+8yXsBpuiVzmud5klBVFPi4jXlfSxuBwHl/v8Q4opiW2U+9CU6y0
-         nsxRbWhfSRRSqmGxHBA5+ptLqA/e7cg2K57L3Mzg58XskmMH/ra72iuZKIV1KdVbcQ6x
-         sfxw==
+        Fri, 15 May 2020 16:47:03 -0400
+Received: by mail-pl1-f195.google.com with SMTP id u22so1377457plq.12;
+        Fri, 15 May 2020 13:47:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZTVysy0/5xwOZqQ9WQNRID/d39HXhyeJhmjEaIIRaN0=;
-        b=jqAdcx5m1HQ07XjU8p2S1eBuIGg2hZBQR+/QcFVWl/zXjdVbvZsg4PZAhdliv54HJe
-         oQCS5UzY3OjqDWSXxaG6UkXCzNsYfj4iQSZjjrb3ATw2vOM7H2L0I3fJMomWZhhqEeoe
-         E5y4Mwc4sxur/ldwCc9zehUVSy4rl2QYVbHJdb3lPUUmMyq+ALedmzj5d6dkAj9j+kVa
-         kvac54TNtD8YvgTSkRryqwNKZSbRfLJdZRrMPDWEYO93dxpptZbE5znsS55ctBI+btmk
-         WyHTbGFFhDz1oCxfkjZeG4C2co+QVrIKM5EppoGjtwzO5mD1KbMYuDcD/1DdTigR+iBT
-         6ZAw==
-X-Gm-Message-State: AOAM532+A8UceRaEpxbIAU4XaQCVjZo1kk+B3CvNSlpktGON5PQK1OD6
-        mPjp4OB9lBVr3Y+5X7SqyDiWuc1RkcNQsG9E+wKgJCXz
-X-Google-Smtp-Source: ABdhPJxkMGRph1yex/EqbfiAYz3QnSvMLGz7CWyEAilbUvr8xbLyxEr5zonPDuT1C9W5C/VYQ3poNHkI9BP8hLpTbKc=
-X-Received: by 2002:a02:7611:: with SMTP id z17mr4929634jab.143.1589575474548;
- Fri, 15 May 2020 13:44:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=bl4gmCDPSUzHnX+jLpXyZUJERfeGYaFlQRMMArtCGYw=;
+        b=oeOXGsr4+HBzYqZnxvIM2ZOj7Jn+xUjXCTSOan+GC9hFglZuNbccQlY1DDZsPy7gHl
+         gpbwsRsp+qh0rFDCxsiOOkS+peI3zeLUS4mnTRnkg77WVrnLcvVH0iU4TPHKvNGuSmgs
+         9OVmoU/wD51jBHwmjVbVf3vvO7fzwNvNSPD7VBmkfIFOE0OP39LctnuYeV5q3gOF4Tt4
+         B7MkKNpnIa43QOuGsZUp3f4gEZy3g67FNILOxpAXAqnykLHeZKkgeJ4wFqAdUVEcel4Q
+         HK9RStpZDTsaRB8PdEoIqP03zu4AAtSApppguTBnZCKnf+GzLl8rE4F3eLzx/eWD47Sl
+         EOrw==
+X-Gm-Message-State: AOAM533+AfYSBNNGDenxpFcF+WGyjrtoso8IfhSNCVwXo6tUH5nojLN7
+        GQuuaVk3jIgTVvne8y56aKs=
+X-Google-Smtp-Source: ABdhPJzvKeCybmqcU3uCZ47Ca1r5orOtVdlDMNpjFIpmiXjNhQsQ3lh6XlyPvdvbjVArLirXx76prA==
+X-Received: by 2002:a17:902:7596:: with SMTP id j22mr5189994pll.226.1589575623031;
+        Fri, 15 May 2020 13:47:03 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id e12sm2387775pgv.16.2020.05.15.13.47.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 13:47:01 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id A324540246; Fri, 15 May 2020 20:47:00 +0000 (UTC)
+Date:   Fri, 15 May 2020 20:47:00 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Mimi Zohar <zohar@kernel.org>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH v5 0/7] firmware: add partial read support in
+ request_firmware_into_buf
+Message-ID: <20200515204700.GC11244@42.do-not-panic.com>
+References: <20200508002739.19360-1-scott.branden@broadcom.com>
+ <1589387039.5098.147.camel@kernel.org>
 MIME-Version: 1.0
-References: <CABV8kRyHrDMK4o=UZZZWJMuQNjPA8Xuoj-JFF-Lsx26fBTR0WA@mail.gmail.com>
- <20200515121346.GA22919@willie-the-truck>
-In-Reply-To: <20200515121346.GA22919@willie-the-truck>
-From:   Keno Fischer <keno@juliacomputing.com>
-Date:   Fri, 15 May 2020 16:43:58 -0400
-Message-ID: <CABV8kRxD3_zh_WJy0jWVpxxNG_NSwoTJXdLd8Ym9Bm7PbHhftQ@mail.gmail.com>
-Subject: Re: PTRACE_SYSEMU behavior difference on arm64
-To:     Will Deacon <will@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1589387039.5098.147.camel@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 8:13 AM Will Deacon <will@kernel.org> wrote:
-> But it also
-> means that nobody is using this on arm64, so we could also consider removing
-> it entirely. Did you spot this because you are trying to use it for
-> something or just by inspection/unit-testing?
+On Wed, May 13, 2020 at 12:23:59PM -0400, Mimi Zohar wrote:
+> Hi Scott,
+> 
+> On Thu, 2020-05-07 at 17:27 -0700, Scott Branden wrote:
+> > Please consider this version series ready for upstream acceptance.
+> > 
+> > This patch series adds partial read support in request_firmware_into_buf.
+> > In order to accept the enhanced API it has been requested that kernel
+> > selftests and upstreamed driver utilize the API enhancement and so
+> > are included in this patch series.
+> > 
+> > Also in this patch series is the addition of a new Broadcom VK driver
+> > utilizing the new request_firmware_into_buf enhanced API.
+> 
+> Up to now, the firmware blob was read into memory allowing IMA to
+> verify the file signature.  With this change, ima_post_read_file()
+> will not be able to verify the file signature.
+> 
+> (I don't think any of the other LSMs are on this hook, but you might
+> want to Cc the LSM or integrity mailing list.)
 
-No, I was trying to port a tool from x86 and nothing made sense for
-many hours :). (it was quite a bit of debugging, because the
-syscall that it was supposed to skip installed a seccomp filter,
-which then later veto'd random syscalls making the
-symptoms quite confusing). Having PTRACE_SYSEMU isn't
-critical, but we might as well support it.
-It makes things a bit more efficient and is probably safer
-(if it works correctly ;). The patch is fairly small. Will validate
-and then send it here for review.
+Scott, so it sounds we need a resolution for pread for IMA for file
+signature verification. It seems that can be addressed though. Feel
+free to submit the u32 flag changes which you picked up on though in
+the meantime.
 
-
-Keno
+  Luis
