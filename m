@@ -2,130 +2,93 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DABC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8BC62073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:30:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KibfLZUk"
+	by mail.kernel.org (Postfix) with ESMTP id 3008220727
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:31:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgEORax (ORCPT
+        id S1726713AbgEORbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:30:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726494AbgEORav (ORCPT
+        Fri, 15 May 2020 13:31:25 -0400
+Received: from mailomta22-sa.btinternet.com ([213.120.69.28]:44947 "EHLO
+        sa-prd-fep-046.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726168AbgEORbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:30:51 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC59DC061A0C;
-        Fri, 15 May 2020 10:30:49 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id h188so2493887lfd.7;
-        Fri, 15 May 2020 10:30:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=h/F90YLQpUp0HHTIQUShz3e2nnAFVjUCmhXhEdzbwnY=;
-        b=KibfLZUk0ftdUq5UDaH2o15irQFHqyz8gi8IqEMsrfk7C4YJfNpMj1v3aDGFgUiDl+
-         Ei/Kt5/khtVtNkdg/aICAD6wcWLCfORTzMRxOmigg+/vPxaELL+8f1WC/9y11fbjbHfc
-         GkSWrvrsVc/rgXn+5qNqg/TRJrPdhUTl+jp0IwbwXhNHIeTopMkk3ImSd+kEUIvFqBr+
-         Yqg6bF92+Qyql0MoOeSdMxXGCb9h+vlV3qey2xv/lkRFsB9TtIqHzC7xJlYRvN6c3ydT
-         twT6Vi7ldFq7ZGduwpM5To/mB8XIFwT2UhuzlXRkcydEWl9zsgVqe5PPOOGegc1+g2vc
-         B3mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=h/F90YLQpUp0HHTIQUShz3e2nnAFVjUCmhXhEdzbwnY=;
-        b=sEraOlyV+/B5BCM5fiPv4vnBkb/Xjerwg0gBuMwzgN1kTq5BEwxomuko6Dbk0nEhEi
-         /P7r56yrQmZvrsSjA+GhAOOPzvouDGVPy5MTEbRopvFU9Fh/OkXEGLtya5ILdLQow9v1
-         gm29tlcZCgVAnVtuGcigFqm5iEQ6ceJ8Aw1j9+b3+2f3+4oBiZTB1Whs7m8vX1e+zEQL
-         6MojS8lWiV4L/sbhcL2OJ2hbNrBOFdp4KmHp/bdI0Dyv5UHbg6n/KHMBgLmbxnl93UYq
-         eB/oSHgsiNAdykavktFI7pTwtaUGvVy6cGieDja844eSJaFt/oSvLRucR0m3hhw1CxgG
-         2m2A==
-X-Gm-Message-State: AOAM531H78aLFnwD4Natz1e6xv29Qd4AAoSNr9kXz3W2zcyixZjKeGRw
-        RwwKmMh32NnMukg4thTjJ+A+F+1L
-X-Google-Smtp-Source: ABdhPJzLU8VsfwD5/Dk7DrFX5XwnW81Mi8DgWZ+Ksz9fXlo1zTYn5GD+V6GGX8UA5KK8Mn9lMX5Wug==
-X-Received: by 2002:ac2:5ccf:: with SMTP id f15mr3073677lfq.216.1589563847942;
-        Fri, 15 May 2020 10:30:47 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id j24sm1471099ljg.60.2020.05.15.10.30.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 10:30:45 -0700 (PDT)
-Subject: Re: [PATCH v1] mfd: tps65910: Correct power-off programming sequence
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Zack Pearsall <zpearsall@yahoo.com>,
-        linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200514205022.7024-1-digetx@gmail.com>
- <20200515110754.GB20564@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <7e1eaac5-34d1-f76e-e4c5-bc36f56a7064@gmail.com>
-Date:   Fri, 15 May 2020 20:30:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200515110754.GB20564@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 15 May 2020 13:31:25 -0400
+Received: from sa-prd-rgout-001.btmx-prd.synchronoss.net ([10.2.38.4])
+          by sa-prd-fep-046.btinternet.com with ESMTP
+          id <20200515173122.JWXS4105.sa-prd-fep-046.btinternet.com@sa-prd-rgout-001.btmx-prd.synchronoss.net>;
+          Fri, 15 May 2020 18:31:22 +0100
+Authentication-Results: btinternet.com;
+    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
+X-Originating-IP: [31.53.141.224]
+X-OWM-Source-IP: 31.53.141.224 (GB)
+X-OWM-Env-Sender: j.oldman998@btinternet.com
+X-VadeSecure-score: verdict=clean score=0/300, class=clean
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduhedrleekgdduuddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuueftkffvkffujffvgffngfevqffopdfqfgfvnecuuegrihhlohhuthemuceftddunecunecujfgurhephffvufffkffosedttdertdertddtnecuhfhrohhmpeflohhhnhcuqfhlughmrghnuceojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqeenucggtffrrghtthgvrhhnpeegfedthfefueeihffgkeefteehuddttdefudetveelveefvdefhfejieejhffggfenucfkphepfedurdehfedrudeguddrvddvgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopehhvghnrhihrdhhohhmvgdpihhnvghtpeefuddrheefrddugedurddvvdegpdhmrghilhhfrhhomhepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoeguvghvvghlsegurhhivhgvrhguvghvrdhoshhuohhslhdrohhrgheqpdhrtghpthhtohepoehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrgheqpdhrtghpthhtohepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgheq
+X-RazorGate-Vade-Verdict: clean 0
+X-RazorGate-Vade-Classification: clean
+Received: from henry.home (31.53.141.224) by sa-prd-rgout-001.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
+        id 5E3A241110DA42BA; Fri, 15 May 2020 18:31:22 +0100
+From:   John Oldman <john.oldman@polehill.co.uk>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        John Oldman <john.oldman@polehill.co.uk>
+Subject: [PATCH] staging: rtl8723bs: Using comparison to true is error prone
+Date:   Fri, 15 May 2020 18:31:08 +0100
+Message-Id: <20200515173108.14739-1-john.oldman@polehill.co.uk>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.05.2020 16:30, Michał Mirosław пишет:
-> On Thu, May 14, 2020 at 11:50:21PM +0300, Dmitry Osipenko wrote:
->> This patch fixes system shutdown on a devices that use TPS65910 as a
->> system's power controller. In accordance to the TPS65910 datasheet, the
->> PMIC's state-machine transitions into the OFF state only when DEV_OFF
->> bit of DEVCTRL_REG is set. The ON / SLEEP states also should be cleared,
->> otherwise PMIC won't get into a proper state on shutdown. Devices like
->> Nexus 7 tablet and Ouya game console are now shutting down properly.
->>
->> Tested-by: Zack Pearsall <zpearsall@yahoo.com>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/mfd/tps65910.c | 12 ++++++++++--
->>  1 file changed, 10 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
->> index 11959021b50a..22116cee411d 100644
->> --- a/drivers/mfd/tps65910.c
->> +++ b/drivers/mfd/tps65910.c
->> @@ -440,8 +440,16 @@ static void tps65910_power_off(void)
->>  			DEVCTRL_PWR_OFF_MASK) < 0)
->>  		return;
->>  
->> -	tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
->> -			DEVCTRL_DEV_ON_MASK);
->> +	if (tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
->> +			DEVCTRL_DEV_SLP_MASK) < 0)
->> +		return;
->> +
->> +	if (tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
->> +			DEVCTRL_DEV_ON_MASK) < 0)
->> +		return;
->> +
->> +	tps65910_reg_set_bits(tps65910, TPS65910_DEVCTRL,
->> +			DEVCTRL_DEV_OFF_MASK);
->>  }
-> 
-> Isn't it enough to update the DEVCTRL with just one
-> tps65910_reg_update_bits()?
+fix below issue reported by checkpatch
 
-IIRC, we've tried that variant and it didn't work. Although, maybe it
-was affected by some other changes that we were trying simultaneously,
-so could be worthwhile to re-check it. Thank you for the comment!
+CHECK: Using comparison to true is error prone
+CHECK: Using comparison to false is error prone
+
+Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
+---
+ drivers/staging/rtl8723bs/core/rtw_security.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/core/rtw_security.c b/drivers/staging/rtl8723bs/core/rtw_security.c
+index 5ebf691bd743..0f95009a30b6 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_security.c
++++ b/drivers/staging/rtl8723bs/core/rtw_security.c
+@@ -756,7 +756,7 @@ u32 rtw_tkip_decrypt(struct adapter *padapter, u8 *precvframe)
+ 				static u32 no_gkey_bc_cnt;
+ 				static u32 no_gkey_mc_cnt;
+ 
+-				if (psecuritypriv->binstallGrpkey == false) {
++				if (!psecuritypriv->binstallGrpkey) {
+ 					res = _FAIL;
+ 
+ 					if (start == 0)
+@@ -1837,7 +1837,7 @@ u32 rtw_aes_decrypt(struct adapter *padapter, u8 *precvframe)
+ 				static u32 no_gkey_bc_cnt;
+ 				static u32 no_gkey_mc_cnt;
+ 
+-				if (psecuritypriv->binstallGrpkey == false) {
++				if (!psecuritypriv->binstallGrpkey) {
+ 					res = _FAIL;
+ 
+ 					if (start == 0)
+@@ -2369,7 +2369,7 @@ u8 rtw_handle_tkip_countermeasure(struct adapter *adapter, const char *caller)
+ 	struct security_priv *securitypriv = &(adapter->securitypriv);
+ 	u8 status = _SUCCESS;
+ 
+-	if (securitypriv->btkip_countermeasure == true) {
++	if (securitypriv->btkip_countermeasure) {
+ 		unsigned long passing_ms = jiffies_to_msecs(jiffies - securitypriv->btkip_countermeasure_time);
+ 		if (passing_ms > 60*1000) {
+ 			DBG_871X_LEVEL(_drv_always_, "%s("ADPT_FMT") countermeasure time:%lus > 60s\n",
+-- 
+2.17.1
+
