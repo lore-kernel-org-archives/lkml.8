@@ -2,156 +2,216 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64CF92065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976822065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:42:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o0D23+tF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgEOBkl (ORCPT
+        id S1728280AbgEOBmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 21:40:41 -0400
-Received: from mga07.intel.com ([134.134.136.100]:47256 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgEOBkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 21:40:41 -0400
-IronPort-SDR: Z/vYp6dr0/XjbCsNuq2mVwc4crf29qmaaK+y2P2HeMnPfL7w/QVMVoiO/Y2VUdYF2lABOK203P
- ANQ9hcF971tw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 18:40:40 -0700
-IronPort-SDR: Wvbu9Q5t/2hVvHxUMIi8gCBcj4w3EPgPRwpVW1YowtZUb5HW6hb9q7UzjKS53ZxyW6RPQuBacP
- ZL+uRBAgjZfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,393,1583222400"; 
-   d="scan'208";a="253653996"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 14 May 2020 18:40:38 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jZPL4-0002SR-4d; Fri, 15 May 2020 09:40:38 +0800
-Date:   Fri, 15 May 2020 09:40:25 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/splitlock] BUILD SUCCESS
- 0ed7bf1d92eafc37bb9eb7c8692a8e44d24f9b99
-Message-ID: <5ebdf309.INAct33Cn6Vbrowl%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 14 May 2020 21:42:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbgEOBms (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 21:42:48 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F42C061A0C;
+        Thu, 14 May 2020 18:42:48 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id g4so489098ljl.2;
+        Thu, 14 May 2020 18:42:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7y6P20mSjIlOn2i5eYB9QskqPv8tZPzDkHJ3IuuNaoY=;
+        b=o0D23+tFHO0Vk+1ZbsDxhvxetGhvfbisXBeInmtob2JiocHgdsVZLNc3LZEnTApYUi
+         LjAK02hRyTg1TQ2Ow1FISZsYBi6Jbork6ea2SIdaLNlXDg2eofxkAsbCSaG4rgpaF+kr
+         HUbLRY/nd0kwqYTYut0MRt9okNN65z+pFLpap/Bw+wcX6Zr6Kx2XTXGbMmCUPjvTF1C4
+         XNQ35HWHz6eTATmeFKP0T1NVcPPdSyJhCR2uWnnMpB3EK4N1F2cUUcSHWV7gscgBrhHA
+         /9ZsxpVUg6djnZOJ3ukP6lIwlS8apmqB4sY0FN1iGsXi4TknFafNoQzUBQ4cU9MYyLq1
+         spHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7y6P20mSjIlOn2i5eYB9QskqPv8tZPzDkHJ3IuuNaoY=;
+        b=a8QAUPLbnGb1w6UZGbzlkFWtHJteNmLK02L8XQ/5/schvFaMLawY69ha/HLa7oWXBe
+         7FWpMXrtTa+FvR1es+Y5zKprsQsqph6+6UFWAtX+inHk7oYFagjuHTqkrtib5Y03WHKL
+         b87xalbmoGvumZdJXtSW1ASmcNPxZNFz4y+uBFV79KKykOr38gcnCG/+nMMrePvVIYSi
+         ugaz0O5eWfFHeddYoJiblkak5kJLsNs1fkHDLbywZ/nylcN6856Espu4Mxo6qWfJNqOc
+         Ua7miVOt8kcUTTqNgExTXhnmGHM/3fbWwLB2C5FS4pkUduSxIehlG4MEUBkGX7VJsruH
+         faFg==
+X-Gm-Message-State: AOAM532tFCde2Ghx64N2AJIHnO+Ae+bckxSbTlSCW2MlK7Kfwah3afW6
+        jGcBck7u7MjcSUJjfy4eWe4=
+X-Google-Smtp-Source: ABdhPJwOyQG8gqtgWYpCM76VtPVOdZuJG/tE2LYnDij4UZ/uWlNv7vguADc6LSGP/yRKtnyIAjl0dg==
+X-Received: by 2002:a2e:8347:: with SMTP id l7mr677120ljh.243.1589506966899;
+        Thu, 14 May 2020 18:42:46 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.gmail.com with ESMTPSA id i1sm309669lja.3.2020.05.14.18.42.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 18:42:46 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>,
+        =?UTF-8?q?Nils=20=C3=96stlund?= <nils@naltan.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
+        Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>
+Subject: [PATCH v4 0/6] Introduce NVIDIA Tegra Partition Table
+Date:   Fri, 15 May 2020 04:41:37 +0300
+Message-Id: <20200515014143.12984-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/splitlock
-branch HEAD: 0ed7bf1d92eafc37bb9eb7c8692a8e44d24f9b99  x86/split_lock: Add Icelake microserver CPU model
+Hello,
 
-elapsed time: 484m
+This series adds support for the NVIDIA Tegra Partition Table format,
+which is needed in order to support consumer-grade Tegra-based devices
+by the upstream kernel.  These devices have Secure Boot enabled and it
+can't be disabled, and thus, it's not possible to easily modify bootloader
+and eMMC storage partitioning.
 
-configs tested: 89
-configs skipped: 107
+Big thanks to everyone who helped with figuring out the TegraPT format
+and with testing!
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Changelog:
 
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-sparc                            allyesconfig
-m68k                             allyesconfig
-m68k                       m5208evb_defconfig
-s390                                defconfig
-arm                         socfpga_defconfig
-mips                        bcm63xx_defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             allmodconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a006-20200514
-i386                 randconfig-a005-20200514
-i386                 randconfig-a003-20200514
-i386                 randconfig-a001-20200514
-i386                 randconfig-a004-20200514
-i386                 randconfig-a002-20200514
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-x86_64                              defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+v4: - Scanning of the eMMC boot partitions has been dropped because it
+      requires a bit too messy hacks in the kernel. We can live without
+      this feature, at least for now it's not really needed.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+    - Instead of the dropped boot partitions scanning, the "gpt_sector="
+      command line option has been brought back [1]. But now it's done
+      in a different way, not bothering platforms other than Tegra and
+      not touching block devices other than eMMC, which was requested during
+      of the [1] review. The "gpt_sector=" usage is needed when partition
+      table is inaccessible by kernel, which is the case for the Ouya game
+      console device for example. Please note that "gpt_sector=" is not
+      available on all devices, such devices will fall back to the TegraPT,
+      Samsung Galaxy Tab 10.1 is an example of a such device.
+
+      [1] https://patchwork.ozlabs.org/project/linux-tegra/patch/20200219162339.16192-1-digetx@gmail.com/
+
+    - We got a bit more broad testing and discovered that Samsung Galaxy
+      Tab 10.1 uses 2K logical sectors instead of 4K. So the 2K sectors
+      are supported now by the TegraPT parser. Thanks to Nils Östlund for
+      the testing!
+
+    - TegraPT parser now utilizes "tegraboot=" cmdline option which is
+      passed to kernel by the NVIDIA's bootloader. It's used for verifying
+      that SDMMC device is *the* boot source.
+
+    - Added patch that exposes Boot Configuration Table to userspace via
+      sysfs. Thanks to Michał Mirosław for the suggestion!
+
+    - Misc changes:
+        - The EB2 (second bootloader) partition is added to the list of
+          known partitions. Used by the Galaxy Tab 10.
+
+        - The blkdev logical sector size is checked now, for consistency.
+          It always should be 512 bytes on the supported/tested devices.
+
+        - Verbose error messages are replaced with pr_debug().
+
+v3: - Fixed "BUG: KASAN: slab-out-of-bounds in tegra_partition". Thanks to
+      Peter Geis for noticing the problem.
+
+    - The MMC boot partitions scanning is now opt-in. See this patch:
+
+        mmc: block: Support partition-table scanning on boot partitions
+
+    - The found MMC boot partitions won't be assigned to the MMC boot
+      block device ever due to the new GENHD_FL_PART_SCAN_ONCE flag.
+
+      This makes us to ensure that the old behavior of the MMC core is
+      preserved for a non-Tegra MMC-block users.
+
+    New patches in v3:
+
+        block: Introduce GENHD_FL_PART_SCAN_ONCE
+        mmc: sdhci-tegra: Enable boot partitions scanning on Tegra20 and Tegra30
+
+v2: - Addressed v1 review comments from Stephen Warren by using BIT for
+      locating BCT position in IRAM.
+
+    - Added more validations to the TegraPT parser: partition type is
+      verified, eMMC instance ID is verified.
+
+    - TegraPT parser now doesn't touch any devices other than eMMC.
+
+    - EKS (encrypted keys) partition is blacklisted now.
+
+    - Implemented eMMC boot partitions scanning. These new patches are
+      added in a result:
+
+        mmc: block: Add mmc_bdev_to_part_type() helper
+        mmc: block: Add mmc_bdev_to_area_type() helper
+        mmc: block: Add MMC_QUIRK_RESCAN_MAIN_BLKDEV
+        mmc: block: Enable partition-table scanning for boot partitions
+        partitions/tegra: Implement eMMC boot partitions scanning
+
+Dmitry Osipenko (6):
+  mmc: core: Add raw_boot_mult field to mmc_ext_csd
+  mmc: block: Add mmc_bdev_to_card() helper
+  partitions: Introduce NVIDIA Tegra Partition Table
+  partitions/efi: Support GPT entry lookup at a non-standard location
+  partitions/tegra: Support gpt_sector= command line option
+  soc/tegra: Expose Boot Configuration Table via sysfs
+
+ arch/arm/mach-tegra/tegra.c   |  58 ++++
+ block/partitions/Kconfig      |   8 +
+ block/partitions/Makefile     |   1 +
+ block/partitions/check.h      |   2 +
+ block/partitions/core.c       |   4 +
+ block/partitions/efi.c        |  16 +
+ block/partitions/efi.h        |   2 +
+ block/partitions/tegra.c      | 603 ++++++++++++++++++++++++++++++++++
+ drivers/mmc/core/block.c      |  15 +
+ drivers/mmc/core/mmc.c        |   2 +
+ drivers/soc/tegra/Makefile    |   1 +
+ drivers/soc/tegra/bootdata.c  |  51 +++
+ drivers/soc/tegra/common.c    |  17 +
+ include/linux/mmc/blkdev.h    |  13 +
+ include/linux/mmc/card.h      |   1 +
+ include/soc/tegra/bootdata.h  |  48 +++
+ include/soc/tegra/common.h    |  12 +
+ include/soc/tegra/partition.h |  83 +++++
+ 18 files changed, 937 insertions(+)
+ create mode 100644 block/partitions/tegra.c
+ create mode 100644 drivers/soc/tegra/bootdata.c
+ create mode 100644 include/linux/mmc/blkdev.h
+ create mode 100644 include/soc/tegra/bootdata.h
+ create mode 100644 include/soc/tegra/partition.h
+
+-- 
+2.26.0
+
