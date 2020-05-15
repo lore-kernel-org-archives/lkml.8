@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F745C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08278207C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49D0207CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:04:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XabRop8t"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H9vVXern"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgEOPEG (ORCPT
+        id S1727033AbgEOPEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:04:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39880 "EHLO
+        Fri, 15 May 2020 11:04:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726879AbgEOPED (ORCPT
+        by vger.kernel.org with ESMTP id S1726948AbgEOPEF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:04:03 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 554ACC05BD09
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:04:03 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id a7so2885171qvl.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:04:03 -0700 (PDT)
+        Fri, 15 May 2020 11:04:05 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E8DFC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:04:05 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id s8so2831157ybj.9
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:04:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=0j39NvXrsyBh4wsV8IVEExoloRXnW3VKds76JrKCKC0=;
-        b=XabRop8tK1h28an1x7LJCVD4HeSuT2hdXYUuJr3M5Kvpu3co2l97LA7K1hagIIbBZB
-         XOxiJwoRDk8RSV86zobtuQc3rcaptEwWqy8FFh+zZsXBS1GWleUzjDjeec97h4T2zXiB
-         QATYP6GUomRJK7598Y70HX0WNyoUNf9ckf7tKLV3D88RTM1TqLzjSTDLFnKkqleYkmGd
-         uS7NyOfNJUXHzy8+X3hVXQDoycPbxHk4quHccTPIy/KqFkceRDkuSy4zuay79Juo3AA+
-         m13am3WymFIVGSr9h2ZHCUg3NDZwrUpiZscfPrYK9m1Uw3GKHyWq+WSReaFWgiTDn4Pd
-         XL0Q==
+        bh=bOmDunhfUaahaaiKVLHLTe7nnH/k9WP55G/+iETR4Xc=;
+        b=H9vVXern9rQlSCkWN6cJri4qpvTSvDQ+XyA5HZCmdoHBWyKOW9AXcUWBWjH1hT8MYf
+         clXHX9rWsmDhpfkER35klYaEnlM71Vyddf+bQIbTE3YTPAbP+LN0EUhcERiBWFHHxv0y
+         qjrRKkP2kgSr28zIEAmbjgegZ+AjBroIw6vQ5X9fCG0szdyV2gt8+rsEb4Qn0bStPQjh
+         LFYXIR+OfiUE8pBcPSFafrLlpVHvslGxti0xfV0E9aYzWFZiUM2zS+sYes8pgVrOJEG9
+         x8+/GBoWWG2pwkonjaaxGqiA5si7/N4/seynPw6womoYOhT/lGSKtIdrc9CKPEamqoAk
+         8/vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=0j39NvXrsyBh4wsV8IVEExoloRXnW3VKds76JrKCKC0=;
-        b=qmQ8PxS9kLPGaeUszkj4YwKTElhT0KTGHCotpEpwl3kYf+2kPEmwWaxjBQtNwqNR41
-         SHgFCT4LhII/UW/6k5e3gI0myvNhBWU6K1JNGLY8/VuOV+WShrPTbpPVE/xIyoMWwawb
-         I75VJxQ4BQ4MUqN8i2UcK9WFbVaInwyY9SBfKpPhlZuuB8FIyABDKV4EwgMkbgUqN2j+
-         yXNVOsAL9wwHSOUwgKYbD9/xZkSmU9J7xrsP+7zMNv1hV5YkwaRuB1THy8hEfNOT1o8n
-         TMsoMY6LG5s+CL1kJuBCLaqAlRAS62fdtoVCPmGtlLWuTCtyMcgcqNAoSgrpAOyWp2ME
-         mN6g==
-X-Gm-Message-State: AOAM531iwMrydVUuNRcHgeLG2AB/ZrnJw2e0CQpLKHENN7ymJPg/EYsd
-        l3xNTQPnqm9gxTGxoYoTIJmn4xwgLw==
-X-Google-Smtp-Source: ABdhPJyBPw4RHtIf0yz3478t+CC7J8CekAFyRt5Q79feW/0GmryL/iqFy8yGlHYiczLcqfHz+8AM0FZh+Q==
-X-Received: by 2002:ad4:5604:: with SMTP id ca4mr3961451qvb.6.1589555042352;
- Fri, 15 May 2020 08:04:02 -0700 (PDT)
-Date:   Fri, 15 May 2020 17:03:35 +0200
+        bh=bOmDunhfUaahaaiKVLHLTe7nnH/k9WP55G/+iETR4Xc=;
+        b=GWsnh5Ey5Lr0BXT4g6XbZjjsz+kd60EUi5l9hWHoomB3eIVsS3iEUhZ1nSqhcHb7or
+         jZbEucdyNYiGj89LvUI/+ohj5ORZoRsPq9Nr5flrgOnf8uPWOX37eJAY9Io6BbRiIBSS
+         9iA+TKt+Ftj1SMUfZ8V1Y0xKQ5CAAcU5bhkf9CuAKIXP/X0FHyWZnUwbsEhDiRcCLmv1
+         X7xo0emZScyc55jotUvDvYcfNHQVDC8ijZ8PaYVqRomhe2WT4LSIphObCeD9CYXoPO0D
+         YY26OyE9MlfeWjmkZgAPswSUD4V22og/XTtaw5BN2szLvpXBjzGkdo38kwc8PnRYot7G
+         qUiQ==
+X-Gm-Message-State: AOAM530QQ6WjuKKLkSyXw/CGr9gpPSf1XPRzbB8ND+HNNGkvszJ+BkKy
+        ipicyrr1AYO1qF8InwL43uJFwSeQyA==
+X-Google-Smtp-Source: ABdhPJzHNvOh6utxf80pvXkEfp6huzTyX1tIpDpSlMdH7iU5qpuglvMC/4Kw7iIGRzCWndRCEeLasx5zVA==
+X-Received: by 2002:a25:d786:: with SMTP id o128mr5956484ybg.519.1589555044732;
+ Fri, 15 May 2020 08:04:04 -0700 (PDT)
+Date:   Fri, 15 May 2020 17:03:36 +0200
 In-Reply-To: <20200515150338.190344-1-elver@google.com>
-Message-Id: <20200515150338.190344-8-elver@google.com>
+Message-Id: <20200515150338.190344-9-elver@google.com>
 Mime-Version: 1.0
 References: <20200515150338.190344-1-elver@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH -tip 07/10] kcsan: Update Documentation to change supported compilers
+Subject: [PATCH -tip 08/10] READ_ONCE, WRITE_ONCE: Remove data_race() wrapping
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com
 Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
@@ -75,38 +75,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The volatile access no longer needs to be wrapped in data_race(),
+because we require compilers that emit instrumentation distinguishing
+volatile accesses.
+
 Signed-off-by: Marco Elver <elver@google.com>
 ---
- Documentation/dev-tools/kcsan.rst | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ include/linux/compiler.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/dev-tools/kcsan.rst b/Documentation/dev-tools/kcsan.rst
-index f4b5766f12cc..ce4bbd918648 100644
---- a/Documentation/dev-tools/kcsan.rst
-+++ b/Documentation/dev-tools/kcsan.rst
-@@ -8,8 +8,7 @@ approach to detect races. KCSAN's primary purpose is to detect `data races`_.
- Usage
- -----
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 17c98b215572..fce56402c082 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -229,7 +229,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ #define __READ_ONCE_SCALAR(x)						\
+ ({									\
+ 	typeof(x) *__xp = &(x);						\
+-	__unqual_scalar_typeof(x) __x = data_race(__READ_ONCE(*__xp));	\
++	__unqual_scalar_typeof(x) __x = __READ_ONCE(*__xp);		\
+ 	kcsan_check_atomic_read(__xp, sizeof(*__xp));			\
+ 	smp_read_barrier_depends();					\
+ 	(typeof(x))__x;							\
+@@ -250,7 +250,7 @@ do {									\
+ do {									\
+ 	typeof(x) *__xp = &(x);						\
+ 	kcsan_check_atomic_write(__xp, sizeof(*__xp));			\
+-	data_race(({ __WRITE_ONCE(*__xp, val); 0; }));			\
++	__WRITE_ONCE(*__xp, val);					\
+ } while (0)
  
--KCSAN is supported in both GCC and Clang. With GCC it requires version 7.3.0 or
--later. With Clang it requires version 7.0.0 or later.
-+KCSAN requires Clang version 11 or later.
- 
- To enable KCSAN configure the kernel with::
- 
-@@ -121,12 +120,6 @@ the below options are available:
-     static __no_kcsan_or_inline void foo(void) {
-         ...
- 
--  Note: Older compiler versions (GCC < 9) also do not always honor the
--  ``__no_kcsan`` attribute on regular ``inline`` functions. If false positives
--  with these compilers cannot be tolerated, for small functions where
--  ``__always_inline`` would be appropriate, ``__no_kcsan_or_inline`` should be
--  preferred instead.
--
- * To disable data race detection for a particular compilation unit, add to the
-   ``Makefile``::
- 
+ #define WRITE_ONCE(x, val)						\
 -- 
 2.26.2.761.g0e0b3e54be-goog
 
