@@ -2,97 +2,88 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF470C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C32C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8CFD206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:43:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sRndifWO"
+	by mail.kernel.org (Postfix) with ESMTP id 8609F206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589528688;
+	bh=4ulSJZHEbPwPApbgbMErWimKM8LRMGl1NjDhth/liIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hTydRLhkxldPrr1gY+pvLNO3ZTSFo8HCN6XUZU+89V2pH+ndzWD//bhX82V3bvnYn
+	 Pc1aRnfIibLqUj7Dv3AHgInLfIC3slQKzf/rDzO7Hn+jrc9hUkDzpPBwJrvcxNSP5G
+	 Y7qVXdLpK1vKwFgf2VqqGjtPU8EXzGQSv7NQ5HEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgEOHns (ORCPT
+        id S1726727AbgEOHor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 03:43:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726646AbgEOHns (ORCPT
+        Fri, 15 May 2020 03:44:47 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52439 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbgEOHor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 03:43:48 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B869C061A0C;
-        Fri, 15 May 2020 00:43:46 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id u6so1170867ljl.6;
-        Fri, 15 May 2020 00:43:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:mime-version:message-id
-         :content-transfer-encoding;
-        bh=6fcd89wgkSgqVBNdrPfzmqnnEY3Nqs7eMpEhxlqoW28=;
-        b=sRndifWOeUllz2bNNyLXMNWvsHJ4ALq6Y4YEs4M0JodNYQmEVzz19fSROv2d4VdgQQ
-         apxYkq5M7fvpMwNBblkBomDhRaruDw3mL5X+Ae8RPLw5lUn/9Ih95B9L9XmdQFSuwdWE
-         eCfQKt81lAW1Ovb+rpzIQKBvn7xIPzt5Y56i6FWlAIN8vAowThL1CfDjkBVsgMBNaUv9
-         YY/PjHwpTczSx06TYf/unI98i8rq8/yM3sW7uFB5RyQt8sM1uG4gYm8pGKkOPQsed+fg
-         HrOcEka3S8B4z3Msdtu40ngo4PflowOBAKI/pdK9dBrN85sW6RV3QAuW9rjEvXaO+KDw
-         QmaA==
+        Fri, 15 May 2020 03:44:47 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z4so112980wmi.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:44:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:mime-version:message-id
-         :content-transfer-encoding;
-        bh=6fcd89wgkSgqVBNdrPfzmqnnEY3Nqs7eMpEhxlqoW28=;
-        b=TF6W75ftXa+1v2opXd7gQPl7Wi33//YrPiQ29maJjHj1xHelraHIswy1TJ8omzU6xn
-         IxY883hFGj181Zo7wfd88c1/q/uMHf4KeDVulQVTJ0uYqPY1hIjHjGg9EocgPyB3+fGp
-         xWbzDw2oNFIjYawK+lBT8OCPgE0CTPuh+F8XPnWPGCqvu11lNLjqTjEzfRWrO92Pl9RH
-         CixknnhvJLFDGbt0d3QvJ6uNJwE34fsmUWy6TXPYJY9zITFor2o6CfZD26/xhthYnRFu
-         Hw/n2JMaXohdkZsaGMU3eZyjZszhCzejC7rL5+rLccQY4LM3rxiL61HhfaopKE4a+ORj
-         MHmg==
-X-Gm-Message-State: AOAM5336KqsYz4yhFd8rvvTjVKkoifi9DoodSOyXdGRm2imXllYqmIR+
-        hVXsW8UUdAWu8QV2kS3FV3erk4Ie
-X-Google-Smtp-Source: ABdhPJyLZUc9KGbWwsBvqCL5JnbLYec4TU3CNXyAvxJVFJby7fzBJDz5MTImfSLj6OxhTKJ0uBQ/2w==
-X-Received: by 2002:a2e:9641:: with SMTP id z1mr1269503ljh.215.1589528624700;
-        Fri, 15 May 2020 00:43:44 -0700 (PDT)
-Received: from N-20L6PF1KTYA2 ([131.228.2.20])
-        by smtp.gmail.com with ESMTPSA id q6sm723028ljg.67.2020.05.15.00.43.43
-        (version=TLS1_2 cipher=AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 May 2020 00:43:44 -0700 (PDT)
-Date:   Fri, 15 May 2020 15:43:43 +0800
-From:   "Li Xinhai" <lixinhai.lxh@gmail.com>
-To:     linux-trace-devel <linux-trace-devel@vger.kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Documentation/trace/events.rst: wrong numbering of sections
-X-Priority: 3
-X-GUID: A3EF515F-BBED-4884-B6FD-8058B47A8C19
-X-Has-Attach: no
-X-Mailer: Foxmail 7.2.13.365[cn]
-Mime-Version: 1.0
-Message-ID: <2020051515434115672512@gmail.com>
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: base64
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vJVWJQVk8CciTsSCvsqJGG8XKk2NT2HP/Zje3wxePpk=;
+        b=Nj54Wor2yF2UtoHvPKf8CCT6bpACcqk7Zc9DZRZFiMVBh270jguWqstgA689Gyxhh1
+         30bdBtppDtZAKJf09ZBGTPRUo4dahaRRBwkJmFNdXkJ5PdxJoB8amPmPYzehXYc9Xe+e
+         6NdCXuMRWSBWuScKYmy6BTKN0XvILbeB8y5adrRV3mzqi9cS+CLvBVwbJi0EVM1+Y0HW
+         tTHVW0yviTzU6mApo9ijai5mqeBkTDciMFxZktFhRuPKHPwM2esAIJplSnU7RpcAvcV7
+         wLyhQTbm0eyUhPpIVsial2RHD0fnH6ewrMhacPoFyuuCRurK1eEn34gLuAANWUx54sQm
+         /fWQ==
+X-Gm-Message-State: AOAM531s8LrP7kmtWUNlhhperFkAjdx4slDNlBqjTzQ6war7YMLbIfJG
+        WbQahAbzoe4dk6cMsU66uUM=
+X-Google-Smtp-Source: ABdhPJzvvHdgX5ui4nSJTmyuDZ8V7G9BS6vKsmATdulV+5BVtxjVEsfdhBS0PT9CUX0cVS6RBi/lDg==
+X-Received: by 2002:a05:600c:1403:: with SMTP id g3mr2660839wmi.51.1589528685290;
+        Fri, 15 May 2020 00:44:45 -0700 (PDT)
+Received: from localhost (ip-37-188-249-36.eurotel.cz. [37.188.249.36])
+        by smtp.gmail.com with ESMTPSA id p17sm5856361wmi.3.2020.05.15.00.44.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 00:44:44 -0700 (PDT)
+Date:   Fri, 15 May 2020 09:44:43 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>, andi.kleen@intel.com,
+        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] mm: adjust vm_committed_as_batch according to vm
+ overcommit policy
+Message-ID: <20200515074443.GI29153@dhcp22.suse.cz>
+References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
+ <1588922717-63697-4-git-send-email-feng.tang@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588922717-63697-4-git-send-email-feng.tang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBkb2N1bWVudCBoYXMgYmVsb3cgbnVtYmVyaW5nIG9mIGl0cyBzZWN0aW9uczoKCjEuIElu
-dHJvZHVjdGlvbgoyLiBVc2luZyBFdmVudCBUcmFjaW5nCjIuMSBWaWEgdGhlICdzZXRfZXZlbnQn
-IGludGVyZmFjZQoyLjIgVmlhIHRoZSAnZW5hYmxlJyB0b2dnbGUKMi4zIEJvb3Qgb3B0aW9uCjMu
-IERlZmluaW5nIGFuIGV2ZW50LWVuYWJsZWQgdHJhY2Vwb2ludAo0LiBFdmVudCBmb3JtYXRzCjUu
-IEV2ZW50IGZpbHRlcmluZwo1LjEgRXhwcmVzc2lvbiBzeW50YXgKNS4yIFNldHRpbmcgZmlsdGVy
-cwo1LjMgQ2xlYXJpbmcgZmlsdGVycwo1LjMgU3Vic3lzdGVtIGZpbHRlcnMKNS40IFBJRCBmaWx0
-ZXJpbmcKNi4gRXZlbnQgdHJpZ2dlcnMKNi4xIEV4cHJlc3Npb24gc3ludGF4CjYuMiBTdXBwb3J0
-ZWQgdHJpZ2dlciBjb21tYW5kcwo2LjMgSW4ta2VybmVsIHRyYWNlIGV2ZW50IEFQSQo2LjMuMSBE
-eWFtaWNhbGx5IGNyZWF0aW5nIHN5bnRoZXRpYyBldmVudCBkZWZpbml0aW9ucwo2LjMuMyBUcmFj
-aW5nIHN5bnRoZXRpYyBldmVudHMgZnJvbSBpbi1rZXJuZWwgY29kZQo2LjMuMy4xIFRyYWNpbmcg
-YSBzeW50aGV0aWMgZXZlbnQgYWxsIGF0IG9uY2UKNi4zLjMuMSBUcmFjaW5nIGEgc3ludGhldGlj
-IGV2ZW50IHBpZWNld2lzZQo2LjMuNCBEeWFtaWNhbGx5IGNyZWF0aW5nIGtwcm9iZSBhbmQga3Jl
-dHByb2JlIGV2ZW50IGRlZmluaXRpb25zCjYuMy40IFRoZSAiZHluZXZlbnRfY21kIiBsb3ctbGV2
-ZWwgQVBJCgpJdCBzZWVtcyB3cm9uZyBudW1iZXJpbmcgd2l0aGluIDYuMyBzZWN0aW9uLsKgCm9y
-LCB3b3VsZCBpdCBiZSBiZXR0ZXIgdG8gaGF2ZSBzZXBhcmF0ZWQgY2hhcHRlciAjNywgZm9yICdJ
-bi1rZXJuZWwgdHJhY2UKZXZlbnQgQVBJJz8gaXQgc2VlbXMgbm90IGJlbG9uZyB0byAnRXZlbnQg
-dHJpZ2dlcnMnLgoKCgo=
+On Fri 08-05-20 15:25:17, Feng Tang wrote:
+> When checking a performance change for will-it-scale scalability
+> mmap test [1], we found very high lock contention for spinlock of
+> percpu counter 'vm_committed_as':
 
+Btw. you are focusing on a microbenchmark here but I believe that there
+are non-synthetic worklaods which would benefit from a larger batch.
+E.g. large in memory databases which do large mmaps during startups
+from multiple threads.
+-- 
+Michal Hocko
+SUSE Labs
