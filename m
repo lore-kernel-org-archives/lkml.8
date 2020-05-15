@@ -2,240 +2,165 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B307C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69204C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D861520671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E2EA2078C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:43:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vNUDEN/o"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H7UtYf9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgEOOnS (ORCPT
+        id S1726558AbgEOOn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:43:18 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:41127 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726197AbgEOOnR (ORCPT
+        Fri, 15 May 2020 10:43:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53508 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726144AbgEOOn2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:43:17 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04FDmbr1012555;
-        Fri, 15 May 2020 16:43:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=F04sQ1TZ22kgx1zdX1z57bhDQ5bWxO9h2V/DsaC5rcQ=;
- b=vNUDEN/ojcyqtVaByhzXqr/Yx3PXPkqTZuZ6NKWK2vIZNTfKEQGY/n/Z4AX11lFBYlSM
- O8G/9TQLdsLbKm0Oq6gwg417YllRM9CChzyqcrtV6QBccZhLmbKoCdODkfepFzfnYIVN
- 7s+wniXR+GTppWmDKECASuKAuEuFq1pJ2NCJ5XuGep4khzENQZ6V6ckm+G6trKhMqcCp
- FGD5zTy4lEzNvAXRQO2KKl8IerrcNxGy7rH4pTMmx2Mn8x5Ul16e09eImpqZ4BipUe9Z
- zSHJz/Ma08MjwykCRzRMjfmCoT0hNydkJLrWOW8H8b53Sdcvtoxb1zC15gFjTgXse5Q/ Qw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vqtjjn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 15 May 2020 16:43:13 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C76AA10002A;
-        Fri, 15 May 2020 16:43:12 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B44AD2CD9CF;
-        Fri, 15 May 2020 16:43:12 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.48) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 15 May
- 2020 16:43:11 +0200
-Subject: Re: [PATCH v5 2/2] rpmsg: core: Add support to retrieve name
- extension
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>, <ohad@wizery.com>,
-        <bjorn.andersson@linaro.org>
-CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200514204022.24233-1-mathieu.poirier@linaro.org>
- <20200514204022.24233-3-mathieu.poirier@linaro.org>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <24a100a8-5244-aedc-6742-16173cf429ce@st.com>
-Date:   Fri, 15 May 2020 16:43:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 15 May 2020 10:43:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589553807;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=X1xZ8JfBmNTiGkLsqL/RqkMRLzuSs2G8A+ZbL9b5Sgw=;
+        b=H7UtYf9x8X/6t204rJy4dTJV7NlKU1VaV+61u9j/RKzQuG0dScvHqccDF412enQY2RRza5
+        feQU5n9DcCNL85G6NCK9P3DnQL2OlOqzL8P9P3pCIhnOgbcA83K9yg35KBwouSvyaKj6LW
+        /CTFfpNNg88HVKPRdr43/8gpkfjL9yQ=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-392-8joFrlu_PyyBj3ZAoUP9Bw-1; Fri, 15 May 2020 10:43:17 -0400
+X-MC-Unique: 8joFrlu_PyyBj3ZAoUP9Bw-1
+Received: by mail-ej1-f72.google.com with SMTP id du3so1160040ejc.15
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 07:43:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X1xZ8JfBmNTiGkLsqL/RqkMRLzuSs2G8A+ZbL9b5Sgw=;
+        b=NiR8MNweSDp1F9462MMS9MK6nTWHhBj5kgu+A28EGs60xoO8AHVklAOzrlyfmyj7ER
+         S4AeMcyRA49cy/cFYwH8f/S5YRQRtj5pK7teGcAPKKzNBe/69WJdLGR9uYLhPWSaQS4i
+         p0nTdd/PzrOgONvkBHNfeTHZ0FIFwMckjCNkJ0bAUKeisS7aOxUAa7B9otC3SDwAbhxS
+         jHG+vIqNbjZS/sgYP2lolsuHoarwkqGW88P1coOLUBdnWq7C7CdzDdygtmG4j2A/LOO+
+         cNw3AIEIXmuZMuyk9/2pHvKIijpnCBLuRIeipyG6I6jDlU87c27i0vXOu78DcVpZwLpj
+         m5Jw==
+X-Gm-Message-State: AOAM532znR39dH6EPpS2fcWpH/5w0xerdkKle/Ix7pEKPe6TRTFeAKBt
+        L5HlJfQrg1dFlkAaB3TIK9+7iwQEqAOkP5D72scswBR4dhochCGZuiocAdPWcKZeZebIilEW9/r
+        7cJLSFu5pENbJwY31Qlr5kOmV3yHuORP0bZ4a2UiN
+X-Received: by 2002:a17:906:5004:: with SMTP id s4mr3193003ejj.13.1589553796404;
+        Fri, 15 May 2020 07:43:16 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzcynxps1KUucQoqq7068tMVHGCDv6crpjonW5YwDES9DmvKGln6WCa0YEZZgSZ7g+qltCxkx4fwqpnxFZZ12Q=
+X-Received: by 2002:a17:906:5004:: with SMTP id s4mr3192981ejj.13.1589553796108;
+ Fri, 15 May 2020 07:43:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200514204022.24233-3-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-15_05:2020-05-15,2020-05-15 signatures=0
+References: <CAE4VaGC09OfU2zXeq2yp_N0zXMbTku5ETz0KEocGi-RSiKXv-w@mail.gmail.com>
+ <20200320152251.GC3818@techsingularity.net> <CAE4VaGBGbTT8dqNyLWAwuiqL8E+3p1_SqP6XTTV71wNZMjc9Zg@mail.gmail.com>
+ <20200320163843.GD3818@techsingularity.net> <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
+ <20200507155422.GD3758@techsingularity.net> <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
+ <20200508092212.GE3758@techsingularity.net> <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
+ <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com> <20200513153023.GF3758@techsingularity.net>
+In-Reply-To: <20200513153023.GF3758@techsingularity.net>
+From:   Jirka Hladky <jhladky@redhat.com>
+Date:   Fri, 15 May 2020 16:43:04 +0200
+Message-ID: <CAE4VaGB=AqOmaHBv4cr85pWVrXyTqFEKvMvnJ3RTkhjxKx+G1g@mail.gmail.com>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Douglas Shakshober <dshaks@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu
+> Complete shot in the dark but restore adjust_numa_imbalance() and try
+> this
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 1a9983da4408..0b31f4468d5b 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2393,7 +2393,7 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
+>         struct rq_flags rf;
+>  #if defined(CONFIG_SMP)
+> -       if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
+> +       if (sched_feat(TTWU_QUEUE)) {
+>                 sched_clock_cpu(cpu); /* Sync clocks across CPUs */
+>                 ttwu_queue_remote(p, cpu, wake_flags);
+>                 return;
+
+Hi Mel,
+
+we have performance results for the proposed patch above ^^^.
+Unfortunately, it hasn't helped the performance.
+
+Jirka
 
 
-On 5/14/20 10:40 PM, Mathieu Poirier wrote:
-> After adding support for rpmsg device name extension, this patch
-> provides a function that returns the extension portion of an rpmsg
-> device name.  That way users of the name extension functionality don't
-> have to write the same boiler plate code to extract the information.
-> 
-> Suggested-by: Suman Anna <s-anna@ti.com>;
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+On Wed, May 13, 2020 at 5:30 PM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Wed, May 13, 2020 at 04:57:15PM +0200, Jirka Hladky wrote:
+> > Hi Mel,
+> >
+> > we have tried the kernel with adjust_numa_imbalance() crippled to just
+> > return the imbalance it's given.
+> >
+> > It has solved all the performance problems I have reported.
+> > Performance is the same as with 5.6 kernel (before the patch was
+> > applied).
+> >
+> > * solved the performance drop upto 20%  with single instance
+> > SPECjbb2005 benchmark on 8 NUMA node servers (particularly on AMD EPYC
+> > Rome systems) => this performance drop was INCREASING with higher
+> > threads counts (10% for 16 threads and 20 % for 32 threads)
+> > * solved the performance drop for low load scenarios (SPECjvm2008 and NAS)
+> >
+> > Any suggestions on how to proceed? One approach is to turn
+> > "imbalance_min" into the kernel tunable. Any other ideas?
+> >
+> > https://github.com/torvalds/linux/blob/4f8a3cc1183c442daee6cc65360e3385021131e4/kernel/sched/fair.c#L8914
+> >
+>
+> Complete shot in the dark but restore adjust_numa_imbalance() and try
+> this
+>
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 1a9983da4408..0b31f4468d5b 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2393,7 +2393,7 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
+>         struct rq_flags rf;
+>
+>  #if defined(CONFIG_SMP)
+> -       if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
+> +       if (sched_feat(TTWU_QUEUE)) {
+>                 sched_clock_cpu(cpu); /* Sync clocks across CPUs */
+>                 ttwu_queue_remote(p, cpu, wake_flags);
+>                 return;
+>
+> --
+> Mel Gorman
+> SUSE Labs
+>
 
-Probably what is missing now it is an upstreamed client. :)
-If a client is mandatory sample/rpmsg/rpmsg_client_sample.c could be 
-a good candidate, using extension to construct the "Hello" message...
 
-Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+-- 
+-Jirka
 
-Regards,
-Arnaud
-
-> ---
->  drivers/rpmsg/rpmsg_core.c | 95 ++++++++++++++++++++++++++++++++++++++
->  include/linux/rpmsg.h      | 13 ++++++
->  2 files changed, 108 insertions(+)
-> 
-> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-> index 5e01e8dede6b..9583eb936607 100644
-> --- a/drivers/rpmsg/rpmsg_core.c
-> +++ b/drivers/rpmsg/rpmsg_core.c
-> @@ -439,6 +439,101 @@ static int rpmsg_dev_match(struct device *dev, struct device_driver *drv)
->  	return of_driver_match_device(dev, drv);
->  }
->  
-> +/**
-> + * rpmsg_device_get_name_extension() - get the name extension of a rpmsg device
-> + * @rpdev: the rpmsg device to work with
-> + * @skip: how many characters in the extension should be skipped over
-> + *
-> + * With function rpmsg_id_match() allowing for extension of the base driver name
-> + * in order to differentiate services, this function returns the extension part
-> + * of an rpmsg device name.  As such and with the following rpmsg driver device
-> + * id table and rpmsg device names:
-> + *
-> + * static struct rpmsg_device_id rpmsg_driver_sample_id_table[] = {
-> + *      { .name = "rpmsg-client-sample" },
-> + *      { },
-> + * }
-> + *
-> + * rpdev1->id.name == "rpmsg-client-sample";
-> + * rpdev2->id.name == "rpmsg-client-sample_instance0";
-> + *
-> + * Calling rpmsg_device_get_name_extension() will yields the following:
-> + *
-> + * rpmsg_device_get_name_extension(rpdev1, 0) == NULL;
-> + * rpmsg_device_get_name_extension(rpdev2, 0) == "_instance0";
-> + * rpmsg_device_get_name_extension(rpdev2, 1) == "instance0";
-> + *
-> + *
-> + * Return: The name extension if found, NULL if the name of the RPMSG device
-> + *	   equals the name of the RPMSG driver and an error if no match is
-> + *	   found or a validation problem has occurred.
-> + */
-> +const char *rpmsg_device_get_name_extension(struct rpmsg_device *rpdev,
-> +					    unsigned int skip)
-> +{
-> +	const char *drv_name, *dev_name, *extension;
-> +	const struct rpmsg_device_id *ids;
-> +	struct device *dev = &rpdev->dev;
-> +	struct rpmsg_driver *rpdrv;
-> +	bool match = false;
-> +	unsigned int i;
-> +
-> +	if (!dev->driver)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	rpdrv = to_rpmsg_driver(dev->driver);
-> +
-> +	/*
-> +	 * No point in going further if the device doesn't have name or
-> +	 * the driver doesn't have a table to work with.
-> +	 */
-> +	if (!rpdev->id.name[0] || !rpdrv->id_table)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	ids = rpdrv->id_table;
-> +	dev_name = rpdev->id.name;
-> +
-> +	/*
-> +	 * See if any name in the driver's table match the beginning
-> +	 * of the rpmsg device's name.
-> +	 */
-> +	for (i = 0; ids[i].name[0]; i++) {
-> +		drv_name = ids[i].name;
-> +		if (strncmp(drv_name,
-> +			    dev_name, strlen(drv_name)) == 0) {
-> +			match = true;
-> +			break;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * A match was not found, return an error to differentiate with cases
-> +	 * where a match was found but the name has no extension (see below).
-> +	 */
-> +	if (!match)
-> +		return ERR_PTR(-ENOENT);
-> +
-> +	 /* No name extension to return if device and driver are the same */
-> +	if (strlen(dev_name) == strlen(drv_name))
-> +		return NULL;
-> +
-> +	/*
-> +	 * Make sure we were not requested to skip past the end
-> +	 * of the device name.
-> +	 */
-> +	if (strlen(drv_name) + skip >= strlen(dev_name))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	/*
-> +	 * Move past the base name published by the driver and
-> +	 * skip any extra characters if needed.
-> +	 */
-> +	extension = dev_name + strlen(drv_name) + skip;
-> +
-> +	return extension;
-> +}
-> +EXPORT_SYMBOL(rpmsg_device_get_name_extension);
-> +
->  static int rpmsg_uevent(struct device *dev, struct kobj_uevent_env *env)
->  {
->  	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
-> diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
-> index 9fe156d1c018..9537b95ad30a 100644
-> --- a/include/linux/rpmsg.h
-> +++ b/include/linux/rpmsg.h
-> @@ -135,6 +135,9 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
->  __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
->  			poll_table *wait);
->  
-> +const char *rpmsg_device_get_name_extension(struct rpmsg_device *dev,
-> +					    unsigned int skip);
-> +
->  #else
->  
->  static inline int register_rpmsg_device(struct rpmsg_device *dev)
-> @@ -242,6 +245,16 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
->  	return 0;
->  }
->  
-> +static inline
-> +const char *rpmsg_device_get_name_extension(struct rpmsg_device *dev,
-> +					    unsigned int skip)
-> +{
-> +	/* This shouldn't be possible */
-> +	WARN_ON(1);
-> +
-> +	return NULL;
-> +}
-> +
->  #endif /* IS_ENABLED(CONFIG_RPMSG) */
->  
->  /* use a macro to avoid include chaining to get THIS_MODULE */
-> 
