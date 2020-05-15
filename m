@@ -2,207 +2,139 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 530FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CEA020671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32BB2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="okgiTiEv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="V4rmYoQN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgEOHNG (ORCPT
+        id S1726615AbgEOHTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 03:13:06 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:30340 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726313AbgEOHNF (ORCPT
+        Fri, 15 May 2020 03:19:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726434AbgEOHTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 03:13:05 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04F7B1BP008148;
-        Fri, 15 May 2020 03:12:42 -0400
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2054.outbound.protection.outlook.com [104.47.36.54])
-        by mx0b-00128a01.pphosted.com with ESMTP id 3100xps6tv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 15 May 2020 03:12:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mjbSqY0i+tAn4ndpMr4Lx0w46sZL5UQD0Wkzn7OWNFOwuRnDo1/psRBlV9l+8G7FHWI13x/754jMcxtEaxRAJuuznLjTbg2qogJyArr3POCSxrvfsH8MN5NiOvrQHLjiaJlozsU3BsNtYIHB7EYhXs34ThH4QDXUOOOiqMdymNCy69izxnbkY16nKW+WpzaMRoCZGoAmYpFKwAGxkzpTa4d8onyuAW9aOiJCtsNOmfE5LV30EVsy3JVLTrnpmNwy1alyk4hYsOcdlphIjg8md33cHCbgwzmuHg93op7+VTmQBSFnPSPrzePp/HzA/TJlNU5pztyhVG3VXYnXWvE7tw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9SH1kJ+NaKFXZcaZRwhOIYPRDGaT01Tv0WNJNqqxkkE=;
- b=baNGfSy75Lj6wgosXtrFWBk7H/upI5uNaD+wQl8PRheWUrSmvYiUO0B9RlKT8wtVjdYYuNQpcnJXBgk7xnwEsKfEoeQITGgK1Al7n8bMmpj4Hx9OJJv7TWBup+3MeKXVI6ZXSUQa7vxXZERG9Z9ZkK/uzGPdM4nl5Ep3Sik2KJJC8cqKuSQfXVXBuRbi8gX+zmCtWtg9Ji8mOUFOrNifqnSHrJ6jng3Gc0hcXQjG8uxfCZAXTKThbprj4pouV9Ow8UOG01UzlMXMqqJBCJcWi7Kg13UHShyICwoiVCCTDO0tgbl+6Am0EKx4yZLEtC0I/S6W4hEyDR/b19Wg3rwZdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9SH1kJ+NaKFXZcaZRwhOIYPRDGaT01Tv0WNJNqqxkkE=;
- b=okgiTiEvI7ucC0vd8SEBDeinJSTWlwMt5qH10JUBqN6iwttztisEi8D4mKaPQXoIwKQIGPVHWuL+8VfeF39OCqhRgF2ji/fE0y26c5SxOidCbSmrRYFe92yXLkBM8zHoXzsrXiVPNC8TWCFme1+kRsrkmJQk/N3O3ibZhi7xySk=
-Received: from BN6PR03MB3347.namprd03.prod.outlook.com (2603:10b6:405:3d::35)
- by BN6PR03MB2499.namprd03.prod.outlook.com (2603:10b6:404:22::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Fri, 15 May
- 2020 07:12:41 +0000
-Received: from BN6PR03MB3347.namprd03.prod.outlook.com
- ([fe80::21b1:c085:e156:cfe7]) by BN6PR03MB3347.namprd03.prod.outlook.com
- ([fe80::21b1:c085:e156:cfe7%4]) with mapi id 15.20.3000.022; Fri, 15 May 2020
- 07:12:41 +0000
-From:   "Sa, Nuno" <Nuno.Sa@analog.com>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
-        "eugen.hristev@microchip.com" <eugen.hristev@microchip.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        "ak@it-klinger.de" <ak@it-klinger.de>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: RE: [PATCH v2 7/8] iio: core: simplify alloc alignment code
-Thread-Topic: [PATCH v2 7/8] iio: core: simplify alloc alignment code
-Thread-Index: AQHWKfIlEQ+thZzvFU2AhvRLBAoa1aiou+ag
-Date:   Fri, 15 May 2020 07:12:40 +0000
-Message-ID: <BN6PR03MB33472A1B559F98E3BDCAB40B99BD0@BN6PR03MB3347.namprd03.prod.outlook.com>
-References: <20200514131710.84201-1-alexandru.ardelean@analog.com>
- <20200514131710.84201-8-alexandru.ardelean@analog.com>
-In-Reply-To: <20200514131710.84201-8-alexandru.ardelean@analog.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?iso-8859-1?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcbnNhXGFwcG?=
- =?iso-8859-1?Q?RhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEy?=
- =?iso-8859-1?Q?OWUzNWJcbXNnc1xtc2ctNzU3OGM3YzYtOTY3Yi0xMWVhLThhNjEtZmM3Nz?=
- =?iso-8859-1?Q?c0MjFmY2FlXGFtZS10ZXN0XDc1NzhjN2M4LTk2N2ItMTFlYS04YTYxLWZj?=
- =?iso-8859-1?Q?Nzc3NDIxZmNhZWJvZHkudHh0IiBzej0iMjMwMyIgdD0iMTMyMzQwMDAzNT?=
- =?iso-8859-1?Q?k0MzcwOTk1IiBoPSJIZ2YwNnNsRHZHYXVKQThyWWNsekRLQytZd2s9IiBp?=
- =?iso-8859-1?Q?ZD0iIiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQU?=
- =?iso-8859-1?Q?FFb0NBQUN6LzlBM2lDcldBU3dlMEtDaGlXb3FMQjdRb0tHSmFpb0RBQUFB?=
- =?iso-8859-1?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBSEFBQUFEYUFRQUFBQUFBQUFBQUFBQU?=
- =?iso-8859-1?Q?FBQUFBQUFBQUFBRUFBUUFCQUFBQTBFSUdyZ0FBQUFBQUFBQUFBQUFBQUo0?=
- =?iso-8859-1?Q?QUFBQmhBR1FBYVFCZkFITUFaUUJqQUhVQWNnQmxBRjhBY0FCeUFHOEFhZ0?=
- =?iso-8859-1?Q?JsQUdNQWRBQnpBRjhBWmdCaEFHd0Fjd0JsQUY4QVpnQnZBSE1BYVFCMEFH?=
- =?iso-8859-1?Q?a0FkZ0JsQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
- =?iso-8859-1?Q?FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?iso-8859-1?Q?QUFBQUFBQUFBQUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdFQV?=
- =?iso-8859-1?Q?pBQnBBRjhBY3dCbEFHTUFkUUJ5QUdVQVh3QndBSElBYndCcUFHVUFZd0Iw?=
- =?iso-8859-1?Q?QUhNQVh3QjBBR2tBWlFCeUFERUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
- =?iso-8859-1?Q?FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?iso-8859-1?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
- =?iso-8859-1?Q?FBQUFBQUFBQUFBUUFBQUFBQUFBQUNBQUFBQUFDZUFBQUFZUUJrQUdrQVh3?=
- =?iso-8859-1?Q?QnpBR1VBWXdCMUFISUFaUUJmQUhBQWNnQnZBR29BWlFCakFIUUFjd0JmQU?=
- =?iso-8859-1?Q?hRQWFRQmxBSElBTWdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?iso-8859-1?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
- =?iso-8859-1?Q?FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?iso-8859-1?Q?QUFBQkFBQUFBQUFBQUFJQUFBQUFBQT09Ii8+PC9tZXRhPg=3D=3D?=
-x-dg-rorf: true
-authentication-results: analog.com; dkim=none (message not signed)
- header.d=none;analog.com; dmarc=none action=none header.from=analog.com;
-x-originating-ip: [2001:a61:24da:5501:cc3f:7631:1113:673f]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cce4b2b8-2964-40f5-dc01-08d7f89f5b40
-x-ms-traffictypediagnostic: BN6PR03MB2499:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR03MB2499429855279CC117988B3C99BD0@BN6PR03MB2499.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 04041A2886
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: TkP+9WRNhkdcODYhmb7WJmaSKE10IJn+3sNpTByyuX3gvexQyaKSkSGfjjwzhRh/UKaJRyCxargbRXM70lpUofcmhRdXGqaK9g8jPWiBg+/2IhoGADlnesJKDIH4H924YfL/+/dAsw6RkiG78wo21ZDoTjwQKGNl0q7Bw98jzhDoFZDSAGdDXFNwbBbkgwDk1gFoxmcSe0gD+UcoVoQoTRDuNGM+gJSWRi+VG+/30FDm1bIYPeMQn84fNFKvDLQtq5VTKGGXoXJOc93pbxzWmnmESW1ArQNrgOwlo3i0dJWC68/rDsD7lB+tCJaAWjzHfU2WFNQYGJ17Ghw+Wnczn/1Vj8ezco5NT+aeWJZYomm0LrCjSIyg9mR/a8WRbcXw0FtiqjfJZItLFDUHVzreIN143PgqLU0QxvoHmE4QHp2NkPxqt16N7E+iZUfJJuZW+BqLUvks0ga+2fC20Uau+NmOk7BRQESF4jsQNTclcxbvgN+PeBVV0CoToJWZI8558SU46kiSpKDp5RkeX44Bcw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR03MB3347.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(396003)(136003)(346002)(376002)(39860400002)(6506007)(53546011)(316002)(54906003)(110136005)(52536014)(66476007)(64756008)(66946007)(5660300002)(7416002)(66556008)(66446008)(2906002)(71200400001)(76116006)(55016002)(7696005)(186003)(478600001)(8676002)(8936002)(9686003)(33656002)(107886003)(4326008)(966005)(86362001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: dQ+R5zlb+3AQKygEkZrHCFOKtqVFEUek9DS4NqhCr1nGkMb2IkEmu7n61+klBGmPUf+QUlmIeuwG/nDBb/HDppvOuAauUQxT/gU42L8//AT6zKYupMBz91bpgII85pzoT+sPyYUPOtLhLVLu7uXfcUtmAb9AxjTiJRNZofTK1W5QVce8cW03XAmzggltFy5Zo+C89bC+DjS7BVwQOtNH7i/EGZb06Kkt6vUcrA79xbiilS6cMltkDkWTkNo3Su92H+3/WC0tNVJd6D0YxXPrf3RZHNt+Xoof8DinVsJ6xpPvLw77/683b3ksRD8QMWoBKZGG7NAHiqRJ1Qbed7z2AdNjsIKnuAiaq1Mr/CVhQ683X4WwKd/jJBL+c0J5AXkhcWNNtpWOQf/1dFtMG2n6/uV/ex3iqWVYySMBlJYZLlD1r1sGUyI2fszQ314t5CqTlE+U4jjEFfIX5XWHmnD0mUo/pcEPmnIyWJHgrzRnBuT2YPcWs/5Zzw9rD1qst5xSOT+mPFqjv7mqXo9GYm0QBxpk80hVHBXbJOx9B+5l+AyMP9BBgmF9Yr5C7nTl82fQ
-Content-Type: text/plain; charset="iso-8859-1"
+        Fri, 15 May 2020 03:19:20 -0400
+Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 920BCC061A0C;
+        Fri, 15 May 2020 00:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589527155;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=/LlQLnJSjr1dPjlAnAK+u/lQG0tGroGOnAwr3HRIIDg=;
+        b=V4rmYoQNMiSdVNe+dWbLMntZAM4z93rruWDqBl4jIT/149VE95L/x3e6Izb3Bs3eyg
+        tk4HunCz0xxntP2hQvK0O33IO16iO3NAOWHc3cB8Z8OrBMXwXk/yWXFHvPmWk+xX8Ll5
+        dF1YuCJ16hBNa93UGhg1Vh3qjEL0JdM8chtrEPk4SXOOA9AiBdNddJqmOAkHqpwuz2AM
+        1N58+yn/d/9SNgUyZ8GRDkvhQ/ehCXXpQJuWL+H0JVTHKXvfmFeiNUIdgs9FOGJn8FvE
+        dJvnMUo1CiW0KXL9HUGsXmDQ9dv4BC3Cdg0//a56AAyC7WYbePBDs6kpZU0JPm0bhf77
+        xLNQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vtwDOvBTU="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id R0acebw4F7IYYRg
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 15 May 2020 09:18:34 +0200 (CEST)
+Subject: Re: [PATCH v7 01/12] dt-bindings: add img,pvrsgx.yaml for Imagination GPUs
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=iso-8859-1
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <08B861A8-D4C2-48A6-9B05-B8CA43312834@goldelico.com>
+Date:   Fri, 15 May 2020 09:18:33 +0200
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Philipp Rossak <embed3d@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cce4b2b8-2964-40f5-dc01-08d7f89f5b40
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2020 07:12:40.7692
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: j+1D69+uux8/iwCFo3eZeQlpfTo9OZKWZGmEl0CdaO6cJA81p7w/Acs/N22BIYLOs8BIBUh1JBm/RH75V5C9Zw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR03MB2499
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-15_02:2020-05-14,2020-05-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 clxscore=1011 priorityscore=1501 adultscore=0 phishscore=0
- bulkscore=0 malwarescore=0 spamscore=0 mlxscore=0 suspectscore=0
- impostorscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005150062
+Message-Id: <D1D14684-2532-46A4-ADA0-2F88F4D2228E@goldelico.com>
+References: <cover.1587760454.git.hns@goldelico.com> <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com> <NMCE9Q.LWG45P20NBVJ@crapouillou.net> <28138EC0-0FA5-4F97-B528-3442BF087C7A@goldelico.com> <TEAR9Q.6HI5DFRO5U0I3@crapouillou.net> <3D8B59D6-83E3-4FE6-9C99-E2E5616A8139@goldelico.com> <8EER9Q.C206SXNSICP7@crapouillou.net> <08B861A8-D4C2-48A6-9B05-B8CA43312834@goldelico.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Burton <paulburton@kernel.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Alex,
+Hi Paul & Paul,
 
-Just a small question...
+> Am 03.05.2020 um 18:41 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
+>=20
+> Hi Paul and Paul,
+>=20
+>> Am 03.05.2020 um 16:18 schrieb Paul Cercueil <paul@crapouillou.net>:
+>>=20
+>>=20
+>>=20
+>> Le dim. 3 mai 2020 =E0 15:31, H. Nikolaus Schaller =
+<hns@goldelico.com> a =E9crit :
+>>> Hi Paul,
+>>>> Am 03.05.2020 um 14:52 schrieb Paul Cercueil =
+<paul@crapouillou.net>:
+>>>>>> It's possible to forbid the presence of the 'clocks' property on =
+some implementations, and require it on others.
+>>>>> To be precise we have to specify the exact number of clocks =
+(between 0 and 4) for every architecture.
+>>>>> This also contradicts my dream to get rid of the architecture =
+specific components in the long run. My dream (because I can't tell how =
+it can be done) is that we can one day develop something which just =
+needs compatible =3D img,530 or imp,540 or img,544. Then we can't make =
+the number clocks depend on the implementation any more.
+>>>> As we said before, the number of clocks is a property of the GPU =
+and *not* its integration into the SoC.
+>>> Well, it is a not very well documented property of the GPU. We have =
+no data sheet of the standalone GPU. Only several SoC data sheets which =
+give some indications.
+>>=20
+>> Maybe we can nicely ask them?
+>=20
+> There is some (old) answer here:
+>=20
+> =
+https://github.com/MIPS/CI20_linux/blob/ci20-v3.18/arch/mips/boot/dts/jz47=
+80.dtsi#L63
+>=20
+>> I expect Paul Burton to have some contacts at ImgTec. Asking for a =
+doc would be too much, but maybe they can help a bit with the DT =
+bindings.
+>=20
+> Good idea! It is definitively worth to try. Therefore I have moved him =
+from CC: to To:
 
-> From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org>
-> On Behalf Of Alexandru Ardelean
-> Sent: Donnerstag, 14. Mai 2020 15:17
-> To: linux-iio@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linu=
-x-
-> stm32@st-md-mailman.stormreply.com; linux-kernel@vger.kernel.org
-> Cc: ludovic.desroches@microchip.com; eugen.hristev@microchip.com;
-> jic23@kernel.org; nicolas.ferre@microchip.com;
-> alexandre.belloni@bootlin.com; alexandre.torgue@st.com;
-> mcoquelin.stm32@gmail.com; ak@it-klinger.de; Ardelean, Alexandru
-> <alexandru.Ardelean@analog.com>
-> Subject: [PATCH v2 7/8] iio: core: simplify alloc alignment code
->=20
-> There was a recent discussion about this code:
->   https://urldefense.com/v3/__https://lore.kernel.org/linux-
-> iio/20200322165317.0b1f0674@archlinux/__;!!A3Ni8CS0y2Y!pgdUSayJCfxMiE
-> w8Fpv0LkEZurCSkX0sEcLnXeDSCLmhpu1xont6-vBQj3ZbCw$
->=20
-> This looks like a good time to rework this, since any issues about it
-> should pop-up under testing, because the iio_dev is having a bit of an
-> overhaul and stuff being moved to iio_dev_priv.
->=20
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  drivers/iio/industrialio-core.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-c=
-ore.c
-> index a1b29e0f8fd6..7671d36efae7 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -1514,13 +1514,9 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
->  	struct iio_dev *dev;
->  	size_t alloc_size;
->=20
-> -	alloc_size =3D sizeof(struct iio_dev_opaque);
-> -	if (sizeof_priv) {
-> -		alloc_size =3D ALIGN(alloc_size, IIO_ALIGN);
-> -		alloc_size +=3D sizeof_priv;
-> -	}
-> -	/* ensure 32-byte alignment of whole construct ? */
-> -	alloc_size +=3D IIO_ALIGN - 1;
-> +	alloc_size =3D ALIGN(sizeof(struct iio_dev_opaque), IIO_ALIGN);
-> +	if (sizeof_priv)
-> +		alloc_size +=3D ALIGN(sizeof_priv, IIO_ALIGN);
+Do we already have an idea if we can get into contact and get help from =
+ImgTec for this topic or if we have to live with what we have?
 
-Do we actually need to do the `ALIGN` again? It seems to me that `alloc_siz=
-e +=3D sizeof_priv`
-would be enough or am I missing something obvious?
-
-- Nuno S=E1
+BR and thanks,
+Nikolaus
 
