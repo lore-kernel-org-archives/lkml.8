@@ -2,88 +2,79 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C32C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8609F206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589528688;
-	bh=4ulSJZHEbPwPApbgbMErWimKM8LRMGl1NjDhth/liIw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hTydRLhkxldPrr1gY+pvLNO3ZTSFo8HCN6XUZU+89V2pH+ndzWD//bhX82V3bvnYn
-	 Pc1aRnfIibLqUj7Dv3AHgInLfIC3slQKzf/rDzO7Hn+jrc9hUkDzpPBwJrvcxNSP5G
-	 Y7qVXdLpK1vKwFgf2VqqGjtPU8EXzGQSv7NQ5HEc=
+	by mail.kernel.org (Postfix) with ESMTP id 2110F206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:45:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgEOHor (ORCPT
+        id S1726831AbgEOHpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 03:44:47 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52439 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbgEOHor (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 03:44:47 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z4so112980wmi.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:44:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vJVWJQVk8CciTsSCvsqJGG8XKk2NT2HP/Zje3wxePpk=;
-        b=Nj54Wor2yF2UtoHvPKf8CCT6bpACcqk7Zc9DZRZFiMVBh270jguWqstgA689Gyxhh1
-         30bdBtppDtZAKJf09ZBGTPRUo4dahaRRBwkJmFNdXkJ5PdxJoB8amPmPYzehXYc9Xe+e
-         6NdCXuMRWSBWuScKYmy6BTKN0XvILbeB8y5adrRV3mzqi9cS+CLvBVwbJi0EVM1+Y0HW
-         tTHVW0yviTzU6mApo9ijai5mqeBkTDciMFxZktFhRuPKHPwM2esAIJplSnU7RpcAvcV7
-         wLyhQTbm0eyUhPpIVsial2RHD0fnH6ewrMhacPoFyuuCRurK1eEn34gLuAANWUx54sQm
-         /fWQ==
-X-Gm-Message-State: AOAM531s8LrP7kmtWUNlhhperFkAjdx4slDNlBqjTzQ6war7YMLbIfJG
-        WbQahAbzoe4dk6cMsU66uUM=
-X-Google-Smtp-Source: ABdhPJzvvHdgX5ui4nSJTmyuDZ8V7G9BS6vKsmATdulV+5BVtxjVEsfdhBS0PT9CUX0cVS6RBi/lDg==
-X-Received: by 2002:a05:600c:1403:: with SMTP id g3mr2660839wmi.51.1589528685290;
-        Fri, 15 May 2020 00:44:45 -0700 (PDT)
-Received: from localhost (ip-37-188-249-36.eurotel.cz. [37.188.249.36])
-        by smtp.gmail.com with ESMTPSA id p17sm5856361wmi.3.2020.05.15.00.44.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 00:44:44 -0700 (PDT)
-Date:   Fri, 15 May 2020 09:44:43 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>, andi.kleen@intel.com,
-        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] mm: adjust vm_committed_as_batch according to vm
- overcommit policy
-Message-ID: <20200515074443.GI29153@dhcp22.suse.cz>
-References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
- <1588922717-63697-4-git-send-email-feng.tang@intel.com>
+        Fri, 15 May 2020 03:45:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:50554 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726622AbgEOHpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 03:45:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68E841042;
+        Fri, 15 May 2020 00:45:14 -0700 (PDT)
+Received: from nicgas01-03-arm-vm (nicgas01-03-arm-vm.shanghai.arm.com [10.169.138.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDBE23F68F;
+        Fri, 15 May 2020 00:45:11 -0700 (PDT)
+References: <20200427061520.24905-1-nick.gasson@arm.com>
+ <20200427103505.GA1476763@krava> <85lflu7v4o.fsf@arm.com>
+ <20200514132337.GM5583@kernel.org>
+ <CAP-5=fX-dV+VHaPMO2Sw0DFB72YtuSyc23X5S3EvxGxYhAT4kQ@mail.gmail.com>
+User-agent: mu4e 1.4.5; emacs 27.0.91
+From:   Nick Gasson <nick.gasson@arm.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Arnaldo Carvalho de Melo" <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH 0/3] perf jvmti: Various fixes to JVMTI agent
+In-reply-to: <CAP-5=fX-dV+VHaPMO2Sw0DFB72YtuSyc23X5S3EvxGxYhAT4kQ@mail.gmail.com>
+Date:   Fri, 15 May 2020 15:45:09 +0800
+Message-ID: <858sht3am2.fsf@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588922717-63697-4-git-send-email-feng.tang@intel.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 08-05-20 15:25:17, Feng Tang wrote:
-> When checking a performance change for will-it-scale scalability
-> mmap test [1], we found very high lock contention for spinlock of
-> percpu counter 'vm_committed_as':
+On 05/15/20 06:41 am, Ian Rogers wrote:
+>
+> If you are looking at this code I believe there is a bug in that the
+> loop handling jvmtiCompiledMethodLoadInlineRecord is writing out the
+> entire line number table before a pc and not just the line number
+> table at the pc. This loop in do_get_line_numbers:
+>
+> if (loc_tab[i].start_location < bci) {
+> tab[lines].pc = (unsigned long)pc;
+> tab[lines].line_number = loc_tab[i].line_number;
+> tab[lines].discrim = 0; /* not yet used */
+> tab[lines].methodID = m;
+> lines++;
+> } else {
+>
+> It could possibly make sense if it were iterating over the inline data
+> in the jvmtiCompiledMethodLoadInlineRecord rather than the line number
+> table.
+> Fixing this is toward the end of a list of things I need to look at.
+>
 
-Btw. you are focusing on a microbenchmark here but I believe that there
-are non-synthetic worklaods which would benefit from a larger batch.
-E.g. large in memory databases which do large mmaps during startups
-from multiple threads.
--- 
-Michal Hocko
-SUSE Labs
+OK sure, I'll have a look at this. Thanks for the reviews.
+
+--
+Thanks,
+Nick
