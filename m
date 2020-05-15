@@ -2,279 +2,150 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 515E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2561C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E5FF2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7FF2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:44:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="s+HlAHIP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kFD/V16e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgEOSo3 (ORCPT
+        id S1726732AbgEOSon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 14:44:29 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:36544 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbgEOSo2 (ORCPT
+        Fri, 15 May 2020 14:44:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbgEOSol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 14:44:28 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04FIfCOb178670;
-        Fri, 15 May 2020 18:44:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Y1ZB+quIhLJg/wI83w/JcQWCUY7lLmfngECGZeGD7Qw=;
- b=s+HlAHIPyQCCPgI79KUBi0mXkKY31ZTyRycJJyB/gvouDXFKcAYsPpM6uYXLgqcpX1pl
- XfzL/196Zn4ZLeWimyKbZvIh7oYxJFqygnxRS97lyWz9ReokJK/ckVpThusqg+yUUFvm
- Y9z4DNXvQItUynOHb5BBaaoq/zX4u50UMmJurWZPPbuPkTT7sQDKZkllDy22jNYC8r9M
- svrW2+RCwDjeRBCEbOO1B8X+8z22GLXMl/e4m53g6E6hLwBA8mbD53NmK9FD+R6vjDwr
- lTuiyftajPeLHggDyVTD4Wix3Z4QykOJHr8U8zY86HDihgjM+KrhQPAyezP6E6E3r7+q ew== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 311nu5n96d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 15 May 2020 18:44:14 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04FIiCMR043342;
-        Fri, 15 May 2020 18:44:13 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 3100yfajvs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 May 2020 18:44:13 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04FIi57v017411;
-        Fri, 15 May 2020 18:44:06 GMT
-Received: from [192.168.2.157] (/50.38.34.50)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 15 May 2020 11:44:05 -0700
-Subject: Re: [PATCH v5] hugetlbfs: Get unmapped area below TASK_UNMAPPED_BASE
- for hugetlbfs
-To:     Shijie Hu <hushijie3@huawei.com>
-Cc:     will@kernel.org, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, nixiaoming@huawei.com,
-        wangxu72@huawei.com, wangkefeng.wang@huawei.com,
-        yangerkun@huawei.com, wangle6@huawei.com, cg.chen@huawei.com,
-        chenjie6@huawei.com, alex.huangjianhui@huawei.com
-References: <20200514143134.73775-1-hushijie3@huawei.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <e458014c-57a7-46a5-3528-2b33f23a6756@oracle.com>
-Date:   Fri, 15 May 2020 11:44:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 15 May 2020 14:44:41 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF040C05BD0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 11:44:40 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id hi11so1291538pjb.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 11:44:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Ma8a3IEAfy5hkhHsO5eKEOmN1t9cPUU6UBCxHjpj29E=;
+        b=kFD/V16eJ50vNYvQlv772jPHRykPYjlwl1Um5D+Hle7uWzCtgZBfQwS/KwK/nZTCfr
+         j7KkvjVgSES0XLwXjE9WlI7wIu/Nf8fUAlNzwExUrzHOkC2R1ilVSTKU/mq7IEzMjFjU
+         4aduh2ic/Jzv/txp6IEmmoGgNg+5FXR5uWH8Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Ma8a3IEAfy5hkhHsO5eKEOmN1t9cPUU6UBCxHjpj29E=;
+        b=eaac0SvN9p7DjGSHY4FXQn2HL3smkoOTOIpnbUsLA9UoiLiQboOp6+RXEo3PKIGF/V
+         +5jnUJx9IisrZHofeYt6wiQWvccjArQlI/mc7YJcOiwGUiJF1ZazUs8vy3/Dd13qsCws
+         bCR0IiyakVtoZSIPXF65BFKy7iDAh1LjUVX6svAUT6m1xrqReH5x89lmPKy7DFlelxM8
+         5hubWU7C2xh6YHm5p/505XArcAERwKT7VHGWnN/VC1ODrwetIoHukT+fUKvcl9CeU/bq
+         DMMRrXtGpStYFC17i/Kh/j0ZOGZp1OFapDANsk93DzlTb7N3/8wT/MXh0fsYyXn+LMCN
+         wKXg==
+X-Gm-Message-State: AOAM53136ecuH1GTmC+AR+E2BhxwNYbng5mFxw+d4B+QMLyzMY1PQm6p
+        JYWGIJLcd/PMt92b8Ys5tI+o5Q==
+X-Google-Smtp-Source: ABdhPJxrmBmEg335hMMKhTsZxipJMSKlq5GwMgh5rKfEUwuGPTZ3/FFaBx7j/3lkOTeALmalHA9y/g==
+X-Received: by 2002:a17:90b:41d5:: with SMTP id jm21mr4562657pjb.96.1589568280507;
+        Fri, 15 May 2020 11:44:40 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t20sm2075905pjo.13.2020.05.15.11.44.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 11:44:38 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Kees Cook <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Benson Leung <bleung@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v4 4/6] pstore/platform: Pass max_reason to kmesg dump
+Date:   Fri, 15 May 2020 11:44:32 -0700
+Message-Id: <20200515184434.8470-5-keescook@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200515184434.8470-1-keescook@chromium.org>
+References: <20200515184434.8470-1-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200514143134.73775-1-hushijie3@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9622 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 phishscore=0
- adultscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005150156
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9622 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 mlxscore=0
- adultscore=0 priorityscore=1501 mlxlogscore=999 impostorscore=0
- suspectscore=0 spamscore=0 lowpriorityscore=0 cotscore=-2147483648
- bulkscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005150156
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/20 7:31 AM, Shijie Hu wrote:
-> Here is a final patch to solve that hugetlb_get_unmapped_area() can't
-> get unmapped area below mmap base for huge pages based on a few previous
-> discussions and patches from me.
-> 
-> I'm so sorry. When sending v2 and v3 patches, I forget to cc:
-> linux-mm@kvack.org and linux-kernel@vger.kernel.org. No records of these
-> two patches found on the https://lkml.org/lkml/.
-> 
-> Patch V1: https://lkml.org/lkml/2020/4/27/440
-> Patch V4: https://lkml.org/lkml/2020/5/13/980
-> 
-> Changes in V2:
-> * Follow Mike's suggestions, move hugetlb_get_unmapped_area() routines
-> from "fs/hugetlbfs/inode.c" to "arch/arm64/mm/hugetlbpage.c", without
-> changing core code.
-> * Add mmap_is_legacy() function, and only fall back to the bottom-up
-> function on no-legacy mode.
-> 
-> Changes in V3:
-> * Add *bottomup() and *topdown() two function, and check if
-> mm->get_unmapped_area is equal to arch_get_unmapped_area() instead of
-> checking mmap_is_legacy() to determine which function should be used.
-> 
-> Changes in V4:
-> * Follow the suggestions of Will and Mike, move back this patch to core
-> code.
-> 
-> Changes in V5:
-> * Fix kbuild test error.
-> 
-> ------
-> 
-> In a 32-bit program, running on arm64 architecture. When the address
-> space below mmap base is completely exhausted, shmat() for huge pages
-> will return ENOMEM, but shmat() for normal pages can still success on
-> no-legacy mode. This seems not fair.
-> 
-> For normal pages, get_unmapped_area() calling flows are:
->     => mm->get_unmapped_area()
-> 	if on legacy mode,
-> 	    => arch_get_unmapped_area()
-> 			=> vm_unmapped_area()
-> 	if on no-legacy mode,
-> 	    => arch_get_unmapped_area_topdown()
-> 			=> vm_unmapped_area()
-> 
-> For huge pages, get_unmapped_area() calling flows are:
->     => file->f_op->get_unmapped_area()
-> 		=> hugetlb_get_unmapped_area()
-> 			=> vm_unmapped_area()
-> 
-> To solve this issue, we only need to make hugetlb_get_unmapped_area() take
-> the same way as mm->get_unmapped_area(). Add *bottomup() and *topdown()
-> two functions, and check current mm->get_unmapped_area() to decide which
-> one to use. If mm->get_unmapped_area is equal to arch_get_unmapped_area(),
-> hugetlb_get_unmapped_area() calls bottomup routine, otherwise calls topdown
-> routine.
-> 
-> Signed-off-by: Shijie Hu <hushijie3@huawei.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> ---
->  fs/hugetlbfs/inode.c | 62 +++++++++++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 54 insertions(+), 8 deletions(-)
-> 
-> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-> index 991c60c7ffe0..61418380f492 100644
-> --- a/fs/hugetlbfs/inode.c
-> +++ b/fs/hugetlbfs/inode.c
-> @@ -38,6 +38,7 @@
->  #include <linux/uio.h>
->  
->  #include <linux/uaccess.h>
-> +#include <linux/sched/mm.h>
->  
->  static const struct super_operations hugetlbfs_ops;
->  static const struct address_space_operations hugetlbfs_aops;
-> @@ -191,13 +192,60 @@ static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
->  
->  #ifndef HAVE_ARCH_HUGETLB_UNMAPPED_AREA
->  static unsigned long
-> +hugetlb_get_unmapped_area_bottomup(struct file *file, unsigned long addr,
-> +		unsigned long len, unsigned long pgoff, unsigned long flags)
-> +{
-> +	struct hstate *h = hstate_file(file);
-> +	struct vm_unmapped_area_info info;
-> +
-> +	info.flags = 0;
-> +	info.length = len;
-> +	info.low_limit = current->mm->mmap_base;
-> +	info.high_limit = TASK_SIZE;
-> +	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-> +	info.align_offset = 0;
-> +	return vm_unmapped_area(&info);
-> +}
-> +
-> +static unsigned long
-> +hugetlb_get_unmapped_area_topdown(struct file *file, unsigned long addr,
-> +		unsigned long len, unsigned long pgoff, unsigned long flags)
-> +{
-> +	struct hstate *h = hstate_file(file);
-> +	struct vm_unmapped_area_info info;
-> +
-> +	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
-> +	info.length = len;
-> +	info.low_limit = max(PAGE_SIZE, mmap_min_addr);
-> +	info.high_limit = current->mm->mmap_base;
-> +	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-> +	info.align_offset = 0;
-> +	addr = vm_unmapped_area(&info);
-> +
-> +	/*
-> +	 * A failed mmap() very likely causes application failure,
-> +	 * so fall back to the bottom-up function here. This scenario
-> +	 * can happen with large stack limits and large mmap()
-> +	 * allocations.
-> +	 */
-> +	if (unlikely(offset_in_page(addr))) {
-> +		VM_BUG_ON(addr != -ENOMEM);
-> +		info.flags = 0;
-> +		info.low_limit = current->mm->mmap_base;
-> +		info.high_limit = TASK_SIZE;
-> +		addr = vm_unmapped_area(&info);
-> +	}
-> +
-> +	return addr;
-> +}
-> +
-> +static unsigned long
->  hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
->  		unsigned long len, unsigned long pgoff, unsigned long flags)
->  {
->  	struct mm_struct *mm = current->mm;
->  	struct vm_area_struct *vma;
->  	struct hstate *h = hstate_file(file);
-> -	struct vm_unmapped_area_info info;
->  
->  	if (len & ~huge_page_mask(h))
->  		return -EINVAL;
-> @@ -218,13 +266,11 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
->  			return addr;
->  	}
->  
-> -	info.flags = 0;
-> -	info.length = len;
-> -	info.low_limit = TASK_UNMAPPED_BASE;
-> -	info.high_limit = TASK_SIZE;
-> -	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-> -	info.align_offset = 0;
-> -	return vm_unmapped_area(&info);
-> +	if (mm->get_unmapped_area == arch_get_unmapped_area)
-> +		return hugetlb_get_unmapped_area_bottomup(file, addr, len,
-> +				pgoff, flags);
-> +	return hugetlb_get_unmapped_area_topdown(file, addr, len,
-> +			pgoff, flags);
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
 
-I like this code using the value of mm->get_unmapped_area to determine
-which routine to call.  It is used by a few architectures.   However, I
-noticed that on at least one architecture (powerpc) mm->get_unmapped_area
-may be assigned to routines other than arch_get_unmapped_area or
-arch_get_unmapped_area_topdown.  In such a case, we would call the 'new'
-topdown routine.  I would prefer that we call the bottomup routine in this
-default case.
+Add a new member to struct pstore_info for passing information about
+kmesg dump maximum reason. This allows a finer control of what kmesg
+dumps are sent to pstore storage backends.
 
-In reality, this does not impact powerpc as that architecture has it's
-own hugetlb_get_unmapped_area routine.
+Those backends that do not explicitly set this field (keeping it equal to
+0), get the default behavior: store only Oopses and Panics, or everything
+if the printk.always_kmsg_dump boot param is set.
 
-Because of this, I suggest we add a comment above this code and switch
-the if/else order.  For example,
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Link: https://lore.kernel.org/lkml/20200506211523.15077-3-keescook@chromium.org/
+Co-developed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/pstore/platform.c   | 4 +++-
+ include/linux/pstore.h | 7 +++++++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-+       /*
-+        * Use mm->get_unmapped_area value as a hint to use topdown routine.
-+        * If architectures have special needs, they should define their own
-+        * version of hugetlb_get_unmapped_area.
-+        */
-+       if (mm->get_unmapped_area == arch_get_unmapped_area_topdown)
-+               return hugetlb_get_unmapped_area_topdown(file, addr, len,
-+                               pgoff, flags);
-+       return hugetlb_get_unmapped_area_bottomup(file, addr, len,
-+                       pgoff, flags);
-
-
-Thoughts?
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index 5e6c6022deb9..a9e297eefdff 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -595,8 +595,10 @@ int pstore_register(struct pstore_info *psi)
+ 
+ 	pstore_get_records(0);
+ 
+-	if (psi->flags & PSTORE_FLAGS_DMESG)
++	if (psi->flags & PSTORE_FLAGS_DMESG) {
++		pstore_dumper.max_reason = psinfo->max_reason;
+ 		pstore_register_kmsg();
++	}
+ 	if (psi->flags & PSTORE_FLAGS_CONSOLE)
+ 		pstore_register_console();
+ 	if (psi->flags & PSTORE_FLAGS_FTRACE)
+diff --git a/include/linux/pstore.h b/include/linux/pstore.h
+index f6f22b13e04f..eb93a54cff31 100644
+--- a/include/linux/pstore.h
++++ b/include/linux/pstore.h
+@@ -96,6 +96,12 @@ struct pstore_record {
+  *
+  * @read_mutex:	serializes @open, @read, @close, and @erase callbacks
+  * @flags:	bitfield of frontends the backend can accept writes for
++ * @max_reason:	Used when PSTORE_FLAGS_DMESG is set. Contains the
++ *		kmsg_dump_reason enum value. KMSG_DUMP_UNDEF means
++ *		"use existing kmsg_dump() filtering, based on the
++ *		printk.always_kmsg_dump boot param" (which is either
++ *		KMSG_DUMP_OOPS when false, or KMSG_DUMP_MAX when
++ *		true); see printk.always_kmsg_dump for more details.
+  * @data:	backend-private pointer passed back during callbacks
+  *
+  * Callbacks:
+@@ -179,6 +185,7 @@ struct pstore_info {
+ 	struct mutex	read_mutex;
+ 
+ 	int		flags;
++	int		max_reason;
+ 	void		*data;
+ 
+ 	int		(*open)(struct pstore_info *psi);
 -- 
-Mike Kravetz
+2.20.1
 
-
->  }
->  #endif
->  
-> 
