@@ -4,64 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32F9C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6775AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98A98207CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E5362078C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:50:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d7qOQnoy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ghve48lJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgEOQuW (ORCPT
+        id S1726727AbgEOQue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:50:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56964 "EHLO
+        Fri, 15 May 2020 12:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726563AbgEOQuU (ORCPT
+        by vger.kernel.org with ESMTP id S1726674AbgEOQuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:50:20 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2045C05BD0A
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:50:20 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id j83so660458qke.10
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:50:20 -0700 (PDT)
+        Fri, 15 May 2020 12:50:25 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42E29C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:50:24 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id a7so3212139qvl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:50:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=kwJEn/wid72uB/BlW2Gk/G6GhFtTPRsbBEoX29PWcbY=;
-        b=d7qOQnoyJTrcevdJ7u1JyqABXsregw3K8ytQELrJP8mBthDLfbRP5YMgAbHiSps7q6
-         26gydaP5n158JrvmrxgqW+yRP2wUZ/2mX0OiVgTxJmMUkcEkGlaencc3CiF8EJEPkO1Y
-         HzMmZqipc8laDNqSOgUCWqslXotwMwtJAiP17IjlIjGoyMocy3UqBOEwxihELUuzg49t
-         UFbie7H5cA/XZIzXbzUKclt+18wNGbjos4t5q4MzDB5rzEUagCMYZoqoAwn+q/xj4GO8
-         qXYjtsKeY8KKp9faqnE+RZVFMG48o/fKQMp7wWewj2Moswp55vA0g8pk10FRB4cezRlh
-         +oJQ==
+        bh=Qx5DR7q9yKe+bR/yiFue61eKIkA72C71MJNDdOxOzy4=;
+        b=ghve48lJdL7a0PhjG8X6wjAjP0AxWuPkU5vybqrnBGVqMTw1Jo0XaaiJVG+Vfu4WIe
+         XUjjQKbOg1bFr7mGVIG6Cfr5X0rJRIGYjWsDPSUaoFsHXWd5s9XYXZQRy/vt8JZ5o0hV
+         FqJzBKMWkkI0+kg7w3Bi93YWMh0/r5ECqIGKTIi4yV3Jj8mFthW1zCqu2GdHLEBPhIiy
+         rYARDDlP3q5K6aDd01qe/e/LVuk4ouQXhDuW60JF+9PjhUMQCNM+SgnGWhD7lQL5cbrz
+         9RkOUljViX68JaIGP234t8zO2nnDyrG73Ykbl+OC5NoNrXgHFy/EoXkfBwaPPKTvP19I
+         K3JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=kwJEn/wid72uB/BlW2Gk/G6GhFtTPRsbBEoX29PWcbY=;
-        b=gBzHDWCR1ZV/QRQjYsHvC21V9zKJYZfmEOxDBXEKC66jcV53uX9tkL2u7MZbakBLtR
-         ItS8CAQsq0QflFS7Oik71BNIDKmtFg/efilvMcatCOltaPJhCEBKgJg13hCmoar1Lz30
-         Hh0p2gkoYuGqmtEiyLunFEFSuq0XihhgAHEhlHeV3V8EHgec9qU25qoJSPaNxZeHB37d
-         ClrlAH4D53N8SqebbFRz2bKdWNXu0JllCXAyz/H2Qn+1UPO+wU0fuwzKouIsybWDNb/k
-         +2BZDzodQecNG3UP7XRqfk4UOTZv356f7YiN1hXdTpuO9H9/l61fr9Sg2sC1ZsSQ3Ql6
-         If6w==
-X-Gm-Message-State: AOAM530seZ2t5VRtGish2967ceYEAOm8YgOwU9xjb68xQ7JpybeIPFXI
-        gmdz3aQ2nN0owNQsV98UF58TqMJdNsf0
-X-Google-Smtp-Source: ABdhPJwNuL/wNyrfSQVQZFx8ITBGuKSkCqddDk6ERPCOPCIaJb99AHqAaSlH5s2PUf4zIajvYseRgwJhAYBr
-X-Received: by 2002:a0c:ec8f:: with SMTP id u15mr4502718qvo.102.1589561419743;
- Fri, 15 May 2020 09:50:19 -0700 (PDT)
-Date:   Fri, 15 May 2020 09:50:04 -0700
+        bh=Qx5DR7q9yKe+bR/yiFue61eKIkA72C71MJNDdOxOzy4=;
+        b=lN3dYdFYDROtrMg9ksGMg60FFglnvZzXnMJB7YyYJI/7Y0Xn3kuFK0HaQmZtqF7toA
+         uhr/bXqEGC/HaA4LWoryMa/2FIg+cKwwZxWUuRqAZVkcD2BbiwR14v69YoFQUW4F6mUA
+         CQa+FNqyqAry6Vu30pgVUPRSON/vIvIwwl3idJMz/nh+ZAQgG2xJ8N+YeUS+1daB14Ux
+         Z7GxgG57DMHDDlwpQWiyLtjpaVqh62VFNB+FUlGYINhN5b/vTktimNOQ2lW/kZhHtFXN
+         VXKyvGB8oc1jTnmxUxqkQihmxwyzl5GXUqxu1sYezr0yysojJ68rGplR31NtMikT76FN
+         ipLA==
+X-Gm-Message-State: AOAM533+Vi2yOd1yLR0ZK/cl/n82B7Vm/Vfmxby/LKaTAw2mWIBjHq9g
+        OozeWIhC8WNSrlKU9tzHdnb6kyXrd3ho
+X-Google-Smtp-Source: ABdhPJyzB2+s5r9taCckBNXZJBSNUxCJz1wu1Th0hkKRNHwTEZbWa8Ppfo14hdhlGoVQ0zXKrjc1TlndTmZg
+X-Received: by 2002:ad4:4b61:: with SMTP id m1mr4521452qvx.235.1589561423365;
+ Fri, 15 May 2020 09:50:23 -0700 (PDT)
+Date:   Fri, 15 May 2020 09:50:06 -0700
 In-Reply-To: <20200515165007.217120-1-irogers@google.com>
-Message-Id: <20200515165007.217120-5-irogers@google.com>
+Message-Id: <20200515165007.217120-7-irogers@google.com>
 Mime-Version: 1.0
 References: <20200515165007.217120-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH v2 4/7] tools lib/api: Copy libbpf hashmap to tools/perf/util
+Subject: [PATCH v2 6/7] perf test: Improve pmu event metric testing
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -88,483 +89,291 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org
 Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Ian Rogers <irogers@google.com>, Paul Clarke <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow use of hashmap in perf. Modify perf's check-headers.sh script to
-check that the files are kept in sync, in the same way kernel headers are
-checked. This will warn if they are out of sync at the start of a perf
-build.
+Break pmu-events test into 2 and add a test to verify that all pmu
+metric expressions simply parse. Try to parse all metric ids/events,
+skip/warn if metrics for the current architecture fail to parse. To
+support warning for a skip, and an ability for a subtest to describe why
+it skips.
+
+Tested on power9, skylakex, haswell, broadwell, westmere, sandybridge and
+ivybridge.
+
+May skip/warn on other architectures if metrics are invalid. In
+particular s390 is untested, but its expressions are trivial. The
+untested architectures with expressions are power8, cascadelakex,
+tremontx, skylake, jaketown, ivytown and variants of haswell and
+broadwell.
+
+v3. addresses review comments from John Garry <john.garry@huawei.com>,
+Jiri Olsa <jolsa@redhat.com> and Arnaldo Carvalho de Melo
+<acme@kernel.org>.
+v2. changes the commit message as event parsing errors no longer cause
+the test to fail.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kajol Jain <kjain@linux.ibm.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Paul Clarke <pc@us.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lore.kernel.org/lkml/20200513212933.41273-1-irogers@google.com
+[ split from a larger patch ]
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/check-headers.sh |   4 +
- tools/perf/util/Build       |   4 +
- tools/perf/util/hashmap.c   | 238 ++++++++++++++++++++++++++++++++++++
- tools/perf/util/hashmap.h   | 177 +++++++++++++++++++++++++++
- 4 files changed, 423 insertions(+)
- create mode 100644 tools/perf/util/hashmap.c
- create mode 100644 tools/perf/util/hashmap.h
+ tools/perf/tests/builtin-test.c |   7 ++
+ tools/perf/tests/pmu-events.c   | 168 ++++++++++++++++++++++++++++++--
+ tools/perf/tests/tests.h        |   3 +
+ 3 files changed, 172 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index cf147db4e5ca..94c2bc22c2bb 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -128,4 +128,8 @@ check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in
- # diff non-symmetric files
- check_2 tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index baee735e6aa5..9553f8061772 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -75,6 +75,13 @@ static struct test generic_tests[] = {
+ 	{
+ 		.desc = "PMU events",
+ 		.func = test__pmu_events,
++		.subtest = {
++			.skip_if_fail	= false,
++			.get_nr		= test__pmu_events_subtest_get_nr,
++			.get_desc	= test__pmu_events_subtest_get_desc,
++			.skip_reason	= test__pmu_events_subtest_skip_reason,
++		},
++
+ 	},
+ 	{
+ 		.desc = "DSO data read",
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index d64261da8bf7..e21f0addcfbb 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -8,6 +8,9 @@
+ #include <linux/zalloc.h>
+ #include "debug.h"
+ #include "../pmu-events/pmu-events.h"
++#include "util/evlist.h"
++#include "util/expr.h"
++#include "util/parse-events.h"
  
-+# check duplicated library files
-+check_2 tools/perf/util/hashmap.h tools/lib/bpf/hashmap.h
-+check_2 tools/perf/util/hashmap.c tools/lib/bpf/hashmap.c
-+
- cd tools/perf
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index ca07a162d602..880fcdd1ab11 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -136,6 +136,10 @@ perf-$(CONFIG_LIBELF) += symbol-elf.o
- perf-$(CONFIG_LIBELF) += probe-file.o
- perf-$(CONFIG_LIBELF) += probe-event.o
+ struct perf_pmu_test_event {
+ 	struct pmu_event event;
+@@ -144,7 +147,7 @@ static struct pmu_events_map *__test_pmu_get_events_map(void)
+ }
  
-+ifndef CONFIG_LIBBPF
-+perf-y += hashmap.o
-+endif
+ /* Verify generated events from pmu-events.c is as expected */
+-static int __test_pmu_event_table(void)
++static int test_pmu_event_table(void)
+ {
+ 	struct pmu_events_map *map = __test_pmu_get_events_map();
+ 	struct pmu_event *table;
+@@ -347,14 +350,11 @@ static int __test__pmu_event_aliases(char *pmu_name, int *count)
+ 	return res;
+ }
+ 
+-int test__pmu_events(struct test *test __maybe_unused,
+-		     int subtest __maybe_unused)
 +
- ifndef CONFIG_LIBELF
- perf-y += symbol-minimal.o
- endif
-diff --git a/tools/perf/util/hashmap.c b/tools/perf/util/hashmap.c
-new file mode 100644
-index 000000000000..a405dad068f5
---- /dev/null
-+++ b/tools/perf/util/hashmap.c
-@@ -0,0 +1,238 @@
-+// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++static int test_aliases(void)
+ {
+ 	struct perf_pmu *pmu = NULL;
+ 
+-	if (__test_pmu_event_table())
+-		return -1;
+-
+ 	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+ 		int count = 0;
+ 
+@@ -377,3 +377,159 @@ int test__pmu_events(struct test *test __maybe_unused,
+ 
+ 	return 0;
+ }
 +
-+/*
-+ * Generic non-thread safe hash map implementation.
-+ *
-+ * Copyright (c) 2019 Facebook
-+ */
-+#include <stdint.h>
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <errno.h>
-+#include <linux/err.h>
-+#include "hashmap.h"
-+
-+/* make sure libbpf doesn't use kernel-only integer typedefs */
-+#pragma GCC poison u8 u16 u32 u64 s8 s16 s32 s64
-+
-+/* start with 4 buckets */
-+#define HASHMAP_MIN_CAP_BITS 2
-+
-+static void hashmap_add_entry(struct hashmap_entry **pprev,
-+			      struct hashmap_entry *entry)
++static bool is_number(const char *str)
 +{
-+	entry->next = *pprev;
-+	*pprev = entry;
++	char *end_ptr;
++
++	strtod(str, &end_ptr);
++	return end_ptr != str;
 +}
 +
-+static void hashmap_del_entry(struct hashmap_entry **pprev,
-+			      struct hashmap_entry *entry)
++static int check_parse_id(const char *id, bool same_cpu, struct pmu_event *pe)
 +{
-+	*pprev = entry->next;
-+	entry->next = NULL;
-+}
++	struct parse_events_error error;
++	struct evlist *evlist;
++	int ret;
 +
-+void hashmap__init(struct hashmap *map, hashmap_hash_fn hash_fn,
-+		   hashmap_equal_fn equal_fn, void *ctx)
-+{
-+	map->hash_fn = hash_fn;
-+	map->equal_fn = equal_fn;
-+	map->ctx = ctx;
++	/* Numbers are always valid. */
++	if (is_number(id))
++		return 0;
 +
-+	map->buckets = NULL;
-+	map->cap = 0;
-+	map->cap_bits = 0;
-+	map->sz = 0;
-+}
-+
-+struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
-+			     hashmap_equal_fn equal_fn,
-+			     void *ctx)
-+{
-+	struct hashmap *map = malloc(sizeof(struct hashmap));
-+
-+	if (!map)
-+		return ERR_PTR(-ENOMEM);
-+	hashmap__init(map, hash_fn, equal_fn, ctx);
-+	return map;
-+}
-+
-+void hashmap__clear(struct hashmap *map)
-+{
-+	struct hashmap_entry *cur, *tmp;
-+	size_t bkt;
-+
-+	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
-+		free(cur);
++	evlist = evlist__new();
++	memset(&error, 0, sizeof(error));
++	ret = parse_events(evlist, id, &error);
++	if (ret && same_cpu) {
++		pr_warning("Parse event failed metric '%s' id '%s' expr '%s'\n",
++			pe->metric_name, id, pe->metric_expr);
++		pr_warning("Error string '%s' help '%s'\n", error.str,
++			error.help);
++	} else if (ret) {
++		pr_debug3("Parse event failed, but for an event that may not be supported by this CPU.\nid '%s' metric '%s' expr '%s'\n",
++			  id, pe->metric_name, pe->metric_expr);
++		ret = 0;
 +	}
-+	free(map->buckets);
-+	map->buckets = NULL;
-+	map->cap = map->cap_bits = map->sz = 0;
++	evlist__delete(evlist);
++	free(error.str);
++	free(error.help);
++	free(error.first_str);
++	free(error.first_help);
++	return ret;
 +}
 +
-+void hashmap__free(struct hashmap *map)
++static void expr_failure(const char *msg,
++			 const struct pmu_events_map *map,
++			 const struct pmu_event *pe)
 +{
-+	if (!map)
-+		return;
-+
-+	hashmap__clear(map);
-+	free(map);
++	pr_debug("%s for map %s %s %s\n",
++		msg, map->cpuid, map->version, map->type);
++	pr_debug("On metric %s\n", pe->metric_name);
++	pr_debug("On expression %s\n", pe->metric_expr);
 +}
 +
-+size_t hashmap__size(const struct hashmap *map)
++static int test_parsing(void)
 +{
-+	return map->sz;
-+}
++	struct pmu_events_map *cpus_map = perf_pmu__find_map(NULL);
++	struct pmu_events_map *map;
++	struct pmu_event *pe;
++	int i, j, k;
++	const char **ids;
++	int idnum;
++	int ret = 0;
++	struct expr_parse_ctx ctx;
++	double result;
 +
-+size_t hashmap__capacity(const struct hashmap *map)
-+{
-+	return map->cap;
-+}
++	i = 0;
++	for (;;) {
++		map = &pmu_events_map[i++];
++		if (!map->table)
++			break;
++		j = 0;
++		for (;;) {
++			pe = &map->table[j++];
++			if (!pe->name && !pe->metric_group && !pe->metric_name)
++				break;
++			if (!pe->metric_expr)
++				continue;
++			if (expr__find_other(pe->metric_expr, NULL,
++						&ids, &idnum, 0) < 0) {
++				expr_failure("Parse other failed", map, pe);
++				ret++;
++				continue;
++			}
++			expr__ctx_init(&ctx);
 +
-+static bool hashmap_needs_to_grow(struct hashmap *map)
-+{
-+	/* grow if empty or more than 75% filled */
-+	return (map->cap == 0) || ((map->sz + 1) * 4 / 3 > map->cap);
-+}
++			/*
++			 * Add all ids with a made up value. The value may
++			 * trigger divide by zero when subtracted and so try to
++			 * make them unique.
++			 */
++			for (k = 0; k < idnum; k++)
++				expr__add_id(&ctx, ids[k], k + 1);
 +
-+static int hashmap_grow(struct hashmap *map)
-+{
-+	struct hashmap_entry **new_buckets;
-+	struct hashmap_entry *cur, *tmp;
-+	size_t new_cap_bits, new_cap;
-+	size_t h, bkt;
++			for (k = 0; k < idnum; k++) {
++				if (check_parse_id(ids[k], map == cpus_map, pe))
++					ret++;
++			}
 +
-+	new_cap_bits = map->cap_bits + 1;
-+	if (new_cap_bits < HASHMAP_MIN_CAP_BITS)
-+		new_cap_bits = HASHMAP_MIN_CAP_BITS;
-+
-+	new_cap = 1UL << new_cap_bits;
-+	new_buckets = calloc(new_cap, sizeof(new_buckets[0]));
-+	if (!new_buckets)
-+		return -ENOMEM;
-+
-+	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
-+		h = hash_bits(map->hash_fn(cur->key, map->ctx), new_cap_bits);
-+		hashmap_add_entry(&new_buckets[h], cur);
-+	}
-+
-+	map->cap = new_cap;
-+	map->cap_bits = new_cap_bits;
-+	free(map->buckets);
-+	map->buckets = new_buckets;
-+
-+	return 0;
-+}
-+
-+static bool hashmap_find_entry(const struct hashmap *map,
-+			       const void *key, size_t hash,
-+			       struct hashmap_entry ***pprev,
-+			       struct hashmap_entry **entry)
-+{
-+	struct hashmap_entry *cur, **prev_ptr;
-+
-+	if (!map->buckets)
-+		return false;
-+
-+	for (prev_ptr = &map->buckets[hash], cur = *prev_ptr;
-+	     cur;
-+	     prev_ptr = &cur->next, cur = cur->next) {
-+		if (map->equal_fn(cur->key, key, map->ctx)) {
-+			if (pprev)
-+				*pprev = prev_ptr;
-+			*entry = cur;
-+			return true;
++			if (expr__parse(&result, &ctx, pe->metric_expr, 0)) {
++				expr_failure("Parse failed", map, pe);
++				ret++;
++			}
++			for (k = 0; k < idnum; k++)
++				zfree(&ids[k]);
++			free(ids);
 +		}
 +	}
-+
-+	return false;
++	/* TODO: fail when not ok */
++	return ret == 0 ? TEST_OK : TEST_SKIP;
 +}
 +
-+int hashmap__insert(struct hashmap *map, const void *key, void *value,
-+		    enum hashmap_insert_strategy strategy,
-+		    const void **old_key, void **old_value)
-+{
-+	struct hashmap_entry *entry;
-+	size_t h;
-+	int err;
-+
-+	if (old_key)
-+		*old_key = NULL;
-+	if (old_value)
-+		*old_value = NULL;
-+
-+	h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
-+	if (strategy != HASHMAP_APPEND &&
-+	    hashmap_find_entry(map, key, h, NULL, &entry)) {
-+		if (old_key)
-+			*old_key = entry->key;
-+		if (old_value)
-+			*old_value = entry->value;
-+
-+		if (strategy == HASHMAP_SET || strategy == HASHMAP_UPDATE) {
-+			entry->key = key;
-+			entry->value = value;
-+			return 0;
-+		} else if (strategy == HASHMAP_ADD) {
-+			return -EEXIST;
-+		}
-+	}
-+
-+	if (strategy == HASHMAP_UPDATE)
-+		return -ENOENT;
-+
-+	if (hashmap_needs_to_grow(map)) {
-+		err = hashmap_grow(map);
-+		if (err)
-+			return err;
-+		h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
-+	}
-+
-+	entry = malloc(sizeof(struct hashmap_entry));
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	entry->key = key;
-+	entry->value = value;
-+	hashmap_add_entry(&map->buckets[h], entry);
-+	map->sz++;
-+
-+	return 0;
-+}
-+
-+bool hashmap__find(const struct hashmap *map, const void *key, void **value)
-+{
-+	struct hashmap_entry *entry;
-+	size_t h;
-+
-+	h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
-+	if (!hashmap_find_entry(map, key, h, NULL, &entry))
-+		return false;
-+
-+	if (value)
-+		*value = entry->value;
-+	return true;
-+}
-+
-+bool hashmap__delete(struct hashmap *map, const void *key,
-+		     const void **old_key, void **old_value)
-+{
-+	struct hashmap_entry **pprev, *entry;
-+	size_t h;
-+
-+	h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
-+	if (!hashmap_find_entry(map, key, h, &pprev, &entry))
-+		return false;
-+
-+	if (old_key)
-+		*old_key = entry->key;
-+	if (old_value)
-+		*old_value = entry->value;
-+
-+	hashmap_del_entry(pprev, entry);
-+	free(entry);
-+	map->sz--;
-+
-+	return true;
-+}
-+
-diff --git a/tools/perf/util/hashmap.h b/tools/perf/util/hashmap.h
-new file mode 100644
-index 000000000000..e823b35e7371
---- /dev/null
-+++ b/tools/perf/util/hashmap.h
-@@ -0,0 +1,177 @@
-+/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
-+
-+/*
-+ * Generic non-thread safe hash map implementation.
-+ *
-+ * Copyright (c) 2019 Facebook
-+ */
-+#ifndef __LIBBPF_HASHMAP_H
-+#define __LIBBPF_HASHMAP_H
-+
-+#include <stdbool.h>
-+#include <stddef.h>
-+#ifdef __GLIBC__
-+#include <bits/wordsize.h>
-+#else
-+#include <bits/reg.h>
-+#endif
-+
-+static inline size_t hash_bits(size_t h, int bits)
-+{
-+	/* shuffle bits and return requested number of upper bits */
-+	return (h * 11400714819323198485llu) >> (__WORDSIZE - bits);
-+}
-+
-+typedef size_t (*hashmap_hash_fn)(const void *key, void *ctx);
-+typedef bool (*hashmap_equal_fn)(const void *key1, const void *key2, void *ctx);
-+
-+struct hashmap_entry {
-+	const void *key;
-+	void *value;
-+	struct hashmap_entry *next;
++static const struct {
++	int (*func)(void);
++	const char *desc;
++} pmu_events_testcase_table[] = {
++	{
++		.func = test_pmu_event_table,
++		.desc = "PMU event table sanity",
++	},
++	{
++		.func = test_aliases,
++		.desc = "PMU event map aliases",
++	},
++	{
++		.func = test_parsing,
++		.desc = "Parsing of PMU event table metrics",
++	},
 +};
 +
-+struct hashmap {
-+	hashmap_hash_fn hash_fn;
-+	hashmap_equal_fn equal_fn;
-+	void *ctx;
-+
-+	struct hashmap_entry **buckets;
-+	size_t cap;
-+	size_t cap_bits;
-+	size_t sz;
-+};
-+
-+#define HASHMAP_INIT(hash_fn, equal_fn, ctx) {	\
-+	.hash_fn = (hash_fn),			\
-+	.equal_fn = (equal_fn),			\
-+	.ctx = (ctx),				\
-+	.buckets = NULL,			\
-+	.cap = 0,				\
-+	.cap_bits = 0,				\
-+	.sz = 0,				\
-+}
-+
-+void hashmap__init(struct hashmap *map, hashmap_hash_fn hash_fn,
-+		   hashmap_equal_fn equal_fn, void *ctx);
-+struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
-+			     hashmap_equal_fn equal_fn,
-+			     void *ctx);
-+void hashmap__clear(struct hashmap *map);
-+void hashmap__free(struct hashmap *map);
-+
-+size_t hashmap__size(const struct hashmap *map);
-+size_t hashmap__capacity(const struct hashmap *map);
-+
-+/*
-+ * Hashmap insertion strategy:
-+ * - HASHMAP_ADD - only add key/value if key doesn't exist yet;
-+ * - HASHMAP_SET - add key/value pair if key doesn't exist yet; otherwise,
-+ *   update value;
-+ * - HASHMAP_UPDATE - update value, if key already exists; otherwise, do
-+ *   nothing and return -ENOENT;
-+ * - HASHMAP_APPEND - always add key/value pair, even if key already exists.
-+ *   This turns hashmap into a multimap by allowing multiple values to be
-+ *   associated with the same key. Most useful read API for such hashmap is
-+ *   hashmap__for_each_key_entry() iteration. If hashmap__find() is still
-+ *   used, it will return last inserted key/value entry (first in a bucket
-+ *   chain).
-+ */
-+enum hashmap_insert_strategy {
-+	HASHMAP_ADD,
-+	HASHMAP_SET,
-+	HASHMAP_UPDATE,
-+	HASHMAP_APPEND,
-+};
-+
-+/*
-+ * hashmap__insert() adds key/value entry w/ various semantics, depending on
-+ * provided strategy value. If a given key/value pair replaced already
-+ * existing key/value pair, both old key and old value will be returned
-+ * through old_key and old_value to allow calling code do proper memory
-+ * management.
-+ */
-+int hashmap__insert(struct hashmap *map, const void *key, void *value,
-+		    enum hashmap_insert_strategy strategy,
-+		    const void **old_key, void **old_value);
-+
-+static inline int hashmap__add(struct hashmap *map,
-+			       const void *key, void *value)
++const char *test__pmu_events_subtest_get_desc(int subtest)
 +{
-+	return hashmap__insert(map, key, value, HASHMAP_ADD, NULL, NULL);
++	if (subtest < 0 ||
++	    subtest >= (int)ARRAY_SIZE(pmu_events_testcase_table))
++		return NULL;
++	return pmu_events_testcase_table[subtest].desc;
 +}
 +
-+static inline int hashmap__set(struct hashmap *map,
-+			       const void *key, void *value,
-+			       const void **old_key, void **old_value)
++const char *test__pmu_events_subtest_skip_reason(int subtest)
 +{
-+	return hashmap__insert(map, key, value, HASHMAP_SET,
-+			       old_key, old_value);
++	if (subtest < 0 ||
++	    subtest >= (int)ARRAY_SIZE(pmu_events_testcase_table))
++		return NULL;
++	if (pmu_events_testcase_table[subtest].func != test_parsing)
++		return NULL;
++	return "some metrics failed";
 +}
 +
-+static inline int hashmap__update(struct hashmap *map,
-+				  const void *key, void *value,
-+				  const void **old_key, void **old_value)
++int test__pmu_events_subtest_get_nr(void)
 +{
-+	return hashmap__insert(map, key, value, HASHMAP_UPDATE,
-+			       old_key, old_value);
++	return (int)ARRAY_SIZE(pmu_events_testcase_table);
 +}
 +
-+static inline int hashmap__append(struct hashmap *map,
-+				  const void *key, void *value)
++int test__pmu_events(struct test *test __maybe_unused, int subtest)
 +{
-+	return hashmap__insert(map, key, value, HASHMAP_APPEND, NULL, NULL);
++	if (subtest < 0 ||
++	    subtest >= (int)ARRAY_SIZE(pmu_events_testcase_table))
++		return TEST_FAIL;
++	return pmu_events_testcase_table[subtest].func();
 +}
-+
-+bool hashmap__delete(struct hashmap *map, const void *key,
-+		     const void **old_key, void **old_value);
-+
-+bool hashmap__find(const struct hashmap *map, const void *key, void **value);
-+
-+/*
-+ * hashmap__for_each_entry - iterate over all entries in hashmap
-+ * @map: hashmap to iterate
-+ * @cur: struct hashmap_entry * used as a loop cursor
-+ * @bkt: integer used as a bucket loop cursor
-+ */
-+#define hashmap__for_each_entry(map, cur, bkt)				    \
-+	for (bkt = 0; bkt < map->cap; bkt++)				    \
-+		for (cur = map->buckets[bkt]; cur; cur = cur->next)
-+
-+/*
-+ * hashmap__for_each_entry_safe - iterate over all entries in hashmap, safe
-+ * against removals
-+ * @map: hashmap to iterate
-+ * @cur: struct hashmap_entry * used as a loop cursor
-+ * @tmp: struct hashmap_entry * used as a temporary next cursor storage
-+ * @bkt: integer used as a bucket loop cursor
-+ */
-+#define hashmap__for_each_entry_safe(map, cur, tmp, bkt)		    \
-+	for (bkt = 0; bkt < map->cap; bkt++)				    \
-+		for (cur = map->buckets[bkt];				    \
-+		     cur && ({tmp = cur->next; true; });		    \
-+		     cur = tmp)
-+
-+/*
-+ * hashmap__for_each_key_entry - iterate over entries associated with given key
-+ * @map: hashmap to iterate
-+ * @cur: struct hashmap_entry * used as a loop cursor
-+ * @key: key to iterate entries for
-+ */
-+#define hashmap__for_each_key_entry(map, cur, _key)			    \
-+	for (cur = ({ size_t bkt = hash_bits(map->hash_fn((_key), map->ctx),\
-+					     map->cap_bits);		    \
-+		     map->buckets ? map->buckets[bkt] : NULL; });	    \
-+	     cur;							    \
-+	     cur = cur->next)						    \
-+		if (map->equal_fn(cur->key, (_key), map->ctx))
-+
-+#define hashmap__for_each_key_entry_safe(map, cur, tmp, _key)		    \
-+	for (cur = ({ size_t bkt = hash_bits(map->hash_fn((_key), map->ctx),\
-+					     map->cap_bits);		    \
-+		     cur = map->buckets ? map->buckets[bkt] : NULL; });	    \
-+	     cur && ({ tmp = cur->next; true; });			    \
-+	     cur = tmp)							    \
-+		if (map->equal_fn(cur->key, (_key), map->ctx))
-+
-+#endif /* __LIBBPF_HASHMAP_H */
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index 88e45aeab94f..6c6c4b6a4796 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -51,6 +51,9 @@ int test__perf_evsel__tp_sched_test(struct test *test, int subtest);
+ int test__syscall_openat_tp_fields(struct test *test, int subtest);
+ int test__pmu(struct test *test, int subtest);
+ int test__pmu_events(struct test *test, int subtest);
++const char *test__pmu_events_subtest_get_desc(int subtest);
++const char *test__pmu_events_subtest_skip_reason(int subtest);
++int test__pmu_events_subtest_get_nr(void);
+ int test__attr(struct test *test, int subtest);
+ int test__dso_data(struct test *test, int subtest);
+ int test__dso_data_cache(struct test *test, int subtest);
 -- 
 2.26.2.761.g0e0b3e54be-goog
 
