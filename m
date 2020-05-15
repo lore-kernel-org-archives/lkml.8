@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AB1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7802C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE9720709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B63720709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589578168;
-	bh=Kfc7RH5wQklFLrTjyZrxyKWCF3lId530z4BZsrN14fM=;
+	s=default; t=1589578173;
+	bh=hSudVJFyAZ9/J4REpJ76G/FrhB+ePdz7UgTctgDaIH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2cDdWsTU6OfQfRqArvVu/bUMHRVK3FCeZqBZ/1+FTHoy+c5m7xkaLnTWblHAcccEU
-	 qh3PA1W/UQgcr35DsSPhHnZPNB2Jpz14atpS3G+kElJ9Ih/6LTITtjZKnDbWpsEtpF
-	 o+yOtQCWFNQ/NwVBppdu00HkLL16XWuwf9B56lug=
+	b=gkNltXv+Vn6L00AubyWPOzNmieqdXq/BDthfinWgvfpSXGji03V0d+KzYNI3qZYgx
+	 n3FAzLRsNMx/6bCbzk7iieHEpBTzCPay7B/QSpV0JXitEEmxFVxbMauOXs9/DSirf6
+	 Tsrb/mpEwuGPs2RYjf339/1ns4tlMXop+afKhb8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgEOV3I (ORCPT
+        id S1728065AbgEOV3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:29:08 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:55098 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgEOV25 (ORCPT
+        Fri, 15 May 2020 17:29:32 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44667 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727942AbgEOV3H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:28:57 -0400
-Received: by mail-pj1-f68.google.com with SMTP id s69so1476674pjb.4;
-        Fri, 15 May 2020 14:28:57 -0700 (PDT)
+        Fri, 15 May 2020 17:29:07 -0400
+Received: by mail-pg1-f193.google.com with SMTP id b8so1587153pgi.11;
+        Fri, 15 May 2020 14:29:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iJHZT4MFB+sxpA2IE8Rn7gYtD/Qc3TQAcYIYNGZYEvg=;
-        b=phgAbbNGhP6J6HCS81WASgrpY9Nrx5oVe49i1im1AEYCMmyduUplIcxbSk128lbn5z
-         TU2mr1DIJBXRCn0klJ41zaK7+lstVO2R1X9Mt3moIhbF1Z2I2T1IaKpUnEJ/hEV6+b/H
-         ZT1TabezFw8DNFr/6SUEIU+ShgnsNkOOShmjegw3aXW3+dPT3rahU/pTRJ3jem3C/UHU
-         nwfLtdSsE3FiPQ13tMm7pqTCk5DHaVzSj8uGfDs+Or0WM7VGkpITCN/69O64+202a897
-         RiLjpzheuUA9YMRXoR4QSwImyHDd4RymJKRryVL+VOogvxc0LBBast66Ir0BpeFcKCYF
-         dh7g==
-X-Gm-Message-State: AOAM5307VsbEQwiBDwxoBXLSrs66/8AOC2cJSWO81u8LqRTHytElmFSm
-        FdNIdsjE6atRICRr2kTle1Y=
-X-Google-Smtp-Source: ABdhPJyXGdNJ50o8iXun3oJYb5kOl4qAS44k7tBrK+zhGB5FrkYaAMjM2mxcrnwWQ+1fLrVtkOdV0w==
-X-Received: by 2002:a17:902:9f97:: with SMTP id g23mr5721810plq.30.1589578136986;
-        Fri, 15 May 2020 14:28:56 -0700 (PDT)
+        bh=7iSHfXW9+fvDe3OMezoTpoZ6yc3BiswtzUTGtFdEoqM=;
+        b=CWT3RSEsOAt3vxph1Drkp6lLCexue3b3KvLCldOnH8ALvAN+vG7ea8ubR3spND7fNJ
+         jrosDF++LVePslD+xaXTT04Dr31BRgvteWo/uCtQqi4oif794PROe+fklD8OUKEqX4pA
+         QG4wWoSauN0emeuSxha6yT8ugiYfMnV346cti0anyZR8Z/mDDmIpCO2Thvyp22N+lQeZ
+         kTbgXNu6dlOitrhfpKl5z4QKE5wWxYyiNBtWDp59hDGh2rzVZMNfsCSsQxtPbismgFxD
+         zuok7sbso5ktvEQvVHjRzuSbyvpON5p/VgfmCj5Zs6lbISK6e1gFECdajf/sQCQVnJek
+         6KhQ==
+X-Gm-Message-State: AOAM5320EiO4ESDUt3yjDQX383A+SPvM1GZR0amfD/fawwVeiraWdgom
+        8naqhOEHuEOtYF2c0FbXQuk=
+X-Google-Smtp-Source: ABdhPJy8UUPC9xXHxB4FjCVxUaLsmMMiDQI0BvVJYF+PqZUF0tKyMG2HswF59FK0uEUmrA4F0O6+Ng==
+X-Received: by 2002:a62:7d91:: with SMTP id y139mr5770731pfc.172.1589578147283;
+        Fri, 15 May 2020 14:29:07 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id m9sm2450255pgd.1.2020.05.15.14.28.52
+        by smtp.gmail.com with ESMTPSA id 25sm2281115pjk.50.2020.05.15.14.28.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 14:28:55 -0700 (PDT)
+        Fri, 15 May 2020 14:29:04 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id CB94E41EDA; Fri, 15 May 2020 21:28:49 +0000 (UTC)
+        id 6016742380; Fri, 15 May 2020 21:28:50 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     jeyu@kernel.org
 Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
@@ -63,16 +63,24 @@ Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
         mchehab+samsung@kernel.org, kvalo@codeaurora.org,
         davem@davemloft.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Rasesh Mody <rmody@marvell.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com
-Subject: [PATCH v2 05/15] bna: use new module_firmware_crashed()
-Date:   Fri, 15 May 2020 21:28:36 +0000
-Message-Id: <20200515212846.1347-6-mcgrof@kernel.org>
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
+Subject: [PATCH v2 14/15] brcm80211: use new module_firmware_crashed()
+Date:   Fri, 15 May 2020 21:28:45 +0000
+Message-Id: <20200515212846.1347-15-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200515212846.1347-1-mcgrof@kernel.org>
 References: <20200515212846.1347-1-mcgrof@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -87,26 +95,34 @@ a reboot.
 
 Using a taint flag allows us to annotate when this happens clearly.
 
-Cc: Rasesh Mody <rmody@marvell.com>
-Cc: Sudarsana Kalluru <skalluru@marvell.com>
-Cc: GR-Linux-NIC-Dev@marvell.com
+Cc: linux-wireless@vger.kernel.org
+Cc: brcm80211-dev-list.pdl@broadcom.com
+Cc: brcm80211-dev-list@cypress.com
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: Franky Lin <franky.lin@broadcom.com>
+Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Cc: Wright Feng <wright.feng@cypress.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "Rafał Miłecki" <rafal@milecki.pl>
+Cc: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/net/ethernet/brocade/bna/bfa_ioc.c | 1 +
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/brocade/bna/bfa_ioc.c b/drivers/net/ethernet/brocade/bna/bfa_ioc.c
-index e17bfc87da90..b3f44a912574 100644
---- a/drivers/net/ethernet/brocade/bna/bfa_ioc.c
-+++ b/drivers/net/ethernet/brocade/bna/bfa_ioc.c
-@@ -927,6 +927,7 @@ bfa_iocpf_sm_disabled(struct bfa_iocpf *iocpf, enum iocpf_event event)
- static void
- bfa_iocpf_sm_initfail_sync_entry(struct bfa_iocpf *iocpf)
- {
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
+index c88655acc78c..d623f83568b3 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
+@@ -1393,6 +1393,7 @@ void brcmf_fw_crashed(struct device *dev)
+ 	struct brcmf_pub *drvr = bus_if->drvr;
+ 
+ 	bphy_err(drvr, "Firmware has halted or crashed\n");
 +	module_firmware_crashed();
- 	bfa_nw_ioc_debug_save_ftrc(iocpf->ioc);
- 	bfa_ioc_hw_sem_get(iocpf->ioc);
- }
+ 
+ 	brcmf_dev_coredump(dev);
+ 
 -- 
 2.26.2
 
