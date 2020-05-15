@@ -2,169 +2,102 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAB7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D978C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E52BE20758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EBF520767
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:57:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589540226;
+	bh=Kgg+Dz7YYYCNO25bLu1uPRJYR5eSTQcswIqaUpnoW7g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=074BYqxNuszZjIBamQW6hOoIjlWohURezQ3ojIRtFIQpQqRmxJgcdz7xWlNMPcs5z
+	 UpXFphLFWsJ55am8XsmcpeLRdaVUkbva3GMplsztc+EGCcWPJgtf/fSOLkVnplRh9q
+	 36Rqe/F9OQFL23X9Z0LwwXFD1CDbsveVzLGFb3O0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgEOK46 (ORCPT
+        id S1726714AbgEOK5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:56:58 -0400
-Received: from mga14.intel.com ([192.55.52.115]:8620 "EHLO mga14.intel.com"
+        Fri, 15 May 2020 06:57:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725968AbgEOK45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:56:57 -0400
-IronPort-SDR: OhF4TIo8ke016/W8xjVhJz3+gsaGlglhvbA5ov+M0K0qwfa0P2HBKYB50zRJ8kcJgbhwcVS4Nv
- ErtX+CqIiFzA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 03:56:56 -0700
-IronPort-SDR: cz2392ucxt8FhURQ67XWzLRCX7ACYrMmmkq2cE80NgKXxJxRld4EQVnKJJUPjYAHV7cLpaW6Q0
- 9Ik/hSz4i9/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="410431330"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga004.jf.intel.com with ESMTP; 15 May 2020 03:56:51 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org
-Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        masonccyang@mxic.com.tw, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v7 1/2] dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
-Date:   Fri, 15 May 2020 18:55:36 +0800
-Message-Id: <20200515105537.4876-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200515105537.4876-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200515105537.4876-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        id S1726233AbgEOK5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 06:57:04 -0400
+Received: from localhost (unknown [122.178.196.30])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79CEE20709;
+        Fri, 15 May 2020 10:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589540223;
+        bh=Kgg+Dz7YYYCNO25bLu1uPRJYR5eSTQcswIqaUpnoW7g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BI2Ru00w9RJBYHRds2Xq2Mkxr4W3LfhVlSyAywdh9J29ayepyZOjzpmQNA5e82s/l
+         JGIWdKxJ32vIiyZJ+BYhvF+cuQ6YlObvkiOWorw1o6PLwEuWDvApbXHMF4sSW+7XqV
+         JW7JA7ufXZkELpNXiq4XJ60LNVGEHtwcRpeDGJwo=
+Date:   Fri, 15 May 2020 16:26:58 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
+ length property
+Message-ID: <20200515105658.GR333670@vkoul-mobl>
+References: <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
+ <20200508111242.GH185537@smile.fi.intel.com>
+ <20200511200528.nfkc2zkh3bvupn7l@mobilestation>
+ <20200511210138.GN185537@smile.fi.intel.com>
+ <20200511213531.wnywlljiulvndx6s@mobilestation>
+ <20200512090804.GR185537@smile.fi.intel.com>
+ <20200512114946.x777yb6bhe22ccn5@mobilestation>
+ <20200512123840.GY185537@smile.fi.intel.com>
+ <20200515060911.GF333670@vkoul-mobl>
+ <20200515105137.GK185537@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515105137.GK185537@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On 15-05-20, 13:51, Andy Shevchenko wrote:
+> On Fri, May 15, 2020 at 11:39:11AM +0530, Vinod Koul wrote:
+> > On 12-05-20, 15:38, Andy Shevchenko wrote:
+> > > On Tue, May 12, 2020 at 02:49:46PM +0300, Serge Semin wrote:
+> > > > On Tue, May 12, 2020 at 12:08:04PM +0300, Andy Shevchenko wrote:
+> > > > > On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
+> > > > > > On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
+> > > > > > > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
+> > > > > > > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
+> > > > > > > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
+> 
+> ...
+> 
+> > > I leave it to Rob and Vinod.
+> > > It won't break our case, so, feel free with your approach.
+> > 
+> > I agree the DT is about describing the hardware and looks like value of
+> > 1 is not allowed. If allowed it should be added..
+> 
+> It's allowed at *run time*, it's illegal in *pre-silicon stage* when
+> synthesizing the IP.
 
-Add YAML file for dt-bindings to support NAND Flash Controller
-on Intel's Lightning Mountain SoC.
+Then it should be added ..
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
----
- .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 91 ++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-
-diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-new file mode 100644
-index 000000000000..cd4e983a449e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mtd/intel,lgm-nand.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel LGM SoC NAND Controller Device Tree Bindings
-+
-+allOf:
-+  - $ref: "nand-controller.yaml"
-+
-+maintainers:
-+  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-nand-controller
-+
-+  reg:
-+    items:
-+       - description: ebunand registers
-+       - description: hsnand registers
-+       - description: nand_cs0 external flash access
-+       - description: nand_cs1 external flash access
-+       - description: addr_sel0 memory region enable and access
-+       - description: addr_sel1 memory region enable and access
-+
-+  clocks:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 2
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+patternProperties:
-+  "^nand@[a-f0-9]+$":
-+    type: object
-+    properties:
-+      reg:
-+        minimum: 0
-+        maximum: 7
-+
-+      nand-ecc-mode: true
-+
-+      nand-ecc-algo:
-+        const: hw
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - dmas
-+  - dma-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    nand-controller@e0f00000 {
-+      compatible = "intel,lgm-nand";
-+      reg = <0xe0f00000 0x100>,
-+            <0xe1000000 0x300>,
-+            <0xe1400000 0x8000>,
-+            <0xe1c00000 0x1000>,
-+            <0x17400000 0x4>,
-+            <0x17c00000 0x4>;
-+      reg-names = "ebunand", "hsnand", "nand_cs0", "nand_cs1",
-+        "addr_sel0","addr_sel1";
-+      clocks = <&cgu0 125>;
-+      dmas = <&dma0 8>, <&dma0 9>;
-+      dma-names = "tx", "rx";
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      #clock-cells = <1>;
-+
-+      nand@0 {
-+        reg = <0>;
-+        nand-on-flash-bbt;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+      };
-+    };
-+
-+...
 -- 
-2.11.0
-
+~Vinod
