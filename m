@@ -2,81 +2,211 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862B8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56393C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2A4206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3536B206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:25:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PXSCARGp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgEOQY4 (ORCPT
+        id S1726263AbgEOQZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:24:56 -0400
-Received: from mga04.intel.com ([192.55.52.120]:10373 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbgEOQY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:24:56 -0400
-IronPort-SDR: wsU01/eh41w/yzzXn/0jig5XKxeuWKrDdE1Xd7pnyxQh26g0fvLg02bDjjLtqcfpHhlFKi+yrB
- KhBFH84RcSGg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 09:24:56 -0700
-IronPort-SDR: oiOGs4kdGAkfrgpiXjs4Lu0J9gX6qJWhPUoDgYzrMTbPYfzbsrcbYQ9Olr50+WUDrxFYcjT4/b
- XTVkPOoBnE+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="307462542"
-Received: from rmfrijns-mobl.ger.corp.intel.com ([10.252.41.136])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 May 2020 09:24:48 -0700
-Message-ID: <85e3304cb3f7bde102bd183d01a282b3b700a285.camel@linux.intel.com>
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com
-Date:   Fri, 15 May 2020 19:24:47 +0300
-In-Reply-To: <20200515094230.GA19017@zn.tnic>
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
-         <20200426165753.GA11046@wind.enjellic.com>
-         <87d07gk24l.fsf@nanos.tec.linutronix.de>
-         <20200508190226.GA31465@wind.enjellic.com>
-         <20200508195635.GR27052@linux.intel.com>
-         <20200514091637.GA25156@wind.enjellic.com>
-         <20200514161559.GA15603@linux.intel.com> <20200514162054.GE9266@zn.tnic>
-         <666f4c3865fcd92e7d5c8437e69399cb55fb88a9.camel@linux.intel.com>
-         <20200515094230.GA19017@zn.tnic>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2 
+        Fri, 15 May 2020 12:25:31 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:49497 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726023AbgEOQZb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 12:25:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589559930; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=3snPa8PcNFz7GP9EFRf4ot7oj2RCpdq3CG7XU0T81c0=;
+ b=PXSCARGpS7TFJMmEjSfnIbEybkBWhIHWe3NK1XiDkwau84MNa3S1qc7bEihLff6FkoQjsfS8
+ gvDjXNfxpskxE10YqUHBy60mAnsj5Lct/gAumym3SqMpK3nmczFLZBCEwWRrHbEjXU9f7DrZ
+ cOeQU4pn2OwE3wpkyUAiF3r3yAQ=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebec274.7fda28651688-smtp-out-n03;
+ Fri, 15 May 2020 16:25:24 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 305C2C43636; Fri, 15 May 2020 16:25:24 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D897C433F2;
+        Fri, 15 May 2020 16:25:23 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 15 May 2020 21:55:23 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Tingwei Zhang <tingwei@codeaurora.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH] coresight: etm4x: Add support to disable trace unit power
+ up
+In-Reply-To: <89be7790b7fdd4b0268919e060198926@codeaurora.org>
+References: <20200514105915.27516-1-saiprakash.ranjan@codeaurora.org>
+ <20200514180055.GA29384@xps15>
+ <2c932d57288508cc72a6ee323cf5595e@codeaurora.org>
+ <CANLsYkxun2EWGeLU42ShbqkJMtCTh+Q9L3t=CXQR+-2zVuuJYg@mail.gmail.com>
+ <a0f8f01f28506e10001885e387d3cb4f@codeaurora.org>
+ <20200515155144.GA7085@xps15>
+ <89be7790b7fdd4b0268919e060198926@codeaurora.org>
+Message-ID: <6cccfa9d18ce86c929da4ec042b4194d@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-15 at 11:42 +0200, Borislav Petkov wrote:
-> On Fri, May 15, 2020 at 12:28:54PM +0300, Jarkko Sakkinen wrote:
-> > Uh oh, should probably address this. Should I send v31 today with a "nosgx"
-> > patch added? Sorry for missing this one :-/
+On 2020-05-15 21:28, Sai Prakash Ranjan wrote:
+> Hi Mathieu,
 > 
-> Not the whole thing - just the one patch as a reply to your thread pls.
+> On 2020-05-15 21:21, Mathieu Poirier wrote:
+>> On Fri, May 15, 2020 at 08:37:13PM +0530, Sai Prakash Ranjan wrote:
+>>> Hi Mathieu,
+>>> 
+>>> On 2020-05-15 20:22, Mathieu Poirier wrote:
+>>> > On Thu, 14 May 2020 at 12:39, Sai Prakash Ranjan
+>>> > <saiprakash.ranjan@codeaurora.org> wrote:
+>>> > >
+>>> > > Hi Mathieu,
+>>> > >
+>>> > > On 2020-05-14 23:30, Mathieu Poirier wrote:
+>>> > > > Good morning Sai,
+>>> > > >
+>>> > > > On Thu, May 14, 2020 at 04:29:15PM +0530, Sai Prakash Ranjan wrote:
+>>> > > >> From: Tingwei Zhang <tingwei@codeaurora.org>
+>>> > > >>
+>>> > > >> On some Qualcomm Technologies Inc. SoCs like SC7180, there
+>>> > > >> exists a hardware errata where the APSS (Application Processor
+>>> > > >> SubSystem)/CPU watchdog counter is stopped when ETM register
+>>> > > >> TRCPDCR.PU=1.
+>>> > > >
+>>> > > > Fun stuff...
+>>> > > >
+>>> > >
+>>> > > Yes :)
+>>> > >
+>>> > > >> Since the ETMs share the same power domain as
+>>> > > >> that of respective CPU cores, they are powered on when the
+>>> > > >> CPU core is powered on. So we can disable powering up of the
+>>> > > >> trace unit after checking for this errata via new property
+>>> > > >> called "qcom,tupwr-disable".
+>>> > > >>
+>>> > > >> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+>>> > > >> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>> > > >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>> > > >
+>>> > > > Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>> > > > Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+>>> > > >
+>>> > >
+>>> > > Tingwei is the author, so if I understand correctly, his signed-off-by
+>>> > > should appear first, am I wrong?
+>>> >
+>>> > It's a gray area and depends on who's code is more prevalent in the
+>>> > patch.  If Tingwei wrote the most of the code then his name is in the
+>>> > "from:" section, yours as co-developer and he signs off on it (as I
+>>> > suggested).  If you did most of the work then it is the opposite.
+>>> > Adding a Co-developed and a signed-off with the same name doesn't make
+>>> > sense.
+>>> >
+>>> 
+>>> I did check the documentation for submitting patches:
+>>> Documentation/process/submitting-patches.rst. And it clearly states
+>>> that "Co-developed-by must be followed by Signed-off by the co-author
+>>> and the last Signed-off-by: must always be that of the developer
+>>> submitting the patch".
+>>> 
+>>> Quoting below from the doc:
+>>> 
+>>> Co-developed-by: <snip> ...Since
+>>> Co-developed-by: denotes authorship, every Co-developed-by: must be
+>>> immediately
+>>> followed by a Signed-off-by: of the associated co-author.  Standard 
+>>> sign-off
+>>> procedure applies, i.e. the ordering of Signed-off-by: tags should 
+>>> reflect
+>>> the
+>>> chronological history of the patch insofar as possible, regardless of
+>>> whether
+>>> the author is attributed via From: or Co-developed-by:.  Notably, the 
+>>> last
+>>> Signed-off-by: must always be that of the developer submitting the 
+>>> patch.
+>> 
+>> Ah yes, glad to see that got clarified.  You can ignore my 
+>> recommendation on
+>> that snippet.
+>> 
+>>> 
+>>> > >
+>>> > > >> ---
+>>> > > >>  .../devicetree/bindings/arm/coresight.txt     |  6 ++++
+>>> > > >>  drivers/hwtracing/coresight/coresight-etm4x.c | 29
+>>> > > >> ++++++++++++-------
+>>> > > >
+>>> > > > Please split in two patches.
+>>> > > >
+>>> > >
+>>> > > Sure, I will split the dt-binding into separate patch, checkpatch did
+>>> > > warn.
+>>> >
+>>> > And you still sent me the patch...  I usually run checkpatch before
+>>> > all the submissions I review and flatly ignore patches that return
+>>> > errors.  You got lucky...
+>>> >
+>>> 
+>>> I did not mean to ignore it or else I wouldn't have run checkpatch 
+>>> itself.
+>>> I checked other cases like "arm,scatter-gather" where the binding and 
+>>> the
+>>> driver change was in a single patch, hence I thought it's not a very 
+>>> strict
+>>> rule.
+>> 
+>> The patch has another warning for a line over 80 characters, that 
+>> should have
+>> been fixed before sending.  Putting DT changes in a separate patch is 
+>> always
+>> better for the DT people.  They review tons of patches and making 
+>> their life
+>> easier is always a good thing.
+>> 
 > 
-> Thx.
+> Ok, I will fix this and resend. I did not want to change it in case if
+> it affects
+> readability since most maintainers prefer to ignore this 80 characters
+> warning if
+> it affects readability. I will keep this in mind for future patches as 
+> well.
+> 
 
-OK, cool, thank you.
+Now fixed all checkpatch warnings and addressed other review comments.
+Posted v3 - https://lore.kernel.org/patchwork/cover/1242572/
 
-/Jarkko
+Thanks,
+Sai
 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
