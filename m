@@ -2,108 +2,64 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A06C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B493E20787
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895B720671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgEOOTm (ORCPT
+        id S1726228AbgEOOUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:19:42 -0400
-Received: from mga17.intel.com ([192.55.52.151]:33489 "EHLO mga17.intel.com"
+        Fri, 15 May 2020 10:20:51 -0400
+Received: from 8bytes.org ([81.169.241.247]:43486 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgEOOTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:19:41 -0400
-IronPort-SDR: VbmSNRgpC1pktixqmSk0+ubFnnD+nYzK5kGxs0WGSip2lsy8HhqsZ05ekLATbzvjXlzExyx1Yn
- r1leke1GbS8g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 07:19:41 -0700
-IronPort-SDR: X806o53qBM8MjR9VttUyfi0cXh5zmXgMlCiMmkMbtxsD8FcSWu76betx4xBGcK+BDkMubjUgtd
- gTSBZRcOTssg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="252388959"
-Received: from marshy.an.intel.com ([10.122.105.159])
-  by fmsmga007.fm.intel.com with ESMTP; 15 May 2020 07:19:40 -0700
-From:   richard.gong@linux.intel.com
-To:     mdf@kernel.org
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dinguyen@kernel.org, richard.gong@linux.intel.com,
-        Richard Gong <richard.gong@intel.com>
-Subject: [PATCHv2] fpga: stratix10-soc: remove the pre-set reconfiguration condition
-Date:   Fri, 15 May 2020 09:35:03 -0500
-Message-Id: <1589553303-7341-1-git-send-email-richard.gong@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726140AbgEOOUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 10:20:51 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 792053C3; Fri, 15 May 2020 16:20:49 +0200 (CEST)
+Date:   Fri, 15 May 2020 16:20:48 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org, jroedel@suse.de,
+        linux-kernel@vger.kernel.org, Tom Murphy <murphyt7@tcd.ie>
+Subject: Re: [PATCH] iommu: Implement deferred domain attachment
+Message-ID: <20200515142047.GX18353@8bytes.org>
+References: <20200515094519.20338-1-joro@8bytes.org>
+ <8ce93a10-2ce0-e5a0-88a0-5d21d7003c0f@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8ce93a10-2ce0-e5a0-88a0-5d21d7003c0f@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
+On Fri, May 15, 2020 at 09:51:03PM +0800, Lu Baolu wrote:
+> On 2020/5/15 17:45, Joerg Roedel wrote:
+> >   struct iommu_domain *iommu_get_dma_domain(struct device *dev)
+> >   {
+> > -	return dev->iommu_group->default_domain;
+> > +	struct iommu_domain *domain = dev->iommu_group->default_domain;
+> > +
+> > +	if (__iommu_is_attach_deferred(domain, dev))
+> > +		__iommu_attach_device_no_defer(domain, dev);
+> 
+> It seems that the return value needs to be checked. The default domain
+> is invalid if attach() failed.
 
-The reconfiguration mode is pre-set by driver as the full reconfiguration.
-As a result, user have to change code and recompile the drivers if he or
-she wants to perform a partial reconfiguration. Removing the pre-set
-reconfiguration condition so that user can select full or partial
-reconfiguration via overlay device tree without recompiling the drivers.
+True, I looked at that, the callers can't handle returning NULL here, so
+I kept it this way for now. The outcome is that DMA will fail, but
+otherwise we'd see a NULL-ptr dereference really quickly after returning
+from that function.
 
-Also add an error message if the configuration request is failure.
+Bottom line: This needs to be cleaned up separatly.
 
-Signed-off-by: Richard Gong <richard.gong@intel.com>
----
-v2: define and use constant values
----
- drivers/fpga/stratix10-soc.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Regards,
 
-diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
-index 44b7c56..4d52a80 100644
---- a/drivers/fpga/stratix10-soc.c
-+++ b/drivers/fpga/stratix10-soc.c
-@@ -14,9 +14,13 @@
- /*
-  * FPGA programming requires a higher level of privilege (EL3), per the SoC
-  * design.
-+ * SoC firmware supports full and partial reconfiguration.
-  */
- #define NUM_SVC_BUFS	4
- #define SVC_BUF_SIZE	SZ_512K
-+#define FULL_RECONFIG_FLAG	0
-+#define PARTIAL_RECONFIG_FLAG	1
-+
- 
- /* Indicates buffer is in use if set */
- #define SVC_BUF_LOCK	0
-@@ -182,12 +186,12 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
- 	uint i;
- 	int ret;
- 
--	ctype.flags = 0;
- 	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
- 		dev_dbg(dev, "Requesting partial reconfiguration.\n");
--		ctype.flags |= BIT(COMMAND_RECONFIG_FLAG_PARTIAL);
-+		ctype.flags = PARTIAL_RECONFIG_FLAG;
- 	} else {
- 		dev_dbg(dev, "Requesting full reconfiguration.\n");
-+		ctype.flags = FULL_RECONFIG_FLAG;
- 	}
- 
- 	reinit_completion(&priv->status_return_completion);
-@@ -210,6 +214,7 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
- 
- 	ret = 0;
- 	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
-+		dev_err(dev, "RECONFIG_REQUEST failed\n");
- 		ret = -ETIMEDOUT;
- 		goto init_done;
- 	}
--- 
-2.7.4
-
+	Joerg
