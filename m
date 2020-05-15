@@ -2,81 +2,97 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0825FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A92220643
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:20:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589530807;
-	bh=MIlGuQgco5xlMobbfG+DhJtDOkUGJNUrRQxXMs79N0M=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KJCYgVj8ZJzWbzCmmB92vSroywufUJJpvvwTI6UbC6TusqisptygXk+FBjznKblJX
-	 AB8O6svRqjdsc9mMPampOvtmdF1EhU0LS+68S51svnwahTmFvBP/D5GimzqDpavXsN
-	 a9X4iYKPYyAguZiElFWwbXAcHSPMIsR3KCksU8oQ=
+	by mail.kernel.org (Postfix) with ESMTP id CE70020709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:20:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="SsP/HvLo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgEOIUG (ORCPT
+        id S1727780AbgEOIUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727838AbgEOIUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:20:06 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6AD820657;
-        Fri, 15 May 2020 08:20:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589530805;
-        bh=MIlGuQgco5xlMobbfG+DhJtDOkUGJNUrRQxXMs79N0M=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=k+284gXvCo5VcDPPtjT7hCZ/LtFdXvCK5j1Qz0OUC5xHDCgcVZtXLGK4P4hEPPlum
-         nCD9FhiCDZsPRlO4Lk8EGBsaURC0odEnVv//RboaNMUpkHO5kTzP2W09yOMX506QCd
-         4Yl+ztZfz51Kyc1nz7bYRqkMPv8T5V7xS4aFJYq4=
-Date:   Fri, 15 May 2020 10:20:01 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: adjust to livepatch .klp.arch removal
-In-Reply-To: <509c316f-5b34-2859-49aa-e4fe4a407428@linux.vnet.ibm.com>
-Message-ID: <nycvar.YFH.7.76.2005151019150.25812@cbobk.fhfr.pm>
-References: <20200509073258.5970-1-lukas.bulwahn@gmail.com> <bfe91b2d-e319-bf12-6a15-4f200d0e8ea4@linux.vnet.ibm.com> <nycvar.YFH.7.76.2005142344230.25812@cbobk.fhfr.pm> <509c316f-5b34-2859-49aa-e4fe4a407428@linux.vnet.ibm.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 15 May 2020 04:20:37 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17781 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726723AbgEOIUg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 04:20:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1589530799; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=I5AO7eEHD447CccTdZaAOftVutHbnJp7+oCWupqOjxaFxHumOrHsLsPwTR3WD8F/Tj297dxDZKQZPIbALAPgKB2zjfG4DByeuIl7gn7+lxzrH8tnbGt4ZrzEdf6kQxO0f++bkXRJcNUAd7M4X7rIncAK8Hfh7QqAqqfgnuTBPn8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1589530799; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=Qx19X+8L49YGzi+rmZOD+1r21r80p24bDOJwkcWDnQI=; 
+        b=U2ewBZCKPaMnwsBx1lSJCsv7Bd7+losI2aNQyg6D2v3zBJaN6h9qp5F0yG8ve35TLew9p0JHfU/GeASzsmf026nzi+j54LlnR3E/JZWpW1q3E72veBF1GB1f/YzIL90WkPEZH5pEEpbZ68qZNSIXw53NiEDuV0Ye86tE/97Uu24=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589530799;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=Qx19X+8L49YGzi+rmZOD+1r21r80p24bDOJwkcWDnQI=;
+        b=SsP/HvLo7zUc4qavU4jkMM0x7eO0RA1RDj+T0/JmskrpysldtZwG9gqhcSqyCeN5
+        VpyiT/WcqRtiT3ybc1kVRtPAsK40ZpbWH4ONgr5aw7Id1sQHxztn4EqOgq6CziIDQ4C
+        wfo1YF/8MiOqDAbFIRwUC/V2IqbtLgwgF47uAmLI=
+Received: from [127.0.0.1] (101.84.172.108 [101.84.172.108]) by mx.zoho.com.cn
+        with SMTPS id 1589530796515656.4604736588635; Fri, 15 May 2020 16:19:56 +0800 (CST)
+Date:   Fri, 15 May 2020 16:19:52 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v2 2/2] MIPS: Fix build errors under CONFIG_HAVE_STD_PC_SERIAL_PORT
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <7715fe64-5d28-f8c8-3b04-0bf2b9f16497@loongson.cn>
+References: <1589512985-27419-1-git-send-email-yangtiezhu@loongson.cn> <1589512985-27419-2-git-send-email-yangtiezhu@loongson.cn> <20200515073938.GA8289@alpha.franken.de> <7715fe64-5d28-f8c8-3b04-0bf2b9f16497@loongson.cn>
+Message-ID: <5AA0EB3A-DF33-4BE7-804C-45F6B51A0CF7@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 May 2020, Kamalesh Babulal wrote:
 
-> Thanks, Jiri. I realized later, that the lib/livepatch directory also 
-> needs to be included in the list of files maintained under livepatch. 
-> Earlier, this week I had sent a patch to the mailing list that includes 
-> both arch headers and lib/livepatch to the list of files, the link to 
-> the patch is:
-> 
-> https://lore.kernel.org/live-patching/20200511061014.308675-1-kamalesh@linux.vnet.ibm.com/
 
-Ah, I wasn't CCed, so it fell in between cracks, sorry. Could you please 
-resend the lib/livepatch part separately? I'll apply it on top.
+=E4=BA=8E 2020=E5=B9=B45=E6=9C=8815=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=883=
+:54:46, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
+>On 05/15/2020 03:39 PM, Thomas Bogendoerfer wrote:
+>> On Fri, May 15, 2020 at 11:23:05AM +0800, Tiezhu Yang wrote:
+>>> When CONFIG_HAVE_STD_PC_SERIAL_PORT is set, include linux/module=2Eh t=
+o fix
+>>> the following build errors:
+>> how are you doing this ? To me it looks like this CONFIG option isn't
+>> used anymore=2E
+>
+>Because I will use arch/mips/kernel/8250-platform=2Ec in the near future,
+>so make MACH_LOONGSON64 selects HAVE_STD_PC_SERIAL_PORT, then
+>I find the build errors=2E
 
-Thanks,
+Please never use it=2E
+If you are willing to add serial port then please do it
+in devicetree=2E
+Platform devices in wild is dangerous and it will break everything=2E
 
--- 
-Jiri Kosina
-SUSE Labs
+>
+>Thanks,
+>Tiezhu Yang
+>
+>>
+>> Thomas=2E
+>>
+>
 
+--=20
+Jiaxun Yang
