@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A63C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82035C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3D1D207D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6196C207CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgEPALA (ORCPT
+        id S1728048AbgEPALD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 20:11:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41110 "EHLO
+        Fri, 15 May 2020 20:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727990AbgEPAK4 (ORCPT
+        by vger.kernel.org with ESMTP id S1728025AbgEPAK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 20:10:56 -0400
+        Fri, 15 May 2020 20:10:59 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68DC8C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 17:10:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2638DC05BD09
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 17:10:59 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jZkPD-0002BX-NV; Sat, 16 May 2020 02:10:19 +0200
+        id 1jZkPX-0002Sw-LH; Sat, 16 May 2020 02:10:39 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 3C8E9FF834;
-        Sat, 16 May 2020 02:10:19 +0200 (CEST)
-Message-Id: <20200515235125.425810667@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 1FD4AFF834;
+        Sat, 16 May 2020 02:10:39 +0200 (CEST)
+Message-Id: <20200515235127.007113214@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sat, 16 May 2020 01:45:57 +0200
+Date:   Sat, 16 May 2020 01:46:13 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V6 10/37] x86/entry: Switch XEN/PV hypercall entry to IDTENTRY
+Subject: [patch V6 26/37] x86/entry: Convert various system vectors
 References: <20200515234547.710474468@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -72,411 +72,378 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Convert the XEN/PV hypercall to IDTENTRY:
-
-  - Emit the ASM stub with DECLARE_IDTENTRY
-  - Remove the ASM idtentry in 64bit
-  - Remove the open coded ASM entry code in 32bit
+Convert various system vectors to IDTENTRY_SYSVEC
+  - Implement the C entry point with DEFINE_IDTENTRY_SYSVEC
+  - Emit the ASM stub with DECLARE_IDTENTRY_SYSVEC
+  - Remove the ASM idtentries in 64bit
+  - Remove the BUILD_INTERRUPT entries in 32bit
   - Remove the old prototypes
 
-The handler stubs need to stay in ASM code as it needs corner case handling
-and adjustment of the stack pointer.
-
-Provide a new C function which invokes the entry/exit handling and calls
-into the XEN handler on the interrupt stack.
-
-The exit code is slightly different from the regular idtentry_exit() on
-non-preemptible kernels. If the hypercall is preemptible and need_resched()
-is set then XEN provides a preempt hypercall scheduling function. Add it as
-conditional path to __idtentry_exit() so the function can be reused.
-
-__idtentry_exit() is forced inlined so on the regular idtentry_exit() path
-the extra condition is optimized out by the compiler.
+No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
 
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index 882ada245bd5..34caf3849632 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -27,6 +27,9 @@
- #include <linux/syscalls.h>
- #include <linux/uaccess.h>
- 
-+#include <xen/xen-ops.h>
-+#include <xen/events.h>
-+
- #include <asm/desc.h>
- #include <asm/traps.h>
- #include <asm/vdso.h>
-@@ -35,6 +38,7 @@
- #include <asm/nospec-branch.h>
- #include <asm/io_bitmap.h>
- #include <asm/syscall.h>
-+#include <asm/irq_stack.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/syscalls.h>
-@@ -539,7 +543,8 @@ void noinstr idtentry_enter(struct pt_regs *regs)
- 	}
- }
- 
--static __always_inline void __idtentry_exit(struct pt_regs *regs)
-+static __always_inline void __idtentry_exit(struct pt_regs *regs,
-+					    bool preempt_hcall)
- {
- 	lockdep_assert_irqs_disabled();
- 
-@@ -573,6 +578,16 @@ static __always_inline void __idtentry_exit(struct pt_regs *regs)
- 				instrumentation_end();
- 				return;
- 			}
-+		} else if (IS_ENABLED(CONFIG_XEN_PV)) {
-+			if (preempt_hcall) {
-+				/* See CONFIG_PREEMPTION above */
-+				instrumentation_begin();
-+				rcu_irq_exit_preempt();
-+				xen_maybe_preempt_hcall();
-+				trace_hardirqs_on();
-+				instrumentation_end();
-+				return;
-+			}
- 		}
- 		/*
- 		 * If preemption is disabled then this needs to be done
-@@ -612,5 +627,43 @@ static __always_inline void __idtentry_exit(struct pt_regs *regs)
-  */
- void noinstr idtentry_exit(struct pt_regs *regs)
- {
--	__idtentry_exit(regs);
-+	__idtentry_exit(regs, false);
-+}
-+
-+#ifdef CONFIG_XEN_PV
-+static void __xen_pv_evtchn_do_upcall(void)
-+{
-+	irq_enter_rcu();
-+	inc_irq_stat(irq_hv_callback_count);
-+
-+	xen_hvm_evtchn_do_upcall();
-+
-+	irq_exit_rcu();
-+}
-+
-+__visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
-+{
-+	struct pt_regs *old_regs;
-+
-+	idtentry_enter(regs);
-+	old_regs = set_irq_regs(regs);
-+
-+	if (!irq_needs_irq_stack(regs)) {
-+		instrumentation_begin();
-+		__xen_pv_evtchn_do_upcall();
-+		instrumentation_end();
-+	} else {
-+		run_on_irqstack(__xen_pv_evtchn_do_upcall, NULL);
-+	}
-+
-+	set_irq_regs(old_regs);
-+
-+	if (IS_ENABLED(CONFIG_PREEMPTION)) {
-+		__idtentry_exit(regs, false);
-+	} else {
-+		bool inhcall = __this_cpu_read(xen_in_preemptible_hcall);
-+
-+		__idtentry_exit(regs, inhcall && need_resched());
-+	}
- }
-+#endif /* CONFIG_XEN_PV */
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index 7563a87d7539..6ac890d5c9d8 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1298,7 +1298,10 @@ SYM_CODE_END(native_iret)
- #endif
- 
- #ifdef CONFIG_XEN_PV
--SYM_FUNC_START(xen_hypervisor_callback)
-+/*
-+ * See comment in entry_64.S for further explanation
-+ */
-+SYM_FUNC_START(exc_xen_hypervisor_callback)
- 	/*
- 	 * Check to see if we got the event in the critical
- 	 * region in xen_iret_direct, after we've reenabled
-@@ -1315,14 +1318,11 @@ SYM_FUNC_START(xen_hypervisor_callback)
- 	pushl	$-1				/* orig_ax = -1 => not a system call */
- 	SAVE_ALL
- 	ENCODE_FRAME_POINTER
--	TRACE_IRQS_OFF
-+
- 	mov	%esp, %eax
--	call	xen_evtchn_do_upcall
--#ifndef CONFIG_PREEMPTION
--	call	xen_maybe_preempt_hcall
--#endif
--	jmp	ret_from_intr
--SYM_FUNC_END(xen_hypervisor_callback)
-+	call	xen_pv_evtchn_do_upcall
-+	jmp	handle_exception_return
-+SYM_FUNC_END(exc_xen_hypervisor_callback)
- 
- /*
-  * Hypervisor uses this for application faults while it executes.
-@@ -1464,6 +1464,7 @@ SYM_CODE_START_LOCAL_NOALIGN(handle_exception)
- 	movl	%esp, %eax			# pt_regs pointer
- 	CALL_NOSPEC edi
- 
-+handle_exception_return:
- #ifdef CONFIG_VM86
- 	movl	PT_EFLAGS(%esp), %eax		# mix EFLAGS and CS
- 	movb	PT_CS(%esp), %al
+
 diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index bdf8391b2f95..3eddf7c6c530 100644
+index c1a47d37f29e..a8eb5c262190 100644
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -1067,10 +1067,6 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work_interrupt		smp_irq_work_interrupt
+@@ -956,9 +956,6 @@ apicinterrupt3 \num \sym \do_sym
+ POP_SECTION_IRQENTRY
+ .endm
  
- idtentry	X86_TRAP_PF		page_fault		do_page_fault			has_error_code=1
+-#ifdef CONFIG_X86_UV
+-apicinterrupt3 UV_BAU_MESSAGE			uv_bau_message_intr1		uv_bau_message_interrupt
+-#endif
  
--#ifdef CONFIG_XEN_PV
--idtentry	512 /* dummy */		hypervisor_callback	xen_do_hypervisor_callback	has_error_code=0
+ #ifdef CONFIG_HAVE_KVM
+ apicinterrupt3 POSTED_INTR_VECTOR		kvm_posted_intr_ipi		smp_kvm_posted_intr_ipi
+@@ -966,26 +963,10 @@ apicinterrupt3 POSTED_INTR_WAKEUP_VECTOR	kvm_posted_intr_wakeup_ipi	smp_kvm_post
+ apicinterrupt3 POSTED_INTR_NESTED_VECTOR	kvm_posted_intr_nested_ipi	smp_kvm_posted_intr_nested_ipi
+ #endif
+ 
+-#ifdef CONFIG_X86_MCE_THRESHOLD
+-apicinterrupt THRESHOLD_APIC_VECTOR		threshold_interrupt		smp_threshold_interrupt
+-#endif
+-
+-#ifdef CONFIG_X86_MCE_AMD
+-apicinterrupt DEFERRED_ERROR_VECTOR		deferred_error_interrupt	smp_deferred_error_interrupt
+-#endif
+-
+-#ifdef CONFIG_X86_THERMAL_VECTOR
+-apicinterrupt THERMAL_APIC_VECTOR		thermal_interrupt		smp_thermal_interrupt
+-#endif
+-
+ #ifdef CONFIG_SMP
+ apicinterrupt RESCHEDULE_VECTOR			reschedule_interrupt		smp_reschedule_interrupt
+ #endif
+ 
+-#ifdef CONFIG_IRQ_WORK
+-apicinterrupt IRQ_WORK_VECTOR			irq_work_interrupt		smp_irq_work_interrupt
 -#endif
 -
  /*
   * Reload gs selector with exception handling
   * edi:  new selector
-@@ -1158,9 +1154,10 @@ SYM_FUNC_END(asm_call_on_stack)
-  * So, on entry to the handler we detect whether we interrupted an
-  * existing activation in its critical region -- if so, we pop the current
-  * activation and restart the handler using the previous one.
-+ *
-+ * C calling convention: exc_xen_hypervisor_callback(struct *pt_regs)
-  */
--/* do_hypervisor_callback(struct *pt_regs) */
--SYM_CODE_START_LOCAL(xen_do_hypervisor_callback)
-+SYM_CODE_START_LOCAL(exc_xen_hypervisor_callback)
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index 19e94af9cc5d..a5416865b6fa 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -534,24 +534,11 @@ static inline void entering_ack_irq(void)
+ 	ack_APIC_irq();
+ }
  
- /*
-  * Since we don't modify %rdi, evtchn_do_upall(struct *pt_regs) will
-@@ -1170,15 +1167,10 @@ SYM_CODE_START_LOCAL(xen_do_hypervisor_callback)
- 	movq	%rdi, %rsp			/* we don't return, adjust the stack frame */
- 	UNWIND_HINT_REGS
+-static inline void ipi_entering_ack_irq(void)
+-{
+-	irq_enter();
+-	ack_APIC_irq();
+-	kvm_set_cpu_l1tf_flush_l1d();
+-}
+-
+ static inline void exiting_irq(void)
+ {
+ 	irq_exit();
+ }
  
--	ENTER_IRQ_STACK old_rsp=%r10
--	call	xen_evtchn_do_upcall
--	LEAVE_IRQ_STACK
-+	call	xen_pv_evtchn_do_upcall
+-static inline void exiting_ack_irq(void)
+-{
+-	ack_APIC_irq();
+-	irq_exit();
+-}
+-
+ extern void ioapic_zap_locks(void);
  
--#ifndef CONFIG_PREEMPTION
--	call	xen_maybe_preempt_hcall
+ #endif /* _ASM_X86_APIC_H */
+diff --git a/arch/x86/include/asm/entry_arch.h b/arch/x86/include/asm/entry_arch.h
+index 2e2055bcfeb2..69a5320a4673 100644
+--- a/arch/x86/include/asm/entry_arch.h
++++ b/arch/x86/include/asm/entry_arch.h
+@@ -20,28 +20,3 @@ BUILD_INTERRUPT(kvm_posted_intr_wakeup_ipi, POSTED_INTR_WAKEUP_VECTOR)
+ BUILD_INTERRUPT(kvm_posted_intr_nested_ipi, POSTED_INTR_NESTED_VECTOR)
+ #endif
+ 
+-/*
+- * every pentium local APIC has two 'local interrupts', with a
+- * soft-definable vector attached to both interrupts, one of
+- * which is a timer interrupt, the other one is error counter
+- * overflow. Linux uses the local APIC timer interrupt to get
+- * a much simpler SMP time architecture:
+- */
+-#ifdef CONFIG_X86_LOCAL_APIC
+-
+-#ifdef CONFIG_IRQ_WORK
+-BUILD_INTERRUPT(irq_work_interrupt, IRQ_WORK_VECTOR)
 -#endif
--	jmp	error_exit
--SYM_CODE_END(xen_do_hypervisor_callback)
-+	jmp	error_return
-+SYM_CODE_END(exc_xen_hypervisor_callback)
+-
+-#ifdef CONFIG_X86_THERMAL_VECTOR
+-BUILD_INTERRUPT(thermal_interrupt,THERMAL_APIC_VECTOR)
+-#endif
+-
+-#ifdef CONFIG_X86_MCE_THRESHOLD
+-BUILD_INTERRUPT(threshold_interrupt,THRESHOLD_APIC_VECTOR)
+-#endif
+-
+-#ifdef CONFIG_X86_MCE_AMD
+-BUILD_INTERRUPT(deferred_error_interrupt, DEFERRED_ERROR_VECTOR)
+-#endif
+-#endif
+diff --git a/arch/x86/include/asm/hw_irq.h b/arch/x86/include/asm/hw_irq.h
+index 36a38695f27f..7281c7e3a0f6 100644
+--- a/arch/x86/include/asm/hw_irq.h
++++ b/arch/x86/include/asm/hw_irq.h
+@@ -32,15 +32,9 @@
+ extern asmlinkage void kvm_posted_intr_ipi(void);
+ extern asmlinkage void kvm_posted_intr_wakeup_ipi(void);
+ extern asmlinkage void kvm_posted_intr_nested_ipi(void);
+-extern asmlinkage void irq_work_interrupt(void);
+-extern asmlinkage void uv_bau_message_intr1(void);
  
- /*
-  * Hypervisor uses this for application faults while it executes.
+-extern asmlinkage void thermal_interrupt(void);
+ extern asmlinkage void reschedule_interrupt(void);
+ 
+-extern asmlinkage void threshold_interrupt(void);
+-extern asmlinkage void deferred_error_interrupt(void);
+-
+ #ifdef	CONFIG_X86_LOCAL_APIC
+ struct irq_data;
+ struct pci_dev;
 diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index e27731092999..fac73bb3577f 100644
+index 20e47b8d4024..1d9d90c85218 100644
 --- a/arch/x86/include/asm/idtentry.h
 +++ b/arch/x86/include/asm/idtentry.h
-@@ -332,6 +332,13 @@ __visible noinstr void func(struct pt_regs *regs,			\
-  * This avoids duplicate defines and ensures that everything is consistent.
-  */
- 
-+/*
-+ * Dummy trap number so the low level ASM macro vector number checks do not
-+ * match which results in emitting plain IDTENTRY stubs without bells and
-+ * whistels.
-+ */
-+#define X86_TRAP_OTHER		0xFFFF
-+
- /* Simple exception entry points. No hardware error code */
- DECLARE_IDTENTRY(X86_TRAP_DE,		exc_divide_error);
- DECLARE_IDTENTRY(X86_TRAP_OF,		exc_overflow);
-@@ -373,4 +380,10 @@ DECLARE_IDTENTRY_XEN(X86_TRAP_DB,	debug);
- DECLARE_IDTENTRY_DF(X86_TRAP_DF,	exc_double_fault);
+@@ -582,6 +582,28 @@ DECLARE_IDTENTRY_SYSVEC(CALL_FUNCTION_SINGLE_VECTOR,	sysvec_call_function_single
+ DECLARE_IDTENTRY_SYSVEC(CALL_FUNCTION_VECTOR,		sysvec_call_function);
  #endif
  
-+#ifdef CONFIG_XEN_PV
-+DECLARE_IDTENTRY(X86_TRAP_OTHER,	exc_xen_hypervisor_callback);
++#ifdef CONFIG_X86_LOCAL_APIC
++# ifdef CONFIG_X86_UV
++DECLARE_IDTENTRY_SYSVEC(UV_BAU_MESSAGE,			sysvec_uv_bau_message);
++# endif
++
++# ifdef CONFIG_X86_MCE_THRESHOLD
++DECLARE_IDTENTRY_SYSVEC(THRESHOLD_APIC_VECTOR,		sysvec_threshold);
++# endif
++
++# ifdef CONFIG_X86_MCE_AMD
++DECLARE_IDTENTRY_SYSVEC(DEFERRED_ERROR_VECTOR,		sysvec_deferred_error);
++# endif
++
++# ifdef CONFIG_X86_THERMAL_VECTOR
++DECLARE_IDTENTRY_SYSVEC(THERMAL_APIC_VECTOR,		sysvec_thermal);
++# endif
++
++# ifdef CONFIG_IRQ_WORK
++DECLARE_IDTENTRY_SYSVEC(IRQ_WORK_VECTOR,		sysvec_irq_work);
++# endif
 +#endif
 +
-+#undef X86_TRAP_OTHER
+ #undef X86_TRAP_OTHER
+ 
+ #endif
+diff --git a/arch/x86/include/asm/irq_work.h b/arch/x86/include/asm/irq_work.h
+index 80b35e3adf03..800ffce0db29 100644
+--- a/arch/x86/include/asm/irq_work.h
++++ b/arch/x86/include/asm/irq_work.h
+@@ -10,7 +10,6 @@ static inline bool arch_irq_work_has_interrupt(void)
+ 	return boot_cpu_has(X86_FEATURE_APIC);
+ }
+ extern void arch_irq_work_raise(void);
+-extern __visible void smp_irq_work_interrupt(struct pt_regs *regs);
+ #else
+ static inline bool arch_irq_work_has_interrupt(void)
+ {
+diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
+index 0c40f37f8cb7..714b1a30e7b0 100644
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -34,11 +34,6 @@ static inline int get_si_code(unsigned long condition)
+ extern int panic_on_unrecovered_nmi;
+ 
+ void math_emulate(struct math_emu_info *);
+-#ifndef CONFIG_X86_32
+-asmlinkage void smp_thermal_interrupt(struct pt_regs *regs);
+-asmlinkage void smp_threshold_interrupt(struct pt_regs *regs);
+-asmlinkage void smp_deferred_error_interrupt(struct pt_regs *regs);
+-#endif
+ 
+ #ifdef CONFIG_VMAP_STACK
+ void __noreturn handle_stack_overflow(const char *message,
+diff --git a/arch/x86/include/asm/uv/uv_bau.h b/arch/x86/include/asm/uv/uv_bau.h
+index 13687bf0e0a9..f1188bd47658 100644
+--- a/arch/x86/include/asm/uv/uv_bau.h
++++ b/arch/x86/include/asm/uv/uv_bau.h
+@@ -12,6 +12,8 @@
+ #define _ASM_X86_UV_UV_BAU_H
+ 
+ #include <linux/bitmap.h>
++#include <asm/idtentry.h>
 +
- #endif
-diff --git a/arch/x86/xen/setup.c b/arch/x86/xen/setup.c
-index 1a2d8a50dac4..3566e37241d7 100644
---- a/arch/x86/xen/setup.c
-+++ b/arch/x86/xen/setup.c
-@@ -20,6 +20,7 @@
- #include <asm/setup.h>
- #include <asm/acpi.h>
- #include <asm/numa.h>
-+#include <asm/idtentry.h>
- #include <asm/xen/hypervisor.h>
- #include <asm/xen/hypercall.h>
- 
-@@ -993,7 +994,8 @@ static void __init xen_pvmmu_arch_setup(void)
- 	HYPERVISOR_vm_assist(VMASST_CMD_enable,
- 			     VMASST_TYPE_pae_extended_cr3);
- 
--	if (register_callback(CALLBACKTYPE_event, xen_hypervisor_callback) ||
-+	if (register_callback(CALLBACKTYPE_event,
-+			      xen_asm_exc_xen_hypervisor_callback) ||
- 	    register_callback(CALLBACKTYPE_failsafe, xen_failsafe_callback))
- 		BUG();
- 
-diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
-index 8fb8a50a28b4..a92259d701c1 100644
---- a/arch/x86/xen/smp_pv.c
-+++ b/arch/x86/xen/smp_pv.c
-@@ -27,6 +27,7 @@
- #include <asm/paravirt.h>
- #include <asm/desc.h>
- #include <asm/pgtable.h>
-+#include <asm/idtentry.h>
- #include <asm/cpu.h>
- 
- #include <xen/interface/xen.h>
-@@ -347,7 +348,7 @@ cpu_initialize_context(unsigned int cpu, struct task_struct *idle)
- 	ctxt->gs_base_kernel = per_cpu_offset(cpu);
- #endif
- 	ctxt->event_callback_eip    =
--		(unsigned long)xen_hypervisor_callback;
-+		(unsigned long)xen_asm_exc_xen_hypervisor_callback;
- 	ctxt->failsafe_callback_eip =
- 		(unsigned long)xen_failsafe_callback;
- 	per_cpu(xen_cr3, cpu) = __pa(swapper_pg_dir);
-diff --git a/arch/x86/xen/xen-asm_32.S b/arch/x86/xen/xen-asm_32.S
-index bd06ac473170..0f7ff3088065 100644
---- a/arch/x86/xen/xen-asm_32.S
-+++ b/arch/x86/xen/xen-asm_32.S
-@@ -93,7 +93,7 @@ xen_iret_start_crit:
- 
- 	/*
- 	 * If there's something pending, mask events again so we can
--	 * jump back into xen_hypervisor_callback. Otherwise do not
-+	 * jump back into exc_xen_hypervisor_callback. Otherwise do not
- 	 * touch XEN_vcpu_info_mask.
- 	 */
- 	jne 1f
-@@ -113,7 +113,7 @@ iret_restore_end:
- 	 * Events are masked, so jumping out of the critical region is
- 	 * OK.
- 	 */
--	je xen_hypervisor_callback
-+	je asm_exc_xen_hypervisor_callback
- 
- 1:	iret
- xen_iret_end_crit:
-@@ -127,7 +127,7 @@ SYM_CODE_END(xen_iret)
- 	.globl xen_iret_start_crit, xen_iret_end_crit
+ #define BITSPERBYTE 8
  
  /*
-- * This is called by xen_hypervisor_callback in entry_32.S when it sees
-+ * This is called by exc_xen_hypervisor_callback in entry_32.S when it sees
-  * that the EIP at the time of interrupt was between
-  * xen_iret_start_crit and xen_iret_end_crit.
-  *
-@@ -144,7 +144,7 @@ SYM_CODE_END(xen_iret)
-  *	 eflags		}
-  *	 cs		}  nested exception info
-  *	 eip		}
-- *	 return address	: (into xen_hypervisor_callback)
-+ *	 return address	: (into asm_exc_xen_hypervisor_callback)
-  *
-  * In order to deliver the nested exception properly, we need to discard the
-  * nested exception frame such that when we handle the exception, we do it
-@@ -152,7 +152,8 @@ SYM_CODE_END(xen_iret)
-  *
-  * The only caveat is that if the outer eax hasn't been restored yet (i.e.
-  * it's still on stack), we need to restore its value here.
-- */
-+*/
-+.pushsection .noinstr.text, "ax"
- SYM_CODE_START(xen_iret_crit_fixup)
- 	/*
- 	 * Paranoia: Make sure we're really coming from kernel space.
-@@ -181,3 +182,4 @@ SYM_CODE_START(xen_iret_crit_fixup)
- 2:
- 	ret
- SYM_CODE_END(xen_iret_crit_fixup)
-+.popsection
-diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
-index e46d863bcaa4..19fbbdbcbde9 100644
---- a/arch/x86/xen/xen-asm_64.S
-+++ b/arch/x86/xen/xen-asm_64.S
-@@ -54,7 +54,7 @@ xen_pv_trap asm_exc_simd_coprocessor_error
- #ifdef CONFIG_IA32_EMULATION
- xen_pv_trap entry_INT80_compat
+@@ -799,12 +801,6 @@ static inline void bau_cpubits_clear(struct bau_local_cpumask *dstp, int nbits)
+ 	bitmap_zero(&dstp->bits, nbits);
+ }
+ 
+-extern void uv_bau_message_intr1(void);
+-#ifdef CONFIG_TRACING
+-#define trace_uv_bau_message_intr1 uv_bau_message_intr1
+-#endif
+-extern void uv_bau_timeout_intr1(void);
+-
+ struct atomic_short {
+ 	short counter;
+ };
+diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+index 52de616a8065..a906d68a18a2 100644
+--- a/arch/x86/kernel/cpu/mce/amd.c
++++ b/arch/x86/kernel/cpu/mce/amd.c
+@@ -907,14 +907,13 @@ static void __log_error(unsigned int bank, u64 status, u64 addr, u64 misc)
+ 	mce_log(&m);
+ }
+ 
+-asmlinkage __visible void __irq_entry smp_deferred_error_interrupt(struct pt_regs *regs)
++DEFINE_IDTENTRY_SYSVEC(sysvec_deferred_error)
+ {
+-	entering_irq();
+ 	trace_deferred_error_apic_entry(DEFERRED_ERROR_VECTOR);
+ 	inc_irq_stat(irq_deferred_error_count);
+ 	deferred_error_int_vector();
+ 	trace_deferred_error_apic_exit(DEFERRED_ERROR_VECTOR);
+-	exiting_ack_irq();
++	ack_APIC_irq();
+ }
+ 
+ /*
+diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
+index f36dc0742085..a7cd2d203ced 100644
+--- a/arch/x86/kernel/cpu/mce/therm_throt.c
++++ b/arch/x86/kernel/cpu/mce/therm_throt.c
+@@ -614,14 +614,13 @@ static void unexpected_thermal_interrupt(void)
+ 
+ static void (*smp_thermal_vector)(void) = unexpected_thermal_interrupt;
+ 
+-asmlinkage __visible void __irq_entry smp_thermal_interrupt(struct pt_regs *regs)
++DEFINE_IDTENTRY_SYSVEC(sysvec_thermal)
+ {
+-	entering_irq();
+ 	trace_thermal_apic_entry(THERMAL_APIC_VECTOR);
+ 	inc_irq_stat(irq_thermal_count);
+ 	smp_thermal_vector();
+ 	trace_thermal_apic_exit(THERMAL_APIC_VECTOR);
+-	exiting_ack_irq();
++	ack_APIC_irq();
+ }
+ 
+ /* Thermal monitoring depends on APIC, ACPI and clock modulation */
+diff --git a/arch/x86/kernel/cpu/mce/threshold.c b/arch/x86/kernel/cpu/mce/threshold.c
+index 28812cc15300..6a059a035021 100644
+--- a/arch/x86/kernel/cpu/mce/threshold.c
++++ b/arch/x86/kernel/cpu/mce/threshold.c
+@@ -21,12 +21,11 @@ static void default_threshold_interrupt(void)
+ 
+ void (*mce_threshold_vector)(void) = default_threshold_interrupt;
+ 
+-asmlinkage __visible void __irq_entry smp_threshold_interrupt(struct pt_regs *regs)
++DEFINE_IDTENTRY_SYSVEC(sysvec_threshold)
+ {
+-	entering_irq();
+ 	trace_threshold_apic_entry(THRESHOLD_APIC_VECTOR);
+ 	inc_irq_stat(irq_threshold_count);
+ 	mce_threshold_vector();
+ 	trace_threshold_apic_exit(THRESHOLD_APIC_VECTOR);
+-	exiting_ack_irq();
++	ack_APIC_irq();
+ }
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index 95abcd52e5be..a986e15becc0 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -117,33 +117,33 @@ static const __initconst struct idt_data apic_idts[] = {
  #endif
--xen_pv_trap hypervisor_callback
-+xen_pv_trap asm_exc_xen_hypervisor_callback
  
- 	__INIT
- SYM_CODE_START(xen_early_idt_handler_array)
-diff --git a/arch/x86/xen/xen-ops.h b/arch/x86/xen/xen-ops.h
-index 45a441c33d6d..4eff29ed375e 100644
---- a/arch/x86/xen/xen-ops.h
-+++ b/arch/x86/xen/xen-ops.h
-@@ -8,7 +8,6 @@
- #include <xen/xen-ops.h>
+ #ifdef CONFIG_X86_THERMAL_VECTOR
+-	INTG(THERMAL_APIC_VECTOR,	thermal_interrupt),
++	INTG(THERMAL_APIC_VECTOR,		asm_sysvec_thermal),
+ #endif
  
- /* These are code, but not functions.  Defined in entry.S */
--extern const char xen_hypervisor_callback[];
- extern const char xen_failsafe_callback[];
+ #ifdef CONFIG_X86_MCE_THRESHOLD
+-	INTG(THRESHOLD_APIC_VECTOR,	threshold_interrupt),
++	INTG(THRESHOLD_APIC_VECTOR,		asm_sysvec_threshold),
+ #endif
  
- void xen_sysenter_target(void);
-diff --git a/drivers/xen/preempt.c b/drivers/xen/preempt.c
-index 17240c5325a3..287171a9dc01 100644
---- a/drivers/xen/preempt.c
-+++ b/drivers/xen/preempt.c
-@@ -24,7 +24,7 @@
- DEFINE_PER_CPU(bool, xen_in_preemptible_hcall);
- EXPORT_SYMBOL_GPL(xen_in_preemptible_hcall);
+ #ifdef CONFIG_X86_MCE_AMD
+-	INTG(DEFERRED_ERROR_VECTOR,	deferred_error_interrupt),
++	INTG(DEFERRED_ERROR_VECTOR,		asm_sysvec_deferred_error),
+ #endif
  
--asmlinkage __visible void xen_maybe_preempt_hcall(void)
-+void xen_maybe_preempt_hcall(void)
+ #ifdef CONFIG_X86_LOCAL_APIC
+-	INTG(LOCAL_TIMER_VECTOR,	asm_sysvec_apic_timer_interrupt),
+-	INTG(X86_PLATFORM_IPI_VECTOR,	asm_sysvec_x86_platform_ipi),
++	INTG(LOCAL_TIMER_VECTOR,		asm_sysvec_apic_timer_interrupt),
++	INTG(X86_PLATFORM_IPI_VECTOR,		asm_sysvec_x86_platform_ipi),
+ # ifdef CONFIG_HAVE_KVM
+-	INTG(POSTED_INTR_VECTOR,	kvm_posted_intr_ipi),
+-	INTG(POSTED_INTR_WAKEUP_VECTOR, kvm_posted_intr_wakeup_ipi),
+-	INTG(POSTED_INTR_NESTED_VECTOR, kvm_posted_intr_nested_ipi),
++	INTG(POSTED_INTR_VECTOR,		kvm_posted_intr_ipi),
++	INTG(POSTED_INTR_WAKEUP_VECTOR,		kvm_posted_intr_wakeup_ipi),
++	INTG(POSTED_INTR_NESTED_VECTOR,		kvm_posted_intr_nested_ipi),
+ # endif
+ # ifdef CONFIG_IRQ_WORK
+-	INTG(IRQ_WORK_VECTOR,		irq_work_interrupt),
++	INTG(IRQ_WORK_VECTOR,			asm_sysvec_irq_work),
+ # endif
+-#ifdef CONFIG_X86_UV
+-	INTG(UV_BAU_MESSAGE,		uv_bau_message_intr1),
+-#endif
+-	INTG(SPURIOUS_APIC_VECTOR,	asm_sysvec_spurious_apic_interrupt),
+-	INTG(ERROR_APIC_VECTOR,		asm_sysvec_error_interrupt),
++# ifdef CONFIG_X86_UV
++	INTG(UV_BAU_MESSAGE,			asm_sysvec_uv_bau_message),
++# endif
++	INTG(SPURIOUS_APIC_VECTOR,		asm_sysvec_spurious_apic_interrupt),
++	INTG(ERROR_APIC_VECTOR,			asm_sysvec_error_interrupt),
+ #endif
+ };
+ 
+diff --git a/arch/x86/kernel/irq_work.c b/arch/x86/kernel/irq_work.c
+index 80bee7695a20..890d4778cd35 100644
+--- a/arch/x86/kernel/irq_work.c
++++ b/arch/x86/kernel/irq_work.c
+@@ -9,18 +9,18 @@
+ #include <linux/irq_work.h>
+ #include <linux/hardirq.h>
+ #include <asm/apic.h>
++#include <asm/idtentry.h>
+ #include <asm/trace/irq_vectors.h>
+ #include <linux/interrupt.h>
+ 
+ #ifdef CONFIG_X86_LOCAL_APIC
+-__visible void __irq_entry smp_irq_work_interrupt(struct pt_regs *regs)
++DEFINE_IDTENTRY_SYSVEC(sysvec_irq_work)
  {
- 	if (unlikely(__this_cpu_read(xen_in_preemptible_hcall)
- 		     && need_resched())) {
-diff --git a/include/xen/xen-ops.h b/include/xen/xen-ops.h
-index 095be1d66f31..0ed975cf6f79 100644
---- a/include/xen/xen-ops.h
-+++ b/include/xen/xen-ops.h
-@@ -214,6 +214,7 @@ bool xen_running_on_version_or_later(unsigned int major, unsigned int minor);
- 
- void xen_efi_runtime_setup(void);
- 
-+DECLARE_PER_CPU(bool, xen_in_preemptible_hcall);
- 
- #ifdef CONFIG_PREEMPTION
- 
-@@ -225,9 +226,9 @@ static inline void xen_preemptible_hcall_end(void)
- {
+-	ipi_entering_ack_irq();
++	ack_APIC_irq();
+ 	trace_irq_work_entry(IRQ_WORK_VECTOR);
+ 	inc_irq_stat(apic_irq_work_irqs);
+ 	irq_work_run();
+ 	trace_irq_work_exit(IRQ_WORK_VECTOR);
+-	exiting_irq();
  }
  
--#else
-+static inline void xen_maybe_preempt_hcall(void) { }
- 
--DECLARE_PER_CPU(bool, xen_in_preemptible_hcall);
-+#else
- 
- static inline void xen_preemptible_hcall_begin(void)
+ void arch_irq_work_raise(void)
+diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
+index 1fd321f37f1b..b02e406a496d 100644
+--- a/arch/x86/platform/uv/tlb_uv.c
++++ b/arch/x86/platform/uv/tlb_uv.c
+@@ -1272,7 +1272,7 @@ static void process_uv2_message(struct msg_desc *mdp, struct bau_control *bcp)
+  * (the resource will not be freed until noninterruptable cpus see this
+  *  interrupt; hardware may timeout the s/w ack and reply ERROR)
+  */
+-void uv_bau_message_interrupt(struct pt_regs *regs)
++DEFINE_IDTENTRY_SYSVEC(sysvec_uv_bau_message)
  {
-@@ -239,6 +240,8 @@ static inline void xen_preemptible_hcall_end(void)
- 	__this_cpu_write(xen_in_preemptible_hcall, false);
- }
- 
-+void xen_maybe_preempt_hcall(void);
-+
- #endif /* CONFIG_PREEMPTION */
- 
- #endif /* INCLUDE_XEN_OPS_H */
+ 	int count = 0;
+ 	cycles_t time_start;
 
