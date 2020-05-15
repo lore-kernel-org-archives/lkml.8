@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AFCC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3AA20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2FF20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589578140;
-	bh=z2BX5Z1JYa79oTwHFyTRI4uV+Tujc8RvVn5/SPzxAJg=;
+	s=default; t=1589578151;
+	bh=uxpw2oen9DW7tdUiWuxAeSYzqt1SAL1i5yvXkVZ7AmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jED80+NpHuGlD+0q78WNIMFEgl8jpv7Zbm/G24Ple5XJ1e+UFkhmqr4Ynx4AEktoF
-	 fKWdNzyNW9/f5rMFXneVhc+vwZ8uOArMwnnYEUITlv2sYsV9+NzRCkJRhfA2RH3ck/
-	 Puy7jnM7kOCnEAXrgMlhz5pc//8dhpwgTllF+kto=
+	b=1i5VBCx1Egf9OV1fpFgS7quR+eCNBBdNeTj9ZQCAscz/TceoQsOBqqbAJf2SKQI8d
+	 g/xeniJGJo8CtHKi1QbBHe2dYIToGsls2a+gh3VzyKXLJMK9MkEE343QdytZRixuTG
+	 MXjkjyCuuFILVqhaUWx/x6PyGjJ+QZdoQRaY4EZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgEOV27 (ORCPT
+        id S1727992AbgEOV3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:28:59 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43365 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbgEOV2z (ORCPT
+        Fri, 15 May 2020 17:29:10 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53441 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727867AbgEOV3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:28:55 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f4so1588986pgi.10;
-        Fri, 15 May 2020 14:28:55 -0700 (PDT)
+        Fri, 15 May 2020 17:29:02 -0400
+Received: by mail-pj1-f65.google.com with SMTP id hi11so1478894pjb.3;
+        Fri, 15 May 2020 14:29:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Os/9pOAyuFP5rE18cPqNjIzCr5UNKNMa70RxbYuAtoQ=;
-        b=BLUUinTZb4bn1XwI4Sbw0k1YwFvObAbJ76yDFFi2D6kYhxyYjBqrdkYZd8TsFJC6cT
-         lzAv4/3uN3LPyYBmvdQQJr35Qo64pUr7t41qhno8B6KDGghGw+HbOkX/htvDZGIDyExK
-         aXB3D3HoB/FlBXdGJCsmN8u3CHkh389CALRHiOdtfrjvs47La+90o8Gjl5A0/1vW6uFb
-         zFiPflefNNWFEIOSVjYjXz9D9NmRQxu3hpcFcVza1x67tX924W9jCfNRB7JJZsBQi6NH
-         PagsDNan9mF0XBTCIFQtho+IKrxYIqrvFZ8ED7omzWRnKmEmqkZBT9paOgz12U4SzW0f
-         KpvQ==
-X-Gm-Message-State: AOAM532H8RWgWRcEKHphaz0lWbp+McCWDaH1bd+4gexLAL8HT71Pxwmu
-        MqFS3Xm7E2si7XSH0bXRLlc=
-X-Google-Smtp-Source: ABdhPJxA6chVMk3VbtmoOXv21M2cB33WLyUbJtzdTmRjvXxRRJ0EACaWlp73Wt9JQyukkevMHDPzbg==
-X-Received: by 2002:a62:68c1:: with SMTP id d184mr5878271pfc.138.1589578134871;
-        Fri, 15 May 2020 14:28:54 -0700 (PDT)
+        bh=BVI90Jx0mfg2mzobQ93FBFZYLfrAY+kFFbLRK534ymo=;
+        b=ar/M2cEv/VBx2QHo3CeSYjVh1shWk97jwOG9PNwmNumzRX7dxVUdwip7nwQ+6fEeW0
+         BY1mLcn5ZJdqNQILAyLVBrSiQH9p7zasqRksdYiXcsLwfOycIQvvZmWK9F09bYcIWB3K
+         gb1lXEFzb+KjodAL7UIHM+mw/lvgyfBajiWusT5NMy294dxDxOtQmQz60x+oPGOYBl9G
+         BZzFexzQ5Gi27DOJkREVjqfIMjaYAGmO7OCHLLAOh9p6BacgZxkhWLJyOPbvAsiGMBj6
+         lcR2cfZ8AOf0du9cdtSOyAaPY+k7+p2PmeXwY/jQs7bpUN7waAgxnKaYk3h9sHbAaVZQ
+         Vjuw==
+X-Gm-Message-State: AOAM531RbIPEYAJuOewWibkXYYUjXICt1H/23gIcJvH9I4Sw9qLCa7sj
+        EVqFkC9cG7Ws6b6UWWZBxq8=
+X-Google-Smtp-Source: ABdhPJxnQmcqRbJRGZ8iB7ghw3anMd7q93j51/pmVs2akYDs6Ntm0WHQQx7X7QEZmBozSzdYQTrPQg==
+X-Received: by 2002:a17:90a:bf08:: with SMTP id c8mr5687943pjs.13.1589578140564;
+        Fri, 15 May 2020 14:29:00 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id o9sm2171534pjp.4.2020.05.15.14.28.50
+        by smtp.gmail.com with ESMTPSA id kr1sm2174731pjb.26.2020.05.15.14.28.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 14:28:50 -0700 (PDT)
+        Fri, 15 May 2020 14:28:55 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id A958C41D95; Fri, 15 May 2020 21:28:49 +0000 (UTC)
+        id ED1424230A; Fri, 15 May 2020 21:28:49 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     jeyu@kernel.org
 Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
@@ -63,12 +63,10 @@ Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
         mchehab+samsung@kernel.org, kvalo@codeaurora.org,
         davem@davemloft.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Ariel Elior <aelior@marvell.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        GR-everest-linux-l2@marvell.com
-Subject: [PATCH v2 03/15] bnx2x: use new module_firmware_crashed()
-Date:   Fri, 15 May 2020 21:28:34 +0000
-Message-Id: <20200515212846.1347-4-mcgrof@kernel.org>
+        Douglas Miller <dougmill@linux.ibm.com>
+Subject: [PATCH v2 08/15] ehea: use new module_firmware_crashed()
+Date:   Fri, 15 May 2020 21:28:39 +0000
+Message-Id: <20200515212846.1347-9-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200515212846.1347-1-mcgrof@kernel.org>
 References: <20200515212846.1347-1-mcgrof@kernel.org>
@@ -87,26 +85,25 @@ a reboot.
 
 Using a taint flag allows us to annotate when this happens clearly.
 
-Cc: Ariel Elior <aelior@marvell.com>
-Cc: Sudarsana Kalluru <skalluru@marvell.com>
-CC: GR-everest-linux-l2@marvell.com
+Cc: Douglas Miller <dougmill@linux.ibm.com>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/ibm/ehea/ehea_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-index db5107e7937c..c38b8c9c8af0 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -909,6 +909,7 @@ void bnx2x_panic_dump(struct bnx2x *bp, bool disable_int)
- 	bp->eth_stats.unrecoverable_error++;
- 	DP(BNX2X_MSG_STATS, "stats_state - DISABLED\n");
+diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+index 0273fb7a9d01..6ae35067003f 100644
+--- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
++++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+@@ -3285,6 +3285,8 @@ static void ehea_crash_handler(void)
+ {
+ 	int i;
  
 +	module_firmware_crashed();
- 	BNX2X_ERR("begin crash dump -----------------\n");
- 
- 	/* Indices */
++
+ 	if (ehea_fw_handles.arr)
+ 		for (i = 0; i < ehea_fw_handles.num_entries; i++)
+ 			ehea_h_free_resource(ehea_fw_handles.arr[i].adh,
 -- 
 2.26.2
 
