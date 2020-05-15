@@ -2,310 +2,202 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FCBC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4444D20760
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 899AA207CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="0aGc2/3O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JPrcu0Df"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgEOGmO (ORCPT
+        id S1726639AbgEOGmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:42:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46074 "EHLO
+        Fri, 15 May 2020 02:42:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726215AbgEOGmO (ORCPT
+        by vger.kernel.org with ESMTP id S1726215AbgEOGmh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:42:14 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79885C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:42:12 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id z3so301924vka.10
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:42:12 -0700 (PDT)
+        Fri, 15 May 2020 02:42:37 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8A0DC061A0C;
+        Thu, 14 May 2020 23:42:36 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id b71so1358996ilg.8;
+        Thu, 14 May 2020 23:42:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BA59quelcDIdRO9l949jW9ARAKnurXI4XEzSqUYELU8=;
-        b=0aGc2/3Oe8lE6W0GmBwKdtVn9A80fXiRgafCdAIrbNICAcWPA7bdshiQbSgWb+GY+c
-         QXHSadz9Alk0IWk1K5O52dnHgeLOcDNrTOCRfeUCPq7f/aNQONzwN9xx0mqmxKns2dpa
-         YQTBOSFnMib+b4loR0XIYQFU8dw7mptMNHNj72JKS3RrCDYBLSU/2W9tHNkj9JAhjUEf
-         hqXKJ9oNvxsGbenMKAFNlQXvtnkCmXedDaB4jSSeZG2bn4sS1KLAWf4FaFOhkUKbz5h6
-         lYNwGan+ItmduuXW+cesj+198/pDHKJgXy1irGQBotwHxwio5GymDrz50Jh17K11X6oL
-         e0wQ==
+        bh=S/lUKrZ0IzuQhEJ2FvtX7EHPOiytT9wChy6t/OM7ElE=;
+        b=JPrcu0Df/duLU+iqV5TvdXkxmjoDF5V0nmMu/i/gL1IHp0aUvtLZ5T3smRvnBfBhwv
+         4VdqxjrGnQK5UND0RMlMzXeYia0R2S4rL8pfBT3Gtj3whSV3qWLl4bAKvjdQzcwUMEuT
+         sRuHNcwYze72jTCHdxm4E+JCz5uy1buo4rTJ6hfetVrjbPn55fp9pbf7IB1B5aQldoJ1
+         KMfgJ1/dut2z9megm89A3GCHi1pELBvWmRhK5TfFOfl2GD7hBd6JAxaN3WYXyVucMAb+
+         /PWxWu+6dXco+sHq6WadJ12NF0ZdkQRv2owbARA7YRzjsjGtHl5nlYjUA7BOV3NuPJCq
+         No6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BA59quelcDIdRO9l949jW9ARAKnurXI4XEzSqUYELU8=;
-        b=aHo/B9BAldne2ba2SZwTcm/CNA8OfDuUBR8sE2Fpl6qf0gVjJp+4IzTWU/iLn5FfBF
-         yJmrhHivCN+lER4fxxwdwxV0OUnqaGve/MdRDoYZOdBhPhtkbx3e5bmvwfdvuEYThUGt
-         aP4LpIMWYGcDyvX79xE/mxNLnvn3OZXm2sywxGwWUEJLFe5yXbxk8kxDsV66Ia/8oh+m
-         pAA7OqRH8sMjjgczLsfPbGiqZV/vRSlZbUnQzXCftZMBn/uuDxyooteq6QIchID8EB6B
-         ZO18MV7XpkhHdvT+bAtFDBRK6Qvq2Gflc1lzWd5HTXisugmLlsxuth+klR7lgd8P8YkT
-         3XiA==
-X-Gm-Message-State: AOAM531t+7WYmqHzc4W+i/gm1DpmfG6N7DQIXm5TsQMQK1Vs9ywuJ5Ws
-        gYOz5fdqfWMILKviR/8y+3ZQE/RqKsCRJD4tEff/hQ==
-X-Google-Smtp-Source: ABdhPJy97WG9tZErtAsULFfSPQ2I8f+58cBdq2w509U3NXrskksxpY2YjHa+yvY7hNCX5KBgDaNNsncGxmdr5WGEM/I=
-X-Received: by 2002:a1f:1386:: with SMTP id 128mr799240vkt.46.1589524930544;
- Thu, 14 May 2020 23:42:10 -0700 (PDT)
+        bh=S/lUKrZ0IzuQhEJ2FvtX7EHPOiytT9wChy6t/OM7ElE=;
+        b=UAnpXpbzLCSpL14d3iqxN5EbGI7sfP6i+BHq/H2DOnvlfyGiWxxExbDUGWUNWOcP0w
+         hBWdJKnM1uTo4uhg3qFj9AWfE2zChbli5e29vL4sH3EdVghpJjZBMDUCUt/SNxtxriPE
+         CEPdEQUlsUIKha/MjIMBXcGu0G29H0WOub2fDAH22dDMAfo24Sq3Sf9oyGbIgqrT3enV
+         zFxYFlAlEJwhxJcPfSQKiIXZnVvIavj6Gngp/3f4vGeK+gawA2y5NT3LCfg1vc1MfQSn
+         FFoe4m19ThEVtYzwIsFNf+2MZ7GxCtsV1/k8kMZ1jp733v4GHveq37YtDFlhKOgemMzo
+         s9MA==
+X-Gm-Message-State: AOAM533oYRtR+Ekluw/EFbvtOfRb+EFUHchiQUJ4v/wkVGF5/bd1QMJg
+        /Vwh5HyBQ5eAeikpW77JIEh9P9rAP/yk+FBNEc4=
+X-Google-Smtp-Source: ABdhPJykCWBVC3LohjndPzwHp8lS+BpIP6XW4lEAbWDYMfziSzZM3w+ter+PCMFRhdrZB15lbWjOvyztXCOfqWu6iLI=
+X-Received: by 2002:a92:b69b:: with SMTP id m27mr1890314ill.250.1589524956227;
+ Thu, 14 May 2020 23:42:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200512132613.31507-1-narmstrong@baylibre.com> <20200512132613.31507-4-narmstrong@baylibre.com>
-In-Reply-To: <20200512132613.31507-4-narmstrong@baylibre.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Fri, 15 May 2020 12:11:29 +0530
-Message-ID: <CAHLCerPiC3QS5u5CGX20q_5aUk4sN5knF4043_=WjtbhDDGuUg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] thermal: add support for the MCU controlled FAN on
- Khadas boards
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200514111453.GA99187@suse.com> <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
+ <20200514124845.GA12559@suse.com> <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
+In-Reply-To: <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Fri, 15 May 2020 09:42:24 +0300
+Message-ID: <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
+Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Luis Henriques <lhenriques@suse.com>,
+        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        fstests <fstests@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Miklos Szeredi <miklos@szeredi.hu>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 6:56 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> The new Khadas VIM2 and VIM3 boards controls the cooling fan via the
-> on-board microcontroller.
->
-> This implements the FAN control as thermal devices and as cell of the Khadas
-> MCU MFD driver.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  drivers/thermal/Kconfig          |  10 ++
->  drivers/thermal/Makefile         |   1 +
->  drivers/thermal/khadas_mcu_fan.c | 174 +++++++++++++++++++++++++++++++
->  3 files changed, 185 insertions(+)
->  create mode 100644 drivers/thermal/khadas_mcu_fan.c
->
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 91af271e9bb0..72b3960cc5ac 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -490,4 +490,14 @@ config SPRD_THERMAL
->         help
->           Support for the Spreadtrum thermal sensor driver in the Linux thermal
->           framework.
-> +
-> +config KHADAS_MCU_FAN_THERMAL
-> +       tristate "Khadas MCU controller FAN cooling support"
-> +       depends on OF || COMPILE_TEST
++CC: fstests
 
-Could you add a depends on the some board/SoC Kconfig option here so
-this doesn't show up for non-Amlogic/non-Khadas boards?
-
-Looks OK otherwise.
-
-> +       select MFD_CORE
-> +       select REGMAP
-> +       help
-> +         If you say yes here you get support for the FAN controlled
-> +         by the Microcontroller found on the Khadas VIM boards.
-> +
->  endif
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 8c8ed7b79915..460428c2122c 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -60,3 +60,4 @@ obj-$(CONFIG_ZX2967_THERMAL)  += zx2967_thermal.o
->  obj-$(CONFIG_UNIPHIER_THERMAL) += uniphier_thermal.o
->  obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
->  obj-$(CONFIG_SPRD_THERMAL)     += sprd_thermal.o
-> +obj-$(CONFIG_KHADAS_MCU_FAN_THERMAL)   += khadas_mcu_fan.o
-> diff --git a/drivers/thermal/khadas_mcu_fan.c b/drivers/thermal/khadas_mcu_fan.c
-> new file mode 100644
-> index 000000000000..044d4aba8be2
-> --- /dev/null
-> +++ b/drivers/thermal/khadas_mcu_fan.c
-> @@ -0,0 +1,174 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Khadas MCU Controlled FAN driver
-> + *
-> + * Copyright (C) 2020 BayLibre SAS
-> + * Author(s): Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mfd/khadas-mcu.h>
-> +#include <linux/regmap.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/thermal.h>
-> +
-> +#define MAX_LEVEL 3
-> +
-> +struct khadas_mcu_fan_ctx {
-> +       struct khadas_mcu *mcu;
-> +       unsigned int level;
-> +       struct thermal_cooling_device *cdev;
-> +};
-> +
-> +static int khadas_mcu_fan_set_level(struct khadas_mcu_fan_ctx *ctx,
-> +                                   unsigned int level)
-> +{
-> +       int ret;
-> +
-> +       ret = regmap_write(ctx->mcu->map, KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG,
-> +                          level);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ctx->level = level;
-> +
-> +       return 0;
-> +}
-> +
-> +static int khadas_mcu_fan_get_max_state(struct thermal_cooling_device *cdev,
-> +                                       unsigned long *state)
-> +{
-> +       struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
-> +
-> +       if (!ctx)
-> +               return -EINVAL;
-> +
-> +       *state = MAX_LEVEL;
-> +
-> +       return 0;
-> +}
-> +
-> +static int khadas_mcu_fan_get_cur_state(struct thermal_cooling_device *cdev,
-> +                                       unsigned long *state)
-> +{
-> +       struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
-> +
-> +       if (!ctx)
-> +               return -EINVAL;
-> +
-> +       *state = ctx->level;
-> +
-> +       return 0;
-> +}
-> +
-> +static int
-> +khadas_mcu_fan_set_cur_state(struct thermal_cooling_device *cdev,
-> +                            unsigned long state)
-> +{
-> +       struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
-> +
-> +       if (!ctx || (state > MAX_LEVEL))
-> +               return -EINVAL;
-> +
-> +       if (state == ctx->level)
-> +               return 0;
-> +
-> +       return khadas_mcu_fan_set_level(ctx, state);
-> +}
-> +
-> +static const struct thermal_cooling_device_ops khadas_mcu_fan_cooling_ops = {
-> +       .get_max_state = khadas_mcu_fan_get_max_state,
-> +       .get_cur_state = khadas_mcu_fan_get_cur_state,
-> +       .set_cur_state = khadas_mcu_fan_set_cur_state,
-> +};
-> +
-> +static int khadas_mcu_fan_probe(struct platform_device *pdev)
-> +{
-> +       struct khadas_mcu *mcu = dev_get_drvdata(pdev->dev.parent);
-> +       struct thermal_cooling_device *cdev;
-> +       struct device *dev = &pdev->dev;
-> +       struct khadas_mcu_fan_ctx *ctx;
-> +       int ret;
-> +
-> +       ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> +       if (!ctx)
-> +               return -ENOMEM;
-> +       ctx->mcu = mcu;
-> +       platform_set_drvdata(pdev, ctx);
-> +
-> +       cdev = devm_thermal_of_cooling_device_register(dev->parent,
-> +                       dev->parent->of_node, "khadas-mcu-fan", ctx,
-> +                       &khadas_mcu_fan_cooling_ops);
-> +       if (IS_ERR(cdev)) {
-> +               ret = PTR_ERR(cdev);
-> +               dev_err(dev,
-> +                               "Failed to register khadas-mcu-fan as cooling device: %d\n",
-> +                               ret);
-> +               return ret;
-> +       }
-> +       ctx->cdev = cdev;
-> +       thermal_cdev_update(cdev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int khadas_mcu_fan_disable(struct device *dev)
-> +{
-> +       struct khadas_mcu_fan_ctx *ctx = dev_get_drvdata(dev);
-> +       unsigned int level_save = ctx->level;
-> +       int ret;
-> +
-> +       ret = khadas_mcu_fan_set_level(ctx, 0);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ctx->level = level_save;
-> +
-> +       return 0;
-> +}
-> +
-> +static void khadas_mcu_fan_shutdown(struct platform_device *pdev)
-> +{
-> +       khadas_mcu_fan_disable(&pdev->dev);
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int khadas_mcu_fan_suspend(struct device *dev)
-> +{
-> +       return khadas_mcu_fan_disable(dev);
-> +}
-> +
-> +static int khadas_mcu_fan_resume(struct device *dev)
-> +{
-> +       struct khadas_mcu_fan_ctx *ctx = dev_get_drvdata(dev);
-> +
-> +       return khadas_mcu_fan_set_level(ctx, ctx->level);
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(khadas_mcu_fan_pm, khadas_mcu_fan_suspend,
-> +                        khadas_mcu_fan_resume);
-> +
-> +static const struct platform_device_id khadas_mcu_fan_id_table[] = {
-> +       { .name = "khadas-mcu-fan-ctrl", },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(platform, khadas_mcu_fan_id_table);
-> +
-> +static struct platform_driver khadas_mcu_fan_driver = {
-> +       .probe          = khadas_mcu_fan_probe,
-> +       .shutdown       = khadas_mcu_fan_shutdown,
-> +       .driver = {
-> +               .name           = "khadas-mcu-fan-ctrl",
-> +               .pm             = &khadas_mcu_fan_pm,
-> +       },
-> +       .id_table       = khadas_mcu_fan_id_table,
-> +};
-> +
-> +module_platform_driver(khadas_mcu_fan_driver);
-> +
-> +MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
-> +MODULE_DESCRIPTION("Khadas MCU FAN driver");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.22.0
+On Thu, May 14, 2020 at 4:15 PM Jeff Layton <jlayton@kernel.org> wrote:
 >
+> On Thu, 2020-05-14 at 13:48 +0100, Luis Henriques wrote:
+> > On Thu, May 14, 2020 at 08:10:09AM -0400, Jeff Layton wrote:
+> > > On Thu, 2020-05-14 at 12:14 +0100, Luis Henriques wrote:
+> > > > Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
+> > > > a file handle to dentry"), this fixes another corner case with
+> > > > name_to_handle_at/open_by_handle_at.  The issue has been detected by
+> > > > xfstest generic/467, when doing:
+> > > >
+> > > >  - name_to_handle_at("/cephfs/myfile")
+> > > >  - open("/cephfs/myfile")
+> > > >  - unlink("/cephfs/myfile")
+> > > >  - open_by_handle_at()
+> > > >
+> > > > The call to open_by_handle_at should not fail because the file still
+> > > > exists and we do have a valid handle to it.
+> > > >
+> > > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > > > ---
+> > > >  fs/ceph/export.c | 13 +++++++++++--
+> > > >  1 file changed, 11 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+> > > > index 79dc06881e78..8556df9d94d0 100644
+> > > > --- a/fs/ceph/export.c
+> > > > +++ b/fs/ceph/export.c
+> > > > @@ -171,12 +171,21 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
+> > > >
+> > > >  static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
+> > > >  {
+> > > > + struct ceph_inode_info *ci;
+> > > >   struct inode *inode = __lookup_inode(sb, ino);
+> > > > +
+> > > >   if (IS_ERR(inode))
+> > > >           return ERR_CAST(inode);
+> > > >   if (inode->i_nlink == 0) {
+> > > > -         iput(inode);
+> > > > -         return ERR_PTR(-ESTALE);
+> > > > +         bool is_open;
+> > > > +         ci = ceph_inode(inode);
+> > > > +         spin_lock(&ci->i_ceph_lock);
+> > > > +         is_open = __ceph_is_file_opened(ci);
+> > > > +         spin_unlock(&ci->i_ceph_lock);
+> > > > +         if (!is_open) {
+> > > > +                 iput(inode);
+> > > > +                 return ERR_PTR(-ESTALE);
+> > > > +         }
+> > > >   }
+> > > >   return d_obtain_alias(inode);
+> > > >  }
+> > >
+> > > Thanks Luis. Out of curiousity, is there any reason we shouldn't ignore
+> > > the i_nlink value here? Does anything obviously break if we do?
+> >
+> > Yes, the scenario described in commit 03f219041fdb is still valid, which
+> > is basically the same but without the extra open(2):
+> >
+> >   - name_to_handle_at("/cephfs/myfile")
+> >   - unlink("/cephfs/myfile")
+> >   - open_by_handle_at()
+> >
+>
+> Ok, I guess we end up doing some delayed cleanup, and that allows the
+> inode to be found in that situation.
+>
+> > The open_by_handle_at man page isn't really clear about these 2 scenarios,
+> > but generic/426 will fail if -ESTALE isn't returned.  Want me to add a
+> > comment to the code, describing these 2 scenarios?
+> >
+>
+> (cc'ing Amir since he added this test)
+>
+> I don't think there is any hard requirement that open_by_handle_at
+> should fail in that situation. It generally does for most filesystems
+> due to the way they handle cl794798fa xfsqa: test open_by_handle() on unlinked and freed inode clusters
+eaning up unlinked inodes, but I don't
+> think it's technically illegal to allow the inode to still be found. If
+> the caller cares about whether it has been unlinked it can always test
+> i_nlink itself.
+>
+> Amir, is this required for some reason that I'm not aware of?
+
+Hi Jeff,
+
+The origin of this test is in fstests commit:
+794798fa xfsqa: test open_by_handle() on unlinked and freed inode clusters
+
+It was introduced to catch an xfs bug, so this behavior is the expectation
+of xfs filesystem, but note that it is not a general expectation to fail
+open_by_handle() after unlink(), it is an expectation to fail open_by_handle()
+after unlink() + sync() + drop_caches.
+
+I have later converted the test to generic, because I needed to check the
+same expectation for overlayfs use case, which is:
+The original inode is always there (in lower layer), unlink creates a whiteout
+mark and open_by_handle should treat that as ESTALE, otherwise the
+unlinked files would be accessible to nfs clients forever.
+
+In overlayfs, we handle the open file case by returning a dentry only
+in case the inode with deletion mark in question is already in inode cache,
+but we take care not to populate inode cache with the check.
+It is easier, because we do not need to get inode into cache for checking
+the delete marker.
+
+Maybe you could instead check in __fh_to_dentry():
+
+    if (inode->i_nlink == 0 && atomic_read(&inode->i_count) == 1)) {
+        iput(inode);
+        return ERR_PTR(-ESTALE);
+    }
+
+The above is untested, so I don't know if it's enough to pass generic/426.
+Note that generic/467 also checks the same behavior for rmdir().
+
+If you decide that ceph does not need to comply to this behavior,
+then we probably need to whitelist/blocklist the filesystems that
+want to test this behavior, which will be a shame.
+
+Thanks,
+Amir.
