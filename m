@@ -2,165 +2,144 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72579C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4460F20657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFFE72074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:48:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bwcQeZtv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eZtjbP6N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbgEONo6 (ORCPT
+        id S1726204AbgEONsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55588 "EHLO
+        Fri, 15 May 2020 09:48:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgEONo5 (ORCPT
+        with ESMTP id S1726141AbgEONsU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:44:57 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 529E5C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:44:57 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id u15so2314525ljd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:44:57 -0700 (PDT)
+        Fri, 15 May 2020 09:48:20 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0596FC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:48:19 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g12so2736839wmh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:48:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DQZCcj+2JGTArdtmPobmCtQJjTTWbjUcr2DcXN7Bysk=;
-        b=bwcQeZtvBT3ap8qSUelaXtkjqURtDK5YcwFZzgcqAgSRVcOkFMG5yGPE3TtE6wzG7m
-         4md+3sb7p7V3v/G+O9IQ2N+yCfuKfOjZb++cX7f0PHWHkNV0WdfJ7LtnFac8/YevP94m
-         GApLJt9dk/ILL20YUAo40ph7QY7oMe/UkMPnQpf+9hk6LFOtAGuG8y9MUm81qsHXFCfM
-         orlyEE330bK4FFvOAOcEbBw8dVrabURiFe/LxJoSShaobqKdSkCIlIkHf9zjU6VEFXZN
-         yDYbTRYjc5ujLi8DMoIxvGrXee2VIZgv/VYCEq/Qj3jkBVg1+opR1mPkZFG04US7RoQD
-         zr3A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3qkYfWFETK6zBf4wXa1Hi398hQXeE5GebQwhI+ncIdg=;
+        b=eZtjbP6NRTFnwBBzAQ/7vAIDOd0g+tBLTmdd6At7C7aKYpemjjiVaON1bhVUUka4xC
+         fdspZ0DuMKB3IXzMrf+3fR3wLygypG8KaN12CdmaGZQ2FmwH8pUXNlPKBbDgCvg+59/j
+         zdeM6ghctOvVndEqGsVetE7otExcx/34sd2COmwwEw61Dpsn5VAnv01ICh9OtH7azKr5
+         zBESlD1TJsEj1W/APW4a22VPev9cTkzEPtO03frS2BuR/1czA3sk57k9hWopVbsnhyG9
+         wqtB3qgQZXTGqNyRM5daJvWnvCqQLbaNTpxQNJZCUtyDUArxuTHxqwaKZ6mT9iu9bYfs
+         5B3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DQZCcj+2JGTArdtmPobmCtQJjTTWbjUcr2DcXN7Bysk=;
-        b=lKJuF18ZNnY1ml+5XIklcCzSgrQnd6CpxNfK4LBHihTAjdi15EG8oPA46ZQkGPMd49
-         FO192phzsAhXHgm8ID6819q/S4F3QM81HwIfkqKdML+OJzTGB3t3ggt0m3dPPdZieCrv
-         5UhqLO+sKMDwq377gOB3h9PT/iTjA65I6FanzSIsOP6KfD9EfGEGdCEAamaRHqFhGsiT
-         v0pKLeWpIvAPa+W9PnrQ7IMBpUDa1ZnDvmXjjX82OAsjWy75blkkurw7jlftP2DZiXwT
-         ioVItPp8puk9zcgDvmQYE6Janho1cCPcUDF68Es9eQpKrrLrQjkzE6o2LhO7DpmJWmZi
-         q6hw==
-X-Gm-Message-State: AOAM532hC8plA1GOZD7xWGK9PticNrTOR4GJJhmeQej/LYda8RHOPDGa
-        VVUlnQxRa3lrWjZFuvHLjx28x1IjbALQSMKB+T2nXA==
-X-Google-Smtp-Source: ABdhPJy4axkqYK5Ps1y4CemlDYwXND6nG68gA6azFpJh3sKJsMxHGHKkm+IZyiZgCuvlFQtsIKx5GlaOidGcZErf2eQ=
-X-Received: by 2002:a2e:b0c8:: with SMTP id g8mr73575ljl.270.1589550295489;
- Fri, 15 May 2020 06:44:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200508170630.94406-1-shakeelb@google.com> <20200508214405.GA226164@cmpxchg.org>
- <CALvZod5VHHUV+_AXs4+5sLOPGyxm709kQ1q=uHMPVxW8pwXZ=g@mail.gmail.com>
- <20200515082955.GJ29153@dhcp22.suse.cz> <20200515132421.GC591266@cmpxchg.org>
-In-Reply-To: <20200515132421.GC591266@cmpxchg.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 15 May 2020 06:44:44 -0700
-Message-ID: <CALvZod7SdgXv0Dmm3q5H=EH4dzg8pXZenMUaDObfoRv5EX-Pkw@mail.gmail.com>
-Subject: Re: [PATCH] memcg: expose root cgroup's memory.stat
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Michal Hocko <mhocko@kernel.org>, Mel Gorman <mgorman@suse.de>,
-        Roman Gushchin <guro@fb.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3qkYfWFETK6zBf4wXa1Hi398hQXeE5GebQwhI+ncIdg=;
+        b=IQImSgb3xKmFszSSoOUj2fGfvtOEIEURklQrXOG+50HkHpO/1cC9vfVy8ayA9OFZmM
+         e2uht1ewSUZyCnNyVpIimAkbwcLBFfjg94cImccDg8afM28YW/qwhj4cwgsL+QPuTKMG
+         Bpw5r0wDdJxThaEhLZs9ut/zNA5ghz4W4lccHe6a2QZi5+q/vs5LwPnWLwyxfEMKV3d3
+         YNKkDGONmgZ6PCPZuHUPyyRIF2xaPKzTZ6nz/t/hHvLP4Wbjtobaom7SrUBV3KMVJbFx
+         VCxNbdMG+usIgkGSmKu4JEdx7ntmyDxjXA1tLodxKE4KVRax8IFJi+4Poj8SLysnd9s3
+         6qvg==
+X-Gm-Message-State: AOAM530kn2eOUpdBPTAORbE2h8iU2V2087O43e5Ox/hu7Mc6tPzS8dXC
+        MQnWl+B0sYp0LG6nqjy1gs3Yfw==
+X-Google-Smtp-Source: ABdhPJzqCP16mihqtDEJGuadqt0+54o3/v4lzS/VEwkSC5lwNA/9e1HsDMpU5KA7xPyOK2gQe0cgwQ==
+X-Received: by 2002:a1c:a952:: with SMTP id s79mr4008010wme.153.1589550489338;
+        Fri, 15 May 2020 06:48:09 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id s12sm3556478wmc.7.2020.05.15.06.48.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 06:48:08 -0700 (PDT)
+Date:   Fri, 15 May 2020 14:48:06 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>, Sumit Garg <sumit.garg@linaro.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>
+Subject: Re: [PATCH] printk/kdb: Redirect printk messages into kdb in any
+ context
+Message-ID: <20200515134806.5cw4xxnxw7k3223l@holly.lan>
+References: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org>
+ <20200512142533.ta4uejwmq5gchtlx@holly.lan>
+ <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
+ <20200514084230.GO17734@linux-b0ei>
+ <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
+ <20200515085021.GS17734@linux-b0ei>
+ <20200515103308.GD42471@jagdpanzerIV.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515103308.GD42471@jagdpanzerIV.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 6:24 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Fri, May 15, 2020 at 10:29:55AM +0200, Michal Hocko wrote:
-> > On Sat 09-05-20 07:06:38, Shakeel Butt wrote:
-> > > On Fri, May 8, 2020 at 2:44 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > > >
-> > > > On Fri, May 08, 2020 at 10:06:30AM -0700, Shakeel Butt wrote:
-> > > > > One way to measure the efficiency of memory reclaim is to look at the
-> > > > > ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
-> > > > > not updated consistently at the system level and the ratio of these are
-> > > > > not very meaningful. The pgsteal and pgscan are updated for only global
-> > > > > reclaim while pgrefill gets updated for global as well as cgroup
-> > > > > reclaim.
-> > > > >
-> > > > > Please note that this difference is only for system level vmstats. The
-> > > > > cgroup stats returned by memory.stat are actually consistent. The
-> > > > > cgroup's pgsteal contains number of reclaimed pages for global as well
-> > > > > as cgroup reclaim. So, one way to get the system level stats is to get
-> > > > > these stats from root's memory.stat, so, expose memory.stat for the root
-> > > > > cgroup.
-> > > > >
-> > > > >       from Johannes Weiner:
-> > > > >       There are subtle differences between /proc/vmstat and
-> > > > >       memory.stat, and cgroup-aware code that wants to watch the full
-> > > > >       hierarchy currently has to know about these intricacies and
-> > > > >       translate semantics back and forth.
-> >
-> > Can we have those subtle differences documented please?
-> >
-> > > > >
-> > > > >       Generally having the fully recursive memory.stat at the root
-> > > > >       level could help a broader range of usecases.
-> > > >
-> > > > The changelog begs the question why we don't just "fix" the
-> > > > system-level stats. It may be useful to include the conclusions from
-> > > > that discussion, and why there is value in keeping the stats this way.
-> > > >
-> > >
-> > > Right. Andrew, can you please add the following para to the changelog?
-> > >
-> > > Why not fix the stats by including both the global and cgroup reclaim
-> > > activity instead of exposing root cgroup's memory.stat? The reason is
-> > > the benefit of having metrics exposing the activity that happens
-> > > purely due to machine capacity rather than localized activity that
-> > > happens due to the limits throughout the cgroup tree. Additionally
-> > > there are userspace tools like sysstat(sar) which reads these stats to
-> > > inform about the system level reclaim activity. So, we should not
-> > > break such use-cases.
-> > >
-> > > > > Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> > > > > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> > > >
-> > > > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> > >
-> > > Thanks a lot.
-> >
-> > I was quite surprised that the patch is so simple TBH. For some reason
-> > I've still had memories that we do not account for root memcg (likely
-> > because mem_cgroup_is_root(memcg) bail out in the try_charge. But stats
-> > are slightly different here.
->
-> Yep, we skip the page_counter for root, but keep in mind that cgroup1
-> *does* have a root-level memory.stat, so (for the most part) we've
-> been keeping consumer stats for the root level the whole time.
->
-> > counters because they are not really all the same. E.g.
-> > - mem_cgroup_charge_statistics accounts for each memcg
->
-> Yep, that's heritage from cgroup1.
->
-> > - memcg_charge_kernel_stack relies on pages being associated with a
-> >   memcg and that in turn relies on __memcg_kmem_charge_page which bails
-> >   out on root memcg
->
-> You're right. It should only bypass the page_counter, but still set
-> page->mem_cgroup = root_mem_cgroup, just like user pages.
->
-> This counter also doesn't get exported on cgroup1, so it would indeed
-> be a new bug. It needs to be fixed before this patch here.
->
-> > - memcg_charge_slab (NR_SLAB*) skips over root memcg as well
->
-> Same thing with these two.
+On Fri, May 15, 2020 at 07:33:08PM +0900, Sergey Senozhatsky wrote:
+> On (20/05/15 10:50), Petr Mladek wrote:
+> > kdb is able to stop kernel even in NMI context where printk() is redirected
+> > to the printk_safe() lockless variant. Move the check and redirect to kdb
+> > even in this case.
+> 
+> Can I please have some context what problem does this solve?
+> I can see that vkdb_printf() calls into console drivers:
+> 
+> 	for_each_console(c) {
+> 		c->write(c, cp, retlen - (cp - kdb_buffer));
+> 		touch_nmi_watchdog();
+> 	}
+> 
+> Is this guaranteed that we never execute this path from NMI?
 
-Yes, we skip page_counter for root but not the stats. I will go over
-all the stats and make sure we are not skipping the stats for root.
+Absolutely not.
+
+The execution context for kdb is pretty much unique... we are running a
+debug mode with all CPUs parked in a holding loop with interrupts
+disabled. One CPU is at an unknown exception state and the others are
+either handling an IRQ or NMI depending on architecture[1].
+
+However there are a number of factors that IMHO weigh in favour of
+allowing kdb to intercept here.
+
+1. kgdb/kdb are designed to work from NMI, modulo the bugs that are
+   undoubtedly present.
+
+2. A synchronous breakpoint (including an implicit breakpoint-on-oops)
+   from any code that executes with irqs disabled will exhibit most of
+   the same problems as an NMI but without waking up all the NMI logic.
+
+3. kdb_trap_printk is only set for *very* narrow time intervals by the
+   debug master (the single CPU in the system that is *not* in a
+   holding loop). Thus in all cases the system has already successfully
+   executed kdb_printf() several times before we ever call the printk()
+   interception code.
+
+   Or put another way, even if we did tickle a bug speculated about in
+   #1, it won't be the call to printk() that triggers it; we'd never
+   get that far!
+
+
+> If so, can this please be added to the commit message? A more
+> detailed commit message will help a lot.
+
+I suspect Petr might prefer any future flames about kdb_printf() to be
+pointed at me rather than him ;-) so if adding anything to the commit
+message then I'd suggest it be based on the reasoning in #3 above.
+
+
+Daniel.
