@@ -2,95 +2,92 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD7AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96752C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4C9207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6392820709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:57:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vvym3etz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgEOJzG (ORCPT
+        id S1728047AbgEOJ5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:55:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45156 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727927AbgEOJzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:55:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 306D9AD31;
-        Fri, 15 May 2020 09:55:06 +0000 (UTC)
-Date:   Fri, 15 May 2020 11:55:01 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Orson Zhai <orsonzhai@gmail.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Orson Zhai <orson.unisoc@gmail.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Orson Zhai <orson.zhai@unisoc.com>
-Subject: Re: [PATCH V2] dynamic_debug: Add an option to enable dynamic debug
- for modules only
-Message-ID: <20200515095501.GU17734@linux-b0ei>
-References: <1587408228-10861-1-git-send-email-orson.unisoc@gmail.com>
- <20200420191014.GE121146@unreal>
- <CA+H2tpGgGtW_8Z8fV9to39JwA_KrcfAeBC+KN87v0xKnZHt2_w@mail.gmail.com>
- <20200422142552.GA492196@unreal>
- <CA+H2tpGR7tywhkexa31AD_FkhyxQgVq_L+b0DbvXzwr6yT8j9Q@mail.gmail.com>
+        Fri, 15 May 2020 05:57:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbgEOJ5e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 05:57:34 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FD0FC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 02:57:32 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id b6so1595993ljj.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 02:57:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nMOYfNEZkqpOwxdikoGlBP08jiU7JwSsPnMDuh6RRyE=;
+        b=vvym3etztXXVkCTEQIqmvLL646Wn7PUlNmNteiiX6vD251ott7ib0iMU9IjQnQFeVI
+         FygmI1w9w1/01lephMRKe6MOthQRKu5pYu1s0lcDU2/gPbfLXhYeRnp7USSWHbHlWs0B
+         rVJ4Nqg/ZxXx10axnj/G1/srp7CmkxfmABm4ln+bf5dkgOS1LfL/BoHPOA8IHWCXAACr
+         Biu0lPHJ+c6M9Wxt38SliC9NcBYeJ/587R++nAXrIfAKNyghAmcfIyJvyD2l2JBbr+Og
+         IaFcU2fxuS2Vae73zPp70EBnZuF8vg0ydQEve2p8PA53EmtX+Yw5m2d0Sss0vLrODiib
+         /Jew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nMOYfNEZkqpOwxdikoGlBP08jiU7JwSsPnMDuh6RRyE=;
+        b=q+7Iz6ycjZoMjZKhg1/1tqwVr0TL9+T42UKW7j6CJMeMSs2iHQ+PhZCiHXGiOxRsrI
+         ZiOgaMejZVPK3chWRoJZqppnGwOijEZh9V/+jcADnfyzDFo4rbvSYrAwniLSaztuYjd/
+         9U88RRC2uvUELUIXjTIsdtvuAdNbSMLn7GhH111NyRjnk3Pwh510qrdd6a6cXHwoO5Kd
+         zunNKzCteJtUTIsf6OBAQE/SImd+gJI+LnpHfeaznbxY/MJz/0oFpR47iM9eD6pzfEod
+         QVAqLWfbDwDAp6WvHG61kItaIUrUvDdkJy7WDJA5U0+veoWUECIbSckIjQLZAaxACp/8
+         Xc3Q==
+X-Gm-Message-State: AOAM533Oj0ji3KVgh0hK0hkqICZ1d1w1aukJATPFXcAbREZHK8pZkyoJ
+        jT0hehN7R/q2LdEPIrzw0ZIEMmgHVyTbhTqZYLvgFw==
+X-Google-Smtp-Source: ABdhPJzunetbL+zFc/cF/yJgQXxIwApcv4HFPrGl6rmOuOSSwSlKzA8Z3vhz3J17EH6DBzXvxjZbuHqvjb10wXIVlaQ=
+X-Received: by 2002:a2e:3517:: with SMTP id z23mr1740322ljz.147.1589536650637;
+ Fri, 15 May 2020 02:57:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+H2tpGR7tywhkexa31AD_FkhyxQgVq_L+b0DbvXzwr6yT8j9Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200514082428.27864-1-etienne.carriere@linaro.org>
+ <20200514142924.GC23401@bogus> <CAN5uoS_bimZsFqwaODRRWeCe15JMepQa2z9J0+dq7qNfwxRsug@mail.gmail.com>
+ <20200515093424.GC23671@bogus>
+In-Reply-To: <20200515093424.GC23671@bogus>
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+Date:   Fri, 15 May 2020 11:57:19 +0200
+Message-ID: <CAN5uoS9Ar5MZRufsf-x=xjm29VfpYAB2T-L=T-Q+-zPiJoKqQw@mail.gmail.com>
+Subject: Re: [PATCH] firmware: arm_scmi: fix SMCCC_RET_NOT_SUPPORTED management
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2020-04-23 00:02:48, Orson Zhai wrote:
-> On Wed, Apr 22, 2020 at 10:25 PM Leon Romanovsky <leon@kernel.org> wrote:
+> > Or consider part of the SCMI-SMC transport API that output arg a0
+> > shall be 0 on success, SMCCC_RET_NOT_SUPPORTED if function ID is not
+> > supported and any non-zero value for non-generic **error** codes.
 > >
-> > On Wed, Apr 22, 2020 at 09:06:08PM +0800, Orson Zhai wrote:
-> > > On Tue, Apr 21, 2020 at 3:10 AM Leon Romanovsky <leon@kernel.org> wrote:
-> > > My motivation came from the concept of GKI (Generic Kernel Image) in Android.
-> > > Google will release a common kernel image (binary) to all of the Android system
-> > > vendors in the world instead of letting them to build their owns as before.
-> > > Every SoC vendor's device drivers will be provided in kernel modules only.
-> > > By my patch, the driver owners could debug their modules in field (say
-> > > production releases)
-> > > without having to enable dynamic debug for the whole GKI.
-> >
-> > Will Google release that binary with CONFIG_DYNAMIC_DEBUG_CORE disabled?
-> >
-> In Google's plan, there will be only one GKI (no debug version) for
-> one Android version per kernel version per year.
+>
+> I prefer that. Anyways I will check and if anything changes I will ping
+> back on this thread.
 
-Are there plans to use modules with debug messages enabled on production
-systems?
+I don't have a strong opinion on whether considering or not 0 as
+success, for whatever the function ID used here for SCMI message
+notification.
+We can assume at least 0 is default returned in a0 when the function
+ID is used in SCMI SMC transport.
+Thanks for the feedback.
 
-IMHO, the debug messages are primary needed during development and
-when fixing bugs. I am sure that developers will want to enable many
-more features that will help with debugging and which will be disabled
-on production systems.
-
-I expect that Google will not release only the single binary. They
-should release also the sources and build configuration. Then
-developers might build their own versions with the needed debugging
-features enabled.
-
-Best Regards,
-Petr
+> --
+> Regards,
+> Sudeep
