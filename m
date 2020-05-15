@@ -2,211 +2,123 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56393C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3536B206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902BF20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:25:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PXSCARGp"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Czl8nSVK";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="tEY8nMzR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgEOQZb (ORCPT
+        id S1726615AbgEOQZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:25:31 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:49497 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726023AbgEOQZb (ORCPT
+        Fri, 15 May 2020 12:25:56 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:50480 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726023AbgEOQZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:25:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589559930; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=3snPa8PcNFz7GP9EFRf4ot7oj2RCpdq3CG7XU0T81c0=;
- b=PXSCARGpS7TFJMmEjSfnIbEybkBWhIHWe3NK1XiDkwau84MNa3S1qc7bEihLff6FkoQjsfS8
- gvDjXNfxpskxE10YqUHBy60mAnsj5Lct/gAumym3SqMpK3nmczFLZBCEwWRrHbEjXU9f7DrZ
- cOeQU4pn2OwE3wpkyUAiF3r3yAQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebec274.7fda28651688-smtp-out-n03;
- Fri, 15 May 2020 16:25:24 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 305C2C43636; Fri, 15 May 2020 16:25:24 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Fri, 15 May 2020 12:25:54 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 350E78EE2CA;
+        Fri, 15 May 2020 09:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1589559953;
+        bh=oe8glbLAsYuPDWO/9J63l1A3/JX/rXGWHMdk2ewNMOA=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Czl8nSVKq6x+5ktnGMuDJVoRjCd8L3FTEERzkB0JPBwHBwxznk411UGYdCzb5lZu1
+         guXqDfI5hhx4GtqifLJzgz2O7o+zakP9bsnBOCG71vbinXNa+oln+R6g4WgfNyfjcx
+         Dabx0g7ig9tCia5NBUFs1/E7rJ8h9iOaFC99r79c=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 97RosFnuv28I; Fri, 15 May 2020 09:25:53 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D897C433F2;
-        Fri, 15 May 2020 16:25:23 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 0DABA8EE25D;
+        Fri, 15 May 2020 09:25:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1589559952;
+        bh=oe8glbLAsYuPDWO/9J63l1A3/JX/rXGWHMdk2ewNMOA=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=tEY8nMzR1YlR1vbSBOyT5z55J1VGQgL9BDudw6VE1ewecDFlqb3xXMh32AnzbC6a0
+         GT1kzr/7c46ULfMWi/Nj6X758girml/uRbappkQnXN1skHpVjas/3GLPJiLL2lQrCw
+         JH6+lou1vP4NouYYQFthT7Aiqk1UItTX2BoqHrRA=
+Message-ID: <1589559950.3653.11.camel@HansenPartnership.com>
+Subject: Re: [PATCH v2] Implement close-on-fork
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     "Karstens, Nate" <Nate.Karstens@garmin.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        David Laight <David.Laight@aculab.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Changli Gao <xiaosuo@gmail.com>,
+        "a.josey@opengroup.org" <a.josey@opengroup.org>
+Date:   Fri, 15 May 2020 09:25:50 -0700
+In-Reply-To: <5b1929aa9f424e689c7f430663891827@garmin.com>
+References: <20200515152321.9280-1-nate.karstens@garmin.com>
+         <20200515155730.GF16070@bombadil.infradead.org>
+         <5b1929aa9f424e689c7f430663891827@garmin.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 15 May 2020 21:55:23 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Tingwei Zhang <tingwei@codeaurora.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH] coresight: etm4x: Add support to disable trace unit power
- up
-In-Reply-To: <89be7790b7fdd4b0268919e060198926@codeaurora.org>
-References: <20200514105915.27516-1-saiprakash.ranjan@codeaurora.org>
- <20200514180055.GA29384@xps15>
- <2c932d57288508cc72a6ee323cf5595e@codeaurora.org>
- <CANLsYkxun2EWGeLU42ShbqkJMtCTh+Q9L3t=CXQR+-2zVuuJYg@mail.gmail.com>
- <a0f8f01f28506e10001885e387d3cb4f@codeaurora.org>
- <20200515155144.GA7085@xps15>
- <89be7790b7fdd4b0268919e060198926@codeaurora.org>
-Message-ID: <6cccfa9d18ce86c929da4ec042b4194d@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-15 21:28, Sai Prakash Ranjan wrote:
-> Hi Mathieu,
+On Fri, 2020-05-15 at 16:07 +0000, Karstens, Nate wrote:
+> Matthew,
 > 
-> On 2020-05-15 21:21, Mathieu Poirier wrote:
->> On Fri, May 15, 2020 at 08:37:13PM +0530, Sai Prakash Ranjan wrote:
->>> Hi Mathieu,
->>> 
->>> On 2020-05-15 20:22, Mathieu Poirier wrote:
->>> > On Thu, 14 May 2020 at 12:39, Sai Prakash Ranjan
->>> > <saiprakash.ranjan@codeaurora.org> wrote:
->>> > >
->>> > > Hi Mathieu,
->>> > >
->>> > > On 2020-05-14 23:30, Mathieu Poirier wrote:
->>> > > > Good morning Sai,
->>> > > >
->>> > > > On Thu, May 14, 2020 at 04:29:15PM +0530, Sai Prakash Ranjan wrote:
->>> > > >> From: Tingwei Zhang <tingwei@codeaurora.org>
->>> > > >>
->>> > > >> On some Qualcomm Technologies Inc. SoCs like SC7180, there
->>> > > >> exists a hardware errata where the APSS (Application Processor
->>> > > >> SubSystem)/CPU watchdog counter is stopped when ETM register
->>> > > >> TRCPDCR.PU=1.
->>> > > >
->>> > > > Fun stuff...
->>> > > >
->>> > >
->>> > > Yes :)
->>> > >
->>> > > >> Since the ETMs share the same power domain as
->>> > > >> that of respective CPU cores, they are powered on when the
->>> > > >> CPU core is powered on. So we can disable powering up of the
->>> > > >> trace unit after checking for this errata via new property
->>> > > >> called "qcom,tupwr-disable".
->>> > > >>
->>> > > >> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
->>> > > >> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->>> > > >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->>> > > >
->>> > > > Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->>> > > > Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
->>> > > >
->>> > >
->>> > > Tingwei is the author, so if I understand correctly, his signed-off-by
->>> > > should appear first, am I wrong?
->>> >
->>> > It's a gray area and depends on who's code is more prevalent in the
->>> > patch.  If Tingwei wrote the most of the code then his name is in the
->>> > "from:" section, yours as co-developer and he signs off on it (as I
->>> > suggested).  If you did most of the work then it is the opposite.
->>> > Adding a Co-developed and a signed-off with the same name doesn't make
->>> > sense.
->>> >
->>> 
->>> I did check the documentation for submitting patches:
->>> Documentation/process/submitting-patches.rst. And it clearly states
->>> that "Co-developed-by must be followed by Signed-off by the co-author
->>> and the last Signed-off-by: must always be that of the developer
->>> submitting the patch".
->>> 
->>> Quoting below from the doc:
->>> 
->>> Co-developed-by: <snip> ...Since
->>> Co-developed-by: denotes authorship, every Co-developed-by: must be
->>> immediately
->>> followed by a Signed-off-by: of the associated co-author.  Standard 
->>> sign-off
->>> procedure applies, i.e. the ordering of Signed-off-by: tags should 
->>> reflect
->>> the
->>> chronological history of the patch insofar as possible, regardless of
->>> whether
->>> the author is attributed via From: or Co-developed-by:.  Notably, the 
->>> last
->>> Signed-off-by: must always be that of the developer submitting the 
->>> patch.
->> 
->> Ah yes, glad to see that got clarified.  You can ignore my 
->> recommendation on
->> that snippet.
->> 
->>> 
->>> > >
->>> > > >> ---
->>> > > >>  .../devicetree/bindings/arm/coresight.txt     |  6 ++++
->>> > > >>  drivers/hwtracing/coresight/coresight-etm4x.c | 29
->>> > > >> ++++++++++++-------
->>> > > >
->>> > > > Please split in two patches.
->>> > > >
->>> > >
->>> > > Sure, I will split the dt-binding into separate patch, checkpatch did
->>> > > warn.
->>> >
->>> > And you still sent me the patch...  I usually run checkpatch before
->>> > all the submissions I review and flatly ignore patches that return
->>> > errors.  You got lucky...
->>> >
->>> 
->>> I did not mean to ignore it or else I wouldn't have run checkpatch 
->>> itself.
->>> I checked other cases like "arm,scatter-gather" where the binding and 
->>> the
->>> driver change was in a single patch, hence I thought it's not a very 
->>> strict
->>> rule.
->> 
->> The patch has another warning for a line over 80 characters, that 
->> should have
->> been fixed before sending.  Putting DT changes in a separate patch is 
->> always
->> better for the DT people.  They review tons of patches and making 
->> their life
->> easier is always a good thing.
->> 
+> What alternative would you suggest?
 > 
-> Ok, I will fix this and resend. I did not want to change it in case if
-> it affects
-> readability since most maintainers prefer to ignore this 80 characters
-> warning if
-> it affects readability. I will keep this in mind for future patches as 
-> well.
+> From an earlier email:
 > 
+> > ...nothing else addresses the underlying issue: there is no way to
+> > prevent a fork() from duplicating the resource. The close-on-exec
+> > flag partially-addresses this by allowing the parent process to
+> > mark a file descriptor as exclusive to itself, but there is still
+> > a period of time the failure can occur because the auto-close only
+> > occurs during the exec(). Perhaps this would not be an issue with
+> > a different process/threading model, but that is another discussion
+> > entirely.
+> 
+> Do you disagree there is an issue?
 
-Now fixed all checkpatch warnings and addressed other review comments.
-Posted v3 - https://lore.kernel.org/patchwork/cover/1242572/
+Oh good grief that's a leading question: When I write bad code and it
+crashes, most people would agree there is an issue; very few would
+agree the kernel should be changed to fix it. Several of us have
+already said the problem seems to be with the way your application is
+written.  You didn't even answer emails like this speculating about the
+cause being the way your application counts resources:
 
-Thanks,
-Sai
+https://lore.kernel.org/linux-fsdevel/1587569663.3485.18.camel@HansenPartnership.com/
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+The bottom line is that we think you could rewrite this one application
+not to have the problem you're complaining about rather than introduce
+a new kernel API to "fix" it.
+
+James
+
+
+
