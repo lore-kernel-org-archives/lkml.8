@@ -2,224 +2,68 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C99C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76617C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D390520759
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D3120759
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:50:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=embedjournal.com header.i=siddharth@embedjournal.com header.b="ZGNjYl5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgEOMtv (ORCPT
+        id S1726223AbgEOMuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:49:51 -0400
-Received: from mailomta4-sa.btinternet.com ([213.120.69.10]:36453 "EHLO
-        sa-prd-fep-040.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726135AbgEOMtu (ORCPT
+        Fri, 15 May 2020 08:50:04 -0400
+Received: from sender4-of-o53.zoho.com ([136.143.188.53]:21311 "EHLO
+        sender4-of-o53.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbgEOMuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:49:50 -0400
-Received: from sa-prd-rgout-001.btmx-prd.synchronoss.net ([10.2.38.4])
-          by sa-prd-fep-040.btinternet.com with ESMTP
-          id <20200515124946.FHRG4600.sa-prd-fep-040.btinternet.com@sa-prd-rgout-001.btmx-prd.synchronoss.net>;
-          Fri, 15 May 2020 13:49:46 +0100
-Authentication-Results: btinternet.com;
-    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
-X-Originating-IP: [31.53.141.224]
-X-OWM-Source-IP: 31.53.141.224 (GB)
-X-OWM-Env-Sender: j.oldman998@btinternet.com
-X-VadeSecure-score: verdict=clean score=0/300, class=clean
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduhedrleekgdehhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemuceutffkvffkuffjvffgnffgvefqofdpqfgfvfenuceurghilhhouhhtmecufedtudenucenucfjughrpefhvffufffkofestddtredtredttdenucfhrhhomheplfhohhhnucfqlhgumhgrnhcuoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqnecuggftrfgrthhtvghrnhepgeeftdfhfeeuiefhgfekfeethedutddtfeduteevleevfedvfefhjeeijefhgffgnecukfhppeefuddrheefrddugedurddvvdegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghlohephhgvnhhrhidrhhhomhgvpdhinhgvthepfedurdehfedrudeguddrvddvgedpmhgrihhlfhhrohhmpeeojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqedprhgtphhtthhopeeouggvvhgvlhesughrihhvvghruggvvhdrohhsuhhoshhlrdhorhhgqedprhgtphhtthhopeeoghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgqedprhgtphhtthhopeeojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqedprhgtphhtthhopeeokhgrihdrhhgvnhhgrdhfvghnghestggrnhhonhhitggrlhdrtghomheqpdhrtghpthhtohepoehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgheq
-X-RazorGate-Vade-Verdict: clean 0
-X-RazorGate-Vade-Classification: clean
-Received: from henry.home (31.53.141.224) by sa-prd-rgout-001.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
-        id 5E3A241110D07693; Fri, 15 May 2020 13:49:46 +0100
-From:   John Oldman <john.oldman@polehill.co.uk>
-To:     gregkh@linuxfoundation.org
-Cc:     kai.heng.feng@canonical.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        John Oldman <john.oldman@polehill.co.uk>
-Subject: [PATCH] Staging: rtl8723bs: os_de: if-else coding style issues
-Date:   Fri, 15 May 2020 13:49:30 +0100
-Message-Id: <20200515124930.3406-1-john.oldman@polehill.co.uk>
-X-Mailer: git-send-email 2.17.1
+        Fri, 15 May 2020 08:50:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1589546993; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=V+juCDGmzCaworGcppZOetk77nItd73iy2X2+qW6Tmp6+nCEht8wDIrQ5UR4S47AUqGAnlFHJYSVdWTSgXeglXngKWkr3h4jzLfKBKHZCD3MHS+uEE2DIUTew5kKb9ytDfJJc9oKIgmSvz1/wGUi1gsjZaRsuXbjsZk5bTxGMx0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1589546993; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=eKa9B/a0gn/6xbMvZVNBWEY4ReK7vfKHmofTOT6BFFo=; 
+        b=WTMAtakiVZTc6C7hxrGlIK3sjuA7lcCWMGvV7XorzJoHGgSTAz4WYJ9DiHtV6nxy/lNsQL6CW37RxhRpHpFprnyW+J3xAw/StVMx4SYhUTTEWrTCq/0nU3J2+Htp9XGWoeyPXaLQlsxHs013SAOF0mX7yhdE62fvaPjZV7gSrHg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=embedjournal.com;
+        spf=pass  smtp.mailfrom=siddharth@embedjournal.com;
+        dmarc=pass header.from=<siddharth@embedjournal.com> header.from=<siddharth@embedjournal.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589546993;
+        s=zoho; d=embedjournal.com; i=siddharth@embedjournal.com;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        bh=eKa9B/a0gn/6xbMvZVNBWEY4ReK7vfKHmofTOT6BFFo=;
+        b=ZGNjYl5ggyPglXshZJy6h9IzzOpx5HM9VglK3jYm3tSnOZCpWd0arzvhAJFPIyAw
+        Vuc6xxshw2uWJXW4b7eljaNZfohsH18RhJBdroUpkoV5q36heegDid5UzAB47x2Eixl
+        FSh1u6rkAoJfRWXaoZ1cI4eGRwBaJZZYb3d6pzDY=
+Received: from csiddharth-a01.vmware.com (115.97.41.221 [115.97.41.221]) by mx.zohomail.com
+        with SMTPS id 1589546991508700.2100207306029; Fri, 15 May 2020 05:49:51 -0700 (PDT)
+Date:   Fri, 15 May 2020 18:19:45 +0530
+From:   Siddharth Chandrasekaran <siddharth@embedjournal.com>
+To:     Siddharth Chandrasekaran <csiddharth@vmware.com>
+Cc:     gregkh@linuxfoundation.org, srostedt@vmware.com,
+        linux-kernel@vger.kernel.org, stable@kernel.org,
+        srivatsab@vmware.com, dchinner@redhat.com, darrick.wong@oracle.com
+Subject: Re: [PATCH] Backport security fixe to 4.9 and 4.4 stable trees
+Message-ID: <20200515124945.GA93755@csiddharth-a01.vmware.com>
+References: <cover.1589486724.git.csiddharth@vmware.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1589486724.git.csiddharth@vmware.com>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Coding style issues:
-This patch clears the checkpatch.pl "braces {} are not necessary for
-single statement blocks" and "else_should_follow_close_brace"
-warnings."
+Please ignore this patch set, I accidentally added another patch I was
+working on. Will send v2 with the right patches.
 
-Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
----
- drivers/staging/rtl8723bs/os_dep/os_intfs.c | 49 +++++++--------------
- 1 file changed, 17 insertions(+), 32 deletions(-)
+Thanks!
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/os_intfs.c b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-index d29f59bbb613..479049cb16e5 100644
---- a/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-+++ b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-@@ -1057,8 +1057,7 @@ static int pm_netdev_open(struct net_device *pnetdev, u8 bnormal)
- 			status = _netdev_open(pnetdev);
- 			mutex_unlock(&(adapter_to_dvobj(padapter)->hw_init_mutex));
- 		}
--	}
--	else
-+	} else
- 		status =  (_SUCCESS == ips_netdrv_open(padapter)) ? (0) : (-1);
- 
- 	return status;
-@@ -1167,9 +1166,8 @@ void rtw_dev_unload(struct adapter *padapter)
- 			DBG_871X_LEVEL(_drv_always_, "%s: driver in IPS-FWLPS\n", __func__);
- 			pdbgpriv->dbg_dev_unload_inIPS_cnt++;
- 			LeaveAllPowerSaveMode(padapter);
--		} else {
-+		} else
- 			DBG_871X_LEVEL(_drv_always_, "%s: driver not in IPS\n", __func__);
--		}
- 
- 		if (padapter->bSurpriseRemoved == false) {
- 			hal_btcoex_IpsNotify(padapter, pwrctl->ips_mode_req);
-@@ -1177,8 +1175,7 @@ void rtw_dev_unload(struct adapter *padapter)
- 			if (pwrctl->bSupportRemoteWakeup == true &&
- 				pwrctl->wowlan_mode == true) {
- 				DBG_871X_LEVEL(_drv_always_, "%s bSupportRemoteWakeup ==true  do not run rtw_hal_deinit()\n", __func__);
--			}
--			else
-+			} else
- #endif
- 			{
- 				/* amy modify 20120221 for power seq is different between driver open and ips */
-@@ -1192,8 +1189,7 @@ void rtw_dev_unload(struct adapter *padapter)
- 		padapter->bup = false;
- 
- 		DBG_871X("<=== %s\n", __func__);
--	}
--	else {
-+	} else {
- 		RT_TRACE(_module_hci_intfs_c_, _drv_notice_, ("%s: bup ==false\n", __func__));
- 		DBG_871X("%s: bup ==false\n", __func__);
- 	}
-@@ -1223,10 +1219,8 @@ static int rtw_suspend_free_assoc_resource(struct adapter *padapter)
- 		rtw_disassoc_cmd(padapter, 0, false);
- 		/* s2-2.  indicate disconnect to os */
- 		rtw_indicate_disconnect(padapter);
--	}
--	else if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
-+	} else if (check_fwstate(pmlmepriv, WIFI_AP_STATE))
- 		rtw_sta_flush(padapter);
--	}
- 
- 	/* s2-3. */
- 	rtw_free_assoc_resources(padapter, 1);
-@@ -1264,15 +1258,15 @@ void rtw_suspend_wow(struct adapter *padapter)
- 	if (pwrpriv->wowlan_mode == true) {
- 		if (pnetdev)
- 			rtw_netif_stop_queue(pnetdev);
-+
- 		/*  1. stop thread */
- 		padapter->bDriverStopped = true;	/* for stop thread */
- 		rtw_stop_drv_threads(padapter);
- 		padapter->bDriverStopped = false;	/* for 32k command */
- 
- 		/*  2. disable interrupt */
--		if (padapter->intf_stop) {
-+		if (padapter->intf_stop)
- 			padapter->intf_stop(padapter);
--		}
- 
- 		/*  2.1 clean interrupt */
- 		if (padapter->HalFunc.clear_interrupt)
-@@ -1316,10 +1310,9 @@ void rtw_suspend_wow(struct adapter *padapter)
- 			DBG_871X_LEVEL(_drv_always_, "%s: pno: %d\n", __func__, pwrpriv->wowlan_pno_enable);
- 		else
- 			rtw_set_ps_mode(padapter, PS_MODE_DTIM, 0, 0, "WOWLAN");
--	}
--	else {
-+	} else
- 		DBG_871X_LEVEL(_drv_always_, "%s: ### ERROR ### wowlan_mode =%d\n", __func__, pwrpriv->wowlan_mode);
--	}
-+
- 	DBG_871X("<== " FUNC_ADPT_FMT " exit....\n", FUNC_ADPT_ARG(padapter));
- }
- #endif /* ifdef CONFIG_WOWLAN */
-@@ -1448,14 +1441,13 @@ int rtw_suspend_common(struct adapter *padapter)
- 
- 	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE) == true) {
- 	#ifdef CONFIG_WOWLAN
--		if (check_fwstate(pmlmepriv, _FW_LINKED)) {
-+		if (check_fwstate(pmlmepriv, _FW_LINKED))
- 			pwrpriv->wowlan_mode = true;
--		} else if (pwrpriv->wowlan_pno_enable == true) {
-+		else if (pwrpriv->wowlan_pno_enable == true)
- 			pwrpriv->wowlan_mode |= pwrpriv->wowlan_pno_enable;
--		}
- 
- 		if (pwrpriv->wowlan_mode == true)
--		rtw_suspend_wow(padapter);
-+			rtw_suspend_wow(padapter);
- 		else
- 			rtw_suspend_normal(padapter);
- 
-@@ -1522,9 +1514,8 @@ int rtw_resume_process_wow(struct adapter *padapter)
- 
- 		pwrpriv->bFwCurrentInPSMode = false;
- 
--		if (padapter->intf_stop) {
-+		if (padapter->intf_stop)
- 			padapter->intf_stop(padapter);
--		}
- 
- 		if (padapter->HalFunc.clear_interrupt)
- 			padapter->HalFunc.clear_interrupt(padapter);
-@@ -1541,18 +1532,15 @@ int rtw_resume_process_wow(struct adapter *padapter)
- 		padapter->HalFunc.SetHwRegHandler(padapter, HW_VAR_WOWLAN, (u8 *)&poidparam);
- 
- 		psta = rtw_get_stainfo(&padapter->stapriv, get_bssid(&padapter->mlmepriv));
--		if (psta) {
-+		if (psta)
- 			set_sta_rate(padapter, psta);
--		}
--
- 
- 		padapter->bDriverStopped = false;
- 		DBG_871X("%s: wowmode resuming, DriverStopped:%d\n", __func__, padapter->bDriverStopped);
- 		rtw_start_drv_threads(padapter);
- 
--		if (padapter->intf_start) {
-+		if (padapter->intf_start)
- 			padapter->intf_start(padapter);
--		}
- 
- 		/*  start netif queue */
- 		if (pnetdev) {
-@@ -1561,10 +1549,8 @@ int rtw_resume_process_wow(struct adapter *padapter)
- 			else
- 				rtw_netif_wake_queue(pnetdev);
- 		}
--	}
--	else {
-+	} else
- 		DBG_871X_LEVEL(_drv_always_, "%s: ### ERROR ### wowlan_mode =%d\n", __func__, pwrpriv->wowlan_mode);
--	}
- 
- 	if (padapter->pid[1] != 0) {
- 		DBG_871X("pid[1]:%d\n", padapter->pid[1]);
-@@ -1656,9 +1642,8 @@ int rtw_resume_process_ap_wow(struct adapter *padapter)
- 	DBG_871X("%s: wowmode resuming, DriverStopped:%d\n", __func__, padapter->bDriverStopped);
- 	rtw_start_drv_threads(padapter);
- 
--	if (padapter->intf_start) {
-+	if (padapter->intf_start)
- 		padapter->intf_start(padapter);
--	}
- 
- 	/*  start netif queue */
- 	if (pnetdev) {
--- 
-2.17.1
-
+-- Sid.
