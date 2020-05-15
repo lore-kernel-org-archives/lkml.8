@@ -2,161 +2,254 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A38CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F680206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589535076;
-	bh=sax79nWs/v/WgVzGTEueYBucfR0bYJPQI5J7wMOGit4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=QFxCQdZth5vz0ddxfbGBVFvcKcVG2r77XCyGeLmXraS5713zaPmw19Q6KRWB1bTjc
-	 zXSp6bBjQEO+ulIcp0FRIt5NNQlyvVVi7TL+rJNHqWiIyU2HRpDzinRvMNm6l03d0x
-	 kgWClFdQcCS95vWmZxiaZiSETguOHmTjMYGJ9cjg=
+	by mail.kernel.org (Postfix) with ESMTP id 06CC7206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgEOJbP (ORCPT
+        id S1728053AbgEOJca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:31:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727116AbgEOJbP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:31:15 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D63C7C061A0C;
-        Fri, 15 May 2020 02:31:14 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id 202so1244384lfe.5;
-        Fri, 15 May 2020 02:31:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=w0eGqlOZ52vQy1Dkr85GlfLJmiL8U3wT1Ya8mJ/znt0=;
-        b=D2wNjY3MJAOzxofquD/Y0UCnjJ5fMCOl9Ng9w38us71OAo0uPFKLsdSgtg/vqQyZWX
-         q8znqNuphrJgEwk/T+VbOfZy9vC04v9Yt3WwGrrfr13XMtgjjKV4I+MJBtM3ur/x2u+M
-         R3geRf3OblRWETJeHASkjtGCPj0DXFviuprj3BXSwbejB7UQBx1zWaE3I6Kwz+EVnRA9
-         byqPT434+EJ5aPIE0Im4tJhd71jdCQFgLM+hTdRaeqEXbze84lcxWsDnSiZYyceqXK5f
-         vw/Qw5oj9hWsRhKJEfnd7aQKDTzVhbfrQomLW6WTcttCBiX/UlnUsAwMjUf/iHVhb5Af
-         Zy8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=w0eGqlOZ52vQy1Dkr85GlfLJmiL8U3wT1Ya8mJ/znt0=;
-        b=auuyWMl5fVl9228uDtBS1wytQlLrd+WtSZBO5151SD4ojQPJ2Q8KtzHvDYyxbabPp4
-         FfgJIQf67OXVoyBoFmBc56STyslZBZLtc7brNoHDBV9PVecYNryEd2qQBPAbkSCa37ZV
-         nLCLQr7SrkanoCq/Q6Eqyx93Wt2bvEs9njsxxrmshGwlsswJcnME17pvPe2pt33GtOwo
-         MruAQd4aGjCzjmIuFDl/Isvw2BgayGx+uRYY6ZdhA0KRcIR+eEoAvy2JKm/d1FeO2SiH
-         1Hbueg4KByLngHTx9o1WXTm9MIW3JGwY6al9ZqcWaDQTqD8TGd8mjBHXIAgQIAj1IdH4
-         QVBQ==
-X-Gm-Message-State: AOAM532o5FBP5cz+jrorQ5qTnDsnSH+70T0cKjqxoY98s0RHRU4S9BeS
-        njLVTnvYqRMIWrGi1aaco7w=
-X-Google-Smtp-Source: ABdhPJwJtuMGAWzQaBQVqZ/aXcBAp+d6w1PONLrgV8Exlm0JbQrhntEPE8IE5SLgExGfimn8BUsb6A==
-X-Received: by 2002:ac2:44cd:: with SMTP id d13mr1811163lfm.2.1589535073199;
-        Fri, 15 May 2020 02:31:13 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id a1sm839104ljn.101.2020.05.15.02.31.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 May 2020 02:31:12 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Jun Li <lijun.kernel@gmail.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, peter.chen@nxp.com,
-        Li Jun <jun.li@nxp.com>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Subject: Re: [PATCH v4 3/9] usb: dwc3: Increase timeout for CmdAct cleared by device controller
-In-Reply-To: <CAKgpwJXfWv5=MDqBCADhe2iXf6eiP0GQ13Bwo9fkuU5kGO7dsw@mail.gmail.com>
-References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-4-john.stultz@linaro.org> <87mudjj4rc.fsf@gmail.com> <CALAqxLU+9uEcdRVaLfh+eQrDtZbDGod9pRXhBX=prAhg9MXagw@mail.gmail.com> <CAKgpwJVaKpsgMjKcnYyJsfNj0ibkPt=mdn-NxfOkeX1jfL=9iQ@mail.gmail.com> <87h7wqmwrv.fsf@kernel.org> <CAKgpwJXfWv5=MDqBCADhe2iXf6eiP0GQ13Bwo9fkuU5kGO7dsw@mail.gmail.com>
-Date:   Fri, 15 May 2020 12:31:07 +0300
-Message-ID: <87imgx35pg.fsf@kernel.org>
+        Fri, 15 May 2020 05:32:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51732 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727116AbgEOJc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 05:32:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 86733B1C1;
+        Fri, 15 May 2020 09:32:28 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 6F43D1E056A; Fri, 15 May 2020 11:32:24 +0200 (CEST)
+Date:   Fri, 15 May 2020 11:32:24 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 7/9] fs/ext4: Make DAX mount option a tri-state
+Message-ID: <20200515093224.GI9569@quack2.suse.cz>
+References: <20200515044121.2987940-1-ira.weiny@intel.com>
+ <20200515044121.2987940-8-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515044121.2987940-8-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Thu 14-05-20 21:41:19, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> We add 'always', 'never', and 'inode' (default).  '-o dax' continues to
+> operate the same which is equivalent to 'always'.  This new
+> functionality is limited to ext4 only.
+> 
+> Specifically we introduce a 2nd DAX mount flag EXT4_MOUNT2_DAX_NEVER and set
+> it and EXT4_MOUNT_DAX_ALWAYS appropriately for the mode.
+> 
+> We also force EXT4_MOUNT2_DAX_NEVER if !CONFIG_FS_DAX.
+> 
+> Finally, EXT4_MOUNT2_DAX_INODE is used solely to detect if the user
+> specified that option for printing.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
+Thanks. The patch looks good to me now. You can add:
 
-Hi,
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Jun Li <lijun.kernel@gmail.com> writes:
->> @@ -397,12 +407,18 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, u=
-nsigned cmd,
->>                         dwc3_gadget_ep_get_transfer_index(dep);
->>         }
->>
->> -       if (saved_config) {
->> +       if (saved_hs_config) {
->>                 reg =3D dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
->> -               reg |=3D saved_config;
->> +               reg |=3D saved_hs_config;
->>                 dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
->>         }
->>
->> +       if (saved_ss_config) {
->> +               reg =3D dwc3_readl(dwc->regs, DWC3_GUSB3PIPECTL(0));
->> +               reg |=3D saved_ss_config;
->> +               dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
->> +       }
->> +
->>         return ret;
->>  }
->
-> Unfortunately this way can't work, once the SS PHY enters P3, disable
-> suspend_en can't force SS PHY exit P3, unless do this at the very beginni=
-ng
-> to prevent SS PHY entering P3(e.g. add "snps,dis_u3_susphy_quirk" for tes=
-t).
+								Honza
 
-It sounds like you have a quirky PHY. If that's the case, then you
-probably need to use the flag you mentioned above. Please verify with
-that.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6+YVsACgkQzL64meEa
-mQbdgRAA2/XUFT7mg4gDxdDx3PjeMl7KW1uDTUiFf7LeQT4Vwkqq2epxcPwqjaQU
-Bnt4CLX2TGgdmL/IntNlpU9i6M3a+IeDZM0D+S7/NK1Ty2iMuQ0kGA6wZOfUdbY+
-RpA6Yrl1DkqQ6pMsLUYkDyGauPx7qFOJ8mx4XDEjX7v6fI/AcKkDMCx/Yuj89zhd
-Yf56yxVKq/tiDOe7U7IC/IpEx9Zt7TGEVUqSotC+23A08/YBiKy229Qv5v9KkoXt
-VP0xHBZGPBnEQ79rCZHxj8M8E2nDmYSLqvAOwDp27EeQNq1j/6XMlzk2bR1jvnpq
-s78lCPBLGoJc/8WVgBJtLZ0BTLKPctS17xatz/3gtgd8sX03ddyp4cG+xMVKC16f
-1kbOg820KTvr1UDgaMq3Bo9lFTFCkOg25WYHx4c1/w/VeclRpfK+2QVqXE0eZ/ME
-8d9oM9tCKILQc1SlSy9tHwKRj5+KCd993CzSyMuMwMO1RqM+nadmQJMcexiquxiS
-T5rHakbLtnpimLfO7SEi/OvuypKkWhLt52JTwgech584qyKWVh3tR/QbZCPMo7Dj
-IAyB80gcRaVN5kZjfdTOeSxUpjuJuJujUwmgFhw/00nqBJ3EPogo6F8n2WDCORpH
-kybGfZw3RrMTtrfd0gQU4rZf6Cel6kE+L7Jjy7skyJ466XjfTpU=
-=hLf8
------END PGP SIGNATURE-----
---=-=-=--
+> 
+> ---
+> Changes from V1:
+> 	Fix up mounting options to only show an option if specified
+> 	Fix remount to prevent dax changes
+> 	Isolate behavior to ext4 only
+> 
+> Changes from RFC:
+> 	Combine remount check for DAX_NEVER with DAX_ALWAYS
+> 	Update ext4_should_enable_dax()
+> ---
+>  fs/ext4/ext4.h  |  2 ++
+>  fs/ext4/inode.c |  2 ++
+>  fs/ext4/super.c | 67 +++++++++++++++++++++++++++++++++++++++++--------
+>  3 files changed, 61 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 86a0994332ce..6235440e4c39 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -1168,6 +1168,8 @@ struct ext4_inode_info {
+>  						      blocks */
+>  #define EXT4_MOUNT2_HURD_COMPAT		0x00000004 /* Support HURD-castrated
+>  						      file systems */
+> +#define EXT4_MOUNT2_DAX_NEVER		0x00000008 /* Do not allow Direct Access */
+> +#define EXT4_MOUNT2_DAX_INODE		0x00000010 /* For printing options only */
+>  
+>  #define EXT4_MOUNT2_EXPLICIT_JOURNAL_CHECKSUM	0x00000008 /* User explicitly
+>  						specified journal checksum */
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 23e42a223235..140b1930e2f4 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -4400,6 +4400,8 @@ int ext4_get_inode_loc(struct inode *inode, struct ext4_iloc *iloc)
+>  
+>  static bool ext4_should_enable_dax(struct inode *inode)
+>  {
+> +	if (test_opt2(inode->i_sb, DAX_NEVER))
+> +		return false;
+>  	if (!S_ISREG(inode->i_mode))
+>  		return false;
+>  	if (ext4_should_journal_data(inode))
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 5ec900fdf73c..4753de53b186 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -1504,7 +1504,8 @@ enum {
+>  	Opt_usrjquota, Opt_grpjquota, Opt_offusrjquota, Opt_offgrpjquota,
+>  	Opt_jqfmt_vfsold, Opt_jqfmt_vfsv0, Opt_jqfmt_vfsv1, Opt_quota,
+>  	Opt_noquota, Opt_barrier, Opt_nobarrier, Opt_err,
+> -	Opt_usrquota, Opt_grpquota, Opt_prjquota, Opt_i_version, Opt_dax,
+> +	Opt_usrquota, Opt_grpquota, Opt_prjquota, Opt_i_version,
+> +	Opt_dax, Opt_dax_always, Opt_dax_inode, Opt_dax_never,
+>  	Opt_stripe, Opt_delalloc, Opt_nodelalloc, Opt_warn_on_error,
+>  	Opt_nowarn_on_error, Opt_mblk_io_submit,
+>  	Opt_lazytime, Opt_nolazytime, Opt_debug_want_extra_isize,
+> @@ -1571,6 +1572,9 @@ static const match_table_t tokens = {
+>  	{Opt_nobarrier, "nobarrier"},
+>  	{Opt_i_version, "i_version"},
+>  	{Opt_dax, "dax"},
+> +	{Opt_dax_always, "dax=always"},
+> +	{Opt_dax_inode, "dax=inode"},
+> +	{Opt_dax_never, "dax=never"},
+>  	{Opt_stripe, "stripe=%u"},
+>  	{Opt_delalloc, "delalloc"},
+>  	{Opt_warn_on_error, "warn_on_error"},
+> @@ -1718,6 +1722,7 @@ static int clear_qf_name(struct super_block *sb, int qtype)
+>  #define MOPT_NO_EXT3	0x0200
+>  #define MOPT_EXT4_ONLY	(MOPT_NO_EXT2 | MOPT_NO_EXT3)
+>  #define MOPT_STRING	0x0400
+> +#define MOPT_SKIP	0x0800
+>  
+>  static const struct mount_opts {
+>  	int	token;
+> @@ -1767,7 +1772,13 @@ static const struct mount_opts {
+>  	{Opt_min_batch_time, 0, MOPT_GTE0},
+>  	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
+>  	{Opt_init_itable, 0, MOPT_GTE0},
+> -	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET},
+> +	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET | MOPT_SKIP},
+> +	{Opt_dax_always, EXT4_MOUNT_DAX_ALWAYS,
+> +		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+> +	{Opt_dax_inode, EXT4_MOUNT2_DAX_INODE,
+> +		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+> +	{Opt_dax_never, EXT4_MOUNT2_DAX_NEVER,
+> +		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+>  	{Opt_stripe, 0, MOPT_GTE0},
+>  	{Opt_resuid, 0, MOPT_GTE0},
+>  	{Opt_resgid, 0, MOPT_GTE0},
+> @@ -2076,13 +2087,32 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+>  		}
+>  		sbi->s_jquota_fmt = m->mount_opt;
+>  #endif
+> -	} else if (token == Opt_dax) {
+> +	} else if (token == Opt_dax || token == Opt_dax_always ||
+> +		   token == Opt_dax_inode || token == Opt_dax_never) {
+>  #ifdef CONFIG_FS_DAX
+> -		ext4_msg(sb, KERN_WARNING,
+> -		"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+> -		sbi->s_mount_opt |= m->mount_opt;
+> +		switch (token) {
+> +		case Opt_dax:
+> +		case Opt_dax_always:
+> +			ext4_msg(sb, KERN_WARNING,
+> +				"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+> +			sbi->s_mount_opt |= EXT4_MOUNT_DAX_ALWAYS;
+> +			sbi->s_mount_opt2 &= ~EXT4_MOUNT2_DAX_NEVER;
+> +			break;
+> +		case Opt_dax_never:
+> +			sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_NEVER;
+> +			sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
+> +			break;
+> +		case Opt_dax_inode:
+> +			sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
+> +			sbi->s_mount_opt2 &= ~EXT4_MOUNT2_DAX_NEVER;
+> +			/* Strictly for printing options */
+> +			sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_INODE;
+> +			break;
+> +		}
+>  #else
+>  		ext4_msg(sb, KERN_INFO, "dax option not supported");
+> +		sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_NEVER;
+> +		sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
+>  		return -1;
+>  #endif
+>  	} else if (token == Opt_data_err_abort) {
+> @@ -2246,7 +2276,7 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
+>  	for (m = ext4_mount_opts; m->token != Opt_err; m++) {
+>  		int want_set = m->flags & MOPT_SET;
+>  		if (((m->flags & (MOPT_SET|MOPT_CLEAR)) == 0) ||
+> -		    (m->flags & MOPT_CLEAR_ERR))
+> +		    (m->flags & MOPT_CLEAR_ERR) || m->flags & MOPT_SKIP)
+>  			continue;
+>  		if (!nodefs && !(m->mount_opt & (sbi->s_mount_opt ^ def_mount_opt)))
+>  			continue; /* skip if same as the default */
+> @@ -2306,6 +2336,17 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
+>  	if (DUMMY_ENCRYPTION_ENABLED(sbi))
+>  		SEQ_OPTS_PUTS("test_dummy_encryption");
+>  
+> +	if (test_opt(sb, DAX_ALWAYS)) {
+> +		if (IS_EXT2_SB(sb))
+> +			SEQ_OPTS_PUTS("dax");
+> +		else
+> +			SEQ_OPTS_PUTS("dax=always");
+> +	} else if (test_opt2(sb, DAX_NEVER)) {
+> +		SEQ_OPTS_PUTS("dax=never");
+> +	} else if (test_opt2(sb, DAX_INODE)) {
+> +		SEQ_OPTS_PUTS("dax=inode");
+> +	}
+> +
+>  	ext4_show_quota_options(seq, sb);
+>  	return 0;
+>  }
+> @@ -5425,10 +5466,16 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+>  		goto restore_opts;
+>  	}
+>  
+> -	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS) {
+> +	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS ||
+> +	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_NEVER ||
+> +	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_INODE) {
+>  		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
+> -			"dax flag with busy inodes while remounting");
+> -		sbi->s_mount_opt ^= EXT4_MOUNT_DAX_ALWAYS;
+> +			"dax mount option with busy inodes while remounting");
+> +		sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
+> +		sbi->s_mount_opt |= old_opts.s_mount_opt & EXT4_MOUNT_DAX_ALWAYS;
+> +		sbi->s_mount_opt2 &= ~(EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
+> +		sbi->s_mount_opt2 |= old_opts.s_mount_opt2 &
+> +				     (EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
+>  	}
+>  
+>  	if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED)
+> -- 
+> 2.25.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
