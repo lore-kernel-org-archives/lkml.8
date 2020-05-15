@@ -2,125 +2,220 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 238B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88937C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0314B20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF2F20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgEOCFK (ORCPT
+        id S1728129AbgEOCGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 22:05:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4843 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726100AbgEOCFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 22:05:10 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 88013B5C8678E9F93395;
-        Fri, 15 May 2020 10:05:05 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.55) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 15 May 2020
- 10:05:04 +0800
-Subject: Re: [PATCH v2 00/10] clean up SECTOR related macros and sectors/pages
- conversions
-To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
-        "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        "Alasdair Kergon" <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>, dm-devel <dm-devel@redhat.com>,
-        Song Liu <song@kernel.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200507075100.1779-1-thunder.leizhen@huawei.com>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <34fa4c00-9860-ca09-da4d-c5b20aad81b7@huawei.com>
-Date:   Fri, 15 May 2020 10:05:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 14 May 2020 22:06:32 -0400
+Received: from mga02.intel.com ([134.134.136.20]:15577 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgEOCGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 22:06:31 -0400
+IronPort-SDR: 1bN+sEaggGzs+ZqGQqO1VB7iAEN13WeKOvnqseqD+dssu6/nkXsfOIEffd9pEzkgbP4WkfMBOa
+ ONmuOmO+eSUQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 19:06:30 -0700
+IronPort-SDR: Xe0oTyAejSCuxTExL/lzRxj20dECodjALgyh0jXW7dSuEqyHpUB+GTAMrHJSAJye9eDuDPHBd5
+ udnnsrj93UPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,393,1583222400"; 
+   d="scan'208";a="251878183"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 14 May 2020 19:06:30 -0700
+Received: from [10.213.147.163] (vramuthx-mobl1.gar.corp.intel.com [10.213.147.163])
+        by linux.intel.com (Postfix) with ESMTP id 74F675804B6;
+        Thu, 14 May 2020 19:06:24 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v6 1/2] dt-bindings: mtd: Add Nand Flash Controller
+ support for Intel LGM SoC
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+References: <20200513104615.7905-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200513104615.7905-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200514130321.GB8436@bogus>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <3248d380-1d08-3088-8d18-0373a8a5aef9@linux.intel.com>
+Date:   Fri, 15 May 2020 10:06:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200507075100.1779-1-thunder.leizhen@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200514130321.GB8436@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.55]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, all:
-   It seems no one take care about these patches. But I think patch 1 is need. And
-the main discussion points of others is whether we should add
-sectors_to_npage()/npage_to_sectors() or keep PAGE_SECTORS_SHIFT. And which marco
-name do we prefer: PAGE_SECTORS vs SECTORS_PER_PAGE, PAGE_SECTORS_SHIFT vs
-SECTORS_PER_PAGE_SHIFT.
+Hi Rob,
 
-Hi, Jens Axboe, Coly Li, Kent Overstreet,Alasdair Kergon. Mike Snitzer:
-   Can you take a look at patch 1?
+    Thank you for the review comments...
 
-On 2020/5/7 15:50, Zhen Lei wrote:
-> v1 --> v2:
-> As Matthew Wilcox's suggestion, add sectors_to_npage()/npage_to_sectors()
-> helpers to eliminate SECTORS_PER_PAGE_SHIFT, because it's quite hard to read.
-> In further, I also eliminated PAGE_SECTORS_SHIFT.
+On 14/5/2020 9:03 pm, Rob Herring wrote:
+> On Wed, May 13, 2020 at 06:46:14PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add YAML file for dt-bindings to support NAND Flash Controller
+>> on Intel's Lightning Mountain SoC.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 83 ++++++++++++++++++++++
+>>   1 file changed, 83 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>> new file mode 100644
+>> index 000000000000..d9e0df8553fa
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>> @@ -0,0 +1,83 @@
+>> +# SPDX-License-Identifier: GPL-2.0
 > 
-> I tried to eliminate all magic number "9" and "512", but it's too many, maybe
-> no one want to review it, so I gave up. In the process of searching, I found
-> the existing macro PAGE_SECTORS, it's equivalent to SECTORS_PER_PAGE. Because
-> PAGE_SECTORS was defined in include/linux/device-mapper.h, and SECTORS_PER_PAGE
-> was defined in drivers/block/zram/zram_drv.h, so I discarded SECTORS_PER_PAGE,
-> althrough I prefer it so much.
+> Dual license new bindings please:
 > 
-> v1:
-> When I studied the code of mm/swap, I found "1 << (PAGE_SHIFT - 9)" appears
-> many times. So I try to clean up it.
+> (GPL-2.0-only OR BSD-2-Clause)
+Noted.
 > 
-> 1. Replace "1 << (PAGE_SHIFT - 9)" or similar with SECTORS_PER_PAGE
-> 2. Replace "PAGE_SHIFT - 9" with SECTORS_PER_PAGE_SHIFT
-> 3. Replace "9" with SECTOR_SHIFT
-> 4. Replace "512" with SECTOR_SIZE
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/mtd/intel,lgm-nand.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Intel LGM SoC NAND Controller Device Tree Bindings
+>> +
+>> +allOf:
+>> +  - $ref: "nand-controller.yaml"
+>> +
+>> +maintainers:
+>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: intel,lgm-nand-controller
+>> +
+>> +  reg:
+>> +    maxItems: 1
 > 
-> Zhen Lei (10):
->   block: move PAGE_SECTORS definition into <linux/blkdev.h>
->   zram: abolish macro SECTORS_PER_PAGE
->   block: add sectors_to_npage()/npage_to_sectors() helpers
->   zram: abolish macro SECTORS_PER_PAGE_SHIFT
->   block: abolish macro PAGE_SECTORS_SHIFT
->   mm/swap: use npage_to_sectors() and PAGE_SECTORS to clean up code
->   block: use sectors_to_npage() and PAGE_SECTORS to clean up code
->   md: use sectors_to_npage() and npage_to_sectors() to clean up code
->   md: use existing definition RESYNC_SECTORS
->   md: use PAGE_SECTORS to clean up code
+> Looks like you have 4 or 6 entries, not 1. Need to define what each one
+> is.
+Sure, will define it.
 > 
->  block/blk-settings.c          |  6 +++---
->  block/partitions/core.c       |  5 ++---
->  drivers/block/brd.c           |  7 ++-----
->  drivers/block/null_blk_main.c | 10 ++++------
->  drivers/block/zram/zram_drv.c |  8 ++++----
->  drivers/block/zram/zram_drv.h |  2 --
->  drivers/md/bcache/util.h      |  2 --
->  drivers/md/dm-kcopyd.c        |  2 +-
->  drivers/md/dm-table.c         |  2 +-
->  drivers/md/md-bitmap.c        | 16 ++++++++--------
->  drivers/md/md.c               |  6 +++---
->  drivers/md/raid1.c            | 10 +++++-----
->  drivers/md/raid10.c           | 28 ++++++++++++++--------------
->  drivers/md/raid5-cache.c      | 11 +++++------
->  drivers/md/raid5.c            |  4 ++--
->  include/linux/blkdev.h        |  7 +++++--
->  include/linux/device-mapper.h |  1 -
->  mm/page_io.c                  |  4 ++--
->  mm/swapfile.c                 | 12 ++++++------
->  19 files changed, 67 insertions(+), 76 deletions(-)
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  dmas:
+>> +    maxItems: 2
+>> +
+>> +  dma-names:
+>> +    enum:
+>> +      - rx
+>> +      - tx
 > 
+> This defines a single entry. I believe you want:
+> 
+> items:
+>    - const: tx
+>    - const: rx
+Yes, Thanks!
 
+> 
+>> +
+>> +  pinctrl-names: true
+> 
+> No need for this. Tools add pinctrl properties.
+will drop it.
+> 
+>> +
+>> +patternProperties:
+>> +  "^nand@[a-f0-9]+$":
+>> +    type: object
+>> +    properties:
+>> +      reg:
+>> +        minimum: 0
+>> +        maximum: 7
+>> +
+>> +      nand-ecc-mode: true
+>> +
+>> +      nand-ecc-algo:
+>> +        const: hw
+>> +
+>> +    additionalProperties: false
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +  - dmas
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    nand-controller@e0f00000 {
+>> +      compatible = "intel,nand-controller";
+> 
+> Doesn't match the schema.
+Noted, will update the schema name.
+> 
+>> +      reg = <0xe0f00000 0x100>,
+>> +            <0xe1000000 0x300>,
+>> +            <0xe1400000 0x8000>,
+>> +            <0xe1c00000 0x1000>;
+> 
+> Is it 4 or 6 entries?
+yes, will update.
+> 
+>> +      reg-names = "ebunand", "hsnand", "nand_cs0", "nand_cs1",
+>> +        "addr_sel0","addr_sel1";
+> 
+> Not documented.
+Noted, will document it.
+> 
+>> +      clocks = <&cgu0 125>;
+>> +      dma-names = "tx", "rx";
+>> +      #address-cells = <1>;
+>> +      #size-cells = <0>;
+>> +      #clock-cells = <1>;
+> 
+> This is a clock provider too?
+Yes, it is getting clock from CGU for nand-controller.
+
+Regards
+Vadivel
+> 
+>> +
+>> +      nand@0 {
+>> +        reg = <0>;
+>> +        nand-on-flash-bbt;
+>> +        #address-cells = <1>;
+>> +        #size-cells = <1>;
+>> +      };
+>> +    };
+>> +
+>> +...
+>> -- 
+>> 2.11.0
+>>
