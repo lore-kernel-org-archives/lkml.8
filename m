@@ -2,106 +2,86 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB23C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8570EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21B2F206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F90D20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:29:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgEOJ2R (ORCPT
+        id S1728068AbgEOJ3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:28:17 -0400
-Received: from mx.socionext.com ([202.248.49.38]:29503 "EHLO mx.socionext.com"
+        Fri, 15 May 2020 05:29:11 -0400
+Received: from mga01.intel.com ([192.55.52.88]:12703 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbgEOJ2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:28:16 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 15 May 2020 18:28:14 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id E2B71180B60;
-        Fri, 15 May 2020 18:28:14 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 15 May 2020 18:28:14 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 580F41A15C4;
-        Fri, 15 May 2020 18:28:14 +0900 (JST)
-Received: from [10.213.29.28] (unknown [10.213.29.28])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 6BDE612013D;
-        Fri, 15 May 2020 18:28:13 +0900 (JST)
-Subject: Re: [PATCH 5/5] PCI: uniphier: Add error message when failed to get
- phy
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1589518105-18368-6-git-send-email-hayashi.kunihiko@socionext.com>
- <202005151454.wRtXzaiY%lkp@intel.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <e41c81f6-837a-e07a-458a-d388f373cb41@socionext.com>
-Date:   Fri, 15 May 2020 18:28:12 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1727803AbgEOJ3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 05:29:11 -0400
+IronPort-SDR: d+jTClX5I0+L5e8W3uS9auM09vExF6e61j2kF0OVqMIdh6ax9ZfjrdtH5Y1L3Q/AGnn+3jNVUQ
+ 5yEhufWYMwBg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 02:29:11 -0700
+IronPort-SDR: zgcyaOJzmdHEPg9rE9q61hQ8kEuO3zkyxDgVzKRV6TU7FG25D9MqCP+h8YFquR2iICtuA4jfoJ
+ hVVhQakx9Gqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,394,1583222400"; 
+   d="scan'208";a="464664998"
+Received: from mgpinon-mobl.ger.corp.intel.com ([10.252.55.74])
+  by fmsmga005.fm.intel.com with ESMTP; 15 May 2020 02:29:03 -0700
+Message-ID: <666f4c3865fcd92e7d5c8437e69399cb55fb88a9.camel@linux.intel.com>
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     "Dr. Greg" <greg@enjellic.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com
+In-Reply-To: <20200514162054.GE9266@zn.tnic>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+         <20200426165753.GA11046@wind.enjellic.com>
+         <87d07gk24l.fsf@nanos.tec.linutronix.de>
+         <20200508190226.GA31465@wind.enjellic.com>
+         <20200508195635.GR27052@linux.intel.com>
+         <20200514091637.GA25156@wind.enjellic.com>
+         <20200514161559.GA15603@linux.intel.com> <20200514162054.GE9266@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160
+ Espoo
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-In-Reply-To: <202005151454.wRtXzaiY%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+Date:   Fri, 15 May 2020 12:28:54 +0300
+User-Agent: Evolution 3.36.1-2 
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/15 15:51, kbuild test robot wrote:
-> Hi Kunihiko,
+On Thu, 2020-05-14 at 18:20 +0200, Borislav Petkov wrote:
+> On Thu, May 14, 2020 at 09:15:59AM -0700, Sean Christopherson wrote:
+> > I'm not opposed to adding a kernel param to disable SGX.  At one point
+> > there was a proposal to extend clearcpuid to allow disabling multiple
+> > feature bits, but it looks like that went the way of the dodo.
+> > 
+> > Note, such a param would disable SGX entirely, e.g. clear the feature bit
+> > in /proc/cpuinfo and prevent any in-kernel SGX code from running.
 > 
-> I love your patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on pci/next]
-> [also build test WARNING on robh/for-next v5.7-rc5 next-20200514]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Kunihiko-Hayashi/PCI-uniphier-Add-features-for-UniPhier-PCIe-host-controller/20200515-125031
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-> config: i386-allyesconfig (attached as .config)
-> compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
-> reproduce:
->          # save the attached .config to linux build tree
->          make ARCH=i386
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
-> 
-> In file included from include/linux/device.h:15:0,
-> from include/linux/pci.h:37,
-> from drivers/pci/controller/dwc/pcie-uniphier.c:18:
-> drivers/pci/controller/dwc/pcie-uniphier.c: In function 'uniphier_pcie_probe':
->>> drivers/pci/controller/dwc/pcie-uniphier.c:470:16: warning: format '%d' expects argument of type 'int', but argument 3 has type 'long int' [-Wformat=]
-> dev_err(dev, "Failed to get phy (%d)n", PTR_ERR(priv->phy));
-> ^
-> include/linux/dev_printk.h:19:22: note: in definition of macro 'dev_fmt'
-> #define dev_fmt(fmt) fmt
-> ^~~
->>> drivers/pci/controller/dwc/pcie-uniphier.c:470:3: note: in expansion of macro 'dev_err'
-> dev_err(dev, "Failed to get phy (%d)n", PTR_ERR(priv->phy));
-> ^~~~~~~
+> It is a usual practice for big features like SGX to add a
+> "nosgx" cmdline param to disable it in case something goes
+> south. We do this for all features - see all "no*" switches in
+> Documentation/admin-guide/kernel-parameters.txt
 
-This should be fixed. I'll fix it in v2.
+Uh oh, should probably address this. Should I send v31 today with a "nosgx"
+patch added? Sorry for missing this one :-/
 
-Thanks,
+/Jarkko
 
----
-Best Regards
-Kunihiko Hayashi
