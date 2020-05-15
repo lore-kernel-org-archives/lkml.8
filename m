@@ -2,108 +2,85 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B666AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9339420709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 847D620756
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgEOXRA (ORCPT
+        id S1726769AbgEOXWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 19:17:00 -0400
-Received: from mga02.intel.com ([134.134.136.20]:24010 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgEOXRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 19:17:00 -0400
-IronPort-SDR: MnN96HectqR7Qc8tYZoXMOyIwn4jPHD//pLJC3Pwjnp3rmnx7NpX1imP2M+gLkwFdFJ2e7CD5J
- PFcGmZqsDnWQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 16:16:59 -0700
-IronPort-SDR: PHU/VX9vgI/7VIW37J4x5i+7JOJ9G2tdqImmyZ5/EMGp3IeC6e/K7lE9ayaAny0Z+tF2Hvas1n
- m+js3FvpH83A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,396,1583222400"; 
-   d="scan'208";a="263342711"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga003.jf.intel.com with ESMTP; 15 May 2020 16:16:59 -0700
-Date:   Fri, 15 May 2020 16:16:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
- token info
-Message-ID: <20200515231659.GM17572@linux.intel.com>
-References: <20200512152709.GB138129@redhat.com>
- <87o8qtmaat.fsf@vitty.brq.redhat.com>
- <20200512155339.GD138129@redhat.com>
- <20200512175017.GC12100@linux.intel.com>
- <20200513125241.GA173965@redhat.com>
- <0733213c-9514-4b04-6356-cf1087edd9cf@redhat.com>
- <20200515184646.GD17572@linux.intel.com>
- <d84b6436-9630-1474-52e5-ffcc4d2bd70a@redhat.com>
- <20200515204341.GF17572@linux.intel.com>
- <943cfc2f-5b18-e00a-f5a2-4577472a1ff5@redhat.com>
+        Fri, 15 May 2020 19:22:54 -0400
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:14157 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgEOXWy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 19:22:54 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.5]) by rmmx-syy-dmz-app07-12007 (RichMail) with SMTP id 2ee75ebf2446435-09b10; Sat, 16 May 2020 07:22:48 +0800 (CST)
+X-RM-TRANSID: 2ee75ebf2446435-09b10
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [192.168.0.101] (unknown[112.1.172.85])
+        by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee35ebf244773b-96322;
+        Sat, 16 May 2020 07:22:48 +0800 (CST)
+X-RM-TRANSID: 2ee35ebf244773b-96322
+Subject: Re: [PATCH][next] USB: EHCI: ehci-mv: fix less than zero comparisonof
+ an unsigned int
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Colin King <colin.king@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
+        linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200515165453.104028-1-colin.king@canonical.com>
+ <20200515172121.GA5498@rowland.harvard.edu>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <fec1e461-16f3-9d5f-bc23-129c71229b9d@cmss.chinamobile.com>
+Date:   Sat, 16 May 2020 07:23:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <943cfc2f-5b18-e00a-f5a2-4577472a1ff5@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200515172121.GA5498@rowland.harvard.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 12:23:31AM +0200, Paolo Bonzini wrote:
-> On 15/05/20 22:43, Sean Christopherson wrote:
-> > On Fri, May 15, 2020 at 09:18:07PM +0200, Paolo Bonzini wrote:
-> >> On 15/05/20 20:46, Sean Christopherson wrote:
-> >>> Why even bother using 'struct kvm_vcpu_pv_apf_data' for the #PF case?  VMX
-> >>> only requires error_code[31:16]==0 and SVM doesn't vet it at all, i.e. we
-> >>> can (ab)use the error code to indicate an async #PF by setting it to an
-> >>> impossible value, e.g. 0xaaaa (a is for async!).  That partciular error code
-> >>> is even enforced by the SDM, which states:
-> >>
-> >> Possibly, but it's water under the bridge now.
-> > 
-> > Why is that?  I thought we were redoing the entire thing because the current
-> > ABI is unfixably broken?  In other words, since the guest needs to change,
-> > why are we keeping any of the current async #PF pieces?  E.g. why keep using
-> > #PF instead of usurping something like #NP?
-> 
-> Because that would be 3 ABIs to support instead of 2.  The #PF solution
-> is only broken as long as you allow async PF from ring 0 (which wasn't
-> even true except for preemptable kernels) _and_ have NMIs that can
-> generate page faults.  We also have the #PF vmexit part for nested
-> virtualization.  This adds up and makes a quick fix for 'page not ready'
-> notifications not that quick.
-> 
-> However, interrupts for 'page ready' do have a bunch of advantages (more
-> control on what can be preempted by the notification, a saner check for
-> new page faults which is effectively a bug fix) so it makes sense to get
-> them in more quickly (probably 5.9 at this point due to the massive
-> cleanups that are being done around interrupt vectors).
+Hi Alan & Colin：
 
-Ah, so the plan is to fix 'page ready' for the current ABI, but keep the
-existing 'page not ready' part because it's not thaaaat broken.  Correct?
+On 2020/5/16 1:21, Alan Stern wrote:
+> On Fri, May 15, 2020 at 05:54:53PM +0100, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> The comparison of hcd->irq to less than zero for an error check will
+>> never be true because hcd->irq is an unsigned int.  Fix this by
+>> assigning the int retval to the return of platform_get_irq and checking
+>> this for the -ve error condition and assigning hcd->irq to retval.
+>>
+>> Addresses-Coverity: ("Unsigned compared against 0")
+>> Fixes: c856b4b0fdb5 ("USB: EHCI: ehci-mv: fix error handling in mv_ehci_probe()")
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+> Thanks to Coverity for spotting this.  Any reason why it didn't spot
+> exactly the same mistake in the ohci-da8xx.c driver?
 
-In that case, is Andy's patch to kill KVM_ASYNC_PF_SEND_ALWAYS in the guest
-being picked up?
+I just looked at the code and wondered whether it would be more 
+appropriate to modify the header file "hcd.h".  Since 'irq' might be an 
+negative, why not just modify the variables in the 'struct usb_hcd',  
+'unsigned int  irq'--> 'int irq'? After all, it's a public one.
 
-I'll read through your #VE stuff on Monday :-).
+Thanks,
+
+Tang Bin
+
+>
+>
+
+
