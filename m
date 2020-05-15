@@ -6,53 +6,54 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5730DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFFD120671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301B720671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589521305;
-	bh=J/xAjUGNLO5gxT2AEedNfb/b/hDd1DvZ708ZwFjsd+4=;
+	s=default; t=1589521382;
+	bh=znbHUnsThBKBrYTWI95KP2LVtdrW14mFKp69v3/IN4Q=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1tV8ezMurNAOGf1bk168KADIHSADwteMmYSrBhrzV34cMG9BAhRZDsL+2GS/VAwLE
-	 F2OblcvugyIclGGpX8YoB3xGzlP7VRKVn3F6FHYgpp+bVG1Hy/ng7C043PJH7KvBwE
-	 J1qsxWb6ZzJ9d052QLO3QgSTUcGvxes3ShGDgXf0=
+	b=KiA+uFRfriQANa5J5HDojnxXq+OD+IZOAJzSZ6hMJ+OvHdJnd1ZZBU50wtrp7Ql23
+	 BfsVV4tFZp9A94F/ssF8EKqiqR2bONzKGtYb8oa0IKPi684f+HQs1zqmQKnP9170HP
+	 nTTrLT5nuNc1vM+RCABF8tnBTClAynp5OPz1QI8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgEOFlo (ORCPT
+        id S1726711AbgEOFnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 01:41:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47212 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 01:43:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbgEOFln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 01:41:43 -0400
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+        id S1726269AbgEOFnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 01:43:00 -0400
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2A3E207C3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 05:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7AA320671
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 05:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589521303;
-        bh=J/xAjUGNLO5gxT2AEedNfb/b/hDd1DvZ708ZwFjsd+4=;
+        s=default; t=1589521380;
+        bh=znbHUnsThBKBrYTWI95KP2LVtdrW14mFKp69v3/IN4Q=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=S05F/2oIq2x4hgpQHwEgQ/h9z5q9J2zJqify9VBJ1DU5IHCETH/c5VGMrKPBepfKh
-         jDHthBFvDEU8iSSPC/Tp4hsGqbfUFHZ2F1PVpD5KIhVdCrKq2D4oDIxCP2ik74WE27
-         BZZ0Vxe51m25CbJix0JmaQv/kQ45E2+uQLq4/W/g=
-Received: by mail-wm1-f45.google.com with SMTP id m12so974027wmc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:41:42 -0700 (PDT)
-X-Gm-Message-State: AOAM533Fbt+O6D4s/aZ7WY9uhXaZ+/57DVtXzTs8OFwQPILaClzqqKeo
-        Hrv+2PciKbpU2eD8gu4RKpr6yZI2WGfxio7aJRSrVA==
-X-Google-Smtp-Source: ABdhPJyqW1K9nDENEb5LYSY8PKlJYn4LQIqwbARCQHg+ge/3Db+I3QWPcGaBlrX/3BqliMfWoLc5HYOiiGpTfiBHeRo=
-X-Received: by 2002:a1c:b3c1:: with SMTP id c184mr1984329wmf.36.1589521301508;
- Thu, 14 May 2020 22:41:41 -0700 (PDT)
+        b=fY7/LdrFLVzJ1RFLRwHkd21rxTIdjwkGzur7R0tbKy2wFQiXgjvs1eoNU093yzjv/
+         0L1zwZBaUkWqpLqgcDOON20Vb3OtbHSydtgAgDWwiLrGvs5ajfTyovhd3ob9m/DEhv
+         saGi2fcM7Yama4Bso7k0MC1slJxlHm+qHSPCvBwY=
+Received: by mail-wm1-f49.google.com with SMTP id f134so969546wmf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:42:59 -0700 (PDT)
+X-Gm-Message-State: AOAM533DxLfxi7lwDUsq3laS8J3FsMcbxPIV0d7WOCZDM5jn9NM3xTNk
+        KLzQGaP6LcYkTs5uhZDU/t+pitbRGdqVXwplwZ6J3w==
+X-Google-Smtp-Source: ABdhPJyL3w1yemsbeii5Sf/MreWsp7ZwCcC1MYxSYMzBmYif7TwzYpstH1iFBLe6VkWdsJHNvhstLg5lraaT25nvCks=
+X-Received: by 2002:a1c:9989:: with SMTP id b131mr2005852wme.176.1589521378526;
+ Thu, 14 May 2020 22:42:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505134926.578885807@linutronix.de> <20200505135315.583415264@linutronix.de>
-In-Reply-To: <20200505135315.583415264@linutronix.de>
+References: <20200505134926.578885807@linutronix.de> <20200505135315.686797857@linutronix.de>
+In-Reply-To: <20200505135315.686797857@linutronix.de>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 14 May 2020 22:41:30 -0700
-X-Gmail-Original-Message-ID: <CALCETrVfrO3ww_raqVnDi6OGf8VkcvzELPsvWu3QXpJiAkGbMg@mail.gmail.com>
-Message-ID: <CALCETrVfrO3ww_raqVnDi6OGf8VkcvzELPsvWu3QXpJiAkGbMg@mail.gmail.com>
-Subject: Re: [patch V4 part 4 23/24] x86/entry: Provide IDTENTRY_DF
+Date:   Thu, 14 May 2020 22:42:47 -0700
+X-Gmail-Original-Message-ID: <CALCETrU3J=yv1_WD1VhQ5suTsT9oH9tWnPGU1BFH7N_8Jd7rUw@mail.gmail.com>
+Message-ID: <CALCETrU3J=yv1_WD1VhQ5suTsT9oH9tWnPGU1BFH7N_8Jd7rUw@mail.gmail.com>
+Subject: Re: [patch V4 part 4 24/24] x86/entry: Convert double fault exception
+ to IDTENTRY_DF
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
@@ -79,10 +80,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue, May 5, 2020 at 7:16 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> Provide a separate macro for #DF as this needs to emit paranoid only code
-> and has also a special ASM stub in 32bit.
+> Convert #DF to IDTENTRY_DF
+>   - Implement the C entry point with DEFINE_IDTENTRY_DF
+>   - Emit the ASM stub with DECLARE_IDTENTRY_DF on 64bit
+>   - Remove the ASM idtentry in 64bit
+>   - Adjust the 32bit shim code
+>   - Fixup the XEN/PV code
+>   - Remove the old prototyoes
+>
+> No functional change.
+>
 
 Acked-by: Andy Lutomirski <luto@kernel.org>
-
-but... maybe it would be cleaner just to open-code all of this in the
-next patch?  This is a lot of macro to do nothing at all.
