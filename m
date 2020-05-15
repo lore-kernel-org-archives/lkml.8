@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5BBC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4442C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44FE920671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E6A20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:37:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZlhQE/DX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yg/1sGMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgEOOhQ (ORCPT
+        id S1726879AbgEOOhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:37:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35578 "EHLO
+        Fri, 15 May 2020 10:37:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726163AbgEOOhM (ORCPT
+        by vger.kernel.org with ESMTP id S1726302AbgEOOh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:37:12 -0400
+        Fri, 15 May 2020 10:37:26 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89220C061A0C;
-        Fri, 15 May 2020 07:37:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E94C061A0C;
+        Fri, 15 May 2020 07:37:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Z9YRs5dLpbvo98tj/Cgt22OOiGK6aHhMzE6epEWfQXc=; b=ZlhQE/DX4CKjdZl8xexqucGXRW
-        ecW0xdoSIe9Gq35tRpeBiirXpnuIuOEEr39MdMGz1PdURhzPLiTO5wahIkK5vw1PmAPLFD99ZDzpT
-        KfzkqvYyTU9LhznNbxGajjy8tQzBZAfMQC8HJfqoH5Sirl+L4HEisHonX50JZQe8vvMnXzsqw+8nd
-        n6IBEp27INvtNKjvuFTjxPOaCyavRVTpfVxqewr8imN9jFg90CqXRttj3krRvgExHWVSdjYWekCmo
-        h0GSVtWiDytYP4TT9HxbBtbdWa/cwt6vJMcpLMC4v/k/iown67sSCkP/8V0MX4v+5BPt/UyLUKy9X
-        x8dhpzzg==;
+        bh=TnbCkkwCrUJoVyKDF526uiErLGT3jwDipU5D/anO8xc=; b=Yg/1sGMNgegwbtPN8e3l3mjuT5
+        IG+U9qiqX2BpWZW5HdvwsSQA60De/nQt3TpJXPQRKQ7EPXuSZnetBVwuqRDjvblJFfZGHQFJgAnXm
+        HexvWXx282zsGkHTgK8V+Kd436i+xu/35S62Ifj7kzJOc63js73HolOH2dm+6DNkeK8wmsVd/pHiv
+        pI6ZzdcQKdTw7Q4ycGaIyCQnPUoHk667HjzWtokNqIMMIU2kUM76aQFAk9Q75/oTkTrIldGqYPJbA
+        8wZis1cE5a+R1kI7WETW1Wx9A0zLLClKWp+6llj5sI6qEEPPSQR2DPvTvgNP/olc941lb5Mlc9TaE
+        L8gNcDBA==;
 Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZbSK-0003qc-Oh; Fri, 15 May 2020 14:36:57 +0000
+        id 1jZbSQ-0003wV-8r; Fri, 15 May 2020 14:37:02 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Arnd Bergmann <arnd@arndb.de>,
@@ -54,9 +54,9 @@ Cc:     Jessica Yu <jeyu@kernel.org>, Michal Simek <monstr@monstr.eu>,
         linux-arch@vger.kernel.org, linux-mm@kvack.org,
         linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH 03/29] powerpc: unexport flush_icache_user_range
-Date:   Fri, 15 May 2020 16:36:20 +0200
-Message-Id: <20200515143646.3857579-4-hch@lst.de>
+Subject: [PATCH 05/29] asm-generic: fix the inclusion guards for cacheflush.h
+Date:   Fri, 15 May 2020 16:36:22 +0200
+Message-Id: <20200515143646.3857579-6-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200515143646.3857579-1-hch@lst.de>
 References: <20200515143646.3857579-1-hch@lst.de>
@@ -68,26 +68,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-flush_icache_user_range is only used by copy_to_user_page, which is
-only used by core VM code.
+cacheflush.h uses a somewhat to generic include guard name that clashes
+with various arch files.  Use a more specific one.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/powerpc/mm/mem.c | 1 -
- 1 file changed, 1 deletion(-)
+ include/asm-generic/cacheflush.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 041ed7cfd341a..f0d1bf0a8e14f 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -587,7 +587,6 @@ void flush_icache_user_range(struct vm_area_struct *vma, struct page *page,
- 	flush_icache_range(maddr, maddr + len);
- 	kunmap(page);
- }
--EXPORT_SYMBOL(flush_icache_user_range);
+diff --git a/include/asm-generic/cacheflush.h b/include/asm-generic/cacheflush.h
+index cac7404b2bdd2..906277492ec59 100644
+--- a/include/asm-generic/cacheflush.h
++++ b/include/asm-generic/cacheflush.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __ASM_CACHEFLUSH_H
+-#define __ASM_CACHEFLUSH_H
++#ifndef _ASM_GENERIC_CACHEFLUSH_H
++#define _ASM_GENERIC_CACHEFLUSH_H
  
- /*
-  * System memory should not be in /proc/iomem but various tools expect it
+ /* Keep includes the same across arches.  */
+ #include <linux/mm.h>
+@@ -109,4 +109,4 @@ static inline void flush_cache_vunmap(unsigned long start, unsigned long end)
+ 	memcpy(dst, src, len)
+ #endif
+ 
+-#endif /* __ASM_CACHEFLUSH_H */
++#endif /* _ASM_GENERIC_CACHEFLUSH_H */
 -- 
 2.26.2
 
