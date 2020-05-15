@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C30392075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F403B20671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:38:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aKuM/IuZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mJPHNJDn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgEOOii (ORCPT
+        id S1728210AbgEOOiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:38:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35836 "EHLO
+        Fri, 15 May 2020 10:38:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728230AbgEOOi1 (ORCPT
+        by vger.kernel.org with ESMTP id S1728138AbgEOOiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:38:27 -0400
+        Fri, 15 May 2020 10:38:18 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80C36C05BD0B;
-        Fri, 15 May 2020 07:38:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F7C8C061A0C;
+        Fri, 15 May 2020 07:38:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=2Xdr7If4G7tlq1M/OLagjELexqLovtR85HrbwT8o5D0=; b=aKuM/IuZGNMxQJ+txtJ5ChLiO9
-        jgRu5IvQBhmQvsyQ6/tX1AwBW4qI7pc/hLSkgNnaYqK3tZnN4jXJuYrKMFwXINCILvmITyTkWBGyq
-        jFRKUUwH6dq7lYNFmx2GLqJw+EL+4rvVlaBjqiFFNolUMbA/eRnz/YCKnBetEYTEB1zu9d/ibFFsd
-        s+6anIu4IhN8wAgtQxueZd0zvcXv9o4iooxCT6SP5C3NG9PKmnNCmKTBZkl79s/wInEl3upE2O1HU
-        uNBV437kfWy7Ap5NeVKUwXWpl3ukGmCINI/nM4NHP1YXOI2mHuEgdsF7zSZNYCiKrqFVqaiJ93UnM
-        YkoHC6JA==;
+        bh=oCdrIxNzR4NHS2NDYxpGK2EFu2WHsVdB0VGTwPSxhuk=; b=mJPHNJDn7vFUrE0crP3cr8ZzuE
+        wkVffsLiZuIGA8DyS86CQKhqkAJmrbIV79qGCT9sR+Rl9E7kPvEf6/IGi4QZ5ZeBa8oUZ2OdE2uqp
+        NIGBkGKr7vj38kjV+3P4R/5Upo6eYECYe4dngZlN41KLcHjMY4GqMSsFw9tAthizDHt0gErnL+PpQ
+        6k8bABtYmtroZOVh0f+uMAeOgfWaZNSub+AckrAKYXUlwpg4Otebfh0aSe8SKQ9lNDRUAr5dfnnMX
+        tzyi1w5krYiX0Wtq2wKUwqQZbSMoWdBcEid3w0GZLDxCxqTV7vO8GAj1NSzGxp7Fh8g5uuMGJMcq0
+        NFxMXPnw==;
 Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZbTV-0005Fj-SN; Fri, 15 May 2020 14:38:10 +0000
+        id 1jZbTQ-0005B1-5T; Fri, 15 May 2020 14:38:04 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Arnd Bergmann <arnd@arndb.de>,
@@ -53,10 +53,10 @@ Cc:     Jessica Yu <jeyu@kernel.org>, Michal Simek <monstr@monstr.eu>,
         linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
         linux-arch@vger.kernel.org, linux-mm@kvack.org,
         linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        linux-fsdevel@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>
-Subject: [PATCH 27/29] binfmt_flat: use flush_icache_user_range
-Date:   Fri, 15 May 2020 16:36:44 +0200
-Message-Id: <20200515143646.3857579-28-hch@lst.de>
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 25/29] exec: only build read_code when needed
+Date:   Fri, 15 May 2020 16:36:42 +0200
+Message-Id: <20200515143646.3857579-26-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200515143646.3857579-1-hch@lst.de>
 References: <20200515143646.3857579-1-hch@lst.de>
@@ -68,27 +68,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-load_flat_file works on user addresses.
+Only build read_code when binary formats that use it are built into the
+kernel.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Greg Ungerer <gerg@linux-m68k.org>
 ---
- fs/binfmt_flat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/exec.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
-index 831a2b25ba79f..6f0aca5379da2 100644
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -854,7 +854,7 @@ static int load_flat_file(struct linux_binprm *bprm,
- #endif /* CONFIG_BINFMT_FLAT_OLD */
- 	}
+diff --git a/fs/exec.c b/fs/exec.c
+index 06b4c550af5d9..a4f766f296f8f 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1027,6 +1027,8 @@ int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
+ }
+ EXPORT_SYMBOL_GPL(kernel_read_file_from_fd);
  
--	flush_icache_range(start_code, end_code);
-+	flush_icache_user_range(start_code, end_code);
++#if defined(CONFIG_HAVE_AOUT) || defined(CONFIG_BINFMT_FLAT) || \
++    defined(CONFIG_BINFMT_ELF_FDPIC)
+ ssize_t read_code(struct file *file, unsigned long addr, loff_t pos, size_t len)
+ {
+ 	ssize_t res = vfs_read(file, (void __user *)addr, len, &pos);
+@@ -1035,6 +1037,7 @@ ssize_t read_code(struct file *file, unsigned long addr, loff_t pos, size_t len)
+ 	return res;
+ }
+ EXPORT_SYMBOL(read_code);
++#endif
  
- 	/* zero the BSS,  BRK and stack areas */
- 	if (clear_user((void __user *)(datapos + data_len), bss_len +
+ /*
+  * Maps the mm_struct mm into the current task struct.
 -- 
 2.26.2
 
