@@ -2,230 +2,114 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE84EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62E642070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:09:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Di3hwkUH";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="BLVTxonY"
+	by mail.kernel.org (Postfix) with ESMTP id D575120657
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgEOSJf (ORCPT
+        id S1726601AbgEOSKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 14:09:35 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:25106 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726144AbgEOSJf (ORCPT
+        Fri, 15 May 2020 14:10:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgEOSKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 14:09:35 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 04FI4Qoi021254;
-        Fri, 15 May 2020 11:09:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=RcI6OHGgK4YWHkA1rH8nPRWPfe72HImVBKslGk0WzHU=;
- b=Di3hwkUHf5rWB9TwGxAqPp58046vqQFKhiJ18Dhk18BFhw2r+MHc3qlbZ98rYKVcvrPU
- n5FCSn29mmI2pnTJ+KFwokaO/3uLqb66lYYO1mfeyFWn4DKzJnDj27u28i3vHDfIRidP
- gvOFKzzVRtgB8DqRhF3A4V/5gKwaglnf3us= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 3100xhkbgp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 15 May 2020 11:09:25 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 15 May 2020 11:09:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T0c6ecFZSqF0P9GRUsPqAGvG+Y86E0pDyxLMfL9wlb9HYr447VkU3vmDk/LroYYFYdwvcMjHodBjkroFueR9xHfjF3+g7Ilq5CqJtCyAwwZlpRZASzxMMvOE8y8RkMQWYHMo5OOedrVviSqBJbaHoBFpRxpLYUGVg9hZ00NzxmbQ9QG5Op+s8PINB5KbtMCITNvDTpbwjfvH6WbmWSvounwUrgink0qkcjFTcX1W/BzsmTs/rPYvQiUTtzTi7MepnIB8Oij4CAFFitKdxCpR9ikfyc94iIz86Y7Xhw3fV3ug46HxnP+UnYPkjcSZXZF6kC+4fziNdK83vu8BwhoHxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RcI6OHGgK4YWHkA1rH8nPRWPfe72HImVBKslGk0WzHU=;
- b=TCJ8eUmu3ehyQ9O3DkutkW5O3azpUsUo0c9LS6cOMGl+jHZDowSU7USbmX/rmgsBaPbgn/MeZYUYhs5hHvBB5GJKEvpcvHGk6VxWCWftXdlEuiv46U6Q66iu6Pr5aq8TM9FKjb6qZv1NaknP9qqVKNjklX4MXRxWQrBuyahm0D9O/FEfeFpOU8YJx4QL3U5CtljYELZuSXQ4pyY7lWDqCfAc4a0zOrKzNdsLQXlx7R2XhUXUqbCQ7A+ztpZKeEolfW4/xqJkKJdbbYXOTmCSvD9nQckZBAW4BxyxAhksP/Wj9XKxkUUSo5g47vi1vs/ZP3R0Es0A2efcYKd344Lcbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RcI6OHGgK4YWHkA1rH8nPRWPfe72HImVBKslGk0WzHU=;
- b=BLVTxonYwgJvhMVlhQuA72IFi509vGgnc3MxwclyLBFBg6kBS8jMeMWi8qfhAL19p2eoPSXQKRH+Jf5GI4XREhBA/z7kffU6H+Eh3GIPYpwlDt3WikmwuY2EFpxDj7ecgoo0cyfTJnqHBuOdvTHCwobyvUG2KvFGyJoAQSrn6kc=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2278.namprd15.prod.outlook.com (2603:10b6:a02:8e::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Fri, 15 May
- 2020 18:09:23 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2979.033; Fri, 15 May 2020
- 18:09:23 +0000
-Date:   Fri, 15 May 2020 11:09:20 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, Mel Gorman <mgorman@suse.de>,
+        Fri, 15 May 2020 14:10:11 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A1FC061A0C;
+        Fri, 15 May 2020 11:10:11 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id A0FC572D;
+        Fri, 15 May 2020 18:10:09 +0000 (UTC)
+Date:   Fri, 15 May 2020 12:10:08 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] memcg: expose root cgroup's memory.stat
-Message-ID: <20200515180920.GC94522@carbon.DHCP.thefacebook.com>
-References: <20200508170630.94406-1-shakeelb@google.com>
- <20200508214405.GA226164@cmpxchg.org>
- <CALvZod5VHHUV+_AXs4+5sLOPGyxm709kQ1q=uHMPVxW8pwXZ=g@mail.gmail.com>
- <20200515082955.GJ29153@dhcp22.suse.cz>
- <20200515132421.GC591266@cmpxchg.org>
- <CALvZod7SdgXv0Dmm3q5H=EH4dzg8pXZenMUaDObfoRv5EX-Pkw@mail.gmail.com>
- <20200515150026.GA94522@carbon.DHCP.thefacebook.com>
- <CALvZod5EHzK-UzS9WgkzpZ2T+WwA8LottxrTzUi3qFwvUbOk4w@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod5EHzK-UzS9WgkzpZ2T+WwA8LottxrTzUi3qFwvUbOk4w@mail.gmail.com>
-X-ClientProxiedBy: BYAPR01CA0071.prod.exchangelabs.com (2603:10b6:a03:94::48)
- To BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Xu <peterx@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Collingbourne <pcc@google.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org
+Subject: Re: [PATCH 11/14] docs: move other kAPI documents to core-api
+Message-ID: <20200515121008.4debe669@lwn.net>
+In-Reply-To: <70cca102282ccd36b107487c60346f414011c684.1588345503.git.mchehab+huawei@kernel.org>
+References: <cover.1588345503.git.mchehab+huawei@kernel.org>
+        <70cca102282ccd36b107487c60346f414011c684.1588345503.git.mchehab+huawei@kernel.org>
+Organization: LWN.net
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:b821) by BYAPR01CA0071.prod.exchangelabs.com (2603:10b6:a03:94::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend Transport; Fri, 15 May 2020 18:09:22 +0000
-X-Originating-IP: [2620:10d:c090:400::5:b821]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c18ce7f8-5db3-47c0-53f1-08d7f8fb18c1
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2278:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB2278ACA00B11F62040A36F60BEBD0@BYAPR15MB2278.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 04041A2886
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pk0Ux00MBHZXqacdiDgMHPWFovLqnIE4q9UCYaarvRU0gfVVr3BNXItQtHm78TEAY666iVLt2C+l0ygQglZwG40MD6E3nltDKYuYFzZKckz4qBtIb3mHDdbuimYwL43KOlKblxuujyDJNv1skh9KCZ7vHzc61tEnJYz1d9cSiYz9TUSLOEXI8jVPDfoqtm0fxAeaSKqJ5fZUkyrxM7sIj7axHivY4Oq5Guzu8gs7XEhfCidCYQKQEqkxLc0AvB18usA77z3yyyCu2tY/jGrOeKMU+ylp0drI7NJqyuux/YscnPPF4ZwMTaUyToAuQTrG+sTDeaePIH2ow3GN4neunHxbnhVoC2PF8hhXgY2QX3iun4h0LBUjo/pCY3e04IokpZIP0hCx7ua1pXNQ9UxdVIDfXsJC2VAKdn+xv7lX6S3KT9Z6FqIifSptwPwPJKrK
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(346002)(366004)(376002)(396003)(136003)(52116002)(33656002)(7696005)(55016002)(9686003)(5660300002)(86362001)(4326008)(478600001)(1076003)(8676002)(66946007)(316002)(6916009)(2906002)(54906003)(66556008)(186003)(6506007)(53546011)(66476007)(8936002)(16526019);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: bQujxOmwXCJUkg48tqXAm8Ku20k7JJdQakWs6++I6Odmsgq/v07fs3uTJKMIfX/ZLKw8q1AQpVfbBJ8k8v2NpqkuKoWoD5MuothT8GSk9DkF609458mEPw3j9C0tR2uDh4/t08QIN2tte7OSeAFLamZZgTtZ8dffxXfcnsBsHXdrGAu8WlJv/aHNWBcMglyVGTxC3zZMmWLLjnjq/OsCV8VTQExNP5d/2W5ZhmAliPTg9qjFHwuSDnnpfCY3drpxL/83xrS+XNARtxnv/tlrFSILKhlxC+7hHf750zAnungUQ2qrMDhUc/lj+V3BkWZ0A/ajWxMhJBEI9tIAP85etiJJeFt/O99PUCKuDbAJsQDKaGts6uXgIvJaP0SrL7jcGqhU53zQbMUBdLho3NlmS58Lk9m8tt5xl7UhE9lwp6ccpNs7bnpX2Q1p8Rim8Kfi86+bnApVcw4OmJ5g4wyH039Vuj8rbVG4Io8+eCv6C16dDQskx4huffuL/ZTAikru+kCsYI6IsYTAT+VGDFyKAg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: c18ce7f8-5db3-47c0-53f1-08d7f8fb18c1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2020 18:09:23.3986
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3aeF8aNOiYmzyr4OszQiSMtncn36/iN2NQVI4DJmUnqMVKpch5L+SuIymAKwCgdT
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2278
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-15_07:2020-05-15,2020-05-15 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 cotscore=-2147483648
- mlxscore=0 priorityscore=1501 adultscore=0 impostorscore=0 malwarescore=0
- spamscore=0 clxscore=1015 suspectscore=1 mlxlogscore=999 phishscore=0
- bulkscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005150151
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 10:49:22AM -0700, Shakeel Butt wrote:
-> On Fri, May 15, 2020 at 8:00 AM Roman Gushchin <guro@fb.com> wrote:
-> >
-> > On Fri, May 15, 2020 at 06:44:44AM -0700, Shakeel Butt wrote:
-> > > On Fri, May 15, 2020 at 6:24 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > > >
-> > > > On Fri, May 15, 2020 at 10:29:55AM +0200, Michal Hocko wrote:
-> > > > > On Sat 09-05-20 07:06:38, Shakeel Butt wrote:
-> > > > > > On Fri, May 8, 2020 at 2:44 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > > > > > >
-> > > > > > > On Fri, May 08, 2020 at 10:06:30AM -0700, Shakeel Butt wrote:
-> > > > > > > > One way to measure the efficiency of memory reclaim is to look at the
-> > > > > > > > ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
-> > > > > > > > not updated consistently at the system level and the ratio of these are
-> > > > > > > > not very meaningful. The pgsteal and pgscan are updated for only global
-> > > > > > > > reclaim while pgrefill gets updated for global as well as cgroup
-> > > > > > > > reclaim.
-> > > > > > > >
-> > > > > > > > Please note that this difference is only for system level vmstats. The
-> > > > > > > > cgroup stats returned by memory.stat are actually consistent. The
-> > > > > > > > cgroup's pgsteal contains number of reclaimed pages for global as well
-> > > > > > > > as cgroup reclaim. So, one way to get the system level stats is to get
-> > > > > > > > these stats from root's memory.stat, so, expose memory.stat for the root
-> > > > > > > > cgroup.
-> > > > > > > >
-> > > > > > > >       from Johannes Weiner:
-> > > > > > > >       There are subtle differences between /proc/vmstat and
-> > > > > > > >       memory.stat, and cgroup-aware code that wants to watch the full
-> > > > > > > >       hierarchy currently has to know about these intricacies and
-> > > > > > > >       translate semantics back and forth.
-> > > > >
-> > > > > Can we have those subtle differences documented please?
-> > > > >
-> > > > > > > >
-> > > > > > > >       Generally having the fully recursive memory.stat at the root
-> > > > > > > >       level could help a broader range of usecases.
-> > > > > > >
-> > > > > > > The changelog begs the question why we don't just "fix" the
-> > > > > > > system-level stats. It may be useful to include the conclusions from
-> > > > > > > that discussion, and why there is value in keeping the stats this way.
-> > > > > > >
-> > > > > >
-> > > > > > Right. Andrew, can you please add the following para to the changelog?
-> > > > > >
-> > > > > > Why not fix the stats by including both the global and cgroup reclaim
-> > > > > > activity instead of exposing root cgroup's memory.stat? The reason is
-> > > > > > the benefit of having metrics exposing the activity that happens
-> > > > > > purely due to machine capacity rather than localized activity that
-> > > > > > happens due to the limits throughout the cgroup tree. Additionally
-> > > > > > there are userspace tools like sysstat(sar) which reads these stats to
-> > > > > > inform about the system level reclaim activity. So, we should not
-> > > > > > break such use-cases.
-> > > > > >
-> > > > > > > > Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> > > > > > > > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> > > > > > >
-> > > > > > > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> > > > > >
-> > > > > > Thanks a lot.
-> > > > >
-> > > > > I was quite surprised that the patch is so simple TBH. For some reason
-> > > > > I've still had memories that we do not account for root memcg (likely
-> > > > > because mem_cgroup_is_root(memcg) bail out in the try_charge. But stats
-> > > > > are slightly different here.
-> > > >
-> > > > Yep, we skip the page_counter for root, but keep in mind that cgroup1
-> > > > *does* have a root-level memory.stat, so (for the most part) we've
-> > > > been keeping consumer stats for the root level the whole time.
-> > > >
-> > > > > counters because they are not really all the same. E.g.
-> > > > > - mem_cgroup_charge_statistics accounts for each memcg
-> > > >
-> > > > Yep, that's heritage from cgroup1.
-> > > >
-> > > > > - memcg_charge_kernel_stack relies on pages being associated with a
-> > > > >   memcg and that in turn relies on __memcg_kmem_charge_page which bails
-> > > > >   out on root memcg
-> > > >
-> > > > You're right. It should only bypass the page_counter, but still set
-> > > > page->mem_cgroup = root_mem_cgroup, just like user pages.
-> >
-> > What about kernel threads? We consider them belonging to the root memory
-> > cgroup. Should their memory consumption being considered in root-level stats?
-> >
-> > I'm not sure we really want it, but I guess we need to document how
-> > kernel threads are handled.
-> >
+On Fri,  1 May 2020 17:37:55 +0200
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+
+> There are a number of random documents that seem to be
+> describing some aspects of the core-api. Move them to such
+> directory, adding them at the core-api/index.rst file.
 > 
-> What will be the cons of updating root-level stats for kthreads?
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/admin-guide/sysctl/vm.rst                     | 2 +-
+>  Documentation/core-api/index.rst                            | 6 ++++++
+>  Documentation/{mailbox.txt => core-api/mailbox.rst}         | 0
+>  Documentation/{nommu-mmap.txt => core-api/nommu-mmap.rst}   | 0
+>  .../{this_cpu_ops.txt => core-api/this_cpu_ops.rst}         | 0
+>  .../unaligned-memory-access.rst}                            | 0
+>  Documentation/gpu/drm-mm.rst                                | 2 +-
+>  arch/Kconfig                                                | 2 +-
+>  init/Kconfig                                                | 2 +-
+>  mm/Kconfig                                                  | 2 +-
+>  mm/nommu.c                                                  | 2 +-
+>  11 files changed, 12 insertions(+), 6 deletions(-)
+>  rename Documentation/{mailbox.txt => core-api/mailbox.rst} (100%)
+>  rename Documentation/{nommu-mmap.txt => core-api/nommu-mmap.rst} (100%)
+>  rename Documentation/{this_cpu_ops.txt => core-api/this_cpu_ops.rst} (100%)
+>  rename Documentation/{unaligned-memory-access.txt => core-api/unaligned-memory-access.rst} (100%)
 
-It makes total sense for stacks, but not much for the slab memory.
-Because it's really "some part of the total slab memory, which is
-accounted on the memcg level". And it comes with some performance
-overhead.
+This one doesn't apply for me.  Beyond that, I'm not entirely convinced
+about a couple of the moves...
 
-I'm not really opposing any solution, just saying we need to document
-what's included into this statistics and what not.
+ - mailbox.txt seems like driver-api stuff to me?
+ - nommu-mmap.txt is mostly (though not completely) about the semantic of
+   mmap() options as seen by user space, so perhaps belongs in that
+   manual...?
 
-Thanks!
+Thanks,
+
+jon
