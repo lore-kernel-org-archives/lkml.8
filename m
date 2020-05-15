@@ -2,213 +2,187 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B935C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A08F20759
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:00:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="MHDjPGtz"
+	by mail.kernel.org (Postfix) with ESMTP id 1E61D207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgEOOAQ (ORCPT
+        id S1726293AbgEOOA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:00:16 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:46806 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbgEOOAP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:00:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589551215; x=1621087215;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RYuYk2nK0gUCJ/sXARflJpI6XX3QksJ6uNvKcChd4mw=;
-  b=MHDjPGtzUEwlEnB7MUuEFW6dC8H+K1ujN40Ih7cV9fJgxfL+8WLwFvms
-   mz8qREtgU/AQeiikkIgVpC6r2KvVjbthg5t/5cN/eUclmDom9sv1DvfdD
-   66fSl3HW6xaqI8avGAKgLiUtjrwDFiRjeGz4I/EYisQnrBrDCR7d1IoDa
-   5TM7VdkzW2s8A7I/lY6XJrHgalHn8gA0wCgNCro7CVvc8G4dtB14Wce5y
-   cw1e4InQ9dn7Qjkw3xfFlPRxSnd0yUsdhPVOMcpD1LP4p6ylho4s95BwA
-   Wxn8aOC3pfQo7Svtpm9v52pffociRb7PaoJnJfos7rv5sEh0/5mIe0fJK
-   g==;
-IronPort-SDR: 7HCBGe2GHURrpUUzzZh6clIGKaIGH3sdDknjInDYLJJfq2nkGRUBKHW/oJQ2VAgNaHMchLJzsl
- xRTeBJ0mS6SKwyZh3ZYSgIVnbtIxdTP+HVzqldccjaKp0jltGJXIiotOHcEnJR5Bw3FjKVZSwG
- g77MnHQUi6SLJ69j/wz7nsuE1WLNClK23BpdSkwGZBylDAiR9PsGHG3CiF2Xcuih7Bhuspm9BN
- jC6AbSo56NQLIIdtYhG/FY81VklLgXZQMbca+cLmZ+2AOQuEg6/PHO4L2blx6YkhyT0/u+2M+E
- OrU=
-X-IronPort-AV: E=Sophos;i="5.73,395,1583218800"; 
-   d="scan'208";a="73579432"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 May 2020 07:00:10 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 15 May 2020 07:00:13 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 15 May 2020 07:00:05 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <robh+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
-Subject: [PATCH] ARM: dts: at91: Configure I2C SCL gpio as open drain
-Date:   Fri, 15 May 2020 17:00:01 +0300
-Message-ID: <20200515140001.287932-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+        Fri, 15 May 2020 10:00:27 -0400
+Received: from 8bytes.org ([81.169.241.247]:43292 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbgEOOA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 10:00:27 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 4A493261; Fri, 15 May 2020 16:00:25 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH v3 1/7] mm: Add functions to track page directory modifications
+Date:   Fri, 15 May 2020 16:00:17 +0200
+Message-Id: <20200515140023.25469-2-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200515140023.25469-1-joro@8bytes.org>
+References: <20200515140023.25469-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SCL gpio pin used by I2C bus for recovery needs to be configured as
-open drain.
+From: Joerg Roedel <jroedel@suse.de>
 
-Fixes: 455fec938bbb ("ARM: dts: at91: sama5d2: add i2c gpio pinctrl")
-Fixes: a4bd8da893a3 ("ARM: dts: at91: sama5d3: add i2c gpio pinctrl")
-Fixes: 8fb82f050cf6 ("ARM: dts: at91: sama5d4: add i2c gpio pinctrl")
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Add page-table allocation functions which will keep track of changed
+directory entries. They are needed for new PGD, P4D, PUD, and PMD
+entries and will be used in vmalloc and ioremap code to decide whether
+any changes in the kernel mappings need to be synchronized between
+page-tables in the system.
+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Acked-by: Andy Lutomirski <luto@kernel.org>
 ---
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts   | 6 +++---
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 6 +++---
- arch/arm/boot/dts/sama5d3.dtsi              | 6 +++---
- arch/arm/boot/dts/sama5d4.dtsi              | 6 +++---
- 4 files changed, 12 insertions(+), 12 deletions(-)
+ include/asm-generic/5level-fixup.h |  5 ++--
+ include/asm-generic/pgtable.h      | 23 +++++++++++++++
+ include/linux/mm.h                 | 46 ++++++++++++++++++++++++++++++
+ 3 files changed, 72 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-index 32435ce1dab2..be33483013e7 100644
---- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-@@ -182,7 +182,7 @@ i2c0: i2c@f8028000 {
- 				pinctrl-0 = <&pinctrl_i2c0_default>;
- 				pinctrl-1 = <&pinctrl_i2c0_gpio>;
- 				sda-gpios = <&pioA PIN_PD21 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA PIN_PD22 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA PIN_PD22 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				status = "okay";
- 			};
+diff --git a/include/asm-generic/5level-fixup.h b/include/asm-generic/5level-fixup.h
+index 4c74b1c1d13b..58046ddc08d0 100644
+--- a/include/asm-generic/5level-fixup.h
++++ b/include/asm-generic/5level-fixup.h
+@@ -17,8 +17,9 @@
+ 	((unlikely(pgd_none(*(p4d))) && __pud_alloc(mm, p4d, address)) ? \
+ 		NULL : pud_offset(p4d, address))
  
-@@ -203,7 +203,7 @@ i2c2: i2c@600 {
- 					pinctrl-0 = <&pinctrl_flx0_default>;
- 					pinctrl-1 = <&pinctrl_flx0_gpio>;
- 					sda-gpios = <&pioA PIN_PB28 GPIO_ACTIVE_HIGH>;
--					scl-gpios = <&pioA PIN_PB29 GPIO_ACTIVE_HIGH>;
-+					scl-gpios = <&pioA PIN_PB29 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 					atmel,fifo-size = <16>;
- 					status = "okay";
- 				};
-@@ -234,7 +234,7 @@ i2c1: i2c@fc028000 {
- 				pinctrl-0 = <&pinctrl_i2c1_default>;
- 				pinctrl-1 = <&pinctrl_i2c1_gpio>;
- 				sda-gpios = <&pioA PIN_PC6 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA PIN_PC7 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA PIN_PC7 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				status = "okay";
+-#define p4d_alloc(mm, pgd, address)	(pgd)
+-#define p4d_offset(pgd, start)		(pgd)
++#define p4d_alloc(mm, pgd, address)		(pgd)
++#define p4d_alloc_track(mm, pgd, address, mask)	(pgd)
++#define p4d_offset(pgd, start)			(pgd)
  
- 				at24@50 {
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index e0c6cff1a312..862bf54376f1 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -185,7 +185,7 @@ i2c0: i2c@f8028000 {
- 				pinctrl-0 = <&pinctrl_i2c0_default>;
- 				pinctrl-1 = <&pinctrl_i2c0_gpio>;
- 				sda-gpios = <&pioA PIN_PD21 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA PIN_PD22 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA PIN_PD22 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				i2c-sda-hold-time-ns = <350>;
- 				status = "okay";
+ #ifndef __ASSEMBLY__
+ static inline int p4d_none(p4d_t p4d)
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index 329b8c8ca703..bf1418ae91a2 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -1209,6 +1209,29 @@ static inline bool arch_has_pfn_modify_check(void)
+ # define PAGE_KERNEL_EXEC PAGE_KERNEL
+ #endif
  
-@@ -390,7 +390,7 @@ i2c2: i2c@600 {
- 					pinctrl-0 = <&pinctrl_flx4_default>;
- 					pinctrl-1 = <&pinctrl_flx4_gpio>;
- 					sda-gpios = <&pioA PIN_PD12 GPIO_ACTIVE_HIGH>;
--					scl-gpios = <&pioA PIN_PD13 GPIO_ACTIVE_HIGH>;
-+					scl-gpios = <&pioA PIN_PD13 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 					atmel,fifo-size = <16>;
- 					i2c-analog-filter;
- 					i2c-digital-filter;
-@@ -408,7 +408,7 @@ i2c1: i2c@fc028000 {
- 				i2c-digital-filter-width-ns = <35>;
- 				pinctrl-1 = <&pinctrl_i2c1_gpio>;
- 				sda-gpios = <&pioA PIN_PD4 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA PIN_PD5 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA PIN_PD5 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				status = "okay";
++/*
++ * Page Table Modification bits for pgtbl_mod_mask.
++ *
++ * These are used by the p?d_alloc_track*() set of functions an in the generic
++ * vmalloc/ioremap code to track at which page-table levels entries have been
++ * modified. Based on that the code can better decide when vmalloc and ioremap
++ * mapping changes need to be synchronized to other page-tables in the system.
++ */
++#define		__PGTBL_PGD_MODIFIED	0
++#define		__PGTBL_P4D_MODIFIED	1
++#define		__PGTBL_PUD_MODIFIED	2
++#define		__PGTBL_PMD_MODIFIED	3
++#define		__PGTBL_PTE_MODIFIED	4
++
++#define		PGTBL_PGD_MODIFIED	BIT(__PGTBL_PGD_MODIFIED)
++#define		PGTBL_P4D_MODIFIED	BIT(__PGTBL_P4D_MODIFIED)
++#define		PGTBL_PUD_MODIFIED	BIT(__PGTBL_PUD_MODIFIED)
++#define		PGTBL_PMD_MODIFIED	BIT(__PGTBL_PMD_MODIFIED)
++#define		PGTBL_PTE_MODIFIED	BIT(__PGTBL_PTE_MODIFIED)
++
++/* Page-Table Modification Mask */
++typedef unsigned int pgtbl_mod_mask;
++
+ #endif /* !__ASSEMBLY__ */
  
- 				at24@54 {
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index f3ce561b46ab..c53e48445e4d 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -163,7 +163,7 @@ i2c0: i2c@f0014000 {
- 				pinctrl-0 = <&pinctrl_i2c0>;
- 				pinctrl-1 = <&pinctrl_i2c0_gpio>;
- 				sda-gpios = <&pioA 30 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA 31 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA 31 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 18>;
-@@ -181,7 +181,7 @@ i2c1: i2c@f0018000 {
- 				pinctrl-0 = <&pinctrl_i2c1>;
- 				pinctrl-1 = <&pinctrl_i2c1_gpio>;
- 				sda-gpios = <&pioC 26 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioC 27 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioC 27 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 19>;
-@@ -367,7 +367,7 @@ i2c2: i2c@f801c000 {
- 				pinctrl-0 = <&pinctrl_i2c2>;
- 				pinctrl-1 = <&pinctrl_i2c2_gpio>;
- 				sda-gpios = <&pioA 18 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA 19 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA 19 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 20>;
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index c9c0316b5b0e..fff679734c9c 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -462,7 +462,7 @@ i2c0: i2c@f8014000 {
- 				pinctrl-0 = <&pinctrl_i2c0>;
- 				pinctrl-1 = <&pinctrl_i2c0_gpio>;
- 				sda-gpios = <&pioA 30 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioA 31 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA 31 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 32>;
-@@ -484,7 +484,7 @@ i2c1: i2c@f8018000 {
- 				pinctrl-0 = <&pinctrl_i2c1>;
- 				pinctrl-1 = <&pinctrl_i2c1_gpio>;
- 				sda-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioE 30 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioE 30 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 33>;
-@@ -529,7 +529,7 @@ i2c2: i2c@f8024000 {
- 				pinctrl-0 = <&pinctrl_i2c2>;
- 				pinctrl-1 = <&pinctrl_i2c2_gpio>;
- 				sda-gpios = <&pioB 29 GPIO_ACTIVE_HIGH>;
--				scl-gpios = <&pioB 30 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioB 30 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 34>;
+ #ifndef io_remap_pfn_range
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 5a323422d783..022fe682af9e 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2078,13 +2078,54 @@ static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
+ 	return (unlikely(p4d_none(*p4d)) && __pud_alloc(mm, p4d, address)) ?
+ 		NULL : pud_offset(p4d, address);
+ }
++
++static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
++				     unsigned long address,
++				     pgtbl_mod_mask *mod_mask)
++
++{
++	if (unlikely(pgd_none(*pgd))) {
++		if (__p4d_alloc(mm, pgd, address))
++			return NULL;
++		*mod_mask |= PGTBL_PGD_MODIFIED;
++	}
++
++	return p4d_offset(pgd, address);
++}
++
+ #endif /* !__ARCH_HAS_5LEVEL_HACK */
+ 
++static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
++				     unsigned long address,
++				     pgtbl_mod_mask *mod_mask)
++{
++	if (unlikely(p4d_none(*p4d))) {
++		if (__pud_alloc(mm, p4d, address))
++			return NULL;
++		*mod_mask |= PGTBL_P4D_MODIFIED;
++	}
++
++	return pud_offset(p4d, address);
++}
++
+ static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
+ {
+ 	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
+ 		NULL: pmd_offset(pud, address);
+ }
++
++static inline pmd_t *pmd_alloc_track(struct mm_struct *mm, pud_t *pud,
++				     unsigned long address,
++				     pgtbl_mod_mask *mod_mask)
++{
++	if (unlikely(pud_none(*pud))) {
++		if (__pmd_alloc(mm, pud, address))
++			return NULL;
++		*mod_mask |= PGTBL_PUD_MODIFIED;
++	}
++
++	return pmd_offset(pud, address);
++}
+ #endif /* CONFIG_MMU */
+ 
+ #if USE_SPLIT_PTE_PTLOCKS
+@@ -2200,6 +2241,11 @@ static inline void pgtable_pte_page_dtor(struct page *page)
+ 	((unlikely(pmd_none(*(pmd))) && __pte_alloc_kernel(pmd))? \
+ 		NULL: pte_offset_kernel(pmd, address))
+ 
++#define pte_alloc_kernel_track(pmd, address, mask)			\
++	((unlikely(pmd_none(*(pmd))) &&					\
++	  (__pte_alloc_kernel(pmd) || ({*(mask)|=PGTBL_PMD_MODIFIED;0;})))?\
++		NULL: pte_offset_kernel(pmd, address))
++
+ #if USE_SPLIT_PMD_PTLOCKS
+ 
+ static struct page *pmd_to_page(pmd_t *pmd)
 -- 
-2.25.1
+2.17.1
 
