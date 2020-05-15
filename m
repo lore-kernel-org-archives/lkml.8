@@ -2,173 +2,151 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C44C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2722C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBBC20758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A61520728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589570607;
-	bh=DGk67flq+KQe3MmfEiLhY8iGdN/JINkf7O8LuIKtC/8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=GmCpMbUyWVG6ox0xxkZZyCN+oBlTTPGpkDGafeb+rzpAUJNnyyfiPjlVMBjRef9f9
-	 KzbWaSg7NwtIhffz1Pe3apQIKyyOLRsED1k8SYOdMqtTHYP6DuC56Gd4p3OgGTVR7o
-	 1p2xtDsKhKoL4ewGCGhsQVPfbNaRc9m9k7b9acQw=
+	s=default; t=1589570623;
+	bh=TuKsKP6cbt7gD83ko2QaqNWtZkkxPgW/pFRBoMPgw40=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SgtTdh/c4miO/dE/uR/gxsVjfbk/fXp6jYJfm2GVUUMfdZsQKEwSQFaQ+NpHavp4c
+	 7aA4rzPoyx05yndpegNw3sOdFI1c5HANtRlG2XeX943C5WWtmLBLaOvsNOrk52xhmA
+	 gipSt2ya8wq8+wTaUMznfFqGnr7GnpxaF1N7hHHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgEOTX0 (ORCPT
+        id S1726584AbgEOTXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 15:23:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41582 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 15:23:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbgEOTX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 15:23:26 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        id S1726168AbgEOTXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 15:23:42 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 755EB2070A;
-        Fri, 15 May 2020 19:23:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A5682070A;
+        Fri, 15 May 2020 19:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589570605;
-        bh=DGk67flq+KQe3MmfEiLhY8iGdN/JINkf7O8LuIKtC/8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QxNVJun8XQkMcfEBoPrJvkAbnFg/av12VA2eolkC5G91Xr9t1NY2RYDqYdFNSPwKj
-         r3FbdDfa//wLDxaUAiBnwLy3IDnKUADYGg7Av+k+PxCwo6wbUer1M125D9zfuU1QE0
-         iEAewFBevpHo065mIOMJ4RZZaVdpC+BJj6AzISNA=
-Date:   Fri, 15 May 2020 14:23:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Xiaochun Lee <lixiaochun.2888@163.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>
-Subject: Re: [PATCH v2] x86/PCI: Mark Power Control Unit as having
- non-compliant BARs
-Message-ID: <20200515192323.GA538104@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1589537271-46459-1-git-send-email-lixiaochun.2888@163.com>
+        s=default; t=1589570621;
+        bh=TuKsKP6cbt7gD83ko2QaqNWtZkkxPgW/pFRBoMPgw40=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kXG5ksATrfPQ9YZ98bZkSV7yFZnEEoxkrv61rl/aO77GO8la7+StdMay7mOAu8sDO
+         JPjDmL12Qy0RtsBkqUmMoFEUNc4xREd5P+gS/F1PWPDuaqcN0P4ftHGUB+aNV9CvQy
+         CFnBD7ljcndESEroYiJ6qA+nZ6PPagiFF8mti1ic=
+Date:   Fri, 15 May 2020 12:23:40 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCHv3 12/50] csky: Add show_stack_loglvl()
+Message-Id: <20200515122340.d0d93b7a29846934e161ef41@linux-foundation.org>
+In-Reply-To: <20200418201944.482088-13-dima@arista.com>
+References: <20200418201944.482088-1-dima@arista.com>
+        <20200418201944.482088-13-dima@arista.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 06:07:51AM -0400, Xiaochun Lee wrote:
-> From: Xiaochun Lee <lixc17@lenovo.com>
-> 
-> The device [8086:a26c] is a Power Control Unit of
-> Intel Ice Lake Server Processor and devices [8086:a1ec,a1ed]
-> are the Power Control Unit of Intel Xeon Scalable Processor,
-> kernel treats their pci BARs as a base address register that
-> leading to a boot failure like:
-> "pci 0000:00:11.0: [Firmware Bug]: reg 0x30: invalid BAR (can't size)".
+On Sat, 18 Apr 2020 21:19:06 +0100 Dmitry Safonov <dima@arista.com> wrote:
 
-Do you have a spec that says these are Power Control Units?  The spec
-I found for the C620 PCH claims these are all "MROM" devices related
-to "Enterprise Value Add", "Intel Management Engine", and "Innovation
-Engine" configuration.
+> Currently, the log-level of show_stack() depends on a platform
+> realization. It creates situations where the headers are printed with
+> lower log level or higher than the stacktrace (depending on
+> a platform or user).
+> 
+> Furthermore, it forces the logic decision from user to an architecture
+> side. In result, some users as sysrq/kdb/etc are doing tricks with
+> temporary rising console_loglevel while printing their messages.
+> And in result it not only may print unwanted messages from other CPUs,
+> but also omit printing at all in the unlucky case where the printk()
+> was deferred.
+> 
+> Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
+> an easier approach than introducing more printk buffers.
+> Also, it will consolidate printings with headers.
+> 
+> Introduce show_stack_loglvl(), that eventually will substitute
+> show_stack().
 
-I updated the commit log, added [8086:a26d] as mentioned in that spec,
-added a stable tag, and applied the patch below to pci/misc for v5.8.
-Let me know if that doesn't look right.
+The csky code has changed a lot in linux-next due to 18c07d23da5a
+("csky: Fixup calltrace panic").  I redid this patch as below.  Can we
+please review and test?
 
-> The symptoms in Ice Lake processor is:
-> "QU99 ICE LAKE ES1 HCC 24C 185W 3200 L-0"
-> 
-> The information of the device [8086:a26c] list as below:
-> 00:11.0 Unassigned class [ff00]: Intel Corporation Device a26c (rev 03)
->         Subsystem: Lenovo Device 7811
->         Flags: fast devsel, NUMA node 0
->         Expansion ROM at <ignored> [disabled]
->         Capabilities: [80] Power Management version 3
-> 
-> The symptoms in Xeon Scalable Processor is:
-> "Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz"
-> "Intel(R) Xeon(R) Gold 6252 CPU @ 2.00GHz"
-> 
-> The information of the Device [8086:a1ec] list as below:
-> 00:11.0 Unassigned class [ff00]: Intel Corporation C620 Series Chipset Family MROM 0 [8086:a1ec] (rev 09)
->         Subsystem: Lenovo Device [17aa:7805]
->         Latency: 0, Cache Line Size: 64 bytes
->         NUMA node: 0
->         Expansion ROM at <ignored> [disabled]
->         Capabilities: [80] Power Management version 3
-> 
-> There are no other BARs on this devices, so mark the PCU as having
-> non-compliant BARs, therefore we don't try to probe any of them.
-> 
-> Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
-> ---
->  arch/x86/pci/fixup.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> index e723559..d9abc67 100644
-> --- a/arch/x86/pci/fixup.c
-> +++ b/arch/x86/pci/fixup.c
-> @@ -563,6 +563,9 @@ static void twinhead_reserve_killing_zone(struct pci_dev *dev)
->   * Erratum BDF2
->   * PCI BARs in the Home Agent Will Return Non-Zero Values During Enumeration
->   * http://www.intel.com/content/www/us/en/processors/xeon/xeon-e5-v4-spec-update.html
-> + *
-> + * Device [8086:a26c]
-> + * Devices [8086:a1ec,a1ed]
->   */
->  static void pci_invalid_bar(struct pci_dev *dev)
->  {
-> @@ -572,6 +575,9 @@ static void pci_invalid_bar(struct pci_dev *dev)
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ec, pci_invalid_bar);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ed, pci_invalid_bar);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26c, pci_invalid_bar);
->  
->  /*
->   * Device [1022:7808]
-> -- 
-> 1.8.3.1
 
-commit 1574051e52cb ("x86/PCI: Mark Intel C620 MROMs as having non-compliant BARs")
-Author: Xiaochun Lee <lixc17@lenovo.com>
-Date:   Thu May 14 23:31:07 2020 -0400
+From: Dmitry Safonov <dima@arista.com>
+Subject: csky: add show_stack_loglvl()
 
-    x86/PCI: Mark Intel C620 MROMs as having non-compliant BARs
-    
-    The Intel C620 Platform Controller Hub has MROM functions that have non-PCI
-    registers (undocumented in the public spec) where BAR 0 is supposed to be,
-    which results in messages like this:
-    
-      pci 0000:00:11.0: [Firmware Bug]: reg 0x30: invalid BAR (can't size)
-    
-    Mark these MROM functions as having non-compliant BARs so we don't try to
-    probe any of them.  There are no other BARs on these devices.
-    
-    See the Intel C620 Series Chipset Platform Controller Hub Datasheet,
-    May 2019, Document Number 336067-007US, sec 2.1, 35.5, 35.6.
-    
-    [bhelgaas: commit log, add 0xa26d]
-    Link: https://lore.kernel.org/r/1589513467-17070-1-git-send-email-lixiaochun.2888@163.com
-    Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Cc: stable@vger.kernel.org
+Currently, the log-level of show_stack() depends on a platform
+realization.  It creates situations where the headers are printed with
+lower log level or higher than the stacktrace (depending on a platform or
+user).
 
-diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-index e723559c386a..0c67a5a94de3 100644
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -572,6 +572,10 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2fc0, pci_invalid_bar);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ec, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ed, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26c, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26d, pci_invalid_bar);
+Furthermore, it forces the logic decision from user to an architecture
+side.  In result, some users as sysrq/kdb/etc are doing tricks with
+temporary rising console_loglevel while printing their messages.  And in
+result it not only may print unwanted messages from other CPUs, but also
+omit printing at all in the unlucky case where the printk() was deferred.
+
+Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems an easier
+approach than introducing more printk buffers.  Also, it will consolidate
+printings with headers.
+
+Introduce show_stack_loglvl(), that eventually will substitute
+show_stack().
+
+[1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
+
+Link: http://lkml.kernel.org/r/20200418201944.482088-13-dima@arista.com
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+Cc: Guo Ren <guoren@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+ arch/csky/kernel/stacktrace.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+--- a/arch/csky/kernel/stacktrace.c~csky-add-show_stack_loglvl
++++ a/arch/csky/kernel/stacktrace.c
+@@ -91,14 +91,21 @@ static void notrace walk_stackframe(stru
  
- /*
-  * Device [1022:7808]
+ static bool print_trace_address(unsigned long pc, void *arg)
+ {
+-	print_ip_sym(pc);
++	print_ip_sym((const char *)arg, pc);
+ 	return false;
+ }
+ 
++void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
++		       const char *loglvl)
++{
++	pr_cont("Call Trace:\n");
++	walk_stackframe(task, NULL, print_trace_address, (void *)loglvl);
++}
++
+ void show_stack(struct task_struct *task, unsigned long *sp)
+ {
+ 	pr_cont("Call Trace:\n");
+-	walk_stackframe(task, NULL, print_trace_address, NULL);
++	walk_stackframe(task, NULL, print_trace_address, KERN_INFO);
+ }
+ 
+ static bool save_wchan(unsigned long pc, void *arg)
+_
+
