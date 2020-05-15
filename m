@@ -2,115 +2,125 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EDFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C74620657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D1520657
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgEOILQ (ORCPT
+        id S1727857AbgEOILw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:11:16 -0400
-Received: from mga14.intel.com ([192.55.52.115]:61049 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726714AbgEOILQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:11:16 -0400
-IronPort-SDR: JAX6Q+Tg8o8xjKomrkQQUc8QQ61vPtZbHM1qA5yq8ZkBWKptqgZvEiWJVqqUCFuDZEiUr6dQ9B
- TA8WieN4pn+A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 01:11:14 -0700
-IronPort-SDR: 0t00XxL70jqXX0GJ+KfI01HDFCWd+CcWGKRNnOh54ai/t1MavrOlvsWhqtaBew52cyYH1l2Jl7
- YKnzh+xc5pEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,394,1583222400"; 
-   d="scan'208";a="298350913"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by fmsmga002.fm.intel.com with ESMTP; 15 May 2020 01:11:10 -0700
-Date:   Fri, 15 May 2020 16:11:09 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>,
-        "Chen, Tim C" <tim.c.chen@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] mm/util.c: make vm_memory_committed() more accurate
-Message-ID: <20200515081109.GD69177@shbuild999.sh.intel.com>
-References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
- <1588922717-63697-3-git-send-email-feng.tang@intel.com>
- <20200515072307.GG29153@dhcp22.suse.cz>
+        Fri, 15 May 2020 04:11:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51034 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726714AbgEOILv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 04:11:51 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04F82MB8142346;
+        Fri, 15 May 2020 04:11:35 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 310x56wnxm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 May 2020 04:11:34 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04F82Y7Q148621;
+        Fri, 15 May 2020 04:11:34 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 310x56wnw3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 May 2020 04:11:34 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04F8B6FY010452;
+        Fri, 15 May 2020 08:11:31 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 3100ubd70b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 May 2020 08:11:31 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04F8BTOo26935298
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 May 2020 08:11:29 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E29A11C052;
+        Fri, 15 May 2020 08:11:29 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 725EB11C050;
+        Fri, 15 May 2020 08:11:27 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.199.53.165])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 15 May 2020 08:11:27 +0000 (GMT)
+Subject: Re: [PATCH] MAINTAINERS: adjust to livepatch .klp.arch removal
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200509073258.5970-1-lukas.bulwahn@gmail.com>
+ <bfe91b2d-e319-bf12-6a15-4f200d0e8ea4@linux.vnet.ibm.com>
+ <nycvar.YFH.7.76.2005142344230.25812@cbobk.fhfr.pm>
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Message-ID: <509c316f-5b34-2859-49aa-e4fe4a407428@linux.vnet.ibm.com>
+Date:   Fri, 15 May 2020 13:41:25 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515072307.GG29153@dhcp22.suse.cz>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <nycvar.YFH.7.76.2005142344230.25812@cbobk.fhfr.pm>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-15_02:2020-05-14,2020-05-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ mlxscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=824 impostorscore=0
+ adultscore=0 clxscore=1015 cotscore=-2147483648 lowpriorityscore=0
+ suspectscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005150066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 03:23:07PM +0800, Michal Hocko wrote:
-> On Fri 08-05-20 15:25:16, Feng Tang wrote:
-> > percpu_counter_sum_positive() will provide more accurate info.
+On 5/15/20 3:15 AM, Jiri Kosina wrote:
+> On Sat, 9 May 2020, Kamalesh Babulal wrote:
 > 
-> Why do we need that?
-
-This is a preparation for patch 3/3, which will enlarge the batch size
-of percpu-counter 'vm_committed_as'. Andi Kleen concerned that may
-hurt the accuracy for those readers (currently only /proc/meminfo
-and hyperV balloon drivers for status check)
-
-As in worst case, the deviation could be 'batch * nr_cpus', and
-with patch 3/3, that could be totalram_pages/16.
-
-Thanks,
-Feng
-
-> > Its time cost is about 800 nanoseconds on a 2C/4T platform and
-> > 2~3 microseconds on a 2S/36C/72T server in normal case, and in
-> > worst case where vm_committed_as's spinlock is under severe
-> > contention, it costs 30~40 microseconds for the 2S/36C/72T sever,
-> > which should be fine for its two users: /proc/meminfo and HV ballon
-> > driver's status trace per second.
+>>> Commit 1d05334d2899 ("livepatch: Remove .klp.arch") removed
+>>> arch/x86/kernel/livepatch.c, but missed to adjust the LIVE PATCHING entry
+>>> in MAINTAINERS.
+>>>
+>>> Since then, ./scripts/get_maintainer.pl --self-test=patterns complains:
+>>>
+>>>   warning: no file matches  F:  arch/x86/kernel/livepatch.c
+>>>
+>>> So, drop that obsolete file entry in MAINTAINERS.
+>>
+>> Patch looks good to me,  you probably want to add following architecture
+>> specific livepatching header files to the list:
+>>
+>> arch/s390/include/asm/livepatch.h
+>> arch/powerpc/include/asm/livepatch.h
 > 
-> OK, this explains that the additional overhead is not terrible but there
-> is no actual information on why the imprecision is a problem.
+> Good point, thanks for spotting it Kamalesh. I've queued the patch below 
+> on top.
 > 
-> > Signed-off-by: Feng Tang <feng.tang@intel.com>
-> > ---
-> >  mm/util.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/mm/util.c b/mm/util.c
-> > index 988d11e..3de78e9 100644
-> > --- a/mm/util.c
-> > +++ b/mm/util.c
-> > @@ -774,7 +774,7 @@ struct percpu_counter vm_committed_as ____cacheline_aligned_in_smp;
-> >   */
-> >  unsigned long vm_memory_committed(void)
-> >  {
-> > -	return percpu_counter_read_positive(&vm_committed_as);
-> > +	return percpu_counter_sum_positive(&vm_committed_as);
-> >  }
-> >  EXPORT_SYMBOL_GPL(vm_memory_committed);
-> >  
-> > -- 
-> > 2.7.4
 > 
-> -- 
-> Michal Hocko
-> SUSE Labs
+
+Thanks, Jiri. I realized later, that the lib/livepatch directory also needs
+to be included in the list of files maintained under livepatch. Earlier, this
+week I had sent a patch to the mailing list that includes both arch
+headers and lib/livepatch to the list of files, the link to the patch is:
+
+https://lore.kernel.org/live-patching/20200511061014.308675-1-kamalesh@linux.vnet.ibm.com/
+
+
+-- 
+Kamalesh
