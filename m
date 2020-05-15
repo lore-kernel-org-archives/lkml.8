@@ -2,182 +2,109 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD17C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08EA120709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589501149;
-	bh=jQ3KvK9MnWgON7TlhG8OH9YLXkkEmuhoZEe3lPN4/fw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xG5nFyc2KRyXkuLqc3knMSeI0dHOjHZK9PEFqeKFqylXeV2H7lDDuGKjGLG+7/+cR
-	 txS51tYKFmSlJ1Z+fEgEXvRRMj4CwpDBB95Lg0qFxlpvnANuQp/RfKDd2tIqylSXXX
-	 5yNbVQIEkMYM5vWVI+L2rJ4bmaJjkff2oXwzhvLo=
+	by mail.kernel.org (Postfix) with ESMTP id 49B4B20727
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:09:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NczCZ3UG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgEOAFs (ORCPT
+        id S1728133AbgEOAJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 20:05:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbgEOAFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 20:05:48 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F9AF2065C;
-        Fri, 15 May 2020 00:05:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589501147;
-        bh=jQ3KvK9MnWgON7TlhG8OH9YLXkkEmuhoZEe3lPN4/fw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I5GLDWFvfdHE7LIGIo0NGa6md2vEN7QltkvX4geczWjfger2//MrtB0eh5HbUHCna
-         +jN02+WmAQ78Ci9q8+F/bvQCAGTZyBiDx6zSB2uK9RhbRzzbNuDCa8Y7CaStFSryOD
-         hEpPH9bkm3kTkuNNjGDAy69230ZwgUsC5d0FMg9Y=
-Date:   Thu, 14 May 2020 19:10:25 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Thu, 14 May 2020 20:09:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbgEOAJ0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 20:09:26 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4304CC061A0C;
+        Thu, 14 May 2020 17:09:25 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 23so115799pfy.8;
+        Thu, 14 May 2020 17:09:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ah0+2uSyJ1tzkppjBImuG7UEaIqlnYN0RR1RbLnlBGY=;
+        b=NczCZ3UGdi1OaVj2w53MUQTPs1fmLRzdv0SwUbupu6J8bdYITMhm+VNz1ld5OrdU/Q
+         GEwZB/00I5bYWvfqzl1AopN2rHHz52xDbXU9zMb36xuCM8KQSHKb/Ti+nxZb/5/ylX6Z
+         bnCFqUnNCSYlgjdxuF+sVWVm61hdgYYxjO4TRDqD0DhOIYz459K/rSuMoOR4kbw6Kss3
+         ojChb4Bf91wZ7mMCDQw9zBZ4gc6Idd2AjRXopqCFoF0hX2wNLxAK98xi1LfLPsKVtMbY
+         z0Ys6rAKegzXN1MvvwbHeQOqMo86dD601BR/2Qbk1PUjmq5OQnrZILkQ4P18+o65zM9K
+         oQRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ah0+2uSyJ1tzkppjBImuG7UEaIqlnYN0RR1RbLnlBGY=;
+        b=CjkYazk+iC4C1WlHf7WPCpXXO0c5JY8fuNwHiy2iWPhO32rkOf5gCpgdI7TEKFO+LO
+         QwovoOBRUnvtJDjztvVboy0980FxKp0P6Gt7SnKhpzZMoVlkkMBj/LxVw7ZJ0ujjQCVb
+         2wJT8XBEaCrQMBMuWHjkDTsYvCuKW27oIZq/b2NyOj+qQhLjhoM9GWVLU7+Euci1nstF
+         QWrCyoGl9PdDuPz+Wiz8O4+Q4Z4kNfle7HpT8vEo0W+T6KcWlgG5a2uayGm5MljXxoys
+         pViKwALoKm8tgDAqj3q4pxyEsLLvZvJ7JaIlap25+BhL6NJEsZT/YyO6feaNZIDwwToV
+         vv9A==
+X-Gm-Message-State: AOAM530AThrJ/6dSlYUdXdQ8RNF2I2/SKyme4nTCnWkoiN0NMA9QRyO2
+        Vkl1Baf1s890+wkUM2q5cNZt51Z4
+X-Google-Smtp-Source: ABdhPJx99L0ylPt+Bg7Btel5BxtMlGxF6reoE1F7WRl4oCm9enpKkLtCR88stej65RVFvBhdBqoILg==
+X-Received: by 2002:a63:3d7:: with SMTP id 206mr600878pgd.45.1589501364772;
+        Thu, 14 May 2020 17:09:24 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:9720])
+        by smtp.gmail.com with ESMTPSA id b11sm278737pgq.50.2020.05.14.17.09.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 17:09:23 -0700 (PDT)
+Date:   Thu, 14 May 2020 17:09:20 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Alan Maguire <alan.maguire@oracle.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Yonghong Song <yhs@fb.com>, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH perf/core] perf intel-pt: Fix clang build failure in
- intel_pt_synth_pebs_sample
-Message-ID: <20200515001025.GU4897@embeddedor>
-References: <20200513234738.GA21211@embeddedor>
- <20200514131030.GL5583@kernel.org>
- <20200514150601.GS4897@embeddedor>
- <CAP-5=fWTCFx80Hd_97_4AxFV4KsRyYptLbQfw=XVw_j8i-EAyg@mail.gmail.com>
- <20200514220934.GT4897@embeddedor>
- <CAP-5=fV5URsHn+SpW8N4XjkKT1vt2T1Us5FsqaJsoOW0zn=OxQ@mail.gmail.com>
+        Network Development <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 bpf-next 4/7] printk: add type-printing %pT format
+ specifier which uses BTF
+Message-ID: <20200515000920.2el4jyrwqqbd6jw3@ast-mbp.dhcp.thefacebook.com>
+References: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com>
+ <1589263005-7887-5-git-send-email-alan.maguire@oracle.com>
+ <1b63a6b193073674b6e0f9f95c62ce2af1b977cc.camel@perches.com>
+ <CAADnVQK8osy9W8-u-K=ucqe5q-+Uik41fBw6d-SfG-m6rgVwDQ@mail.gmail.com>
+ <397fb29abb20d11003a18919ee0c44918fc1a165.camel@perches.com>
+ <28145b05ee792b89ab9cb560f4f9989fd3d5d93b.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fV5URsHn+SpW8N4XjkKT1vt2T1Us5FsqaJsoOW0zn=OxQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <28145b05ee792b89ab9cb560f4f9989fd3d5d93b.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 03:46:05PM -0700, Ian Rogers wrote:
-> On Thu, May 14, 2020 at 3:04 PM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
-> >
-> > On Thu, May 14, 2020 at 12:06:48PM -0700, Ian Rogers wrote:
-> > > On Thu, May 14, 2020 at 8:01 AM Gustavo A. R. Silva
-> > > <gustavoars@kernel.org> wrote:
-> > > >
-> > > > On Thu, May 14, 2020 at 10:10:30AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > Em Wed, May 13, 2020 at 06:47:38PM -0500, Gustavo A. R. Silva escreveu:
-> > > > > > Fix the following build failure generated with command
-> > > > > > $ make CC=clang HOSTCC=clang -C tools/ perf:
-> > > > > >
-> > > > > > util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
-> > > > > >                         struct branch_stack br_stack;
-> > > > > >                                             ^
-> > > > > > 1 error generated.
-> > > > > >
-> > > > > > Fix this by reordering the members of struct br.
-> > > > >
-> > > > > Yeah, I noticed that as far back as with ubuntu 16.04's clang:
-> > > > >
-> > > > > clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)
-> > > > >
-> > > > > util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU
-> > > > >       extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
-> > > > >                         struct branch_stack br_stack;
-> > > > >                                             ^
-> > > > > 1 error generated.
-> > > > >
-> > > > >
-> > > > > Will fold this with the bug introducing the problem to avoid bisection
-> > > > > problems.
-> > > > >
-> > > >
-> > > > I agree. Also, the commit hash of the "Fixes" tag only applies to the
-> > > > perf/core branch and, I guess that might create confusion.
-> > >
-> > >
-> > > So while this fixes the warning I believe it breaks the intent of the code.
-> > >
-> > > tools/perf/util/branch.h:
-> > > struct branch_stack {
-> > >        u64                     nr;
-> > >        u64                     hw_idx;
-> > >        struct branch_entry     entries[];
-> > > };
-> > >
-> > > tools/perf/util/intel-pt.c:
-> > >                struct {
-> > >                        struct branch_stack br_stack;
-> > >                        struct branch_entry entries[LBRS_MAX];
-> > >                } br;
-> > >
-> > > The array in br is trying to extend branch_stack's entries array. You
-> > > might have to do something like:
-> > >
-> > > alignas(alignof(branch_stack)) char storage[sizeof(branch_stack) +
-> > > sizeof(branch_entry) * LBRS_MAX];
-> > > struct branch_stack *br = &storage;
-> > >
-> > > malloc/free may be nicer on the eyeballs.
-> > >
-> >
-> > Yep, I'd go for zalloc/free. There are a couple of places where dynamic
-> > memory is being allocated for struct branch_stack:
-> >
-> > tools/perf/util/cs-etm.c-256-   if (etm->synth_opts.last_branch) {
-> > tools/perf/util/cs-etm.c:257:           size_t sz = sizeof(struct branch_stack);
-> > tools/perf/util/cs-etm.c-258-
-> > tools/perf/util/cs-etm.c-259-           sz += etm->synth_opts.last_branch_sz *
-> > tools/perf/util/cs-etm.c-260-                 sizeof(struct branch_entry);
-> > tools/perf/util/cs-etm.c-261-           tidq->last_branch = zalloc(sz);
-> >
-> > tools/perf/util/thread-stack.c-148-     if (br_stack_sz) {
-> > tools/perf/util/thread-stack.c:149:             size_t sz = sizeof(struct branch_stack);
-> > tools/perf/util/thread-stack.c-150-
-> > tools/perf/util/thread-stack.c-151-             sz += br_stack_sz * sizeof(struct branch_entry);
-> > tools/perf/util/thread-stack.c-152-             ts->br_stack_rb = zalloc(sz);
-> >
-> > there is even function intel_pt_alloc_br_stack().
-> >
-> > Just out of curiosity, why the need of such a hack in this case (the
-> > on-stack extension of branch_stack's entries array)?
-> 
-> My guess would be that the lbr size is an architectural constant and
-> so avoiding malloc/free in what could be a hot loop was desirable.
-> As this is part of a larger patch set, is this the only place this
-> problem has been encountered? Perhaps a macro could perform the
+On Thu, May 14, 2020 at 04:43:24PM -0700, Joe Perches wrote:
+>  The ``BTF_INT_BITS()`` specifies the number of actual bits held by this int
+>  type. For example, a 4-bit bitfield encodes ``BTF_INT_BITS()`` equals to 4.
+> diff --git a/include/uapi/linux/btf.h b/include/uapi/linux/btf.h
+> index 5a667107ad2c..36f309209786 100644
+> --- a/include/uapi/linux/btf.h
+> +++ b/include/uapi/linux/btf.h
+> @@ -90,6 +90,7 @@ struct btf_type {
+>  #define BTF_INT_SIGNED	(1 << 0)
+>  #define BTF_INT_CHAR	(1 << 1)
+>  #define BTF_INT_BOOL	(1 << 2)
+> +#define BTF_INT_HEX	(1 << 3)
 
-Yep. I just built linux-next --which contains all the flexible-array
-conversions-- with Clang --GCC doesn't catch this issue, not even GCC
-10-- and I don't see any other issue like this.
-
-I mean, I have run into these other two:
-
-https://lore.kernel.org/lkml/20200505235205.GA18539@embeddedor/
-https://lore.kernel.org/lkml/20200508163826.GA768@embeddedor/
-
-but those are due to the erroneous application of the sizeof operator
-to zero-length arrays.
-
-> complicated stack allocation I suggested. It may be nice to save
-> cycles if code this pattern is widespread and the code hot.
-> 
-
-Apparently, this is the only instace of this sort of issue in the whole
-codebase.
-
-Thanks
---
-Gustavo
+Nack.
+Hex is not a type.
