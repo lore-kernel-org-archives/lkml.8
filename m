@@ -2,121 +2,110 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE501C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E995FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B82F12065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54022065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:57:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jZGcHekf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgEODvW (ORCPT
+        id S1728355AbgEOD5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 23:51:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:48118 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726665AbgEODvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 23:51:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C82741042;
-        Thu, 14 May 2020 20:51:21 -0700 (PDT)
-Received: from [192.168.0.129] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B4B83F305;
-        Thu, 14 May 2020 20:51:19 -0700 (PDT)
-Subject: Re: [RFC] mm/vmstat: Add events for THP migration without split
-To:     Zi Yan <ziy@nvidia.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-References: <1589257372-29576-1-git-send-email-anshuman.khandual@arm.com>
- <67C72AD3-120C-4825-B67B-AECD4245EC4E@nvidia.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <7b4504c8-8583-d426-fef1-4c14986798c3@arm.com>
-Date:   Fri, 15 May 2020 09:20:43 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 14 May 2020 23:57:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726665AbgEOD5Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 23:57:16 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AEB1C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 20:57:16 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id 79so1224464iou.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 20:57:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nOIJwK9iadOQS8VS9oX0d0eobJTm/S5dRf232DfhV2Q=;
+        b=jZGcHekf36InUx+/RT41yJ39LwB4eBQd7vT66ue0xAbo5xTuZa/i0CJGeuQo7uasFj
+         KWR4W7zbDPi+yq6TlwQ/zf00VGEQsa9I4hgKLRy95YYxTa/7/vLLZ4zckSK3fiLThmnp
+         7APyzonChcoUD6QuyiXT4zmroeoUonhrx7iX00yfVl9XCl3PDxXPwMf1n6VJgz6HgOY+
+         A99tLzeweiB5AaZ9lVTuw1dif9/03YSktMiID+xWBMBqbu3KL5JcKrJE0YqaeoLj+OtY
+         31xcKDIp1GOlgt95Lo/67hHz6ooA4vlcpH+Xi4ndyRh2QHgKM65UGQ6Ra684eiFjo8Jq
+         6sig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nOIJwK9iadOQS8VS9oX0d0eobJTm/S5dRf232DfhV2Q=;
+        b=ITVTdth8inqw7ESbDb4KWW3unb6Xh6GDJzkk1EEUWPromFe6SzI77C3nejEaxt270B
+         oLamgCkIn+d4Zq7+10GvgX+6qYMiC/GIeQi+/fJ8sJAMoaFQ3ZQzsYo5jBbPbxw93R7+
+         jZBad8hP/F+miMwB4Z8rM4GzbhEkftfvfzYXRP1TJuiME6NQPdKGdMURoMpZa/FRTnPs
+         Pbq3ar7Ga2xhbi/gNmNVVpeVddEObdGBtG1oXOuR5Apl1TkLvS1ZDhukJ1wEutZIYjOF
+         jwzCBCGqOx5gXlrb9R7hTxekPVtN3iuzWfbGoCKl2WtKqF7WrGJSVPS4TUYFZwsKbn0U
+         j97w==
+X-Gm-Message-State: AOAM531eecPC6xl8ePc0pNr8o7+8rWmSkF94pHDlmCRtDxOT/fBNHlAT
+        GTXHXO+SRBMovQ6E4wJosiTsd6D4E1zA2JZI361Jpw==
+X-Google-Smtp-Source: ABdhPJz4yECgbKlvcTa70WHzfNcxbCgYqFO0xfvcC6KgNtx0n8f7dausExrVZi/vmEvOALHEs8Dq89VdSz06od9lItk=
+X-Received: by 2002:a6b:e60b:: with SMTP id g11mr1143301ioh.96.1589515035477;
+ Thu, 14 May 2020 20:57:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <67C72AD3-120C-4825-B67B-AECD4245EC4E@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <1585718145-29537-3-git-send-email-sanm@codeaurora.org> <878shu4uwk.fsf@kernel.org>
+ <875zcy4uuj.fsf@kernel.org> <20200514171352.GP4525@google.com> <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org>
+In-Reply-To: <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org>
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+Date:   Fri, 15 May 2020 09:27:03 +0530
+Message-ID: <CAKohpon+JBpV3fC7j=rhc1R4gi_mVG6teBDrE8Yryd4QXfw9bw@mail.gmail.com>
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
+        <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 15 May 2020 at 02:33, Georgi Djakov <georgi.djakov@linaro.org> wrote:
 
-On 05/14/2020 07:58 PM, Zi Yan wrote:
-> On 12 May 2020, at 0:22, Anshuman Khandual wrote:
-> 
->> Add the following new trace events which will help in validating migration
->> events involving PMD based THP pages.
->>
->> 1. THP_PMD_MIGRATION_ENTRY_SET
->> 2. THP_PMD_MIGRATION_ENTRY_REMOVE
->>
->> There are no clear method to confirm whether a THP migration happened with
->> out involving it's split. These trace events along with PGMIGRATE_SUCCESS
->> and PGMIGRATE_FAILURE will provide additional insights. After this change,
->>
->> A single 2M THP (2K base page) when migrated
->>
->> 1. Without split
->>
->> ................
->> pgmigrate_success 1
->> pgmigrate_fail 0
->> ................
->> thp_pmd_migration_entry_set 1
->> thp_pmd_migration_entry_remove 1
->> ................
->>
->> 2. With split
->>
->> ................
->> pgmigrate_success 512
->> pgmigrate_fail 0
->> ................
->> thp_pmd_migration_entry_set 0
->> thp_pmd_migration_entry_remove 0
->> ................
->>
->> pgmigrate_success as 1 instead of 512, provides a hint for possible THP
->> migration event. But then it gets mixed with normal page migrations over
->> time. These additional trace events provide required co-relation.
-> 
-> To track successful THP migrations, the code below should work, right?
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index b1092876e537..d394f5331288 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1220,6 +1220,8 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
->          * we want to retry.
->          */
->         if (rc == MIGRATEPAGE_SUCCESS) {
-> +               if (PageTransHuge(newpage))
-> +                       count_vm_event(THP_PMD_MIGRATION_SUCCESS);
+> ---8<---
+> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> index 206caa0ea1c6..6661788b1a76 100644
+> --- a/drivers/usb/dwc3/Kconfig
+> +++ b/drivers/usb/dwc3/Kconfig
+> @@ -129,6 +129,7 @@ config USB_DWC3_QCOM
+>         tristate "Qualcomm Platform"
+>         depends on ARCH_QCOM || COMPILE_TEST
+>         depends on EXTCON || !EXTCON
+> +       depends on INTERCONNECT || !INTERCONNECT
 
-Thats right.
+Again, as I said yesterday. This looks incorrect and may not fix the problem..
 
->                 put_page(page);
->                 if (reason == MR_MEMORY_FAILURE) {
->                         /*
+With this we will be able to select USB_DWC3_QCOM even when INTERCONNECT=m.
 
-Another THP_PMD_MIGRATION_FAILURE event in migrate_pages() when the THP gets
-split as a huge page could not be allocated. Both THP_PMD_MIGRATION_SUCCESS
-and THP_PMD_MIGRATION_FAILURE will provide a better understanding regarding
-THP migration events on the system.
+What we perhaps need here is:
+depends on INTERCONNECT != m
 
-> 
-> Maybe you could give more details on why you want to add the THP migration event and
-> how you are going to use the event in your use case. That would be very helpful to this
-> code review. Are you going to do anything if you see THP migration failures?
-
-Not at the moment. Like other VM events these new ones will provide required
-statistics (and better understanding) on THP migration which can be used to
-improve it further. Follows the same good old principle, if we cannot measure
-we cannot improve.
+--
+viresh
