@@ -2,134 +2,122 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FDDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB4162078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A2A220671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EINNHW9t"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DdyZcp26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgEOOjk (ORCPT
+        id S1728436AbgEOOju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36036 "EHLO
+        Fri, 15 May 2020 10:39:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726719AbgEOOjh (ORCPT
+        by vger.kernel.org with ESMTP id S1727097AbgEOOhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:39:37 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE8EC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 07:39:37 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id x5so2976631ioh.6
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 07:39:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G4hpPbKuo/eM3pj3/8Bij0gexeSDdOJHguLYolZpnKs=;
-        b=EINNHW9tIkICYl47a8AU63VrYU5C2scpuARJTsP/TsQ5cQzHBrJb64es1TdQNfzB0Z
-         kx7VDchChuQupqL21ecTM6d/vWEDCBR9/Mj/T6gCVP0egVvjgWc7NmEIgxAoa3uMxKpz
-         /K88McJ4rzVlfbFGm6J2bLOCcOht/xcZvDaX00RYyCcawkdq3Actzuwtq2TK8fl4s2Lg
-         avUNEFz4X/u6f28O1W0p/sBimqX3ruf1yDupSHCBp+B2z/g1atEgcEquvjabpI5aDhUr
-         ADEyA1YhRpY5L0XbORk0kp3IMCV2isKMD5faV9CGzmeFxs+bulJlaVVu/F6kP1dZnPac
-         8d0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G4hpPbKuo/eM3pj3/8Bij0gexeSDdOJHguLYolZpnKs=;
-        b=WueS372cuLqqi1HfJkZW4Df43YqDUHW5Lw+xsscbEcsSJBA9r5Az3qzFPHDY0HshnS
-         XYgxLNC5FGqlgCDEdY6FkdBEDNn6mNwbCuKWx1wysTKqi652wxxjjO9GLP0u2zSKHBi3
-         YxHypDSzXrEHM5WENHi0SiCCV1W5CW/YiqJ65Y6ZetbKnfNE/6p/ELhhEd6xkcZAarXg
-         KZvZmDb8MmFR/jq8z5vzFZV2HHd6t9Wc2GWR4NA79YZFS/Ulfg0PAY9Hl8gJ4VEUbYbi
-         a1pIR5bbcT80ucatJAcyEfGp2/tiFxgO5Muo0Uhji5DWP5ksKEffQh+WQAb/ZevA+T0o
-         Homw==
-X-Gm-Message-State: AOAM533f+zSz6CfxNFreLBd6J/a0ImX79fahLq/fLRJ/+HO7g6iDj2qg
-        RWCeHNQSvgsm0rY+rfd7fCb/9cZugshGzfXkkrc=
-X-Google-Smtp-Source: ABdhPJwzD0QkHIguS5g7gqQWdRioLG5NpbqHvkBIRDn2sKkJGrf0li0RxdR/lDgkeQQFPY4463LkRvsZOTwKU4ubiHY=
-X-Received: by 2002:a05:6638:158:: with SMTP id y24mr3441021jao.43.1589553576465;
- Fri, 15 May 2020 07:39:36 -0700 (PDT)
+        Fri, 15 May 2020 10:37:37 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71DE8C05BD0A;
+        Fri, 15 May 2020 07:37:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=9OkRp1p3UvpvhrMloqYZ5BRhhjLRydsct9faQtkGwTk=; b=DdyZcp26/ow147BL9gUGZZnER7
+        vcCTRmMp36OtMyz9pn19PFkols5p+Nj3kQQ+jlz3xQh4MH/sjs2KmvQIAZVQQceUPBHHlCJNPsBhE
+        +V4VFDQRDsfz4ppjxrPcVC0i3Znl6X0WZ+eB02i4ZAUvjHiteAVQo16H/TU3CzVSOW9lJG0ALia4r
+        ovxaKmklN2eUI0ytL0Xzw2pUigOnnXYHm4EAbYD4UjXdBFdaCsw5Eft4WE8hp7WGJOJZgD6A9e+WW
+        z7TDLg9mqbBwkpvdSpQOyl6PRMV3rhIGbixYdQJOTjhWvpkxEleX4gG2HEIv1CzggF07ZucRfNtL/
+        pgIYQmMA==;
+Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZbSe-0004HF-J3; Fri, 15 May 2020 14:37:17 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Roman Zippel <zippel@linux-m68k.org>
+Cc:     Jessica Yu <jeyu@kernel.org>, Michal Simek <monstr@monstr.eu>,
+        x86@kernel.org, linux-alpha@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-c6x-dev@linux-c6x.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 10/29] c6x: use asm-generic/cacheflush.h
+Date:   Fri, 15 May 2020 16:36:27 +0200
+Message-Id: <20200515143646.3857579-11-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200515143646.3857579-1-hch@lst.de>
+References: <20200515143646.3857579-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200515124710.16439-1-laijs@linux.alibaba.com> <20200515130030.GV2957@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200515130030.GV2957@hirez.programming.kicks-ass.net>
-From:   Lai Jiangshan <jiangshanlai+lkml@gmail.com>
-Date:   Fri, 15 May 2020 22:39:25 +0800
-Message-ID: <CAJhGHyAMOQ7Bp8kYF7urp572SguFjiLs5PmqQvTKAkwfwBrOKQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] rbtree_latch: quit searching when reaching to maximum depth
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Michel Lespinasse <walken@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Woodhouse <David.Woodhouse@intel.com>,
-        Rik van Riel <riel@redhat.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 9:04 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, May 15, 2020 at 12:47:06PM +0000, Lai Jiangshan wrote:
-> > lib/rbtree.c has ensured that there is not possible to
-> > inadvertently cause (temporary) loops in the tree structure
-> > as seen in program order of the modifier. But loop is still
-> > possible to be seen in searcher due to CPU's reordering.
-> >
-> > for example:
-> > modifier                              searcher
-> >
-> > left rotate at parent
-> > parent->rb_right is node
-> >                                       search to parent
-> >                                       parent->rb_right is node
-> >                                    +->see node->rb_left changed
-> > WRITE_ONCE(parent->rb_right, tmp);-+ |  node->rb_left is parennt
-> > no smp_wmb(), some arch can        | |
-> > reorder these two writes           | |  loop long between
-> > WRITE_ONCE(node->rb_left, parent);-+-+  parent and node
-> >                                  |
-> >                                  +--->finally see
-> >                                       parent->rb_right
-> >
-> > The long loop won't stop until the modifer's CPU flushes
-> > its writes. Too avoid it, we should limit the searching depth.
->
-> Cute, have you actually observed this? Did you have performance issues?
+C6x needs almost no cache flushing routines of its own.  Rely on
+asm-generic/cacheflush.h for the defaults.
 
-I can only test it on x86 by now, which implies smp_wmb() between
-writes. I haven't observed any thing wrong. I'm just imaging
-it on some other ARCHs.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/c6x/include/asm/cacheflush.h | 19 +------------------
+ 1 file changed, 1 insertion(+), 18 deletions(-)
 
-I accidentally found this part of code when I searched for
-whether there is any attempt again to use rbtree with RCU, and
-whether there are the cases besides speculative page fault.
+diff --git a/arch/c6x/include/asm/cacheflush.h b/arch/c6x/include/asm/cacheflush.h
+index 4540b40475e6c..10922d528de6d 100644
+--- a/arch/c6x/include/asm/cacheflush.h
++++ b/arch/c6x/include/asm/cacheflush.h
+@@ -16,21 +16,6 @@
+ #include <asm/page.h>
+ #include <asm/string.h>
+ 
+-/*
+- * virtually-indexed cache management (our cache is physically indexed)
+- */
+-#define flush_cache_all()			do {} while (0)
+-#define flush_cache_mm(mm)			do {} while (0)
+-#define flush_cache_dup_mm(mm)			do {} while (0)
+-#define flush_cache_range(mm, start, end)	do {} while (0)
+-#define flush_cache_page(vma, vmaddr, pfn)	do {} while (0)
+-#define flush_cache_vmap(start, end)		do {} while (0)
+-#define flush_cache_vunmap(start, end)		do {} while (0)
+-#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+-#define flush_dcache_page(page)			do {} while (0)
+-#define flush_dcache_mmap_lock(mapping)		do {} while (0)
+-#define flush_dcache_mmap_unlock(mapping)	do {} while (0)
+-
+ /*
+  * physically-indexed cache management
+  */
+@@ -49,14 +34,12 @@ do {								  \
+ 			(unsigned long) page_address(page) + PAGE_SIZE)); \
+ } while (0)
+ 
+-
+ #define copy_to_user_page(vma, page, vaddr, dst, src, len) \
+ do {						     \
+ 	memcpy(dst, src, len);			     \
+ 	flush_icache_range((unsigned) (dst), (unsigned) (dst) + (len)); \
+ } while (0)
+ 
+-#define copy_from_user_page(vma, page, vaddr, dst, src, len) \
+-	memcpy(dst, src, len)
++#include <asm-generic/cacheflush.h>
+ 
+ #endif /* _ASM_C6X_CACHEFLUSH_H */
+-- 
+2.26.2
 
->
-> > There are no more than (1<<BITS_PER_LONG)-1 nodes in the tree.
-> > And the max_depth of a tree is no more than 2*lg(node_count+1),
-> > which is no mare than 2*BITS_PER_LONG.
-> >
-> > So the serarch should stop when diving down up to
-> > 2*BITS_PER_LONG depth.
->
-> Arguably you can have a larger key space, but I think due to memory
-> constraints this limit still isn't wrong. But I do feel you need a
-> comment with that.
-
-Sure, I will add some comments about why "2*BITS_PER_LONG" in code.
-
-But how it could be larger key space? there are not more than
-(1<<BITS_PER_LONG) bytes in the kernel dereferencable address
-space, and (1<<BITS_PER_LONG)/sizeof(rb_node) must be less than
-(1<<BITS_PER_LONG)-1.
