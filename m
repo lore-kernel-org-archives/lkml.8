@@ -2,110 +2,113 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA8F2078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 147CD20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:18:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UCgyVCrL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rS0ZcSw0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgEOORu (ORCPT
+        id S1726497AbgEOOSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:17:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60768 "EHLO
+        Fri, 15 May 2020 10:18:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726160AbgEOORr (ORCPT
+        by vger.kernel.org with ESMTP id S1726140AbgEOOSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:17:47 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53B39C061A0C;
-        Fri, 15 May 2020 07:17:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=v1b+koX9aKkCpLP5KsbA1c0ns2JdCdDM2wQyt2wy9Nw=; b=UCgyVCrLlY2GcbgEUFlxjexZvP
-        X13+Bvt5Sm10QJmbkpFC1yqWZ0sAV93SeLj9hIHCPrBJQhtGifoVVqLXkkVmVR3ggXKvb3yAGxjMl
-        cJenei+aE7tY8vixRd8femgEShi1xghEBxzR5PnP0aNnzxrm/qBS7/C5tk8efpIKAP0/35Uem6tvP
-        yKztd0CBKbKSMlO3SPXagJeQHb+dNEy0Xel0VZ27ymdl+WB7dLEyZVxy+E6Wyy2T+k2ep7iX4TiKz
-        jO0oNVtpNCynaAzhjtqe67zFmBtDHJngqrSzyLpQ2iRu5OOVAVER+2AwqMGnR79ZDIu2rGKIcVQnz
-        /7E2PLGg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZb92-0002JY-HL; Fri, 15 May 2020 14:17:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5CB40300455;
-        Fri, 15 May 2020 16:16:57 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 47D1320267E67; Fri, 15 May 2020 16:16:57 +0200 (CEST)
-Date:   Fri, 15 May 2020 16:16:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>, rjw@rjwysocki.net,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v3 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
-Message-ID: <20200515141657.GF2940@hirez.programming.kicks-ass.net>
-References: <20200515140023.25469-1-joro@8bytes.org>
+        Fri, 15 May 2020 10:18:23 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9A2AC061A0C;
+        Fri, 15 May 2020 07:18:22 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id m7so936227plt.5;
+        Fri, 15 May 2020 07:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=4XXkbZJb0W8CP7Lg+be2a0F3GhBQ7+qsR6HQdEwv8y8=;
+        b=rS0ZcSw0dC2H0Yxsp0LaGoGev6AxzL4/6qr3SNtVUIHEtF9ET3KtK9GWnY6bbeko5i
+         qrtu6zbFuFnYa+H52wNA7z7GFUeUaiqApey3cdAurqpB73mZVz/9yjpuUY2mh0XQ4gKH
+         GwhBqSUlLFVsmRy6h/edUT/iLex3CPCXL0nDaLTE/30DIgcNg+jgoVV4j9376HbavSTF
+         4ibaZWVzJ/mUncIvxsZzqwHfKHm36gLy1PaDrKjlO1aKntFKlgRwvPMRVyVo9b28Z+Y9
+         xV3eKPI6hpgALxvkY22SrNPGTH8+NxkJX6YQluglFvjgMgDWHjxH1hFP1NViEHEkV+v0
+         HSpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4XXkbZJb0W8CP7Lg+be2a0F3GhBQ7+qsR6HQdEwv8y8=;
+        b=QDhoI63Rq8G5PMKt4dMIIA2y3XH1qp8OFxdrwQ3KMVfrFDs7z0SOv9GcMCrUj5/r4Q
+         9wJGxLDWW2+5U7Ty6WgtCdfH0YaodksyvAUynvjWzbxcYCY1jcsApIuJfxUjU53rx6LJ
+         Cv3dM6mU91/YdwgU6h/4qn44wNjedW4KkIr4Pp+aaDhZtF2MJoCQP0Gl4QR4U1hkdOuM
+         U6FtwBPIA/a6nHin0+wPDiZUl7ilgsUVtCuj2WEhi7umu6kLSIPu6Q8UyGNfQCmDnRIO
+         x406zg5v7etG2ezVGhpLzsVT+Um6JX57Ifpv6KnSOXbNZB4lLzM26Rl2dDsjodkGoTzs
+         hp0w==
+X-Gm-Message-State: AOAM531TB4513B12aPeQuOHd1K4mBmwtCQtnzNDuiachchqVLn7lQ//W
+        FeiAcdb2NVJEWE0Uv1P6QlEKkPbnfTWd5EoIE5c=
+X-Google-Smtp-Source: ABdhPJwVG2t0IjBDgnQi/UcrLLlYIdFlGzj1+tols8vw2NgjaKGD2LS09KMaEQvEcmheZL66S1lhbUvoOvDkc5mpl7I=
+X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr3885831pjb.129.1589552302315;
+ Fri, 15 May 2020 07:18:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515140023.25469-1-joro@8bytes.org>
+References: <20200512204009.4751-1-bernhardu@mailbox.org> <2656984b-3eec-c6d0-f992-8f1f8973fe3e@redhat.com>
+ <CAHp75VejzaZL26ztQMFGjAAMC3B8mkSnXSvGhyFeiHUbUUpp=w@mail.gmail.com> <4787d347-b761-6283-7f9d-34c1a11b909f@mailbox.org>
+In-Reply-To: <4787d347-b761-6283-7f9d-34c1a11b909f@mailbox.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 15 May 2020 17:18:15 +0300
+Message-ID: <CAHp75VfAeyMnwoJi8P0d4Gs5dziUQYhPGzS2fmev00UiRZ6vaQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the Trekstor
+ Yourbook C11B
+To:     =?UTF-8?Q?Bernhard_=C3=9Cbelacker?= <bernhardu@mailbox.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Otmar Meier <otmarjun.meier@nexgo.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 04:00:16PM +0200, Joerg Roedel wrote:
-> Joerg Roedel (7):
->   mm: Add functions to track page directory modifications
->   mm/vmalloc: Track which page-table levels were modified
->   mm/ioremap: Track which page-table levels were modified
->   x86/mm/64: Implement arch_sync_kernel_mappings()
->   x86/mm/32: Implement arch_sync_kernel_mappings()
->   mm: Remove vmalloc_sync_(un)mappings()
->   x86/mm: Remove vmalloc faulting
-> 
->  arch/x86/include/asm/pgtable-2level_types.h |   2 +
->  arch/x86/include/asm/pgtable-3level_types.h |   2 +
->  arch/x86/include/asm/pgtable_64_types.h     |   2 +
->  arch/x86/include/asm/switch_to.h            |  23 ---
->  arch/x86/kernel/setup_percpu.c              |   6 +-
->  arch/x86/mm/fault.c                         | 176 +-------------------
->  arch/x86/mm/init_64.c                       |   5 +
->  arch/x86/mm/pti.c                           |   8 +-
->  arch/x86/mm/tlb.c                           |  37 ----
->  drivers/acpi/apei/ghes.c                    |   6 -
->  include/asm-generic/5level-fixup.h          |   5 +-
->  include/asm-generic/pgtable.h               |  23 +++
->  include/linux/mm.h                          |  46 +++++
->  include/linux/vmalloc.h                     |  18 +-
->  kernel/notifier.c                           |   1 -
->  kernel/trace/trace.c                        |  12 --
->  lib/ioremap.c                               |  46 +++--
->  mm/nommu.c                                  |  12 --
->  mm/vmalloc.c                                | 109 +++++++-----
->  19 files changed, 204 insertions(+), 335 deletions(-)
+On Fri, May 15, 2020 at 5:08 PM Bernhard =C3=9Cbelacker
+<bernhardu@mailbox.org> wrote:
+> Am 13.05.20 um 19:17 schrieb Andy Shevchenko:
+> > On Tue, May 12, 2020 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wr=
+ote:
+> >> Hi,
+> >> On 5/12/20 10:40 PM, Bernhard =C3=9Cbelacker wrote:
+> >>> Add touchscreen info for the Trekstor Yourbook C11B. It seems to
+> >>> use the same touchscreen as the Primebook C11, so we only add a new D=
+MI
+> >>> match.
+> >>>
+> >>> Cc: Otmar Meier <otmarjun.meier@nexgo.de>
+> >>> Reported-and-tested-by: Otmar Meier <otmarjun.meier@nexgo.de>
+> >>> Signed-off-by: Bernhard =C3=9Cbelacker <bernhardu@mailbox.org>
+> >>
+> >> Thank you, patch looks good to me:
+> >>
+> >> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> >
+> > This doesn't apply to our for-next.
+> > Please, rebase, add Hans' tag and resend, thanks!
 
-I'm thinking this improves the status-quo, so:
+> I am not sure against which git tree I should rebase?
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Ah, sorry, this one [1] you should use for PDx86.
 
-Like Andy, I think I'd like x86_64 to pre-populate, but that can easily
-be done on top and should not hold this back.
+[1]: http://git.infradead.org/linux-platform-drivers-x86.git
+
+--=20
+With Best Regards,
+Andy Shevchenko
