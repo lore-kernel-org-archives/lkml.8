@@ -2,171 +2,118 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97343C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD906C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB8B206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:02:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pFgKDKk7"
+	by mail.kernel.org (Postfix) with ESMTP id 9C692206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgEOHCL (ORCPT
+        id S1726648AbgEOHEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 03:02:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726465AbgEOHCK (ORCPT
+        Fri, 15 May 2020 03:04:45 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:36215 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbgEOHEo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 03:02:10 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF02C05BD09
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:02:10 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id v26so639793vsa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:02:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sgU13Kc+HGjnXldvrdhY5980/BNCXPEM10WiDRFS03A=;
-        b=pFgKDKk720R91YwhG113PrRjxUIWD3RdicIP0iQlBI/gF9/XYXl9D5xEMKZG7l9mCa
-         cr4mtt2zEa2hiWeX+rhx2o4qI7LQZ53x59z4Zu6IytOuwpV7Ps+xiG5XtRY+4ID33qHi
-         zZ+cVDfABknYj7jtWygH+D7syWW1dvzEkbIzOrH9tFJoDF4bBRq+nJtHIVCQiE42Xr7Q
-         CSgz5UtNVODPQ2HyRnfDR8+eH7uLPedCTzYgm3SZXr0j0XVYQWceRwD4lNeKK6Ksuf/d
-         iz3G3DoIOwrFNdo2nDq1xDJVIPwGvlyK0HwZVL+CZUO9vOWpuGT8nfUtnUm+qcgOgXTh
-         xTPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sgU13Kc+HGjnXldvrdhY5980/BNCXPEM10WiDRFS03A=;
-        b=KAiSDglljATdjJh7LDdKOZ1jk5Z4eyIVqdK33yKgtFcAT/guhDbgcV74V1ybmve1y6
-         rlZu6vydtEWOQjo8KSmNAMHLsvy+4p0LoAXXFyCfLpHyXjHUrBW9IQP0g6d4mI0zSNpn
-         tJUGlMhl+IFn5Lzv/OUxpEi3FExlOyvlR7Q/MGRRTmIgrZM6ZigaXCCrUmBHASECHs/f
-         ic4SAmWzZfinOTQ8P1rBqukyCfb6LvzmIGA4obW+FylcArGJVMFbFPVGeTR0Lk2zbNCM
-         kViBai/Vr8zoy6PzucjSR44iSM8CJlC20AF9JRsoI1Xj70O2+p0/9yIbvDoJnCKqTbnn
-         5wJw==
-X-Gm-Message-State: AOAM532wqyBH4U3z5uGiFaz++fM+OcCqbANyVaIp81+JHfpYAisopTnG
-        bd4ZfBeR+0aG1oRpC6wOQ6X5Ojr5z2qRh70XW5NIBg==
-X-Google-Smtp-Source: ABdhPJyaR7V3dikIRkypHdFpMj0NsapuNRzxksZYZbQt4Ns2w50pkKiUb9ZvS28rW6Lgu/f22M49zi8FBOgq9tC8KLQ=
-X-Received: by 2002:a67:8b46:: with SMTP id n67mr1431361vsd.35.1589526129228;
- Fri, 15 May 2020 00:02:09 -0700 (PDT)
+        Fri, 15 May 2020 03:04:44 -0400
+X-Originating-IP: 42.109.214.107
+Received: from localhost (unknown [42.109.214.107])
+        (Authenticated sender: me@yadavpratyush.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id AD1D820002;
+        Fri, 15 May 2020 07:04:39 +0000 (UTC)
+Date:   Fri, 15 May 2020 12:34:36 +0530
+From:   Pratyush Yadav <me@yadavpratyush.com>
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, tudor.ambarus@microchip.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        anup.patel@wdc.com, aou@eecs.berkeley.edu, palmer@dabbelt.com,
+        paul.walmsley@sifive.com
+Subject: Re: [PATCH v1 2/2] spi: nor: update page program settings for
+ is25wp256 using post bfpt fixup
+Message-ID: <20200515070436.hk5ho7ygluqznpcq@yadavpratyush.com>
+References: <1589457051-5410-1-git-send-email-sagar.kadam@sifive.com>
+ <1589457051-5410-3-git-send-email-sagar.kadam@sifive.com>
 MIME-Version: 1.0
-References: <20200513174706.3eeddb2b@xhacker.debian> <CAPDyKFpE_uqiNQ22Fq9hDfb5pzMBdgmwgUbasEsEdXFkEOmq6A@mail.gmail.com>
- <20200514134507.54c17936@xhacker.debian> <CAPDyKFpUv=HGBAEchH25tdnRdUSAvbCgGGCgN8uuvPCQ92xwZg@mail.gmail.com>
- <20200515140008.6c8a8f2b@xhacker.debian>
-In-Reply-To: <20200515140008.6c8a8f2b@xhacker.debian>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 15 May 2020 09:01:33 +0200
-Message-ID: <CAPDyKFpXyhL32ZQH3Qi9FvXEu--0+YH8sLi927m56YJd3iNZWg@mail.gmail.com>
-Subject: Re: [PATCH] Revert "mmc: sdhci-xenon: add runtime pm support and
- reimplement standby"
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589457051-5410-3-git-send-email-sagar.kadam@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 May 2020 at 08:00, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
->
-> On Thu, 14 May 2020 12:18:58 +0200 Ulf Hansson wrote:
->
-> >
-> >
-> > On Thu, 14 May 2020 at 07:45, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
-> > >
-> > > On Wed, 13 May 2020 14:15:21 +0200 Ulf Hansson wrote:
-> > >
-> > > >
-> > > >
-> > > > On Wed, 13 May 2020 at 11:47, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
-> > > > >
-> > > > > This reverts commit a027b2c5fed78851e69fab395b02d127a7759fc7.
-> > > > >
-> > > > > The HW supports auto clock gating, so it's useless to do runtime pm
-> > > > > in software.
-> > > >
-> > > > Runtime PM isn't soley about clock gating. Moreover it manages the
-> > >
-> > > Per my understanding, current xenon rpm implementation is just clock gating.
->
-> what's your option about this? My point is the HW can auto clock
-> gate, so what's the benefit of current rpm implementation given it only does
-> clock gating. FWICT, when submitting the xenon rpm patch, I don't think the
-> author  compared the power consumption. If the comparison is done, it's easy
-> to find the rpm doesn't bring any power consumption benefit at all.
+Hi Sagar,
 
-As I stated, runtime PM isn't solely about clock gating. It depends on the SoC.
+On 14/05/20 04:50AM, Sagar Shrikant Kadam wrote:
+> During SFDP parsing it is seen that the IS25WP256d device is missing 4BAIT
+> (4-Byte address instruction table), due to which it's page program
+> capacity doesn't get correctly populated and the device gets configured
+> with 4-byte Address Serial Input Page Program i.e. SNOR_PROTO_1_1_1
+> even though it can work with SNOR_PROTO_1_1_4.
+> 
+> Here using the post bfpt fixup hooks we update the page program
+> settings to 4-byte QUAD Input Page program operations.
+> 
+> The patch is tested on HiFive Unleashed A00 board and it benefits
+> few seconds of average write time for entire flash write.
+> 
+> QUAD Input Page Program operations:
+> > time mtd_debug write /dev/mtd0 0 33554432 rd32M
+> Copied 33554432 bytes from rd32M to address 0x00000000 in flash
+> real    0m 32.85s
+> user    0m 0.00s
+> sys     0m 31.79s
+> 
+> Serial Input Page Program operations:
+> > time mtd_debug write /dev/mtd0 0 33554432 rd32M
+> Copied 33554432 bytes from rd32M to address 0x00000000 in flash
+> real    0m 35.87s
+> user    0m 0.00s
+> sys     0m 35.42s
+> 
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> ---
+>  drivers/mtd/spi-nor/issi.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/mtd/spi-nor/issi.c b/drivers/mtd/spi-nor/issi.c
+> index ffcb60e..9eb6e82 100644
+> --- a/drivers/mtd/spi-nor/issi.c
+> +++ b/drivers/mtd/spi-nor/issi.c
+> @@ -23,6 +23,22 @@ is25lp256_post_bfpt_fixups(struct spi_nor *nor,
+>  		BFPT_DWORD1_ADDRESS_BYTES_3_ONLY)
+>  		nor->addr_width = 4;
+>  
+> +	/*
+> +	 * On IS25WP256d device 4-Byte address instruction table doesn't
+> +	 * get populated and so the device get's configured with 4-byte
+> +	 * Address Serial Input Page Program i.e. SNOR_PROTO_1_1_1 even
+> +	 * though it supports SNOR_PROTO_1_1_4, so priorotize QUAD write
+> +	 * over SINGLE write if device id table holds SPI_NOR_QUAD_READ.
+> +	 */
+> +	if (strcmp(nor->info->name, "is25wp256") == 0) {
 
-For example, if this sdhci device is being powered by a shared voltage
-rail through a PM domain, perhaps it's even critical from an energy
-efficiency point to manage runtime PM correctly.
+Instead of doing this, wouldn't it make more sense to have a separate 
+fixup hook for is25wp256? Does this device also need the above address 
+width fixup? If it does, maybe that can be split into a separate 
+function, and used by both the fixups?
 
-By looking at the original commit, that sounds exactly what is
-happening as the registers seem to lose their context.
+> +		if (nor->info->flags & SPI_NOR_QUAD_READ) {
+> +			params->hwcaps.mask |= SNOR_HWCAPS_PP_1_1_4;
+> +			spi_nor_set_pp_settings
+> +				(&params->page_programs[SNOR_CMD_PP_1_1_4],
+> +				 SPINOR_OP_PP_1_1_4,
+> +				 SNOR_PROTO_1_1_4);
+> +		}
+> +	}
+>  	return 0;
+>  }
 
->
-> > >
-> > > > "pltfm_host->clk", which means even if the controller supports auto
-> > > > clock gating, gating/ungating the externally provided clock still
-> > > > makes sense.
-> > >
-> > >        clock -----------  xenon IP
-> > >       |___ rpm           |__ HW Auto clock gate
-> > >
-> > > Per my understanding, with rpm, both clock and IP is clock gated; while with
-> > > Auto clock gate, the IP is clock gated. So the only difference is clock itself.
-> > > Considering the gain(suspect we have power consumption gain, see below), the
-> > > pay -- 56 LoCs and latency doesn't deserve gain.
-> > >
-> > > Even if considering from power consumption POV, sdhci_runtime_suspend_host(),
-> > > sdhci_runtime_resume_host(), and the retune process could be more than the clock
-> > > itself.
-> >
-> > Right.
-> >
-> > The re-tune may be costly, yes. However, whether the re-tune is
-> > *really* needed actually varies depending on the sdhci variant and the
-> > SoC. Additionally, re-tune isn't done for all types of (e)MMC/SD/SDIO
-> > cards.
-> >
-> > I see a few options that you can explore.
-> >
-> > 1. There is no requirement to call sdhci_runtime_suspend|resume_host()
-> > from sdhci-xenon's ->runtime_suspend|resume() callbacks - if that's
-> > not explicitly needed. The point is, you can do other things there,
-> > that suits your variant/SoC better.
->
-> Yes, there's no requirement to call sdhci_runtime_suspend|resume_host().
-> But simply removing the calls would break system suspend. How to handle
-> this situation?
-
-Alright. Then perhaps you need parts of what
-sdhci_runtime_suspend|resume() is doing?
-
-Anyway, as I said below. If you really have some good reasons from an
-energy efficiency point of view, you can always disable runtime
-suspend, along the lines of below.
-
-To put it clear, to me the reasons you are providing to justify the
-revert just doesn't make sense. Please try a different option.
-
->
-> >
-> > 2. Perhaps for embedded eMMCs, with a non-removable slot, the
-> > re-tuning is costly. If you want to prevent the device from entering
-> > runtime suspend for that slot, for example, just do an additional
-> > pm_runtime_get_noresume() during ->probe().
-> >
-> > [...]
-> >
-
-Kind regards
-Uffe
+-- 
+Regards,
+Pratyush Yadav
