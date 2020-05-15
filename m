@@ -2,96 +2,168 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC82C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1F1E2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589578278;
-	bh=O2OJcQ2yvuaecdX9dvP5MSICBbljS0c+xz4C+o2FiI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k9i/YjFOuojZNlyRX+ge4cWyuKrvmXHisqqO7B/Fao2RTGlhxXzC9SrwygiSnue5k
-	 H9SnNta1w3oi39/M+rRaYPw0Ev4942GgqP/gEWDkhMzplEj8jA/APL9vUyRs2XMMSB
-	 X7m1G/doz038VNKVqIbVZvya2LYgcE9Nptzn2uqg=
+	by mail.kernel.org (Postfix) with ESMTP id 5CD3A20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgEOVbR (ORCPT
+        id S1727109AbgEOVdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:31:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34958 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 17:33:47 -0400
+Received: from mga11.intel.com ([192.55.52.93]:49479 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726553AbgEOVbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:31:17 -0400
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B97420709;
-        Fri, 15 May 2020 21:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589578276;
-        bh=O2OJcQ2yvuaecdX9dvP5MSICBbljS0c+xz4C+o2FiI0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I99rlMKoPbdlbWCb9h5COafzf6+k54KLOJBDHcVxoYTvgESqR1/Yc4RECzZw4tVY/
-         HUUQHcWScYkdYLOo+Zics3ayytm1IEBQccZjNaMkNw66Cm+YNGk4CkU7vgXxPl3bou
-         VTesA2N4afQESdI13pR2QlbwwIEUpBaQzj3YWbhk=
-Date:   Fri, 15 May 2020 23:31:13 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
+        id S1726301AbgEOVdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 17:33:46 -0400
+IronPort-SDR: rjx1Bjtp71FatJIwHqJg2ZcIKG5tXG0BFAMW9FpOneoRHQRZKhidfZzC66oRgSt17keFIE7WWC
+ Ou4NizKCeDJA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 14:33:45 -0700
+IronPort-SDR: gOvKgDGmB5WzruN5yXXKLsAMyljyX+RYXJfeyIzc1yrVpIPo7o0atEfAuJk8N9xLs8ad2pQRhT
+ 9yEIkVHRnUcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,396,1583222400"; 
+   d="scan'208";a="263317095"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by orsmga003.jf.intel.com with ESMTP; 15 May 2020 14:33:44 -0700
+Message-ID: <44c055342bda4fb4730703f987ae35195d1d0c38.camel@intel.com>
+Subject: Re: [PATCH v10 01/26] Documentation/x86: Add CET description
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
         Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [patch V4 part 1 27/36] arm64: Prepare arch_nmi_enter() for
- recursion
-Message-ID: <20200515213112.GB5974@lenoir>
-References: <20200505131602.633487962@linutronix.de>
- <20200505134100.771491291@linutronix.de>
- <873680evkm.fsf@nanos.tec.linutronix.de>
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Date:   Fri, 15 May 2020 14:33:49 -0700
+In-Reply-To: <b0581ddc-0d99-cbcf-278e-0be55ba939a0@intel.com>
+References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
+         <20200429220732.31602-2-yu-cheng.yu@intel.com>
+         <b5197a8d-5d8b-e1f7-68d4-58d80261904c@intel.com>
+         <dd5b9bab31ecf247a0b4890e22bfbb486ff52001.camel@intel.com>
+         <5cc163ff9058d1b27778e5f0a016c88a3b1a1598.camel@intel.com>
+         <b0581ddc-0d99-cbcf-278e-0be55ba939a0@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <873680evkm.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 11:29:13PM +0200, Thomas Gleixner wrote:
-> Thomas Gleixner <tglx@linutronix.de> writes:
+On Fri, 2020-05-15 at 11:39 -0700, Dave Hansen wrote:
+> On 5/12/20 4:20 PM, Yu-cheng Yu wrote:
+> > On Wed, 2020-04-29 at 16:02 -0700, Yu-cheng Yu wrote:
+> > > On Wed, 2020-04-29 at 15:53 -0700, Dave Hansen wrote:
+> > > > On 4/29/20 3:07 PM, Yu-cheng Yu wrote:
+> > > > > +Note:
+> > > > > +  There is no CET-enabling arch_prctl function.  By design, CET is enabled
+> > > > > +  automatically if the binary and the system can support it.
+> > > > 
+> > > > I think Andy and I danced around this last time.  Let me try to say it
+> > > > more explicitly.
+> > > > 
+> > > > I want CET kernel enabling to able to be disconnected from the on-disk
+> > > > binary.  I want a binary compiled with CET to be able to disable it, and
+> > > > I want a binary not compiled with CET to be able to enable it.  I want
+> > > > different threads in a process to be able to each have different CET status.
+> > > 
+> > > The kernel patches we have now can be modified to support this model.  If after
+> > > discussion this is favorable, I will modify code accordingly.
+> > 
+> > To turn on/off and to lock CET are application-level decisions.  The kernel does
+> > not prevent any of those.  Should there be a need to provide an arch_prctl() to
+> > turn on CET, it can be added without any conflict to this series.
 > 
-> > From: Frederic Weisbecker <frederic@kernel.org>
+> I spelled out what I wanted pretty clearly.  On your next post, could
+> you please directly address each of the things I asked for?  Please
+> directly answer the following questions in your next post with respect
+> to the code you post:
 > 
-> This changelog was very empty. Here is what Peter provided:
-> 
->  When using nmi_enter() recursively, arch_nmi_enter() must also be recursion
->  safe. In particular, it must be ensured that HCR_TGE is always set while in
->  NMI context when in HYP mode, and be restored to it's former state when
->  done.
-> 
->  The current code fails this when interleaved wrong. Notably it overwrites
->  the original hcr state on nesting.
-> 
->  Introduce a nesting counter to make sure to store the original value.
+> Can a binary compiled with CET run without CET?
 
-Nice!
+Yes, but a few details:
 
-Thanks.
+- The shadow stack is transparent to the application.  A CET application does
+not have anything different from a non-CET application.  However, if a CET
+application uses any CET instructions (e.g. INCSSP), it must first check if CET
+is turned on.
+- If an application is compiled for IBT, the compiler inserts ENDBRs at branch
+targets.  These are nops if IBT is not on.
+
+> Can a binary compiled without CET run CET-enabled code?
+
+Partially yes, but in reality somewhat difficult.
+
+- If a non-CET application does exec() of a CET binary, then CET is enabled.
+- If a not-CET application does fork(), and the child wants to turn on CET, it
+would be difficult to manage the stack frames, unless the child knows what is is
+doing.  The JIT examples I mentioned previously run with CET enabled from the
+beginning.  Do you have a reason to do this?  In other words, if the JIT code
+needs CET, the app could have started with CET in the first place.
+- If you are asking about dlopen(), the library will have the same setting as
+the main application.  Do you have any reason to have a library running with
+CET, but the application does not have CET?
+
+> Can different threads in a process have different CET enabling state?
+
+Yes, if the parent starts with CET, children can turn it off.  But for the same
+reason described above, it is difficult to turn on CET from the middle.
+
+> > > > Which JITs was this tested with?  I think as a bare minimum we need to
+> > > > know that this design can accommodate _a_ modern JIT.  It would be
+> > > > horrible if the browser javascript engines couldn't use this design, for
+> > > > instance.
+> > > 
+> > > JIT work is still in progress.  When that is available I will test it.
+> > 
+> > I found CET has been enabled in LLVM JIT, Mesa JIT as well as sljit which is
+> > used by jit.  So the current model works with JIT.
+> 
+> Great!  I'm glad the model works.  That's not what I asked, though.
+> 
+> Does this *code* work?  Could you please indicate which JITs have been
+> enabled to use the code in this series?  How much of the new ABI is in use?
+
+JIT does not necessarily use all of the ABI.  The JIT changes mainly fix stack
+frames and insert ENDBRs.  I do not work on JIT.  What I found is LLVM JIT fixes
+are tested and in the master branch.  Sljit fixes are in the release.
+
+> Where are the selftests/ for this new ABI?  Were you planning on
+> submitting any with this series?
+
+The ABI is more related to the application side, and therefore most suitable for
+GLIBC unit tests.  The more complicated areas such as pthreads, signals,
+ucontext, fork() are all included there.  I have been constantly running these
+tests without any problems.  I can provide more details if testing is the
+concern.
+
+Yu-cheng
+
