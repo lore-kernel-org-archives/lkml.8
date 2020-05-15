@@ -2,95 +2,88 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F96C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CA7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE4F4206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4B520709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:32:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cPk6Aai/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbgEOA0h (ORCPT
+        id S1728483AbgEOAcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 20:26:37 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:57865 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728131AbgEOA0g (ORCPT
+        Thu, 14 May 2020 20:32:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728427AbgEOAcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 20:26:36 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 04F0QFPu8011756, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 04F0QFPu8011756
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 15 May 2020 08:26:15 +0800
-Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 15 May 2020 08:26:15 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 15 May 2020 08:26:15 +0800
-Received: from RTEXMB04.realtek.com.tw ([fe80::8001:f5f5:a41e:f8d4]) by
- RTEXMB04.realtek.com.tw ([fe80::8001:f5f5:a41e:f8d4%3]) with mapi id
- 15.01.1779.005; Fri, 15 May 2020 08:26:15 +0800
-From:   Pkshih <pkshih@realtek.com>
-To:     Tony Chuang <yhchuang@realtek.com>,
-        "colin.king@canonical.com" <colin.king@canonical.com>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH][next] rtw88: 8723d: fix incorrect setting of ldo_pwr
-Thread-Topic: [PATCH][next] rtw88: 8723d: fix incorrect setting of ldo_pwr
-Thread-Index: AQHWKhti7lhzaSVBmUG5wyOyhYF1sqinxIaA
-Date:   Fri, 15 May 2020 00:26:14 +0000
-Message-ID: <1589502367.2500.2.camel@realtek.com>
-References: <20200514181329.16292-1-colin.king@canonical.com>
-In-Reply-To: <20200514181329.16292-1-colin.king@canonical.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.69.213]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7BA5728ACA45E54F983A55A77EB2DFA0@realtek.com>
-Content-Transfer-Encoding: base64
+        Thu, 14 May 2020 20:32:06 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B2F0C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 17:32:06 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id r22so150019pga.12
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 17:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ksohmisiygmMHSWmZNuyiGcxOl23DTxWznhnrAA0Tbc=;
+        b=cPk6Aai/Cgvqt0Hw0nAvV2PJi+S+U0lQ3s+kR1zT8quJNLuBg2FCokbhC2GzfDSzJJ
+         F5bmAzSUpSBwRoZ1Ym+YE2Zs64UYZ9YUoW+PRgtrsZynF/QJDpka4gEPcaI0pKdfmbQA
+         B4Z8rYbMian4pw77PaNRSd1O+Vcxwo0afwBs8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ksohmisiygmMHSWmZNuyiGcxOl23DTxWznhnrAA0Tbc=;
+        b=J7Nz079BmL8B2K+ZM2DEQZZldVnHFSVrnpkjQA1GqS66wZIfnXL1QIfdMNYKUWhWDe
+         yeXh4mGZuw6XhtRIwtY7DdAReMUs05ZwKOxADMaGUHOm1MeZTgSXSsMls/hJnCbv01uQ
+         H0ysyyi5Sdg/A/jxbx8kF9X6Gpon4krGGJDwBK7XZnTiAb5gh4Vuf+JDZMGtzRqmtEDJ
+         h96P6k/5Gx0JHRdkLjSFPFXESniSDb1ETSY797kB2RQ/tY2HE6+T+bNsxbEwdw2k0baE
+         5NTkFbEARa5d7eyJE+kl3kD/tVFZNjD29xinFdrElFVE39FfnuV28Ps4LicyP1TO5cur
+         O+Pg==
+X-Gm-Message-State: AOAM531V7TjRTRMrP6rpCz8hEPVC5R94fGSz74L+StCDRZDQxVscUlkS
+        lcCeIi8MWdindIhNyBgrKJ2L8g==
+X-Google-Smtp-Source: ABdhPJxP4fdAV/QiAEsyatfE+OPdd5pusF9BcQ3lUqxkmtep+uuG0U2tNiNsF7/PknZVYJq9lJXrlA==
+X-Received: by 2002:a62:8888:: with SMTP id l130mr1187943pfd.140.1589502725382;
+        Thu, 14 May 2020 17:32:05 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id z1sm163461pjn.43.2020.05.14.17.32.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 17:32:04 -0700 (PDT)
+Date:   Thu, 14 May 2020 17:32:02 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        georgi.djakov@linaro.org, Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH 3/6] OPP: Add and export helper to set bandwidth
+Message-ID: <20200515003202.GU4525@google.com>
+References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
+ <1589453659-27581-4-git-send-email-smasetty@codeaurora.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1589453659-27581-4-git-send-email-smasetty@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA1LTE0IGF0IDE4OjEzICswMDAwLCBDb2xpbiBLaW5nIHdyb3RlOg0KPiBG
-cm9tOiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmljYWwuY29tPg0KPiANCj4gQ3Vy
-cmVudGx5IGxkb19wd3IgaGFzIHRoZSBMRE8yNSB2b2x0YWdlIGJpdHMgc2V0IHRvIHplcm8gYW5k
-IHRoZW4NCj4gaXQgaXMgb3ZlcndyaXR0ZW4gd2l0aCB0aGUgbmV3IHZvbHRhZ2Ugc2V0dGluZy4g
-VGhlIGFzc2lnbm1lbnQNCj4gbG9va3MgaW5jb3JyZWN0LCBpdCBzaG91bGQgYmUgYml0LXdpc2Ug
-b3InaW5nIGluIHRoZSBuZXcgdm9sdGFnZQ0KPiBzZXR0aW5nIHJhdGhlciB0aGFuIGEgZGlyZWN0
-IGFzc2lnbm1lbnQuDQo+IA0KPiBBZGRyZXNzZXMtQ292ZXJpdHk6ICgiVW51c2VkIHZhbHVlIikN
-Cj4gRml4ZXM6IDFhZmI1ZWI3YTAwZCAoInJ0dzg4OiA4NzIzZDogQWRkIGNmZ19sZG8yNSB0byBj
-b250cm9sIExETzI1IikNCj4gU2lnbmVkLW9mZi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtp
-bmdAY2Fub25pY2FsLmNvbT4NCg0KVGhhbmsgeW91IGZvciB5b3VyIGZpeC4NCg0KQWNrZWQtYnk6
-IFBpbmctS2UgU2hpaCA8cGtzaGloQHJlYWx0ZWsuY29tPg0KDQo+IC0tLQ0KPiDCoGRyaXZlcnMv
-bmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODgvcnR3ODcyM2QuYyB8IDIgKy0NCj4gwqAxIGZpbGUg
-Y2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg4L3J0dzg3MjNkLmMNCj4gYi9kcml2
-ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg4L3J0dzg3MjNkLmMNCj4gaW5kZXggYjUxN2Fm
-NDE3ZTBlLi4yYzZlNDE3YzViY2EgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbmV0L3dpcmVsZXNz
-L3JlYWx0ZWsvcnR3ODgvcnR3ODcyM2QuYw0KPiArKysgYi9kcml2ZXJzL25ldC93aXJlbGVzcy9y
-ZWFsdGVrL3J0dzg4L3J0dzg3MjNkLmMNCj4gQEAgLTU2MSw3ICs1NjEsNyBAQCBzdGF0aWMgdm9p
-ZCBydHc4NzIzZF9jZmdfbGRvMjUoc3RydWN0IHJ0d19kZXYgKnJ0d2RldiwNCj4gYm9vbCBlbmFi
-bGUpDQo+IMKgCWxkb19wd3IgPSBydHdfcmVhZDgocnR3ZGV2LCBSRUdfTERPX0VGVVNFX0NUUkwg
-KyAzKTsNCj4gwqAJaWYgKGVuYWJsZSkgew0KPiDCoAkJbGRvX3B3ciAmPSB+QklUX01BU0tfTERP
-MjVfVk9MVEFHRTsNCj4gLQkJbGRvX3B3ciA9IChCSVRfTERPMjVfVk9MVEFHRV9WMjUgPDwgNCkg
-fCBCSVRfTERPMjVfRU47DQo+ICsJCWxkb19wd3IgfD0gKEJJVF9MRE8yNV9WT0xUQUdFX1YyNSA8
-PCA0KSB8IEJJVF9MRE8yNV9FTjsNCj4gwqAJfSBlbHNlIHsNCj4gwqAJCWxkb19wd3IgJj0gfkJJ
-VF9MRE8yNV9FTjsNCj4gwqAJfQ0KPiAtLcKgDQo+IDIuMjUuMQ0KPiANCj4gDQo+IC0tLS0tLVBs
-ZWFzZSBjb25zaWRlciB0aGUgZW52aXJvbm1lbnQgYmVmb3JlIHByaW50aW5nIHRoaXMgZS1tYWls
-Lg0KDQoNCg==
+On Thu, May 14, 2020 at 04:24:16PM +0530, Sharat Masetty wrote:
+> From: Sibi Sankar <sibis@codeaurora.org>
+> 
+> Add and export 'dev_pm_opp_set_bw' to set the bandwidth
+> levels associated with an OPP for a given frequency.
+
+Wait, this looks very much like Sibi's patch from v4 of the "DDR/L3
+Scaling support on SDM845 and SC7180 SoCs" series
+(https://patchwork.kernel.org/patch/11527571/). Please don't repost
+patches from other series (unless the series/patch was clearly
+abandonded, which isn't the case here). Instead mention the patch
+as a dependency.
