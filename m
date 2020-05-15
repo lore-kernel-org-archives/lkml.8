@@ -2,151 +2,97 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2722C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D439C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A61520728
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:23:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589570623;
-	bh=TuKsKP6cbt7gD83ko2QaqNWtZkkxPgW/pFRBoMPgw40=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SgtTdh/c4miO/dE/uR/gxsVjfbk/fXp6jYJfm2GVUUMfdZsQKEwSQFaQ+NpHavp4c
-	 7aA4rzPoyx05yndpegNw3sOdFI1c5HANtRlG2XeX943C5WWtmLBLaOvsNOrk52xhmA
-	 gipSt2ya8wq8+wTaUMznfFqGnr7GnpxaF1N7hHHo=
+	by mail.kernel.org (Postfix) with ESMTP id 3F71D2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:24:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="PY8rmKLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgEOTXm (ORCPT
+        id S1726607AbgEOTYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 15:23:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbgEOTXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 15:23:42 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A5682070A;
-        Fri, 15 May 2020 19:23:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589570621;
-        bh=TuKsKP6cbt7gD83ko2QaqNWtZkkxPgW/pFRBoMPgw40=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kXG5ksATrfPQ9YZ98bZkSV7yFZnEEoxkrv61rl/aO77GO8la7+StdMay7mOAu8sDO
-         JPjDmL12Qy0RtsBkqUmMoFEUNc4xREd5P+gS/F1PWPDuaqcN0P4ftHGUB+aNV9CvQy
-         CFnBD7ljcndESEroYiJ6qA+nZ6PPagiFF8mti1ic=
-Date:   Fri, 15 May 2020 12:23:40 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Petr Mladek <pmladek@suse.com>,
+        Fri, 15 May 2020 15:24:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726227AbgEOTYa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 15:24:30 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABC40C05BD09
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 12:24:29 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id x1so3150019ejd.8
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 12:24:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a36hrCvkPbUg843/bSmumOn78+ipKHZWMg5XvSohP3o=;
+        b=PY8rmKLsoOIAWMnudxgpiJvpNf1j1UsqVeSDR8qlbXb2PjKGGE3Wy9ytx1c5odlDP2
+         Y7jk9kBiWi7s1ZLcWH8gNy4I4cxa944o1z8d63G/2gVgyWoKuFjsq31zCukSiMz9oVQ/
+         q8mhT3nJbRKKl9LI8v8k8kBSrTeWoVS362oOdyavmXQbvC38loTmUXVsni8RSKwK5Cyw
+         D2iY8jmZ9218Wo/3qB8puStPuHYFj0i0Zknw9HkhR3zgwqCCuOP12NAqbL4BZqQX6tJu
+         ADQT2pCL13mYBwfnUOewfIEfVDaXhfsbM/h3ASSw7rt+zEL5wAewbqddkbJ4mno36n7h
+         pQDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a36hrCvkPbUg843/bSmumOn78+ipKHZWMg5XvSohP3o=;
+        b=XAXE623cOxbFS119N5TYnXHmOhKEZTHndoY2Kfvni6malhy93ikvUiEUpneHdYbOf/
+         Ow1EV7N1D5U+nIFzt3bEym4ZaWZI9i8pVWDOxAcrD/PRGZ1OF+DPghvy7v7b3yu12z0O
+         htzoBXSrmtzEj4vif2RKhGyXH1jXcdPZoCEPWeFC5wHAI3QOmajwq3Y4ZzCeAXQHxs74
+         d2iZVFX305/AXYkOwbYhwp9mwNZKvZhTZFHEs+pyfoURyH2Nm+jfC4LRMWmQjSCwsgnN
+         n88aIpweE6P5ZTiBKbo+OcWGeGLudyxRnKsPQ2kK0464UQQM+hF0Vq1UkBTqhog/qCrd
+         zs/g==
+X-Gm-Message-State: AOAM531qYRhZjRi4/iXq16JPl/5pFk6VUNawA2kpNL8B8YqJ420FBSP7
+        UD6K3cZIw1tiBCI4T90/IcBQaAzv8wsCEiYh6v0Iuw==
+X-Google-Smtp-Source: ABdhPJzjo4HsWFSrpU7PHPWN+VC1EtmQWOEZbJjdzveuqDK930f9zFXRjleWAFRW4YK8ia6ElnSqJyxhw48h+Oaon94=
+X-Received: by 2002:a17:906:aed2:: with SMTP id me18mr4576716ejb.283.1589570668270;
+ Fri, 15 May 2020 12:24:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200515184434.8470-1-keescook@chromium.org> <20200515184434.8470-4-keescook@chromium.org>
+In-Reply-To: <20200515184434.8470-4-keescook@chromium.org>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Fri, 15 May 2020 15:23:52 -0400
+Message-ID: <CA+CK2bDvsoOMKb_1Q1eAy4mcrDs6hUOtkr+3AM2nXoJD2+q93g@mail.gmail.com>
+Subject: Re: [PATCH v4 3/6] printk: Introduce kmsg_dump_reason_str()
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Benson Leung <bleung@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCHv3 12/50] csky: Add show_stack_loglvl()
-Message-Id: <20200515122340.d0d93b7a29846934e161ef41@linux-foundation.org>
-In-Reply-To: <20200418201944.482088-13-dima@arista.com>
-References: <20200418201944.482088-1-dima@arista.com>
-        <20200418201944.482088-13-dima@arista.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Apr 2020 21:19:06 +0100 Dmitry Safonov <dima@arista.com> wrote:
+On Fri, May 15, 2020 at 2:44 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> The pstore subsystem already had a private version of this function.
+> With the coming addition of the pstore/zone driver, this needs to be
+> shared. As it really should live with printk, move it there instead.
+>
+> Link: https://lore.kernel.org/lkml/20200510202436.63222-8-keescook@chromium.org/
+> Acked-by: Petr Mladek <pmladek@suse.com>
+> Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-> Currently, the log-level of show_stack() depends on a platform
-> realization. It creates situations where the headers are printed with
-> lower log level or higher than the stacktrace (depending on
-> a platform or user).
-> 
-> Furthermore, it forces the logic decision from user to an architecture
-> side. In result, some users as sysrq/kdb/etc are doing tricks with
-> temporary rising console_loglevel while printing their messages.
-> And in result it not only may print unwanted messages from other CPUs,
-> but also omit printing at all in the unlucky case where the printk()
-> was deferred.
-> 
-> Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
-> an easier approach than introducing more printk buffers.
-> Also, it will consolidate printings with headers.
-> 
-> Introduce show_stack_loglvl(), that eventually will substitute
-> show_stack().
-
-The csky code has changed a lot in linux-next due to 18c07d23da5a
-("csky: Fixup calltrace panic").  I redid this patch as below.  Can we
-please review and test?
-
-
-From: Dmitry Safonov <dima@arista.com>
-Subject: csky: add show_stack_loglvl()
-
-Currently, the log-level of show_stack() depends on a platform
-realization.  It creates situations where the headers are printed with
-lower log level or higher than the stacktrace (depending on a platform or
-user).
-
-Furthermore, it forces the logic decision from user to an architecture
-side.  In result, some users as sysrq/kdb/etc are doing tricks with
-temporary rising console_loglevel while printing their messages.  And in
-result it not only may print unwanted messages from other CPUs, but also
-omit printing at all in the unlucky case where the printk() was deferred.
-
-Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems an easier
-approach than introducing more printk buffers.  Also, it will consolidate
-printings with headers.
-
-Introduce show_stack_loglvl(), that eventually will substitute
-show_stack().
-
-[1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
-
-Link: http://lkml.kernel.org/r/20200418201944.482088-13-dima@arista.com
-Signed-off-by: Dmitry Safonov <dima@arista.com>
-Cc: Guo Ren <guoren@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- arch/csky/kernel/stacktrace.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
---- a/arch/csky/kernel/stacktrace.c~csky-add-show_stack_loglvl
-+++ a/arch/csky/kernel/stacktrace.c
-@@ -91,14 +91,21 @@ static void notrace walk_stackframe(stru
- 
- static bool print_trace_address(unsigned long pc, void *arg)
- {
--	print_ip_sym(pc);
-+	print_ip_sym((const char *)arg, pc);
- 	return false;
- }
- 
-+void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
-+		       const char *loglvl)
-+{
-+	pr_cont("Call Trace:\n");
-+	walk_stackframe(task, NULL, print_trace_address, (void *)loglvl);
-+}
-+
- void show_stack(struct task_struct *task, unsigned long *sp)
- {
- 	pr_cont("Call Trace:\n");
--	walk_stackframe(task, NULL, print_trace_address, NULL);
-+	walk_stackframe(task, NULL, print_trace_address, KERN_INFO);
- }
- 
- static bool save_wchan(unsigned long pc, void *arg)
-_
-
+Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
