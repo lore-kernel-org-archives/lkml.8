@@ -2,225 +2,153 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9435DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01047C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC30206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D052220671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:10:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KF9Evebm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xIGvyUUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgEOHKG (ORCPT
+        id S1726950AbgEOHKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 03:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50524 "EHLO
+        Fri, 15 May 2020 03:10:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726727AbgEOHKE (ORCPT
+        by vger.kernel.org with ESMTP id S1726863AbgEOHKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 03:10:04 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75534C05BD0A
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:10:03 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id 1so630856vsl.9
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:10:03 -0700 (PDT)
+        Fri, 15 May 2020 03:10:06 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B1EC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:10:05 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id p7so328600vkf.5
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:10:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=S1KNisJsCqChNlKv09ipjuXjD/t4NKsjUgukAjLqwgo=;
-        b=KF9Evebmgk0IOkagk7/RIFUBMr+cPh1F1LPbkWTaNsyUq6b8RMhamq3NMmj2URio+7
-         +frWZsPYuuQBDWNPFG7eOAsO4HkwALGPJ1tpDzAqi7mZP6Y6amz/LU/lFbChXoGq5u5t
-         KbXwuwMjFBMWvu2nPM+eJrhDKuz+7NIpqjdfjS1khs/WHntHd1pW7qgK6i+wbNbs/9lT
-         xFLoXUMCgP+Bz8GgRF5UIehxFkG8irzYVxPNfRjighgWUtQxPJFhGm2gUIu0zje9S/wG
-         5bFaq1hDKWAFT3sxy1xy3aoNxIJ3N9ozNfiBsQkPZyIMl/OxORRYKAd6m3nUE02TbaNR
-         0JeA==
+        bh=Mjd+prrjNqDXqBM9/JBw7x6PcberMvd4v5JGZhudn1M=;
+        b=xIGvyUUHtSqMRzFRXRnD4nfC2if8wa39ovV9GvseHD7I+pK+Gw9uLPMl82g51Trnpr
+         s4GcWcpuS6KMNpb+Dn0pHR4t/X562i0PfW1GttkjayRQUz1ZMPrun3msXt5FLjOEqTc1
+         bJyPfm/TErT0RZpuMAfhfxmSiVVnMhaWLgLVaVwMH3yAb/zDtGjLyrGPAc0DuZgiHZH3
+         ZqyAtZuxpydnmVosRFn5gNQcyF1j2ezdm/wiDPpQ28z52Qu284jLsUpZU2RcwLCZsi5X
+         fDAx2E0RqlZbQMjD5XPdklOD17tGn9YBeQWIn9+ukQ1eDivxTrTabIiV4Ja6AAKK/Qvx
+         22NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=S1KNisJsCqChNlKv09ipjuXjD/t4NKsjUgukAjLqwgo=;
-        b=F/RnapWUnyhlY/5UJoqlG9pGlnYxmc1WLq6LYZNudouU6vmDKGAFlg2z7sg3BSOQk8
-         pChRozLfzjg8q+E1LM9iqTYmLxcWd3O9H8r8SbBV2qtB2+MrmSSpFdmA0amAxoLr8BRF
-         lN9OLtUV5daurwOVcXb0Yo0XA7hMqlBFQ7ZvW7PHwjfbLYrZO3fzCkWeJpgqAJDg/neF
-         jHlUn1tjJTcqgyQW7U0vV1F/8mX138MclqXVSIjlEQ417lm2hW0SEHrXu6L8/UR8qv5x
-         5/wXXL+ne4X96WDrtc2wSFcjjHd3dInRuOtPUwyE0TLTUby8yfRGVrOf2nrd2R+y/OSm
-         JBYA==
-X-Gm-Message-State: AOAM530BaQWa5MqRlqwc3F7ndvL8FCgdYVObF96ZmtVPAJSKrUFmybix
-        xs6vbSrRc6+7oBT9b0OJd9OXxEQ7zFUmTabM1/H4FA==
-X-Google-Smtp-Source: ABdhPJygnTdNDgbwU5IjwBpTpT+E94UNhD0unulxzXkizTZB4BYj5ClHbIbFXY2A/54DrC6ynz4HrgCg7fBD01ytnGc=
-X-Received: by 2002:a67:8b46:: with SMTP id n67mr1453605vsd.35.1589526602387;
- Fri, 15 May 2020 00:10:02 -0700 (PDT)
+        bh=Mjd+prrjNqDXqBM9/JBw7x6PcberMvd4v5JGZhudn1M=;
+        b=GxF8vcRFXxpH50rytf0aySagnChesSj1fi8Tp+9n+RXcs07NU4vuM7DRoo1BRAFDay
+         WxvgzQmIeYS3gtWHltZ9YcCyemx+SLBa0H33rlquWO7HLSACD3qO5OI+k62hHGyMjSCG
+         c7zUXCTA9vaCLtlpiTEoGFDfD7SKh1yW1WhrzK02MMpx9DJoa5FyntHzYYgI0BRcLDHj
+         YrP4oOZgIiKdAI2ULCq6How0c7KF6t346YooXJMp/+C/0gRwcFLFD3BwZmCiK0GoQxnX
+         zEA9w+rtm600agf1PQFuQNasXFvxyO9L3GSoXo85fzo/EtPM8K0PpWeawQcCug2SbHm+
+         Qk5w==
+X-Gm-Message-State: AOAM532FZ2rKQ7pwpyXHsD8OX4JHBpzroG1rzIR6Diud5zPOlXYYl2zW
+        pBsyX3AcCyTy06t64cFeUFB0L9KstWhf+fgxPQgCDA==
+X-Google-Smtp-Source: ABdhPJwxZbZR68HiY+mo1Hhtcs9d5uEygTDNwRq8jwAS5SfojmWEhuvdsHyCL/tLbuQOhpQ1qL4iS9ld5jUBImTv2d8=
+X-Received: by 2002:ac5:cded:: with SMTP id v13mr1701498vkn.59.1589526604780;
+ Fri, 15 May 2020 00:10:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200512204147.504087-1-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20200512204147.504087-1-martin.blumenstingl@googlemail.com>
+References: <20200515141926.52e088fe@xhacker.debian>
+In-Reply-To: <20200515141926.52e088fe@xhacker.debian>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 15 May 2020 09:09:25 +0200
-Message-ID: <CAPDyKFrTxcCy6Py9i4kzgy7gcvpg0dVn-tbuNn-jiKhW=wh4bg@mail.gmail.com>
-Subject: Re: [PATCH v7 0/2] Amlogic 32-bit Meson SoC SDHC MMC controller driver
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+Date:   Fri, 15 May 2020 09:09:28 +0200
+Message-ID: <CAPDyKFqD2YKbQYAFSZT=v2kwT4ssW79Zxda0NAUtbUaq4CEQwA@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-of-dwcmshc: add suspend/resume support
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        yinxin_1989@aliyun.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        lnykww@gmail.com, Anand Moon <linux.amoon@gmail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 at 22:42, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
+On Fri, 15 May 2020 at 08:19, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
 >
-> Hello,
+> Add dwcmshc specific system-level suspend and resume support.
 >
-> this is the patchset for a driver for the Amlogic "SDHC" MMC controller
-> found on Meson6, Meson8, Meson8b and Meson8m2 SoCs.
->
-> The public S805 (Meson8b) datasheet has some documentation starting on
-> page 74: [0]
->
-> It's performance is still not as good as the driver from Amlogic's 3.10
-> kernel, but it does not corrupt data anymore (as RFC v1 did).
->
-> Special thanks to the people who supported me off-list - you are
-> amazing and deserve to be mentioned here:
-> - Xin Yin who helped me fix two more write corruption problems. I am
->   hoping that he will reply with Reviewed-by, Tested-by and Bug-fixed-by
-> - Jianxin Pan for sharing some of the internal workings of this MMC
->   controller with me
-> - Wei Wang for spotting the initial write corruption problem and helping
->   test this driver on his board. I have his permission to add his
->   Tested-by (off-list, he's Cc'ed so if there's any problem he can speak
->   up)
->
->
-> Changes since v6 at [6]:
-> - both patches: dropped the clock #include from the dt-bindings as well
->   as #clock-cells = <1> and the self-referencing clock inputs. Instead
->   the driver will not be registering a clock provider anymore. The
->   clock references are obtained using "clk_hw.clk" (thus not going
->   through the dt-bindings anymore) as suggested in [7] until a better
->   solution is implemented. A TODO comment is also in place so it's
->   easier to find this temporary workaround when the new helper exists.
-> - dropped Rob's Reviewed-by because I modified the dt-bindings. schema
->   validation still passes on my build machine.
-> - patch #2: dropped MMC_CAP_ERASE due to the following patch which is
->   queued in mmc's -next: "mmc: host: Drop redundant MMC_CAP_ERASE"
-> - patch #2: fill all clk_{mux,divider,gate,hw} values in
->   meson_mx_sdhc_register_clkc instead of using loops and two separate
->   structs to make the code easier to read. Thanks to Jerome for the
->   suggestion.
-> - I decided to keep all the Tested-by's because testing was smooth
->   for me and none of the clock calculation formulas has changed (only
->   the API how to obtain the clocks).
->
-> Changes since v5 at [5] (thanks to Ulf and Jerome for the feedback):
-> - changed copyright year to 2020
-> - move register #defines to a separate header file
-> - drop unused include linux/clk-provider.h from meson-mx-sdhc.c
-> - used #defines for regmap_read_poll_timeout timeout/sleep values
-> - set MMC_CAP_WAIT_WHILE_BUSY
-> - move the clock controller code to mmc/host/meson-mx-sdhc-clkc.c and
->   don't register a separate platform_device for it. This also means
->   that the driver switched from clk_regmap to the standard
->   clk_{divider,gate,mux}_ops
-> - dropped ".index = -1" for clk_parent_data with .fw_name
-> - use CLK_SET_RATE_PARENT on all leaf clocks and drop
->   CLK_SET_RATE_GATE
-> - switch from parent_data.name to parent_hws
-> - use fallthrough; instead of fallthrough comment
-> - added Anand's Tested-by - thank you!
-> - I decided to keep all Tested-by and Reviewed-by because they were
->   only for the MMC controller part and I have barely touched that with
->   this update.
-> - Ulf asked if the timeout can be shortened. I believe it can but I
->   have no documentation for it. Thus I need a test-case to see if my
->   assumptions are correct - thus I have not addressed this in v6 yet
->
-> Changes since v4 at [4]:
-> - move the four clkin clock inputs to the start of the clock-names list
->   as suggested by Rob, affects patch #1
-> - fixed #include statement in dt-bindings example in patch #1
->
-> Changes since v3 at [3]:
-> - split the clock bits into a separate clock controller driver because
->   of two reasons: 1) it keeps the MMC controller driver mostly clean of
->   the clock bits 2) the pure clock controller can use
->   devm_clk_hw_register() (instead of devm_clk_register(), which is
->   deprecated) and the MMC controller can act as a pure clock consumer.
->   This also affects the dt-bindings which is why I dropped Rob's
->   Reviewed-by. Thanks to Ulf for the suggestions
->
-> Changes since v2 at [2]:
-> - rebased on top of v5.5-rc1
-> - added Rob's and Xin Yin's Reviewed-by and Tested-by (thank you!)
-> - (note: Kevin had v2 of this series in -next for a few days so the
->    build test robots could play with it. I haven't received any negative
->    feedback in that time)
->
-> Changes since RFC v1 at [1]:
-> - don't set MESON_SDHC_MISC_MANUAL_STOP to fix one of three write
->   corruption problems. the out-of-tree 3.10 "reference" driver doesn't
->   set it either
-> - check against data->flags instead of cmd->flags when testing for
->   MMC_DATA_WRITE as spotted by Xin Yin (many thanks!). This fixes
->   another write corruption problem
-> - clear the FIFOs after successfully transferring data as suggested by
->   Xin Yin (many thanks!). This is what the 3.10 driver did and fixes yet
->   another write corruption problem
-> - integrate the clock suggestions from Jianxin Pan so the driver is now
->   able to set up the clocks correctly for all known cases. documentation
->   is also added to the patch description. Thank you Jianxin for the
->   help!
-> - set the correct max_busy_timeout as suggested by Jianxin Pan (thanks!)
-> - convert the dt-bindings to .yaml (which is why I didn't add Rob's
->   Reviewed-by)
-> - switch to struct clk_parent_data as part of newer common clock
->   framework APIs to simplify the clock setup
-> - dropped CMD23 support because it seems to hurt read and write
->   performance by 10-20% in my tests. it's not clear why, but for now we
->   can live without this.
-> - use devm_platform_ioremap_resource instead of open-coding it
->
->
-> [0] https://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
-> [1] https://patchwork.kernel.org/cover/11035505/
-> [2] http://lists.infradead.org/pipermail/linux-amlogic/2019-November/014576.html
-> [3] https://patchwork.kernel.org/cover/11283179/
-> [4] https://patchwork.kernel.org/cover/11329017/
-> [5] https://patchwork.kernel.org/cover/11463341/
-> [6] https://patchwork.kernel.org/cover/11515603/
-> [7] https://lore.kernel.org/linux-clk/158870581453.26370.15255632521260524214@swboyd.mtv.corp.google.com/
->
->
-> Martin Blumenstingl (2):
->   dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
->   mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
->
->  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   |  68 ++
->  drivers/mmc/host/Kconfig                      |  14 +
->  drivers/mmc/host/Makefile                     |   1 +
->  drivers/mmc/host/meson-mx-sdhc-clkc.c         | 158 +++
->  drivers/mmc/host/meson-mx-sdhc.c              | 907 ++++++++++++++++++
->  drivers/mmc/host/meson-mx-sdhc.h              | 141 +++
->  6 files changed, 1289 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
->  create mode 100644 drivers/mmc/host/meson-mx-sdhc-clkc.c
->  create mode 100644 drivers/mmc/host/meson-mx-sdhc.c
->  create mode 100644 drivers/mmc/host/meson-mx-sdhc.h
->
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
 Applied for next, thanks!
 
 Kind regards
 Uffe
+
+
+> ---
+>  drivers/mmc/host/sdhci-of-dwcmshc.c | 43 +++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> index a9ed0e006e06..64ac0dbee95c 100644
+> --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
+> +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> @@ -163,6 +163,48 @@ static int dwcmshc_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> +#ifdef CONFIG_PM_SLEEP
+> +static int dwcmshc_suspend(struct device *dev)
+> +{
+> +       struct sdhci_host *host = dev_get_drvdata(dev);
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       struct dwcmshc_priv *priv = sdhci_pltfm_priv(pltfm_host);
+> +       int ret;
+> +
+> +       ret = sdhci_suspend_host(host);
+> +       if (ret)
+> +               return ret;
+> +
+> +       clk_disable_unprepare(pltfm_host->clk);
+> +       if (!IS_ERR(priv->bus_clk))
+> +               clk_disable_unprepare(priv->bus_clk);
+> +
+> +       return ret;
+> +}
+> +
+> +static int dwcmshc_resume(struct device *dev)
+> +{
+> +       struct sdhci_host *host = dev_get_drvdata(dev);
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       struct dwcmshc_priv *priv = sdhci_pltfm_priv(pltfm_host);
+> +       int ret;
+> +
+> +       ret = clk_prepare_enable(pltfm_host->clk);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (!IS_ERR(priv->bus_clk)) {
+> +               ret = clk_prepare_enable(priv->bus_clk);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       return sdhci_resume_host(host);
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(dwcmshc_pmops, dwcmshc_suspend, dwcmshc_resume);
+> +
+>  static const struct of_device_id sdhci_dwcmshc_dt_ids[] = {
+>         { .compatible = "snps,dwcmshc-sdhci" },
+>         {}
+> @@ -173,6 +215,7 @@ static struct platform_driver sdhci_dwcmshc_driver = {
+>         .driver = {
+>                 .name   = "sdhci-dwcmshc",
+>                 .of_match_table = sdhci_dwcmshc_dt_ids,
+> +               .pm = &dwcmshc_pmops,
+>         },
+>         .probe  = dwcmshc_probe,
+>         .remove = dwcmshc_remove,
+> --
+> 2.26.2
+>
