@@ -6,94 +6,104 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1167EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA49C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9B692054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DEAC2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:19:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="MaEKK/Mb"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="r0FQL82H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgEODS0 (ORCPT
+        id S1728264AbgEODTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 23:18:26 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17768 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727869AbgEODSZ (ORCPT
+        Thu, 14 May 2020 23:19:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727856AbgEODTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 23:18:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1589512684; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=Kr82VYcwh3WX1pT2Oz1uE0TVVH+6tE7BKeDMG6WSj8nhIGEic/tb5AT080jfYk4Pqb71v13HBBK9pKrx5xre3BWuTUqkTISB0vsylpgZ4e1SlIuyWQY+gBjt2KrYh+EQ9tDdTnrr/BMSp6CFHUzx8Gan7YsdyCr03EKe2nXco5M=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1589512684; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
-        bh=a9MfE+IX939f7XSiZya+c23GX+UUfpJI7N9HjGVXA54=; 
-        b=eJ5JcL/ZlMz4eaMd3GqcgEp6r20GUk1IVL9+wQunCYW9BKmaxCI3NSaKl8RCzN5FrsB0HBO2aW5eP4cHyHHQa7cMotSfw4Na/pw7DZ0U1UCt4CIVD8dl5DEZes4R8RlGT16MU+yPH9n7Chwq4PqPOxbSvomYrxZswQjkF9G9Nzc=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589512684;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=a9MfE+IX939f7XSiZya+c23GX+UUfpJI7N9HjGVXA54=;
-        b=MaEKK/Mb8RQAk6lxjVcnvoEMdPLX2BhCBsjt91L3kre/rspxvztpC+xf1443+Xvq
-        PJSPLMmdCZC/y5xktWkiGPG//Sip7wcFNMDIUb5whHJEi4/oXAxeuJC8QOQ8fEK775h
-        kZoLMsY2Vt6J4dg35RuIgIdZywx6xovyv1Bw8oHY=
-Received: from [127.0.0.1] (101.84.172.108 [101.84.172.108]) by mx.zoho.com.cn
-        with SMTPS id 15895126814021012.4116349819437; Fri, 15 May 2020 11:18:01 +0800 (CST)
-Date:   Fri, 15 May 2020 11:17:58 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>
-CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH 1/2] MIPS: Loongson: Fix fatal error during GPU init
-User-Agent: K-9 Mail for Android
-Reply-to: jiaxun.yang@flygoat.com
-In-Reply-To: <636ba812-3849-2667-d625-ab7e35d5ac36@loongson.cn>
-References: <1589508901-18077-1-git-send-email-yangtiezhu@loongson.cn> <ECE71DFC-57D3-4132-BB85-609448B29238@flygoat.com> <636ba812-3849-2667-d625-ab7e35d5ac36@loongson.cn>
-Message-ID: <F7BAD661-9D82-4063-B685-4A7192B7F172@flygoat.com>
+        Thu, 14 May 2020 23:19:02 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91B63C061A0C;
+        Thu, 14 May 2020 20:19:01 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49NYXf04FMz9sT8;
+        Fri, 15 May 2020 13:18:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589512738;
+        bh=t5TmQpn3DiV31DFC2sE1M61YrXj0NQ20tFn+T2BJ4dU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=r0FQL82H/5R6YfS7Q6aJVyRbY0jIJk9mbTFCMj3Vl0c8a/uQDHeOglezQcm2HvDmK
+         Lwm72/cjC5yiYkMbEsfPNZx73i/MBMnT0OtRcnt+dRyVF2wyDfPClcrJG0zznygFVZ
+         +lZB2Bhq76WYonCxqPL1P6ojSli6GFQh8+qWH/7GbxPdnDRnv/E74A4S6upClpEX68
+         NDiXZPp9lZQtxM3eFik5QX4VUlJtG006avuq8/edznoj5kNRpNNPkJZjxZ4U1Bwl3C
+         Tz4Dbp8pj8edama0/G35eMoM9LtXtZPbCuqlhRHQaSDRZcw57vVtaGwPTaZymjlGeh
+         lGrPXBdnn0oKQ==
+Date:   Fri, 15 May 2020 13:18:53 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yonghong Song <yhs@fb.com>
+Subject: linux-next: manual merge of the bpf-next tree with the bpf tree
+Message-ID: <20200515131853.06375989@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+Content-Type: multipart/signed; boundary="Sig_/KiZE6h07nxf.M9k.R+KNNA2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/KiZE6h07nxf.M9k.R+KNNA2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-=E4=BA=8E 2020=E5=B9=B45=E6=9C=8815=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
-1:09:56, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
->On 05/15/2020 10:33 AM, Jiaxun Yang wrote:
->>
->> =E4=BA=8E 2020=E5=B9=B45=E6=9C=8815=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
-=8810:15:00, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
->>> When ATI Radeon graphics card has been compiled directly into the kern=
-el
->>> instead of as a module, we should make sure the firmware for the model
->>> (check available ones in /lib/firmware/radeon) is built-in to the kern=
-el
->>> as well, otherwise there exists the following fatal error during GPU i=
-nit,
->>> change CONFIG_DRM_RADEON=3Dy to CONFIG_DRM_RADEON=3Dm to fix it=2E
->>>
->> The commit message looks shocking=2E
->>
->> You'd better reword it as "MIPS: Loongson64: Mark GPU driver as module =
-in Kconfig"
->
->OK, I will modify the patch subject and send v2=2E
+Today's linux-next merge of the bpf-next tree got a conflict in:
 
-Sorry I meant defconfig not Kconfig=2E
->
->>
->> Thanks=2E
->
+  kernel/bpf/verifier.c
+
+between commit:
+
+  e92888c72fbd ("bpf: Enforce returning 0 for fentry/fexit progs")
+
+from the bpf tree and commit:
+
+  15d83c4d7cef ("bpf: Allow loading of a bpf_iter program")
+
+from the bpf-next tree.
+
+I fixed it up (I just used the latter version) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
 
 --=20
-Jiaxun Yang
+Cheers,
+Stephen Rothwell
+
+--Sig_/KiZE6h07nxf.M9k.R+KNNA2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6+Ch0ACgkQAVBC80lX
+0GwMCgf/ePk6dVQIX2ko7nhfY5wNlC0MXFnGhnEv/9Hmzgw2QnKpngT02+83FhFK
+cJcDIMSNg5ex4WdypOcbrge+NlGgdHte/wOClLxMQIOuRaDsVkQG1CfkIpPguIxe
+oLDmwuSWi2bSh94hfae9gAcO/IpquSb2J7LOeyJprszsPzJnP0xlnbs38nW3+OcB
+w/3Ewa6FWhlrlhzyiI664tBERYHUo28dpFa0sSCAVafmbu9cqQ7j8NJB2/X/czKu
+A5OBv+dyYztfESS6vn6heP1ppc1JSN88QMWQB+Qq+k4rtxC38RWE/LHlCbirvXrv
+6ZfRAjVH0z13SLMRDUdguN8acN2DQg==
+=HsuW
+-----END PGP SIGNATURE-----
+
+--Sig_/KiZE6h07nxf.M9k.R+KNNA2--
