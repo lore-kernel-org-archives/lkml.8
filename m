@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B54C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CB0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E52820787
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4724A20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:19:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U1iv++gs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q74mV6QR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgEONSw (ORCPT
+        id S1728060AbgEONTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:18:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51252 "EHLO
+        Fri, 15 May 2020 09:19:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgEONRC (ORCPT
+        with ESMTP id S1726295AbgEONRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:17:02 -0400
+        Fri, 15 May 2020 09:17:01 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96098C05BD12;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61A86C05BD10;
         Fri, 15 May 2020 06:17:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=uUwTC8qZH5aTuaqH+aLzce4GCEO3VHgfxQaRVX/zsNo=; b=U1iv++gsxX5R7NBJtaFKwLzv7s
-        Jk/JxUikwRkGC1Tx8iVOBs+43nO3ZI7yPhqyQ1rjEcZ59YuGLeuwqf8PCN2vAP9nd9PWmqRKBiIzt
-        fFasueM3IYJi4xejHHHVPycl8SSmktOnPudSupKmXf1rbYeIEkfKIxHHOQhFTtO1gKV0QQArt/fi+
-        fkl0aSNJ8QmBoalsNs9P/eDsFEB+joPJ87VfGaEEcKf3brMSjY9gUXK1h2T2eMeDxhgXQSn9/zmAL
-        7pqaIMClrCpN6ojqNdSMuuARd25FYLC0nTxPLhK1ER3sgXFTAhy+TYCgytfZvmpnb1kwq6BYBbZPh
-        ZfXZZAlg==;
+        bh=432shkXra2Q82xS7AlMDJKErtAEp0TEP0/wbg8xsW6c=; b=q74mV6QRfYbFQZYu2vwH5zkmR4
+        p+/bUMKwtWFAv/4hgmenXnXmpXdjkHro+yfLTWiyo6nSeW3lLhMvQbSN9qdAyDBH4Ea/Aaw2Yp0Ig
+        CDoi+Dls87v/CZtQMeGOOHH4rkfYPXH9AgQK1oqSZHRaOm1R6baM+5fBPYqcdkNpqDe+jeBUzW8kd
+        B4YJ/BjtdQhCkfPTr7FEHIM6BAp2+V0AJsiXzHoVI/MS13Iqkc/B+bRkLkxXAlf4auQIfxzJvwM0P
+        HhfRnC3z3U2KO6/XMic7iEVoXUDznjlvpXPYs7awPswHb4FWOAjhP9a4wsbJe5N3jqYkiVIBV6lde
+        m/ECie9w==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZaCz-0005dP-DW; Fri, 15 May 2020 13:17:01 +0000
+        id 1jZaCz-0005bP-6C; Fri, 15 May 2020 13:17:01 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 15/36] iomap: Support large pages in read paths
-Date:   Fri, 15 May 2020 06:16:35 -0700
-Message-Id: <20200515131656.12890-16-willy@infradead.org>
+Subject: [PATCH v4 12/36] bio: Add bio_for_each_thp_segment_all
+Date:   Fri, 15 May 2020 06:16:32 -0700
+Message-Id: <20200515131656.12890-13-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200515131656.12890-1-willy@infradead.org>
 References: <20200515131656.12890-1-willy@infradead.org>
@@ -57,75 +57,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Use thp_size() instead of PAGE_SIZE, offset_in_thp() instead of
-offset_in_page() and bio_for_each_thp_segment_all().
+Iterate once for each THP page instead of once for each base page.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- fs/iomap/buffered-io.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ include/linux/bio.h  | 13 +++++++++++++
+ include/linux/bvec.h | 23 +++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 423ffc9d4a97..75f42c0d4cd9 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -198,7 +198,7 @@ iomap_read_end_io(struct bio *bio)
- 	struct bio_vec *bvec;
- 	struct bvec_iter_all iter_all;
- 
--	bio_for_each_segment_all(bvec, bio, iter_all)
-+	bio_for_each_thp_segment_all(bvec, bio, iter_all)
- 		iomap_read_page_end_io(bvec, error);
- 	bio_put(bio);
- }
-@@ -238,6 +238,16 @@ static inline bool iomap_block_needs_zeroing(struct inode *inode,
- 		pos >= i_size_read(inode);
+diff --git a/include/linux/bio.h b/include/linux/bio.h
+index c1c0f9ea4e63..4cc883fd8d63 100644
+--- a/include/linux/bio.h
++++ b/include/linux/bio.h
+@@ -131,12 +131,25 @@ static inline bool bio_next_segment(const struct bio *bio,
+ 	return true;
  }
  
-+/*
-+ * Estimate the number of vectors we need based on the current page size;
-+ * if we're wrong we'll end up doing an overly large allocation or needing
-+ * to do a second allocation, neither of which is a big deal.
-+ */
-+static unsigned int iomap_nr_vecs(struct page *page, loff_t length)
++static inline bool bio_next_thp_segment(const struct bio *bio,
++				    struct bvec_iter_all *iter)
 +{
-+	return (length + thp_size(page) - 1) >> page_shift(page);
++	if (iter->idx >= bio->bi_vcnt)
++		return false;
++
++	bvec_thp_advance(&bio->bi_io_vec[iter->idx], iter);
++	return true;
 +}
 +
- static loff_t
- iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
- 		struct iomap *iomap, struct iomap *srcmap)
-@@ -294,7 +304,7 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
- 	if (!ctx->bio || !is_contig || bio_full(ctx->bio, plen)) {
- 		gfp_t gfp = mapping_gfp_constraint(page->mapping, GFP_KERNEL);
- 		gfp_t orig_gfp = gfp;
--		int nr_vecs = (length + PAGE_SIZE - 1) >> PAGE_SHIFT;
-+		int nr_vecs = iomap_nr_vecs(page, length);
+ /*
+  * drivers should _never_ use the all version - the bio may have been split
+  * before it got to the driver and the driver won't own all of it
+  */
+ #define bio_for_each_segment_all(bvl, bio, iter) \
+ 	for (bvl = bvec_init_iter_all(&iter); bio_next_segment((bio), &iter); )
++#define bio_for_each_thp_segment_all(bvl, bio, iter) \
++	for (bvl = bvec_init_iter_all(&iter); \
++	     bio_next_thp_segment((bio), &iter); )
  
- 		if (ctx->bio)
- 			submit_bio(ctx->bio);
-@@ -338,9 +348,9 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
+ static inline void bio_advance_iter(struct bio *bio, struct bvec_iter *iter,
+ 				    unsigned bytes)
+diff --git a/include/linux/bvec.h b/include/linux/bvec.h
+index a81c13ac1972..e08bd192e0ed 100644
+--- a/include/linux/bvec.h
++++ b/include/linux/bvec.h
+@@ -153,4 +153,27 @@ static inline void bvec_advance(const struct bio_vec *bvec,
+ 	}
+ }
  
- 	trace_iomap_readpage(page->mapping->host, 1);
- 
--	for (poff = 0; poff < PAGE_SIZE; poff += ret) {
-+	for (poff = 0; poff < thp_size(page); poff += ret) {
- 		ret = iomap_apply(inode, page_offset(page) + poff,
--				PAGE_SIZE - poff, 0, ops, &ctx,
-+				thp_size(page) - poff, 0, ops, &ctx,
- 				iomap_readpage_actor);
- 		if (ret <= 0) {
- 			WARN_ON_ONCE(ret == 0);
-@@ -374,7 +384,8 @@ iomap_readahead_actor(struct inode *inode, loff_t pos, loff_t length,
- 	loff_t done, ret;
- 
- 	for (done = 0; done < length; done += ret) {
--		if (ctx->cur_page && offset_in_page(pos + done) == 0) {
-+		if (ctx->cur_page &&
-+		    offset_in_thp(ctx->cur_page, pos + done) == 0) {
- 			if (!ctx->cur_page_in_bio)
- 				unlock_page(ctx->cur_page);
- 			put_page(ctx->cur_page);
++static inline void bvec_thp_advance(const struct bio_vec *bvec,
++				struct bvec_iter_all *iter_all)
++{
++	struct bio_vec *bv = &iter_all->bv;
++	unsigned int page_size = thp_size(bvec->bv_page);
++
++	if (iter_all->done) {
++		bv->bv_page += hpage_nr_pages(bv->bv_page);
++		bv->bv_offset = 0;
++	} else {
++		BUG_ON(bvec->bv_offset >= page_size);
++		bv->bv_page = bvec->bv_page;
++		bv->bv_offset = bvec->bv_offset & (page_size - 1);
++	}
++	bv->bv_len = min(page_size - bv->bv_offset,
++			 bvec->bv_len - iter_all->done);
++	iter_all->done += bv->bv_len;
++
++	if (iter_all->done == bvec->bv_len) {
++		iter_all->idx++;
++		iter_all->done = 0;
++	}
++}
+ #endif /* __LINUX_BVEC_ITER_H */
 -- 
 2.26.2
 
