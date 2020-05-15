@@ -2,88 +2,84 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA22EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF24C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8623020728
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:22:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="nbGpSns7"
+	by mail.kernel.org (Postfix) with ESMTP id 5C2C020727
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgEOSWz (ORCPT
+        id S1726653AbgEOSXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 14:22:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgEOSWz (ORCPT
+        Fri, 15 May 2020 14:23:25 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38480 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgEOSXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 14:22:55 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 175E8C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 11:22:55 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0d67004cd1c8a6a574a4fa.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6700:4cd1:c8a6:a574:a4fa])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 922ED1EC028D;
-        Fri, 15 May 2020 20:22:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589566973;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=Sq9tviaQNeT+bKn+8y6t6z3482J+xIgqd1tFGIStlew=;
-        b=nbGpSns76YiTYHagolg68Lk4njOIOqjRS7tOrqLQ7D4tdCqZdPj/naAbE4JGrzJBUrGAYw
-        PumSX9/TA82TI5/Pb3FIgt7NcwvuWWhueUwLL5n0K0zTFoueQ5wyHOwNx8eCrNPVgig3C5
-        CxHAhMJpJTRneNx+bZrSljIZyQAlsao=
-From:   Borislav Petkov <bp@alien8.de>
-To:     X86 ML <x86@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] x86/nmi: Remove edac.h include leftover
-Date:   Fri, 15 May 2020 20:22:46 +0200
-Message-Id: <20200515182246.3553-1-bp@alien8.de>
-X-Mailer: git-send-email 2.21.0
+        Fri, 15 May 2020 14:23:25 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6FC1980005C9;
+        Fri, 15 May 2020 18:23:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Ti73dIEaZ6s6; Fri, 15 May 2020 21:23:22 +0300 (MSK)
+Date:   Fri, 15 May 2020 21:23:22 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] spi: dw: Clear DMAC register when done or stopped
+Message-ID: <20200515182322.mmsfe5zu5tqmovmf@mobilestation>
+References: <20200515174856.1406-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515175100.GL5066@sirena.org.uk>
+ <20200515175420.qgejailgnzswxtdz@mobilestation>
+ <20200515181219.GN5066@sirena.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200515181219.GN5066@sirena.org.uk>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+On Fri, May 15, 2020 at 07:12:19PM +0100, Mark Brown wrote:
+> On Fri, May 15, 2020 at 08:54:20PM +0300, Serge Semin wrote:
+> > On Fri, May 15, 2020 at 06:51:00PM +0100, Mark Brown wrote:
+> > > On Fri, May 15, 2020 at 08:48:54PM +0300, Serge Semin wrote:
+> 
+> > > > Acked-by: Mark Brown <broonie@kernel.org>
+> 
+> > > I didn't ack this but Andy did (or at least the for-5.8 version)?
+> 
+> > Andy said he needs Fixes field to get his RB tag. You said:
+> > "This and patch 4 look good ..." Normally this means to get Acked-by.
+> 
+> Unless someone explicitly gives you a tag for something you shouldn't
+> usually assume that one applies, especially with maintainers giving acks
+> on their own trees since that has process meaning - it's saying that the
+> maintainer is OK with it being applied to some other tree which is
+> something it's worth being careful about.
 
-... which
+Hm, it depends on maintainer and sub-system then. I did such "looks good" ->
+Acked-by conversions before. Not that many, but noone argued. [1] also says it's
+sometimes possible. Anyway, sorry for inconvenience. I'll get to remember that
+I'd better ask explicit acked-by from you, no assumption.
 
-  db47d5f85646 ("x86/nmi, EDAC: Get rid of DRAM error reporting thru PCI SERR NMI")
+[1] Documentation/process/submitting-patches.rst
 
-forgot to remove.
+-Sergey
 
-No functional changes.
+> 
+> On the other hand if someone says "if you do X you can add tag Y" and
+> you do X then you can generally add the tag if you do Y.
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/kernel/nmi.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 6407ea21fa1b..bdcc5146de96 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -25,10 +25,6 @@
- #include <linux/atomic.h>
- #include <linux/sched/clock.h>
- 
--#if defined(CONFIG_EDAC)
--#include <linux/edac.h>
--#endif
--
- #include <asm/cpu_entry_area.h>
- #include <asm/traps.h>
- #include <asm/mach_traps.h>
--- 
-2.21.0
 
