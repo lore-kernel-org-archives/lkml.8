@@ -2,38 +2,38 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9358207C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C7B207C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgEPALg (ORCPT
+        id S1728267AbgEPALj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 20:11:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41200 "EHLO
+        Fri, 15 May 2020 20:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728154AbgEPALQ (ORCPT
+        by vger.kernel.org with ESMTP id S1728139AbgEPALO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 20:11:16 -0400
+        Fri, 15 May 2020 20:11:14 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C51FC05BD0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 17:11:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A9F5C05BD0B
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 17:11:14 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jZkPh-0002cq-M6; Sat, 16 May 2020 02:10:49 +0200
+        id 1jZkPg-0002bY-9h; Sat, 16 May 2020 02:10:48 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 10BB3FF834;
-        Sat, 16 May 2020 02:10:49 +0200 (CEST)
-Message-Id: <20200515235127.792767126@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id C8C94FF834;
+        Sat, 16 May 2020 02:10:47 +0200 (CEST)
+Message-Id: <20200515235127.699422368@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sat, 16 May 2020 01:46:21 +0200
+Date:   Sat, 16 May 2020 01:46:20 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V6 34/37] x86/entry/32: Remove redundant irq disable code
+Subject: [patch V6 33/37] x86/entry: Make enter_from_user_mode() static
 References: <20200515234547.710474468@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -72,113 +72,21 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-All exceptions/interrupts return with interrupts disabled now. No point in
-doing this in ASM again.
+The ASM users are gone. All callers are local.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-
----
- arch/x86/entry/entry_32.S |   76 ----------------------------------------------
- 1 file changed, 76 deletions(-)
-
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -51,34 +51,6 @@
+diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+index 72588f1a45a2..a0772b0d6bc2 100644
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -54,7 +54,7 @@
+  * 2) Invoke context tracking if enabled to reactivate RCU
+  * 3) Trace interrupts off state
+  */
+-__visible noinstr void enter_from_user_mode(void)
++static noinstr void enter_from_user_mode(void)
+ {
+ 	enum ctx_state state = ct_state();
  
- 	.section .entry.text, "ax"
- 
--/*
-- * We use macros for low-level operations which need to be overridden
-- * for paravirtualization.  The following will never clobber any registers:
-- *   INTERRUPT_RETURN (aka. "iret")
-- *   GET_CR0_INTO_EAX (aka. "movl %cr0, %eax")
-- *   ENABLE_INTERRUPTS_SYSEXIT (aka "sti; sysexit").
-- *
-- * For DISABLE_INTERRUPTS/ENABLE_INTERRUPTS (aka "cli"/"sti"), you must
-- * specify what registers can be overwritten (CLBR_NONE, CLBR_EAX/EDX/ECX/ANY).
-- * Allowing a register to be clobbered can shrink the paravirt replacement
-- * enough to patch inline, increasing performance.
-- */
--
--#ifdef CONFIG_PREEMPTION
--# define preempt_stop(clobbers)	DISABLE_INTERRUPTS(clobbers); TRACE_IRQS_OFF
--#else
--# define preempt_stop(clobbers)
--#endif
--
--.macro TRACE_IRQS_IRET
--#ifdef CONFIG_TRACE_IRQFLAGS
--	testl	$X86_EFLAGS_IF, PT_EFLAGS(%esp)     # interrupts off?
--	jz	1f
--	TRACE_IRQS_ON
--1:
--#endif
--.endm
--
- #define PTI_SWITCH_MASK         (1 << PAGE_SHIFT)
- 
- /*
-@@ -881,38 +853,6 @@ SYM_CODE_START(ret_from_fork)
- SYM_CODE_END(ret_from_fork)
- .popsection
- 
--/*
-- * Return to user mode is not as complex as all this looks,
-- * but we want the default path for a system call return to
-- * go as quickly as possible which is why some of this is
-- * less clear than it otherwise should be.
-- */
--
--	# userspace resumption stub bypassing syscall exit tracing
--SYM_CODE_START_LOCAL(ret_from_exception)
--	preempt_stop(CLBR_ANY)
--ret_from_intr:
--#ifdef CONFIG_VM86
--	movl	PT_EFLAGS(%esp), %eax		# mix EFLAGS and CS
--	movb	PT_CS(%esp), %al
--	andl	$(X86_EFLAGS_VM | SEGMENT_RPL_MASK), %eax
--#else
--	/*
--	 * We can be coming here from child spawned by kernel_thread().
--	 */
--	movl	PT_CS(%esp), %eax
--	andl	$SEGMENT_RPL_MASK, %eax
--#endif
--	cmpl	$USER_RPL, %eax
--	jb	restore_all_kernel		# not returning to v8086 or userspace
--
--	DISABLE_INTERRUPTS(CLBR_ANY)
--	TRACE_IRQS_OFF
--	movl	%esp, %eax
--	call	prepare_exit_to_usermode
--	jmp	restore_all_switch_stack
--SYM_CODE_END(ret_from_exception)
--
- SYM_ENTRY(__begin_SYSENTER_singlestep_region, SYM_L_GLOBAL, SYM_A_NONE)
- /*
-  * All code from here through __end_SYSENTER_singlestep_region is subject
-@@ -1147,22 +1087,6 @@ SYM_FUNC_START(entry_INT80_32)
- 	 */
- 	INTERRUPT_RETURN
- 
--restore_all_kernel:
--#ifdef CONFIG_PREEMPTION
--	DISABLE_INTERRUPTS(CLBR_ANY)
--	cmpl	$0, PER_CPU_VAR(__preempt_count)
--	jnz	.Lno_preempt
--	testl	$X86_EFLAGS_IF, PT_EFLAGS(%esp)	# interrupts off (exception path) ?
--	jz	.Lno_preempt
--	call	preempt_schedule_irq
--.Lno_preempt:
--#endif
--	TRACE_IRQS_IRET
--	PARANOID_EXIT_TO_KERNEL_MODE
--	BUG_IF_WRONG_CR3
--	RESTORE_REGS 4
--	jmp	.Lirq_return
--
- .section .fixup, "ax"
- SYM_CODE_START(asm_iret_error)
- 	pushl	$0				# no error code
 
