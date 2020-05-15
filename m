@@ -2,88 +2,165 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C021C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27267C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D980920767
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:23:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589549037;
-	bh=/0i5GAiE3iEWTH++PER3m05MtECmVly6M7AdsDkEHyA=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=JDSDLW9fIkZQgESEN9zIwTkX9yJC8dDWfz0aA3lJfsjZaF5v4V8JzHhx7s+fC5OW4
-	 IXt7R8ga9Qyc6hmSvrg53dH4UZbsnbsOTWZy6+jokV1gIZ4N5rNOsKmtyq0uA2jNDS
-	 vx9sxJMm6CdSFqgh0wosZHxZoCuY8/oDOSYkzVds=
+	by mail.kernel.org (Postfix) with ESMTP id E853C2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:24:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Y0Zf8seE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgEONX5 (ORCPT
+        id S1726239AbgEONYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:23:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgEONX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:23:56 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C8D12065F;
-        Fri, 15 May 2020 13:23:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589549036;
-        bh=/0i5GAiE3iEWTH++PER3m05MtECmVly6M7AdsDkEHyA=;
-        h=Date:From:To:Subject:From;
-        b=eUxA01FL7MpcaT18FllxBXLQi5y9mqy236JTywcAJTO8U50scr1ovwBvhXnf5rcCd
-         NmB3ZYqF9blLrTuUnzPPACskQWp11Dk+8WHs4VphSMi/paxMa0PyXFdS6S425XRUnm
-         evmmrflY204CAYpsmKTxynPd9YZaGxIGAYTLKk2U=
-Received: by pali.im (Postfix)
-        id BF6F15F0; Fri, 15 May 2020 15:23:53 +0200 (CEST)
-Date:   Fri, 15 May 2020 15:23:53 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: mwifiex: Firmware name for W8997 sdio wifi chip
-Message-ID: <20200515132353.vfor7v4buzoddfmb@pali>
+        Fri, 15 May 2020 09:24:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbgEONYn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 09:24:43 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F89C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:24:43 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id b6so2424470qkh.11
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QaWgWrHuxPFWiLAhp4MGw0Ee13FyqS0FhmE2+InAr5c=;
+        b=Y0Zf8seELSKB++cOysfnNke0Q1k76yTJbnwd9rRfJFzYLkxIfL9/nlC1CVvTkXY1r9
+         X237RzZx508nP1DQhXxUfM8ufYAA/sDlD7aXCy1RECkqi3B88KBqXqAgLfXdeea+JOKP
+         sr2HNKzwKT7a/5CHP+mQyk4HPqmfnePuexg9SGO+XsHXBaYAmhb3LohQz8G652U4JNdY
+         435kJdjSIfXUjHSpqzxa2p+WSHdqN33IjL7oO0ZM4yziSaY7z58qoJOvFZhf5gANOz29
+         cJF7y8i/lutV2jpKNQPdSLpWfP9YWiF7zl3araZDTay9TmA9VA9SJMWWSaxODkYdbBr5
+         t/LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QaWgWrHuxPFWiLAhp4MGw0Ee13FyqS0FhmE2+InAr5c=;
+        b=pIxnvasazeDFNcyEX9jH31KtUMJPHX5LeQrCoqyL8E4REu519NazMRRUltd8Q0PVTN
+         I/b/CNmuPGwkgw7/jZhBp4CcSPz8aNYKHzwk1KxZGBdB1Y2MVSqSmI+hWK1T+buvfeEL
+         mGkXoR06reA1CwLO5cAzkCCkIOvawaHgoFKfHF7mP2jJPmB93m8eK8O28jUTvv88ZseH
+         zJXnfOxpSbtEYydYsDsTwoyhgZnz2PSgO4nQQfidcZS7v/W0PERqeGdEl5CShDZ+C6Q9
+         MFE2g7MAVcsVKZN6nWKUeBM/Pgd64UviZBxDLEHduhvoFUxmeSS9iGePjZmak4kkWNMt
+         DCrA==
+X-Gm-Message-State: AOAM533a9DTPeZdHh7dUruaf61egkiQGX59mekoyN/08fPwRu1IQn0HD
+        zpjf12ECKYk+mcEF2THJa1tMnw==
+X-Google-Smtp-Source: ABdhPJyglpfBWXibDDxv4gJRiM6bCFQxrloF93IYOhe1B1YqX0LapZGO/P4tWM2dZqB+l9qK9jPRRQ==
+X-Received: by 2002:a37:9e06:: with SMTP id h6mr3248738qke.400.1589549082491;
+        Fri, 15 May 2020 06:24:42 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:90a4])
+        by smtp.gmail.com with ESMTPSA id t67sm1516787qka.17.2020.05.15.06.24.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 06:24:41 -0700 (PDT)
+Date:   Fri, 15 May 2020 09:24:21 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Shakeel Butt <shakeelb@google.com>, Mel Gorman <mgorman@suse.de>,
+        Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] memcg: expose root cgroup's memory.stat
+Message-ID: <20200515132421.GC591266@cmpxchg.org>
+References: <20200508170630.94406-1-shakeelb@google.com>
+ <20200508214405.GA226164@cmpxchg.org>
+ <CALvZod5VHHUV+_AXs4+5sLOPGyxm709kQ1q=uHMPVxW8pwXZ=g@mail.gmail.com>
+ <20200515082955.GJ29153@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200515082955.GJ29153@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Fri, May 15, 2020 at 10:29:55AM +0200, Michal Hocko wrote:
+> On Sat 09-05-20 07:06:38, Shakeel Butt wrote:
+> > On Fri, May 8, 2020 at 2:44 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > >
+> > > On Fri, May 08, 2020 at 10:06:30AM -0700, Shakeel Butt wrote:
+> > > > One way to measure the efficiency of memory reclaim is to look at the
+> > > > ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
+> > > > not updated consistently at the system level and the ratio of these are
+> > > > not very meaningful. The pgsteal and pgscan are updated for only global
+> > > > reclaim while pgrefill gets updated for global as well as cgroup
+> > > > reclaim.
+> > > >
+> > > > Please note that this difference is only for system level vmstats. The
+> > > > cgroup stats returned by memory.stat are actually consistent. The
+> > > > cgroup's pgsteal contains number of reclaimed pages for global as well
+> > > > as cgroup reclaim. So, one way to get the system level stats is to get
+> > > > these stats from root's memory.stat, so, expose memory.stat for the root
+> > > > cgroup.
+> > > >
+> > > >       from Johannes Weiner:
+> > > >       There are subtle differences between /proc/vmstat and
+> > > >       memory.stat, and cgroup-aware code that wants to watch the full
+> > > >       hierarchy currently has to know about these intricacies and
+> > > >       translate semantics back and forth.
+> 
+> Can we have those subtle differences documented please?
+> 
+> > > >
+> > > >       Generally having the fully recursive memory.stat at the root
+> > > >       level could help a broader range of usecases.
+> > >
+> > > The changelog begs the question why we don't just "fix" the
+> > > system-level stats. It may be useful to include the conclusions from
+> > > that discussion, and why there is value in keeping the stats this way.
+> > >
+> > 
+> > Right. Andrew, can you please add the following para to the changelog?
+> > 
+> > Why not fix the stats by including both the global and cgroup reclaim
+> > activity instead of exposing root cgroup's memory.stat? The reason is
+> > the benefit of having metrics exposing the activity that happens
+> > purely due to machine capacity rather than localized activity that
+> > happens due to the limits throughout the cgroup tree. Additionally
+> > there are userspace tools like sysstat(sar) which reads these stats to
+> > inform about the system level reclaim activity. So, we should not
+> > break such use-cases.
+> > 
+> > > > Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> > > > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> > >
+> > > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> > 
+> > Thanks a lot.
+> 
+> I was quite surprised that the patch is so simple TBH. For some reason
+> I've still had memories that we do not account for root memcg (likely
+> because mem_cgroup_is_root(memcg) bail out in the try_charge. But stats
+> are slightly different here.
 
-There is inconsistency in firmware naming for W8997 SDIO wifi chip.
+Yep, we skip the page_counter for root, but keep in mind that cgroup1
+*does* have a root-level memory.stat, so (for the most part) we've
+been keeping consumer stats for the root level the whole time.
 
-Firmware for this chip is stored in linux-firmware [1] repository under
-filename sdsd8997_combo_v4.bin.
+> counters because they are not really all the same. E.g.
+> - mem_cgroup_charge_statistics accounts for each memcg
 
-But mainline linux kernel driver mwifiex_sdio.ko [2] expects and loads
-firmware for this chip from filename sd8997_uapsta.bin.
+Yep, that's heritage from cgroup1.
 
-So result is that W8997 SDIO wifi chip does not work out of box and
-people are complaining where to get "sd8997_uapsta.bin" firmware file as
-it does not exist [3]. People suggest to rename it.
+> - memcg_charge_kernel_stack relies on pages being associated with a
+>   memcg and that in turn relies on __memcg_kmem_charge_page which bails
+>   out on root memcg
 
-Do you have any opinion how to solve this problem?
+You're right. It should only bypass the page_counter, but still set
+page->mem_cgroup = root_mem_cgroup, just like user pages.
 
-As Marvell is using sdsd8997_combo_v4.bin name for this firmware I would
-suggest to extend mwifiex_sdio.ko Linux driver to load this firmware
-also from the file sdsd8997_combo_v4.bin.
+This counter also doesn't get exported on cgroup1, so it would indeed
+be a new bug. It needs to be fixed before this patch here.
 
-Also firmware file sdsd8997_combo_v4.bin in linux-firmware git
-repository [1] is in version 16.68.1.p179. But there is already newer
-version available (e.g. 16.68.1.p197) . Are you able to update firmware
-for W8997 SDIO chip in linux-firmware repository to the lasted version?
+> - memcg_charge_slab (NR_SLAB*) skips over root memcg as well
 
-[1] - https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/mrvl
-[2] - https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/wireless/marvell/mwifiex/sdio.h?h=v5.6#n41
-[3] - https://raspberrypi.stackexchange.com/q/93478
+Same thing with these two.
