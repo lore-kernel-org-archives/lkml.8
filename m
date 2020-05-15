@@ -2,82 +2,107 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F696C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BB4C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E770620709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91BD520709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589578198;
+	bh=nlFjtF3iNBR9I/CCNMH8yulQumgP66HMnDkbHuOv1/Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AEysGHsBpAM1fZLV6QBOF8Rj2/xihLjQHqdeVxJ2kjA/wQ94utiMO4Sv84mQjckdB
+	 sTx3NQjlkRdQ0AXZ982xQdyJJbsbHN/1J2b1Y+Te4wiALRGegfDex7t/nZoqKFTqbL
+	 oivsFvICKHZjM/jBvqypmcRT9syfqZUKsVeq/Kto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgEOV3w (ORCPT
+        id S1728154AbgEOV35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:29:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726653AbgEOV3t (ORCPT
+        Fri, 15 May 2020 17:29:57 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38786 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbgEOV3D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:29:49 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 773ABC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 14:29:49 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jZhtK-0000R7-1f; Fri, 15 May 2020 23:29:14 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 6ECFC100606; Fri, 15 May 2020 23:29:13 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [patch V4 part 1 27/36] arm64: Prepare arch_nmi_enter() for recursion
-In-Reply-To: <20200505134100.771491291@linutronix.de>
-References: <20200505131602.633487962@linutronix.de> <20200505134100.771491291@linutronix.de>
-Date:   Fri, 15 May 2020 23:29:13 +0200
-Message-ID: <873680evkm.fsf@nanos.tec.linutronix.de>
+        Fri, 15 May 2020 17:29:03 -0400
+Received: by mail-pl1-f194.google.com with SMTP id m7so1431073plt.5;
+        Fri, 15 May 2020 14:29:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=q9PwzdCQf8OZTe8dAYOPmHkC2y8QfZP7n40O3xNZ4X4=;
+        b=df8TRJLJ1RXLSRHcRrfIw6OS3qe40NKqM4dfJfApWY1E4d+dz9n9baaCmPYQ/DBwRp
+         jc3meNVqVGCIpN36KXwDybymH9HtacPx9md6eVmV1jzSRy741aXHSB4qqELBdHVBILwZ
+         PNm3cSm1BA/1cJSdItK8w655sVthAphMKvmneGVOdVHNHO0JYN884aI0iEl02ulTGkVB
+         xFY0+B3tGCPVmTsWWUcaWBK2ViftfwRG98YbLjZEzwquB+0Jp6cdOSLQIPecnw5f7k1s
+         E6O9vyjv6aXkr768hn7O21cstq//0SK+WXSISk7YLB+p586L7xYWm/YUbmcmpBD+DIHc
+         bu7A==
+X-Gm-Message-State: AOAM532O50ZBCKvJ04TEdlr8N/DXD7jAVS9PkhjgDYzmtrlGRAow97NF
+        sWtEUAS4/kzoEJfNzw3aKIg=
+X-Google-Smtp-Source: ABdhPJyrm+xaRGTabJz/en5ByrR3PDdgfo69rGBaeEQxT6mtQVCqVD2NZl0Yj2IiJxaWLZHc4xWqTQ==
+X-Received: by 2002:a17:902:988a:: with SMTP id s10mr5292140plp.204.1589578142589;
+        Fri, 15 May 2020 14:29:02 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id cc8sm2217813pjb.11.2020.05.15.14.28.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 14:28:55 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 0FF8E42340; Fri, 15 May 2020 21:28:50 +0000 (UTC)
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     jeyu@kernel.org
+Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
+        schlad@suse.de, andriy.shevchenko@linux.intel.com,
+        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Alex Elder <elder@kernel.org>
+Subject: [PATCH v2 10/15] soc: qcom: ipa: use new module_firmware_crashed()
+Date:   Fri, 15 May 2020 21:28:41 +0000
+Message-Id: <20200515212846.1347-11-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20200515212846.1347-1-mcgrof@kernel.org>
+References: <20200515212846.1347-1-mcgrof@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> writes:
+This makes use of the new module_firmware_crashed() to help
+annotate when firmware for device drivers crash. When firmware
+crashes devices can sometimes become unresponsive, and recovery
+sometimes requires a driver unload / reload and in the worst cases
+a reboot.
 
-> From: Frederic Weisbecker <frederic@kernel.org>
+Using a taint flag allows us to annotate when this happens clearly.
 
-This changelog was very empty. Here is what Peter provided:
+Cc: Alex Elder <elder@kernel.org>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ drivers/net/ipa/ipa_modem.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- When using nmi_enter() recursively, arch_nmi_enter() must also be recursion
- safe. In particular, it must be ensured that HCR_TGE is always set while in
- NMI context when in HYP mode, and be restored to it's former state when
- done.
-
- The current code fails this when interleaved wrong. Notably it overwrites
- the original hcr state on nesting.
-
- Introduce a nesting counter to make sure to store the original value.
+diff --git a/drivers/net/ipa/ipa_modem.c b/drivers/net/ipa/ipa_modem.c
+index ed10818dd99f..1790b87446ed 100644
+--- a/drivers/net/ipa/ipa_modem.c
++++ b/drivers/net/ipa/ipa_modem.c
+@@ -285,6 +285,7 @@ static void ipa_modem_crashed(struct ipa *ipa)
+ 	struct device *dev = &ipa->pdev->dev;
+ 	int ret;
+ 
++	module_firmware_crashed();
+ 	ipa_endpoint_modem_pause_all(ipa, true);
+ 
+ 	ipa_endpoint_modem_hol_block_clear_all(ipa);
+-- 
+2.26.2
 
