@@ -2,151 +2,232 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26DBC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 866392076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80584206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OVS0BvkZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eJcK1GVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbgEOQiQ (ORCPT
+        id S1726339AbgEOQiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:38:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34940 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726302AbgEOQiP (ORCPT
+        Fri, 15 May 2020 12:38:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726231AbgEOQiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:38:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589560693;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6gZ5R0zPx7v8Q5QUl+dC4PL1yY2tt7RqoIbj3l8sE74=;
-        b=OVS0BvkZTZX8VAP7WKqCcEsyKi8CcjKryS5eG11F3TGafFb9uKe2aMPgGIG8oXR9on4pYd
-        F6vY+6xDzKHREcgmkNHw1icJMNAA5cDoJSa4QYAIyfmZZwe+hxk/sJNk44/C3OrI5KqQ3x
-        96eTsP9kzdm3ZVG8jc4sdA/CwDNtLmc=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-159-DoEot4NXOA-wB8tVlTv9RQ-1; Fri, 15 May 2020 12:38:10 -0400
-X-MC-Unique: DoEot4NXOA-wB8tVlTv9RQ-1
-Received: by mail-wr1-f72.google.com with SMTP id y7so1433449wrd.12
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:38:09 -0700 (PDT)
+        Fri, 15 May 2020 12:38:12 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E37BC05BD09
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:38:12 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id g35so1025189uad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dsWS87oi/iCZiA7NcMAjL2FtmRuX/wXJ/5rlQnp6zmo=;
+        b=eJcK1GVzgHPtvBtl7+i8mN1qpqG8SB0hDnStaypr1OR9DbkSvrc8siXYG/buCjwsq8
+         jLPh8H/3sIUkFgicYCe+u1bnBMCswUGPYiaXUWGNAy19k9PyqIvLQ8Xi2N9GVMtZUwnu
+         qTpfoTHvj8l/TNVlZrH7R6nglxOwowCbETks8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6gZ5R0zPx7v8Q5QUl+dC4PL1yY2tt7RqoIbj3l8sE74=;
-        b=FRqcRauuMIzBe02CCUzBO4fXakSxISCs2o8/1zLYwZZoVWUqs0a3YenCg6961PplIC
-         s1IFnG5P1GnylDMibquHgQl5dFz2oFAICNXnWFRDEzUQ5MzsejlMkeTs8WK3enWqdsXP
-         KMdpx2C84D6lrODqkzP8sYztZBS5eVAK1yS9KJcaC5++591CXN8WJMKFq+yjo/2fy/kr
-         mQEZucx/c/V42XRkZEAJiv0r2A1Q4c4pbiEnVA/HgTdaFrc7MrF86c0JaT0YATItmclx
-         wpzjzRuzojgdPGmifVDkg0pTGg6Pix8YrXizRiDDiw1lS4dnf1+J1kl5A+Y0aY6RxN+m
-         U03g==
-X-Gm-Message-State: AOAM532PVUttSoOr6M88+orJ/XycogvuAN9S2H3lUyIIpuOJiMndEBmr
-        8isZjhUopKm99qkDcvFY5uH8huhSzcA3WzW8WlMtSAXbzcsYrNl+nED02P4sMHa6EEaYYmFm7fr
-        uufr4LmLHZl/bWgO+BYP9BI0u
-X-Received: by 2002:adf:dc0f:: with SMTP id t15mr5068326wri.165.1589560688995;
-        Fri, 15 May 2020 09:38:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxF+hp4GbO5uog6iIPuueL5jjs4PZEKrB1UaoTN20cj9bx0TDVFE81Yzd2+7qty/BxbZXjrMA==
-X-Received: by 2002:adf:dc0f:: with SMTP id t15mr5068296wri.165.1589560688701;
-        Fri, 15 May 2020 09:38:08 -0700 (PDT)
-Received: from steredhat.redhat.com ([79.49.207.108])
-        by smtp.gmail.com with ESMTPSA id b145sm4680274wme.41.2020.05.15.09.38.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 09:38:08 -0700 (PDT)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 1/2] io_uring: add 'cq_flags' field for the CQ ring
-Date:   Fri, 15 May 2020 18:38:04 +0200
-Message-Id: <20200515163805.235098-2-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200515163805.235098-1-sgarzare@redhat.com>
-References: <20200515163805.235098-1-sgarzare@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dsWS87oi/iCZiA7NcMAjL2FtmRuX/wXJ/5rlQnp6zmo=;
+        b=cbmCMGZiGYGYpMPk9r5rlOJnqNsq0yW2IIJNvRZVq+K0DI70p3SLNygPPKDDfAtm4N
+         Izb08eBtrWXg/a97y6vKl618dhRIaiHyZCWlcXtxJMhhVqRlROGAsbntA1YhAAvR8aGM
+         PZFq+68gXkxmEpNCbeRO8wVnvj/ayUPW8gQh5PMkoKSkL3TJK77VOQr1ZoEiT0cxJ9OB
+         blYhPAnFEt3Mn3s8qStLJnycLg6aDJkZoUgXF5QIKxZeAJJwYVOXzRni3OsP0uC6V/Z6
+         DBy4WYRFNRlHkGbIX2waMMx7swOME6Ol92GePG813g8TWAbuT88ZScME3+HwmnpF7F5B
+         7j4Q==
+X-Gm-Message-State: AOAM531nj3DTvR3ZfcHL149ONYFuSLBrC64xyJdpzb5CqHtqTiSwdhOL
+        u+bn2V4y03kqOviHAl2zO02Ic2eqypw=
+X-Google-Smtp-Source: ABdhPJx34YlhoQIY6w2ReB5qev7Mi3lHsxcP9Yg162KpuXdPCG2aYzo0Z/55wPQdqjrvC1C7P9UjbQ==
+X-Received: by 2002:a9f:3244:: with SMTP id y4mr3694358uad.49.1589560690522;
+        Fri, 15 May 2020 09:38:10 -0700 (PDT)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id h2sm702711vkn.12.2020.05.15.09.38.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2020 09:38:09 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id 36so1009926uaf.9
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:38:09 -0700 (PDT)
+X-Received: by 2002:ab0:69cc:: with SMTP id u12mr216029uaq.22.1589560688373;
+ Fri, 15 May 2020 09:38:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1588339863-1322-1-git-send-email-kalyan_t@codeaurora.org>
+ <CAD=FV=UJGivCyp=t0J++1DbSFDVf+5zSCcXgh83VZtssBmavjg@mail.gmail.com> <32c01e9a5277bdbdbab868eb71688184@codeaurora.org>
+In-Reply-To: <32c01e9a5277bdbdbab868eb71688184@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 15 May 2020 09:37:57 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VVi6oUDx_2Yf543ZphS1oQJiQU8St0XNUHs7HyPkoTeg@mail.gmail.com>
+Message-ID: <CAD=FV=VVi6oUDx_2Yf543ZphS1oQJiQU8St0XNUHs7HyPkoTeg@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH] drm/msm/dpu: ensure device suspend happens
+ during PM sleep
+To:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, mkrishn@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        travitej@codeaurora.org, LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the new 'cq_flags' field that should be written by
-the application and read by the kernel.
+Hi,
 
-This new field is available to the userspace application through
-'cq_off.flags'.
-We are using 4-bytes previously reserved and set to zero. This means
-that if the application finds this field to zero, then the new
-functionality is not supported.
+On Fri, May 15, 2020 at 5:06 AM <kalyan_t@codeaurora.org> wrote:
+>
+> On 2020-05-14 21:47, Doug Anderson wrote:
+> > Hi,
+> >
+> > On Fri, May 1, 2020 at 6:31 AM Kalyan Thota <kalyan_t@codeaurora.org>
+> > wrote:
+> >>
+> >> "The PM core always increments the runtime usage counter
+> >> before calling the ->suspend() callback and decrements it
+> >> after calling the ->resume() callback"
+> >>
+> >> DPU and DSI are managed as runtime devices. When
+> >> suspend is triggered, PM core adds a refcount on all the
+> >> devices and calls device suspend, since usage count is
+> >> already incremented, runtime suspend was not getting called
+> >> and it kept the clocks on which resulted in target not
+> >> entering into XO shutdown.
+> >>
+> >> Add changes to force suspend on runtime devices during pm sleep.
+> >>
+> >> Changes in v1:
+> >>  - Remove unnecessary checks in the function
+> >>     _dpu_kms_disable_dpu (Rob Clark).
+> >>
+> >> Changes in v2:
+> >>  - Avoid using suspend_late to reset the usagecount
+> >>    as suspend_late might not be called during suspend
+> >>    call failures (Doug).
+> >>
+> >> Changes in v3:
+> >>  - Use force suspend instead of managing device usage_count
+> >>    via runtime put and get API's to trigger callbacks (Doug).
+> >>
+> >> Changes in v4:
+> >>  - Check the return values of pm_runtime_force_suspend and
+> >>    pm_runtime_force_resume API's and pass appropriately (Doug).
+> >>
+> >> Changes in v5:
+> >
+> > Can you please put the version number properly in your subject?  It's
+> > really hard to tell one version of your patch from another.
+> >
+> >
+> >>  - With v4 patch, test cycle has uncovered issues in device resume.
+> >>
+> >>    On bubs: cmd tx failures were seen as SW is sending panel off
+> >>    commands when the dsi resources are turned off.
+> >>
+> >>    Upon suspend, DRM driver will issue a NULL composition to the
+> >>    dpu, followed by turning off all the HW blocks.
+> >>
+> >>    v5 changes will serialize the NULL commit and resource unwinding
+> >>    by handling them under PM prepare and PM complete phases there by
+> >>    ensuring that clks are on when panel off commands are being
+> >>    processed.
+> >
+> > I'm still most definitely not an expert in how all the DRM pieces all
+> > hook up together, but the solution you have in this patch seems wrong
+> > to me.  As far as I can tell the "prepare" state isn't supposed to be
+> > actually doing the suspend work and here that's exactly what you're
+> > doing.  I think you should find a different solution to ensure
+> > ordering is correct.
+> >
+> > -Doug
+> >
+>
+> Hi,
 
-In the next patch we will introduce the first flag available.
+Quite honestly I'm probably not the right person to be reviewing this
+code.  I mostly just noticed one of your early patches and it looked
+strange to me.  Hopefully someone with actual experience in how all
+the DRM components work together can actually review and see if this
+makes sense.  Maybe Sean would know better?
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+That being said, let me at least look at what you're saying...
+
+
+> Prepare and Complete are callbacks defined as part of Sleep and Resume
+> sequence
+>
+> Entering PM SUSPEND the phases are : prepare --> suspend -->
+> suspend_late --> suspend_noirq.
+> While leaving PM SUSPEND the phases are: resume_noirq --> resume_early
+> --> resume --> complete.
+
+Sure, it's part of the sequence.  It's also documented in pm.h as:
+
+ * The principal role of this callback is to prevent new children of
+ * the device from being registered after it has returned (the driver's
+ * subsystem and generally the rest of the kernel is supposed to prevent
+ * new calls to the probe method from being made too once @prepare() has
+ * succeeded).
+
+It does not feel like that matches your usage of this call.
+
+
+> The reason to push drm suspend handling to PM prepare phase is that
+> parent here will trigger a modeset to turn off the timing and
+> subsequently the panel.
+> the child devices should not turn of their clocks before parent unwinds
+> the composition. Hence they are serialized as per the sequence mentioned
+> above.
+
+So the general model in Linux is that children suspend before their
+parents, right?  So you're saying that, in this case, the parent needs
+to act on the child before the child suspends.  Is that correct?
+
+Rather than hijacking the prepare/complete, I'd be at least slightly
+inclined to move the other driver to turn off its clocks in
+suspend_late and to turn them back on in resume_early?  That seems to
+be what was done in "analogix_dp-rockchip.c" to solve a similar
+problem.
+
+
+> A similar approach is taken by other driver that use drm framework. In
+> this driver, the device registers for prepare and complete callbacks to
+> handle drm_suspend and drm_resume.
+> https://gitlab.freedesktop.org/drm/msm/-/blob/msm-next/drivers/gpu/drm/exynos/exynos_drm_drv.c#L163
+
+OK, if there is another driver in DRM then I guess I won't object too
+strongly.  Note that when searching for other drivers I noticed this
+bit in todo.rst:
+
+* Most drivers (except i915 and nouveau) that use
+* drm_atomic_helper_suspend/resume() can probably be converted to use
+* drm_mode_config_helper_suspend/resume(). Also there's still open-coded version
+* of the atomic suspend/resume code in older atomic modeset drivers.
+
+Does anything get fixed if you do that?  It seems like it'd cleanup
+your code a bit so maybe worth doing anyway...
+
 ---
- fs/io_uring.c                 | 10 +++++++++-
- include/uapi/linux/io_uring.h |  4 +++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 979d9f977409..6e8158269f3c 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -142,7 +142,7 @@ struct io_rings {
- 	 */
- 	u32			sq_dropped;
- 	/*
--	 * Runtime flags
-+	 * Runtime SQ flags
- 	 *
- 	 * Written by the kernel, shouldn't be modified by the
- 	 * application.
-@@ -151,6 +151,13 @@ struct io_rings {
- 	 * for IORING_SQ_NEED_WAKEUP after updating the sq tail.
- 	 */
- 	u32			sq_flags;
-+	/*
-+	 * Runtime CQ flags
-+	 *
-+	 * Written by the application, shouldn't be modified by the
-+	 * kernel.
-+	 */
-+	u32                     cq_flags;
- 	/*
- 	 * Number of completion events lost because the queue was full;
- 	 * this should be avoided by the application by making sure
-@@ -7834,6 +7841,7 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p,
- 	p->cq_off.ring_entries = offsetof(struct io_rings, cq_ring_entries);
- 	p->cq_off.overflow = offsetof(struct io_rings, cq_overflow);
- 	p->cq_off.cqes = offsetof(struct io_rings, cqes);
-+	p->cq_off.flags = offsetof(struct io_rings, cq_flags);
- 
- 	p->features = IORING_FEAT_SINGLE_MMAP | IORING_FEAT_NODROP |
- 			IORING_FEAT_SUBMIT_STABLE | IORING_FEAT_RW_CUR_POS |
-diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-index e48d746b8e2a..602bb0ece607 100644
---- a/include/uapi/linux/io_uring.h
-+++ b/include/uapi/linux/io_uring.h
-@@ -204,7 +204,9 @@ struct io_cqring_offsets {
- 	__u32 ring_entries;
- 	__u32 overflow;
- 	__u32 cqes;
--	__u64 resv[2];
-+	__u32 flags;
-+	__u32 resv1;
-+	__u64 resv2;
- };
- 
- /*
--- 
-2.25.4
+I guess the last question I'd want resolved is why you have this asymmetry:
 
+SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, msm_pm_resume)
+
+Why couldn't you use pm_runtime_force_resume()?
+
+
+-Doug
