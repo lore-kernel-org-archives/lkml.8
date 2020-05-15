@@ -2,101 +2,132 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB5BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 632AE207C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:11:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589555515;
-	bh=ys1V8HWNqH20yXhWtg1p2L+pPQ1fwqd8rYNvrPx95UM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yzk136fX26R+Gq0oueWa3lyLWdTnbxGOheEv18BaP22jPUkxLcP+6okNH+uwEGaOH
-	 AZ8vfrLnUkp9Qp58s5iIEXiSDFnxgaGFeIykzllDTC/qBWX/reXx/rTesALuc5RDdE
-	 6mZs6Vto1F3/R7dv8KmQShktqzRbdy8WqwyPl9ms=
+	by mail.kernel.org (Postfix) with ESMTP id 7C8332076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:13:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="xD33G4jC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgEOPLy (ORCPT
+        id S1726717AbgEOPNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:11:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726717AbgEOPJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:09:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 448D1207C3;
-        Fri, 15 May 2020 15:09:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589555376;
-        bh=ys1V8HWNqH20yXhWtg1p2L+pPQ1fwqd8rYNvrPx95UM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lS2YsSuumgPFlql65mzaXT7bI02mBOVqmqPUIPQyGjNbMP5CjS5Yhe8iytrsPHNBA
-         tLSKzTBJMMCHJ6v2uY+1HJrYDJ2cXMayZvliNSfnz/+NIV5gi36XTpsgnxCH9qfbCy
-         cFaTWRXjEkqX+lEvr958G7qHow4nV5GAWGgH7OoI=
-Date:   Fri, 15 May 2020 17:09:34 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     =?iso-8859-1?B?Suly9G1l?= Pouiller <jerome.pouiller@silabs.com>
-Cc:     devel@driverdev.osuosl.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH 05/19] staging: wfx: fix coherency of hif_scan() prototype
-Message-ID: <20200515150934.GA2573363@kroah.com>
-References: <20200515083325.378539-1-Jerome.Pouiller@silabs.com>
- <20200515083325.378539-6-Jerome.Pouiller@silabs.com>
- <20200515135359.GA2162457@kroah.com>
- <15113296.vvBLmrQuJQ@pc-42>
+        Fri, 15 May 2020 11:13:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726266AbgEOPNg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 11:13:36 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0723FC05BD09
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:13:36 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id f4so1073458pgi.10
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:13:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bfBhHYTtohVO95sNvjwzNyBK2wYpRf6EXbUlmqF97hY=;
+        b=xD33G4jCnZyZK/tVplz8bvqfeTRe8c8TYLRHnuCfRcELdIU9IUSSMWdH4cg8VNjBTB
+         XFKndQLtX8nj+DkAz7hT1qCu84OdkLnoxEIHrNIWszFtboQ2VAP05Qz0KdE5f5gSr/Fr
+         EhDnYKdxeQBr0qrekR4PnuQD6V26t4Sb1RMDxwnuiABeZOY2piNE8c/+NVO9+OjysYnz
+         fgqdjcRmmxb01XKczSvP6+Ve5gdeM5ipZ8mI+Wj28HgWDe4sd3PG5FhDQxanwZw6joxz
+         JN9EFqwErcw7YRJ6fQC+5d+v9jcQEqlqsPck3/o763qssedKbJwO/M7sFOEfMaP2fsW7
+         kELg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bfBhHYTtohVO95sNvjwzNyBK2wYpRf6EXbUlmqF97hY=;
+        b=Lme6ieJ2zhM19nBOsCEZArMsWgVAQ7zJwdbXvRM/SKi6Y14DHqnF5rkmFp/kfYC//E
+         yEAA/lPFDFPdxwXhfTOqCQpwWqzKp2SMTSb3zUviE5pSRhOIUsSUBx5sLw1fC093k7GO
+         EiSLmnvwn6s4IVlBwOSdIBswOYpU3lGQCcNXg+n6MkWdDF8bjkmk2yCzs/g3fx7xZVkf
+         BjeRVX1LnZqf6v287ggEUYhvru8TP3HSjN3egAPmZNEFTK3Cd2r93g/y+1Y8NPY+H1HO
+         8R8gDse+oWuzpCtM1wODgl5T+0JOfUBP0doJrymKycFQQWt1HyIVdSgiJyNKHWdVo17P
+         gaXg==
+X-Gm-Message-State: AOAM532XM5ogkp3zDu1A/lb2XMcvoMBdYxq4IGLPEK0OjZuWYsG4tYwf
+        S1pqzjCjaOo0a1qCPvs43s6vQQ==
+X-Google-Smtp-Source: ABdhPJwjkUi4YQauXs6/fEa1OaygsEMg8M7xaZVFabwiAKCRkC0c9/HThyf43z2ib0G01cAbex7X0g==
+X-Received: by 2002:a62:1d4c:: with SMTP id d73mr4244848pfd.226.1589555615469;
+        Fri, 15 May 2020 08:13:35 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:aca2:b1c9:3206:e390? ([2605:e000:100e:8c61:aca2:b1c9:3206:e390])
+        by smtp.gmail.com with ESMTPSA id co16sm823398pjb.55.2020.05.15.08.13.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2020 08:13:34 -0700 (PDT)
+Subject: Re: [PATCH 0/2] io_uring: add a CQ ring flag to enable/disable
+ eventfd notification
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20200515105414.68683-1-sgarzare@redhat.com>
+ <eaab5cc7-0297-a8f8-f7a9-e00bcf12b678@kernel.dk>
+ <20200515143419.f3uggj7h3nyolfqb@steredhat>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a7ac101d-0f5d-2ab2-b36b-b40607d65878@kernel.dk>
+Date:   Fri, 15 May 2020 09:13:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <15113296.vvBLmrQuJQ@pc-42>
+In-Reply-To: <20200515143419.f3uggj7h3nyolfqb@steredhat>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 05:03:40PM +0200, Jérôme Pouiller wrote:
-> On Friday 15 May 2020 15:53:59 CEST Greg Kroah-Hartman wrote:
-> > On Fri, May 15, 2020 at 10:33:11AM +0200, Jerome Pouiller wrote:
-> > > From: Jérôme Pouiller <jerome.pouiller@silabs.com>
-> > >
-> > > The function hif_scan() return the timeout for the completion of the
-> > > scan request. It is the only function from hif_tx.c that return another
-> > > thing than just an error code. This behavior is not coherent with the
-> > > rest of file. Worse, if value returned is positive, the caller can't
-> > > make say if it is a timeout or the value returned by the hardware.
-> > >
-> > > Uniformize API with other HIF functions, only return the error code and
-> > > pass timeout with parameters.
-> > >
-> > > Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-> > > ---
-> > >  drivers/staging/wfx/hif_tx.c | 6 ++++--
-> > >  drivers/staging/wfx/hif_tx.h | 2 +-
-> > >  drivers/staging/wfx/scan.c   | 6 +++---
-> > >  3 files changed, 8 insertions(+), 6 deletions(-)
-> > 
-> > This patch fails to apply to my branch, so I've stopped here in the
-> > patch series.
+On 5/15/20 8:34 AM, Stefano Garzarella wrote:
+> On Fri, May 15, 2020 at 08:24:58AM -0600, Jens Axboe wrote:
+>> On 5/15/20 4:54 AM, Stefano Garzarella wrote:
+>>> The first patch adds the new 'cq_flags' field for the CQ ring. It
+>>> should be written by the application and read by the kernel.
+>>>
+>>> The second patch adds a new IORING_CQ_NEED_WAKEUP flag that can be
+>>> used by the application to enable/disable eventfd notifications.
+>>>
+>>> I'm not sure the name is the best one, an alternative could be
+>>> IORING_CQ_NEED_EVENT.
+>>>
+>>> This feature can be useful if the application are using eventfd to be
+>>> notified when requests are completed, but they don't want a notification
+>>> for every request.
+>>> Of course the application can already remove the eventfd from the event
+>>> loop, but as soon as it adds the eventfd again, it will be notified,
+>>> even if it has already handled all the completed requests.
+>>>
+>>> The most important use case is when the registered eventfd is used to
+>>> notify a KVM guest through irqfd and we want a mechanism to
+>>> enable/disable interrupts.
+>>>
+>>> I also extended liburing API and added a test case here:
+>>> https://github.com/stefano-garzarella/liburing/tree/eventfd-disable
+>>
+>> Don't mind the feature, and I think the patches look fine. But the name
+>> is really horrible, I'd have no idea what that flag does without looking
+>> at the code or a man page. Why not call it IORING_CQ_EVENTFD_ENABLED or
+>> something like that? Or maybe IORING_CQ_EVENTFD_DISABLED, and then you
+>> don't have to muck with the default value either. The app would set the
+>> flag to disable eventfd, temporarily, and clear it again when it wants
+>> notifications again.
 > 
-> Hello Greg,
-> 
-> Did you applied the patch called "staging: wfx: unlock on error path" from
-> Dan?
+> You're clearly right! :-) The name was horrible.
 
-I have no idea :)
+Sometimes you go down that path on naming and just can't think of
+the right one. I think we've all been there.
 
-> (I wrote that information in the introduction letter, but maybe I would
-> had include the Dan's patch in my PR?)
+> I agree that IORING_CQ_EVENTFD_DISABLED should be the best.
+> I'll send a v2 changing the name and removing the default value.
 
-I think you should have, as my queue is empty now.
+Great thanks, and please do queue a pull for the liburing side too.
 
-thanks,
+-- 
+Jens Axboe
 
-greg k-h
