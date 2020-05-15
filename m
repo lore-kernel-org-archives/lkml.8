@@ -2,102 +2,203 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190A6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B683C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE66C20760
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589522959;
-	bh=kgLtAKAfE9tPkcpQWYFZxlQ+PomFFTOqOI8Aot+uWlI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p9SQwGj6/yF/a7SSB5tk+seVZsDSPKFa/ZCkxxIB8mPVVNe3KJz6zBA1uB4QJS4FS
-	 K9XwA+ZFQP9ZzmU9BWhFaTUxYRq5vm1nJxxqGo1lk9iCaNDb0FUW0ak7+QmNmiLdxo
-	 0rCy2sqo12f29wJFtie/qZkcLVxoT7OeIf/YRu/0=
+	by mail.kernel.org (Postfix) with ESMTP id 47F4A20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:11:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bNkj+QVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgEOGJT (ORCPT
+        id S1726671AbgEOGLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:09:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726137AbgEOGJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:09:18 -0400
-Received: from localhost (unknown [122.178.196.30])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62AAE2065F;
-        Fri, 15 May 2020 06:09:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589522958;
-        bh=kgLtAKAfE9tPkcpQWYFZxlQ+PomFFTOqOI8Aot+uWlI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HpXT4he0xdWcmrcjS/VNjmglDEDWEmj7Vq5dRgrt8nABPbVNpJdj7fQGxuf5pbFTW
-         sX6vt6Rt6SyZc0kmQsycfvi27XzW5xB1arzxtopdHNvrEf5B9Wf36v7BA7aq9ErklA
-         M3tNNI2EvAsesfJnoomkv6nPDwSLn/APVqdO7Cgo=
-Date:   Fri, 15 May 2020 11:39:11 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Viresh Kumar <vireshk@kernel.org>,
+        Fri, 15 May 2020 02:11:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726172AbgEOGLa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 02:11:30 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A4DC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:11:30 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id y16so2075639wrs.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:11:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wy7SkokOXED+zXcabkbOGd6dTUOIU/PqPk33gv8HT6A=;
+        b=bNkj+QVDqvnrHB4NVRawww5FGe7Rle4UtDMpXdakjkRpOOhlDFhy9XxX6dGU9GO3oI
+         CFu0WQEt27jk6xPzzpDDtCHRSCodcVGgCJCstFl3T8++1GrYf1T+AQzMzIn7gESQQlN8
+         tj5RrKLQyPciUOJD9ZDgbW3BwCc2ujLGLcYRAuAMsTOX/MNjJf4rt0tLvUFG+2qxMaB7
+         7E3SgGzrWWcyBQ4k46/0MMYYC6uZYp5yAj3qKa4S3tH3KBw1gIYiLIkXXgoWf699M8i0
+         98ULWYCc1L2pfdCHig7SksJFFi6dtc+1yviIoj5o1nImlXVIrHjzz5QW8iZkvlTyDt1d
+         93cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wy7SkokOXED+zXcabkbOGd6dTUOIU/PqPk33gv8HT6A=;
+        b=h+exQX6v8WVUuxgR99QAwqczMCHp03NL/7V5El9LTtC528YK2uGhSxPMpmq/zA2vFM
+         W5RKIsAPgFvEysp5EtZzirYFUQr4FLGiB4OKPk82EB1rX9KQndZdD4iH+lddKFkpmxMr
+         HhVjSAsxtbMugoAygVYjfeWPeNiFKdOpvgL86LPJEox4I9YyiXh6IxPPvcs5iZtuvttO
+         3Ej+Ln/pq6Oqyh9hGCW24OhakeENvHSs67wdSQ3GXIJOjNl/SvWIvcnauUKIRMDlK9+v
+         m+8bot637dwfdkQPaZwjUebbAw7qNj4NOR/3HiiJkfVS9j+2KxCrzT13tcb6+uqmrk7B
+         3zNA==
+X-Gm-Message-State: AOAM530dIUR/Umzx/YVnRIN4a041c6dPD+s6DBbWoPdLCmQZ4PQVEcov
+        eMd7W/IISG0lYbcNKGzQDLifG9H/QlE=
+X-Google-Smtp-Source: ABdhPJxWkrXaEss4TRpJRWMZvW5S4kGr5bJVzlWUlTTf3QWFV4XLzjz8TmnyyiMajCe8a+v4wg7qYg==
+X-Received: by 2002:a5d:5710:: with SMTP id a16mr2227668wrv.209.1589523088522;
+        Thu, 14 May 2020 23:11:28 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id d126sm2150965wmd.32.2020.05.14.23.11.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 May 2020 23:11:27 -0700 (PDT)
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+To:     Felipe Balbi <balbi@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200515060911.GF333670@vkoul-mobl>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
- <20200508111242.GH185537@smile.fi.intel.com>
- <20200511200528.nfkc2zkh3bvupn7l@mobilestation>
- <20200511210138.GN185537@smile.fi.intel.com>
- <20200511213531.wnywlljiulvndx6s@mobilestation>
- <20200512090804.GR185537@smile.fi.intel.com>
- <20200512114946.x777yb6bhe22ccn5@mobilestation>
- <20200512123840.GY185537@smile.fi.intel.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+ <878shu4uwk.fsf@kernel.org> <875zcy4uuj.fsf@kernel.org>
+ <20200514171352.GP4525@google.com>
+ <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org> <87tv0h3fpv.fsf@kernel.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <090e48d7-7988-eea1-bf39-f6820578d354@linaro.org>
+Date:   Fri, 15 May 2020 09:11:18 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512123840.GY185537@smile.fi.intel.com>
+In-Reply-To: <87tv0h3fpv.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-05-20, 15:38, Andy Shevchenko wrote:
-> On Tue, May 12, 2020 at 02:49:46PM +0300, Serge Semin wrote:
-> > On Tue, May 12, 2020 at 12:08:04PM +0300, Andy Shevchenko wrote:
-> > > On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
-> > > > On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
-> > > > > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
-> > > > > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
-> > > > > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
+Hi,
+
+On 5/15/20 08:54, Felipe Balbi wrote:
 > 
-> ...
+> Hi,
 > 
-> I leave it to Rob and Vinod.
-> It won't break our case, so, feel free with your approach.
+> Georgi Djakov <georgi.djakov@linaro.org> writes:
+>> On 5/14/20 20:13, Matthias Kaehlcke wrote:
+>>> On Thu, May 14, 2020 at 02:30:28PM +0300, Felipe Balbi wrote:
+>>>> Felipe Balbi <balbi@kernel.org> writes:
+>>>>
+>>>>> Hi,
+>>>>>
+>>>>> Sandeep Maheswaram <sanm@codeaurora.org> writes:
+>>>>>> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
+>>>>>> +{
+>>>>>> +	struct device *dev = qcom->dev;
+>>>>>> +	int ret;
+>>>>>> +
+>>>>>> +	if (!device_is_bound(&qcom->dwc3->dev))
+>>>>>> +		return -EPROBE_DEFER;
+>>>>>
+>>>>> this breaks allmodconfig. I'm dropping this series from my queue for
+>>>>> this merge window.
+>>>>
+>>>> Sorry, I meant this patch ;-)
+>>>
+>>> I guess that's due to INTERCONNECT being a module. There is currently a
+>>
+>> I believe it's because of this:
+>> ERROR: modpost: "device_is_bound" [drivers/usb/dwc3/dwc3-qcom.ko] undefined!
+>>
+>>> discussion about this  with Viresh and Georgi in response to another
+>>> automated build failure. Viresh suggests changing CONFIG_INTERCONNECT
+>>> from tristate to bool, which seems sensible to me given that interconnect
+>>> is a core subsystem.
+>>
+>> The problem you are talking about would arise when INTERCONNECT=m and
+>> USB_DWC3_QCOM=y and it definitely exists here and could be triggered with
+>> randconfig build. So i suggest to squash also the diff below.
+>>
+>> Thanks,
+>> Georgi
+>>
+>> ---8<---
+>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+>> index 206caa0ea1c6..6661788b1a76 100644
+>> --- a/drivers/usb/dwc3/Kconfig
+>> +++ b/drivers/usb/dwc3/Kconfig
+>> @@ -129,6 +129,7 @@ config USB_DWC3_QCOM
+>>  	tristate "Qualcomm Platform"
+>>  	depends on ARCH_QCOM || COMPILE_TEST
+>>  	depends on EXTCON || !EXTCON
+>> +	depends on INTERCONNECT || !INTERCONNECT
+> 
+> I would prefer to see a patch adding EXPORT_SYMBOL_GPL() to device_is_bound()
 
-I agree the DT is about describing the hardware and looks like value of
-1 is not allowed. If allowed it should be added..
+Agree, but just to clarify, that these are two separate issues that need to
+be fixed. The device_is_bound() is the first one and USB_DWC3_QCOM=y combined
+with INTERCONNECT=m is the second one.
 
-> P.S. Perhaps at some point we need to
-> 1) convert properties to be u32 (it will simplify things);
-> 2) convert legacy ones to proper format ('-' instead of '_', vendor prefix added);
-> 3) parse them in core with device property API.
-
-These suggestions are good and should be done.
-
--- 
-~Vinod
+Thanks,
+Georgi
