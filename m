@@ -2,193 +2,146 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA75C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F94C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07AF920758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDA92065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:45:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qBpBRBd+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VgV4vnHk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgEOKo0 (ORCPT
+        id S1728417AbgEOKo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55686 "EHLO
+        Fri, 15 May 2020 06:44:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728013AbgEOKoY (ORCPT
+        with ESMTP id S1728013AbgEOKo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:44:24 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82710C061A0C;
-        Fri, 15 May 2020 03:44:24 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id s5so619739uad.4;
-        Fri, 15 May 2020 03:44:24 -0700 (PDT)
+        Fri, 15 May 2020 06:44:58 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABCDC061A0C;
+        Fri, 15 May 2020 03:44:56 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id 188so1397410lfa.10;
+        Fri, 15 May 2020 03:44:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YgrIIrg4mnIAMD9622ZNs+MTWyUAyrZXO6F1RXxlaUo=;
-        b=qBpBRBd+taT5XlFmUkeAv/Lh+hN7eLDn8H6QxhWoJpEpjwIwhm+RO81oNPuFkcPTiU
-         t5qFna5c2zvlntgknYHcHd5xd3W4vR8i10sbG3EVVO0S5qFs188+RcwEBhy7JSoCSrxQ
-         e4OmdKf5lv3LNLKVCbds2+5jvr0iYU8ItqiknQJz5P8m3VEUhUj1t3EBfNtdaqmwE8gU
-         7gvEyQ9YaHs0cvJ/8WPsWL+50Do3WQe6R/0LVv5AqqZfNSa9XbiqrU5NXyixK8CccUd4
-         4a5XzGqvgl5Pa4zBNVAfYThXRix4FJ6BTryUrzURbn9/d7u9EmqLX7InwgkwXvFSHJ55
-         6WlQ==
+         :cc;
+        bh=RP/C+T1G9Ut2iOKolnfVAMBSxN8RIC6J9bPF0F0wsOU=;
+        b=VgV4vnHk/xDyNeMazwEiccDn0tx607GkqAOjIVpkNcQlpKA0yk6QiIq2iiw/SvrSMB
+         /9T4YYOqWgMKy3laVmhj6LZUdWgwoI8hGn47Dm0lPfoPycjfU6/wMY1nl29Fao6HPGAM
+         IUyMLt/wNsvIUCri6O4MQM7X4ETd6JL163HEvI61Wu8j/lpbVYHQK8LOQEYoGqlyiy8v
+         dhgExbU/7wjjZ5mWJCq05sx5zobMgfSBZuJkoRRgZoeg530AGaW6dfWL+HC+0xOaCOc5
+         7ya49tN5yXHlC12FfLWHVvjka9pwf8SJ/y7szscZMq2whuiUq5QemangKzSbVyXtIL68
+         Dd9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YgrIIrg4mnIAMD9622ZNs+MTWyUAyrZXO6F1RXxlaUo=;
-        b=mgkWiS+rOTgI1LEP7Gt47YCKK9ByFPqCHgzrsi63ilExICgds3NZypPVf0BByZJP+s
-         oLRxMPYREGbUIXtKY/7qGWu6HjwYtb6pFAbt6jPKdg7b24NHO0J38ywXDvjp10/TtBvg
-         kW1sH0gS22UUEskQWeH47dnUQGhiOyzxWZqZyufMu3Wo/Le+ivWfNZCJ5TuSNDkx5rFo
-         ntimjxib+fwR66hE35lV6pldvtYiNTB7n+IjPq1A7p6w71d6yyi9c0oYEyC4DVRuZPP9
-         8EFnTxTLqHsphXO5Pxi+7qHVYb3OjYwUAIus+rnV7xDd5FP8MoH45vbrRQCggZGjarcF
-         CeEQ==
-X-Gm-Message-State: AOAM532CzrcScuDsdnqEl/GJ6les7rK9AWeRLdw5QD30wthMRbjLbC21
-        Adno0vAjpzpGmu+EpLoZwHg6mMnDiRz7s1nZVmM=
-X-Google-Smtp-Source: ABdhPJzGP3waNVN9Q8Dt2zJH7viCURTLsKBnUK2Y9VknZqkyRmQ7DRt5B81IjaNpVV5vHr1rgJGqeMMQ4pnGv69SQTA=
-X-Received: by 2002:ab0:4ac9:: with SMTP id t9mr2350299uae.40.1589539463686;
- Fri, 15 May 2020 03:44:23 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=RP/C+T1G9Ut2iOKolnfVAMBSxN8RIC6J9bPF0F0wsOU=;
+        b=qOd1kp5WQhzrb7JYhcDMid2k+Lw0hCrXkN8g5euwtwQaI/BUgI9EHqb9JceckVgD/t
+         cvLLzJF3dZRgOwP8y1L4DwQjNAW4Iap9+l/cBiSzWqaljQQOhNjpvfwHWOmrG8i9EWFo
+         VWUqh9VtLmyFbn8sNLSATNyBtFJoJmmfDmI0Y0a1koyciUkKvR7pSh8gylsQlOwwalfj
+         KvANTVuZsu6PgiBEyjN29EEbsJeg50IsV2q9X4zecsKtLiJg4JStwga2uR1U8t+PWRa8
+         NpPllxATe/WRE6YtxVVNWflQouL89PlvObZeL9yA7hmlFXyxOk9KOqyxA36u/HYUwSVR
+         U6AQ==
+X-Gm-Message-State: AOAM5316VJ2h+ZCR7pFHA4C05Im1jRGfohBuEnqWV3qvdw2FBwf+CFJH
+        7lkK5YNieQ8QzZ3Sf0tsMQcOEsSkROfQDFIZBOg=
+X-Google-Smtp-Source: ABdhPJwrShfI7gSIURk9dxTDqiEefZ5tzPAA1hhJWtIIiOZzjgjSBp4ntBv8ZrLyRmdnBk7A5M2eKz4h7R+uK1TVd10=
+X-Received: by 2002:ac2:5212:: with SMTP id a18mr1971443lfl.83.1589539495366;
+ Fri, 15 May 2020 03:44:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200511123846.96594-1-christian.gmeiner@gmail.com>
- <CAH9NwWcJNhUVkzd0KAfJyxNZJ9a71KLzipW+qRwhgEWUmnnxmg@mail.gmail.com>
- <X0BDAQ.L99CTJZCDEJE3@crapouillou.net> <a51cb70623c4c2441bb8df8385f56c99392b8435.camel@pengutronix.de>
- <CAH9NwWc6zUvoJ0xep9zO2Ocm8BzR7nRNx9=EQuwb5DXsX-J0Zw@mail.gmail.com> <ed4688343e443ff76644051be544c70fd8c5345b.camel@pengutronix.de>
-In-Reply-To: <ed4688343e443ff76644051be544c70fd8c5345b.camel@pengutronix.de>
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-Date:   Fri, 15 May 2020 12:44:12 +0200
-Message-ID: <CAH9NwWctscn-cfU_Y1OV2GV_T3oNn1H2Tmu18OHQOD4=aTYbFA@mail.gmail.com>
-Subject: Re: [PATCH] drm/etnaviv: fix perfmon domain interation
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>
+References: <20200515021731.cb5y557wsxf66fo3@debian.debian-2>
+ <SN4PR0401MB35985CFC199D20362EBFD8E09BBD0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+ <CAKq8=3KyewqQLdo-GjERuOfKe5ZrmQ+bRPfFRWiyZkjdEVvSeA@mail.gmail.com> <SN4PR0401MB35989B816CB1DA4BCB75B1FC9BBD0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+In-Reply-To: <SN4PR0401MB35989B816CB1DA4BCB75B1FC9BBD0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+From:   Bo YU <tsu.yubo@gmail.com>
+Date:   Fri, 15 May 2020 18:44:44 +0800
+Message-ID: <CAKq8=3L7u05wneTt=DRPNU6dCrg=OMN-Zcp9XgTcd3MWbjPKUg@mail.gmail.com>
+Subject: Re: [PATCH -next] fs/btrfs: Fix unlocking in btrfs_ref_tree_mod
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+Cc:     "clm@fb.com" <clm@fb.com>,
+        "josef@toxicpanda.com" <josef@toxicpanda.com>,
+        "sterba@suse.com" <sterba@suse.com>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Fr., 15. Mai 2020 um 12:33 Uhr schrieb Lucas Stach <l.stach@pengutronix.=
-de>:
+On Fri, May 15, 2020 at 5:36 PM Johannes Thumshirn
+<Johannes.Thumshirn@wdc.com> wrote:
 >
-> Am Freitag, den 15.05.2020, 12:27 +0200 schrieb Christian Gmeiner:
-> > Am Fr., 15. Mai 2020 um 12:24 Uhr schrieb Lucas Stach <l.stach@pengutro=
-nix.de>:
-> > > Am Freitag, den 15.05.2020, 12:12 +0200 schrieb Paul Cercueil:
-> > > > Hi Christian,
-> > > >
-> > > > Le ven. 15 mai 2020 =C3=A0 12:09, Christian Gmeiner
-> > > > <christian.gmeiner@gmail.com> a =C3=A9crit :
-> > > > > Am Mo., 11. Mai 2020 um 14:38 Uhr schrieb Christian Gmeiner
-> > > > > <christian.gmeiner@gmail.com>:
-> > > > > >  The GC860 has one GPU device which has a 2d and 3d core. In th=
-is
-> > > > > > case
-> > > > > >  we want to expose perfmon information for both cores.
-> > > > > >
-> > > > > >  The driver has one array which contains all possible perfmon d=
-omains
-> > > > > >  with some meta data - doms_meta. Here we can see that for the =
-GC860
-> > > > > >  two elements of that array are relevant:
-> > > > > >
-> > > > > >    doms_3d: is at index 0 in the doms_meta array with 8 perfmon
-> > > > > > domains
-> > > > > >    doms_2d: is at index 1 in the doms_meta array with 1 perfmon
-> > > > > > domain
-> > > > > >
-> > > > > >  The userspace driver wants to get a list of all perfmon domain=
-s and
-> > > > > >  their perfmon signals. This is done by iterating over all doma=
-ins
-> > > > > > and
-> > > > > >  their signals. If the userspace driver wants to access the dom=
-ain
-> > > > > > with
-> > > > > >  id 8 the kernel driver fails and returns invalid data from dom=
-s_3d
-> > > > > > with
-> > > > > >  and invalid offset.
-> > > > > >
-> > > > > >  This results in:
-> > > > > >    Unable to handle kernel paging request at virtual address 00=
-000000
-> > > > > >
-> > > > > >  On such a device it is not possible to use the userspace drive=
-r at
-> > > > > > all.
-> > > > > >
-> > > > > >  The fix for this off-by-one error is quite simple.
-> > > > > >
-> > > > > >  Reported-by: Paul Cercueil <paul@crapouillou.net>
-> > > > > >  Tested-by: Paul Cercueil <paul@crapouillou.net>
-> > > > > >  Fixes: ed1dd899baa3 ("drm/etnaviv: rework perfmon query
-> > > > > > infrastructure")
-> > > > > >  Cc: stable@vger.kernel.org
-> > > > > >  Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-> > > > > >  ---
-> > > > > >   drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 2 +-
-> > > > > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > >
-> > > > > >  diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > > > > > b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > > > > >  index e6795bafcbb9..35f7171e779a 100644
-> > > > > >  --- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > > > > >  +++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > > > > >  @@ -453,7 +453,7 @@ static const struct etnaviv_pm_domain
-> > > > > > *pm_domain(const struct etnaviv_gpu *gpu,
-> > > > > >                  if (!(gpu->identity.features & meta->feature))
-> > > > > >                          continue;
-> > > > > >
-> > > > > >  -               if (meta->nr_domains < (index - offset)) {
-> > > > > >  +               if ((meta->nr_domains - 1) < (index - offset))=
- {
-> > > > > >                          offset +=3D meta->nr_domains;
-> > > > > >                          continue;
-> > > > > >                  }
-> > > > > >  --
-> > > > > >  2.26.2
-> > > > > >
-> > > > >
-> > > > > ping
-> > > >
-> > > > I'll merge it tomorrow if there's no further feedback.
-> > >
-> > > Huh? Etnaviv patches are going through the etnaviv tree.
-> > >
-> > > We now have two different solutions to the same issue. I first want t=
-o
-> > > dig into the code to see why two developers can get confused enough b=
-y
-> > > the code to come up with totally different fixes.
-> > >
+> On 15/05/2020 11:24, Bo YU wrote:
+> > Hi,
+> > On Fri, May 15, 2020 at 5:03 PM Johannes Thumshirn
+> > <Johannes.Thumshirn@wdc.com> wrote:
+> >>
+> >> On 15/05/2020 04:17, Bo YU wrote:
+> >>> It adds spin_lock() in add_block_entry() but out path does not unlock
+> >>> it.
+> >>
+> >> Which call path doesn't unlock it? There is an out_unlock label with a
+> >> spin_unlock() right above your insert. So either coverity messed something
+> >> up or the call path that needs the unlock has to jump to out_unlock instead
+> >> of out.
+> > This is out label without unlocking it. It will be offered spin_lock
+> > in add_block_entry()
+> > for be. But here I was worried about that unlock it in if() whether it
+> > is right or not.
 > >
-> > You will see that the solutions are not totally different. I really hop=
-ed to
-> > get this fixed in the 5.7 release.. but I think its now too late.
 >
-> I didn't have time to look at the full picture, yet. We still have at
-> least a week until the final 5.7 release, why would it be too late to
-> get a fix upstream?
+> No add_block_entry() returns with the ref_verify_lock held on success only:
+> static struct block_entry *add_block_entry(struct btrfs_fs_info *fs_info,
+>                                            u64 bytenr, u64 len,
+>                                            u64 root_objectid)
+> {
+>         struct block_entry *be = NULL, *exist;
+>         struct root_entry *re = NULL;
 >
-
-Great - so I count on you that we will have a fix in 5.7 release.
-
---=20
-greets
---
-Christian Gmeiner, MSc
-
-https://christian-gmeiner.info/privacypolicy
+>         re = kzalloc(sizeof(struct root_entry), GFP_KERNEL);
+>         be = kzalloc(sizeof(struct block_entry), GFP_KERNEL);
+>         if (!be || !re) {
+>                 kfree(re);
+>                 kfree(be);
+>                 return ERR_PTR(-ENOMEM);
+>         }
+>         be->bytenr = bytenr;
+>         be->len = len;
+>
+>         re->root_objectid = root_objectid;
+>         re->num_refs = 0;
+>
+>         spin_lock(&fs_info->ref_verify_lock);
+> [...]
+>
+>
+> While the code caller checks for an error:
+>
+> if (action == BTRFS_ADD_DELAYED_EXTENT) {
+>                 /*
+>                  * For subvol_create we'll just pass in whatever the parent root
+>                  * is and the new root objectid, so let's not treat the passed
+>                  * in root as if it really has a ref for this bytenr.
+>                  */
+>                 be = add_block_entry(fs_info, bytenr, num_bytes, ref_root);
+>                 if (IS_ERR(be)) {
+>                         kfree(ref);
+>                         kfree(ra);
+>                         ret = PTR_ERR(be);
+>                         goto out;
+>                 }
+>
+> So if add_block_entry returns -ENOMEM it didn't take the lock and thus no unlock
+> is needed.
+Ok,  I got it. Please drop it.
+Thank you!
+>
+> Or did I miss something?
