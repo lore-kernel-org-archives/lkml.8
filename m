@@ -2,119 +2,102 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLACK,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4713C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12704C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE27206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:25:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="fdlLKeJm"
+	by mail.kernel.org (Postfix) with ESMTP id D86F42073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589574421;
+	bh=TYIO6oIBcj3gHKJmn6EHN5Dy+P6j+DIZWhWkg5mKhXQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pqzj87UEJnoMdoisY2b6jwV4um7Ke1akDxfubnuQwar0lhqp1VBJtcdMyBZChQnPe
+	 5x+7++mn32BzmtCnALLj7gY823TNkG8bbkaIk/O//DspWsaXa0w2dZWhMYbgsVQPMw
+	 V4CmPEaT4l85BnlBNxFBqAEgKsYf6Qo/Xc6XZ778=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgEOUZ2 (ORCPT
+        id S1726624AbgEOU1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:25:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgEOUZ2 (ORCPT
+        Fri, 15 May 2020 16:27:01 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43785 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgEOU1A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:25:28 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2056C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:25:27 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id e16so4932343wra.7
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:25:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u1+JLSREPICjU1AOf1yt9AUIk3xHHHjpOMeSnKLRdJk=;
-        b=fdlLKeJmZHoBAKiRGldp8Wkgofrx2uoYboDia9Xn8EGJxP8Zt8ttN6yRL3vqfRxYLl
-         LmVueoQjqABOiOFfkj7IGCDifjyw3oQoeAry3A5HT89sHJ54krJC+IJCjDu/d6UeQzBd
-         RsUhWnOawCVhCziDYl8+gTHv8EcbC4AcuJaoW3zLpsRpN3HrS/vDgMoHaL5yD0BTV8YU
-         ImcGQwuMUTcUdit16kSpD9obPkd91hWYNVj+LCrpyb+L/Q5gylnqxzD9P0OYlbh1Lhxz
-         qBfeZnwiD/QFxLdTLbNZmklEhSya5Jp8xwgs5mCRELWuXTVp4fn+2QJjpAElew7KivkN
-         EdOA==
+        Fri, 15 May 2020 16:27:00 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v63so1515480pfb.10;
+        Fri, 15 May 2020 13:26:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u1+JLSREPICjU1AOf1yt9AUIk3xHHHjpOMeSnKLRdJk=;
-        b=g8FOmCHg/VQ9mrl236XZZknwfi68qIsOdTqgHwIGqhfHOCA8kqo7A7Sm78eMolZ0XW
-         qxHNZLbb/utnssUch1sQ9jr0gaICv1exD0QApdedeD1voeNOxL4kLWx4NbK7hKVSs6M1
-         EX6DxCUK26bBU8VmDZ5lOjrCGmo9nJhljtU4+ZgKWK9//ocpw+5w0iKdOVdG4/777bY3
-         GZ30BkUu5n1FReJfLCHl92qIuD5ksProi9wOV3y4d1LeBY5xMb9XmRb+SXGII4VWDSxq
-         LGkjVqmLQqYu3lYlWX/IawTCa2C1jQIbQ/AZkAhUGYyi2QakRnzgw5oaXvRstTLWB7AU
-         Cw7A==
-X-Gm-Message-State: AOAM530g2XD4NRPfdZehFq3yKOpQvwyM78ucUNVN5xXd0c9qEBRtXerr
-        mz4AcvO5b9ujROiInKABP1o=
-X-Google-Smtp-Source: ABdhPJywobO3is2E0W6Xkrzdw3Fq6CgAgv1LL4PeVN3GVH4Iv4kv3Q42vuiepsp5lpdHcHdKYXym5Q==
-X-Received: by 2002:adf:9166:: with SMTP id j93mr5775356wrj.289.1589574326432;
-        Fri, 15 May 2020 13:25:26 -0700 (PDT)
-Received: from localhost.localdomain (p200300F137132E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3713:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id v20sm6231074wrd.9.2020.05.15.13.25.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BjLEoH1/onS9gWc/WGPUDHWQzqwo7CrmGrZOV7KWi24=;
+        b=UamxaYbhgmj4ujJONx9S2X0l7P6wumcxE4lCGY7L+hC75LuNCGzJEMVPtzKi3tAkm0
+         ZjNsthL6BZX6hgsdieTZuM9UDtBXG8JjW+SzW2IK6F79BYnh925FesrYfzhtQncTuhal
+         scZM6DgFKImNeRAgxcq4e2L0t6eq6+ttNwcm4DENzstvSE2jVtnucOitxtaEUsIgt5Uo
+         nv4EHBREXpcwTKl9VfV9+oZbIT1y9pUpMPCJBFAVewlTHeyEMsUp384i7UGYKPzllDHK
+         UHfopQlU+IticbbiN9Q5dwMZfEKeJZN8Jr4rDW0PpF3dl2H/Gg/IJjFoIQwg7yDLaarJ
+         +Hzg==
+X-Gm-Message-State: AOAM531FQfaSSrvtxOHnfCYDpvINMx4IMb4Bzn63zur9rX2DuWdGAeY+
+        X4bQZPds47HkgnQFgaml8rE=
+X-Google-Smtp-Source: ABdhPJw55POBvLJW1yTqamx/YQ9pJ9208HAhysD6+dQoHJdWvvegvrWWTUXGJdA6DaxsTXI4n7DFIw==
+X-Received: by 2002:a65:608c:: with SMTP id t12mr4951599pgu.46.1589574418563;
+        Fri, 15 May 2020 13:26:58 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id d18sm2638767pfq.177.2020.05.15.13.26.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 13:25:25 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     khilman@baylibre.com, linux-amlogic@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH for-5.8 v1 1/1] ARM: dts: meson8m2: Use the Meson8m2 specific USB2 PHY compatible
-Date:   Fri, 15 May 2020 22:25:20 +0200
-Message-Id: <20200515202520.1487514-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 15 May 2020 13:26:57 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id B49A240246; Fri, 15 May 2020 20:26:56 +0000 (UTC)
+Date:   Fri, 15 May 2020 20:26:56 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Rafael Aquini <aquini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
+        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
+        rdunlap@infradead.org, tytso@mit.edu, bunk@kernel.org,
+        torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
+        labbott@redhat.com, jeffm@suse.com, jikos@kernel.org, jeyu@suse.de,
+        tiwai@suse.de, AnDavis@suse.com, rpalethorpe@suse.de
+Subject: Re: [PATCH v5] kernel: add panic_on_taint
+Message-ID: <20200515202656.GZ11244@42.do-not-panic.com>
+References: <20200515175502.146720-1-aquini@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515175502.146720-1-aquini@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the Meson8m2 specific USB2 PHY compatible string. The 3.10 vendor
-kernel has at least one known difference between Meson8 and Meson8m2:
-Meson8m2 sets the ACA_ENABLE bit while Meson8 doesn't.
+On Fri, May 15, 2020 at 01:55:02PM -0400, Rafael Aquini wrote:
+> Analogously to the introduction of panic_on_warn, this patch introduces a kernel
+> option named panic_on_taint in order to provide a simple and generic way to stop
+> execution and catch a coredump when the kernel gets tainted by any given flag.
+> 
+> This is useful for debugging sessions as it avoids having to rebuild the kernel
+> to explicitly add calls to panic() into the code sites that introduce the taint
+> flags of interest. For instance, if one is interested in proceeding with a
+> post-mortem analysis at the point a given code path is hitting a bad page
+> (i.e. unaccount_page_cache_page(), or slab_bug()), a coredump can be collected
+> by rebooting the kernel with 'panic_on_taint=0x20' amended to the command line.
+> 
+> Another, perhaps less frequent, use for this option would be as a mean for
+> assuring a security policy case where only a subset of taints, or no single
+> taint (in paranoid mode), is allowed for the running system.
+> The optional switch 'nousertaint' is handy in this particular scenario,
+> as it will avoid userspace induced crashes by writes to sysctl interface
+> /proc/sys/kernel/tainted causing false positive hits for such policies.
+> 
+> Suggested-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Rafael Aquini <aquini@redhat.com>
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
-This has a runtime dependency on the meson8b-usb2 PHY series from [0].
-That one is queued for v5.8 so it would be great if this could make it
-into v5.8 as well.
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 
-This patch is meant to apply on top of my other series titled "ARM:
-dts: meson8b/m2: RGMII improvements" from [1]
-
-
-[0] https://patchwork.kernel.org/cover/11544233/
-[1] https://patchwork.kernel.org/cover/11544215/
-
-
- arch/arm/boot/dts/meson8m2.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/meson8m2.dtsi b/arch/arm/boot/dts/meson8m2.dtsi
-index 96b37d5e9afd..2397ba06d608 100644
---- a/arch/arm/boot/dts/meson8m2.dtsi
-+++ b/arch/arm/boot/dts/meson8m2.dtsi
-@@ -65,6 +65,14 @@ &saradc {
- 	compatible = "amlogic,meson8m2-saradc", "amlogic,meson-saradc";
- };
- 
-+&usb0_phy {
-+	compatible = "amlogic,meson8m2-usb2-phy", "amlogic,meson-mx-usb2-phy";
-+};
-+
-+&usb1_phy {
-+	compatible = "amlogic,meson8m2-usb2-phy", "amlogic,meson-mx-usb2-phy";
-+};
-+
- &wdt {
- 	compatible = "amlogic,meson8m2-wdt", "amlogic,meson8b-wdt";
- };
--- 
-2.26.2
-
+  Luis
