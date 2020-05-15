@@ -2,236 +2,96 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCDFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC82C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0492070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F1E2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589578228;
-	bh=LFGOrBTpdevXGXjY0okLBQ3PPT825HdMmz0pGK/QNLQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C7946lnyxfz1VHb2OEvevjSEDKioE7NbmSKcfccLBrtvPTsAjEdZeKnSVEl4+dP9W
-	 DF0gHTIm4iyby9ZyuljonTBD+97ozcR5p8uOtj0UCuxoN5JR16e0bY4XUpXd1MLxR6
-	 PQr+KfSQknvQTYHcctGwa8f9CPgiI02IwwDMEtH8=
+	s=default; t=1589578278;
+	bh=O2OJcQ2yvuaecdX9dvP5MSICBbljS0c+xz4C+o2FiI0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k9i/YjFOuojZNlyRX+ge4cWyuKrvmXHisqqO7B/Fao2RTGlhxXzC9SrwygiSnue5k
+	 H9SnNta1w3oi39/M+rRaYPw0Ev4942GgqP/gEWDkhMzplEj8jA/APL9vUyRs2XMMSB
+	 X7m1G/doz038VNKVqIbVZvya2LYgcE9Nptzn2uqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgEOVa1 (ORCPT
+        id S1727823AbgEOVbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:30:27 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:34056 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727098AbgEOV2x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:28:53 -0400
-Received: by mail-pj1-f67.google.com with SMTP id l73so4405794pjb.1;
-        Fri, 15 May 2020 14:28:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6DYtMtUC5VyzJjkaI1PbcryyaFQEBo8w9yp476+Y/8k=;
-        b=KE8hQEUk9b7d3DxEQoFt2WpLPBQA115RLNE5o3cJ6QVUSCA8/eKsqouK2EJ4AJhWV7
-         FGcfFLuYRx4Vv5Ux7mhtloN14BIMB4AX3fbQ5ajpRAwWDOejwAQpd0cHReTYFRY4HjqD
-         SUf+gglEzlv1WoOliV5DhLSBDA6H3O8rmxr+EIS8JAnOrQAaHJwvAahJDZGGs+XJKPt8
-         OJQw4lxhfbckcm4FA5ImMtPlLpDE+lTv2eM4/EEDG7sxSjlgukrZpiJhqpC79cAwUiYF
-         rwCmQsUvRFx0oulJYNKPIW1FtxasLVX6nTiC0HqGyIyR5kY+MPFxlBUdmcyvCRn4NTHs
-         KEpg==
-X-Gm-Message-State: AOAM531OwB2wd29/5Azz+e5r5ybr83yaiY0rUYGANLts1gXdBhd+oefV
-        LO23cvLKqXHrrpVGa6UXRcE=
-X-Google-Smtp-Source: ABdhPJxXfmLp+gvIUNO8TU4BMrhu87/QAIPcxxYwYq0djFtBbeCPpZgFKZuASiN+4EgG4W9iOStsEg==
-X-Received: by 2002:a17:902:9a06:: with SMTP id v6mr1597671plp.286.1589578132568;
-        Fri, 15 May 2020 14:28:52 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 14sm2700222pfy.38.2020.05.15.14.28.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 14:28:50 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 863A040E7B; Fri, 15 May 2020 21:28:49 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     jeyu@kernel.org
-Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 01/15] taint: add module firmware crash taint support
-Date:   Fri, 15 May 2020 21:28:32 +0000
-Message-Id: <20200515212846.1347-2-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200515212846.1347-1-mcgrof@kernel.org>
-References: <20200515212846.1347-1-mcgrof@kernel.org>
+        Fri, 15 May 2020 17:31:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726553AbgEOVbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 17:31:17 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B97420709;
+        Fri, 15 May 2020 21:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589578276;
+        bh=O2OJcQ2yvuaecdX9dvP5MSICBbljS0c+xz4C+o2FiI0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I99rlMKoPbdlbWCb9h5COafzf6+k54KLOJBDHcVxoYTvgESqR1/Yc4RECzZw4tVY/
+         HUUQHcWScYkdYLOo+Zics3ayytm1IEBQccZjNaMkNw66Cm+YNGk4CkU7vgXxPl3bou
+         VTesA2N4afQESdI13pR2QlbwwIEUpBaQzj3YWbhk=
+Date:   Fri, 15 May 2020 23:31:13 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [patch V4 part 1 27/36] arm64: Prepare arch_nmi_enter() for
+ recursion
+Message-ID: <20200515213112.GB5974@lenoir>
+References: <20200505131602.633487962@linutronix.de>
+ <20200505134100.771491291@linutronix.de>
+ <873680evkm.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <873680evkm.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Device driver firmware can crash, and sometimes, this can leave your
-system in a state which makes the device or subsystem completely
-useless. Detecting this by inspecting /proc/sys/kernel/tainted instead
-of scraping some magical words from the kernel log, which is driver
-specific, is much easier. So instead provide a helper which lets drivers
-annotate this.
+On Fri, May 15, 2020 at 11:29:13PM +0200, Thomas Gleixner wrote:
+> Thomas Gleixner <tglx@linutronix.de> writes:
+> 
+> > From: Frederic Weisbecker <frederic@kernel.org>
+> 
+> This changelog was very empty. Here is what Peter provided:
+> 
+>  When using nmi_enter() recursively, arch_nmi_enter() must also be recursion
+>  safe. In particular, it must be ensured that HCR_TGE is always set while in
+>  NMI context when in HYP mode, and be restored to it's former state when
+>  done.
+> 
+>  The current code fails this when interleaved wrong. Notably it overwrites
+>  the original hcr state on nesting.
+> 
+>  Introduce a nesting counter to make sure to store the original value.
 
-Once this happens, scrapers can easily look for modules taint flags
-for a firmware crash. This will taint both the kernel and respective
-calling module.
+Nice!
 
-The new helper module_firmware_crashed() uses LOCKDEP_STILL_OK as this
-fact should in no way shape or form affect lockdep. This taint is device
-driver specific.
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- Documentation/admin-guide/tainted-kernels.rst |  6 ++++++
- include/linux/kernel.h                        |  3 ++-
- include/linux/module.h                        | 13 +++++++++++++
- include/trace/events/module.h                 |  3 ++-
- kernel/module.c                               |  5 +++--
- kernel/panic.c                                |  1 +
- tools/debugging/kernel-chktaint               |  7 +++++++
- 7 files changed, 34 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentation/admin-guide/tainted-kernels.rst
-index 71e9184a9079..92530f1d60ae 100644
---- a/Documentation/admin-guide/tainted-kernels.rst
-+++ b/Documentation/admin-guide/tainted-kernels.rst
-@@ -100,6 +100,7 @@ Bit  Log  Number  Reason that got the kernel tainted
-  15  _/K   32768  kernel has been live patched
-  16  _/X   65536  auxiliary taint, defined for and used by distros
-  17  _/T  131072  kernel was built with the struct randomization plugin
-+ 18  _/Q  262144  driver firmware crash annotation
- ===  ===  ======  ========================================================
- 
- Note: The character ``_`` is representing a blank in this table to make reading
-@@ -162,3 +163,8 @@ More detailed explanation for tainting
-      produce extremely unusual kernel structure layouts (even performance
-      pathological ones), which is important to know when debugging. Set at
-      build time.
-+
-+ 18) ``Q`` used by device drivers to annotate that the device driver's firmware
-+     has crashed and the device's operation has been severely affected. The
-+     device may be left in a crippled state, requiring full driver removal /
-+     addition, system reboot, or it is unclear how long recovery will take.
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 04a5885cec1b..19e1541c82c7 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -601,7 +601,8 @@ extern enum system_states {
- #define TAINT_LIVEPATCH			15
- #define TAINT_AUX			16
- #define TAINT_RANDSTRUCT		17
--#define TAINT_FLAGS_COUNT		18
-+#define TAINT_FIRMWARE_CRASH		18
-+#define TAINT_FLAGS_COUNT		19
- 
- struct taint_flag {
- 	char c_true;	/* character printed when tainted */
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 2c2e988bcf10..221200078180 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -697,6 +697,14 @@ static inline bool is_livepatch_module(struct module *mod)
- bool is_module_sig_enforced(void);
- void set_module_sig_enforced(void);
- 
-+void add_taint_module(struct module *mod, unsigned flag,
-+		      enum lockdep_ok lockdep_ok);
-+
-+static inline void module_firmware_crashed(void)
-+{
-+	add_taint_module(THIS_MODULE, TAINT_FIRMWARE_CRASH, LOCKDEP_STILL_OK);
-+}
-+
- #else /* !CONFIG_MODULES... */
- 
- static inline struct module *__module_address(unsigned long addr)
-@@ -844,6 +852,11 @@ void *dereference_module_function_descriptor(struct module *mod, void *ptr)
- 	return ptr;
- }
- 
-+static inline void module_firmware_crashed(void)
-+{
-+	add_taint(TAINT_FIRMWARE_CRASH, LOCKDEP_STILL_OK);
-+}
-+
- #endif /* CONFIG_MODULES */
- 
- #ifdef CONFIG_SYSFS
-diff --git a/include/trace/events/module.h b/include/trace/events/module.h
-index 097485c73c01..b749ea25affd 100644
---- a/include/trace/events/module.h
-+++ b/include/trace/events/module.h
-@@ -26,7 +26,8 @@ struct module;
- 	{ (1UL << TAINT_OOT_MODULE),		"O" },		\
- 	{ (1UL << TAINT_FORCED_MODULE),		"F" },		\
- 	{ (1UL << TAINT_CRAP),			"C" },		\
--	{ (1UL << TAINT_UNSIGNED_MODULE),	"E" })
-+	{ (1UL << TAINT_UNSIGNED_MODULE),	"E" },		\
-+	{ (1UL << TAINT_FIRMWARE_CRASH),	"Q" })
- 
- TRACE_EVENT(module_load,
- 
-diff --git a/kernel/module.c b/kernel/module.c
-index 80faaf2116dd..f98e8c25c6b4 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -325,12 +325,13 @@ static inline int strong_try_module_get(struct module *mod)
- 		return -ENOENT;
- }
- 
--static inline void add_taint_module(struct module *mod, unsigned flag,
--				    enum lockdep_ok lockdep_ok)
-+void add_taint_module(struct module *mod, unsigned flag,
-+		      enum lockdep_ok lockdep_ok)
- {
- 	add_taint(flag, lockdep_ok);
- 	set_bit(flag, &mod->taints);
- }
-+EXPORT_SYMBOL_GPL(add_taint_module);
- 
- /*
-  * A thread that wants to hold a reference to a module only while it
-diff --git a/kernel/panic.c b/kernel/panic.c
-index ec6d7d788ce7..504fb926947e 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -384,6 +384,7 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
- 	[ TAINT_LIVEPATCH ]		= { 'K', ' ', true },
- 	[ TAINT_AUX ]			= { 'X', ' ', true },
- 	[ TAINT_RANDSTRUCT ]		= { 'T', ' ', true },
-+	[ TAINT_FIRMWARE_CRASH ]	= { 'Q', ' ', true },
- };
- 
- /**
-diff --git a/tools/debugging/kernel-chktaint b/tools/debugging/kernel-chktaint
-index 2240cb56e6e5..c397c6aabea7 100755
---- a/tools/debugging/kernel-chktaint
-+++ b/tools/debugging/kernel-chktaint
-@@ -194,6 +194,13 @@ else
- 	addout "T"
- 	echo " * kernel was built with the struct randomization plugin (#17)"
- fi
-+T=`expr $T / 2`
-+if [ `expr $T % 2` -eq 0 ]; then
-+	addout " "
-+else
-+	addout "Q"
-+	echo " * a device driver's firmware has crashed (#18)"
-+fi
- 
- echo "For a more detailed explanation of the various taint flags see"
- echo " Documentation/admin-guide/tainted-kernels.rst in the the Linux kernel sources"
--- 
-2.26.2
-
+Thanks.
