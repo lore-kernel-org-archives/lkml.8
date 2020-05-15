@@ -2,254 +2,312 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FBBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06CC7206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4AF206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:32:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="n4g1dPvn";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="n4g1dPvn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgEOJca (ORCPT
+        id S1728139AbgEOJcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:32:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51732 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbgEOJc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:32:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 86733B1C1;
-        Fri, 15 May 2020 09:32:28 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 6F43D1E056A; Fri, 15 May 2020 11:32:24 +0200 (CEST)
-Date:   Fri, 15 May 2020 11:32:24 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     ira.weiny@intel.com
-Cc:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/9] fs/ext4: Make DAX mount option a tri-state
-Message-ID: <20200515093224.GI9569@quack2.suse.cz>
-References: <20200515044121.2987940-1-ira.weiny@intel.com>
- <20200515044121.2987940-8-ira.weiny@intel.com>
-MIME-Version: 1.0
+        Fri, 15 May 2020 05:32:51 -0400
+Received: from mail-eopbgr80073.outbound.protection.outlook.com ([40.107.8.73]:60413
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727116AbgEOJct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 05:32:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p1eVtPJdOfak8LUKZ90gMOGASb8ujGDAuzC7EcQvvxA=;
+ b=n4g1dPvnQerVoJdDk5Kpc3Uw67yq5AYbGmHrxHP3Rwd0mt23QCRN5t/gvbIS2mDounPReMjIRScxJyZ7Xqzy/1NE92rLCs5r+QpOr/OwgnY6hJqV4WE6nikA881vo1gjGguSuIX5FaiffjgShMq0mbTsukyq5BwUFWNB+sbPDe0=
+Received: from AM4PR0202CA0022.eurprd02.prod.outlook.com
+ (2603:10a6:200:89::32) by AM6PR08MB3400.eurprd08.prod.outlook.com
+ (2603:10a6:20b:42::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Fri, 15 May
+ 2020 09:32:42 +0000
+Received: from AM5EUR03FT012.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:200:89:cafe::8) by AM4PR0202CA0022.outlook.office365.com
+ (2603:10a6:200:89::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26 via Frontend
+ Transport; Fri, 15 May 2020 09:32:42 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT012.mail.protection.outlook.com (10.152.16.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3000.19 via Frontend Transport; Fri, 15 May 2020 09:32:41 +0000
+Received: ("Tessian outbound b3a67fbfbb1f:v54"); Fri, 15 May 2020 09:32:41 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: e383358394b59448
+X-CR-MTA-TID: 64aa7808
+Received: from e9153ab57fc6.2
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id DFB3491D-EF13-411F-8C1B-AAB3CDFC3F87.1;
+        Fri, 15 May 2020 09:32:36 +0000
+Received: from EUR02-HE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id e9153ab57fc6.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 15 May 2020 09:32:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Wza82cE5h5ZWP3h2XRO9zs6EkKdBRvJeETYJCKqYXlchwydv71olSoVzhzJPEvV6w+zG1sqpj7UwEgY/ha+2PQ8mblujGMCGC8+MEoy398rwUrO3mO9SPgSpNA//NAp3DducaPQ9aOj+1sU6abzJStVDW2NluWR04Piqk/MHMEOuIybeXlVf19qPgdqqb7AO1H2JoS9GOFIZGWGu5qMWqsw1mivdmBl6wePs47h/2VhXARDCsCnnTKqfRW8d3Ze9b5NGB3idzGRpBNamjBcrUAMGzZxMe8fkeV7jsZZWlQ9/LBPNMM+iEtkO61cRQ4Bypqy4KwgqU0PPet/EbYgj9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p1eVtPJdOfak8LUKZ90gMOGASb8ujGDAuzC7EcQvvxA=;
+ b=IyCt+e+JCvhBY+LBT9GJPFsBbGf1JodQ6UHPezQu8pq8bh9F+JmwnnywJ43MlRANjuMbydAxsG+vG9RE4uBAjWgj2TJ78KLonanJRH8FSsqFBjS3HVJFlIlBM9cd8NnWCSr/0tGI38OYPPaWhPimoQdFW3Rl7kVuzbdxTT2BHS2zLYnWixBeB17gDekXvpKfI7PYxT4LPQDO22YMxza8wfjopkUcbjXC//GRg91CoMk4GPSmah3rpywtx6sFNyhW7RYTA7D8QadGjZz61XnH6ye1ynU+ksBQQMY5N15jUq+SHHX1Uh179t+8s3birpYdTw+i6NjcpJPh7GgrFjQQOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p1eVtPJdOfak8LUKZ90gMOGASb8ujGDAuzC7EcQvvxA=;
+ b=n4g1dPvnQerVoJdDk5Kpc3Uw67yq5AYbGmHrxHP3Rwd0mt23QCRN5t/gvbIS2mDounPReMjIRScxJyZ7Xqzy/1NE92rLCs5r+QpOr/OwgnY6hJqV4WE6nikA881vo1gjGguSuIX5FaiffjgShMq0mbTsukyq5BwUFWNB+sbPDe0=
+Authentication-Results-Original: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=arm.com;
+Received: from HE1PR08MB2890.eurprd08.prod.outlook.com (2603:10a6:7:36::11) by
+ HE1PR08MB2921.eurprd08.prod.outlook.com (2603:10a6:7:30::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2979.34; Fri, 15 May 2020 09:32:32 +0000
+Received: from HE1PR08MB2890.eurprd08.prod.outlook.com
+ ([fe80::21af:7992:3558:1a80]) by HE1PR08MB2890.eurprd08.prod.outlook.com
+ ([fe80::21af:7992:3558:1a80%2]) with mapi id 15.20.3000.022; Fri, 15 May 2020
+ 09:32:32 +0000
+Date:   Fri, 15 May 2020 10:32:29 +0100
+From:   Brian Starkey <brian.starkey@arm.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F. Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-mm <linux-mm@kvack.org>, nd <nd@arm.com>
+Subject: Re: [RFC][PATCH 3/4] dma-buf: cma_heap: Extend logic to export CMA
+ regions tagged with "linux,cma-heap"
+Message-ID: <20200515093229.bibu5etvfrdlrhsi@DESKTOP-E1NTVVP.localdomain>
+References: <20200501073949.120396-1-john.stultz@linaro.org>
+ <20200501073949.120396-4-john.stultz@linaro.org>
+ <20200501102143.xcckvsfecumbei3c@DESKTOP-E1NTVVP.localdomain>
+ <47e7eded-7240-887a-39e1-97c55bf752e7@arm.com>
+ <CALAqxLU6kmvJ+xPCFzc3N+RNMv4g=L9bmzgE0wrOXefiGfPoHg@mail.gmail.com>
+ <20200504090628.d2q32dwyg6em5pp7@DESKTOP-E1NTVVP.localdomain>
+ <20200512163714.GA22577@bogus>
+ <20200513104401.lhh2m5avlasev6mj@DESKTOP-E1NTVVP.localdomain>
+ <CAL_Jsq+V-YA9B7i+9U0as3oXNC=HLPHmZ2NrPzNJu5CXpvD3tg@mail.gmail.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515044121.2987940-8-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAL_Jsq+V-YA9B7i+9U0as3oXNC=HLPHmZ2NrPzNJu5CXpvD3tg@mail.gmail.com>
+User-Agent: NeoMutt/20180716-849-147d51-dirty
+X-ClientProxiedBy: LO2P265CA0308.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a5::32) To HE1PR08MB2890.eurprd08.prod.outlook.com
+ (2603:10a6:7:36::11)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from DESKTOP-E1NTVVP.localdomain (82.1.208.173) by LO2P265CA0308.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a5::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26 via Frontend Transport; Fri, 15 May 2020 09:32:30 +0000
+X-Originating-IP: [82.1.208.173]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: eb0c88b4-fb4a-4d89-149d-08d7f8b2ea70
+X-MS-TrafficTypeDiagnostic: HE1PR08MB2921:|HE1PR08MB2921:|AM6PR08MB3400:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR08MB3400807DEDC86952FC95D154F0BD0@AM6PR08MB3400.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;OLM:8882;
+X-Forefront-PRVS: 04041A2886
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: NKzk5khuMDIemVQuoeYoENrAbLHq3Hpeo2gRKN6vmFsYC1xU+vooC9Ivx4bsqwWuFUMlM0H7Yub2p2OFrZppkSlVqrPZzZcN8CYvMkQ+Qn2U/TGjdWc4gj1H8kOrd9mEXYEAgZvEM76dmL9q8bJZ2XlIGlsyL4uUd/OIDAdtKQ+BlYu13a7oKqISeh2uUpmz+C07JMDKWxIsZHp/It7B9qNkSr1LNcNbH51uAU9F5qEieWatsgjk/laV3Eyiiw7z/dnZPR2osLWbyXNck1gwMRDFytGFaFDjqYFxyTtBM20r6yANXoQuQl1AxWVkCOC5z/TigLlFyfZ7SBeKlBSfMfxAYojKMJr2jer38pT6cE2k2EG80ZCXfmiZo/gbgWKKL8mOYhxXHN5EEco6+8SaJ7eQUGVOS2ffvogvM8uOHFQWqKfHyOmL1f5hLTHuwWb3PF7wZl/MKP+SMFOUUlJ3Wl3J/S0SEFw8Sa8/pYKnQAWRJfn/Y4ExQ20s+bh5q4uO
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR08MB2890.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(396003)(346002)(376002)(366004)(1076003)(6916009)(8936002)(86362001)(66946007)(66556008)(186003)(54906003)(7416002)(16526019)(956004)(66476007)(55016002)(9686003)(478600001)(6506007)(7696005)(53546011)(8676002)(316002)(52116002)(2906002)(44832011)(4326008)(26005)(5660300002)(142933001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: fN6g2wvY+kQGqfVYzukC3huo+PGdxIeyOewBKsrg/s82Mk1AoC2NmSzAYVzbuurElLMVfWrZTeJmNTczo09V4iRZIMbiRNhGN+VmgFokPp/P3ZeT2wmC0z8LSbr2QPpYt+lzJRv/O+CwT4DAoLeipF9z3SFpLcKNMdyzTQqWc19KFq3o3RgAYYee5+5SMYqM1OiwZuYHN1JqXmt42FwPW1v+ZyEKnkT+QoSoBd4bBJwFeQxYTrHknu9y8CMLOyq13aFsqPWdad+xt65gGl9E1Gbxk7DflMt7uaT4SXNhRqXyXff/OHILVG6xsKmiC9c4TQ32SNLn7X39/lWjP9u0ItK6uFVCiSyn9E2TeiCgj9GPqZXvEXILozz3URcDyUrTdnOE6/ebGFvBa1yXnM3CaPUy/gzwDtQ9IiQ+VN5ZlNoLBBWHNCwruKkN8AXzqdQvGhmFSrci1+MW0iI2zUOCCjNDpxmomb4/YzMehXw4E2Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR08MB2921
+Original-Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT012.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(396003)(346002)(39860400002)(46966005)(6862004)(8676002)(70586007)(316002)(9686003)(70206006)(47076004)(1076003)(82310400002)(16526019)(4326008)(55016002)(36906005)(54906003)(5660300002)(8936002)(450100002)(186003)(26005)(956004)(53546011)(6506007)(2906002)(336012)(86362001)(478600001)(356005)(81166007)(82740400003)(44832011)(7696005)(142933001);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 75b2492b-b0b0-470a-0c9c-08d7f8b2e49b
+X-Forefront-PRVS: 04041A2886
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1pvgSql+3+uukiSbqv8nxZWUKXUFEjubHLDU5v3wGABJNFWVjQUS1HiCet9gZpmfXvEfIMhbvjPynkkjStbqeKVycmRlBVRCWOWfMdj/YU3XvvGdrrVuL88mjIH8CcaNOoJwUxu4RwG5op7KSXxLsAbZ2xN0HKT6XNGhnJqhO3JU9YngLkveGcSo1rrLUcAzDm9bvDf3fcrqCVqPUmxf7wYL4ICbvm9DDqoVAn+UwxupwQO0KOkMR0JtZt8nn2yac0vtR6CAR2MG3rz2Diq6KBLbmG342NQOMYfYLjBn8inSyQeljtALQZZBR94coIJpuQkmllP9NEu7hV6BHoCxzYaIAHYhDzlCx3f4rLqieWTd7XVYizutXTK81Q3adgd8awkHqeoROMV9ksXNwL34PgYkdFSIOFgt/WBmt2fKk+0t7EAnEEuttQ4/3ORcDbaGXoiuHh6zM/uWaWT3qZ3kDQMC3eVpj3olgv0vpZCDIdzq8aGsuLoYoXW3AgJtG9+koVGTYqmqSTOgqlce2acnKpwfLXsXASEnVRykw02a//8=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2020 09:32:41.6056
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb0c88b4-fb4a-4d89-149d-08d7f8b2ea70
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3400
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 14-05-20 21:41:19, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On Thu, May 14, 2020 at 09:52:35AM -0500, Rob Herring wrote:
+> On Wed, May 13, 2020 at 5:44 AM Brian Starkey <brian.starkey@arm.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > On Tue, May 12, 2020 at 11:37:14AM -0500, Rob Herring wrote:
+> > > On Mon, May 04, 2020 at 10:06:28AM +0100, Brian Starkey wrote:
+> > > > On Fri, May 01, 2020 at 12:01:40PM -0700, John Stultz wrote:
+> > > > > On Fri, May 1, 2020 at 4:08 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> > > > > >
+> > > > > > On 2020-05-01 11:21 am, Brian Starkey wrote:
+> > > > > > > Hi John,
+> > > > > > >
+> > > > > > > On Fri, May 01, 2020 at 07:39:48AM +0000, John Stultz wrote:
+> > > > > > >> This patch reworks the cma_heap initialization so that
+> > > > > > >> we expose both the default CMA region and any CMA regions
+> > > > > > >> tagged with "linux,cma-heap" in the device-tree.
+> > > > > > >>
+> > > > > > >> Cc: Rob Herring <robh+dt@kernel.org>
+> > > > > > >> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> > > > > > >> Cc: "Andrew F. Davis" <afd@ti.com>
+> > > > > > >> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> > > > > > >> Cc: Liam Mark <lmark@codeaurora.org>
+> > > > > > >> Cc: Pratik Patel <pratikp@codeaurora.org>
+> > > > > > >> Cc: Laura Abbott <labbott@redhat.com>
+> > > > > > >> Cc: Brian Starkey <Brian.Starkey@arm.com>
+> > > > > > >> Cc: Chenbo Feng <fengc@google.com>
+> > > > > > >> Cc: Alistair Strachan <astrachan@google.com>
+> > > > > > >> Cc: Sandeep Patil <sspatil@google.com>
+> > > > > > >> Cc: Hridya Valsaraju <hridya@google.com>
+> > > > > > >> Cc: Christoph Hellwig <hch@lst.de>
+> > > > > > >> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > > > > >> Cc: Robin Murphy <robin.murphy@arm.com>
+> > > > > > >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > > > > >> Cc: devicetree@vger.kernel.org
+> > > > > > >> Cc: dri-devel@lists.freedesktop.org
+> > > > > > >> Cc: linux-mm@kvack.org
+> > > > > > >> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > > > > > >> ---
+> > > > > > >>   drivers/dma-buf/heaps/cma_heap.c | 18 +++++++++---------
+> > > > > > >>   1 file changed, 9 insertions(+), 9 deletions(-)
+> > > > > > >>
+> > > > > > >> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
+> > > > > > >> index 626cf7fd033a..dd154e2db101 100644
+> > > > > > >> --- a/drivers/dma-buf/heaps/cma_heap.c
+> > > > > > >> +++ b/drivers/dma-buf/heaps/cma_heap.c
+> > > > > > >> @@ -141,6 +141,11 @@ static int __add_cma_heap(struct cma *cma, void *data)
+> > > > > > >>   {
+> > > > > > >>      struct cma_heap *cma_heap;
+> > > > > > >>      struct dma_heap_export_info exp_info;
+> > > > > > >> +    struct cma *default_cma = dev_get_cma_area(NULL);
+> > > > > > >> +
+> > > > > > >> +    /* We only add the default heap and explicitly tagged heaps */
+> > > > > > >> +    if (cma != default_cma && !cma_dma_heap_enabled(cma))
+> > > > > > >> +            return 0;
+> > > > > > >
+> > > > > > > Thinking about the pl111 thread[1], I'm wondering if we should also
+> > > > > > > let drivers call this directly to expose their CMA pools, even if they
+> > > > > > > aren't tagged for dma-heaps in DT. But perhaps that's too close to
+> > > > > > > policy.
+> > > > > >
+> > > > > > That sounds much like what my first thoughts were - apologies if I'm
+> > > > > > wildly off-base here, but as far as I understand:
+> > > > > >
+> > > > > > - Device drivers know whether they have their own "memory-region" or not.
+> > > > > > - Device drivers already have to do *something* to participate in dma-buf.
+> > > > > > - Device drivers know best how they make use of both the above.
+> > > > > > - Therefore couldn't it be left to drivers to choose whether to register
+> > > > > > their CMA regions as heaps, without having to mess with DT at all?
+> > >
+> > > +1, but I'm biased toward any solution not using DT. :)
+> > >
+> > > > > I guess I'm not opposed to this. But I guess I'd like to see some more
+> > > > > details? You're thinking the pl111 driver would add the
+> > > > > "memory-region" node itself?
+> > > > >
+> > > > > Assuming that's the case, my only worry is what if that memory-region
+> > > > > node isn't a CMA area, but instead something like a carveout? Does the
+> > > > > driver need to parse enough of the dt to figure out where to register
+> > > > > the region as a heap?
+> > > >
+> > > > My thinking was more like there would already be a reserved-memory
+> > > > node in DT for the chunk of memory, appropriately tagged so that it
+> > > > gets added as a CMA region.
+> > > >
+> > > > The device's node would have "memory-region=<&blah>;" and would use
+> > > > of_reserved_mem_device_init() to link up dev->cma_area to the
+> > > > corresponding cma region.
+> > > >
+> > > > So far, that's all in-place already. The bit that's missing is
+> > > > exposing that dev->cma_area to userspace as a dma_heap - so we could
+> > > > just have "int cma_heap_add(struct cma *cma)" or "int
+> > > > cma_heap_dev_add(struct device *dev)" or something exported for
+> > > > drivers to expose their device-assigned cma region if they wanted to.
+> > > >
+> > > > I don't think this runs into the lifetime problems of generalised
+> > > > heaps-as-modules either, because the CMA region will never go away
+> > > > even if the driver does.
+> > > >
+> > > > Alongside that, I do think the completely DT-driven approach can be
+> > > > useful too - because there may be regions which aren't associated with
+> > > > any specific device driver, that we want exported as heaps.
+> > >
+> > > And they are associated with the hardware description rather than the
+> > > userspace environment?
+> >
+> > I'm not sure how to answer that. We already have CMA regions being
+> > created from device-tree, so we're only talking about explicitly
+> > exposing those to userspace.
 > 
-> We add 'always', 'never', and 'inode' (default).  '-o dax' continues to
-> operate the same which is equivalent to 'always'.  This new
-> functionality is limited to ext4 only.
+> It's easier to argue that how much CMA memory a system/device needs is
+> h/w description as that's more a function of devices and frame sizes.
+> But exposing to userspace or not is an OS architecture decision. It's
+> not really any different than a kernel vs. userspace driver question.
+> What's exposed by UIO or spi-dev is purely a kernel thing.
 > 
-> Specifically we introduce a 2nd DAX mount flag EXT4_MOUNT2_DAX_NEVER and set
-> it and EXT4_MOUNT_DAX_ALWAYS appropriately for the mode.
+> > Are you thinking that userspace should be deciding whether they get
+> > exposed or not? I don't know how userspace would discover them in
+> > order to make that decision.
 > 
-> We also force EXT4_MOUNT2_DAX_NEVER if !CONFIG_FS_DAX.
-> 
-> Finally, EXT4_MOUNT2_DAX_INODE is used solely to detect if the user
-> specified that option for printing.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Or perhaps the kernel should be deciding. Expose to userspace what the
+> kernel doesn't need or drivers decide?
 
-Thanks. The patch looks good to me now. You can add:
+If not via device-tree how would the kernel make that decision? For
+regions which get "claimed" by a device/driver, obviously that driver
+can make the decision, and I totally think we should provide a way for
+them to expose it.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+But for something like a shared pool amongst the media subsystem,
+there may not be any specific single device/driver - and creating a
+dummy driver with the sole purpose of exposing the heap doesn't seem
+like an improvement over a simple "linux,cma-heap".
 
-								Honza
+Cheers,
+-Brian
 
 > 
-> ---
-> Changes from V1:
-> 	Fix up mounting options to only show an option if specified
-> 	Fix remount to prevent dax changes
-> 	Isolate behavior to ext4 only
+> It's hard to argue against 1 new property. It's death by a 1000 cuts though.
 > 
-> Changes from RFC:
-> 	Combine remount check for DAX_NEVER with DAX_ALWAYS
-> 	Update ext4_should_enable_dax()
-> ---
->  fs/ext4/ext4.h  |  2 ++
->  fs/ext4/inode.c |  2 ++
->  fs/ext4/super.c | 67 +++++++++++++++++++++++++++++++++++++++++--------
->  3 files changed, 61 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 86a0994332ce..6235440e4c39 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -1168,6 +1168,8 @@ struct ext4_inode_info {
->  						      blocks */
->  #define EXT4_MOUNT2_HURD_COMPAT		0x00000004 /* Support HURD-castrated
->  						      file systems */
-> +#define EXT4_MOUNT2_DAX_NEVER		0x00000008 /* Do not allow Direct Access */
-> +#define EXT4_MOUNT2_DAX_INODE		0x00000010 /* For printing options only */
->  
->  #define EXT4_MOUNT2_EXPLICIT_JOURNAL_CHECKSUM	0x00000008 /* User explicitly
->  						specified journal checksum */
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 23e42a223235..140b1930e2f4 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -4400,6 +4400,8 @@ int ext4_get_inode_loc(struct inode *inode, struct ext4_iloc *iloc)
->  
->  static bool ext4_should_enable_dax(struct inode *inode)
->  {
-> +	if (test_opt2(inode->i_sb, DAX_NEVER))
-> +		return false;
->  	if (!S_ISREG(inode->i_mode))
->  		return false;
->  	if (ext4_should_journal_data(inode))
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index 5ec900fdf73c..4753de53b186 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -1504,7 +1504,8 @@ enum {
->  	Opt_usrjquota, Opt_grpjquota, Opt_offusrjquota, Opt_offgrpjquota,
->  	Opt_jqfmt_vfsold, Opt_jqfmt_vfsv0, Opt_jqfmt_vfsv1, Opt_quota,
->  	Opt_noquota, Opt_barrier, Opt_nobarrier, Opt_err,
-> -	Opt_usrquota, Opt_grpquota, Opt_prjquota, Opt_i_version, Opt_dax,
-> +	Opt_usrquota, Opt_grpquota, Opt_prjquota, Opt_i_version,
-> +	Opt_dax, Opt_dax_always, Opt_dax_inode, Opt_dax_never,
->  	Opt_stripe, Opt_delalloc, Opt_nodelalloc, Opt_warn_on_error,
->  	Opt_nowarn_on_error, Opt_mblk_io_submit,
->  	Opt_lazytime, Opt_nolazytime, Opt_debug_want_extra_isize,
-> @@ -1571,6 +1572,9 @@ static const match_table_t tokens = {
->  	{Opt_nobarrier, "nobarrier"},
->  	{Opt_i_version, "i_version"},
->  	{Opt_dax, "dax"},
-> +	{Opt_dax_always, "dax=always"},
-> +	{Opt_dax_inode, "dax=inode"},
-> +	{Opt_dax_never, "dax=never"},
->  	{Opt_stripe, "stripe=%u"},
->  	{Opt_delalloc, "delalloc"},
->  	{Opt_warn_on_error, "warn_on_error"},
-> @@ -1718,6 +1722,7 @@ static int clear_qf_name(struct super_block *sb, int qtype)
->  #define MOPT_NO_EXT3	0x0200
->  #define MOPT_EXT4_ONLY	(MOPT_NO_EXT2 | MOPT_NO_EXT3)
->  #define MOPT_STRING	0x0400
-> +#define MOPT_SKIP	0x0800
->  
->  static const struct mount_opts {
->  	int	token;
-> @@ -1767,7 +1772,13 @@ static const struct mount_opts {
->  	{Opt_min_batch_time, 0, MOPT_GTE0},
->  	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
->  	{Opt_init_itable, 0, MOPT_GTE0},
-> -	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET},
-> +	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET | MOPT_SKIP},
-> +	{Opt_dax_always, EXT4_MOUNT_DAX_ALWAYS,
-> +		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
-> +	{Opt_dax_inode, EXT4_MOUNT2_DAX_INODE,
-> +		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
-> +	{Opt_dax_never, EXT4_MOUNT2_DAX_NEVER,
-> +		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
->  	{Opt_stripe, 0, MOPT_GTE0},
->  	{Opt_resuid, 0, MOPT_GTE0},
->  	{Opt_resgid, 0, MOPT_GTE0},
-> @@ -2076,13 +2087,32 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
->  		}
->  		sbi->s_jquota_fmt = m->mount_opt;
->  #endif
-> -	} else if (token == Opt_dax) {
-> +	} else if (token == Opt_dax || token == Opt_dax_always ||
-> +		   token == Opt_dax_inode || token == Opt_dax_never) {
->  #ifdef CONFIG_FS_DAX
-> -		ext4_msg(sb, KERN_WARNING,
-> -		"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
-> -		sbi->s_mount_opt |= m->mount_opt;
-> +		switch (token) {
-> +		case Opt_dax:
-> +		case Opt_dax_always:
-> +			ext4_msg(sb, KERN_WARNING,
-> +				"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
-> +			sbi->s_mount_opt |= EXT4_MOUNT_DAX_ALWAYS;
-> +			sbi->s_mount_opt2 &= ~EXT4_MOUNT2_DAX_NEVER;
-> +			break;
-> +		case Opt_dax_never:
-> +			sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_NEVER;
-> +			sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
-> +			break;
-> +		case Opt_dax_inode:
-> +			sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
-> +			sbi->s_mount_opt2 &= ~EXT4_MOUNT2_DAX_NEVER;
-> +			/* Strictly for printing options */
-> +			sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_INODE;
-> +			break;
-> +		}
->  #else
->  		ext4_msg(sb, KERN_INFO, "dax option not supported");
-> +		sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_NEVER;
-> +		sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
->  		return -1;
->  #endif
->  	} else if (token == Opt_data_err_abort) {
-> @@ -2246,7 +2276,7 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
->  	for (m = ext4_mount_opts; m->token != Opt_err; m++) {
->  		int want_set = m->flags & MOPT_SET;
->  		if (((m->flags & (MOPT_SET|MOPT_CLEAR)) == 0) ||
-> -		    (m->flags & MOPT_CLEAR_ERR))
-> +		    (m->flags & MOPT_CLEAR_ERR) || m->flags & MOPT_SKIP)
->  			continue;
->  		if (!nodefs && !(m->mount_opt & (sbi->s_mount_opt ^ def_mount_opt)))
->  			continue; /* skip if same as the default */
-> @@ -2306,6 +2336,17 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
->  	if (DUMMY_ENCRYPTION_ENABLED(sbi))
->  		SEQ_OPTS_PUTS("test_dummy_encryption");
->  
-> +	if (test_opt(sb, DAX_ALWAYS)) {
-> +		if (IS_EXT2_SB(sb))
-> +			SEQ_OPTS_PUTS("dax");
-> +		else
-> +			SEQ_OPTS_PUTS("dax=always");
-> +	} else if (test_opt2(sb, DAX_NEVER)) {
-> +		SEQ_OPTS_PUTS("dax=never");
-> +	} else if (test_opt2(sb, DAX_INODE)) {
-> +		SEQ_OPTS_PUTS("dax=inode");
-> +	}
-> +
->  	ext4_show_quota_options(seq, sb);
->  	return 0;
->  }
-> @@ -5425,10 +5466,16 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
->  		goto restore_opts;
->  	}
->  
-> -	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS) {
-> +	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS ||
-> +	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_NEVER ||
-> +	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_INODE) {
->  		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
-> -			"dax flag with busy inodes while remounting");
-> -		sbi->s_mount_opt ^= EXT4_MOUNT_DAX_ALWAYS;
-> +			"dax mount option with busy inodes while remounting");
-> +		sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
-> +		sbi->s_mount_opt |= old_opts.s_mount_opt & EXT4_MOUNT_DAX_ALWAYS;
-> +		sbi->s_mount_opt2 &= ~(EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
-> +		sbi->s_mount_opt2 |= old_opts.s_mount_opt2 &
-> +				     (EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
->  	}
->  
->  	if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED)
-> -- 
-> 2.25.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> Rob
