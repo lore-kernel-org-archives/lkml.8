@@ -2,156 +2,80 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 04:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C04C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 04:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4948E20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 04:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B5D20671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 04:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgEOEcB (ORCPT
+        id S1726246AbgEOEd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 00:32:01 -0400
-Received: from mo-csw1116.securemx.jp ([210.130.202.158]:42314 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbgEOEcB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 00:32:01 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1116) id 04F4ViWo023273; Fri, 15 May 2020 13:31:44 +0900
-X-Iguazu-Qid: 2wHHidEfDmcahIIBuK
-X-Iguazu-QSIG: v=2; s=0; t=1589517104; q=2wHHidEfDmcahIIBuK; m=slt4I4Ma9asGl9MdH6xWfznD1YOKckyNoxkOisCo/x0=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1113) id 04F4VgFx003154;
-        Fri, 15 May 2020 13:31:42 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id 04F4VgJS024761;
-        Fri, 15 May 2020 13:31:42 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 04F4Vf4u001744;
-        Fri, 15 May 2020 13:31:41 +0900
-From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-To:     jeffrey.t.kirsher@intel.com
-Cc:     daniel.sangorrin@toshiba.co.jp,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] e1000e: Relax condition to trigger reset for ME workaround
-Date:   Fri, 15 May 2020 13:31:27 +0900
-X-TSB-HOP: ON
-Message-Id: <20200515043127.3882162-1-punit1.agrawal@toshiba.co.jp>
-X-Mailer: git-send-email 2.26.2
+        Fri, 15 May 2020 00:33:56 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4845 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725616AbgEOEd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 00:33:56 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 212CB54EA7F1D3547B1B;
+        Fri, 15 May 2020 12:33:53 +0800 (CST)
+Received: from use12-sp2.huawei.com (10.67.189.174) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 15 May 2020 12:33:47 +0800
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+To:     <mcgrof@kernel.org>, <keescook@chromium.org>, <yzaikin@google.com>,
+        <adobriyan@gmail.com>, <mingo@kernel.org>, <peterz@infradead.org>,
+        <akpm@linux-foundation.org>, <yamada.masahiro@socionext.com>,
+        <bauerman@linux.ibm.com>, <gregkh@linuxfoundation.org>,
+        <skhan@linuxfoundation.org>, <dvyukov@google.com>,
+        <svens@stackframe.org>, <joel@joelfernandes.org>,
+        <tglx@linutronix.de>, <Jisheng.Zhang@synaptics.com>,
+        <pmladek@suse.com>, <bigeasy@linutronix.de>
+CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <nixiaoming@huawei.com>, <wangle6@huawei.com>
+Subject: [PATCH 0/4] Move the sysctl interface to the corresponding feature code file
+Date:   Fri, 15 May 2020 12:33:40 +0800
+Message-ID: <1589517224-123928-1-git-send-email-nixiaoming@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.189.174]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's an error if the value of the RX/TX tail descriptor does not match
-what was written. The error condition is true regardless the duration
-of the interference from ME. But the driver only performs the reset if
-E1000_ICH_FWSM_PCIM2PCI_COUNT (2000) iterations of 50us delay have
-transpired. The extra condition can lead to inconsistency between the
-state of hardware as expected by the driver.
+Use register_sysctl() to register the sysctl interface to avoid
+merge conflicts when different features modify sysctl.c at the same time.
 
-Fix this by dropping the check for number of delay iterations.
+Here, the sysctl interfaces of hung task and watchdog are moved to the
+corresponding feature code files
 
-While at it, also make __ew32_prepare() static as it's not used
-anywhere else.
+https://lkml.org/lkml/2020/5/11/1419
 
-Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: intel-wired-lan@lists.osuosl.org
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
-Hi Jeff,
+Xiaoming Ni (4):
+  hung_task: Move hung_task syscl interface to hung_task_sysctl.c
+  proc/sysctl: add shared variables -1
+  watchdog: move watchdog sysctl to watchdog.c
+  sysctl: Add register_sysctl_init() interface
 
-If there are no further comments please consider merging the patch.
+ fs/proc/proc_sysctl.c        |   2 +-
+ include/linux/sched/sysctl.h |   8 +--
+ include/linux/sysctl.h       |   3 +
+ kernel/Makefile              |   4 +-
+ kernel/hung_task.c           |   6 +-
+ kernel/hung_task.h           |  21 ++++++
+ kernel/hung_task_sysctl.c    |  66 +++++++++++++++++
+ kernel/sysctl.c              | 168 ++++++-------------------------------------
+ kernel/watchdog.c            | 101 ++++++++++++++++++++++++++
+ 9 files changed, 219 insertions(+), 160 deletions(-)
+ create mode 100644 kernel/hung_task.h
+ create mode 100644 kernel/hung_task_sysctl.c
 
-Also, should it be marked for backport to stable?
-
-Thanks,
-Punit
-
-RFC[0] -> v1:
-* Dropped return value for __ew32_prepare() as it's not used
-* Made __ew32_prepare() static
-* Added tags
-
-[0] https://lkml.org/lkml/2020/5/12/20
-
- drivers/net/ethernet/intel/e1000e/e1000.h  |  1 -
- drivers/net/ethernet/intel/e1000e/netdev.c | 12 +++++-------
- 2 files changed, 5 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/e1000e/e1000.h b/drivers/net/ethernet/intel/e1000e/e1000.h
-index 37a2314d3e6b..944abd5eae11 100644
---- a/drivers/net/ethernet/intel/e1000e/e1000.h
-+++ b/drivers/net/ethernet/intel/e1000e/e1000.h
-@@ -576,7 +576,6 @@ static inline u32 __er32(struct e1000_hw *hw, unsigned long reg)
- 
- #define er32(reg)	__er32(hw, E1000_##reg)
- 
--s32 __ew32_prepare(struct e1000_hw *hw);
- void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val);
- 
- #define ew32(reg, val)	__ew32(hw, E1000_##reg, (val))
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index 177c6da80c57..e9aa47aba7eb 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -119,14 +119,12 @@ static const struct e1000_reg_info e1000_reg_info_tbl[] = {
-  * has bit 24 set while ME is accessing MAC CSR registers, wait if it is set
-  * and try again a number of times.
-  **/
--s32 __ew32_prepare(struct e1000_hw *hw)
-+static void __ew32_prepare(struct e1000_hw *hw)
- {
- 	s32 i = E1000_ICH_FWSM_PCIM2PCI_COUNT;
- 
- 	while ((er32(FWSM) & E1000_ICH_FWSM_PCIM2PCI) && --i)
- 		udelay(50);
--
--	return i;
- }
- 
- void __ew32(struct e1000_hw *hw, unsigned long reg, u32 val)
-@@ -607,11 +605,11 @@ static void e1000e_update_rdt_wa(struct e1000_ring *rx_ring, unsigned int i)
- {
- 	struct e1000_adapter *adapter = rx_ring->adapter;
- 	struct e1000_hw *hw = &adapter->hw;
--	s32 ret_val = __ew32_prepare(hw);
- 
-+	__ew32_prepare(hw);
- 	writel(i, rx_ring->tail);
- 
--	if (unlikely(!ret_val && (i != readl(rx_ring->tail)))) {
-+	if (unlikely(i != readl(rx_ring->tail))) {
- 		u32 rctl = er32(RCTL);
- 
- 		ew32(RCTL, rctl & ~E1000_RCTL_EN);
-@@ -624,11 +622,11 @@ static void e1000e_update_tdt_wa(struct e1000_ring *tx_ring, unsigned int i)
- {
- 	struct e1000_adapter *adapter = tx_ring->adapter;
- 	struct e1000_hw *hw = &adapter->hw;
--	s32 ret_val = __ew32_prepare(hw);
- 
-+	__ew32_prepare(hw);
- 	writel(i, tx_ring->tail);
- 
--	if (unlikely(!ret_val && (i != readl(tx_ring->tail)))) {
-+	if (unlikely(i != readl(tx_ring->tail))) {
- 		u32 tctl = er32(TCTL);
- 
- 		ew32(TCTL, tctl & ~E1000_TCTL_EN);
 -- 
-2.26.2
+1.8.5.6
 
