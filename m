@@ -2,67 +2,109 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3878FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3F32065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11B2620709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:03:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589504616;
+	bh=67KeMOOHllPtjB4niROag3k8A8DvU7fdhWlbPOcGW1k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JJDUTo53DivMShKDBRRc6sFU/JcuZSz6sLXnBFh1ALNHks73pDaaljchwP4fXA3ZH
+	 7tPmM6w5wVdrmrX+BJGq+TwI04KvS14SJVt2XNj2iNEv6IyFNcZDswWAq67BrfzLpA
+	 e31fRd/mso3R6GGYKcmQhCq87H+S5kLwq/5B9EsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgEOBDZ (ORCPT
+        id S1728008AbgEOBDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 21:03:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726122AbgEOBDZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 21:03:25 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED9CC061A0C;
-        Thu, 14 May 2020 18:03:25 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CF56A14DDDEE5;
-        Thu, 14 May 2020 18:03:23 -0700 (PDT)
-Date:   Thu, 14 May 2020 18:03:22 -0700 (PDT)
-Message-Id: <20200514.180322.2120900678402639632.davem@davemloft.net>
-To:     colin.king@canonical.com
-Cc:     vladimir.oltean@nxp.com, claudiu.manoil@nxp.com, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        xiaoliang.yang_1@nxp.com, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] net: dsa: felix: fix incorrect clamp calculation
- for burst
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200514183302.16925-1-colin.king@canonical.com>
-References: <20200514183302.16925-1-colin.king@canonical.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 14 May 2020 18:03:24 -0700 (PDT)
+        Thu, 14 May 2020 21:03:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726122AbgEOBDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 21:03:34 -0400
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D83FC20760
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 01:03:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589504614;
+        bh=67KeMOOHllPtjB4niROag3k8A8DvU7fdhWlbPOcGW1k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Sh1zxBz+d9fkmcicP8jvyuLHjND0Tftcj+cMN9e1ot4NhKJZKsR635Bg8oKx/rCfx
+         JH5EDkUaOykToWV9LlVeJSPMet1Yv3kPj9s8twooW8hUBbnGpLjKRKBZGX1OLb2YpR
+         Yo12O+RHuFE1RRByr3o8tsHKIReXsET2ciIEJiOU=
+Received: by mail-wr1-f52.google.com with SMTP id j5so1427154wrq.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 18:03:33 -0700 (PDT)
+X-Gm-Message-State: AOAM5314Gj2Q96vYGPUXvEHsmop5Vseh/8E7QedN2jTaoPWNX4EyE+cH
+        slFxCCJU9mfAFoV6XSUtY76nDRTLSvgg2LX03KIpJg==
+X-Google-Smtp-Source: ABdhPJwChWt2wQEEg3Hjs6bFAQrFplWyheRat8eiTxJYXZxeUWE24J6YSsSLj6y4jGmWqmRd2H44t28JQzqxAMaYfJE=
+X-Received: by 2002:adf:eccf:: with SMTP id s15mr1246285wro.70.1589504612293;
+ Thu, 14 May 2020 18:03:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200514180540.52407-1-vkuznets@redhat.com> <20200514220516.GC449815@xz-x1>
+ <20200514225623.GF15847@linux.intel.com>
+In-Reply-To: <20200514225623.GF15847@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 14 May 2020 18:03:20 -0700
+X-Gmail-Original-Message-ID: <CALCETrUf3qMgpYGfF=b6dt2gneodTv5eYGGwKZ=xDSYDa9aTVg@mail.gmail.com>
+Message-ID: <CALCETrUf3qMgpYGfF=b6dt2gneodTv5eYGGwKZ=xDSYDa9aTVg@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/5] KVM: x86: KVM_MEM_ALLONES memory
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Peter Xu <peterx@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michael Tsirkin <mst@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin King <colin.king@canonical.com>
-Date: Thu, 14 May 2020 19:33:02 +0100
+On Thu, May 14, 2020 at 3:56 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Thu, May 14, 2020 at 06:05:16PM -0400, Peter Xu wrote:
+> > On Thu, May 14, 2020 at 08:05:35PM +0200, Vitaly Kuznetsov wrote:
+> > > The idea of the patchset was suggested by Michael S. Tsirkin.
+> > >
+> > > PCIe config space can (depending on the configuration) be quite big but
+> > > usually is sparsely populated. Guest may scan it by accessing individual
+> > > device's page which, when device is missing, is supposed to have 'pci
+> > > holes' semantics: reads return '0xff' and writes get discarded. Currently,
+> > > userspace has to allocate real memory for these holes and fill them with
+> > > '0xff'. Moreover, different VMs usually require different memory.
+> > >
+> > > The idea behind the feature introduced by this patch is: let's have a
+> > > single read-only page filled with '0xff' in KVM and map it to all such
+> > > PCI holes in all VMs. This will free userspace of obligation to allocate
+> > > real memory and also allow us to speed up access to these holes as we
+> > > can aggressively map the whole slot upon first fault.
+> > >
+> > > RFC. I've only tested the feature with the selftest (PATCH5) on Intel/AMD
+> > > with and wiuthout EPT/NPT. I haven't tested memslot modifications yet.
+> > >
+> > > Patches are against kvm/next.
+> >
+> > Hi, Vitaly,
+> >
+> > Could this be done in userspace with existing techniques?
+> >
+> > E.g., shm_open() with a handle and fill one 0xff page, then remap it to
+> > anywhere needed in QEMU?
+>
+> Mapping that 4k page over and over is going to get expensive, e.g. each
+> duplicate will need a VMA and a memslot, plus any PTE overhead.  If the
+> total sum of the holes is >2mb it'll even overflow the mumber of allowed
+> memslots.
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently burst is clamping on rate and not burst, the assignment
-> of burst from the clamping discards the previous assignment of burst.
-> This looks like a cut-n-paste error from the previous clamping
-> calculation on ramp.  Fix this by replacing ramp with burst.
-> 
-> Addresses-Coverity: ("Unused value")
-> Fixes: 0fbabf875d18 ("net: dsa: felix: add support Credit Based Shaper(CBS) for hardware offload")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-
-Applied.
+How about a tiny character device driver /dev/ones?
