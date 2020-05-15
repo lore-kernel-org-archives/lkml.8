@@ -2,244 +2,280 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4606C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97C95205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811632065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:21:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CpQAn/SF"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Pv5wJc2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbgEOFSB (ORCPT
+        id S1726217AbgEOFVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 01:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33046 "EHLO
+        Fri, 15 May 2020 01:21:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726000AbgEOFSA (ORCPT
+        by vger.kernel.org with ESMTP id S1726000AbgEOFV3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 01:18:00 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1E8DC05BD09
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:17:58 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k7so445127pjs.5
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:17:58 -0700 (PDT)
+        Fri, 15 May 2020 01:21:29 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77030C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:21:29 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b6so1352132qkh.11
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:21:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hMleKhZRwYnYk8trdPGYl13OjWa3go/Bt1PhL2DTPXo=;
-        b=CpQAn/SFEFpBwXkURwgPzqVVevnZWk4x5rKIicMyToKZfczl/E4eQjP8SVh/hNwYcS
-         6DUz8bRV48Bj60vn5QXNut9LrXYxC5DIWKVN4GXxoF7r81tieIVTXvpM6xfcjl4MiAqp
-         xsXFqJ7QuY1mhPjKV63M1s3zHaSxdJzkxb5B8Gm5VhtawWhSMz7HmYs0rEQKUrcU7tg8
-         L+FYgtEvAq6ol8PfFZ3jjujajTO3kC9vaHWNOepSDCX2p0A0f2BOmmJljwfPsL52VLOD
-         1TUvc/YfYy2vDMezlAsJFblCi4WifLks0PTNWpwHwqDc1Wy4y+XjKYgUV1U5HNI8eqRj
-         1A3A==
+        d=lca.pw; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=gInxQOdZOaqokdqxXmouDhZhNy2e1yNxXdlP5JHe5/8=;
+        b=Pv5wJc2dBTkMyn0XWKnfPG6QWravhpOy13e3l5ajQcVZE02XpA6or1Lv418PNkSF8c
+         KGKWzreTfApj5NUq32O8+l+LvAuJSoDi2U02NEHCUymZQODInjdZRgMkFuwjrzOk781r
+         sgr2zBsSCPr3TxC8b3CkqgtGpqXLBes3exen6Hv5z7sdrn+1pZb/mnekbjdyqQNrP0lF
+         MxnAo6SpPViXTii8XOWZnPTo2xwOicsGCKsOrtUA722uUZjZwjqKrzCJme3Y313WL1Js
+         FH8uHOq3yEakFC5EMrWYjXYRx6X6V1s4wYV71IUWa1u3/Vv9ojQXYJTVVTwM07RwlmO6
+         dOOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hMleKhZRwYnYk8trdPGYl13OjWa3go/Bt1PhL2DTPXo=;
-        b=HS1RNSEiX6DjBU57oD0QbKFVAoE8dyrD/VudZu0coHJ8pFM3U7mV3X384YWrMpUiA+
-         FCMaKO0zg932kpddAlj5eyD0e9fx+Z4v1pDEJAsKo7oUt/1pNgfz8nP2E+IliVZ0yqry
-         PRZZpOBxKDY6vb8JrIQ9DfPU7e5iuSBWFDYvlMad/sExxNekbJmMSEHJyjZIU21K9B6y
-         xKlCL6tr73LEjtN/CLJNHiPlHNk4L5SS7Ck++VIW8p9BKK7Wh4BvBenhJMzjQLzkfF6q
-         EGofrEcAu0iO7zYaeFKCqhL9dJofIR+8aVdmTuuvB2EpjFvqhLuJ5g4+yYeO6vCXq0ey
-         7AKg==
-X-Gm-Message-State: AOAM532vIvIU2gHAJ/Ln0vLAILNf0Q/HeENkbJfWMKJEQoWZPV40T6lt
-        Det8tlbvh3TpVe9M0LmvVprZ2w==
-X-Google-Smtp-Source: ABdhPJylEXYFkUKbsA7pjWiU7zxQPtu31zx2CCb2GDHOcQAinrwKDrX/1WSJ+z2qGzzZjFhZ364V2A==
-X-Received: by 2002:a17:90a:e28c:: with SMTP id d12mr1611674pjz.19.1589519877981;
-        Thu, 14 May 2020 22:17:57 -0700 (PDT)
-Received: from localhost ([122.167.130.103])
-        by smtp.gmail.com with ESMTPSA id fh18sm39271712pjb.0.2020.05.14.22.17.56
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=gInxQOdZOaqokdqxXmouDhZhNy2e1yNxXdlP5JHe5/8=;
+        b=krKlEXMDI8PVB37HTIEAuMV97tJjmR2B/npLr41Wo4yTY5EHkuL7o2FNo0Z85GvNHD
+         Xc29cJ6nixncsknnbFgw7K3Fg19ouJ8lnPM7nypXnKuGuJC9iMnVE5E+Xdnfm8DFZ+Ji
+         2c/sclessc1pOQsQElINJ+uX8LWGSlRYFZ4wxl/B1I0GqP/8znXsk0SkjkVzbekDbeYu
+         chdmEUVIWpvHyDeDtTZo71iUz++k5nDW/oVWV0/Cn16Gi3pWteEt9/HINhhuavOdw8WL
+         Sf0UEVUovSl4jWp6gHS3sG1oMGvuXGcQO15xPVYOdBgy+aN3V2wR6VKjnhM5BI3N2FEE
+         PxGw==
+X-Gm-Message-State: AOAM532U4ai4Si7Q51D/IpFNKJOrNI72Gad70J2FnN2YRk8BmolHIlvR
+        Ff54NQ4rnOh+xDLpH7lbXmq0KA==
+X-Google-Smtp-Source: ABdhPJy1x0nQGnyo0RnmDA/F0BXUsFAm7s+D7XRE251PwLLVwxjjVh6vNRngKL+JTbkxqfl2MtLsqQ==
+X-Received: by 2002:a05:620a:a83:: with SMTP id v3mr1760800qkg.456.1589520088371;
+        Thu, 14 May 2020 22:21:28 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id y21sm841591qkb.95.2020.05.14.22.21.27
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 May 2020 22:17:57 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Date:   Fri, 15 May 2020 10:47:38 +0530
-Message-Id: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 14 May 2020 22:21:27 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: "BUG: MAX_LOCKDEP_ENTRIES too low" with 6979 "&type->s_umount_key"
+Message-Id: <F430E503-F8E9-41B6-B23E-D350FD73359B@lca.pw>
+Date:   Fri, 15 May 2020 01:21:26 -0400
+Cc:     David Howells <dhowells@redhat.com>,
+        Alexander Viro <viro@ZenIV.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+Lockdep is screwed here in next-20200514 due to "BUG: =
+MAX_LOCKDEP_ENTRIES too low". One of the traces below pointed to this =
+linux-next commit,
 
-Hi Rob, Arnd and Jassi,
+8c8e824d4ef0 watch_queue: Introduce a non-repeating system-unique =
+superblock ID
 
-This stuff has been doing rounds on the mailing list since several years
-now with no agreed conclusion by all the parties. And here is another
-attempt to get some feedback from everyone involved to close this once
-and for ever. Your comments will very much be appreciated.
+which was accidentally just showed up in next-20200514 along with,
 
-The ARM MHU is defined here in the TRM [1] for your reference, which
-states following:
+46896d79c514 watch_queue: Add superblock notifications
 
-	"The MHU drives the signal using a 32-bit register, with all 32
-	bits logically ORed together. The MHU provides a set of
-	registers to enable software to set, clear, and check the status
-	of each of the bits of this register independently.  The use of
-	32 bits for each interrupt line enables software to provide more
-	information about the source of the interrupt. For example, each
-	bit of the register can be associated with a type of event that
-	can contribute to raising the interrupt."
+I did have here,
 
-On few other platforms, like qcom, similar doorbell mechanism is present
-with separate interrupt for each of the bits (that's how I understood
-it), while in case of ARM MHU, there is a single interrupt line for all
-the 32 bits. Also in case of ARM MHU, these registers and interrupts
-have 3 copies for different priority levels, i.e. low priority
-non-secure, high priority non-secure and secure channels.
+CONFIG_SB_NOTIFICATIONS=3Dy
+CONFIG_MOUNT_NOTIFICATIONS=3Dy
+CONFIG_FSINFO=3Dy
 
-For ARM MHU, both the dt bindings and the Linux driver support 3
-channels for the different priorities right now and support sending a 32
-bit data on every transfer in a locked fashion, i.e. only one transfer
-can be done at once and the other have to wait for it to finish first.
+While MAX_LOCKDEP_ENTRIES is 32768, I noticed there is one type of lock =
+had a lot along,
 
-Here are the point of view of the parties involved on this subject:
+# grep  'type->s_umount_key=E2=80=99 /proc/lockdep_chains | wc -l
+6979
 
-Jassi's viewpoint:
+type->s_umount_key is from alloc_super(),
 
-- Virtualization of channels should be discouraged in software based on
-  specific usecases of the application. This may invite other mailbox
-  driver authors to ask for doing virtualization in their drivers.
+lockdep_set_class(&s->s_umount, &type->s_umount_key);
 
-- In mailbox's terminology, every channel is equivalent to a signal,
-  since there is only one signal generated here by the MHU, there should
-  be only one channel per priority level.
+Any thought before I bury myself bisecting this?
 
-- The clients should send data (of just setting 1 bit or many in the 32
-  bit word) using the existing mechanism as the delays due to
-  serialization shouldn't be significant anyway.
+[15323.316234] LTP: starting isofs (isofs.sh)
+[15369.549302] LTP: starting fs_fill
+[15369.837565] /dev/zero: Can't open blockdev
+[15378.107150] EXT4-fs (loop0): mounting ext3 file system using the ext4 =
+subsystem
+[15378.180704] EXT4-fs (loop0): mounted filesystem with ordered data =
+mode. Opts: (null)
+[15378.191630] ext3 filesystem being mounted at =
+/tmp/ltp-M6YHxqgN9o/mIisOB/mntpoint supports timestamps until 2038 =
+(0x7fffffff)
+[15448.581853] EXT4-fs (loop0): mounted filesystem with ordered data =
+mode. Opts: (null)
+[15448.592515] ext4 filesystem being mounted at =
+/tmp/ltp-M6YHxqgN9o/mIisOB/mntpoint supports timestamps until 2038 =
+(0x7fffffff)
+[15482.370368] XFS (loop0): Mounting V5 Filesystem
+[15482.413544] XFS (loop0): Ending clean mount
+[15482.427896] xfs filesystem being mounted at =
+/tmp/ltp-M6YHxqgN9o/mIisOB/mntpoint supports timestamps until 2038 =
+(0x7fffffff)
+[15495.280716] XFS (loop0): Unmounting Filesystem
+[15613.223513] LTP: starting binfmt_misc01 (binfmt_misc01.sh)
+[15615.253089] BUG: MAX_LOCKDEP_ENTRIES too low!
+[15615.258178] turning off the locking correctness validator.
+[15615.264402] CPU: 4 PID: 80930 Comm: mount Tainted: G           O      =
+5.7.0-rc5-next-20200514 #1
+[15615.273942] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 =
+Gen10, BIOS A40 07/10/2019
+[15615.283218] Call Trace:
+[15615.286388]  dump_stack+0xa7/0xea
+[15615.290429]  alloc_list_entry.cold.37+0x11/0x18
+[15615.295689]  __lock_acquire+0x2aad/0x3260
+[15615.300428]  ? register_lock_class+0xb90/0xb90
+[15615.305603]  ? __kasan_check_read+0x11/0x20
+[15615.310514]  ? mark_lock+0x160/0xfe0
+[15615.314814]  ? check_chain_key+0x1df/0x2e0
+[15615.319637]  ? print_irqtrace_events+0x110/0x110
+[15615.324984]  lock_acquire+0x1a2/0x680
+[15615.329373]  ? vfs_generate_unique_id+0x23/0x70
+[15615.334632]  ? check_flags.part.28+0x220/0x220
+[15615.339806]  ? ktime_get+0xf2/0x150
+[15615.344016]  ? lockdep_hardirqs_on+0x1b0/0x2c0
+[15615.349190]  ? vfs_generate_unique_id+0x14/0x70
+[15615.354453]  ? trace_hardirqs_on+0x3a/0x160
+[15615.359366]  _raw_spin_lock+0x2f/0x40
+[15615.363754]  ? vfs_generate_unique_id+0x23/0x70
+[15615.369014]  vfs_generate_unique_id+0x23/0x70
+vfs_generate_unique_id at fs/super.c:1890
+[15615.374099]  alloc_super+0x531/0x5b0
+alloc_super at fs/super.c:286
+[15615.378398]  ? alloc_file.cold.7+0x19/0x19
+[15615.383220]  sget_fc+0xb9/0x3a0
+sget_fc at fs/super.c:539
+[15615.387082]  ? compare_single+0x10/0x10
+[15615.391645]  ? bm_get_tree+0x20/0x20 [binfmt_misc]
+[15615.397167]  vfs_get_super+0x4e/0x1a0
+vfs_get_super at fs/super.c:1197
+[15615.401554]  get_tree_single+0x13/0x20
+[15615.406031]  bm_get_tree+0x15/0x20 [binfmt_misc]
+[15615.411380]  vfs_get_tree+0x54/0x150
+[15615.415681]  do_mount+0xef4/0x11b0
+[15615.419807]  ? copy_mount_string+0x20/0x20
+[15615.424630]  ? __kasan_check_write+0x14/0x20
+[15615.429630]  ? _copy_from_user+0x95/0xd0
+[15615.434282]  ? memdup_user+0x58/0x90
+[15615.438579]  __x64_sys_mount+0x100/0x120
+[15615.443231]  do_syscall_64+0xcc/0xaf0
+[15615.447617]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+[15615.452965]  ? syscall_return_slowpath+0x580/0x580
+[15615.458487]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xb3
+[15615.464447]  ? trace_hardirqs_off_caller+0x3a/0x150
+[15615.470055]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+[15615.475489]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+[15615.481271] RIP: 0033:0x7f9721fb79ee
+[15615.485572] Code: 48 8b 0d 9d f4 2b 00 f7 d8 64 89 01 48 83 c8 ff c3 =
+66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f =
+05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 6a f4 2b 00 f7 d8 64 89 01 48
+[15615.505155] RSP: 002b:00007ffd555d4ac8 EFLAGS: 00000246 ORIG_RAX: =
+00000000000000a5
+[15615.513474] RAX: ffffffffffffffda RBX: 00005591d34c19c0 RCX: =
+00007f9721fb79ee
+[15615.521355] RDX: 00005591d34c1ba0 RSI: 00005591d34c38c0 RDI: =
+00005591d34c1bc0
+[15615.529232] RBP: 00007f9722d63184 R08: 0000000000000000 R09: =
+0000000000000003
+[15615.537113] R10: 00000000c0ed0000 R11: 0000000000000246 R12: =
+0000000000000000
+[15615.544991] R13: 00000000c0ed0000 R14: 00005591d34c1bc0 R15: =
+00005591d34c1ba0
 
-- The driver supports 90% of the users with the current implementation
-  and it shouldn't be extended to support doorbell and implement two
-  different modes by changing value of #mbox-cells field in bindings.
+=3D=3D=3D the second run =3D=3D=3D
 
-Sudeep (ARM) and myself as well to some extent:
-
-- The hardware gives us the capability to write the register in
-  parallel, i.e. we can write 0x800 and 0x400 together without any
-  software locks, and so these 32 bits should be considered as separate
-  channel even if only one interrupt is issued by the hardware finally.
-  This shouldn't be called as virtualization of the channels, as the
-  hardware supports this (as clearly mentioned in the TRM) and it takes
-  care of handling the signal properly.
-
-- With serialization, if we use only one channel as today at every
-  priority, if there are 5 requests to send signal to the receiver and
-  the dvfs request is the last one in queue (which may be called from
-  scheduler's hot path with fast switching), it unnecessarily needs to
-  wait for the first four transfers to finish due to the software
-  locking imposed by the mailbox framework. This adds additional delay,
-  maybe of few ms only, which isn't required by the hardware but just by
-  the software and few ms can be important in scheduler's hotpath.
-
-- With the current approach it isn't possible to assign different bits
-  (or doorbell numbers) to clients from DT and the only way of doing
-  that without adding new bindings is by extending #mbox-cells to accept
-  a value of 2 as done in this patch.
-
-Jassi and Sudeep, I hope I was able to represent both the view points
-properly here. Please correct me if I have made a mistake here.
-
-This is it. It would be nice to get the views of everyone now on this
-and how should this be handled.
-
-Thanks.
-
-[1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0515f/DDI0515F_juno_arm_development_platform_soc_trm.pdf , section 3.4.4, page 3-38.
-
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- .../devicetree/bindings/mailbox/arm-mhu.txt   | 39 ++++++++++++++++++-
- 1 file changed, 37 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-index 4971f03f0b33..ba659bcc7109 100644
---- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-+++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-@@ -10,6 +10,15 @@ STAT register and the remote clears it after having read the data.
- The last channel is specified to be a 'Secure' resource, hence can't be
- used by Linux running NS.
- 
-+The MHU drives the interrupt signal using a 32-bit register, with all
-+32-bits logically ORed together. It provides a set of registers to
-+enable software to set, clear and check the status of each of the bits
-+of this register independently. The use of 32 bits per interrupt line
-+enables software to provide more information about the source of the
-+interrupt. For example, each bit of the register can be associated with
-+a type of event that can contribute to raising the interrupt. Each of
-+the 32-bits can be used as "doorbell" to alert the remote processor.
-+
- Mailbox Device Node:
- ====================
- 
-@@ -18,13 +27,21 @@ used by Linux running NS.
- - compatible:		Shall be "arm,mhu" & "arm,primecell"
- - reg:			Contains the mailbox register address range (base
- 			address and length)
--- #mbox-cells		Shall be 1 - the index of the channel needed.
-+- #mbox-cells		Shall be 1 - the index of the channel needed when
-+			not used as set of doorbell bits.
-+			Shall be 2 - the index of the channel needed, and
-+			the index of the doorbell bit within the channel
-+			when used in doorbell mode.
- - interrupts:		Contains the interrupt information corresponding to
--			each of the 3 links of MHU.
-+			each of the 3 physical channels of MHU namely low
-+			priority non-secure, high priority non-secure and
-+			secure channels.
- 
- Example:
- --------
- 
-+1. Controller which doesn't support doorbells
-+
- 	mhu: mailbox@2b1f0000 {
- 		#mbox-cells = <1>;
- 		compatible = "arm,mhu", "arm,primecell";
-@@ -41,3 +58,21 @@ used by Linux running NS.
- 		reg = <0 0x2e000000 0x4000>;
- 		mboxes = <&mhu 1>; /* HP-NonSecure */
- 	};
-+
-+2. Controller which supports doorbells
-+
-+	mhu: mailbox@2b1f0000 {
-+		#mbox-cells = <2>;
-+		compatible = "arm,mhu", "arm,primecell";
-+		reg = <0 0x2b1f0000 0x1000>;
-+		interrupts = <0 36 4>, /* LP-NonSecure */
-+			     <0 35 4>; /* HP-NonSecure */
-+		clocks = <&clock 0 2 1>;
-+		clock-names = "apb_pclk";
-+	};
-+
-+	mhu_client: scb@2e000000 {
-+		compatible = "arm,scpi";
-+		reg = <0 0x2e000000 0x200>;
-+		mboxes = <&mhu 1 4>; /* HP-NonSecure 5th doorbell bit */
-+	};
--- 
-2.25.0.rc1.19.g042ed3e048af
-
+[28392.003312] LTP: starting read_all_dev (read_all -d /dev -p -q -r 10)
+[28392.125739] BUG: MAX_LOCKDEP_ENTRIES too low!
+[28392.131254] turning off the locking correctness validator.
+[28392.137568] CPU: 64 PID: 107055 Comm: read_all Tainted: G           O =
+L    5.7.0-rc5-next-20200514 #1
+[28392.147634] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 =
+Gen10, BIOS A40 07/10/2019
+[28392.157002] Call Trace:
+[28392.160260]  dump_stack+0xa7/0xea
+[28392.164390]  alloc_list_entry.cold.37+0x11/0x18
+[28392.169745]  __lock_acquire+0x2aad/0x3260
+[28392.174820]  ? register_lock_class+0xb90/0xb90
+[28392.180208]  ? check_chain_key+0x1df/0x2e0
+[28392.185120]  lock_acquire+0x1a2/0x680
+[28392.189646]  ? get_random_u32+0x4c/0xe0
+[28392.194296]  ? lock_downgrade+0x3e0/0x3e0
+[28392.199123]  ? check_flags.part.28+0x220/0x220
+[28392.204386]  ? get_random_u32+0x4c/0xe0
+[28392.209038]  _raw_spin_lock_irqsave+0x3a/0x50
+[28392.214212]  ? get_random_u32+0x4c/0xe0
+[28392.218862]  get_random_u32+0x4c/0xe0
+get_random_u32 at drivers/char/random.c:2225
+[28392.223341]  allocate_slab+0x13e/0x5c0
+[28392.227905]  ? memcg_kmem_get_cache+0x378/0x640
+[28392.233257]  new_slab+0x46/0x70
+[28392.237207]  ___slab_alloc+0x35e/0x810
+[28392.241770]  ? rcu_read_lock_sched_held+0xe0/0xe0
+[28392.247295]  ? seq_open+0x44/0xd0
+[28392.251424]  ? seq_open+0x44/0xd0
+[28392.255551]  __slab_alloc+0x43/0x70
+[28392.259851]  ? __slab_alloc+0x43/0x70
+[28392.264325]  ? seq_open+0x44/0xd0
+[28392.268455]  kmem_cache_alloc+0x2e9/0x460
+[28392.273281]  seq_open+0x44/0xd0
+kmem_cache_zalloc at include/linux/slab.h:661 (discriminator 3)
+(inlined by) seq_open at fs/seq_file.c:59 (discriminator 3)
+[28392.277233]  kernfs_fop_open+0x2ec/0x720
+[28392.281973]  do_dentry_open+0x323/0x870
+do_dentry_open at fs/open.c:796
+[28392.286625]  ? kernfs_fop_read+0x2c0/0x2c0
+[28392.291539]  ? chmod_common+0x280/0x280
+[28392.296188]  ? kernfs_iop_permission+0x5d/0x70
+[28392.301451]  ? inode_permission+0x65/0x1d0
+[28392.306364]  vfs_open+0x58/0x60
+[28392.310314]  path_openat+0xbd6/0xf40
+[28392.314703]  ? path_lookupat+0x1c0/0x1c0
+[28392.319441]  ? register_lock_class+0xb90/0xb90
+[28392.324701]  ? match_held_lock+0x20/0x270
+[28392.329525]  ? match_held_lock+0x20/0x270
+[28392.334351]  ? check_chain_key+0x1df/0x2e0
+[28392.339261]  ? find_held_lock+0xca/0xf0
+[28392.343910]  do_filp_open+0x11d/0x1a0
+[28392.348389]  ? may_open_dev+0x50/0x50
+[28392.352865]  ? __kasan_check_read+0x11/0x20
+[28392.357866]  ? do_raw_spin_unlock+0xa8/0x140
+[28392.362953]  ? _raw_spin_unlock+0x22/0x30
+[28392.367780]  do_sys_openat2+0x307/0x420
+[28392.372431]  ? file_open_root+0x210/0x210
+[28392.377257]  do_sys_open+0x95/0xe0
+[28392.381469]  ? filp_open+0x60/0x60
+[28392.385683]  ? lockdep_hardirqs_on+0x1b0/0x2c0
+[28392.390944]  __x64_sys_openat+0x59/0x70
+[28392.395596]  do_syscall_64+0xcc/0xaf0
+[28392.400072]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+[28392.405510]  ? syscall_return_slowpath+0x580/0x580
+[28392.411122]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xb3
+[28392.417172]  ? trace_hardirqs_off_caller+0x3a/0x150
+[28392.422869]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+[28392.428394]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+[28392.434268] RIP: 0033:0x7f1ad727a2ff
+[28392.438658] Code: 52 89 f0 25 00 00 41 00 3d 00 00 41 00 74 44 8b 05 =
+56 d1 20 00 85 c0 75 65 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff ff 0f =
+05 <48> 3d 00 f0 ff ff 0f 87 9d 00 00 00 48 8b 4c 24 28 64 48 33 0c 25
+[28392.458331] RSP: 002b:00007ffd8c461340 EFLAGS: 00000246 ORIG_RAX: =
+0000000000000101
+[28392.466742] RAX: ffffffffffffffda RBX: 0000000000000005 RCX: =
+00007f1ad727a2ff
+[28392.474710] RDX: 0000000000000800 RSI: 00007ffd8c461450 RDI: =
+00000000ffffff9c=
