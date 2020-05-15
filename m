@@ -2,43 +2,45 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FDCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ED6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64807206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1193520756
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgEORzd (ORCPT
+        id S1726607AbgEORzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:55:33 -0400
+        Fri, 15 May 2020 13:55:37 -0400
 Received: from mga07.intel.com ([134.134.136.100]:26829 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbgEORzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:55:33 -0400
-IronPort-SDR: UIAnu/tCtLGImoaeSaH/xDDLuq6PRNd6cH37Ojq67LivAPTbGCH5ViLsFeT/Hf04Av5KxYpcLX
- 76ktuMZAz6gg==
+        id S1726170AbgEORze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:55:34 -0400
+IronPort-SDR: YSQElN/JhJR8ZI1WRQYGzwiFq8MsKc6lM19qEdFQbLzbL1ZfGo0AixCQ2uvuomkCckHwFUDSJ4
+ UDyuHONzPOpA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 10:55:32 -0700
-IronPort-SDR: 9AkNMV+Z5iNMk5sGL13LOjuA8Bfj2b7u7jpkxwSw8qoxmYbxr9oI2Clt3PUW9VKkJf6+R/oAsI
- S+b3B64VNpYA==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 10:55:33 -0700
+IronPort-SDR: qgcuVsb9ef3voiqrlupXSufm3k31gDdjouK/kYeNGZoU0Mu9pWjHno2245wsE6x7jBEaGSGvRW
+ rzZsOeeRXvIg==
 X-IronPort-AV: E=Sophos;i="5.73,396,1583222400"; 
-   d="scan'208";a="464804635"
+   d="scan'208";a="464804645"
 Received: from msethi-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.178.149])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 10:55:31 -0700
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 10:55:32 -0700
 From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>
-Subject: [RFC PATCH 0/2] PCI: Add basic Compute eXpress Link DVSEC decode
-Date:   Fri, 15 May 2020 10:55:26 -0700
-Message-Id: <20200515175528.980103-1-sean.v.kelley@linux.intel.com>
+        "David E. Box" <david.e.box@linux.intel.com>
+Subject: [RFC PATCH 1/2] pci: Add Designated Vendor Specific Capability
+Date:   Fri, 15 May 2020 10:55:27 -0700
+Message-Id: <20200515175528.980103-2-sean.v.kelley@linux.intel.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200515175528.980103-1-sean.v.kelley@linux.intel.com>
+References: <20200515175528.980103-1-sean.v.kelley@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,48 +48,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series implements basic Designated Vendor-Specific Extended
-Capabilities (DVSEC) decode for Compute eXpress Link devices, a new CPU
-interconnect building upon PCIe. As a basis for the CXL support it provides
-PCI init handling for detection, decode, and caching of CXL device
-capabilities.  Moreover, it makes use of the DVSEC Vendor ID and DVSEC ID so
-as to identify a CXL capable device. (PCIe r5.0, sec 7.9.6.2)
+From: "David E. Box" <david.e.box@linux.intel.com>
 
-DocLink: https://www.computeexpresslink.org/
+Add pcie dvsec extended capability id along with helper macros to
+retrieve information from the headers.
 
-For your reference, a parallel series of patches have been submitted to enable
-lspci decode of CXL DVSEC and may be tracked.
+https://members.pcisig.com/wg/PCI-SIG/document/12335
 
-Link: https://lore.kernel.org/linux-pci/20200511174618.10589-1-sean.v.kelley@linux.intel.com/
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ include/uapi/linux/pci_regs.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-This patch makes use of pending DVSEC related header additions and the
-first patch of that series is included here. It can be sorted out when the
-upstream merge is done.
-
-Link: https://lore.kernel.org/linux-pci/20200508021844.6911-2-david.e.box@linux.intel.com/
-
-Sample dmesg output of a CXL Type 3 device (CXL.io, CXL.mem):
-[    2.997177] pci 0000:6b:00.0: CXL: Cache- IO+ Mem+ Viral- HDMCount 1
-[    2.997188] pci 0000:6b:00.0: CXL: cap ctrl status ctrl2 status2 lock
-[    2.997201] pci 0000:6b:00.0: CXL: 001e 0002 0000 0000 0000 0000
-
-
-David E. Box (1):
-  pci: Add Designated Vendor Specific Capability
-
-Sean V Kelley (1):
-  PCI: Add basic Compute eXpress Link DVSEC decode
-
- drivers/pci/Kconfig           |  9 ++++
- drivers/pci/Makefile          |  1 +
- drivers/pci/cxl.c             | 89 +++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h             |  7 +++
- drivers/pci/probe.c           |  1 +
- include/linux/pci.h           |  1 +
- include/uapi/linux/pci_regs.h |  5 ++
- 7 files changed, 113 insertions(+)
- create mode 100644 drivers/pci/cxl.c
-
---
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index f9701410d3b5..c96f08d1e711 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -720,6 +720,7 @@
+ #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
+ #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+ #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
++#define PCI_EXT_CAP_ID_DVSEC	0x23	/* Desinated Vendor-Specific */
+ #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+ #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
+ #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
+@@ -1062,6 +1063,10 @@
+ #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
+ #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
+ 
++/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
++#define PCI_DVSEC_HEADER1		0x4 /* Vendor-Specific Header1 */
++#define PCI_DVSEC_HEADER2		0x8 /* Vendor-Specific Header2 */
++
+ /* Data Link Feature */
+ #define PCI_DLF_CAP		0x04	/* Capabilities Register */
+ #define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
+-- 
 2.26.2
 
