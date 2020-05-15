@@ -2,189 +2,93 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B79C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664E2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85C5320657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41C1F20657
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:27:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XDpFiU17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgEON1A (ORCPT
+        id S1726261AbgEON06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:27:00 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43696 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbgEON05 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:26:57 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: evelikov)
-        with ESMTPSA id B1F332A2B8B
-Date:   Fri, 15 May 2020 14:24:16 +0100
-From:   Emil Velikov <emil.velikov@collabora.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCHv1 1/2] power: supply: gpio-charger: add
- charge-current-limit feature
-Message-ID: <20200515132416.GA2836808@arch-x1c3>
-References: <20200513115601.360642-1-sebastian.reichel@collabora.com>
+        Fri, 15 May 2020 09:26:58 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34018 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726162AbgEON0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 09:26:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=2lkBHPmlDRseinSfpjV+W/RFt5TcCXmxGmuOEC27plc=; b=XDpFiU172k5RrAaLBNhmTQlUrc
+        jR2OibS4ZxAABJMhFVQlN9XNegRrmH9VQwX4fxx4PIMi8BnrqEwj9NpagBYhS27I/Jyw/drf1nECQ
+        osgRt5q2QnDdGsfK64NrmFvt+ObES17pyWEhNWTDyuFsq8ISQzqmB8xp8pzdhSOhgFts=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jZaMP-002Nfr-PO; Fri, 15 May 2020 15:26:45 +0200
+Date:   Fri, 15 May 2020 15:26:45 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Xulin Sun <xulin.sun@windriver.com>
+Cc:     alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xulinsun@gmail.com
+Subject: Re: [PATCH] net: mscc: ocelot: replace readx_poll_timeout with
+ readx_poll_timeout_atomic
+Message-ID: <20200515132645.GR527401@lunn.ch>
+References: <20200515031813.30283-1-xulin.sun@windriver.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513115601.360642-1-sebastian.reichel@collabora.com>
+In-Reply-To: <20200515031813.30283-1-xulin.sun@windriver.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
-
-I've left a few trivial suggestions, although I suspect only one of them
-really matters. Namely - I think as-is the code changes the legacy behaviour
-when OF is missing.
-
-Mind you, this is my third time skimming through power/supply, so take it with
-a grain of salt.
-
-On 2020/05/13, Sebastian Reichel wrote:
-> Add new charge-current-limit feature to gpio-charger. This also
-> makes the online status GPIO optional, since hardware might only
-> expose the charge-current-limit feature and there is no good reason
-> to have it mandatory now that different GPIOs are supported.
+On Fri, May 15, 2020 at 11:18:13AM +0800, Xulin Sun wrote:
+> This fixes call trace like below to use atomic safe API:
 > 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../bindings/power/supply/gpio-charger.txt    |  11 +-
->  drivers/power/supply/gpio-charger.c           | 176 ++++++++++++++++--
->  2 files changed, 174 insertions(+), 13 deletions(-)
+> BUG: sleeping function called from invalid context at drivers/net/ethernet/mscc/ocelot.c:59
+> in_atomic(): 1, irqs_disabled(): 0, pid: 3778, name: ifconfig
+> INFO: lockdep is turned off.
+> Preemption disabled at:
+> [<ffff2b163c83b78c>] dev_set_rx_mode+0x24/0x40
+> Hardware name: LS1028A RDB Board (DT)
+> Call trace:
+> dump_backtrace+0x0/0x140
+> show_stack+0x24/0x30
+> dump_stack+0xc4/0x10c
+> ___might_sleep+0x194/0x230
+> __might_sleep+0x58/0x90
+> ocelot_mact_forget+0x74/0xf8
+> ocelot_mc_unsync+0x2c/0x38
+> __hw_addr_sync_dev+0x6c/0x130
+> ocelot_set_rx_mode+0x8c/0xa0
+> __dev_set_rx_mode+0x58/0xa0
+> dev_set_rx_mode+0x2c/0x40
+> __dev_open+0x120/0x190
+> __dev_change_flags+0x168/0x1c0
+> dev_change_flags+0x3c/0x78
+> devinet_ioctl+0x6c4/0x7c8
+> inet_ioctl+0x2b8/0x2f8
+> sock_do_ioctl+0x54/0x260
+> sock_ioctl+0x21c/0x4d0
+> do_vfs_ioctl+0x6d4/0x968
+> ksys_ioctl+0x84/0xb8
+> __arm64_sys_ioctl+0x28/0x38
+> el0_svc_common.constprop.0+0x78/0x190
+> el0_svc_handler+0x70/0x90
+> el0_svc+0x8/0xc
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
-> index 0fb33b2c62a6..dbfd29029f69 100644
-> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
-> @@ -2,8 +2,6 @@ gpio-charger
->  
->  Required properties :
->   - compatible : "gpio-charger"
-> - - gpios : GPIO indicating the charger presence.
-> -   See GPIO binding in bindings/gpio/gpio.txt .
->   - charger-type : power supply type, one of
->       unknown
->       battery
-> @@ -15,7 +13,13 @@ Required properties :
->       usb-aca (USB accessory charger adapter)
->  
->  Optional properties:
-> + - gpios : GPIO indicating the charger presence.
-> +   See GPIO binding in bindings/gpio/gpio.txt .
->   - charge-status-gpios: GPIO indicating whether a battery is charging.
-> + - charge-current-limit-gpios: Output GPIOs specifiers for limiting the charge current
-> + - charge-current-limit-mapping: List of touples with current in uA and a GPIO bitmap (in this order).
-> +                                The GPIOs are encoded in the same order as specified in charge-current-limit-gpios.
-> +				The touples must be provided in descending order of the current limit.
+> Signed-off-by: Xulin Sun <xulin.sun@windriver.com>
 
-Minor tweaks:
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-	List of tuples with current in uA and a GPIO bitmap.
-	Tuples must be sorted in descending order of the current limit.
-	GPIOs are encoded in the order as specified in charge-current-limit-gpios.
-
-
-> +static int init_charge_current_limit(struct device *dev,
-> +				    struct gpio_charger *gpio_charger)
-> +{
-> +	int i, len;
-> +	u32 cur_limit = U32_MAX;
-> +
-> +	gpio_charger->current_limit_gpios = devm_gpiod_get_array_optional(dev,
-> +		"charge-current-limit", GPIOD_OUT_LOW);
-> +	if (IS_ERR(gpio_charger->current_limit_gpios)) {
-> +		dev_err(dev, "error getting current-limit GPIOs\n");
-> +		return PTR_ERR(gpio_charger->current_limit_gpios);
-> +	}
-> +
-> +	if (!gpio_charger->current_limit_gpios)
-> +		return 0;
-> +
-> +	len = device_property_read_u32_array(dev, "charge-current-limit-mapping",
-> +		NULL, 0);
-> +	if (len < 0)
-
-The properly is optional, although I'm not sure if having an 'empty' properly
-(len == 0) should be considered an error as indicated by -ENOMEM below or not.
-
-Worth documenting that, unless it's covered already.
-
-> +		return len;
-> +
-> +	if (len % 2) {
-> +		dev_err(dev, "invalid charge-current-limit-mapping length\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	gpio_charger->current_limit_map = devm_kmalloc_array(dev,
-> +		len / 2, sizeof(*gpio_charger->current_limit_map), GFP_KERNEL);
-> +	if (!gpio_charger->current_limit_map)
-> +		return -ENOMEM;
-> +
-> +	gpio_charger->current_limit_map_size = len / 2;
-> +
-> +	len = device_property_read_u32_array(dev, "charge-current-limit-mapping",
-> +		(u32*) gpio_charger->current_limit_map, len);
-> +	if (len < 0)
-> +		return len;
-> +
-> +	for (i=0; i < gpio_charger->current_limit_map_size; i++) {
-> +		if (gpio_charger->current_limit_map[i].limit_ua > cur_limit) {
-> +			dev_err(dev, "invalid charge-current-limit-mapping\n");
-Would make sense to use something more descriptive than "invalid". Say "not
-sorted by current descending order"?
-
-
-> @@ -137,18 +270,19 @@ static int gpio_charger_probe(struct platform_device *pdev)
-
->  	/*
->  	 * If this fails and we're not using device tree, try the
->  	 * legacy platform data method.
->  	 */
-> -	if (IS_ERR(gpio_charger->gpiod) && !dev->of_node) {
-> +	if (!gpio_charger->gpiod && !dev->of_node) {
-The original code will attempt the legacy code for ... (from the doc)
-
- * ..., -ENOENT if no GPIO has been assigned to the requested function, or
- * another IS_ERR() code if an error occurred while trying to acquire the GPIO.
-
-While the new code will only consider -ENOENT.
-
-Using IS_ERR_OR_NULL(gpio_charger->gpiod) should preserve the original
-behaviour.
-
-
->  		/* Non-DT: use legacy GPIO numbers */
->  		if (!gpio_is_valid(pdata->gpio)) {
->  			dev_err(dev, "Invalid gpio pin in pdata\n");
-> @@ -173,18 +307,38 @@ static int gpio_charger_probe(struct platform_device *pdev)
->  		return PTR_ERR(gpio_charger->gpiod);
->  	}
->  
-> +	if (gpio_charger->gpiod &&
-> +	    num_props < ARRAY_SIZE(gpio_charger_properties)) {
-> +		gpio_charger_properties[num_props] = POWER_SUPPLY_PROP_ONLINE;
-The ARRAY_SIZE() check here (and below) are always true, albeit not dead code.
-
-IMHO the beefy comment above gpio_charger_properties, plus review process is
-enough to catch these issues, so it can be dropped.
-
-
->  	charger_desc = &gpio_charger->charger_desc;
->  	charger_desc->properties = gpio_charger_properties;
-
-Aside: any particular reason why power_supply_desc::properties isn't const?
-
--Emil
+    Andrew
