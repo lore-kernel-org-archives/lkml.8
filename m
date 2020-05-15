@@ -2,49 +2,91 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9461EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 847D620756
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A4B2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:28:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="UnQQdzA2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgEOXWy (ORCPT
+        id S1726725AbgEOX2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 19:22:54 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:14157 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgEOXWy (ORCPT
+        Fri, 15 May 2020 19:28:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726231AbgEOX2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 19:22:54 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.5]) by rmmx-syy-dmz-app07-12007 (RichMail) with SMTP id 2ee75ebf2446435-09b10; Sat, 16 May 2020 07:22:48 +0800 (CST)
-X-RM-TRANSID: 2ee75ebf2446435-09b10
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [192.168.0.101] (unknown[112.1.172.85])
-        by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee35ebf244773b-96322;
-        Sat, 16 May 2020 07:22:48 +0800 (CST)
-X-RM-TRANSID: 2ee35ebf244773b-96322
-Subject: Re: [PATCH][next] USB: EHCI: ehci-mv: fix less than zero comparisonof
- an unsigned int
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Colin King <colin.king@canonical.com>
+        Fri, 15 May 2020 19:28:13 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 960ADC05BD0B
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 16:28:13 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x15so1742363pfa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 16:28:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=E8j1zsP3t9Db9IDf/V9aE8nyZ2/Ryf+TXAxn3gqfEkQ=;
+        b=UnQQdzA2k7WTu3soGTuHp6WGTD+qiK8qSJb8mk1Pn9H2eum+E9Ts+BBJn73fEbeHhn
+         RCvwsXpvTKZDN9nf0ieSFsKQIBNAAhSy3JGMSLqfTBgCWzn69SZ6AjRrdwRptGXc6OxA
+         GMwQn9MzvTX7QqrnZx+alQ0//TqjxC7Ikw4bc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=E8j1zsP3t9Db9IDf/V9aE8nyZ2/Ryf+TXAxn3gqfEkQ=;
+        b=kzc3Tr2MfUt+5bNrU8pFYwAcFCmm5vtfgYmRDKCgfmp1llJv9+dRs1tAg10Nnbe+ts
+         iMyhiYm9SWDZaK1VdT7iO98SU9XYARi+KrFyMqjH2P8c5sqeFIcmdR+1hqGAQRZvRd/p
+         wVf9ArCGB/l6x/bHMdhnd5+2HT98CdpfDKjMkbw2T7nUymvOQYN7IC6tIY8HjRBzrOUe
+         l/BIxNpl2A3c9QEZr+q3w7S3nYsohdVrQJfVwkNBz6LM4JpVkHI1oE82mdPR9MLChRv3
+         VX45XfXiCYMfIt/MRLHyKq/g6C6fmtV+H51JWevIl7hG2k8EqfYPdyEtRBX+96/Wyyv/
+         eadQ==
+X-Gm-Message-State: AOAM532Bv16kwrqE3uGePEyEKfx+aLTj4Jf/ZN6RRgxuDrE5OQAUqeIj
+        voXJOOS7ZPsd7Q4ABM5KGJUjmQ==
+X-Google-Smtp-Source: ABdhPJzDjdFyP0pP2LVm3Q8vARDClgR1ApLEZE6gM2tCxeAVs7H8OmgkHRMJ22dzucxwh+mZ6qJIdA==
+X-Received: by 2002:aa7:9302:: with SMTP id 2mr6259587pfj.256.1589585292833;
+        Fri, 15 May 2020 16:28:12 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id b13sm2543954pgi.58.2020.05.15.16.28.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2020 16:28:11 -0700 (PDT)
+Subject: Re: [PATCH v5 0/7] firmware: add partial read support in
+ request_firmware_into_buf
+To:     Luis Chamberlain <mcgrof@kernel.org>, Mimi Zohar <zohar@kernel.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200515165453.104028-1-colin.king@canonical.com>
- <20200515172121.GA5498@rowland.harvard.edu>
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <fec1e461-16f3-9d5f-bc23-129c71229b9d@cmss.chinamobile.com>
-Date:   Sat, 16 May 2020 07:23:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+References: <20200508002739.19360-1-scott.branden@broadcom.com>
+ <1589387039.5098.147.camel@kernel.org>
+ <20200515204700.GC11244@42.do-not-panic.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <1e75c270-eae5-8f1d-ecc6-1fd2fb248f29@broadcom.com>
+Date:   Fri, 15 May 2020 16:28:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200515172121.GA5498@rowland.harvard.edu>
+In-Reply-To: <20200515204700.GC11244@42.do-not-panic.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
@@ -53,34 +95,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alan & Colin：
+Hi Luis,
 
-On 2020/5/16 1:21, Alan Stern wrote:
-> On Fri, May 15, 2020 at 05:54:53PM +0100, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
+On 2020-05-15 1:47 p.m., Luis Chamberlain wrote:
+> On Wed, May 13, 2020 at 12:23:59PM -0400, Mimi Zohar wrote:
+>> Hi Scott,
 >>
->> The comparison of hcd->irq to less than zero for an error check will
->> never be true because hcd->irq is an unsigned int.  Fix this by
->> assigning the int retval to the return of platform_get_irq and checking
->> this for the -ve error condition and assigning hcd->irq to retval.
+>> On Thu, 2020-05-07 at 17:27 -0700, Scott Branden wrote:
+>>> Please consider this version series ready for upstream acceptance.
+>>>
+>>> This patch series adds partial read support in request_firmware_into_buf.
+>>> In order to accept the enhanced API it has been requested that kernel
+>>> selftests and upstreamed driver utilize the API enhancement and so
+>>> are included in this patch series.
+>>>
+>>> Also in this patch series is the addition of a new Broadcom VK driver
+>>> utilizing the new request_firmware_into_buf enhanced API.
+>> Up to now, the firmware blob was read into memory allowing IMA to
+>> verify the file signature.  With this change, ima_post_read_file()
+>> will not be able to verify the file signature.
 >>
->> Addresses-Coverity: ("Unsigned compared against 0")
->> Fixes: c856b4b0fdb5 ("USB: EHCI: ehci-mv: fix error handling in mv_ehci_probe()")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
-> Thanks to Coverity for spotting this.  Any reason why it didn't spot
-> exactly the same mistake in the ohci-da8xx.c driver?
+>> (I don't think any of the other LSMs are on this hook, but you might
+>> want to Cc the LSM or integrity mailing list.)
+> Scott, so it sounds we need a resolution for pread for IMA for file
+> signature verification. It seems that can be addressed though. Feel
+> free to submit the u32 flag changes which you picked up on though in
+> the meantime.
+Sure, I can submit a new patch to change the existing enum to
+a u32.  For the new pread flags I am adding I could also leave as
+a u32 or change from a u32 to an enum since there is currently only
+one flag in use.  Then, in the future if another flag was added we would 
+need
+to change it back to a u32.
 
-I just looked at the code and wondered whether it would be more 
-appropriate to modify the header file "hcd.h".  Since 'irq' might be an 
-negative, why not just modify the variables in the 'struct usb_hcd',  
-'unsigned int  irq'--> 'int irq'? After all, it's a public one.
-
+Please let me know what you prefer for the pread_flags.
+>
+>    Luis
 Thanks,
-
-Tang Bin
-
->
->
-
-
+  Scott
