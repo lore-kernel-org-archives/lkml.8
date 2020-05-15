@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA0AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB0D20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374832070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589578184;
-	bh=P+0z5CgYd/VEtoy2ytItsykPZASUzqZqG5w7OjihB+s=;
+	s=default; t=1589578188;
+	bh=NrMQPgYRP9p+pwWiM9JZeQZAQw4XN49a2eaeFAUhbK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0wp/5+No/vFX7D+byZ5l1HG/5/8bvttPC/hjoORPzdHUNCWOBRhkiWkHeBtlmyX5W
-	 mOMVTfr7qvFIGbyjXLZg66Y4SP+8vj8MOTxPe8b4r51Gmpx3C7hVULYW75wA0LYa9U
-	 4KQS1ZfokqBmppotsdsmCYKc+WVwCA1oGtowHGiQ=
+	b=NiZ/Is95pOMWGA/7zxoEl5nl+ymmQvz9smtmSdIoMilfmOw5CyTRORIonSUtGESJj
+	 yDvm4GwXUylvTMkpiNzL73qZ8bA1UbrzY1A1RKM+vnbGEJ78droABgvQB5hTBR49J/
+	 RKhy5Gv3ENEYKPcWRDh2KZCYXApKbRKUAC7u5/yE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgEOV3F (ORCPT
+        id S1728117AbgEOV3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:29:05 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37558 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbgEOV27 (ORCPT
+        Fri, 15 May 2020 17:29:47 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42173 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727904AbgEOV3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:28:59 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y198so16653pfb.4;
-        Fri, 15 May 2020 14:28:58 -0700 (PDT)
+        Fri, 15 May 2020 17:29:05 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y18so1595189pfl.9;
+        Fri, 15 May 2020 14:29:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Z+ArGLDYdSJ0w7Ek09g85tZFCS/nTsClbFEBaRYmVeE=;
-        b=JKj/b0lhoe91hvSIP4HwSrtqmQV9Zmq7gBg//kOnQ6nJPk49bZqU/6FmQwJiI4WMOZ
-         aSE+ehqCEg/QCemRs+2sfu858cebfalP55rGkobjcTV5Pl16xdYxG5cIlZPFB0Ju2aOL
-         zkB++V8lSS2JOYE7P+BaHcB47liizJ8e+W8b8H9e6BQ3eXiccfIjAd9yjG3kd7Ef+asP
-         GqA4kQtmO27dvmDEbZ6d/lTICzg1mciiL3tnV/hhXgll5ALFI4exu6i/Ag7dO82UIQKN
-         +zUtuO2m432IzTOFxHoQuM00tJJMXLeru1NK6wepk9jm4syq7B0ALAUO0GLmC652/3ur
-         ljQg==
-X-Gm-Message-State: AOAM53321W61l1qU/ACg1FaVlhwvWdJ6PO1f8YM1ryvOk9/l8kUdjTxZ
-        T3Xvcj8wXsG5/rhcVauC0Aw=
-X-Google-Smtp-Source: ABdhPJyh4noS75cFo4UeBGQrE1rurDnL6NYp88Jw6dMIn4GnhLizAu+jGFCLtYQLhffbGewrUXICdw==
-X-Received: by 2002:a62:38d5:: with SMTP id f204mr5547097pfa.284.1589578138203;
-        Fri, 15 May 2020 14:28:58 -0700 (PDT)
+        bh=qxlVajjfNXCuVHnmE5Xgl/OMrJvTtdBFsSisnAsjai4=;
+        b=cjNh+5CWfFuHJmEkhtQZTa8V2Er32bR+QtLu4ooAgibXEBJ5yuZtVzohKHLeNYSCbw
+         0PrTOvVCRuw47szXz+aWI/f4+GMaYgGCyjiL6gsfgzG/DoH5IoH9NM9Sb0+aIVmTLUtP
+         9w6H82f40HsQ0Ia8QXSOd0rYiR83Qgy6kTU1OEz6bPz+Faqv1hVU80CjGR7zFw6CdBnn
+         TnQsxOt7+ZdVzqbF//bGArm5msWhmmYTCa7H/UXfF4C9b+zFNb4WJbv7Ph4jG85L1KjO
+         pYPDr6DMkhiizXqYr2trL3sJ2VzcuMIzonCmNCNjPQSDTQ6mA1mc4N7a+Rp4DuuVrRlF
+         Mbag==
+X-Gm-Message-State: AOAM532knxrDHsbGmcGFNDomaa7TlvU9rDxHe9P2WR+I1Ea3ELWVA8vi
+        WMKC1ypzdFpmPa4L/OY5zJs=
+X-Google-Smtp-Source: ABdhPJxQ0KFVYL9S7FuI8AkItqLd45YmQBv/URE7CupJdOWl8x9JUhRFuhp/9RSwH2FI5AIrP9WBbw==
+X-Received: by 2002:a65:560f:: with SMTP id l15mr2568395pgs.439.1589578143709;
+        Fri, 15 May 2020 14:29:03 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id b74sm2424048pga.31.2020.05.15.14.28.52
+        by smtp.gmail.com with ESMTPSA id cc8sm2217831pjb.11.2020.05.15.14.28.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 15 May 2020 14:28:55 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id D6EE2422E5; Fri, 15 May 2020 21:28:49 +0000 (UTC)
+        id 19BE342341; Fri, 15 May 2020 21:28:50 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     jeyu@kernel.org
 Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
@@ -63,12 +63,11 @@ Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
         mchehab+samsung@kernel.org, kvalo@codeaurora.org,
         davem@davemloft.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Derek Chickles <dchickles@marvell.com>,
-        Satanand Burla <sburla@marvell.com>,
-        Felix Manlunas <fmanlunas@marvell.com>
-Subject: [PATCH v2 06/15] liquidio: use new module_firmware_crashed()
-Date:   Fri, 15 May 2020 21:28:37 +0000
-Message-Id: <20200515212846.1347-7-mcgrof@kernel.org>
+        linux-wimax@intel.com,
+        Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>
+Subject: [PATCH v2 11/15] wimax/i2400m: use new module_firmware_crashed()
+Date:   Fri, 15 May 2020 21:28:42 +0000
+Message-Id: <20200515212846.1347-12-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200515212846.1347-1-mcgrof@kernel.org>
 References: <20200515212846.1347-1-mcgrof@kernel.org>
@@ -87,27 +86,25 @@ a reboot.
 
 Using a taint flag allows us to annotate when this happens clearly.
 
-Cc: Derek Chickles <dchickles@marvell.com>
-Cc: Satanand Burla <sburla@marvell.com>
-Cc: Felix Manlunas <fmanlunas@marvell.com>
-Reviewed-by: Derek Chickles <dchickles@marvell.com>
+Cc: linux-wimax@intel.com
+Cc: Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/net/ethernet/cavium/liquidio/lio_main.c | 1 +
+ drivers/net/wimax/i2400m/rx.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/cavium/liquidio/lio_main.c b/drivers/net/ethernet/cavium/liquidio/lio_main.c
-index 66d31c018c7e..f18085262982 100644
---- a/drivers/net/ethernet/cavium/liquidio/lio_main.c
-+++ b/drivers/net/ethernet/cavium/liquidio/lio_main.c
-@@ -801,6 +801,7 @@ static int liquidio_watchdog(void *param)
- 			continue;
- 
- 		WRITE_ONCE(oct->cores_crashed, true);
-+		module_firmware_crashed();
- 		other_oct = get_other_octeon_device(oct);
- 		if (other_oct)
- 			WRITE_ONCE(other_oct->cores_crashed, true);
+diff --git a/drivers/net/wimax/i2400m/rx.c b/drivers/net/wimax/i2400m/rx.c
+index c9fb619a9e01..307a62ca183f 100644
+--- a/drivers/net/wimax/i2400m/rx.c
++++ b/drivers/net/wimax/i2400m/rx.c
+@@ -712,6 +712,7 @@ void __i2400m_roq_queue(struct i2400m *i2400m, struct i2400m_roq *roq,
+ 	dev_err(dev, "SW BUG? failed to insert packet\n");
+ 	dev_err(dev, "ERX: roq %p [ws %u] skb %p nsn %d sn %u\n",
+ 		roq, roq->ws, skb, nsn, roq_data->sn);
++	module_firmware_crashed();
+ 	skb_queue_walk(&roq->queue, skb_itr) {
+ 		roq_data_itr = (struct i2400m_roq_data *) &skb_itr->cb;
+ 		nsn_itr = __i2400m_roq_nsn(roq, roq_data_itr->sn);
 -- 
 2.26.2
 
