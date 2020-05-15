@@ -2,125 +2,117 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F41ECC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5012C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEDBC2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A611220709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589575248;
+	bh=7/Rpg+KXflBLuZsnLoyMnGo3Y9ufgp8qwJuPpO7BwaA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=n6Z6LEqrKpoQSI/9TKgRPRAUrpB9CQGyHY9dnJbrIZhCiR6Fmwj7HZfdg2rol94IC
+	 6QruydojI8e8tAjNCfbpaWeV/+3kI8yjk0gYBwZThDok8jdv6bx4506+jPoLROQi6F
+	 3gJHv9hv0rY5G6DlyOu6si7xtQwI0Uk+fFVNdN6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgEOUj7 (ORCPT
+        id S1726653AbgEOUkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:39:59 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:56812 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgEOUj6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:39:58 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jZh7a-0007OX-H5; Fri, 15 May 2020 14:39:54 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jZh7V-0007gL-4O; Fri, 15 May 2020 14:39:54 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        syzbot <syzbot+c1af344512918c61362c@syzkaller.appspotmail.com>,
-        jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, linux-security-module@vger.kernel.org,
-        serge@hallyn.com, sfr@canb.auug.org.au,
-        syzkaller-bugs@googlegroups.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <0000000000002f0c7505a5b0e04c@google.com>
-        <c3461e26-1407-2262-c709-dac0df3da2d0@i-love.sakura.ne.jp>
-        <72cb7aea-92bd-d71b-2f8a-63881a35fad8@i-love.sakura.ne.jp>
-        <20200515201357.GG23230@ZenIV.linux.org.uk>
-Date:   Fri, 15 May 2020 15:36:13 -0500
-In-Reply-To: <20200515201357.GG23230@ZenIV.linux.org.uk> (Al Viro's message of
-        "Fri, 15 May 2020 21:13:57 +0100")
-Message-ID: <87o8qpaqbm.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jZh7V-0007gL-4O;;;mid=<87o8qpaqbm.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/PGgvqQtmtGb1PoHqp2pZ/qQlUc5KbPks=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: linux-next boot error: general protection fault in tomoyo_get_local_path
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+        Fri, 15 May 2020 16:40:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbgEOUkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 16:40:47 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90FD92065C;
+        Fri, 15 May 2020 20:40:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589575247;
+        bh=7/Rpg+KXflBLuZsnLoyMnGo3Y9ufgp8qwJuPpO7BwaA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yYiOrVlBnM3aO59WMqUm3FSSQzFJGNL3VqcYNpP/dJzArRZ14W3EckZ3tyQpIm3P+
+         MrBsYFDV0RlVmYXRJ5hqynPd8nRvqZpfj1XibvEeXHaFByurO0jEiypqW5nKXCJHlS
+         5FbAPrnmkaWnlNtI5oAHxBPHONNGNE0HtTdo43GQ=
+Date:   Fri, 15 May 2020 13:40:46 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Bibo Mao <maobibo@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org
+Subject: Re: [PATCH 2/3] mm/memory.c: Update local TLB if PTE entry exists
+Message-Id: <20200515134046.cf107c6a13b9604c46ad71b8@linux-foundation.org>
+In-Reply-To: <1589515809-32422-2-git-send-email-maobibo@loongson.cn>
+References: <1589515809-32422-1-git-send-email-maobibo@loongson.cn>
+        <1589515809-32422-2-git-send-email-maobibo@loongson.cn>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al Viro <viro@zeniv.linux.org.uk> writes:
+On Fri, 15 May 2020 12:10:08 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
 
-> On Sat, May 16, 2020 at 12:36:28AM +0900, Tetsuo Handa wrote:
->> On 2020/05/16 0:18, Tetsuo Handa wrote:
->> > This is
->> > 
->> >         if (sb->s_magic == PROC_SUPER_MAGIC && *pos == '/') {
->> >                 char *ep;
->> >                 const pid_t pid = (pid_t) simple_strtoul(pos + 1, &ep, 10);
->> >                 struct pid_namespace *proc_pidns = proc_pid_ns(d_inode(dentry)); // <= here
->> > 
->> >                 if (*ep == '/' && pid && pid ==
->> >                     task_tgid_nr_ns(current, proc_pidns)) {
->> > 
->> > which was added by commit c59f415a7cb6e1e1 ("Use proc_pid_ns() to get pid_namespace from the proc superblock").
->> > 
->> > @@ -161,9 +162,10 @@ static char *tomoyo_get_local_path(struct dentry *dentry, char * const buffer,
->> >         if (sb->s_magic == PROC_SUPER_MAGIC && *pos == '/') {
->> >                 char *ep;
->> >                 const pid_t pid = (pid_t) simple_strtoul(pos + 1, &ep, 10);
->> > +               struct pid_namespace *proc_pidns = proc_pid_ns(d_inode(dentry));
->> > 
->> >                 if (*ep == '/' && pid && pid ==
->> > -                   task_tgid_nr_ns(current, sb->s_fs_info)) {
->> > +                   task_tgid_nr_ns(current, proc_pidns)) {
->> >                         pos = ep - 5;
->> >                         if (pos < buffer)
->> >                                 goto out;
->> > 
->> > Alexey and Eric, any clue?
->> > 
->> 
->> A similar bug (racing inode destruction with open() on proc filesystem) was fixed as
->> commit 6f7c41374b62fd80 ("tomoyo: Don't use nifty names on sockets."). Then, it might
->> not be safe to replace dentry->d_sb->s_fs_info with dentry->d_inode->i_sb->s_fs_info .
+> If there are two threads hitting page fault at the same page,
+> one thread updates PTE entry and local TLB, the other can
+> update local tlb also, rather than give up and do page fault
+> again.
 >
-> Could you explain why do you want to bother with d_inode() anyway?  Anything that
-> does dentry->d_inode->i_sb can bloody well use dentry->d_sb.  And that's never
-> changed over the struct dentry lifetime - ->d_sb is set on allocation and never
-> modified afterwards.
+> ...
+>
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -1770,8 +1770,8 @@ static vm_fault_t insert_pfn(struct vm_area_struct *vma, unsigned long addr,
+>  			}
+>  			entry = pte_mkyoung(*pte);
+>  			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+> -			if (ptep_set_access_flags(vma, addr, pte, entry, 1))
+> -				update_mmu_cache(vma, addr, pte);
+> +			ptep_set_access_flags(vma, addr, pte, entry, 1);
+> +			update_mmu_cache(vma, addr, pte);
 
-Wanting to bother with d_inode is a bit strong.
+Presumably these changes mean that other architectures will run
+update_mmu_cache() more frequently than they used to.  How much more
+frequently, and what will be the impact of this change?  (Please fully
+explain all this in the changelog).
 
-It was just a matter of the helper function proc_pid_ns was built to
-work against inodes.  And working with inodes looks reasonable as
-in all of the places in proc where it was originally called it had
-an inode, and did not have a dentry.
+>  		}
+>  		goto out_unlock;
+>  	}
+>
+> ...
+>
+> @@ -2463,7 +2462,8 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
+>  		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
+>  		locked = true;
+>  		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+> -			/* The PTE changed under us. Retry page fault. */
+> +			/* The PTE changed under us, update local tlb */
+> +			pdate_mmu_cache(vma, addr, vmf->pte);
 
-I don't think there was any strong design to it.
+Missing a 'u' there.  Which tells me this patch isn't the one which you
+tested!
 
-Before changing the s_fs_info in proc we found Tomoyo accessing it
-without any helpers, and used the helper we had.  Which looked
-reasonable.  Now we have discovered it wasn't.
-
-It probably makes most sense just to have the helper go from the
-super_block, and not worry about inodes or dentries.
-
-Alexey Gladkov is already looking at fixing this.
-
-Eric
-
+>  			ret = false;
+>  			goto pte_unlock;
+>  		}
+>
+> ...
+>
