@@ -2,146 +2,164 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22811C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 886B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEF16205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589533707;
-	bh=CppYqC9xASQBBV5hYCGtUNU8fCEozttVX3L8qNW3r6A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xn50ryxB1Rj5axIixt6etCpbmdb0EF8F7qjvJnbDYXjMwBC+mrl4h67ZXrgMkc1Nr
-	 zPvI+MwMu/4PoUZnVEi95e23g9I8MsP5phMoxy/r6jmvBu0Z8zB3YPko6DJ8CFKVVg
-	 UdbA63qm/ss0XXKIx5arlb04ZtwbKmgohASQQJPM=
+	by mail.kernel.org (Postfix) with ESMTP id 5FF25205CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:08:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PJ9Evlic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgEOJI0 (ORCPT
+        id S1727998AbgEOJIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:08:26 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44148 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbgEOJIZ (ORCPT
+        Fri, 15 May 2020 05:08:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726922AbgEOJIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:08:25 -0400
-Received: by mail-wr1-f67.google.com with SMTP id 50so2582070wrc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 02:08:24 -0700 (PDT)
+        Fri, 15 May 2020 05:08:32 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B734C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 02:08:31 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j5so2658229wrq.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 02:08:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dtYTgXYxfIoUCk4loRWbuFk7VuNlmN02rgGRoj7S0Ao=;
+        b=PJ9EvlicG79uzhFJwbIU3UATGIRW97yWLRhLUOn6ud/9ECe8YeepuMRUm8KNJjBo8V
+         NMlf49pTjcPoPtNR8ULE9IjISzwdMYrENJ3mmF2Zg+l/gVhL+4UbwkhRL6efIk1bNgdp
+         CNelvYyJmG62PVcbZsIwqaerZBmgQkW+n1gHOMTDYot6JN8PeGvRMhh57HR0kA0Thpjw
+         1kNt736a28aieaDLp8LrNzLdszmw4EhFa3lNmLZiNSPL7B0xG12d5t09FtJtnbRAlhwA
+         gewV1hsFRMVJRUamG2DhjwvL3cAAbESswSZKhNEgBbYESIlgs8NOYPUddv8oyNaA/AyD
+         mQaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=J28ctCQPdtuyBJRgZtHzD140QCC+2jwNn3ZnYypquyw=;
-        b=jqPYQ6GT3bveSQlucNajYxEMuiRRPSiCAl8gSIfDoC4RfUMjtfAGFSdriXERSpnUCb
-         0pqkTDKndezcNfA+ErPqMus5oDJQNLHqO/vPW2ZkHgRnALbfBlSQrexNKzMLrGionUQf
-         ais7lW05ha3Yasb1+xaiPHSkwtYluhMy+G1mgW+BNqtiMOsgQYf16ECn6IcxaSFTNqFl
-         Dkr155XWt/6hey74UellxKu1ejvkkDVRj3Nz/a6+qwu2KhjC7ySiwyihJsqjVI6JSs98
-         wtj+KyvrZoUwoc/c6GKUTLJbOSmJ3u/2GqxAl0UXN4qxrEDG/VSGoUE635AOFu2h6Cmw
-         iRmQ==
-X-Gm-Message-State: AOAM5310IZtnqJFSDHUFFjOV0Yml59WNUrTRncFlENAeMPOqZJraEBvg
-        b7n8uFVriTVo/WDxg0106vU=
-X-Google-Smtp-Source: ABdhPJx52WtvVOeMhy79X8+1BQZbsLlO7skCUfOYdMSwb8omCOfuZ6kNO9SujbtzJKeho92KCscVgQ==
-X-Received: by 2002:a05:6000:110b:: with SMTP id z11mr3315478wrw.16.1589533703612;
-        Fri, 15 May 2020 02:08:23 -0700 (PDT)
-Received: from localhost (ip-37-188-249-36.eurotel.cz. [37.188.249.36])
-        by smtp.gmail.com with ESMTPSA id r11sm2760862wro.15.2020.05.15.02.08.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dtYTgXYxfIoUCk4loRWbuFk7VuNlmN02rgGRoj7S0Ao=;
+        b=V8aXXTCQpKVf22RGuGWRXw4MnhCJbtDysAmqDGQCRi/ho3Gy6UEEskuFFpRg1mQnRv
+         /7NGzIqsZhrivFVwB2JL1/EgZKSP+SK2TWExd5iDe3L62Pq9rYkfpcZR2JMmRKtPqFYq
+         kWL1jRJBtAjPvx1G1qqTM5w4IrVfIAGJDe+MrSeBPwSg+zzlRE/ENtSWnD43U2eS7FVF
+         4JdgDf2OV03yBAiGxAoRCdnqa0Ko+nc0i+FQb/nZ77eelJSYArOfIjO9/d1KhG+UWuSM
+         /5WWIpk/nW8ppU7QPNtKW8FqcLxlWiuoy9GH9rK0HFaCPgK0BrlJWrPBusfZRtoQAYaq
+         X3/A==
+X-Gm-Message-State: AOAM532pztG1xVmcTPK6C6jh9G0vqDk2jy8oFB/IthJ8aEYfAvyvTsYA
+        +yVV5JUBJpn+gL/UXGX5kc75sg==
+X-Google-Smtp-Source: ABdhPJzlPFRglVuF6PYzK/e/6mVvcXfBSVM6Eb646F46YSaOH4YpjKFqonvd0bkXEgMGJHzdh6HVSg==
+X-Received: by 2002:a05:6000:1107:: with SMTP id z7mr3029463wrw.93.1589533710197;
+        Fri, 15 May 2020 02:08:30 -0700 (PDT)
+Received: from localhost.localdomain ([37.120.32.219])
+        by smtp.gmail.com with ESMTPSA id z132sm2834240wmc.29.2020.05.15.02.08.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 02:08:22 -0700 (PDT)
-Date:   Fri, 15 May 2020 11:08:21 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>,
-        "Chen, Tim C" <tim.c.chen@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] mm: adjust vm_committed_as_batch according to vm
- overcommit policy
-Message-ID: <20200515090821.GO29153@dhcp22.suse.cz>
-References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
- <1588922717-63697-4-git-send-email-feng.tang@intel.com>
- <20200515074125.GH29153@dhcp22.suse.cz>
- <20200515080210.GC69177@shbuild999.sh.intel.com>
+        Fri, 15 May 2020 02:08:29 -0700 (PDT)
+From:   Robert Foss <robert.foss@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Nicolas Dechesne <nicolas.dechesne@linaro.org>,
+        Robert Foss <robert.foss@linaro.org>
+Subject: [PATCH v2] arm64: dts: qcom: apq8016-sbc-d3: Add Qualcomm APQ8016 SBC + D3Camera mezzanine
+Date:   Fri, 15 May 2020 11:08:20 +0200
+Message-Id: <20200515090820.1744353-1-robert.foss@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515080210.GC69177@shbuild999.sh.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 15-05-20 16:02:10, Feng Tang wrote:
-> Hi Michal,
-> 
-> Thanks for the thorough reviews for these 3 patches!
-> 
-> On Fri, May 15, 2020 at 03:41:25PM +0800, Michal Hocko wrote:
-> > On Fri 08-05-20 15:25:17, Feng Tang wrote:
-> > > When checking a performance change for will-it-scale scalability
-> > > mmap test [1], we found very high lock contention for spinlock of
-> > > percpu counter 'vm_committed_as':
-> > > 
-> > >     94.14%     0.35%  [kernel.kallsyms]         [k] _raw_spin_lock_irqsave
-> > >     48.21% _raw_spin_lock_irqsave;percpu_counter_add_batch;__vm_enough_memory;mmap_region;do_mmap;
-> > >     45.91% _raw_spin_lock_irqsave;percpu_counter_add_batch;__do_munmap;
-> > > 
-> > > Actually this heavy lock contention is not always necessary. The
-> > > 'vm_committed_as' needs to be very precise when the strict
-> > > OVERCOMMIT_NEVER policy is set, which requires a rather small batch
-> > > number for the percpu counter.
-> > > 
-> > > So lift the batch number to 16X for OVERCOMMIT_ALWAYS and
-> > > OVERCOMMIT_GUESS policies, and add a sysctl handler to adjust it
-> > > when the policy is reconfigured.
-> > 
-> > Increasing the batch size for weaker overcommit modes makes sense. But
-> > your patch is also tuning OVERCOMMIT_NEVER without any explanation why
-> > that is still "small enough to be precise".
-> 
-> Actually, it keeps the batch algorithm for "OVERCOMMIT_NEVER", but
-> change the other 2 policies, which I should set it clear in the
-> commit log.
+Add device treee support for the Qualcomm APQ8016 SBC, otherwise known as
+the Dragonboard 410c with the D3Camera mezzanine expansion board.
 
-Yeah, I have misread that part. Sorry about that.
+The D3Camera mezzanine ships in a kit with a OmniVision 5640 sensor module,
+which is what this DT targets.
 
-[...]
-> > > +void mm_compute_batch(void)
-> > >  {
-> > >  	u64 memsized_batch;
-> > >  	s32 nr = num_present_cpus();
-> > >  	s32 batch = max_t(s32, nr*2, 32);
-> > > -
-> > > -	/* batch size set to 0.4% of (total memory/#cpus), or max int32 */
-> > > -	memsized_batch = min_t(u64, (totalram_pages()/nr)/256, 0x7fffffff);
-> > > +	unsigned long ram_pages = totalram_pages();
-> > > +
-> > > +	/*
-> > > +	 * For policy of OVERCOMMIT_NEVER, set batch size to 0.4%
-> > > +	 * of (total memory/#cpus), and lift it to 6.25% for other
-> > > +	 * policies to easy the possible lock contention for percpu_counter
-> > > +	 * vm_committed_as, while the max limit is INT_MAX
-> > > +	 */
-> > > +	if (sysctl_overcommit_memory == OVERCOMMIT_NEVER)
-> > > +		memsized_batch = min_t(u64, ram_pages/nr/256, INT_MAX);
-> > > +	else
-> > > +		memsized_batch = min_t(u64, ram_pages/nr/16, INT_MAX);
-> 
-> Also as you mentioned there are real-world work loads with big mmap
-> size and multi-threading, can we lift it even further ?
-> 	memsized_batch = min_t(u64, ram_pages/nr/4, INT_MAX)
+Signed-off-by: Robert Foss <robert.foss@linaro.org>
+---
 
-Try to measure those and see what numbers look like.
+Changes since v1:
+ - Vinod: Changed license to GPL+BSD
+ - Vinod: Changed copyright year to 2020
+ - Nico: Changed name of mezzanine to d3camera
+
+ arch/arm64/boot/dts/qcom/Makefile             |  1 +
+ .../boot/dts/qcom/apq8016-sbc-d3camera.dts    | 45 +++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index cc103f7020fd..3f95b522694e 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-d3camera.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+ dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
+new file mode 100644
+index 000000000000..752e5ec47499
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++/dts-v1/;
++
++#include "apq8016-sbc.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. APQ 8016 SBC w/ D3Camera Mezzanine";
++	compatible = "qcom,apq8016-sbc", "qcom,apq8016", "qcom,sbc";
++};
++
++&cci_i2c0 {
++	/delete-node/ camera_rear@3b;
++
++	camera_rear@76 {
++		compatible = "ovti,ov5640";
++		reg = <0x76>;
++
++		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&camera_rear_default>;
++
++		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
++		clock-names = "xclk";
++		clock-frequency = <23880000>;
++
++		vdddo-supply = <&camera_vdddo_1v8>;
++		vdda-supply = <&camera_vdda_2v8>;
++		vddd-supply = <&camera_vddd_1v5>;
++
++		status = "ok";
++
++		port {
++			ov5640_ep: endpoint {
++				clock-lanes = <1>;
++				data-lanes = <0 2>;
++				remote-endpoint = <&csiphy0_ep>;
++			};
++		};
++	};
++};
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
