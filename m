@@ -2,141 +2,195 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9739CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 712DF204EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:15:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eg/D5Yhu"
+	by mail.kernel.org (Postfix) with ESMTP id E35DA206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgEOLPq (ORCPT
+        id S1726213AbgEOLPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:15:46 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44598 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726023AbgEOLPq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:15:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589541344;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Wj1hRCTkHQCZJH+c9WShqi9qUC8IADHSYNNh6gBVfN4=;
-        b=eg/D5YhuPDgxMiOCOPlEELCfbd5WRSx3JOd/psOKteqaqUDaO4/mzoZ8vL7/8IqYr4cdEn
-        JCKPPdMBJJH9t5ZKhl91mjUdP/Sm17ZTnei6RdlyeGiV2AHYiD0R70O80H64h6YbDZSW2s
-        dGCOc2TyGtkdNL6sj+nLp11x8i6xH/g=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-124-7fB8KjlANnWXBkPAbKVJZg-1; Fri, 15 May 2020 07:15:42 -0400
-X-MC-Unique: 7fB8KjlANnWXBkPAbKVJZg-1
-Received: by mail-qt1-f199.google.com with SMTP id o11so1999886qti.23
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 04:15:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Wj1hRCTkHQCZJH+c9WShqi9qUC8IADHSYNNh6gBVfN4=;
-        b=rweaQQZs4YKe9w7eKpz/YA8bfuduvWjIwZUQok3Q98DnPcYDf5VVEpimiyqM5Har/n
-         iXNUqLXh7LoDWWbP2wdAd5CJB1J6YDmL/ScWE/hrFEmQ6vn5Ua4krREJFCBljqakNsCE
-         EWsHdKVmzs5Ia1oCSq8pVKUt1Lis5CzcQV0NhICc7WDTwn5+c2CatF/FYhwySiMtN8df
-         3EIPH36Gr/Fn4yYyPsfb4eor7rjq/6fiEMAyfTd1Lzpc+CdPnaijzl1OSKtOVRoQAFmr
-         f++9AyE/HF1E6xIGtiYcy8GIO2DAASX57DVxWtKLxvhb5Upl2z12u5He82nXZUuqHWDW
-         fzzg==
-X-Gm-Message-State: AOAM531R7KDmLbY3tr+6DP/CLjuLGr1HQedizERF5YLtMGskMs6TbDQU
-        oVL3UX66EbYFoO6LMoTS4SNdWcFiminn8rMDS2UWyJAPN5gPO9hsvDKTpLtSyJd61999+aYUtNL
-        0E9ksY+4qwXfsbqmvDQLYdyb9
-X-Received: by 2002:a37:9bcf:: with SMTP id d198mr2701588qke.423.1589541342363;
-        Fri, 15 May 2020 04:15:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw6k0Wxp/fggTGTEhGVsnY3c8zWZpwXaG8sjFGKb5wDstAflNu6HHHSCA7aDXYrrL/lD2v3kw==
-X-Received: by 2002:a37:9bcf:: with SMTP id d198mr2701562qke.423.1589541342093;
-        Fri, 15 May 2020 04:15:42 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id t12sm1303890qkt.77.2020.05.15.04.15.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 04:15:41 -0700 (PDT)
-Date:   Fri, 15 May 2020 07:15:39 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michael Tsirkin <mst@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH RFC 0/5] KVM: x86: KVM_MEM_ALLONES memory
-Message-ID: <20200515111539.GA497380@xz-x1>
-References: <20200514180540.52407-1-vkuznets@redhat.com>
- <20200514220516.GC449815@xz-x1>
- <20200514225623.GF15847@linux.intel.com>
- <CALCETrUf3qMgpYGfF=b6dt2gneodTv5eYGGwKZ=xDSYDa9aTVg@mail.gmail.com>
+        Fri, 15 May 2020 07:15:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38828 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726084AbgEOLPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:15:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BC8B5ABBD;
+        Fri, 15 May 2020 11:15:52 +0000 (UTC)
+Received: from localhost (webern.olymp [local])
+        by webern.olymp (OpenSMTPD) with ESMTPA id 57d1585e;
+        Fri, 15 May 2020 12:15:48 +0100 (WEST)
+Date:   Fri, 15 May 2020 12:15:48 +0100
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        fstests <fstests@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
+Message-ID: <20200515111548.GA54598@suse.com>
+References: <20200514111453.GA99187@suse.com>
+ <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
+ <20200514124845.GA12559@suse.com>
+ <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
+ <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrUf3qMgpYGfF=b6dt2gneodTv5eYGGwKZ=xDSYDa9aTVg@mail.gmail.com>
+In-Reply-To: <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 06:03:20PM -0700, Andy Lutomirski wrote:
-> On Thu, May 14, 2020 at 3:56 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Thu, May 14, 2020 at 06:05:16PM -0400, Peter Xu wrote:
-> > > On Thu, May 14, 2020 at 08:05:35PM +0200, Vitaly Kuznetsov wrote:
-> > > > The idea of the patchset was suggested by Michael S. Tsirkin.
-> > > >
-> > > > PCIe config space can (depending on the configuration) be quite big but
-> > > > usually is sparsely populated. Guest may scan it by accessing individual
-> > > > device's page which, when device is missing, is supposed to have 'pci
-> > > > holes' semantics: reads return '0xff' and writes get discarded. Currently,
-> > > > userspace has to allocate real memory for these holes and fill them with
-> > > > '0xff'. Moreover, different VMs usually require different memory.
-> > > >
-> > > > The idea behind the feature introduced by this patch is: let's have a
-> > > > single read-only page filled with '0xff' in KVM and map it to all such
-> > > > PCI holes in all VMs. This will free userspace of obligation to allocate
-> > > > real memory and also allow us to speed up access to these holes as we
-> > > > can aggressively map the whole slot upon first fault.
-> > > >
-> > > > RFC. I've only tested the feature with the selftest (PATCH5) on Intel/AMD
-> > > > with and wiuthout EPT/NPT. I haven't tested memslot modifications yet.
-> > > >
-> > > > Patches are against kvm/next.
-> > >
-> > > Hi, Vitaly,
-> > >
-> > > Could this be done in userspace with existing techniques?
-> > >
-> > > E.g., shm_open() with a handle and fill one 0xff page, then remap it to
-> > > anywhere needed in QEMU?
-> >
-> > Mapping that 4k page over and over is going to get expensive, e.g. each
-> > duplicate will need a VMA and a memslot, plus any PTE overhead.  If the
-> > total sum of the holes is >2mb it'll even overflow the mumber of allowed
-> > memslots.
+On Fri, May 15, 2020 at 09:42:24AM +0300, Amir Goldstein wrote:
+> +CC: fstests
 > 
-> How about a tiny character device driver /dev/ones?
+> On Thu, May 14, 2020 at 4:15 PM Jeff Layton <jlayton@kernel.org> wrote:
+> >
+> > On Thu, 2020-05-14 at 13:48 +0100, Luis Henriques wrote:
+> > > On Thu, May 14, 2020 at 08:10:09AM -0400, Jeff Layton wrote:
+> > > > On Thu, 2020-05-14 at 12:14 +0100, Luis Henriques wrote:
+> > > > > Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
+> > > > > a file handle to dentry"), this fixes another corner case with
+> > > > > name_to_handle_at/open_by_handle_at.  The issue has been detected by
+> > > > > xfstest generic/467, when doing:
+> > > > >
+> > > > >  - name_to_handle_at("/cephfs/myfile")
+> > > > >  - open("/cephfs/myfile")
+> > > > >  - unlink("/cephfs/myfile")
+> > > > >  - open_by_handle_at()
+> > > > >
+> > > > > The call to open_by_handle_at should not fail because the file still
+> > > > > exists and we do have a valid handle to it.
+> > > > >
+> > > > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > > > > ---
+> > > > >  fs/ceph/export.c | 13 +++++++++++--
+> > > > >  1 file changed, 11 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+> > > > > index 79dc06881e78..8556df9d94d0 100644
+> > > > > --- a/fs/ceph/export.c
+> > > > > +++ b/fs/ceph/export.c
+> > > > > @@ -171,12 +171,21 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
+> > > > >
+> > > > >  static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
+> > > > >  {
+> > > > > + struct ceph_inode_info *ci;
+> > > > >   struct inode *inode = __lookup_inode(sb, ino);
+> > > > > +
+> > > > >   if (IS_ERR(inode))
+> > > > >           return ERR_CAST(inode);
+> > > > >   if (inode->i_nlink == 0) {
+> > > > > -         iput(inode);
+> > > > > -         return ERR_PTR(-ESTALE);
+> > > > > +         bool is_open;
+> > > > > +         ci = ceph_inode(inode);
+> > > > > +         spin_lock(&ci->i_ceph_lock);
+> > > > > +         is_open = __ceph_is_file_opened(ci);
+> > > > > +         spin_unlock(&ci->i_ceph_lock);
+> > > > > +         if (!is_open) {
+> > > > > +                 iput(inode);
+> > > > > +                 return ERR_PTR(-ESTALE);
+> > > > > +         }
+> > > > >   }
+> > > > >   return d_obtain_alias(inode);
+> > > > >  }
+> > > >
+> > > > Thanks Luis. Out of curiousity, is there any reason we shouldn't ignore
+> > > > the i_nlink value here? Does anything obviously break if we do?
+> > >
+> > > Yes, the scenario described in commit 03f219041fdb is still valid, which
+> > > is basically the same but without the extra open(2):
+> > >
+> > >   - name_to_handle_at("/cephfs/myfile")
+> > >   - unlink("/cephfs/myfile")
+> > >   - open_by_handle_at()
+> > >
+> >
+> > Ok, I guess we end up doing some delayed cleanup, and that allows the
+> > inode to be found in that situation.
+> >
+> > > The open_by_handle_at man page isn't really clear about these 2 scenarios,
+> > > but generic/426 will fail if -ESTALE isn't returned.  Want me to add a
+> > > comment to the code, describing these 2 scenarios?
+> > >
+> >
+> > (cc'ing Amir since he added this test)
+> >
+> > I don't think there is any hard requirement that open_by_handle_at
+> > should fail in that situation. It generally does for most filesystems
+> > due to the way they handle cl794798fa xfsqa: test open_by_handle() on unlinked and freed inode clusters
+> eaning up unlinked inodes, but I don't
+> > think it's technically illegal to allow the inode to still be found. If
+> > the caller cares about whether it has been unlinked it can always test
+> > i_nlink itself.
+> >
+> > Amir, is this required for some reason that I'm not aware of?
+> 
+> Hi Jeff,
+> 
+> The origin of this test is in fstests commit:
+> 794798fa xfsqa: test open_by_handle() on unlinked and freed inode clusters
+> 
+> It was introduced to catch an xfs bug, so this behavior is the expectation
+> of xfs filesystem, but note that it is not a general expectation to fail
+> open_by_handle() after unlink(), it is an expectation to fail open_by_handle()
+> after unlink() + sync() + drop_caches.
 
-Yeah, this looks very clean.
+Yes, sorry I should have mentioned the sync+drop_caches in the
+description.
 
-Or I also like Sean's idea about using the slow path - I think the answer could
-depend on a better knowledge on the problem to solve (PCI scan for small VM
-boots) to firstly justify that the fast path is required.  E.g., could we even
-workaround that inefficient reading of 0xff's for our use case?  After all what
-the BIOS really needs is not those 0xff's, but some other facts.
+> I have later converted the test to generic, because I needed to check the
+> same expectation for overlayfs use case, which is:
+> The original inode is always there (in lower layer), unlink creates a whiteout
+> mark and open_by_handle should treat that as ESTALE, otherwise the
+> unlinked files would be accessible to nfs clients forever.
+> 
+> In overlayfs, we handle the open file case by returning a dentry only
+> in case the inode with deletion mark in question is already in inode cache,
+> but we take care not to populate inode cache with the check.
+> It is easier, because we do not need to get inode into cache for checking
+> the delete marker.
+> 
+> Maybe you could instead check in __fh_to_dentry():
+> 
+>     if (inode->i_nlink == 0 && atomic_read(&inode->i_count) == 1)) {
+>         iput(inode);
+>         return ERR_PTR(-ESTALE);
+>     }
+> 
+> The above is untested, so I don't know if it's enough to pass generic/426.
 
-Thanks!
+Yes, I can confirm that this also fixes the issue -- both tests pass.
+__ceph_is_file_opened() uses some internal counters per inode, incremented
+each time a file is open in a specific mode.  The problem is that these
+counters require some extra locking (maybe they should be atomic_t?), so
+you're suggestion is probably better.
 
--- 
-Peter Xu
+> Note that generic/467 also checks the same behavior for rmdir().
 
+Yeah, but the only test-case failing with cephfs is the one described
+above (i.e. "open_by_handle -dkr ...").
+
+> If you decide that ceph does not need to comply to this behavior,
+> then we probably need to whitelist/blocklist the filesystems that
+> want to test this behavior, which will be a shame.
+
+Unless Jeff has any objection, I'm happy sending v2, simplifying the patch
+to use your simpler solution (and mentioning sync+drop_caches in the
+commit message).
+
+Cheers,
+--
+Luis
