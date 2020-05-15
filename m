@@ -2,112 +2,199 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB21C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E2EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20CC720758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 222FA2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:33:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQepBCDY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="SH86u7Z+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbgEOKdU (ORCPT
+        id S1728468AbgEOKdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:33:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbgEOKdL (ORCPT
+        Fri, 15 May 2020 06:33:22 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:2002 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728156AbgEOKdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:33:11 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B397C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 03:33:11 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id q9so765732pjm.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 03:33:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+XVj7Vn4q7UWK0rXA2mfb7XaH4le6Oj5JDX0rkTcjv8=;
-        b=QQepBCDYSozWfCOr/eFEkoIrW01LVBw3ONlO+lac/N4lGJUp/URE0OM0R9XXbLQIJ3
-         YYf2/4K2rm8OLRPVubTJZFyO50CLzcAWr8nckIRaOLY+1f/vjSs2lR+Y5Y9bYDVQr+pO
-         Fnas1I2V70MShXTLQFzApJ2ybjosMrusIzmosj5ERNkD0FNvl2r7xEpN3u7aiDcdK0tr
-         JLoFrbFbEqVnmjAqh84lWcO60Bmd564ZmkSBEo0e8Y39SfjqK2Z8OgAUv8FeW0UIIq7Y
-         6HRB59wBCV00RZ4X9L92ig7LTwJGuZxKJZFNvgtQjZp6S88j5dMkuyDY9bSxQbZ/13/F
-         /JTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+XVj7Vn4q7UWK0rXA2mfb7XaH4le6Oj5JDX0rkTcjv8=;
-        b=qpALtZVVHyhnxdR8erxrpZ/GB3XByRrj1qz/TVNuuDPs6wg2fqAHVC7qguqL8GYH0k
-         2wFUQdOy6fgdktEQMbOqu4LAp4PTxEOfZyOcFAtZrSANESzSzJNm3Y+oZiIj6cujpBtX
-         HwmFWFwi12ZirvsZvgGgMg5dRXq1/ZegbpekdfcASEOLRkbHiW1X++P+1vpGVf5W6rKl
-         nSMPw9Gr+doaZOsLTSKZC3D7rrBqlVKMdM5xhAoVDvIqqiMu191tChz/wLcpLhzpwrsl
-         Qvn57TmuYHda4sRP0fjPIMFrnc+cZjadnB/4n1RCqDWdEIH51uMjEj4AjjAJo/bipWIe
-         Vz9w==
-X-Gm-Message-State: AOAM5327nl+9CZHLOMlafkP8Ie3/WM4iJ6ioS4JfYaegLx/RRt4INMd/
-        iaQ+tP77urJ+U5xa0kbJ6/g=
-X-Google-Smtp-Source: ABdhPJweTKamypY9HN33QeOPRzMIehLxFsMWkxcut7xNXPUoTEgrKmllHE13oLf4hSc73mfTruAatA==
-X-Received: by 2002:a17:90a:1aa2:: with SMTP id p31mr2625068pjp.233.1589538791105;
-        Fri, 15 May 2020 03:33:11 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id j23sm1316378pjz.13.2020.05.15.03.33.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 03:33:10 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Fri, 15 May 2020 19:33:08 +0900
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH] printk/kdb: Redirect printk messages into kdb in any
- context
-Message-ID: <20200515103308.GD42471@jagdpanzerIV.localdomain>
-References: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org>
- <20200512142533.ta4uejwmq5gchtlx@holly.lan>
- <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
- <20200514084230.GO17734@linux-b0ei>
- <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
- <20200515085021.GS17734@linux-b0ei>
+        Fri, 15 May 2020 06:33:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1589538799; x=1621074799;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=6JyjevTXi30Ra8MJtEs+SOstBuSe182myQ1YtRcMwrs=;
+  b=SH86u7Z+RmssjW/UKcpFqBHoMz6WQszV86yxb1QH1s6A+F2Y0UJrFkbg
+   bcDPbb9YmA4zG6G41b++ffiKJ5xP2UESMy+RKI3CnMO1Idx575jAqX6VZ
+   W7X0A5KNOAQMbH1NunvFMeCqppuwzfyhkM4em1Ut8VcYQaMfKaqPNsA6K
+   VkOWKH1mlMGxnH20IYnPleNQzOVXHi/Zd9tElwnSbfi3NwSpnfxO6m5Mf
+   zMClmwY+9QzDOkq757cDbA+DUwijlL/ofb8dN43WkHqNRtODFyWtOjRFV
+   6WQD4XerEdTz4gnmHb6EphS+2meJpSD3A1/Ne8luf4ASXld3aZrWIuq4T
+   Q==;
+IronPort-SDR: sHtuxIsD4NU1WhzJAKJ4zvi4s7W39U1cycCxDoxEDN+wN18UAVaFwA+Mhaxckl6Vkl1jp/CDiP
+ /4ynM1IADWP5DRXoC1WCpaWeYInUYaOB3NpeXl20eAhpn/CB4h+DPjwO1qfMSk9LPCErvnBUTQ
+ m3i8Y5PDphomNvLM7D0hEZ6kYx2NPJD0dzpaoYvavQw5aIbpWzn3lBf2g83vPLnWme6Vzbgd6P
+ hzkThsA2j4t0DTh3zTXuXcxgFVdklB6a15kDxoZYixFhK/aze1q/9s7+NhiiIlvbmyX9vHv0qK
+ ILw=
+X-IronPort-AV: E=Sophos;i="5.73,394,1583164800"; 
+   d="scan'208";a="142113860"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 15 May 2020 18:33:19 +0800
+IronPort-SDR: tvi1LgUTx5wf84CQeqhaYQvgt2AvhCz736AVKc8v5TfjPX69eT1kwVpC0CmU4p0nBWxHh9Z2y5
+ QKsP9B/0nglR2DBxNPZx8VOFmVOnMhJuE=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 03:23:29 -0700
+IronPort-SDR: O6V3SslWYV1kHoNF7CO9NcAHntwUzYct3jabOkhOsZGctm6NFncgkdJw09IsKH36WPdBZPeOy9
+ ylqAAvE5A3uQ==
+WDCIronportException: Internal
+Received: from ile422988.sdcorp.global.sandisk.com ([10.0.231.246])
+  by uls-op-cesaip01.wdc.com with ESMTP; 15 May 2020 03:33:14 -0700
+From:   Avri Altman <avri.altman@wdc.com>
+To:     "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Bart Van Assche <bvanassche@acm.org>, alim.akhtar@samsung.com,
+        asutoshd@codeaurora.org, Zang Leigang <zangleigang@hisilicon.com>,
+        Avi Shchislowski <avi.shchislowski@wdc.com>,
+        Bean Huo <beanhuo@micron.com>, cang@codeaurora.org,
+        stanley.chu@mediatek.com,
+        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>
+Subject: [RFC PATCH 13/13] scsi: scsi_dh: ufshpb: Add "Cold" subregions timer
+Date:   Fri, 15 May 2020 13:30:14 +0300
+Message-Id: <1589538614-24048-14-git-send-email-avri.altman@wdc.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
+References: <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515085021.GS17734@linux-b0ei>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/05/15 10:50), Petr Mladek wrote:
-> kdb is able to stop kernel even in NMI context where printk() is redirected
-> to the printk_safe() lockless variant. Move the check and redirect to kdb
-> even in this case.
+In order not to hang on to “cold” subregions, we shall inactivate a
+subregion that has no READ access for a predefined amount of time. For
+that purpose we shall attach to any active subregion a timer, triggering
+it on every READ to expire after 500msec. On timer expiry we shall make
+note of that event and call the state-machine worker to handle it.
 
-Can I please have some context what problem does this solve?
-I can see that vkdb_printf() calls into console drivers:
+Timers will not be attached to a pinned region's subregions.
 
-	for_each_console(c) {
-		c->write(c, cp, retlen - (cp - kdb_buffer));
-		touch_nmi_watchdog();
-	}
+Signed-off-by: Avri Altman <avri.altman@wdc.com>
+---
+ drivers/scsi/device_handler/scsi_dh_ufshpb.c | 47 +++++++++++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 1 deletion(-)
 
-Is this guaranteed that we never execute this path from NMI?
-If so, can this please be added to the commit message? A more
-detailed commit message will help a lot.
+diff --git a/drivers/scsi/device_handler/scsi_dh_ufshpb.c b/drivers/scsi/device_handler/scsi_dh_ufshpb.c
+index 04e3d56..e89dd30 100644
+--- a/drivers/scsi/device_handler/scsi_dh_ufshpb.c
++++ b/drivers/scsi/device_handler/scsi_dh_ufshpb.c
+@@ -123,6 +123,8 @@ struct ufshpb_subregion {
+ 	unsigned long event;
+ 	struct mutex state_lock;
+ 	struct work_struct hpb_work;
++
++	struct timer_list read_timer;
+ };
+ 
+ /**
+@@ -210,6 +212,31 @@ static unsigned int entries_per_region_mask;
+ static unsigned int entries_per_subregion_shift;
+ static unsigned int entries_per_subregion_mask;
+ 
++static void ufshpb_read_timeout(struct timer_list *t)
++{
++	struct ufshpb_subregion *s = from_timer(s, t, read_timer);
++	enum ufshpb_state s_state;
++
++	rcu_read_lock();
++	s_state = s->state;
++	rcu_read_unlock();
++
++	if (WARN_ON_ONCE(s_state != HPB_STATE_ACTIVE))
++		return;
++
++	if (atomic64_read(&s->writes) < SET_AS_DIRTY &&
++	    !atomic_dec_and_test(&s->read_timeout_expiries)) {
++		/* rewind the timer for clean subregions */
++		mod_timer(&s->read_timer,
++			  jiffies + msecs_to_jiffies(READ_TIMEOUT_MSEC));
++		return;
++	}
++
++	set_bit(SUBREGION_EVENT_TIMER, &s->event);
++
++	queue_work(s->hpb->wq, &s->hpb_work);
++}
++
+ static inline unsigned int ufshpb_lba_to_region(u64 lba)
+ {
+ 	return lba >> entries_per_region_shift;
+@@ -376,6 +403,7 @@ static bool ufshpb_test_block_dirty(struct ufshpb_dh_data *h,
+ 	struct ufshpb_region *r = hpb->region_tbl + region;
+ 	struct ufshpb_subregion *s = r->subregion_tbl + subregion;
+ 	enum ufshpb_state s_state;
++	bool is_dirty;
+ 
+ 	__update_rw_counters(hpb, start_lba, end_lba, REQ_OP_READ);
+ 
+@@ -386,7 +414,14 @@ static bool ufshpb_test_block_dirty(struct ufshpb_dh_data *h,
+ 	if (s_state != HPB_STATE_ACTIVE)
+ 		return true;
+ 
+-	return (atomic64_read(&s->writes) >= SET_AS_DIRTY);
++	is_dirty = (atomic64_read(&s->writes) >= SET_AS_DIRTY);
++	if (!is_dirty && !test_bit(region, hpb->pinned_map)) {
++		mod_timer(&s->read_timer,
++			  jiffies + msecs_to_jiffies(READ_TIMEOUT_MSEC));
++		atomic_set(&s->read_timeout_expiries, READ_TIMEOUT_EXPIRIES);
++	}
++
++	return is_dirty;
+ }
+ 
+ /* Call this on write from prep_fn */
+@@ -456,6 +491,8 @@ static void __subregion_inactivate(struct ufshpb_dh_lun *hpb,
+ 	list_add(&s->mctx->list, &hpb->lh_map_ctx);
+ 	spin_unlock(&hpb->map_list_lock);
+ 	s->mctx = NULL;
++
++	del_timer(&s->read_timer);
+ }
+ 
+ static void ufshpb_subregion_inactivate(struct ufshpb_dh_lun *hpb,
+@@ -602,6 +639,13 @@ static int __subregion_activate(struct ufshpb_dh_lun *hpb,
+ 	atomic64_sub(atomic64_read(&s->writes), &r->writes);
+ 	atomic64_set(&s->writes, 0);
+ 
++	if (!test_bit(r->region, hpb->pinned_map)) {
++		timer_setup(&s->read_timer, ufshpb_read_timeout, 0);
++		mod_timer(&s->read_timer,
++			  jiffies + msecs_to_jiffies(READ_TIMEOUT_MSEC));
++		atomic_set(&s->read_timeout_expiries, READ_TIMEOUT_EXPIRIES);
++	}
++
+ out:
+ 	if (ret)
+ 		__subregion_inactivate(hpb, r, s);
+@@ -1377,6 +1421,7 @@ static void ufshpb_region_tbl_remove(struct ufshpb_dh_lun *hpb)
+ 							r->subregion_tbl + j;
+ 
+ 				cancel_work_sync(&s->hpb_work);
++				del_timer(&s->read_timer);
+ 			}
+ 
+ 			kfree(r->subregion_tbl);
+-- 
+2.7.4
 
-	-ss
