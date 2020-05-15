@@ -2,138 +2,106 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B755DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E96C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF3020787
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38DEC20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gp63hVTH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UoncJL2B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgEOKKL (ORCPT
+        id S1728245AbgEOKMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:10:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727927AbgEOKKK (ORCPT
+        Fri, 15 May 2020 06:12:33 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35371 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728083AbgEOKMd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:10:10 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03F48C061A0C;
-        Fri, 15 May 2020 03:10:10 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id p139so430964vkd.7;
-        Fri, 15 May 2020 03:10:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lhigMlxhzrJnKPEuZs499FlSgqJIMriFF+MKS12l+uA=;
-        b=gp63hVTHYVuojW36b06JYhiTReOtH2+pg7/v0FgV+Ta6hcdtZGvwPDyvoqSOxSGDtN
-         oP4ZHdDKFOvyHJR10A/6nYElof0kMVJDPAoNTgKZxEIGa+nCyCfwHCiI7lFXwc0qaMzA
-         QAfKbSJ13sKqc8f+OXYJ9n35j/TnMdw1ZWoDyj9c/ixU0QS+YJHW8nSU546+3aSOA6Ux
-         XF8IKhCQyLoOHK9JXy+j+yExcJ6wrEbHiSh9Z0DxkEif/uCZ5Z55ljyO0QHaypYZ3Us0
-         8oC9LXlPJzcj52ZMtS73p+KmzpCK5aGkyR/IadwzfCicaErtAohw9QYfP8bff+OpX50s
-         iKyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lhigMlxhzrJnKPEuZs499FlSgqJIMriFF+MKS12l+uA=;
-        b=tCtS09q3p1KPLZFo5ean+FzflpaS5ZMSZrFl+Hr71WC/6ZqWQxWuSdGFHzNgQBv3Px
-         DMNtk7NidJQui8a5ShAk/BOY6ASPH2NvuRD2i4lE/8DLzp6/DwUnGe5xhK7mkRW5G1DU
-         XMDIUp1APsVnezb/fdUj3XOKCh4Uo4kyoV2t9ATTOCLtoTifmu5hzHiPVxrLKUap7HIt
-         s4CaTO/uUQ3kblCukEG+mxgMxpiTKzZas4l+200MvUbHtDyCUOce6LGNTP5N7LgkIm16
-         xRcwhpFjiAt46ZHwDPOv7UmBZ3DRa72M1TVL/JjoqmJOD9x4RQevSMSTcq8YdrAIsp1M
-         8vWQ==
-X-Gm-Message-State: AOAM533npPTX10LG3yKsZsqZxlAcABMDJ+CIoQT8trB4sIYtHn7ll9vs
-        C3o3f1GTFkIOpIvkQBs8eN8KqAVeNcviL3LJC63F+GtI3nA=
-X-Google-Smtp-Source: ABdhPJzaNbylRYStH6B+ZztSv24YNQNGSipyPFdD8gsTBnMBMP46eaL7d0io05RZRZvcuJ3Mg3DYYVRNdgElHQ0yNRE=
-X-Received: by 2002:a1f:cd06:: with SMTP id d6mr1918886vkg.94.1589537408919;
- Fri, 15 May 2020 03:10:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200511123846.96594-1-christian.gmeiner@gmail.com>
-In-Reply-To: <20200511123846.96594-1-christian.gmeiner@gmail.com>
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-Date:   Fri, 15 May 2020 12:09:57 +0200
-Message-ID: <CAH9NwWcJNhUVkzd0KAfJyxNZJ9a71KLzipW+qRwhgEWUmnnxmg@mail.gmail.com>
-Subject: Re: [PATCH] drm/etnaviv: fix perfmon domain interation
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Paul Cercueil <paul@crapouillou.net>, stable@vger.kernel.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Fri, 15 May 2020 06:12:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589537551;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0MKoWH/rG+jrDQ9BJKMgClfKWi0OU8i02iZINw2Eoiw=;
+        b=UoncJL2BiGZmXOHftuvoO0l63bhbcD8Sowd86xuUjqhtGUVI0NbQIjeBd/1te/nQn5DmM9
+        ty2yCX/c6h2jXn6ismutnCysnYPy91lwz8MgPU2Dh/Qd51olq67N961nNelU/xKtpiFSoK
+        /RsbqazdY72YpghSViPcG1OZBfmDy5o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-29-FfsBUAj5OSSzyVChPXN-GA-1; Fri, 15 May 2020 06:12:30 -0400
+X-MC-Unique: FfsBUAj5OSSzyVChPXN-GA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01163189952E;
+        Fri, 15 May 2020 10:12:28 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-115-145.ams2.redhat.com [10.36.115.145])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0554A26E41;
+        Fri, 15 May 2020 10:12:26 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id EB6CF16E16; Fri, 15 May 2020 12:12:24 +0200 (CEST)
+Date:   Fri, 15 May 2020 12:12:24 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v5 25/38] drm: virtio: fix common struct sg_table related
+ issues
+Message-ID: <20200515101224.vrr6rlzgwc6d35az@sirius.home.kraxel.org>
+References: <20200513132114.6046-1-m.szyprowski@samsung.com>
+ <20200513133245.6408-1-m.szyprowski@samsung.com>
+ <CGME20200513133314eucas1p2f04e32d65e71c613a2a9aacb29064a7d@eucas1p2.samsung.com>
+ <20200513133245.6408-25-m.szyprowski@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513133245.6408-25-m.szyprowski@samsung.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mo., 11. Mai 2020 um 14:38 Uhr schrieb Christian Gmeiner
-<christian.gmeiner@gmail.com>:
->
-> The GC860 has one GPU device which has a 2d and 3d core. In this case
-> we want to expose perfmon information for both cores.
->
-> The driver has one array which contains all possible perfmon domains
-> with some meta data - doms_meta. Here we can see that for the GC860
-> two elements of that array are relevant:
->
->   doms_3d: is at index 0 in the doms_meta array with 8 perfmon domains
->   doms_2d: is at index 1 in the doms_meta array with 1 perfmon domain
->
-> The userspace driver wants to get a list of all perfmon domains and
-> their perfmon signals. This is done by iterating over all domains and
-> their signals. If the userspace driver wants to access the domain with
-> id 8 the kernel driver fails and returns invalid data from doms_3d with
-> and invalid offset.
->
-> This results in:
->   Unable to handle kernel paging request at virtual address 00000000
->
-> On such a device it is not possible to use the userspace driver at all.
->
-> The fix for this off-by-one error is quite simple.
->
-> Reported-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
-> Fixes: ed1dd899baa3 ("drm/etnaviv: rework perfmon query infrastructure")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-> ---
->  drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> index e6795bafcbb9..35f7171e779a 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> @@ -453,7 +453,7 @@ static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
->                 if (!(gpu->identity.features & meta->feature))
->                         continue;
->
-> -               if (meta->nr_domains < (index - offset)) {
-> +               if ((meta->nr_domains - 1) < (index - offset)) {
->                         offset += meta->nr_domains;
->                         continue;
->                 }
-> --
-> 2.26.2
->
+On Wed, May 13, 2020 at 03:32:32PM +0200, Marek Szyprowski wrote:
+> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+> returns the number of the created entries in the DMA address space.
+> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+> dma_unmap_sg must be called with the original number of the entries
+> passed to the dma_map_sg().
+> 
+> struct sg_table is a common structure used for describing a non-contiguous
+> memory buffer, used commonly in the DRM and graphics subsystems. It
+> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+> and DMA mapped pages (nents entry).
+> 
+> It turned out that it was a common mistake to misuse nents and orig_nents
+> entries, calling DMA-mapping functions with a wrong number of entries or
+> ignoring the number of mapped entries returned by the dma_map_sg()
+> function.
+> 
+> To avoid such issues, lets use a common dma-mapping wrappers operating
+> directly on the struct sg_table objects and use scatterlist page
+> iterators where possible. This, almost always, hides references to the
+> nents and orig_nents entries, making the code robust, easier to follow
+> and copy/paste safe.
 
-ping
+Looks all sane.
 
--- 
-greets
---
-Christian Gmeiner, MSc
+Acked-by: Gerd Hoffmann <kraxel@redhat.com>
 
-https://christian-gmeiner.info/privacypolicy
+take care,
+  Gerd
+
