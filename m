@@ -2,110 +2,113 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4491AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98CF920787
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:34:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AlW9FY5X"
+	by mail.kernel.org (Postfix) with ESMTP id 243E020727
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgEOJe0 (ORCPT
+        id S1728138AbgEOJea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:34:26 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45424 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgEOJeZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:34:25 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04F9YL2A002540;
-        Fri, 15 May 2020 04:34:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589535261;
-        bh=eoqwD1iY8I9uQckZWcPuP5jTSPV/Lliz8amDTTfZ87w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=AlW9FY5X9gMIyy3p7ak4u9jg9wI1vCfsL6IgjfBVIXDaUaeFled9DxsrsjyxOwgmd
-         RMESuK5NFXNcxqmXZ0458GHPDMvhXX08gT4Yvei42IT0qMcFAr/TDxSxYQhlHfWIVf
-         Zxs+2U8UMeYyDQEBgRx27FGKjhmHFLT/oPBZ/TDM=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04F9YLcb057666
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 15 May 2020 04:34:21 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 15
- May 2020 04:34:20 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 15 May 2020 04:34:21 -0500
-Received: from [10.250.151.179] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04F9YGRB117213;
-        Fri, 15 May 2020 04:34:17 -0500
-Subject: Re: [PATCH v2] arm: dts: Move am33xx and am43xx mmc nodes to
- sdhci-omap driver
-To:     Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <robh+dt@kernel.org>,
-        <bcousson@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
-References: <20200512203804.9340-1-faiz_abbas@ti.com>
- <20200513162327.GM37466@atomide.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <94025425-95e2-e53d-cfac-a1e73e6c011a@ti.com>
-Date:   Fri, 15 May 2020 15:04:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 15 May 2020 05:34:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:52002 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727803AbgEOJe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 05:34:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD32D2F;
+        Fri, 15 May 2020 02:34:28 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.6])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75A863F71E;
+        Fri, 15 May 2020 02:34:27 -0700 (PDT)
+Date:   Fri, 15 May 2020 10:34:24 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Etienne Carriere <etienne.carriere@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] firmware: arm_scmi: fix SMCCC_RET_NOT_SUPPORTED
+ management
+Message-ID: <20200515093424.GC23671@bogus>
+References: <20200514082428.27864-1-etienne.carriere@linaro.org>
+ <20200514142924.GC23401@bogus>
+ <CAN5uoS_bimZsFqwaODRRWeCe15JMepQa2z9J0+dq7qNfwxRsug@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200513162327.GM37466@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAN5uoS_bimZsFqwaODRRWeCe15JMepQa2z9J0+dq7qNfwxRsug@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
-
-On 13/05/20 9:53 pm, Tony Lindgren wrote:
-> * Faiz Abbas <faiz_abbas@ti.com> [200512 13:39]:
->> Move mmc nodes to be compatible with the sdhci-omap driver. The following
->> modifications are required for omap_hsmmc specific properties:
->>
->> ti,non-removable: convert to the generic mmc non-removable
->> ti,needs-special-reset:  co-opted into the sdhci-omap driver
->> ti,dual-volt: removed. Legacy property not used in am335x or am43xx
->> ti,needs-special-hs-handling: removed. Legacy property not used in am335x
->> or am43xx
->>
->> Also since the sdhci-omap driver does not support runtime PM, explicitly
->> disable the mmc3 instance in the dtsi.
->>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> ---
->>
->> v2: Rebased to latest mainline where all kernel dependancies have been merged.
->>
->> Suspend/Resume is now supported in the sdhci-omap driver.
+On Thu, May 14, 2020 at 05:06:22PM +0200, Etienne Carriere wrote:
+> On Thu, 14 May 2020 at 16:29, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Thu, May 14, 2020 at 10:24:28AM +0200, Etienne Carriere wrote:
+> > > Fix management of argument a0 output value of arm_smccc_1_1_invoke() that
+> > > should consider only SMCCC_RET_NOT_SUPPORTED as reporting an unsupported
+> > > function ID as correctly stated in the inline comment.
+> > >
+> >
+> > I agree on the comment part, but ...
+> >
+> > > Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
+> > > ---
+> > >  drivers/firmware/arm_scmi/smc.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/firmware/arm_scmi/smc.c b/drivers/firmware/arm_scmi/smc.c
+> > > index 49bc4b0e8428..637ad439545f 100644
+> > > --- a/drivers/firmware/arm_scmi/smc.c
+> > > +++ b/drivers/firmware/arm_scmi/smc.c
+> > > @@ -115,7 +115,7 @@ static int smc_send_message(struct scmi_chan_info *cinfo,
+> > >       mutex_unlock(&scmi_info->shmem_lock);
+> > >
+> > >       /* Only SMCCC_RET_NOT_SUPPORTED is valid error code */
+> > > -     if (res.a0)
+> > > +     if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
+> > >               return -EOPNOTSUPP;
+> >
+> > Now this will return 0 for all values other than SMCCC_RET_NOT_SUPPORTED.
+> > Is that what we need ? Or do you see non-zero res.a0 for a success case ?
+> > If later, we need some fixing, otherwise it is safer to leave it as is
+> > IMO.
 > 
-> Great, thanks for updating it.
-> 
-> Keerthy, care to test for am3 and am4?
-> 
+> Firmware following SMCCC v1.x for some OEM/SiP invocation may simply
+> not modify invocation register argument a0 on invocation with a
+> SCMI-SMC transport function ID.
 
-Suspend/resume on am43xx-gpevm is broken right now in mainline and the regression looks
-like it is caused by the display subsystem. I have reported this to Tomi and
-its being investigated.
+Yikes, I need to check specification again for this. I will also
+check with the firmware implementation team/
 
-Meanwhile I have tested this patch with display configs disabled and Keerthy's
-suspend/resume tests pass on both am3 and am4.
+> Resulting in res.a0 == scmi_info->func_id here. Which is, by SMCCC
+> v1.x not an error.
+>
 
-Thanks,
-Faiz
+But that may get fatal the result in some other cases, not here for sure.
+But I would rather flag that as error so that it is fixed. Anyways I will
+check on this again/
+
+> From SMCCC v1.x only SMCCC_RET_NOT_SUPPORTED (-1 signed extended is a
+> reserved ) is a generic return error whatever function ID value.
+>
+
+Not really, there are couple more I think now. But yes I need to check
+on the generic return part.
+
+> Or consider part of the SCMI-SMC transport API that output arg a0
+> shall be 0 on success, SMCCC_RET_NOT_SUPPORTED if function ID is not
+> supported and any non-zero value for non-generic **error** codes.
+>
+
+I prefer that. Anyways I will check and if anything changes I will ping
+back on this thread.
+
+--
+Regards,
+Sudeep
