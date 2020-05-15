@@ -2,166 +2,119 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D95C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EABC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 427F420709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A59020709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pNSPY0+w"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iEZQ1MA6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgEONTR (ORCPT
+        id S1728126AbgEONTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:19:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgEONRB (ORCPT
+        Fri, 15 May 2020 09:19:20 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29896 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726283AbgEONTO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:17:01 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29CD5C05BD09;
-        Fri, 15 May 2020 06:17:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=1J7GDV48P+WkxyUAPsLY8yi6VmGAIbfZnnMIUsA88sE=; b=pNSPY0+wGzcOTijNhI56+Jj0L2
-        JC7V+EVRmc2dVcCxK6jIAFN8Y7pPJBSbBtdqQHOeoPgTAjrxJBKtRpop8AsLqHtAy04tBvKUkaBLh
-        1ICdL4u+bCOhAePci6SCaktDl8fPrIaxz2xlaEc0tQAvOqniALurQn7/MDv4U3KfKIeMLgI0D7kcq
-        8euxSjIRcV8j4vl90PvYNP24wfp5Hc3aOR1OM8dtim4ZufCqbYmX1JdUwhAx5uaiYpcsfj61BSVFk
-        1MPjCprlAu+XE8mmrKsi12+qZOISLRz0a8Q1MOXNef6MrL+YWzi23ycxJsD62WD2K8Tw4AAuPfcuM
-        mP0Hq+EA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZaCy-0005Yh-TC; Fri, 15 May 2020 13:17:00 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v4 09/36] fs: Introduce i_blocks_per_page
-Date:   Fri, 15 May 2020 06:16:29 -0700
-Message-Id: <20200515131656.12890-10-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200515131656.12890-1-willy@infradead.org>
-References: <20200515131656.12890-1-willy@infradead.org>
+        Fri, 15 May 2020 09:19:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589548753;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VVfnMaxbDJwdN3t1pb7+qmfm61G7CFVxjrzZ7nK0lKs=;
+        b=iEZQ1MA6zRRxiv/TBD4Pvm9wJ9cFasGQEftC/kxnKq3nAT9Jbi81XQ8ldCor0FR+dUCzgZ
+        ZXgwwYH5uRXqYZWV6ty0N8kgFB2tlmCuun4z4egxKkOy4V2Xs2RkSn6uAPiE2OGrRlsFjr
+        0jS6yWvtFjqhOSDzyXHyt/oXYYaOad4=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-370-GggsbnMGMgCTgZBiNb796A-1; Fri, 15 May 2020 09:19:11 -0400
+X-MC-Unique: GggsbnMGMgCTgZBiNb796A-1
+Received: by mail-qv1-f70.google.com with SMTP id w6so2575237qvj.4
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:19:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VVfnMaxbDJwdN3t1pb7+qmfm61G7CFVxjrzZ7nK0lKs=;
+        b=WMYy3A/sNKJqKKVT5PRzJzMK0M/hCsx8afxvxZqgb3CzZ4RdOQbGt5eoPGpbKl6h9I
+         ucyxP6Q3VgMBZqdKk5irHEEwbBRFCjXv29gFoEHeqakfPUg9jlGyFO3OxUQePwYjFHIS
+         ZyAE0e38CSrprn0Vlq+pdjlaSq/c4g+uQXrpgBVmMMTCmlBeGr5Zv21qAtmdJ0xdpTsq
+         26rrWtia86QuRKbWpqMFLElpEdBlUAkHudphKMQnTQ30+gn55r0/mJE0ZrJ9ZQgvzXRB
+         wuD/Fd75Hb+aTkWIG+lnm/FNs9eRpD4BgAAcWIP7XdgQLE0ghztLYlQ+pD37hjECl7pR
+         T/Ug==
+X-Gm-Message-State: AOAM531IS19ACx7ERn0mddvV6wduROrao70VZ0h7hUUinb8+YNSwPDoQ
+        NFIerTIClJuF0ebjk7a1vjFm9MJJ3Q7vy+sp/sk/Tszpl/P9MGkrSIeYWNHSvD315I91sCSMIzq
+        1/MABpam92d1kdMgUFJGLcOuIGG0zlM8UYGomC0KO
+X-Received: by 2002:a37:2783:: with SMTP id n125mr2067398qkn.335.1589548751341;
+        Fri, 15 May 2020 06:19:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw2B+IpGj1TzoDwxhUOvlZ0BoV1h+b7uDLIOJqPAZ+BTQYyL5XS0xoOnJyMwQ5EcW6b+8bWBU1/WT/ceTDe9b8=
+X-Received: by 2002:a37:2783:: with SMTP id n125mr2067373qkn.335.1589548751140;
+ Fri, 15 May 2020 06:19:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAKgNAkioH1z-pVimHziWP=ZtyBgCOwoC7ekWGFwzaZ1FPYg-tA@mail.gmail.com>
+ <CAOssrKeNEdpY77xCWvPg-i4vQBoKLX3Y96gvf1kL7Pe29rmq_w@mail.gmail.com>
+In-Reply-To: <CAOssrKeNEdpY77xCWvPg-i4vQBoKLX3Y96gvf1kL7Pe29rmq_w@mail.gmail.com>
+From:   Miklos Szeredi <mszeredi@redhat.com>
+Date:   Fri, 15 May 2020 15:18:59 +0200
+Message-ID: <CAOssrKeDE5XKEA62Kygiis+6AVZodOzLifsaQY=eR0jAa8Z23g@mail.gmail.com>
+Subject: Re: Setting mount propagation type in new mount API
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Petr Vorel <pvorel@suse.cz>,
+        linux-man <linux-man@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Fri, May 15, 2020 at 3:04 PM Miklos Szeredi <mszeredi@redhat.com> wrote:
+>
+> On Fri, May 15, 2020 at 1:40 PM Michael Kerrisk (man-pages)
+> <mtk.manpages@gmail.com> wrote:
+> >
+> > Hello David, Miklos,
+> >
+> > I've been looking at the new mount API (fsopen(), fsconfig(),
+> > fsmount(), move_mount(), etc.) and among the details that remain
+> > mysterious to me is this: how does one set the propagation type
+> > (private/shared/slave/unbindable) of a new mount and change the
+> > propagation type of an existing mount?
+>
+> Existing mount can be chaged with mount(NULL, path, NULL, MS_$(propflag), NULL).
+>
+> To do that with a detached mount created by fsmount(2) the
+> "/proc/self/fd/$fd" trick can be used.
+>
+> The plan was to introduce a mount_setattr(2) syscall, but that hasn't
+> happened yet...  I'm not sure we should be adding propagation flags to
+> fsmount(2), since that is a less generic mechanism than
+> mount_setattr(2) or just plain mount(2) as shown above.
 
-This helper is useful for both large pages in the page cache and for
-supporting block size larger than page size.  Convert some example
-users (we have a few different ways of writing this idiom).
+Also note that only setting MS_SHARED makes sense on a new mount
+returned by fsmount(2) because
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
----
- fs/iomap/buffered-io.c  |  8 ++++----
- fs/jfs/jfs_metapage.c   |  2 +-
- fs/xfs/xfs_aops.c       |  2 +-
- include/linux/pagemap.h | 16 ++++++++++++++++
- 4 files changed, 22 insertions(+), 6 deletions(-)
+ - MS_PRIVATE is a no op, due to mount already being private
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 890c8fcda4f3..4bc37bf8d057 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -46,7 +46,7 @@ iomap_page_create(struct inode *inode, struct page *page)
- {
- 	struct iomap_page *iop = to_iomap_page(page);
- 
--	if (iop || i_blocksize(inode) == PAGE_SIZE)
-+	if (iop || i_blocks_per_page(inode, page) <= 1)
- 		return iop;
- 
- 	iop = kmalloc(sizeof(*iop), GFP_NOFS | __GFP_NOFAIL);
-@@ -152,7 +152,7 @@ iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
- 	unsigned int i;
- 
- 	spin_lock_irqsave(&iop->uptodate_lock, flags);
--	for (i = 0; i < PAGE_SIZE / i_blocksize(inode); i++) {
-+	for (i = 0; i < i_blocks_per_page(inode, page); i++) {
- 		if (i >= first && i <= last)
- 			set_bit(i, iop->uptodate);
- 		else if (!test_bit(i, iop->uptodate))
-@@ -1090,7 +1090,7 @@ iomap_finish_page_writeback(struct inode *inode, struct page *page,
- 		mapping_set_error(inode->i_mapping, -EIO);
- 	}
- 
--	WARN_ON_ONCE(i_blocksize(inode) < PAGE_SIZE && !iop);
-+	WARN_ON_ONCE(i_blocks_per_page(inode, page) > 1 && !iop);
- 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) <= 0);
- 
- 	if (!iop || atomic_dec_and_test(&iop->write_count))
-@@ -1386,7 +1386,7 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
- 	int error = 0, count = 0, i;
- 	LIST_HEAD(submit_list);
- 
--	WARN_ON_ONCE(i_blocksize(inode) < PAGE_SIZE && !iop);
-+	WARN_ON_ONCE(i_blocks_per_page(inode, page) > 1 && !iop);
- 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) != 0);
- 
- 	/*
-diff --git a/fs/jfs/jfs_metapage.c b/fs/jfs/jfs_metapage.c
-index a2f5338a5ea1..176580f54af9 100644
---- a/fs/jfs/jfs_metapage.c
-+++ b/fs/jfs/jfs_metapage.c
-@@ -473,7 +473,7 @@ static int metapage_readpage(struct file *fp, struct page *page)
- 	struct inode *inode = page->mapping->host;
- 	struct bio *bio = NULL;
- 	int block_offset;
--	int blocks_per_page = PAGE_SIZE >> inode->i_blkbits;
-+	int blocks_per_page = i_blocks_per_page(inode, page);
- 	sector_t page_start;	/* address of page in fs blocks */
- 	sector_t pblock;
- 	int xlen;
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 1fd4fb7a607c..5b25f5ee84dc 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -544,7 +544,7 @@ xfs_discard_page(
- 			page, ip->i_ino, offset);
- 
- 	error = xfs_bmap_punch_delalloc_range(ip, start_fsb,
--			PAGE_SIZE / i_blocksize(inode));
-+			i_blocks_per_page(inode, page));
- 	if (error && !XFS_FORCED_SHUTDOWN(mp))
- 		xfs_alert(mp, "page discard unable to remove delalloc mapping.");
- out_invalidate:
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index cacd5a30cb9d..1a0bb387948c 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -850,4 +850,20 @@ static inline int page_mkwrite_check_truncate(struct page *page,
- 	return offset;
- }
- 
-+/**
-+ * i_blocks_per_page - How many blocks fit in this page.
-+ * @inode: The inode which contains the blocks.
-+ * @page: The (potentially large) page.
-+ *
-+ * If the block size is larger than the size of this page, will return
-+ * zero,
-+ *
-+ * Context: Any context.
-+ * Return: The number of filesystem blocks covered by this page.
-+ */
-+static inline
-+unsigned int i_blocks_per_page(struct inode *inode, struct page *page)
-+{
-+	return thp_size(page) >> inode->i_blkbits;
-+}
- #endif /* _LINUX_PAGEMAP_H */
--- 
-2.26.2
+ - same for MS_SLAVE, since it's only different from MS_PRIVATE  on
+mounts receiving propagation, which a new mount by definition isn't
+
+ - MS_UNBINDABLE just prevents move_mount(2) from working so that's
+not really useful, though at least it does something
+
+A more interesting issue is whether we'd want to control the
+propagation of the target when moving into a shared tree.  I.e. should
+there be a MOVE_MOUNT_DONTPROPAGATE flag for move_mount(20 that
+prevents the new mount from being propagated...
+
+Thanks,
+Miklos
 
