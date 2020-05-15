@@ -2,159 +2,85 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD2FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10FDB2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97EA020787
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:19:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3T7qFUb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HmK6qg17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgEOQS7 (ORCPT
+        id S1726297AbgEOQTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:18:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726162AbgEOQS6 (ORCPT
+        Fri, 15 May 2020 12:19:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38354 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726204AbgEOQTY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:18:58 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9559C061A0C;
-        Fri, 15 May 2020 09:18:58 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x13so1143333pfn.11;
-        Fri, 15 May 2020 09:18:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YarDuVlVYf6RY5LhI+cxh6o9ataicSsU1JAbBrOD00M=;
-        b=M3T7qFUboMA/ALBd2rJpebQ3r8DrGmPWoDnBzzxs3XVDGbrPfpXiOI9stRc0Oqc0+g
-         bgKhGdHh39IeIDJaNzXoxWDYPvPGOeKbZ6NvQUYDrO7KWf4lWhqRNgiRPvPcWoigcCrw
-         May/oa+G2m34AnkscQeGeWKjDmBZyM17MczcKDSwBkgPLUMIskD9tMbKYX/JTsU6JA7h
-         84PISpVhKw9MtLSiJryu7edaZNCbqHENbg/kbyYQ6+uWJyl71AazhLeu3R1X6yRfmHHy
-         tKhkievdDnOzwY4EWw4q3oV30KaM88nBu1+TXFiZqaAr3OBBXm2r9eUTc79EPBdw7EHz
-         /Z6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YarDuVlVYf6RY5LhI+cxh6o9ataicSsU1JAbBrOD00M=;
-        b=WPZtfrRCVW/NiKXve8OASrw9caHTWW44UzR00dAXwhNN+wW7c2axQAwgki7VC7TrIM
-         Y+nIPTb9iqsQ6RMe4YWGq3eucSirBc1Eb/sEFHUuc8zh2WQTKQe7ffqsQdzkO0BKKnL0
-         ZVRJm8ksIjfFZdcGT53XFH8AWeNXZOT9F68KZesva8S6JIGsupRQ8L4MBbAs77Raf6q6
-         T1Ci4sYxspJru2MhYwBoZSpNjYNpLLKl2obubfw/YI88L3Cv3QYQIFY0k2ACI1rqB1+v
-         9hsTYstpr0QFvz8HMEYnBeo7BYT9ioRHfMnwL3k3QMTJi/By+3rE7iRWs0dfFhph1fxd
-         ljpg==
-X-Gm-Message-State: AOAM533Q4Z9T8/XomObiR8RBk7sO5hGUAY6YIFooL0eivSn552bJXpSO
-        gRtlhdzkgo3Nurf23WfW3cQGnbr/
-X-Google-Smtp-Source: ABdhPJxYaLz5Tf88VWPvMDcn/Vl/pIVrcT14u0MxHdO2GhTVgz33TdTWVePdJ4CpSibF1y9crWpO2w==
-X-Received: by 2002:a62:1d4c:: with SMTP id d73mr4503216pfd.226.1589559537503;
-        Fri, 15 May 2020 09:18:57 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id j32sm2093718pgb.55.2020.05.15.09.18.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 09:18:56 -0700 (PDT)
-Subject: Re: [PATCH] net: phy: realtek: clear interrupt during init for
- rtl8211f
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200512184601.40b1758a@xhacker.debian>
- <7735a257-21ff-e6c0-acdc-f5ee187b1f57@gmail.com>
- <20200513145151.04a6ee46@xhacker.debian>
- <a0aac85d-064f-2672-370b-404fd83e83f3@gmail.com>
- <20200514142537.63b478fd@xhacker.debian>
- <bbb70281-d477-d227-d1d2-aeecffdb6299@gmail.com>
- <20200515154128.41ee2afa@xhacker.debian>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <18d7bdc7-b9f3-080f-f9df-a6ff61cd6a87@gmail.com>
-Date:   Fri, 15 May 2020 09:18:53 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200515154128.41ee2afa@xhacker.debian>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 15 May 2020 12:19:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589559563;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc; bh=jyrqhLt/j8WM6W25F/4nHaguhXzjEnraWUNGaaQDntQ=;
+        b=HmK6qg17Ccbj1VqTmlNjtnQIF62j/aZJt7g2A7B96DNMXHykGZx6GOZf8igysrGDFQCpf6
+        Gzk6bbGqh6yLOJ4SAjSzZVq5jFJr+W6SvoJ+wYEQc7Vlh++cIx9TXbNrKNqOvdHr1dkGPE
+        BtE6CSWily9GSYA/kLFOiOyJy6zydkI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-bqPGaupuNxmS7POCrWErMQ-1; Fri, 15 May 2020 12:19:21 -0400
+X-MC-Unique: bqPGaupuNxmS7POCrWErMQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2079818FF661;
+        Fri, 15 May 2020 16:19:20 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF12A79B6;
+        Fri, 15 May 2020 16:19:19 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH] KVM: x86: emulate reserved nops from 0f/18 to 0f/1f
+Date:   Fri, 15 May 2020 12:19:19 -0400
+Message-Id: <20200515161919.29249-1-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Instructions starting with 0f18 up to 0f1f are reserved nops, except those
+that were assigned to MPX.  These include the endbr markers used by CET.
+List them correctly in the opcode table.
 
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/emulate.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-On 5/15/2020 12:41 AM, Jisheng Zhang wrote:
-> On Thu, 14 May 2020 21:50:53 +0200 Heiner Kallweit wrote:
-> 
->>
->>
->> On 14.05.2020 08:25, Jisheng Zhang wrote:
->>> On Wed, 13 May 2020 20:45:13 +0200 Heiner Kallweit wrote:
->>>  
->>>>
->>>> On 13.05.2020 08:51, Jisheng Zhang wrote:  
->>>>> Hi,
->>>>>
->>>>> On Tue, 12 May 2020 20:43:40 +0200 Heiner Kallweit wrote:
->>>>>  
->>>>>>
->>>>>>
->>>>>> On 12.05.2020 12:46, Jisheng Zhang wrote:  
->>>>>>> The PHY Register Accessible Interrupt is enabled by default, so
->>>>>>> there's such an interrupt during init. In PHY POLL mode case, the
->>>>>>> INTB/PMEB pin is alway active, it is not good. Clear the interrupt by
->>>>>>> calling rtl8211f_ack_interrupt().  
->>>>>>
->>>>>> As you say "it's not good" w/o elaborating a little bit more on it:
->>>>>> Do you face any actual issue? Or do you just think that it's not nice?  
->>>>>
->>>>>
->>>>> The INTB/PMEB pin can be used in two different modes:
->>>>> INTB: used for interrupt
->>>>> PMEB: special mode for Wake-on-LAN
->>>>>
->>>>> The PHY Register Accessible Interrupt is enabled by
->>>>> default, there's always such an interrupt during the init. In PHY POLL mode
->>>>> case, the pin is always active. If platforms plans to use the INTB/PMEB pin
->>>>> as WOL, then the platform will see WOL active. It's not good.
->>>>>  
->>>> The platform should listen to this pin only once WOL has been configured and
->>>> the pin has been switched to PMEB function. For the latter you first would
->>>> have to implement the set_wol callback in the PHY driver.
->>>> Or where in which code do you plan to switch the pin function to PMEB?  
->>>
->>> I think it's better to switch the pin function in set_wol callback. But this
->>> is another story. No matter WOL has been configured or not, keeping the
->>> INTB/PMEB pin active is not good. what do you think?
->>>  
->>
->> It shouldn't hurt (at least it didn't hurt for the last years), because no
->> listener should listen to the pin w/o having it configured before.
->> So better extend the PHY driver first (set_wol, ..), and then do the follow-up
->> platform changes (e.g. DT config of a connected GPIO).
-> 
-> There are two sides involved here: the listener, it should not listen to the pin
-> as you pointed out; the phy side, this patch tries to make the phy side
-> behave normally -- not keep the INTB/PMEB pin always active. The listener
-> side behaves correctly doesn't mean the phy side could keep the pin active.
-> 
-> When .set_wol isn't implemented, this patch could make the system suspend/resume
-> work properly.
-> 
-> PS: even with set_wol implemented as configure the pin mode, I think we
-> still need to clear the interrupt for phy poll mode either in set_wol
-> or as this patch does.
-
-I agree with Jisheng here, Heiner, is there a reason you are pushing
-back on the change? Acknowledging prior interrupts while configuring the
-PHY is a common and established practice.
+diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+index de5476f8683e..d0e2825ae617 100644
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -4800,8 +4800,12 @@ static const struct opcode twobyte_table[256] = {
+ 	GP(ModRM | DstReg | SrcMem | Mov | Sse, &pfx_0f_10_0f_11),
+ 	GP(ModRM | DstMem | SrcReg | Mov | Sse, &pfx_0f_10_0f_11),
+ 	N, N, N, N, N, N,
+-	D(ImplicitOps | ModRM | SrcMem | NoAccess),
+-	N, N, N, N, N, N, D(ImplicitOps | ModRM | SrcMem | NoAccess),
++	D(ImplicitOps | ModRM | SrcMem | NoAccess), /* 4 * prefetch + 4 * reserved NOP */
++	D(ImplicitOps | ModRM | SrcMem | NoAccess), N, N,
++	D(ImplicitOps | ModRM | SrcMem | NoAccess), /* 8 * reserved NOP */
++	D(ImplicitOps | ModRM | SrcMem | NoAccess), /* 8 * reserved NOP */
++	D(ImplicitOps | ModRM | SrcMem | NoAccess), /* 8 * reserved NOP */
++	D(ImplicitOps | ModRM | SrcMem | NoAccess), /* NOP + 7 * reserved NOP */
+ 	/* 0x20 - 0x2F */
+ 	DIP(ModRM | DstMem | Priv | Op3264 | NoMod, cr_read, check_cr_read),
+ 	DIP(ModRM | DstMem | Priv | Op3264 | NoMod, dr_read, check_dr_read),
 -- 
-Florian
+2.18.2
+
