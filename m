@@ -2,216 +2,120 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DFEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA18206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54B020709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:19:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ATUAU1/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgEOIS0 (ORCPT
+        id S1727844AbgEOITG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:18:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56540 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726648AbgEOIS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:18:26 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 17AAD492B3BEF0468190;
-        Fri, 15 May 2020 16:18:22 +0800 (CST)
-Received: from localhost.localdomain (10.175.118.36) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 15 May 2020 16:18:12 +0800
-From:   Luo bin <luobin9@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, <luobin9@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-Subject: [PATCH net-next] hinic: add set_channels ethtool_ops support
-Date:   Fri, 15 May 2020 00:35:47 +0000
-Message-ID: <20200515003547.27359-1-luobin9@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 15 May 2020 04:19:06 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15601 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726716AbgEOITF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 04:19:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589530745; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=b15zrAYlQprMOsxRmwfaMv2/XJdzaN8Ceooz+8pLgE4=;
+ b=ATUAU1/w4xQ7JghRoIZHCHWwZrO4BWmSQ1KgtDVum6z8cr0IBomqlFtssGXLv+kwER1YkOln
+ KBppyQuOgu4qlORIFjI/fLfUtvI5CL0IdQFPSciNUFtfM5GRnVtjWfqhbMBdNd4szOGWfs5H
+ 1fiYLE3JxHdwSsdZ3mVf7td9GOw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ebe506f5d62762fd4a5b18a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 15 May 2020 08:18:55
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5C29FC43637; Fri, 15 May 2020 08:18:54 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9BAE7C433D2;
+        Fri, 15 May 2020 08:18:53 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.118.36]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 15 May 2020 13:48:53 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     will@kernel.org, robin.murphy@arm.com, joro@8bytes.org
+Cc:     bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, dianders@chromium.org,
+        evgreen@chromium.org, mka@chromium.org,
+        linux-kernel-owner@vger.kernel.org, swboyd@chromium.org
+Subject: Re: [PATCH v6] iommu/arm-smmu-qcom: Request direct mapping for modem
+ device
+In-Reply-To: <20200511175532.25874-1-sibis@codeaurora.org>
+References: <20200511175532.25874-1-sibis@codeaurora.org>
+Message-ID: <0f0679f57a213536dfbba78b5c2dab5c@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add support to change TX/RX queue number with ethtool -L
+Hey Will,
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
----
- .../net/ethernet/huawei/hinic/hinic_ethtool.c | 67 +++++++++++++++++--
- .../net/ethernet/huawei/hinic/hinic_hw_dev.c  |  7 ++
- .../net/ethernet/huawei/hinic/hinic_hw_dev.h  |  2 +
- .../net/ethernet/huawei/hinic/hinic_main.c    |  5 +-
- drivers/net/ethernet/huawei/hinic/hinic_tx.c  |  5 ++
- 5 files changed, 79 insertions(+), 7 deletions(-)
+On 2020-05-11 23:25, Sibi Sankar wrote:
+> The modem remote processor has two access paths to DDR. One path is
+> directly connected to DDR and another path goes through an SMMU. The
+> SMMU path is configured to be a direct mapping because it's used by
+> various peripherals in the modem subsystem. Typically this direct
+> mapping is configured statically at EL2 by QHEE (Qualcomm's Hypervisor
+> Execution Environment) before the kernel is entered.
+> 
+> In certain firmware configuration, especially when the kernel is 
+> already
+> in full control of the SMMU, defer programming the modem SIDs to the
+> kernel. Let's add compatibles here so that we can have the kernel
+> program the SIDs for the modem in these cases.
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-index ace18d258049..92a0e3bd19c3 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-@@ -619,14 +619,68 @@ static void hinic_get_channels(struct net_device *netdev,
- 	struct hinic_dev *nic_dev = netdev_priv(netdev);
- 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
- 
--	channels->max_rx = hwdev->nic_cap.max_qps;
--	channels->max_tx = hwdev->nic_cap.max_qps;
-+	channels->max_rx = 0;
-+	channels->max_tx = 0;
- 	channels->max_other = 0;
--	channels->max_combined = 0;
--	channels->rx_count = hinic_hwdev_num_qps(hwdev);
--	channels->tx_count = hinic_hwdev_num_qps(hwdev);
-+	channels->max_combined = nic_dev->max_qps;
-+	channels->rx_count = 0;
-+	channels->tx_count = 0;
- 	channels->other_count = 0;
--	channels->combined_count = 0;
-+	channels->combined_count = hinic_hwdev_num_qps(hwdev);
-+}
-+
-+int hinic_set_channels(struct net_device *netdev,
-+		       struct ethtool_channels *channels)
-+{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	unsigned int count = channels->combined_count;
-+	int err;
-+
-+	if (!count) {
-+		netif_err(nic_dev, drv, netdev,
-+			  "Unsupported combined_count: 0\n");
-+		return -EINVAL;
-+	}
-+
-+	if (channels->tx_count || channels->rx_count || channels->other_count) {
-+		netif_err(nic_dev, drv, netdev,
-+			  "Setting rx/tx/other count not supported\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!(nic_dev->flags & HINIC_RSS_ENABLE)) {
-+		netif_err(nic_dev, drv, netdev,
-+			  "This function doesn't support RSS, only support 1 queue pair\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (count > nic_dev->max_qps) {
-+		netif_err(nic_dev, drv, netdev,
-+			  "Combined count %d exceeds limit %d\n",
-+			  count, nic_dev->max_qps);
-+		return -EINVAL;
-+	}
-+
-+	netif_info(nic_dev, drv, netdev, "Set max combined queue number from %d to %d\n",
-+		   hinic_hwdev_num_qps(nic_dev->hwdev), count);
-+
-+	if (netif_running(netdev)) {
-+		netif_info(nic_dev, drv, netdev, "Restarting netdev\n");
-+		hinic_close(netdev);
-+
-+		hinic_update_num_qps(nic_dev->hwdev, count);
-+
-+		err = hinic_open(netdev);
-+		if (err) {
-+			netif_err(nic_dev, drv, netdev,
-+				  "Failed to open netdev\n");
-+			return -EFAULT;
-+		}
-+	} else {
-+		hinic_update_num_qps(nic_dev->hwdev, count);
-+	}
-+
-+	return 0;
- }
- 
- static int hinic_get_rss_hash_opts(struct hinic_dev *nic_dev,
-@@ -1219,6 +1273,7 @@ static const struct ethtool_ops hinic_ethtool_ops = {
- 	.get_ringparam = hinic_get_ringparam,
- 	.set_ringparam = hinic_set_ringparam,
- 	.get_channels = hinic_get_channels,
-+	.set_channels = hinic_set_channels,
- 	.get_rxnfc = hinic_get_rxnfc,
- 	.set_rxnfc = hinic_set_rxnfc,
- 	.get_rxfh_key_size = hinic_get_rxfh_key_size,
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 0245da02efbb..d40a0a5d2c8d 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -858,6 +858,13 @@ int hinic_hwdev_num_qps(struct hinic_hwdev *hwdev)
- 	return nic_cap->num_qps;
- }
- 
-+void hinic_update_num_qps(struct hinic_hwdev *hwdev, u16 num_qp)
-+{
-+	struct hinic_cap *nic_cap = &hwdev->nic_cap;
-+
-+	nic_cap->num_qps = num_qp;
-+}
-+
- /**
-  * hinic_hwdev_get_sq - get SQ
-  * @hwdev: the NIC HW device
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-index 71ea7e46dbbc..e7dfe5ae2f8b 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-@@ -359,6 +359,8 @@ int hinic_hwdev_max_num_qps(struct hinic_hwdev *hwdev);
- 
- int hinic_hwdev_num_qps(struct hinic_hwdev *hwdev);
- 
-+void hinic_update_num_qps(struct hinic_hwdev *hwdev, u16 num_qp);
-+
- struct hinic_sq *hinic_hwdev_get_sq(struct hinic_hwdev *hwdev, int i);
- 
- struct hinic_rq *hinic_hwdev_get_rq(struct hinic_hwdev *hwdev, int i);
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-index e3ff119fe341..5a130c982a02 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -326,7 +326,6 @@ static void hinic_enable_rss(struct hinic_dev *nic_dev)
- 	int i, node, err = 0;
- 	u16 num_cpus = 0;
- 
--	nic_dev->max_qps = hinic_hwdev_max_num_qps(hwdev);
- 	if (nic_dev->max_qps <= 1) {
- 		nic_dev->flags &= ~HINIC_RSS_ENABLE;
- 		nic_dev->rss_limit = nic_dev->max_qps;
-@@ -1043,6 +1042,10 @@ static int nic_dev_init(struct pci_dev *pdev)
- 	nic_dev->rq_depth = HINIC_RQ_DEPTH;
- 	nic_dev->sriov_info.hwdev = hwdev;
- 	nic_dev->sriov_info.pdev = pdev;
-+	nic_dev->max_qps = num_qps;
-+
-+	if (nic_dev->max_qps > 1)
-+		nic_dev->flags |= HINIC_RSS_ENABLE;
- 
- 	sema_init(&nic_dev->mgmt_lock, 1);
- 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-index 4c66a0bc1b28..6da761d7a6ef 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-@@ -470,6 +470,11 @@ netdev_tx_t hinic_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
- 	struct hinic_txq *txq;
- 	struct hinic_qp *qp;
- 
-+	if (unlikely(!netif_carrier_ok(netdev))) {
-+		dev_kfree_skb_any(skb);
-+		return NETDEV_TX_OK;
-+	}
-+
- 	txq = &nic_dev->txqs[q_id];
- 	qp = container_of(txq->sq, struct hinic_qp, sq);
- 
+Now that the patch is reworded can
+you please pick it up since its the
+only pending path from the series.
+
+> 
+> V6
+>  * Rebased on Will's for-joerg/arm-smmu/updates
+>  * Reword commit message and add more details [Stephen]
+> 
+>  drivers/iommu/arm-smmu-qcom.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/iommu/arm-smmu-qcom.c 
+> b/drivers/iommu/arm-smmu-qcom.c
+> index 5bedf21587a56..cf01d0215a397 100644
+> --- a/drivers/iommu/arm-smmu-qcom.c
+> +++ b/drivers/iommu/arm-smmu-qcom.c
+> @@ -17,7 +17,9 @@ static const struct of_device_id
+> qcom_smmu_client_of_match[] = {
+>  	{ .compatible = "qcom,mdp4" },
+>  	{ .compatible = "qcom,mdss" },
+>  	{ .compatible = "qcom,sc7180-mdss" },
+> +	{ .compatible = "qcom,sc7180-mss-pil" },
+>  	{ .compatible = "qcom,sdm845-mdss" },
+> +	{ .compatible = "qcom,sdm845-mss-pil" },
+>  	{ }
+>  };
+
 -- 
-2.17.1
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
