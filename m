@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46454C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA34C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22A2D20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55BBE20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nrbQmsny"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WhPmJBJS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgEONR3 (ORCPT
+        id S1726948AbgEONR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:17:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51282 "EHLO
+        Fri, 15 May 2020 09:17:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgEONRE (ORCPT
+        with ESMTP id S1726643AbgEONRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 May 2020 09:17:04 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DAAAC05BD0E;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F490C05BD0A;
         Fri, 15 May 2020 06:17:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=TfKJJimoKlvRsCM0paiVClt+UpHKBMIygN+uHMldA9w=; b=nrbQmsnyDrNzpDeCvgGAQ6d9Zr
-        N7w9Tc/yqPDrXRlMvfBajD4Gf8y0bJljDa9818uaX/Bfih9si5rm/N2jnX9m0RIg8Me5l1905nTlB
-        HJOm/DJ5lNs9+gounmGcw4AhzzTOsOTgeYlqZF7mevzEtzkc7Ae/QL4qU5M4pu8v/v7v49VKAGuMe
-        dK/fOlcjhomGUZS1iKLmJS+qQtvT8QUdvBt+G5YMFqrjb35E8D+d20E28FcVp8cFncxjbIgG46dKS
-        ZqfTX0DaTO8eG8lB/T818szUf6+sV68HnMvEp5gEnkRCtbgSTdRox+VqpZsQBPwdUCLGXexUM25ir
-        mN/MKKvw==;
+        bh=8tGdVMSWeas8R2bSKE6AqR3+R5LRIfaVDMdjwwPPyK0=; b=WhPmJBJSOgnOF3ooep5OzVpDYF
+        POCkNm2xsyLEnK7pW6aZr7fW8VRnyBsNlzuCaulgdtx1bij7wSF0fyiL4lZbF5+7VIYoBpPR7kBmQ
+        N4/bFgssgva/U9r3Gt5ncw6Qz6cigrYUtc5HAG7Gh8gppgTxZRaIr/KtTLydtM07h5JT6xu1JYS5I
+        axv23xhYPll1i7f/UyAwrzSrFxdiNUW8vEP4anFDJboao5DExIINtcORx9BRaKMpowsW5eMPjar75
+        SLygYKWBIj04UrEP4qQ/4i19bkBKRR2bkfQoHvFnrHsOG2B2GITT8w6Ay+F9fsB3TCB2jV3Rrc0YJ
+        KKTsXm8A==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZaD0-0005pi-Ts; Fri, 15 May 2020 13:17:02 +0000
+        id 1jZaCy-0005Sp-BI; Fri, 15 May 2020 13:17:00 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 34/36] mm: Allow PageReadahead to be set on head pages
-Date:   Fri, 15 May 2020 06:16:54 -0700
-Message-Id: <20200515131656.12890-35-willy@infradead.org>
+Subject: [PATCH v4 02/36] mm: Simplify PageDoubleMap with PF_SECOND policy
+Date:   Fri, 15 May 2020 06:16:22 -0700
+Message-Id: <20200515131656.12890-3-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200515131656.12890-1-willy@infradead.org>
 References: <20200515131656.12890-1-willy@infradead.org>
@@ -57,66 +57,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Adjust the callers to only call PageReadahead on the head page.
+Introduce the new page policy of PF_SECOND which lets us use the
+normal pageflags generation machinery to create the various DoubleMap
+manipulation functions.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/page-flags.h |  4 ++--
- mm/filemap.c               | 10 +++++-----
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ include/linux/page-flags.h | 40 ++++++++++----------------------------
+ 1 file changed, 10 insertions(+), 30 deletions(-)
 
 diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 979460df4768..a3110d675cd0 100644
+index de6e0696f55c..979460df4768 100644
 --- a/include/linux/page-flags.h
 +++ b/include/linux/page-flags.h
-@@ -377,8 +377,8 @@ PAGEFLAG(MappedToDisk, mappedtodisk, PF_NO_TAIL)
- /* PG_readahead is only used for reads; PG_reclaim is only for writes */
- PAGEFLAG(Reclaim, reclaim, PF_NO_TAIL)
- 	TESTCLEARFLAG(Reclaim, reclaim, PF_NO_TAIL)
--PAGEFLAG(Readahead, reclaim, PF_NO_COMPOUND)
--	TESTCLEARFLAG(Readahead, reclaim, PF_NO_COMPOUND)
-+PAGEFLAG(Readahead, reclaim, PF_ONLY_HEAD)
-+	TESTCLEARFLAG(Readahead, reclaim, PF_ONLY_HEAD)
+@@ -232,6 +232,9 @@ static inline void page_init_poison(struct page *page, size_t size)
+  *
+  * PF_NO_COMPOUND:
+  *     the page flag is not relevant for compound pages.
++ *
++ * PF_SECOND:
++ *     the page flag is stored in the first tail page.
+  */
+ #define PF_POISONED_CHECK(page) ({					\
+ 		VM_BUG_ON_PGFLAGS(PagePoisoned(page), page);		\
+@@ -247,6 +250,9 @@ static inline void page_init_poison(struct page *page, size_t size)
+ #define PF_NO_COMPOUND(page, enforce) ({				\
+ 		VM_BUG_ON_PGFLAGS(enforce && PageCompound(page), page);	\
+ 		PF_POISONED_CHECK(page); })
++#define PF_SECOND(page, enforce) ({					\
++		VM_BUG_ON_PGFLAGS(!PageHead(page), page);		\
++		PF_POISONED_CHECK(&page[1]); })
  
- #ifdef CONFIG_HIGHMEM
  /*
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 56eb086acef8..f3f03705c025 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2067,7 +2067,7 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
- 			if (unlikely(page == NULL))
- 				goto no_cached_page;
- 		}
--		if (PageReadahead(page)) {
-+		if (PageReadahead(compound_head(page))) {
- 			page_cache_async_readahead(mapping,
- 					ra, filp, page,
- 					index, last_index - index);
-@@ -2454,7 +2454,7 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
- 		return fpin;
- 	if (ra->mmap_miss > 0)
- 		ra->mmap_miss--;
--	if (PageReadahead(page)) {
-+	if (PageReadahead(compound_head(page))) {
- 		fpin = maybe_unlock_mmap_for_io(vmf, fpin);
- 		page_cache_async_readahead(mapping, ra, file,
- 					   page, offset, ra->ra_pages);
-@@ -2640,11 +2640,11 @@ void filemap_map_pages(struct vm_fault *vmf,
- 		/* Has the page moved or been split? */
- 		if (unlikely(page != xas_reload(&xas)))
- 			goto skip;
-+		if (PageReadahead(page))
-+			goto skip;
- 		page = find_subpage(page, xas.xa_index);
+  * Macros to create function definitions for page flags
+@@ -685,42 +691,15 @@ static inline int PageTransTail(struct page *page)
+  *
+  * See also __split_huge_pmd_locked() and page_remove_anon_compound_rmap().
+  */
+-static inline int PageDoubleMap(struct page *page)
+-{
+-	return PageHead(page) && test_bit(PG_double_map, &page[1].flags);
+-}
+-
+-static inline void SetPageDoubleMap(struct page *page)
+-{
+-	VM_BUG_ON_PAGE(!PageHead(page), page);
+-	set_bit(PG_double_map, &page[1].flags);
+-}
+-
+-static inline void ClearPageDoubleMap(struct page *page)
+-{
+-	VM_BUG_ON_PAGE(!PageHead(page), page);
+-	clear_bit(PG_double_map, &page[1].flags);
+-}
+-static inline int TestSetPageDoubleMap(struct page *page)
+-{
+-	VM_BUG_ON_PAGE(!PageHead(page), page);
+-	return test_and_set_bit(PG_double_map, &page[1].flags);
+-}
+-
+-static inline int TestClearPageDoubleMap(struct page *page)
+-{
+-	VM_BUG_ON_PAGE(!PageHead(page), page);
+-	return test_and_clear_bit(PG_double_map, &page[1].flags);
+-}
+-
++PAGEFLAG(DoubleMap, double_map, PF_SECOND)
++	TESTSCFLAG(DoubleMap, double_map, PF_SECOND)
+ #else
+ TESTPAGEFLAG_FALSE(TransHuge)
+ TESTPAGEFLAG_FALSE(TransCompound)
+ TESTPAGEFLAG_FALSE(TransCompoundMap)
+ TESTPAGEFLAG_FALSE(TransTail)
+ PAGEFLAG_FALSE(DoubleMap)
+-	TESTSETFLAG_FALSE(DoubleMap)
+-	TESTCLEARFLAG_FALSE(DoubleMap)
++	TESTSCFLAG_FALSE(DoubleMap)
+ #endif
  
--		if (!PageUptodate(page) ||
--				PageReadahead(page) ||
--				PageHWPoison(page))
-+		if (!PageUptodate(page) || PageHWPoison(page))
- 			goto skip;
- 		if (!trylock_page(page))
- 			goto skip;
+ /*
+@@ -875,6 +854,7 @@ static inline int page_has_private(struct page *page)
+ #undef PF_ONLY_HEAD
+ #undef PF_NO_TAIL
+ #undef PF_NO_COMPOUND
++#undef PF_SECOND
+ #endif /* !__GENERATING_BOUNDS_H */
+ 
+ #endif	/* PAGE_FLAGS_H */
 -- 
 2.26.2
 
