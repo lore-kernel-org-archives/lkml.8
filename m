@@ -2,107 +2,91 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CBCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 193DC20671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C986D20671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:18:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ut1seaLF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MlVPl7tH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgEOCRr (ORCPT
+        id S1728119AbgEOCSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 22:17:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726122AbgEOCRq (ORCPT
+        Thu, 14 May 2020 22:18:03 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:31839 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728018AbgEOCSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 22:17:46 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DAFBC061A0C;
-        Thu, 14 May 2020 19:17:46 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id u10so311763pls.8;
-        Thu, 14 May 2020 19:17:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=dP2dgHJL+/ZZAyIJxLUBe2ULDQdO+RZITSQnrYFRs8k=;
-        b=Ut1seaLFauwVnQHgW/+30SJULYTJuUnde7WoEdAECG6S+bjjEqZYspgxBjp4Tuelzf
-         LYsRNO/vSHPNcUPEWDrJQ0AWifCWK0QcHVrQpiE/iNNeMT8fhAVSYvgFwdA+XRDa4o/T
-         IK1YdH4t8OJq4aWYiUEd/E6VPaYHp0DiRjdEVPAfF+OF6xnSnLH1WPi4cfgusm+gj/pO
-         ukVboi+pOr1pjfBUrFbILXGce3ALXsjR0ZxkKY4Crq15bk5naKbH2V2x/CSqs5LAdZui
-         TLTY96B9fpUrvv7ucIQgqN7xnnQ1NLMIorsxqGNV9skzOeC1MBzHLnfU6+dkWP5vqKxm
-         2tdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=dP2dgHJL+/ZZAyIJxLUBe2ULDQdO+RZITSQnrYFRs8k=;
-        b=DhkcOBW58VP/FKDSAJ4CthmQ6rKTW5MhUHwIpz4VdqLD28vpOyDNmrkA9IAYCMc8fT
-         t1NO09mZY942Jo9HEH22JmmG9YVbYW58KHCyCtTZh2P7vt/YFz1wMAA09Ea7rg4UE6O8
-         6IAkF8JJYqmOHuk1zMqI7FcsgsYIjFxWoKAyFbXj0/XdOw9X8ByUgtztg6iDubWI5QoZ
-         6kaLhfXw4xU3EkLT1wJQZr0AKuHyC3LtheeAeR7TWeEl0xsZU80KjTclC6mfsKAdadpn
-         iGdG24L/+M083oQwxl0UUo+2F/jnB95kvoiSxb7PvjfSh0nzG8pVNc+f/dOJlBIHFa5+
-         /1yw==
-X-Gm-Message-State: AOAM532KszpmjbHtsT57vhz0UlYcdZC7s96Lm0WGlMK4suME104m6+Je
-        Ba8bTJfloFMQLBgMz4lOc48=
-X-Google-Smtp-Source: ABdhPJxXbdIBZIjwkn7ZbY+hGsjbDKfIfe1ZdO9VXxwzM1xJNTPv8EDLt6su+DiiWRPBkEf4kiwP3Q==
-X-Received: by 2002:a17:902:328:: with SMTP id 37mr1557483pld.35.1589509065945;
-        Thu, 14 May 2020 19:17:45 -0700 (PDT)
-Received: from debian.debian-2 ([154.223.71.34])
-        by smtp.gmail.com with ESMTPSA id d2sm439366pfa.164.2020.05.14.19.17.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 May 2020 19:17:44 -0700 (PDT)
-Date:   Fri, 15 May 2020 10:17:40 +0800
-From:   Bo YU <tsu.yubo@gmail.com>
-To:     clm@fb.com, josef@toxicpanda.com, sterba@suse.com
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tsu.yubo@gmail.com
-Subject: [PATCH -next] fs/btrfs: Fix unlocking in btrfs_ref_tree_mod
-Message-ID: <20200515021731.cb5y557wsxf66fo3@debian.debian-2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Thu, 14 May 2020 22:18:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589509081; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=LIkYfJRN7PLEeEi/ulUhazbev/1bwcEkEalsKq0bNh4=; b=MlVPl7tHjjlwUtMCbQe4aK8+UC8a6Ms8/iUKFa9EpvzyK8Gcks1EidASVD9FCraVAFdpZOnd
+ Xwk8YgK/ZdTyRr/9linaPf6YIW7eziA0/XO2We/6zV1qncCiBnkV/kNjfWiLLNeopTLO9wYN
+ rbLhQi3SgzL3u3vmuKKJxyQYhnw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ebdfbccaefa5a01cc8977ca (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 15 May 2020 02:17:48
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 80536C432C2; Fri, 15 May 2020 02:17:47 +0000 (UTC)
+Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 20700C433D2;
+        Fri, 15 May 2020 02:17:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 20700C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org, hemantk@codeaurora.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH] bus: mhi: core: Use current ee in intvec handler
+Date:   Thu, 14 May 2020 20:17:29 -0600
+Message-Id: <1589509049-14532-1-git-send-email-jhugo@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It adds spin_lock() in add_block_entry() but out path does not unlock
-it.
+The intvec handler stores the caches ee in a local variable for use in
+processing the intvec.  It should instead use the current ee which is
+read at the beginning of the intvec incase that the intvec is related to
+an ee change.  Otherwise, the handler might make the wrong decision
+based on an incorrect ee.
 
-Detected by CoversityScan, CID# 1463343:(Missing unlock)
-
-Fixes: fd708b81d972a (Btrfs: add a extent ref verify tool)
-Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+Fixes: 3000f85b8f47 (bus: mhi: core: Add support for basic PM operations)
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- fs/btrfs/ref-verify.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/bus/mhi/core/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/ref-verify.c b/fs/btrfs/ref-verify.c
-index 7887317033c9..8f644511006d 100644
---- a/fs/btrfs/ref-verify.c
-+++ b/fs/btrfs/ref-verify.c
-@@ -894,8 +894,10 @@ int btrfs_ref_tree_mod(struct btrfs_fs_info *fs_info,
- out_unlock:
- 	spin_unlock(&fs_info->ref_verify_lock);
- out:
--	if (ret)
-+	if (ret) {
-+		spin_unlock(&fs_info->ref_verify_lock);
- 		btrfs_clear_opt(fs_info->mount_opt, REF_VERIFY);
-+	}
- 	return ret;
- }
-
---
-2.11.0
+diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+index 7272a5a..0a41fe5 100644
+--- a/drivers/bus/mhi/core/main.c
++++ b/drivers/bus/mhi/core/main.c
+@@ -386,8 +386,8 @@ irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *dev)
+ 	write_lock_irq(&mhi_cntrl->pm_lock);
+ 	if (MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
+ 		state = mhi_get_mhi_state(mhi_cntrl);
+-		ee = mhi_cntrl->ee;
+ 		mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
++		ee = mhi_cntrl->ee;
+ 	}
+ 
+ 	if (state == MHI_STATE_SYS_ERR) {
+-- 
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
 
