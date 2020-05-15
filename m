@@ -2,114 +2,210 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAD8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A389C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE3BE206DC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589511051;
-	bh=RzJEhITZbWZpNq+mY9foajRd7R6ugOd0UfGm2M8BNsk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MrKWqbxr2mWV+1OzFapiDewLWg1klAA9iQKNxEABfGBDbci97g22bQXO51QX0eA0/
-	 Fi6NzObJzDNXsFZQHufgV2dyv2jvqPdRDiKq8JadsWmkFYatT+WvYR4Gn1wlu3CkH+
-	 EsRN2hnKmr8Myz3u2dc6y47Me6CBlIjGPhOFwnhk=
+	by mail.kernel.org (Postfix) with ESMTP id 81ADA20734
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgEOCuu (ORCPT
+        id S1728275AbgEOC6Y convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 22:50:50 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39987 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgEOCut (ORCPT
+        Thu, 14 May 2020 22:58:24 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:43156 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727029AbgEOC6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 22:50:49 -0400
-Received: by mail-ot1-f66.google.com with SMTP id d26so779867otc.7;
-        Thu, 14 May 2020 19:50:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ozglBc+sLmCi94fyi9hM4nMjLfjck0uiAKDPMtJ/ktQ=;
-        b=ECr0/UAyKyFFDJ2ku3XmPI+IYNoD1zjVfsHkXTU2ANlRVHZ7cWvSfbHLwLqLA5cUjY
-         vKdcBSdLDbpY2qiojfBzO5Jvu6FcYhDmwPi6YOpUlgIo9wJ8RJcSr6F4p9T0QKAalWob
-         yFpd0XwOpIHnTRoZqAS1QQR70nfhZ98klOnUFf4FILfn4QKiiXxStBtctn+rmTQ8lHcj
-         H34xjdQA/aAV5Kp1CmtaO6INa3715cnwGMFGg6/pBpMKygs1vVSDQU1kJNyLNbx03cvD
-         ZiomcyYOdIdjCexPmshbyprfnu1HfHe+RAqg6O+s9x8975NhwsrVGv40zE1v15kGeLNb
-         MPlQ==
-X-Gm-Message-State: AOAM531svvF5TG5dhnjmLUyBgVQRJZqOpJbqQbsDQcoj/lkOIRkppxiL
-        qvWrbtwzjIaOW0YAyZrW1w==
-X-Google-Smtp-Source: ABdhPJyf3I3BEvGznd2LmPlqdpXGJf9rz4M+SJAOYC+ZrQGj/mDBIoUotlVom7IQ3onC2yi+Xbff4w==
-X-Received: by 2002:a9d:7414:: with SMTP id n20mr773057otk.61.1589511048634;
-        Thu, 14 May 2020 19:50:48 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o17sm237457otp.79.2020.05.14.19.50.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 19:50:48 -0700 (PDT)
-Received: (nullmailer pid 30844 invoked by uid 1000);
-        Fri, 15 May 2020 02:50:47 -0000
-Date:   Thu, 14 May 2020 21:50:47 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sarthak Garg <sartgarg@codeaurora.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        vbadigan@codeaurora.org, stummala@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH V1 1/7] dt-bindings: mmc: Add information for DLL
- register properties
-Message-ID: <20200515025047.GA27895@bogus>
-References: <1588838535-6050-1-git-send-email-sartgarg@codeaurora.org>
- <1588838535-6050-2-git-send-email-sartgarg@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588838535-6050-2-git-send-email-sartgarg@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 14 May 2020 22:58:23 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R641e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=41;SR=0;TI=SMTPD_---0TyZxr82_1589511481;
+Received: from 127.0.0.1(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TyZxr82_1589511481)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 15 May 2020 10:58:15 +0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [virtio-dev] [PATCH v3 00/15] virtio-mem: paravirtualized memory
+From:   teawater <teawaterz@linux.alibaba.com>
+In-Reply-To: <cda84c4d-0f4c-1dd8-44f6-68f211e5de6d@redhat.com>
+Date:   Fri, 15 May 2020 10:58:00 +0800
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        virtio-dev@lists.oasis-open.org,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        kvm@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        Samuel Ortiz <samuel.ortiz@intel.com>,
+        Robert Bradford <robert.bradford@intel.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Len Brown <lenb@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <9708F43A-9BD2-4377-8EE8-7FB1D95C6F69@linux.alibaba.com>
+References: <20200507103119.11219-1-david@redhat.com>
+ <7848642F-6AA7-4B5E-AE0E-DB0857C94A93@linux.alibaba.com>
+ <31c5d2f9-c104-53e8-d9c8-cb45f7507c85@redhat.com>
+ <A3BBAEEE-FBB9-4259-8BED-023CCD530021@linux.alibaba.com>
+ <389b6bdc-b196-e4b9-b6be-dcac57524fdf@redhat.com>
+ <3c82e149-6c42-690e-9d58-bb8e69870fe0@redhat.com>
+ <e48ded49-9b92-7025-a06f-49b24f1c53a6@redhat.com>
+ <cda84c4d-0f4c-1dd8-44f6-68f211e5de6d@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:32:08PM +0530, Sarthak Garg wrote:
-> Add information regarding DLL register properties for getting target
-> specific configurations. These DLL register settings may vary from
-> target to target.
-> 
-> Also new compatible string value for sm8250 target.
-> 
-> Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> index 5445931..b8e1d2b 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -17,6 +17,7 @@ Required properties:
->  		"qcom,msm8916-sdhci", "qcom,sdhci-msm-v4"
->  		"qcom,msm8992-sdhci", "qcom,sdhci-msm-v4"
->  		"qcom,msm8996-sdhci", "qcom,sdhci-msm-v4"
-> +		"qcom,sm8250-sdhci", "qcom,sdhci-msm-v5"
->  		"qcom,sdm845-sdhci", "qcom,sdhci-msm-v5"
->  		"qcom,qcs404-sdhci", "qcom,sdhci-msm-v5"
->  		"qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
-> @@ -46,6 +47,13 @@ Required properties:
->  	"cal"	- reference clock for RCLK delay calibration (optional)
->  	"sleep"	- sleep clock for RCLK delay calibration (optional)
->  
-> +- qcom,ddr-config: Certain chipsets and platforms require particular settings
-> +	for the DDR_CONFIG register. Use this field to specify the register
-> +	value as per the Hardware Programming Guide.
-> +
-> +- qcom,dll-config: Chipset and Platform specific value. Use this field to
-> +	specify the DLL_CONFIG register value as per Hardware Programming Guide.
 
-Board specific or SoC specific? If the latter, imply this from the 
-compatible string.
+
+> 2020年5月14日 20:19，David Hildenbrand <david@redhat.com> 写道：
+> 
+> On 14.05.20 13:47, David Hildenbrand wrote:
+>> On 14.05.20 13:10, David Hildenbrand wrote:
+>>> On 14.05.20 12:12, David Hildenbrand wrote:
+>>>> On 14.05.20 12:02, teawater wrote:
+>>>>> 
+>>>>> 
+>>>>>> 2020年5月14日 16:48，David Hildenbrand <david@redhat.com> 写道：
+>>>>>> 
+>>>>>> On 14.05.20 08:44, teawater wrote:
+>>>>>>> Hi David,
+>>>>>>> 
+>>>>>>> I got a kernel warning with v2 and v3.
+>>>>>> 
+>>>>>> Hi Hui,
+>>>>>> 
+>>>>>> thanks for playing with the latest versions. Surprisingly, I can
+>>>>>> reproduce even by hotplugging a DIMM instead as well - that's good, so
+>>>>>> it's not related to virtio-mem, lol. Seems to be some QEMU setup issue
+>>>>>> with older machine types.
+>>>>>> 
+>>>>>> Can you switch to a newer qemu machine version, especially
+>>>>>> pc-i440fx-5.0? Both, hotplugging DIMMs and virtio-mem works for me with
+>>>>>> that QEMU machine just fine.
+>>>>> 
+>>>>> I still could reproduce this issue with pc-i440fx-5.0 or pc.  Did I miss anything?
+>>>>> 
+>>>> 
+>>>> Below I don't even see virtio_mem. I had to repair the image (filesystem
+>>>> fsck) because it was broken, can you try that as well?
+>>>> 
+>>>> Also, it would be great if you could test with v4.
+>>>> 
+>>> 
+>>> Correction, something seems to be broken either in QEMU or the kernel. Once I
+>>> define a DIMM so it's added and online during boot, I get these issues:
+>>> 
+>>> (I have virtio-mem v4 installed in the guest)
+>>> 
+>>> #! /bin/bash
+>>> sudo x86_64-softmmu/qemu-system-x86_64 \
+>>>    -machine pc-i440fx-5.0,accel=kvm,usb=off \
+>>>    -cpu host \
+>>>    -no-reboot \
+>>>    -nographic \
+>>>    -device ide-hd,drive=hd \
+>>>    -drive if=none,id=hd,file=/home/dhildenb/git/Fedora-Cloud-Base-31-1.9.x86_64.qcow2,format=qcow2 \
+>>>    -m 1g,slots=10,maxmem=2G \
+>>>    -smp 1 \
+>>>    -object memory-backend-ram,id=mem0,size=256m \
+>>>    -device pc-dimm,id=dimm0,memdev=mem0 \
+>>>    -s \
+>>>    -monitor unix:/var/tmp/monitor,server,nowait
+>>> 
+>>> 
+>>> Without the DIMM it seems to work just fine.
+>>> 
+>> 
+>> And another correction. 
+>> 
+>> Using QEMU v5.0.0, Linux 5.7-rc5, untouched
+>> Fedora-Cloud-Base-32-1.6.x86_64.qcow2, I get even without any memory hotplug:
+>> 
+>> #! /bin/bash
+>> sudo x86_64-softmmu/qemu-system-x86_64 \
+>>    -machine pc-i440fx-5.0,accel=kvm,usb=off \
+>>    -cpu host \
+>>    -no-reboot \
+>>    -nographic \
+>>    -device ide-hd,drive=hd \
+>>    -drive if=none,id=hd,file=/home/dhildenb/git/Fedora-Cloud-Base-32-1.6.x86_64.qcow2,format=qcow2 \
+>>    -m 5g,slots=10,maxmem=6G \
+>>    -smp 1 \
+>>    -s \
+>>    -kernel /home/dhildenb/git/linux/arch/x86/boot/bzImage \
+>>    -append "console=ttyS0 rd.shell nokaslr swiotlb=noforce" \
+>>    -monitor unix:/var/tmp/monitor,server,nowait
+>> 
+>> 
+>> Observe how big the initial RAM even is!
+>> 
+>> 
+>> So this is no DIMM/hotplug/virtio_mem issue. With memory hotplug, it seems to get
+>> more likely to trigger if "swiotlb=noforce" is not specified.
+>> 
+>> "swiotlb=noforce" seems to trigger some pre-existing issue here. Without
+>> "swiotlb=noforce", I was only able to observe this via pc-i440fx-2.1,
+>> 
+> 
+> (talking to myself :) )
+> 
+> I think I finally understood why using "swiotlb=noforce" with hotplugged
+> memory is wrong - or with memory > 3GB. Via "swiotlb=noforce" you tell
+> the system to "Never use bounce buffers (for debugging)". This works as
+> long as all memory is DMA memory (e.g., < 3GB) AFAIK.
+> 
+> "If specified, trying to map memory that cannot be used with DMA will
+> fail, and a rate-limited warning will be printed."
+> 
+> Hotplugged memory (under QEMU) is never added below 4GB, because of the
+> PCI hole. So both, memory from DIMMs and from virtio-mem will end up at
+> or above 4GB. To make a device use that memory, you need bounce buffers.
+> 
+> Hotplugged memory is never DMA memory.
+> 
+
+
+Hi David,
+
+It is fixed when I remove "swiotlb=noforce”.
+
+Thanks for your help.
+
+Best,
+Hui
+
+> -- 
+> Thanks,
+> 
+> David / dhildenb
+
