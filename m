@@ -2,102 +2,204 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5433C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17384C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADA87206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8FBD20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:02:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="R0kHxm4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgEOI6k (ORCPT
+        id S1727833AbgEOJCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:58:40 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:49776 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727050AbgEOI6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:58:39 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL9+4Wb5eaA41AA--.11S3;
-        Fri, 15 May 2020 16:58:33 +0800 (CST)
-Subject: Re: [PATCH 1/2] MIPS: Loongson: Fix fatal error during GPU init
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <1589508901-18077-1-git-send-email-yangtiezhu@loongson.cn>
- <1264becb-44aa-9e29-4e67-d1b5fbc0b56c@cogentembedded.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <9472816e-f97f-349b-2f7c-6c6c636f5fec@loongson.cn>
-Date:   Fri, 15 May 2020 16:58:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Fri, 15 May 2020 05:02:05 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:36045 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbgEOJCE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 05:02:04 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200515090159euoutp0236e9770168ac99c9a4be7030e7d363a6~PKCHbwAgw0470004700euoutp027;
+        Fri, 15 May 2020 09:01:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200515090159euoutp0236e9770168ac99c9a4be7030e7d363a6~PKCHbwAgw0470004700euoutp027
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589533319;
+        bh=BJUvSEYuIkgkm6K5e3tQsge4+Ps1nNuHga1u75mPc8Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R0kHxm4U1Pj11tcDMI2GYr6UeyHB3eKfABhD7Ke1sAsc8XspYbBJ/uZocKL/bIBMp
+         HqC28wOJa3rxmlqKO5VQulIlGMBQBJdCAZ/x6WO7azQs9EJHOEut/Ra1UcUbiLoYtn
+         D4D+UY9rOF/pUaX9cCsWEZlBCMdZ45ygpNpTzgt4=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200515090159eucas1p17f8b880e2c6bd05ca0885172a3ac4f41~PKCHK48mb2730627306eucas1p1H;
+        Fri, 15 May 2020 09:01:59 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id DE.A3.60679.78A5EBE5; Fri, 15
+        May 2020 10:01:59 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200515090158eucas1p1b653fc50f1ad4f0f6c92525ab3188d45~PKCG2e7DM2266122661eucas1p1J;
+        Fri, 15 May 2020 09:01:58 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200515090158eusmtrp266b5b5e7f8a74778bf76cc8b55b0b0dc~PKCG1o62k0348403484eusmtrp2N;
+        Fri, 15 May 2020 09:01:58 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-70-5ebe5a87aa93
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 8E.70.08375.68A5EBE5; Fri, 15
+        May 2020 10:01:58 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200515090158eusmtip19ed78938e34f5e5f5a23a9689bc1e99d~PKCGqse3e1343513435eusmtip17;
+        Fri, 15 May 2020 09:01:58 +0000 (GMT)
+From:   Lukasz Stelmach <l.stelmach@samsung.com>
+To:     Stephan Mueller <smueller@chronox.de>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 1/2] hwrng: iproc-rng200 - Set the quality value
+Date:   Fri, 15 May 2020 11:01:48 +0200
+In-Reply-To: <dleftjtv0i88ji.fsf%l.stelmach@samsung.com> (Lukasz Stelmach's
+        message of "Fri, 15 May 2020 00:18:41 +0200")
+Message-ID: <dleftjimgx8tc3.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <1264becb-44aa-9e29-4e67-d1b5fbc0b56c@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9DxL9+4Wb5eaA41AA--.11S3
-X-Coremail-Antispam: 1UD129KBjvJXoWrZry5Zw45ur18uF1xJFy7KFg_yoW8Jry5pF
-        W5Gan3KrWkJrZ5Kasrt3y7u34Y9an5XFy5Cw40kr1xCrsxur1kA3yUXw4DCFW8Gr4xKa4I
-        yFZ7G34F93WDZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r4j6F4U
-        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUkrcfUUU
-        UU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa2xLYRjH8/acnnO26HLWuTypS6hbEDOX8C4uQ4bji5BYIgulOBlZ222t
+        bsaHuYRZMWxj1k06Nrbs1umqrOyShg5lZTaWuCypGuuYYGIrw7pTiW+/9//8n2tehpCWUTJm
+        r2Yfr9UoVXIqlLQ5B91zM+MbFVHPfCI8lOOk8fWLZjGuPn2PxO6sMgL7++7S+GiJmcInfRPw
+        mbe9BHa7a2lseftcjLveDIrwM3sRhS+6G0W4ONcrxsW2bITfFdRRuK/Si/B5VzWJW+5nESsj
+        uJ/+HMQZux5T3Nf2dhFXb3xNcyWWJoqzNU/nLBVZFNd0qYrm6kozuGxrBeKye2oRZ7Z2kNyR
+        h5li7ptl0saw+NBlu3nV3lReO2/FjtA9AzeKxMkXxuz/8fM7cQjlhRtQCAPsIvC99CMDCmWk
+        bDkCl91EC49+BINfqoKRbwjMDif1L+Wm+fAIS9kyBL9zScH0HkH5pwqRATEMxUZCdfWWgGc0
+        Ows6Mk1UwEOwrWL4VdhGBAIRbCy0nTwnCjDJTof3DUepQG4IexCKbi0NyBJ2CTS/KR3pNYaN
+        BuuHLlrQw+FBgZcMMMGqocD9cWRQYL0M2J7ni4RBY+FmZ12QI8DXYqUFngB/6k0jcwKbAbk5
+        i4XcUwhsRQOk4FkKr1r9wYVXQfejfFrwh0Hnp3Chbxjk2PIJQZbAieNSwT0Nas7cCVaRwWlf
+        ORKYg2tlL4Jnq0Ng/zL5LJps/G8b43/bGIerEsOXM9vnCfIcuHa5lxB4OdTUfCaLkbgCjeP1
+        OnUCr1ug4dMidUq1Tq9JiNyVpLag4S/r+t3SfwvZf+10IJZB8lGSqPMNCqlYmapLVzvQtOFK
+        ntrKJ0hGapI0vHy0ZIP5tkIq2a1MP8Brk7Zr9Spe50DjGVI+TrLwSs82KZug3Mcn8nwyr/0X
+        FTEhskPoenKfo7u/sa3epfKYDHH+jGNdM041O8cOre3toVBr/s4+vT6lIz16q9OQOlFdqPqq
+        d3V2JMWsGyDsKWmKzfu37siLWZOYFuv10FHxq+MWdXtm/6jMu1uTusmy/uUjGTU1sepqSa9p
+        pkz5ShFxWDvFWuXJurzmqTR6U8yMISf3XU7q9ijnzya0OuVfbYKCP7oDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAKsWRmVeSWpSXmKPExsVy+t/xu7ptUfviDCYv1rL4O+kYu8XGGetZ
+        Ldb2HmWxON+5nNni17sj7BbNi9ezWXS/krHof/ya2eL8+Q3sFpseX2O1uH/vJ5PF5V1z2Cxm
+        nN/HZLFg8hNWiwXb+hgtns7czGbxbvUTRoupp9eyWBw/0cnsIOzx+9ckRo9Z98+yeXy6coXJ
+        Y+esu+weizftZ/PYdkDVY9OqTjaP/XPXsHtsXlLv0bdlFaNH38sNjB7rt1xl8Wg61c7q8XmT
+        XABflJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G
+        j61zWAumiVZ8//2VuYFximAXIyeHhICJxPb1jWxdjFwcQgJLGSW+P7rJ1MXIAZSQklg5Nx2i
+        Rljiz7UuqJqnjBJ/955gBalhE9CTWLs2AqRGREBT4mr7fLAaZoFdrBK3u6+xgiSEBVwkLnVP
+        ZAKxhQTiJfZN+8oCYrMIqEo839vMBjKHU6BaYs4Oa5Awr4C5xIF7S9hAbFEBS4ktL+6zQ8QF
+        JU7OfALWyiyQLfF19XPmCYwCs5CkZiFJzQKaygx00vpd+hBhbYllC18zQ9i2EuvWvWdZwMi6
+        ilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzBFbDv2c/MOxksbgw8xCnAwKvHwGkzdGyfEmlhW
+        XJl7iFEFaMyjDasvMEqx5OXnpSqJ8Pqt3x0nxJuSWFmVWpQfX1Sak1p8iNEU6M2JzFKiyfnA
+        tJZXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoFxfhGD2ctrJ6um
+        rfRnq9GtmXnT0vT+q3XKt+yW3P3vf8+rTplB2+WtzNzrt3aaqiQ9fsKrKM0Y03fQecN/K50r
+        Cz3jJfiC9ic84NEPlpi4iGnd5xM5kwK2vVgkLnw85EXufaYFnVV3974Ozs7Idp2vKMXqodgx
+        07NxweSvJauidytkXn+v/cFAiaU4I9FQi7moOBEAxdC18zMDAAA=
+X-CMS-MailID: 20200515090158eucas1p1b653fc50f1ad4f0f6c92525ab3188d45
+X-Msg-Generator: CA
+X-RootMTR: 20200515090158eucas1p1b653fc50f1ad4f0f6c92525ab3188d45
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200515090158eucas1p1b653fc50f1ad4f0f6c92525ab3188d45
+References: <4493123.C11H8YMYNy@tauon.chronox.de>
+        <dleftjtv0i88ji.fsf%l.stelmach@samsung.com>
+        <CGME20200515090158eucas1p1b653fc50f1ad4f0f6c92525ab3188d45@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/15/2020 04:51 PM, Sergei Shtylyov wrote:
-> Hello!
->
-> On 15.05.2020 5:15, Tiezhu Yang wrote:
->
->> When ATI Radeon graphics card has been compiled directly into the kernel
->                                ^ driver
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sergei,
-
-Thanks for your review, I have been sent v2 with the updated commit message:
-https://lore.kernel.org/patchwork/patch/1242218/
-
-Thanks,
-Tiezhu Yang
-
->
->> instead of as a module, we should make sure the firmware for the model
->> (check available ones in /lib/firmware/radeon) is built-in to the kernel
->> as well, otherwise there exists the following fatal error during GPU 
->> init,
->> change CONFIG_DRM_RADEON=y to CONFIG_DRM_RADEON=m to fix it.
+It was <2020-05-15 pi=C4=85 00:18>, when Lukasz Stelmach wrote:
+> It was <2020-05-14 czw 22:20>, when Stephan Mueller wrote:
+>> Am Donnerstag, 14. Mai 2020, 21:07:33 CEST schrieb =C5=81ukasz Stelmach:
 >>
->> [    1.900997] [drm] Loading RS780 Microcode
->> [    1.905077] radeon 0000:01:05.0: Direct firmware load for 
->> radeon/RS780_pfp.bin failed with error -2
->> [    1.914140] r600_cp: Failed to load firmware "radeon/RS780_pfp.bin"
->> [    1.920405] [drm:r600_init] *ERROR* Failed to load firmware!
->> [    1.926069] radeon 0000:01:05.0: Fatal error during GPU init
->> [    1.931729] [drm] radeon: finishing device.
+>> Hi =C5=81ukasz,
 >>
->> Fixes: 024e6a8b5bb1 ("MIPS: Loongson: Add a Loongson-3 default config 
->> file")
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> [...]
->
-> MBR, Sergei
+>>> The value has been estimaded by obtainig 1024 chunks of data 128 bytes
+>>> (1024 bits) each from the generator and finding chunk with minimal
+>>> entropy using the ent(1) tool. The value was 6.327820 bits of entropy
+>>> in each 8 bits of data.
+>>
+>> I am not sure we should use the ent tool to define the entropy
+>> level. Ent seems to use a very coarse entropy estimation.
+>>
+>> I would feel more comfortable when using other measures like SP800-90B
+>> which even provides a tool for the analysis.
+>>
+>> I understand that entropy estimates, well, are estimates. But the ent
+>> data is commonly not very conservative.
+>>
+>> [1] https://github.com/usnistgov/SP800-90B_EntropyAssessment
 
+[...]
+
+> Anyway. I collected 1024 files 1024 bits each once again and ran the
+> following tests
+>
+>     for f in exynos-trng/random*; do ./ea_iid "$f" | grep ^min; done |  s=
+ort | head -1
+>     for f in rng200/random*; do ./ea_iid "$f" | grep ^min; done | sort | =
+head -1
+>
+> For both RNGs I got the same
+>
+>     min(H_original, 8 X H_bitstring): 3.393082
+
+Oddly enough I've got the same number for other random sources on my x86
+
+| Source       | ea_iid -i | ea_iid -c (h') |      ent |
+|--------------+-----------+----------------+----------|
+| /dev/random  |  3.393082 |       0.768654 | 6.300399 |
+| /dev/urandom |  3.393082 |       0.759161 | 6.348562 |
+| tpm-rng      |  3.393082 |       0.735722 | 6.323990 |
+| exynos-trng  |  3.393082 |       0.687825 | 6.327820 |
+| rng200       |  3.393082 |       0.740376 | 6.291959 |
+
+I suspect 1024 bits is too little for ea_iid to give a meaningfull
+result. BTW ent results also seem a little oddly low for crng. Any
+thoughs?
+
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl6+WnwACgkQsK4enJil
+gBA9ZwgAl4RerBCo3cGU06Y5pP1+rqugZzPkI7o66VxgR+6drixIE3jZKAS7Q/nz
+wD2F601qT6AU+zcvaIsP1+qhk/V7XXNDm8zJb1V1D3QEyVn79KNs6f8MOCTkdkG5
+Nk2PWpX3VZ5y77Q5gW/TjYLTUQzyvJZ2VCMWLeQ5Hgkf+07Pt7U5Ol85T8XT/7R4
+PhG2U46/w7NNRsCrOlfdkHhj+Iy/6KCsRHQ3foLvvkGURGcstkB9tSxKApE/iBPA
+jZPfIwqm1Sz/TWtHUDAtaUGZhp6Nclpzfl5aZeHM/t/UIBlKn0zC9bnRzbkUC0Co
+76utoUjLeopAw0FgKKqG2S0WLxSI2w==
+=eb3U
+-----END PGP SIGNATURE-----
+--=-=-=--
