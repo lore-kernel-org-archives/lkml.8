@@ -2,88 +2,116 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5403C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9456920756
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF2302070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:39:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XsNVU5IS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="F9gBoT3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgEOSja (ORCPT
+        id S1726660AbgEOSjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 14:39:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgEOSj2 (ORCPT
+        Fri, 15 May 2020 14:39:53 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:23522 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726298AbgEOSjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 14:39:28 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4350C05BD09
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 11:39:28 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p21so1377264pgm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 11:39:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=phaOl4UmRtsq7El/zXDiXXLmxp5U/M6vGOmuvPTWkEw=;
-        b=XsNVU5IShN9fJKPkoBVuH+Y35AROQc4c4/lXaeXGlGS94mJJcFgEnq1I5NwLej/D/J
-         o8cLPSHHchNGnwn6sT6S7OWZlGdC1O5VdQ3NCw4NrrEyCMDodE2BLoQ1px5PTXhTDzKN
-         4iDIb8k0OE1A4S7K0K1zWbBp4Smr2GqOlkhj4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=phaOl4UmRtsq7El/zXDiXXLmxp5U/M6vGOmuvPTWkEw=;
-        b=mBGqYEF2AUkDyKeBoUWq2AKQndIlgMO4XB4iO2+p7/0FxufS5qpoUoPVG0D2KTqLjb
-         f+vVoYKGTAauIPzGDQtdpWxOQlDhe/hWoEwS0TS4hgIB5XXBXaBMYZOsvVd5vjHEfvp+
-         34IXO5oGAX7Uwodsb2yb/FW+Zs9b2Q1EP7ZGkobePkWo6QG56MW/kwRrJsS7jjkKhN7C
-         sgSkfrm7RbGewWrwE7uFCKGLiYw1oT9SBbqlAD1Pl/xuKCtpf3XB2SbE5aXH2fh88uq5
-         96sZbPhdsPLvc0PiZhgfsxAI/PbZqrNdb0/H+vz7IXI8TA3VXsgMM4Wm+tqjRogdC4VM
-         yXPw==
-X-Gm-Message-State: AOAM5338+SZ+phbdpqCCVssb2ZqUP7Lf66jqoMiwbp8OZFIxts0Rn6kW
-        SchbGmlrXST7xE7ZZM5+gzUMAQ==
-X-Google-Smtp-Source: ABdhPJzoos6SroEbTwNgchhW8pq9WTD4Qe0ecUkShREHdGCuNK6bU3WSbJHL54SN3cHNcpk6GH5a2Q==
-X-Received: by 2002:a63:3449:: with SMTP id b70mr4570122pga.289.1589567968230;
-        Fri, 15 May 2020 11:39:28 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id j35sm2232570pgl.74.2020.05.15.11.39.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 11:39:27 -0700 (PDT)
-Date:   Fri, 15 May 2020 11:39:26 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v7 2/4] dt-bindings: phy: qcom,qmp-usb3-dp: Add dt
- bindings for USB3 DP PHY
-Message-ID: <20200515183926.GZ4525@google.com>
-References: <1589510358-3865-1-git-send-email-sanm@codeaurora.org>
- <1589510358-3865-3-git-send-email-sanm@codeaurora.org>
+        Fri, 15 May 2020 14:39:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589567992; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=mBPBCYFoKWdI3mEJ/ipBvucpCeB6dmeaUNTapAwv4TA=; b=F9gBoT3vYJDT2kKipcCbfGrYgP7+VzsVyM+4Hw/4T1RX3exs/ZNBCOJCu6R/DEZMxEU/detv
+ 5PtFXNO+Tfm/t9aPLMLfzifXOQ4JOE8hj9/oK14TyFeSQJr6G9uD2ka4zn1/VH4zfLWJ8CnH
+ IRgtfsSX3xYQ4NOta6xDvSI7SmI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebee1f7.7f85bbbcc960-smtp-out-n04;
+ Fri, 15 May 2020 18:39:51 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 12CB1C43636; Fri, 15 May 2020 18:39:50 +0000 (UTC)
+Received: from [10.110.50.174] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 98FECC433D2;
+        Fri, 15 May 2020 18:39:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 98FECC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [RFC 3/3] dt-bindings: usb: dwc3: Add entry for tx-fifo-resize
+To:     Rob Herring <robh@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
+        gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, jackp@codeaurora.org
+References: <1588888768-25315-1-git-send-email-wcheng@codeaurora.org>
+ <1588888768-25315-4-git-send-email-wcheng@codeaurora.org>
+ <20200515031042.GA25107@bogus>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <10d2109d-cfb7-73d0-a186-4fa5f17feffe@codeaurora.org>
+Date:   Fri, 15 May 2020 11:39:46 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200515031042.GA25107@bogus>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1589510358-3865-3-git-send-email-sanm@codeaurora.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 08:09:16AM +0530, Sandeep Maheswaram wrote:
 
-> Subject: dt-bindings: phy: qcom,qmp-usb3-dp: Add dt bindings for USB3 DP PHY
 
-The subject is misleading, this patch doesn't add the binding for the USB3 DP
-PHY, but factors it out.
+On 5/14/2020 8:10 PM, Rob Herring wrote:
+> On Thu, May 07, 2020 at 02:59:28PM -0700, Wesley Cheng wrote:
+>> Re-introduce the comment for the tx-fifo-resize setting for the DWC3
+>> controller.
+> 
+> Why?
+> 
+
+Hi Rob,
+
+Initially, the reasoning behind bringing back the DTSI parameter, was to
+address situations where vendors don't require the resizing logic.  I
+was assuming that each vendor has their own HW configuration for the TX
+FIFO size, and some may already have sufficient space to account for
+their endpoint requirements.  However, if Felipe doesn't believe we need
+to have a DTSI parameter for this, then we don't need to re-add this
+back in.
+
+>>
+>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/usb/dwc3.txt | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> index 9946ff9..489f5da 100644
+>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> @@ -105,7 +105,7 @@ Optional properties:
+>>  			1-16 (DWC_usb31 programming guide section 1.2.3) to
+>>  			enable periodic ESS TX threshold.
+>>  
+>> - - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+>> + - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+>>   - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
+>>  			register, undefined length INCR burst type enable and INCRx type.
+>>  			When just one value, which means INCRX burst mode enabled. When
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
