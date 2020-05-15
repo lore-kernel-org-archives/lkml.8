@@ -4,58 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A56EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 571222065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A1F204EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:20:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="b/4RlDSN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UEYxWKhr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbgEOLU2 (ORCPT
+        id S1726295AbgEOLUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:20:28 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:15136 "EHLO
+        Fri, 15 May 2020 07:20:33 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:49159 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726217AbgEOLUZ (ORCPT
+        by vger.kernel.org with ESMTP id S1726217AbgEOLUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:20:25 -0400
+        Fri, 15 May 2020 07:20:31 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589541625; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1589541631; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=hed5X6RlvHP5iun0h6cacBLjIzbJ+Q/7Jlx/w5qDseg=; b=b/4RlDSN19wcsDJBPlesD/6KvU+fEXeX7GIQbeGCnnUcYdyl+YSMQst7/A0GqZ84ljDgcdFf
- WWjXrS3AW2prY7Z7l+aIJAXbfkh6AdvcMAyne57Gm2Qo7QpY8MlsTMPLQgYnyabaOXprQnoQ
- pXaiMminWzrPhEN4vdS5t65jIbA=
+ bh=1OX94c5DVErd4QJ5QC03HLjvrFguY5uhejhppx3Mmtw=; b=UEYxWKhrqjporgt4qgRj0jadxotI8GMs/Qsvaul99LYjSnnECLkPllBheN08o7taLDdv2RVp
+ ljg6+AAev/ZVz0MBDZoZTxRyuMkkwUvfvlHSI5ufE2b7HDb6HJdBtsmEbIqU3SZSdZUHK61n
+ kTDUnXiuXE+aE/dema5BDcKyMGM=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5ebe7aebaefa5a01cc5d62ad (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 15 May 2020 11:20:11
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ebe7afed915e862f6f6332f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 15 May 2020 11:20:30
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8C457C433F2; Fri, 15 May 2020 11:20:10 +0000 (UTC)
+        id E125EC43636; Fri, 15 May 2020 11:20:29 +0000 (UTC)
 Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DFB8C433D2;
-        Fri, 15 May 2020 11:20:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6DFB8C433D2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D269C433D2;
+        Fri, 15 May 2020 11:20:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0D269C433D2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
 From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 To:     adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org
 Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Vijay Viswanath <vviswana@codeaurora.org>,
         Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: [PATCH V1 1/3] dt-bindings: mmc: Supply max load for mmc supplies
-Date:   Fri, 15 May 2020 16:48:52 +0530
-Message-Id: <1589541535-8523-2-git-send-email-vbadigan@codeaurora.org>
+Subject: [PATCH V1 3/3] mmc: sdhci: Allow platform controlled voltage switching
+Date:   Fri, 15 May 2020 16:48:54 +0530
+Message-Id: <1589541535-8523-4-git-send-email-vbadigan@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
 References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
@@ -64,40 +65,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Supply the max load needed for driving the mmc supplies.
+From: Vijay Viswanath <vviswana@codeaurora.org>
 
+If vendor platform drivers are controlling whole logic of voltage
+switching, then sdhci driver no need control vqmmc regulator.
+So skip enabling/disable vqmmc from SDHC driver.
+
+Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
 Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 ---
- .../devicetree/bindings/mmc/mmc-controller.yaml          | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/mmc/host/sdhci.c | 32 +++++++++++++++++++-------------
+ drivers/mmc/host/sdhci.h |  1 +
+ 2 files changed, 20 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-index acc9f10..9058b82 100644
---- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-+++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-@@ -290,6 +290,22 @@ properties:
-     description:
-       Supply for the bus IO line power
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 1bb6b67..c010823 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -4098,6 +4098,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	unsigned int override_timeout_clk;
+ 	u32 max_clk;
+ 	int ret;
++	bool enable_vqmmc = false;
  
-+  vmmc-max-load-microamp:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 1000000
-+    description:
-+      Maximum load for the card power.
-+
-+  vqmmc-max-load-microamp:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 1000000
-+    description:
-+      Maximum load for the bus IO line power.
-+
-   mmc-pwrseq:
-     $ref: /schemas/types.yaml#/definitions/phandle
-     description:
+ 	WARN_ON(host == NULL);
+ 	if (host == NULL)
+@@ -4111,9 +4112,12 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	 * the host can take the appropriate action if regulators are not
+ 	 * available.
+ 	 */
+-	ret = mmc_regulator_get_supply(mmc);
+-	if (ret)
+-		return ret;
++	if (!mmc->supply.vqmmc) {
++		ret = mmc_regulator_get_supply(mmc);
++		if (ret)
++			return ret;
++		enable_vqmmc  = true;
++	}
+ 
+ 	DBG("Version:   0x%08x | Present:  0x%08x\n",
+ 	    sdhci_readw(host, SDHCI_HOST_VERSION),
+@@ -4373,7 +4377,15 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 		mmc->caps |= MMC_CAP_NEEDS_POLL;
+ 
+ 	if (!IS_ERR(mmc->supply.vqmmc)) {
+-		ret = regulator_enable(mmc->supply.vqmmc);
++		if (enable_vqmmc) {
++			ret = regulator_enable(mmc->supply.vqmmc);
++			if (ret) {
++				pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
++					mmc_hostname(mmc), ret);
++				mmc->supply.vqmmc = ERR_PTR(-EINVAL);
++			}
++			host->vqmmc_enabled = !ret;
++		}
+ 
+ 		/* If vqmmc provides no 1.8V signalling, then there's no UHS */
+ 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
+@@ -4386,12 +4398,6 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 2700000,
+ 						    3600000))
+ 			host->flags &= ~SDHCI_SIGNALING_330;
+-
+-		if (ret) {
+-			pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
+-				mmc_hostname(mmc), ret);
+-			mmc->supply.vqmmc = ERR_PTR(-EINVAL);
+-		}
+ 	}
+ 
+ 	if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V) {
+@@ -4625,7 +4631,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	return 0;
+ 
+ unreg:
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->vqmmc_enabled)
+ 		regulator_disable(mmc->supply.vqmmc);
+ undma:
+ 	if (host->align_buffer)
+@@ -4643,7 +4649,7 @@ void sdhci_cleanup_host(struct sdhci_host *host)
+ {
+ 	struct mmc_host *mmc = host->mmc;
+ 
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->vqmmc_enabled)
+ 		regulator_disable(mmc->supply.vqmmc);
+ 
+ 	if (host->align_buffer)
+@@ -4780,7 +4786,7 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
+ 
+ 	destroy_workqueue(host->complete_wq);
+ 
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->vqmmc_enabled)
+ 		regulator_disable(mmc->supply.vqmmc);
+ 
+ 	if (host->align_buffer)
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 8d2a096..24d27e1 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -570,6 +570,7 @@ struct sdhci_host {
+ 	u32 caps1;		/* CAPABILITY_1 */
+ 	bool read_caps;		/* Capability flags have been read */
+ 
++	bool vqmmc_enabled;	/* Vqmmc is enabled */
+ 	unsigned int            ocr_avail_sdio;	/* OCR bit masks */
+ 	unsigned int            ocr_avail_sd;
+ 	unsigned int            ocr_avail_mmc;
 -- 
 Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
 
