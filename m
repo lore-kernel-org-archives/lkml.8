@@ -2,133 +2,138 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B755DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0FB620709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF3020787
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:10:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gp63hVTH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgEOKIi (ORCPT
+        id S1728133AbgEOKKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:08:38 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48874 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727999AbgEOKIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:08:37 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 202F6BC4D3A5C439F8EB;
-        Fri, 15 May 2020 18:08:35 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Fri, 15 May 2020
- 18:08:28 +0800
-From:   Cheng Jian <cj.chengjian@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <rostedt@goodmis.org>
-CC:     <xiexiuqi@huawei.com>, <bobo.shaobowang@huawei.com>,
-        <huawei.libin@huawei.com>, <cj.chengjian@huawei.com>,
-        <chenwandun@huawei.com>, <mingo@redhat.com>
-Subject: [PATCH] ftrace: show debugging information when panic_on_warn set
-Date:   Fri, 15 May 2020 10:08:28 +0000
-Message-ID: <20200515100828.7091-1-cj.chengjian@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 15 May 2020 06:10:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbgEOKKK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 06:10:10 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03F48C061A0C;
+        Fri, 15 May 2020 03:10:10 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id p139so430964vkd.7;
+        Fri, 15 May 2020 03:10:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lhigMlxhzrJnKPEuZs499FlSgqJIMriFF+MKS12l+uA=;
+        b=gp63hVTHYVuojW36b06JYhiTReOtH2+pg7/v0FgV+Ta6hcdtZGvwPDyvoqSOxSGDtN
+         oP4ZHdDKFOvyHJR10A/6nYElof0kMVJDPAoNTgKZxEIGa+nCyCfwHCiI7lFXwc0qaMzA
+         QAfKbSJ13sKqc8f+OXYJ9n35j/TnMdw1ZWoDyj9c/ixU0QS+YJHW8nSU546+3aSOA6Ux
+         XF8IKhCQyLoOHK9JXy+j+yExcJ6wrEbHiSh9Z0DxkEif/uCZ5Z55ljyO0QHaypYZ3Us0
+         8oC9LXlPJzcj52ZMtS73p+KmzpCK5aGkyR/IadwzfCicaErtAohw9QYfP8bff+OpX50s
+         iKyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lhigMlxhzrJnKPEuZs499FlSgqJIMriFF+MKS12l+uA=;
+        b=tCtS09q3p1KPLZFo5ean+FzflpaS5ZMSZrFl+Hr71WC/6ZqWQxWuSdGFHzNgQBv3Px
+         DMNtk7NidJQui8a5ShAk/BOY6ASPH2NvuRD2i4lE/8DLzp6/DwUnGe5xhK7mkRW5G1DU
+         XMDIUp1APsVnezb/fdUj3XOKCh4Uo4kyoV2t9ATTOCLtoTifmu5hzHiPVxrLKUap7HIt
+         s4CaTO/uUQ3kblCukEG+mxgMxpiTKzZas4l+200MvUbHtDyCUOce6LGNTP5N7LgkIm16
+         xRcwhpFjiAt46ZHwDPOv7UmBZ3DRa72M1TVL/JjoqmJOD9x4RQevSMSTcq8YdrAIsp1M
+         8vWQ==
+X-Gm-Message-State: AOAM533npPTX10LG3yKsZsqZxlAcABMDJ+CIoQT8trB4sIYtHn7ll9vs
+        C3o3f1GTFkIOpIvkQBs8eN8KqAVeNcviL3LJC63F+GtI3nA=
+X-Google-Smtp-Source: ABdhPJzaNbylRYStH6B+ZztSv24YNQNGSipyPFdD8gsTBnMBMP46eaL7d0io05RZRZvcuJ3Mg3DYYVRNdgElHQ0yNRE=
+X-Received: by 2002:a1f:cd06:: with SMTP id d6mr1918886vkg.94.1589537408919;
+ Fri, 15 May 2020 03:10:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.27]
-X-CFilter-Loop: Reflected
+References: <20200511123846.96594-1-christian.gmeiner@gmail.com>
+In-Reply-To: <20200511123846.96594-1-christian.gmeiner@gmail.com>
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+Date:   Fri, 15 May 2020 12:09:57 +0200
+Message-ID: <CAH9NwWcJNhUVkzd0KAfJyxNZJ9a71KLzipW+qRwhgEWUmnnxmg@mail.gmail.com>
+Subject: Re: [PATCH] drm/etnaviv: fix perfmon domain interation
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>, stable@vger.kernel.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an anomaly is detected in the function call modification
-code, ftrace_bug() is called to disable function tracing as well
-as give some warn and information that may help debug the problem.
+Am Mo., 11. Mai 2020 um 14:38 Uhr schrieb Christian Gmeiner
+<christian.gmeiner@gmail.com>:
+>
+> The GC860 has one GPU device which has a 2d and 3d core. In this case
+> we want to expose perfmon information for both cores.
+>
+> The driver has one array which contains all possible perfmon domains
+> with some meta data - doms_meta. Here we can see that for the GC860
+> two elements of that array are relevant:
+>
+>   doms_3d: is at index 0 in the doms_meta array with 8 perfmon domains
+>   doms_2d: is at index 1 in the doms_meta array with 1 perfmon domain
+>
+> The userspace driver wants to get a list of all perfmon domains and
+> their perfmon signals. This is done by iterating over all domains and
+> their signals. If the userspace driver wants to access the domain with
+> id 8 the kernel driver fails and returns invalid data from doms_3d with
+> and invalid offset.
+>
+> This results in:
+>   Unable to handle kernel paging request at virtual address 00000000
+>
+> On such a device it is not possible to use the userspace driver at all.
+>
+> The fix for this off-by-one error is quite simple.
+>
+> Reported-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
+> Fixes: ed1dd899baa3 ("drm/etnaviv: rework perfmon query infrastructure")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+> ---
+>  drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+> index e6795bafcbb9..35f7171e779a 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+> @@ -453,7 +453,7 @@ static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
+>                 if (!(gpu->identity.features & meta->feature))
+>                         continue;
+>
+> -               if (meta->nr_domains < (index - offset)) {
+> +               if ((meta->nr_domains - 1) < (index - offset)) {
+>                         offset += meta->nr_domains;
+>                         continue;
+>                 }
+> --
+> 2.26.2
+>
 
-But currently, we call FTRACE_WARN_ON_ONCE() first in ftrace_bug(),
-so when panic_on_warn is set, we can't see the debugging information
-here. Call FTRACE_WARN_ON_ONCE() at the end of ftrace_bug() to ensure
-that the debugging information is displayed first.
+ping
 
-after this patch, the dmesg looks like:
-
-	------------[ ftrace bug ]------------
-	ftrace failed to modify
-	[<ffff800010081004>] bcm2835_handle_irq+0x4/0x58
-	 actual:   1f:20:03:d5
-	Setting ftrace call site to call ftrace function
-	ftrace record flags: 80000001
-	 (1)
-	 expected tramp: ffff80001009d6f0
-	------------[ cut here ]------------
-	WARNING: CPU: 2 PID: 1635 at kernel/trace/ftrace.c:2078 ftrace_bug+0x204/0x238
-	Kernel panic - not syncing: panic_on_warn set ...
-	CPU: 2 PID: 1635 Comm: sh Not tainted 5.7.0-rc5-00033-gb922183867f5 #14
-	Hardware name: linux,dummy-virt (DT)
-	Call trace:
-	 dump_backtrace+0x0/0x1b0
-	 show_stack+0x20/0x30
-	 dump_stack+0xc0/0x10c
-	 panic+0x16c/0x368
-	 __warn+0x120/0x160
-	 report_bug+0xc8/0x160
-	 bug_handler+0x28/0x98
-	 brk_handler+0x70/0xd0
-	 do_debug_exception+0xcc/0x1ac
-	 el1_sync_handler+0xe4/0x120
-	 el1_sync+0x7c/0x100
-	 ftrace_bug+0x204/0x238
-
-Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
----
- kernel/trace/ftrace.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index bd030b1b9514..cd39cbf3631a 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -2027,14 +2027,14 @@ void ftrace_bug(int failed, struct dyn_ftrace *rec)
- {
- 	unsigned long ip = rec ? rec->ip : 0;
- 
-+	pr_info("------------[ ftrace bug ]------------\n");
-+
- 	switch (failed) {
- 	case -EFAULT:
--		FTRACE_WARN_ON_ONCE(1);
- 		pr_info("ftrace faulted on modifying ");
- 		print_ip_sym(ip);
- 		break;
- 	case -EINVAL:
--		FTRACE_WARN_ON_ONCE(1);
- 		pr_info("ftrace failed to modify ");
- 		print_ip_sym(ip);
- 		print_ip_ins(" actual:   ", (unsigned char *)ip);
-@@ -2045,12 +2045,10 @@ void ftrace_bug(int failed, struct dyn_ftrace *rec)
- 		}
- 		break;
- 	case -EPERM:
--		FTRACE_WARN_ON_ONCE(1);
- 		pr_info("ftrace faulted on writing ");
- 		print_ip_sym(ip);
- 		break;
- 	default:
--		FTRACE_WARN_ON_ONCE(1);
- 		pr_info("ftrace faulted on unknown error ");
- 		print_ip_sym(ip);
- 	}
-@@ -2077,6 +2075,8 @@ void ftrace_bug(int failed, struct dyn_ftrace *rec)
- 		ip = ftrace_get_addr_curr(rec);
- 		pr_cont("\n expected tramp: %lx\n", ip);
- 	}
-+
-+	FTRACE_WARN_ON_ONCE(1);
- }
- 
- static int ftrace_check_record(struct dyn_ftrace *rec, bool enable, bool update)
 -- 
-2.17.1
+greets
+--
+Christian Gmeiner, MSc
 
+https://christian-gmeiner.info/privacypolicy
