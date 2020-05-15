@@ -2,151 +2,115 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AEBC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1049E20727
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:27:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AYT3eRrV"
+	by mail.kernel.org (Postfix) with ESMTP id 149892076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:28:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589563688;
+	bh=UhWUiz4i2ua+ePQnkwga76Is6IlUX/kwGgzY/Tlf9Rw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XNol+uPPwLwuoyH8SS/Dtu6lfT0n6u25L6Y5T71qNchIh6NUgZO6Gfy75uE6RoB3T
+	 RcSyzE6GnI43Jijq/N/5JaCqKoaOT+mRda/z9jjNktq8dNShw5olpLIbodnvky8Gha
+	 11hW1nwfPlcbjP6/e0UCsXnw8wzGIiBz0glBM1Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgEOR1o (ORCPT
+        id S1726551AbgEOR2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:27:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726168AbgEOR1n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:27:43 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24C75C061A0C;
-        Fri, 15 May 2020 10:27:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=18mwp/q8sV8ky3Xs5Csf6eFReIMsx0xc80Vz0Im9aK8=; b=AYT3eRrVNy9OS3ow10EwcjCcYe
-        HDo7BHlOZGG6GoeWHX+hq6EXMisOZ/X4fA0GPq1zilq3XFO57QKal2qmZ7tMcCksU2nKxmKuNMaNu
-        +EoiYsOFuboNCtPZE6ZFjCSVhRSz57+fhKpljr35lIoDdwGF0cMASNNZba4HnPVeyYY97QP0CzeBO
-        MK22lgrr0XJB6KxvgKKQ8w9hqB//g42yGpFNoOVjz5kXTEIyQFKguQF0ObZY1+2sbQDFP0nJ5ALs/
-        EvGx10W/hMWWrBg3tpEUvbnhCGg2P1oCW4F7LiWtZsBWyeFmjE4W3DDKPg1Im6BuQ5DCthaRVmNrW
-        2Tlpt3YA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZe7Z-0008Ua-Ff; Fri, 15 May 2020 17:27:41 +0000
-To:     "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] nfs: fsinfo: fix build when CONFIG_NFS_V4 is not
- enabled
-Message-ID: <f91b8f29-271a-b5cd-410b-a43a399d34aa@infradead.org>
-Date:   Fri, 15 May 2020 10:27:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 15 May 2020 13:28:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726023AbgEOR2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:28:07 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95BE120727;
+        Fri, 15 May 2020 17:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589563686;
+        bh=UhWUiz4i2ua+ePQnkwga76Is6IlUX/kwGgzY/Tlf9Rw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=i7R/upiPvB13dzbce/7FCK5QI3Jiq/Z5T2Q3J68Qd/A3slV4cLoCuhd4eSBpgVDkD
+         jZPNla3o9j8LB1rbB4PwVdTjs6EUjsgfTY3EU4SZPCJWbH1LVmbOBD5BZyO2+sqwxd
+         mC+6RXA6dCAuCzZFdOkyHgziEbwGcl+65c0hEz6E=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@am.com>,
+        Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
+Subject: [PATCH 0/6] Clean up Shadow Call Stack patches for 5.8
+Date:   Fri, 15 May 2020 18:27:50 +0100
+Message-Id: <20200515172756.27185-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+Hi all,
 
-Fix multiple build errors when CONFIG_NFS_V4 is not enabled.
+Here's a series of cleanups I hacked together on top of a modified v13
+of the Shadow Call Stack patches from Sami:
 
-../fs/nfs/fsinfo.c: In function 'nfs_fsinfo_get_supports':
-../fs/nfs/fsinfo.c:153:12: error: 'const struct nfs_server' has no member named 'attr_bitmask'
-  if (server->attr_bitmask[0] & FATTR4_WORD0_SIZE)
-            ^~
-../fs/nfs/fsinfo.c:155:12: error: 'const struct nfs_server' has no member named 'attr_bitmask'
-  if (server->attr_bitmask[1] & FATTR4_WORD1_NUMLINKS)
-            ^~
-../fs/nfs/fsinfo.c:158:12: error: 'const struct nfs_server' has no member named 'attr_bitmask'
-  if (server->attr_bitmask[0] & FATTR4_WORD0_ARCHIVE)
-            ^~
-../fs/nfs/fsinfo.c:160:12: error: 'const struct nfs_server' has no member named 'attr_bitmask'
-  if (server->attr_bitmask[0] & FATTR4_WORD0_HIDDEN)
-            ^~
-../fs/nfs/fsinfo.c:162:12: error: 'const struct nfs_server' has no member named 'attr_bitmask'
-  if (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM)
-            ^~
-../fs/nfs/fsinfo.c: In function 'nfs_fsinfo_get_features':
-../fs/nfs/fsinfo.c:205:12: error: 'const struct nfs_server' has no member named 'attr_bitmask'
-  if (server->attr_bitmask[0] & FATTR4_WORD0_CASE_INSENSITIVE)
-            ^~
-../fs/nfs/fsinfo.c:207:13: error: 'const struct nfs_server' has no member named 'attr_bitmask'
-  if ((server->attr_bitmask[0] & FATTR4_WORD0_ARCHIVE) ||
-             ^~
-../fs/nfs/fsinfo.c:208:13: error: 'const struct nfs_server' has no member named 'attr_bitmask'
-      (server->attr_bitmask[0] & FATTR4_WORD0_HIDDEN) ||
-             ^~
-../fs/nfs/fsinfo.c:209:13: error: 'const struct nfs_server' has no member named 'attr_bitmask'
-      (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM))
-             ^~
+  https://lore.kernel.org/r/20200515172355.GD23334@willie-the-truck
 
+The main changes are:
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-nfs@vger.kernel.org
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna.schumaker@netapp.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>
----
- fs/nfs/fsinfo.c |    5 +++++
- 1 file changed, 5 insertions(+)
+  * Move code out of arch/arm64 and into the core implementation
+  * Store the full SCS stack pointer instead of the offset
+  * Code simplification and general style things
 
---- linux-next-20200515.orig/fs/nfs/fsinfo.c
-+++ linux-next-20200515/fs/nfs/fsinfo.c
-@@ -5,6 +5,7 @@
-  * Written by David Howells (dhowells@redhat.com)
-  */
- 
-+#include <linux/kconfig.h>
- #include <linux/nfs_fs.h>
- #include <linux/windows.h>
- #include "internal.h"
-@@ -150,6 +151,7 @@ static int nfs_fsinfo_get_supports(struc
- 		sup->stx_mask |= STATX_CTIME;
- 	if (server->caps & NFS_CAP_MTIME)
- 		sup->stx_mask |= STATX_MTIME;
-+#if IS_ENABLED(CONFIG_NFS_V4)
- 	if (server->attr_bitmask[0] & FATTR4_WORD0_SIZE)
- 		sup->stx_mask |= STATX_SIZE;
- 	if (server->attr_bitmask[1] & FATTR4_WORD1_NUMLINKS)
-@@ -161,6 +163,7 @@ static int nfs_fsinfo_get_supports(struc
- 		sup->win_file_attrs |= ATTR_HIDDEN;
- 	if (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM)
- 		sup->win_file_attrs |= ATTR_SYSTEM;
-+#endif
- 
- 	sup->stx_attributes = STATX_ATTR_AUTOMOUNT;
- 	return sizeof(*sup);
-@@ -202,12 +205,14 @@ static int nfs_fsinfo_get_features(struc
- 	if (server->caps & NFS_CAP_MTIME)
- 		fsinfo_set_feature(ft, FSINFO_FEAT_HAS_MTIME);
- 
-+#if IS_ENABLED(CONFIG_NFS_V4)
- 	if (server->attr_bitmask[0] & FATTR4_WORD0_CASE_INSENSITIVE)
- 		fsinfo_set_feature(ft, FSINFO_FEAT_NAME_CASE_INDEP);
- 	if ((server->attr_bitmask[0] & FATTR4_WORD0_ARCHIVE) ||
- 	    (server->attr_bitmask[0] & FATTR4_WORD0_HIDDEN) ||
- 	    (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM))
- 		fsinfo_set_feature(ft, FSINFO_FEAT_WINDOWS_ATTRS);
-+#endif
- 
- 	return sizeof(*ft);
- }
+I'd like to queue this on top early next week so that it can spend some
+quality time in linux-next.
+
+Cheers,
+
+Will
+
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Mark Rutland <mark.rutland@am.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: <kernel-team@android.com>
+
+--->8
+
+Will Deacon (6):
+  arm64: scs: Store absolute SCS stack pointer value in thread_info
+  scs: Move accounting into alloc/free functions
+  arm64: scs: Use 'scs_sp' register alias for x18
+  scs: Move scs_overflow_check() out of architecture code
+  scs: Remove references to asm/scs.h from core code
+  scs: Move DEFINE_SCS macro into core code
+
+ arch/Kconfig                         |  4 +--
+ arch/arm64/include/asm/scs.h         | 29 ++++------------
+ arch/arm64/include/asm/thread_info.h |  4 +--
+ arch/arm64/kernel/asm-offsets.c      |  2 +-
+ arch/arm64/kernel/entry.S            | 10 +++---
+ arch/arm64/kernel/head.S             |  2 +-
+ arch/arm64/kernel/process.c          |  2 --
+ arch/arm64/kernel/scs.c              |  6 +---
+ include/linux/scs.h                  | 16 +++++----
+ kernel/sched/core.c                  |  3 ++
+ kernel/scs.c                         | 52 +++++++++++++---------------
+ 11 files changed, 55 insertions(+), 75 deletions(-)
+
+-- 
+2.26.2.761.g0e0b3e54be-goog
 
