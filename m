@@ -2,87 +2,91 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF207C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25896C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8D3120759
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:54:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589550842;
-	bh=uSZuCKTI8X0CVgaJfgeo7/SP3mbua+v/7wQh3rBjeSQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LV806fuqRm5h4rDrEtmL+2Wo/kV0cpsnEIjQXuzW9XvMcqd+Ptx3n2JcGRT5mAk7J
-	 J+4qpadMF+FPQSjNQ0qYYvRdPN6TssRli4/GbqG0HmYmgwtbOMfiVgTmLR4531/GwS
-	 OnaGfqsnlCCbtHqf6CEygu981Xqjqv9IhPI9IHcQ=
+	by mail.kernel.org (Postfix) with ESMTP id F292120759
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgEONyB (ORCPT
+        id S1726204AbgEONzt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:54:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbgEONyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:54:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B248220728;
-        Fri, 15 May 2020 13:54:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589550841;
-        bh=uSZuCKTI8X0CVgaJfgeo7/SP3mbua+v/7wQh3rBjeSQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mCFpSBUcYU1s4a1dzjlhEVZKKeXDmCKw3ZGXTLUcUn1C6rCFB0W3yY3be35QSPsXP
-         bKZluBiQicwsHO00LCtrw3LvofDvRLALLfhtUN/3u3sZMAomu+YC/hH7az5b+cDXsW
-         rkTmHWxO9Afm66Vy/Fct/j1aTVnipQ3AMAEdn4gc=
-Date:   Fri, 15 May 2020 15:53:59 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
-Cc:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH 05/19] staging: wfx: fix coherency of hif_scan() prototype
-Message-ID: <20200515135359.GA2162457@kroah.com>
-References: <20200515083325.378539-1-Jerome.Pouiller@silabs.com>
- <20200515083325.378539-6-Jerome.Pouiller@silabs.com>
+        Fri, 15 May 2020 09:55:49 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:36592 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726144AbgEONzs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 09:55:48 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-152-DguEuvUTNmShAeVBwZOssg-1; Fri, 15 May 2020 14:55:43 +0100
+X-MC-Unique: DguEuvUTNmShAeVBwZOssg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 15 May 2020 14:55:43 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 15 May 2020 14:55:43 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Peter Zijlstra' <peterz@infradead.org>,
+        Marco Elver <elver@google.com>
+CC:     Will Deacon <will@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: RE: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+Thread-Topic: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+Thread-Index: AQHWKfttZor7e2JWdEKPvqldyEhGwKipLI7w
+Date:   Fri, 15 May 2020 13:55:43 +0000
+Message-ID: <26283b5bccc8402cb8c243c569676dbd@AcuMS.aculab.com>
+References: <20200513124021.GB20278@willie-the-truck>
+ <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
+ <20200513165008.GA24836@willie-the-truck>
+ <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com>
+ <20200513174747.GB24836@willie-the-truck>
+ <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com>
+ <20200513212520.GC28594@willie-the-truck>
+ <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com>
+ <20200514110537.GC4280@willie-the-truck>
+ <CANpmjNMTsY_8241bS7=XAfqvZHFLrVEkv_uM4aDUWE_kh3Rvbw@mail.gmail.com>
+ <20200514142450.GC2978@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200514142450.GC2978@hirez.programming.kicks-ass.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200515083325.378539-6-Jerome.Pouiller@silabs.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 10:33:11AM +0200, Jerome Pouiller wrote:
-> From: Jérôme Pouiller <jerome.pouiller@silabs.com>
-> 
-> The function hif_scan() return the timeout for the completion of the
-> scan request. It is the only function from hif_tx.c that return another
-> thing than just an error code. This behavior is not coherent with the
-> rest of file. Worse, if value returned is positive, the caller can't
-> make say if it is a timeout or the value returned by the hardware.
-> 
-> Uniformize API with other HIF functions, only return the error code and
-> pass timeout with parameters.
-> 
-> Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-> ---
->  drivers/staging/wfx/hif_tx.c | 6 ++++--
->  drivers/staging/wfx/hif_tx.h | 2 +-
->  drivers/staging/wfx/scan.c   | 6 +++---
->  3 files changed, 8 insertions(+), 6 deletions(-)
+From: Peter Zijlstra
+> Sent: 14 May 2020 15:25
+..
+> Exact same requirements, KASAN even has the data_race() problem through
+> READ_ONCE_NOCHECK(), UBSAN doesn't and might be simpler because of it.
 
-This patch fails to apply to my branch, so I've stopped here in the
-patch series.
+What happens if you implement READ_ONCE_NOCHECK() with an
+asm() statement containing a memory load?
 
-Can you rebase and resend the remaining ones?
+Is that enough to kill all the instrumentation?
 
-thanks,
+	David
 
-greg k-h
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
