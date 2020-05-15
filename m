@@ -2,101 +2,71 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CADC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A197C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE68620709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03BA32074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:53:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589540018;
+	bh=YO9ieZ2XSjlr8youhAVFeJv8Lk8F4t/qapdPY41IiYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sPc86UMiYcsEa/klY9uWiEIHEZypYQS+m3iDK2neBlSDKx2ZbTQdW1lI7ZTkkNKGY
+	 VY8QvWA1zzjpmPcfmVd1cj3ZFi8rC11SWsrFawfi21jn+aKhtDe3Yvs2FtYQnQezcH
+	 7AB+Q3FEKXru2vLFgMRCVMJ1IEp3IeuhJAe8wtHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbgEOKxT (ORCPT
+        id S1726212AbgEOKxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:53:19 -0400
-Received: from mga12.intel.com ([192.55.52.136]:23818 "EHLO mga12.intel.com"
+        Fri, 15 May 2020 06:53:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725968AbgEOKxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:53:18 -0400
-IronPort-SDR: ZEIiMclK4CAEABoksrY00BYJtZEszQm6oJIz4TqOPd+Uso7A/qffUDWVQXIXRNflsQX+Adfoad
- SOMw5uegyY5Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 03:53:18 -0700
-IronPort-SDR: Z9jMbhI0bOSAkUctcFuR95gd0AMX/8Mg684Ffh1OGKjfyYJ8M6hkVl1s3Jyl+BbGleFFixE9ab
- lPkSNLmIyqsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="341946497"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 15 May 2020 03:53:11 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZXxp-006qHS-UQ; Fri, 15 May 2020 13:53:13 +0300
-Date:   Fri, 15 May 2020 13:53:13 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
- parameter
-Message-ID: <20200515105313.GL185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
- <20200508112152.GI185537@smile.fi.intel.com>
- <20200511211622.yuh3ls2ay76yaxrf@mobilestation>
- <20200512123551.GX185537@smile.fi.intel.com>
- <20200515061601.GG333670@vkoul-mobl>
+        id S1725968AbgEOKxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 06:53:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C643C20709;
+        Fri, 15 May 2020 10:53:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589540015;
+        bh=YO9ieZ2XSjlr8youhAVFeJv8Lk8F4t/qapdPY41IiYc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2cMsIbs15Sft892IdErIDqutExzauM4P+weAaPQtXM5RewFP8HC0paIsj/hi45MGl
+         hqf0SuwQ57cdQpv33YwqDC5luP1CpbuayLhx3nA+NQUldkJw9Gr1QHnDH12Cs/vVi3
+         JvaU5KTqidvcLpoQwvFDgKXkrCoo8Q03OsFNkim8=
+Date:   Fri, 15 May 2020 12:53:33 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 06/20] n_hdlc_tty_read(): remove pointless access_ok()
+Message-ID: <20200515105333.GA1729517@kroah.com>
+References: <20200509234124.GM23230@ZenIV.linux.org.uk>
+ <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
+ <20200509234557.1124086-6-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515061601.GG333670@vkoul-mobl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200509234557.1124086-6-viro@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 11:46:01AM +0530, Vinod Koul wrote:
-> On 12-05-20, 15:35, Andy Shevchenko wrote:
-> > On Tue, May 12, 2020 at 12:16:22AM +0300, Serge Semin wrote:
-> > > On Fri, May 08, 2020 at 02:21:52PM +0300, Andy Shevchenko wrote:
-> > > > On Fri, May 08, 2020 at 01:53:01PM +0300, Serge Semin wrote:
-
-...
-
-> > My point here that we probably can avoid complications till we have real
-> > hardware where it's different. As I said I don't remember a such, except
-> > *maybe* Intel Medfield, which is quite outdated and not supported for wider
-> > audience anyway.
+On Sun, May 10, 2020 at 12:45:43AM +0100, Al Viro wrote:
+> From: Al Viro <viro@zeniv.linux.org.uk>
 > 
-> IIRC Intel Medfield has couple of dma controller instances each one with
-> different parameters *but* each instance has same channel configuration.
+> only copy_to_user() is done to the address in question
+> 
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> ---
+>  drivers/tty/n_hdlc.c | 7 -------
+>  1 file changed, 7 deletions(-)
 
-That's my memory too.
-
-> I do not recall seeing that we have synthesis parameters per channel
-> basis... But I maybe wrong, it's been a while.
-
-Exactly, that's why I think we better simplify things till we will have real
-issue with it. I.o.w. no need to solve the problem which doesn't exist.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
