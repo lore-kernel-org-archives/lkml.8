@@ -2,79 +2,115 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5497FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A421C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5EE206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589566134;
-	bh=ESlVXG+oqcd9xYFxURto9/OPRJKlMx968VMKHxE5ct0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MMAcHF1EDXNebhZYxZlgdUyBqvbBattaKElSWFk5dhIqkTaqzBlx50vz8lUrYl0HL
-	 PCyUPrKvwzhXGo3+kkcYhzCCcLBQEyzyWoGcFVobfaMy/QYrMftHvOtt/Jlrzv6TsG
-	 spy3C+IbHMbvsL2IrVwuFUtRjn+bpYmmFfavI6QQ=
+	by mail.kernel.org (Postfix) with ESMTP id E16B720657
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:09:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="PWW0GHaO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgEOSIx (ORCPT
+        id S1726339AbgEOSJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 14:08:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbgEOSIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 14:08:53 -0400
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC97B20657;
-        Fri, 15 May 2020 18:08:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589566133;
-        bh=ESlVXG+oqcd9xYFxURto9/OPRJKlMx968VMKHxE5ct0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OIf/ZO4kqMQOIrV1HAFCYW52ZXGnXzxq8x+Su+JM1yKLvGE4mMjl0JgYX51tRxtaC
-         2aeiMr/iKhar5vo+IEuFJAZiw8NVt5admQnN79SBGbHTBVlkbphPtkHD3CMG/8JV8D
-         Rdr2Q2ip48DL41XjRZcl6dHNhxR3zKdliubJ60+E=
-Received: by mail-lf1-f52.google.com with SMTP id v5so2553744lfp.13;
-        Fri, 15 May 2020 11:08:52 -0700 (PDT)
-X-Gm-Message-State: AOAM530hvrPISsyE0v/UIlr5S+ShsmvGYhXb2JHKmjgMWT/tC3oA5hgJ
-        ZyHaNaaPjd4BtR8Fp7X/bR3zT7Sk4/G1NtxL3w0=
-X-Google-Smtp-Source: ABdhPJzbQo6rOBwWknOrMCZMnmq8FRvflFdJwiKbjOm5/kRGe5wn4Q+82lIJfpDzCJ5+F+TNooMQw4z8nBWo+/AjCUA=
-X-Received: by 2002:ac2:558e:: with SMTP id v14mr3228999lfg.138.1589566131003;
- Fri, 15 May 2020 11:08:51 -0700 (PDT)
+        Fri, 15 May 2020 14:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgEOSJ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 14:09:28 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E5FDC05BD09
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 11:09:28 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id i5so3459593qkl.12
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 11:09:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VtzLCBVok8XlbDgDkip+DgPbXfjB0Ty8UH/3nIag75g=;
+        b=PWW0GHaOTt1grzeYKkoIvWRXSG1ezxAQ+T3eDFecYfulUEoEJYp420H3TUxznxZXQ1
+         9lmGHfjOikCYafK145P0664YqWXjwb4EGqCEWKoudJakCv8Dw1OXKswDI/STZl84s0oj
+         FdHtIChT8Sant8We8ACswlssnUtp1DMS9fkJLszaFdnX3veOh9/6Cx9Liy4idE0Ng0ft
+         t1uS6PEF6Jr4UxM7+nsO1+Vcco4BLQ36HwyN/C+YXmXX+cx7z/wgen2muSrBI9qh39hf
+         6/CXUnvoyK9hziUMbIPb/ehW4roSn+H/XCPV41JvgL3t2j69yBmk3DHDxruevgNlwBEx
+         927w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VtzLCBVok8XlbDgDkip+DgPbXfjB0Ty8UH/3nIag75g=;
+        b=NWwaLkIOSs5aLm9IJey8P6Q8pSdf4qzIIf2xzuGKsKjpLnfHYANAuWmrWPraWNgVpV
+         S9MIDdJJPnjJW1rPZSyh3ybR+hXZflAlJBw9sbwFWZ3xf1IXm9e3C3ACfaX/kBTwZy7v
+         SzsKMS2Clw8at+MvtRZqnzSyYLnOcsZ29mnEtQ3WNBWpmlSm5PSt+ZcFe9HHrkU2tJkE
+         6JhVurx1gwXWWE1BCuHZJWzjYBDWKimJP2ZsmDYioDI/WnH6x4ZQp8sRjX5aKh+EB90q
+         AHkqc5XIhwzOsmWIRv/RCGpHvAPY7xQQhIcGg0FwFCjK05aSCPuzp25eT11RcjIKys4e
+         Lp/Q==
+X-Gm-Message-State: AOAM533pgZwoXEcb+4EZsreRAdqT3R7EhL2EB7wKgOqX+z5Vtbrn9W33
+        gkvxdqyNqXE/tnw9Lc5bt2SGFg==
+X-Google-Smtp-Source: ABdhPJysqfBouqJQhvsnrhs4XntBJ+MuFFmcGCdoQqqmwUBGOQ1dCTh6LZSFcednwifZXtSzt759Bg==
+X-Received: by 2002:ae9:e418:: with SMTP id q24mr4580879qkc.69.1589566167550;
+        Fri, 15 May 2020 11:09:27 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:90a4])
+        by smtp.gmail.com with ESMTPSA id z15sm2113327qkg.70.2020.05.15.11.09.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 11:09:26 -0700 (PDT)
+Date:   Fri, 15 May 2020 14:09:06 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] memcg: expose root cgroup's memory.stat
+Message-ID: <20200515180906.GA630613@cmpxchg.org>
+References: <20200508170630.94406-1-shakeelb@google.com>
+ <20200508214405.GA226164@cmpxchg.org>
+ <CALvZod5VHHUV+_AXs4+5sLOPGyxm709kQ1q=uHMPVxW8pwXZ=g@mail.gmail.com>
+ <20200515082955.GJ29153@dhcp22.suse.cz>
+ <20200515132421.GC591266@cmpxchg.org>
+ <CALvZod7SdgXv0Dmm3q5H=EH4dzg8pXZenMUaDObfoRv5EX-Pkw@mail.gmail.com>
+ <20200515150026.GA94522@carbon.DHCP.thefacebook.com>
+ <CALvZod5EHzK-UzS9WgkzpZ2T+WwA8LottxrTzUi3qFwvUbOk4w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190724185029.26822-1-indigo@bitglue.com>
-In-Reply-To: <20190724185029.26822-1-indigo@bitglue.com>
-From:   Song Liu <song@kernel.org>
-Date:   Fri, 15 May 2020 11:08:39 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW67xTooG7QLwkwLfs=3EgFUXARWtfexdwp4gQHAFv+yoA@mail.gmail.com>
-Message-ID: <CAPhsuW67xTooG7QLwkwLfs=3EgFUXARWtfexdwp4gQHAFv+yoA@mail.gmail.com>
-Subject: Re: [PATCH] Correct documentation for /proc/schedstat
-To:     Phil Frost <indigo@bitglue.com>, davidca@fb.com, haowanglud@fb.com
-Cc:     Ingo Molnar <mingo@elte.hu>, trivial@kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod5EHzK-UzS9WgkzpZ2T+WwA8LottxrTzUi3qFwvUbOk4w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Phil,
+On Fri, May 15, 2020 at 10:49:22AM -0700, Shakeel Butt wrote:
+> On Fri, May 15, 2020 at 8:00 AM Roman Gushchin <guro@fb.com> wrote:
+> > On Fri, May 15, 2020 at 06:44:44AM -0700, Shakeel Butt wrote:
+> > > On Fri, May 15, 2020 at 6:24 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > > > You're right. It should only bypass the page_counter, but still set
+> > > > page->mem_cgroup = root_mem_cgroup, just like user pages.
+> >
+> > What about kernel threads? We consider them belonging to the root memory
+> > cgroup. Should their memory consumption being considered in root-level stats?
+> >
+> > I'm not sure we really want it, but I guess we need to document how
+> > kernel threads are handled.
+> 
+> What will be the cons of updating root-level stats for kthreads?
 
-On Wed, Jul 24, 2019 at 12:26 PM Phil Frost <indigo@bitglue.com> wrote:
->
-> Commit 425e0968a25fa3f111f9919964cac079738140b5 ("sched: move code into
-> kernel/sched_stats.h") appears to have inadvertently changed the unit of
-> time from jiffies to nanoseconds as part of the implementation of CFS.
->
-> Signed-off-by: Phil Frost <indigo@bitglue.com>
+Should kernel threads be doing GFP_ACCOUNT allocations without
+memalloc_use_memcg()? GFP_ACCOUNT implies that the memory consumption
+can be significant and should be attributed to userspace activity.
 
-Do you plan to resend this patch? The file has been updated to sched-stats.rst.
+If the kernel thread has no userspace entity to blame, it seems to
+imply the same thing as a !GFP_ACCOUNT allocation: shared public
+infrastructure, not interesting to account to any specific cgroup.
 
-Thanks,
-Song
+I'm not sure if we have such allocations right now. But IMO we should
+not account anything from kthreads, or interrupts for that matter,
+/unless/ there is a specific active_memcg that was set by the kthread
+or the interrupt.
