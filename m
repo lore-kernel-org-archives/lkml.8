@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E36F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AB1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBB1E20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE9720709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589578161;
-	bh=axO7uaYrjQR5BXFcyfzz5CtxMgICxAqYcDU4Tgu6OYg=;
+	s=default; t=1589578168;
+	bh=Kfc7RH5wQklFLrTjyZrxyKWCF3lId530z4BZsrN14fM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zHQcx5os52yU2alMYf1wbv1BvLyQekbQ4yhIkV8KW3KkXCgBKWVZmjXCxbeDw7Hkr
-	 LjDF346MZ6rVJx8rmMAqUBPolnRFO8jKpq2GFpH0/9ufIwqXoBNA3jtVyKCzTXJ+c8
-	 QJ1lc0Z67R7m8f2ciEnkPvtbPUIciw+rqKDTL+9E=
+	b=2cDdWsTU6OfQfRqArvVu/bUMHRVK3FCeZqBZ/1+FTHoy+c5m7xkaLnTWblHAcccEU
+	 qh3PA1W/UQgcr35DsSPhHnZPNB2Jpz14atpS3G+kElJ9Ih/6LTITtjZKnDbWpsEtpF
+	 o+yOtQCWFNQ/NwVBppdu00HkLL16XWuwf9B56lug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgEOV3U (ORCPT
+        id S1727964AbgEOV3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:29:20 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38031 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbgEOV3J (ORCPT
+        Fri, 15 May 2020 17:29:08 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55098 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgEOV25 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:29:09 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y25so1601914pfn.5;
-        Fri, 15 May 2020 14:29:08 -0700 (PDT)
+        Fri, 15 May 2020 17:28:57 -0400
+Received: by mail-pj1-f68.google.com with SMTP id s69so1476674pjb.4;
+        Fri, 15 May 2020 14:28:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wyaNKYj+csWx0v5/RRrrvPiG/GlOrf9rCpyGTc2gDv0=;
-        b=PNU2WB7xGk4aeo9LqsRnFBNqh2ufNpsh3E2UmToKGNuzHfu5s+ztk+s6S6VUKmq0C/
-         iwuKhe46HL2A2VjsuMCiBG1UUq668ruWKtTYFkzSo6RRrX/zBJOPXhRKnsWG3B0dZ2hW
-         bWS2BRDcZKdi0ogAgjbkHYrTzBOU4NRKRmSTPmsBmzjqEpdkwG3CiEBpgHGmHoGOpB6R
-         79oBGxLCemAvW7+V9HRYSkPx8A6zubaw+QyShr460zkG2LBJNAtE7VyZ2ppalO/b0PTK
-         iMKzu8k478e+nghLjgvLqcZuQkCqBKzZEUEUe5QfMFc988OM7X2xv4dSblScsJRps6Fl
-         5B1A==
-X-Gm-Message-State: AOAM531hGbKW+WC3F5TKCbWmueDzmsXgOmOREtXk4XgjwqnH/lMZEyw5
-        Y6Oh5B+/fqtxcGWbDJ81iE4=
-X-Google-Smtp-Source: ABdhPJzT8OuJIcMz4maB705Q5rp4ih5zCp5ALUBnEyTPR7+PH8X96oQqmCWUmGTpOQxsyRkd6WhDeA==
-X-Received: by 2002:aa7:8a92:: with SMTP id a18mr5990105pfc.0.1589578148396;
-        Fri, 15 May 2020 14:29:08 -0700 (PDT)
+        bh=iJHZT4MFB+sxpA2IE8Rn7gYtD/Qc3TQAcYIYNGZYEvg=;
+        b=phgAbbNGhP6J6HCS81WASgrpY9Nrx5oVe49i1im1AEYCMmyduUplIcxbSk128lbn5z
+         TU2mr1DIJBXRCn0klJ41zaK7+lstVO2R1X9Mt3moIhbF1Z2I2T1IaKpUnEJ/hEV6+b/H
+         ZT1TabezFw8DNFr/6SUEIU+ShgnsNkOOShmjegw3aXW3+dPT3rahU/pTRJ3jem3C/UHU
+         nwfLtdSsE3FiPQ13tMm7pqTCk5DHaVzSj8uGfDs+Or0WM7VGkpITCN/69O64+202a897
+         RiLjpzheuUA9YMRXoR4QSwImyHDd4RymJKRryVL+VOogvxc0LBBast66Ir0BpeFcKCYF
+         dh7g==
+X-Gm-Message-State: AOAM5307VsbEQwiBDwxoBXLSrs66/8AOC2cJSWO81u8LqRTHytElmFSm
+        FdNIdsjE6atRICRr2kTle1Y=
+X-Google-Smtp-Source: ABdhPJyXGdNJ50o8iXun3oJYb5kOl4qAS44k7tBrK+zhGB5FrkYaAMjM2mxcrnwWQ+1fLrVtkOdV0w==
+X-Received: by 2002:a17:902:9f97:: with SMTP id g23mr5721810plq.30.1589578136986;
+        Fri, 15 May 2020 14:28:56 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 19sm2216513pjl.52.2020.05.15.14.28.57
+        by smtp.gmail.com with ESMTPSA id m9sm2450255pgd.1.2020.05.15.14.28.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 14:29:04 -0700 (PDT)
+        Fri, 15 May 2020 14:28:55 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 7975D4238B; Fri, 15 May 2020 21:28:50 +0000 (UTC)
+        id CB94E41EDA; Fri, 15 May 2020 21:28:49 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     jeyu@kernel.org
 Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
@@ -63,14 +63,12 @@ Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
         mchehab+samsung@kernel.org, kvalo@codeaurora.org,
         davem@davemloft.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        Lennert Buytenhek <buytenh@wantstofly.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Subject: [PATCH v2 15/15] mwl8k: use new module_firmware_crashed()
-Date:   Fri, 15 May 2020 21:28:46 +0000
-Message-Id: <20200515212846.1347-16-mcgrof@kernel.org>
+        Rasesh Mody <rmody@marvell.com>,
+        Sudarsana Kalluru <skalluru@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com
+Subject: [PATCH v2 05/15] bna: use new module_firmware_crashed()
+Date:   Fri, 15 May 2020 21:28:36 +0000
+Message-Id: <20200515212846.1347-6-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200515212846.1347-1-mcgrof@kernel.org>
 References: <20200515212846.1347-1-mcgrof@kernel.org>
@@ -89,29 +87,26 @@ a reboot.
 
 Using a taint flag allows us to annotate when this happens clearly.
 
-Cc: linux-wireless@vger.kernel.org
-Cc: Lennert Buytenhek <buytenh@wantstofly.org>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Johannes Berg <johannes.berg@intel.com>
-Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Cc: Rasesh Mody <rmody@marvell.com>
+Cc: Sudarsana Kalluru <skalluru@marvell.com>
+Cc: GR-Linux-NIC-Dev@marvell.com
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/net/wireless/marvell/mwl8k.c | 1 +
+ drivers/net/ethernet/brocade/bna/bfa_ioc.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/marvell/mwl8k.c b/drivers/net/wireless/marvell/mwl8k.c
-index 97f23f93f6e7..d609ef1bb879 100644
---- a/drivers/net/wireless/marvell/mwl8k.c
-+++ b/drivers/net/wireless/marvell/mwl8k.c
-@@ -1551,6 +1551,7 @@ static int mwl8k_tx_wait_empty(struct ieee80211_hw *hw)
- 	 * the firmware has crashed
- 	 */
- 	if (priv->hw_restart_in_progress) {
-+		module_firmware_crashed();
- 		if (priv->hw_restart_owner == current)
- 			return 0;
- 		else
+diff --git a/drivers/net/ethernet/brocade/bna/bfa_ioc.c b/drivers/net/ethernet/brocade/bna/bfa_ioc.c
+index e17bfc87da90..b3f44a912574 100644
+--- a/drivers/net/ethernet/brocade/bna/bfa_ioc.c
++++ b/drivers/net/ethernet/brocade/bna/bfa_ioc.c
+@@ -927,6 +927,7 @@ bfa_iocpf_sm_disabled(struct bfa_iocpf *iocpf, enum iocpf_event event)
+ static void
+ bfa_iocpf_sm_initfail_sync_entry(struct bfa_iocpf *iocpf)
+ {
++	module_firmware_crashed();
+ 	bfa_nw_ioc_debug_save_ftrc(iocpf->ioc);
+ 	bfa_ioc_hw_sem_get(iocpf->ioc);
+ }
 -- 
 2.26.2
 
