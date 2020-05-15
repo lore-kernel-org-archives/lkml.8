@@ -2,206 +2,85 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EE3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE0BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE8820671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F932076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgEOPaW (ORCPT
+        id S1726908AbgEOPal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:30:22 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:37958 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbgEOPaU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:30:20 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C1EB580004AB;
-        Fri, 15 May 2020 15:30:13 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id o7cbxl9OftMx; Fri, 15 May 2020 18:30:08 +0300 (MSK)
-Date:   Fri, 15 May 2020 18:30:06 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 00/19] spi: dw: Add generic DW DMA controller support
-Message-ID: <20200515153006.gucdogtlwp2gwwi7@mobilestation>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515114950.GT185537@smile.fi.intel.com>
+        Fri, 15 May 2020 11:30:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:58186 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726249AbgEOPak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 11:30:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26C1D2F;
+        Fri, 15 May 2020 08:30:40 -0700 (PDT)
+Received: from [10.57.27.64] (unknown [10.57.27.64])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C26B23F71E;
+        Fri, 15 May 2020 08:30:37 -0700 (PDT)
+Subject: Re: [PATCH 06/14] arm64: dts: sparx5: Add basic cpu support
+To:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Marc Zyngier <maz@misterjones.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, SoC Team <soc@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Olof Johansson <olof@lixom.net>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>
+References: <20200513125532.24585-1-lars.povlsen@microchip.com>
+ <20200513125532.24585-7-lars.povlsen@microchip.com>
+ <2d230dab95ee96727a42f9c242c93c18@misterjones.org>
+ <871rnlp740.fsf@soft-dev15.microsemi.net>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <18c0d9ef-9a2b-31d0-b317-f051bb26a907@arm.com>
+Date:   Fri, 15 May 2020 16:30:36 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200515114950.GT185537@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <871rnlp740.fsf@soft-dev15.microsemi.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 02:49:50PM +0300, Andy Shevchenko wrote:
-> On Fri, May 15, 2020 at 01:47:39PM +0300, Serge Semin wrote:
-> > Baikal-T1 SoC provides a DW DMA controller to perform low-speed peripherals
-> > Mem-to-Dev and Dev-to-Mem transaction. This is also applicable to the DW
-> > APB SSI devices embedded into the SoC. Currently the DMA-based transfers
-> > are supported by the DW APB SPI driver only as a middle layer code for
-> > Intel MID/Elkhart PCI devices. Seeing the same code can be used for normal
-> > platform DMAC device we introduced a set of patches to fix it within this
-> > series.
-> > 
-> > First of all we need to add the Tx and Rx DMA channels support into the DW
-> > APB SSI binding. Then there are several fixes and cleanups provided as a
-> > initial preparation for the Generic DMA support integration: add Tx/Rx
-> > finish wait methods, clear DMAC register when done or stopped, Fix native
-> > CS being unset, enable interrupts in accordance with DMA xfer mode,
-> > discard static DW DMA slave structures, discard unused void priv pointer
-> > and dma_width member of the dw_spi structure, provide the DMA Tx/Rx burst
-> > length parametrisation and make sure it's optionally set in accordance
-> > with the DMA max-burst capability.
-> > 
-> > In order to have the DW APB SSI MMIO driver working with DMA we need to
-> > initialize the paddr field with the physical base address of the DW APB SSI
-> > registers space. Then we unpin the Intel MID specific code from the
-> > generic DMA one and placed it into the spi-dw-pci.c driver, which is a
-> > better place for it anyway. After that the naming cleanups are performed
-> > since the code is going to be used for a generic DMAC device. Finally the
-> > Generic DMA initialization can be added to the generic version of the
-> > DW APB SSI IP.
-> > 
-> > Last but not least we traditionally convert the legacy plain text-based
-> > dt-binding file with yaml-based one and as a cherry on a cake replace
-> > the manually written DebugFS registers read method with a ready-to-use
-> > for the same purpose regset32 DebugFS interface usage.
-> > 
-> > This patchset is rebased and tested on the spi/for-next (5.7-rc5):
-> > base-commit: fe9fce6b2cf3 ("Merge remote-tracking branch 'spi/for-5.8' into spi-next")
-> 
-> Thanks! I'm going to review it soon.
-> 
-> Hint for the next time, please start always a new thread with new version.
+On 2020-05-15 16:09, Lars Povlsen wrote:
+[...]
+>>> +             cpu0: cpu@0 {
+>>> +                     compatible = "arm,cortex-a53", "arm,armv8";
 
-Thanks for suggestion. Indeed my knowledge of the submission procedure has
-been incomplete: "However, for a multi-patch series, it is generally best
-to avoid using In-Reply-To: to link to older versions of the series.
-This way multiple versions of the patch don't become an unmanageable
-forest of references in email clients." [1]
+Side note: only one compatible string for the real CPU please, running a 
+DT bindings check should complain about that.
 
-[1] Documentation/process/submitting-patches.rst
+>>> +                     device_type = "cpu";
+>>> +                     reg = <0x0 0x0>;
+>>> +                     enable-method = "spin-table";
+>>
+>> Really? This is 2020, not 2012 any more. Surely a new platform
+>> boots using PSCI, and not *this*.
+>>
+> 
+> We don't currently support PSCI. The platform does not have TrustZone,
+> hence we don't use ATF.
+AIUI, part of the purpose of ATF is to provide a nice standardised 
+platform interface regardless of whether you care about Secure software 
+or not. It shouldn't take much to knock up a trivial ATF port that just 
+uses an internal spin-table for its PSCI backend - in fact I suspect 
+that's probably just a copy-paste from the RPi3 port ;)
 
--Sergey
-
-> 
-> > Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> > Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> > Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> > Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-> > Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> > Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-> > Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-> > Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Allison Randal <allison@lohutok.net>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: linux-mips@vger.kernel.org
-> > Cc: linux-spi@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > 
-> > ---
-> > 
-> > Changelog v2:
-> > - Rebase on top of the spi repository for-next branch.
-> > - Move bindings conversion patch to the tail of the series.
-> > - Move fixes to the head of the series.
-> > - Apply as many changes as possible to be applied the Generic DMA
-> >   functionality support is added and the spi-dw-mid is moved to the
-> >   spi-dw-dma driver.
-> > - Discard patch "spi: dw: Fix dma_slave_config used partly uninitialized"
-> >   since the problem has already been fixed.
-> > - Add new patch "spi: dw: Discard unused void priv pointer".
-> > - Add new patch "spi: dw: Discard dma_width member of the dw_spi structure".
-> >   n_bytes member of the DW SPI data can be used instead.
-> > - Build the DMA functionality into the DW APB SSI core if required instead
-> >   of creating a separate kernel module.
-> > - Use conditional statement instead of the ternary operator in the ref
-> >   clock getter.
-> > 
-> > Serge Semin (19):
-> >   dt-bindings: spi: dw: Add Tx/Rx DMA properties
-> >   spi: dw: Add Tx/Rx finish wait methods to the MID DMA
-> >   spi: dw: Clear DMAC register when done or stopped
-> >   spi: dw: Fix native CS being unset
-> >   spi: dw: Enable interrupts in accordance with DMA xfer mode
-> >   spi: dw: Discard static DW DMA slave structures
-> >   spi: dw: Discard unused void priv pointer
-> >   spi: dw: Discard dma_width member of the dw_spi structure
-> >   spi: dw: Parameterize the DMA Rx/Tx burst length
-> >   spi: dw: Use DMA max burst to set the request thresholds
-> >   spi: dw: Initialize paddr in DW SPI MMIO private data
-> >   spi: dw: Fix Rx-only DMA transfers
-> >   spi: dw: Move Non-DMA code to the DW PCIe-SPI driver
-> >   spi: dw: Remove DW DMA code dependency from DW_DMAC_PCI
-> >   spi: dw: Add DW SPI DMA/PCI/MMIO dependency on the DW SPI core
-> >   spi: dw: Cleanup generic DW DMA code namings
-> >   spi: dw: Add DMA support to the DW SPI MMIO driver
-> >   spi: dw: Use regset32 DebugFS method to create regdump file
-> >   dt-bindings: spi: Convert DW SPI binding to DT schema
-> > 
-> >  .../bindings/spi/snps,dw-apb-ssi.txt          |  42 ---
-> >  .../bindings/spi/snps,dw-apb-ssi.yaml         | 127 +++++++++
-> >  .../devicetree/bindings/spi/spi-dw.txt        |  24 --
-> >  drivers/spi/Kconfig                           |  15 +-
-> >  drivers/spi/Makefile                          |   7 +-
-> >  drivers/spi/{spi-dw-mid.c => spi-dw-dma.c}    | 257 ++++++++++--------
-> >  drivers/spi/spi-dw-mmio.c                     |   9 +-
-> >  drivers/spi/spi-dw-pci.c                      |  50 +++-
-> >  drivers/spi/spi-dw.c                          |  98 +++----
-> >  drivers/spi/spi-dw.h                          |  33 ++-
-> >  10 files changed, 405 insertions(+), 257 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> >  create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/spi/spi-dw.txt
-> >  rename drivers/spi/{spi-dw-mid.c => spi-dw-dma.c} (53%)
-> > 
-> > -- 
-> > 2.25.1
-> > 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Robin.
