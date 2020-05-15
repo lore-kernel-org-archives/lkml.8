@@ -2,87 +2,67 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC63C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25D1320709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:00:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFu9ELsM"
+	by mail.kernel.org (Postfix) with ESMTP id E65A6206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgEOAAn (ORCPT
+        id S1728114AbgEOAAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 20:00:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbgEOAAn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 20:00:43 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1EE3C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 17:00:42 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id i5so765362qkl.12
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 17:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=wKnP4cRDwV5pisveNqypr4DPC2I8ojFUWdJ2DYvbn+s=;
-        b=fFu9ELsMYEGcxZpGuSbxGZ5BhePy8a4gaFOp/1xFDw22VuQQ9hU73GRZaeoVCzX9EN
-         69pqPdn/N0gZmRsUpxGKx6E35AmCwnb869I6uvf9KIZ7Jo3PcMtRPDk5tSb4RZVOgaxs
-         7/AsJfkG9my8BEBrUp5rMnHJaGgxSyVxK9VUjXu7XuRc8yliTk3iFR+m+gaaNTvbqgsw
-         +unSpk4sF0Tv+u1e1LTp6O6Whkz0ZrTrgncSheaLDLYKW9y85JjkmsNpUvQiBWNREqW0
-         PARvxwirZ6IRnkX877H14Fxgx7hYyuOnn45UXNLduOebj5/4rWkL+l1ep03TTvQiX1/v
-         qIxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=wKnP4cRDwV5pisveNqypr4DPC2I8ojFUWdJ2DYvbn+s=;
-        b=HqKl3qxikiyGjuX8L3ADbZ2TDZuTt32Tm49+GDKIjTj/XUc8rDLlg62al5CWA/wD9k
-         /yq1YvyQ4dVDIqZEyOAsfCPlrgzg1wSskhvdqOeS06tLwGnvBihrnRLWWCKc6bvs91CA
-         CE/MLwHqJ/avDCXPa6cIrKjs0GiZyZ/cBbmodxD15V1h7bxnzMwKNwOYeRn75J+uAvjG
-         twzdghMi6i5L7JXCOIgchs/oOWITGcuvh5U9WUPM0BydzZDIYXUOmCrehrm3NREmDENj
-         GuHV55OTQZyqiB8TCbJJvkewqZbL43CRq0viMxKPU7pFPErEUxfZKsBLeCtnG5Re11Fb
-         zJDQ==
-X-Gm-Message-State: AOAM531AGhlVy6MgaCv1BPkDlWx64kaCnbYVDqeA8IKAG+xDFxCtoZEP
-        Ye2RpGr4oNVcbsvU4kaTgSc=
-X-Google-Smtp-Source: ABdhPJxzlVVZEyGno1YM1Z74EjtIzkmN8CMMFZ3IbQ1B4TaEKsA5p63EFbGw0iIYxgkADVp1jJ1hgg==
-X-Received: by 2002:a37:a1c7:: with SMTP id k190mr826162qke.469.1589500841967;
-        Thu, 14 May 2020 17:00:41 -0700 (PDT)
-Received: from LeoBras (179-125-143-209.dynamic.desktop.com.br. [179.125.143.209])
-        by smtp.gmail.com with ESMTPSA id c25sm330412qkm.119.2020.05.14.17.00.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 17:00:41 -0700 (PDT)
-Message-ID: <344838598649fd638c9408606efe8db4c69db9cb.camel@gmail.com>
-Subject: Re: [PATCH v3 2/2] powerpc/rtas: Implement reentrant rtas call
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Nadav Amit <namit@vmware.com>
-Date:   Thu, 14 May 2020 21:00:29 -0300
-In-Reply-To: <fc13b26ff3d2ea2e84049eabda0c60a60d851b40.camel@gmail.com>
-References: <20200514011245.127174-1-leobras.c@gmail.com>
-         <20200514011245.127174-3-leobras.c@gmail.com>
-         <878shu2vjp.fsf@linux.ibm.com>
-         <fc13b26ff3d2ea2e84049eabda0c60a60d851b40.camel@gmail.com>
-Organization: IBM
+        Thu, 14 May 2020 20:00:49 -0400
+Received: from mga07.intel.com ([134.134.136.100]:17357 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726088AbgEOAAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 20:00:47 -0400
+IronPort-SDR: qid2dEkSCvK+pyM55tMfjpyqTHN9m5Sqx+mMxHdlRszjyYJxVsFjxkCoU9OJrs4T/UrAm0WAw1
+ ZgQr/rp0a4Ew==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 17:00:46 -0700
+IronPort-SDR: ca6NGik9rwL5TfUuopCMa37yfmw6w+5tfFEmLEcDsO+j+WiMzKp0s+BHsnCUEhu0AryC6eHS/K
+ TorQLC+Wgq5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
+   d="scan'208";a="266421400"
+Received: from ashadrin-mobl1.ccr.corp.intel.com ([10.249.38.112])
+  by orsmga006.jf.intel.com with ESMTP; 14 May 2020 17:00:37 -0700
+Message-ID: <956b284c2b144313fd158de75cba510eb98f71bf.camel@linux.intel.com>
+Subject: Re: [PATCH v4 1/4] KEYS: trusted: Add generic trusted keys framework
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>, dhowells@redhat.com,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Markus Wamser <Markus.Wamser@mixed-mode.de>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        op-tee@lists.trustedfirmware.org,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Date:   Fri, 15 May 2020 03:00:25 +0300
+In-Reply-To: <CAFA6WYMciZ=qkG3N_9YWzt_DJr2dGwdAy9diMXCJSNjr2o5ONA@mail.gmail.com>
+References: <1588758017-30426-1-git-send-email-sumit.garg@linaro.org>
+         <1588758017-30426-2-git-send-email-sumit.garg@linaro.org>
+         <07bb6080f8be9f6613f460e2d6e19f3d456e219c.camel@linux.intel.com>
+         <CAFA6WYMciZ=qkG3N_9YWzt_DJr2dGwdAy9diMXCJSNjr2o5ONA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -90,14 +70,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-14 at 20:28 -0300, Leonardo Bras wrote:
-> Yes, you are right.
-> I will also add preempt_{dis,en}able, which in most kernels will
-> compile out, but it will be kind of 'ready' if we ever decide to
-> support PREEMPT.
+On Thu, 2020-05-14 at 16:53 +0530, Sumit Garg wrote:
+> On Thu, 14 May 2020 at 05:55, Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> > On Wed, 2020-05-06 at 15:10 +0530, Sumit Garg wrote:
+> > > Current trusted keys framework is tightly coupled to use TPM device as
+> > > an underlying implementation which makes it difficult for implementations
+> > > like Trusted Execution Environment (TEE) etc. to provide trusked keys
+> > > support in case platform doesn't posses a TPM device.
+> > > 
+> > > So this patch tries to add generic trusted keys framework where underlying
+> > > implemtations like TPM, TEE etc. could be easily plugged-in.
+> > > 
+> > > Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > 
+> > I tend to agree how this is implemented and could merge it as such.
+> > 
+> > I'm just thinking if we could refine this patch in a way that instead of
+> > copying TRUSTED_DEBUG macro we could just replace pr_info() statements
+> > with pr_debug()?
 > 
-> Thanks for the feedback!
+> AFAIU, TRUSTED_DEBUG being a security sensitive operation is only
+> meant to be used in development environments and should be strictly
+> disabled in production environments. But it may not always be true
+> with pr_debug() with CONFIG_DYNAMIC_DEBUG=y which allows the debug
+> paths to be compiled into the kernel which can be enabled/disabled at
+> runtime.
+> 
+> IMO we should keep this TRUSTED_DEBUG macro, so that users are aware
+> of its security sensitive nature and need to explicitly enable it to
+> debug.
 
-v4:
-http://patchwork.ozlabs.org/project/linuxppc-dev/patch/20200514235138.150722-3-leobras.c@gmail.com/
+You are absolutely correct.
+
+/Jarkko
 
