@@ -2,89 +2,123 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 04:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D878C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 04:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF7C5206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 04:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A6D20671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 04:23:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B+hdZiy3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pMcZxToO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbgEOET2 (ORCPT
+        id S1726584AbgEOEXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 00:19:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725616AbgEOET1 (ORCPT
+        Fri, 15 May 2020 00:23:43 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46272 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726283AbgEOEXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 00:19:27 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89797C061A0C;
-        Thu, 14 May 2020 21:19:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=sEV2Dcb/vxjuVh6b2+vt3K/ZxF+r4H+loOY/Rcz7Jfs=; b=B+hdZiy3fTXn2Mq/d0DoC+/mOU
-        O7aStKnfUbQOLviXcQAC1xrirMK/uwB39WFmDo6picuEgYmTQnVmUuZ0qd+ATNk8Ub9VtzaevKA8S
-        AlqLvhorITqZJxUgDvRru+uRCk2j/rq3sFKAt3lJYCiM6Mtzleodx+LGlLL9FYrEh7yTFzAk/USVu
-        oKizsjcZPJmBV6EEqOODHagdmMRMMc+pX7Q9xMcRpg9puDRmNx6DJAQ57vRz41Q6bXAawywEeqx0U
-        ORQwc7NJ+AHpY5tIt0VCfmpRxpMRzYYA6L9uxji4uekEAN5RXxZwP2+7psdx2ejVJ1Yy/NufRZqQ/
-        dSkO3VcA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZRoa-0006Is-Ic; Fri, 15 May 2020 04:19:16 +0000
-Date:   Thu, 14 May 2020 21:19:16 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Zhen Lei <thunder.leizhen@huawei.com>
-Cc:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>, dm-devel <dm-devel@redhat.com>,
-        Song Liu <song@kernel.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 07/10] block: use sectors_to_npage() and PAGE_SECTORS
- to clean up code
-Message-ID: <20200515041916.GE16070@bombadil.infradead.org>
-References: <20200507075100.1779-1-thunder.leizhen@huawei.com>
- <20200507075100.1779-8-thunder.leizhen@huawei.com>
+        Fri, 15 May 2020 00:23:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589516622; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=fcotPRDneqlOpcVfqWQi9yd9jerMS3v05oGvbu+gO4g=; b=pMcZxToOFz4u03HHw/OsiFGBiWlXyydeVEI3DrZ0xoEWve0yIVuDUILmVu02oLncUt2IERlm
+ Hca7vONhh2lcRpRRDBZg/pm6lOB1/p6PYeEWo71Fl4F+vRBZfFtUHryfc0M9lkTjtdcx+jrV
+ XwD4EQ44MzUJE08VBMTQoqDj3zE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5ebe193daefa5a01ccbdc318 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 15 May 2020 04:23:25
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AF71EC432C2; Fri, 15 May 2020 04:23:24 +0000 (UTC)
+Received: from [192.168.1.7] (unknown [122.169.155.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mgautam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F58FC433D2;
+        Fri, 15 May 2020 04:23:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5F58FC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mgautam@codeaurora.org
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
+        <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+ <878shu4uwk.fsf@kernel.org> <875zcy4uuj.fsf@kernel.org>
+ <20200514171352.GP4525@google.com>
+ <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org>
+ <CAKohpon+JBpV3fC7j=rhc1R4gi_mVG6teBDrE8Yryd4QXfw9bw@mail.gmail.com>
+From:   Manu Gautam <mgautam@codeaurora.org>
+Message-ID: <20a2adc5-4153-1447-0542-908b7996c187@codeaurora.org>
+Date:   Fri, 15 May 2020 09:53:15 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507075100.1779-8-thunder.leizhen@huawei.com>
+In-Reply-To: <CAKohpon+JBpV3fC7j=rhc1R4gi_mVG6teBDrE8Yryd4QXfw9bw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 03:50:57PM +0800, Zhen Lei wrote:
-> +++ b/block/blk-settings.c
-> @@ -150,7 +150,7 @@ void blk_queue_max_hw_sectors(struct request_queue *q, unsigned int max_hw_secto
->  	unsigned int max_sectors;
->  
->  	if ((max_hw_sectors << 9) < PAGE_SIZE) {
-> -		max_hw_sectors = 1 << (PAGE_SHIFT - 9);
-> +		max_hw_sectors = PAGE_SECTORS;
+Hi,
 
-Surely this should be:
+On 5/15/2020 9:27 AM, Viresh Kumar wrote:
+> On Fri, 15 May 2020 at 02:33, Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>
+>> ---8<---
+>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+>> index 206caa0ea1c6..6661788b1a76 100644
+>> --- a/drivers/usb/dwc3/Kconfig
+>> +++ b/drivers/usb/dwc3/Kconfig
+>> @@ -129,6 +129,7 @@ config USB_DWC3_QCOM
+>>         tristate "Qualcomm Platform"
+>>         depends on ARCH_QCOM || COMPILE_TEST
+>>         depends on EXTCON || !EXTCON
+>> +       depends on INTERCONNECT || !INTERCONNECT
+> Again, as I said yesterday. This looks incorrect and may not fix the problem..
+>
+> With this we will be able to select USB_DWC3_QCOM even when INTERCONNECT=m.
 
-	if (max_hw_sectors < PAGE_SECTORS) {
-		max_hw_sectors = PAGE_SECTORS;
+DWC3_QCOM in that case would be 'm' if INTERCONNECT =m and
+that should be fine?
 
-... no?
 
-> -	page = read_mapping_page(mapping,
-> -			(pgoff_t)(n >> (PAGE_SHIFT - 9)), NULL);
-> +	page = read_mapping_page(mapping, (pgoff_t)sectors_to_npage(n), NULL);
+> What we perhaps need here is:
+> depends on INTERCONNECT != m
+>
+> --
+> viresh
 
-... again, get the type right, and you won't need the cast.
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
