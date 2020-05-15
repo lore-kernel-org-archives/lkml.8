@@ -2,130 +2,104 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2917C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A64DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F92520709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69C6D206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:32:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hNoS6Mtp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="IuicEsZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgEOIck (ORCPT
+        id S1727933AbgEOIco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:32:40 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46892 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbgEOIcj (ORCPT
+        Fri, 15 May 2020 04:32:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726730AbgEOIcl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:32:39 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04F8WaCV061056;
-        Fri, 15 May 2020 08:32:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id; s=corp-2020-01-29;
- bh=qabFLrPBdCY3XzQ1h1tsRNJ4eGD+6UXRbZdhAcUiFI4=;
- b=hNoS6Mtp3jr5/HiRadwKCuRNDibTlfSTKmSX3zVlln2xorHymhFdluq4r4rM6o0ZegcE
- Qc3z5H4/waSb8c+rYF6OCknwMeGf289CEl6ca34tFt8PYfCVTtLs9sZgwL1XnvaWGZPb
- sjXMkN8ca8inddOsT0EuwTfyG6g9vT7Q686AKH9sh0fBrES2U+VCuXyB1FNBMBKZYpzA
- QJK/BKtuHYUiRSff1LxM0RxY/2IYKMtRDp+w2EYUC7vOsAaHf5WltXA6iBEmnRTbRKRc
- J6oa70PhEWIInzoBaee0cp9hoN0facjCK2NMtKNNSS6ARco2IPxKNMOJLNfx6ZVl8e3p KQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3100yg986d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 15 May 2020 08:32:36 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04F8Sk8J123706;
-        Fri, 15 May 2020 08:30:31 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 3100yr3jp5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 May 2020 08:30:31 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04F8UUCh002457;
-        Fri, 15 May 2020 08:30:30 GMT
-Received: from gms-target-03.osdevelopmeniad.oraclevcn.com (/100.100.242.162)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 15 May 2020 01:30:30 -0700
-From:   Gulam Mohamed <gulam.mohamed@oracle.com>
-To:     gulam.mohamed@oracle.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: Correct-the-type-of-arg-to-scsi_host_lookup
-Date:   Fri, 15 May 2020 08:30:16 +0000
-Message-Id: <1589531416-3852-1-git-send-email-gulam.mohamed@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9621 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005150074
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9621 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 adultscore=0
- cotscore=-2147483648 mlxscore=0 suspectscore=0 spamscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 clxscore=1011 phishscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005150075
+        Fri, 15 May 2020 04:32:41 -0400
+Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1734C061A0C;
+        Fri, 15 May 2020 01:32:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589531557;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=cHEQOWUyIIldwmU2G5ztyzURhkG246vmV36B4A8PLNg=;
+        b=IuicEsZLQ+IWZvn46fqIzv8mnRi9bsTzIalpbDAxiCGMZ3VRLcZucrP+fUsRXR/r0s
+        rts+19tHz3YACk3hQ0NZFZcEqGDXU2Qhp3jLlxe1GBd/LjkVIWEFBRS+9zq9kn3hPJE+
+        GWQ+WRzdFsrbxPBkaNLK+ViY6ALoWoO5gYMTT3dNsql48FlcIQ13ryBBxL31s5JsbkyW
+        KFU5LjhqKOAcZ1YVwKXRI7SQc3OTdjHRCo1oIY2pbMqbJ5CIlwr7I54d9RD0hiyAfyiy
+        szxrx0rtEHXHIohi/hzIn+qLRJcLpF7r0n1hR100/BM6Ze7y+/nu0e2YuJ3gVbtzGGKt
+        lcMw==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPaJfSc9C1S"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id u08bf3w4F8WN0ZL
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 15 May 2020 10:32:23 +0200 (CEST)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 1/2] hwrng: iproc-rng200 - Set the quality value
+Date:   Fri, 15 May 2020 10:32:22 +0200
+Message-ID: <2080864.23lDWg4Bvs@tauon.chronox.de>
+In-Reply-To: <dleftjtv0i88ji.fsf%l.stelmach@samsung.com>
+References: <4493123.C11H8YMYNy@tauon.chronox.de> <CGME20200514221852eucas1p2bea169d0b4467b0ec9e195c6ac58a08a@eucas1p2.samsung.com> <dleftjtv0i88ji.fsf%l.stelmach@samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The data type of the argument, hostnum, to function
-scsi_host_lookup(unsigned short hostnum) is unsigned short but the
-hostnum sent to this function from callers functions is uint32_t or
-unsigned int. Correct the data type to unsigned int to avoid the
-wrapping of the hostnum value after 65535. Also change the data type of
-local variable hostnum of the function __scsi_host_match() to unsigned
-int.
+Am Freitag, 15. Mai 2020, 00:18:41 CEST schrieb Lukasz Stelmach:
 
-Signed-off-by: Gulam Mohamed <gulam.mohamed@oracle.com>
-Reviewed-by: Joe Jin <joe.jin@oracle.com>
-Reviewed-by: Fred Herard <fred.herard@oracle.com>
----
- drivers/scsi/hosts.c     | 4 ++--
- include/scsi/scsi_host.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Hi Lukasz,
+> 
+> I am running tests using SP800-90B tools and the first issue I can see
+> is the warning that samples contain less than 1e6 bytes of data. I know
+> little about maths behind random number generators, but I have noticed
+> that the bigger chunk of data from an RNG I feed into either ent or ea_iid
+> the higher entropy they report. That is why I divided the data into 1024
+> bit chunks in the first place. To get worse results. With ea_iid they
+> get even worse (128 bytes of random data)
 
-diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c
-index 7ec91c3a66ca..c5c1534eb6e7 100644
---- a/drivers/scsi/hosts.c
-+++ b/drivers/scsi/hosts.c
-@@ -510,7 +510,7 @@ struct Scsi_Host *scsi_host_alloc(struct scsi_host_template *sht, int privsize)
- static int __scsi_host_match(struct device *dev, const void *data)
- {
- 	struct Scsi_Host *p;
--	const unsigned short *hostnum = data;
-+	const unsigned int *hostnum = data;
- 
- 	p = class_to_shost(dev);
- 	return p->host_no == *hostnum;
-@@ -527,7 +527,7 @@ static int __scsi_host_match(struct device *dev, const void *data)
-  *	that scsi_host_get() took. The put_device() below dropped
-  *	the reference from class_find_device().
-  **/
--struct Scsi_Host *scsi_host_lookup(unsigned short hostnum)
-+struct Scsi_Host *scsi_host_lookup(unsigned int hostnum)
- {
- 	struct device *cdev;
- 	struct Scsi_Host *shost = NULL;
-diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
-index 822e8cda8d9b..59742fb6fcd7 100644
---- a/include/scsi/scsi_host.h
-+++ b/include/scsi/scsi_host.h
-@@ -731,7 +731,7 @@ extern int __must_check scsi_add_host_with_dma(struct Scsi_Host *,
- extern struct Scsi_Host *scsi_host_get(struct Scsi_Host *);
- extern int scsi_host_busy(struct Scsi_Host *shost);
- extern void scsi_host_put(struct Scsi_Host *t);
--extern struct Scsi_Host *scsi_host_lookup(unsigned short);
-+extern struct Scsi_Host *scsi_host_lookup(unsigned int);
- extern const char *scsi_host_state_name(enum scsi_host_state);
- extern void scsi_host_complete_all_commands(struct Scsi_Host *shost,
- 					    int status);
--- 
-1.8.3.1
+I read that you seem to just take the output data from the RNG. If this is 
+correct, I think we can stop right here. The output of an RNG is usually after 
+post-processing commonly provided by a cryptographic function.
+
+Thus, when processing the output of the RNG all what we measure here is the 
+quality of the cryptographic post-processing and not the entropy that may be 
+present in the data.
+
+What we need is to access the noise source and analyze this with the given 
+tool set. And yes, the analysis may require adjusting the data to a format 
+that can be consumed and analyzed by the statistical tests.
+
+Ciao
+Stephan
+
 
