@@ -2,235 +2,244 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03412C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 412A220657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B29206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:38:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jFmypT7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgEONgR (ORCPT
+        id S1726228AbgEONiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:36:17 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:50793 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbgEONgQ (ORCPT
+        Fri, 15 May 2020 09:38:55 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39918 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726162AbgEONiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:36:16 -0400
-Received: by mail-io1-f69.google.com with SMTP id b21so2216837iob.17
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:36:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=tmWgxPICzcyq48JmdJNpYrHTpVkuRalZAn+LO5vWeSw=;
-        b=XE+EeXSSl5yqKo/bvmbWV8459+EwrA9TmNmNDc9qBBKwlRlqOs5TZLbMgZOdSXVaHt
-         BHtW/+eTzrBiPKB/nDyfWg8hrL3KsYbKKShbddS4UzvPm0kYJORmZifpyVwEVYkLTxPh
-         /XwDx6nHcAxdb2MXCCQHuLzDJfAxlGuc/NsBUy7/KgmrNTyIdE3+aCTuqqiL6E49O2a3
-         c9S8ELKpDCeH6Ww02dA4AEVtgM/kzAk90Lt/qx6w1VoZUTeXuLIv3sxGbRWunkZFNrlV
-         O1dxSwVQj+KfKk5V3WT3TVXDCm2fNeWAHMdCNyN03PVgC+UvnEMgKclzHkmD0j6SE75v
-         vBrw==
-X-Gm-Message-State: AOAM532xU4xzC6IGVLyQgVCMSaSjLNJBKighpP+OVpIVJ1PZgZs4RI6w
-        9S3JPUKgyXKVGfuj7uZryQC1Cl2BhobDvLnQ07vvM5nL6xX1
-X-Google-Smtp-Source: ABdhPJwGq5Hzcz/7b3zbnRJSKX9fmii7bXab8ueIXy9KCP0sqBwAwkOilUBT3ZQx8H1oUJVgtD5oHe7+MleeIrOnhVFCWEt+SHMg
+        Fri, 15 May 2020 09:38:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589549932;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=IrGI0DZbjpPmctsiQFo4Cv0GcRUtJJCYrBz4CvoBjWo=;
+        b=jFmypT7vS0cvTQIv044XJgj4Gij8Jyte0URJ+BuMrabCVnxMZDeK1n3k3/SZW2SeRP6rtS
+        2dOsALdwfpidonCP7yfqQHlhFjBzBv+nc4Tm0KHx+PlpHR3nrvHve1BtzXGIKraMzNbvyX
+        e990N3xH39Hj+pjAIZ0AO/xWJokxWG4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-440-Yq-CiclcP8CbpI35jLsV0Q-1; Fri, 15 May 2020 09:38:50 -0400
+X-MC-Unique: Yq-CiclcP8CbpI35jLsV0Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35D631005510;
+        Fri, 15 May 2020 13:38:49 +0000 (UTC)
+Received: from [10.36.114.77] (ovpn-114-77.ams2.redhat.com [10.36.114.77])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1C2EC5D9C9;
+        Fri, 15 May 2020 13:38:47 +0000 (UTC)
+Subject: Re: [PATCH v4 04/36] mm: Introduce thp_size
+To:     Matthew Wilcox <willy@infradead.org>, linux-fsdevel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200515131656.12890-1-willy@infradead.org>
+ <20200515131656.12890-5-willy@infradead.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <d48ec2d8-4335-5628-0189-1ad4b6799a9f@redhat.com>
+Date:   Fri, 15 May 2020 15:38:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a5e:c203:: with SMTP id v3mr3077147iop.152.1589549774831;
- Fri, 15 May 2020 06:36:14 -0700 (PDT)
-Date:   Fri, 15 May 2020 06:36:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ae936d05a5afe5fc@google.com>
-Subject: KMSAN: uninit-value in nf_ip6_checksum
-From:   syzbot <syzbot+266e61dcc3259a67d5ec@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        glider@google.com, kadlec@netfilter.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200515131656.12890-5-willy@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 15.05.20 15:16, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> This is like page_size(), but compiles down to just PAGE_SIZE if THP
+> are disabled.  Convert the users of hpage_nr_pages() which would prefer
+> this interface.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  drivers/nvdimm/btt.c    | 4 +---
+>  drivers/nvdimm/pmem.c   | 6 ++----
+>  include/linux/huge_mm.h | 7 +++++++
+>  mm/internal.h           | 2 +-
+>  mm/page_io.c            | 2 +-
+>  mm/page_vma_mapped.c    | 4 ++--
+>  6 files changed, 14 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+> index 3b09419218d6..78e8d972d45a 100644
+> --- a/drivers/nvdimm/btt.c
+> +++ b/drivers/nvdimm/btt.c
+> @@ -1488,10 +1488,8 @@ static int btt_rw_page(struct block_device *bdev, sector_t sector,
+>  {
+>  	struct btt *btt = bdev->bd_disk->private_data;
+>  	int rc;
+> -	unsigned int len;
+>  
+> -	len = hpage_nr_pages(page) * PAGE_SIZE;
+> -	rc = btt_do_bvec(btt, NULL, page, len, 0, op, sector);
+> +	rc = btt_do_bvec(btt, NULL, page, thp_size(page), 0, op, sector);
+>  	if (rc == 0)
+>  		page_endio(page, op_is_write(op), 0);
+>  
+> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+> index 2df6994acf83..d511504d07af 100644
+> --- a/drivers/nvdimm/pmem.c
+> +++ b/drivers/nvdimm/pmem.c
+> @@ -235,11 +235,9 @@ static int pmem_rw_page(struct block_device *bdev, sector_t sector,
+>  	blk_status_t rc;
+>  
+>  	if (op_is_write(op))
+> -		rc = pmem_do_write(pmem, page, 0, sector,
+> -				   hpage_nr_pages(page) * PAGE_SIZE);
+> +		rc = pmem_do_write(pmem, page, 0, sector, thp_size(page));
+>  	else
+> -		rc = pmem_do_read(pmem, page, 0, sector,
+> -				   hpage_nr_pages(page) * PAGE_SIZE);
+> +		rc = pmem_do_read(pmem, page, 0, sector, thp_size(page));
+>  	/*
+>  	 * The ->rw_page interface is subtle and tricky.  The core
+>  	 * retries on any error, so we can only invoke page_endio() in
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index 6bec4b5b61e1..e944f9757349 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -271,6 +271,11 @@ static inline int hpage_nr_pages(struct page *page)
+>  	return compound_nr(page);
+>  }
+>  
+> +static inline unsigned long thp_size(struct page *page)
+> +{
+> +	return page_size(page);
+> +}
+> +
+>  struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+>  		pmd_t *pmd, int flags, struct dev_pagemap **pgmap);
+>  struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
+> @@ -329,6 +334,8 @@ static inline int hpage_nr_pages(struct page *page)
+>  	return 1;
+>  }
+>  
+> +#define thp_size(x)		PAGE_SIZE
+> +
+>  static inline bool __transparent_hugepage_enabled(struct vm_area_struct *vma)
+>  {
+>  	return false;
+> diff --git a/mm/internal.h b/mm/internal.h
+> index f762a34b0c57..5efb13d5c226 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -386,7 +386,7 @@ vma_address(struct page *page, struct vm_area_struct *vma)
+>  	unsigned long start, end;
+>  
+>  	start = __vma_address(page, vma);
+> -	end = start + PAGE_SIZE * (hpage_nr_pages(page) - 1);
+> +	end = start + thp_size(page) - PAGE_SIZE;
+>  
+>  	/* page should be within @vma mapping range */
+>  	VM_BUG_ON_VMA(end < vma->vm_start || start >= vma->vm_end, vma);
+> diff --git a/mm/page_io.c b/mm/page_io.c
+> index 76965be1d40e..dd935129e3cb 100644
+> --- a/mm/page_io.c
+> +++ b/mm/page_io.c
+> @@ -41,7 +41,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
+>  		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
+>  		bio->bi_end_io = end_io;
+>  
+> -		bio_add_page(bio, page, PAGE_SIZE * hpage_nr_pages(page), 0);
+> +		bio_add_page(bio, page, thp_size(page), 0);
+>  	}
+>  	return bio;
+>  }
+> diff --git a/mm/page_vma_mapped.c b/mm/page_vma_mapped.c
+> index 719c35246cfa..e65629c056e8 100644
+> --- a/mm/page_vma_mapped.c
+> +++ b/mm/page_vma_mapped.c
+> @@ -227,7 +227,7 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
+>  			if (pvmw->address >= pvmw->vma->vm_end ||
+>  			    pvmw->address >=
+>  					__vma_address(pvmw->page, pvmw->vma) +
+> -					hpage_nr_pages(pvmw->page) * PAGE_SIZE)
+> +					thp_size(pvmw->page))
+>  				return not_found(pvmw);
+>  			/* Did we cross page table boundary? */
+>  			if (pvmw->address % PMD_SIZE == 0) {
+> @@ -268,7 +268,7 @@ int page_mapped_in_vma(struct page *page, struct vm_area_struct *vma)
+>  	unsigned long start, end;
+>  
+>  	start = __vma_address(page, vma);
+> -	end = start + PAGE_SIZE * (hpage_nr_pages(page) - 1);
+> +	end = start + thp_size(page) - PAGE_SIZE;
+>  
+>  	if (unlikely(end < vma->vm_start || start >= vma->vm_end))
+>  		return 0;
+> 
 
-syzbot found the following crash on:
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-HEAD commit:    8b97c627 kmsan: drop the opportunity to ignore pages
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=17830eac100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6f048d804e1a47a0
-dashboard link: https://syzkaller.appspot.com/bug?extid=266e61dcc3259a67d5ec
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+-- 
+Thanks,
 
-Unfortunately, I don't have any reproducer for this crash yet.
+David / dhildenb
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+266e61dcc3259a67d5ec@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in nf_ip6_checksum+0x58d/0x610 net/netfilter/utils.c:74
-CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.7.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- nf_ip6_checksum+0x58d/0x610 net/netfilter/utils.c:74
- nf_nat_icmpv6_reply_translation+0x24b/0x10c0 net/netfilter/nf_nat_proto.c:802
- nf_nat_ipv6_fn+0x394/0x4d0 net/netfilter/nf_nat_proto.c:875
- nf_nat_ipv6_in+0x126/0x3c0 net/netfilter/nf_nat_proto.c:894
- nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
- nf_hook_slow+0x16e/0x400 net/netfilter/core.c:512
- nf_hook include/linux/netfilter.h:262 [inline]
- NF_HOOK include/linux/netfilter.h:305 [inline]
- ipv6_rcv+0x273/0x710 net/ipv6/ip6_input.c:307
- __netif_receive_skb_one_core net/core/dev.c:5188 [inline]
- __netif_receive_skb net/core/dev.c:5302 [inline]
- process_backlog+0xa41/0x1410 net/core/dev.c:6134
- napi_poll net/core/dev.c:6572 [inline]
- net_rx_action+0x786/0x1aa0 net/core/dev.c:6640
- __do_softirq+0x311/0x83d kernel/softirq.c:293
- run_ksoftirqd+0x25/0x40 kernel/softirq.c:608
- smpboot_thread_fn+0x493/0x980 kernel/smpboot.c:165
- kthread+0x4b5/0x4f0 kernel/kthread.c:269
- ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:353
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- __msan_chain_origin+0x50/0x90 mm/kmsan/kmsan_instr.c:165
- __skb_checksum_complete+0x422/0x540 net/core/skbuff.c:2858
- nf_ip6_checksum+0x501/0x610 net/netfilter/utils.c:91
- nf_nat_icmpv6_reply_translation+0x24b/0x10c0 net/netfilter/nf_nat_proto.c:802
- nf_nat_ipv6_fn+0x394/0x4d0 net/netfilter/nf_nat_proto.c:875
- nf_nat_ipv6_local_fn+0xb0/0x690 net/netfilter/nf_nat_proto.c:948
- nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
- nf_hook_slow+0x16e/0x400 net/netfilter/core.c:512
- nf_hook include/linux/netfilter.h:262 [inline]
- __ip6_local_out+0x56d/0x750 net/ipv6/output_core.c:167
- ip6_local_out+0xa4/0x1d0 net/ipv6/output_core.c:177
- ip6_send_skb net/ipv6/ip6_output.c:1865 [inline]
- ip6_push_pending_frames+0x213/0x4f0 net/ipv6/ip6_output.c:1885
- icmpv6_push_pending_frames+0x674/0x6b0 net/ipv6/icmp.c:304
- icmp6_send+0x32a3/0x39d0 net/ipv6/icmp.c:617
- icmpv6_send+0xe4/0x110 net/ipv6/ip6_icmp.c:43
- ip6_link_failure+0x68/0x590 net/ipv6/route.c:2640
- dst_link_failure include/net/dst.h:418 [inline]
- ndisc_error_report+0x106/0x1a0 net/ipv6/ndisc.c:710
- neigh_invalidate+0x348/0x8d0 net/core/neighbour.c:993
- neigh_timer_handler+0xb1a/0x1530 net/core/neighbour.c:1080
- call_timer_fn+0x218/0x510 kernel/time/timer.c:1405
- expire_timers kernel/time/timer.c:1450 [inline]
- __run_timers+0xcff/0x1210 kernel/time/timer.c:1774
- run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1787
- __do_softirq+0x311/0x83d kernel/softirq.c:293
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
- __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
- csum_partial_copy+0xae/0x100 lib/checksum.c:174
- skb_copy_and_csum_bits+0x227/0x1130 net/core/skbuff.c:2737
- icmpv6_getfrag+0x15f/0x350 net/ipv6/icmp.c:319
- __ip6_append_data+0x50d7/0x63e0 net/ipv6/ip6_output.c:1623
- ip6_append_data+0x3cb/0x660 net/ipv6/ip6_output.c:1757
- icmp6_send+0x306a/0x39d0 net/ipv6/icmp.c:609
- icmpv6_send+0xe4/0x110 net/ipv6/ip6_icmp.c:43
- ip6_link_failure+0x68/0x590 net/ipv6/route.c:2640
- dst_link_failure include/net/dst.h:418 [inline]
- ndisc_error_report+0x106/0x1a0 net/ipv6/ndisc.c:710
- neigh_invalidate+0x348/0x8d0 net/core/neighbour.c:993
- neigh_timer_handler+0xb1a/0x1530 net/core/neighbour.c:1080
- call_timer_fn+0x218/0x510 kernel/time/timer.c:1405
- expire_timers kernel/time/timer.c:1450 [inline]
- __run_timers+0xcff/0x1210 kernel/time/timer.c:1774
- run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1787
- __do_softirq+0x311/0x83d kernel/softirq.c:293
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
- __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
- pskb_expand_head+0x38b/0x1b00 net/core/skbuff.c:1636
- __skb_cow include/linux/skbuff.h:3171 [inline]
- skb_cow_head include/linux/skbuff.h:3205 [inline]
- geneve_build_skb+0x4c0/0xe00 drivers/net/geneve.c:754
- geneve6_xmit_skb drivers/net/geneve.c:969 [inline]
- geneve_xmit+0x1b21/0x2c20 drivers/net/geneve.c:1001
- __netdev_start_xmit include/linux/netdevice.h:4533 [inline]
- netdev_start_xmit include/linux/netdevice.h:4547 [inline]
- xmit_one net/core/dev.c:3477 [inline]
- dev_hard_start_xmit+0x531/0xab0 net/core/dev.c:3493
- __dev_queue_xmit+0x2f8d/0x3b20 net/core/dev.c:4052
- dev_queue_xmit+0x4b/0x60 net/core/dev.c:4085
- batadv_send_skb_packet+0x59b/0x8c0 net/batman-adv/send.c:108
- batadv_send_broadcast_skb+0x76/0x90 net/batman-adv/send.c:127
- batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:393 [inline]
- batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:419 [inline]
- batadv_iv_send_outstanding_bat_ogm_packet+0x97e/0xd50 net/batman-adv/bat_iv_ogm.c:1710
- process_one_work+0x1555/0x1f40 kernel/workqueue.c:2268
- worker_thread+0xef6/0x2450 kernel/workqueue.c:2414
- kthread+0x4b5/0x4f0 kernel/kthread.c:269
- ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:353
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
- __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
- pskb_expand_head+0x38b/0x1b00 net/core/skbuff.c:1636
- __skb_cow include/linux/skbuff.h:3171 [inline]
- skb_cow_head include/linux/skbuff.h:3205 [inline]
- batadv_skb_head_push+0x234/0x350 net/batman-adv/soft-interface.c:74
- batadv_send_skb_packet+0x1a7/0x8c0 net/batman-adv/send.c:86
- batadv_send_broadcast_skb+0x76/0x90 net/batman-adv/send.c:127
- batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:393 [inline]
- batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:419 [inline]
- batadv_iv_send_outstanding_bat_ogm_packet+0x97e/0xd50 net/batman-adv/bat_iv_ogm.c:1710
- process_one_work+0x1555/0x1f40 kernel/workqueue.c:2268
- worker_thread+0xef6/0x2450 kernel/workqueue.c:2414
- kthread+0x4b5/0x4f0 kernel/kthread.c:269
- ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:353
-
-Uninit was created at:
- kmsan_save_stack_with_flags+0x3c/0x90 mm/kmsan/kmsan.c:144
- kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:269 [inline]
- kmsan_alloc_page+0xb9/0x180 mm/kmsan/kmsan_shadow.c:293
- __alloc_pages_nodemask+0x56a2/0x5dc0 mm/page_alloc.c:4848
- __alloc_pages include/linux/gfp.h:504 [inline]
- __alloc_pages_node include/linux/gfp.h:517 [inline]
- alloc_pages_node include/linux/gfp.h:531 [inline]
- __page_frag_cache_refill mm/page_alloc.c:4923 [inline]
- page_frag_alloc+0x3ae/0x910 mm/page_alloc.c:4953
- __netdev_alloc_skb+0x703/0xbb0 net/core/skbuff.c:456
- __netdev_alloc_skb_ip_align include/linux/skbuff.h:2852 [inline]
- netdev_alloc_skb_ip_align include/linux/skbuff.h:2862 [inline]
- batadv_iv_ogm_aggregate_new net/batman-adv/bat_iv_ogm.c:558 [inline]
- batadv_iv_ogm_queue_add+0x10da/0x1900 net/batman-adv/bat_iv_ogm.c:670
- batadv_iv_ogm_schedule_buff net/batman-adv/bat_iv_ogm.c:849 [inline]
- batadv_iv_ogm_schedule+0x10cb/0x1430 net/batman-adv/bat_iv_ogm.c:869
- batadv_iv_send_outstanding_bat_ogm_packet+0xbae/0xd50 net/batman-adv/bat_iv_ogm.c:1722
- process_one_work+0x1555/0x1f40 kernel/workqueue.c:2268
- worker_thread+0xef6/0x2450 kernel/workqueue.c:2414
- kthread+0x4b5/0x4f0 kernel/kthread.c:269
- ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:353
-=====================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
