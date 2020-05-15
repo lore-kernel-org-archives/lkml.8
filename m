@@ -2,345 +2,412 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E6DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 190C520727
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E62206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:30:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgEOJaM (ORCPT
+        id S1728193AbgEOJae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:30:12 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:5037 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727803AbgEOJaI (ORCPT
+        Fri, 15 May 2020 05:30:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727917AbgEOJae (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:30:08 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 15 May 2020 15:00:01 +0530
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 15 May 2020 14:59:36 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 7FDE928F7; Fri, 15 May 2020 14:59:35 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v6 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings
-Date:   Fri, 15 May 2020 14:59:19 +0530
-Message-Id: <1589534960-6973-2-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589534960-6973-1-git-send-email-sanm@codeaurora.org>
-References: <1589534960-6973-1-git-send-email-sanm@codeaurora.org>
+        Fri, 15 May 2020 05:30:34 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27F69C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 02:30:34 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jZWfa-00072c-2b; Fri, 15 May 2020 11:30:18 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jZWfY-0002sW-Be; Fri, 15 May 2020 11:30:16 +0200
+Date:   Fri, 15 May 2020 11:30:16 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Fengping Yu <fengping.yu@mediatek.com>
+Cc:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/3] drivers: input: keyboard: Add mtk keypad driver
+Message-ID: <20200515093016.rw5bmvoumgzvkqrc@pengutronix.de>
+References: <20200515062007.28346-1-fengping.yu@mediatek.com>
+ <20200515062007.28346-3-fengping.yu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515062007.28346-3-fengping.yu@mediatek.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:13:08 up 181 days, 23:31, 197 users,  load average: 1.21, 0.99,
+ 0.55
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert USB DWC3 bindings to DT schema format using json-schema.
+Hi,
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
----
- .../devicetree/bindings/usb/qcom,dwc3.txt          | 104 -------------
- .../devicetree/bindings/usb/qcom,dwc3.yaml         | 162 +++++++++++++++++++++
- 2 files changed, 162 insertions(+), 104 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.txt
- create mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+On 20-05-15 14:20, Fengping Yu wrote:
+> From: "fengping.yu" <fengping.yu@mediatek.com>
+> 
+> This adds matrix keypad support for Mediatek SoCs.
+> 
+> Signed-off-by: fengping.yu <fengping.yu@mediatek.com>
+> ---
+>  drivers/input/keyboard/Kconfig   |   9 ++
+>  drivers/input/keyboard/Makefile  |   1 +
+>  drivers/input/keyboard/mtk-kpd.c | 231 +++++++++++++++++++++++++++++++
+>  3 files changed, 241 insertions(+)
+>  create mode 100644 drivers/input/keyboard/mtk-kpd.c
+> 
+> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+> index 28de965a08d5..2b42015e6923 100644
+> --- a/drivers/input/keyboard/Kconfig
+> +++ b/drivers/input/keyboard/Kconfig
+> @@ -782,6 +782,15 @@ config KEYBOARD_BCM
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called bcm-keypad.
+>  
+> +config KEYBOARD_MTK_KPD
+> +	tristate "MediaTek Keypad Support"
+> +	depends on OF && HAVE_CLK
 
-diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-deleted file mode 100644
-index fbdd017..0000000
---- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-+++ /dev/null
-@@ -1,104 +0,0 @@
--Qualcomm SuperSpeed DWC3 USB SoC controller
--
--Required properties:
--- compatible:		Compatible list, contains
--			"qcom,dwc3"
--			"qcom,msm8996-dwc3" for msm8996 SOC.
--			"qcom,msm8998-dwc3" for msm8998 SOC.
--			"qcom,sdm845-dwc3" for sdm845 SOC.
--- reg:			Offset and length of register set for QSCRATCH wrapper
--- power-domains:	specifies a phandle to PM domain provider node
--- clocks:		A list of phandle + clock-specifier pairs for the
--				clocks listed in clock-names
--- clock-names:		Should contain the following:
--  "core"		Master/Core clock, have to be >= 125 MHz for SS
--				operation and >= 60MHz for HS operation
--  "mock_utmi"		Mock utmi clock needed for ITP/SOF generation in
--				host mode. Its frequency should be 19.2MHz.
--  "sleep"		Sleep clock, used for wakeup when USB3 core goes
--				into low power mode (U3).
--
--Optional clocks:
--  "iface"		System bus AXI clock.
--			Not present on "qcom,msm8996-dwc3" compatible.
--  "cfg_noc"		System Config NOC clock.
--			Not present on "qcom,msm8996-dwc3" compatible.
--- assigned-clocks:	Should be:
--				MOCK_UTMI_CLK
--				MASTER_CLK
--- assigned-clock-rates: Should be:
--                                19.2Mhz (192000000) for MOCK_UTMI_CLK
--                                >=125Mhz (125000000) for MASTER_CLK in SS mode
--                                >=60Mhz (60000000) for MASTER_CLK in HS mode
--
--Optional properties:
--- resets:		Phandle to reset control that resets core and wrapper.
--- interrupts:		specifies interrupts from controller wrapper used
--			to wakeup from low power/susepnd state.	Must contain
--			one or more entry for interrupt-names property
--- interrupt-names:	Must include the following entries:
--			- "hs_phy_irq": The interrupt that is asserted when a
--			   wakeup event is received on USB2 bus
--			- "ss_phy_irq": The interrupt that is asserted when a
--			   wakeup event is received on USB3 bus
--			- "dm_hs_phy_irq" and "dp_hs_phy_irq": Separate
--			   interrupts for any wakeup event on DM and DP lines
--- qcom,select-utmi-as-pipe-clk: if present, disable USB3 pipe_clk requirement.
--				Used when dwc3 operates without SSPHY and only
--				HS/FS/LS modes are supported.
--
--Required child node:
--A child node must exist to represent the core DWC3 IP block. The name of
--the node is not important. The content of the node is defined in dwc3.txt.
--
--Phy documentation is provided in the following places:
--Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt    - USB3 QMP PHY
--Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml - USB2 QUSB2 PHY
--
--Example device nodes:
--
--		hs_phy: phy@100f8800 {
--			compatible = "qcom,qusb2-v2-phy";
--			...
--		};
--
--		ss_phy: phy@100f8830 {
--			compatible = "qcom,qmp-v3-usb3-phy";
--			...
--		};
--
--		usb3_0: usb30@a6f8800 {
--			compatible = "qcom,dwc3";
--			reg = <0xa6f8800 0x400>;
--			#address-cells = <1>;
--			#size-cells = <1>;
--			ranges;
--
--			interrupts = <0 131 0>, <0 486 0>, <0 488 0>, <0 489 0>;
--			interrupt-names = "hs_phy_irq", "ss_phy_irq",
--				  "dm_hs_phy_irq", "dp_hs_phy_irq";
--
--			clocks = <&gcc GCC_USB30_PRIM_MASTER_CLK>,
--				<&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
--				<&gcc GCC_USB30_PRIM_SLEEP_CLK>;
--			clock-names = "core", "mock_utmi", "sleep";
--
--			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
--					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
--			assigned-clock-rates = <19200000>, <133000000>;
--
--			resets = <&gcc GCC_USB30_PRIM_BCR>;
--			reset-names = "core_reset";
--			power-domains = <&gcc USB30_PRIM_GDSC>;
--			qcom,select-utmi-as-pipe-clk;
--
--			dwc3@10000000 {
--				compatible = "snps,dwc3";
--				reg = <0x10000000 0xcd00>;
--				interrupts = <0 205 0x4>;
--				phys = <&hs_phy>, <&ss_phy>;
--				phy-names = "usb2-phy", "usb3-phy";
--				dr_mode = "host";
--			};
--		};
--
-diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-new file mode 100644
-index 0000000..074d3cc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-@@ -0,0 +1,162 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm SuperSpeed DWC3 USB SoC controller
-+
-+maintainers:
-+  - Manu Gautam <mgautam@codeaurora.org>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - qcom,msm8996-dwc3
-+          - qcom,msm8998-dwc3
-+          - qcom,sdm845-dwc3
-+      - const: qcom,dwc3
-+
-+  reg:
-+    description: Offset and length of register set for QSCRATCH wrapper
-+    maxItems: 1
-+
-+  "#address-cells":
-+    enum: [ 1, 2 ]
-+
-+  "#size-cells":
-+    enum: [ 1, 2 ]
-+
-+  ranges: true
-+
-+  power-domains:
-+    description: specifies a phandle to PM domain provider node
-+    maxItems: 1
-+
-+  clocks:
-+    description:
-+      A list of phandle and clock-specifier pairs for the clocks
-+      listed in clock-names.
-+    items:
-+      - description: System Config NOC clock.
-+      - description: Master/Core clock, has to be >= 125 MHz
-+          for SS operation and >= 60MHz for HS operation.
-+      - description: System bus AXI clock.
-+      - description: Mock utmi clock needed for ITP/SOF generation
-+          in host mode. Its frequency should be 19.2MHz.
-+      - description: Sleep clock, used for wakeup when
-+          USB3 core goes into low power mode (U3).
-+
-+  clock-names:
-+    items:
-+      - const: cfg_noc
-+      - const: core
-+      - const: iface
-+      - const: mock_utmi
-+      - const: sleep
-+
-+  assigned-clocks:
-+    items:
-+      - description: Phandle and clock specifier of MOCK_UTMI_CLK.
-+      - description: Phandle and clock specifoer of MASTER_CLK.
-+
-+  assigned-clock-rates:
-+    items:
-+      - description: Must be 19.2MHz (19200000).
-+      - description: Must be >= 60 MHz in HS mode, >= 125 MHz in SS mode.
-+  resets:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: The interrupt that is asserted
-+          when a wakeup event is received on USB2 bus.
-+      - description: The interrupt that is asserted
-+          when a wakeup event is received on USB3 bus.
-+      - description: Wakeup event on DM line.
-+      - description: Wakeup event on DP line.
-+
-+  interrupt-names:
-+    items:
-+      - const: hs_phy_irq
-+      - const: ss_phy_irq
-+      - const: dm_hs_phy_irq
-+      - const: dp_hs_phy_irq
-+
-+  qcom,select-utmi-as-pipe-clk:
-+    description:
-+      If present, disable USB3 pipe_clk requirement.
-+      Used when dwc3 operates without SSPHY and only
-+      HS/FS/LS modes are supported.
-+    type: boolean
-+
-+# Required child node:
-+
-+patternProperties:
-+  "^dwc3@[0-9a-f]+$":
-+    type: object
-+    description:
-+      A child node must exist to represent the core DWC3 IP block
-+      The content of the node is defined in dwc3.txt.
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-+  - power-domains
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - interrupt-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    usb@a6f8800 {
-+        compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
-+        reg = <0 0x0a6f8800 0 0x400>;
-+
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+        ranges;
-+        clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
-+                 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
-+                 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
-+                 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+                 <&gcc GCC_USB30_PRIM_SLEEP_CLK>;
-+        clock-names = "cfg_noc", "core", "iface", "mock_utmi",
-+                      "sleep";
-+
-+        assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+                          <&gcc GCC_USB30_PRIM_MASTER_CLK>;
-+        assigned-clock-rates = <19200000>, <150000000>;
-+
-+        interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "hs_phy_irq", "ss_phy_irq",
-+                          "dm_hs_phy_irq", "dp_hs_phy_irq";
-+
-+        power-domains = <&gcc USB30_PRIM_GDSC>;
-+
-+        resets = <&gcc GCC_USB30_PRIM_BCR>;
-+
-+        dwc3@a600000 {
-+            compatible = "snps,dwc3";
-+            reg = <0 0x0a600000 0 0xcd00>;
-+            interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+            iommus = <&apps_smmu 0x740 0>;
-+            snps,dis_u2_susphy_quirk;
-+            snps,dis_enblslpm_quirk;
-+            phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
-+            phy-names = "usb2-phy", "usb3-phy";
-+        };
-+    };
-+
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Please drop those deps and instead use:
+depends on ARCH_MEDIATEK && ARM64
 
+There are still some missing deps:
+
+select CONFIG_REGMAP_MMIO
+select INPUT_MATRIXKMAP
+
+and check which clock driver must be enabled:
+
+COMMON_CLK_MT6779_MMSYS
+COMMON_CLK_MT6779_IMGSYS
+COMMON_CLK_MT6779_IPESYS
+COMMON_CLK_MT6779_CAMSYS
+COMMON_CLK_MT6779_VDECSYS
+COMMON_CLK_MT6779_VENCSYS
+COMMON_CLK_MT6779_MFGCFG
+COMMON_CLK_MT6779_AUDSYS
+
+
+> +	help
+> +	  Say Y here if you want to use the keypad on MediaTek SoCs.
+> +	  If unsure, say N.
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called mtk-kpd.
+> +
+>  config KEYBOARD_MTK_PMIC
+>  	tristate "MediaTek PMIC keys support"
+>  	depends on MFD_MT6397
+> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+> index 1d689fdd5c00..6c9d852c377e 100644
+> --- a/drivers/input/keyboard/Makefile
+> +++ b/drivers/input/keyboard/Makefile
+> @@ -43,6 +43,7 @@ obj-$(CONFIG_KEYBOARD_MATRIX)		+= matrix_keypad.o
+>  obj-$(CONFIG_KEYBOARD_MAX7359)		+= max7359_keypad.o
+>  obj-$(CONFIG_KEYBOARD_MCS)		+= mcs_touchkey.o
+>  obj-$(CONFIG_KEYBOARD_MPR121)		+= mpr121_touchkey.o
+> +obj-$(CONFIG_KEYBOARD_MTK_KPD)		+= mtk-kpd.o
+>  obj-$(CONFIG_KEYBOARD_MTK_PMIC) 	+= mtk-pmic-keys.o
+>  obj-$(CONFIG_KEYBOARD_NEWTON)		+= newtonkbd.o
+>  obj-$(CONFIG_KEYBOARD_NOMADIK)		+= nomadik-ske-keypad.o
+> diff --git a/drivers/input/keyboard/mtk-kpd.c b/drivers/input/keyboard/mtk-kpd.c
+> new file mode 100644
+> index 000000000000..66c70c475ee2
+> --- /dev/null
+> +++ b/drivers/input/keyboard/mtk-kpd.c
+> @@ -0,0 +1,231 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 MediaTek Inc.
+> + * Author Terry Chang <terry.chang@mediatek.com>
+> + */
+> +#include <linux/bitops.h>
+> +#include <linux/clk.h>
+> +#include <linux/input/matrix_keypad.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/property.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define MTK_KPD_NAME			"mtk-kpd"
+> +#define MTK_KPD_MEM			0x0004
+> +#define MTK_KPD_DEBOUNCE		0x0018
+> +#define MTK_KPD_DEBOUNCE_MASK		GENMASK(13, 0)
+> +#define MTK_KPD_DEBOUNCE_MAX_US		256000 /*256ms */
+
+Thanks for aligning the defines but the 256ms comment is still useless
+as Andy already said.
+
+> +#define MTK_KPD_NUM_MEMS		5
+> +#define MTK_KPD_NUM_BITS		136	/* 4*32+8 MEM5 only use 8 BITS */
+> +
+> +struct mtk_keypad {
+> +	struct regmap *regmap;
+> +	struct input_dev *input_dev;
+> +	struct clk *clk;
+> +	void __iomem *base;
+> +	bool wakeup;
+> +	u32 n_rows;
+> +	u32 n_cols;
+> +	DECLARE_BITMAP(keymap_state, MTK_KPD_NUM_BITS);
+> +};
+> +
+> +static const struct regmap_config keypad_regmap_cfg = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = sizeof(u32),
+> +	.max_register = 36,
+> +};
+> +
+> +static irqreturn_t kpd_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct mtk_keypad *keypad = dev_id;
+> +	unsigned short *keycode = keypad->input_dev->keycode;
+> +	DECLARE_BITMAP(new_state, MTK_KPD_NUM_BITS);
+> +	DECLARE_BITMAP(change, MTK_KPD_NUM_BITS);
+> +	int bit_nr;
+> +	int pressed;
+> +	unsigned short code;
+> +
+> +	regmap_raw_read(keypad->regmap, MTK_KPD_MEM, new_state, MTK_KPD_NUM_MEMS);
+> +
+> +	bitmap_xor(change, new_state, keypad->keymap_state, MTK_KPD_NUM_BITS);
+> +
+> +	for_each_set_bit(bit_nr, change, MTK_KPD_NUM_BITS) {
+> +		/* 1: not pressed, 0: pressed */
+> +		pressed = !test_bit(bit_nr, new_state);
+> +		dev_dbg(&keypad->input_dev->dev, "%s",
+> +			pressed ? "pressed" : "released");
+> +
+> +		/* 32bit register only use low 16bit as keypad mem register */
+> +		code = keycode[bit_nr - 16 * (BITS_TO_U32(bit_nr) - 1)];
+> +
+> +		input_report_key(keypad->input_dev, code, pressed);
+> +		input_sync(keypad->input_dev);
+> +
+> +		dev_dbg(&keypad->input_dev->dev,
+> +			"report Linux keycode = %d\n", code);
+> +	}
+> +
+> +	bitmap_copy(keypad->keymap_state, new_state, MTK_KPD_NUM_BITS);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int kpd_probe_clock(struct platform_device *pdev, struct clk *clk)
+> +{
+> +	int ret;
+> +
+> +	clk = devm_clk_get(&pdev->dev, "kpd");
+> +	if (IS_ERR(clk))
+> +		return clk;
+> +
+> +	ret = clk_prepare_enable(clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "cannot prepare/enable keypad clock\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(&pdev->dev,
+> +					(void (*)(void *))clk_disable_unprepare,
+							^
+						Please avoid this and
+						instead use a driver
+						internal function.
+
+> +					clk);
+> +
+> +	return ret;
+> +}
+
+That was not my intention. You can do all the stuff within the probe()
+routine.
+
+> +
+> +static int kpd_pdrv_probe(struct platform_device *pdev)
+> +{
+> +	struct mtk_keypad *keypad;
+> +	struct pinctrl *keypad_pinctrl;
+> +	struct pinctrl_state *kpd_default;
+> +	unsigned int irqnr;
+> +	u32 debounce;
+> +	int ret;
+> +
+> +	keypad = devm_kzalloc(&pdev->dev, sizeof(*keypad), GFP_KERNEL);
+> +	if (!keypad)
+> +		return -ENOMEM;
+> +
+> +	keypad->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(keypad->base))
+> +		return PTR_ERR(keypad->base);
+> +
+> +	keypad->regmap = devm_regmap_init_mmio(&pdev->dev,
+> +						keypad->base,
+> +						&keypad_regmap_cfg);
+> +	if (IS_ERR(keypad->regmap)) {
+> +		dev_err(&pdev->dev,
+> +			"regmap init failed:%ld\n", PTR_ERR(keypad->regmap));
+> +		return PTR_ERR(keypad->regmap);
+> +	}
+> +
+> +	bitmap_fill(keypad->keymap_state, MTK_KPD_NUM_BITS);
+> +
+> +	keypad->input_dev = devm_input_allocate_device(&pdev->dev);
+> +	if (!keypad->input_dev) {
+> +		dev_err(&pdev->dev, "Failed to allocate input dev\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	keypad->input_dev->name = MTK_KPD_NAME;
+> +	keypad->input_dev->id.bustype = BUS_HOST;
+> +
+> +	ret = matrix_keypad_parse_properties(&pdev->dev, &keypad->n_rows,
+> +					     &keypad->n_cols);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to parse keypad params\n");
+> +		return ret;
+> +	}
+> +
+> +	if (device_property_read_u32(&pdev->dev, "mediatek,debounce-us",
+> +					&debounce))
+
+Did you executed checkpatch.pl here? There are a few more style issues
+within the patch.
+
+> +		debounce = 16000;
+> +
+> +	if (debounce > MTK_KPD_DEBOUNCE_MAX_US) {
+> +		dev_err(&pdev->dev, "Debounce time exceeds the maximum allowed time 256ms\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	keypad->wakeup = device_property_read_bool(&pdev->dev, "wakeup-source");
+> +
+> +	dev_dbg(&pdev->dev, "n_row=%d n_col=%d debounce=%d\n",
+> +		keypad->n_rows, keypad->n_cols, debounce);
+> +
+> +	ret = matrix_keypad_build_keymap(NULL, NULL,
+> +					keypad->n_rows,
+> +					keypad->n_cols,
+> +					NULL,
+> +					keypad->input_dev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to build keymap\n");
+> +		return ret;
+> +	}
+> +
+> +	input_set_drvdata(keypad->input_dev, keypad);
+
+This is useless.
+
+> +
+> +	regmap_write(keypad->regmap, KP_DEBOUNCE,
+> +		     debounce * 32 / 1000 & MTK_KPD_DEBOUNCE_MASK);
+> +
+> +	if (kpd_probe_clock(pdev, keypad->clk)) {
+> +		dev_err(&pdev->dev, "Failed to enable clock\n");
+> +		return ret;
+> +	}
+> +
+> +	keypad_pinctrl = devm_pinctrl_get(&pdev->dev);
+> +	if (IS_ERR(keypad_pinctrl))
+> +		return PTR_ERR(keypad_pinctrl);
+> +
+> +	kpd_default = pinctrl_lookup_state(keypad_pinctrl, "default");
+> +	if (IS_ERR(kpd_default)) {
+> +		dev_err(&pdev->dev, "No default pinctrl state\n");
+> +		return PTR_ERR(kpd_default);
+> +	}
+> +
+> +	pinctrl_select_state(keypad_pinctrl, kpd_default);
+> +
+> +	irqnr = platform_get_irq(pdev, 0);
+> +	if (irqnr < 0) {
+> +		dev_err(&pdev->dev, "Failed to get irq\n");
+
+Andy already said that platform_get_irq() prints a error so you can just
+'return -irqnr'.
+
+> +		return -irqnr;
+> +	}
+> +
+> +	ret = devm_request_threaded_irq(&pdev->dev, irqnr,
+> +				NULL, kpd_irq_handler, 0,
+> +				MTK_KPD_NAME, keypad);
+
+Still missaligned, pls use checkpatch.pl
+
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to request IRQ#%d:%d\n",
+> +						irqnr, ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = input_register_device(keypad->input_dev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to register device\n");
+> +		return ret;
+> +	}
+> +
+> +	device_init_wakeup(&pdev->dev, keypad->wakeup);
+> +
+> +	return 0;
+
+Here we can 'return device_init_wakeup(&pdev->dev, keypad->wakeup);'
+
+> +}
+> +
+> +static const struct of_device_id kpd_of_match[] = {
+> +	{.compatible = "mediatek, mt6779-keypad"},
+> +	{.compatible = "mediatek,kp"},
+				 ^
+                         Missing whitespace
+
+> +	{/*sentinel*/}
+         ^	     ^
+	 Missing whitespaces
+
+Regards,
+  Marco
+
+> +};
+> +
+> +static struct platform_driver kpd_pdrv = {
+> +	.probe = kpd_pdrv_probe,
+> +	.driver = {
+> +		   .name = MTK_KPD_NAME,
+> +		   .of_match_table = kpd_of_match,
+> +	},
+> +};
+> +module_platform_driver(kpd_pdrv);
+> +
+> +MODULE_AUTHOR("Mediatek Corporation");
+> +MODULE_DESCRIPTION("MTK Keypad (KPD) Driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.18.0
