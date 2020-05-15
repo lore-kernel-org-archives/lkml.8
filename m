@@ -2,85 +2,116 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFD4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C57FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27C752074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B3772065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgEOKkG (ORCPT
+        id S1728294AbgEOKkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:40:06 -0400
-Received: from cheddar.halon.org.uk ([93.93.131.118]:58194 "EHLO
-        cheddar.halon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728013AbgEOKkF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:40:05 -0400
-X-Greylist: delayed 2113 seconds by postgrey-1.27 at vger.kernel.org; Fri, 15 May 2020 06:40:04 EDT
-Received: from bsmtp by cheddar.halon.org.uk with local-bsmtp (Exim 4.92)
-        (envelope-from <steve@einval.com>)
-        id 1jZXCM-0005Bp-LR; Fri, 15 May 2020 11:04:10 +0100
-Received: from steve by tack.einval.org with local (Exim 4.92)
-        (envelope-from <steve@einval.com>)
-        id 1jZXBi-0000Vp-4M; Fri, 15 May 2020 11:03:30 +0100
-Date:   Fri, 15 May 2020 11:03:30 +0100
-From:   Steve McIntyre <steve@einval.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>,
-        Nils =?iso-8859-1?Q?=D6stlund?= <nils@naltan.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
-        Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>
-Subject: Re: [PATCH v4 4/6] partitions/efi: Support GPT entry lookup at a
- non-standard location
-Message-ID: <20200515100320.GB30674@tack.einval.com>
-References: <20200515014143.12984-1-digetx@gmail.com>
- <20200515014143.12984-5-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515014143.12984-5-digetx@gmail.com>
-X-attached: none
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 15 May 2020 06:40:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46494 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728013AbgEOKkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 06:40:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A5267AC5F;
+        Fri, 15 May 2020 10:40:45 +0000 (UTC)
+Date:   Fri, 15 May 2020 12:40:42 +0200
+Message-ID: <s5himgxmqfp.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Lu, Brent" <brent.lu@intel.com>
+Cc:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "Jaroslav Kysela" <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        paulhsia <paulhsia@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: pcm: fix incorrect hw_base increase
+In-Reply-To: <BN6PR1101MB213283BD74AA4477B18C96CD97BD0@BN6PR1101MB2132.namprd11.prod.outlook.com>
+References: <1589515779-20987-1-git-send-email-brent.lu@intel.com>
+        <s5htv0hoe8p.wl-tiwai@suse.de>
+        <BN6PR1101MB213283BD74AA4477B18C96CD97BD0@BN6PR1101MB2132.namprd11.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 04:41:41AM +0300, Dmitry Osipenko wrote:
->Most of consumer-grade NVIDIA Tegra devices use a proprietary bootloader
->that can't be easily replaced because it's locked down using Secure Boot
->cryptography singing and the crypto keys aren't given to a device owner.
-              ^^^^^^^ typo
->These devices usually have eMMC storage that is partitioned using a custom
->NVIDIA Tegra partition table format.  Of course bootloader and other
->"special things" are stored on the eMMC storage, and thus, the partition
->format can't be changed.
+On Fri, 15 May 2020 11:36:19 +0200,
+Lu, Brent wrote:
+> 
+> > 
+> > Updating hw_ptr_jiffies at that code path looks correct, but it still leaves the
+> > question why this condition happens.  It means that the actual hwptr isn't
+> > changed and yet only jiffies increase significantly; it means that the hardware
+> > can't report proper pointer, and it should have set
+> > SNDRV_PCM_INFO_BATCH flag, then the jiffies check is skipped.
+> > 
+> > With which hardware and under which situation did it happen (and the patch
+> > fixed)?
+> > 
+> > 
+> > thanks,
+> > 
+> > Takashi
+> > 
+> 
+> >From time to time we got questions from google about why sometimes the
+> snd_pcm_avail() returns a value larger than buffer size. Recently we finally
+> found reliable reproduce steps: it's on Intel GLK Chromebook Fleex with
+> SOF firmware. There is a 1/20 chance the audio playback to HDMI fails.
+> 
+> >From the FW side we observe a buffer runderrun, the FW is not able to
+> recover it for some reason and stops the pipe.
+> 
+> >From the Linux side we see the pos does not increase because the FW stops
+> receiving data but suddenly the hw_prt is increased by buffer_size (16368).
+> It could make snd_pcm_avail() reporting a false underrun to the caller like
+> following log:
+> 
+> 2020-05-09T16:08:32.712042+08:00 DEBUG kernel: [  418.510086] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
+> 2020-05-09T16:08:32.712043+08:00 DEBUG kernel: [  418.510149] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6910 avail 9554
+> ...
+> 2020-05-09T16:08:32.883095+08:00 DEBUG kernel: [  418.680868] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15102 avail 1362
+> 2020-05-09T16:08:32.883104+08:00 DEBUG kernel: [  418.681052] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15102 avail 1362
+> 2020-05-09T16:08:32.883109+08:00 DEBUG kernel: [  418.681130] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+> 2020-05-09T16:08:32.929330+08:00 DEBUG kernel: [  418.726515] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 16464 avail 16368
+> 2020-05-09T16:08:32.929512+08:00 DEBUG kernel: [  418.727041] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 16464 avail 16368
+> 
+> Or it could make snd_pcm_avail() returns an invalid number and confuses the
+> Caller like following log:
+> 
+> 2020-05-09T16:08:33.054039+08:00 DEBUG kernel: [  418.851755] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 27390 avail 5442
+> 2020-05-09T16:08:33.129552+08:00 DEBUG kernel: [  418.926491] sound pcmC0D5p: pos 96 hw_ptr 32832 appl_ptr 27390 avail 21810
+> 2020-05-09T16:08:33.131746+08:00 ERR cras_server[1907]: pcm_avail returned frames larger than buf_size: sof-glkda7219max: :0,5: 21810 > 16368
+> 
+> I've submitted a patch to fix the issue in SOF side. However, I think it's also good
+> to fix the incorrect hw_base increasement in Linux side.
+> 
+> https://github.com/thesofproject/sof/pull/2926
 
-...
+Oh this whole information (at least some digested version) should have
+been included in the patch description.  Otherwise we have no idea why
+it's needed and what actually means.
 
--- 
-Steve McIntyre, Cambridge, UK.                                steve@einval.com
-"Further comment on how I feel about IBM will appear once I've worked out
- whether they're being malicious or incompetent. Capital letters are forecast."
- Matthew Garrett, http://www.livejournal.com/users/mjg59/30675.html
+Let's wait for Jaroslav's review, and if it's OK, could you resubmit
+with more description?
 
+
+thanks,
+
+Takashi
