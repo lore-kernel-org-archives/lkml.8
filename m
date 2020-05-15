@@ -2,81 +2,141 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3509D20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77C2A20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbgEONww (ORCPT
+        id S1726304AbgEONxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:52:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:56330 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbgEONww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:52:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 756DB2F;
-        Fri, 15 May 2020 06:52:51 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.6])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E59F63F71E;
-        Fri, 15 May 2020 06:52:47 -0700 (PDT)
-Date:   Fri, 15 May 2020 14:52:37 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        harb@amperecomputing.com
-Subject: Re: [PATCH v3 3/7] firmware: smccc: Add the definition for SMCCCv1.2
- version/error codes
-Message-ID: <20200515135237.GA7336@bogus>
-References: <20200506164411.3284-1-sudeep.holla@arm.com>
- <20200506164411.3284-4-sudeep.holla@arm.com>
- <20200515113801.GC67718@C02TD0UTHF1T.local>
+        Fri, 15 May 2020 09:53:16 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:37050 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbgEONxP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 09:53:15 -0400
+Received: by mail-il1-f197.google.com with SMTP id m4so2207007ilg.4
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:53:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=dtg5GgafUw4jGvE5P1d7UwvG3o7ee9JspFTKmxqu558=;
+        b=qLkCLltP0c9/iv377EFwlQYng37IbOfKVHdqgtHaL32BunVRM1JW1TwBmFL1UgmIW/
+         UJxRxClkdiCnFEjXjMeoFh9A+XkM3vSraGtrYKOBX1ALhkRAEC+DA6rkyD+qkSkmy9pD
+         e/5ARY2m9TmG7ZE0sqZvN1TRmXQS0U88Y7C5xUlkVq4EEcPiklWmcyBMc0XVtvkjgr6q
+         2H+cYM9C3AcP4zGCs3b15dSDmGS1rdTSfM1YoSiBk5LjJP9P6T31Jisv7Ibqslh2CaTG
+         67BNhhEqICNQmET9q0kyBM5+nUvgljJkSGj8FTwbF2c9b9HPfafi6AMXNmS/+4ifTl8H
+         HjPg==
+X-Gm-Message-State: AOAM532t1zuPKhyAfgdsyCPyxPsG+41IIeHqU3kHSQQxx5/tNCIhCB1g
+        YpRHS3tpH+2BQ3pE195VTTX6l58pnK6ZN03L1X76ftAPDr+8
+X-Google-Smtp-Source: ABdhPJxDlPbOh9OWF6qG9IvAhXCBtqfBvJwis/9Oapte4FHxuB9lhIi0dKU+PZ58mGCwVUhotu+kex36s31TAvSfQRrAkVgnlieQ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200515113801.GC67718@C02TD0UTHF1T.local>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a05:6e02:f81:: with SMTP id v1mr3317412ilo.246.1589550794365;
+ Fri, 15 May 2020 06:53:14 -0700 (PDT)
+Date:   Fri, 15 May 2020 06:53:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000735f5205a5b02279@google.com>
+Subject: BUG: unable to handle kernel paging request in fl_dump_key
+From:   syzbot <syzbot+9c1be56e9317b795e874@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 12:38:01PM +0100, Mark Rutland wrote:
-> On Wed, May 06, 2020 at 05:44:07PM +0100, Sudeep Holla wrote:
-> > Add the definition for SMCCC v1.2 version and new error code added.
-> > While at it, also add a note that ARM DEN 0070A is deprecated and is
-> > now merged into the main SMCCC specification(ARM DEN 0028C).
-> > 
-> > Reviewed-by: Steven Price <steven.price@arm.com>
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> Hmm... the SMCCC v1.2 doc still seems to be EAC rather than a final
-> release.
->
+Hello,
 
-Right, I was told final release sometime in the recent past 😄
-I mean April or mid-May, I will check on that but yes I agree on your
-concerns.
+syzbot found the following crash on:
 
-> I don't expect that this would change, but I am a little hesitant to add
-> other stuff based on an unfinalized spec. Do we know when the final
-> release will be?
->
+HEAD commit:    99addbe3 net: broadcom: Select BROADCOM_PHY for BCMGENET
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=173e568c100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b0212dbee046bc1f
+dashboard link: https://syzkaller.appspot.com/bug?extid=9c1be56e9317b795e874
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-I have asked for the same as I write this email.
+Unfortunately, I don't have any reproducer for this crash yet.
 
--- 
-Regards,
-Sudeep
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9c1be56e9317b795e874@syzkaller.appspotmail.com
+
+BUG: unable to handle page fault for address: fffffbfff4a9538a
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 21ffe5067 P4D 21ffe5067 PUD 21ffe4067 PMD 0 
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 5831 Comm: syz-executor.3 Not tainted 5.7.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:fl_dump_key+0x8c/0x1980 net/sched/cls_flower.c:2514
+Code: 04 f2 04 f2 c7 40 0c 04 f3 f3 f3 65 48 8b 04 25 28 00 00 00 48 89 84 24 b0 00 00 00 31 c0 e8 3b 0d 20 fb 48 89 e8 48 c1 e8 03 <42> 0f b6 04 30 84 c0 74 08 3c 03 0f 8e 6f 17 00 00 44 8b 75 00 31
+RSP: 0018:ffffc900019672d8 EFLAGS: 00010a03
+RAX: 1ffffffff4a9538a RBX: ffffffffa54a9a8f RCX: ffffc9000f733000
+RDX: 000000000000080f RSI: ffffffff86532275 RDI: ffff88808f68b800
+RBP: ffffffffa54a9c57 R08: ffff888096266200 R09: ffff888097a5603c
+R10: ffff888097a56036 R11: ffffed1012f4ac06 R12: ffff88808f68b800
+R13: ffff88806780a100 R14: dffffc0000000000 R15: ffff88806780a100
+FS:  00007f0a86395700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffbfff4a9538a CR3: 0000000099de6000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ fl_tmplt_dump+0xcf/0x250 net/sched/cls_flower.c:2784
+ tc_chain_fill_node+0x48e/0x7c0 net/sched/cls_api.c:2707
+ tc_chain_notify+0x189/0x2e0 net/sched/cls_api.c:2733
+ tc_ctl_chain+0xb82/0x1080 net/sched/cls_api.c:2919
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5454
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c829
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f0a86394c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000500d20 RCX: 000000000045c829
+RDX: 0000000000000000 RSI: 00000000200001c0 RDI: 0000000000000003
+RBP: 000000000078c040 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000a05 R14: 00000000004ccbdd R15: 00007f0a863956d4
+Modules linked in:
+CR2: fffffbfff4a9538a
+---[ end trace da47bdc433f8d794 ]---
+RIP: 0010:fl_dump_key+0x8c/0x1980 net/sched/cls_flower.c:2514
+Code: 04 f2 04 f2 c7 40 0c 04 f3 f3 f3 65 48 8b 04 25 28 00 00 00 48 89 84 24 b0 00 00 00 31 c0 e8 3b 0d 20 fb 48 89 e8 48 c1 e8 03 <42> 0f b6 04 30 84 c0 74 08 3c 03 0f 8e 6f 17 00 00 44 8b 75 00 31
+RSP: 0018:ffffc900019672d8 EFLAGS: 00010a03
+RAX: 1ffffffff4a9538a RBX: ffffffffa54a9a8f RCX: ffffc9000f733000
+RDX: 000000000000080f RSI: ffffffff86532275 RDI: ffff88808f68b800
+RBP: ffffffffa54a9c57 R08: ffff888096266200 R09: ffff888097a5603c
+R10: ffff888097a56036 R11: ffffed1012f4ac06 R12: ffff88808f68b800
+R13: ffff88806780a100 R14: dffffc0000000000 R15: ffff88806780a100
+FS:  00007f0a86395700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffbfff4a9538a CR3: 0000000099de6000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
