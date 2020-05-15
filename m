@@ -2,122 +2,153 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD385C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B98CB207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6CF207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:03:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RR/K1jJt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ppjy+eUs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgEOPDs (ORCPT
+        id S1726624AbgEOPDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:03:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39822 "EHLO
+        Fri, 15 May 2020 11:03:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726144AbgEOPDr (ORCPT
+        by vger.kernel.org with ESMTP id S1726144AbgEOPDs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:03:47 -0400
+        Fri, 15 May 2020 11:03:48 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F1F6C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:03:46 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id k15so2892082ybt.4
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:03:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98F14C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:03:48 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id q16so2825293ybg.18
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:03:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=c51QaJvL6D/qqlVaG3mfBJRBx6GYLLBQHT61u+1oODA=;
-        b=RR/K1jJtCOCT/6JoMxAIcZZsnTpgmVGsN47iiF7gTmxQ1alXp4PRAIRh+MoKcy8b9v
-         T2YhTNDT4X3MBhI8ET/gYm5l5QFMySt2DIBTp4lDPGFcB8eMJJIWMR2iKzfIGRwhfhws
-         v/GcyunXI6xYenGssjZYfbvrKTR+yseCHZnW5ZI3CiX5ew72KVYuNQqgfppGIzSswOjD
-         ypl4HmlsT7dzJFX+/28WcP7r9WgtaX+tPQ9otTUpFNIK7yd/9rCTOlud2QhcC5oBi4k0
-         uW0DmtigCNI/HbEn8g1ipIp44W+acGcWEaV2hZs+bDI0yTxu/YP8f++QB4/c0i1O2Oyu
-         LLeg==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=Rd50Ui3HZ2EL9EcMGbbjqrEeCeIHgbARzkGzMmh8b1c=;
+        b=ppjy+eUszCIjHMv2y1VNMLdz4INtsshcg6LC7YKwwdSCF4nrDHKAIkaunBJKpu53Wm
+         CdqE/IfFCNtdHfH/B1f1IkW3LRH/px9S7zwHqNV+dWl/OM8J7VFjkH+P/qXzTonyKk6n
+         Vx9oF/JBHieMwEykO/ClbUrmonI4pxSgjjPttkA7cda+oG2sAEFIvphxyaqhGWe9IhLR
+         HdmDHiIh4OkKUmVM90q9tjXXK5DKVlGWh0L4sBpvP4j15deqw2jETxcu+cxHl4R+BM9Y
+         ybEScMJchKUnFYrRy8Hh8LQfQOA/8qrZJZ73c4yEgpOvaW4QD5k0fB4czvgMj6TFjeWI
+         WjlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=c51QaJvL6D/qqlVaG3mfBJRBx6GYLLBQHT61u+1oODA=;
-        b=IIi9DCD/o63R4ySnDDH3nnOl3+e0D6KEx8nisaOl2P47i8Za6VzdVaG40odb5065UF
-         0QGAyDkKsXxBk5w7qCSCK5AKcVjBOc9I+7L6q8W9ggNl+FiZ6X74fiRUxSuAQwbUMp6y
-         pq1mH4Eb+796Quoafk0D3P1PUpVF9TNTJ8sPk5FoNsW3UwuYz2HN5sWeOmDXrDy7VmHC
-         FNiBBPdAhhQHHWEmsP76U4AWhPFXRHtjR8AqN9X7krFxoO5iDkvVQDh3zdr0baLC0TL4
-         3XjEByYE62/8GJFiw79MToHWwBoFD4SJ36DQ0xx+wDNMBz25tcGHajOQwvuIERZJXDjq
-         cXtQ==
-X-Gm-Message-State: AOAM532bGuH+seCcNhGuOgSQuxkNqCrKR/dnU5KwGSbQYPjwyDdGvzTT
-        J2Bfioc8px/m4hKKk8sGF3h0IM7hMA==
-X-Google-Smtp-Source: ABdhPJzOUfRS5O3oReRqmfbWku++WCbyJMTiwsoZfbDnP+oYAarTN+2y0VZa4z3iyt/UFTJZKzQV/w4uCA==
-X-Received: by 2002:a25:2054:: with SMTP id g81mr6167148ybg.470.1589555025225;
- Fri, 15 May 2020 08:03:45 -0700 (PDT)
-Date:   Fri, 15 May 2020 17:03:28 +0200
-Message-Id: <20200515150338.190344-1-elver@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=Rd50Ui3HZ2EL9EcMGbbjqrEeCeIHgbARzkGzMmh8b1c=;
+        b=loF41cFPPtoAAowhXg+ID4SuJdyL9xqbP9bQjMeJRQlCqgjmYhJG6tt6ghvrBiVa/+
+         B0/GCYBkYwQh+AfuxFVMEq1+jGN2u9GTR6YUHxds55yjKwWtv0BjGdv7drD5kS+k1LZh
+         lEbih1OL3fhC1SFSXcnbpQA7yzKUdI97EZTBBm/bfeTxuDyqULzaj64dw/CxpdcpuZi9
+         HfwQg2nxLWqyUwCdIFT2PubwkoGaRuVYdT+tt+InmS3KEcDgaY5MdXEnkQF41b3OzqUA
+         sl63UY9hi+ZYjuRnjqP28c7VujOpNl5kw8O0UZKNIcpXn+YHZzn5BzBWS1+OMFkaolV5
+         8h/A==
+X-Gm-Message-State: AOAM533jva5uP9X6JLpk26q7Ue5LQIfC+Bgi1bSGIMtnb7tveLWKqxz9
+        2PNaLPobWtSme44pouV0kiafdRzZ8A==
+X-Google-Smtp-Source: ABdhPJxRUysCvFRWde5u2Oy8c8WyvgCzFWpEPOZ/1+FG9if+ZCojdkKaWfQUz69Li4qI1nqFXWyZBD0wNw==
+X-Received: by 2002:a25:60d6:: with SMTP id u205mr6281104ybb.440.1589555027743;
+ Fri, 15 May 2020 08:03:47 -0700 (PDT)
+Date:   Fri, 15 May 2020 17:03:29 +0200
+In-Reply-To: <20200515150338.190344-1-elver@google.com>
+Message-Id: <20200515150338.190344-2-elver@google.com>
 Mime-Version: 1.0
+References: <20200515150338.190344-1-elver@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH -tip 00/10] Fix KCSAN for new ONCE (require Clang 11)
+Subject: [PATCH -tip 01/10] ubsan, kcsan: don't combine sanitizer with kcov on clang
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com
 Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
         andreyknvl@google.com, kasan-dev@googlegroups.com,
         linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
         peterz@infradead.org, will@kernel.org,
-        clang-built-linux@googlegroups.com
+        clang-built-linux@googlegroups.com, Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series is the conclusion to [1], where we determined that due
-to various interactions with no_sanitize attributes and the new
-{READ,WRITE}_ONCE(), KCSAN will require Clang 11 or later. Other
-sanitizers are largely untouched, and only KCSAN now has a hard
-dependency on Clang 11. To test, a recent Clang development version will
-suffice [2]. While a little inconvenient for now, it is hoped that in
-future we may be able to fix GCC and re-enable GCC support.
+From: Arnd Bergmann <arnd@arndb.de>
 
-The patch "kcsan: Restrict supported compilers" contains a detailed list
-of requirements that led to this decision.
+Clang does not allow -fsanitize-coverage=trace-{pc,cmp} together
+with -fsanitize=bounds or with ubsan:
 
-Most of the patches are related to KCSAN, however, the first patch also
-includes an UBSAN related fix and is a dependency for the remaining
-ones. The last 2 patches clean up the attributes by moving them to the
-right place, and fix KASAN's way of defining __no_kasan_or_inline,
-making it consistent with KCSAN.
+clang: error: argument unused during compilation: '-fsanitize-coverage=trace-pc' [-Werror,-Wunused-command-line-argument]
+clang: error: argument unused during compilation: '-fsanitize-coverage=trace-cmp' [-Werror,-Wunused-command-line-argument]
 
-The series has been tested by running kcsan-test several times and
-completed successfully.
+To avoid the warning, check whether clang can handle this correctly
+or disallow ubsan and kcsan when kcov is enabled.
 
-[1] https://lkml.kernel.org/r/CANpmjNOGFqhtDa9wWpXs2kztQsSozbwsuMO5BqqW0c0g0zGfSA@mail.gmail.com
-[2] https://github.com/llvm/llvm-project
+Link: https://bugs.llvm.org/show_bug.cgi?id=45831
+Link: https://lore.kernel.org/lkml/20200505142341.1096942-1-arnd@arndb.de
+Acked-by: Marco Elver <elver@google.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Marco Elver <elver@google.com>
+---
+This patch is already in -rcu tree, but since since the series is based
+on -tip, to avoid conflict it is required for the subsequent patches.
+---
+ lib/Kconfig.kcsan | 11 +++++++++++
+ lib/Kconfig.ubsan | 11 +++++++++++
+ 2 files changed, 22 insertions(+)
 
-Arnd Bergmann (1):
-  ubsan, kcsan: don't combine sanitizer with kcov on clang
-
-Marco Elver (9):
-  kcsan: Avoid inserting __tsan_func_entry/exit if possible
-  kcsan: Support distinguishing volatile accesses
-  kcsan: Pass option tsan-instrument-read-before-write to Clang
-  kcsan: Remove 'noinline' from __no_kcsan_or_inline
-  kcsan: Restrict supported compilers
-  kcsan: Update Documentation to change supported compilers
-  READ_ONCE, WRITE_ONCE: Remove data_race() wrapping
-  compiler.h: Move function attributes to compiler_types.h
-  compiler_types.h, kasan: Use __SANITIZE_ADDRESS__ instead of
-    CONFIG_KASAN to decide inlining
-
- Documentation/dev-tools/kcsan.rst |  9 +------
- include/linux/compiler.h          | 35 ++-----------------------
- include/linux/compiler_types.h    | 32 +++++++++++++++++++++++
- kernel/kcsan/core.c               | 43 +++++++++++++++++++++++++++++++
- lib/Kconfig.kcsan                 | 20 +++++++++++++-
- lib/Kconfig.ubsan                 | 11 ++++++++
- scripts/Makefile.kcsan            | 15 ++++++++++-
- 7 files changed, 122 insertions(+), 43 deletions(-)
-
+diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+index ea28245c6c1d..a7276035ca0d 100644
+--- a/lib/Kconfig.kcsan
++++ b/lib/Kconfig.kcsan
+@@ -3,9 +3,20 @@
+ config HAVE_ARCH_KCSAN
+ 	bool
+ 
++config KCSAN_KCOV_BROKEN
++	def_bool KCOV && CC_HAS_SANCOV_TRACE_PC
++	depends on CC_IS_CLANG
++	depends on !$(cc-option,-Werror=unused-command-line-argument -fsanitize=thread -fsanitize-coverage=trace-pc)
++	help
++	  Some versions of clang support either KCSAN and KCOV but not the
++	  combination of the two.
++	  See https://bugs.llvm.org/show_bug.cgi?id=45831 for the status
++	  in newer releases.
++
+ menuconfig KCSAN
+ 	bool "KCSAN: dynamic data race detector"
+ 	depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN
++	depends on !KCSAN_KCOV_BROKEN
+ 	select STACKTRACE
+ 	help
+ 	  The Kernel Concurrency Sanitizer (KCSAN) is a dynamic
+diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+index 48469c95d78e..3baea77bf37f 100644
+--- a/lib/Kconfig.ubsan
++++ b/lib/Kconfig.ubsan
+@@ -26,9 +26,20 @@ config UBSAN_TRAP
+ 	  the system. For some system builders this is an acceptable
+ 	  trade-off.
+ 
++config UBSAN_KCOV_BROKEN
++	def_bool KCOV && CC_HAS_SANCOV_TRACE_PC
++	depends on CC_IS_CLANG
++	depends on !$(cc-option,-Werror=unused-command-line-argument -fsanitize=bounds -fsanitize-coverage=trace-pc)
++	help
++	  Some versions of clang support either UBSAN or KCOV but not the
++	  combination of the two.
++	  See https://bugs.llvm.org/show_bug.cgi?id=45831 for the status
++	  in newer releases.
++
+ config UBSAN_BOUNDS
+ 	bool "Perform array index bounds checking"
+ 	default UBSAN
++	depends on !UBSAN_KCOV_BROKEN
+ 	help
+ 	  This option enables detection of directly indexed out of bounds
+ 	  array accesses, where the array size is known at compile time.
 -- 
 2.26.2.761.g0e0b3e54be-goog
 
