@@ -2,115 +2,88 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3930C20657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0DC20671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589527393;
-	bh=Ir4lhWto/dDAJUOC1hBIxk4JypxuzE0ECEMZho5Y0M4=;
+	s=default; t=1589527543;
+	bh=0ddCruwCSBmZGShckOzm/0PobS7Jm3SkMeP1nKtGL3w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yqyxU10iZaG84zFZlfCIqhjkpYeAYzkWiRiXHuAapLPchkrn/4QFUwKgDqR69UUJ7
-	 alCs0IdO0Zi6OJk7OwrRJ0Aashw/ZRxFUx1XrsE4lQePp9RPeanps4pRRB3b+cvH+0
-	 B+dj859yg8Cv5MvqGk1u/rpyO3gxG77Zy2BZziso=
+	b=bmhCT5nLhwmRv4+rzFEqmC7EwitxZ5HY7zvatzt+5/CfUCD5BdS0zXurGjCHkXSYN
+	 5IXREG8qGiTvBLOnjH/ssMDLkWaTM//JGi8azlTVjDA9eQVjf/h1jqUbt7MAcW7piF
+	 r3PM4+Ug1MpHqIKHBZtflt3z6o8JqU+v/z5ALNe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgEOHXM (ORCPT
+        id S1726639AbgEOHZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 03:23:12 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55374 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbgEOHXM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 03:23:12 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f13so1198473wmc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:23:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ViqolJpDhhrZA9TAi6a+VUrDe/NCe25ekmSOzaROAko=;
-        b=Ha29l6cMafFDVxmwbKjmBNru0A/Vkn1YfiICuVvT6LViZ2axN+SxzhsRvweZ0u30Ra
-         L1eSeTzZiBYFJcix/a7cpScaKlVTSBa3DHLtID40S156SxUQ4pzvhbdJnLSMjfdtdmjz
-         2za7OTx5VJwFTxNjhrhkegNAAAm82I6suFIu1gz3lAEclHkaO9e5O1CPeB/4AWSDFIIG
-         rMVI78UR6cFczVDGKctCPDUQiNq/jvxdnQ2LE5qzZbI6eLYWAM/5mSPlMudi2lu1IWj9
-         fAtAbWxNQnWICWRMehImOv6GldnoQB0ZoztjEYQxtCZExk2+6tHv7RbwnhjPjl/nfW+s
-         0geg==
-X-Gm-Message-State: AOAM532xAFQYNaK3v+cJTco9tQsGj6Q8po3/AAf3NJjI/VMuOwcDaxF3
-        kfSJSxQHOeeeqXCddL1shJA=
-X-Google-Smtp-Source: ABdhPJxExEn1K+SFUpE/RNI3yudtQWWFVZ+K0DND0NHpc9hBADLmfnfETugmECFCwjEC8m6oOfu2AA==
-X-Received: by 2002:a1c:a910:: with SMTP id s16mr2478484wme.70.1589527388737;
-        Fri, 15 May 2020 00:23:08 -0700 (PDT)
-Received: from localhost (ip-37-188-249-36.eurotel.cz. [37.188.249.36])
-        by smtp.gmail.com with ESMTPSA id f5sm2207946wrp.70.2020.05.15.00.23.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 00:23:08 -0700 (PDT)
-Date:   Fri, 15 May 2020 09:23:07 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>, andi.kleen@intel.com,
-        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mm/util.c: make vm_memory_committed() more accurate
-Message-ID: <20200515072307.GG29153@dhcp22.suse.cz>
-References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
- <1588922717-63697-3-git-send-email-feng.tang@intel.com>
+        Fri, 15 May 2020 03:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50404 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726525AbgEOHZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 03:25:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62B8E20657;
+        Fri, 15 May 2020 07:25:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589527541;
+        bh=0ddCruwCSBmZGShckOzm/0PobS7Jm3SkMeP1nKtGL3w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gyj0iWN5PnBSeaCX45RJV8anO42r4yFOpYGfPNxi87bEguVF/ndXVNZESIEtW8AFk
+         3ypXJFklZnesRxZLxD/f7E0sFYS73mZs/l+0LJf0oL5jbocBfCmUo62EjSymA08wwq
+         uWux83pOmu7OnMkXkICNuXZ3128IOhr3BdNOop0Y=
+Date:   Fri, 15 May 2020 09:25:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     rafael.j.wysocki@intel.com, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        evgreen@chromium.org, swboyd@chromium.org, mka@chromium.org,
+        mkshah@codeaurora.org, Alexios Zavras <alexios.zavras@intel.com>,
+        Colin Cross <ccross@android.com>,
+        Kevin Hilman <khilman@ti.com>,
+        Santosh Shilimkar <santosh.shilimkar@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/5] kernel/cpu_pm: Fix uninitted local in cpu_pm
+Message-ID: <20200515072539.GA1334029@kroah.com>
+References: <20200504104917.v6.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
+ <20200504104917.v6.3.I2d44fc0053d019f239527a4e5829416714b7e299@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588922717-63697-3-git-send-email-feng.tang@intel.com>
+In-Reply-To: <20200504104917.v6.3.I2d44fc0053d019f239527a4e5829416714b7e299@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 08-05-20 15:25:16, Feng Tang wrote:
-> percpu_counter_sum_positive() will provide more accurate info.
-
-Why do we need that?
-
-> Its time cost is about 800 nanoseconds on a 2C/4T platform and
-> 2~3 microseconds on a 2S/36C/72T server in normal case, and in
-> worst case where vm_committed_as's spinlock is under severe
-> contention, it costs 30~40 microseconds for the 2S/36C/72T sever,
-> which should be fine for its two users: /proc/meminfo and HV ballon
-> driver's status trace per second.
-
-OK, this explains that the additional overhead is not terrible but there
-is no actual information on why the imprecision is a problem.
-
-> Signed-off-by: Feng Tang <feng.tang@intel.com>
-> ---
->  mm/util.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, May 04, 2020 at 10:50:17AM -0700, Douglas Anderson wrote:
+> cpu_pm_notify() is basically a wrapper of notifier_call_chain().
+> notifier_call_chain() doesn't initialize *nr_calls to 0 before it
+> starts incrementing it--presumably it's up to the callers to do this.
 > 
-> diff --git a/mm/util.c b/mm/util.c
-> index 988d11e..3de78e9 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -774,7 +774,7 @@ struct percpu_counter vm_committed_as ____cacheline_aligned_in_smp;
->   */
->  unsigned long vm_memory_committed(void)
->  {
-> -	return percpu_counter_read_positive(&vm_committed_as);
-> +	return percpu_counter_sum_positive(&vm_committed_as);
->  }
->  EXPORT_SYMBOL_GPL(vm_memory_committed);
->  
-> -- 
-> 2.7.4
+> Unfortunately the callers of cpu_pm_notify() don't init *nr_calls.
+> This potentially means you could get too many or two few calls to
+> CPU_PM_ENTER_FAILED or CPU_CLUSTER_PM_ENTER_FAILED depending on the
+> luck of the stack.
+> 
+> Let's fix this.
+> 
+> Fixes: ab10023e0088 ("cpu_pm: Add cpu power management notifiers")
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 
--- 
-Michal Hocko
-SUSE Labs
+
+Should also have a cc: stable@vger.kernel.org tag on it.
+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
