@@ -2,259 +2,183 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81065C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A572EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5655320756
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589563445;
-	bh=zWhOLyH9TNGBBaNKqL1KsajY5TGVx0wn+S/jS978Jqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NlvbH4VnjgC+HoEB1uck1VTXhPIvY0UoFB4k/MsOlExb4kGrS8utqRlmj4Ke3yf5v
-	 9+rNvPu23we0RlZ4UhB+SjhoroWv93OwwgWP2HcK0B3tv6Y/PYmoggaSQE6iWIvyLU
-	 k47yEMaEUj8yuebSf1SFmfGrIydJuTflIPCuiOeI=
+	by mail.kernel.org (Postfix) with ESMTP id 8132B2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:24:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ctl7VHZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgEORYE (ORCPT
+        id S1727001AbgEORYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:24:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbgEORYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:24:04 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 15 May 2020 13:24:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55478 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726234AbgEORYW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:24:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589563460;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=g7UxpoSaYFlNgGerVC7wIAaJL2fcWcGLepQ9Q16ldlM=;
+        b=ctl7VHZTGeaBIGL59LbXe1iPIf3aGMbxEA06A8GJ963GU4i5fm/Y0FEpJzL50SSVtZ29Qo
+        b4f6As9fYize29cRiIjqglkPtuc20T35eJoAL/Yyru5yaFAdTiIq2xXJMtP+V1D8qzs7KM
+        w9VAY7tJPJIzGpThkwefflgou9NncDI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-177-BwngXKV9NgCiUqjJj7MYUQ-1; Fri, 15 May 2020 13:24:16 -0400
+X-MC-Unique: BwngXKV9NgCiUqjJj7MYUQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C922D20727;
-        Fri, 15 May 2020 17:23:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589563443;
-        bh=zWhOLyH9TNGBBaNKqL1KsajY5TGVx0wn+S/jS978Jqg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u58EeNvoas8dp6AcVakZPDrN6DVn18NlyNjlI3Pdyhnc7mjVPOcn8MbktD+o5Rsq7
-         xcLTIOfxTo116Bo1iK9tGCYZsdxOJ/oLJ7Z+pF5IT90Nnk54qTVuGu5BtrDdGIq1xl
-         sKj3OzlhgENCEF/BhlrMtyX6jMLy7xzMY0UmSyHg=
-Date:   Fri, 15 May 2020 18:23:56 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Ingo Molnar <mingo@redhat.com>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9015618FF679;
+        Fri, 15 May 2020 17:24:15 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.140])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 19EA078868;
+        Fri, 15 May 2020 17:24:03 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 15 May 2020 19:24:15 +0200 (CEST)
+Date:   Fri, 15 May 2020 19:24:03 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v13 00/12] add support for Clang's Shadow Call Stack
-Message-ID: <20200515172355.GD23334@willie-the-truck>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200427160018.243569-1-samitolvanen@google.com>
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andrew Fox <afox@redhat.com>,
+        Stephen Johnston <sjohnsto@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] sched/cputime: make scale_stime() more precise
+Message-ID: <20200515172403.GA30626@redhat.com>
+References: <20190718131834.GA22211@redhat.com>
+ <20200127122817.GA10957@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200427160018.243569-1-samitolvanen@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200127122817.GA10957@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sami,
+ping...
 
-On Mon, Apr 27, 2020 at 09:00:06AM -0700, Sami Tolvanen wrote:
-> This patch series adds support for Clang's Shadow Call Stack
-> (SCS) mitigation, which uses a separately allocated shadow stack
-> to protect against return address overwrites. More information
-> can be found here:
+Peter, could you comment?
+
+On 01/27, Oleg Nesterov wrote:
+>
+> People report that utime and stime from /proc/<pid>/stat become very
+> wrong when the numbers are big enough, especially if you watch these
+> counters incrementally.
 > 
->   https://clang.llvm.org/docs/ShadowCallStack.html
-
-I'm planning to queue this with the (mostly cosmetic) diff below folded in.
-I also have some extra patches on top which I'll send out shortly for
-review.
-
-However, I really think we need to get to the bottom of the size issue
-since I'm highly sceptical about not being able to afford a full page
-for the shadow stack allocation. We can change this later so it needn't
-hold up the patchset, but given that Android is the only user, I'd like
-to make sure that if we change to use a full page upstream then that is
-also acceptable in AOSP.
-
-Thanks,
-
-Will
-
---->8
-
-diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
-index 18fc4d29ef27..790c0c6b8552 100644
---- a/include/linux/compiler-clang.h
-+++ b/include/linux/compiler-clang.h
-@@ -45,6 +45,4 @@
- 
- #if __has_feature(shadow_call_stack)
- # define __noscs	__attribute__((__no_sanitize__("shadow-call-stack")))
--#else
--# define __noscs
- #endif
-diff --git a/include/linux/scs.h b/include/linux/scs.h
-index 060eeb3d1390..3f3662621a27 100644
---- a/include/linux/scs.h
-+++ b/include/linux/scs.h
-@@ -11,7 +11,7 @@
- #include <linux/gfp.h>
- #include <linux/poison.h>
- #include <linux/sched.h>
--#include <asm/page.h>
-+#include <linux/sizes.h>
- 
- #ifdef CONFIG_SHADOW_CALL_STACK
- 
-@@ -20,7 +20,7 @@
-  * architecture) provided ~40% safety margin on stack usage while keeping
-  * memory allocation overhead reasonable.
-  */
--#define SCS_SIZE		1024UL
-+#define SCS_SIZE		SZ_1K
- #define GFP_SCS			(GFP_KERNEL | __GFP_ZERO)
- 
- /* An illegal pointer value to mark the end of the shadow stack. */
-@@ -29,7 +29,9 @@
- #define task_scs(tsk)		(task_thread_info(tsk)->scs_base)
- #define task_scs_offset(tsk)	(task_thread_info(tsk)->scs_offset)
- 
--extern void scs_init(void);
-+void scs_init(void);
-+int scs_prepare(struct task_struct *tsk, int node);
-+void scs_release(struct task_struct *tsk);
- 
- static inline void scs_task_reset(struct task_struct *tsk)
- {
-@@ -40,8 +42,6 @@ static inline void scs_task_reset(struct task_struct *tsk)
-	task_scs_offset(tsk) = 0;
- }
- 
--extern int scs_prepare(struct task_struct *tsk, int node);
--
- static inline unsigned long *__scs_magic(void *s)
- {
-	return (unsigned long *)(s + SCS_SIZE) - 1;
-@@ -55,12 +55,8 @@ static inline bool scs_corrupted(struct task_struct *tsk)
-		READ_ONCE_NOCHECK(*magic) != SCS_END_MAGIC);
- }
- 
--extern void scs_release(struct task_struct *tsk);
--
- #else /* CONFIG_SHADOW_CALL_STACK */
- 
--#define task_scs(tsk)	NULL
--
- static inline void scs_init(void) {}
- static inline void scs_task_reset(struct task_struct *tsk) {}
- static inline int scs_prepare(struct task_struct *tsk, int node) { return 0; }
-diff --git a/kernel/scs.c b/kernel/scs.c
-index 2a96573f2b1b..9389c28f0853 100644
---- a/kernel/scs.c
-+++ b/kernel/scs.c
-@@ -55,45 +55,37 @@ static void scs_account(struct task_struct *tsk, int account)
- 
- int scs_prepare(struct task_struct *tsk, int node)
- {
--	void *s;
-+	void *s = scs_alloc(node);
- 
--	s = scs_alloc(node);
-	if (!s)
-		return -ENOMEM;
- 
-	task_scs(tsk) = s;
-	task_scs_offset(tsk) = 0;
-	scs_account(tsk, 1);
--
-	return 0;
- }
- 
--#ifdef CONFIG_DEBUG_STACK_USAGE
--static unsigned long __scs_used(struct task_struct *tsk)
-+static void scs_check_usage(struct task_struct *tsk)
- {
--	unsigned long *p = task_scs(tsk);
--	unsigned long *end = __scs_magic(p);
--	unsigned long s = (unsigned long)p;
-+	static unsigned long highest;
- 
--	while (p < end && READ_ONCE_NOCHECK(*p))
--		p++;
-+	unsigned long *p, prev, curr = highest, used = 0;
- 
--	return (unsigned long)p - s;
--}
-+	if (!IS_ENABLED(CONFIG_DEBUG_STACK_USAGE))
-+		return;
- 
--static void scs_check_usage(struct task_struct *tsk)
--{
--	static unsigned long highest;
--	unsigned long used = __scs_used(tsk);
--	unsigned long prev;
--	unsigned long curr = highest;
-+	for (p = task_scs(tsk); p < __scs_magic(tsk); ++p) {
-+		if (!READ_ONCE_NOCHECK(*p))
-+			break;
-+		used++;
-+	}
- 
-	while (used > curr) {
-		prev = cmpxchg_relaxed(&highest, curr, used);
- 
-		if (prev == curr) {
--			pr_info("%s (%d): highest shadow stack usage: "
--				"%lu bytes\n",
-+			pr_info("%s (%d): highest shadow stack usage: %lu bytes\n",
-				tsk->comm, task_pid_nr(tsk), used);
-			break;
-		}
-@@ -101,21 +93,16 @@ static void scs_check_usage(struct task_struct *tsk)
-		curr = prev;
-	}
- }
--#else
--static inline void scs_check_usage(struct task_struct *tsk) {}
--#endif
- 
- void scs_release(struct task_struct *tsk)
- {
--	void *s;
-+	void *s = task_scs(tsk);
- 
--	s = task_scs(tsk);
-	if (!s)
-		return;
- 
--	WARN_ON(scs_corrupted(tsk));
-+	WARN(scs_corrupted(tsk), "corrupted shadow stack detected when freeing task\n");
-	scs_check_usage(tsk);
--
-	scs_account(tsk, -1);
-	scs_free(s);
- }
+> Say, if the monitored process runs 100 days 50/50 in user/kernel mode
+> it looks as if it runs 20 minutes entirely in kernel mode, then 20
+> minutes in user mode. See the test-case which tries to demonstrate this
+> behaviour:
+> 
+> 	https://lore.kernel.org/lkml/20200124154215.GA14714@redhat.com/
+> 
+> The new implementation does the additional div64_u64_rem() but according
+> to my naive measurements it is faster on x86_64, much faster if rtime/etc
+> are big enough. See
+> 
+> 	https://lore.kernel.org/lkml/20200123130541.GA30620@redhat.com/
+> 
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+> ---
+>  kernel/sched/cputime.c | 65 +++++++++++++++++++++++++-------------------------
+>  1 file changed, 32 insertions(+), 33 deletions(-)
+> 
+> diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+> index d43318a..ae1ea09 100644
+> --- a/kernel/sched/cputime.c
+> +++ b/kernel/sched/cputime.c
+> @@ -528,42 +528,41 @@ void account_idle_ticks(unsigned long ticks)
+>   */
+>  static u64 scale_stime(u64 stime, u64 rtime, u64 total)
+>  {
+> -	u64 scaled;
+> +	u64 res = 0, div, rem;
+> +	int shift;
+>  
+> -	for (;;) {
+> -		/* Make sure "rtime" is the bigger of stime/rtime */
+> -		if (stime > rtime)
+> -			swap(rtime, stime);
+> -
+> -		/* Make sure 'total' fits in 32 bits */
+> -		if (total >> 32)
+> -			goto drop_precision;
+> -
+> -		/* Does rtime (and thus stime) fit in 32 bits? */
+> -		if (!(rtime >> 32))
+> -			break;
+> -
+> -		/* Can we just balance rtime/stime rather than dropping bits? */
+> -		if (stime >> 31)
+> -			goto drop_precision;
+> -
+> -		/* We can grow stime and shrink rtime and try to make them both fit */
+> -		stime <<= 1;
+> -		rtime >>= 1;
+> -		continue;
+> -
+> -drop_precision:
+> -		/* We drop from rtime, it has more bits than stime */
+> -		rtime >>= 1;
+> -		total >>= 1;
+> +	/* can stime * rtime overflow ? */
+> +	if (ilog2(stime) + ilog2(rtime) > 62) {
+> +		/*
+> +		 * (rtime * stime) / total is equal to
+> +		 *
+> +		 *	(rtime / total) * stime +
+> +		 *	(rtime % total) * stime / total
+> +		 *
+> +		 * if nothing overflows. Can the 1st multiplication
+> +		 * overflow? Yes, but we do not care: this can only
+> +		 * happen if the end result can't fit in u64 anyway.
+> +		 *
+> +		 * So the code below does
+> +		 *
+> +		 *	res = (rtime / total) * stime;
+> +		 *	rtime = rtime % total;
+> +		 */
+> +		div = div64_u64_rem(rtime, total, &rem);
+> +		res = div * stime;
+> +		rtime = rem;
+> +
+> +		shift = ilog2(stime) + ilog2(rtime) - 62;
+> +		if (shift > 0) {
+> +			/* drop precision */
+> +			rtime >>= shift;
+> +			total >>= shift;
+> +			if (!total)
+> +				return res;
+> +		}
+>  	}
+>  
+> -	/*
+> -	 * Make sure gcc understands that this is a 32x32->64 multiply,
+> -	 * followed by a 64/32->64 divide.
+> -	 */
+> -	scaled = div_u64((u64) (u32) stime * (u64) (u32) rtime, (u32)total);
+> -	return scaled;
+> +	return res + div64_u64(stime * rtime, total);
+>  }
+>  
+>  /*
+> -- 
+> 2.5.0
+> 
 
