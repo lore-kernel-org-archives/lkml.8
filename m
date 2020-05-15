@@ -2,60 +2,94 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F798C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF5002074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C9D2074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:55:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589504133;
+	bh=dyv0R0ie8YtJy95FD9KX/0SzWGEPyzcOwMlclDh+UA4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QTnQcYBxJ8642X2o2j7BqynP3KX6e4Xb2ZLwW0HlKoTAEVSzO5Grz+YNc7bcbR1nM
+	 WroTug8Z0/DobzucAdYCUPZMrcPPD6z/bqRWUIXj/JYUxGQY52+tzRZfFs2D6QS3Kq
+	 JZ6eI2KFZlG8CLDzhUfkFNCBR/pzuvfDoI1TNgDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgEOAyx (ORCPT
+        id S1728475AbgEOAzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 20:54:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726046AbgEOAyx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 20:54:53 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CE2BC061A0C;
-        Thu, 14 May 2020 17:54:53 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id AE18914DD3162;
-        Thu, 14 May 2020 17:54:52 -0700 (PDT)
-Date:   Thu, 14 May 2020 17:54:52 -0700 (PDT)
-Message-Id: <20200514.175452.1041898960046538461.davem@davemloft.net>
-To:     dmurphy@ti.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org
-Subject: Re: [PATCH net-next] dt-bindings: net: dp83869: Update licensing
- info
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200514145012.16145-1-dmurphy@ti.com>
-References: <20200514145012.16145-1-dmurphy@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 14 May 2020 17:54:53 -0700 (PDT)
+        Thu, 14 May 2020 20:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbgEOAzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 20:55:32 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6657720748;
+        Fri, 15 May 2020 00:55:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589504131;
+        bh=dyv0R0ie8YtJy95FD9KX/0SzWGEPyzcOwMlclDh+UA4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uJSjrd+xSjB+lMuRVw90RcbqLGFHaXVtOIgqfx07hc1ld5s6DyfDgXH6HgOs4xQ1l
+         J2xXwpDTUJl3aIpJp50BsBsCONoto8RXR7nnKtrJebxML90qwN3NLUj5Wh8ghW9VXj
+         R30NpFNQJmBYlDidtvszjQo65EAGoXaguTwV2S6A=
+Date:   Thu, 14 May 2020 20:55:30 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.14 39/39] crypto: xts - simplify error handling
+ in ->create()
+Message-ID: <20200515005530.GD29995@sasha-vm>
+References: <20200514185456.21060-1-sashal@kernel.org>
+ <20200514185456.21060-39-sashal@kernel.org>
+ <20200514190843.GA187179@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200514190843.GA187179@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Murphy <dmurphy@ti.com>
-Date: Thu, 14 May 2020 09:50:12 -0500
+On Thu, May 14, 2020 at 12:08:43PM -0700, Eric Biggers wrote:
+>On Thu, May 14, 2020 at 02:54:56PM -0400, Sasha Levin wrote:
+>> From: Eric Biggers <ebiggers@google.com>
+>>
+>> [ Upstream commit 732e540953477083082e999ff553622c59cffd5f ]
+>>
+>> Simplify the error handling in the XTS template's ->create() function by
+>> taking advantage of crypto_drop_skcipher() now accepting (as a no-op) a
+>> spawn that hasn't been grabbed yet.
+>>
+>> Signed-off-by: Eric Biggers <ebiggers@google.com>
+>> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>Please don't backport this patch.  It's a cleanup (not a fix) that depends on
+>patches in 5.6, which you don't seem to be backporting.
 
-> Add BSD 2 Clause to the licensing.
-> 
-> CC: Rob Herring <robh@kernel.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+For 5.6-4.19 I grabbed these to take:
 
-Applied.
+	1a263ae60b04 ("gcc-10: avoid shadowing standard library 'free()' in crypto")
+
+cleanly. I'll drop it as it's mostly to avoid silly gcc10 warnings, but
+I just wanted to let you know the reason they ended up here.
+
+>Note, this comment applies to all stable trees as well as all the other
+>"simplify error handling in ->create()" patches.
+>I hope that I don't have to reply to every individual email.
+
+You don't :)
+
+-- 
+Thanks,
+Sasha
