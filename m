@@ -2,141 +2,93 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA67C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3D102075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 542AE2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:06:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eKRCQooT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgEOPFr (ORCPT
+        id S1726680AbgEOPGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:05:47 -0400
-Received: from mga05.intel.com ([192.55.52.43]:28339 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgEOPFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:05:46 -0400
-IronPort-SDR: MHM+E/F2RjRegcbJ5yG++1J3qOtHcitfn+3Cs17Ip0MdAmtUHM2T4JlsXFXVbLI3+ZgxpZ3Qvx
- X0fKuLp8sU/w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 08:05:45 -0700
-IronPort-SDR: EX+/kA0HXNH84sqyToqDVeH2rEi9LIuOqiQ6K0oN24pfAe2f1Rat9eUkw4gWcL3iD9ayQ886Np
- VcYqaY6I9WsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="252057189"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 15 May 2020 08:05:40 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZbuA-006tTf-Vz; Fri, 15 May 2020 18:05:42 +0300
-Date:   Fri, 15 May 2020 18:05:42 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Long Cheng <long.cheng@mediatek.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] serial: 8250_dw: Simplify the ref clock rate
- setting procedure
-Message-ID: <20200515150542.GN1634618@smile.fi.intel.com>
-References: <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru>
- <20200506233136.11842-1-Sergey.Semin@baikalelectronics.ru>
- <20200506233136.11842-4-Sergey.Semin@baikalelectronics.ru>
- <20200515140547.GE1634618@smile.fi.intel.com>
- <20200515145007.xjrx5mminxrh374d@mobilestation>
+        Fri, 15 May 2020 11:06:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726140AbgEOPGG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 11:06:06 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 388D9C061A0C;
+        Fri, 15 May 2020 08:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=7K6CdWf4N8dxVLXNgInfVtSHh5OYnenmWosUImu2nCs=; b=eKRCQooTT9w0nJQ/xGCYcjEsBX
+        qdaZV40WsNTpJ+G0v+rd18Tq2j4Fdq6QdTA0L6mrVpwfTTklPCtK5Hs0GQGzXV3nF1ZvzXcCMBlVy
+        JJyDMjNoz5kdfhUq06tvfZtW4wF99R4o3/rDLZWPlsZmlgfxzmd3P5EXP5XmCCXjrbTdHR3YMy49g
+        ysZA9QIAXADeICE/fyr+KVWWq6OA9NBgsxRmwBHtk1MZV4mwySPBOLQhLp5V2z5fop6vJLLDnJVN3
+        fb9nGOAE2lBfs4+pHENQGiZTlltaYDoz6/uW6c6n1I23rK8jU4uPZVexK+eiC9N0cN8eOtsMPJ6Zs
+        rh5nDlrg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZbuV-0006VS-6f; Fri, 15 May 2020 15:06:03 +0000
+Subject: Re: linux-next: Tree for May 12 (fs/namespace.c)
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        David Howells <dhowells@redhat.com>
+References: <20200512225400.6abf0bda@canb.auug.org.au>
+ <22d91c05-49ed-0c32-ba02-e2ded4947f46@infradead.org>
+Message-ID: <12fa4586-a47d-4b6f-7b3c-23a036e45f8d@infradead.org>
+Date:   Fri, 15 May 2020 08:06:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515145007.xjrx5mminxrh374d@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <22d91c05-49ed-0c32-ba02-e2ded4947f46@infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 05:50:07PM +0300, Serge Semin wrote:
-> On Fri, May 15, 2020 at 05:05:47PM +0300, Andy Shevchenko wrote:
-> > On Thu, May 07, 2020 at 02:31:34AM +0300, Serge Semin wrote:
-> > > Really instead of twice checking the clk_round_rate() return value
-> > > we could do it once, and if it isn't error the clock rate can be changed.
-> > > By doing so we decrease a number of ret-value tests and remove a weird
-> > > goto-based construction implemented in the dw8250_set_termios() method.
-> > 
-> > >  	rate = clk_round_rate(d->clk, baud * 16);
-> > > -	if (rate < 0)
-> > > -		ret = rate;
-> > 
-> > > -	else if (rate == 0)
-> > > -		ret = -ENOENT;
-> > 
-> > This case now handled differently.
-> > I don't think it's good idea to change semantics.
-> > 
-> > So, I don't see how this, after leaving the rate==0 case, would be better than
-> > original one.
+On 5/12/20 8:12 AM, Randy Dunlap wrote:
+> On 5/12/20 5:54 AM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> News: there will be no linux-next release tomorrow.
+>>
+>> Changes since 20200511:
+>>
+>> New trees: notifications, fsinfo
+>>
 > 
-> Semantic doesn't change. The code does exactly the same as before. If it didn't
-> I either would have provided a comment about this or just didn't introduce the
-> change in the first place. I guess you just don't see the whole picture of the
-> method. Take a look in the code. The ret variable's been used to skip the
-> "p->uartclk = rate" assignment. That's it. So the (rate == 0) will still be
-> considered as error condition, which causes the clock rate left unchanged.
-> Here is the code diff so you wouldn't need to dive deep into the driver
-> sources:
+> on i386 or x86_64:
 > 
-> <	clk_disable_unprepare(d->clk);
-> <	rate = clk_round_rate(d->clk, baud * 16);
-> <	if (rate < 0)
-> <		ret = rate;
-> <	else if (rate == 0)
-> <		ret = -ENOENT;
-> <	else
-> <		ret = clk_set_rate(d->clk, rate);
-> <	clk_prepare_enable(d->clk);
-> <
-> <	if (ret)
-> <		goto out;
-> <
-> <	p->uartclk = rate;
-> <
-> <out:
-> ---
-> >       clk_disable_unprepare(d->clk);
-> >       rate = clk_round_rate(d->clk, baud * 16);
-> >       if (rate > 0) {
-> >              ret = clk_set_rate(d->clk, rate);
-> >              if (!ret)
-> >                      p->uartclk = rate;
-> >       }
-> >       clk_prepare_enable(d->clk);
+>   CC      fs/namespace.o
+> ../fs/namespace.c: In function ‘fsinfo_generic_mount_topology’:
+> ../fs/namespace.c:4274:42: error: ‘struct mount’ has no member named ‘mnt_topology_changes’
+>   p->mnt_topology_changes = atomic_read(&m->mnt_topology_changes);
+>                                           ^~
+> 
+> i.e., CONFIG_MOUNT_NOTIFICATIONS is not set/enabled.
+> 
+> Full randconfig file is attached.
+> 
 
-Thanks.
-Indeed, in the above it looks clear.
-
+This build error is still present in linux-next 20200515.
 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
