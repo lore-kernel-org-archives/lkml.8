@@ -2,99 +2,129 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7359C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A552320657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:11:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="rzJExiwo"
+	by mail.kernel.org (Postfix) with ESMTP id E98E320759
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:12:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgEONLl (ORCPT
+        id S1726242AbgEONMT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:11:41 -0400
-Received: from mail.efficios.com ([167.114.26.124]:35276 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbgEONLl (ORCPT
+        Fri, 15 May 2020 09:12:19 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:46405 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgEONMT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:11:41 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 608442AE9CD;
-        Fri, 15 May 2020 09:11:40 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id xN0YRVTzlkDk; Fri, 15 May 2020 09:11:39 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id C9CFD2AE9CC;
-        Fri, 15 May 2020 09:11:39 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C9CFD2AE9CC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1589548299;
-        bh=ckXGYo/mwLj3Sl75hO6m/BXI6eeRGWK4bk+UTIcpgr0=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=rzJExiwomdtGvHkAXUrG0G56AAxdJPuuafskN/tCpeC8mZzWXsFMpY8dx2JYPAEBU
-         QXVAKRmsRII9ZEI5zIP4UQkLHFQPPhj6a2lld1/yvobSbqj0JbGgdV7Mm958h/2tOu
-         5Gz2JpQnr3mkxLUL7IfvgWaK+26jNLy38JoQ96Sg0Un7hWP7VSYr9b/sKpk2p/QM/A
-         SjUHHL/Q5aEK7ghgJ3wBEwjz4xG2AkFvLPVLWcsIwuFY+k1mFdyCVqtCO85gTuOUw8
-         gnV2Y7RtLeAojbQzaiNZ1P1uRoCjI9AzBJI1UP+FLYIi1hL4iebv5zC1SI46Dh0pEM
-         p3R7QM4HTF/IA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id MqocqiZ0O0Ac; Fri, 15 May 2020 09:11:39 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id B7AFF2AE769;
-        Fri, 15 May 2020 09:11:39 -0400 (EDT)
-Date:   Fri, 15 May 2020 09:11:39 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        paulmck <paulmck@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Message-ID: <2096020113.22176.1589548299729.JavaMail.zimbra@efficios.com>
-In-Reply-To: <877dxdy211.fsf@nanos.tec.linutronix.de>
-References: <20200505131602.633487962@linutronix.de> <20200505134059.462640294@linutronix.de> <1777514130.20137.1589410645669.JavaMail.zimbra@efficios.com> <877dxdy211.fsf@nanos.tec.linutronix.de>
-Subject: Re: [patch V4 part 1 14/36] x86/entry: Get rid of
- ist_begin/end_non_atomic()
+        Fri, 15 May 2020 09:12:19 -0400
+Received: from mail-qv1-f52.google.com ([209.85.219.52]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MlsWZ-1irCxX2oex-00j3ld; Fri, 15 May 2020 15:12:16 +0200
+Received: by mail-qv1-f52.google.com with SMTP id l3so1010890qvo.7;
+        Fri, 15 May 2020 06:12:16 -0700 (PDT)
+X-Gm-Message-State: AOAM530LkO6Ejh7NLH/YllxbvXRsA0epdjGiwFt5cehSdCFbS8SzU0dp
+        V7p7FUM8Wu4CihVnDBaASbRXTCCbey/Gu5qEqU4=
+X-Google-Smtp-Source: ABdhPJzL0kbPaWt/UYw2Uz2rNIXYk/KnlaMI5B0hSICGSdegHY/AByOI15lsImUtudCP8+CPlNhdx49cfpzs91/rvyQ=
+X-Received: by 2002:a05:6214:1392:: with SMTP id g18mr3170818qvz.210.1589548335328;
+ Fri, 15 May 2020 06:12:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
-Thread-Topic: x86/entry: Get rid of ist_begin/end_non_atomic()
-Thread-Index: 9uyVhZ+9PK6Uht/T7s935ZVPtLoupA==
+References: <20200514075942.10136-1-brgl@bgdev.pl> <20200514075942.10136-11-brgl@bgdev.pl>
+ <CAK8P3a3=xgbvqrSpCK5h96eRH32AA7xnoK2ossvT0-cLFLzmXA@mail.gmail.com>
+ <CAMRc=MeypzZBHo6dJGKm4JujYyejqHxtdo7Ts95DXuL0VuMYCw@mail.gmail.com>
+ <CAK8P3a0u53rHSW=72CnnbhrY28Z+9f=Yv2K-bbj5OD+2Ds4unA@mail.gmail.com> <CAMRc=Mf_vYt1J-cc6aZ2-Qv_YDEymVoC7ZiwuG9BrXoGMsXepw@mail.gmail.com>
+In-Reply-To: <CAMRc=Mf_vYt1J-cc6aZ2-Qv_YDEymVoC7ZiwuG9BrXoGMsXepw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 15 May 2020 15:11:59 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a13k+X0XkkX=12x+22qVt_xxTBZr52ONQGdAY2T6XbpyA@mail.gmail.com>
+Message-ID: <CAK8P3a13k+X0XkkX=12x+22qVt_xxTBZr52ONQGdAY2T6XbpyA@mail.gmail.com>
+Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:Fbbb/Tu1JEHdbirs7W2eZ4b5soDWkcqrpUNCd5AaHYPNk6HxGy2
+ OSilgEREmRLlSUYRmbxeJZ85CkgnfW4dK1joqZ3jpfDTq4NRC0izCAffyT40kiZzV1i9FLq
+ A1yhR0K89YColUJjT0UhQ4vNN3yQPnVsQWWCcE6V8NNBW00qi1BgU9sK72ZD8AynvMdl1zz
+ ZMyZoFoeBfDDXmQBmG6hQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/aU9I5jDUPI=:U4e6GhX/+tv+OxvqBwcDO/
+ b0pfnGyT5+zIonA26dv83VamYMMs3WmnG/ofxiOzpfRB6WRvdJQDM+vbQr4ZeamjIb6kOOXoR
+ PWkqIe5XJL8jJBv0cyZ9gfFVqUSVokQel8BQA5G2OA5Lv4M7WDo8UMdAekijVV+xqIMtft+4k
+ Coo2Rtdm4vGG3ApnDOa7MsPIXUnHuZI0sPOFn/xgaB1rtHzIcl2sN8xtQPjvtZ33t7Atpk9ht
+ djwz+V6SnN1KbXT5HEPYiKXJQ2GPX825lmd/gvjW3V/afKjhqCmhCj7ZRNDvsJ58wLPQqJgev
+ Ez0u6D5IsNRXaugy6jHJe5sP0dIGs/cSeNeQJcSZgx2RLIda96pMxCM5E1Jf7Sc7GIBGD9iLP
+ fP+hpCBfqjUxbdtp2tpSTtHuHRR0wiV8wUNjqr66UullH+sjzH5EdK6ZVJPNRNKIVuT5za3UU
+ sBedh6JGQ325SVv05i/3v5IsjR6YUidCGjVKmUl9AFXMNuXJtfr+bMHBsc4MvdfaQn725yvTt
+ CFYobvYhrDZAa/gW4txI9C2/4yppbom8TPCwslmd+kHIRmzqoiQOVtXQBE+Uzw4t4iIKuTdmH
+ aLp+0K9DK3L4n+cMiAzH/uKBaFSC8r4+twq62UpOxRlHDcQqloDgwxEzPVn6aMMH/6i5ofFug
+ qtEtxxXQB2L39Pi+gevNMvv6iAgtl+S2ZwMjlNDYxc6mnkCLLDOWGLMXtvdzLtKAnqYIEyV9Q
+ FyYkH2LOrLxakAQGI9lIER04XlKrtLuC1jXYLJvh6Oav62Jcj51NbJht/gvLaJrn0qjLX8WAp
+ UuVCzeHLdEK/xMBQs5hosTYMq/9z7yVIqRZ+qSVl+A5uhx0ZjI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On May 15, 2020, at 5:34 AM, Thomas Gleixner tglx@linutronix.de wrote:
-[...]
-> 
-> Can you please trim your replies?
+On Fri, May 15, 2020 at 2:56 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> pt., 15 maj 2020 o 14:04 Arnd Bergmann <arnd@arndb.de> napisał(a):
+> > On Fri, May 15, 2020 at 9:11 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Sorry, will do,
+> > > >
+> > > > It looks like most of the stuff inside of the loop can be pulled out
+> > > > and only done once here.
+> > > >
+> > >
+> > > I did that in one of the previous submissions but it was pointed out
+> > > to me that a parallel TX path may fill up the queue before I wake it.
+> >
+> > Right, I see you plugged that hole, however the way you hold the
+> > spinlock across the expensive DMA management but then give it
+> > up in each loop iteration feels like this is not the most efficient
+> > way.
+> >
+>
+> Maybe my thinking is wrong here, but I assumed that with a spinlock
+> it's better to give other threads the chance to run in between each
+> iteration. I didn't benchmark it though.
 
-Thanks,
+It depends. You want to avoid lock contention (two threads trying to
+get the lock at the same time) but you also want to avoid bouncing
+around the spinlock between the caches.
 
-Mathieu
+In the contention case, what I think would happen here is that the
+cleanup thread gives up the lock and the xmit function gets it, but
+then the cleanup thread is spinning again, so you are still blocked
+on one of the two CPUs but also pay the overhead of synchronizing
+between the two.
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Holding the lock the whole time would speed up both the good case
+(no contention) and the bad case (bouncing the lock) a little bit
+because it saves some overhead. Holding the lock for shorter
+times (i.e. not during the cache operations) would reduce the
+amount of lock-contention but not help in the good case.
+
+Not needing a lock at all is generally best, but getting it right
+is tricky ;-)
+
+      Arnd
