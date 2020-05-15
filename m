@@ -2,86 +2,240 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18685C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF10D204EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:33:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="apxtGyDt"
+	by mail.kernel.org (Postfix) with ESMTP id EB22020734
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589510336;
+	bh=YSQiHaG5T2cTvdocAHDsvW2x1qVb7kEdw/7s72Qr01U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AMEd1+vjkjXJz/shn1Ei97Lw2nl0uROpJP0mX5l0anibOskLt/SRt2spbukMjBXb7
+	 uJJcOJQ+xetQxcRDU9T9TrXq7n2vzaVZrx7d+YqoZmLUD0CFrfxtmURyDqNgtNwQfB
+	 6sduG+33pXl/z5r2swxJOyaqkXYRTr9DNijUYKQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgEOCdw (ORCPT
+        id S1727944AbgEOCiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 22:33:52 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17762 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726176AbgEOCdv (ORCPT
+        Thu, 14 May 2020 22:38:55 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37409 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726176AbgEOCiz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 22:33:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1589510015; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=XrNbjK2JzDL+oW9cOJ6TVXSX1BBA6clxLNBleupsCQY0k/jX+LQ77zeaNvBg/9jGpsjqqCCLO8sKBd5m49S0BvNVy07RF2TYzT6JEmMTH3jHTFL0+Ja/AEqgQKlecRFlM+wwTSqEKjaXKDvjKiLjslT3lGQcEcCuh2g9m7RHNuM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1589510015; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
-        bh=0dz0tsk8IyniG3Mpw42gBiYzPUtONnY4I4J1LK/ahDI=; 
-        b=OyBPeGMLzZZ39SVoWCwgN+SI/SapdSwRJl6T5cDhInbUOg5EhNOrnenqxO+ueciQMNengPPOLokA3GT6t9oeXsFu3133/w8vehM9Txq/ckls797hFu8q/LtsLHuHV1GKI6nYDL9x1mjMNNJKY8034NgEr/5ND09cBiWhNkVGucU=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589510015;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=0dz0tsk8IyniG3Mpw42gBiYzPUtONnY4I4J1LK/ahDI=;
-        b=apxtGyDt4sOno14UVkRhMgW0f0yaBqLCNuJfE2Tf+R1+PzupJKEJ6rPdyjMG6fUD
-        uncU0+Xmy2jHgF6h89f4sAig+aBJg6uRv86+IqTgktelO3q3iO/TNlp5YzJdCXPSceJ
-        9KFkOUnJ66eQl8vp9GUl+y22RDQef5Qz/97ZMl3A=
-Received: from [127.0.0.1] (101.84.172.108 [101.84.172.108]) by mx.zoho.com.cn
-        with SMTPS id 1589510013492869.4167107598075; Fri, 15 May 2020 10:33:33 +0800 (CST)
-Date:   Fri, 15 May 2020 10:33:29 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>
-CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH 1/2] MIPS: Loongson: Fix fatal error during GPU init
-User-Agent: K-9 Mail for Android
-Reply-to: jiaxun.yang@flygoat.com
-In-Reply-To: <1589508901-18077-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1589508901-18077-1-git-send-email-yangtiezhu@loongson.cn>
-Message-ID: <ECE71DFC-57D3-4132-BB85-609448B29238@flygoat.com>
+        Thu, 14 May 2020 22:38:55 -0400
+Received: by mail-ot1-f65.google.com with SMTP id z17so782396oto.4;
+        Thu, 14 May 2020 19:38:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ptFVEDg6umdMtCllBkJHixw/+OkA7uIpMhN7I/D6mxg=;
+        b=T9HoXctrf2ly3F8s0wkBH5Oi7NJSsqvFuodBC5CLce7GmrVSVLqw0+grh/txUDfIR0
+         XeS2RYwz1nNUidnhq3R4vOdqVdfRYnl/FepCPpAy5q83SPP5t2BJR4lL1+W+CknDKAt6
+         e00rBc9JwsUuHYJyh+DhK8b36fmn96/i41WleHKHPe9p0N9JTqhxS2LdW1312IiytCkG
+         J1Lu+JG5L8kr6tjZyqc8WcA1UL4te2rf1OdfgXkuXsndjDk2vMPI9+eO+eyM80JUin4F
+         BScyN+t+x5zqIYSkG597A2JZqNDT0/UrCkwaMHK8q8R/4zRedOVwH6CBGlNBeV+Tx3W6
+         EMQQ==
+X-Gm-Message-State: AOAM531LzcUobmINq16UEUkbum+HOUpuBkDU1ak0iDcTRb1VOYkVJkkR
+        iyAUdudj6cjsbRgp+s0KvQ==
+X-Google-Smtp-Source: ABdhPJxObpjMpwzOqzN0xtCAmCuXpkdbEHiKZzCEQfCkL5D2OlKXkEMqhrrbkrWQy27y36CRQFZnmw==
+X-Received: by 2002:a05:6830:2378:: with SMTP id r24mr678472oth.113.1589510333173;
+        Thu, 14 May 2020 19:38:53 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d10sm239100ote.10.2020.05.14.19.38.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 19:38:51 -0700 (PDT)
+Received: (nullmailer pid 11325 invoked by uid 1000);
+        Fri, 15 May 2020 02:38:50 -0000
+Date:   Thu, 14 May 2020 21:38:50 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-ntb@googlegroups.com, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-doc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 01/19] dt-bindings: PCI: Endpoint: Add DT bindings for
+ PCI EPF NTB Device
+Message-ID: <20200515023850.GA10278@bogus>
+References: <20200514145927.17555-1-kishon@ti.com>
+ <20200514145927.17555-2-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514145927.17555-2-kishon@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 14 May 2020 20:29:09 +0530, Kishon Vijay Abraham I wrote:
+> Add device tree schema for PCI endpoint function bus to which
+> endpoint function devices should be attached. Then add device tree
+> schema for PCI endpoint function device to include bindings thats
+> generic to all endpoint functions. Finally add device tree schema
+> for PCI endpoint NTB function device by including the generic
+> device tree schema for PCIe endpoint function.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../bindings/pci/endpoint/pci-epf-bus.yaml    | 42 +++++++++++
+>  .../bindings/pci/endpoint/pci-epf-device.yaml | 69 +++++++++++++++++++
+>  .../bindings/pci/endpoint/pci-epf-ntb.yaml    | 68 ++++++++++++++++++
+>  3 files changed, 179 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-device.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.yaml
+> 
 
 
-=E4=BA=8E 2020=E5=B9=B45=E6=9C=8815=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
-0:15:00, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
->When ATI Radeon graphics card has been compiled directly into the kernel
->instead of as a module, we should make sure the firmware for the model
->(check available ones in /lib/firmware/radeon) is built-in to the kernel
->as well, otherwise there exists the following fatal error during GPU init=
-,
->change CONFIG_DRM_RADEON=3Dy to CONFIG_DRM_RADEON=3Dm to fix it=2E
->
+My bot found errors running 'make dt_binding_check' on your patch:
 
-The commit message looks shocking=2E
+Traceback (most recent call last):
+  File "/usr/local/bin/dt-doc-validate", line 64, in <module>
+    ret = check_doc(args.yamldt)
+  File "/usr/local/bin/dt-doc-validate", line 25, in check_doc
+    testtree = dtschema.load(filename, line_number=line_number, duplicate_keys=False)
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 592, in load
+    return yaml.load(f.read())
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/main.py", line 343, in load
+    return constructor.get_single_data()
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 113, in get_single_data
+    return self.construct_document(node)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 123, in construct_document
+    for _dummy in generator:
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 723, in construct_yaml_map
+    value = self.construct_mapping(node)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 440, in construct_mapping
+    return BaseConstructor.construct_mapping(self, node, deep=deep)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 257, in construct_mapping
+    if self.check_mapping_key(node, key_node, mapping, key, value):
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 295, in check_mapping_key
+    raise DuplicateKeyError(*args)
+ruamel.yaml.constructor.DuplicateKeyError: while constructing a mapping
+  in "<unicode string>", line 5, column 1
+found duplicate key "properties" with value "{}" (original value: "{}")
+  in "<unicode string>", line 17, column 1
 
-You'd better reword it as "MIPS: Loongson64: Mark GPU driver as module in =
-Kconfig"
+To suppress this check see:
+    http://yaml.readthedocs.io/en/latest/api.html#duplicate-keys
 
-Thanks=2E
---=20
-Jiaxun Yang
+Duplicate keys will become an error in future releases, and are errors
+by default when using the new API.
+
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/pci/endpoint/pci-epf-device.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/pci/endpoint/pci-epf-device.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.yaml: while constructing a mapping
+  in "<unicode string>", line 5, column 1
+found duplicate key "properties" with value "{}" (original value: "{}")
+  in "<unicode string>", line 17, column 1
+
+To suppress this check see:
+    http://yaml.readthedocs.io/en/latest/api.html#duplicate-keys
+
+Duplicate keys will become an error in future releases, and are errors
+by default when using the new API.
+
+Traceback (most recent call last):
+  File "/usr/local/bin/dt-mk-schema", line 34, in <module>
+    schemas = dtschema.process_schemas(args.schemas, core_schema=(not args.useronly))
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 554, in process_schemas
+    sch = process_schema(os.path.abspath(filename))
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 507, in process_schema
+    schema = load_schema(filename)
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 123, in load_schema
+    return do_load(os.path.join(schema_basedir, schema))
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 108, in do_load
+    return yaml.load(tmp)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/main.py", line 343, in load
+    return constructor.get_single_data()
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 113, in get_single_data
+    return self.construct_document(node)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 123, in construct_document
+    for _dummy in generator:
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 723, in construct_yaml_map
+    value = self.construct_mapping(node)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 440, in construct_mapping
+    return BaseConstructor.construct_mapping(self, node, deep=deep)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 257, in construct_mapping
+    if self.check_mapping_key(node, key_node, mapping, key, value):
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 295, in check_mapping_key
+    raise DuplicateKeyError(*args)
+ruamel.yaml.constructor.DuplicateKeyError: while constructing a mapping
+  in "<unicode string>", line 5, column 1
+found duplicate key "properties" with value "{}" (original value: "{}")
+  in "<unicode string>", line 17, column 1
+
+To suppress this check see:
+    http://yaml.readthedocs.io/en/latest/api.html#duplicate-keys
+
+Duplicate keys will become an error in future releases, and are errors
+by default when using the new API.
+
+Documentation/devicetree/bindings/Makefile:41: recipe for target 'Documentation/devicetree/bindings/processed-schema-examples.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/processed-schema-examples.yaml] Error 123
+make[1]: *** Deleting file 'Documentation/devicetree/bindings/processed-schema-examples.yaml'
+Traceback (most recent call last):
+  File "/usr/local/bin/dt-mk-schema", line 34, in <module>
+    schemas = dtschema.process_schemas(args.schemas, core_schema=(not args.useronly))
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 554, in process_schemas
+    sch = process_schema(os.path.abspath(filename))
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 507, in process_schema
+    schema = load_schema(filename)
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 123, in load_schema
+    return do_load(os.path.join(schema_basedir, schema))
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 108, in do_load
+    return yaml.load(tmp)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/main.py", line 343, in load
+    return constructor.get_single_data()
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 113, in get_single_data
+    return self.construct_document(node)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 123, in construct_document
+    for _dummy in generator:
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 723, in construct_yaml_map
+    value = self.construct_mapping(node)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 440, in construct_mapping
+    return BaseConstructor.construct_mapping(self, node, deep=deep)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 257, in construct_mapping
+    if self.check_mapping_key(node, key_node, mapping, key, value):
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 295, in check_mapping_key
+    raise DuplicateKeyError(*args)
+ruamel.yaml.constructor.DuplicateKeyError: while constructing a mapping
+  in "<unicode string>", line 5, column 1
+found duplicate key "properties" with value "{}" (original value: "{}")
+  in "<unicode string>", line 17, column 1
+
+To suppress this check see:
+    http://yaml.readthedocs.io/en/latest/api.html#duplicate-keys
+
+Duplicate keys will become an error in future releases, and are errors
+by default when using the new API.
+
+Documentation/devicetree/bindings/Makefile:45: recipe for target 'Documentation/devicetree/bindings/processed-schema.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/processed-schema.yaml] Error 123
+make[1]: *** Deleting file 'Documentation/devicetree/bindings/processed-schema.yaml'
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1290443
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
