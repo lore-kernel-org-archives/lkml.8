@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 674DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3698F2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E3820759
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:35:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=displaylink.com header.i=@displaylink.com header.b="wv3T0FW6"
+	dkim=pass (1024-bit key) header.d=displaylink.com header.i=@displaylink.com header.b="QznIqWTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgEOMfc (ORCPT
+        id S1726298AbgEOMfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:35:32 -0400
-Received: from eu-smtp-delivery-167.mimecast.com ([146.101.78.167]:48983 "EHLO
+        Fri, 15 May 2020 08:35:36 -0400
+Received: from eu-smtp-delivery-167.mimecast.com ([146.101.78.167]:37358 "EHLO
         eu-smtp-delivery-167.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726202AbgEOMf3 (ORCPT
+        by vger.kernel.org with ESMTP id S1726223AbgEOMfa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:35:29 -0400
+        Fri, 15 May 2020 08:35:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=displaylink.com;
-        s=mimecast20151025; t=1589546122;
+        s=mimecast20151025; t=1589546123;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UaaFTluE1Qc3glP+qtI2+gfeCdu4G7mdlAo9NoDyfMI=;
-        b=wv3T0FW6dzrYSbpTV0/0fW6T90qhQg+r4PBi1c6Vl1lYShbDPl4FfWGMNDenUEPcUpEQse
-        ATec8v4pYkCRVzEJybS6/WH9gC30C86mlPZEb/xNjlmkzECOw9bxLpDf+EuVsHSZI39INA
-        2cGWcScbRT5OcvdhrvINfd2WckzFWHk=
+        bh=HOS2lHjSj4Tmq6iIyJCmuWsM0MD9wJ/2ZrDx/UGvCw8=;
+        b=QznIqWTyyKCY9R+gsqdGppxOjvmwAfKSUXNeHQcHysU9ONvOUazktlke7FUVOuMUwwdIkB
+        PdLM7zsIdYvo1QpiarHu7div82rToycmGIthAKVd+DwOqbQSG7N+Uo6CGjBzrsf7HkSniK
+        5752xRsgi6mNlIOWcFAIjY6X6zAtp3M=
 Received: from EUR04-VI1-obe.outbound.protection.outlook.com
  (mail-vi1eur04lp2053.outbound.protection.outlook.com [104.47.14.53]) (Using
  TLS) by relay.mimecast.com with ESMTP id
- uk-mta-247-j8GRsXlgPH-ApX4OfzLTfA-5; Fri, 15 May 2020 13:35:21 +0100
-X-MC-Unique: j8GRsXlgPH-ApX4OfzLTfA-5
+ uk-mta-247-q7Y6Y-8iMdS2GoMbmiLUPw-6; Fri, 15 May 2020 13:35:22 +0100
+X-MC-Unique: q7Y6Y-8iMdS2GoMbmiLUPw-6
 Received: from VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM
  (2603:10a6:800:64::13) by VI1PR1001MB1230.EURPRD10.PROD.OUTLOOK.COM
  (2603:10a6:800:dd::17) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Fri, 15 May
- 2020 12:35:18 +0000
+ 2020 12:35:19 +0000
 Received: from VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::3cc1:941d:635d:99f7]) by VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::3cc1:941d:635d:99f7%11]) with mapi id 15.20.3000.016; Fri, 15 May
- 2020 12:35:18 +0000
+ 2020 12:35:19 +0000
 From:   Vladimir Stankovic <vladimir.stankovic@displaylink.com>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
         mausb-host-devel@displaylink.com
-Subject: [PATCH v6 4/8] usb: mausb_host: Implement initial hub handlers
-Date:   Fri, 15 May 2020 14:34:58 +0200
-Message-Id: <20200515123502.12099-5-vladimir.stankovic@displaylink.com>
+Subject: [PATCH v6 6/8] usb: mausb_host: Add logic for PAL-to-PAL communication
+Date:   Fri, 15 May 2020 14:35:00 +0200
+Message-Id: <20200515123502.12099-7-vladimir.stankovic@displaylink.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200515123502.12099-1-vladimir.stankovic@displaylink.com>
 References: <20200425091954.1610-1-vladimir.stankovic@displaylink.com>
@@ -63,29 +63,29 @@ X-ClientProxiedBy: VI1PR09CA0140.eurprd09.prod.outlook.com
  (2603:10a6:800:64::13)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from raven-hp.endava.net (94.189.199.177) by VI1PR09CA0140.eurprd09.prod.outlook.com (2603:10a6:803:12c::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25 via Frontend Transport; Fri, 15 May 2020 12:35:18 +0000
+Received: from raven-hp.endava.net (94.189.199.177) by VI1PR09CA0140.eurprd09.prod.outlook.com (2603:10a6:803:12c::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25 via Frontend Transport; Fri, 15 May 2020 12:35:19 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [94.189.199.177]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c7b7cd0a-ab79-48a4-cf46-08d7f8cc6d0d
+X-MS-Office365-Filtering-Correlation-Id: 124baa66-5065-4961-5fa7-08d7f8cc6dc4
 X-MS-TrafficTypeDiagnostic: VI1PR1001MB1230:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR1001MB1230D02C9A4241C209E3F04091BD0@VI1PR1001MB1230.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:126;
+X-Microsoft-Antispam-PRVS: <VI1PR1001MB12306F6BF115FE1EF4485B4F91BD0@VI1PR1001MB1230.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:283;
 X-Forefront-PRVS: 04041A2886
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vSRVbSQDYrq0n50rpIsb+0SHfrGk0dKta/HkXQ116tYjJB0yO/yAMGijC7P/vHP1RuKsCB6NJ4MPeJC3+SfBOSJTWYOtWqlsiVZulV/Hn5o+TXvZa1xxcN+cx7Ky+B+bTdBFw12lPTLdwe2xZM9Pix4j0+CpRO5h2+OHvZAnXQZEsFt/IYptBzATQ4F/5qkTg0Wovq2HoDOgxS5X5jucGGf1y/PBmPqGZjxASfa3l1Urm1MrRR5xR4xHMVHp5uQEAsNFdr1aql5vF1tD2NQk1r2fy+atBfGeL9ouDHfHJqfuH0OHIB4HKFw+g+v84shpGF0ForuZKEn41dBvWu5CLrHeSKVHsIO44Ht2KzMJIBwzRXQU2Auvj2yAfeIsVspLW1Aq6d/A5DmMwbB9AI9f8vB0v47P6g8gQJOfheYANyiLeZhJEc8DS5ic+AarumZe
+X-Microsoft-Antispam-Message-Info: SUpu9U0V53CsepqwwOQw+0ASdNsCxWjRb0K/a0YTZSSQHFwz+pXBf0gkC40Zwh6guMsDChpScl3QuV9oeEIdBKyXXA+59OM/kdVc9wy1XXVSmBgcdYRnZnF712XNTZv3U66xIu8CqKmWthdKulTXfOJYuoviyNBDCwmPA+y+oPzfnAOs46f7oq1X1KzR98Mt95rkly/QsmrUmvSNj//xXupNe/tMbLQa7kky2+Xyhl4kXo4FphLajXvgdYaqzfSmotHMJEii+N+8JD61wTy83hcE819hWGrjb326uJROLAfIZnXzdk4PFFbofk3B8uJNkqtdFRT9zUQzt77aziXU8j1VgoFI3mT99gMUblqMCEZ/dwNv5v6ObcUtFYMai3e45suThnRYwnq5F2hlr8eDIyqWXYJRT/oRvlwVIUWRgF/zuRVeLrxliKRLY8q1ecQJ
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39840400004)(366004)(346002)(376002)(36756003)(86362001)(5660300002)(107886003)(6666004)(66946007)(66476007)(66556008)(2906002)(4326008)(16526019)(956004)(6486002)(8676002)(186003)(8936002)(6512007)(6506007)(30864003)(1076003)(478600001)(26005)(44832011)(6916009)(316002)(2616005)(52116002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: busU4DJcxT9t3KSYlYEJlF6bF9Sshp0Gzom4Q76Kddl2E6UnOUINEDjzcuhrYj3q8ec2L5KgxHA0hDO458a8m8YgQIDP9Zbi/+XtaffjikEv3mdFW7P8YDlOaYeNwjA1zqPWs1T53Dov0DWNGqLsdZGUoIz3X0qDqgbZKcrVfnwVziL+8vEnbBUA7oUw9gNKVProcrq0svnIPE+0Q5AyU5xUzp8MUdxMYjlAgwV1jH2qugyfMaAjhtIBxrNJnVZ48Mg8oAuS2ure+Cgt7KQxnwzaTGDcCQWWdM0ueDboDX4WGEapbL4FgIMImUSrfmw4Fm1tluWprpO0PhTQ6IiR4Ce6PtjtW/m4t/djfJekDKhhN0dBQLXTNlMF69kgZPODklQNPE5NMc0pBQbHkTyMTMj1V4ZkxLcr3cdo9AZUNA3nC6Rq3TNh4Gb8XWN7b6Q8334WZajTxxJWtDrtLv/tMWxhui3EPrSTWbwUjjcby/s=
+X-MS-Exchange-AntiSpam-MessageData: 5vJzLQEpeDM0tirKOl38Y+toLkbnKIDGKs5xuzRy5tSawdXEs9gtNXjLmpEbjvrPXB5FasfXeSrH0uWHpN+Icm/3cj4mr52fLcMzTglXYCwRxAjRgqQ3+jrR4xHVpVDWFtmWDfjb1VG6YBPshKqyPImAyTtmOYZho5dy/1Ph4IPbChFLxLm1vIGItnLuXyj6XlN5PDX0oXRn8HodhtbIvjqJkEnWkAt91lI2wInXVXpJ0P8mXK4BfbClqK11OZEombidCec9lV1Dd23hPIt1yArk4g7vct6RrpuG+fIbfX5RZMWxmuj677udS0tMUKWZMk3ZtVx0m5gPNyHEEXlerMw7O6OfhFeIsMQ7TsITHnqG1BDGWQOlE7hPLgOeQiMPwmQD0q4+8MrQ5+zgElXOaq31wyKg6R2LWNKgf78AyRFBmA8Sz8NjXtoC8JUksVGplBKgaesbheUB1DlLivXbDwrKvfMy5DkcMQwYE8lqYKU=
 X-OriginatorOrg: displaylink.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7b7cd0a-ab79-48a4-cf46-08d7f8cc6d0d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2020 12:35:18.5501
+X-MS-Exchange-CrossTenant-Network-Message-Id: 124baa66-5065-4961-5fa7-08d7f8cc6dc4
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2020 12:35:19.7046
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: a4bda75a-b444-4312-9c90-44a7c4b2c91a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oYaU/lo62rHrC1r+qfx+bG1Qsi4doQWbXOlHSPTO30h2BTMfj0i/kTM9e1P3AkbUiiQ22QpUt01nRjxLibTS74nwpkTvoJuHl0/c9aZ62UhsbZlgUMSG/WuhdhZYMXbV
+X-MS-Exchange-CrossTenant-UserPrincipalName: Sgc7sOPFJTpmNOzinxph8aGaP4lWRA0TeulrsDXV6FbrGNoFTPuA+Ncj+ohqm7ylDnDcJBU6FyBykaTJJeW2R+JjbzeygxvlQFAjAqdmWTSC08g5lfdA3LcCK21FMl37
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR1001MB1230
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: displaylink.com
@@ -96,1111 +96,831 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implemented handlers for subset of HCD events.
+Implemeneted connection between PAL and Link layers and set up
+environment for exchanging PAL-to-PAL messages.
+
+Within this patch, driver's sysfs parameters have been created
+with intention to configure remote connection parameters.
 
 Signed-off-by: Vladimir Stankovic <vladimir.stankovic@displaylink.com>
 ---
- drivers/usb/host/mausb/hcd.c | 925 +++++++++++++++++++++++++++++++++++
- drivers/usb/host/mausb/hcd.h |  86 +++-
- 2 files changed, 1008 insertions(+), 3 deletions(-)
+ drivers/usb/host/mausb/hpal.c       | 529 ++++++++++++++++++++++++++++
+ drivers/usb/host/mausb/hpal.h       |   6 +
+ drivers/usb/host/mausb/mausb_core.c | 140 ++++++++
+ 3 files changed, 675 insertions(+)
 
-diff --git a/drivers/usb/host/mausb/hcd.c b/drivers/usb/host/mausb/hcd.c
-index 3a6ef9313dcb..41b88b6f97b1 100644
---- a/drivers/usb/host/mausb/hcd.c
-+++ b/drivers/usb/host/mausb/hcd.c
-@@ -6,6 +6,7 @@
-=20
+diff --git a/drivers/usb/host/mausb/hpal.c b/drivers/usb/host/mausb/hpal.c
+index 5368c500a320..be600e8c30ec 100644
+--- a/drivers/usb/host/mausb/hpal.c
++++ b/drivers/usb/host/mausb/hpal.c
+@@ -9,10 +9,15 @@
+ #include "hcd.h"
  #include "utils.h"
 =20
-+static int mausb_bus_probe(struct device *dev);
- static int mausb_bus_match(struct device *dev, struct device_driver *drv);
++#define MAUSB_DELETE_MADEV_TIMEOUT_MS 3000
++
+ struct mss mss;
 =20
- static const struct file_operations mausb_fops;
-@@ -20,6 +21,7 @@ static struct class=09*mausb_class;
- static struct bus_type=09mausb_bus_type =3D {
- =09.name=09=3D DEVICE_NAME,
- =09.match=09=3D mausb_bus_match,
-+=09.probe=09=3D mausb_bus_probe,
- };
++static int mausb_start_connection_timer(struct mausb_device *dev);
+ static int mausb_power_state_cb(struct notifier_block *nb, unsigned long a=
+ction,
+ =09=09=09=09void *data);
++static void mausb_signal_empty_mss(void);
++static void mausb_remove_madev_from_list(u8 madev_addr);
+ static void mausb_execute_urb_dequeue(struct work_struct *dequeue_work);
+ static int mausb_start_heartbeat_timer(void);
 =20
- static struct device_driver mausb_driver =3D {
-@@ -46,6 +48,11 @@ static void mausb_remove(void)
- =09mhcd->hcd_hs_ctx =3D NULL;
+@@ -173,6 +178,56 @@ static bool mausb_return_urb_ctx_to_tree(struct mausb_=
+urb_ctx *urb_ctx,
+ =09return true;
  }
 =20
-+static int mausb_bus_probe(struct device *dev)
++static void mausb_complete_urbs_from_tree(void)
 +{
-+=09return mausb_probe(dev);
++=09struct mausb_urb_ctx *urb_ctx =3D NULL;
++=09struct urb=09     *current_urb =3D NULL;
++=09struct rb_node=09     *current_node =3D NULL;
++=09unsigned long flags;
++=09int status =3D 0;
++=09int ret;
++
++=09dev_dbg(mausb_host_dev.this_device, "Completing all urbs from tree");
++
++=09spin_lock_irqsave(&mhcd->lock, flags);
++
++=09while ((current_node =3D rb_first(&mhcd->mausb_urbs))) {
++=09=09urb_ctx =3D rb_entry(current_node, struct mausb_urb_ctx, rb_node);
++
++=09=09current_urb =3D urb_ctx->urb;
++=09=09mausb_delete_urb_ctx_from_tree(urb_ctx);
++=09=09mausb_uninit_data_iterator(&urb_ctx->iterator);
++=09=09kfree(urb_ctx);
++
++=09=09ret =3D usb_hcd_check_unlink_urb(current_urb->hcpriv,
++=09=09=09=09=09       current_urb, status);
++=09=09if (ret =3D=3D -EIDRM)
++=09=09=09dev_warn(mausb_host_dev.this_device, "Urb=3D%p is already unlinke=
+d",
++=09=09=09=09 current_urb);
++=09=09else
++=09=09=09usb_hcd_unlink_urb_from_ep(current_urb->hcpriv,
++=09=09=09=09=09=09   current_urb);
++
++=09=09spin_unlock_irqrestore(&mhcd->lock, flags);
++
++=09=09/* Prepare urb for completion */
++=09=09dev_dbg(mausb_host_dev.this_device, "Completing urb=3D%p",
++=09=09=09current_urb);
++
++=09=09current_urb->status=09   =3D -EPROTO;
++=09=09current_urb->actual_length =3D 0;
++=09=09atomic_dec(&current_urb->use_count);
++=09=09usb_hcd_giveback_urb(current_urb->hcpriv, current_urb,
++=09=09=09=09     current_urb->status);
++
++=09=09spin_lock_irqsave(&mhcd->lock, flags);
++=09}
++
++=09spin_unlock_irqrestore(&mhcd->lock, flags);
++
++=09dev_dbg(mausb_host_dev.this_device, "Completed all urbs from tree");
 +}
 +
- static int mausb_bus_match(struct device *dev, struct device_driver *drv)
- {
- =09if (strncmp(dev->bus->name, drv->name, strlen(drv->name)))
-@@ -91,7 +98,13 @@ int mausb_init_hcd(void)
+ /*After this function call only valid thing to do with urb is to give it b=
+ack*/
+ struct mausb_urb_ctx *mausb_unlink_and_delete_urb_from_tree(struct urb *ur=
+b,
+ =09=09=09=09=09=09=09    int status)
+@@ -280,6 +335,164 @@ static inline void mausb_port_has_changed_event(struc=
+t mausb_device *dev,
+ =09=09mausb_port_has_changed(USB20HUB, HIGH_SPEED, dev);
+ }
 =20
- =09device->driver =3D &mausb_driver;
-=20
-+=09retval =3D mausb_probe(device);
-+=09if (retval)
-+=09=09goto mausb_probe_failed;
++static void mausb_socket_disconnect_event(struct work_struct *work)
++{
++=09struct mausb_device *dev =3D container_of(work, struct mausb_device,
++=09=09=09=09=09=09socket_disconnect_work);
++=09struct mausb_event event;
 +
- =09return retval;
-+mausb_probe_failed:
-+=09device_destroy(mausb_class, devt);
- device_create_error:
- =09kfree(mhcd);
- =09mhcd =3D NULL;
-@@ -118,3 +131,915 @@ void mausb_deinit_hcd(void)
- =09=09unregister_chrdev(major, DEVICE_NAME);
++=09dev_info(mausb_host_dev.this_device, "Disconnect madev_addr=3D%d",
++=09=09 dev->madev_addr);
++
++=09mausb_ip_disconnect(dev->ctrl_channel);
++=09mausb_destroy_ip_ctx(dev->ctrl_channel);
++=09dev->ctrl_channel =3D NULL;
++
++=09mausb_ip_disconnect(dev->bulk_channel);
++=09mausb_destroy_ip_ctx(dev->bulk_channel);
++=09dev->bulk_channel =3D NULL;
++
++=09mausb_ip_disconnect(dev->isoch_channel);
++=09mausb_destroy_ip_ctx(dev->isoch_channel);
++=09dev->isoch_channel =3D NULL;
++
++=09if (dev->mgmt_channel) {
++=09=09memset(&event, 0, sizeof(event));
++=09=09event.type =3D MAUSB_EVENT_TYPE_NETWORK_DISCONNECTED;
++=09=09event.data.device_id =3D dev->id;
++
++=09=09dev_info(mausb_host_dev.this_device, "Releasing MAUSB device ref");
++=09=09kref_put(&dev->refcount, mausb_release_ma_dev_async);
++=09}
++
++=09mausb_ip_disconnect(dev->mgmt_channel);
++=09mausb_destroy_ip_ctx(dev->mgmt_channel);
++=09dev->mgmt_channel =3D NULL;
++
++=09memset(dev->channel_map, 0, sizeof(dev->channel_map));
++}
++
++static void mausb_disconnect_ma_dev(struct mausb_device *dev)
++{
++=09dev_info(mausb_host_dev.this_device, "Disconnecting MAUSB device madev_=
+addr=3D%d",
++=09=09 dev->madev_addr);
++
++=09if (!dev->dev_connected) {
++=09=09dev_warn(mausb_host_dev.this_device, "MAUSB device is not connected"=
+);
++=09=09kref_put(&dev->refcount, mausb_release_ma_dev_async);
++=09=09return;
++=09}
++=09mausb_hcd_disconnect(dev->port_number, dev->dev_type, dev->dev_speed);
++
++=09if (dev->dev_type =3D=3D USB30HUB)
++=09=09mausb_hcd_disconnect(dev->port_number, USB20HUB, HIGH_SPEED);
++}
++
++static void mausb_hcd_disconnect_event(struct work_struct *work)
++{
++=09struct mausb_device *ma_dev =3D container_of(work, struct mausb_device,
++=09=09=09=09=09=09   hcd_disconnect_work);
++
++=09mausb_disconnect_ma_dev(ma_dev);
++}
++
++static void mausb_delete_madev(struct work_struct *work)
++{
++=09struct mausb_device *dev =3D container_of(work, struct mausb_device,
++=09=09=09=09=09=09madev_delete_work);
++=09struct mausb_event=09event;
++=09struct completion=09completion;
++=09struct completion=09*user_event;
++=09struct mausb_completion mausb_completion;
++=09long status;
++=09unsigned long timeout =3D msecs_to_jiffies(MAUSB_DELETE_MADEV_TIMEOUT_M=
+S);
++
++=09dev_info(mausb_host_dev.this_device, "Deleting MAUSB device madev_addr=
+=3D%d",
++=09=09 dev->madev_addr);
++
++=09del_timer_sync(&dev->connection_timer);
++
++=09/* Client IS responsive */
++=09if (!atomic_read(&dev->unresponsive_client)) {
++=09=09memset(&event, 0, sizeof(event));
++=09=09event.type =3D MAUSB_EVENT_TYPE_DELETE_MA_DEV;
++=09=09event.mgmt.delete_ma_dev.device_id =3D dev->id;
++=09=09event.mgmt.delete_ma_dev.event_id  =3D mausb_event_id(dev);
++
++=09=09init_completion(&completion);
++=09=09mausb_completion.completion_event =3D &completion;
++=09=09mausb_completion.event_id =3D event.mgmt.delete_ma_dev.event_id;
++=09=09mausb_completion.mausb_event =3D &event;
++
++=09=09mausb_insert_event(dev, &mausb_completion);
++
++=09=09dev_dbg(mausb_host_dev.this_device, "Deleting MAUSB device...");
++
++=09=09status =3D wait_for_completion_interruptible_timeout(&completion,
++=09=09=09=09=09=09=09=09   timeout);
++
++=09=09dev_dbg(mausb_host_dev.this_device, "Deleting MAUSB device event fin=
+ished with %ld",
++=09=09=09status);
++
++=09=09mausb_remove_event(dev, &mausb_completion);
++
++=09=09user_event =3D &dev->user_finished_event;
++
++=09=09status =3D wait_for_completion_interruptible_timeout(user_event,
++=09=09=09=09=09=09=09=09   timeout);
++=09=09dev_info(mausb_host_dev.this_device, "User event finished with %ld",
++=09=09=09 status);
++=09}
++
++=09flush_workqueue(dev->workq);
++=09destroy_workqueue(dev->workq);
++
++=09mausb_clear_hcd_madev(dev->port_number);
++
++=09mausb_remove_madev_from_list(dev->madev_addr);
++
++=09put_net(dev->net_ns);
++
++=09kfree(dev);
++=09mausb_signal_empty_mss();
++
++=09dev_dbg(mausb_host_dev.this_device, "MAUSB device deleted.");
++}
++
++static void mausb_ping_work(struct work_struct *work)
++{
++=09struct mausb_device *dev =3D container_of(work, struct mausb_device,
++=09=09=09=09=09=09ping_work);
++
++=09if (mausb_start_connection_timer(dev) < 0) {
++=09=09dev_err(mausb_host_dev.this_device, "Session timeout - disconnnectin=
+g device madev_addr=3D%d",
++=09=09=09dev->madev_addr);
++=09=09queue_work(dev->workq, &dev->socket_disconnect_work);
++=09=09queue_work(dev->workq, &dev->hcd_disconnect_work);
++=09=09return;
++=09}
++}
++
++static void mausb_heartbeat_work(struct work_struct *work)
++{
++=09struct mausb_device *dev =3D container_of(work, struct mausb_device,
++=09=09=09=09=09=09heartbeat_work);
++
++=09dev_err(mausb_host_dev.this_device, "App is unresponsive - disconnect d=
+evice");
++=09atomic_set(&dev->unresponsive_client, 1);
++=09mausb_complete_urbs_from_tree();
++=09queue_work(dev->workq, &dev->socket_disconnect_work);
++=09queue_work(dev->workq, &dev->hcd_disconnect_work);
++}
++
++static void mausb_connection_timer_func(struct timer_list *timer)
++{
++=09struct mausb_device *dev =3D container_of(timer, struct mausb_device,
++=09=09=09=09=09=09connection_timer);
++
++=09queue_work(dev->workq, &dev->ping_work);
++}
++
+ static void mausb_heartbeat_timer_func(struct timer_list *timer)
+ {
+ =09unsigned long flags =3D 0;
+@@ -304,6 +517,99 @@ static void mausb_heartbeat_timer_func(struct timer_li=
+st *timer)
  =09}
  }
-+
-+static const char driver_name[] =3D "MA-USB host controller";
-+
-+static void mausb_get_hub_descriptor(struct usb_hcd *hcd, u16 type_req,
-+=09=09=09=09     u16 value, u16 index,
-+=09=09=09=09     char *buff, u16 length);
-+static void mausb_set_port_feature(struct usb_hcd *hcd, u16 type_req,
-+=09=09=09=09   u16 value, u16 index, char *buff,
-+=09=09=09=09   u16 length);
-+static void mausb_get_port_status(struct usb_hcd *hcd, u16 type_req,
-+=09=09=09=09  u16 value, u16 index, char *buff,
-+=09=09=09=09  u16 length);
-+static void mausb_clear_port_feature(struct usb_hcd *hcd, u16 type_req,
-+=09=09=09=09     u16 value, u16 index,
-+=09=09=09=09     char *buff, u16 length);
-+static void mausb_get_hub_status(struct usb_hcd *hcd, u16 type_req,
-+=09=09=09=09 u16 value, u16 index, char *buff,
-+=09=09=09=09 u16 length);
-+static int mausb_add_endpoint(struct usb_hcd *hcd, struct usb_device *dev,
-+=09=09=09      struct usb_host_endpoint *endpoint);
-+static int mausb_address_device(struct usb_hcd *hcd, struct usb_device *de=
-v);
-+static int mausb_alloc_dev(struct usb_hcd *hcd, struct usb_device *dev);
-+static int mausb_drop_endpoint(struct usb_hcd *hcd, struct usb_device *dev=
-,
-+=09=09=09       struct usb_host_endpoint *endpoint);
-+static int mausb_enable_device(struct usb_hcd *hcd, struct usb_device *dev=
-);
-+static void mausb_endpoint_reset(struct usb_hcd *hcd,
-+=09=09=09=09 struct usb_host_endpoint *endpoint);
-+static void mausb_free_dev(struct usb_hcd *hcd, struct usb_device *dev);
-+static int mausb_hcd_bus_resume(struct usb_hcd *hcd);
-+static int mausb_hcd_bus_suspend(struct usb_hcd *hcd);
-+static int mausb_hcd_get_frame_number(struct usb_hcd *hcd);
-+static int mausb_hcd_hub_control(struct usb_hcd *hcd, u16 type_req,
-+=09=09=09=09 u16 value, u16 index, char *buff,
-+=09=09=09=09 u16 length);
-+static int mausb_hcd_hub_status(struct usb_hcd *hcd, char *buff);
-+static int mausb_hcd_reset(struct usb_hcd *hcd);
-+static int mausb_hcd_start(struct usb_hcd *hcd);
-+static int mausb_hub_update_device(struct usb_hcd *hcd, struct usb_device =
-*dev,
-+=09=09=09=09   struct usb_tt *tt, gfp_t mem_flags);
-+static int mausb_reset_device(struct usb_hcd *hcd, struct usb_device *dev)=
-;
-+static int mausb_update_device(struct usb_hcd *hcd, struct usb_device *dev=
-);
-+
-+static const struct hc_driver mausb_hc_driver =3D {
-+=09.description  =3D  driver_name,
-+=09.product_desc =3D driver_name,
-+=09.flags=09      =3D HCD_USB3 | HCD_SHARED,
-+
-+=09.hcd_priv_size =3D sizeof(struct hub_ctx),
-+
-+=09.reset =3D mausb_hcd_reset,
-+=09.start =3D mausb_hcd_start,
-+
-+=09.get_frame_number =3D mausb_hcd_get_frame_number,
-+
-+=09.hub_status_data   =3D mausb_hcd_hub_status,
-+=09.hub_control=09   =3D mausb_hcd_hub_control,
-+=09.update_hub_device =3D mausb_hub_update_device,
-+=09.bus_suspend=09   =3D mausb_hcd_bus_suspend,
-+=09.bus_resume=09   =3D mausb_hcd_bus_resume,
-+
-+=09.alloc_dev=09=3D mausb_alloc_dev,
-+=09.free_dev=09=3D mausb_free_dev,
-+=09.enable_device=09=3D mausb_enable_device,
-+=09.update_device=09=3D mausb_update_device,
-+=09.reset_device=09=3D mausb_reset_device,
-+
-+=09.add_endpoint=09  =3D mausb_add_endpoint,
-+=09.drop_endpoint=09  =3D mausb_drop_endpoint,
-+=09.address_device   =3D mausb_address_device,
-+=09.endpoint_reset=09  =3D mausb_endpoint_reset,
-+};
-+
-+static struct {
-+=09struct usb_bos_descriptor    bos;
-+=09struct usb_ss_cap_descriptor ss_cap;
-+} usb3_bos_desc =3D {
-+=09.bos =3D {
-+=09=09.bLength=09 =3D USB_DT_BOS_SIZE,
-+=09=09.bDescriptorType =3D USB_DT_BOS,
-+=09=09.wTotalLength=09 =3D cpu_to_le16(sizeof(usb3_bos_desc)),
-+=09=09.bNumDeviceCaps=09 =3D 1
-+=09},
-+=09.ss_cap =3D {
-+=09=09.bLength=09=09=3D USB_DT_USB_SS_CAP_SIZE,
-+=09=09.bDescriptorType=09=3D USB_DT_DEVICE_CAPABILITY,
-+=09=09.bDevCapabilityType=09=3D USB_SS_CAP_TYPE,
-+=09=09.wSpeedSupported=09=3D cpu_to_le16(USB_5GBPS_OPERATION),
-+=09=09.bFunctionalitySupport=09=3D ilog2(USB_5GBPS_OPERATION)
-+=09}
-+};
-+
-+static int get_root_hub_port_number(struct usb_device *dev, u8 *port_numbe=
-r)
+=20
++static struct mausb_device *
++mausb_create_madev(struct mausb_device_address dev_addr, u8 madev_address,
++=09=09   int *status)
 +{
-+=09struct usb_device *first_hub_device =3D dev;
++=09struct mausb_device *dev;
++=09unsigned long flags =3D 0;
++=09char workq_name[16];
++=09struct workqueue_struct *workq;
 +
-+=09if (!dev->parent) {
-+=09=09(*port_number) =3D 0;
-+=09=09return -EINVAL;
++=09memset(workq_name, 0, sizeof(workq_name));
++=09sprintf(workq_name, "%x", madev_address);
++=09strcat(workq_name, "_madev_workq");
++
++=09dev_vdbg(mausb_host_dev.this_device, "madev_workq_name =3D %s",
++=09=09 workq_name);
++
++=09workq =3D alloc_ordered_workqueue(workq_name, WQ_MEM_RECLAIM);
++=09if (!workq) {
++=09=09*status =3D -ENOMEM;
++=09=09return NULL;
 +=09}
 +
-+=09while (first_hub_device->parent->parent)
-+=09=09first_hub_device =3D first_hub_device->parent;
++=09spin_lock_irqsave(&mss.lock, flags);
 +
-+=09(*port_number) =3D first_hub_device->portnum - 1;
-+
-+=09return 0;
-+}
-+
-+static struct mausb_usb_device_ctx *mausb_find_usb_device(struct mausb_dev
-+=09=09=09=09=09=09=09*mdevs, void *dev_addr)
-+{
-+=09struct rb_node *node =3D mdevs->usb_devices.rb_node;
-+
-+=09while (node) {
-+=09=09struct mausb_usb_device_ctx *usb_device =3D
-+=09=09    rb_entry(node, struct mausb_usb_device_ctx, rb_node);
-+
-+=09=09if (dev_addr < usb_device->dev_addr)
-+=09=09=09node =3D usb_device->rb_node.rb_left;
-+=09=09else if (dev_addr > usb_device->dev_addr)
-+=09=09=09node =3D usb_device->rb_node.rb_right;
-+=09=09else
-+=09=09=09return usb_device;
++=09if (mss.deinit_in_progress) {
++=09=09spin_unlock_irqrestore(&mss.lock, flags);
++=09=09dev_alert(mausb_host_dev.this_device, "Device creating failed - mss =
+deinit in progress");
++=09=09flush_workqueue(workq);
++=09=09destroy_workqueue(workq);
++=09=09*status =3D -ESHUTDOWN;
++=09=09return NULL;
 +=09}
-+=09return NULL;
-+}
 +
-+static int mausb_hcd_get_frame_number(struct usb_hcd *hcd)
-+{
-+=09return 0;
-+}
-+
-+static int mausb_hcd_reset(struct usb_hcd *hcd)
-+{
-+=09if (usb_hcd_is_primary_hcd(hcd)) {
-+=09=09hcd->speed =3D HCD_USB2;
-+=09=09hcd->self.root_hub->speed =3D USB_SPEED_HIGH;
-+=09} else {
-+=09=09hcd->speed =3D HCD_USB3;
-+=09=09hcd->self.root_hub->speed =3D USB_SPEED_SUPER;
++=09dev =3D mausb_get_dev_from_addr_unsafe(madev_address);
++=09if (dev) {
++=09=09spin_unlock_irqrestore(&mss.lock, flags);
++=09=09dev_warn(mausb_host_dev.this_device, "MAUSB device already connected=
+, madev_address=3D%x",
++=09=09=09 madev_address);
++=09=09flush_workqueue(workq);
++=09=09destroy_workqueue(workq);
++=09=09*status =3D -EEXIST;
++=09=09return NULL;
 +=09}
-+=09hcd->self.no_sg_constraint =3D 1;
-+=09hcd->self.sg_tablesize =3D UINT_MAX;
 +
-+=09return 0;
++=09dev =3D kzalloc(sizeof(*dev), GFP_ATOMIC);
++
++=09if (!dev) {
++=09=09spin_unlock_irqrestore(&mss.lock, flags);
++=09=09dev_alert(mausb_host_dev.this_device, "Could not allocate MAUSB devi=
+ce!");
++=09=09flush_workqueue(workq);
++=09=09destroy_workqueue(workq);
++=09=09*status =3D -ENOMEM;
++=09=09return NULL;
++=09}
++
++=09dev_dbg(mausb_host_dev.this_device, "Create MAUSB device.");
++
++=09dev->workq =3D workq;
++
++=09INIT_WORK(&dev->socket_disconnect_work, mausb_socket_disconnect_event);
++=09INIT_WORK(&dev->hcd_disconnect_work, mausb_hcd_disconnect_event);
++=09INIT_WORK(&dev->madev_delete_work, mausb_delete_madev);
++=09INIT_WORK(&dev->ping_work, mausb_ping_work);
++=09INIT_WORK(&dev->heartbeat_work, mausb_heartbeat_work);
++
++=09kref_init(&dev->refcount);
++
++=09dev->event_id =3D 0;
++=09spin_lock_init(&dev->event_id_lock);
++
++=09INIT_LIST_HEAD(&dev->completion_events);
++=09spin_lock_init(&dev->completion_events_lock);
++=09spin_lock_init(&dev->num_of_user_events_lock);
++=09spin_lock_init(&dev->connection_timer_lock);
++
++=09init_completion(&dev->user_finished_event);
++=09atomic_set(&dev->unresponsive_client, 0);
++
++=09timer_setup(&dev->connection_timer, mausb_connection_timer_func, 0);
++
++=09dev->dev_addr =3D dev_addr;
++=09dev->madev_addr =3D madev_address;
++=09dev->net_ns =3D get_net(current->nsproxy->net_ns);
++
++=09list_add_tail(&dev->list_entry, &mss.madev_list);
++
++=09reinit_completion(&mss.empty);
++
++=09spin_unlock_irqrestore(&mss.lock, flags);
++
++=09return dev;
 +}
 +
-+static int mausb_hcd_start(struct usb_hcd *hcd)
+ void mausb_release_ma_dev_async(struct kref *kref)
+ {
+ =09struct mausb_device *dev =3D container_of(kref, struct mausb_device,
+@@ -314,6 +620,46 @@ void mausb_release_ma_dev_async(struct kref *kref)
+ =09schedule_work(&dev->madev_delete_work);
+ }
+=20
++int mausb_initiate_dev_connection(struct mausb_device_address dev_addr,
++=09=09=09=09  u8 madev_address)
 +{
-+=09hcd->power_budget =3D 0;
-+=09hcd->uses_new_polling =3D 1;
-+=09return 0;
-+}
-+
-+static int mausb_hcd_hub_status(struct usb_hcd *hcd, char *buff)
-+{
-+=09int retval;
-+=09int changed;
-+=09int i;
-+=09struct hub_ctx *hub;
++=09int error =3D 0;
++=09struct mausb_device *dev;
 +=09unsigned long flags =3D 0;
 +
-+=09hub =3D (struct hub_ctx *)hcd->hcd_priv;
++=09spin_lock_irqsave(&mss.lock, flags);
++=09dev =3D mausb_get_dev_from_addr_unsafe(madev_address);
++=09spin_unlock_irqrestore(&mss.lock, flags);
 +
-+=09retval  =3D DIV_ROUND_UP(NUMBER_OF_PORTS + 1, 8);
-+=09changed =3D 0;
-+
-+=09memset(buff, 0, (unsigned int)retval);
-+
-+=09spin_lock_irqsave(&mhcd->lock, flags);
-+
-+=09if (!HCD_HW_ACCESSIBLE(hcd)) {
-+=09=09dev_info(mausb_host_dev.this_device, "hcd not accessible, hcd speed=
-=3D%d",
-+=09=09=09 hcd->speed);
-+=09=09spin_unlock_irqrestore(&mhcd->lock, flags);
-+=09=09return 0;
++=09if (dev) {
++=09=09dev_warn(mausb_host_dev.this_device, "MAUSB device already connected=
+, madev_address=3D%x",
++=09=09=09 madev_address);
++=09=09return -EEXIST;
 +=09}
 +
-+=09for (i =3D 0; i < NUMBER_OF_PORTS; ++i) {
-+=09=09if ((hub->ma_devs[i].port_status & PORT_C_MASK)) {
-+=09=09=09buff[(i + 1) / 8] |=3D 1 << (i + 1) % 8;
-+=09=09=09changed =3D 1;
-+=09=09}
++=09dev =3D mausb_create_madev(dev_addr, madev_address, &error);
++=09if (!dev)
++=09=09return error;
++
++=09dev_info(mausb_host_dev.this_device, "New MAUSB device created madev_ad=
+dr=3D%d",
++=09=09 madev_address);
++
++=09error =3D mausb_init_ip_ctx(&dev->mgmt_channel, dev->net_ns,
++=09=09=09=09  dev->dev_addr.ip.address,
++=09=09=09=09  dev->dev_addr.ip.port.management, dev,
++=09=09=09=09  mausb_ip_callback, MAUSB_MGMT_CHANNEL);
++=09if (error) {
++=09=09dev_err(mausb_host_dev.this_device, "Mgmt ip context init failed: er=
+ror=3D%d",
++=09=09=09error);
++=09=09kref_put(&dev->refcount, mausb_release_ma_dev_async);
++=09=09return error;
 +=09}
 +
-+=09dev_info(mausb_host_dev.this_device, "Usb %d.0 : changed=3D%d, retval=
-=3D%d",
-+=09=09 (hcd->speed =3D=3D HCD_USB2) ? 2 : 3, changed, retval);
++=09mausb_ip_connect_async(dev->mgmt_channel);
 +
-+=09if (hcd->state =3D=3D HC_STATE_SUSPENDED && changed =3D=3D 1) {
-+=09=09dev_info(mausb_host_dev.this_device, "hcd state is suspended");
-+=09=09usb_hcd_resume_root_hub(hcd);
-+=09}
-+
-+=09spin_unlock_irqrestore(&mhcd->lock, flags);
-+
-+=09return changed ? retval : 0;
++=09return 0;
 +}
 +
-+static int mausb_hcd_bus_resume(struct usb_hcd *hcd)
+ int mausb_enqueue_event_from_user(u8 madev_addr, u16 num_of_events,
+ =09=09=09=09  u16 num_of_completed)
+ {
+@@ -414,6 +760,26 @@ int mausb_signal_event(struct mausb_device *dev,
+ =09return -ETIMEDOUT;
+ }
+=20
++static int mausb_start_connection_timer(struct mausb_device *dev)
 +{
 +=09unsigned long flags =3D 0;
 +
-+=09spin_lock_irqsave(&mhcd->lock, flags);
-+=09if (!HCD_HW_ACCESSIBLE(hcd)) {
-+=09=09dev_info(mausb_host_dev.this_device, "hcd not accessible, hcd speed=
-=3D%d",
-+=09=09=09 hcd->speed);
-+=09=09spin_unlock_irqrestore(&mhcd->lock, flags);
-+=09=09return -ESHUTDOWN;
-+=09}
-+=09hcd->state =3D HC_STATE_RUNNING;
-+=09spin_unlock_irqrestore(&mhcd->lock, flags);
++=09spin_lock_irqsave(&dev->connection_timer_lock, flags);
 +
-+=09return 0;
-+}
-+
-+static int mausb_hcd_bus_suspend(struct usb_hcd *hcd)
-+{
-+=09unsigned long flags =3D 0;
-+
-+=09spin_lock_irqsave(&mhcd->lock, flags);
-+=09hcd->state =3D HC_STATE_SUSPENDED;
-+=09spin_unlock_irqrestore(&mhcd->lock, flags);
-+
-+=09return 0;
-+}
-+
-+static int mausb_hcd_hub_control(struct usb_hcd *hcd, u16 type_req,
-+=09=09=09=09 u16 value, u16 index, char *buff,
-+=09=09=09=09 u16 length)
-+{
-+=09int retval =3D 0;
-+=09struct hub_ctx=09 *hub =3D (struct hub_ctx *)hcd->hcd_priv;
-+=09struct mausb_hcd *hub_mhcd =3D hub->mhcd;
-+=09unsigned long=09 flags;
-+=09bool invalid_rhport =3D false;
-+
-+=09index =3D ((__u8)(index & 0x00ff));
-+=09if (index < 1 || index > NUMBER_OF_PORTS)
-+=09=09invalid_rhport =3D true;
-+
-+=09dev_vdbg(mausb_host_dev.this_device, "TypeReq=3D%d", type_req);
-+
-+=09spin_lock_irqsave(&hub_mhcd->lock, flags);
-+
-+=09if (!HCD_HW_ACCESSIBLE(hcd)) {
-+=09=09dev_err(mausb_host_dev.this_device, "hcd not accessible, hcd speed=
-=3D%d",
-+=09=09=09hcd->speed);
-+=09=09spin_unlock_irqrestore(&hub_mhcd->lock, flags);
++=09if (++dev->receive_failures_num > MAUSB_MAX_RECEIVE_FAILURES) {
++=09=09dev_err(mausb_host_dev.this_device, "Missed more than %d ping respon=
+ses",
++=09=09=09MAUSB_MAX_RECEIVE_FAILURES);
++=09=09spin_unlock_irqrestore(&dev->connection_timer_lock, flags);
 +=09=09return -ETIMEDOUT;
 +=09}
 +
-+=09switch (type_req) {
-+=09case ClearHubFeature:
-+=09=09break;
-+=09case ClearPortFeature:
-+=09=09if (invalid_rhport)
-+=09=09=09goto invalid_port;
++=09mod_timer(&dev->connection_timer, jiffies + msecs_to_jiffies(1000));
 +
-+=09=09mausb_clear_port_feature(hcd, type_req, value, index, buff,
-+=09=09=09=09=09 length);
-+=09=09break;
-+=09case DeviceRequest | USB_REQ_GET_DESCRIPTOR:
-+=09=09memcpy(buff, &usb3_bos_desc, sizeof(usb3_bos_desc));
-+=09=09retval =3D sizeof(usb3_bos_desc);
-+=09=09break;
-+=09case GetHubDescriptor:
-+=09=09mausb_get_hub_descriptor(hcd, type_req, value, index, buff,
-+=09=09=09=09=09 length);
-+=09=09break;
-+=09case GetHubStatus:
-+=09=09mausb_get_hub_status(hcd, type_req, value, index, buff,
-+=09=09=09=09     length);
-+=09=09break;
-+=09case GetPortStatus:
-+=09=09if (invalid_rhport)
-+=09=09=09goto invalid_port;
++=09spin_unlock_irqrestore(&dev->connection_timer_lock, flags);
 +
-+=09=09mausb_get_port_status(hcd, type_req, value, index, buff,
-+=09=09=09=09      length);
-+=09=09break;
-+=09case SetHubFeature:
-+=09=09retval =3D -EPIPE;
-+=09=09break;
-+=09case SetPortFeature:
-+=09=09if (invalid_rhport)
-+=09=09=09goto invalid_port;
-+
-+=09=09mausb_set_port_feature(hcd, type_req, value, index, buff,
-+=09=09=09=09       length);
-+=09=09break;
-+=09default:
-+=09=09retval =3D -EPIPE;
-+=09}
-+
-+invalid_port:
-+=09spin_unlock_irqrestore(&hub_mhcd->lock, flags);
-+=09return retval;
++=09return 0;
 +}
 +
-+int mausb_probe(struct device *dev)
+ void mausb_reset_connection_timer(struct mausb_device *dev)
+ {
+ =09unsigned long flags =3D 0;
+@@ -658,6 +1024,36 @@ struct mausb_device *mausb_get_dev_from_addr_unsafe(u=
+8 madev_addr)
+ =09return NULL;
+ }
+=20
++static void mausb_remove_madev_from_list(u8 madev_addr)
 +{
-+=09struct mausb_hcd *mausb_hcd;
-+=09struct usb_hcd=09 *hcd_ss;
-+=09struct usb_hcd=09 *hcd_hs;
-+=09int ret;
++=09unsigned long flags =3D 0;
++=09struct mausb_device *ma_dev, *tmp =3D NULL;
 +
-+=09mausb_hcd =3D dev_get_drvdata(dev);
-+=09spin_lock_init(&mausb_hcd->lock);
++=09spin_lock_irqsave(&mss.lock, flags);
 +
-+=09hcd_hs =3D usb_create_hcd(&mausb_hc_driver, dev, dev_name(dev));
-+=09if (!hcd_hs)
-+=09=09return -ENOMEM;
-+
-+=09hcd_hs->has_tt =3D 1;
-+=09mausb_hcd->hcd_hs_ctx=09    =3D (struct hub_ctx *)hcd_hs->hcd_priv;
-+=09mausb_hcd->hcd_hs_ctx->mhcd =3D mausb_hcd;
-+=09mausb_hcd->hcd_hs_ctx->hcd  =3D hcd_hs;
-+=09memset(mausb_hcd->hcd_hs_ctx->ma_devs, 0,
-+=09       sizeof(struct mausb_dev) * NUMBER_OF_PORTS);
-+
-+=09ret =3D usb_add_hcd(hcd_hs, 0, 0);
-+=09if (ret) {
-+=09=09dev_err(dev, "usb_add_hcd failed");
-+=09=09goto put_hcd_hs;
-+=09}
-+
-+=09hcd_ss =3D usb_create_shared_hcd(&mausb_hc_driver, dev, dev_name(dev),
-+=09=09=09=09       hcd_hs);
-+=09if (!hcd_ss) {
-+=09=09ret =3D -ENOMEM;
-+=09=09goto remove_hcd_hs;
-+=09}
-+=09mausb_hcd->hcd_ss_ctx=09    =3D (struct hub_ctx *)hcd_ss->hcd_priv;
-+=09mausb_hcd->hcd_ss_ctx->mhcd =3D mausb_hcd;
-+=09mausb_hcd->hcd_ss_ctx->hcd  =3D hcd_ss;
-+
-+=09memset(mausb_hcd->hcd_ss_ctx->ma_devs, 0,
-+=09       sizeof(struct mausb_dev) * NUMBER_OF_PORTS);
-+
-+=09ret =3D usb_add_hcd(hcd_ss, 0, 0);
-+=09if (ret) {
-+=09=09dev_err(dev, "usb_add_hcd failed");
-+=09=09goto put_hcd_ss;
-+=09}
-+
-+=09return ret;
-+
-+put_hcd_ss:
-+=09usb_put_hcd(hcd_ss);
-+remove_hcd_hs:
-+=09usb_remove_hcd(hcd_hs);
-+put_hcd_hs:
-+=09usb_put_hcd(hcd_hs);
-+=09mausb_hcd->hcd_hs_ctx =3D NULL;
-+=09mausb_hcd->hcd_ss_ctx =3D NULL;
-+=09return ret;
-+}
-+
-+static void mausb_get_hub_descriptor(struct usb_hcd *hcd, u16 type_req,
-+=09=09=09=09     u16 value, u16 index,
-+=09=09=09=09     char *buff, u16 length)
-+{
-+=09u8 width;
-+=09struct usb_hub_descriptor *desc =3D (struct usb_hub_descriptor *)buff;
-+
-+=09memset(desc, 0, sizeof(struct usb_hub_descriptor));
-+
-+=09if (hcd->speed =3D=3D HCD_USB3) {
-+=09=09desc->bDescriptorType=09   =3D USB_DT_SS_HUB;
-+=09=09desc->bDescLength=09   =3D 12;
-+=09=09desc->wHubCharacteristics  =3D
-+=09=09    cpu_to_le16(HUB_CHAR_INDV_PORT_LPSM | HUB_CHAR_COMMON_OCPM);
-+=09=09desc->bNbrPorts=09=09   =3D NUMBER_OF_PORTS;
-+=09=09desc->u.ss.bHubHdrDecLat   =3D 0x04;
-+=09=09desc->u.ss.DeviceRemovable =3D cpu_to_le16(0xffff);
-+=09} else {
-+=09=09desc->bDescriptorType=09  =3D USB_DT_HUB;
-+=09=09desc->wHubCharacteristics =3D
-+=09=09    cpu_to_le16(HUB_CHAR_INDV_PORT_LPSM | HUB_CHAR_COMMON_OCPM);
-+=09=09desc->bNbrPorts=09=09  =3D NUMBER_OF_PORTS;
-+=09=09width=09=09=09  =3D (u8)(desc->bNbrPorts / 8 + 1);
-+=09=09desc->bDescLength=09  =3D USB_DT_HUB_NONVAR_SIZE + 2 * width;
-+
-+=09=09memset(&desc->u.hs.DeviceRemovable[0], 0, width);
-+=09=09memset(&desc->u.hs.DeviceRemovable[width], 0xff, width);
-+=09}
-+}
-+
-+static void mausb_set_port_feature(struct usb_hcd *hcd, u16 type_req,
-+=09=09=09=09   u16 value, u16 index, char *buff,
-+=09=09=09=09   u16 length)
-+{
-+=09struct hub_ctx *hub =3D (struct hub_ctx *)hcd->hcd_priv;
-+
-+=09index =3D ((__u8)(index & 0x00ff));
-+
-+=09switch (value) {
-+=09case USB_PORT_FEAT_LINK_STATE:
-+=09=09dev_vdbg(mausb_host_dev.this_device, "USB_PORT_FEAT_LINK_STATE");
-+=09=09if (hcd->speed =3D=3D HCD_USB3) {
-+=09=09=09if ((hub->ma_devs[index - 1].port_status &
-+=09=09=09     USB_SS_PORT_STAT_POWER) !=3D 0) {
-+=09=09=09=09hub->ma_devs[index - 1].port_status |=3D
-+=09=09=09=09    (1U << value);
-+=09=09=09}
-+=09=09} else {
-+=09=09=09if ((hub->ma_devs[index - 1].port_status &
-+=09=09=09     USB_PORT_STAT_POWER) !=3D 0) {
-+=09=09=09=09hub->ma_devs[index - 1].port_status |=3D
-+=09=09=09=09    (1U << value);
-+=09=09=09}
-+=09=09}
-+=09=09break;
-+=09case USB_PORT_FEAT_U1_TIMEOUT:
-+=09case USB_PORT_FEAT_U2_TIMEOUT:
-+=09=09break;
-+=09case USB_PORT_FEAT_SUSPEND:
-+=09=09break;
-+=09case USB_PORT_FEAT_POWER:
-+=09=09dev_vdbg(mausb_host_dev.this_device, "USB_PORT_FEAT_POWER");
-+
-+=09=09if (hcd->speed =3D=3D HCD_USB3) {
-+=09=09=09hub->ma_devs[index - 1].port_status |=3D
-+=09=09=09    USB_SS_PORT_STAT_POWER;
-+=09=09} else {
-+=09=09=09hub->ma_devs[index - 1].port_status |=3D
-+=09=09=09    USB_PORT_STAT_POWER;
-+=09=09}
-+=09=09break;
-+=09case USB_PORT_FEAT_BH_PORT_RESET:
-+=09=09dev_dbg(mausb_host_dev.this_device, "USB_PORT_FEAT_BH_PORT_RESET");
-+=09=09/* fall through */
-+=09case USB_PORT_FEAT_RESET:
-+=09=09dev_vdbg(mausb_host_dev.this_device, "USB_PORT_FEAT_RESET hcd->speed=
-=3D%d",
-+=09=09=09 hcd->speed);
-+
-+=09=09if (hcd->speed =3D=3D HCD_USB3) {
-+=09=09=09hub->ma_devs[index - 1].port_status =3D 0;
-+=09=09=09hub->ma_devs[index - 1].port_status =3D
-+=09=09=09    (USB_SS_PORT_STAT_POWER |
-+=09=09=09     USB_PORT_STAT_CONNECTION | USB_PORT_STAT_RESET);
-+=09=09} else if (hub->ma_devs[index - 1].port_status
-+=09=09=09   & USB_PORT_STAT_ENABLE) {
-+=09=09=09hub->ma_devs[index - 1].port_status &=3D
-+=09=09=09    ~(USB_PORT_STAT_ENABLE |
-+=09=09=09      USB_PORT_STAT_LOW_SPEED |
-+=09=09=09      USB_PORT_STAT_HIGH_SPEED);
-+=09=09}
-+=09=09/* fall through */
-+=09default:
-+=09=09dev_vdbg(mausb_host_dev.this_device, "Default value=3D%d", value);
-+
-+=09=09if (hcd->speed =3D=3D HCD_USB3) {
-+=09=09=09if ((hub->ma_devs[index - 1].port_status &
-+=09=09=09     USB_SS_PORT_STAT_POWER) !=3D 0) {
-+=09=09=09=09hub->ma_devs[index - 1].port_status |=3D
-+=09=09=09=09    (1U << value);
-+=09=09=09}
-+=09=09} else {
-+=09=09=09if ((hub->ma_devs[index - 1].port_status &
-+=09=09=09     USB_PORT_STAT_POWER) !=3D 0) {
-+=09=09=09=09hub->ma_devs[index - 1].port_status |=3D
-+=09=09=09=09    (1U << value);
-+=09=09=09}
-+=09=09}
-+=09}
-+}
-+
-+static void mausb_get_port_status(struct usb_hcd *hcd, u16 type_req,
-+=09=09=09=09  u16 value, u16 index, char *buff,
-+=09=09=09=09  u16 length)
-+{
-+=09u8 dev_speed;
-+=09struct hub_ctx *hub =3D (struct hub_ctx *)hcd->hcd_priv;
-+
-+=09index =3D ((__u8)(index & 0x00ff));
-+
-+=09if ((hub->ma_devs[index - 1].port_status &
-+=09=09=09=09(1 << USB_PORT_FEAT_RESET)) !=3D 0) {
-+=09=09dev_info(mausb_host_dev.this_device, "Finished reset hcd->speed=3D%d=
-",
-+=09=09=09 hcd->speed);
-+
-+=09=09dev_speed =3D hub->ma_devs[index - 1].dev_speed;
-+=09=09switch (dev_speed) {
-+=09=09case LOW_SPEED:
-+=09=09=09hub->ma_devs[index - 1].port_status |=3D
-+=09=09=09    USB_PORT_STAT_LOW_SPEED;
++=09list_for_each_entry_safe(ma_dev, tmp, &mss.madev_list, list_entry) {
++=09=09if (ma_dev->madev_addr =3D=3D madev_addr) {
++=09=09=09list_del(&ma_dev->list_entry);
 +=09=09=09break;
-+=09=09case HIGH_SPEED:
-+=09=09=09hub->ma_devs[index - 1].port_status |=3D
-+=09=09=09    USB_PORT_STAT_HIGH_SPEED;
-+=09=09=09break;
-+=09=09default:
-+=09=09=09dev_info(mausb_host_dev.this_device, "Not updating port_status fo=
-r device speed %d",
-+=09=09=09=09 dev_speed);
 +=09=09}
-+
-+=09=09hub->ma_devs[index - 1].port_status |=3D
-+=09=09    (1 << USB_PORT_FEAT_C_RESET) | USB_PORT_STAT_ENABLE;
-+=09=09hub->ma_devs[index - 1].port_status &=3D
-+=09=09    ~(1 << USB_PORT_FEAT_RESET);
 +=09}
 +
-+=09((__le16 *)buff)[0] =3D cpu_to_le16(hub->ma_devs[index - 1].port_status=
-);
-+=09((__le16 *)buff)[1] =3D
-+=09    cpu_to_le16(hub->ma_devs[index - 1].port_status >> 16);
++=09if (list_empty(&mss.madev_list))
++=09=09reinit_completion(&mss.rings_events.mausb_ring_has_events);
 +
-+=09dev_vdbg(mausb_host_dev.this_device, "port_status=3D%d",
-+=09=09 hub->ma_devs[index - 1].port_status);
++=09spin_unlock_irqrestore(&mss.lock, flags);
 +}
 +
-+static void mausb_clear_port_feature(struct usb_hcd *hcd, u16 type_req,
-+=09=09=09=09     u16 value, u16 index,
-+=09=09=09=09     char *buff, u16 length)
-+{
-+=09struct hub_ctx *hub =3D (struct hub_ctx *)hcd->hcd_priv;
-+
-+=09index =3D ((__u8)(index & 0x00ff));
-+
-+=09switch (value) {
-+=09case USB_PORT_FEAT_SUSPEND:
-+=09=09break;
-+=09case USB_PORT_FEAT_POWER:
-+=09=09dev_vdbg(mausb_host_dev.this_device, "USB_PORT_FEAT_POWER");
-+
-+=09=09if (hcd->speed =3D=3D HCD_USB3) {
-+=09=09=09hub->ma_devs[index - 1].port_status &=3D
-+=09=09=09    ~USB_SS_PORT_STAT_POWER;
-+=09=09} else {
-+=09=09=09hub->ma_devs[index - 1].port_status &=3D
-+=09=09=09    ~USB_PORT_STAT_POWER;
-+=09=09}
-+=09=09break;
-+=09case USB_PORT_FEAT_RESET:
-+=09case USB_PORT_FEAT_C_RESET:
-+=09default:
-+=09=09dev_vdbg(mausb_host_dev.this_device, "Default value: %d",
-+=09=09=09 value);
-+
-+=09=09hub->ma_devs[index - 1].port_status &=3D ~(1 << value);
-+=09}
-+}
-+
-+static void mausb_get_hub_status(struct usb_hcd *hcd, u16 type_req,
-+=09=09=09=09 u16 value, u16 index, char *buff,
-+=09=09=09=09 u16 length)
-+{
-+=09*(__le32 *)buff =3D cpu_to_le32(0);
-+}
-+
-+static int mausb_alloc_dev(struct usb_hcd *hcd, struct usb_device *dev)
-+{
-+=09dev_info(mausb_host_dev.this_device, "Usb device=3D%p", dev);
-+
-+=09return 1;
-+}
-+
-+static void mausb_free_dev(struct usb_hcd *hcd, struct usb_device *dev)
-+{
-+=09u8=09port_number;
-+=09s16=09dev_handle;
-+=09int=09status;
-+=09struct hub_ctx   *hub  =3D (struct hub_ctx *)hcd->hcd_priv;
-+=09struct mausb_dev=09    *mdev =3D NULL;
-+=09struct mausb_usb_device_ctx *usb_device_ctx;
-+=09struct mausb_endpoint_ctx   *ep_ctx =3D dev->ep0.hcpriv;
-+
-+=09status =3D get_root_hub_port_number(dev, &port_number);
-+=09if (status < 0 || port_number >=3D NUMBER_OF_PORTS) {
-+=09=09dev_dbg(mausb_host_dev.this_device, "port_number out of range, port_=
-number=3D%x",
-+=09=09=09port_number);
-+=09=09return;
-+=09}
-+
-+=09mdev  =3D &hub->ma_devs[port_number];
-+
-+=09usb_device_ctx =3D mausb_find_usb_device(mdev, dev);
-+=09if (!usb_device_ctx) {
-+=09=09dev_warn(mausb_host_dev.this_device, "device_ctx is not found");
-+=09=09return;
-+=09}
-+
-+=09dev_handle =3D usb_device_ctx->dev_handle;
-+
-+=09if (ep_ctx) {
-+=09=09dev->ep0.hcpriv =3D NULL;
-+=09=09kfree(ep_ctx);
-+=09} else {
-+=09=09dev_warn(mausb_host_dev.this_device, "ep_ctx is NULL: dev_handle=3D%=
-#x",
-+=09=09=09 dev_handle);
-+=09}
-+
-+=09rb_erase(&usb_device_ctx->rb_node, &mdev->usb_devices);
-+=09dev_info(mausb_host_dev.this_device, "USB device deleted device=3D%p",
-+=09=09 usb_device_ctx->dev_addr);
-+=09kfree(usb_device_ctx);
-+}
-+
-+static int mausb_address_device(struct usb_hcd *hcd, struct usb_device *de=
-v)
-+{
-+=09u8=09port_number;
-+=09int=09status;
-+=09struct hub_ctx=09*hub =3D (struct hub_ctx *)hcd->hcd_priv;
-+=09struct mausb_usb_device_ctx *usb_device_ctx;
-+=09struct mausb_endpoint_ctx   *endpoint_ctx;
-+
-+=09status =3D get_root_hub_port_number(dev, &port_number);
-+=09if (status < 0 || port_number >=3D NUMBER_OF_PORTS) {
-+=09=09dev_warn(&dev->dev, "port_number out of range, port_number=3D%x",
-+=09=09=09 port_number);
-+=09=09return -EINVAL;
-+=09}
-+
-+=09usb_device_ctx =3D mausb_find_usb_device(&hub->ma_devs[port_number], de=
-v);
-+=09if (!usb_device_ctx)
-+=09=09return -ENODEV;
-+
-+=09dev_info(&dev->dev, "dev_handle=3D%#x, dev_speed=3D%#x",
-+=09=09 usb_device_ctx->dev_handle, dev->speed);
-+
-+=09if (dev->speed >=3D USB_SPEED_SUPER)
-+=09=09dev_info(&dev->dev, "USB 3.0");
-+=09else
-+=09=09dev_info(&dev->dev, "USB 2.0");
-+
-+=09if (usb_device_ctx->dev_handle =3D=3D DEV_HANDLE_NOT_ASSIGNED) {
-+=09=09status =3D mausb_enable_device(hcd, dev);
-+=09=09if (status < 0)
-+=09=09=09return status;
-+=09}
-+
-+=09endpoint_ctx =3D dev->ep0.hcpriv;
-+=09if (!endpoint_ctx) {
-+=09=09dev_err(&dev->dev, "endpoint_ctx is NULL: dev_handle=3D%#x",
-+=09=09=09usb_device_ctx->dev_handle);
-+=09=09return -EINVAL;
-+=09}
-+
-+=09return 0;
-+}
-+
-+static int mausb_add_endpoint(struct usb_hcd *hcd, struct usb_device *dev,
-+=09=09=09      struct usb_host_endpoint *endpoint)
-+{
-+=09int=09status;
-+=09u8=09port_number;
-+=09struct hub_ctx=09=09    *hub =3D (struct hub_ctx *)hcd->hcd_priv;
-+=09struct mausb_usb_device_ctx *usb_dev_ctx;
-+=09struct mausb_endpoint_ctx   *endpoint_ctx;
-+
-+=09status =3D get_root_hub_port_number(dev, &port_number);
-+=09if (status < 0 || port_number >=3D NUMBER_OF_PORTS) {
-+=09=09dev_dbg(&dev->dev, "port_number out of range, port_number=3D%x",
-+=09=09=09port_number);
-+=09=09return 0;
-+=09}
-+
-+=09usb_dev_ctx =3D mausb_find_usb_device(&hub->ma_devs[port_number], dev);
-+=09if (!usb_dev_ctx) {
-+=09=09dev_warn(&dev->dev, "Device not found");
-+=09=09return -ENODEV;
-+=09}
-+
-+=09endpoint_ctx =3D kzalloc(sizeof(*endpoint_ctx), GFP_ATOMIC);
-+=09if (!endpoint_ctx)
-+=09=09return -ENOMEM;
-+
-+=09endpoint_ctx->dev_handle=09=3D usb_dev_ctx->dev_handle;
-+=09endpoint_ctx->usb_device_ctx=09=3D usb_dev_ctx;
-+=09endpoint->hcpriv=09=09=3D endpoint_ctx;
-+
-+=09return 0;
-+}
-+
-+static int mausb_drop_endpoint(struct usb_hcd *hcd, struct usb_device *dev=
-,
-+=09=09=09       struct usb_host_endpoint *endpoint)
-+{
-+=09u8=09port_number;
-+=09int=09status;
-+=09struct hub_ctx=09=09    *hub =3D (struct hub_ctx *)hcd->hcd_priv;
-+=09struct mausb_usb_device_ctx *usb_dev_ctx;
-+=09struct mausb_endpoint_ctx   *endpoint_ctx =3D endpoint->hcpriv;
-+
-+=09status =3D get_root_hub_port_number(dev, &port_number);
-+=09if (status < 0 || port_number >=3D NUMBER_OF_PORTS) {
-+=09=09dev_dbg(&dev->dev, "port_number out of range, port_number=3D%x",
-+=09=09=09port_number);
-+=09=09return -EINVAL;
-+=09}
-+
-+=09usb_dev_ctx =3D mausb_find_usb_device(&hub->ma_devs[port_number], dev);
-+
-+=09if (!endpoint_ctx) {
-+=09=09dev_err(&dev->dev, "Endpoint context doesn't exist");
-+=09=09return 0;
-+=09}
-+=09if (!usb_dev_ctx) {
-+=09=09dev_err(&dev->dev, "Usb device context doesn't exist");
-+=09=09return -ENODEV;
-+=09}
-+
-+=09endpoint->hcpriv =3D NULL;
-+=09kfree(endpoint_ctx);
-+=09return 0;
-+}
-+
-+static int mausb_enable_device(struct usb_hcd *hcd, struct usb_device *dev=
-)
-+{
-+=09int status;
-+=09u8 port_number;
-+=09struct hub_ctx=09=09    *hub =3D (struct hub_ctx *)hcd->hcd_priv;
-+=09struct mausb_usb_device_ctx *usb_device_ctx;
-+
-+=09status =3D get_root_hub_port_number(dev, &port_number);
-+=09if (status < 0 || port_number >=3D NUMBER_OF_PORTS) {
-+=09=09dev_dbg(mausb_host_dev.this_device, "port_number out of range, port_=
-number=3D%x",
-+=09=09=09port_number);
-+=09=09return -EINVAL;
-+=09}
-+
-+=09usb_device_ctx =3D mausb_find_usb_device(&hub->ma_devs[port_number], de=
-v);
-+=09if (!usb_device_ctx)
-+=09=09return -ENODEV;
-+
-+=09dev_info(mausb_host_dev.this_device, "Device assigned and addressed usb=
-_device_ctx=3D%p",
-+=09=09 usb_device_ctx);
-+
-+=09return 0;
-+}
-+
-+static int mausb_is_hub_device(struct usb_device *dev)
-+{
-+=09return dev->descriptor.bDeviceClass =3D=3D 0x09;
-+}
-+
-+static int mausb_update_device(struct usb_hcd *hcd, struct usb_device *dev=
-)
-+{
-+=09u8=09port_number =3D 0;
-+=09int=09status=09    =3D 0;
-+=09struct hub_ctx=09=09    *hub =3D (struct hub_ctx *)hcd->hcd_priv;
-+=09struct mausb_usb_device_ctx *usb_device_ctx =3D NULL;
-+
-+=09if (mausb_is_hub_device(dev)) {
-+=09=09dev_warn(mausb_host_dev.this_device, "Device is hub");
-+=09=09return 0;
-+=09}
-+
-+=09status =3D get_root_hub_port_number(dev, &port_number);
-+=09if (status < 0 || port_number >=3D NUMBER_OF_PORTS) {
-+=09=09dev_dbg(mausb_host_dev.this_device, "port_number out of range, port_=
-number=3D%x",
-+=09=09=09port_number);
-+=09=09return -EINVAL;
-+=09}
-+
-+=09usb_device_ctx =3D mausb_find_usb_device(&hub->ma_devs[port_number], de=
-v);
-+=09if (!usb_device_ctx) {
-+=09=09dev_warn(mausb_host_dev.this_device, "Device not found");
-+=09=09return -ENODEV;
-+=09}
-+
-+=09return 0;
-+}
-+
-+static int mausb_hub_update_device(struct usb_hcd *hcd, struct usb_device =
-*dev,
-+=09=09=09=09   struct usb_tt *tt, gfp_t mem_flags)
-+{
-+=09int=09status;
-+=09u8=09port_number;
-+=09u16 max_exit_latency =3D 0;
-+=09u8  mtt =3D 0;
-+=09u8  ttt =3D 0;
-+=09struct hub_ctx=09=09    *hub =3D (struct hub_ctx *)hcd->hcd_priv;
-+=09struct mausb_usb_device_ctx *usb_device_ctx;
-+
-+=09if (dev->speed =3D=3D USB_SPEED_HIGH) {
-+=09=09mtt =3D tt->multi =3D=3D 0 ? 1 : 0;
-+=09=09ttt =3D (u8)tt->think_time;
-+=09}
-+
-+=09status =3D get_root_hub_port_number(dev, &port_number);
-+=09if (status < 0 || port_number >=3D NUMBER_OF_PORTS) {
-+=09=09dev_dbg(mausb_host_dev.this_device, "port_number out of range, port_=
-number=3D%x",
-+=09=09=09port_number);
-+=09=09return 0;
-+=09}
-+
-+=09usb_device_ctx =3D mausb_find_usb_device(&hub->ma_devs[port_number],
-+=09=09=09=09=09       dev);
-+
-+=09if (!usb_device_ctx) {
-+=09=09dev_err(mausb_host_dev.this_device, "USB device not found");
-+=09=09return -ENODEV;
-+=09}
-+
-+=09if (dev->usb3_lpm_u1_enabled)
-+=09=09max_exit_latency =3D (u16)dev->u1_params.mel;
-+=09else if (dev->usb3_lpm_u2_enabled)
-+=09=09max_exit_latency =3D (u16)dev->u2_params.mel;
-+
-+=09return 0;
-+}
-+
-+static void mausb_endpoint_reset(struct usb_hcd *hcd,
-+=09=09=09=09 struct usb_host_endpoint *endpoint)
-+{
-+=09int status;
-+=09int is_control;
-+=09int epnum;
-+=09int is_out;
-+=09u16=09dev_handle;
-+=09u8=09tsp;
-+=09u8=09port_number;
-+=09struct hub_ctx=09=09    *hub;
-+=09struct mausb_usb_device_ctx *usb_device_ctx;
-+=09struct usb_device=09    *dev;
-+=09struct mausb_endpoint_ctx   *ep_ctx;
-+
-+=09ep_ctx =3D endpoint->hcpriv;
-+=09if (!ep_ctx)
-+=09=09return;
-+
-+=09usb_device_ctx=09=3D ep_ctx->usb_device_ctx;
-+=09dev_handle=09=3D usb_device_ctx->dev_handle;
-+=09dev=09=09=3D usb_device_ctx->dev_addr;
-+
-+=09status =3D get_root_hub_port_number(dev, &port_number);
-+=09if (status < 0 || port_number >=3D NUMBER_OF_PORTS) {
-+=09=09dev_dbg(&dev->dev, "port_number out of range, port_number=3D%x",
-+=09=09=09port_number);
-+=09=09return;
-+=09}
-+=09hub =3D (struct hub_ctx *)hcd->hcd_priv;
-+
-+=09is_control =3D usb_endpoint_xfer_control(&endpoint->desc);
-+=09epnum =3D usb_endpoint_num(&endpoint->desc);
-+=09is_out =3D usb_endpoint_dir_out(&endpoint->desc);
-+=09tsp =3D (u8)(is_out ? dev->toggle[1] : dev->toggle[0]);
-+
-+=09if (status < 0)
-+=09=09return;
-+
-+=09if (status !=3D EUCLEAN) {
-+=09=09if (!tsp) {
-+=09=09=09usb_settoggle(dev, epnum, is_out, 0U);
-+=09=09=09if (is_control)
-+=09=09=09=09usb_settoggle(dev, epnum, !is_out, 0U);
-+=09=09}
-+
-+=09=09return;
-+=09}
-+
-+=09if (tsp)
-+=09=09return;
-+
-+=09dev_info(&dev->dev, "ep_handle request status=3D%d, ep_handle=3D%#x, de=
-v_handle=3D%#x",
-+=09=09 status, ep_ctx->ep_handle, dev_handle);
-+}
-+
-+static int mausb_reset_device(struct usb_hcd *hcd, struct usb_device *dev)
-+{
-+=09int status;
-+=09u8  port_number;
-+=09u16 dev_handle;
-+=09struct hub_ctx=09=09    *hub;
-+=09struct mausb_usb_device_ctx *usb_device_ctx;
-+
-+=09hub =3D (struct hub_ctx *)hcd->hcd_priv;
-+
-+=09status =3D get_root_hub_port_number(dev, &port_number);
-+=09if (status < 0 || port_number >=3D NUMBER_OF_PORTS) {
-+=09=09dev_dbg(mausb_host_dev.this_device, "port_number out of range, port_=
-number=3D%x",
-+=09=09=09port_number);
-+=09=09return -EINVAL;
-+=09}
-+
-+=09usb_device_ctx =3D mausb_find_usb_device(&hub->ma_devs[port_number], de=
-v);
-+
-+=09if (!usb_device_ctx ||
-+=09    usb_device_ctx->dev_handle =3D=3D DEV_HANDLE_NOT_ASSIGNED)
-+=09=09return 0;
-+
-+=09dev_handle =3D usb_device_ctx->dev_handle;
-+
-+=09return 0;
-+}
-+
-+void mausb_clear_hcd_madev(u16 port_number)
++static void mausb_signal_empty_mss(void)
 +{
 +=09unsigned long flags =3D 0;
 +
-+=09if (port_number >=3D NUMBER_OF_PORTS) {
-+=09=09dev_err(mausb_host_dev.this_device, "port_number out of range, port_=
-number=3D%x",
-+=09=09=09port_number);
++=09spin_lock_irqsave(&mss.lock, flags);
++=09if (list_empty(&mss.madev_list))
++=09=09complete(&mss.empty);
++=09spin_unlock_irqrestore(&mss.lock, flags);
++}
++
+ static inline
+ struct mausb_ip_ctx *mausb_get_data_channel(struct mausb_device *ma_dev,
+ =09=09=09=09=09    enum mausb_channel channel)
+@@ -812,6 +1208,139 @@ void mausb_cleanup_chunks_list(struct list_head *chu=
+nks_list)
+ =09}
+ }
+=20
++static void mausb_init_ip_ctx_helper(struct mausb_device *dev,
++=09=09=09=09     struct mausb_ip_ctx **ip_ctx,
++=09=09=09=09     u16 port,
++=09=09=09=09     enum mausb_channel channel)
++{
++=09int status =3D mausb_init_ip_ctx(ip_ctx, dev->net_ns,
++=09=09=09=09       dev->dev_addr.ip.address, port, dev,
++=09=09=09=09       mausb_ip_callback, channel);
++=09if (status < 0) {
++=09=09dev_err(mausb_host_dev.this_device, "Init ip context failed with err=
+or=3D%d",
++=09=09=09status);
++=09=09queue_work(dev->workq, &dev->socket_disconnect_work);
 +=09=09return;
 +=09}
 +
-+=09spin_lock_irqsave(&mhcd->lock, flags);
-+
-+=09memset(&mhcd->hcd_hs_ctx->ma_devs[port_number], 0,
-+=09       sizeof(struct mausb_dev));
-+=09memset(&mhcd->hcd_ss_ctx->ma_devs[port_number], 0,
-+=09       sizeof(struct mausb_dev));
-+
-+=09mhcd->connected_ports &=3D ~(1 << port_number);
-+
-+=09mhcd->hcd_hs_ctx->ma_devs[port_number].port_status =3D
-+=09=09=09=09=09=09=09USB_PORT_STAT_POWER;
-+=09mhcd->hcd_ss_ctx->ma_devs[port_number].port_status =3D
-+=09=09=09=09=09=09=09USB_SS_PORT_STAT_POWER;
-+
-+=09spin_unlock_irqrestore(&mhcd->lock, flags);
++=09dev->channel_map[channel] =3D *ip_ctx;
++=09mausb_ip_connect_async(*ip_ctx);
 +}
-diff --git a/drivers/usb/host/mausb/hcd.h b/drivers/usb/host/mausb/hcd.h
-index e2374af67663..c0818edc0266 100644
---- a/drivers/usb/host/mausb/hcd.h
-+++ b/drivers/usb/host/mausb/hcd.h
-@@ -18,9 +18,6 @@
++
++static void mausb_connect_callback(struct mausb_device *dev,
++=09=09=09=09   enum mausb_channel channel, int status)
++{
++=09struct mausb_device_address *dev_addr =3D &dev->dev_addr;
++
++=09dev_info(mausb_host_dev.this_device, "Connect callback for channel=3D%d=
+ with status=3D%d",
++=09=09      channel, status);
++
++=09if (status < 0) {
++=09=09queue_work(dev->workq, &dev->socket_disconnect_work);
++=09=09return;
++=09}
++
++=09if (channel =3D=3D MAUSB_MGMT_CHANNEL) {
++=09=09if (dev_addr->ip.port.control =3D=3D 0) {
++=09=09=09dev->channel_map[MAUSB_CTRL_CHANNEL] =3D
++=09=09=09=09dev->mgmt_channel;
++=09=09=09channel =3D MAUSB_CTRL_CHANNEL;
++=09=09} else {
++=09=09=09mausb_init_ip_ctx_helper(dev, &dev->ctrl_channel,
++=09=09=09=09=09=09 dev_addr->ip.port.control,
++=09=09=09=09=09=09 MAUSB_CTRL_CHANNEL);
++=09=09=09return;
++=09=09}
++=09}
++
++=09if (channel =3D=3D MAUSB_CTRL_CHANNEL) {
++=09=09if (dev_addr->ip.port.bulk =3D=3D 0) {
++=09=09=09dev->channel_map[MAUSB_BULK_CHANNEL] =3D
++=09=09=09=09dev->channel_map[MAUSB_CTRL_CHANNEL];
++=09=09=09channel =3D MAUSB_BULK_CHANNEL;
++=09=09} else {
++=09=09=09mausb_init_ip_ctx_helper(dev, &dev->bulk_channel,
++=09=09=09=09=09=09 dev_addr->ip.port.bulk,
++=09=09=09=09=09=09 MAUSB_BULK_CHANNEL);
++=09=09=09return;
++=09=09}
++=09}
++
++=09if (channel =3D=3D MAUSB_BULK_CHANNEL) {
++=09=09if (dev_addr->ip.port.isochronous =3D=3D 0) {
++=09=09=09/* if there is no isoch port use tcp for it */
++=09=09=09dev->channel_map[MAUSB_ISOCH_CHANNEL] =3D
++=09=09=09=09dev->channel_map[MAUSB_BULK_CHANNEL];
++=09=09=09channel =3D MAUSB_ISOCH_CHANNEL;
++=09=09} else {
++=09=09=09mausb_init_ip_ctx_helper(dev, &dev->isoch_channel,
++=09=09=09=09=09=09 dev_addr->ip.port.isochronous,
++=09=09=09=09=09=09 MAUSB_ISOCH_CHANNEL);
++=09=09=09return;
++=09=09}
++=09}
++
++=09if (channel =3D=3D MAUSB_ISOCH_CHANNEL) {
++=09=09dev->channel_map[MAUSB_INTR_CHANNEL] =3D
++=09=09=09=09dev->channel_map[MAUSB_CTRL_CHANNEL];
++=09}
++}
++
++static void mausb_handle_connect_event(struct mausb_device *dev,
++=09=09=09=09       enum mausb_channel channel, int status,
++=09=09=09=09       void *data)
++{
++=09mausb_connect_callback(dev, channel, status);
++}
++
++static void mausb_handle_receive_event(struct mausb_device *dev,
++=09=09=09=09       enum mausb_channel channel, int status,
++=09=09=09=09       void *data)
++{
++=09struct mausb_event event;
++
++=09event.madev_addr =3D dev->madev_addr;
++
++=09if (status <=3D 0) {
++=09=09dev_err(mausb_host_dev.this_device, "Receive event error status=3D%d=
+",
++=09=09=09status);
++=09=09queue_work(dev->workq, &dev->socket_disconnect_work);
++=09=09queue_work(dev->workq, &dev->hcd_disconnect_work);
++=09=09return;
++=09}
++
++=09mausb_reset_connection_timer(dev);
++}
++
++void mausb_ip_callback(void *ctx, enum mausb_channel channel,
++=09=09       enum mausb_link_action action, int status, void *data)
++{
++=09struct mausb_device *dev =3D (struct mausb_device *)ctx;
++
++=09switch (action) {
++=09case MAUSB_LINK_CONNECT:
++=09=09mausb_handle_connect_event(dev, channel, status, data);
++=09=09break;
++=09case MAUSB_LINK_SEND:
++=09=09/*
++=09=09 * Currently there is nothing to do, as send operation is
++=09=09 * synchronous
++=09=09 */
++=09=09break;
++=09case MAUSB_LINK_RECV:
++=09=09mausb_handle_receive_event(dev, channel, status, data);
++=09=09break;
++=09case MAUSB_LINK_DISCONNECT:
++=09=09/*
++=09=09 * Currently there is nothing to do, as disconnect operation is
++=09=09 * synchronous
++=09=09 */
++=09=09break;
++=09default:
++=09=09dev_warn(mausb_host_dev.this_device, "Unknown network action");
++=09}
++}
++
+ static int mausb_read_virtual_buffer(struct mausb_data_iter *iterator,
+ =09=09=09=09     u32 byte_num,
+ =09=09=09=09     struct list_head *data_chunks_list,
+diff --git a/drivers/usb/host/mausb/hpal.h b/drivers/usb/host/mausb/hpal.h
+index f184bbc07783..a04ed120ba5e 100644
+--- a/drivers/usb/host/mausb/hpal.h
++++ b/drivers/usb/host/mausb/hpal.h
+@@ -131,6 +131,8 @@ static inline u64 mausb_event_id(struct mausb_device *d=
+ev)
+ =09return val;
+ }
 =20
- #define RESPONSE_TIMEOUT=095000
++int mausb_initiate_dev_connection(struct mausb_device_address device_addre=
+ss,
++=09=09=09=09  u8 madev_address);
+ int mausb_data_req_enqueue_event(struct mausb_device *dev, u16 ep_handle,
+ =09=09=09=09 struct urb *request);
+ int mausb_signal_event(struct mausb_device *dev, struct mausb_event *event=
+,
+@@ -158,6 +160,7 @@ static inline void mausb_remove_event(struct mausb_devi=
+ce *dev,
+ }
 =20
--#define MAUSB_PORT_20_STATUS_LOW_SPEED       0x0200
--#define MAUSB_PORT_20_STATUS_HIGH_SPEED      0x0400
--
- enum mausb_device_type {
- =09USBDEVICE =3D 0,
- =09USB20HUB  =3D 1,
-@@ -62,4 +59,87 @@ struct hub_ctx {
- int mausb_init_hcd(void);
- void mausb_deinit_hcd(void);
+ void mausb_release_ma_dev_async(struct kref *kref);
++void mausb_on_madev_connected(struct mausb_device *dev);
+ void mausb_complete_request(struct urb *urb, u32 actual_length, int status=
+);
+ void mausb_complete_urb(struct mausb_event *event);
+ void mausb_reset_connection_timer(struct mausb_device *dev);
+@@ -240,6 +243,9 @@ enum mausb_channel mausb_transfer_type_to_channel(u8 tr=
+ansfer_type)
+ =09return transfer_type >> 3;
+ }
 =20
-+#define PORT_C_MASK \
-+=09=09((USB_PORT_STAT_C_CONNECTION \
-+=09=09| USB_PORT_STAT_C_ENABLE \
-+=09=09| USB_PORT_STAT_C_SUSPEND \
-+=09=09| USB_PORT_STAT_C_OVERCURRENT \
-+=09=09| USB_PORT_STAT_C_RESET) << 16)
++void mausb_ip_callback(void *ctx, enum mausb_channel channel,
++=09=09       enum mausb_link_action action, int status, void *data);
 +
-+#define MAUSB_PORT_20_STATUS_CONNECT         0x0001
-+#define MAUSB_PORT_20_STATUS_ENABLE          0x0002
-+#define MAUSB_PORT_20_STATUS_SUSPEND         0x0004
-+#define MAUSB_PORT_20_STATUS_OVER_CURRENT    0x0008
-+#define MAUSB_PORT_20_STATUS_RESET           0x0010
-+#define MAUSB_PORT_20_STATUS_POWER           0x0100
-+#define MAUSB_PORT_20_STATUS_LOW_SPEED       0x0200
-+#define MAUSB_PORT_20_STATUS_HIGH_SPEED      0x0400
+ struct mausb_data_iter {
+ =09u32 length;
+=20
+diff --git a/drivers/usb/host/mausb/mausb_core.c b/drivers/usb/host/mausb/m=
+ausb_core.c
+index e5ccf4e9173b..f394365700da 100644
+--- a/drivers/usb/host/mausb/mausb_core.c
++++ b/drivers/usb/host/mausb/mausb_core.c
+@@ -11,6 +11,146 @@
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("DisplayLink (UK) Ltd.");
+=20
++static struct mausb_device_address=09device_address;
++static int=09=09=09=09mausb_device_disconnect_param;
++static u16=09=09=09=09madev_addr;
++static u8=09=09=09=09mausb_client_connect_param;
++static u8=09=09=09=09mausb_client_disconnect_param;
 +
-+#define MAUSB_CHANGE_PORT_20_STATUS_CONNECT  0x010000
-+#define MAUSB_CHANGE_PORT_20_STATUS_RESET    0x100000
++static int mausb_client_connect(const char *value,
++=09=09=09=09const struct kernel_param *kp)
++{
++=09unsigned long flags =3D 0;
 +
-+/* USB 3.2 specification chapter 10.16.2.6.1 table 10-13 page 440 */
-+#define MAUSB_PORT_30_STATUS_CONNECT              0x0001
-+#define MAUSB_PORT_30_STATUS_ENABLE               0x0002
-+#define MAUSB_PORT_30_STATUS_OVER_CURRENT         0x0008
-+#define MAUSB_PORT_30_STATUS_RESET                0x0010
-+#define MAUSB_PORT_30_LINK_STATE_U0               0x0000
-+#define MAUSB_PORT_30_LINK_STATE_U1               0x0020
-+#define MAUSB_PORT_30_LINK_STATE_U2               0x0040
-+#define MAUSB_PORT_30_LINK_STATE_U3               0x0060
-+#define MAUSB_PORT_30_LINK_STATE_DISABLED         0x0080
-+#define MAUSB_PORT_30_LINK_STATE_RX_DETECT        0x00A0
-+#define MAUSB_PORT_30_LINK_STATE_INACTIVE         0x00C0
-+#define MAUSB_PORT_30_LINK_STATE_POLLING          0x00E0
-+#define MAUSB_PORT_30_LINK_STATE_RECOVERY         0x0100
-+#define MAUSB_PORT_30_LINK_STATE_HOT_RESET        0x0120
-+#define MAUSB_PORT_30_LINK_STATE_COMPLIANCE_MODE  0x0140
-+#define MAUSB_PORT_30_LINK_STATE_LOOPBACK         0x0160
-+#define MAUSB_PORT_30_STATUS_POWER                0x0200
-+#define MAUSB_PORT_30_STATUS_SUPER_SPEED          0x0400
-+#define MAUSB_PORT_30_CLEAR_LINK_STATE            0xFE1F
++=09spin_lock_irqsave(&mss.lock, flags);
++=09if (mss.client_connected) {
++=09=09dev_err(mausb_host_dev.this_device, "MA-USB client is already connec=
+ted");
++=09=09spin_unlock_irqrestore(&mss.lock, flags);
++=09=09return -EEXIST;
++=09}
++=09/* Save heartbeat client information */
++=09mss.client_connected =3D true;
++=09mss.missed_heartbeats =3D 0;
++=09reinit_completion(&mss.client_stopped);
++=09spin_unlock_irqrestore(&mss.lock, flags);
++=09/* Start hearbeat timer */
++=09mod_timer(&mss.heartbeat_timer,
++=09=09  jiffies + msecs_to_jiffies(MAUSB_HEARTBEAT_TIMEOUT_MS));
 +
-+/* USB 3.2 specification chapter 10.16.2.6.2 table 10-14 page 443 */
-+#define MAUSB_CHANGE_PORT_30_STATUS_CONNECT              0x010000
-+#define MAUSB_CHANGE_PORT_30_STATUS_OVER_CURRENT         0x080000
-+#define MAUSB_CHANGE_PORT_30_STATUS_RESET                0x100000
-+#define MAUSB_CHANGE_PORT_30_BH_STATUS_RESET             0x200000
-+#define MAUSB_CHANGE_PORT_30_LINK_STATE                  0x400000
-+#define MAUSB_CHANGE_PORT_30_CONFIG_ERROR                0x800000
++=09return 0;
++}
 +
-+/* USB 3.2 specification chapter 10.16.2.4 table 10-10 page 438 */
-+#define MAUSB_HUB_30_POWER_GOOD              0x00
-+#define MAUSB_HUB_30_LOCAL_POWER_SOURCE_LOST 0x01
-+#define MAUSB_HUB_30_OVER_CURRENT            0x02
++static int mausb_client_disconnect(const char *value,
++=09=09=09=09   const struct kernel_param *kp)
++{
++=09unsigned long flags =3D 0;
++=09struct mausb_device *dev =3D NULL;
 +
-+/* USB 3.2 specification chapter 10.16.2.4 table 10-11 page 438 */
-+#define MAUSB_CHANGE_HUB_30_LOCAL_POWER_SOURCE_LOST  0x10000
-+#define MAUSB_CHANGE_HUB_30_OVER_CURRENT             0x20000
++=09spin_lock_irqsave(&mss.lock, flags);
++=09if (!mss.client_connected) {
++=09=09dev_err(mausb_host_dev.this_device, "MA-USB client is not connected"=
+);
++=09=09spin_unlock_irqrestore(&mss.lock, flags);
++=09=09return -ENODEV;
++=09}
 +
-+#define DEV_HANDLE_NOT_ASSIGNED=09-1
++=09spin_unlock_irqrestore(&mss.lock, flags);
 +
-+struct mausb_usb_device_ctx {
-+=09s32=09=09dev_handle;
-+=09bool=09=09addressed;
-+=09void=09=09*dev_addr;
-+=09struct rb_node=09rb_node;
++=09/* Stop heartbeat timer */
++=09del_timer_sync(&mss.heartbeat_timer);
++
++=09/* Clear heartbeat client information */
++=09spin_lock_irqsave(&mss.lock, flags);
++=09mss.client_connected =3D false;
++=09mss.missed_heartbeats =3D 0;
++=09list_for_each_entry(dev, &mss.madev_list, list_entry) {
++=09=09dev_vdbg(mausb_host_dev.this_device, "Enqueue heartbeat_work madev_a=
+ddr=3D%x",
++=09=09=09 dev->madev_addr);
++=09=09queue_work(dev->workq, &dev->heartbeat_work);
++=09}
++=09complete(&mss.client_stopped);
++=09spin_unlock_irqrestore(&mss.lock, flags);
++
++=09return 0;
++}
++
++static int mausb_device_connect(const char *value,
++=09=09=09=09const struct kernel_param *kp)
++{
++=09int status =3D 0;
++
++=09if (strlen(value) <=3D INET6_ADDRSTRLEN) {
++=09=09strcpy(device_address.ip.address, value);
++=09=09dev_info(mausb_host_dev.this_device, "Processing '%s' address",
++=09=09=09 device_address.ip.address);
++=09} else {
++=09=09dev_err(mausb_host_dev.this_device, "Invalid IP format");
++=09=09return 0;
++=09}
++=09status =3D mausb_initiate_dev_connection(device_address, madev_addr);
++=09memset(&device_address, 0, sizeof(device_address));
++
++=09return status;
++}
++
++static int mausb_device_disconnect(const char *value,
++=09=09=09=09   const struct kernel_param *kp)
++{
++=09u8 dev_address =3D 0;
++=09int status =3D 0;
++=09unsigned long flags =3D 0;
++=09struct mausb_device *dev =3D NULL;
++
++=09status =3D kstrtou8(value, 0, &dev_address);
++=09if (status < 0)
++=09=09return -EINVAL;
++
++=09spin_lock_irqsave(&mss.lock, flags);
++
++=09dev =3D mausb_get_dev_from_addr_unsafe(dev_address);
++=09if (dev)
++=09=09queue_work(dev->workq, &dev->hcd_disconnect_work);
++
++=09spin_unlock_irqrestore(&mss.lock, flags);
++
++=09return 0;
++}
++
++static const struct kernel_param_ops mausb_device_connect_ops =3D {
++=09.set =3D mausb_device_connect
 +};
 +
-+struct mausb_endpoint_ctx {
-+=09u16=09ep_handle;
-+=09u16=09dev_handle;
-+=09void=09*ma_dev;
-+=09struct mausb_usb_device_ctx *usb_device_ctx;
++static const struct kernel_param_ops mausb_device_disconnect_ops =3D {
++=09.set =3D mausb_device_disconnect
 +};
 +
-+struct mausb_urb_ctx {
-+=09struct urb=09=09*urb;
-+=09struct rb_node=09=09rb_node;
-+=09struct work_struct=09work;
++static const struct kernel_param_ops mausb_client_connect_ops =3D {
++=09.set =3D mausb_client_connect
 +};
 +
-+int mausb_probe(struct device *dev);
++static const struct kernel_param_ops mausb_client_disconnect_ops =3D {
++=09.set =3D mausb_client_disconnect
++};
 +
-+void mausb_clear_hcd_madev(u16 port_number);
++module_param_named(mgmt, device_address.ip.port.management, ushort, 0664);
++MODULE_PARM_DESC(mgmt, "MA-USB management port");
++module_param_named(ctrl, device_address.ip.port.control, ushort, 0664);
++MODULE_PARM_DESC(ctrl, "MA-USB control port");
++module_param_named(bulk, device_address.ip.port.bulk, ushort, 0664);
++MODULE_PARM_DESC(bulk, "MA-USB bulk port");
++module_param_named(isoch, device_address.ip.port.isochronous, ushort, 0664=
+);
++MODULE_PARM_DESC(isoch, "MA-USB isochronous port");
++module_param_named(madev_addr, madev_addr, ushort, 0664);
++MODULE_PARM_DESC(madev_addr, "MA-USB device address");
 +
- #endif /* __MAUSB_HCD_H__ */
++module_param_cb(client_connect, &mausb_client_connect_ops,
++=09=09&mausb_client_connect_param, 0664);
++module_param_cb(client_disconnect, &mausb_client_disconnect_ops,
++=09=09&mausb_client_disconnect_param, 0664);
++module_param_cb(ip, &mausb_device_connect_ops,
++=09=09device_address.ip.address, 0664);
++module_param_cb(disconnect, &mausb_device_disconnect_ops,
++=09=09&mausb_device_disconnect_param, 0664);
++
+ static int mausb_host_init(void)
+ {
+ =09int status =3D mausb_host_dev_register();
 --=20
 2.17.1
 
