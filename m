@@ -3,57 +3,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 047D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D06C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C82FA20760
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E54320760
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589520214;
-	bh=Ky51v5BgL4uAG/kzZjdIe4k8SSM/0MecFmdfyDLxjJY=;
+	s=default; t=1589520268;
+	bh=D1Mhutuxg2DPblPSYiRI6z8kl0kDMOThuWJYcrtIiFE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Xa9Wu1GOLg9Z4EYAjwZlEuSg7R0Oy/D/kL5WEIeStwM8ESTIG75yhCQ/lr6wI1rH+
-	 jzAulAtsOGJbv9CqvlbdxEDxB8imk1p6K/kvBNZafcCI63y25Lv2TYeM2savQg8Cr2
-	 ogJZyRcE/muKWQX/EPPFDYYjRDXsJaGptND2At88=
+	b=VNHjqS8eYdlddksmWQcLKO/MuClg0HDmW/gQM7CSCIyqAkL3JAtCdPZuBVr8oneKt
+	 hn3FTunV/guntfwq2y22WFFn5v17RKC8U2y19R7qM6JP7wLEIiWwYsdUGruhYxZLwz
+	 X4AxY2PnQjlaFTThJnXYTumri1Tcq0Dkufv+y3ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgEOFXd (ORCPT
+        id S1726314AbgEOFY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 01:23:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59810 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 01:24:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbgEOFXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 01:23:33 -0400
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+        id S1726217AbgEOFY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 01:24:27 -0400
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7DD6207BB
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 05:23:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA051207BB
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 05:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589520213;
-        bh=Ky51v5BgL4uAG/kzZjdIe4k8SSM/0MecFmdfyDLxjJY=;
+        s=default; t=1589520266;
+        bh=D1Mhutuxg2DPblPSYiRI6z8kl0kDMOThuWJYcrtIiFE=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pmuFVVK/jXZyveATyVxrrGE4cjQ05Tw1OvFo8qa//b5KkfCM2Wd/O2uph2A+yn7jX
-         UjWvDWBvn/HnYzxDGN4eMHH43iByZnr+ukrVDr/CgCovU9prVM2aMk1EL/0Uef14+Y
-         XgdyRcTF0g8TW8kG0OrUBDrMi2Fk2wfEIyH9NZ3I=
-Received: by mail-wm1-f52.google.com with SMTP id u188so1125342wmu.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:23:32 -0700 (PDT)
-X-Gm-Message-State: AOAM533PbjFKquLTBUs9snLPW2wr23/L8BrIhd2XBRHZalF9gJmLlj81
-        l+eWR6gLS5OKvl5Ij+DWCtegxOSFLpOF6LTW4yv6dA==
-X-Google-Smtp-Source: ABdhPJxV31oB4go2kwPiEWCdQPp98jLuYdv1bOLNPdJl0NdwCtpDlSsnY3xUmHlmKhL4l1+TeF5XcLMSftk3+StfLuQ=
-X-Received: by 2002:a1c:2bc2:: with SMTP id r185mr2034453wmr.49.1589520211169;
- Thu, 14 May 2020 22:23:31 -0700 (PDT)
+        b=oH20iWvHaCfMvTa6hdO5LPadiHLQTZ6tW5VigGbBTfPP2/xUEuRcTFP4XIV4+L7SC
+         mN5jOQ+wtS3JVKNkF9Nvw6HmOGL+Fzfo0aeL1Wiuvo0bUmiCotRIBM3Mw5wk2bKjyH
+         MGXgnzmJVbHKj9W42ikL/UX79uJeEEkbbZzvlltM=
+Received: by mail-wr1-f44.google.com with SMTP id l17so1936368wrr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:24:26 -0700 (PDT)
+X-Gm-Message-State: AOAM530vPKBP/Y6vT+/LhbjmwN4rOkRIKffGKjvGy0toGwFxCM9btcmc
+        oHIHsVhPLDQydrSJLmIx2Q98uvl6r0vtHNp0Xy8lLw==
+X-Google-Smtp-Source: ABdhPJzSIQbfHVa7DLub5UxHPTEj/YFF+5eHMmsgI74FtkHo1/mIRCMGaTAN0QuAek7CcaZNVdRddfQgTYIYGDtVLU4=
+X-Received: by 2002:adf:fe45:: with SMTP id m5mr2099016wrs.257.1589520265063;
+ Thu, 14 May 2020 22:24:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505134926.578885807@linutronix.de> <20200505135314.243936614@linutronix.de>
-In-Reply-To: <20200505135314.243936614@linutronix.de>
+References: <20200505134926.578885807@linutronix.de> <20200505135314.334980426@linutronix.de>
+In-Reply-To: <20200505135314.334980426@linutronix.de>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 14 May 2020 22:23:18 -0700
-X-Gmail-Original-Message-ID: <CALCETrU2Mi8_yL4WWneVhLBgu3kpaa5nxfeH7s_UTy-36KRghw@mail.gmail.com>
-Message-ID: <CALCETrU2Mi8_yL4WWneVhLBgu3kpaa5nxfeH7s_UTy-36KRghw@mail.gmail.com>
-Subject: Re: [patch V4 part 4 09/24] x86/mce: Move nmi_enter/exit() into the
- entry point
+Date:   Thu, 14 May 2020 22:24:13 -0700
+X-Gmail-Original-Message-ID: <CALCETrXbZpJGj1y46mixKbe-hu71cE=14OXMwa9DC0KTX6QjAQ@mail.gmail.com>
+Message-ID: <CALCETrXbZpJGj1y46mixKbe-hu71cE=14OXMwa9DC0KTX6QjAQ@mail.gmail.com>
+Subject: Re: [patch V4 part 4 10/24] x86/entry: Convert Machine Check to IDTENTRY_IST
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
@@ -80,8 +79,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue, May 5, 2020 at 7:16 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> There is no reason to have nmi_enter/exit() in the actual MCE
-> handlers. Move it to the entry point. This also covers the until now
-> uncovered initial handler which only prints.
+> Convert #MC to IDTENTRY_MCE:
+>   - Implement the C entry points with DEFINE_IDTENTRY_MCE
+>   - Emit the ASM stub with DECLARE_IDTENTRY_MCE
+>   - Remove the ASM idtentry in 64bit
+>   - Remove the open coded ASM entry code in 32bit
+>   - Fixup the XEN/PV code
+>   - Remove the old prototyoes
+>   - Remove the error code from *machine_check_vector() as
+>     it is always 0 and not used by any of the functions
+>     it can point to. Fixup all the functions as well.
+>
+> No functional change.
+
 
 Acked-by: Andy Lutomirski <luto@kernel.org>
