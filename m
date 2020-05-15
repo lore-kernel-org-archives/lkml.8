@@ -2,398 +2,138 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E50C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A97BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 758572054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A8B20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:00:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y8jOUBhh"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="M3zUE+Em"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgEOFzX (ORCPT
+        id S1726460AbgEOGAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 01:55:23 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26243 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725899AbgEOFzX (ORCPT
+        Fri, 15 May 2020 02:00:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726184AbgEOGAU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 01:55:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589522120;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=U+aB1CA1Otl268pO9Az/r7NFdoYXk7JXT4NW4PKxozs=;
-        b=Y8jOUBhhP81UFNz5Tm3S5c1+ji7+BPVh/83HH4UuFhp7Y7ahLRbutG5HzqopRGpBkN3H10
-        N1mNLo3hoUKoZdoifZe7KetJb/8IYg5w+vlHpyuG8eLqQdpENYGi8wYn/z1zHSBlMhu3wC
-        7XRFPbjZg0MIluGEbvHtgs2clAzlaeQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-169-WogNCXuSNt2yBD9bCkrbwA-1; Fri, 15 May 2020 01:55:16 -0400
-X-MC-Unique: WogNCXuSNt2yBD9bCkrbwA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 15 May 2020 02:00:20 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5540FC061A0C;
+        Thu, 14 May 2020 23:00:20 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D8BC464;
-        Fri, 15 May 2020 05:55:14 +0000 (UTC)
-Received: from localhost (ovpn-12-34.pek2.redhat.com [10.72.12.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BD27360BE2;
-        Fri, 15 May 2020 05:55:12 +0000 (UTC)
-Date:   Fri, 15 May 2020 13:55:09 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Kristen Carlson Accardi <kristen@linux.intel.com>
-Cc:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, Jonathan Corbet <corbet@lwn.net>,
-        x86@kernel.org, arjan@linux.intel.com,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        rick.p.edgecomb@intel.com, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 7/9] x86: Add support for function granular KASLR
-Message-ID: <20200515055509.GA31243@MiWiFi-R3L-srv>
-References: <20200415210452.27436-1-kristen@linux.intel.com>
- <20200415210452.27436-8-kristen@linux.intel.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Nd6j60Ldz9sT8;
+        Fri, 15 May 2020 16:00:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589522417;
+        bh=sXWQ6fcIr84bgQy2RgljVshFnRMy+/RUr4mrTKK1Q9I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=M3zUE+EmjYYDok0HB/Hqt3Eq2i/wb2hIKY4TPvh/KDc/23Cn8QqJXFcBQLA8aqXa6
+         eHO1SS7BEf80FusOTJc9UgNTDoQ/u8AeGRe9GTaw88pY0Psi2Hs3cdojP90Ny+thCt
+         XJtkEeRIn7VLlqrOKXc0R4s9x7oX0pZvcuJEsnzid0D/4dadhG6B2bY21IRzALZW0f
+         mok4QPNrNFRU41ozn69tpslr2iZCeOgKwrtDjsnxMxm3spLeDf8bbibvA4COs/TWNb
+         jKRywOYgqtsOxdXY6iA+lHYLJBbRPpYwW2xVW2c/449PnRSCxo7U5ylUsM6WFIdpTz
+         ylVHGNh8Z/Pyg==
+Date:   Fri, 15 May 2020 16:00:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: linux-next: build failure after merge of the tip tree
+Message-ID: <20200515160011.538b848a@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415210452.27436-8-kristen@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: multipart/signed; boundary="Sig_/aIFIPZzGRhDfalNTWdkuys_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/15/20 at 02:04pm, Kristen Carlson Accardi wrote:
-...
-> diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-> index 9652d5c2afda..2e108fdc7757 100644
-> --- a/arch/x86/boot/compressed/misc.c
-> +++ b/arch/x86/boot/compressed/misc.c
-> @@ -26,9 +26,6 @@
->   * it is not safe to place pointers in static structures.
->   */
->  
-> -/* Macros used by the included decompressor code below. */
-> -#define STATIC		static
-> -
+--Sig_/aIFIPZzGRhDfalNTWdkuys_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Here removing STATIC definition might be the reason why the LKP
-reported build error to patch 7/9.
+Hi all,
 
->  /*
->   * Use normal definitions of mem*() from string.c. There are already
->   * included header files which expect a definition of memset() and by
-> @@ -49,6 +46,8 @@ struct boot_params *boot_params;
->  
->  memptr free_mem_ptr;
->  memptr free_mem_end_ptr;
-> +unsigned long malloc_ptr;
-> +int malloc_count;
->  
->  static char *vidmem;
->  static int vidport;
-> @@ -203,10 +202,20 @@ static void handle_relocations(void *output, unsigned long output_len,
->  	if (IS_ENABLED(CONFIG_X86_64))
->  		delta = virt_addr - LOAD_PHYSICAL_ADDR;
->  
-> -	if (!delta) {
-> -		debug_putstr("No relocation needed... ");
-> -		return;
-> +	/*
-> +	 * it is possible to have delta be zero and
-> +	 * still have enabled fg kaslr. We need to perform relocations
-> +	 * for fgkaslr regardless of whether the base address has moved.
-> +	 */
-> +	if (!IS_ENABLED(CONFIG_FG_KASLR) || nokaslr) {
-> +		if (!delta) {
-> +			debug_putstr("No relocation needed... ");
-> +			return;
-> +		}
->  	}
-> +
-> +	pre_relocations_cleanup(map);
-> +
->  	debug_putstr("Performing relocations... ");
+After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-I testes this patchset on x86_64 machine, it works well. Seems the
-debug printing need a little bit adjustment.
+arch/x86/kernel/ftrace.c: In function 'set_ftrace_ops_ro':
+arch/x86/kernel/ftrace.c:444:32: error: 'ftrace_epilogue' undeclared (first=
+ use in this function)
+  444 |    end_offset =3D (unsigned long)ftrace_epilogue;
+      |                                ^~~~~~~~~~~~~~~
 
--  	debug_putstr("Performing relocations... ");
-+  	debug_putstr("\nPerforming relocations... ");
+Caused by commit
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Decompressing Linux... Parsing ELF... 
-Parsing ELF section headers... 
-Looking for symbols... 
-Re-sorting kallsyms ...Performing relocations... 
-                       ~~~~~~~~^
-Updating exception table...
+  0298739b7983 ("x86,ftrace: Fix ftrace_regs_caller() unwind")
 
-Re-sorting exception table...
+from the tip tree ineracting with commit
 
->  
->  	/*
-> @@ -230,35 +239,106 @@ static void handle_relocations(void *output, unsigned long output_len,
->  	 */
->  	for (reloc = output + output_len - sizeof(*reloc); *reloc; reloc--) {
->  		long extended = *reloc;
-> +		long value;
-> +
-> +		/*
-> +		 * if using fgkaslr, we might have moved the address
-> +		 * of the relocation. Check it to see if it needs adjusting
-> +		 * from the original address.
-> +		 */
-> +		(void) adjust_address(&extended);
-> +
->  		extended += map;
->  
->  		ptr = (unsigned long)extended;
->  		if (ptr < min_addr || ptr > max_addr)
->  			error("32-bit relocation outside of kernel!\n");
->  
-> -		*(uint32_t *)ptr += delta;
-> +		value = *(int32_t *)ptr;
-> +
-> +		/*
-> +		 * If using fgkaslr, the value of the relocation
-> +		 * might need to be changed because it referred
-> +		 * to an address that has moved.
-> +		 */
-> +		adjust_address(&value);
-> +
-> +		value += delta;
-> +
-> +		*(uint32_t *)ptr = value;
->  	}
->  #ifdef CONFIG_X86_64
->  	while (*--reloc) {
->  		long extended = *reloc;
-> +		long value;
-> +		long oldvalue;
-> +		Elf64_Shdr *s;
-> +
-> +		/*
-> +		 * if using fgkaslr, we might have moved the address
-> +		 * of the relocation. Check it to see if it needs adjusting
-> +		 * from the original address.
-> +		 */
-> +		s = adjust_address(&extended);
-> +
->  		extended += map;
->  
->  		ptr = (unsigned long)extended;
->  		if (ptr < min_addr || ptr > max_addr)
->  			error("inverse 32-bit relocation outside of kernel!\n");
->  
-> -		*(int32_t *)ptr -= delta;
-> +		value = *(int32_t *)ptr;
-> +		oldvalue = value;
-> +
-> +		/*
-> +		 * If using fgkaslr, these relocs will contain
-> +		 * relative offsets which might need to be
-> +		 * changed because it referred
-> +		 * to an address that has moved.
-> +		 */
-> +		adjust_relative_offset(*reloc, &value, s);
-> +
-> +		/*
-> +		 * only percpu symbols need to have their values adjusted for
-> +		 * base address kaslr since relative offsets within the .text
-> +		 * and .text.* sections are ok wrt each other.
-> +		 */
-> +		if (is_percpu_addr(*reloc, oldvalue))
-> +			value -= delta;
-> +
-> +		*(int32_t *)ptr = value;
->  	}
->  	for (reloc--; *reloc; reloc--) {
->  		long extended = *reloc;
-> +		long value;
-> +
-> +		/*
-> +		 * if using fgkaslr, we might have moved the address
-> +		 * of the relocation. Check it to see if it needs adjusting
-> +		 * from the original address.
-> +		 */
-> +		(void) adjust_address(&extended);
-> +
->  		extended += map;
->  
->  		ptr = (unsigned long)extended;
->  		if (ptr < min_addr || ptr > max_addr)
->  			error("64-bit relocation outside of kernel!\n");
->  
-> -		*(uint64_t *)ptr += delta;
-> +		value = *(int64_t *)ptr;
-> +
-> +		/*
-> +		 * If using fgkaslr, the value of the relocation
-> +		 * might need to be changed because it referred
-> +		 * to an address that has moved.
-> +		 */
-> +		(void) adjust_address(&value);
-> +
-> +		value += delta;
-> +
-> +		*(uint64_t *)ptr = value;
->  	}
-> +	post_relocations_cleanup(map);
->  #endif
->  }
->  #else
-> @@ -296,6 +376,15 @@ static void parse_elf(void *output)
->  
->  	memcpy(phdrs, output + ehdr.e_phoff, sizeof(*phdrs) * ehdr.e_phnum);
->  
-> +	if (IS_ENABLED(CONFIG_FG_KASLR)) {
-> +		if (!nokaslr) {
-> +			parse_sections_headers(output, &ehdr, phdrs);
-> +			return;
-> +		} else {
-> +			warn("FG_KASLR disabled: 'nokaslr' on cmdline.");
-> +		}
-> +	}
-> +
->  	for (i = 0; i < ehdr.e_phnum; i++) {
->  		phdr = &phdrs[i];
->  
-> diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-> index 726e264410ff..f68f7fc39543 100644
-> --- a/arch/x86/boot/compressed/misc.h
-> +++ b/arch/x86/boot/compressed/misc.h
-> @@ -39,7 +39,12 @@
->  /* misc.c */
->  extern memptr free_mem_ptr;
->  extern memptr free_mem_end_ptr;
-> +#define STATIC
-> +#define STATIC_RW_DATA extern
-> +#include <linux/decompress/mm.h>
-> +
->  extern struct boot_params *boot_params;
-> +extern int nokaslr;
->  void __putstr(const char *s);
->  void __puthex(unsigned long value);
->  #define error_putstr(__x)  __putstr(__x)
-> @@ -74,6 +79,32 @@ struct mem_vector {
->  	unsigned long long size;
->  };
->  
-> +#ifdef CONFIG_X86_64
-> +#define Elf_Ehdr Elf64_Ehdr
-> +#define Elf_Phdr Elf64_Phdr
-> +#define Elf_Shdr Elf64_Shdr
-> +#else
-> +#define Elf_Ehdr Elf32_Ehdr
-> +#define Elf_Phdr Elf32_Phdr
-> +#define Elf_Shdr Elf32_Shdr
-> +#endif
-> +
-> +#if CONFIG_FG_KASLR
-> +void parse_sections_headers(void *output, Elf_Ehdr *ehdr, Elf_Phdr *phdrs);
-> +void pre_relocations_cleanup(unsigned long map);
-> +void post_relocations_cleanup(unsigned long map);
-> +Elf_Shdr *adjust_address(long *address);
-> +void adjust_relative_offset(long pc, long *value, Elf_Shdr *section);
-> +bool is_percpu_addr(long pc, long offset);
-> +#else
-> +static inline void parse_sections_headers(void *output, Elf_Ehdr *ehdr, Elf_Phdr *phdrs) { }
-> +static inline void pre_relocations_cleanup(unsigned long map) { }
-> +static inline void post_relocations_cleanup(unsigned long map) { }
-> +static inline Elf_Shdr *adjust_address(long *address) { return NULL; }
-> +static inline void adjust_relative_offset(long pc, long *value, Elf_Shdr *section) { }
-> +static inline bool is_percpu_addr(long pc, long offset) { return true; }
-> +#endif /* CONFIG_FG_KASLR */
-> +
->  #if CONFIG_RANDOMIZE_BASE
->  /* kaslr.c */
->  void choose_random_location(unsigned long input,
-> diff --git a/arch/x86/boot/compressed/utils.c b/arch/x86/boot/compressed/utils.c
-> new file mode 100644
-> index 000000000000..ceefc58d7c71
-> --- /dev/null
-> +++ b/arch/x86/boot/compressed/utils.c
-> @@ -0,0 +1,12 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * utils.c
-> + *
-> + * This contains various libraries that are needed for fgkaslr
-> + */
-> +#define __DISABLE_EXPORTS
-> +#define _LINUX_KPROBES_H
-> +#define NOKPROBE_SYMBOL(fname)
-> +#include "../../../../lib/sort.c"
-> +#include "../../../../lib/bsearch.c"
-> +
-> diff --git a/arch/x86/boot/compressed/vmlinux.symbols b/arch/x86/boot/compressed/vmlinux.symbols
-> new file mode 100644
-> index 000000000000..f48a4c396966
-> --- /dev/null
-> +++ b/arch/x86/boot/compressed/vmlinux.symbols
-> @@ -0,0 +1,18 @@
-> +kallsyms_offsets
-> +kallsyms_addresses
-> +kallsyms_num_syms
-> +kallsyms_relative_base
-> +kallsyms_names
-> +kallsyms_token_table
-> +kallsyms_token_index
-> +kallsyms_markers
-> +__start___ex_table
-> +__stop___ex_table
-> +_sinittext
-> +_einittext
-> +_stext
-> +_etext
-> +__start_orc_unwind_ip
-> +__stop_orc_unwind_ip
-> +__stop_orc_unwind
-> +__start_orc_unwind
-> diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
-> index 680c320363db..6918d33eb5ef 100644
-> --- a/arch/x86/include/asm/boot.h
-> +++ b/arch/x86/include/asm/boot.h
-> @@ -26,8 +26,19 @@
->  
->  #ifdef CONFIG_KERNEL_BZIP2
->  # define BOOT_HEAP_SIZE		0x400000
-> -#else /* !CONFIG_KERNEL_BZIP2 */
-> -# define BOOT_HEAP_SIZE		 0x10000
-> +#elif CONFIG_FG_KASLR
-> +/*
-> + * We need extra boot heap when using fgkaslr because we make a copy
-> + * of the original decompressed kernel to avoid issues with writing
-> + * over ourselves when shuffling the sections. We also need extra
-> + * space for resorting kallsyms after shuffling. This value could
-> + * be decreased if free() would release memory properly, or if we
-> + * could avoid the kernel copy. It would need to be increased if we
-> + * find additional tables that need to be resorted.
-> + */
-> +# define BOOT_HEAP_SIZE		0x4000000
-> +#else /* !CONFIG_KERNEL_BZIP2 && !CONFIG_FG_KASLR */
-> +# define BOOT_HEAP_SIZE		0x10000
->  #endif
->  
->  #ifdef CONFIG_X86_64
-> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-> index 34c02e4290fe..a85d1792d5a8 100644
-> --- a/include/uapi/linux/elf.h
-> +++ b/include/uapi/linux/elf.h
-> @@ -298,6 +298,7 @@ typedef struct elf64_phdr {
->  #define SHN_LIVEPATCH	0xff20
->  #define SHN_ABS		0xfff1
->  #define SHN_COMMON	0xfff2
-> +#define SHN_XINDEX	0xffff
->  #define SHN_HIRESERVE	0xffff
->   
->  typedef struct elf32_shdr {
-> -- 
-> 2.20.1
-> 
+  59566b0b622e ("x86/ftrace: Have ftrace trampolines turn read-only at the =
+end of system boot up")
 
+from Linus' tree.
+
+I applied the following merge fix patch (I don't know if this is
+correct, but it seemed reasonable):
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 15 May 2020 15:51:17 +1000
+Subject: [PATCH] fixup for "x86/ftrace: Have ftrace trampolines turn read-o=
+nly
+ at the end of system boot up"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ arch/x86/kernel/ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index f8917a6f25b7..c84d28e90a58 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -441,7 +441,7 @@ void set_ftrace_ops_ro(void)
+ 			end_offset =3D (unsigned long)ftrace_regs_caller_end;
+ 		} else {
+ 			start_offset =3D (unsigned long)ftrace_caller;
+-			end_offset =3D (unsigned long)ftrace_epilogue;
++			end_offset =3D (unsigned long)ftrace_caller_end;
+ 		}
+ 		size =3D end_offset - start_offset;
+ 		size =3D size + RET_SIZE + sizeof(void *);
+--=20
+2.26.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/aIFIPZzGRhDfalNTWdkuys_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6+L+sACgkQAVBC80lX
+0GyM6wf+J7Ag1vO4AUONZMa+sHn9E9wVS2e0B/AHlQzO/k7sogVLAqaGSLBidZI3
+SEtGM20ygAjD4yJHFk0cNY3w1T1xfsz/He3NwsoevpwsAR8ntp19PyiRkgifWqG7
+kNgUrF50qgamQ6nMhhdJ8LVjwEn2ZGDFZIsDMNWipHQlGRY5IWMPy6AeywWsBYRP
+EVrcfsvlmdzSjbuIeuknAa3HtLdMoFk5RLcB9ZgktooyzBIddnq2YMzbl+y4+USP
+Kf1gGRF4E+OF4qa1dUK3Y8JDCn8YBQPGZWSe8g8xn3feRH0LPltXRQ+5iMZefHff
+zA/22F7VkCxMpnuf10FhkeaFbcB0kA==
+=vwup
+-----END PGP SIGNATURE-----
+
+--Sig_/aIFIPZzGRhDfalNTWdkuys_--
