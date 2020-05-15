@@ -2,76 +2,94 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D81C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5866DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 740CD206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E4C206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:23:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gnu6BnKS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KrGrI4Yt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgEOQUP (ORCPT
+        id S1726234AbgEOQXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:20:15 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:40565 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726144AbgEOQUP (ORCPT
+        Fri, 15 May 2020 12:23:07 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:59612 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726162AbgEOQXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:20:15 -0400
-X-UUID: cb4ebb84f2be4272bb1d3a1d06bf0b75-20200516
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=daT5vIjMMWKHxeEq35Hg3A5bQddsffUWP1nkfOQhP6s=;
-        b=gnu6BnKSdmTStfX/P09VcThW+EUE3y4Z1paN2zromqco3UYPQuJtgzn0olhgqNNqQBIN4gUl02xHN+H9SQdZHW5wy4/DwSHjsGvRs+eraYt8dKHfbncVCNdJqfkytYgjSKXflUAQt6pjl/tlauw0qQHuWYwVtRPNImfMhnX/ZcU=;
-X-UUID: cb4ebb84f2be4272bb1d3a1d06bf0b75-20200516
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1911322180; Sat, 16 May 2020 00:19:54 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS32N2.mediatek.inc (172.27.4.72) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sat, 16 May 2020 00:19:54 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 16 May 2020 00:19:43 +0800
-Message-ID: <1589559587.28571.0.camel@mtksdaap41>
-Subject: Re: [PATCH v8 2/3] drivers: input: keyboard: Add mtk keypad driver
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Marco Felsch <m.felsch@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Fengping Yu <fengping.yu@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Sat, 16 May 2020 00:19:47 +0800
-In-Reply-To: <20200515114044.GR185537@smile.fi.intel.com>
-References: <20200515062007.28346-1-fengping.yu@mediatek.com>
-         <20200515062007.28346-3-fengping.yu@mediatek.com>
-         <20200515093016.rw5bmvoumgzvkqrc@pengutronix.de>
-         <20200515114044.GR185537@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 15 May 2020 12:23:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589559786; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=jr+Pq8PUO8hvm/NpQeG3PNW0H4SGlfkDWJS5UbVcagI=; b=KrGrI4YtU4GrXPZXiiIluLXS8JwEdnvBClWQ0AwE0F7ra+8m1MvN8CEv1IPi0gAjVYri+x80
+ CA9ENe3Utzn9OehM2oDiXaEWpzyoHhBjKR3d9zldxpV57hKUXdx5AiHmvX9OMy5dI+Jrglbo
+ SrK8DrNXVXYaIruG5q9oueHqrOQ=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebec1d8.7fb2f0ea4dc0-smtp-out-n04;
+ Fri, 15 May 2020 16:22:48 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5D260C4478C; Fri, 15 May 2020 16:22:48 +0000 (UTC)
+Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 13E12C433F2;
+        Fri, 15 May 2020 16:22:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 13E12C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Tingwei Zhang <tingwei@codeaurora.org>,
+        coresight@lists.linaro.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv3 0/2] coresight: etm4x: Add support to skip trace unit power up
+Date:   Fri, 15 May 2020 21:52:31 +0530
+Message-Id: <cover.1589558615.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 504A2C560B75F9C0E94BF133E726E79914057E37B5687E4BA8C310B10E096B912000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA1LTE1IGF0IDE0OjQwICswMzAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
-DQo+IE9uIEZyaSwgTWF5IDE1LCAyMDIwIGF0IDExOjMwOjE2QU0gKzAyMDAsIE1hcmNvIEZlbHNj
-aCB3cm90ZToNCj4gPiBPbiAyMC0wNS0xNSAxNDoyMCwgRmVuZ3BpbmcgWXUgd3JvdGU6DQo+IA0K
-PiAuLi4NCj4gDQo+ID4gPiArCWRlcGVuZHMgb24gT0YgJiYgSEFWRV9DTEsNCj4gPiANCj4gPiBQ
-bGVhc2UgZHJvcCB0aG9zZSBkZXBzIGFuZCBpbnN0ZWFkIHVzZToNCj4gDQo+ICsxDQo+IA0KPiA+
-IGRlcGVuZHMgb24gQVJDSF9NRURJQVRFSyAmJiBBUk02NA0KPiANCj4gSSB3b3VsZCBnbyBldmVu
-IGZ1cnRoZXINCj4gCWRlcGVuZHMgb24gKEFSQ0hfTUVESUFURUsgJiYgQVJNNjQpIHx8IENPTVBJ
-TEVfVEVTVA0KDQpQbGVhc2UgZHJvcCBBUk02NC4gVGhpcyB3b3JrcyBmb3IgMzJiaXRzIFNvQyBh
-cyB3ZWxsLg0KDQpKb2UuQw0KDQoNCg==
+This series adds support to skip powering up of trace unit on systems
+with an errata which stops CPU watchdog counter when power up bit is
+set (TRCPDCR.PU = 1). Setting this bit is not required on Qualcomm
+Technologies Inc. chipsets where this errata exists since the ETMs
+are in the same power domain as their respective CPU cores.
 
+Changes since v2:
+ * Fix checkpatch warning for 80 characters.
+
+Changes since v1:
+ * Use qcom,skip-power-up for naming as suggested by Mathieu.
+ * Have check for DT property in initialization as per Mathieu.
+ * Reword description for property as per Mathieu.
+ * Split up dt-binding patch as checkpatch complains.
+
+Tingwei Zhang (2):
+  coresight: etm4x: Add support to skip trace unit power up
+  dt-bindings: arm: coresight: Add support to skip trace unit power up
+
+ .../devicetree/bindings/arm/coresight.txt     |  7 +++++
+ drivers/hwtracing/coresight/coresight-etm4x.c | 27 ++++++++++++-------
+ drivers/hwtracing/coresight/coresight-etm4x.h |  3 +++
+ 3 files changed, 27 insertions(+), 10 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
