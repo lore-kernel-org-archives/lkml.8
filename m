@@ -2,69 +2,155 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 986CE20657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E01D20657
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:41:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ShnRSmvL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgEORk4 (ORCPT
+        id S1726407AbgEORlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:40:56 -0400
-Received: from ms.lwn.net ([45.79.88.28]:53508 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726223AbgEORkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:40:55 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 15 May 2020 13:41:53 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22728 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726144AbgEORlw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:41:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589564511;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=obvdaqrDmOo0TZ7H8EUPrGh8lXy9dD8Hldwr4knbgD0=;
+        b=ShnRSmvLeXh64VW5XDoTeIZrrEQvJBzCj6wLSV9bHNcPjRcExZU1L4rjJsxIwG9DaoRf6r
+        vQPTmHhjLMt9+p/De0qPpJc5siJXaP/s0/FwWJMjEyNN4MJ1xDCCgI09v7DcnZubedvYiv
+        Hu05w7YH2tTrT3Dsyb4a9b5qZLR5sSw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-FwbIl2CVOiiBBWetwE2nzw-1; Fri, 15 May 2020 13:41:48 -0400
+X-MC-Unique: FwbIl2CVOiiBBWetwE2nzw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 9BE0672D;
-        Fri, 15 May 2020 17:40:55 +0000 (UTC)
-Date:   Fri, 15 May 2020 11:40:54 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] docs: acpi: fix old http link and improve document
- format
-Message-ID: <20200515114054.2496c171@lwn.net>
-In-Reply-To: <1588673836-9954-2-git-send-email-f.suligoi@asem.it>
-References: <1588673836-9954-1-git-send-email-f.suligoi@asem.it>
-        <1588673836-9954-2-git-send-email-f.suligoi@asem.it>
-Organization: LWN.net
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 43DEA83DE2B;
+        Fri, 15 May 2020 17:41:47 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 979C210002CD;
+        Fri, 15 May 2020 17:41:46 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Cathy Avery <cavery@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: [PATCH 1/7] KVM: SVM: move map argument out of enter_svm_guest_mode
+Date:   Fri, 15 May 2020 13:41:38 -0400
+Message-Id: <20200515174144.1727-2-pbonzini@redhat.com>
+In-Reply-To: <20200515174144.1727-1-pbonzini@redhat.com>
+References: <20200515174144.1727-1-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 12:17:16 +0200
-Flavio Suligoi <f.suligoi@asem.it> wrote:
+Unmapping the nested VMCB in enter_svm_guest_mode is a bit of a wart,
+since the map is not used elsewhere in the function.  There are
+just two calls, so move it there.
 
-> The website:
-> 
->     http://wiki.minnowboard.org
-> 
-> doesn't exist anymore. The same pages are moved to:
-> 
->     https://www.elinux.org/Minnowboard
-> 
-> Other improvements concern the introduction of some rst
-> semantic markup in the document.
-> 
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/svm/nested.c | 14 ++++++--------
+ arch/x86/kvm/svm/svm.c    |  3 ++-
+ arch/x86/kvm/svm/svm.h    |  2 +-
+ 3 files changed, 9 insertions(+), 10 deletions(-)
 
-Thanks for updating the URL.  The markup changes are a bit heavy-handed,
-though; could I ask you to redo it without that.  In particular, there is
-no real need to put file paths in ``literal text``, but that does clutter
-up the reading experience significantly.
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index a89a166d1cb8..22f75f66084f 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -226,7 +226,7 @@ static bool nested_vmcb_checks(struct vmcb *vmcb)
+ }
+ 
+ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+-			  struct vmcb *nested_vmcb, struct kvm_host_map *map)
++			  struct vmcb *nested_vmcb)
+ {
+ 	bool evaluate_pending_interrupts =
+ 		is_intercept(svm, INTERCEPT_VINTR) ||
+@@ -305,8 +305,6 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+ 	svm->vmcb->control.pause_filter_thresh =
+ 		nested_vmcb->control.pause_filter_thresh;
+ 
+-	kvm_vcpu_unmap(&svm->vcpu, map, true);
+-
+ 	/* Enter Guest-Mode */
+ 	enter_guest_mode(&svm->vcpu);
+ 
+@@ -369,10 +367,7 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
+ 		nested_vmcb->control.exit_code_hi = 0;
+ 		nested_vmcb->control.exit_info_1  = 0;
+ 		nested_vmcb->control.exit_info_2  = 0;
+-
+-		kvm_vcpu_unmap(&svm->vcpu, &map, true);
+-
+-		return ret;
++		goto out;
+ 	}
+ 
+ 	trace_kvm_nested_vmrun(svm->vmcb->save.rip, vmcb_gpa,
+@@ -415,7 +410,7 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
+ 	copy_vmcb_control_area(hsave, vmcb);
+ 
+ 	svm->nested.nested_run_pending = 1;
+-	enter_svm_guest_mode(svm, vmcb_gpa, nested_vmcb, &map);
++	enter_svm_guest_mode(svm, vmcb_gpa, nested_vmcb);
+ 
+ 	if (!nested_svm_vmrun_msrpm(svm)) {
+ 		svm->vmcb->control.exit_code    = SVM_EXIT_ERR;
+@@ -426,6 +421,9 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
+ 		nested_svm_vmexit(svm);
+ 	}
+ 
++out:
++	kvm_vcpu_unmap(&svm->vcpu, &map, true);
++
+ 	return ret;
+ }
+ 
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 4e9cd2a73ad0..dc12a03d16f6 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3843,7 +3843,8 @@ static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
+ 		if (kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb), &map) == -EINVAL)
+ 			return 1;
+ 		nested_vmcb = map.hva;
+-		enter_svm_guest_mode(svm, vmcb, nested_vmcb, &map);
++		enter_svm_guest_mode(svm, vmcb, nested_vmcb);
++		kvm_vcpu_unmap(&svm->vcpu, &map, true);
+ 	}
+ 	return 0;
+ }
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 5cc559ab862d..730eb7242930 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -397,7 +397,7 @@ static inline bool nested_exit_on_nmi(struct vcpu_svm *svm)
+ }
+ 
+ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+-			  struct vmcb *nested_vmcb, struct kvm_host_map *map);
++			  struct vmcb *nested_vmcb);
+ int nested_svm_vmrun(struct vcpu_svm *svm);
+ void nested_svm_vmloadsave(struct vmcb *from_vmcb, struct vmcb *to_vmcb);
+ int nested_svm_vmexit(struct vcpu_svm *svm);
+-- 
+2.18.2
 
-Thanks,
 
-jon
