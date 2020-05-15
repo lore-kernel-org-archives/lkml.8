@@ -2,106 +2,129 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E96C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38DEC20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3B420709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:12:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UoncJL2B"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="NiQbku4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgEOKMd (ORCPT
+        id S1728266AbgEOKMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:12:33 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35371 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728083AbgEOKMd (ORCPT
+        Fri, 15 May 2020 06:12:47 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:44930 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728050AbgEOKMq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:12:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589537551;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        Fri, 15 May 2020 06:12:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1589537564; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0MKoWH/rG+jrDQ9BJKMgClfKWi0OU8i02iZINw2Eoiw=;
-        b=UoncJL2BiGZmXOHftuvoO0l63bhbcD8Sowd86xuUjqhtGUVI0NbQIjeBd/1te/nQn5DmM9
-        ty2yCX/c6h2jXn6ismutnCysnYPy91lwz8MgPU2Dh/Qd51olq67N961nNelU/xKtpiFSoK
-        /RsbqazdY72YpghSViPcG1OZBfmDy5o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-29-FfsBUAj5OSSzyVChPXN-GA-1; Fri, 15 May 2020 06:12:30 -0400
-X-MC-Unique: FfsBUAj5OSSzyVChPXN-GA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01163189952E;
-        Fri, 15 May 2020 10:12:28 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-115-145.ams2.redhat.com [10.36.115.145])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0554A26E41;
-        Fri, 15 May 2020 10:12:26 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id EB6CF16E16; Fri, 15 May 2020 12:12:24 +0200 (CEST)
-Date:   Fri, 15 May 2020 12:12:24 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
+        bh=M/ePh4YMLWBTL9hyhzqUgUQ4fXudSnPsmWQ/+DO/jDI=;
+        b=NiQbku4jdQcDOxNquHeMhn1m5LxhL3LJZ2WTO7CcLadmmETPPamlO/NiaFdg9HKSvQ97al
+        qqo0OAkpXFMg/k3pf+5hraTU0B0/wJ9h7iLhnKKiflNymqRqCs5ew7ChK3jOnqjr0WBUo6
+        gIaV4UPZoQPdphURMUF3/KzzcABU8iM=
+Date:   Fri, 15 May 2020 12:12:33 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] drm/etnaviv: fix perfmon domain interation
+To:     Christian Gmeiner <christian.gmeiner@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v5 25/38] drm: virtio: fix common struct sg_table related
- issues
-Message-ID: <20200515101224.vrr6rlzgwc6d35az@sirius.home.kraxel.org>
-References: <20200513132114.6046-1-m.szyprowski@samsung.com>
- <20200513133245.6408-1-m.szyprowski@samsung.com>
- <CGME20200513133314eucas1p2f04e32d65e71c613a2a9aacb29064a7d@eucas1p2.samsung.com>
- <20200513133245.6408-25-m.szyprowski@samsung.com>
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>
+Message-Id: <X0BDAQ.L99CTJZCDEJE3@crapouillou.net>
+In-Reply-To: <CAH9NwWcJNhUVkzd0KAfJyxNZJ9a71KLzipW+qRwhgEWUmnnxmg@mail.gmail.com>
+References: <20200511123846.96594-1-christian.gmeiner@gmail.com>
+        <CAH9NwWcJNhUVkzd0KAfJyxNZJ9a71KLzipW+qRwhgEWUmnnxmg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513133245.6408-25-m.szyprowski@samsung.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 03:32:32PM +0200, Marek Szyprowski wrote:
-> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-> returns the number of the created entries in the DMA address space.
-> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-> dma_unmap_sg must be called with the original number of the entries
-> passed to the dma_map_sg().
-> 
-> struct sg_table is a common structure used for describing a non-contiguous
-> memory buffer, used commonly in the DRM and graphics subsystems. It
-> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-> and DMA mapped pages (nents entry).
-> 
-> It turned out that it was a common mistake to misuse nents and orig_nents
-> entries, calling DMA-mapping functions with a wrong number of entries or
-> ignoring the number of mapped entries returned by the dma_map_sg()
-> function.
-> 
-> To avoid such issues, lets use a common dma-mapping wrappers operating
-> directly on the struct sg_table objects and use scatterlist page
-> iterators where possible. This, almost always, hides references to the
-> nents and orig_nents entries, making the code robust, easier to follow
-> and copy/paste safe.
+Hi Christian,
 
-Looks all sane.
+Le ven. 15 mai 2020 =E0 12:09, Christian Gmeiner=20
+<christian.gmeiner@gmail.com> a =E9crit :
+> Am Mo., 11. Mai 2020 um 14:38 Uhr schrieb Christian Gmeiner
+> <christian.gmeiner@gmail.com>:
+>>=20
+>>  The GC860 has one GPU device which has a 2d and 3d core. In this=20
+>> case
+>>  we want to expose perfmon information for both cores.
+>>=20
+>>  The driver has one array which contains all possible perfmon domains
+>>  with some meta data - doms_meta. Here we can see that for the GC860
+>>  two elements of that array are relevant:
+>>=20
+>>    doms_3d: is at index 0 in the doms_meta array with 8 perfmon=20
+>> domains
+>>    doms_2d: is at index 1 in the doms_meta array with 1 perfmon=20
+>> domain
+>>=20
+>>  The userspace driver wants to get a list of all perfmon domains and
+>>  their perfmon signals. This is done by iterating over all domains=20
+>> and
+>>  their signals. If the userspace driver wants to access the domain=20
+>> with
+>>  id 8 the kernel driver fails and returns invalid data from doms_3d=20
+>> with
+>>  and invalid offset.
+>>=20
+>>  This results in:
+>>    Unable to handle kernel paging request at virtual address 00000000
+>>=20
+>>  On such a device it is not possible to use the userspace driver at=20
+>> all.
+>>=20
+>>  The fix for this off-by-one error is quite simple.
+>>=20
+>>  Reported-by: Paul Cercueil <paul@crapouillou.net>
+>>  Tested-by: Paul Cercueil <paul@crapouillou.net>
+>>  Fixes: ed1dd899baa3 ("drm/etnaviv: rework perfmon query=20
+>> infrastructure")
+>>  Cc: stable@vger.kernel.org
+>>  Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+>>  ---
+>>   drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>>  diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c=20
+>> b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+>>  index e6795bafcbb9..35f7171e779a 100644
+>>  --- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+>>  +++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+>>  @@ -453,7 +453,7 @@ static const struct etnaviv_pm_domain=20
+>> *pm_domain(const struct etnaviv_gpu *gpu,
+>>                  if (!(gpu->identity.features & meta->feature))
+>>                          continue;
+>>=20
+>>  -               if (meta->nr_domains < (index - offset)) {
+>>  +               if ((meta->nr_domains - 1) < (index - offset)) {
+>>                          offset +=3D meta->nr_domains;
+>>                          continue;
+>>                  }
+>>  --
+>>  2.26.2
+>>=20
+>=20
+> ping
 
-Acked-by: Gerd Hoffmann <kraxel@redhat.com>
+I'll merge it tomorrow if there's no further feedback.
 
-take care,
-  Gerd
+-Paul
+
 
