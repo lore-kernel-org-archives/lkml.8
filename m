@@ -2,207 +2,107 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F03C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BD9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60C942065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C34F206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:35:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lvHWU6Ve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgEOFeQ (ORCPT
+        id S1726496AbgEOFfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 01:34:16 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18658 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgEOFeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 01:34:16 -0400
-IronPort-SDR: 8qFklpnb/1JJC2nfv4a+bwILfNy7OvgUxstd+dI4u3adXtfMR4tAbpMjA3OoGcnqNaqIPRYC9p
- VyeeOp9ZrF1A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 22:34:11 -0700
-IronPort-SDR: uXufvtbniNnroduGJRKqmguWgO7u5amVn2dGMryEBVmoJLuY1ceHizxjTL0+pWKPKwz7qze9Z+
- Zcao8twYoWew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,394,1583222400"; 
-   d="scan'208";a="266493650"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 14 May 2020 22:34:09 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jZSz3-000FC1-9S; Fri, 15 May 2020 13:34:09 +0800
-Date:   Fri, 15 May 2020 13:33:20 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: drivers/vhost/vhost.c:1014:16: sparse: sparse: cast to restricted
- __virtio16
-Message-ID: <202005151312.W9HdqsHa%lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 15 May 2020 01:35:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726314AbgEOFfF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 01:35:05 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8879C05BD0A
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:35:04 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id c20so1225238qtw.11
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Qx5/VgfsCB/0k5IE7hJvg2xd2TLeiyTwpbJCbmIdWvI=;
+        b=lvHWU6VeXu6KapJJkibDasYRuW+k6b/OfIy63ABvf5/06XyVIw7icDWGXVSOOkM7hL
+         S6vwzrEjQQEtfi6SNZkmBp11uUzyJCuP7CWjecdBDIck4uWCgF9P8NCf4jItObYNDeP7
+         g04ubuy4+WgB0GMQXY1aKTDPvv+xtoysuQbwRn9O9BYtEKx901rHzXNSgdfuYjxBRIGV
+         5JG1us+oGljF3deg6Hx8SJi81zFbyc/RjO/ZKsL28wGWlZoYqlU85740UsvcADKZk/zz
+         evtsHRbTQ9QBny9Svq/nHXX9ZqhL2HBKyrnBxBuQrTEcjoHjCpYZuiD4AkiUSMpc6zd+
+         +hkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Qx5/VgfsCB/0k5IE7hJvg2xd2TLeiyTwpbJCbmIdWvI=;
+        b=FsPU0gGnCMfUk0gue6qMBWu33DusDnuPjznt2TXzrA1HqI+oRJAEteJBBeTK4DqVH/
+         gJdho6YMAjHUKTOXQZqRCJCyfg9LL5XYDPffHh6GRYcc29rpL9Q5ZAJ26yQddKycS2pv
+         VHa7yuLNMVuuO93DQDg0E/hoS0uJ7uMYBSodvKTI2GvGn9a2jJuAM+JD/grp6jgLSstv
+         35k6yxnOqRFq2mCSGOOhvp449XaYCz5+QnEiol0nnKulBULJv2lLDNZBXyNC0m+lEXlz
+         l+xXxX9v3Cz2lgRIY0SXik7Mc2xfnmP/lnP2pUfGoQIQP5fBSk79j21HvUq/GSN74tFr
+         t+CA==
+X-Gm-Message-State: AOAM532Ao/FxycHGxsXKEeFL7+UrCDKfEaq6+GW8BblO/p5x0AtuUCkF
+        5LjcmWGbKTFzvVJzUliw/rvGRij8zcvI5uw=
+X-Google-Smtp-Source: ABdhPJzkZ7NwIirUL48KLBVkTRpO1s4i8GVWXAgGGRuJllEo33MlBuGiIXJOZt5DKrCCh2wbIIR0gtSAnJblP6g=
+X-Received: by 2002:ad4:4c4f:: with SMTP id cs15mr1776465qvb.117.1589520903895;
+ Thu, 14 May 2020 22:35:03 -0700 (PDT)
+Date:   Thu, 14 May 2020 22:34:56 -0700
+Message-Id: <20200515053500.215929-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
+Subject: [PATCH v1 0/4] Optimize fw_devlink parsing
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Ji Luo <ji.luo@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+When fw_devlink is enabled on hardware with a large number of device
+tree nodes, the initial device addition done in
+of_platform_default_populate_init() can be very inefficient. This is
+because most devices will fail to find all their suppliers when they are
+added and will keep trying to parse their device tree nodes and link to
+any newly added devices
 
-First bad commit (maybe != root cause):
+This was an item on my TODO list that I'm finally getting around to. On
+hardware I'm testing on, this saved 1.216 _seconds_!  Another SoC vendor
+was also able to test a similar but hacky patch series and confirmed
+that it saved them around 1 second.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   1ae7efb388540adc1653a51a3bc3b2c9cef5ec1a
-commit: 20c384f1ea1a0bc7320bc445c72dd02d2970d594 vhost: refine vhost and vringh kconfig
-date:   6 weeks ago
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-193-gb8fad4bc-dirty
-        git checkout 20c384f1ea1a0bc7320bc445c72dd02d2970d594
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+Thanks,
+Saravana
+P.S: It took me longer to write the comments than the code!
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
+Saravana Kannan (4):
+  driver core: Move code to the right part of the file
+  driver core: Look for waiting consumers only for a fwnode's primary
+    device
+  driver core: fw_devlink: Add support for batching fwnode parsing
+  of: platform: Batch fwnode parsing when adding all top level devices
 
+ drivers/base/base.h    |   1 +
+ drivers/base/core.c    | 193 ++++++++++++++++++++++++++++++++---------
+ drivers/base/dd.c      |   8 ++
+ drivers/of/platform.c  |   2 +
+ include/linux/fwnode.h |   2 +
+ 5 files changed, 164 insertions(+), 42 deletions(-)
 
-sparse warnings: (new ones prefixed by >>)
+-- 
+2.26.2.761.g0e0b3e54be-goog
 
-   drivers/vhost/vhost.c:753:17: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void [noderef] <asn:1> * @@    got n:1> * @@
-   drivers/vhost/vhost.c:753:17: sparse:    expected void [noderef] <asn:1> *
-   drivers/vhost/vhost.c:753:17: sparse:    got void *
-   drivers/vhost/vhost.c:753:17: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void [noderef] <asn:1> * @@    got n:1> * @@
-   drivers/vhost/vhost.c:753:17: sparse:    expected void [noderef] <asn:1> *
-   drivers/vhost/vhost.c:753:17: sparse:    got void *
-   drivers/vhost/vhost.c:753:17: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void [noderef] <asn:1> * @@    got n:1> * @@
-   drivers/vhost/vhost.c:753:17: sparse:    expected void [noderef] <asn:1> *
-   drivers/vhost/vhost.c:753:17: sparse:    got void *
-   drivers/vhost/vhost.c:937:16: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void *addr @@    got restricted __virtio16 [noderef] <asvoid *addr @@
-   drivers/vhost/vhost.c:937:16: sparse:    expected void *addr
-   drivers/vhost/vhost.c:937:16: sparse:    got restricted __virtio16 [noderef] <asn:1> *
-   drivers/vhost/vhost.c:900:42: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void [noderef] <asn:1> *addr @@    got n:1> *addr @@
-   drivers/vhost/vhost.c:900:42: sparse:    expected void [noderef] <asn:1> *addr
-   drivers/vhost/vhost.c:900:42: sparse:    got void *addr
-   drivers/vhost/vhost.c:753:17: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void [noderef] <asn:1> * @@    got n:1> * @@
-   drivers/vhost/vhost.c:753:17: sparse:    expected void [noderef] <asn:1> *
-   drivers/vhost/vhost.c:753:17: sparse:    got void *
-   drivers/vhost/vhost.c:922:16: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void *addr @@    got restricted __virtio16 [noderef] [usertype] <asvoid *addr @@
-   drivers/vhost/vhost.c:922:16: sparse:    expected void *addr
-   drivers/vhost/vhost.c:922:16: sparse:    got restricted __virtio16 [noderef] [usertype] <asn:1> *
-   drivers/vhost/vhost.c:900:42: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void [noderef] <asn:1> *addr @@    got n:1> *addr @@
-   drivers/vhost/vhost.c:900:42: sparse:    expected void [noderef] <asn:1> *addr
-   drivers/vhost/vhost.c:900:42: sparse:    got void *addr
-   drivers/vhost/vhost.c:753:17: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void [noderef] <asn:1> * @@    got n:1> * @@
-   drivers/vhost/vhost.c:753:17: sparse:    expected void [noderef] <asn:1> *
-   drivers/vhost/vhost.c:753:17: sparse:    got void *
->> drivers/vhost/vhost.c:1014:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:1014:16: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void *addr @@    got restricted __virtio16 [noderef] <asvoid *addr @@
-   drivers/vhost/vhost.c:1014:16: sparse:    expected void *addr
-   drivers/vhost/vhost.c:1014:16: sparse:    got restricted __virtio16 [noderef] <asn:1> *
->> drivers/vhost/vhost.c:1014:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:900:42: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void [noderef] <asn:1> *addr @@    got n:1> *addr @@
-   drivers/vhost/vhost.c:900:42: sparse:    expected void [noderef] <asn:1> *addr
-   drivers/vhost/vhost.c:900:42: sparse:    got void *addr
-   drivers/vhost/vhost.c:753:17: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void [noderef] <asn:1> * @@    got n:1> * @@
-   drivers/vhost/vhost.c:753:17: sparse:    expected void [noderef] <asn:1> *
-   drivers/vhost/vhost.c:753:17: sparse:    got void *
-   drivers/vhost/vhost.c:989:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:989:16: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void *addr @@    got restricted __virtio16 [noderef] <asvoid *addr @@
-   drivers/vhost/vhost.c:989:16: sparse:    expected void *addr
-   drivers/vhost/vhost.c:989:16: sparse:    got restricted __virtio16 [noderef] <asn:1> *
-   drivers/vhost/vhost.c:989:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:900:42: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void [noderef] <asn:1> *addr @@    got n:1> *addr @@
-   drivers/vhost/vhost.c:900:42: sparse:    expected void [noderef] <asn:1> *addr
-   drivers/vhost/vhost.c:900:42: sparse:    got void *addr
-   drivers/vhost/vhost.c:753:17: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void [noderef] <asn:1> * @@    got n:1> * @@
-   drivers/vhost/vhost.c:753:17: sparse:    expected void [noderef] <asn:1> *
-   drivers/vhost/vhost.c:753:17: sparse:    got void *
-   drivers/vhost/vhost.c:995:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:995:16: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void *addr @@    got restricted __virtio16 [noderef] <asvoid *addr @@
-   drivers/vhost/vhost.c:995:16: sparse:    expected void *addr
-   drivers/vhost/vhost.c:995:16: sparse:    got restricted __virtio16 [noderef] <asn:1> *
-   drivers/vhost/vhost.c:995:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:900:42: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void [noderef] <asn:1> *addr @@    got n:1> *addr @@
-   drivers/vhost/vhost.c:900:42: sparse:    expected void [noderef] <asn:1> *addr
-   drivers/vhost/vhost.c:900:42: sparse:    got void *addr
-   drivers/vhost/vhost.c:753:17: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void [noderef] <asn:1> * @@    got n:1> * @@
-   drivers/vhost/vhost.c:753:17: sparse:    expected void [noderef] <asn:1> *
-   drivers/vhost/vhost.c:753:17: sparse:    got void *
-   drivers/vhost/vhost.c:944:16: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void *addr @@    got restricted __virtio16 [noderef] <asvoid *addr @@
-   drivers/vhost/vhost.c:944:16: sparse:    expected void *addr
-   drivers/vhost/vhost.c:944:16: sparse:    got restricted __virtio16 [noderef] <asn:1> *
-   drivers/vhost/vhost.c:900:42: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void [noderef] <asn:1> *addr @@    got n:1> *addr @@
-   drivers/vhost/vhost.c:900:42: sparse:    expected void [noderef] <asn:1> *addr
-   drivers/vhost/vhost.c:900:42: sparse:    got void *addr
-   drivers/vhost/vhost.c:753:17: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void [noderef] <asn:1> * @@    got n:1> * @@
-   drivers/vhost/vhost.c:753:17: sparse:    expected void [noderef] <asn:1> *
-   drivers/vhost/vhost.c:753:17: sparse:    got void *
-   drivers/vhost/vhost.c:1002:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:1002:16: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void *addr @@    got restricted __virtio16 [noderef] <asvoid *addr @@
-   drivers/vhost/vhost.c:1002:16: sparse:    expected void *addr
-   drivers/vhost/vhost.c:1002:16: sparse:    got restricted __virtio16 [noderef] <asn:1> *
-   drivers/vhost/vhost.c:1002:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:900:42: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void [noderef] <asn:1> *addr @@    got n:1> *addr @@
-   drivers/vhost/vhost.c:900:42: sparse:    expected void [noderef] <asn:1> *addr
-   drivers/vhost/vhost.c:900:42: sparse:    got void *addr
-   drivers/vhost/vhost.c:753:17: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void [noderef] <asn:1> * @@    got n:1> * @@
-   drivers/vhost/vhost.c:753:17: sparse:    expected void [noderef] <asn:1> *
-   drivers/vhost/vhost.c:753:17: sparse:    got void *
-   drivers/vhost/vhost.c:1008:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:1008:16: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void *addr @@    got restricted __virtio16 [noderef] [usertype] <asvoid *addr @@
-   drivers/vhost/vhost.c:1008:16: sparse:    expected void *addr
-   drivers/vhost/vhost.c:1008:16: sparse:    got restricted __virtio16 [noderef] [usertype] <asn:1> *
-   drivers/vhost/vhost.c:1008:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:900:42: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void [noderef] <asn:1> *addr @@    got n:1> *addr @@
-   drivers/vhost/vhost.c:900:42: sparse:    expected void [noderef] <asn:1> *addr
-   drivers/vhost/vhost.c:900:42: sparse:    got void *addr
-   drivers/vhost/vhost.c:753:17: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void [noderef] <asn:1> * @@    got n:1> * @@
-   drivers/vhost/vhost.c:753:17: sparse:    expected void [noderef] <asn:1> *
-   drivers/vhost/vhost.c:753:17: sparse:    got void *
-   drivers/vhost/vhost.c:989:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:989:16: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void *addr @@    got restricted __virtio16 [noderef] <asvoid *addr @@
-   drivers/vhost/vhost.c:989:16: sparse:    expected void *addr
-   drivers/vhost/vhost.c:989:16: sparse:    got restricted __virtio16 [noderef] <asn:1> *
-   drivers/vhost/vhost.c:989:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:900:42: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void [noderef] <asn:1> *addr @@    got n:1> *addr @@
-   drivers/vhost/vhost.c:900:42: sparse:    expected void [noderef] <asn:1> *addr
-   drivers/vhost/vhost.c:900:42: sparse:    got void *addr
-   drivers/vhost/vhost.c:753:17: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void [noderef] <asn:1> * @@    got n:1> * @@
-   drivers/vhost/vhost.c:753:17: sparse:    expected void [noderef] <asn:1> *
-   drivers/vhost/vhost.c:753:17: sparse:    got void *
-   drivers/vhost/vhost.c:989:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:989:16: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void *addr @@    got restricted __virtio16 [noderef] <asvoid *addr @@
-   drivers/vhost/vhost.c:989:16: sparse:    expected void *addr
-   drivers/vhost/vhost.c:989:16: sparse:    got restricted __virtio16 [noderef] <asn:1> *
-   drivers/vhost/vhost.c:989:16: sparse: sparse: cast to restricted __virtio16
-   drivers/vhost/vhost.c:900:42: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void [noderef] <asn:1> *addr @@    got n:1> *addr @@
-   drivers/vhost/vhost.c:900:42: sparse:    expected void [noderef] <asn:1> *addr
-   drivers/vhost/vhost.c:900:42: sparse:    got void *addr
-   drivers/vhost/vhost.c:753:17: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void [noderef] <asn:1> * @@    got n:1> * @@
-   drivers/vhost/vhost.c:753:17: sparse:    expected void [noderef] <asn:1> *
-   drivers/vhost/vhost.c:753:17: sparse:    got void *
-
-vim +1014 drivers/vhost/vhost.c
-
-7b5d753ebc22c5 Jason Wang 2019-05-24  1010  
-7b5d753ebc22c5 Jason Wang 2019-05-24  1011  static inline int vhost_get_used_idx(struct vhost_virtqueue *vq,
-7b5d753ebc22c5 Jason Wang 2019-05-24  1012  				     __virtio16 *idx)
-7b5d753ebc22c5 Jason Wang 2019-05-24  1013  {
-7b5d753ebc22c5 Jason Wang 2019-05-24 @1014  	return vhost_get_used(vq, *idx, &vq->used->idx);
-7b5d753ebc22c5 Jason Wang 2019-05-24  1015  }
-7b5d753ebc22c5 Jason Wang 2019-05-24  1016  
-
-:::::: The code at line 1014 was first introduced by commit
-:::::: 7b5d753ebc22c5b6935a70ce9a857dc6220784f8 vhost: fine grain userspace memory accessors
-
-:::::: TO: Jason Wang <jasowang@redhat.com>
-:::::: CC: Michael S. Tsirkin <mst@redhat.com>
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
