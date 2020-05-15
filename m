@@ -7,187 +7,99 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBD5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4773C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9AA2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE975206DC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589511608;
-	bh=o461O1VN8+GikyE4m6q0vZ6eip5p9sPvEENcukkNYQQ=;
+	s=default; t=1589511698;
+	bh=9cq6wDSaS8rgFO3PFz1aGXsS0WfdMO9i+hjf6cuabKw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QnBelP8wAMs1p4qYXavAb2Zfwwp6RhVf9tZCmDxktafpXkuIGsGLs/JDmCEy7PavT
-	 3I1RWe3dq5hXHqcey3XbKQO0kO0i+g0IQTnRXauZf9K5dHqXReJacJcSqb0Vosehja
-	 MqJoGs3GnVqzA7rwChJzcfmSQWN+VMcEUwmo1OC0=
+	b=QX4KSCQslY/7cJ6oQbSVyymECX+Q60CoImSiuHicGXmZcNXHVFiCfS9iQrvoL3k+M
+	 OSM/Mnf1D4lj9KMJwInO/ebXPh1tR8O5AgkabG7BAKLwQHpxI/ZsUZTbkDDyelqsSu
+	 CODgJ/gWxce1N+AxDbKYZAUMihHvwesilTA6kbxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbgEODAH (ORCPT
+        id S1728256AbgEODBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 23:00:07 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43265 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgEODAG (ORCPT
+        Thu, 14 May 2020 23:01:38 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:34966 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbgEODBh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 23:00:06 -0400
-Received: by mail-oi1-f196.google.com with SMTP id i22so960722oik.10;
-        Thu, 14 May 2020 20:00:04 -0700 (PDT)
+        Thu, 14 May 2020 23:01:37 -0400
+Received: by mail-oo1-f65.google.com with SMTP id c187so144288ooc.2;
+        Thu, 14 May 2020 20:01:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bjc9M+ltvOohtg90sCLNJrRki6/Nirbm2vS+XeCl5Xk=;
-        b=CBr/WwpyQHhBZ4RZa/piW2/x1Cjxykvc2dcSFgZSeCr7HDTeIA+0LM4PhnaerdlTG2
-         dxLXHuzmKsReAqCEqCIIPF5bWBMrCq+d+OlFrm+FIqRzG/UkAQnsOpWC+hHO5nM/FrgF
-         Kfya+nuqVK6Qtgk6vJnUuKTBgP4/SV3GV9OXhVZjQQ3AzqpmdPYjSLmhslhRS1bBmckD
-         C2RL0HIO41Zcq4X59LtaYgoe+ET3umI1SvTAjqcdR8zUPBovw7qFkmIxnqDFjaWudL7r
-         qsq/DIrDM02ckpoAM6ah4/gSKP0cD8VfGWb5tuZ00i/5jG49w0vvAbPE5bvkHxqN7gcx
-         dalw==
-X-Gm-Message-State: AOAM531XwSw/7seKwKOGHy3tUABHpcrcWb0Ts0geRy/ngbiq8ALW3+PN
-        kbczIQAcBmoayeRfY9nXDQ==
-X-Google-Smtp-Source: ABdhPJw2JGnI3HK1STO/gY+vd05hdLxQM19boTQeYNYuxp5F6jLUKLnTu0URfOrtg50l2/MqoT/tcw==
-X-Received: by 2002:aca:d50f:: with SMTP id m15mr713670oig.54.1589511603885;
-        Thu, 14 May 2020 20:00:03 -0700 (PDT)
+        bh=fzt3fbDfPhMLsvVChoRsuRz5dmNGR0DOVOHIwVjbwCo=;
+        b=mL4cYKK2sFj7olXwtcGYQfn1+Z7h0DR2lYKGpzhm4rKkf0dmqIB6d0hpu87RazerRu
+         hBUxMUVyTxop+z5QBEY/iPd4eVBv+JPxJrNIFxS8F/S1Xny7VggovMKbW8uWDKxncwuQ
+         AItsfksuSuITQ18n5log+gj+wmbibK9lYTVRqyF57p3/LMwszmbOfa3iNUF2+RgCj1z9
+         hRshMe4eqHNYmtNxZxXd8aJ49p0h57ixAyOFtEZxIje2equV9gWCY9Y1vzh40LCJj1wq
+         EY7+nCiucAKJe5Zxa6vyupbEemCNBP+h9eg62g76WMClqNS21jycAWP/yWMt6QPz8EtH
+         Ocgg==
+X-Gm-Message-State: AOAM531m1ab1jlxrZPBTr6hH3H6oSywa4iOu/NSKHdKJu2+bpWHTd3wT
+        HyRmS3+oD6/YyIF1kkkjmw==
+X-Google-Smtp-Source: ABdhPJx3IazIe047SWhLhbb8iub9o9mvI5+SddR6eHlIPjOIaHcBm7Kf5QHuVnMUBWQ/xZh8l1RlWg==
+X-Received: by 2002:a4a:a448:: with SMTP id w8mr871623ool.78.1589511695032;
+        Thu, 14 May 2020 20:01:35 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e4sm256580oou.33.2020.05.14.20.00.02
+        by smtp.gmail.com with ESMTPSA id o21sm265756ook.8.2020.05.14.20.01.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 20:00:03 -0700 (PDT)
-Received: (nullmailer pid 11296 invoked by uid 1000);
-        Fri, 15 May 2020 03:00:02 -0000
-Date:   Thu, 14 May 2020 22:00:02 -0500
+        Thu, 14 May 2020 20:01:34 -0700 (PDT)
+Received: (nullmailer pid 13459 invoked by uid 1000);
+        Fri, 15 May 2020 03:01:33 -0000
+Date:   Thu, 14 May 2020 22:01:33 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Cc:     jic23@kernel.org, mchehab+huawei@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/12] dt-bindings: iio: imu: Add inv_icm42600
- documentation
-Message-ID: <20200515030002.GA6242@bogus>
-References: <20200507144222.20989-1-jmaneyrol@invensense.com>
- <20200507144222.20989-12-jmaneyrol@invensense.com>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mgautam@codeaurora.org, rojay@codeaurora.org,
+        skakit@codeaurora.org, mka@chromium.org
+Subject: Re: [PATCH V6 3/3] dt-bindings: serial: Add binding for UART pin swap
+Message-ID: <20200515030133.GA11479@bogus>
+References: <1588863647-17240-1-git-send-email-akashast@codeaurora.org>
+ <1588863647-17240-4-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507144222.20989-12-jmaneyrol@invensense.com>
+In-Reply-To: <1588863647-17240-4-git-send-email-akashast@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 04:42:21PM +0200, Jean-Baptiste Maneyrol wrote:
-> Document the ICM-426xxx devices devicetree bindings.
+On Thu, May 07, 2020 at 08:30:47PM +0530, Akash Asthana wrote:
+> Add documentation to support RX-TX & CTS-RTS GPIO pin swap in HW.
 > 
-> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
 > ---
->  .../bindings/iio/imu/invensense,icm42600.yaml | 90 +++++++++++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+>  Documentation/devicetree/bindings/serial/serial.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
-> new file mode 100644
-> index 000000000000..a7175f6543fa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
-> @@ -0,0 +1,90 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/imu/invensense,icm42600.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/Documentation/devicetree/bindings/serial/serial.yaml b/Documentation/devicetree/bindings/serial/serial.yaml
+> index 53204d9..e657dd6 100644
+> --- a/Documentation/devicetree/bindings/serial/serial.yaml
+> +++ b/Documentation/devicetree/bindings/serial/serial.yaml
+> @@ -67,6 +67,12 @@ properties:
+>        (wired and enabled by pinmux configuration).  This depends on both the
+>        UART hardware and the board wiring.
+>  
+> +  rx-tx-swap:
+> +    description: RX and TX pins are swapped.
 > +
-> +title: InvenSense ICM-426xx Inertial Measurement Unit
-> +
-> +maintainers:
-> +  - Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-> +
-> +description: |
-> +  6-axis MotionTracking device that combines a 3-axis gyroscope and a 3-axis accelerometer.
-> +
-> +  It has a configurable host interface that supports I3C, I2C and SPI serial communication, features a 2kB FIFO and
-> +  2 programmable interrupts with ultra-low-power wake-on-motion support to minimize system power consumption.
-> +
-> +  Other industry-leading features include InvenSense on-chip APEX Motion Processing engine for gesture recognition,
-> +  activity classification, and pedometer, along with programmable digital filters, and an embedded temperature sensor.
-> +
-> +  https://invensense.tdk.com/wp-content/uploads/2020/03/DS-000292-ICM-42605-v1.4.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - invensense,icm42600
-> +      - invensense,icm42602
-> +      - invensense,icm42605
-> +      - invensense,icm42622
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  spi-cpha: true
-> +
-> +  spi-cpol: true
+> +  cts-rts-swap:
+> +    description: CTS and RTS pins are swapped.
 
-It doesn't make much sense to specify these and not make them required. 
-I guess you could have a device with multiple modes, but generally 
-there's only one right combination of these properties. Also, this could 
-just be implied by the compatible.
+Need 'type: boolean' on both of these.
 
 > +
-> +  spi-max-frequency:
-> +    maxItems: 1
-
-Not an array. Either give a frequency range (minimum/maximum) or just 
-'true'.
-
-> +
-> +  vdd-supply:
-> +    description: Regulator that provides power to the sensor
-> +
-> +  vddio-supply:
-> +    description: Regulator that provides power to the bus
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        icm42605@68 {
-> +          compatible = "invensense,icm42605";
-> +          reg = <0x68>;
-> +          interrupt-parent = <&gpio2>;
-> +          interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-> +          vdd-supply = <&vdd>;
-> +          vddio-supply = <&vddio>;
-> +        };
-> +    };
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    spi0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        icm42602@0 {
-> +          compatible = "invensense,icm42602";
-> +          reg = <0>;
-> +          spi-max-frequency = <24000000>;
-> +          spi-cpha;
-> +          spi-cpol;
-> +          interrupt-parent = <&gpio1>;
-> +          interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> +          vdd-supply = <&vdd>;
-> +          vddio-supply = <&vddio>;
-> +        };
-> +    };
+>  if:
+>    required:
+>      - uart-has-rtscts
 > -- 
-> 2.17.1
-> 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
