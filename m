@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3190C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1064C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9F520727
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1152073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589563694;
-	bh=kv5mnSWLjr5fBV4nQ8+dYNhj0aVw4GQo+4yHT59GbLg=;
+	s=default; t=1589563697;
+	bh=p66GI+uTo7YFHULVF+gV8GMNJV+n4qtI5rkkXvHNSgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q96vUXugfDw8yRYTjMWh9X/GDaKHzqNUcSsivUXjp0/763AER7wBkDQVSbb6PcBng
-	 pTiOaxwfGLXs/sc+/S1jVXkwY8STjkLvW+qrKMbIkU4C/TiiZAZYaWMqFPFbwyej/C
-	 CNkozG/RmOWPsIClnp3r8m1GPUQEeQM7A2E5LwSI=
+	b=Bizfj2QDkovnIG0RHRAIR9wx9PF+qhzloa7YCdlL1cKbqMksgMtPYzz5hrXw7xXkx
+	 VI87EALWMPMza8nOP13+zf2o/Dxe5o1mXFD/5qPmLW267BDwvf0EpYA6K2nLl9He7m
+	 X6LPfPFWMxz0Rbg6SkLv/Zj4nDAbkagiQglbprRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgEOR2N (ORCPT
+        id S1726707AbgEOR2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:28:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53138 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 13:28:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726610AbgEOR2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:28:11 -0400
+        id S1726663AbgEOR2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:28:13 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 299A7207D5;
-        Fri, 15 May 2020 17:28:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 664B420756;
+        Fri, 15 May 2020 17:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589563691;
-        bh=kv5mnSWLjr5fBV4nQ8+dYNhj0aVw4GQo+4yHT59GbLg=;
+        s=default; t=1589563693;
+        bh=p66GI+uTo7YFHULVF+gV8GMNJV+n4qtI5rkkXvHNSgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1GUhQpkPHCiFNiBceCCvlyDAK8CSvD8Ee+z6+TNY03ORfuvnrDGahbWBzDJLE3SJI
-         ElQ3TdQYN1ZeTFygNbIjUgfTcHBTFWqs9GgNc3Xi1IjtfF9UcOsf1SScwVaQb6xTNM
-         F2nfBQBOOuvL2DpUBLY371Ls/BS28+5ZPiat51oU=
+        b=MzT4gx/SEvgCF35wdoC8o12qutuMXLDyvFTvlIapI95GJch+y536OIiJeafpy7ktV
+         PRPft1PnSAwuL2gnIi72NGdVmAEKyRUHbLwyjtFw1nqHf+WMWjtRXfcEwPQMuppVGS
+         OgLKeU41E1vqgbhfujljiGor4MjYsDSlaKhIKjFk=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org,
@@ -49,9 +49,9 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         Mark Rutland <mark.rutland@am.com>,
         Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
-Subject: [PATCH 2/6] scs: Move accounting into alloc/free functions
-Date:   Fri, 15 May 2020 18:27:52 +0100
-Message-Id: <20200515172756.27185-3-will@kernel.org>
+Subject: [PATCH 3/6] arm64: scs: Use 'scs_sp' register alias for x18
+Date:   Fri, 15 May 2020 18:27:53 +0100
+Message-Id: <20200515172756.27185-4-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200515172756.27185-1-will@kernel.org>
 References: <20200515172756.27185-1-will@kernel.org>
@@ -62,99 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no need to perform the shadow stack page accounting independently
-of the lifetime of the underlying allocation, so call the accounting code
-from the {alloc,free}() functions and simplify the code in the process.
+x18 holds the SCS stack pointer value, so introduce a register alias to
+make this easier to read in assembly code.
 
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- kernel/scs.c | 45 +++++++++++++++++++++------------------------
- 1 file changed, 21 insertions(+), 24 deletions(-)
+ arch/arm64/include/asm/scs.h |  6 ++++--
+ arch/arm64/kernel/entry.S    | 10 +++++-----
+ arch/arm64/kernel/head.S     |  2 +-
+ 3 files changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/scs.c b/kernel/scs.c
-index 5ff8663e4a67..aea841cd7586 100644
---- a/kernel/scs.c
-+++ b/kernel/scs.c
-@@ -14,25 +14,35 @@
+diff --git a/arch/arm64/include/asm/scs.h b/arch/arm64/include/asm/scs.h
+index 6b8cf4352fe3..d46efdd2060a 100644
+--- a/arch/arm64/include/asm/scs.h
++++ b/arch/arm64/include/asm/scs.h
+@@ -7,12 +7,14 @@
+ #include <asm/asm-offsets.h>
  
- static struct kmem_cache *scs_cache;
- 
-+static void __scs_account(void *s, int account)
-+{
-+	struct page *scs_page = virt_to_page(s);
+ #ifdef CONFIG_SHADOW_CALL_STACK
++	scs_sp	.req	x18
 +
-+	mod_zone_page_state(page_zone(scs_page), NR_KERNEL_SCS_KB,
-+			    account * (SCS_SIZE / SZ_1K));
-+}
-+
- static void *scs_alloc(int node)
- {
--	void *s;
--
--	s = kmem_cache_alloc_node(scs_cache, GFP_SCS, node);
--	if (s) {
--		*__scs_magic(s) = SCS_END_MAGIC;
--		/*
--		 * Poison the allocation to catch unintentional accesses to
--		 * the shadow stack when KASAN is enabled.
--		 */
--		kasan_poison_object_data(scs_cache, s);
--	}
-+	void *s = kmem_cache_alloc_node(scs_cache, GFP_SCS, node);
-+
-+	if (!s)
-+		return NULL;
+ 	.macro scs_load tsk, tmp
+-	ldr	x18, [\tsk, #TSK_TI_SCS_SP]
++	ldr	scs_sp, [\tsk, #TSK_TI_SCS_SP]
+ 	.endm
  
-+	*__scs_magic(s) = SCS_END_MAGIC;
-+
-+	/*
-+	 * Poison the allocation to catch unintentional accesses to
-+	 * the shadow stack when KASAN is enabled.
-+	 */
-+	kasan_poison_object_data(scs_cache, s);
-+	__scs_account(s, 1);
- 	return s;
- }
+ 	.macro scs_save tsk, tmp
+-	str	x18, [\tsk, #TSK_TI_SCS_SP]
++	str	scs_sp, [\tsk, #TSK_TI_SCS_SP]
+ 	.endm
+ #else
+ 	.macro scs_load tsk, tmp
+diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+index cb0516e6f963..741faf0706f1 100644
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -394,7 +394,7 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
+ 	.macro	irq_stack_entry
+ 	mov	x19, sp			// preserve the original sp
+ #ifdef CONFIG_SHADOW_CALL_STACK
+-	mov	x24, x18		// preserve the original shadow stack
++	mov	x24, scs_sp		// preserve the original shadow stack
+ #endif
  
- static void scs_free(void *s)
- {
-+	__scs_account(s, -1);
- 	kasan_unpoison_object_data(scs_cache, s);
- 	kmem_cache_free(scs_cache, s);
- }
-@@ -42,17 +52,6 @@ void __init scs_init(void)
- 	scs_cache = kmem_cache_create("scs_cache", SCS_SIZE, 0, 0, NULL);
- }
+ 	/*
+@@ -416,7 +416,7 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
  
--static struct page *__scs_page(struct task_struct *tsk)
--{
--	return virt_to_page(task_scs(tsk));
--}
--
--static void scs_account(struct task_struct *tsk, int account)
--{
--	mod_zone_page_state(page_zone(__scs_page(tsk)), NR_KERNEL_SCS_KB,
--		account * (SCS_SIZE / 1024));
--}
--
- int scs_prepare(struct task_struct *tsk, int node)
- {
- 	void *s = scs_alloc(node);
-@@ -61,7 +60,6 @@ int scs_prepare(struct task_struct *tsk, int node)
- 		return -ENOMEM;
+ #ifdef CONFIG_SHADOW_CALL_STACK
+ 	/* also switch to the irq shadow stack */
+-	adr_this_cpu x18, irq_shadow_call_stack, x26
++	adr_this_cpu scs_sp, irq_shadow_call_stack, x26
+ #endif
  
- 	task_scs(tsk) = task_scs_sp(tsk) = s;
--	scs_account(tsk, 1);
- 	return 0;
- }
+ 9998:
+@@ -430,7 +430,7 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
+ 	.macro	irq_stack_exit
+ 	mov	sp, x19
+ #ifdef CONFIG_SHADOW_CALL_STACK
+-	mov	x18, x24
++	mov	scs_sp, x24
+ #endif
+ 	.endm
  
-@@ -102,6 +100,5 @@ void scs_release(struct task_struct *tsk)
+@@ -1071,9 +1071,9 @@ SYM_CODE_START(__sdei_asm_handler)
+ #ifdef CONFIG_SHADOW_CALL_STACK
+ 	/* Use a separate shadow call stack for normal and critical events */
+ 	cbnz	w4, 3f
+-	adr_this_cpu dst=x18, sym=sdei_shadow_call_stack_normal, tmp=x6
++	adr_this_cpu dst=scs_sp, sym=sdei_shadow_call_stack_normal, tmp=x6
+ 	b	4f
+-3:	adr_this_cpu dst=x18, sym=sdei_shadow_call_stack_critical, tmp=x6
++3:	adr_this_cpu dst=scs_sp, sym=sdei_shadow_call_stack_critical, tmp=x6
+ 4:
+ #endif
  
- 	WARN(scs_corrupted(tsk), "corrupted shadow stack detected when freeing task\n");
- 	scs_check_usage(tsk);
--	scs_account(tsk, -1);
- 	scs_free(s);
- }
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index 2b01c19c5483..1293baddfd20 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -426,7 +426,7 @@ SYM_FUNC_START_LOCAL(__primary_switched)
+ 	mov	x29, sp
+ 
+ #ifdef CONFIG_SHADOW_CALL_STACK
+-	adr_l	x18, init_shadow_call_stack	// Set shadow call stack
++	adr_l	scs_sp, init_shadow_call_stack	// Set shadow call stack
+ #endif
+ 
+ 	str_l	x21, __fdt_pointer, x5		// Save FDT pointer
 -- 
 2.26.2.761.g0e0b3e54be-goog
 
