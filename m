@@ -2,254 +2,202 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00132C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D06D82076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:58:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589561888;
-	bh=WyzQ92ApewIu4RHvp2WXU8VIKb29Z5HwrMixhKJyzeo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KGnQJIPbP4grUMGUq4mTo/TamywhRsUXMqOlGI0KvbopFY6mrsg166GQSsMa9084T
-	 k7FgwlhUIDvhbEwXa+QeHaGOzs9ZWgw5hKwo8lkiVwM1DkMLUkwerz3mKP0rKjptzQ
-	 B98CzwVK1QoDQr+BwbI1z586Z12PeOFadu7m5ttg=
+	by mail.kernel.org (Postfix) with ESMTP id 9FE58206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:00:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ccbWLnUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgEOQ6I (ORCPT
+        id S1726248AbgEORAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:58:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbgEOQ6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:58:05 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 272412073E;
-        Fri, 15 May 2020 16:58:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589561884;
-        bh=WyzQ92ApewIu4RHvp2WXU8VIKb29Z5HwrMixhKJyzeo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LLvAaYdIIa038jexo8NsziT2hNt4ezFnW1s7SbDhdgbkMIvqzR5+Bvp344d53SwIq
-         NUJnawybcvFTmcRS95ffIr/UOR6Y8EMVipN3OfPFXFnt01Hk2JFDMiU6Wna69KmZyq
-         nQU58ZQido6x5Ff3xfF0/uD2hXMVN/AnjEE61QvE=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jZdes-00Cdec-HO; Fri, 15 May 2020 17:58:02 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     John Garry <john.garry@huawei.com>,
-        chenxiang <chenxiang66@hisilicon.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com
-Subject: [PATCH v4 2/2] irqchip/gic-v3-its: Balance initial LPI affinity across CPUs
-Date:   Fri, 15 May 2020 17:57:52 +0100
-Message-Id: <20200515165752.121296-3-maz@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200515165752.121296-1-maz@kernel.org>
-References: <20200515165752.121296-1-maz@kernel.org>
+        Fri, 15 May 2020 13:00:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726144AbgEORAK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:00:10 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2046C05BD09
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 10:00:09 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id s37so1451531ybe.13
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 10:00:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7FCtnhxXRkcL3anwH9mEdDuKXNzEgQcRUlM4mCBSwPs=;
+        b=ccbWLnUtUwiKAn842+6hU4C8edxHHnDZVhGAcXJ4MHD2aPM6Y9mOFtesaLH/exfbRt
+         V8+JUSsPRZGS6hqOjAIdFZfjzoqsQd2EFR1KpOCWVsK8DeNYUfpVPeuX+Bc1ljak+GmK
+         IXRcsBaTgrtooRn0FHSrLzePzaHbEIPHqyT7MivD7o8WNzJZAywU2+W4FDZ/61x78tN+
+         ijTVdyvNlGULn23pBqyFlg5XtYzRLEJRj2EC4Bv5rvQILYRVWMtK3yB6og4PdN3nWygU
+         YUR1czuWUDExyXOofEPeqN2USbyL9tKoOXk+6h7oEeUKlWH/11Da1+aoBE84Br767RNx
+         08XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7FCtnhxXRkcL3anwH9mEdDuKXNzEgQcRUlM4mCBSwPs=;
+        b=j1+SxAhP6/kJwsHDyvBLjKSiaUJxBN6ExlF/HjiG0o54zluydedR3o5tWi64YKEQ0W
+         oys6HQDPck+HWSeXddJP1XNJZXWq6tixg7LrgX7J2Xq55wn+F4NBCR7k+KcKDO3bnPQz
+         RiLpaQR+LyZUuX4cAyYeaOImVUphDM2B0NcVPOmjwwgDL3935GRFy1x7NSKTN4/odhQC
+         I1w5ssUjA4D3Yeccg/G8HrJpPfGUni0II+QVajr4TpAJ/WAEZSIJv/6fQq3Iwv+srkg1
+         cNCIT3gJCfVSXfrnXAtpyifrP2Y0Sg84/3rzxAV4Jc9dVo448cBm0NH/c0HiaUlJUy9v
+         Lrdw==
+X-Gm-Message-State: AOAM533aGrdB8snc3JpeGf3thgtXv4+e2Bjag9864OWnzRZOpfs0tfJY
+        CLm5N8mb2koB+VhcRa0stxzITVf7rbeZZolRI18yqw==
+X-Google-Smtp-Source: ABdhPJyH3+hVuoWG26jUdXOuiqO06AU3SHQ71fqWw7wtANcrcWD7kOBFVq4nqnjQ0Txo9ZKUonn51mDqXlP2DLGicIk=
+X-Received: by 2002:a25:c08b:: with SMTP id c133mr7057333ybf.286.1589562008534;
+ Fri, 15 May 2020 10:00:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, john.garry@huawei.com, chenxiang66@hisilicon.com, wangzhou1@hisilicon.com, ming.lei@redhat.com, jason@lakedaemon.net, tglx@linutronix.de, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200515065624.21658-1-irogers@google.com> <20200515065624.21658-5-irogers@google.com>
+ <20200515091707.GC3511648@krava> <20200515142917.GT5583@kernel.org>
+ <CAP-5=fXtXgnb4nrVtsoxQ6vj8YtzPicFsad6+jB5UUFqMzg4mw@mail.gmail.com> <20200515163146.GA9335@kernel.org>
+In-Reply-To: <20200515163146.GA9335@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 15 May 2020 09:59:57 -0700
+Message-ID: <CAP-5=fWiaVXVHVu7iFw+7V21Ztf6VU7BtwhUa5gsq3f+ZryQ+w@mail.gmail.com>
+Subject: Re: [PATCH 4/8] libbpf hashmap: Localize static hashmap__* symbols
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When mapping a LPI, the ITS driver picks the first possible
-affinity, which is in most cases CPU0, assuming that if
-that's not suitable, someone will come and set the affinity
-to something more interesting.
+On Fri, May 15, 2020 at 9:31 AM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Em Fri, May 15, 2020 at 07:53:33AM -0700, Ian Rogers escreveu:
+> > On Fri, May 15, 2020 at 7:29 AM Arnaldo Carvalho de Melo
+> > <arnaldo.melo@gmail.com> wrote:
+> > >
+> > > Em Fri, May 15, 2020 at 11:17:07AM +0200, Jiri Olsa escreveu:
+> > > > On Thu, May 14, 2020 at 11:56:20PM -0700, Ian Rogers wrote:
+> > > > > Localize the hashmap__* symbols in libbpf.a. To allow for a version in
+> > > > > libapi.
+> > > > >
+> > > > > Before:
+> > > > > $ nm libbpf.a
+> > > > > ...
+> > > > > 000000000002088a t hashmap_add_entry
+> > > > > 000000000001712a t hashmap__append
+> > > > > 0000000000020aa3 T hashmap__capacity
+> > > > > 000000000002099c T hashmap__clear
+> > > > > 00000000000208b3 t hashmap_del_entry
+> > > > > 0000000000020fc1 T hashmap__delete
+> > > > > 0000000000020f29 T hashmap__find
+> > > > > 0000000000020c6c t hashmap_find_entry
+> > > > > 0000000000020a61 T hashmap__free
+> > > > > 0000000000020b08 t hashmap_grow
+> > > > > 00000000000208dd T hashmap__init
+> > > > > 0000000000020d35 T hashmap__insert
+> > > > > 0000000000020ab5 t hashmap_needs_to_grow
+> > > > > 0000000000020947 T hashmap__new
+> > > > > 0000000000000775 t hashmap__set
+> > > > > 00000000000212f8 t hashmap__set
+> > > > > 0000000000020a91 T hashmap__size
+> > > > > ...
+> > > > >
+> > > > > After:
+> > > > > $ nm libbpf.a
+> > > > > ...
+> > > > > 000000000002088a t hashmap_add_entry
+> > > > > 000000000001712a t hashmap__append
+> > > > > 0000000000020aa3 t hashmap__capacity
+> > > > > 000000000002099c t hashmap__clear
+> > > > > 00000000000208b3 t hashmap_del_entry
+> > > > > 0000000000020fc1 t hashmap__delete
+> > > > > 0000000000020f29 t hashmap__find
+> > > > > 0000000000020c6c t hashmap_find_entry
+> > > > > 0000000000020a61 t hashmap__free
+> > > > > 0000000000020b08 t hashmap_grow
+> > > > > 00000000000208dd t hashmap__init
+> > > > > 0000000000020d35 t hashmap__insert
+> > > > > 0000000000020ab5 t hashmap_needs_to_grow
+> > > > > 0000000000020947 t hashmap__new
+> > > > > 0000000000000775 t hashmap__set
+> > > > > 00000000000212f8 t hashmap__set
+> > > > > 0000000000020a91 t hashmap__size
+> > > > > ...
+> > > >
+> > > > I think this will break bpf selftests which use hashmap,
+> > > > we need to find some other way to include this
+> > > >
+> > > > either to use it from libbpf directly, or use the api version
+> > > > only if the libbpf is not compiled in perf, we could use
+> > > > following to detect that:
+> > > >
+> > > >       CFLAGS += -DHAVE_LIBBPF_SUPPORT
+> > > >       $(call detected,CONFIG_LIBBPF)
+> > >
+> > > And have it in tools/perf/util/ instead?
+>
+> > *sigh*
+>
+> > $ make -C tools/testing/selftests/bpf test_hashmap
+> > make: Entering directory
+> > '/usr/local/google/home/irogers/kernel-trees/kernel.org/tip/tools/testing/s
+> > elftests/bpf'
+> >  BINARY   test_hashmap
+> > /usr/bin/ld: /tmp/ccEGGNw5.o: in function `test_hashmap_generic':
+> > /usr/local/google/home/irogers/kernel-trees/kernel.org/tip/tools/testing/selftests/bpf/test_hashmap.
+> > c:61: undefined reference to `hashmap__new'
+> > ...
+>
+> > My preference was to make hashmap a sharable API in tools, to benefit
+>
+> That is my preference as well, I'm not defending having it in
+> tools/perf/util/, just saying that that is a possible way to make
+> progress with the current situation...
 
-It apparently isn't the case, and people complain of poor
-performance when many interrupts are glued to the same CPU.
-So let's place the interrupts by finding the "least loaded"
-CPU (that is, the one that has the fewer LPIs mapped to it).
-So called 'managed' interrupts are an interesting case where
-the affinity is actually dictated by the kernel itself, and
-we should honor this.
+Thanks, it'd be nice to be expedient as both Jiri and myself are
+changing code in this area. v2 is up for review here:
+https://lore.kernel.org/lkml/20200515165007.217120-8-irogers@google.com/
+An ifdef when the hashmap.h is used, and one in the build. It could be worse.
 
-Reported-by: John Garry <john.garry@huawei.com>
-Link: https://lore.kernel.org/r/1575642904-58295-1-git-send-email-john.garry@huawei.com
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-v3-its.c | 127 ++++++++++++++++++++++++-------
- 1 file changed, 100 insertions(+), 27 deletions(-)
+Thanks,
+Ian
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 4eb8441d0c2b..2aaf1e6bdc89 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1541,15 +1541,104 @@ static void its_dec_lpi_count(struct irq_data *d, int cpu)
- 		atomic_dec(&per_cpu_ptr(&cpu_lpi_count, cpu)->unmanaged);
- }
- 
-+static unsigned int cpumask_pick_least_loaded(struct irq_data *d,
-+					      const struct cpumask *cpu_mask)
-+{
-+	unsigned int cpu = nr_cpu_ids, tmp;
-+	int count = S32_MAX;
-+
-+	for_each_cpu(tmp, cpu_mask) {
-+		int this_count = its_read_lpi_count(d, tmp);
-+		if (this_count < count) {
-+			cpu = tmp;
-+		        count = this_count;
-+		}
-+	}
-+
-+	return cpu;
-+}
-+
-+/*
-+ * As suggested by Thomas Gleixner in:
-+ * https://lore.kernel.org/r/87h80q2aoc.fsf@nanos.tec.linutronix.de
-+ */
-+static int its_select_cpu(struct irq_data *d,
-+			  const struct cpumask *aff_mask)
-+{
-+	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
-+	cpumask_var_t tmpmask;
-+	int cpu, node;
-+
-+	if (!alloc_cpumask_var(&tmpmask, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	node = its_dev->its->numa_node;
-+
-+	if (!irqd_affinity_is_managed(d)) {
-+		/* First try the NUMA node */
-+		if (node != NUMA_NO_NODE) {
-+			/*
-+			 * Try the intersection of the affinity mask and the
-+			 * node mask (and the online mask, just to be safe).
-+			 */
-+			cpumask_and(tmpmask, cpumask_of_node(node), aff_mask);
-+			cpumask_and(tmpmask, tmpmask, cpu_online_mask);
-+
-+			/*
-+			 * Ideally, we would check if the mask is empty, and
-+			 * try again on the full node here.
-+			 *
-+			 * But it turns out that the way API describes the
-+			 * affinity for ITSs only deals about memory, and
-+			 * not target CPUs, so it cannot describe a single
-+			 * ITS placed next to two NUMA nodes.
-+			 *
-+			 * Instead, just fallback on the online mask. This
-+			 * diverges from Thomas' suggestion above.
-+			 */
-+			cpu = cpumask_pick_least_loaded(d, tmpmask);
-+			if (cpu < nr_cpu_ids)
-+				goto out;
-+
-+			/* If we can't cross sockets, give up */
-+			if ((its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144))
-+				goto out;
-+
-+			/* If the above failed, expand the search */
-+		}
-+
-+		/* Try the intersection of the affinity and online masks */
-+		cpumask_and(tmpmask, aff_mask, cpu_online_mask);
-+
-+		/* If that doesn't fly, the online mask is the last resort */
-+		if (cpumask_empty(tmpmask))
-+			cpumask_copy(tmpmask, cpu_online_mask);
-+
-+		cpu = cpumask_pick_least_loaded(d, tmpmask);
-+	} else {
-+		cpumask_and(tmpmask, irq_data_get_affinity_mask(d), cpu_online_mask);
-+
-+		/* If we cannot cross sockets, limit the search to that node */
-+		if ((its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144) &&
-+		    node != NUMA_NO_NODE)
-+			cpumask_and(tmpmask, tmpmask, cpumask_of_node(node));
-+
-+		cpu = cpumask_pick_least_loaded(d, tmpmask);
-+	}
-+out:
-+	free_cpumask_var(tmpmask);
-+
-+	pr_debug("IRQ%d -> %*pbl CPU%d\n", d->irq, cpumask_pr_args(aff_mask), cpu);
-+	return cpu;
-+}
-+
- static int its_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 			    bool force)
- {
--	unsigned int cpu;
--	const struct cpumask *cpu_mask = cpu_online_mask;
- 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
- 	struct its_collection *target_col;
- 	u32 id = its_get_event_id(d);
--	int prev_cpu;
-+	int cpu, prev_cpu;
- 
- 	/* A forwarded interrupt should use irq_set_vcpu_affinity */
- 	if (irqd_is_forwarded_to_vcpu(d))
-@@ -1558,18 +1647,12 @@ static int its_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 	prev_cpu = its_dev->event_map.col_map[id];
- 	its_dec_lpi_count(d, prev_cpu);
- 
--       /* lpi cannot be routed to a redistributor that is on a foreign node */
--	if (its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144) {
--		if (its_dev->its->numa_node >= 0) {
--			cpu_mask = cpumask_of_node(its_dev->its->numa_node);
--			if (!cpumask_intersects(mask_val, cpu_mask))
--				goto err;
--		}
--	}
--
--	cpu = cpumask_any_and(mask_val, cpu_mask);
-+	if (!force)
-+		cpu = its_select_cpu(d, mask_val);
-+	else
-+		cpu = cpumask_pick_least_loaded(d, mask_val);
- 
--	if (cpu >= nr_cpu_ids)
-+	if (cpu < 0 || cpu >= nr_cpu_ids)
- 		goto err;
- 
- 	/* don't set the affinity when the target cpu is same as current one */
-@@ -3473,21 +3556,11 @@ static int its_irq_domain_activate(struct irq_domain *domain,
- {
- 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
- 	u32 event = its_get_event_id(d);
--	const struct cpumask *cpu_mask = cpu_online_mask;
- 	int cpu;
- 
--	/* get the cpu_mask of local node */
--	if (its_dev->its->numa_node >= 0)
--		cpu_mask = cpumask_of_node(its_dev->its->numa_node);
--
--	/* Bind the LPI to the first possible CPU */
--	cpu = cpumask_first_and(cpu_mask, cpu_online_mask);
--	if (cpu >= nr_cpu_ids) {
--		if (its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144)
--			return -EINVAL;
--
--		cpu = cpumask_first(cpu_online_mask);
--	}
-+	cpu = its_select_cpu(d, cpu_online_mask);
-+	if (cpu < 0 || cpu >= nr_cpu_ids)
-+		return -EINVAL;
- 
- 	its_inc_lpi_count(d, cpu);
- 	its_dev->event_map.col_map[event] = cpu;
--- 
-2.26.2
-
+> > not just perf but say things like libsymbol, libperf, etc. Moving it
+> > into perf and using conditional compilation is kinda gross but having
+> > libbpf tests depend on libapi also isn't ideal I guess. It is tempting
+> > to just cut a hashmap from fresh cloth to avoid this and to share
+> > among tools/. I don't know if the bpf folks have opinions?
+> >
+> > I'll do a v2 using conditional compilation to see how bad it looks.
+>
+> Cool, lets see how it looks.
+>
+> - Arnaldo
