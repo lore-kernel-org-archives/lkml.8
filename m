@@ -2,85 +2,150 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A16CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB0912065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B239C20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:43:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="pD/NsOHg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgEOGmw (ORCPT
+        id S1726558AbgEOGnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:42:52 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47166 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726215AbgEOGmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:42:51 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 443D0F559CF58DF50670;
-        Fri, 15 May 2020 14:42:48 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.55) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Fri, 15 May 2020
- 14:42:46 +0800
-Subject: Re: [PATCH v2 06/10] mm/swap: use npage_to_sectors() and PAGE_SECTORS
- to clean up code
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
-        "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>, dm-devel <dm-devel@redhat.com>,
-        Song Liu <song@kernel.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200507075100.1779-1-thunder.leizhen@huawei.com>
- <20200507075100.1779-7-thunder.leizhen@huawei.com>
- <20200515041456.GD16070@bombadil.infradead.org>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <85ea7c5e-9879-8aa4-c0f4-c60f107d63e3@huawei.com>
-Date:   Fri, 15 May 2020 14:42:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 15 May 2020 02:43:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726339AbgEOGnV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 02:43:21 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A9CC05BD09
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:43:21 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id 1so594480vsl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3u5biufGGoeHTr+TJL8nbm6kBJzdWnn/M3v0cfmw50s=;
+        b=pD/NsOHgg9RiRzrmFZckLGgtKv4FNpjz6MHbVkQ9V5iKpGCmFLdD9+7u8AzgIJdOUx
+         iLCRHKLZI6aJmLhCA4u/iuIgKUKWvgytv6eplSb4xpChzRdJZswwqTH+RGOkhfavvGxG
+         9OqNaw3NjTjZyC88sDBbY/jwaH0osejduH/BQCz1vkUPR5thEUYmREH+nTWqA7nntaIY
+         a91o5rJlHh3HrATc0gEZ14PJ7r4t+orDTaS7hQY6HaL8OQUj7ZESKlpDmHICKJ9Uwlxq
+         TUnqSThoi6EzywAYWhMr/iHqiGIiOxZSwA34a4ST8G9x+/PeaFtKmyUNT/jJUwlFjN+g
+         212Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3u5biufGGoeHTr+TJL8nbm6kBJzdWnn/M3v0cfmw50s=;
+        b=ENCtTg1OmzF0hCBZ6iS+5Lep+VIi+RAjeFBEr08iByFm74WT+wEYVM2Tgm4jF7gtl2
+         R8D9XkPZ/7rESWZjSZNXgt6umYYxpc5DgxalPk//A+QDiYK419V9L+TeEXzsOYEGS4r4
+         ybta1GqFebDf4jgkQvkEHGdFwNP9aM7T8ejGO4TFnwZFvZNkiegTCKPaDOfOYWteueQY
+         FWdREZpZLMDYKj+5V8PEkbVb4kbBlqAhUpzquO1xi+MTeiB8a1gV6FBJPccMTIOIUxUC
+         gaZX6EPn56Pg8zbbf19K5H4BmKIgY/nVhhV8u0w7y0cES7YhqISeMLY52xKAi/XXWkVd
+         7o5Q==
+X-Gm-Message-State: AOAM531b3LOEcteX7Vt1nCsT1jiVMTVLard6YqTVEWclT/8QTcpmQDYl
+        Qe7Tf1PPxUhYje0qTVidZit3xtp3RkWvy+8ub8/1CQ==
+X-Google-Smtp-Source: ABdhPJz1EnXjRX110fk6oUizGR6vyVuia3mcnLi7d3Ga6JMGWl+PQ5YITnQDF2FwN/zC8y0AEoQFGDiVNZgyE8UHtf8=
+X-Received: by 2002:a67:42c6:: with SMTP id p189mr1528692vsa.9.1589525000316;
+ Thu, 14 May 2020 23:43:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200515041456.GD16070@bombadil.infradead.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.55]
-X-CFilter-Loop: Reflected
+References: <20200512132613.31507-1-narmstrong@baylibre.com> <20200512132613.31507-2-narmstrong@baylibre.com>
+In-Reply-To: <20200512132613.31507-2-narmstrong@baylibre.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Fri, 15 May 2020 12:12:39 +0530
+Message-ID: <CAHLCerMP2m1BfzNGoOzOe=4_zYr=i-kXOXnJ_WTN-f1L4N7SUg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: add Khadas Microcontroller bindings
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-amlogic@lists.infradead.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 12, 2020 at 6:56 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> This Microcontroller is present on the Khadas VIM1, VIM2, VIM3 and Edge
+> boards.
+>
+> It has multiple boot control features like password check, power-on
+> options, power-off control and system FAN control on recent boards.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-On 2020/5/15 12:14, Matthew Wilcox wrote:
-> On Thu, May 07, 2020 at 03:50:56PM +0800, Zhen Lei wrote:
->> +++ b/mm/page_io.c
->> @@ -38,7 +38,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
->>  
->>  		bio->bi_iter.bi_sector = map_swap_page(page, &bdev);
->>  		bio_set_dev(bio, bdev);
->> -		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
->> +		bio->bi_iter.bi_sector *= PAGE_SECTORS;
->>  		bio->bi_end_io = end_io;
-> 
-> This just doesn't look right.  Why is map_swap_page() returning a sector_t
-> which isn't actually a sector_t?
-
-I try to understand map_swap_page(). Here maybe a bug. Otherwise, it would be
-better to add a temporary variable to cache the return value of map_swap_page(page, &bdev).
-
-> 
-> 
-> .
-> 
-
+> ---
+>  .../devicetree/bindings/mfd/khadas,mcu.yaml   | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml b/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
+> new file mode 100644
+> index 000000000000..a3b976f101e8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/khadas,mcu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Khadas on-board Microcontroller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
+> +
+> +description: |
+> +  Khadas embeds a microcontroller on their VIM and Edge boards adding some
+> +  system feature as PWM Fan control (for VIM2 rev14 or VIM3), User memory
+> +  storage, IR/Key resume control, system power LED control and more.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - khadas,mcu # MCU revision is discoverable
+> +
+> +  "#cooling-cells": # Only needed for boards having FAN control feature
+> +    const: 2
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      khadas_mcu: system-controller@18 {
+> +        compatible = "khadas,mcu";
+> +        reg = <0x18>;
+> +        #cooling-cells = <2>;
+> +      };
+> +    };
+> --
+> 2.22.0
+>
