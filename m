@@ -2,101 +2,138 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F54FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D21C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA83820758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:30:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="VUjaUsVK"
+	by mail.kernel.org (Postfix) with ESMTP id E8CD120758
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbgEONaR (ORCPT
+        id S1726269AbgEONcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:30:17 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:35466 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbgEONaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:30:16 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49Nq5x0fTgz8j;
-        Fri, 15 May 2020 15:30:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1589549414; bh=YhB2JsZedxwN/B0OR0Q2lPRzMCO96sFs8wnazr66xiA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VUjaUsVKtUrnMR6cwbBIf5YkkpBfI3oQfiB7seL4Jr+YGEGDsR1TP/ynHi/NHLI8b
-         ZtlqWJL1ima5A6MTYIuf3T05sWlwe9Rkg6O9Biwc2jyxj7aDqMUviAuKmRMgisLYVg
-         xB9eAAsoPGso/w1GskeocPjPquQE9gqy9IxeFMBW5WDalHYDehVxzVLskMe1JDU8YV
-         LZXCwNw+Nb5QpeEbHm8Z+8vBdm/9e/DRsfMpeo1zXkIgTjTuD44czwTVXFUMK2XeDo
-         x8wE9jOJ1pToKB8OoMcRfWX0GIxJeXBG+gzZVcE9gU+ZswKiX/HgTTqZDpUSqEJCyi
-         2R3OJQeBXobNQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Fri, 15 May 2020 15:30:11 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Zack Pearsall <zpearsall@yahoo.com>,
-        linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mfd: tps65910: Correct power-off programming sequence
-Message-ID: <20200515110754.GB20564@qmqm.qmqm.pl>
-References: <20200514205022.7024-1-digetx@gmail.com>
+        Fri, 15 May 2020 09:32:51 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:39195 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgEONcu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 09:32:50 -0400
+Received: from mail-qv1-f54.google.com ([209.85.219.54]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N8GIa-1j4jqL03iy-0148bL; Fri, 15 May 2020 15:32:49 +0200
+Received: by mail-qv1-f54.google.com with SMTP id p4so1036078qvr.10;
+        Fri, 15 May 2020 06:32:48 -0700 (PDT)
+X-Gm-Message-State: AOAM533LC1JhRL8lBvEYosRM/J8mL0QJapJt9PSOWop9bWdP0bC6/eRk
+        yd+VsM6iU/j2hJQvBX0zTgy6w+UKWY+IFV6U63I=
+X-Google-Smtp-Source: ABdhPJxRaY7zY8QTvNzuxerWSaqGbHKOK4FIyf/5qJLFxDuhmkrh8pWdFCVTHGQsHaBEpA8LvsOh8UJboFLS9sON+fo=
+X-Received: by 2002:a0c:eb11:: with SMTP id j17mr3448680qvp.197.1589549567720;
+ Fri, 15 May 2020 06:32:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200514205022.7024-1-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200514075942.10136-1-brgl@bgdev.pl> <20200514075942.10136-11-brgl@bgdev.pl>
+In-Reply-To: <20200514075942.10136-11-brgl@bgdev.pl>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 15 May 2020 15:32:31 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com>
+Message-ID: <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com>
+Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:/5ofnXw9mU5dIgLefv/eRsDvP8+vTrIU+kLDXUGITnkQuWac4Lv
+ lCUzHqRE2GvIKbgKOqokob5YjwHyKX97w0rAAWhXtQOfANy41OWqbOBppqecviSzLFkmNz+
+ 2baHX4ARSd0lXB90Re+J/7eya76FB9t4m55bGplGQ+RfBZSx9IL4TuVFvxJp5ov/6iHHmpn
+ 4slNhioblUkWT2Ewt3K6Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PSBO+4J/98g=:gGROTXY0ptE/pYUSwwvuox
+ LQJix53g2u4f43J6wPGIlXEN9Sfdb91HjNyChil2D95CJzrRnaWlVruZOo55mgKhe92Ohy/yg
+ 87OxKYoBj1Mb2P4J3L/V3fwqP/gav9cVeaxsCo20ZFaZKoDvkYvfSlIPYU3uurK/xeEFAMAbt
+ qTjRN9SdEVq/n4qttKKMYTG9tw1Shau5JApHNfoB7BxtG3qf9SbAGxOsqaARuc47qUYax1dZ6
+ 1578a9XMcwHoKjC8rsWVu3m9WcdNS0qVH9VIH+rzArN+G81B1CaboTmEgNF2cPqd9xRvMp/Oz
+ 7EA5phTtB26zA7YNb5q6Zv55A0kKSfzPK571gneJm4rDtsS8/J3JbjXme+g8hKNmUH4xQN2yS
+ iDZLbWuwlWzjeKIeMxXkK8QMGCaN0sHeY0/LtUgY8BVQ+unPpjmLQC3ry/CyVIKmEZkrWEkGR
+ Xce+CMpI83rqIg857MjSgpzciN7wok2nNy0BPk8DJZb9HOjlpUxE0szWAxIn5VjzOsVZhTSLi
+ 3m/Z6AUId97YB+eqRUNSHlLaam1G55PHrKKd80C8B0vLof15lLICwSnOQi33wDKI8vO4/WT/t
+ BGRcMNIu1vThyBFAC2NRdPVihx7d37eDljyoIJRK4o1OpPhV/daih5x8HZQkE4ftEFRFBNcwe
+ vtAgLAJdJcS/SsDR+JCwKabWvHHbCJItJfZT0uRLp71Imow6FV5+a3LR7CMEKbFSVfv3U8p7F
+ rhiCgx08UIIgJbUEGAZm4+lL+yaVY+NZPwhReHOUocFaLcjNfELZBJkcAbWJ+Qiicg08kgcv/
+ xV8uJmISTCGfylAtb0x0tUGlBv+WL8b/dblBJFamBW0aVbHB00=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 11:50:21PM +0300, Dmitry Osipenko wrote:
-> This patch fixes system shutdown on a devices that use TPS65910 as a
-> system's power controller. In accordance to the TPS65910 datasheet, the
-> PMIC's state-machine transitions into the OFF state only when DEV_OFF
-> bit of DEVCTRL_REG is set. The ON / SLEEP states also should be cleared,
-> otherwise PMIC won't get into a proper state on shutdown. Devices like
-> Nexus 7 tablet and Ouya game console are now shutting down properly.
-> 
-> Tested-by: Zack Pearsall <zpearsall@yahoo.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/mfd/tps65910.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
-> index 11959021b50a..22116cee411d 100644
-> --- a/drivers/mfd/tps65910.c
-> +++ b/drivers/mfd/tps65910.c
-> @@ -440,8 +440,16 @@ static void tps65910_power_off(void)
->  			DEVCTRL_PWR_OFF_MASK) < 0)
->  		return;
->  
-> -	tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
-> -			DEVCTRL_DEV_ON_MASK);
-> +	if (tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
-> +			DEVCTRL_DEV_SLP_MASK) < 0)
-> +		return;
-> +
-> +	if (tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
-> +			DEVCTRL_DEV_ON_MASK) < 0)
-> +		return;
-> +
-> +	tps65910_reg_set_bits(tps65910, TPS65910_DEVCTRL,
-> +			DEVCTRL_DEV_OFF_MASK);
->  }
+On Thu, May 14, 2020 at 10:00 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> +static int mtk_mac_ring_pop_tail(struct mtk_mac_ring *ring,
+> +                                struct mtk_mac_ring_desc_data *desc_data)
 
-Isn't it enough to update the DEVCTRL with just one
-tps65910_reg_update_bits()?
+I took another look at this function because of your comment on the locking
+the descriptor updates, which seemed suspicious as the device side does not
+actually use the locks to access them
 
-Best Regards
-Micha³ Miros³aw
+> +{
+> +       struct mtk_mac_ring_desc *desc = &ring->descs[ring->tail];
+> +       unsigned int status;
+> +
+> +       /* Let the device release the descriptor. */
+> +       dma_rmb();
+> +       status = desc->status;
+> +       if (!(status & MTK_MAC_DESC_BIT_COWN))
+> +               return -1;
+
+The dma_rmb() seems odd here, as I don't see which prior read
+is being protected by this.
+
+> +       desc_data->len = status & MTK_MAC_DESC_MSK_LEN;
+> +       desc_data->flags = status & ~MTK_MAC_DESC_MSK_LEN;
+> +       desc_data->dma_addr = ring->dma_addrs[ring->tail];
+> +       desc_data->skb = ring->skbs[ring->tail];
+> +
+> +       desc->data_ptr = 0;
+> +       desc->status = MTK_MAC_DESC_BIT_COWN;
+> +       if (status & MTK_MAC_DESC_BIT_EOR)
+> +               desc->status |= MTK_MAC_DESC_BIT_EOR;
+> +
+> +       /* Flush writes to descriptor memory. */
+> +       dma_wmb();
+
+The comment and the barrier here seem odd as well. I would have expected
+a barrier after the update to the data pointer, and only a single store
+but no read of the status flag instead of the read-modify-write,
+something like
+
+      desc->data_ptr = 0;
+      dma_wmb(); /* make pointer update visible before status update */
+      desc->status = MTK_MAC_DESC_BIT_COWN | (status & MTK_MAC_DESC_BIT_EOR);
+
+> +       ring->tail = (ring->tail + 1) % MTK_MAC_RING_NUM_DESCS;
+> +       ring->count--;
+
+I would get rid of the 'count' here, as it duplicates the information
+that is already known from the difference between head and tail, and you
+can't update it atomically without holding a lock around the access to
+the ring. The way I'd do this is to have the head and tail pointers
+in separate cache lines, and then use READ_ONCE/WRITE_ONCE
+and smp barriers to access them, with each one updated on one
+thread but read by the other.
+
+     Arnd
