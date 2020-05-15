@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C86C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7637C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25684207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B26B92075F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:38:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qAhrFRCG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hpUzTvBs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgEOOi1 (ORCPT
+        id S1728288AbgEOOif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:38:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35802 "EHLO
+        Fri, 15 May 2020 10:38:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728135AbgEOOiS (ORCPT
+        by vger.kernel.org with ESMTP id S1728229AbgEOOi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:38:18 -0400
+        Fri, 15 May 2020 10:38:27 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37187C05BD09;
-        Fri, 15 May 2020 07:38:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8055FC05BD0A;
+        Fri, 15 May 2020 07:38:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=b/AKrpkhJpxezrTGvPZBC9SW3CgmeEDvWHVUmiGEvwM=; b=qAhrFRCGcIQb9NDVcbKnnI87MO
-        rAFmmbjM2sLu6e+feJPc3c5I4D7qGwprfGKsIR8476ANnfS/yu+Lwia+kMttqQbXC0L114HXUN3Zx
-        /rZuenpggIX5ieHsOhX9HaVYQzc60QnpIUS1gFYUdtvTNzlWDdgHKpgNbNOzKmviizUSkBt4JEYbf
-        bnHS19xdmEcmi4mAmx1qWzsIQQu+OMiLEWB/1RWRZwrkJeYHKqw6O3F0JT5GZFxCOTQT37/cwdPJq
-        iO2aQzvkIHxDSKKgPu2mIE1NMibz1IIqvSU5BNlDIGKCAv1NeWRgcfGBjQ7o90LDDCdUWVzlGDBAd
-        GiLHjF/Q==;
+        bh=OHvjr8r1KhMcd+S1XqK4FPd5dKfKqhNjgzj94rkBC/s=; b=hpUzTvBsq4vpy1elAkl1mw6FHf
+        ubJgC5vxQtcJOayMkdq554ViwyiWPCUTwet2YV9Q2J++ssaYd8BSdQzKy6GK2PSq3jWKk5s5x3Izc
+        2Kin6963rmuYrLo4TBx+Y63gokwXQGbrKKxrfmmNUiqMO6yNEI89Nky7+qugD8CIiXjgmeJM4zFm/
+        CS7fc1kZph5dFEd33G1oyyGQ1cQLqiEBOzkijVFNt6hdcjRpqFBG6oGwAX+vWlaW4GQkqGDQWWqP6
+        BmUdTn4oIL3jnqZ2HzQNem8gIxxjHcgR3+9EnmzG4z0Elcnl32jkX27nSL9PJdgETwYDxCfP+L4Sm
+        hcHw+eRA==;
 Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZbTK-00054u-7X; Fri, 15 May 2020 14:37:58 +0000
+        id 1jZbTb-0005KV-FH; Fri, 15 May 2020 14:38:15 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Arnd Bergmann <arnd@arndb.de>,
@@ -53,10 +53,11 @@ Cc:     Jessica Yu <jeyu@kernel.org>, Michal Simek <monstr@monstr.eu>,
         linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
         linux-arch@vger.kernel.org, linux-mm@kvack.org,
         linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 23/29] arm: rename flush_cache_user_range to flush_icache_user_range
-Date:   Fri, 15 May 2020 16:36:40 +0200
-Message-Id: <20200515143646.3857579-24-hch@lst.de>
+        linux-fsdevel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 29/29] module: move the set_fs hack for flush_icache_range to m68k
+Date:   Fri, 15 May 2020 16:36:46 +0200
+Message-Id: <20200515143646.3857579-30-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200515143646.3857579-1-hch@lst.de>
 References: <20200515143646.3857579-1-hch@lst.de>
@@ -68,46 +69,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-flush_icache_user_range will be the name for a generic primitive.
-Move the arm name so that arm already has an implementation.
+flush_icache_range generally operates on kernel addresses, but for some
+reason m68k needed a set_fs override.  Move that into the m68k code
+insted of keeping it in the module loader.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
- arch/arm/include/asm/cacheflush.h | 4 ++--
- arch/arm/kernel/traps.c           | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/m68k/mm/cache.c | 4 ++++
+ kernel/module.c      | 8 --------
+ 2 files changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/include/asm/cacheflush.h b/arch/arm/include/asm/cacheflush.h
-index c78e14fcfb5df..2e24e765e6d3a 100644
---- a/arch/arm/include/asm/cacheflush.h
-+++ b/arch/arm/include/asm/cacheflush.h
-@@ -258,11 +258,11 @@ extern void flush_cache_page(struct vm_area_struct *vma, unsigned long user_addr
- #define flush_cache_dup_mm(mm) flush_cache_mm(mm)
+diff --git a/arch/m68k/mm/cache.c b/arch/m68k/mm/cache.c
+index 7915be3a09712..5ecb3310e8745 100644
+--- a/arch/m68k/mm/cache.c
++++ b/arch/m68k/mm/cache.c
+@@ -107,7 +107,11 @@ void flush_icache_user_range(unsigned long address, unsigned long endaddr)
  
- /*
-- * flush_cache_user_range is used when we want to ensure that the
-+ * flush_icache_user_range is used when we want to ensure that the
-  * Harvard caches are synchronised for the user space address range.
-  * This is used for the ARM private sys_cacheflush system call.
-  */
--#define flush_cache_user_range(s,e)	__cpuc_coherent_user_range(s,e)
-+#define flush_icache_user_range(s,e)	__cpuc_coherent_user_range(s,e)
+ void flush_icache_range(unsigned long address, unsigned long endaddr)
+ {
++	mm_segment_t old_fs = get_fs();
++
++	set_fs(KERNEL_DS);
+ 	flush_icache_user_range(address, endaddr);
++	set_fs(old_fs);
+ }
+ EXPORT_SYMBOL(flush_icache_range);
  
- /*
-  * Perform necessary cache operations to ensure that data previously
-diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
-index 1e70e7227f0ff..316a7687f8133 100644
---- a/arch/arm/kernel/traps.c
-+++ b/arch/arm/kernel/traps.c
-@@ -566,7 +566,7 @@ __do_cache_op(unsigned long start, unsigned long end)
- 		if (fatal_signal_pending(current))
- 			return 0;
+diff --git a/kernel/module.c b/kernel/module.c
+index 646f1e2330d2b..b1673ed49594f 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3312,12 +3312,6 @@ static int check_module_license_and_versions(struct module *mod)
  
--		ret = flush_cache_user_range(start, start + chunk);
-+		ret = flush_icache_user_range(start, start + chunk);
- 		if (ret)
- 			return ret;
+ static void flush_module_icache(const struct module *mod)
+ {
+-	mm_segment_t old_fs;
+-
+-	/* flush the icache in correct context */
+-	old_fs = get_fs();
+-	set_fs(KERNEL_DS);
+-
+ 	/*
+ 	 * Flush the instruction cache, since we've played with text.
+ 	 * Do it before processing of module parameters, so the module
+@@ -3329,8 +3323,6 @@ static void flush_module_icache(const struct module *mod)
+ 				   + mod->init_layout.size);
+ 	flush_icache_range((unsigned long)mod->core_layout.base,
+ 			   (unsigned long)mod->core_layout.base + mod->core_layout.size);
+-
+-	set_fs(old_fs);
+ }
  
+ int __weak module_frob_arch_sections(Elf_Ehdr *hdr,
 -- 
 2.26.2
 
