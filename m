@@ -2,166 +2,200 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F19C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 22:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BE9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 22:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA1520709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 22:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03B120709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 22:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="mUQnLFU7";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="UFr364pf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wgYl/oLl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgEOWNK (ORCPT
+        id S1726492AbgEOWPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 18:13:10 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:25666 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726198AbgEOWNJ (ORCPT
+        Fri, 15 May 2020 18:15:49 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:36588 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgEOWPs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 18:13:09 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04FMBI03006041;
-        Fri, 15 May 2020 15:13:02 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=sgvaCFCbzx12OZlw6/ZIUc76iTc/1YQFQ0/cPUbpKtU=;
- b=mUQnLFU7pPcHkrfWh4ODwGh1Drrn9lT/L9Hr9kYjjS1+aBGx24nlD/UmHB4WAITjqe8Z
- Aa0WofM01nC6lfF/itN+C12ugFglAXiCOLIhRvbjXf812Kv1fYz7UexpspNAoEx9ipmq
- TJRQMow7nKA119tEkWvNXD0fyXhHbn6bngU= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 311v2b2p5w-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 15 May 2020 15:13:02 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.229) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 15 May 2020 15:13:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kTs+K86PC5JKyv+nyu5vHg6tAAPcY+jlSdML374SfLcJjCCl8c0y+VOm0ey3dIbyVHbqzMHqZ0KWyXRGC4VH2lWKUNkKUxoHkDwVKYmapDpIIm56d67HjrFSNW2xciqIDG9nxL0C+mevBlWZoRKAUdmiRlBKTJ3qo5GpEfG5GfIvIxiiCzVMy6YxHd6bLwJrE+s8jLU+khFevez+BfCZMT+cumm1lAuedu5Udc0z1rBoahCtpuKiFtwFDats0t5TcefKICzaeFsJtsnztGN1JmPd2JcixiVC6AKdXWuofPMEGqnk808aCxhJPezDWoFzIAEJYIY4z5Y87zcyNLjiSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sgvaCFCbzx12OZlw6/ZIUc76iTc/1YQFQ0/cPUbpKtU=;
- b=N8F64UarsQ3Li2UhQHA4IzCUvv/C0c1FArBp9H7ANpNnoggdHsnH3lkQl++zFYc9564kGVQM4OY2/Wqvng7mH6TJFvQ6m1kJxXuW//V0tFpsuUnfx+8BLpuXwYLCAeO020BjloDaP4JASoHKq5d1lX4qccQEtPdLHp6wk9glyNxWV0BsePTamuCz/qyaEXjtvUOiG2V7mccBHzaI/4UTIWb/FqUDm93jiHoICMuzsn8gUBocXxYjlOS48mR7qu8NREGMwcwDplv3TAtlJPFwGBdKji6oL+PfjGh619xR0hdarAQkYTe0AGJ6iyqhT22tFkRmHlPp5KRJgztc6R4G5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sgvaCFCbzx12OZlw6/ZIUc76iTc/1YQFQ0/cPUbpKtU=;
- b=UFr364pf+rvJfpCiiS+miQH3xTXDU+1IB2inQMRERc+9mkJ9gdck4fASDdAz3Libsm8lNgr2EZzQG4tDDC4DdJM0RFI4O3YNOD+r847bYpZCsNYFUCCm1iLn9mbsW+aTgio4ZomU15/uOHFAFH76EwtGgCwp8x5sFzQoxX5t42U=
-Authentication-Results: linux.com; dkim=none (message not signed)
- header.d=none;linux.com; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2405.namprd15.prod.outlook.com (2603:10b6:a02:87::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Fri, 15 May
- 2020 22:12:58 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2979.033; Fri, 15 May 2020
- 22:12:58 +0000
-Date:   Fri, 15 May 2020 15:12:55 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Christopher Lameter <cl@linux.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 04/19] mm: slub: implement SLUB version of
- obj_to_index()
-Message-ID: <20200515221255.GE94522@carbon.DHCP.thefacebook.com>
-References: <20200425024625.GA107755@carbon.lan>
- <alpine.DEB.2.21.2004271618340.27701@www.lameter.com>
- <20200427164638.GC114719@carbon.DHCP.thefacebook.com>
- <alpine.DEB.2.21.2004301625490.1693@www.lameter.com>
- <20200430171558.GA339283@carbon.dhcp.thefacebook.com>
- <alpine.DEB.2.22.394.2005022353330.1987@www.lameter.com>
- <20200504182922.GA20009@carbon.dhcp.thefacebook.com>
- <alpine.DEB.2.22.394.2005082130570.65713@www.lameter.com>
- <20200513005741.GA67541@carbon.dhcp.thefacebook.com>
- <alpine.DEB.2.22.394.2005152142570.119998@www.lameter.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2005152142570.119998@www.lameter.com>
-X-ClientProxiedBy: BY3PR10CA0015.namprd10.prod.outlook.com
- (2603:10b6:a03:255::20) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Fri, 15 May 2020 18:15:48 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04FMBnZM029431;
+        Fri, 15 May 2020 22:15:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=2kGRzsjaRGAXe1KvMIuG2Z2gwGj3Jnd8bvP3/TCsvXU=;
+ b=wgYl/oLleBEBHiZhkcCodEzbVKC/Otg3zgV3+oHjt3VUQ+Q1u6k3vdeA3pg0yl9ZSKU8
+ GeZ0feNYYp6T01DDM7+NAHf6u8PjUbyoYUi2LL5pJsyzTKldX9EPRs+IX2I9VeHowq6k
+ OCFWd0gT8FwS1JRn6IdNPrwSecJU8ChgN8qDcxC6Q28Y0S2VpwLMDUfzWOCn5MomRdBe
+ rQrspoj3gK5H8ypDU4OsCvgg7kMrjxqzh6OLapzvOHAeJ6NUF/I2XTHKgqKrmIa41Rnc
+ Pbw/4dd5N6RRo+n4dtsrdC/oARZoeBqljrnlUam9Jm3qtzOXPiyAMx638vDXCLdNW23/ Rg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 3100xwx2vh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 15 May 2020 22:15:40 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04FMCpqE165873;
+        Fri, 15 May 2020 22:15:39 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 3100ysb9jq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 May 2020 22:15:39 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04FMFaqC003865;
+        Fri, 15 May 2020 22:15:37 GMT
+Received: from [192.168.2.157] (/50.38.34.50)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 15 May 2020 15:15:36 -0700
+Subject: Re: kernel BUG at mm/hugetlb.c:LINE!
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Miklos Szeredi <mszeredi@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <000000000000b4684e05a2968ca6@google.com>
+ <aa7812b8-60ae-8578-40db-e71ad766b4d3@oracle.com>
+ <CAJfpegtVca6H1JPW00OF-7sCwpomMCo=A2qr5K=9uGKEGjEp3w@mail.gmail.com>
+ <d32b8579-04a3-2a9b-cd54-1d581c63332e@oracle.com>
+Message-ID: <86c504b3-52c9-55f6-13db-ab55b2f6980e@oracle.com>
+Date:   Fri, 15 May 2020 15:15:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:aa2e) by BY3PR10CA0015.namprd10.prod.outlook.com (2603:10b6:a03:255::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend Transport; Fri, 15 May 2020 22:12:57 +0000
-X-Originating-IP: [2620:10d:c090:400::5:aa2e]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7c8944d5-ff65-4ffc-5004-08d7f91d2000
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2405:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB240595A1DC7A0E07AF275A38BEBD0@BYAPR15MB2405.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 04041A2886
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HoPr5HrFxMlBntVe6pCrO8VTV23p9V6mQCiJo+HCd1UbOL1gYdV78lBpfptBGb+4ArZcKVbop1DW+hWx1srBAt89Zp3GxEnZGYkICmffJHiZECPjNz2tIYUed7QEG6g2FiQk4KkF79WCZ3bdbjgq877DHZHreI5xT0FGO3JAieWHR9EhzQoH0iKeU9s7qUtAy4wcV9OL/wK59fNWooxLv/vPFG4pItthH0Yb0LknfllnQGe8dlFBnfpRZBtFC1Tp44MuooCDN2DDHiQ7A2PRPIwGRNT7InnOktwXQr4ggUhrbgEKubkhEiAFpmKCqjmn6MMAD38ZyReB/iErxZnkCF6mm/Qn4IJQQSFnMDQcKEO+Q032dShdALcioke0vyM6v7cnVHKdZs7bCocN+SKTZ6PD+5D/EXAtUhar7p4o5xvt1PxtOn5M45nFLN/xZAeN
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(346002)(136003)(376002)(39860400002)(6506007)(186003)(1076003)(16526019)(52116002)(86362001)(66946007)(6916009)(7696005)(478600001)(4326008)(54906003)(8676002)(9686003)(2906002)(5660300002)(66556008)(33656002)(66476007)(8936002)(55016002)(316002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: tuxGDY0jw2TZn/FkRVUYuC0wS/eG/7boRveD1lQoptiMNKDhhpU5BH72e7gZ+J6KUrcnI/UHfzZkFNy2iVnKi+ISXaYr2BQ4dEdfIv0xk1zAAIld/Ds0cYyix5SoyINWvbjfot5cEBX84UcCk9ssWGrzg9ltneVdqloCru++r/FZfKnHu+jFroTn8mxk/3wYETQn8J8h8/V4fcvsnXI3qiN/xoP7ykLwzVQWtBh+0x1BdPInlZj2n1l7YeCMwyw8uSxyJlhH2lw/KNYDoGQfcG+bF006OHUF1tmhz3ACEHvLf703vlmEHYHF9vbsyF6sqi+Ae5fTqCRq+pD5UsC2XgAPELNsEiEJE8/TCwjfGD8R+emmbomkQ0YoDKI1joHj8FUIlGjkDGXhFe7J/Ro2xGE5KzdykV3fi76Piq0m08rufnhWpFhlzv0YoI9CJJcGh7G5JYPYK7oEmK+/VfPPU8h6DsH7Tha5tIeftBo++hBg8oOc3e10rX2LzSCQzFGj6zHbXqYz3ODTmJ8YpbUSSA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c8944d5-ff65-4ffc-5004-08d7f91d2000
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2020 22:12:58.4902
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nrjNg1cJwxWeDzzBkiAN2nMnBBXPpCKE1jovr0MK61cLXxr9mnuAApButz9oOT7C
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2405
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-15_07:2020-05-15,2020-05-15 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- impostorscore=0 cotscore=-2147483648 malwarescore=0 phishscore=0
- spamscore=0 lowpriorityscore=0 suspectscore=1 adultscore=0 bulkscore=0
- mlxscore=0 mlxlogscore=999 clxscore=1015 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005150187
-X-FB-Internal: deliver
+In-Reply-To: <d32b8579-04a3-2a9b-cd54-1d581c63332e@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9622 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005150186
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9622 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=999 clxscore=1015 cotscore=-2147483648
+ mlxscore=0 phishscore=0 adultscore=0 impostorscore=0 bulkscore=0
+ malwarescore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005150186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 09:45:30PM +0000, Christoph Lameter wrote:
-> On Tue, 12 May 2020, Roman Gushchin wrote:
+On 5/12/20 11:11 AM, Mike Kravetz wrote:
+> On 5/12/20 8:04 AM, Miklos Szeredi wrote:
+>> On Tue, Apr 7, 2020 at 12:06 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>>> On 4/5/20 8:06 PM, syzbot wrote:
+>>>
+>>> The routine is_file_hugepages() is just comparing the file ops to huegtlbfs:
+>>>
+>>>         if (file->f_op == &hugetlbfs_file_operations)
+>>>                 return true;
+>>>
+>>> Since the file is in an overlayfs, file->f_op == ovl_file_operations.
+>>> Therefore, length will not be rounded up to huge page size and we create a
+>>> mapping with incorrect size which leads to the BUG.
+>>>
+>>> Because of the code in mmap, the hugetlbfs mmap() routine assumes length is
+>>> rounded to a huge page size.  I can easily add a check to hugetlbfs mmap
+>>> to validate length and return -EINVAL.  However, I think we really want to
+>>> do the 'round up' earlier in mmap.  This is because the man page says:
+>>>
+>>>    Huge page (Huge TLB) mappings
+>>>        For mappings that employ huge pages, the requirements for the arguments
+>>>        of  mmap()  and munmap() differ somewhat from the requirements for map‐
+>>>        pings that use the native system page size.
+>>>
+>>>        For mmap(), offset must be a multiple of the underlying huge page size.
+>>>        The system automatically aligns length to be a multiple of the underly‐
+>>>        ing huge page size.
+>>>
+>>> Since the location for the mapping is chosen BEFORE getting to the hugetlbfs
+>>> mmap routine, we can not wait until then to round up the length.  Is there a
+>>> defined way to go from a struct file * to the underlying filesystem so we
+>>> can continue to do the 'round up' in early mmap code?
+>>
+>> That's easy enough:
+>>
+>> static inline struct file *real_file(struct file *file)
+>> {
+>>     return file->f_op != ovl_file_operations ? file : file->private_data;
+>> }
+>>
+>> But adding more filesystem specific code to generic code does not
+>> sound like the cleanest way to solve this...
 > 
-> > > Add it to the metadata at the end of the object. Like the debugging
-> > > information or the pointer for RCU freeing.
-> >
-> > Enabling debugging metadata currently disables the cache merging.
-> > I doubt that it's acceptable to sacrifice the cache merging in order
-> > to embed the memcg pointer?
+> We can incorporate the above 'real_file' functionality in the filesystem
+> specific routine is_file_hugepages(), and I think that would address this
+> specific issue.  I'll code that up.
 > 
-> Well then keep the merging even if you have a memcg pointer.
+>>> One other thing I noticed with overlayfs is that it does not contain a
+>>> specific get_unmapped_area file_operations routine.  I would expect it to at
+>>> least check for and use the get_unmapped_area of the underlying filesystem?
+>>> Can someone comment if this is by design?
+>>
+>> Not sure.  What exactly is f_op->get_unmapped_area supposed to do?
+>>
 > 
-> The disabling for debugging is only to simplify debugging. You dont have
-> to deal with multiple caches actually using the same storage structures.
+> IIUC, filesystems can define their own routines to get addresses for mmap
+> operations.  Quite a few filesystems define get_unmapped_area.
 > 
-> > Figuring out all these details will likely take several weeks, so the whole
-> > thing will be delayed for one-two major releases (in the best case). Given that
-> > the current implementation saves ~40% of slab memory, I think there is some value
-> > in delivering it as it is. So I wonder if the idea of embedding the pointer
-> > should be considered a blocker, or it can be implemented of top of the proposed
-> > code (given it's not a user-facing api or something like this)?
+> The generic mmap code does the following,
 > 
-> Sorry no idea from my end here.
+> 	get_area = current->mm->get_unmapped_area;
+> 	if (file) {
+> 		if (file->f_op->get_unmapped_area)
+> 			get_area = file->f_op->get_unmapped_area;
+> 	} else if (flags & MAP_SHARED) {
+> 		/*
+> 		 * mmap_region() will call shmem_zero_setup() to create a file,
+> 		 * so use shmem's get_unmapped_area in case it can be huge.
+> 		 * do_mmap_pgoff() will clear pgoff, so match alignment.
+> 		 */
+> 		pgoff = 0;
+> 		get_area = shmem_get_unmapped_area;
+> 	}
+> 
+> 	addr = get_area(file, addr, len, pgoff, flags);
+> 
+> If the filesystem provides a get_unmapped_area, it will use it.  I beleive
+> overlayfs prevents this from happening for the underlying filesystem.
+> 
+> Perhaps we do need to add something like a call 'real_file' to this generic
+> code?  I can't think of any other way to get to the underlying filesystem
+> get_unmapped_area here.
 
-Ok, then I'll continue working on the embedding the pointer as an enhancement
-*on top* of the current patchset. As I showed in my other e-mail, switching
-to a different way of obj_cgroup storage is fairly trivial and doesn't change
-much in the rest of the patchset.
+I started going down the path of creating a get_unmapped_area f_op for
+overlayfs.  That is pretty straight forward and works well.  But that
+did not take care of the is_file_hugepages() routine.  Recall that
+is_file_hugepages simply does if (file->f_op == &hugetlbfs_file_operations).
 
-Please, let me know if you're not ok with it.
+I suppose I could add a specific overlayfs check like real_file here.  But,
+that does not seem like a clean solution.
 
-Thanks!
+I also discovered other routines doing comparisons like
+if (file->f_op == <expected_fops>), they are:
+is_dma_buf_file()
+is_file_shm_hugepages()
+get_pipe_info()
+is_file_epoll()
+
+So, it seems that these routines are also impacted if operating on files
+in an overlayfs? 
+
+Any suggestions on how to move forward?  It seems like there may be the
+need for a real_file() routine?  I see a d_real dentry_op was added to
+deal with this issue for dentries.  Might we need something similiar for
+files (f_real)?
+
+Looking for suggestions as I do not normally work with this code.
+-- 
+Mike Kravetz
