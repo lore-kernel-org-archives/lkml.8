@@ -2,255 +2,89 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB78DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF97C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB3F206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:50:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B2srkRIA"
+	by mail.kernel.org (Postfix) with ESMTP id DA091206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:51:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589565064;
+	bh=tcvAYJHglzwUNfNTWbEPrAeLOSbX+1crX3AKhXvoL5Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gEbmUe5qBihzF9FsysIfexE/4QrmvLPILdJ3jsr0SujIbaGfX5tF7/t8Ur+tndT4m
+	 YFZmmt5bVRbWkYpne/zq21VfuakPbuS9t3Lp0OzR3M5jk86YHs4Mwm0qidVDY9dgX4
+	 fVGbte4SrdyV20iz9Y6UYyXdn5n0LmxU80tBDYTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgEORuV (ORCPT
+        id S1726275AbgEORvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:50:21 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55417 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726023AbgEORuV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:50:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589565019;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zwQ5ltGt83PqgYhj9uQQrPj4wuimjwIpIpSjO1pjtKQ=;
-        b=B2srkRIA3ZNcxXrxfTrbZNPEnqOyfhPCab0zJWcFEfj2GP3ntSLiVrDxhc+0/bwLosZr/p
-        Ak3kpxW8M1Y+jMFgHLslLr27muUcDLV8L1BzYYQVi4B/aglPYWpMRGUdxAtu3B2sbKYDjB
-        bu4PMb9LqgsskIIFggayyYgolNuM+Xc=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-476-Hs4JGxStPSCdREjbgJLOSA-1; Fri, 15 May 2020 13:50:18 -0400
-X-MC-Unique: Hs4JGxStPSCdREjbgJLOSA-1
-Received: by mail-qk1-f200.google.com with SMTP id i21so3065773qki.0
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 10:50:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zwQ5ltGt83PqgYhj9uQQrPj4wuimjwIpIpSjO1pjtKQ=;
-        b=FBjl++qBsDcTpoppwx2JpYVIJBeAZ3nALk+cZBHwVjsNTHfE3k7hlRWvxboHsy38mh
-         WWrp15SGvmI4iG0RAc9c9UZQlQ8M0yCoh0UGAFR/Gv11/O0159E6fY51EE9MmQQpQSos
-         QtuktCs/Drm5O7M/+Ml+Z+a+4gLQAc3wmyhIXHDQht/xpXFrmf5eNnBR8IIFk63CjeCY
-         zDroCxc+8L8EQ7tQqPEHBWQj4mUzgPhfM7GGEAMI/OEJMNTargaudmGkq2h8G7RCaT1w
-         foMst7xesWbU+0lZtuiTA1CC8d3nyAoJ8+C4VHbGYOeqiDuKTZZQOL0QGahxgIOvtOOv
-         34lQ==
-X-Gm-Message-State: AOAM5331S77XUWLqN5ODiHsSqYT97KdvUYXwxljmXbBb0M1V1HEWdsXw
-        1LDbOtzyXOjZlF2VFzYWm/3Hkbw1h9tiS9Dw7FM/f9AOUAriXdjCKBE7Mq8tD49INOOuFiLSTIl
-        3+xS4NRpEPLg6XuQyN2PEe/Jc
-X-Received: by 2002:ac8:714c:: with SMTP id h12mr4756283qtp.372.1589565017234;
-        Fri, 15 May 2020 10:50:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxt4GvKY1IPSC9+yaLvlKyNwTubxF6olkd9m/7jRcVRlAeG7PlvKpIFSHS1j81tO5BUwDOM8Q==
-X-Received: by 2002:ac8:714c:: with SMTP id h12mr4756264qtp.372.1589565016959;
-        Fri, 15 May 2020 10:50:16 -0700 (PDT)
-Received: from [192.168.1.4] (198-84-170-103.cpe.teksavvy.com. [198.84.170.103])
-        by smtp.gmail.com with ESMTPSA id 88sm2549291qth.9.2020.05.15.10.50.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 10:50:16 -0700 (PDT)
-Subject: Re: [PATCH] futex: send SIGBUS if argument is not aligned on a
- four-byte boundary
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Maxim Samoylov <max7255@yandex-team.ru>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-api@vger.kernel.org
-References: <158955700764.647498.18025770126733698386.stgit@buzz>
- <20200515162707.GI2978@hirez.programming.kicks-ass.net>
-From:   Carlos O'Donell <carlos@redhat.com>
-Organization: Red Hat
-Message-ID: <403cc691-4ec5-8b3f-382c-4820736da41d@redhat.com>
-Date:   Fri, 15 May 2020 13:50:14 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 15 May 2020 13:51:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgEORvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:51:03 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC86C206D8;
+        Fri, 15 May 2020 17:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589565063;
+        bh=tcvAYJHglzwUNfNTWbEPrAeLOSbX+1crX3AKhXvoL5Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aRzyo3nUmxd8NpKUMnioyB/kziXRo5fJ+uPX0zWb/ZU+Yooi03NiG3naVx/tj//jz
+         /mRfY1nzCj0CM2YoShJ9RJmbzLUS/LK2c8IeplSGvGAV2rYJo40Z4qRe/9dGhDZKnR
+         qvRDUrGb5N6uiOnVK0MX3E/MNUHZGcXMB2Z5FWY0=
+Date:   Fri, 15 May 2020 18:51:00 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] spi: dw: Clear DMAC register when done or stopped
+Message-ID: <20200515175100.GL5066@sirena.org.uk>
+References: <20200515174856.1406-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200515162707.GI2978@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7vAdt9JsdkkzRPKN"
+Content-Disposition: inline
+In-Reply-To: <20200515174856.1406-1-Sergey.Semin@baikalelectronics.ru>
+X-Cookie: Avoid contact with eyes.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/20 12:27 PM, Peter Zijlstra wrote:
-> On Fri, May 15, 2020 at 06:36:47PM +0300, Konstantin Khlebnikov wrote:
->> Userspace implementations of mutexes (including glibc) in some cases
->> retries operation without checking error code from syscall futex.
->> This is good for performance because most errors are impossible when
->> locking code trusts itself.
 
-In newer versions of glibc, which won't solve this problem for older
-distributions (or newer glibc on older kernels), we've refactored all
-of this code into futex-internal.h and do things like this (example
-from one of the generic internal interfaces for futex use):
+--7vAdt9JsdkkzRPKN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-149     case -ETIMEDOUT: /* Cannot have happened as we provided no timeout.  */
-150     case -EFAULT: /* Must have been caused by a glibc or application bug.  */
-151     case -EINVAL: /* Either due to wrong alignment or due to the timeout not
-152                      being normalized.  Must have been caused by a glibc or
-153                      application bug.  */
-154     case -ENOSYS: /* Must have been caused by a glibc bug.  */
-155     /* No other errors are documented at this time.  */
-156     default:
-157       futex_fatal_error ();
-158     }
+On Fri, May 15, 2020 at 08:48:54PM +0300, Serge Semin wrote:
 
-Several of the pthread interfaces are using this code so they won't suffer
-from "stuck EINVAL loops" like below.
+> Acked-by: Mark Brown <broonie@kernel.org>
 
-We worked with all the interested parties to get `man 2 futex` updated
-with the expected semantics and error return codes.
+I didn't ack this but Andy did (or at least the for-5.8 version)?
 
-We don't want to ignore what the kernel is returning and we terminate
-the process without propagating that error upwards for the simple 
-API cases.
+--7vAdt9JsdkkzRPKN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Likewise note the "default:" which means if we get new futex error that
-is not documented we also terminate the process.
+-----BEGIN PGP SIGNATURE-----
 
->> Some errors which could came from outer code are handled automatically,
->> for example invalid address triggers SIGSEGV on atomic fast path.
->>
->> But one case turns into nasty busy-loop: when address is unaligned.
->> futex(FUTEX_WAIT) returns EINVAL immediately and loop goes to retry.
->>
->> Example which loops inside second call rather than hung peacefully:
->>
->> #include <stdlib.h>
->> #include <pthread.h>
->>
->> int main(int argc, char **argv)
->> {
->> 	char buf[sizeof(pthread_mutex_t) + 1];
->> 	pthread_mutex_t *mutex = (pthread_mutex_t *)(buf + 1);
->>
->> 	pthread_mutex_init(mutex, NULL);
->> 	pthread_mutex_lock(mutex);
->> 	pthread_mutex_lock(mutex);
->> }
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6+1oMACgkQJNaLcl1U
+h9CKggf8DwgS+z/RTKKCOSWkzy5KUqsXHelAyHkx/m4g22mXx2lAUIO/JRtskyqN
+bw6XePwD9D3G4HqYStuMKJ9eumQ+sV2/GGkAwwQoPqNhr4RH/Y/W2qVOVHXW7mYy
+eNVMr0Vt3Y4NouV5wKo3KVnZ3U7uV9TrHgqT0uDXNJDL6bO+8ZskMDOE6XHzVrA4
+DWuTr5cd+f9i05eWrmXazAxREUcnrcXpVr9qhwcplO8NQx99uGQSSiFcnFUJkCN+
+9j/6KEvvYscKcmYg/M8FH0tGcLk3ok7T4sxUu+Gvm+F6oW5Ol5ioVVR34o95mhNb
+L1U9jBBY4G0VL5LDPX1197nV5qQF8g==
+=LKb+
+-----END PGP SIGNATURE-----
 
-This isn't fixed because this is the older code in pthread_mutex_lock
-which we haven't ported to futex-internal.h yet, otherwise we would abort
-the process.
-
-A quick change to use the newer interface (futex_wait_simple), and the
-example above fails as expected:
-
-./test
-The futex facility returned an unexpected error code.
-Aborted (core dumped)
-
-And it does not loop. I'm open to bikeshed on the existing error message
-(which has been there since 2014 / commit a2f0363f817).
-
-coredumpctl debug loop-futex/test
-
-Core was generated by `./test'.
-Program terminated with signal SIGABRT, Aborted.
-#0  __GI_raise (sig=sig@entry=6) at ../sysdeps/unix/sysv/linux/raise.c:49
-49	  return ret;
-(gdb) bt
-#0  __GI_raise (sig=sig@entry=6) at ../sysdeps/unix/sysv/linux/raise.c:49
-#1  0x00007f1cac0d2872 in __GI_abort () at abort.c:79
-#2  0x00007f1cac12a248 in __libc_message (action=action@entry=do_abort, fmt=fmt@entry=0x7f1cac234a57 "%s")
-    at ../sysdeps/posix/libc_fatal.c:155
-#3  0x00007f1cac12a27a in __GI___libc_fatal (
-    message=message@entry=0x7f1cac288000 "The futex facility returned an unexpected error code.\n")
-    at ../sysdeps/posix/libc_fatal.c:164
-#4  0x00007f1cac283fdc in futex_fatal_error () at ../sysdeps/nptl/futex-internal.h:157
-#5  futex_wait (private=<optimized out>, expected=2, futex_word=0x7f1cac283fdc <__lll_lock_wait+92>)
-    at ../sysdeps/nptl/futex-internal.h:157
-#6  futex_wait_simple (private=<optimized out>, expected=2, futex_word=0x7f1cac283fdc <__lll_lock_wait+92>)
-    at ../sysdeps/nptl/futex-internal.h:172
-#7  __lll_lock_wait (futex=futex@entry=0x7ffdb1f0a2c1, private=<optimized out>) at lowlevellock.c:53
-#8  0x00007f1cac27cbf3 in __GI___pthread_mutex_lock (mutex=0x7ffdb1f0a2c1) at ../nptl/pthread_mutex_lock.c:80
-#9  0x000000000040117a in main (argc=1, argv=0x7ffdb1f0a3f8) at test.c:11
-
-So semantically the kernel change makes sense, and will terminate the
-process for glibc today, and matches what the refactored glibc code
-will do in userspace for more of the interfaces in the future.
-
->> It seems there is no practical usage for calling syscall futex for
->> unaligned address. This may be only bug in user space. Let's help
->> and handle this gracefully without adding extra code on fast path.
-
-The only use case I could see is retroactively adding a futex to the
-existing ABI of a structure and wanting to avoid padding. That does
-not seem like a common enough use case that we would want to support.
-To get efficient cache-line usage you'll want to pack things by hand.
-
->> This patch sends SIGBUS signal to slay task and break busy-loop.
->>
->> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->> Reported-by: Maxim Samoylov <max7255@yandex-team.ru>
-> 
-> Seems like a sensible idea to me.
-
-Please do try to update the linux kernel man pages update to note
-the change in behaviour and the version and commit of the released
-kernel where this changed.
-
-Please keep `man 2 futex` as accurate as possible for userspace
-libc implementations.
-
-Thanks.
- 
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> 
->> ---
->>  kernel/futex.c |   13 ++++++++++++-
->>  1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/kernel/futex.c b/kernel/futex.c
->> index b59532862bc0..8a6d35fa56bc 100644
->> --- a/kernel/futex.c
->> +++ b/kernel/futex.c
->> @@ -508,10 +508,21 @@ get_futex_key(u32 __user *uaddr, int fshared, union futex_key *key, enum futex_a
->>  
->>  	/*
->>  	 * The futex address must be "naturally" aligned.
->> +	 * Also send signal to break busy-loop if user-space ignore error.
->> +	 * EFAULT case should trigger SIGSEGV at access from user-space.
->>  	 */
->>  	key->both.offset = address % PAGE_SIZE;
->> -	if (unlikely((address % sizeof(u32)) != 0))
->> +	if (unlikely((address % sizeof(u32)) != 0)) {
->> +		struct kernel_siginfo info;
->> +
->> +		clear_siginfo(&info);
->> +		info.si_signo = SIGBUS;
->> +		info.si_code  = BUS_ADRALN;
->> +		info.si_addr  = uaddr;
->> +		force_sig_info(&info);
->> +
->>  		return -EINVAL;
->> +	}
->>  	address -= key->both.offset;
->>  
->>  	if (unlikely(!access_ok(uaddr, sizeof(u32))))
->>
-> 
-
--- 
-Cheers,
-Carlos.
-
+--7vAdt9JsdkkzRPKN--
