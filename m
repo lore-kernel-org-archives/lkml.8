@@ -4,64 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EEBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B96C9206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C800220728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l3OKb9/P"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KLdZkd7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgEOG4i (ORCPT
+        id S1726821AbgEOG4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:56:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48352 "EHLO
+        Fri, 15 May 2020 02:56:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726656AbgEOG4f (ORCPT
+        by vger.kernel.org with ESMTP id S1726722AbgEOG4j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:56:35 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD9CC05BD09
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:35 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id t11so418097qvv.11
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:35 -0700 (PDT)
+        Fri, 15 May 2020 02:56:39 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB55C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:39 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id d7so1566686ybp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=6zJdeczCxXIR05ROPjfL5M3I5d1ozekeF2WaxmhUPXo=;
-        b=l3OKb9/Pu0/xrbfvi4lE2TdFagJPZ+BcPCVUsNj1x3y0yxGzAHd4rZFb5smd6fBjNj
-         E5sWXxqdr81LqYGmCrXKMXD26Kg4w64KQ4PrQb0AMH475KRgrmYJgqfinUUapGN7Kz0+
-         JomMgqVpcsgelaft2fGQcqHV65twgmBNwO6YywGIvz5fFPrQKjW4r2P9MSpe+MLL9z0V
-         RQOYhDIkOX8dkiQyqL8tEyMl+XCpKwT8/zrxBEQJE6gVIki9Z/7z27Q3MngZfJG4k6yh
-         uyC+MInwMKFZubfIYfNfwhotQRMCL9SLOigBr4GX5+3V5evNYARi8ESBmeBfvf2faHMy
-         31Jw==
+        bh=rDN5X6ee0p3DPWcQJnEO6bz3ZGrQ0VwuHJwyeJb8UjA=;
+        b=KLdZkd7htipcJURCMR14vvzpQP9A0y+OVxW6HSLzZHzFBZJHTKwz9IVBBxRF4GvUEm
+         FSMZk7uKRPn2mlBTMmDdAt4esd/0s/s2wgWy5aAXz7LuQtGXRB+iIyTXNziR2p53QKE3
+         T5PtllNVjRZJj4jCsHWttYebRTmUjfvvmRoDZtP0cJ7NI9MB3S+RPaCwNn8KeFIkYLI8
+         0cJto9KU6HcZEH+wKsu4HJgbFDpQ5jMfV2/lsGTVbKVcr1J9sClqOkTc/McfHP0SuS/F
+         XhDi9KXz9PRd5yRyXKq2SgvSHeLXQ916hTUQ41QXQgXuFNTFyzU/fLuAraZvRzw69afs
+         DX7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=6zJdeczCxXIR05ROPjfL5M3I5d1ozekeF2WaxmhUPXo=;
-        b=FU12GVyZ4i9BTLx2NLyIkD5vBpIuNv7cSH2niHCfVEH7/YphDFyxzNO2IGFzRoOvUp
-         WwNCBWw/liQb4EzNSRJSlqN0mxkElq/4hb2poRJ9BQ+6RM1GlFmCYm3Qf+15Fo0R9gel
-         O+3CaA0ELPDnx3PJ5I6kvDgB+T/XPaZ2YnnGKqpTE5BDb3McLkQzUkNaiuyZeVSrjuI6
-         Tfx2cPNQQoUGLifVLNfTargo0RIKVno7/3T+RfzH2zGAxXVHOk+0eAc0VJh+Biu1DLCw
-         8KEBmQ8j1HSFbz1VJM/Gv574Rx+UEgWF4GEyOxw6jxOwN7woSWH4rz3nkvzciYOj8gde
-         GDmQ==
-X-Gm-Message-State: AOAM532uIbCzRrFN+s6LDS9DS/1mZXnbIcpqwZvonR5KbPfPvLJPMunn
-        IIvT0Nd1Ru+o2Ov5baFreaXWis1Wefv6
-X-Google-Smtp-Source: ABdhPJxgP3QPfqhrDHlYbZvoBePrEE1LeamWczkyl3CHCs2p0Alr5VTy1rx2TlK6084IIR4Gb7TzZvSscmhG
-X-Received: by 2002:ad4:5584:: with SMTP id e4mr2000014qvx.191.1589525794216;
- Thu, 14 May 2020 23:56:34 -0700 (PDT)
-Date:   Thu, 14 May 2020 23:56:18 -0700
+        bh=rDN5X6ee0p3DPWcQJnEO6bz3ZGrQ0VwuHJwyeJb8UjA=;
+        b=VAEWSVo5J+XAiI9qEHzpBN7b87yGTx94nf2OdKV/E/+GBcqWMwpPQ/z2AhSUwSx+3Z
+         mFYA6pDW+Z/1sn+KjjPGGjbATGK/JJpUf+Dhg3RX2zTQZVOG38CDhdkC6fUvQCPzdIES
+         XZjx7RYyD2zS1R5CQ3xFBndfHGCS5mDOc7yAVps0x8NIsskTowZQ2U0Zd0uIMxRJyGHg
+         /ruS0ckGaFJ0utfxwDHo65gb8JXvoEAx5i0f3qTMbuWd/z1v/SkD4pt0jEFL1gPIukAA
+         d/Gw0sA6XrWYB3datApYO5nukcFd24rEUzUimrtQAXC5F6YI8LNImUa4lNstokl+0znB
+         L9kQ==
+X-Gm-Message-State: AOAM530w94H3BbGTMvnaXQvJTZ18ta4RoLo8jqHEEOqYwU/08u4Tzv5c
+        titWkFIw84bJJrWGgTpqbOzU2RrdaxDS
+X-Google-Smtp-Source: ABdhPJyAKrEhG9hP88436bqQfTqIsJLRSZBZRWxiUsuHq6Q11uRmf18lQUT127u8JrDy04si5qc0Uj/kFk74
+X-Received: by 2002:a25:a184:: with SMTP id a4mr3068042ybi.255.1589525797993;
+ Thu, 14 May 2020 23:56:37 -0700 (PDT)
+Date:   Thu, 14 May 2020 23:56:20 -0700
 In-Reply-To: <20200515065624.21658-1-irogers@google.com>
-Message-Id: <20200515065624.21658-3-irogers@google.com>
+Message-Id: <20200515065624.21658-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20200515065624.21658-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH 2/8] libbpf hashmap: Remove unused #include
+Subject: [PATCH 4/8] libbpf hashmap: Localize static hashmap__* symbols
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -95,27 +96,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove #include of libbpf_internal.h that is unused.
-Discussed in this thread:
-https://lore.kernel.org/lkml/CAEf4BzZRmiEds_8R8g4vaAeWvJzPb4xYLnpF0X2VNY8oTzkphQ@mail.gmail.com/
+Localize the hashmap__* symbols in libbpf.a. To allow for a version in
+libapi.
+
+Before:
+$ nm libbpf.a
+...
+000000000002088a t hashmap_add_entry
+000000000001712a t hashmap__append
+0000000000020aa3 T hashmap__capacity
+000000000002099c T hashmap__clear
+00000000000208b3 t hashmap_del_entry
+0000000000020fc1 T hashmap__delete
+0000000000020f29 T hashmap__find
+0000000000020c6c t hashmap_find_entry
+0000000000020a61 T hashmap__free
+0000000000020b08 t hashmap_grow
+00000000000208dd T hashmap__init
+0000000000020d35 T hashmap__insert
+0000000000020ab5 t hashmap_needs_to_grow
+0000000000020947 T hashmap__new
+0000000000000775 t hashmap__set
+00000000000212f8 t hashmap__set
+0000000000020a91 T hashmap__size
+...
+
+After:
+$ nm libbpf.a
+...
+000000000002088a t hashmap_add_entry
+000000000001712a t hashmap__append
+0000000000020aa3 t hashmap__capacity
+000000000002099c t hashmap__clear
+00000000000208b3 t hashmap_del_entry
+0000000000020fc1 t hashmap__delete
+0000000000020f29 t hashmap__find
+0000000000020c6c t hashmap_find_entry
+0000000000020a61 t hashmap__free
+0000000000020b08 t hashmap_grow
+00000000000208dd t hashmap__init
+0000000000020d35 t hashmap__insert
+0000000000020ab5 t hashmap_needs_to_grow
+0000000000020947 t hashmap__new
+0000000000000775 t hashmap__set
+00000000000212f8 t hashmap__set
+0000000000020a91 t hashmap__size
+...
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/bpf/hashmap.h | 1 -
- 1 file changed, 1 deletion(-)
+ tools/lib/bpf/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/lib/bpf/hashmap.h b/tools/lib/bpf/hashmap.h
-index bae8879cdf58..e823b35e7371 100644
---- a/tools/lib/bpf/hashmap.h
-+++ b/tools/lib/bpf/hashmap.h
-@@ -15,7 +15,6 @@
- #else
- #include <bits/reg.h>
- #endif
--#include "libbpf_internal.h"
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index aee7f1a83c77..4a1cdbceb04e 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -20,6 +20,7 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
+ endif
  
- static inline size_t hash_bits(size_t h, int bits)
- {
+ INSTALL = install
++OBJCOPY ?= objcopy
+ 
+ # Use DESTDIR for installing into a different root directory.
+ # This is useful for building a package. The program will be
+@@ -181,6 +182,7 @@ $(BPF_IN_SHARED): force elfdep zdep bpfdep $(BPF_HELPER_DEFS)
+ 
+ $(BPF_IN_STATIC): force elfdep zdep bpfdep $(BPF_HELPER_DEFS)
+ 	$(Q)$(MAKE) $(build)=libbpf OUTPUT=$(STATIC_OBJDIR)
++	$(Q)$(OBJCOPY) -w -L hashmap__\* $@
+ 
+ $(BPF_HELPER_DEFS): $(srctree)/tools/include/uapi/linux/bpf.h
+ 	$(QUIET_GEN)$(srctree)/scripts/bpf_helpers_doc.py --header \
 -- 
 2.26.2.761.g0e0b3e54be-goog
 
