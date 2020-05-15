@@ -2,68 +2,115 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36938C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87693C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC6B205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0D9206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589573720;
-	bh=tmkkfb5RlgiolGotuwMjHh51nDR1N6E8SzFTI3GSFeQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=QcCaILUGQKpQKcZiYAQQtzQ5Icf4ZF9hSCeGRUpjw1SM33fDA+w5mM3uX29w0RO6c
-	 MuoY4AII+c4w0LP/SSvC71ckoX2pW+OC558VYhtxbb1QN0qQTMgQ6rIcrS2JGPkdbF
-	 LsEAzCfl8pIpoAiTKiTFqGw2VF5Kp0/TqjeOIR2s=
+	s=default; t=1589574091;
+	bh=ZlKLA6hftmfIEQ01B3gzgC4rNUKxxIa9wJUwmOd8fXk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eveGPESw6O5GNgMyXPaNrZVQF7RLr2yRFt2jDD8XeFVt39hK1AQmzoPfEyftLX8+K
+	 ozUHTcc6fNmULm6YHTymlpHAW5nOTEOrYyGf3yIYgXFOUJTQnd+8MaNu6GZqK0n3W/
+	 yQ+T25dE+W6ebUJMo3oAZmn7qPAIysDUn9htPh+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbgEOUPR (ORCPT
+        id S1726362AbgEOUVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:15:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726297AbgEOUPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:15:04 -0400
-Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589573704;
-        bh=tmkkfb5RlgiolGotuwMjHh51nDR1N6E8SzFTI3GSFeQ=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=tXOSpJjkfNs2y1D1BhBs2SndCSbVK63wjYNsrqUoCLDIwqmsbpicJhaqiVFxwHIYY
-         eswxt2uT5ke2kbecUTPr3wl7lsNW1Eppm5TkqUCT7+wF+jbVy8aHggiaOaqpNXMVMH
-         7op84PIaivZylRCDAd608OEaBK3eIs7vb6iGh9e8=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200515191354.GA17053@ziepe.ca>
-References: <20200515191354.GA17053@ziepe.ca>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200515191354.GA17053@ziepe.ca>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
-X-PR-Tracked-Commit-Id: ccfdbaa5cf4601b9b71601893029dcc9245c002b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d5dfe4f1b44ed532653c2335267ad9599c8a698e
-Message-Id: <158957370400.26450.6291646987244577141.pr-tracker-bot@kernel.org>
-Date:   Fri, 15 May 2020 20:15:04 +0000
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Fri, 15 May 2020 16:21:30 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44007 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbgEOUVa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 16:21:30 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k22so1356063pls.10;
+        Fri, 15 May 2020 13:21:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aSUN+6mJpWuP6Of+IJbDE1swWmWrU0mZkmJ837Io9Jc=;
+        b=TqjWOIPpNm7Q9QgzYwTdZzvOnu/rbVVbf5scL5/dzTt5x0basnk7htPeqZbYyHAMwN
+         zRg8HudCqRFdGigUQosebddz+ci5Tv0BWJvHgHoTaNeo7KzsQ4vqS47zZpYzuoJbHeK8
+         g9vVcYRxW5vXP5ToJBvwT3CVuVsmLlkuS2kH7Oyg0blbTPuMgMFi2mvBG94WRw3hmO6k
+         A+TdBEkfybb+0d5O8fJ8rrmA9jGyfxk/SfAKLC06hr6+bv0CcpK9yb7gjZjPqmzX9sQ+
+         kOxySfPlpOXXyQ5KFa2mu59N2XDiGCjSY/dsJ79IM0Muwvl18L1q9enj5SdS2wzH3kp0
+         raVg==
+X-Gm-Message-State: AOAM531VXGcLQcCJLJuQp495AUdYXEJRcRfAk4nzT1RWvqZV8VV73GhP
+        hTz+AcTV/Y18LxaouykLGpMJjSy4yV8=
+X-Google-Smtp-Source: ABdhPJzDKstdoEAfNtdPXwb/uILqnTT69eTIYpdZ5GurBwer3cFOtdawny/GPsI7kVqMwlRo4sJv+A==
+X-Received: by 2002:a17:90b:3887:: with SMTP id mu7mr5128138pjb.168.1589574089350;
+        Fri, 15 May 2020 13:21:29 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id r2sm2621097pfq.194.2020.05.15.13.21.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 13:21:27 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id D608240246; Fri, 15 May 2020 20:21:26 +0000 (UTC)
+Date:   Fri, 15 May 2020 20:21:26 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Xiaoming Ni <nixiaoming@huawei.com>, yzaikin@google.com,
+        adobriyan@gmail.com, mingo@kernel.org, peterz@infradead.org,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        bauerman@linux.ibm.com, gregkh@linuxfoundation.org,
+        skhan@linuxfoundation.org, dvyukov@google.com,
+        svens@stackframe.org, joel@joelfernandes.org, tglx@linutronix.de,
+        Jisheng.Zhang@synaptics.com, pmladek@suse.com,
+        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, wangle6@huawei.com
+Subject: Re: [PATCH 1/4] hung_task: Move hung_task sysctl interface to
+ hung_task_sysctl.c
+Message-ID: <20200515202126.GY11244@42.do-not-panic.com>
+References: <1589517224-123928-1-git-send-email-nixiaoming@huawei.com>
+ <1589517224-123928-2-git-send-email-nixiaoming@huawei.com>
+ <202005150103.6DD6F07@keescook>
+ <b72e0721-d08a-0fef-f55d-eb854483d04f@huawei.com>
+ <202005150902.9293E99B8@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202005150902.9293E99B8@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 15 May 2020 16:13:54 -0300:
+On Fri, May 15, 2020 at 09:03:54AM -0700, Kees Cook wrote:
+> On Fri, May 15, 2020 at 04:56:34PM +0800, Xiaoming Ni wrote:
+> > On 2020/5/15 16:04, Kees Cook wrote:
+> > > On Fri, May 15, 2020 at 12:33:41PM +0800, Xiaoming Ni wrote:
+> > > > Move hung_task sysctl interface to hung_task_sysctl.c.
+> > > > Use register_sysctl() to register the sysctl interface to avoid
+> > > > merge conflicts when different features modify sysctl.c at the same time.
+> > > > 
+> > > > Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+> > > > ---
+> > > >   include/linux/sched/sysctl.h |  8 +----
+> > > >   kernel/Makefile              |  4 ++-
+> > > >   kernel/hung_task.c           |  6 ++--
+> > > >   kernel/hung_task.h           | 21 ++++++++++++
+> > > >   kernel/hung_task_sysctl.c    | 80 ++++++++++++++++++++++++++++++++++++++++++++
+> > > 
+> > > Why a separate file? That ends up needing changes to Makefile, the
+> > > creation of a new header file, etc. Why not just put it all into
+> > > hung_task.c directly?
+> > > 
+> > > -Kees
+> > > 
+> > But Luis Chamberlain's suggestion is to put the hung_task sysctl code in a
+> > separate file. Details are in https://lkml.org/lkml/2020/5/13/762.
+> > I am a little confused, not sure which way is better.
+> 
+> Ah, yes, I see now. Luis, I disagree with your recommendation here -- I
+> think complicating the Makefile is much less intuitive than just
+> wrapping this code in an #ifdef block in the existing .c file.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+That's fine, sorry for the trouble Xiaoming.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d5dfe4f1b44ed532653c2335267ad9599c8a698e
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+  Luis
