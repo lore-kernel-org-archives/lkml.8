@@ -2,145 +2,178 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F3CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69339C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02FD32076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4532076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:07:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPEJnav0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vhExOYJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgEOPGc (ORCPT
+        id S1726657AbgEOPHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:06:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726140AbgEOPGb (ORCPT
+        Fri, 15 May 2020 11:07:34 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:33968 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726227AbgEOPHe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:06:31 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2698C061A0C;
-        Fri, 15 May 2020 08:06:30 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 63so2125515oto.8;
-        Fri, 15 May 2020 08:06:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=37rPaVirt9XFwClnSBrwkFy9t98lCKr8fqc0wxeBqbQ=;
-        b=MPEJnav0wmHisAiDR2w3zemBM3f2eft4Lu2hyl6UgNLm64xKttZ8VCns7GP4XN8R1b
-         Sp4HbB/z7Jdp9fA/566ZRfZ65n3RknpeHN36kWGOVh1Y5HQQsSpvqFD3gKIPv85z3rSb
-         t/Z8vAyqQxYTh71PTSjC2gLcNC9zxPuLMUzkOVFZY5sDoRcrnT8N8FDbAZ9OSbDtkndR
-         62xZLpAJTdQ/hMqlFxbAXf+Pw7n0PCp05eyxyeacagdMrfGM+izusdh9eGubyMwu9J0t
-         OURKLPntMmiVHAhsrBgJkD6enwkXRpFlKasScbF9TycKoDyL9oMXo+hzcpmBz+DhyR51
-         FTXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=37rPaVirt9XFwClnSBrwkFy9t98lCKr8fqc0wxeBqbQ=;
-        b=uL4Q8Cn0nRbwxve4plikM/AFrqOlJuI4tjOQE+MMZq1ad6tZtcaloeBPSPTSLKzGCX
-         /DOO7Wk2U8sYr4KwVzzAU1lAts3UelTRRZNb6/cl1gKz7PpxBYfHZ0jNBVgUx+SgzQVP
-         PjiStxnC1bNpoD2DDBveZezw4HVq4rkQ6tWpr771HDFB1rGOaIt6kH1tx46FIOYIxhBf
-         FrpMML4jBOBWo0iENAa7Rn7Pt9seHySdTNJ+5Qc6uQc+l7iaFruH4EDNrfah34+Xs/Yc
-         OsyECatjFrqTLQLPcAvCzL791QTY/84tAz1NTpAhzaR0Ay90Ox4MEf3rewf6uKHEVQTW
-         j3wQ==
-X-Gm-Message-State: AOAM530OgGj+JsDcTAWFFgI0SWZinHB4e8cZhJVP2Ia0xlSxKDj+inUq
-        ZNxneaaszuQqxqI8vLlez3SdwfbF0oZXlKK+qIp8cv8V
-X-Google-Smtp-Source: ABdhPJzk/TdecIuYME/TbHJhuVxtzCM9/2TfvlIcp1YRHPbhNTokdedEGTsjL7EV3EvLZvWppABE9grOvae5hhi/HOg=
-X-Received: by 2002:a9d:398b:: with SMTP id y11mr1775480otb.135.1589555189997;
- Fri, 15 May 2020 08:06:29 -0700 (PDT)
+        Fri, 15 May 2020 11:07:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589555253; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=GD3MSVnurBHbUadPkaSVqaLd1/4uCYhA66rh1sVq/Fc=;
+ b=vhExOYJ6n/SzUz7BG0k0tJCGPx8dSqawdByQg1nPVOwnjU8LAm/+cd2epQYjF82MpLMwG6dm
+ 1kA1YCCD8plW53T3o/WTWpgb1JCHsKfW5xOfBeBMxMWp1X0JenJyPBjn3fugZl5/8eqeB05y
+ c738hfovVi8f3CeLvMlk2BQHFGM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ebeb02775dd50406e3fe241 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 15 May 2020 15:07:19
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CAF95C43636; Fri, 15 May 2020 15:07:18 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A1BF8C433F2;
+        Fri, 15 May 2020 15:07:13 +0000 (UTC)
 MIME-Version: 1.0
-References: <CAEjxPJ6pFdDfm55pv9bT3CV5DTFF9VqzRmG_Xi5bKNxPaGuOLg@mail.gmail.com>
- <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk>
- <CAEjxPJ4=ZN_jKP2nX5mrMA3OxC8XLsYEmCPCD-78H4XQw=_hCA@mail.gmail.com> <3999877.1589475539@warthog.procyon.org.uk>
-In-Reply-To: <3999877.1589475539@warthog.procyon.org.uk>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Fri, 15 May 2020 11:06:19 -0400
-Message-ID: <CAEjxPJ5wW2qHYDsqKr5rjnRJ++4f2LXobCQkKZvWCSb_j0WN6w@mail.gmail.com>
-Subject: Re: [PATCH] keys: Move permissions checking decisions into the
- checking code
-To:     David Howells <dhowells@redhat.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        keyrings@vger.kernel.org, SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 15 May 2020 20:37:13 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Tingwei Zhang <tingwei@codeaurora.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH] coresight: etm4x: Add support to disable trace unit power
+ up
+In-Reply-To: <CANLsYkxun2EWGeLU42ShbqkJMtCTh+Q9L3t=CXQR+-2zVuuJYg@mail.gmail.com>
+References: <20200514105915.27516-1-saiprakash.ranjan@codeaurora.org>
+ <20200514180055.GA29384@xps15>
+ <2c932d57288508cc72a6ee323cf5595e@codeaurora.org>
+ <CANLsYkxun2EWGeLU42ShbqkJMtCTh+Q9L3t=CXQR+-2zVuuJYg@mail.gmail.com>
+Message-ID: <a0f8f01f28506e10001885e387d3cb4f@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 12:59 PM David Howells <dhowells@redhat.com> wrote:
->
-> How about this then?
->
-> David
-> ---
-> commit fa37b6c7e2f86d16ede1e0e3cb73857152d51825
-> Author: David Howells <dhowells@redhat.com>
-> Date:   Thu May 14 17:48:55 2020 +0100
->
->     keys: Move permissions checking decisions into the checking code
->
->     Overhaul the permissions checking, moving the decisions of which permits to
->     request for what operation and what overrides to allow into the permissions
->     checking functions in keyrings, SELinux and Smack.
->
->     To this end, the KEY_NEED_* constants are turned into an enum and expanded
->     in number to cover operation types individually.
->
->     Note that some more tweaking is probably needed to separate kernel uses,
->     e.g. AFS using rxrpc keys, from direct userspace users.
->
->     Some overrides are available and this needs to be handled specially:
->
->      (1) KEY_FLAG_KEEP in key->flags - The key may not be deleted and/or things
->          may not be removed from the keyring.
+Hi Mathieu,
 
-Why can't they be deleted / removed?  They can't ever be deleted or
-removed or for some period of time?
+On 2020-05-15 20:22, Mathieu Poirier wrote:
+> On Thu, 14 May 2020 at 12:39, Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> Hi Mathieu,
+>> 
+>> On 2020-05-14 23:30, Mathieu Poirier wrote:
+>> > Good morning Sai,
+>> >
+>> > On Thu, May 14, 2020 at 04:29:15PM +0530, Sai Prakash Ranjan wrote:
+>> >> From: Tingwei Zhang <tingwei@codeaurora.org>
+>> >>
+>> >> On some Qualcomm Technologies Inc. SoCs like SC7180, there
+>> >> exists a hardware errata where the APSS (Application Processor
+>> >> SubSystem)/CPU watchdog counter is stopped when ETM register
+>> >> TRCPDCR.PU=1.
+>> >
+>> > Fun stuff...
+>> >
+>> 
+>> Yes :)
+>> 
+>> >> Since the ETMs share the same power domain as
+>> >> that of respective CPU cores, they are powered on when the
+>> >> CPU core is powered on. So we can disable powering up of the
+>> >> trace unit after checking for this errata via new property
+>> >> called "qcom,tupwr-disable".
+>> >>
+>> >> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+>> >> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> >
+>> > Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> > Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+>> >
+>> 
+>> Tingwei is the author, so if I understand correctly, his signed-off-by
+>> should appear first, am I wrong?
+> 
+> It's a gray area and depends on who's code is more prevalent in the
+> patch.  If Tingwei wrote the most of the code then his name is in the
+> "from:" section, yours as co-developer and he signs off on it (as I
+> suggested).  If you did most of the work then it is the opposite.
+> Adding a Co-developed and a signed-off with the same name doesn't make
+> sense.
+> 
 
->      (2) KEY_FLAG_ROOT_CAN_CLEAR in key->flags - The keyring can be cleared by
->          CAP_SYS_ADMIN.
+I did check the documentation for submitting patches:
+Documentation/process/submitting-patches.rst. And it clearly states
+that "Co-developed-by must be followed by Signed-off by the co-author
+and the last Signed-off-by: must always be that of the developer
+submitting the patch".
 
-Why do some keyrings get this flag and others do not?  Under what
-conditions?  Why is CAP_SYS_ADMIN the right capability for this?
+Quoting below from the doc:
 
->      (3) KEY_FLAG_ROOT_CAN_INVAL in key->flags - The key can be invalidated by
->          CAP_SYS_ADMIN.
+Co-developed-by: <snip> ...Since
+Co-developed-by: denotes authorship, every Co-developed-by: must be 
+immediately
+followed by a Signed-off-by: of the associated co-author.  Standard 
+sign-off
+procedure applies, i.e. the ordering of Signed-off-by: tags should 
+reflect the
+chronological history of the patch insofar as possible, regardless of 
+whether
+the author is attributed via From: or Co-developed-by:.  Notably, the 
+last
+Signed-off-by: must always be that of the developer submitting the 
+patch.
 
-Ditto.
+>> 
+>> >> ---
+>> >>  .../devicetree/bindings/arm/coresight.txt     |  6 ++++
+>> >>  drivers/hwtracing/coresight/coresight-etm4x.c | 29
+>> >> ++++++++++++-------
+>> >
+>> > Please split in two patches.
+>> >
+>> 
+>> Sure, I will split the dt-binding into separate patch, checkpatch did
+>> warn.
+> 
+> And you still sent me the patch...  I usually run checkpatch before
+> all the submissions I review and flatly ignore patches that return
+> errors.  You got lucky...
+> 
 
->      (4) An appropriate auth token being set in cred->request_key_auth that
->          gives a process transient permission to view and instantiate a key.
->          This is used by the kernel to delegate instantiation to userspace.
+I did not mean to ignore it or else I wouldn't have run checkpatch 
+itself.
+I checked other cases like "arm,scatter-gather" where the binding and 
+the
+driver change was in a single patch, hence I thought it's not a very 
+strict rule.
 
-Is this ever allowed across different credentials?  When?  Why?  Is
-there a check between the different credentials before the auth token
-is created?
-
->     Note that this requires some tweaks to the testsuite as some of the error
->     codes change.
-
-Which testsuite?  keyring or selinux or both?  What error codes change
-(from what to what)?  Does this constitute an ABI change?
-
-I like moving more of the permission checking logic into the security
-modules and giving them greater visibility and control.  That said, I
-am somewhat concerned by the scale of this change, by the extent to
-which you are exposing keyring internals inside the security modules,
-and by the extent to which logic is getting duplicated in each
-security module.  I'd suggest a more incremental approach, e.g. start
-with just the enum patch, then migrate the easy cases, then consider
-the more complicated cases.  And possibly we need multiple different
-security hooks for the keyring subsystem that are more specialized for
-the complicated cases.  If we authorize the delegation up front, we
-don't need to check it later.
+Thanks,
+Sai
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
