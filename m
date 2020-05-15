@@ -2,191 +2,269 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03535C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B220C204EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:28:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GQZg09Xh"
+	by mail.kernel.org (Postfix) with ESMTP id 82A3F20758
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:29:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgEOL26 (ORCPT
+        id S1726183AbgEOL3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:28:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725986AbgEOL26 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:28:58 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B943C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 04:28:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5nhH7XCvMNPLgr/SaozWYIO34BzLn3ulz7bnIl+wGhQ=; b=GQZg09XhZH6ap38v8hI5cRQJ++
-        RAOODbH+VFa1+9bQC7uwYziac/1gsvXJs12sVXIQhy5M3QZAQ10L/CVphDMFOCGFgYDh6xDm/b84n
-        B5H8f6xDnPLbWLwaTcjXvA5NYa5sqCe4jgn17drG5mvfvv720xHHijYUfqUE6ntJVv52Tvso4cI9p
-        cewZvRs0OAWuE+TzfAhmDGfNckP3u1od9jsqSVMaeSsEIuRLMVWaY/W2mYULfsRNc1FtrC3M61VM5
-        PWul2uD3aacRHVKMQPgFUdBSa9Jzpi/yLZPeewzeAoSL3EANRHf63RYBSZjU81EVqpqh4/yfwk1g1
-        fq7S2r2Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZYVm-0006i1-C7; Fri, 15 May 2020 11:28:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4085A301205;
-        Fri, 15 May 2020 13:28:15 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1BF7B20267E65; Fri, 15 May 2020 13:28:15 +0200 (CEST)
-Date:   Fri, 15 May 2020 13:28:15 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Jirka Hladky <jhladky@redhat.com>, Phil Auld <pauld@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Douglas Shakshober <dshaks@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-Message-ID: <20200515112815.GT2957@hirez.programming.kicks-ass.net>
-References: <20200320163843.GD3818@techsingularity.net>
- <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
- <20200507155422.GD3758@techsingularity.net>
- <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
- <20200508092212.GE3758@techsingularity.net>
- <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
- <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
- <20200513153023.GF3758@techsingularity.net>
- <20200514153122.GE2978@hirez.programming.kicks-ass.net>
- <20200515084740.GJ3758@techsingularity.net>
+        Fri, 15 May 2020 07:29:53 -0400
+Received: from mga01.intel.com ([192.55.52.88]:20999 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725986AbgEOL3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:29:52 -0400
+IronPort-SDR: 3oJWqk5VL+n0Uy3FJqIZo1sexEfRBdrbeqp+IKYanlnRC5wcGEH6ALGmctbxAxZ/w17WTKvrJ3
+ j9Ozy3+VUuqg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 04:29:50 -0700
+IronPort-SDR: 5vmLd6gczDlQXkJEjWpJLWnePxaUuNt/3x7tKARqZiIIMUXs2PVi0Ec6q+VvNhAKugx2rF0jfg
+ tOkBa88swT7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="253772217"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 15 May 2020 04:29:49 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZYXI-006qcN-8r; Fri, 15 May 2020 14:29:52 +0300
+Date:   Fri, 15 May 2020 14:29:52 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     akpm@linux-foundation.org, vilhelm.gray@gmail.com, arnd@arndb.de,
+        linus.walleij@linaro.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/4] bitops: Introduce the the for_each_set_clump macro
+Message-ID: <20200515112952.GN185537@smile.fi.intel.com>
+References: <cover.1589497311.git.syednwaris@gmail.com>
+ <efd5cb7d79efb4bd74fae501b616ef8a21d24b81.1589497312.git.syednwaris@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515084740.GJ3758@techsingularity.net>
+In-Reply-To: <efd5cb7d79efb4bd74fae501b616ef8a21d24b81.1589497312.git.syednwaris@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 09:47:40AM +0100, Mel Gorman wrote:
-> sched: Wake cache-local tasks via wake_list if wakee CPU is polling
+On Fri, May 15, 2020 at 04:47:18AM +0530, Syed Nayyar Waris wrote:
+> This macro iterates for each group of bits (clump) with set bits,
+> within a bitmap memory region. For each iteration, "start" is set to
+> the bit offset of the found clump, while the respective clump value is
+> stored to the location pointed by "clump". Additionally, the
+> bitmap_get_value and bitmap_set_value functions are introduced to
+> respectively get and set a value of n-bits in a bitmap memory region.
+> The n-bits can have any size less than or equal to BITS_PER_LONG.
+> Moreover, during setting value of n-bit in bitmap, if a situation arise
+> that the width of next n-bit is exceeding the word boundary, then it
+> will divide itself such that some portion of it is stored in that word,
+> while the remaining portion is stored in the next higher word. Similar
+> situation occurs while retrieving value of n-bits from bitmap.
 > 
-> There are two separate method for waking a task from idle, one for
-> tasks running on CPUs that share a cache and one for when the caches are
-> separate. The methods can loosely be called local and remote even though
-> this is not directly related to NUMA and instead is due to the expected
-> cost of accessing data that is cache-hot on another CPU. The "local" costs
-> are expected to be relatively cheap as they share the LLC in comparison to
-> a remote IPI that is potentially required when using the "remote" wakeup.
-> The problem is that the local wakeup is not always cheaper and it appears
-> to have degraded even further around the 4.19 mark.
-> 
-> There appears to be a couple of reasons why it can be slower.
-> 
-> The first is specific to pairs of tasks where one or both rapidly enters
-> idle. For example, on netperf UDP_STREAM, the client sends a bunch of
-> packets, wakes the server, the server processes some packets and goes
-> back to sleep. There is a relationship between the tasks but it's not
-> strictly synchronous. The timing is different if the client/server are on
-> separate NUMA nodes and netserver is more likely to enter idle (measured
-> as server entering idle 10% more times when tasks are local vs remote
-> but machine-specific). However, the wakeups are so rapid that the wakeup
-> happens while the server is descheduling. That forces the waker to spin
-> on smp_cond_load_acquire for longer. In this case, it can be cheaper to
-> add the task to the rq->wake_list even if that potentially requires an IPI.
-> 
-> The second is that the local wakeup path is simply not always
-> that fast. Using ftrace, the cost of the locks, update_rq_clock and
-> ttwu_do_activate was measured as roughly 4.5 microseconds. While it's
-> a single instance, the cost of the "remote" wakeup for try_to_wake_up
-> was roughly 2.5 microseconds versus 6.2 microseconds for the "fast" local
-> wakeup. When there are tens of thousands of wakeups per second, these costs
-> accumulate and manifest as a throughput regression in netperf UDP_STREAM.
-> 
-> The essential difference in costs comes down to whether the CPU is fully
-> idle, a task is descheduling or polling in poll_idle(). This patch
-> special cases ttwu_queue() to use the "remote" method if the CPUs
-> task is polling as it's generally cheaper to use the wake_list in that
-> case than the local method because an IPI should not be required. As it is
-> race-prone, a reschedule IPI may still be sent but in that case the local
-> wakeup would also have to send a reschedule IPI so it should be harmless.
 
-We don't in fact send a wakeup IPI when polling. So this might end up
-with an extra IPI.
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 9a2fbf98fd6f..59077c7c6660 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -2380,13 +2380,32 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
->  	struct rq_flags rf;
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> ---
+> Changes in v6:
+>  - No change.
+> 
+> Changes in v5:
+>  - No change.
+> 
+> Changes in v4:
+>  - No change.
+> 
+> Changes in v3:
+>  - No change.
+> 
+> Changes in v2:
+>  - No change.
+> 
+>  include/asm-generic/bitops/find.h | 19 ++++++++++
+>  include/linux/bitmap.h            | 61 +++++++++++++++++++++++++++++++
+>  include/linux/bitops.h            | 13 +++++++
+>  lib/find_bit.c                    | 14 +++++++
+>  4 files changed, 107 insertions(+)
+> 
+> diff --git a/include/asm-generic/bitops/find.h b/include/asm-generic/bitops/find.h
+> index 9fdf21302fdf..4e6600759455 100644
+> --- a/include/asm-generic/bitops/find.h
+> +++ b/include/asm-generic/bitops/find.h
+> @@ -97,4 +97,23 @@ extern unsigned long find_next_clump8(unsigned long *clump,
+>  #define find_first_clump8(clump, bits, size) \
+>  	find_next_clump8((clump), (bits), (size), 0)
 >  
->  #if defined(CONFIG_SMP)
-> -	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
-> +	if (sched_feat(TTWU_QUEUE)) {
-> +		/*
-> +		 * A remote wakeup is often expensive as can require
-> +		 * an IPI and the wakeup path is slow. However, in
-> +		 * the specific case where the target CPU is idle
-> +		 * and polling, the CPU is active and rapidly checking
-> +		 * if a reschedule is needed.
-
-Not strictly true; MWAIT can be very deep idle, it's just that with
-POLLING we indicate we do not have to send an IPI to wake up. Just
-setting the TIF_NEED_RESCHED flag is sufficient to wake up -- the
-monitor part of monitor-wait.
-
->                                             In this case, the idle
-> +		 * task just needs to be marked for resched and p
-> +		 * will rapidly be requeued which is less expensive
-> +		 * than the direct wakeup path.
-> +		 */
-> +		if (cpus_share_cache(smp_processor_id(), cpu)) {
-> +			struct thread_info *ti = task_thread_info(p);
-> +			typeof(ti->flags) val = READ_ONCE(ti->flags);
+> +/**
+> + * find_next_clump - find next clump with set bits in a memory region
+> + * @clump: location to store copy of found clump
+> + * @addr: address to base the search on
+> + * @size: bitmap size in number of bits
+> + * @offset: bit offset at which to start searching
+> + * @clump_size: clump size in bits
+> + *
+> + * Returns the bit offset for the next set clump; the found clump value is
+> + * copied to the location pointed by @clump. If no bits are set, returns @size.
+> + */
+> +extern unsigned long find_next_clump(unsigned long *clump,
+> +				      const unsigned long *addr,
+> +				      unsigned long size, unsigned long offset,
+> +				      unsigned long clump_size);
 > +
-> +			if (val & _TIF_POLLING_NRFLAG)
-> +				goto activate;
-
-I'm completely confused... the result here is that if you're polling you
-do _NOT_ queue on the wake_list, but instead immediately enqueue.
-
-(which kinda makes sense, since if the remote CPU is idle, it doesn't
-have these lines in its cache anyway)
-
-But the subject and comments all seem to suggest the opposite !?
-
-Also, this will fail compilation when !defined(TIF_POLLING_NRFLAGG).
-
-> +		}
+> +#define find_first_clump(clump, bits, size, clump_size) \
+> +	find_next_clump((clump), (bits), (size), 0, (clump_size))
 > +
->  		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
->  		ttwu_queue_remote(p, cpu, wake_flags);
->  		return;
->  	}
->  #endif
+>  #endif /*_ASM_GENERIC_BITOPS_FIND_H_ */
+> diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+> index 99058eb81042..7ab2c65fc964 100644
+> --- a/include/linux/bitmap.h
+> +++ b/include/linux/bitmap.h
+> @@ -75,7 +75,11 @@
+>   *  bitmap_from_arr32(dst, buf, nbits)          Copy nbits from u32[] buf to dst
+>   *  bitmap_to_arr32(buf, src, nbits)            Copy nbits from buf to u32[] dst
+>   *  bitmap_get_value8(map, start)               Get 8bit value from map at start
+> + *  bitmap_get_value(map, start, nbits)		Get bit value of size
+> + *						'nbits' from map at start
+>   *  bitmap_set_value8(map, value, start)        Set 8bit value to map at start
+> + *  bitmap_set_value(map, value, start, nbits)	Set bit value of size 'nbits'
+> + *						of map at start
+>   *
+>   * Note, bitmap_zero() and bitmap_fill() operate over the region of
+>   * unsigned longs, that is, bits behind bitmap till the unsigned long
+> @@ -563,6 +567,34 @@ static inline unsigned long bitmap_get_value8(const unsigned long *map,
+>  	return (map[index] >> offset) & 0xFF;
+>  }
 >  
-> +activate:
+> +/**
+> + * bitmap_get_value - get a value of n-bits from the memory region
+> + * @map: address to the bitmap memory region
+> + * @start: bit offset of the n-bit value
+> + * @nbits: size of value in bits
+> + *
+> + * Returns value of nbits located at the @start bit offset within the @map
+> + * memory region.
+> + */
+> +static inline unsigned long bitmap_get_value(const unsigned long *map,
+> +					      unsigned long start,
+> +					      unsigned long nbits)
+> +{
+> +	const size_t index = BIT_WORD(start);
+> +	const unsigned long offset = start % BITS_PER_LONG;
+> +	const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
+> +	const unsigned long space = ceiling - start;
+> +	unsigned long value_low, value_high;
+> +
+> +	if (space >= nbits)
+> +		return (map[index] >> offset) & GENMASK(nbits - 1, 0);
+> +	else {
+> +		value_low = map[index] & BITMAP_FIRST_WORD_MASK(start);
+> +		value_high = map[index + 1] & BITMAP_LAST_WORD_MASK(start + nbits);
+> +		return (value_low >> offset) | (value_high << space);
+> +	}
+> +}
+> +
+>  /**
+>   * bitmap_set_value8 - set an 8-bit value within a memory region
+>   * @map: address to the bitmap memory region
+> @@ -579,6 +611,35 @@ static inline void bitmap_set_value8(unsigned long *map, unsigned long value,
+>  	map[index] |= value << offset;
+>  }
+>  
+> +/**
+> + * bitmap_set_value - set n-bit value within a memory region
+> + * @map: address to the bitmap memory region
+> + * @value: value of nbits
+> + * @start: bit offset of the n-bit value
+> + * @nbits: size of value in bits
+> + */
+> +static inline void bitmap_set_value(unsigned long *map,
+> +				    unsigned long value,
+> +				    unsigned long start, unsigned long nbits)
+> +{
+> +	const size_t index = BIT_WORD(start);
+> +	const unsigned long offset = start % BITS_PER_LONG;
+> +	const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
+> +	const unsigned long space = ceiling - start;
+> +
+> +	value &= GENMASK(nbits - 1, 0);
+> +
+> +	if (space >= nbits) {
+> +		map[index] &= ~(GENMASK(nbits + offset - 1, offset));
+> +		map[index] |= value << offset;
+> +	} else {
+> +		map[index] &= ~BITMAP_FIRST_WORD_MASK(start);
+> +		map[index] |= value << offset;
+> +		map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
+> +		map[index + 1] |= (value >> space);
+> +	}
+> +}
+> +
+>  #endif /* __ASSEMBLY__ */
+>  
+>  #endif /* __LINUX_BITMAP_H */
+> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+> index 99f2ac30b1d9..36a445e4a7cc 100644
+> --- a/include/linux/bitops.h
+> +++ b/include/linux/bitops.h
+> @@ -62,6 +62,19 @@ extern unsigned long __sw_hweight64(__u64 w);
+>  	     (start) < (size); \
+>  	     (start) = find_next_clump8(&(clump), (bits), (size), (start) + 8))
+>  
+> +/**
+> + * for_each_set_clump - iterate over bitmap for each clump with set bits
+> + * @start: bit offset to start search and to store the current iteration offset
+> + * @clump: location to store copy of current 8-bit clump
+> + * @bits: bitmap address to base the search on
+> + * @size: bitmap size in number of bits
+> + * @clump_size: clump size in bits
+> + */
+> +#define for_each_set_clump(start, clump, bits, size, clump_size) \
+> +	for ((start) = find_first_clump(&(clump), (bits), (size), (clump_size)); \
+> +	     (start) < (size); \
+> +	     (start) = find_next_clump(&(clump), (bits), (size), (start) + (clump_size), (clump_size)))
+> +
+>  static inline int get_bitmask_order(unsigned int count)
+>  {
+>  	int order;
+> diff --git a/lib/find_bit.c b/lib/find_bit.c
+> index 49f875f1baf7..1341bd39b32a 100644
+> --- a/lib/find_bit.c
+> +++ b/lib/find_bit.c
+> @@ -190,3 +190,17 @@ unsigned long find_next_clump8(unsigned long *clump, const unsigned long *addr,
+>  	return offset;
+>  }
+>  EXPORT_SYMBOL(find_next_clump8);
+> +
+> +unsigned long find_next_clump(unsigned long *clump, const unsigned long *addr,
+> +			       unsigned long size, unsigned long offset,
+> +			       unsigned long clump_size)
+> +{
+> +	offset = find_next_bit(addr, size, offset);
+> +	if (offset == size)
+> +		return size;
+> +
+> +	offset = rounddown(offset, clump_size);
+> +	*clump = bitmap_get_value(addr, offset, clump_size);
+> +	return offset;
+> +}
+> +EXPORT_SYMBOL(find_next_clump);
+> -- 
+> 2.26.2
+> 
 
-The labels wants to go inside the ifdef, otherwise GCC will complain
-about unused labels etc..
+-- 
+With Best Regards,
+Andy Shevchenko
 
->  	rq_lock(rq, &rf);
->  	update_rq_clock(rq);
->  	ttwu_do_activate(rq, p, wake_flags, &rf);
+
