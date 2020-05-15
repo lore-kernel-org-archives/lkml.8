@@ -2,126 +2,204 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB03C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7BD7206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68710206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:59:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KEEKWvbt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgEOP6y (ORCPT
+        id S1726950AbgEOP7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:58:54 -0400
-Received: from mga11.intel.com ([192.55.52.93]:23856 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbgEOP6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:58:53 -0400
-IronPort-SDR: 2mHQnDI+cDVuxPl4+6x4XzYcU9BCzxzHCrj7+4wEp8s+/sre3qQeA2EMi46obvskbTsdfHECEA
- YPKufeby6AzA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 08:58:53 -0700
-IronPort-SDR: HirYw8rAPztdjIA+/NI+F9pTHI7jr2RVdgGVqpP6A1KNTRdCnoAGKJuyB90njmSwKQdRaaUe4r
- 3Fk2+H3/lEUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="263229930"
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.131.101]) ([10.249.131.101])
-  by orsmga003.jf.intel.com with ESMTP; 15 May 2020 08:58:48 -0700
-Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
- setting
-To:     Sergey.Semin@baikalelectronics.ru,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, stable@vger.kernel.org,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-21-Sergey.Semin@baikalelectronics.ru>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <c5109483-4c14-1a0c-efa9-51edf01c12de@intel.com>
-Date:   Fri, 15 May 2020 17:58:47 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 15 May 2020 11:59:06 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:42176 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726283AbgEOP7F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 11:59:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589558343; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=qxsW8J//wgvAmbboym2DVFK7T00YKI0V2xlBc3zGI9A=;
+ b=KEEKWvbt+O6HXnwQsAaEoIYWqSgmNqLEOWTh0z5E3xveaK90fuJ1Ti3B+I1CH5J/CGZuzyGD
+ KHXbT2TmggNBOTMuYmjWqN0apvplZwwdNEc0HX39+GvEqJgC52nEGN0DWL+8inxXM7Q/DtoX
+ 4NhjQPpmSGzxX4DmpfXV+HmZBJc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebebc30.7fd92b617f10-smtp-out-n05;
+ Fri, 15 May 2020 15:58:40 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 243A2C43636; Fri, 15 May 2020 15:58:40 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1D64AC433D2;
+        Fri, 15 May 2020 15:58:39 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200506174238.15385-21-Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Date:   Fri, 15 May 2020 21:28:39 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Tingwei Zhang <tingwei@codeaurora.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH] coresight: etm4x: Add support to disable trace unit power
+ up
+In-Reply-To: <20200515155144.GA7085@xps15>
+References: <20200514105915.27516-1-saiprakash.ranjan@codeaurora.org>
+ <20200514180055.GA29384@xps15>
+ <2c932d57288508cc72a6ee323cf5595e@codeaurora.org>
+ <CANLsYkxun2EWGeLU42ShbqkJMtCTh+Q9L3t=CXQR+-2zVuuJYg@mail.gmail.com>
+ <a0f8f01f28506e10001885e387d3cb4f@codeaurora.org>
+ <20200515155144.GA7085@xps15>
+Message-ID: <89be7790b7fdd4b0268919e060198926@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/2020 7:42 PM, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->
-> Recent commit e61a41256edf ("cpufreq: dev_pm_qos_update_request() can
-> return 1 on success") fixed a problem when active policies traverse
-> was falsely stopped due to invalidly treating the non-zero return value
-> from freq_qos_update_request() method as an error. Yes, that function
-> can return positive values if the requested update actually took place.
-> The current problem is that the returned value is then passed to the
-> return cell of the cpufreq_boost_set_sw() (set_boost callback) method.
-> This value is then also analyzed for being non-zero, which is also
-> treated as having an error. As a result during the boost activation
-> we'll get an error returned while having the QOS frequency update
-> successfully performed. Fix this by returning a negative value from the
-> cpufreq_boost_set_sw() if actual error was encountered and zero
-> otherwise treating any positive values as the successful operations
-> completion.
->
-> Fixes: 18c49926c4bf ("cpufreq: Add QoS requests for userspace constraints")
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> ---
->   drivers/cpufreq/cpufreq.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 045f9fe157ce..5870cdca88cf 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -2554,7 +2554,7 @@ static int cpufreq_boost_set_sw(int state)
->   			break;
->   	}
->   
-> -	return ret;
-> +	return ret < 0 ? ret : 0;
->   }
->   
->   int cpufreq_boost_trigger_state(int state)
+Hi Mathieu,
 
-IMO it is better to update the caller of this function to handle the 
-positive value possibly returned by it correctly.
+On 2020-05-15 21:21, Mathieu Poirier wrote:
+> On Fri, May 15, 2020 at 08:37:13PM +0530, Sai Prakash Ranjan wrote:
+>> Hi Mathieu,
+>> 
+>> On 2020-05-15 20:22, Mathieu Poirier wrote:
+>> > On Thu, 14 May 2020 at 12:39, Sai Prakash Ranjan
+>> > <saiprakash.ranjan@codeaurora.org> wrote:
+>> > >
+>> > > Hi Mathieu,
+>> > >
+>> > > On 2020-05-14 23:30, Mathieu Poirier wrote:
+>> > > > Good morning Sai,
+>> > > >
+>> > > > On Thu, May 14, 2020 at 04:29:15PM +0530, Sai Prakash Ranjan wrote:
+>> > > >> From: Tingwei Zhang <tingwei@codeaurora.org>
+>> > > >>
+>> > > >> On some Qualcomm Technologies Inc. SoCs like SC7180, there
+>> > > >> exists a hardware errata where the APSS (Application Processor
+>> > > >> SubSystem)/CPU watchdog counter is stopped when ETM register
+>> > > >> TRCPDCR.PU=1.
+>> > > >
+>> > > > Fun stuff...
+>> > > >
+>> > >
+>> > > Yes :)
+>> > >
+>> > > >> Since the ETMs share the same power domain as
+>> > > >> that of respective CPU cores, they are powered on when the
+>> > > >> CPU core is powered on. So we can disable powering up of the
+>> > > >> trace unit after checking for this errata via new property
+>> > > >> called "qcom,tupwr-disable".
+>> > > >>
+>> > > >> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+>> > > >> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> > > >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> > > >
+>> > > > Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> > > > Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+>> > > >
+>> > >
+>> > > Tingwei is the author, so if I understand correctly, his signed-off-by
+>> > > should appear first, am I wrong?
+>> >
+>> > It's a gray area and depends on who's code is more prevalent in the
+>> > patch.  If Tingwei wrote the most of the code then his name is in the
+>> > "from:" section, yours as co-developer and he signs off on it (as I
+>> > suggested).  If you did most of the work then it is the opposite.
+>> > Adding a Co-developed and a signed-off with the same name doesn't make
+>> > sense.
+>> >
+>> 
+>> I did check the documentation for submitting patches:
+>> Documentation/process/submitting-patches.rst. And it clearly states
+>> that "Co-developed-by must be followed by Signed-off by the co-author
+>> and the last Signed-off-by: must always be that of the developer
+>> submitting the patch".
+>> 
+>> Quoting below from the doc:
+>> 
+>> Co-developed-by: <snip> ...Since
+>> Co-developed-by: denotes authorship, every Co-developed-by: must be
+>> immediately
+>> followed by a Signed-off-by: of the associated co-author.  Standard 
+>> sign-off
+>> procedure applies, i.e. the ordering of Signed-off-by: tags should 
+>> reflect
+>> the
+>> chronological history of the patch insofar as possible, regardless of
+>> whether
+>> the author is attributed via From: or Co-developed-by:.  Notably, the 
+>> last
+>> Signed-off-by: must always be that of the developer submitting the 
+>> patch.
+> 
+> Ah yes, glad to see that got clarified.  You can ignore my 
+> recommendation on
+> that snippet.
+> 
+>> 
+>> > >
+>> > > >> ---
+>> > > >>  .../devicetree/bindings/arm/coresight.txt     |  6 ++++
+>> > > >>  drivers/hwtracing/coresight/coresight-etm4x.c | 29
+>> > > >> ++++++++++++-------
+>> > > >
+>> > > > Please split in two patches.
+>> > > >
+>> > >
+>> > > Sure, I will split the dt-binding into separate patch, checkpatch did
+>> > > warn.
+>> >
+>> > And you still sent me the patch...  I usually run checkpatch before
+>> > all the submissions I review and flatly ignore patches that return
+>> > errors.  You got lucky...
+>> >
+>> 
+>> I did not mean to ignore it or else I wouldn't have run checkpatch 
+>> itself.
+>> I checked other cases like "arm,scatter-gather" where the binding and 
+>> the
+>> driver change was in a single patch, hence I thought it's not a very 
+>> strict
+>> rule.
+> 
+> The patch has another warning for a line over 80 characters, that 
+> should have
+> been fixed before sending.  Putting DT changes in a separate patch is 
+> always
+> better for the DT people.  They review tons of patches and making their 
+> life
+> easier is always a good thing.
+> 
 
-Thanks!
+Ok, I will fix this and resend. I did not want to change it in case if 
+it affects
+readability since most maintainers prefer to ignore this 80 characters 
+warning if
+it affects readability. I will keep this in mind for future patches as 
+well.
 
-
+Thanks,
+Sai
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
