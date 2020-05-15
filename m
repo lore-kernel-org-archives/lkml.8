@@ -2,107 +2,101 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6009BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B08C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37CFF20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:35:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h+QlbAmr"
+	by mail.kernel.org (Postfix) with ESMTP id 5BFDF206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589521064;
+	bh=SuVHOy8cA7zaee1Wtzeq5edqdj/GnFqaX2yUkDrhAUs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Yom/KI/daa4pvxOsqXOrMogj1vJLteItOSKQ4GFu18hxHGJ41D7tDepC1Jv3RuJuA
+	 lK127hTHfwIgeOnf3RGBAQxzkRCizKNvAoRe73tBlK+LjQZGELuJ/OtXjS7TBvVVpQ
+	 hpIootEgXPKdm+a9nt5fPycDOK0grXBbYRb8UpHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgEOFfT (ORCPT
+        id S1726349AbgEOFhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 01:35:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726241AbgEOFfQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 01:35:16 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A7BC05BD0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:35:14 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id q4so1478136qve.19
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:35:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=DX4XT+k02Ir/KDfouowfMsuBfYhxf4GU86W0BHIaHtQ=;
-        b=h+QlbAmrwT3Qk4XUER329GnhkSmrKvVq49brjpGM/uyL/DEiMw6DIaqHwVX6GqCOIB
-         TknypZylAeb9WhesT1jWWEO02DyLbugXMPf5rmRsRnZpaiaTUzo1fs0oLRyuhWXbpsjX
-         Pm8gJKEfiAsoM8LYcey7kctMNCeL/9WKjacPxTokZ+UIIzANPDcR9JeLWvI6uWYrHNub
-         sFN6BSjBRFFZy9Pwb5Gjo8WOwwMO3bxjCGrUOBF46x30sYznw9flhLN/Gzgy35+RvJm4
-         l5cZChSPp7ithvlffbtvdVokmYA3Pm1O94rTPKB8RtxdWUkQjt+64irBeKpJWbv5xSlg
-         dgig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=DX4XT+k02Ir/KDfouowfMsuBfYhxf4GU86W0BHIaHtQ=;
-        b=OvQn4eAKujtVPq1ET59SHKMQ0ZG6PVVveJA0DoTUwi6Kf+yZif/rlqtIMl5mfchoyJ
-         olzVSCmnt6ilhCJlj0DIewzYaJxo6i0jOMBVHM7Q3NcySO8yeGhSSgdPV40huziOTT8h
-         uN98Upesa5CZoihAML10EJ3w4rOQagOMikpmIluVxvYoXdeQpwfj5ncm3ol1k8Q22KST
-         vVowZebA6bypGJp5aBZX6qdMIbmFx2v8DikGej9Fp12SseHbx9VP+/Yln4Hj76paytP9
-         s71uOTXXiz5huJPoFnoQORuH0WV+xOCDq9zn+rWchgPr/ROTwd03hr0LeNKAjWNpqx+3
-         sn4A==
-X-Gm-Message-State: AOAM5322Yv+85KuyYK54dNWU4ih0gS8ld/OgcxW3ko7/+/fPp8odIrJ9
-        YXKdIM8uOY4O+GjnLzIyt/9Ui9ZA2o/IKnA=
-X-Google-Smtp-Source: ABdhPJwU9KkQfudVyjXyuE1Z396eMGSwdCB1SS/UClNjOPAmBPGEnfF7OqgDxMbxzOdUKsYQeJryPfZDxQez2Aw=
-X-Received: by 2002:a05:6214:42f:: with SMTP id a15mr1851765qvy.170.1589520913709;
- Thu, 14 May 2020 22:35:13 -0700 (PDT)
-Date:   Thu, 14 May 2020 22:35:00 -0700
-In-Reply-To: <20200515053500.215929-1-saravanak@google.com>
-Message-Id: <20200515053500.215929-5-saravanak@google.com>
-Mime-Version: 1.0
-References: <20200515053500.215929-1-saravanak@google.com>
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding all top
- level devices
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Ji Luo <ji.luo@nxp.com>
+        Fri, 15 May 2020 01:37:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726236AbgEOFhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 01:37:43 -0400
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64DA720671
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 05:37:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589521062;
+        bh=SuVHOy8cA7zaee1Wtzeq5edqdj/GnFqaX2yUkDrhAUs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OlniUzH1ZnVwPBp/5Z3f/4e+e1z2AkmWp7CXReQ5bC4a/J0AcN6uLOZk2uKHdE2nD
+         DvEWLiFw3/FlM8E1wusUmg+kF4LYFPWPoG0k1a5LW7XTQEI6Ad/qp7ehTLau947an4
+         lzsW9eFBgsqGQl3YpzCzNSzjtSVWLK/39HRTgqcw=
+Received: by mail-wm1-f50.google.com with SMTP id n5so1167386wmd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:37:42 -0700 (PDT)
+X-Gm-Message-State: AOAM532Tul6V+ttQWfvlMDDaGgbZ/ssWJrMIkkUYKjzrcaG4n3RZKL09
+        4mF6dY3AAbJGilz1y5f3MjBAMdbQnzKIGzjHP5kTxw==
+X-Google-Smtp-Source: ABdhPJy2M8IQey4U6e7K04OTZ5tUzm0crbydvUjQHcDy7lIaGJYXIcMQTaP860O0jZq0UsQHr8WiVQs+p26DJU+KUTw=
+X-Received: by 2002:a1c:8141:: with SMTP id c62mr1071698wmd.21.1589521060978;
+ Thu, 14 May 2020 22:37:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200505134926.578885807@linutronix.de> <20200505135314.808628211@linutronix.de>
+In-Reply-To: <20200505135314.808628211@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 14 May 2020 22:37:29 -0700
+X-Gmail-Original-Message-ID: <CALCETrWFiAWiMByNmDSnWJDfRai2meaLaOJ-fxxWoBKhVOd9xw@mail.gmail.com>
+Message-ID: <CALCETrWFiAWiMByNmDSnWJDfRai2meaLaOJ-fxxWoBKhVOd9xw@mail.gmail.com>
+Subject: Re: [patch V4 part 4 15/24] x86/db: Split out dr6/7 handling
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The fw_devlink_pause() and fw_devlink_resume() APIs allow batching the
-parsing of the device tree nodes when a lot of devices are added. This
-will significantly cut down parsing time (as much a 1 second on some
-systems). So, use them when adding devices for all the top level device
-tree nodes in a system.
+On Tue, May 5, 2020 at 7:16 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> From: Peter Zijlstra <peterz@infradead.org>
+>
+> DR6/7 should be handled before nmi_enter() is invoked and restore after
+> nmi_exit() to minimize the exposure.
+>
+> Split it out into helper inlines and bring it into the correct order.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/of/platform.c | 2 ++
- 1 file changed, 2 insertions(+)
+> +        *
+> +        * Entry text is excluded for HW_BP_X and cpu_entry_area, which
+> +        * includes the entry stack is excluded for everything.
+> +        */
+> +       get_debugreg(*dr7, 6);
+> +       set_debugreg(0, 7);
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 3371e4a06248..55d719347810 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -538,7 +538,9 @@ static int __init of_platform_default_populate_init(void)
- 	}
- 
- 	/* Populate everything else. */
-+	fw_devlink_pause();
- 	of_platform_default_populate(NULL, NULL, NULL);
-+	fw_devlink_resume();
- 
- 	return 0;
- }
--- 
-2.26.2.761.g0e0b3e54be-goog
+Fortunately, PeterZ is hiding in a brown paper bag, so I don't have to
+comment :)
 
+Other than that:
+
+Acked-by: Andy Lutomirski <luto@kernel.org>
