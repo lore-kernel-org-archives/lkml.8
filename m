@@ -2,210 +2,192 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A389C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBD5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81ADA20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9AA2074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:00:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589511608;
+	bh=o461O1VN8+GikyE4m6q0vZ6eip5p9sPvEENcukkNYQQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QnBelP8wAMs1p4qYXavAb2Zfwwp6RhVf9tZCmDxktafpXkuIGsGLs/JDmCEy7PavT
+	 3I1RWe3dq5hXHqcey3XbKQO0kO0i+g0IQTnRXauZf9K5dHqXReJacJcSqb0Vosehja
+	 MqJoGs3GnVqzA7rwChJzcfmSQWN+VMcEUwmo1OC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgEOC6Y convert rfc822-to-8bit (ORCPT
+        id S1728287AbgEODAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 22:58:24 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:43156 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727029AbgEOC6X (ORCPT
+        Thu, 14 May 2020 23:00:07 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43265 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgEODAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 22:58:23 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R641e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=41;SR=0;TI=SMTPD_---0TyZxr82_1589511481;
-Received: from 127.0.0.1(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TyZxr82_1589511481)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 15 May 2020 10:58:15 +0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [virtio-dev] [PATCH v3 00/15] virtio-mem: paravirtualized memory
-From:   teawater <teawaterz@linux.alibaba.com>
-In-Reply-To: <cda84c4d-0f4c-1dd8-44f6-68f211e5de6d@redhat.com>
-Date:   Fri, 15 May 2020 10:58:00 +0800
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        virtio-dev@lists.oasis-open.org,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        kvm@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Samuel Ortiz <samuel.ortiz@intel.com>,
-        Robert Bradford <robert.bradford@intel.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <9708F43A-9BD2-4377-8EE8-7FB1D95C6F69@linux.alibaba.com>
-References: <20200507103119.11219-1-david@redhat.com>
- <7848642F-6AA7-4B5E-AE0E-DB0857C94A93@linux.alibaba.com>
- <31c5d2f9-c104-53e8-d9c8-cb45f7507c85@redhat.com>
- <A3BBAEEE-FBB9-4259-8BED-023CCD530021@linux.alibaba.com>
- <389b6bdc-b196-e4b9-b6be-dcac57524fdf@redhat.com>
- <3c82e149-6c42-690e-9d58-bb8e69870fe0@redhat.com>
- <e48ded49-9b92-7025-a06f-49b24f1c53a6@redhat.com>
- <cda84c4d-0f4c-1dd8-44f6-68f211e5de6d@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Thu, 14 May 2020 23:00:06 -0400
+Received: by mail-oi1-f196.google.com with SMTP id i22so960722oik.10;
+        Thu, 14 May 2020 20:00:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bjc9M+ltvOohtg90sCLNJrRki6/Nirbm2vS+XeCl5Xk=;
+        b=CBr/WwpyQHhBZ4RZa/piW2/x1Cjxykvc2dcSFgZSeCr7HDTeIA+0LM4PhnaerdlTG2
+         dxLXHuzmKsReAqCEqCIIPF5bWBMrCq+d+OlFrm+FIqRzG/UkAQnsOpWC+hHO5nM/FrgF
+         Kfya+nuqVK6Qtgk6vJnUuKTBgP4/SV3GV9OXhVZjQQ3AzqpmdPYjSLmhslhRS1bBmckD
+         C2RL0HIO41Zcq4X59LtaYgoe+ET3umI1SvTAjqcdR8zUPBovw7qFkmIxnqDFjaWudL7r
+         qsq/DIrDM02ckpoAM6ah4/gSKP0cD8VfGWb5tuZ00i/5jG49w0vvAbPE5bvkHxqN7gcx
+         dalw==
+X-Gm-Message-State: AOAM531XwSw/7seKwKOGHy3tUABHpcrcWb0Ts0geRy/ngbiq8ALW3+PN
+        kbczIQAcBmoayeRfY9nXDQ==
+X-Google-Smtp-Source: ABdhPJw2JGnI3HK1STO/gY+vd05hdLxQM19boTQeYNYuxp5F6jLUKLnTu0URfOrtg50l2/MqoT/tcw==
+X-Received: by 2002:aca:d50f:: with SMTP id m15mr713670oig.54.1589511603885;
+        Thu, 14 May 2020 20:00:03 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e4sm256580oou.33.2020.05.14.20.00.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 20:00:03 -0700 (PDT)
+Received: (nullmailer pid 11296 invoked by uid 1000);
+        Fri, 15 May 2020 03:00:02 -0000
+Date:   Thu, 14 May 2020 22:00:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+Cc:     jic23@kernel.org, mchehab+huawei@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/12] dt-bindings: iio: imu: Add inv_icm42600
+ documentation
+Message-ID: <20200515030002.GA6242@bogus>
+References: <20200507144222.20989-1-jmaneyrol@invensense.com>
+ <20200507144222.20989-12-jmaneyrol@invensense.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507144222.20989-12-jmaneyrol@invensense.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> 2020年5月14日 20:19，David Hildenbrand <david@redhat.com> 写道：
+On Thu, May 07, 2020 at 04:42:21PM +0200, Jean-Baptiste Maneyrol wrote:
+> Document the ICM-426xxx devices devicetree bindings.
 > 
-> On 14.05.20 13:47, David Hildenbrand wrote:
->> On 14.05.20 13:10, David Hildenbrand wrote:
->>> On 14.05.20 12:12, David Hildenbrand wrote:
->>>> On 14.05.20 12:02, teawater wrote:
->>>>> 
->>>>> 
->>>>>> 2020年5月14日 16:48，David Hildenbrand <david@redhat.com> 写道：
->>>>>> 
->>>>>> On 14.05.20 08:44, teawater wrote:
->>>>>>> Hi David,
->>>>>>> 
->>>>>>> I got a kernel warning with v2 and v3.
->>>>>> 
->>>>>> Hi Hui,
->>>>>> 
->>>>>> thanks for playing with the latest versions. Surprisingly, I can
->>>>>> reproduce even by hotplugging a DIMM instead as well - that's good, so
->>>>>> it's not related to virtio-mem, lol. Seems to be some QEMU setup issue
->>>>>> with older machine types.
->>>>>> 
->>>>>> Can you switch to a newer qemu machine version, especially
->>>>>> pc-i440fx-5.0? Both, hotplugging DIMMs and virtio-mem works for me with
->>>>>> that QEMU machine just fine.
->>>>> 
->>>>> I still could reproduce this issue with pc-i440fx-5.0 or pc.  Did I miss anything?
->>>>> 
->>>> 
->>>> Below I don't even see virtio_mem. I had to repair the image (filesystem
->>>> fsck) because it was broken, can you try that as well?
->>>> 
->>>> Also, it would be great if you could test with v4.
->>>> 
->>> 
->>> Correction, something seems to be broken either in QEMU or the kernel. Once I
->>> define a DIMM so it's added and online during boot, I get these issues:
->>> 
->>> (I have virtio-mem v4 installed in the guest)
->>> 
->>> #! /bin/bash
->>> sudo x86_64-softmmu/qemu-system-x86_64 \
->>>    -machine pc-i440fx-5.0,accel=kvm,usb=off \
->>>    -cpu host \
->>>    -no-reboot \
->>>    -nographic \
->>>    -device ide-hd,drive=hd \
->>>    -drive if=none,id=hd,file=/home/dhildenb/git/Fedora-Cloud-Base-31-1.9.x86_64.qcow2,format=qcow2 \
->>>    -m 1g,slots=10,maxmem=2G \
->>>    -smp 1 \
->>>    -object memory-backend-ram,id=mem0,size=256m \
->>>    -device pc-dimm,id=dimm0,memdev=mem0 \
->>>    -s \
->>>    -monitor unix:/var/tmp/monitor,server,nowait
->>> 
->>> 
->>> Without the DIMM it seems to work just fine.
->>> 
->> 
->> And another correction. 
->> 
->> Using QEMU v5.0.0, Linux 5.7-rc5, untouched
->> Fedora-Cloud-Base-32-1.6.x86_64.qcow2, I get even without any memory hotplug:
->> 
->> #! /bin/bash
->> sudo x86_64-softmmu/qemu-system-x86_64 \
->>    -machine pc-i440fx-5.0,accel=kvm,usb=off \
->>    -cpu host \
->>    -no-reboot \
->>    -nographic \
->>    -device ide-hd,drive=hd \
->>    -drive if=none,id=hd,file=/home/dhildenb/git/Fedora-Cloud-Base-32-1.6.x86_64.qcow2,format=qcow2 \
->>    -m 5g,slots=10,maxmem=6G \
->>    -smp 1 \
->>    -s \
->>    -kernel /home/dhildenb/git/linux/arch/x86/boot/bzImage \
->>    -append "console=ttyS0 rd.shell nokaslr swiotlb=noforce" \
->>    -monitor unix:/var/tmp/monitor,server,nowait
->> 
->> 
->> Observe how big the initial RAM even is!
->> 
->> 
->> So this is no DIMM/hotplug/virtio_mem issue. With memory hotplug, it seems to get
->> more likely to trigger if "swiotlb=noforce" is not specified.
->> 
->> "swiotlb=noforce" seems to trigger some pre-existing issue here. Without
->> "swiotlb=noforce", I was only able to observe this via pc-i440fx-2.1,
->> 
+> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+> ---
+>  .../bindings/iio/imu/invensense,icm42600.yaml | 90 +++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
 > 
-> (talking to myself :) )
-> 
-> I think I finally understood why using "swiotlb=noforce" with hotplugged
-> memory is wrong - or with memory > 3GB. Via "swiotlb=noforce" you tell
-> the system to "Never use bounce buffers (for debugging)". This works as
-> long as all memory is DMA memory (e.g., < 3GB) AFAIK.
-> 
-> "If specified, trying to map memory that cannot be used with DMA will
-> fail, and a rate-limited warning will be printed."
-> 
-> Hotplugged memory (under QEMU) is never added below 4GB, because of the
-> PCI hole. So both, memory from DIMMs and from virtio-mem will end up at
-> or above 4GB. To make a device use that memory, you need bounce buffers.
-> 
-> Hotplugged memory is never DMA memory.
-> 
+> diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+> new file mode 100644
+> index 000000000000..a7175f6543fa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+> @@ -0,0 +1,90 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/imu/invensense,icm42600.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: InvenSense ICM-426xx Inertial Measurement Unit
+> +
+> +maintainers:
+> +  - Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+> +
+> +description: |
+> +  6-axis MotionTracking device that combines a 3-axis gyroscope and a 3-axis accelerometer.
+> +
+> +  It has a configurable host interface that supports I3C, I2C and SPI serial communication, features a 2kB FIFO and
+> +  2 programmable interrupts with ultra-low-power wake-on-motion support to minimize system power consumption.
+> +
+> +  Other industry-leading features include InvenSense on-chip APEX Motion Processing engine for gesture recognition,
+> +  activity classification, and pedometer, along with programmable digital filters, and an embedded temperature sensor.
+> +
+> +  https://invensense.tdk.com/wp-content/uploads/2020/03/DS-000292-ICM-42605-v1.4.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - invensense,icm42600
+> +      - invensense,icm42602
+> +      - invensense,icm42605
+> +      - invensense,icm42622
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  spi-cpha: true
+> +
+> +  spi-cpol: true
 
+It doesn't make much sense to specify these and not make them required. 
+I guess you could have a device with multiple modes, but generally 
+there's only one right combination of these properties. Also, this could 
+just be implied by the compatible.
 
-Hi David,
+> +
+> +  spi-max-frequency:
+> +    maxItems: 1
 
-It is fixed when I remove "swiotlb=noforce”.
+Not an array. Either give a frequency range (minimum/maximum) or just 
+'true'.
 
-Thanks for your help.
-
-Best,
-Hui
-
+> +
+> +  vdd-supply:
+> +    description: Regulator that provides power to the sensor
+> +
+> +  vddio-supply:
+> +    description: Regulator that provides power to the bus
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        icm42605@68 {
+> +          compatible = "invensense,icm42605";
+> +          reg = <0x68>;
+> +          interrupt-parent = <&gpio2>;
+> +          interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
+> +          vdd-supply = <&vdd>;
+> +          vddio-supply = <&vddio>;
+> +        };
+> +    };
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    spi0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        icm42602@0 {
+> +          compatible = "invensense,icm42602";
+> +          reg = <0>;
+> +          spi-max-frequency = <24000000>;
+> +          spi-cpha;
+> +          spi-cpol;
+> +          interrupt-parent = <&gpio1>;
+> +          interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> +          vdd-supply = <&vdd>;
+> +          vddio-supply = <&vddio>;
+> +        };
+> +    };
 > -- 
-> Thanks,
+> 2.17.1
 > 
-> David / dhildenb
-
