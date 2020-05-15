@@ -2,120 +2,100 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA8AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E44A2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2C78205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF382070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:56:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fToAM0ki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgEOU4m (ORCPT
+        id S1726717AbgEOU4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:56:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39002 "EHLO
+        Fri, 15 May 2020 16:56:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgEOU4m (ORCPT
+        with ESMTP id S1726179AbgEOU4o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:56:42 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D092AC061A0C;
-        Fri, 15 May 2020 13:56:41 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZhNV-009Hh7-7g; Fri, 15 May 2020 20:56:21 +0000
-Date:   Fri, 15 May 2020 21:56:21 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Olga Kornievskaia <kolga@netapp.com>
-Cc:     Alexey Gladkov <gladkov.alexey@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        syzbot <syzbot+c1af344512918c61362c@syzkaller.appspotmail.com>,
-        jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, linux-security-module@vger.kernel.org,
-        serge@hallyn.com, sfr@canb.auug.org.au,
-        syzkaller-bugs@googlegroups.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        ".Tetsuo Handa" <penguin-kernel@i-love.sakura.ne.jp>
-Subject: Re: linux-next boot error: general protection fault in
- tomoyo_get_local_path
-Message-ID: <20200515205621.GH23230@ZenIV.linux.org.uk>
-References: <0000000000002f0c7505a5b0e04c@google.com>
- <c3461e26-1407-2262-c709-dac0df3da2d0@i-love.sakura.ne.jp>
- <72cb7aea-92bd-d71b-2f8a-63881a35fad8@i-love.sakura.ne.jp>
- <20200515201357.GG23230@ZenIV.linux.org.uk>
+        Fri, 15 May 2020 16:56:44 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6264C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:56:44 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id s69so1444325pjb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:56:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZaKdPWICHrxeaJbcoZswmrKCh+nf/OKEqhO0mqkBL0o=;
+        b=fToAM0kiMpq2dR+CH7durVFF8CEZAkoYW5Ajg9aw+A6JVRq6NUDQ/2mUM4aTJeGWhM
+         igUxe2lGMdSch78wRSDUQgegsr6mtTz52bCm8HKGuW20nxKomwLEz8Nm8Rhxgv7JG4mO
+         Nz88xGftWDBFbs3f6ShvzXABvkeBKzkR/JCxbOhcBEK1vhioTn4f3oCbF2zlAWxH3hK5
+         fWwSDe8dq+3dht/1R/ITLr4dyAQHcs92NFKxlDE1+yG9TEb+j3erLnuv3ZWyg3J/btm5
+         cg1D3nw4v6zjwBbcjVrv1fggMD/jtgcPj/m9esPp+v5nyqoQqvPlWAfAENV4+j7ykNWL
+         Tb5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZaKdPWICHrxeaJbcoZswmrKCh+nf/OKEqhO0mqkBL0o=;
+        b=jGverpwlvRhIrKCEsWkWi91ZuPaBPuVe+5OMgJwz1ZQn4wrxHsYSTVz8DTYhR2lmq4
+         7vCtAm+vTJuSzoBY7JX5RJLeFcfvJyzMkWI9htvlnqZb6GifL4pVkXGzRnp/hKntLHz2
+         ksQmal7UtEFvO64f81G4KmJkd6fuk4sS4/ZqGNvUB2QxnmGjMeHSdr4umhKJf3/JbtLU
+         8yy9xNyi914ClDolxryBn6hxxwTDuu2KTwEMy9EsU2h0/LnQrlUJI0X6WF6o35QMJEan
+         pwd6YZ2+/i+6LVJDdTgvMrP4tBpbyq+qWPros9G0qrz+K4eTJINetbERdLOYqEZNUM3e
+         GKgA==
+X-Gm-Message-State: AOAM5334Wl9eDiylMUYMi5LUgumJgsH3jbvyQRR8odMiVZRtJ1iOj+VX
+        6nAK7kx3EwXnwjzM7oih97fCrA==
+X-Google-Smtp-Source: ABdhPJxH1V+FMWeIMxm/3315pKLxhQfiK+9ClID6F/TqaIZyHMTMQTS7TTEXJmC2UjSoxRPUCo1Irg==
+X-Received: by 2002:a17:902:6b05:: with SMTP id o5mr5085512plk.274.1589576204401;
+        Fri, 15 May 2020 13:56:44 -0700 (PDT)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id z13sm2208903pjz.42.2020.05.15.13.56.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 13:56:43 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org
+Cc:     arnaud.pouliquen@st.com, s-anna@ti.com,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/3] rpmsg: core: Add support for name extension 
+Date:   Fri, 15 May 2020 14:56:39 -0600
+Message-Id: <20200515205642.13529-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515201357.GG23230@ZenIV.linux.org.uk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 09:13:57PM +0100, Al Viro wrote:
-> On Sat, May 16, 2020 at 12:36:28AM +0900, Tetsuo Handa wrote:
-> > On 2020/05/16 0:18, Tetsuo Handa wrote:
-[snip]
-> > A similar bug (racing inode destruction with open() on proc filesystem) was fixed as
-> > commit 6f7c41374b62fd80 ("tomoyo: Don't use nifty names on sockets."). Then, it might
-> > not be safe to replace dentry->d_sb->s_fs_info with dentry->d_inode->i_sb->s_fs_info .
-> 
-> Could you explain why do you want to bother with d_inode() anyway?  Anything that
-> does dentry->d_inode->i_sb can bloody well use dentry->d_sb.  And that's never
-> changed over the struct dentry lifetime - ->d_sb is set on allocation and never
-> modified afterwards.
+This patchset adds the capability to supplement the base definition
+published by an rpmsg_driver with a postfix description so that it
+is easy to differentiate entities that use the same name service.
 
-Incidentally, this
-        r_ino = nfs_fhget(ss_mnt->mnt_root->d_inode->i_sb, src_fh, &fattr,
-                        NULL);
-(in nfs42_ssc_open()) is just plain weird.
+Applies cleanly on rpmsg-next (4f05fc33bebd).
 
-	1) d->d_inode->i_sb is equal to d->d_sb
-	2) m->mnt_root->d_sb is equal to m->mnt_sb
-IOW, the whole thing should be 
-        r_ino = nfs_fhget(ss_mnt->mnt_sb, src_fh, &fattr, NULL);
+New for V6:
+- Added example on how to use the new API.
 
-Moreover,
-	server = NFS_SERVER(ss_mnt->mnt_root->d_inode);
-in the same function is again too convoluted for no good reason, seeing that
-NFS_SERVER(inode) is NFS_SB(inode->i_sb).
+Thanks,
+Mathieu
 
-Something along the lines of
 
-nfs: don't obfuscate ->mnt_sb as ->mnt_root->d_inode->i_sb
+Mathieu Poirier (3):
+  rpmsg: core: Add wildcard match for name service
+  rpmsg: core: Add support to retrieve name extension
+  sample/rpmsg: Print out RPMSG device name extension
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 8e5d6223ddd3..1e8ca45bc806 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -317,15 +317,14 @@ nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
- {
- 	struct nfs_fattr fattr;
- 	struct file *filep, *res;
--	struct nfs_server *server;
-+	struct super_block *sb = ss_mnt->mnt_sb;
-+	struct nfs_server *server = NFS_SB(sb);
- 	struct inode *r_ino = NULL;
- 	struct nfs_open_context *ctx;
- 	struct nfs4_state_owner *sp;
- 	char *read_name = NULL;
- 	int len, status = 0;
- 
--	server = NFS_SERVER(ss_mnt->mnt_root->d_inode);
--
- 	nfs_fattr_init(&fattr);
- 
- 	status = nfs4_proc_getattr(server, src_fh, &fattr, NULL, NULL);
-@@ -341,8 +340,7 @@ nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
- 		goto out;
- 	snprintf(read_name, len, SSC_READ_NAME_BODY, read_name_gen++);
- 
--	r_ino = nfs_fhget(ss_mnt->mnt_root->d_inode->i_sb, src_fh, &fattr,
--			NULL);
-+	r_ino = nfs_fhget(sb, src_fh, &fattr, NULL);
- 	if (IS_ERR(r_ino)) {
- 		res = ERR_CAST(r_ino);
- 		goto out_free_name;
+ drivers/rpmsg/rpmsg_core.c          | 115 +++++++++++++++++++++++++++-
+ include/linux/rpmsg.h               |  13 ++++
+ samples/rpmsg/rpmsg_client_sample.c |   5 ++
+ 3 files changed, 132 insertions(+), 1 deletion(-)
+
+-- 
+2.20.1
+
