@@ -2,203 +2,132 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C33C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59C6A2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:31:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qr7qtHrV"
+	by mail.kernel.org (Postfix) with ESMTP id 6269E206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:32:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589560348;
+	bh=Clbg95mGe285CM3PrnZFuBXtRg+ehhJCv+3nMgLYc+g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Eu/hx/2yYD2UasBQCRbFa/45zjgmpxrumCet9w2VlUYIN5eZRK6/cX0fLhJSdqNYr
+	 XYCIUdh9D3kyGqW+Lb4Fpda22In2r6heyHIC8c5J7y5uC6xGC9numxGtKv3isC8sjL
+	 fXfcWmllQnxVTUrMV+cBTATuPJnj7hvJW+Ei3Noo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgEOQbx (ORCPT
+        id S1726294AbgEOQc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:31:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54054 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726168AbgEOQbw (ORCPT
+        Fri, 15 May 2020 12:32:27 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33115 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgEOQc1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:31:52 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39571C061A0C;
-        Fri, 15 May 2020 09:31:52 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id z18so2472970qto.2;
-        Fri, 15 May 2020 09:31:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qWJplWQlnWRC9afl46qOWJcxiXlm4NEUM51q0ljY+vQ=;
-        b=Qr7qtHrVlXDmY1zII6GIwRjsAZeo97nUvw9Pl6LHydipbHKZKOsREcDCWb/Nehay4q
-         HPkyqmI3IOEbsYBhDpaXJrq16Vws8qxRXrJ7rzjlK+TvVhG2vNj/H5DHsLtQV0Kwk8vT
-         L/0YqzgiFJoF5h4P3F8wa0c2Xt8FgX9EE0E+WMwb4AtPRxSzuWRK4rNlZ1eZXo+yjnRI
-         UvG/FV0zTQwPi6Z0zcoCkDbZP6wa8zFXAQ4VnisEKYCHJIjuMHxKZamuv0112f1jymoA
-         URx7xPYWkI7UqEkCP3ketlR0BEfAmPKepvS3QrMDHW5/elG9jrzQSimb/0HKyCfQqAp1
-         d7RA==
+        Fri, 15 May 2020 12:32:27 -0400
+Received: by mail-ot1-f67.google.com with SMTP id v17so2398039ote.0;
+        Fri, 15 May 2020 09:32:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qWJplWQlnWRC9afl46qOWJcxiXlm4NEUM51q0ljY+vQ=;
-        b=XFm5KdwulzFJ24owl2tJmAr2u9z+3jB5LbLiPDcZw+jwFbpoVqAryWom5MJJltwdTk
-         yCSSUHYuFWzsHCJgwP2NQ6HNAxhXDqXHKmGu6sGaDJZkMqgfmXwdNgZmsc/CIwXXWYoI
-         lkh3Fk8szMaJCh9iYdMoqS0H2folV6S4kQRzDWYV131SKnamDFc+TniAL38FJ3jF1nGq
-         2v8S1FjRM1NXa9jWDal+8DKkmt5+nSIcTWI16+aRActE/DR3P/lADmZ6qxw0w3nk/V0b
-         xc99kLgTQ1CPflt9O7w77OaHbnHx4p9zabEyI4GyxotlnFY+o7gboGaLxJbbZRaQ+LUq
-         FiiA==
-X-Gm-Message-State: AOAM532ewzMJkAPSMtXuO/m595ku9SuIo7UoHoZKeiR75AGdCJRgkCse
-        /UZSi4sjRYYVsh7nLKdba+8=
-X-Google-Smtp-Source: ABdhPJxTfV2SqcByVx6TzfUx3zWMgaeTTZ2afzCvX+IBk+67/nhyHvYXCNEKrESdgwDQxNoPU0z89A==
-X-Received: by 2002:ac8:2f50:: with SMTP id k16mr4474062qta.392.1589560311093;
-        Fri, 15 May 2020 09:31:51 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id e23sm1896496qkm.63.2020.05.15.09.31.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 09:31:49 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E013840AFD; Fri, 15 May 2020 13:31:46 -0300 (-03)
-Date:   Fri, 15 May 2020 13:31:46 -0300
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 4/8] libbpf hashmap: Localize static hashmap__* symbols
-Message-ID: <20200515163146.GA9335@kernel.org>
-References: <20200515065624.21658-1-irogers@google.com>
- <20200515065624.21658-5-irogers@google.com>
- <20200515091707.GC3511648@krava>
- <20200515142917.GT5583@kernel.org>
- <CAP-5=fXtXgnb4nrVtsoxQ6vj8YtzPicFsad6+jB5UUFqMzg4mw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1EkG6O/3cmUPYt5DCQJXeRo2YDJdl3A9XsZfu0rbjpI=;
+        b=J8GcQEZcq0uG1iye5NP9ZfV5wqn7JSx+VMYpTy8Gq0qzKobMC7mXd3JromxwtbdvAA
+         Qum5rRLXBa/I0mobuEdDTtSk6IP7iNp37+Vd1LiNi289SKkA1OPbE10PG+IIIB1nWbKq
+         05jpLyy4SNawXgV4V76RRz4eX35FGlSxiiAtWxpDYM+8Nt0HRVzyQLCO5xir1rwh/kD3
+         0+dGbkIDwMKUIn057FPB2usmUomDm9G4YjDAi/M8a+9it1YIXwA0vq07ZSj2V1I6BjJ+
+         n/VORGqR/aD2xt/ZiATbuhrE3jJ9z7XZrhp+h/lvm5+UrSRI99CFSOHXVzmAvVshHgK3
+         F93A==
+X-Gm-Message-State: AOAM532L7pru267NtOM9nijzch36dHmzNDvGsm64r14A4cM0nRrnlsTz
+        v+amUpA0EmWzwkYvw+LpZ7KFq+0OKgVxZRSHOwAOlw==
+X-Google-Smtp-Source: ABdhPJxo0/cj2tVHy034QYN22JdcAzua5TQIunVoodyMMWprdbREtuanWAuUarfMnKINXK9/gLW23mnPdEZd/9cbVdI=
+X-Received: by 2002:a9d:6ac8:: with SMTP id m8mr2917760otq.262.1589560346499;
+ Fri, 15 May 2020 09:32:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fXtXgnb4nrVtsoxQ6vj8YtzPicFsad6+jB5UUFqMzg4mw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20200515093613.18691-1-ardb@kernel.org>
+In-Reply-To: <20200515093613.18691-1-ardb@kernel.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 15 May 2020 18:32:14 +0200
+Message-ID: <CAJZ5v0guHdbZTsU5e7KDAHDy9Gnh67JwtSSCeDaK8mUwAk1d3g@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: GED: add support for _Exx / _Lxx handler methods
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, May 15, 2020 at 07:53:33AM -0700, Ian Rogers escreveu:
-> On Fri, May 15, 2020 at 7:29 AM Arnaldo Carvalho de Melo
-> <arnaldo.melo@gmail.com> wrote:
-> >
-> > Em Fri, May 15, 2020 at 11:17:07AM +0200, Jiri Olsa escreveu:
-> > > On Thu, May 14, 2020 at 11:56:20PM -0700, Ian Rogers wrote:
-> > > > Localize the hashmap__* symbols in libbpf.a. To allow for a version in
-> > > > libapi.
-> > > >
-> > > > Before:
-> > > > $ nm libbpf.a
-> > > > ...
-> > > > 000000000002088a t hashmap_add_entry
-> > > > 000000000001712a t hashmap__append
-> > > > 0000000000020aa3 T hashmap__capacity
-> > > > 000000000002099c T hashmap__clear
-> > > > 00000000000208b3 t hashmap_del_entry
-> > > > 0000000000020fc1 T hashmap__delete
-> > > > 0000000000020f29 T hashmap__find
-> > > > 0000000000020c6c t hashmap_find_entry
-> > > > 0000000000020a61 T hashmap__free
-> > > > 0000000000020b08 t hashmap_grow
-> > > > 00000000000208dd T hashmap__init
-> > > > 0000000000020d35 T hashmap__insert
-> > > > 0000000000020ab5 t hashmap_needs_to_grow
-> > > > 0000000000020947 T hashmap__new
-> > > > 0000000000000775 t hashmap__set
-> > > > 00000000000212f8 t hashmap__set
-> > > > 0000000000020a91 T hashmap__size
-> > > > ...
-> > > >
-> > > > After:
-> > > > $ nm libbpf.a
-> > > > ...
-> > > > 000000000002088a t hashmap_add_entry
-> > > > 000000000001712a t hashmap__append
-> > > > 0000000000020aa3 t hashmap__capacity
-> > > > 000000000002099c t hashmap__clear
-> > > > 00000000000208b3 t hashmap_del_entry
-> > > > 0000000000020fc1 t hashmap__delete
-> > > > 0000000000020f29 t hashmap__find
-> > > > 0000000000020c6c t hashmap_find_entry
-> > > > 0000000000020a61 t hashmap__free
-> > > > 0000000000020b08 t hashmap_grow
-> > > > 00000000000208dd t hashmap__init
-> > > > 0000000000020d35 t hashmap__insert
-> > > > 0000000000020ab5 t hashmap_needs_to_grow
-> > > > 0000000000020947 t hashmap__new
-> > > > 0000000000000775 t hashmap__set
-> > > > 00000000000212f8 t hashmap__set
-> > > > 0000000000020a91 t hashmap__size
-> > > > ...
-> > >
-> > > I think this will break bpf selftests which use hashmap,
-> > > we need to find some other way to include this
-> > >
-> > > either to use it from libbpf directly, or use the api version
-> > > only if the libbpf is not compiled in perf, we could use
-> > > following to detect that:
-> > >
-> > >       CFLAGS += -DHAVE_LIBBPF_SUPPORT
-> > >       $(call detected,CONFIG_LIBBPF)
-> >
-> > And have it in tools/perf/util/ instead?
- 
-> *sigh*
- 
-> $ make -C tools/testing/selftests/bpf test_hashmap
-> make: Entering directory
-> '/usr/local/google/home/irogers/kernel-trees/kernel.org/tip/tools/testing/s
-> elftests/bpf'
->  BINARY   test_hashmap
-> /usr/bin/ld: /tmp/ccEGGNw5.o: in function `test_hashmap_generic':
-> /usr/local/google/home/irogers/kernel-trees/kernel.org/tip/tools/testing/selftests/bpf/test_hashmap.
-> c:61: undefined reference to `hashmap__new'
-> ...
- 
-> My preference was to make hashmap a sharable API in tools, to benefit
+On Fri, May 15, 2020 at 11:37 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> Per the ACPI spec, interrupts in the range [0, 255] may be handled
+> in AML using individual methods whose naming is based on the format
+> _Exx or _Lxx, where xx is the hex representation of the interrupt
+> index.
+>
+> Add support for this missing feature to our ACPI GED driver.
+>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: linux-acpi@vger.kernel.org
+> Cc: <stable@vger.kernel.org> # v4.9+
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  drivers/acpi/evged.c | 22 +++++++++++++++++---
+>  1 file changed, 19 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/acpi/evged.c b/drivers/acpi/evged.c
+> index aba0d0027586..6d7a522952bf 100644
+> --- a/drivers/acpi/evged.c
+> +++ b/drivers/acpi/evged.c
+> @@ -79,6 +79,8 @@ static acpi_status acpi_ged_request_interrupt(struct acpi_resource *ares,
+>         struct resource r;
+>         struct acpi_resource_irq *p = &ares->data.irq;
+>         struct acpi_resource_extended_irq *pext = &ares->data.extended_irq;
+> +       char ev_name[5];
+> +       u8 trigger;
+>
+>         if (ares->type == ACPI_RESOURCE_TYPE_END_TAG)
+>                 return AE_OK;
+> @@ -87,14 +89,28 @@ static acpi_status acpi_ged_request_interrupt(struct acpi_resource *ares,
+>                 dev_err(dev, "unable to parse IRQ resource\n");
+>                 return AE_ERROR;
+>         }
+> -       if (ares->type == ACPI_RESOURCE_TYPE_IRQ)
+> +       if (ares->type == ACPI_RESOURCE_TYPE_IRQ) {
+>                 gsi = p->interrupts[0];
+> -       else
+> +               trigger = p->triggering;
+> +       } else {
+>                 gsi = pext->interrupts[0];
+> +               trigger = p->triggering;
+> +       }
+>
+>         irq = r.start;
+>
+> -       if (ACPI_FAILURE(acpi_get_handle(handle, "_EVT", &evt_handle))) {
+> +       switch (gsi) {
+> +       case 0 ... 255:
+> +               sprintf(ev_name, "_%c%02hhX",
+> +                       trigger == ACPI_EDGE_SENSITIVE ? 'E' : 'L', gsi);
+> +
+> +               if (ACPI_SUCCESS(acpi_get_handle(handle, ev_name, &evt_handle)))
+> +                       break;
+> +               /* fall through */
+> +       default:
+> +               if (ACPI_SUCCESS(acpi_get_handle(handle, "_EVT", &evt_handle)))
+> +                       break;
+> +
+>                 dev_err(dev, "cannot locate _EVT method\n");
+>                 return AE_ERROR;
+>         }
+> --
 
-That is my preference as well, I'm not defending having it in
-tools/perf/util/, just saying that that is a possible way to make
-progress with the current situation...
-
-> not just perf but say things like libsymbol, libperf, etc. Moving it
-> into perf and using conditional compilation is kinda gross but having
-> libbpf tests depend on libapi also isn't ideal I guess. It is tempting
-> to just cut a hashmap from fresh cloth to avoid this and to share
-> among tools/. I don't know if the bpf folks have opinions?
-> 
-> I'll do a v2 using conditional compilation to see how bad it looks.
-
-Cool, lets see how it looks.
-
-- Arnaldo
+Applied as 5.8 material, thanks!
