@@ -2,78 +2,101 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDD9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB5BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5512076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 632AE207C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589555515;
+	bh=ys1V8HWNqH20yXhWtg1p2L+pPQ1fwqd8rYNvrPx95UM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yzk136fX26R+Gq0oueWa3lyLWdTnbxGOheEv18BaP22jPUkxLcP+6okNH+uwEGaOH
+	 AZ8vfrLnUkp9Qp58s5iIEXiSDFnxgaGFeIykzllDTC/qBWX/reXx/rTesALuc5RDdE
+	 6mZs6Vto1F3/R7dv8KmQShktqzRbdy8WqwyPl9ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgEOPL0 (ORCPT
+        id S1728378AbgEOPLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:11:26 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:14629 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728054AbgEOPKR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:10:17 -0400
-X-IronPort-AV: E=Sophos;i="5.73,395,1583161200"; 
-   d="scan'208";a="47188404"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 16 May 2020 00:10:15 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 051D6400E8F9;
-        Sat, 16 May 2020 00:10:11 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 10/17] dt-bindings: net: renesas,ravb: Add support for r8a7742 SoC
-Date:   Fri, 15 May 2020 16:08:50 +0100
-Message-Id: <1589555337-5498-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 15 May 2020 11:11:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726717AbgEOPJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 11:09:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 448D1207C3;
+        Fri, 15 May 2020 15:09:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589555376;
+        bh=ys1V8HWNqH20yXhWtg1p2L+pPQ1fwqd8rYNvrPx95UM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lS2YsSuumgPFlql65mzaXT7bI02mBOVqmqPUIPQyGjNbMP5CjS5Yhe8iytrsPHNBA
+         tLSKzTBJMMCHJ6v2uY+1HJrYDJ2cXMayZvliNSfnz/+NIV5gi36XTpsgnxCH9qfbCy
+         cFaTWRXjEkqX+lEvr958G7qHow4nV5GAWGgH7OoI=
+Date:   Fri, 15 May 2020 17:09:34 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     =?iso-8859-1?B?Suly9G1l?= Pouiller <jerome.pouiller@silabs.com>
+Cc:     devel@driverdev.osuosl.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH 05/19] staging: wfx: fix coherency of hif_scan() prototype
+Message-ID: <20200515150934.GA2573363@kroah.com>
+References: <20200515083325.378539-1-Jerome.Pouiller@silabs.com>
+ <20200515083325.378539-6-Jerome.Pouiller@silabs.com>
+ <20200515135359.GA2162457@kroah.com>
+ <15113296.vvBLmrQuJQ@pc-42>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <15113296.vvBLmrQuJQ@pc-42>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document RZ/G1H (R8A7742) SoC bindings.
+On Fri, May 15, 2020 at 05:03:40PM +0200, Jérôme Pouiller wrote:
+> On Friday 15 May 2020 15:53:59 CEST Greg Kroah-Hartman wrote:
+> > On Fri, May 15, 2020 at 10:33:11AM +0200, Jerome Pouiller wrote:
+> > > From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+> > >
+> > > The function hif_scan() return the timeout for the completion of the
+> > > scan request. It is the only function from hif_tx.c that return another
+> > > thing than just an error code. This behavior is not coherent with the
+> > > rest of file. Worse, if value returned is positive, the caller can't
+> > > make say if it is a timeout or the value returned by the hardware.
+> > >
+> > > Uniformize API with other HIF functions, only return the error code and
+> > > pass timeout with parameters.
+> > >
+> > > Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+> > > ---
+> > >  drivers/staging/wfx/hif_tx.c | 6 ++++--
+> > >  drivers/staging/wfx/hif_tx.h | 2 +-
+> > >  drivers/staging/wfx/scan.c   | 6 +++---
+> > >  3 files changed, 8 insertions(+), 6 deletions(-)
+> > 
+> > This patch fails to apply to my branch, so I've stopped here in the
+> > patch series.
+> 
+> Hello Greg,
+> 
+> Did you applied the patch called "staging: wfx: unlock on error path" from
+> Dan?
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
----
- Documentation/devicetree/bindings/net/renesas,ravb.txt | 1 +
- 1 file changed, 1 insertion(+)
+I have no idea :)
 
-diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-index 87dad2d..032b76f 100644
---- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-+++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-@@ -5,6 +5,7 @@ interface contains.
- 
- Required properties:
- - compatible: Must contain one or more of the following:
-+      - "renesas,etheravb-r8a7742" for the R8A7742 SoC.
-       - "renesas,etheravb-r8a7743" for the R8A7743 SoC.
-       - "renesas,etheravb-r8a7744" for the R8A7744 SoC.
-       - "renesas,etheravb-r8a7745" for the R8A7745 SoC.
--- 
-2.7.4
+> (I wrote that information in the introduction letter, but maybe I would
+> had include the Dan's patch in my PR?)
 
+I think you should have, as my queue is empty now.
+
+thanks,
+
+greg k-h
