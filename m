@@ -2,139 +2,98 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F35C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D32BB2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:19:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="V4rmYoQN"
+	by mail.kernel.org (Postfix) with ESMTP id ED7662065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgEOHTV (ORCPT
+        id S1726645AbgEOHVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 03:19:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726434AbgEOHTU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 03:19:20 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 920BCC061A0C;
-        Fri, 15 May 2020 00:19:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589527155;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=/LlQLnJSjr1dPjlAnAK+u/lQG0tGroGOnAwr3HRIIDg=;
-        b=V4rmYoQNMiSdVNe+dWbLMntZAM4z93rruWDqBl4jIT/149VE95L/x3e6Izb3Bs3eyg
-        tk4HunCz0xxntP2hQvK0O33IO16iO3NAOWHc3cB8Z8OrBMXwXk/yWXFHvPmWk+xX8Ll5
-        dF1YuCJ16hBNa93UGhg1Vh3qjEL0JdM8chtrEPk4SXOOA9AiBdNddJqmOAkHqpwuz2AM
-        1N58+yn/d/9SNgUyZ8GRDkvhQ/ehCXXpQJuWL+H0JVTHKXvfmFeiNUIdgs9FOGJn8FvE
-        dJvnMUo1CiW0KXL9HUGsXmDQ9dv4BC3Cdg0//a56AAyC7WYbePBDs6kpZU0JPm0bhf77
-        xLNQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vtwDOvBTU="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id R0acebw4F7IYYRg
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 15 May 2020 09:18:34 +0200 (CEST)
-Subject: Re: [PATCH v7 01/12] dt-bindings: add img,pvrsgx.yaml for Imagination GPUs
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=iso-8859-1
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <08B861A8-D4C2-48A6-9B05-B8CA43312834@goldelico.com>
-Date:   Fri, 15 May 2020 09:18:33 +0200
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Philipp Rossak <embed3d@gmail.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D1D14684-2532-46A4-ADA0-2F88F4D2228E@goldelico.com>
-References: <cover.1587760454.git.hns@goldelico.com> <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com> <NMCE9Q.LWG45P20NBVJ@crapouillou.net> <28138EC0-0FA5-4F97-B528-3442BF087C7A@goldelico.com> <TEAR9Q.6HI5DFRO5U0I3@crapouillou.net> <3D8B59D6-83E3-4FE6-9C99-E2E5616A8139@goldelico.com> <8EER9Q.C206SXNSICP7@crapouillou.net> <08B861A8-D4C2-48A6-9B05-B8CA43312834@goldelico.com>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Burton <paulburton@kernel.org>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 15 May 2020 03:21:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49682 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726496AbgEOHVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 03:21:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3553AACC5;
+        Fri, 15 May 2020 07:21:14 +0000 (UTC)
+Date:   Fri, 15 May 2020 09:21:10 +0200
+Message-ID: <s5htv0hoe8p.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Brent Lu <brent.lu@intel.com>
+Cc:     <alsa-devel@alsa-project.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulhsia <paulhsia@chromium.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: pcm: fix incorrect hw_base increase
+In-Reply-To: <1589515779-20987-1-git-send-email-brent.lu@intel.com>
+References: <1589515779-20987-1-git-send-email-brent.lu@intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul & Paul,
+On Fri, 15 May 2020 06:09:39 +0200,
+Brent Lu wrote:
+> 
+> The hw_base will be increased by runtime->buffer_size frames
+> unconditionally if the runtime->status->hw_ptr is not updated for over
+> half of buffer time. As the hw_base increases, so does the
+> runtime->status->hw_ptr which could lead to invalid return value when
+> user space program calls snd_pcm_avail() function.
+> 
+> By updating runtime->hw_ptr_jiffies each time the HWSYNC is called,
+> the hw_base will keep the same when buffer stall happens, so does the
+> hw_ptr.
 
-> Am 03.05.2020 um 18:41 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> Hi Paul and Paul,
->=20
->> Am 03.05.2020 um 16:18 schrieb Paul Cercueil <paul@crapouillou.net>:
->>=20
->>=20
->>=20
->> Le dim. 3 mai 2020 =E0 15:31, H. Nikolaus Schaller =
-<hns@goldelico.com> a =E9crit :
->>> Hi Paul,
->>>> Am 03.05.2020 um 14:52 schrieb Paul Cercueil =
-<paul@crapouillou.net>:
->>>>>> It's possible to forbid the presence of the 'clocks' property on =
-some implementations, and require it on others.
->>>>> To be precise we have to specify the exact number of clocks =
-(between 0 and 4) for every architecture.
->>>>> This also contradicts my dream to get rid of the architecture =
-specific components in the long run. My dream (because I can't tell how =
-it can be done) is that we can one day develop something which just =
-needs compatible =3D img,530 or imp,540 or img,544. Then we can't make =
-the number clocks depend on the implementation any more.
->>>> As we said before, the number of clocks is a property of the GPU =
-and *not* its integration into the SoC.
->>> Well, it is a not very well documented property of the GPU. We have =
-no data sheet of the standalone GPU. Only several SoC data sheets which =
-give some indications.
->>=20
->> Maybe we can nicely ask them?
->=20
-> There is some (old) answer here:
->=20
-> =
-https://github.com/MIPS/CI20_linux/blob/ci20-v3.18/arch/mips/boot/dts/jz47=
-80.dtsi#L63
->=20
->> I expect Paul Burton to have some contacts at ImgTec. Asking for a =
-doc would be too much, but maybe they can help a bit with the DT =
-bindings.
->=20
-> Good idea! It is definitively worth to try. Therefore I have moved him =
-from CC: to To:
+Updating hw_ptr_jiffies at that code path looks correct, but it still
+leaves the question why this condition happens.  It means that the
+actual hwptr isn't changed and yet only jiffies increase
+significantly; it means that the hardware can't report proper pointer,
+and it should have set SNDRV_PCM_INFO_BATCH flag, then the jiffies
+check is skipped.
 
-Do we already have an idea if we can get into contact and get help from =
-ImgTec for this topic or if we have to live with what we have?
+With which hardware and under which situation did it happen (and the
+patch fixed)?
 
-BR and thanks,
-Nikolaus
 
+thanks,
+
+Takashi
+
+> 
+> Signed-off-by: Brent Lu <brent.lu@intel.com>
+> ---
+>  sound/core/pcm_lib.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
+> index 872a852..d531e1b 100644
+> --- a/sound/core/pcm_lib.c
+> +++ b/sound/core/pcm_lib.c
+> @@ -433,6 +433,7 @@ static int snd_pcm_update_hw_ptr0(struct snd_pcm_substream *substream,
+>  
+>   no_delta_check:
+>  	if (runtime->status->hw_ptr == new_hw_ptr) {
+> +		runtime->hw_ptr_jiffies = curr_jiffies;
+>  		update_audio_tstamp(substream, &curr_tstamp, &audio_tstamp);
+>  		return 0;
+>  	}
+> -- 
+> 2.7.4
+> 
