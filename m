@@ -2,166 +2,129 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153E9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38AD42076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EABDE207C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:50:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XbNk7MuQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="IgrV4I+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgEOPuW (ORCPT
+        id S1726660AbgEOPul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:50:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726227AbgEOPuT (ORCPT
+        Fri, 15 May 2020 11:50:41 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:10795 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbgEOPuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:50:19 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A55CDC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:50:18 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k19so1020411pll.9
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:50:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=maNQlt0vCXUutQdGjL8vBhpeTRE+KVofJhs1eAnXh6g=;
-        b=XbNk7MuQ57Rts4Z0qNTKjgNqv1OpA6t+Nc11jH0CcE5DjXS7oVuq2I56+d2MDC75jJ
-         nDjDvlSzADQw/PQCIl8/DxXmgfrveGmE6Hw9eY461U1BxfLAfoewmC1zHAQ7NjHaBVwq
-         48yzco9HijnVPOEH6uI2cCSke9LuzsUIGaAQQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=maNQlt0vCXUutQdGjL8vBhpeTRE+KVofJhs1eAnXh6g=;
-        b=JRvWjrWTUZFTusIuZ3+8q6XjBJq0aQV7CUVFTfYidsGa+tYLAhFYdyCO7nqFojDoZk
-         mvYhlpJSqVRmKadAfgd8WPHzB6fayA+jsRvEjtrHYOgbf+xMyvt++7QsPZi5LyLDS3Mu
-         09kqqeJRhgMBc2n5tHK7mWMJ6EllFcWC3RYEPl2JAdf1O+vjKA535nuhkUvUIqlu/jxJ
-         IFYjhpiA35omMrqRhUeRLM6EEoFv+fSnyXg5rKmS/sIHhX9sDbT0XoKAWh/Rq24TAEfh
-         YWdgehLabic84naeu+djUCAw6u7O1lZ31Vfzzx+pUBB8X/7kzuNm0JzgGWRb0Fs88Tgc
-         uUAw==
-X-Gm-Message-State: AOAM531EgJNVag5ZkAHrNAjdPC3qR0X1cEWoGH/jr56Gl8JRyV3+1bKP
-        Mkk3pSqzmcOAISt42oxLGUqDTg==
-X-Google-Smtp-Source: ABdhPJzV9V5xkT+PRgcjtkcfzF74hfXgdSbJTDs6Pij7aSIOh0B9fva/6CPrsQhWRfBllA/W9iJm5Q==
-X-Received: by 2002:a17:90a:5584:: with SMTP id c4mr459126pji.51.1589557818127;
-        Fri, 15 May 2020 08:50:18 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b24sm2247218pfi.4.2020.05.15.08.50.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 08:50:17 -0700 (PDT)
-Date:   Fri, 15 May 2020 08:50:16 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Christian Heimes <christian@python.org>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        John Johansen <john.johansen@canonical.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        "Lev R. Oshvang ." <levonshe@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Subject: Re: How about just O_EXEC? (was Re: [PATCH v5 3/6] fs: Enable to
- enforce noexec mounts or file exec through O_MAYEXEC)
-Message-ID: <202005150847.2B1ED8F81@keescook>
-References: <202005131525.D08BFB3@keescook>
- <202005132002.91B8B63@keescook>
- <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
- <202005140830.2475344F86@keescook>
- <CAEjxPJ4R_juwvRbKiCg5OGuhAi1ZuVytK4fKCDT_kT6VKc8iRg@mail.gmail.com>
- <b740d658-a2da-5773-7a10-59a0ca52ac6b@digikod.net>
- <202005142343.D580850@keescook>
- <87a729wpu1.fsf@oldenburg2.str.redhat.com>
- <202005150732.17C5EE0@keescook>
- <87r1vluuli.fsf@oldenburg2.str.redhat.com>
+        Fri, 15 May 2020 11:50:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589557840; x=1621093840;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=MDIagMcn7mtuRjSwV1TW+kBgMJmNhc1GuhsOuPDwSjA=;
+  b=IgrV4I+2QUMtSMcQN9d30JNmW6QuUBbWS+shwerFeBwTTsFZfyXZOoRH
+   eMHuGVCfHhPa6PXWqSK3Nhnw5QwQZ3aLkDZ5rOEOYrTq1TkXEmWmuEAcN
+   LRyERW7dPm2jSd4iBo9BG8yooc55xkRUVkipYlzMBJ2wCUnx9UeQILBj5
+   t7AsuranZ/fMSuyAbIpgcPBy1/ain4hrRiEo5WQWHy/oShS+z7TpXRsZW
+   ZaMXMfk4bKubDrtLMQUQDsYbrjk1zkx8/V2s6kKw7aF1AH5MtEZxcZFEr
+   FxCQOptrmJG+HaYyWD/OThg9iSNMQf7oma3jOrYiXFIYl7JBUGmgFinkf
+   w==;
+IronPort-SDR: I/qRcPDftRSuDS3oZ/Yg8hkzzKz87JMkmZGRX/CRyKNK9aOiBJLrIHXEjMtIKvh7ilKQjxCYBt
+ 0caWAGW27FWHrET47n3/5mCkj1k00dKIfJVFzi5/Q/aRnwhxytJg7FSNzrd6iVj9C4kMkZktJ3
+ oFzLG8QKXY1eGP2E0krhyvx5q3nBCOtHqBva0jGRk8LlxJqe23IGOxjOPoI/BI3eLmEspPit8K
+ 7cwXiTKFJltJ2R8MYABxTUHdYiyqNYNf35oPm92VuNmoUVNOqHLt0xSASMqikAAS25EM7Fp+Ed
+ pI4=
+X-IronPort-AV: E=Sophos;i="5.73,395,1583218800"; 
+   d="scan'208";a="12522245"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 May 2020 08:50:39 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 15 May 2020 08:50:42 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 15 May 2020 08:50:36 -0700
+References: <20200513133122.25121-1-lars.povlsen@microchip.com> <20200513133122.25121-2-lars.povlsen@microchip.com> <20200514130351.GA17797@bogus>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Rob Herring <robh@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "SoC Team" <soc@kernel.org>, <linux-mmc@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        <devicetree@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: Add Sparx5 SDHCI controller bindings
+In-Reply-To: <20200514130351.GA17797@bogus>
+Date:   Fri, 15 May 2020 17:50:35 +0200
+Message-ID: <87zha9nqno.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87r1vluuli.fsf@oldenburg2.str.redhat.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 04:43:37PM +0200, Florian Weimer wrote:
-> * Kees Cook:
-> 
-> > On Fri, May 15, 2020 at 10:43:34AM +0200, Florian Weimer wrote:
-> >> * Kees Cook:
-> >> 
-> >> > Maybe I've missed some earlier discussion that ruled this out, but I
-> >> > couldn't find it: let's just add O_EXEC and be done with it. It actually
-> >> > makes the execve() path more like openat2() and is much cleaner after
-> >> > a little refactoring. Here are the results, though I haven't emailed it
-> >> > yet since I still want to do some more testing:
-> >> > https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=kspp/o_exec/v1
-> >> 
-> >> I think POSIX specifies O_EXEC in such a way that it does not confer
-> >> read permissions.  This seems incompatible with what we are trying to
-> >> achieve here.
-> >
-> > I was trying to retain this behavior, since we already make this
-> > distinction between execve() and uselib() with the MAY_* flags:
-> >
-> > execve():
-> >         struct open_flags open_exec_flags = {
-> >                 .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
-> >                 .acc_mode = MAY_EXEC,
-> >
-> > uselib():
-> >         static const struct open_flags uselib_flags = {
-> >                 .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
-> >                 .acc_mode = MAY_READ | MAY_EXEC,
-> >
-> > I tried to retain this in my proposal, in the O_EXEC does not imply
-> > MAY_READ:
-> 
-> That doesn't quite parse for me, sorry.
-> 
-> The point is that the script interpreter actually needs to *read* those
-> files in order to execute them.
 
-I think I misunderstood what you meant (Mickaël got me sorted out
-now). If O_EXEC is already meant to be "EXEC and _not_ READ nor WRITE",
-then yes, this new flag can't be O_EXEC. I was reading the glibc
-documentation (which treats it as a permission bit flag, not POSIX,
-which treats it as a complete mode description).
+Rob Herring writes:
+
+> On Wed, 13 May 2020 15:31:20 +0200, Lars Povlsen wrote:
+>> The Sparx5 SDHCI controller is based on the Designware controller IP.
+>>
+>> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>> ---
+>>  .../mmc/microchip,dw-sparx5-sdhci.yaml        | 57 +++++++++++++++++++
+>>  1 file changed, 57 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
+>>
+>
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dts:20:18: fatal error: dt-bindings/clock/microchip,sparx5.h: No such file or directory
+>          #include <dt-bindings/clock/microchip,sparx5.h>
+>                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> compilation terminated.
+> scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dt.yaml] Error 1
+> make[1]: *** Waiting for unfinished jobs....
+> Makefile:1300: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+>
+> See https://patchwork.ozlabs.org/patch/1289290
+>
+
+Rob,
+
+The header file is added with the "parent" SoC series for Sparx5, which
+was submitted separately to the SoC list.
+
+Should I rewrite the example to avoid using the (normal) header file, or
+can you add the header file?
+
+I have verified the YAML pass dt_binding_check with the header file.
+
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+>
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+>
+> Please check and re-submit.
 
 -- 
-Kees Cook
+Lars Povlsen,
+Microchip
