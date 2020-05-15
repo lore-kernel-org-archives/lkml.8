@@ -2,101 +2,121 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91412C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE875C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62AD9205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:51:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CN/hLDPV"
+	by mail.kernel.org (Postfix) with ESMTP id 989962065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:53:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgEOUvo (ORCPT
+        id S1726504AbgEOUx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:51:44 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36250 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726183AbgEOUvo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:51:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589575903;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FHPcJo3/hUrokZL+DP7WLakvS6EX9QMKXwY5VRZtidY=;
-        b=CN/hLDPVem+NeRmh3E4uw5biXn9uWqf7qVkG7stxEi7WKzETl7zVE1yig2Cl2eDCLwFkPS
-        nyh3w8Z8DbZe5/x9LTkyJbbZ0bWNKpUl2gzDPMyAVjkqZO//ucAtZIqq49vxNPudJMU0hw
-        FzEoWthv7NCdZ6sQ8Q3IhfNox8SLjEw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-25-ZKC5u3TfPteBbGqUTTJjEQ-1; Fri, 15 May 2020 16:51:39 -0400
-X-MC-Unique: ZKC5u3TfPteBbGqUTTJjEQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 084C4460;
-        Fri, 15 May 2020 20:51:38 +0000 (UTC)
-Received: from treble (ovpn-117-151.rdu2.redhat.com [10.10.117.151])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1FAFC5D9C9;
-        Fri, 15 May 2020 20:51:37 +0000 (UTC)
-Date:   Fri, 15 May 2020 15:51:35 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     Matt Helsley <mhelsley@vmware.com>, linux-kernel@vger.kernel.org,
+        Fri, 15 May 2020 16:53:26 -0400
+Received: from mga14.intel.com ([192.55.52.115]:56975 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbgEOUxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 16:53:25 -0400
+IronPort-SDR: J7SGBl2TzjLYIVDcqHF0maJXasVq3PnmAFNXvxSSMgqvRpWWrOS8WOrBI4QB7tbYJi/CLGk3W4
+ xa9T4bcoZnrg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 13:53:25 -0700
+IronPort-SDR: C95Rn81/ebN/JuIa+TmgAU88CFYBuDbTazAR2EdLVuXxAV20KTsFp8hGgUbfhNNzT4zTx58pux
+ tErfs3B52l+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,396,1583222400"; 
+   d="scan'208";a="253889602"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga008.fm.intel.com with ESMTP; 15 May 2020 13:53:24 -0700
+Date:   Fri, 15 May 2020 13:53:24 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC][PATCH 4/5] objtool: Enable compilation of objtool for all
- architectures
-Message-ID: <20200515205135.5pknexlld53oicu5@treble>
-References: <cover.1588888003.git.mhelsley@vmware.com>
- <9f709ea2ae66cc03b3ff3329baa8f670ccd0e368.1588888003.git.mhelsley@vmware.com>
- <f9eedb02-54fe-fb96-fbcc-5f40f41e571a@redhat.com>
- <20200513155948.GI9040@rlwimi.vmware.com>
- <e369f0a9-30fc-5754-8cff-bf238ab0b716@redhat.com>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
+ token info
+Message-ID: <20200515205323.GG17572@linux.intel.com>
+References: <20200511164752.2158645-3-vkuznets@redhat.com>
+ <20200512152709.GB138129@redhat.com>
+ <87o8qtmaat.fsf@vitty.brq.redhat.com>
+ <20200512155339.GD138129@redhat.com>
+ <20200512175017.GC12100@linux.intel.com>
+ <20200513125241.GA173965@redhat.com>
+ <0733213c-9514-4b04-6356-cf1087edd9cf@redhat.com>
+ <20200515184646.GD17572@linux.intel.com>
+ <d84b6436-9630-1474-52e5-ffcc4d2bd70a@redhat.com>
+ <20200515203352.GC235744@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e369f0a9-30fc-5754-8cff-bf238ab0b716@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200515203352.GC235744@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 05:55:31PM +0100, Julien Thierry wrote:
-> > > Since the stuff under arch/missing is only weak symbols to make up for
-> > > missing subcmd implementations, can we put everything in a file
-> > > subcmd_defaults.c (name up for debate!) that would be always be compiled an
-> > > linked. And some SUBCMD_XXX is set to "y", the corresponding object file
-> > > gets compiled and overrides the weak symbols from subcmd_defaults.c .
+On Fri, May 15, 2020 at 04:33:52PM -0400, Vivek Goyal wrote:
+> On Fri, May 15, 2020 at 09:18:07PM +0200, Paolo Bonzini wrote:
+> > On 15/05/20 20:46, Sean Christopherson wrote:
+> > >> The new one using #VE is not coming very soon (we need to emulate it for
+> > >> <Broadwell and AMD processors, so it's not entirely trivial) so we are
+> > >> going to keep "page not ready" delivery using #PF for some time or even
+> > >> forever.  However, page ready notification as #PF is going away for good.
+> > > 
+> > > And isn't hardware based EPT Violation #VE going to require a completely
+> > > different protocol than what is implemented today?  For hardware based #VE,
+> > > KVM won't intercept the fault, i.e. the guest will need to make an explicit
+> > > hypercall to request the page.
 > > 
-> > Hmm, I like keeping them separated along similar lines to the other
-> > code because it makes it easier to see the intended correspondence and
-> > likely will keep the files more readable / smaller. I could
-> > just move them out of arch/missing and into missing_check.c and so forth.
+> > Yes, but it's a fairly simple hypercall to implement.
 > > 
-> > What do you think of that?
+> > >> That said, type1/type2 is quite bad. :)  Let's change that to page not
+> > >> present / page ready.
+> > > 
+> > > Why even bother using 'struct kvm_vcpu_pv_apf_data' for the #PF case?  VMX
+> > > only requires error_code[31:16]==0 and SVM doesn't vet it at all, i.e. we
+> > > can (ab)use the error code to indicate an async #PF by setting it to an
+> > > impossible value, e.g. 0xaaaa (a is for async!).  That partciular error code
+> > > is even enforced by the SDM, which states:
 > > 
+> > Possibly, but it's water under the bridge now.
+> > And the #PF mechanism also has the problem with NMIs that happen before
+> > the error code is read
+> > and page faults happening in the handler (you may connect some dots now).
 > 
-> I do prefer that to the introduction of an arch/missing.
+> I understood that following was racy.
 > 
-> Still, I'm not sure I see much benefit in splitting those small
-> implementations in separate files, but it's not a problem either. This seems
-> more a matter of taste rather than one approach working better than the
-> other. So it's more up to what the maintainer prefer! :)
+> do_async_page_fault <--- kvm injected async page fault
+>   NMI happens (Before kvm_read_and_reset_pf_reason() is done)
+>    ->do_async_page_fault() (This is regular page fault but it will read
+>    			    reason from shared area and will treat itself
+> 			    as async page fault)
+> 
+> So this is racy.
+> 
+> But if we get rid of the notion of reading from shared region in page
+> fault handler, will we not get rid of this race.
+> 
+> I am assuming that error_code is not racy as it is pushed on stack.
+> What am I missing.
 
-For now I'd prefer getting rid of the 'missing' arch and just having a
-single top-level weak.c which has all the weak functions in it.  Keeps
-the clutter down :-)
+Nothing, AFAICT.  As I mentioned in a different mail, CR2 can be squished,
+but I don't see how error code can be lost.
 
-Down the road, if the number of weak functions got out of hand then we
-could look at splitting them up into multiple files.
-
--- 
-Josh
-
+But, because CR2 can be squished, there still needs to be an in-memory busy
+flag even if error code is used as the host #PF indicator, otherwise the
+guest could lose one of the tokens.
