@@ -2,194 +2,150 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E86C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B941DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9D32070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D642070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:16:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgEOQOD (ORCPT
+        id S1726226AbgEOQQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:14:03 -0400
-Received: from 8bytes.org ([81.169.241.247]:43514 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbgEOQOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:14:03 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id C35FA3C3; Fri, 15 May 2020 18:14:01 +0200 (CEST)
-Date:   Fri, 15 May 2020 18:14:00 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     iommu@lists.linux-foundation.org, jroedel@suse.de,
-        linux-kernel@vger.kernel.org, Tom Murphy <murphyt7@tcd.ie>,
-        jsnitsel@redhat.com
-Subject: Re: [PATCH] iommu: Implement deferred domain attachment
-Message-ID: <20200515161400.GZ18353@8bytes.org>
-References: <20200515094519.20338-1-joro@8bytes.org>
- <d4e1cd9e-fc83-d41a-49c0-8f14f44b2701@arm.com>
+        Fri, 15 May 2020 12:16:12 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2215 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726185AbgEOQQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 12:16:11 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id EE34CF91752B055297BB;
+        Fri, 15 May 2020 17:16:08 +0100 (IST)
+Received: from [127.0.0.1] (10.47.1.24) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Fri, 15 May
+ 2020 17:16:07 +0100
+Subject: Re: [PATCH v3 0/2] irqchip/gic-v3-its: Balance LPI affinity across
+ CPUs
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        luojiaxing <luojiaxing@huawei.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>
+References: <20200316115433.9017-1-maz@kernel.org>
+ <9171c554-50d2-142b-96ae-1357952fce52@huawei.com>
+ <80b673a7-1097-c5fa-82c0-1056baa5309d@huawei.com>
+ <f2971d1c-50f8-bf5a-8b16-8d84a631b0ba@huawei.com>
+ <7c05b08b-2edc-7f97-0175-898e9772673e@huawei.com>
+ <668f819c8747104814245cd6faebdd9a@kernel.org>
+ <a22aaa72-4f5f-40d4-33e0-0aff8b65fdc2@huawei.com>
+ <c37d8b15f09c6c933e39b81f39fcb827@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <17dd20ba-075d-33d1-e16a-417924b2956a@huawei.com>
+Date:   Fri, 15 May 2020 17:15:12 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d4e1cd9e-fc83-d41a-49c0-8f14f44b2701@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c37d8b15f09c6c933e39b81f39fcb827@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.1.24]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 04:42:23PM +0100, Robin Murphy wrote:
-> >   struct iommu_domain *iommu_get_dma_domain(struct device *dev)
-> >   {
-> > -	return dev->iommu_group->default_domain;
-> > +	struct iommu_domain *domain = dev->iommu_group->default_domain;
-> > +
-> > +	if (__iommu_is_attach_deferred(domain, dev))
-> > +		__iommu_attach_device_no_defer(domain, dev);
+On 15/05/2020 16:37, Marc Zyngier wrote:
+
+Hi Marc,
+
+>>>
+>>
+>> It's not just userspace. Some drivers call irq_set_affinity{_hint}}()
+>> also, with a non-overlapping affinity mask.
+>>
+>> We could just error these requests, but some drivers rely on this
+>> behavior. Consider the uncore driver I mentioned above, which WARNs
+>> when the affinity setting fails. So it tries to set the affinity with
+>> the cpumask of the cluster associated with the device, but with D06's
+>> ITS config, below, there may be no overlap.
 > 
-> This raises a red flag, since iommu-dma already has explicit deferred attach
-> handling where it should need it, immediately after this is called to
-> retrieve the domain. The whole thing smells to me like we should have an
-> explicit special-case in iommu_probe_device() rather than hooking
-> __iommu_attach_device() in general then having to bodge around the fallout
-> elsewhere.
+> Does this PMU use the ITS? That's a pretty odd setup.
+> 
 
-Good point, I missed that. But it didn't work for its only user, the
-AMD IOMMU driver, the reason is that it calls iommu_attach_device(),
-which in its code-path checks for deferred attaching again and bails
-out, without do the real attachment.
+Yes, I think so. Our old friend, mbigen...
 
-But below updated fix should work. Jerry, could you please test it
-again?
+> So this is a case where the device has an implicit affinity that
+> isn't that of the ITS. Huhu...
+> 
+>>>
+>>> What you are advocating for is a strict adherence to the provided
+>>> mask, and it doesn't seem to be what other architectures are providing.
+>>> I consider the userspace-provided affinity as a hint more that anything
+>>> else, as in this case the kernel does know better (routing the interrupt
+>>> to a foreign node might be costly, or even impossible, see the TX1
+>>> erratum).
+>>
+>> Right
+>>
+>>>
+>>>   From what I remember of the earlier discussion, you saw an issue on
+>>> a system with two sockets and a single ITS, with the node mask limited
+>>> to the first socket. Is that correct?
+>>
+>> A bit more complicated: 2 sockets, 2 NUMA nodes per socket, and ITS
+>> config as follows:
+>> D06ES  1x ITS with proximity node #0
+>>
+>> root@(none)$ dmesg | grep ITS
+>> [ 0.000000] SRAT: PXM 0 -> ITS 0 -> Node 0
+>>
+>>
+>> D06CS
+>> 2x ITS with proximity node #0, #2
+>>
+>> estuary:/$ dmesg | grep ITS
+>> [    0.000000] SRAT: PXM 0 -> ITS 0 -> Node 0
+>> [    0.000000] SRAT: PXM 2 -> ITS 1 -> Node 2
+>>
+>> It complicates things.
+>>
+>> We could add extra intelligence to record if an node has an ITS
+>> associated. In the case of that not being true, we would fallback on
+>> the requested affin only (for case of no overlap). It gets a bit more
+>> messy then.
+> 
+> It looks like part of the problem is that we can't reliably describe
+> an ITS affine to multiple NUMA nodes... If we could describe that, then
+> the above situation wouldn't occur (we'd say that ITS-0 covers both
+> nodes 0 and 1). But I can't find a way to express this with SRAT and
+> _PXM. Also, SRAT describes the affinity of the ITS with memory, and not
+> with the CPUs... It is all a bit fsck'd. :-(
 
-From 4e262dedcd36c7572312c65e66416da74fc78047 Mon Sep 17 00:00:00 2001
-From: Joerg Roedel <jroedel@suse.de>
-Date: Fri, 15 May 2020 11:25:03 +0200
-Subject: [PATCH] iommu: Fix deferred domain attachment
+Yeah.
 
-The IOMMU core code has support for deferring the attachment of a domain
-to a device. This is needed in kdump kernels where the new domain must
-not be attached to a device before the device driver takes it over.
+We could try to deal with those excluded CPUs, not within an ITS node 
+cpumask, by trying to find the "closest" ITS, and expanding the cpumask 
+of that ITS to cover those. Not sure if it's worth it.
 
-When the AMD IOMMU driver got converted to use the dma-iommu
-implementation, the deferred attaching got lost. The code in
-dma-iommu.c has support for deferred attaching, but it calls into
-iommu_attach_device() to actually do it. But iommu_attach_device()
-will check if the device should be deferred in it code-path and do
-nothing, breaking deferred attachment.
+But this sort of problem has always cropped up, with no clear way to 
+describe our topology exactly.
 
-Provide a function in IOMMU core code to reliably attach a device to a
-domain without any deferred checks and also without other safe-guards.
+> 
+> I guess I'll apply your change for now with a comment explaining the
+> situation.
+> 
 
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Tom Murphy <murphyt7@tcd.ie>
-Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Fixes: 795bbbb9b6f8 ("iommu/dma-iommu: Handle deferred devices")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/dma-iommu.c |  4 ++--
- drivers/iommu/iommu.c     | 37 ++++++++++++++++++++++++++++++++-----
- include/linux/iommu.h     |  2 ++
- 3 files changed, 36 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index ba128d1cdaee..403fda04ea98 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -362,8 +362,8 @@ static int iommu_dma_deferred_attach(struct device *dev,
- 		return 0;
- 
- 	if (unlikely(ops->is_attach_deferred &&
--			ops->is_attach_deferred(domain, dev)))
--		return iommu_attach_device(domain, dev);
-+		     ops->is_attach_deferred(domain, dev)))
-+		return iommu_attach_device_no_defer(domain, dev);
- 
- 	return 0;
- }
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 4050569188be..91dbdbc6d640 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -23,6 +23,7 @@
- #include <linux/property.h>
- #include <linux/fsl/mc.h>
- #include <linux/module.h>
-+#include <linux/crash_dump.h>
- #include <trace/events/iommu.h>
- 
- static struct kset *iommu_group_kset;
-@@ -1889,13 +1890,19 @@ void iommu_domain_free(struct iommu_domain *domain)
- }
- EXPORT_SYMBOL_GPL(iommu_domain_free);
- 
--static int __iommu_attach_device(struct iommu_domain *domain,
--				 struct device *dev)
-+static bool __iommu_is_attach_deferred(struct iommu_domain *domain,
-+				       struct device *dev)
-+{
-+	if (!domain->ops->is_attach_deferred)
-+		return false;
-+
-+	return domain->ops->is_attach_deferred(domain, dev);
-+}
-+
-+static int __iommu_attach_device_no_defer(struct iommu_domain *domain,
-+					  struct device *dev)
- {
- 	int ret;
--	if ((domain->ops->is_attach_deferred != NULL) &&
--	    domain->ops->is_attach_deferred(domain, dev))
--		return 0;
- 
- 	if (unlikely(domain->ops->attach_dev == NULL))
- 		return -ENODEV;
-@@ -1903,9 +1910,29 @@ static int __iommu_attach_device(struct iommu_domain *domain,
- 	ret = domain->ops->attach_dev(domain, dev);
- 	if (!ret)
- 		trace_attach_device_to_domain(dev);
-+
- 	return ret;
- }
- 
-+static int __iommu_attach_device(struct iommu_domain *domain,
-+				 struct device *dev)
-+{
-+	if (__iommu_is_attach_deferred(domain, dev))
-+		return 0;
-+
-+	return __iommu_attach_device_no_defer(domain, dev);
-+}
-+
-+int iommu_attach_device_no_defer(struct iommu_domain *domain,
-+				 struct device *dev)
-+{
-+	/* Safe-Guard to only call this when needed */
-+	if (!is_kdump_kernel())
-+		return -ENODEV;
-+
-+	return __iommu_attach_device_no_defer(domain, dev);
-+}
-+
- int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
- {
- 	struct iommu_group *group;
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 7cfd2dddb49d..f82b20a61d0b 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -449,6 +449,8 @@ extern struct iommu_group *iommu_group_get_by_id(int id);
- extern void iommu_domain_free(struct iommu_domain *domain);
- extern int iommu_attach_device(struct iommu_domain *domain,
- 			       struct device *dev);
-+extern int iommu_attach_device_no_defer(struct iommu_domain *domain,
-+					struct device *dev);
- extern void iommu_detach_device(struct iommu_domain *domain,
- 				struct device *dev);
- extern int iommu_cache_invalidate(struct iommu_domain *domain,
--- 
-2.25.1
-
+Cheers,
+John
