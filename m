@@ -2,131 +2,108 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EEDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77506C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A608206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5E1206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:51:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="ifUAfR6z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgEOIuZ (ORCPT
+        id S1727893AbgEOIvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:50:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41220 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbgEOIuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:50:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BF189AC77;
-        Fri, 15 May 2020 08:50:25 +0000 (UTC)
-Date:   Fri, 15 May 2020 10:50:21 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        Petr Mladek <pmladek@suse.com>
-Subject: [PATCH] printk/kdb: Redirect printk messages into kdb in any context
-Message-ID: <20200515085021.GS17734@linux-b0ei>
-References: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org>
- <20200512142533.ta4uejwmq5gchtlx@holly.lan>
- <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
- <20200514084230.GO17734@linux-b0ei>
- <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
+        Fri, 15 May 2020 04:51:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727833AbgEOIvk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 04:51:40 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B703C05BD09
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 01:51:39 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id a21so1352750ljj.11
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 01:51:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=E8iSa6ALDqacyJ/a+HRe0nZCH4WvMfQxe+p585lwoJE=;
+        b=ifUAfR6z5qzxx2rSJkcgO+arSZPSic63yjaBwBK+DBtdY41jLP1+kSNu7RDNaz6Rz7
+         uy8vIdVtQPqR4XjnUdzngajCpDyOrLcnBZI5rmDlAU+NgSr5B0wf/EZtSzP3Yv4XFLRl
+         h1DS5lpjBTR4bFDjpUtKXXS0eviDfS0h0/Jg/US9uB+flzv+Fx+D4Gogami8mz7gpaFE
+         HDJw6tllwrmoRy5xtniAg5kd9FSAzLnuMqrEKpiJmojLr223NbhFraZnEJo55fc7WOgA
+         9powX8lqymWuLCZwl6D8TXwuliU6FPoYuNxvsF2EQLwirxzivoY6nDoYBfeWOcRyyypg
+         +a7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E8iSa6ALDqacyJ/a+HRe0nZCH4WvMfQxe+p585lwoJE=;
+        b=EF95GBhlmbtNR+HJWPk2m3ONJfgfbk3Ok0KhCepM6viaZ5e9AgE+BXyY/qliZ9Om3d
+         UmFw1tuZRxwrUdDC0k1BanbvYcUWgG/akseSk+glidftYqFremjlhPwGeBghESHYiaZF
+         79tY2AYgiQbJJfKnORaZOzSHdAzHKkcPzHUFy/4vqdPW7mbCwCiDh1HN9SsGAIU/2vmQ
+         Fxe2XUxL6FNz+H76KC6pGKg2g1XCLP/mpBe840X4cE1RtkgRWUsA8g3Eka5TdJUoIbCp
+         yz2bZjwp9a23b4Fn+P4F+21EOuNdWvQzWf8gVFaOTdVTaGNWilpZq9G6xvTpzzXm1Zfg
+         oXUw==
+X-Gm-Message-State: AOAM530wxFff/PAYJYSn9KwbDfE0ZUfxCXIaoj0UnmZ7UvaeGmwLkyVZ
+        qvUI2jaqujQfpl3MqcROB9PGxQ==
+X-Google-Smtp-Source: ABdhPJy/YvG5iCdqZMV5vnOhHeT1sBeHj6YHDTBZHwNFu044wP6T3JgWzucfB2LxnYJz4S5Zqa3i3g==
+X-Received: by 2002:a2e:9455:: with SMTP id o21mr1599107ljh.245.1589532697455;
+        Fri, 15 May 2020 01:51:37 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:46b9:e14c:2541:1887:9a5d:d412? ([2a00:1fa0:46b9:e14c:2541:1887:9a5d:d412])
+        by smtp.gmail.com with ESMTPSA id x2sm797962ljc.106.2020.05.15.01.51.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2020 01:51:36 -0700 (PDT)
+Subject: Re: [PATCH 1/2] MIPS: Loongson: Fix fatal error during GPU init
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+References: <1589508901-18077-1-git-send-email-yangtiezhu@loongson.cn>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <1264becb-44aa-9e29-4e67-d1b5fbc0b56c@cogentembedded.com>
+Date:   Fri, 15 May 2020 11:51:24 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1589508901-18077-1-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kdb is able to stop kernel even in NMI context where printk() is redirected
-to the printk_safe() lockless variant. Move the check and redirect to kdb
-even in this case.
+Hello!
 
-Reported-by: Sumit Garg <sumit.garg@linaro.org>
-Tested-by: Sumit Garg <sumit.garg@linaro.org>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
----
-Sending as proper patch for review.
-Adding Sergey into CC and John into CC.
+On 15.05.2020 5:15, Tiezhu Yang wrote:
 
-kernel/printk/printk.c      | 14 +-------------
- kernel/printk/printk_safe.c |  7 +++++++
- 2 files changed, 8 insertions(+), 13 deletions(-)
+> When ATI Radeon graphics card has been compiled directly into the kernel
+                                ^ driver
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 9a9b6156270b..63a1aa377cd9 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -35,7 +35,6 @@
- #include <linux/memblock.h>
- #include <linux/syscalls.h>
- #include <linux/crash_core.h>
--#include <linux/kdb.h>
- #include <linux/ratelimit.h>
- #include <linux/kmsg_dump.h>
- #include <linux/syslog.h>
-@@ -2036,18 +2035,7 @@ EXPORT_SYMBOL(vprintk);
- 
- int vprintk_default(const char *fmt, va_list args)
- {
--	int r;
--
--#ifdef CONFIG_KGDB_KDB
--	/* Allow to pass printk() to kdb but avoid a recursion. */
--	if (unlikely(kdb_trap_printk && kdb_printf_cpu < 0)) {
--		r = vkdb_printf(KDB_MSGSRC_PRINTK, fmt, args);
--		return r;
--	}
--#endif
--	r = vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, 0, fmt, args);
--
--	return r;
-+	return vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, 0, fmt, args);
- }
- EXPORT_SYMBOL_GPL(vprintk_default);
- 
-diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
-index d9a659a686f3..7ccb821d0bfe 100644
---- a/kernel/printk/printk_safe.c
-+++ b/kernel/printk/printk_safe.c
-@@ -6,6 +6,7 @@
- #include <linux/preempt.h>
- #include <linux/spinlock.h>
- #include <linux/debug_locks.h>
-+#include <linux/kdb.h>
- #include <linux/smp.h>
- #include <linux/cpumask.h>
- #include <linux/irq_work.h>
-@@ -359,6 +360,12 @@ void __printk_safe_exit(void)
- 
- __printf(1, 0) int vprintk_func(const char *fmt, va_list args)
- {
-+#ifdef CONFIG_KGDB_KDB
-+	/* Allow to pass printk() to kdb but avoid a recursion. */
-+	if (unlikely(kdb_trap_printk && kdb_printf_cpu < 0))
-+		return vkdb_printf(KDB_MSGSRC_PRINTK, fmt, args);
-+#endif
-+
- 	/*
- 	 * Try to use the main logbuf even in NMI. But avoid calling console
- 	 * drivers that might have their own locks.
--- 
-2.26.1
+> instead of as a module, we should make sure the firmware for the model
+> (check available ones in /lib/firmware/radeon) is built-in to the kernel
+> as well, otherwise there exists the following fatal error during GPU init,
+> change CONFIG_DRM_RADEON=y to CONFIG_DRM_RADEON=m to fix it.
+> 
+> [    1.900997] [drm] Loading RS780 Microcode
+> [    1.905077] radeon 0000:01:05.0: Direct firmware load for radeon/RS780_pfp.bin failed with error -2
+> [    1.914140] r600_cp: Failed to load firmware "radeon/RS780_pfp.bin"
+> [    1.920405] [drm:r600_init] *ERROR* Failed to load firmware!
+> [    1.926069] radeon 0000:01:05.0: Fatal error during GPU init
+> [    1.931729] [drm] radeon: finishing device.
+> 
+> Fixes: 024e6a8b5bb1 ("MIPS: Loongson: Add a Loongson-3 default config file")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+[...]
 
+MBR, Sergei
