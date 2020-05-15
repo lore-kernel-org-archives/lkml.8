@@ -2,59 +2,125 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B90DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6116BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0BFA206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5C7206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:00:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TAUf1qdO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgEOL7q (ORCPT
+        id S1726213AbgEOMAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:59:46 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52939 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgEOL7q (ORCPT
+        Fri, 15 May 2020 08:00:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbgEOMAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:59:46 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jZZ0B-0000Kb-MV; Fri, 15 May 2020 11:59:43 +0000
-Date:   Fri, 15 May 2020 13:59:42 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH] clone.2: Document CLONE_INTO_CGROUP
-Message-ID: <20200515115942.n2teqwvo3day6cvz@wittgenstein>
-References: <CAKgNAkhL0zCj11LS9vfae872YVeRsxdz20sZWuXdi+UjH21=0g@mail.gmail.com>
- <20200410104132.294639-1-christian@brauner.io>
- <b7550fcd-ba12-e64a-3228-e6668b31a8a7@gmail.com>
- <CAKgNAkhQr+sKGAu+KcxPEsuwG3kjQOyzVW7E1yM9cMtSZrhW9A@mail.gmail.com>
- <20200423101420.udkmlhnfg57lsshi@wittgenstein>
- <CAKgNAkhXxWFE8msNkJ3117ChacWsfiMsBptZsVJOnxGtuDTX0Q@mail.gmail.com>
+        Fri, 15 May 2020 08:00:55 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3418C061A0C;
+        Fri, 15 May 2020 05:00:54 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id k6so2412304iob.3;
+        Fri, 15 May 2020 05:00:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yYxgWvcJ8rrN6qfxnW2mlSqNc8IfTvO2QBvIRiKBE98=;
+        b=TAUf1qdOEbF3duuSQazplZs2NAADUhUcfKqnmJtxmwGU5MMw/dwlM0IMlAWQAIJX7v
+         GhWNPojZ4W9K7i9UspaaAwU2zTfCzr6x65rEcNexdVXEndz112MbSqZQPZ6RxPo5zllj
+         v8pceFBybKceRLQySE910AEo65Jfey0I9F1k8Wj/Y9cwBcWCBqaXGJSeaRcaeH55KdLk
+         HUZ3dPy852dM8kicfMhdnyT0WeYAWFooNd8HWLeSajeoUQ4/phgbb+Pf4P8ryWv9EeoH
+         jNNB7iTlSFQZuek9+t27y0ULbTZPKdVP5Wgb+54pgKHdBdcCE5209jATfKo6zqar0uYU
+         dhog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yYxgWvcJ8rrN6qfxnW2mlSqNc8IfTvO2QBvIRiKBE98=;
+        b=NelTxw4FqtNPWz/6JjYPFt+4Uer+lA65SQJJ4A/4lPbyY6c2URPCpuDU5ncCAFj5rk
+         9P7wOptWCRZQoBpxTf5HcRwcsUZwPFJJWEGRvdlxHIY7n6E+BO2SVW8AgE2tZRI9FUqK
+         sLorXcnJiJ/s1N4gRJbRjHMuL6ZtyFIRGWC075i7ipdIcAykYHUEiW1391tRcoibNHYc
+         GY8e040HxEfz2Pn79YbbiKC0TQrTDtyU89yvtm+cMFtRQTrpJ4RShyh9liKppXStVdwU
+         4+LrvfsWcom0RIMbgkHeyojLhvJ8cmtfeRWA+uGAs40tjBgMsJauJYX75tD2fgeYaEUU
+         Q9dQ==
+X-Gm-Message-State: AOAM530ITKdMapP1GHUo76tVKxQJIED1h/KWtsX52GStRbXiRJq7xzlo
+        35DxhENIE8AG3iykBokilP+wJjyN+wuEmr7ah42cptNA
+X-Google-Smtp-Source: ABdhPJyscAOeMTHnpUYFEpvWOFvtaX4XmX+fEDzqMgO4hSAwAvVPP/zBFr4agXyags8j+2o8bmw9E1q7F2JcXarQ17Y=
+X-Received: by 2002:a02:3b4b:: with SMTP id i11mr2962189jaf.16.1589544053459;
+ Fri, 15 May 2020 05:00:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKgNAkhXxWFE8msNkJ3117ChacWsfiMsBptZsVJOnxGtuDTX0Q@mail.gmail.com>
+References: <cover.1589528491.git.viresh.kumar@linaro.org>
+In-Reply-To: <cover.1589528491.git.viresh.kumar@linaro.org>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Fri, 15 May 2020 14:00:42 +0200
+Message-ID: <CAJiuCceftArjKPyiEW8AnT5TtuCJFsRGGA-_8y2zG5GDTxHO4Q@mail.gmail.com>
+Subject: Re: [PATCH 0/2] opp: core: add regulators enable and disable
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     k.konieczny@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        "open list:ALLWINNER CPUFREQ DRIVER" <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Mark Brown <broonie@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 01:41:46PM +0200, Michael Kerrisk (man-pages) wrote:
-> Hello Christian,
-> 
-> Ping!
+Hi Viresh,
 
-Yes, I just thought of this when I saw your mail to Aleksa fly by. ;)
-Christian
+On Fri, 15 May 2020 at 09:57, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> Hi,
+>
+> This series reintroduces the usage of regulator_enable/disable() to the
+> OPP core after the previous attempt was reverted [1] shortly after gettin=
+g
+> applied. This time the regulator is enabled only after it is configured
+> by the OPP core.
+>
+> Marek, Kamil and Cl=C3=A9ment: Can you guys please test this out and repo=
+rt
+> if this doesn't work as expected ?
+
+I have reviewed the patch and it seems fine for my use case.
+Unfortunately I can't test it until next week.
+
+Acked-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+
+Regards,
+Clement
+
+
+>
+> --
+> viresh
+>
+> [1] https://lore.kernel.org/lkml/20191017102758.8104-1-m.szyprowski@samsu=
+ng.com/
+>
+> Kamil Konieczny (1):
+>   opp: core: add regulators enable and disable
+>
+> Viresh Kumar (1):
+>   opp: Reorder the code for !target_freq case
+>
+>  drivers/opp/core.c | 39 ++++++++++++++++++++++++++++++++++-----
+>  drivers/opp/opp.h  |  2 ++
+>  2 files changed, 36 insertions(+), 5 deletions(-)
+>
+> --
+> 2.25.0.rc1.19.g042ed3e048af
+>
