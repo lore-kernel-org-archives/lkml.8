@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 363FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645AEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0203C20727
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0AD20758
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589563704;
-	bh=ABe6HtCY2BXd5/kuL4vILx9xPHe8+HCzgvhneFJFTyk=;
+	s=default; t=1589563706;
+	bh=JS2Jcbe+j41/8PgSBe5ih0CI/gZxqJJ8SvDSb97vzwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kxDWIK9SeLBWUKb3YdY8UxedpDhqUWf9YVufIEHkahGB0N84qRzTjKPWitwlPbxQk
-	 80AXmzhIe5k1CVo1tS/SPu2VZKHZAs+ZUpsZoeCsQ/k3fcgLW8o3l27tB17FuhulJZ
-	 +ruGxQJBDDf80O/7i6d+DoKHrlzPK1WxCWQ+ExWw=
+	b=awaZ7b9VEvBzj8zegRcisL4dR5+u4FY7YUTDheUy0kxEZYRa8w/slUSd/7y/RM1uG
+	 o3n2w57TOk9tOkSD/eLgTCa7/whSYKY5fbB6opR/JwkpFREDc9rV4g2Vs3BQAPJR3F
+	 FmJNgQzZ6aOmwqI9DQv/XmzyVN32v/xviMWD4RfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgEOR2X (ORCPT
+        id S1726769AbgEOR2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:28:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53392 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 13:28:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbgEOR2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:28:17 -0400
+        id S1726245AbgEOR2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:28:20 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB162207DA;
-        Fri, 15 May 2020 17:28:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 226DA20758;
+        Fri, 15 May 2020 17:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589563697;
-        bh=ABe6HtCY2BXd5/kuL4vILx9xPHe8+HCzgvhneFJFTyk=;
+        s=default; t=1589563699;
+        bh=JS2Jcbe+j41/8PgSBe5ih0CI/gZxqJJ8SvDSb97vzwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r8Bq6TnL9F9NCbt6Nn3/Eifd+upKBoavceS4C7D/UHKa6I3fQ1C5JA+08R22FK84P
-         tsHNSdBR7iXkE+esIPeR0qsd/EAs6d/+9zw36V/JLMVgYZio6erR905reXmUfnkBb/
-         KLU94b9Y5U2Zn4rby6g+vUV7WHwL61PKSKauhK58=
+        b=AhbWjB9Y7n2sMM0P5UzxQKHLsz8tKpwzCNGStKJaSVGYMfbcKjAvx90oglmyJbBI4
+         A4n2ySKaJBRmk8qXEId9xSsNu+yiLfWMP1PnoB1eNPC5WH5E1dwfYuMFp1C7R+Xjtz
+         xB4ZBLlaXVLMzIx2O1CtaijJWKVy9G+GskKy6s0o=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org,
@@ -49,9 +49,9 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         Mark Rutland <mark.rutland@am.com>,
         Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
-Subject: [PATCH 5/6] scs: Remove references to asm/scs.h from core code
-Date:   Fri, 15 May 2020 18:27:55 +0100
-Message-Id: <20200515172756.27185-6-will@kernel.org>
+Subject: [PATCH 6/6] scs: Move DEFINE_SCS macro into core code
+Date:   Fri, 15 May 2020 18:27:56 +0100
+Message-Id: <20200515172756.27185-7-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200515172756.27185-1-will@kernel.org>
 References: <20200515172756.27185-1-will@kernel.org>
@@ -62,41 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-asm/scs.h is no longer needed by the core code, so remove a redundant
-header inclusion and update the stale Kconfig text.
+Defining static shadow call stacks is not architecture-specific, so move
+the DEFINE_SCS() macro into the core header file.
 
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- arch/Kconfig | 4 ++--
- kernel/scs.c | 1 -
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/scs.c | 4 ----
+ include/linux/scs.h     | 4 ++++
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 45dfca9a98d3..2e6f843d87c4 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -537,8 +537,8 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
- 	bool
- 	help
- 	  An architecture should select this if it supports Clang's Shadow
--	  Call Stack, has asm/scs.h, and implements runtime support for shadow
--	  stack switching.
-+	  Call Stack and implements runtime support for shadow stack
-+	  switching.
- 
- config SHADOW_CALL_STACK
- 	bool "Clang Shadow Call Stack"
-diff --git a/kernel/scs.c b/kernel/scs.c
-index faf0ecd7b893..222a7a9ad543 100644
---- a/kernel/scs.c
-+++ b/kernel/scs.c
-@@ -10,7 +10,6 @@
+diff --git a/arch/arm64/kernel/scs.c b/arch/arm64/kernel/scs.c
+index 955875dff9e1..e8f7ff45dd8f 100644
+--- a/arch/arm64/kernel/scs.c
++++ b/arch/arm64/kernel/scs.c
+@@ -8,10 +8,6 @@
+ #include <linux/percpu.h>
  #include <linux/scs.h>
- #include <linux/slab.h>
- #include <linux/vmstat.h>
--#include <asm/scs.h>
  
- static struct kmem_cache *scs_cache;
+-/* Allocate a static per-CPU shadow stack */
+-#define DEFINE_SCS(name)						\
+-	DEFINE_PER_CPU(unsigned long [SCS_SIZE/sizeof(long)], name)	\
+-
+ DEFINE_SCS(irq_shadow_call_stack);
+ 
+ #ifdef CONFIG_ARM_SDE_INTERFACE
+diff --git a/include/linux/scs.h b/include/linux/scs.h
+index 2fd3df50e93e..6dec390cf154 100644
+--- a/include/linux/scs.h
++++ b/include/linux/scs.h
+@@ -26,6 +26,10 @@
+ /* An illegal pointer value to mark the end of the shadow stack. */
+ #define SCS_END_MAGIC		(0x5f6UL + POISON_POINTER_DELTA)
+ 
++/* Allocate a static per-CPU shadow stack */
++#define DEFINE_SCS(name)						\
++	DEFINE_PER_CPU(unsigned long [SCS_SIZE/sizeof(long)], name)	\
++
+ #define task_scs(tsk)		(task_thread_info(tsk)->scs_base)
+ #define task_scs_sp(tsk)	(task_thread_info(tsk)->scs_sp)
  
 -- 
 2.26.2.761.g0e0b3e54be-goog
