@@ -2,145 +2,70 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19F8A2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:17:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P4Iii1at"
+	by mail.kernel.org (Postfix) with ESMTP id C619B206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgEOJR0 (ORCPT
+        id S1728026AbgEOJST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:17:26 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38575 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727857AbgEOJRZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:17:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589534244;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mnRre2Cx4ihUmsSYvpskeloE4Blh3L+V4XuwzK66mi0=;
-        b=P4Iii1atA6lNryeNNVXerKJ9TF0kR6JPrrspqdkCO34DsixQTq7XZupi7qCG7b5NnGIRF/
-        n4k4d1R+KCo9t3ys9jxxbH7eFEv2rc12Ob9nLHCCgQOriwIMkDRnHTMH9SFRedVnOM+mzj
-        hrkBBbX7hJccOCKObugHMRJCOdKcqoQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-302-e0TBRx52PWahR22LB9MItA-1; Fri, 15 May 2020 05:17:20 -0400
-X-MC-Unique: e0TBRx52PWahR22LB9MItA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 69715835BA8;
-        Fri, 15 May 2020 09:17:17 +0000 (UTC)
-Received: from krava (unknown [10.40.194.127])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7835478B23;
-        Fri, 15 May 2020 09:17:10 +0000 (UTC)
-Date:   Fri, 15 May 2020 11:17:07 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 4/8] libbpf hashmap: Localize static hashmap__* symbols
-Message-ID: <20200515091707.GC3511648@krava>
-References: <20200515065624.21658-1-irogers@google.com>
- <20200515065624.21658-5-irogers@google.com>
+        Fri, 15 May 2020 05:18:19 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4848 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727116AbgEOJST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 05:18:19 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8383EF3AD3429BBE4F04;
+        Fri, 15 May 2020 17:18:16 +0800 (CST)
+Received: from [127.0.0.1] (10.67.102.197) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Fri, 15 May 2020
+ 17:17:57 +0800
+Subject: Re: [PATCH 3/4] watchdog: move watchdog sysctl to watchdog.c
+To:     Kees Cook <keescook@chromium.org>
+CC:     <mcgrof@kernel.org>, <yzaikin@google.com>, <adobriyan@gmail.com>,
+        <mingo@kernel.org>, <peterz@infradead.org>,
+        <akpm@linux-foundation.org>, <yamada.masahiro@socionext.com>,
+        <bauerman@linux.ibm.com>, <gregkh@linuxfoundation.org>,
+        <skhan@linuxfoundation.org>, <dvyukov@google.com>,
+        <svens@stackframe.org>, <joel@joelfernandes.org>,
+        <tglx@linutronix.de>, <Jisheng.Zhang@synaptics.com>,
+        <pmladek@suse.com>, <bigeasy@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <wangle6@huawei.com>
+References: <1589517224-123928-1-git-send-email-nixiaoming@huawei.com>
+ <1589517224-123928-4-git-send-email-nixiaoming@huawei.com>
+ <202005150107.DA3ABE3@keescook>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <287d50e9-28b6-0d9f-1aa7-aac5bbeb0807@huawei.com>
+Date:   Fri, 15 May 2020 17:17:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515065624.21658-5-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <202005150107.DA3ABE3@keescook>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.197]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 11:56:20PM -0700, Ian Rogers wrote:
-> Localize the hashmap__* symbols in libbpf.a. To allow for a version in
-> libapi.
+On 2020/5/15 16:09, Kees Cook wrote:
+> On Fri, May 15, 2020 at 12:33:43PM +0800, Xiaoming Ni wrote:
+>> +static int sixty = 60;
 > 
-> Before:
-> $ nm libbpf.a
-> ...
-> 000000000002088a t hashmap_add_entry
-> 000000000001712a t hashmap__append
-> 0000000000020aa3 T hashmap__capacity
-> 000000000002099c T hashmap__clear
-> 00000000000208b3 t hashmap_del_entry
-> 0000000000020fc1 T hashmap__delete
-> 0000000000020f29 T hashmap__find
-> 0000000000020c6c t hashmap_find_entry
-> 0000000000020a61 T hashmap__free
-> 0000000000020b08 t hashmap_grow
-> 00000000000208dd T hashmap__init
-> 0000000000020d35 T hashmap__insert
-> 0000000000020ab5 t hashmap_needs_to_grow
-> 0000000000020947 T hashmap__new
-> 0000000000000775 t hashmap__set
-> 00000000000212f8 t hashmap__set
-> 0000000000020a91 T hashmap__size
-> ...
+> This should be const. (Which will require a cast during extra2
+> assignment.)
 > 
-> After:
-> $ nm libbpf.a
-> ...
-> 000000000002088a t hashmap_add_entry
-> 000000000001712a t hashmap__append
-> 0000000000020aa3 t hashmap__capacity
-> 000000000002099c t hashmap__clear
-> 00000000000208b3 t hashmap_del_entry
-> 0000000000020fc1 t hashmap__delete
-> 0000000000020f29 t hashmap__find
-> 0000000000020c6c t hashmap_find_entry
-> 0000000000020a61 t hashmap__free
-> 0000000000020b08 t hashmap_grow
-> 00000000000208dd t hashmap__init
-> 0000000000020d35 t hashmap__insert
-> 0000000000020ab5 t hashmap_needs_to_grow
-> 0000000000020947 t hashmap__new
-> 0000000000000775 t hashmap__set
-> 00000000000212f8 t hashmap__set
-> 0000000000020a91 t hashmap__size
-> ...
+Sorry, I forgot to append const.
+Thanks for your guidance.
 
-I think this will break bpf selftests which use hashmap,
-we need to find some other way to include this
-
-either to use it from libbpf directly, or use the api version
-only if the libbpf is not compiled in perf, we could use
-following to detect that:
-
-      CFLAGS += -DHAVE_LIBBPF_SUPPORT
-      $(call detected,CONFIG_LIBBPF)
-
-jirka
+Thanks
+Xiaoming Ni
 
