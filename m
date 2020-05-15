@@ -4,235 +4,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7412FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5771320657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F13120657
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:49:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726223AbgEORtG convert rfc822-to-8bit (ORCPT
+        id S1726283AbgEORtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:49:06 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37960 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgEORtG (ORCPT
+        Fri, 15 May 2020 13:49:20 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38368 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgEORtT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:49:06 -0400
-Received: from mail-pf1-f197.google.com ([209.85.210.197])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jZeSF-0000iq-0r
-        for linux-kernel@vger.kernel.org; Fri, 15 May 2020 17:49:03 +0000
-Received: by mail-pf1-f197.google.com with SMTP id a85so2504276pfa.7
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 10:49:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=XNrxl7Ei4SzRzAuobvLq0dv0NglXRJzSCfyYrWyMnGQ=;
-        b=UE2h6DziwpNNtzB/2T6xZwuXX15FAeJ729F6w+CC+vJzwcWFC7G7E/f/RKKfeMiWUe
-         PUF49s+eGYU/LACYs2aG6A7FdZJVhbVaXvLEqn/S7X50LsCJ3Be15U+Um4Wm8N6OpeUk
-         c0zx7Gotsj+nK/VJtNbVZIGpTbw41USrI96mpOQhTQTSQUyTV9jL7RjBnD70hwFdbqPZ
-         actrP8EwSF1zQPt82qquxSAQK92mg73/A8tlGTNC6XtQ9IHgU14LFSIgN2vW3lV+m5XL
-         KtnfOmabVrPFQCuBuWArLxPmntlV064PMMe5Q601fF5eN0ZHrmKq+eePHrJOsQBIjlP4
-         +RMw==
-X-Gm-Message-State: AOAM533QG15LD4MaUviun+4gFeRlPMZlSMgUvO57WZrHgeooDLpaeRpC
-        uFbFTnP/2+mh7+jCypg09DGp8VtkDSFeMTfW3148tSNY22bqOmKhkD8rbOuGCYtY92TIZUk8TG0
-        1kWPo9px72KIPP1unm8gbECAmkJ6HPlBBEpOSF7lgWw==
-X-Received: by 2002:a17:90a:1f4b:: with SMTP id y11mr4818641pjy.136.1589564941557;
-        Fri, 15 May 2020 10:49:01 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzF7OfuYHHgmnr3u2K2khymUzuj1d3YSkFB3LJdHptvsBqWppa7E7h//JX9y1UDJwrEIuNN0Q==
-X-Received: by 2002:a17:90a:1f4b:: with SMTP id y11mr4818546pjy.136.1589564940851;
-        Fri, 15 May 2020 10:49:00 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id o27sm2280110pgd.18.2020.05.15.10.48.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 May 2020 10:49:00 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] libata: Use per port sync for detach
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <555101fd-71bc-fa0b-98c2-69249bb3eda6@huawei.com>
-Date:   Sat, 16 May 2020 01:48:57 +0800
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <15CFC20D-B8CB-43D7-8973-60E82DE6B894@canonical.com>
-References: <20200515110916.11556-1-kai.heng.feng@canonical.com>
- <555101fd-71bc-fa0b-98c2-69249bb3eda6@huawei.com>
-To:     John Garry <john.garry@huawei.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Fri, 15 May 2020 13:49:19 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6ECE680005E8;
+        Fri, 15 May 2020 17:49:16 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id T0VLfiG8Gp3u; Fri, 15 May 2020 20:49:11 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 2/2] spi: dw: Fix native CS being unset
+Date:   Fri, 15 May 2020 20:48:55 +0300
+Message-ID: <20200515174856.1406-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200515174856.1406-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200515174856.1406-1-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit 6e0a32d6f376 ("spi: dw: Fix default polarity of native
+chipselect") attempted to fix the problem when GPIO active-high
+chip-select is utilized to communicate with some SPI slave. It fixed
+the problem, but broke the normal native CS support. At the same time
+the reversion commit ada9e3fcc175 ("spi: dw: Correct handling of native
+chipselect") didn't solve the problem either, since it just inverted
+the set_cs() polarity perception without taking into account that
+CS-high might be applicable. Here is what is done to finally fix the
+problem.
 
+DW SPI controller demands any native CS being set in order to proceed
+with data transfer. So in order to activate the SPI communications we
+must set any bit in the Slave Select DW SPI controller register no
+matter whether the platform requests the GPIO- or native CS. Preferably
+it should be the bit corresponding to the SPI slave CS number. But
+currently the dw_spi_set_cs() method activates the chip-select
+only if the second argument is false. Since the second argument of the
+set_cs callback is expected to be a boolean with "is-high" semantics
+(actual chip-select pin state value), the bit in the DW SPI Slave
+Select register will be set only if SPI core requests the driver
+to set the CS in the low state. So this will work for active-low
+GPIO-based CS case, and won't work for active-high CS setting
+the bit when SPI core actually needs to deactivate the CS.
 
-> On May 15, 2020, at 20:38, John Garry <john.garry@huawei.com> wrote:
-> 
-> On 15/05/2020 12:09, Kai-Heng Feng wrote:
->> Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
->> detach") may cause system freeze during suspend.
->> Using async_synchronize_full() in PM callbacks is wrong, since async
->> callbacks that are already scheduled may wait for not-yet-scheduled
->> callbacks, causes a circular dependency.
-> 
-> It would be nice to describe this circular dependency a bit more.
+This commit fixes the problem for all described cases. So no matter
+whether an SPI slave needs GPIO- or native-based CS with active-high
+or low signal the corresponding bit will be set in SER.
 
-Hmm, I think it's quite self-explanatory. Which part do you want me to add? 
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Fixes: ada9e3fcc175 ("spi: dw: Correct handling of native chipselect")
+Fixes: 6e0a32d6f376 ("spi: dw: Fix default polarity of native chipselect")
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Mark Brown <broonie@kernel.org>
+Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 
-> 
->> Instead of using big hammer like async_synchronize_full(), use async
->> cookie to make sure port probe are synced, without affecting other
->> scheduled PM callbacks.
-> 
-> oh, I thought that we could avoid the hassle of per-port cookie management. Sorry.
-> 
-> Did you check if the original issue which I tried to remedy is still suppressed?
-> 
-> I tried your patch, and got this:
-> 
-> [   28.190587] ------------[ cut here ]------------
-> [   28.195194] WARNING: CPU: 79 PID: 1 at drivers/ata/libata-core.c:5888 ata_hos
-> t_detach+0x238/0x248
-> [   28.204025] Modules linked in:
-> [   28.207072] CPU: 79 PID: 1 Comm: swapper/0 Tainted: G        W  5.7.0-
-> rc5-g644cd6f-dirty #84
-> [   28.216076] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V
-> 3.B220.02 03/27/2020
-> [   28.224906] pstate: 20c00009 (nzCv daif +PAN +UAO)
-> [   28.229677] pc : ata_host_detach+0x238/0x248
-> [   28.233929] lr : ata_host_detach+0x12c/0x248
-> [   28.238181] sp : ffff0026dc74f980
-> [   28.241481] x29: ffff0026dc74f980 x28: 0000000000000000
-> [   28.246769] x27: ffff2026c541c010 x26: 00000000000038e0
-> [   28.252059] x25: 0000000000003590 x24: ffff0026d3a0a018
-> [   28.257350] x23: 0000000000000001 x22: ffff0026d3a0a000
-> [   28.262638] x21: 0000000000013ec0 x20: ffff2026c541c000
-> [   28.267928] x19: ffff2026c541c020 x18: 0000000000000000
-> [   28.273215] x17: 0000000000000000 x16: 0000000000000000
-> [   28.278504] x15: 00000000000006c0 x14: 0000000000000000
-> [   28.283792] x13: 0000000000000000 x12: 1fffe004da744317
-> [   28.289081] x11: ffff8004da744317 x10: dfffa00000000000
-> [   28.294370] x9 : ffff8004da744318 x8 : ffff0026d3a218bc
-> [   28.299657] x7 : 0000000000000001 x6 : ffff8004da744318
-> [   28.304945] x5 : ffff8004da744318 x4 : dfffa00000000000
-> [   28.310233] x3 : ffffa00075ea18b4 x2 : 0000000000000003
-> [   28.315521] x1 : 0000000000000000 x0 : 0000000000400200
-> [   28.320808] Call trace:
-> [   28.323246]  ata_host_detach+0x238/0x248
-> [   28.327153]  ata_pci_remove_one+0x24/0x38
-> [   28.331147]  ahci_remove_one+0x54/0x88
-> [   28.334881]  pci_device_remove+0x70/0x148
-> [   28.338874]  really_probe+0x17c/0x570
-> [   28.342522]  driver_probe_device+0x80/0x150
-> [   28.346690]  device_driver_attach+0x9c/0xa8
-> [   28.350856]  __driver_attach+0xac/0x118
-> [   28.354677]  bus_for_each_dev+0xf0/0x168
-> [   28.358584]  driver_attach+0x34/0x48
-> [   28.362146]  bus_add_driver+0x240/0x300
-> [   28.365966]  driver_register+0xc0/0x1e0
-> [   28.369787]  __pci_register_driver+0xb4/0xd0
-> [   28.374039]  ahci_pci_driver_init+0x24/0x30
-> [   28.378205]  do_one_initcall+0xb8/0x268
-> [   28.382027]  kernel_init_freeable+0x294/0x30c
-> [   28.386366]  kernel_init+0x14/0x120
-> [   28.389841]  ret_from_fork+0x10/0x1c
-> [   28.393400] ---[ end trace 9972785c7052048f ]---
-> [   28.435826] ahci 0000:b4:03.0: SSS flag set, parallel bus scan disabled
+---
 
-Can you please test the following patch:
+Changelog v2:
+- Add a comment about SER register, that it must be set to activate the
+  SPI communications.
 
-diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
-index 474c6c34fe02..51ee0cc4d414 100644
---- a/drivers/ata/libata-eh.c
-+++ b/drivers/ata/libata-eh.c
-@@ -3583,8 +3583,10 @@ int ata_eh_recover(struct ata_port *ap, ata_prereset_fn_t prereset,
-        rc = 0;
+Changelog v3:
+- Rebase on top of the spi/for-5.7.
+---
+ drivers/spi/spi-dw.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 31e3f866d11a..6c2d8df50507 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -128,12 +128,20 @@ void dw_spi_set_cs(struct spi_device *spi, bool enable)
+ {
+ 	struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
+ 	struct chip_data *chip = spi_get_ctldata(spi);
++	bool cs_high = !!(spi->mode & SPI_CS_HIGH);
  
-        /* if UNLOADING, finish immediately */
--       if (ap->pflags & ATA_PFLAG_UNLOADING)
-+       if (ap->pflags & ATA_PFLAG_UNLOADING) {
-+               ap->pflags |= ATA_PFLAG_UNLOADED;
-                goto out;
-+       }
-
-It's only compile-tested, many drivers panic with CONFIG_DEBUG_TEST_DRIVER_REMOVE enabled, so the system I have can't even boot properly :(
-
-Probably worth some time to fix them one by one...
-
-Kai-Heng
-
-> 
-> 
-> Thanks,
-> John
-> 
->> Fixes: 130f4caf145c ("libata: Ensure ata_port probe has completed before detach")
->> BugLink: https://bugs.launchpad.net/bugs/1867983
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> ---
->>  drivers/ata/libata-core.c | 6 +++---
->>  include/linux/libata.h    | 3 +++
->>  2 files changed, 6 insertions(+), 3 deletions(-)
->> diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
->> index beca5f91bb4c..4a698f6388cd 100644
->> --- a/drivers/ata/libata-core.c
->> +++ b/drivers/ata/libata-core.c
->> @@ -42,7 +42,6 @@
->>  #include <linux/workqueue.h>
->>  #include <linux/scatterlist.h>
->>  #include <linux/io.h>
->> -#include <linux/async.h>
->>  #include <linux/log2.h>
->>  #include <linux/slab.h>
->>  #include <linux/glob.h>
->> @@ -5778,7 +5777,7 @@ int ata_host_register(struct ata_host *host, struct scsi_host_template *sht)
->>  	/* perform each probe asynchronously */
->>  	for (i = 0; i < host->n_ports; i++) {
->>  		struct ata_port *ap = host->ports[i];
->> -		async_schedule(async_port_probe, ap);
->> +		ap->cookie = async_schedule(async_port_probe, ap);
->>  	}
->>    	return 0;
->> @@ -5921,7 +5920,8 @@ void ata_host_detach(struct ata_host *host)
->>  	int i;
->>    	/* Ensure ata_port probe has completed */
->> -	async_synchronize_full();
->> +	for (i = 0; i < host->n_ports; i++)
->> +		async_synchronize_cookie(host->ports[i]->cookie);
->>    	for (i = 0; i < host->n_ports; i++)
-> 
-> Is it possible to combine these "for" loops?
-> 
->>  		ata_port_detach(host->ports[i]);
->> diff --git a/include/linux/libata.h b/include/linux/libata.h
->> index cffa4714bfa8..ae6dfc107ea8 100644
->> --- a/include/linux/libata.h
->> +++ b/include/linux/libata.h
->> @@ -22,6 +22,7 @@
->>  #include <linux/acpi.h>
->>  #include <linux/cdrom.h>
->>  #include <linux/sched.h>
->> +#include <linux/async.h>
->>  
-> 
-> alphabetic?
-> 
->>  /*
->>   * Define if arch has non-standard setup.  This is a _PCI_ standard
->> @@ -872,6 +873,8 @@ struct ata_port {
->>  	struct timer_list	fastdrain_timer;
->>  	unsigned long		fastdrain_cnt;
->>  +	async_cookie_t		cookie;
->> +
->>  	int			em_message_type;
->>  	void			*private_data;
+ 	/* Chip select logic is inverted from spi_set_cs() */
+ 	if (chip && chip->cs_control)
+ 		chip->cs_control(!enable);
+ 
+-	if (!enable)
++	/*
++	 * DW SPI controller demands any native CS being set in order to
++	 * proceed with data transfer. So in order to activate the SPI
++	 * communications we must set a corresponding bit in the Slave
++	 * Enable register no matter whether the SPI core is configured to
++	 * support active-high or active-low CS level.
++	 */
++	if (cs_high == enable)
+ 		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
+ 	else if (dws->cs_override)
+ 		dw_writel(dws, DW_SPI_SER, 0);
+-- 
+2.25.1
 
