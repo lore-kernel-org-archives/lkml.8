@@ -2,112 +2,120 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C544AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA8AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E456205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:56:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DMx+Zs92"
+	by mail.kernel.org (Postfix) with ESMTP id E2C78205CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:56:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgEOU4T (ORCPT
+        id S1726646AbgEOU4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:56:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55908 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726179AbgEOU4T (ORCPT
+        Fri, 15 May 2020 16:56:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgEOU4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:56:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589576178;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XclJikw/kSVnStKK/hg+PLzsRFUWexrJPtiigEia7po=;
-        b=DMx+Zs92+oPf1Vu3awZjJNT/FqjtUSu6oXOOb3OEhstlJRcWQ8M7o+pTJqCZ1vlQfeT4IM
-        cw1/dnfzc6lgqQ6q/2XD8MkWLKJG60mOo6X8sAmUA6oXL3jcyzRZZu9Yn3XrW1eTPAv5SW
-        b9dwRL0AUAERfL4rh6hhUadB/tjYRpQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-263-gMF37x8lM1WhTl_uO5SNFw-1; Fri, 15 May 2020 16:56:14 -0400
-X-MC-Unique: gMF37x8lM1WhTl_uO5SNFw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2DDF3107BEF6;
-        Fri, 15 May 2020 20:56:13 +0000 (UTC)
-Received: from treble (ovpn-117-151.rdu2.redhat.com [10.10.117.151])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 604671001920;
-        Fri, 15 May 2020 20:56:12 +0000 (UTC)
-Date:   Fri, 15 May 2020 15:56:10 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Matt Helsley <mhelsley@vmware.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC][PATCH 4/5] objtool: Enable compilation of objtool for all
- architectures
-Message-ID: <20200515205610.fmdimt7wbafypuqc@treble>
-References: <cover.1588888003.git.mhelsley@vmware.com>
- <9f709ea2ae66cc03b3ff3329baa8f670ccd0e368.1588888003.git.mhelsley@vmware.com>
+        Fri, 15 May 2020 16:56:42 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D092AC061A0C;
+        Fri, 15 May 2020 13:56:41 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZhNV-009Hh7-7g; Fri, 15 May 2020 20:56:21 +0000
+Date:   Fri, 15 May 2020 21:56:21 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Olga Kornievskaia <kolga@netapp.com>
+Cc:     Alexey Gladkov <gladkov.alexey@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        syzbot <syzbot+c1af344512918c61362c@syzkaller.appspotmail.com>,
+        jmorris@namei.org, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, linux-security-module@vger.kernel.org,
+        serge@hallyn.com, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        ".Tetsuo Handa" <penguin-kernel@i-love.sakura.ne.jp>
+Subject: Re: linux-next boot error: general protection fault in
+ tomoyo_get_local_path
+Message-ID: <20200515205621.GH23230@ZenIV.linux.org.uk>
+References: <0000000000002f0c7505a5b0e04c@google.com>
+ <c3461e26-1407-2262-c709-dac0df3da2d0@i-love.sakura.ne.jp>
+ <72cb7aea-92bd-d71b-2f8a-63881a35fad8@i-love.sakura.ne.jp>
+ <20200515201357.GG23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9f709ea2ae66cc03b3ff3329baa8f670ccd0e368.1588888003.git.mhelsley@vmware.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200515201357.GG23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 10:35:12AM -0700, Matt Helsley wrote:
-> +struct insn_state {
-> +	struct cfi_reg cfa;
-> +	struct cfi_reg regs[CFI_NUM_REGS];
-> +	int stack_size;
-> +	unsigned char type;
-> +	bool bp_scratch;
-> +	bool drap, end, uaccess, df;
-> +	bool noinstr;
-> +	s8 instr;
-> +	unsigned int uaccess_stack;
-> +	int drap_reg, drap_offset;
-> +	struct cfi_reg vals[CFI_NUM_REGS];
-> +};
-> +
-> +struct instruction {
-> +	struct list_head list;
-> +	struct hlist_node hash;
-> +	struct section *sec;
-> +	unsigned long offset;
-> +	unsigned int len;
-> +	enum insn_type type;
-> +	unsigned long immediate;
-> +	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
-> +	bool retpoline_safe;
-> +	s8 instr;
-> +	u8 visited;
-> +	struct symbol *call_dest;
-> +	struct instruction *jump_dest;
-> +	struct instruction *first_jump_src;
-> +	struct rela *jump_table;
-> +	struct list_head alts;
-> +	struct symbol *func;
-> +	struct stack_op stack_op;
-> +	struct insn_state state;
-> +	struct orc_entry orc;
-> +};
+On Fri, May 15, 2020 at 09:13:57PM +0100, Al Viro wrote:
+> On Sat, May 16, 2020 at 12:36:28AM +0900, Tetsuo Handa wrote:
+> > On 2020/05/16 0:18, Tetsuo Handa wrote:
+[snip]
+> > A similar bug (racing inode destruction with open() on proc filesystem) was fixed as
+> > commit 6f7c41374b62fd80 ("tomoyo: Don't use nifty names on sockets."). Then, it might
+> > not be safe to replace dentry->d_sb->s_fs_info with dentry->d_inode->i_sb->s_fs_info .
+> 
+> Could you explain why do you want to bother with d_inode() anyway?  Anything that
+> does dentry->d_inode->i_sb can bloody well use dentry->d_sb.  And that's never
+> changed over the struct dentry lifetime - ->d_sb is set on allocation and never
+> modified afterwards.
 
-Why were these moved to arch.h?  They're not necessarily arch-specific,
-but rather "check"-specific, so I think they still belong in check.h, if
-possible.
+Incidentally, this
+        r_ino = nfs_fhget(ss_mnt->mnt_root->d_inode->i_sb, src_fh, &fattr,
+                        NULL);
+(in nfs42_ssc_open()) is just plain weird.
 
--- 
-Josh
+	1) d->d_inode->i_sb is equal to d->d_sb
+	2) m->mnt_root->d_sb is equal to m->mnt_sb
+IOW, the whole thing should be 
+        r_ino = nfs_fhget(ss_mnt->mnt_sb, src_fh, &fattr, NULL);
 
+Moreover,
+	server = NFS_SERVER(ss_mnt->mnt_root->d_inode);
+in the same function is again too convoluted for no good reason, seeing that
+NFS_SERVER(inode) is NFS_SB(inode->i_sb).
+
+Something along the lines of
+
+nfs: don't obfuscate ->mnt_sb as ->mnt_root->d_inode->i_sb
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index 8e5d6223ddd3..1e8ca45bc806 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -317,15 +317,14 @@ nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
+ {
+ 	struct nfs_fattr fattr;
+ 	struct file *filep, *res;
+-	struct nfs_server *server;
++	struct super_block *sb = ss_mnt->mnt_sb;
++	struct nfs_server *server = NFS_SB(sb);
+ 	struct inode *r_ino = NULL;
+ 	struct nfs_open_context *ctx;
+ 	struct nfs4_state_owner *sp;
+ 	char *read_name = NULL;
+ 	int len, status = 0;
+ 
+-	server = NFS_SERVER(ss_mnt->mnt_root->d_inode);
+-
+ 	nfs_fattr_init(&fattr);
+ 
+ 	status = nfs4_proc_getattr(server, src_fh, &fattr, NULL, NULL);
+@@ -341,8 +340,7 @@ nfs42_ssc_open(struct vfsmount *ss_mnt, struct nfs_fh *src_fh,
+ 		goto out;
+ 	snprintf(read_name, len, SSC_READ_NAME_BODY, read_name_gen++);
+ 
+-	r_ino = nfs_fhget(ss_mnt->mnt_root->d_inode->i_sb, src_fh, &fattr,
+-			NULL);
++	r_ino = nfs_fhget(sb, src_fh, &fattr, NULL);
+ 	if (IS_ERR(r_ino)) {
+ 		res = ERR_CAST(r_ino);
+ 		goto out_free_name;
