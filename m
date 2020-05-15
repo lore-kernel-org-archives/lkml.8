@@ -2,87 +2,135 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B53C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F7AC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD3B9207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142C0207C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbgEOPAg (ORCPT
+        id S1726610AbgEOPAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 15 May 2020 11:00:39 -0400
+Received: from mga02.intel.com ([134.134.136.20]:52670 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726174AbgEOPAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 May 2020 11:00:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726174AbgEOPAf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:00:35 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 472FFC061A0C;
-        Fri, 15 May 2020 08:00:35 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: evelikov)
-        with ESMTPSA id A7C892A2DB7
-Date:   Fri, 15 May 2020 15:57:55 +0100
-From:   Emil Velikov <emil.velikov@collabora.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com,
-        Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-Subject: Re: [PATCHv1 15/19] power: supply: sbs-battery: add ability to
- disable charger broadcasts
-Message-ID: <20200515145755.GD2836808@arch-x1c3>
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
- <20200513185615.508236-16-sebastian.reichel@collabora.com>
+IronPort-SDR: lm38IzyeuYoWTXcFTI2oNYDdiZ8+7f4oY7B2iujOQvivT9wERmzGZw2EPg5cQOHovJcWfj3LUo
+ kOTx3feu6//A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 08:00:36 -0700
+IronPort-SDR: HSjIdpF/nRZGCr9SJb8mEf4rh552y15IUtOVwWugyT0lBpAgNRZRf9Bw5E4bPvIRTnXLfZDfho
+ y39by4V9ZCyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="266626401"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 15 May 2020 08:00:30 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZbpA-006tQd-83; Fri, 15 May 2020 18:00:32 +0300
+Date:   Fri, 15 May 2020 18:00:32 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clement Leger <cleger@kalray.eu>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 08/19] spi: dw: Discard dma_width member of the dw_spi
+ structure
+Message-ID: <20200515150032.GK1634618@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-9-Sergey.Semin@baikalelectronics.ru>
+ <20200515130305.GA1634618@smile.fi.intel.com>
+ <20200515130559.psq2zwfhovt6rzhl@mobilestation>
+ <20200515134956.GC1634618@smile.fi.intel.com>
+ <20200515141627.pqdaic6wksatusl6@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513185615.508236-16-sebastian.reichel@collabora.com>
+In-Reply-To: <20200515141627.pqdaic6wksatusl6@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/13, Sebastian Reichel wrote:
-> From: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+On Fri, May 15, 2020 at 05:16:27PM +0300, Serge Semin wrote:
+> On Fri, May 15, 2020 at 04:49:56PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 15, 2020 at 04:05:59PM +0300, Serge Semin wrote:
+> > > On Fri, May 15, 2020 at 04:03:05PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, May 15, 2020 at 01:47:47PM +0300, Serge Semin wrote:
+> > > > > This member has exactly the same value as n_bytes of the DW SPI private
+> > > > > data object, it's calculated at the same point of the transfer method,
+> > > > > n_bytes isn't changed during the whole transfer, and they even serve for
+> > > > > the same purpose - keep number of bytes per transfer word, though the
+> > > > > dma_width is used only to calculate the DMA source/destination addresses
+> > > > > width, which n_bytes could be also utilized for. Taking all of these
+> > > > > into account let's replace the dma_width member usage with n_bytes one
+> > > > > and remove the former.
+> > > > 
+> > > > I've no strong opinion about this.
+> > > > So, after addressing one issue below,
+> > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > 
+> > ...
+> > 
+> > > > > -static enum dma_slave_buswidth convert_dma_width(u32 dma_width) {
+> > > > > -	if (dma_width == 1)
+> > > > 
+> > > > > +static enum dma_slave_buswidth convert_dma_width(u8 n_bytes) {
+> > > > 
+> > > > It seems somebody (maybe even me) at some point messed up between enum
+> > > > definition and function that returns an enum.
+> > > > 
+> > > > For what said, { should be on the separate line.
+> > > 
+> > > See the patch 16/19: "spi: dw: Cleanup generic DW DMA code namings"
+> > > in this series.
+> > 
+> > Since you are touching that line here, it makes sense to do it here rather than
+> > ping-pong to other patch in very same series.
 > 
-> In certain designs, it is possible to add a battery on a populated i2c
-> bus without an sbs compliant charger. In that case, the battery will
-> un-necessarily and sometimes un-desirably master the bus trying to write
-> info in the charger.
+> You didn't open the patch I referred to, did you?
 
-Nit: s/un-/un/
+Patches in the series are going on purpose. I look at them in the sequence of
+the appearance. But okay, I looked at it and I found what I expected. I think
+that you may reorder patch 16 to be one right after renaming module.
 
-> 
-> It is observed in many occasion that these battery "broadcasts" are even
-> corrupting other ongoing master to slave communication. I.e. the
-> multi-master support in the battery is inadequate.
-> 
-> Thankfully, the CHARGER_MODE bit allows designers to disable that SBS
-> battery behaviour.
-> 
-> This needs to be done once when the battery is first seen on the bus.
-> 
-> Signed-off-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-> [rebased code]
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
+> If you did, you would have
+> seen that I touched that line there too in the framework of the naming cleanup
+> procedure. So please, stop wasting my time with trivial stuff.
 
-> @@ -1017,6 +1043,9 @@ static int sbs_probe(struct i2c_client *client,
->  	}
->  	chip->i2c_retry_count = chip->i2c_retry_count + 1;
->  
-> +	chip->charger_broadcasts = !of_property_read_bool(client->dev.of_node,
-> +					"sbs,disable-charger-broadcasts");
-> +
-This patch adds the of_property_read, only for it to be replaced in the next
-patch. Consider flipping the patch order?
+Haven't you missed my tag? It means I spent *my* time on *your* stuff. Please,
+be respectful to reviewers.
 
--Emil
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
