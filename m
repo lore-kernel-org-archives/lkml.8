@@ -2,82 +2,129 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51949C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2961C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7B1207CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F37D207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgEOPCc (ORCPT
+        id S1726703AbgEOPC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:02:32 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:57671 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgEOPCc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:02:32 -0400
-Received: from localhost (lfbn-lyo-1-1912-bdcst.w90-65.abo.wanadoo.fr [90.65.91.255])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 18597240009;
-        Fri, 15 May 2020 15:02:28 +0000 (UTC)
-Date:   Fri, 15 May 2020 17:02:28 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     cristian.birsan@microchip.com
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org,
-        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] usb: gadget: udc: atmel: add usb device support
- for SAM9x60 SoC
-Message-ID: <20200515150228.GW34497@piout.net>
-References: <20200515111631.31210-1-cristian.birsan@microchip.com>
+        Fri, 15 May 2020 11:02:56 -0400
+Received: from mga01.intel.com ([192.55.52.88]:37779 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgEOPCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 11:02:55 -0400
+IronPort-SDR: u+rA+49iOEPwsbt5dbBxeyPlKRnijZBiXeGfVBdKT/40l157xFP6U+clmRKIuvzI5NgskqgZ3A
+ MG7Yq/MwXv0Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 08:02:55 -0700
+IronPort-SDR: pPF5tDZcqhcLLPzgTY2JMxf40nbuiZdzldG4JbZkozpoJFkWqLEGENyw6lvT2Up2dOxF0YS3Wh
+ d8P87UJjILpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="464752447"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 15 May 2020 08:02:50 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZbrQ-006tS4-AY; Fri, 15 May 2020 18:02:52 +0300
+Date:   Fri, 15 May 2020 18:02:52 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 14/19] spi: dw: Remove DW DMA code dependency from
+ DW_DMAC_PCI
+Message-ID: <20200515150252.GL1634618@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-15-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515111631.31210-1-cristian.birsan@microchip.com>
+In-Reply-To: <20200515104758.6934-15-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, May 15, 2020 at 01:47:53PM +0300, Serge Semin wrote:
+> Since there is a generic method available to initialize the DW SPI DMA
+> interface on any DT and ACPI-based platforms, which in general can be
+> designed with not only DW DMAC but with any DMA engine on board, we can
+> freely remove the CONFIG_DW_DMAC_PCI config from dependency list of
+> CONFIG_SPI_DW_DMA. Especially seeing that we don't use anything DW DMAC
+> specific in the new driver.
 
-On 15/05/2020 14:16:24+0300, cristian.birsan@microchip.com wrote:
-> From: Cristian Birsan <cristian.birsan@microchip.com>
-> 
-> This patch set adds usb device support for SAM9x60 SoC.
-> The DPRAM memory for the USB High Speed Device Port (UDPHS) hardware
-> block was increased and the allocation method is changed. This patch
-> series simplifies the endpoint allocation scheme to acomodate this SoC
-> and the old ones.
-> 
-> Changes in v2:
-> - drop the patch that adds reference to pmc for sam9x60
-> - use dt-bindings: usb prefix
-> - enable usb device in device tree
-> 
-> Claudiu Beznea (1):
->   usb: gadget: udc: atmel: use of_find_matching_node_and_match
-> 
-> Cristian Birsan (6):
->   dt-bindings: usb: atmel: Update DT bindings documentation for sam9x60
->   usb: gadget: udc: atmel: simplify endpoint allocation
->   usb: gadget: udc: atmel: use 1 bank endpoints for control transfers
->   usb: gadget: udc: atmel: rename errata into caps
->   usb: gadget: udc: atmel: update endpoint allocation for sam9x60
->   ARM: dts: at91: sam9x60ek: enable usb device
+Right, and used data structures are always available at compile time.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This should probably be rebased on top of
-https://lore.kernel.org/linux-arm-kernel/20200507155651.1094142-1-gregory.clement@bootlin.com/
-so we avoid having to define the endpoints in the device tree in the
-first place.
+> Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> ---
+>  drivers/spi/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+> index 03b061975f70..6a84f3dad35c 100644
+> --- a/drivers/spi/Kconfig
+> +++ b/drivers/spi/Kconfig
+> @@ -228,7 +228,7 @@ config SPI_DESIGNWARE
+>  
+>  config SPI_DW_DMA
+>  	bool "DMA support for DW SPI controller"
+> -	depends on SPI_DESIGNWARE && DW_DMAC_PCI
+> +	depends on SPI_DESIGNWARE
+>  
+>  config SPI_DW_PCI
+>  	tristate "PCI interface driver for DW SPI core"
+> -- 
+> 2.25.1
+> 
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+With Best Regards,
+Andy Shevchenko
+
+
