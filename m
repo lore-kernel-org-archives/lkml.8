@@ -2,118 +2,116 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F66DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A202207C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591482076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WVFYeKIq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fz2bWsiq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbgEOOZD (ORCPT
+        id S1726257AbgEOOZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:25:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33680 "EHLO
+        Fri, 15 May 2020 10:25:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726229AbgEOOZB (ORCPT
+        by vger.kernel.org with ESMTP id S1726140AbgEOOZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:25:01 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49951C05BD0B
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 07:25:01 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y25so1018130pfn.5
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 07:25:01 -0700 (PDT)
+        Fri, 15 May 2020 10:25:39 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A478C061A0C;
+        Fri, 15 May 2020 07:25:39 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id g11so952659plp.1;
+        Fri, 15 May 2020 07:25:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rKuzsBx4cSJvriSVGbzt79618OPfv8Eok+sl7EaCGvk=;
-        b=WVFYeKIqdMj/Srr/1bTEErA+epgu+DH+A/WDQyM9gqFzEDwvVElUrZIWg3Hz7hF8B/
-         N6OFUChnBSxKwDrv2ZcBMpYlw/D3nMEVVhOu+wnoFz8bTp7xKEM0g0vZ1Y/L1yaD7dv6
-         YF3ko6LQF1QF5smUIgJS9wu9x0iOXq4Dtw4z+cJfcJeFkFikqtN3ghM1YCL4kuCvU1nb
-         HTaUZgljc/QHWyB22xy44i3YN+G9yBlMYil+1NnfMt5IQgwQL7Vx/lajWvOm21jX+tHP
-         nwgYhzGlUOWwqvfzqys0GLa0+3gzCn05ZKHiOwbIUK4Yvmcn6ejcUUTq1h5T4ToXnMPE
-         DY8Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=49t3MoXqM17BH4PLPJ14eJW4i3hdwXhMbbVc4qSxdOU=;
+        b=Fz2bWsiqdptvWYwhZebHUhc7rMuBMDCX4uTwcs5ceuql0+cViaytGDFp/j9mBgjdWW
+         lRJNX/naOqb3ZSYr1mWFWT1wdMxJ1lWqpcAbqnSYBcvtRmGFn6y8lcWtwVEkiAXYdyvT
+         eGUh577Y3lREjPqwr3l7usDOHyyeGQcktBjQTwlXiHUrLG4F4cy5pMupnxw9sGvFjrWF
+         8MO8KYjxjVcKlnpXq64N9CTY4TGlRdnHlAzQ9V2z87BDaWh4Q1W4/9Pl1bRZifXrVcab
+         YPLygDao+UrsS7bgmi26QPlbVm7Ux5yHOo5vG4WuKwwjsoz/Tt6Ll7sPAAHd1LMnoIBb
+         mD0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rKuzsBx4cSJvriSVGbzt79618OPfv8Eok+sl7EaCGvk=;
-        b=hhrJ5TSGIfPqQ4YAFQWzlr/50DsbvS7wvPXlj4IkB5I8xH4aRm6WnihMLxMhaJt/Js
-         QV03ODpBltIIv5n94s1e9/itBmUoTA8z///XO+yX2mGwRBcBY9u6tEQ+9U02DKp6h8FR
-         1MCR8JnCxvXSNP2NqsWRkoAd1lDkTwXWwU/TjxCWFgXoP74BvE/b2NA1wjNxWYR8gShk
-         rCYR+GIcLwMWQ6YK2E3DObXFz3n/QxAS+oqCPZfTbmhA9vl4oMteytpcgR7l5Oq3cKW8
-         GvP7vsKGOvh/EPh48n4u+clApAQvnVheoQUcQubSYB9Mj8XUXC6WKA1JB8yrhSKVnsoU
-         a7HQ==
-X-Gm-Message-State: AOAM530RUPuxM8NUvmoa0OntLxhy0AmUOFvOiXt9WqRlPPthiVN/+yBL
-        QPOQTIx/WgWGeOSvcqXN9zhabw==
-X-Google-Smtp-Source: ABdhPJyBtrljQApl8ZHuJbXFW2dv6fiVrkv63Op/bK/6nAFNHesQEkrdhwsL4yZ3suq6ubX8WngyDQ==
-X-Received: by 2002:a63:5320:: with SMTP id h32mr3443963pgb.28.1589552700514;
-        Fri, 15 May 2020 07:25:00 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c085:21d6::1089? ([2620:10d:c090:400::5:7df0])
-        by smtp.gmail.com with ESMTPSA id n16sm2152078pfq.61.2020.05.15.07.24.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 07:24:59 -0700 (PDT)
-Subject: Re: [PATCH 0/2] io_uring: add a CQ ring flag to enable/disable
- eventfd notification
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20200515105414.68683-1-sgarzare@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <eaab5cc7-0297-a8f8-f7a9-e00bcf12b678@kernel.dk>
-Date:   Fri, 15 May 2020 08:24:58 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=49t3MoXqM17BH4PLPJ14eJW4i3hdwXhMbbVc4qSxdOU=;
+        b=NvXxUw320wG+UecGtB88k2v40pOuRTuSUhxRwdLNy31PNdOqfvtvWYrOwYtra8ig9y
+         dlh/CO8q2ntnBNzYjTGRSYLQL9+3iOcynbaOrG8BsocnvmOslxZGSi0kJ1hIfFg64+qi
+         cfsjkiFFoBckG/XN9AYux4yvopKf++//oxkr5BzrcHjCEOBErdXBV3w2q6B5kYXFnkXT
+         VIlXVnAl0oEQccnuQW5gy963gDjNtKHB4w4lWYAKFaW6ELy4U0QCPPKXQ2sAnspmAIkY
+         MgKVqfJQqblfnaqKI01c8q8iLgbq7eiQsV1fhRJ/0sYV9zxmBTxnKx8R7RWwvhdroGnI
+         BsUQ==
+X-Gm-Message-State: AOAM532moFL543r0MchCE3rUYngQS1l56Bul42zrDCk16pKkA/jpjEbz
+        RnS9Xv5tvx84ZOcBOOtf1dRAJXjLGT6UbYSQAd8ELCzC
+X-Google-Smtp-Source: ABdhPJx9WsseUUaDU5aQqbAWqexIuw50ii00Xe8pgIuJOUKQiPtL7+0zN6dlHyzFIKqHVICZ6VuV7lnKAhfkRv72a4M=
+X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr3921780pjb.129.1589552738686;
+ Fri, 15 May 2020 07:25:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200515105414.68683-1-sgarzare@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200515105537.4876-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <202005152142.AWvx4xc5%lkp@intel.com>
+In-Reply-To: <202005152142.AWvx4xc5%lkp@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 15 May 2020 17:25:32 +0300
+Message-ID: <CAHp75Ven9q-6dDYtP_uXigeS_r2uvpUZVR5Mh0RdEd36MbTG+Q@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     kbuild test robot <lkp@intel.com>
+Cc:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>, kbuild-all@lists.01.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>, Arnd Bergmann <arnd@arndb.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        masonccyang@mxic.com.tw
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/20 4:54 AM, Stefano Garzarella wrote:
-> The first patch adds the new 'cq_flags' field for the CQ ring. It
-> should be written by the application and read by the kernel.
-> 
-> The second patch adds a new IORING_CQ_NEED_WAKEUP flag that can be
-> used by the application to enable/disable eventfd notifications.
-> 
-> I'm not sure the name is the best one, an alternative could be
-> IORING_CQ_NEED_EVENT.
-> 
-> This feature can be useful if the application are using eventfd to be
-> notified when requests are completed, but they don't want a notification
-> for every request.
-> Of course the application can already remove the eventfd from the event
-> loop, but as soon as it adds the eventfd again, it will be notified,
-> even if it has already handled all the completed requests.
-> 
-> The most important use case is when the registered eventfd is used to
-> notify a KVM guest through irqfd and we want a mechanism to
-> enable/disable interrupts.
-> 
-> I also extended liburing API and added a test case here:
-> https://github.com/stefano-garzarella/liburing/tree/eventfd-disable
+On Fri, May 15, 2020 at 4:48 PM kbuild test robot <lkp@intel.com> wrote:
 
-Don't mind the feature, and I think the patches look fine. But the name
-is really horrible, I'd have no idea what that flag does without looking
-at the code or a man page. Why not call it IORING_CQ_EVENTFD_ENABLED or
-something like that? Or maybe IORING_CQ_EVENTFD_DISABLED, and then you
-don't have to muck with the default value either. The app would set the
-flag to disable eventfd, temporarily, and clear it again when it wants
-notifications again.
+> sparse warnings: (new ones prefixed by >>)
+>
+> >> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse: sparse: incorrect type in argument 1 (different base types) @@    expected unsigned int val @@    got restricted __be32 [assignedunsigned int val @@
+> >> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse:    expected unsigned int val
+> >> drivers/mtd/nand/raw/intel-nand-controller.c:441:24: sparse:    got restricted __be32 [assigned] [usertype] reg
+>    drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse: sparse: incorrect type in argument 1 (different base types) @@    expected unsigned int val @@    got restricted __be32 [assignedunsigned int val @@
+>    drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse:    expected unsigned int val
+>    drivers/mtd/nand/raw/intel-nand-controller.c:444:24: sparse:    got restricted __be32 [assigned] [usertype] reg
+>
+>    440                  reg = cpu_to_be32(*pdata++);
+>  > 441                  writel(reg, ebu_host->hsnand + HSNAND_CMSG_0);
+>    442
+>    443                  reg = cpu_to_be32(*pdata);
+>    444                  writel(reg, ebu_host->hsnand + HSNAND_CMSG_1);
+
+On BE:
+cpu_to_be32 -> no-op
+writel() -> converts reg to LE
+
+On LE:
+cpu_to_be32 -> converts to BE
+writel() -> no-op (in terms of conversion)
+
+Seems to me that the proper API (if above is intended) should be swab32().
+But something tells me that above is broken (or my understanding is wrong).
 
 -- 
-Jens Axboe
-
+With Best Regards,
+Andy Shevchenko
