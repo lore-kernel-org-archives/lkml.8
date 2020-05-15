@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE939C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C23C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCCEB20787
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC3020709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JSwRLVyB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kiAbDPTe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgEONRu (ORCPT
+        id S1727827AbgEONRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:17:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51274 "EHLO
+        Fri, 15 May 2020 09:17:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgEONRD (ORCPT
+        with ESMTP id S1726592AbgEONRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 May 2020 09:17:03 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7F4C05BD1D;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE092C05BD1B;
         Fri, 15 May 2020 06:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=kXBnruT4KbXQebPUUg3EoL13oF8Mp4vidq1Icbtcla0=; b=JSwRLVyBj6ZOqiNLRjRA6OJGTW
-        odRfxyrzQ2XXez5Etut7e3NAHp6PyviIIsLDxgZxflAG489fyd+U6IfQF6xtJ9DB93pHOoXokzcL3
-        4SyR/IAozO4/StHbWywL70g3wI570PGILkRNrWzkZBk2Y40IwXqta1Buu7bOgEipaiBRU5VIqqXJb
-        n8Xnff2tILSaKENsc4MnuxxoSLd382TTYDwlJ1XJG+tmaBSgnZnu9ox3Z/18FrJ9HBrB5DQPNpJY1
-        j6hDTlCM+fWp/w9yExSNiTitfiRy+JQPU/Fh3cCepmSMAjIDbjmEqnRFG1hNv6RUt7f0jJ2eruqhB
-        hDfQXHsA==;
+        bh=MKRr7ww84nPVgNZDl/LbIY5Kct5MfTlH0fl1kdElxWI=; b=kiAbDPTewmgI3eISPMqX72XGNu
+        yzCMKUQ+gWQse6OYoJ/inqZDWB4YjDAvvsDgsA69+ZBDJa/0NfS/F2RIXWl/C5LmYBBYF1xtJ8G3J
+        nXNkmnt9T6sQUCO9BQS1MeTNGuZmWF71da1I8CLu5FY/3fBm35aO5aMu4a+wNEdDKZmb/myAzCJ71
+        Y2FtehLRyQjb/ENPUt7AOVHxzULSFW8whEZm3fK4ckkmMesrK8tEDZWCGa/Lyz7l7a3VWyokbbVvG
+        vb9ddS9t/jI/cTX7fqDnOQ4JZUW2QOtA6/NR3eH0rhzM/qMBZWUp5npwPS1kpmHgAYuEBSbKmdhD3
+        SZv88Kuw==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZaD0-0005oD-MU; Fri, 15 May 2020 13:17:02 +0000
+        id 1jZaD0-0005jq-5j; Fri, 15 May 2020 13:17:02 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 31/36] mm: Add DEFINE_READAHEAD
-Date:   Fri, 15 May 2020 06:16:51 -0700
-Message-Id: <20200515131656.12890-32-willy@infradead.org>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v4 25/36] mm: Fix total_mapcount assumption of page size
+Date:   Fri, 15 May 2020 06:16:45 -0700
+Message-Id: <20200515131656.12890-26-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200515131656.12890-1-willy@infradead.org>
 References: <20200515131656.12890-1-willy@infradead.org>
@@ -55,51 +55,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
 
-Allow for a more concise definition of a struct readahead_control.
+File THPs may now be of arbitrary order.
 
+Signed-off-by: Kirill A. Shutemov <kirill@shutemov.name>
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/pagemap.h | 7 +++++++
- mm/readahead.c          | 6 +-----
- 2 files changed, 8 insertions(+), 5 deletions(-)
+ mm/huge_memory.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 97f36ea16116..29ca36acdfd7 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -718,6 +718,13 @@ struct readahead_control {
- 	unsigned int _batch_count;
- };
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 7a5e2b470bc7..15a86b06befc 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2668,7 +2668,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
  
-+#define DEFINE_READAHEAD(rac, f, m, i)					\
-+	struct readahead_control rac = {				\
-+		.file = f,						\
-+		.mapping = m,						\
-+		._index = i,						\
-+	}
-+
- /**
-  * readahead_page - Get the next page to read.
-  * @rac: The current readahead request.
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 3c9a8dd7c56c..2126a2754e22 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -179,11 +179,7 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
+ int total_mapcount(struct page *page)
  {
- 	LIST_HEAD(page_pool);
- 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
--	struct readahead_control rac = {
--		.mapping = mapping,
--		.file = file,
--		._index = index,
--	};
-+	DEFINE_READAHEAD(rac, file, mapping, index);
- 	unsigned long i;
+-	int i, compound, ret;
++	int i, compound, nr, ret;
  
- 	/*
+ 	VM_BUG_ON_PAGE(PageTail(page), page);
+ 
+@@ -2676,16 +2676,17 @@ int total_mapcount(struct page *page)
+ 		return atomic_read(&page->_mapcount) + 1;
+ 
+ 	compound = compound_mapcount(page);
++	nr = compound_nr(page);
+ 	if (PageHuge(page))
+ 		return compound;
+ 	ret = compound;
+-	for (i = 0; i < HPAGE_PMD_NR; i++)
++	for (i = 0; i < nr; i++)
+ 		ret += atomic_read(&page[i]._mapcount) + 1;
+ 	/* File pages has compound_mapcount included in _mapcount */
+ 	if (!PageAnon(page))
+-		return ret - compound * HPAGE_PMD_NR;
++		return ret - compound * nr;
+ 	if (PageDoubleMap(page))
+-		ret -= HPAGE_PMD_NR;
++		ret -= nr;
+ 	return ret;
+ }
+ 
 -- 
 2.26.2
 
