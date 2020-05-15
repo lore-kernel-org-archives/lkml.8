@@ -4,128 +4,195 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC77C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E429C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5AFC20671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D23A20671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgEOOkz (ORCPT
+        id S1726229AbgEOOlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:40:55 -0400
-Received: from mga06.intel.com ([134.134.136.31]:28147 "EHLO mga06.intel.com"
+        Fri, 15 May 2020 10:41:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:57118 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgEOOky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:40:54 -0400
-IronPort-SDR: j7NeS0c8vCQJlJT0B2FckR9uTMK+3uKCEq7fK2xCmYs4hk97gMbrKHdv+5H9ie+moA734p+tll
- iGb0VLQIp54w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 07:40:54 -0700
-IronPort-SDR: sE4KrJfb+F950VrQYghbTdseYseoCD3GtYpM+afg0mMFUPGBgSSsRVnmo6M9PHNfcRnmX+ydfZ
- w+2wluTqA70Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="263206144"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 15 May 2020 07:40:48 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZbW6-006tCc-Uq; Fri, 15 May 2020 17:40:50 +0300
-Date:   Fri, 15 May 2020 17:40:50 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Clement Leger <cleger@kalray.eu>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        "wuxu.wu" <wuxu.wu@huawei.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 12/19] spi: dw: Fix Rx-only DMA transfers
-Message-ID: <20200515144050.GI1634618@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-13-Sergey.Semin@baikalelectronics.ru>
+        id S1726197AbgEOOlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 10:41:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99A3F2F;
+        Fri, 15 May 2020 07:41:50 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6099A3F71E;
+        Fri, 15 May 2020 07:41:50 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 24973682B70; Fri, 15 May 2020 15:41:49 +0100 (BST)
+Date:   Fri, 15 May 2020 15:41:49 +0100
+From:   Liviu Dudau <liviu.dudau@arm.com>
+To:     Bernard <bernard@vivo.com>
+Cc:     Brian Starkey <brian.starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: Re: Re:Re: [PATCH v2] drm/arm: fixes pixel clock enabled with wrong
+ format
+Message-ID: <20200515144149.GN159988@e110455-lin.cambridge.arm.com>
+References: <AKgAPAB2CNW-P97ALGekNqqN.3.1587728256276.Hmail.bernard@vivo.com>
+ <AAsAdQBuCHzEtmuRTR69xqrg.3.1588927637309.Hmail.bernard@vivo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200515104758.6934-13-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AAsAdQBuCHzEtmuRTR69xqrg.3.1588927637309.Hmail.bernard@vivo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 01:47:51PM +0300, Serge Semin wrote:
-> Tx-only DMA transfers are working perfectly fine since in this case
-> the code just ignores the Rx FIFO overflow interrupts. But it turns
-> out the SPI Rx-only transfers are broken since nothing pushing any
-> data to the shift registers, so the Rx FIFO is left empty and the
-> SPI core subsystems just returns a timeout error. Since DW DMAC
-> driver doesn't support something like cyclic write operations of
-> a single byte to a device register, the only way to support the
-> Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
-> This is what we intend to fix in this commit by setting the
-> SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
+Hi Bernard,
 
-I'm fine with this if Mark considers this right thing to do.
-So, conditionally
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Fri, May 08, 2020 at 04:47:17PM +0800, Bernard wrote:
+> From: "赵军奎" <bernard@vivo.com>
+> Date: 2020-04-24 19:37:36
+> To:  Liviu Dudau <liviu.dudau@arm.com>
+> Cc:  Brian Starkey <brian.starkey@arm.com>,David Airlie <airlied@linux.ie>,Daniel Vetter <daniel@ffwll.ch>,dri-devel@lists.freedesktop.org,linux-kernel@vger.kernel.org,opensource.kernel@vivo.com
+> Subject: Re:Re: [PATCH v2] drm/arm: fixes pixel clock enabled with wrong format
+> 
+> 
+> 
+> 
+> From: Liviu Dudau <liviu.dudau@arm.com>
+> Date: 2020-04-24 19:09:50
+> To:  Bernard Zhao <bernard@vivo.com>
+> Cc:  Brian Starkey <brian.starkey@arm.com>,David Airlie <airlied@linux.ie>,Daniel Vetter <daniel@ffwll.ch>,dri-devel@lists.freedesktop.org,linux-kernel@vger.kernel.org,opensource.kernel@vivo.com
+> Subject: Re: [PATCH v2] drm/arm: fixes pixel clock enabled with wrong format>Hi Bernand,
+> >
+> >On Thu, Apr 23, 2020 at 11:35:51PM -0700, Bernard Zhao wrote:
+> >> The pixel clock is still enabled when the format is wrong.
+> >> no error branch handle, and also some register is not set
+> >> in this case, e.g: HDLCD_REG_<color>_SELECT. Maybe we
+> >> should disable this clock and throw an warn message when
+> >> this happened.
+> >> With this change, the code maybe a bit more readable.
+> >> 
+> >> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+> >> 
+> >> Changes since V1:
+> >> *add format error handle, if format is not correct, throw
+> >> an warning message and disable this clock.
+> >> 
+> >> Link for V1:
+> >> *https://lore.kernel.org/patchwork/patch/1228501/
+> >> ---
+> >>  drivers/gpu/drm/arm/hdlcd_crtc.c | 13 +++++++++----
+> >>  1 file changed, 9 insertions(+), 4 deletions(-)
+> >> 
+> >> diff --git a/drivers/gpu/drm/arm/hdlcd_crtc.c b/drivers/gpu/drm/arm/hdlcd_crtc.c
+> >> index af67fefed38d..f3945dee2b7d 100644
+> >> --- a/drivers/gpu/drm/arm/hdlcd_crtc.c
+> >> +++ b/drivers/gpu/drm/arm/hdlcd_crtc.c
+> >> @@ -96,7 +96,7 @@ static int hdlcd_set_pxl_fmt(struct drm_crtc *crtc)
+> >>  	}
+> >>  
+> >>  	if (WARN_ON(!format))
+> >> -		return 0;
+> >> +		return -EINVAL;
+> >
+> >That is the right fix!
+> >
+> >>  
+> >>  	/* HDLCD uses 'bytes per pixel', zero means 1 byte */
+> >>  	btpp = (format->bits_per_pixel + 7) / 8;
+> >> @@ -125,7 +125,7 @@ static int hdlcd_set_pxl_fmt(struct drm_crtc *crtc)
+> >>  	return 0;
+> >>  }
+> >>  
+> >> -static void hdlcd_crtc_mode_set_nofb(struct drm_crtc *crtc)
+> >> +static int hdlcd_crtc_mode_set_nofb(struct drm_crtc *crtc)
+> >
+> >But this is not. We don't need to propagate the error further, just ....
+> >
+> >>  {
+> >>  	struct hdlcd_drm_private *hdlcd = crtc_to_hdlcd_priv(crtc);
+> >>  	struct drm_display_mode *m = &crtc->state->adjusted_mode;
+> >> @@ -162,9 +162,10 @@ static void hdlcd_crtc_mode_set_nofb(struct drm_crtc *crtc)
+> >>  
+> >>  	err = hdlcd_set_pxl_fmt(crtc);
+> >>  	if (err)
+> >> -		return;
+> >
+> 
+> My previous understanding was that when such an exception occurred, it was caught
+> in the atomic_enable interface, and then disable pixel clock. I am not sure is this ok or
+> i have to do more register clean operaction.
+> 
+> >... return here so that we don't call clk_set_rate();
+> And for this part, i am a little confused :
+> 1 clk_set_rate must be set even if format is wrong?
+> 2 The original code logic shows that If format is not correct, we will not set registers 
+> HDLCD_REG_PIXEL_FORMAT & HDLCD_REG_<color>_SELECT, will this bring in
+> any problems?
+> 3 if 1 the rate must set & 2 registers above doesn`t matter, then maybe there is no
+> need to disable pixel clock.
+> Am i misunderstanding
+
+You are right, the pixel format check should not happen inside hdlcd_crtc_atomic_enable()
+hook, it should be moved into a separate function hdlcd_crtc_atomic_check() and that needs
+to be hooked into .atomic_check() for hdlcd_crtc_helper_funcs().
+
+If you want to have another go I'll be happy to review and Ack your patch.
+
+Best regards,
+Liviu 
 
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
->  drivers/spi/spi-dw.c | 1 +
->  1 file changed, 1 insertion(+)
+> Regards,
+> Bernard
 > 
-> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-> index 1edb8cdd11ee..31607b40147d 100644
-> --- a/drivers/spi/spi-dw.c
-> +++ b/drivers/spi/spi-dw.c
-> @@ -517,6 +517,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
->  			dev_warn(dev, "DMA init failed\n");
->  		} else {
->  			master->can_dma = dws->dma_ops->can_dma;
-> +			master->flags |= SPI_CONTROLLER_MUST_TX;
->  		}
->  	}
->  
-> -- 
-> 2.25.1
+> >> +		return err;
+> >>  
+> >>  	clk_set_rate(hdlcd->clk, m->crtc_clock * 1000);
+> >> +	return 0;
+> >>  }
+> >>  
+> >>  static void hdlcd_crtc_atomic_enable(struct drm_crtc *crtc,
+> >> @@ -173,7 +174,11 @@ static void hdlcd_crtc_atomic_enable(struct drm_crtc *crtc,
+> >>  	struct hdlcd_drm_private *hdlcd = crtc_to_hdlcd_priv(crtc);
+> >>  
+> >>  	clk_prepare_enable(hdlcd->clk);
+> >> -	hdlcd_crtc_mode_set_nofb(crtc);
+> >> +	if (hdlcd_crtc_mode_set_nofb(crtc)) {
+> >> +		DRM_DEBUG_KMS("Invalid format, pixel clock enable failed!\n");
+> >> +		clk_disable_unprepare(hdlcd->clk);
+> >> +		return;
+> >> +	}
+> >>  	hdlcd_write(hdlcd, HDLCD_REG_COMMAND, 1);
+> >>  	drm_crtc_vblank_on(crtc);
+> >>  }
+> >> -- 
+> >> 2.26.2
+> >> 
+> >
+> >-- 
+> >====================
+> >| I would like to |
+> >| fix the world,  |
+> >| but they're not |
+> >| giving me the   |
+> > \ source code!  /
+> >  ---------------
+> >    ¯\_(ツ)_/¯
+> 
+> 
 > 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
