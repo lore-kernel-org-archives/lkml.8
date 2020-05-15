@@ -2,59 +2,151 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F41C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AEBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF1A20727
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1049E20727
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AYT3eRrV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgEOR1j (ORCPT
+        id S1726541AbgEOR1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:27:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34534 "EHLO
+        Fri, 15 May 2020 13:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726168AbgEOR1i (ORCPT
+        by vger.kernel.org with ESMTP id S1726168AbgEOR1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:27:38 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 863CBC061A0C;
-        Fri, 15 May 2020 10:27:38 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CA83814C6026F;
-        Fri, 15 May 2020 10:27:37 -0700 (PDT)
-Date:   Fri, 15 May 2020 10:27:36 -0700 (PDT)
-Message-Id: <20200515.102736.2093927810365892295.davem@davemloft.net>
-To:     hch@lst.de
-Cc:     kuba@kernel.org, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: move the SIOCDELRT and SIOCADDRT compat_ioctl handlers v2
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200515131925.3855053-1-hch@lst.de>
-References: <20200515131925.3855053-1-hch@lst.de>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Fri, 15 May 2020 13:27:43 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24C75C061A0C;
+        Fri, 15 May 2020 10:27:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=18mwp/q8sV8ky3Xs5Csf6eFReIMsx0xc80Vz0Im9aK8=; b=AYT3eRrVNy9OS3ow10EwcjCcYe
+        HDo7BHlOZGG6GoeWHX+hq6EXMisOZ/X4fA0GPq1zilq3XFO57QKal2qmZ7tMcCksU2nKxmKuNMaNu
+        +EoiYsOFuboNCtPZE6ZFjCSVhRSz57+fhKpljr35lIoDdwGF0cMASNNZba4HnPVeyYY97QP0CzeBO
+        MK22lgrr0XJB6KxvgKKQ8w9hqB//g42yGpFNoOVjz5kXTEIyQFKguQF0ObZY1+2sbQDFP0nJ5ALs/
+        EvGx10W/hMWWrBg3tpEUvbnhCGg2P1oCW4F7LiWtZsBWyeFmjE4W3DDKPg1Im6BuQ5DCthaRVmNrW
+        2Tlpt3YA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZe7Z-0008Ua-Ff; Fri, 15 May 2020 17:27:41 +0000
+To:     "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] nfs: fsinfo: fix build when CONFIG_NFS_V4 is not
+ enabled
+Message-ID: <f91b8f29-271a-b5cd-410b-a43a399d34aa@infradead.org>
+Date:   Fri, 15 May 2020 10:27:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 15 May 2020 10:27:38 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
-Date: Fri, 15 May 2020 15:19:21 +0200
+From: Randy Dunlap <rdunlap@infradead.org>
 
-> Changes since v1:
->  - reorder a bunch of variable declarations
+Fix multiple build errors when CONFIG_NFS_V4 is not enabled.
 
-Please audit your entire series, the atalk_compat_ioctl() still has the
-reverse christmas tree problem.
+../fs/nfs/fsinfo.c: In function 'nfs_fsinfo_get_supports':
+../fs/nfs/fsinfo.c:153:12: error: 'const struct nfs_server' has no member named 'attr_bitmask'
+  if (server->attr_bitmask[0] & FATTR4_WORD0_SIZE)
+            ^~
+../fs/nfs/fsinfo.c:155:12: error: 'const struct nfs_server' has no member named 'attr_bitmask'
+  if (server->attr_bitmask[1] & FATTR4_WORD1_NUMLINKS)
+            ^~
+../fs/nfs/fsinfo.c:158:12: error: 'const struct nfs_server' has no member named 'attr_bitmask'
+  if (server->attr_bitmask[0] & FATTR4_WORD0_ARCHIVE)
+            ^~
+../fs/nfs/fsinfo.c:160:12: error: 'const struct nfs_server' has no member named 'attr_bitmask'
+  if (server->attr_bitmask[0] & FATTR4_WORD0_HIDDEN)
+            ^~
+../fs/nfs/fsinfo.c:162:12: error: 'const struct nfs_server' has no member named 'attr_bitmask'
+  if (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM)
+            ^~
+../fs/nfs/fsinfo.c: In function 'nfs_fsinfo_get_features':
+../fs/nfs/fsinfo.c:205:12: error: 'const struct nfs_server' has no member named 'attr_bitmask'
+  if (server->attr_bitmask[0] & FATTR4_WORD0_CASE_INSENSITIVE)
+            ^~
+../fs/nfs/fsinfo.c:207:13: error: 'const struct nfs_server' has no member named 'attr_bitmask'
+  if ((server->attr_bitmask[0] & FATTR4_WORD0_ARCHIVE) ||
+             ^~
+../fs/nfs/fsinfo.c:208:13: error: 'const struct nfs_server' has no member named 'attr_bitmask'
+      (server->attr_bitmask[0] & FATTR4_WORD0_HIDDEN) ||
+             ^~
+../fs/nfs/fsinfo.c:209:13: error: 'const struct nfs_server' has no member named 'attr_bitmask'
+      (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM))
+             ^~
 
-Thank you.
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-nfs@vger.kernel.org
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna.schumaker@netapp.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>
+---
+ fs/nfs/fsinfo.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- linux-next-20200515.orig/fs/nfs/fsinfo.c
++++ linux-next-20200515/fs/nfs/fsinfo.c
+@@ -5,6 +5,7 @@
+  * Written by David Howells (dhowells@redhat.com)
+  */
+ 
++#include <linux/kconfig.h>
+ #include <linux/nfs_fs.h>
+ #include <linux/windows.h>
+ #include "internal.h"
+@@ -150,6 +151,7 @@ static int nfs_fsinfo_get_supports(struc
+ 		sup->stx_mask |= STATX_CTIME;
+ 	if (server->caps & NFS_CAP_MTIME)
+ 		sup->stx_mask |= STATX_MTIME;
++#if IS_ENABLED(CONFIG_NFS_V4)
+ 	if (server->attr_bitmask[0] & FATTR4_WORD0_SIZE)
+ 		sup->stx_mask |= STATX_SIZE;
+ 	if (server->attr_bitmask[1] & FATTR4_WORD1_NUMLINKS)
+@@ -161,6 +163,7 @@ static int nfs_fsinfo_get_supports(struc
+ 		sup->win_file_attrs |= ATTR_HIDDEN;
+ 	if (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM)
+ 		sup->win_file_attrs |= ATTR_SYSTEM;
++#endif
+ 
+ 	sup->stx_attributes = STATX_ATTR_AUTOMOUNT;
+ 	return sizeof(*sup);
+@@ -202,12 +205,14 @@ static int nfs_fsinfo_get_features(struc
+ 	if (server->caps & NFS_CAP_MTIME)
+ 		fsinfo_set_feature(ft, FSINFO_FEAT_HAS_MTIME);
+ 
++#if IS_ENABLED(CONFIG_NFS_V4)
+ 	if (server->attr_bitmask[0] & FATTR4_WORD0_CASE_INSENSITIVE)
+ 		fsinfo_set_feature(ft, FSINFO_FEAT_NAME_CASE_INDEP);
+ 	if ((server->attr_bitmask[0] & FATTR4_WORD0_ARCHIVE) ||
+ 	    (server->attr_bitmask[0] & FATTR4_WORD0_HIDDEN) ||
+ 	    (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM))
+ 		fsinfo_set_feature(ft, FSINFO_FEAT_WINDOWS_ATTRS);
++#endif
+ 
+ 	return sizeof(*ft);
+ }
+
