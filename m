@@ -2,167 +2,166 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737F7C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F78C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC3C2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:43:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oo9OGukz"
+	by mail.kernel.org (Postfix) with ESMTP id 1166620759
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:45:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589546729;
+	bh=VxEiO3x4a+oQcWdaaVMQiUJypOo8K7HbBM/nH0w786Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g/1tfG1jtyeNWiZEfeZGpRzK/xTExJQjFpUF2iy72vetIIHctab/jY8QQoAy2lDqn
+	 agVZ6pqhaaVDxGcHlr+DkMhRwCoDsmBNnSHcVQpC9kChM8QK8giS2oKQuQxpfd03ph
+	 yNY8AM6ZW5oWdJtmF1iD8lMYAuyhKFEOATwzrZPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726223AbgEOMn1 (ORCPT
+        id S1726228AbgEOMp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:43:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbgEOMn1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:43:27 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16691C05BD09
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 05:43:27 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id i22so2051617oik.10
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 05:43:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9kyKQJ2homgfOAGe2E1L8oQbfswl7dsX3WsAr4pTpyU=;
-        b=Oo9OGukz5vUHYyRByCYNK/z6d0nJShT6FToPuhH7CdqfE/KavEedAAbKnns+xOYN+J
-         Z08K+t8JrWFGeQnTCBt7JFjpEIT4vJAJ5KicPopY2h0ZOFoQndYWT9gZTi30+JnRA+Fr
-         qtwrAgrSOOlza4w2ABgZTQ5Y19H55pKEVIuFjSqBY9xAScqvbE7+d1/+moUUQfquKqfB
-         CYrYHRjwMcciZWRcPjYi77FbyrI3Cfpv5UzUlYIqGYmEwPwGjETl641wvrQiLG/De5wm
-         5saCZMJ8cYzU7sQCcMrZpsIbY3VuUOaMcLJVgsABUZITVEPALqEH9/3Pra47q507KVD5
-         j+tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9kyKQJ2homgfOAGe2E1L8oQbfswl7dsX3WsAr4pTpyU=;
-        b=OkakoqMCmgoBMezFi5YwgENTBVsPcnIeM1r5PQPg+CPsN5kcO5hMuJJKr2ZpAoyTum
-         CwvnCEP0UFJVpkFQC/SoyHsDPEOZPENB5tZbOrkctjg63GrYEIXyOX0GKlJBlRBwXTaa
-         ccIY2BUFz6Pv/FgXrE/KT+vWga5MfhyzAEvi73JlDHrDudERAnRBbYukFmd6pZyIEHpq
-         5Z62WfbFHY8dTlHK/sjJSGopEjdNKORA1M/fRpIqbFxyvhU6O2pCGpb5pTsMHh1cWVmC
-         js8IlzZxwTANDdTUUQUwtRi1pohDYuES78qScSxXkozEQAAY/EhlhfsRnAcmxkoJfw1B
-         4eiw==
-X-Gm-Message-State: AOAM532+EziDnz1BfLThVsSfKh7y68J669WD1vV2hmfZV8Gd8Ezmktke
-        avnZ3q6Vv+4PFCzdFPDMyNLy36j9kKU1LrrfiC1w7j+Dqpc=
-X-Google-Smtp-Source: ABdhPJy+1AdH+F1A47Jf7bOpVkDcWVzgX3aG8AI4XCFKUwvfwJRnwkqCm8z/w434pIjAqu5A/i+DJskOoy/UVbu+yS4=
-X-Received: by 2002:aca:1812:: with SMTP id h18mr1815141oih.133.1589546606362;
- Fri, 15 May 2020 05:43:26 -0700 (PDT)
+        Fri, 15 May 2020 08:45:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726170AbgEOMp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 08:45:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B349B2074D;
+        Fri, 15 May 2020 12:45:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589546727;
+        bh=VxEiO3x4a+oQcWdaaVMQiUJypOo8K7HbBM/nH0w786Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pARATMOWXVPralSCYApjOqgrXBmbXaWUOAVyiklm3wvsFI7cpwChGJ/1ecUuX9fPT
+         QVbUFq3kmm+rDg7Ri60N8Dc7rwACXOW292F/3eazEmhAVd9DueYm5iII28jJZ4NtSg
+         qJs8bopvK/RAKRqzzLhtcLBXshrJbhvVyAvefRAE=
+Date:   Fri, 15 May 2020 14:45:25 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiri Slaby <jslaby@suse.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Long Cheng <long.cheng@mediatek.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, Lukas Wunner <lukas@wunner.de>,
+        Stefan Roese <sr@denx.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Allison Randal <allison@lohutok.net>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] serial: 8250: Add 8250 port clock update method
+Message-ID: <20200515124525.GA1888557@kroah.com>
+References: <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506233136.11842-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506233136.11842-3-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <20200515090820.1744353-1-robert.foss@linaro.org>
-In-Reply-To: <20200515090820.1744353-1-robert.foss@linaro.org>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Fri, 15 May 2020 14:43:14 +0200
-Message-ID: <CAG3jFyuz4PRQvTKPTz9u4fo43=Te=uVyQbSs95vZntLce+2pVw@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: qcom: apq8016-sbc-d3: Add Qualcomm APQ8016
- SBC + D3Camera mezzanine
-To:     Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506233136.11842-3-Sergey.Semin@baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 May 2020 at 11:08, Robert Foss <robert.foss@linaro.org> wrote:
->
-> Add device treee support for the Qualcomm APQ8016 SBC, otherwise known as
-> the Dragonboard 410c with the D3Camera mezzanine expansion board.
->
-> The D3Camera mezzanine ships in a kit with a OmniVision 5640 sensor module,
-> which is what this DT targets.
->
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+On Thu, May 07, 2020 at 02:31:33AM +0300, Serge Semin wrote:
+> Some platforms can be designed in a way so the UART port reference clock
+> might be asynchronously changed at some point. In Baikal-T1 SoC this may
+> happen due to the reference clock being shared between two UART ports, on
+> the Allwinner SoC the reference clock is derived from the CPU clock, so
+> any CPU frequency change should get to be known/reflected by/in the UART
+> controller as well. But it's not enough to just update the
+> uart_port->uartclk field of the corresponding UART port, the 8250
+> controller reference clock divisor should be altered so to preserve
+> current baud rate setting. All of these things is done in a coherent
+> way by calling the serial8250_update_uartclk() method provided in this
+> patch. Though note that it isn't supposed to be called from within the
+> UART port callbacks because the locks using to the protect the UART port
+> data are already taken in there.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Long Cheng <long.cheng@mediatek.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-mediatek@lists.infradead.org
 > ---
->
-> Changes since v1:
->  - Vinod: Changed license to GPL+BSD
->  - Vinod: Changed copyright year to 2020
->  - Nico: Changed name of mezzanine to d3camera
->
->  arch/arm64/boot/dts/qcom/Makefile             |  1 +
->  .../boot/dts/qcom/apq8016-sbc-d3camera.dts    | 45 +++++++++++++++++++
->  2 files changed, 46 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
->
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index cc103f7020fd..3f95b522694e 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -1,5 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  dtb-$(CONFIG_ARCH_QCOM)        += apq8016-sbc.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)        += apq8016-sbc-d3camera.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += apq8096-db820c.dtb
->  dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += ipq6018-cp01-c1.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
-> new file mode 100644
-> index 000000000000..752e5ec47499
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
-> @@ -0,0 +1,45 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+>  drivers/tty/serial/8250/8250_port.c | 38 +++++++++++++++++++++++++++++
+>  include/linux/serial_8250.h         |  2 ++
+>  2 files changed, 40 insertions(+)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 4d83c85a7389..484ff9df1432 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -2628,6 +2628,44 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
+>  				  (port->uartclk + tolerance) / 16);
+>  }
+>  
 > +/*
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-
-This copyright is incorrect, and should instead assigned to Linaro.
-I'll spin a new version with this change.
-
+> + * Note in order to avoid the tty port mutex deadlock don't use the next method
+> + * within the uart port callbacks. Primarily it's supposed to be utilized to
+> + * handle a sudden reference clock rate change.
 > + */
+> +void serial8250_update_uartclk(struct uart_port *port, unsigned int uartclk)
+> +{
+> +	struct uart_8250_port *up = up_to_u8250p(port);
+> +	unsigned int baud, quot, frac = 0;
+> +	struct ktermios *termios;
+> +	unsigned long flags;
 > +
-> +/dts-v1/;
+> +	mutex_lock(&port->state->port.mutex);
 > +
-> +#include "apq8016-sbc.dtsi"
+> +	if (port->uartclk == uartclk)
+> +		goto out_lock;
 > +
-> +/ {
-> +       model = "Qualcomm Technologies, Inc. APQ 8016 SBC w/ D3Camera Mezzanine";
-> +       compatible = "qcom,apq8016-sbc", "qcom,apq8016", "qcom,sbc";
-> +};
+> +	port->uartclk = uartclk;
+> +	termios = &port->state->port.tty->termios;
 > +
-> +&cci_i2c0 {
-> +       /delete-node/ camera_rear@3b;
+> +	baud = serial8250_get_baud_rate(port, termios, NULL);
+> +	quot = serial8250_get_divisor(port, baud, &frac);
 > +
-> +       camera_rear@76 {
-> +               compatible = "ovti,ov5640";
-> +               reg = <0x76>;
+> +	spin_lock_irqsave(&port->lock, flags);
 > +
-> +               enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
-> +               reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&camera_rear_default>;
+> +	uart_update_timeout(port, termios->c_cflag, baud);
 > +
-> +               clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
-> +               clock-names = "xclk";
-> +               clock-frequency = <23880000>;
+> +	serial8250_set_divisor(port, baud, quot, frac);
+> +	serial_port_out(port, UART_LCR, up->lcr);
+> +	serial8250_out_MCR(up, UART_MCR_DTR | UART_MCR_RTS);
 > +
-> +               vdddo-supply = <&camera_vdddo_1v8>;
-> +               vdda-supply = <&camera_vdda_2v8>;
-> +               vddd-supply = <&camera_vddd_1v5>;
+> +	spin_unlock_irqrestore(&port->lock, flags);
 > +
-> +               status = "ok";
-> +
-> +               port {
-> +                       ov5640_ep: endpoint {
-> +                               clock-lanes = <1>;
-> +                               data-lanes = <0 2>;
-> +                               remote-endpoint = <&csiphy0_ep>;
-> +                       };
-> +               };
-> +       };
-> +};
-> --
-> 2.25.1
->
+> +out_lock:
+> +	mutex_unlock(&port->state->port.mutex);
+> +}
+> +EXPORT_SYMBOL(serial8250_update_uartclk);
+
+EXPORT_SYMBOL_GPL() please.
+
+thanks,
+
+greg k-h
