@@ -2,106 +2,79 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A411C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB86C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71E9320657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD3220657
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgEOIOO convert rfc822-to-8bit (ORCPT
+        id S1727943AbgEOIPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:14:14 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:25825 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727902AbgEOION (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:14:13 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-135-kgvmV9-GP7CT7oWXwAS8yw-1; Fri, 15 May 2020 09:14:08 +0100
-X-MC-Unique: kgvmV9-GP7CT7oWXwAS8yw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 15 May 2020 09:14:07 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 15 May 2020 09:14:07 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'David Miller' <davem@davemloft.net>
-CC:     "hch@lst.de" <hch@lst.de>, "joe@perches.com" <joe@perches.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "vyasevich@gmail.com" <vyasevich@gmail.com>,
-        "nhorman@tuxdriver.com" <nhorman@tuxdriver.com>,
-        "marcelo.leitner@gmail.com" <marcelo.leitner@gmail.com>,
-        "jmaloy@redhat.com" <jmaloy@redhat.com>,
-        "ying.xue@windriver.com" <ying.xue@windriver.com>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
-        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: RE: remove kernel_setsockopt and kernel_getsockopt
-Thread-Topic: remove kernel_setsockopt and kernel_getsockopt
-Thread-Index: AQHWKU15LJmP4mOGDE2/GHhLszFt9KinP7aQgAAO/ACAABIowIAAkWGAgADbQOA=
-Date:   Fri, 15 May 2020 08:14:07 +0000
-Message-ID: <29428bc7a5344412be9f632bced8888d@AcuMS.aculab.com>
-References: <756758e8f0e34e2e97db470609f5fbba@AcuMS.aculab.com>
-        <20200514101838.GA12548@lst.de>
-        <a76440f7305c4653877ff2abff499f4e@AcuMS.aculab.com>
- <20200514.130357.1683454520750761365.davem@davemloft.net>
-In-Reply-To: <20200514.130357.1683454520750761365.davem@davemloft.net>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Fri, 15 May 2020 04:15:05 -0400
+Received: from mga17.intel.com ([192.55.52.151]:6766 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726855AbgEOIPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 04:15:05 -0400
+IronPort-SDR: N/qCV0fWymPpLRCNBkebxmV/Zzq2cnASp0tTD57ZxlzWTPI5TrDNa4s/v64d4JC4ldapQ3mi1D
+ WEY4kQnUdTVQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 01:15:04 -0700
+IronPort-SDR: QB6RIKzOK+QPwwf9iI1RCSIsgazbCdjmlTcgh4Ycr1LnW8BZZl2IQijYXLCAyDNCWEhcAB/Lcg
+ 3fMcsEzUuiAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,394,1583222400"; 
+   d="scan'208";a="438231892"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga005.jf.intel.com with ESMTP; 15 May 2020 01:15:01 -0700
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org,
+        devicetree@vger.kernel.org
+Cc:     robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [RESEND PATCH v8 0/3] Add Intel ComboPhy driver
+Date:   Fri, 15 May 2020 16:13:32 +0800
+Message-Id: <cover.1589530082.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looking at __sys_setsockopt() I noticed that the BPF intercept
-can also cause set_fs(KERNEL_DS) be set in order to pass a
-modified buffer into the actual setsockopt() code.
+This patch series adds Intel ComboPhy driver, respective yaml schemas
 
-If that functionality is to be kept then the underlying
-protocol specific code needs changing to accept a kernel buffer.
+Changes on v8:
+  As per PHY Maintainer's request add description in comments for doing
+  register access through register map framework.
 
-The 32bit compat code would also be a lot simpler if it could
-pass an kernel buffer through.
-At the moment it copies the modified buffer back out onto the
-user stack.
+Changes on v7:
+  As per System control driver maintainer's inputs remove
+    fwnode_to_regmap() definition and use device_node_get_regmap()
+    
+Changes on v6:
+  Rebase patches on the latest maintainer's branch
+  https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/?h=phy-for-5.7
+Dilip Kota (3):
+  dt-bindings: phy: Add PHY_TYPE_XPCS definition
+  dt-bindings: phy: Add YAML schemas for Intel ComboPhy
+  phy: intel: Add driver support for ComboPhy
 
-I'm sure there have been suggestions to remove that complete hack.
-Fixing the compat code would leave a kernel_[sg]et_sockopt() that
-still worked.
+ .../devicetree/bindings/phy/intel,combo-phy.yaml   | 101 ++++
+ drivers/phy/intel/Kconfig                          |  14 +
+ drivers/phy/intel/Makefile                         |   1 +
+ drivers/phy/intel/phy-intel-combo.c                | 632 +++++++++++++++++++++
+ include/dt-bindings/phy/phy.h                      |   1 +
+ 5 files changed, 749 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+ create mode 100644 drivers/phy/intel/phy-intel-combo.c
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+-- 
+2.11.0
 
