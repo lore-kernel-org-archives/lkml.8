@@ -2,122 +2,96 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4537DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44BAA2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:43:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fKScrmok"
+	by mail.kernel.org (Postfix) with ESMTP id 242272054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgEOInz (ORCPT
+        id S1727973AbgEOIoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:43:55 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33564 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727796AbgEOInz (ORCPT
+        Fri, 15 May 2020 04:44:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3334 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727097AbgEOIoa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:43:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589532233;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+98viFOd9jTdpHCY3sUvt3t0b4J5Yg6795DHu7DfVIk=;
-        b=fKScrmokPCuiEv3RuFPvqUqtSW4pRmkmMSR+m4lh38ZgD+He292FGbDa0d1vO+m+zQM/FS
-        hZS2ZoMIm6vpaQmRVG+WTcp5H2ZGUlT6LGY28+K/tGKndmvV9ym5GKCV4EXnuQEpX8Wv68
-        TnnOhRJ7AnJGXiPknOKzEniP49FHPNI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-164-u_nUq3bSN8OR1tg-mmpQdg-1; Fri, 15 May 2020 04:43:49 -0400
-X-MC-Unique: u_nUq3bSN8OR1tg-mmpQdg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8CC9801503;
-        Fri, 15 May 2020 08:43:44 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-77.ams2.redhat.com [10.36.112.77])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6435B5D9D7;
-        Fri, 15 May 2020 08:43:36 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Christian Heimes <christian@python.org>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        John Johansen <john.johansen@canonical.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        "Lev R. Oshvang ." <levonshe@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Subject: Re: How about just O_EXEC? (was Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec through O_MAYEXEC)
-References: <20200505153156.925111-1-mic@digikod.net>
-        <20200505153156.925111-4-mic@digikod.net>
-        <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
-        <202005131525.D08BFB3@keescook> <202005132002.91B8B63@keescook>
-        <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
-        <202005140830.2475344F86@keescook>
-        <CAEjxPJ4R_juwvRbKiCg5OGuhAi1ZuVytK4fKCDT_kT6VKc8iRg@mail.gmail.com>
-        <b740d658-a2da-5773-7a10-59a0ca52ac6b@digikod.net>
-        <202005142343.D580850@keescook>
-Date:   Fri, 15 May 2020 10:43:34 +0200
-In-Reply-To: <202005142343.D580850@keescook> (Kees Cook's message of "Fri, 15
-        May 2020 01:01:32 -0700")
-Message-ID: <87a729wpu1.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Fri, 15 May 2020 04:44:30 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04F8WHoh126164;
+        Fri, 15 May 2020 04:44:26 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 310x56yedu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 May 2020 04:44:25 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04F8e6kf020136;
+        Fri, 15 May 2020 08:44:24 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 3100uc24jr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 May 2020 08:44:23 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04F8iLW457540794
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 May 2020 08:44:21 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8130911C04A;
+        Fri, 15 May 2020 08:44:21 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6918E11C052;
+        Fri, 15 May 2020 08:44:20 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com.com (unknown [9.199.53.165])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 15 May 2020 08:44:20 +0000 (GMT)
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+To:     live-patching@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: [PATCH] MAINTAINERS: add lib/livepatch to LIVE PATCHING
+Date:   Fri, 15 May 2020 14:14:10 +0530
+Message-Id: <20200515084410.67821-1-kamalesh@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-15_02:2020-05-14,2020-05-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ mlxscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=574 impostorscore=0
+ adultscore=0 clxscore=1015 cotscore=-2147483648 lowpriorityscore=0
+ suspectscore=1 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005150071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Kees Cook:
+Add lib/livepatch to list of livepatching F: patterns in MAINTAINERS.
 
-> Maybe I've missed some earlier discussion that ruled this out, but I
-> couldn't find it: let's just add O_EXEC and be done with it. It actually
-> makes the execve() path more like openat2() and is much cleaner after
-> a little refactoring. Here are the results, though I haven't emailed it
-> yet since I still want to do some more testing:
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=kspp/o_exec/v1
+Suggested-by: Jiri Kosina <jikos@kernel.org>
+Signed-off-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-I think POSIX specifies O_EXEC in such a way that it does not confer
-read permissions.  This seems incompatible with what we are trying to
-achieve here.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8e14444eb98d..de4f6af03198 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9859,6 +9859,7 @@ F:	arch/s390/include/asm/livepatch.h
+ F:	arch/x86/include/asm/livepatch.h
+ F:	include/linux/livepatch.h
+ F:	kernel/livepatch/
++F:	lib/livepatch/
+ F:	samples/livepatch/
+ F:	tools/testing/selftests/livepatch/
+ 
 
-Thanks,
-Florian
+base-commit: 1a0601ade9e132a03fd3e957f6f27e1ed89c1b2e
+-- 
+2.26.2
 
