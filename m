@@ -2,109 +2,129 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F574C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E301C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D80C20787
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:42:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589560928;
-	bh=wP6rN+0fcyq9AqNL4mJfVYCMurnxEiNZYbbiBjX71PU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KIYv7n4imGcqByzE0zbdpifO9FQhpPpWkRe1T3oKzdANPGexGXZLmAVMtIWBqjsSQ
-	 zqJvLlBO3bxa0vKbj0m+b40nyNH7a+e9MBWE73ILUDAeyzKDXaqJIkaspm0/sfgxO9
-	 JVHYSsuffzwrTD0b17RHpEXRXzL5tFu5ENf6MsXI=
+	by mail.kernel.org (Postfix) with ESMTP id 1FF7920849
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:43:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="boXYK+gw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgEOQmH (ORCPT
+        id S1726245AbgEOQng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:42:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgEOQmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:42:07 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67314206C0;
-        Fri, 15 May 2020 16:42:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589560926;
-        bh=wP6rN+0fcyq9AqNL4mJfVYCMurnxEiNZYbbiBjX71PU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MB7fP4O+o4JDp6I9/D4xpNZ6udvmMRewLpl1ChMf7/zBU/GPuKsrl8ZKkHfAXglfM
-         sOvN9Q9uzqwmnnn890ATCTtg9mN5JeR2MK+xIYNWsU0Yx8X7k98dWRrKjvuP7wz9pC
-         +u3dLgL5MD1B8AKF9x0BoULoQpPL3/aKCaRK8v68=
-Date:   Fri, 15 May 2020 17:42:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/19] spi: dw: Clear DMAC register when done or
- stopped
-Message-ID: <20200515164203.GJ5066@sirena.org.uk>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-4-Sergey.Semin@baikalelectronics.ru>
+        Fri, 15 May 2020 12:43:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726144AbgEOQnf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 12:43:35 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7969BC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:43:34 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id l1so2482473qtp.6
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:43:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=O2iqJ8KQcZDCTc9y6KB4+QJ4upFjWYXxi/TwEeRaUVo=;
+        b=boXYK+gwglwO9n0Wi0Vh9KYiXI/hyUq7NVa8NqLzdNyA4/HucC05wZQJu3ZG5TwRKM
+         m68w9gsFgwLrLA3rjbEnFEPeo+fKoiezd/rd8D1s2euwBB1hgVH0Ma8tMviuiTTpkD4W
+         Tk2dp8qewFd3z5vd2dKw3bVeD6XMSqklEZmyPIWT50+IeaRQhmaISX7KV8bRPEv/hqwF
+         fmMVONMdSalRkLw9Z3P4Atp6ddIBJ7lgF2XTs283vTtsx70PoKAak73QaCwKLNNNJvzD
+         UXW2+9lWDM1EyLT2Xf/31G5wLybv0snRX7p/WAEqOXGg1jAWptiHYs7K9rM0W739bXCG
+         V7KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=O2iqJ8KQcZDCTc9y6KB4+QJ4upFjWYXxi/TwEeRaUVo=;
+        b=n6cK05Ym0TZKk/2NePCEmzaxi9O5QS09lewkl9LB22lDAWMtjEOCXO8shhHgRhjByA
+         Yba2KIKHICrZz2RS35VcurofQwi9keBAocOQnIQA1toOPJj8db7wMzxq7aTFahJr+eZo
+         ateH8+gtOzVc1NaghabvT5EEh8g2st+JYwMKoAiWp+vx9nagDYRmKTLrnllNF9RgfnjT
+         ZxfsYk7lf4/i5tPtNBzouMngAsRB36Fj82vUbqbem08npwhZmvDQUwcEMF8L8xF+ANFI
+         ac3ZQR2qWgGMHVVuhtSmtle9ztMbfzVVytu0ZkKpIalyjhN077dmDctBraQBjxXQP0GI
+         L08A==
+X-Gm-Message-State: AOAM5310ghV6tWBMtfZG1FxGGJr+VuEm6YvnHw5H94sA3thXwbvGfUYU
+        ZHWg80zFdweemKcEoFq6AyE=
+X-Google-Smtp-Source: ABdhPJxjvVPL/hbo4sp5d8UNeHn7+/aj+pTxfFp3wyHR1MXqIFSw3iOzCKsi17s6o/H5cwzj3qPuTg==
+X-Received: by 2002:ac8:c0d:: with SMTP id k13mr4538302qti.136.1589561013697;
+        Fri, 15 May 2020 09:43:33 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id y140sm1951030qkb.127.2020.05.15.09.43.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 09:43:33 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 36B1540AFD; Fri, 15 May 2020 13:43:31 -0300 (-03)
+Date:   Fri, 15 May 2020 13:43:31 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH perf/core] perf intel-pt: Fix clang build failure in
+ intel_pt_synth_pebs_sample
+Message-ID: <20200515164331.GE9335@kernel.org>
+References: <20200513234738.GA21211@embeddedor>
+ <20200514131030.GL5583@kernel.org>
+ <20200514150601.GS4897@embeddedor>
+ <CAP-5=fWTCFx80Hd_97_4AxFV4KsRyYptLbQfw=XVw_j8i-EAyg@mail.gmail.com>
+ <20200514220934.GT4897@embeddedor>
+ <CAP-5=fV5URsHn+SpW8N4XjkKT1vt2T1Us5FsqaJsoOW0zn=OxQ@mail.gmail.com>
+ <20200515001025.GU4897@embeddedor>
+ <20200515164153.GD9335@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/0U0QBNx7JIUZLHm"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515104758.6934-4-Sergey.Semin@baikalelectronics.ru>
-X-Cookie: Avoid contact with eyes.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200515164153.GD9335@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Fri, May 15, 2020 at 01:41:53PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Thu, May 14, 2020 at 07:10:25PM -0500, Gustavo A. R. Silva escreveu:
+> > On Thu, May 14, 2020 at 03:46:05PM -0700, Ian Rogers wrote:
+> > > On Thu, May 14, 2020 at 3:04 PM Gustavo A. R. Silva
+> > > <gustavoars@kernel.org> wrote:
+> > 
+> > Yep. I just built linux-next --which contains all the flexible-array
+> > conversions-- with Clang --GCC doesn't catch this issue, not even GCC
+> > 10-- and I don't see any other issue like this.
+> > 
+> > I mean, I have run into these other two:
+> > 
+> > https://lore.kernel.org/lkml/20200505235205.GA18539@embeddedor/
+> > https://lore.kernel.org/lkml/20200508163826.GA768@embeddedor/
+> > 
+> > but those are due to the erroneous application of the sizeof operator
+> > to zero-length arrays.
+> > 
+> > > complicated stack allocation I suggested. It may be nice to save
+> > > cycles if code this pattern is widespread and the code hot.
+> > > 
+> > 
+> > Apparently, this is the only instace of this sort of issue in the whole
+> > codebase.
+> 
+> Adrian Hunter was not CCed, Adrian?
 
---/0U0QBNx7JIUZLHm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Gustavo, I've removed this from my tree from now till this gets
+resolved.
 
-On Fri, May 15, 2020 at 01:47:42PM +0300, Serge Semin wrote:
-> If DMAC register is left uncleared any further DMAless transfers
-> may cause the DMAC hardware handshaking interface getting activated.
-
-This and patch 4 look good as is but they don't apply against for-5.7
-due to context changes in -next, unfortunately everyone seems to have
-decided that now is the time to start working on this driver which makes
-combinations of new work and fixes awkward.  I'm going to apply these
-for 5.8 but it'd be good if you could send versions based on for-5.7 as
-well so I can apply there - I can sort out the conflicts with 5.8.
-
-
---/0U0QBNx7JIUZLHm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6+xloACgkQJNaLcl1U
-h9ABrwf/WQm+mOxb45Hxt0ho5+NLAIHIGJtDEbVnzaKIAHrJ76Kzbfpw1etZeWdL
-NFMGaUa7GJED/7kuBofBOtVn34ZIuNrtS0ljxoxka2Ajcz3nmXxshzzgC8PkiDMG
-sCDtGqBikWu9Yy/GqD7y5BfrZ279aadvlln4JTM0PCAILyQ39kps+aliMjXeHsdc
-UrSJjBUuMePJ9LDjKQ8vzzTmQkrxQ5rKYL7vvIFA6shq3Yn21unkO0UqFfNVRgSQ
-jdwUSiSYndO+lwk2aHH2jHmrwpZMsdiDGCtNX9VAn6D2lYdYmhNKmWPUF0BqeIp9
-5Zvi4BlaUwxZS+41vq5pOJaIEhH4BA==
-=rfwh
------END PGP SIGNATURE-----
-
---/0U0QBNx7JIUZLHm--
+- Arnaldo
