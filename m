@@ -2,164 +2,194 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C612BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9FA206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D196204EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="qlabrFSB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r8XOY0Tr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgEOLQ6 (ORCPT
+        id S1726112AbgEOLSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:16:58 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:13950 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbgEOLQn (ORCPT
+        Fri, 15 May 2020 07:18:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725986AbgEOLSM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:16:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589541403; x=1621077403;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=M8yQNnHZuVdT9r1/rS/M/SeMts6Jhu8mlf3UsJER9oM=;
-  b=qlabrFSBbBXQCPb9TeEVcHWcvyyb1dzLmUHYSiXWw02rlqsHzKX/F5Vv
-   XmqpIKIDDwWox9FAKmF9B34u+jczI2/VzHP0clzCsVHLg53rbA+r963OR
-   GGe1BdLynwOT27MVdiZ0/twDA+VYJ6MsbTJEE62f/iMnxXFeakorTdr6/
-   8f3kmruqeui7i0NlBbYXwoSLbfm2XG7sDcgOwHMVymxUvIYkaOmScHXk/
-   ujf/rZTTEPoj5W3hXZllVLwLH3Z1RC1yk77JtvHygQpYTqWlKVvpRwl+O
-   i94zi4DnSZ4BO9j1lbhPHHYG3AGIEtrvA+s37dx6VXC+CB4AEHnQJLptj
-   A==;
-IronPort-SDR: sxRN6AYyixy98jYK0pJgpAbKE0SS6Fq4rWaqrtp1X5uWuw7wugQBo9ITcaXDwvjShVQhh3PAjL
- aS7CX5Wlx/jlihLj3nnIcJlogL0NgUS6y2iN4bQGoVoHFwHZ5Z8Tx6pL13AUCg/EYCOobp9aMJ
- AJqeAp+34Qw4KFzokv6jYsDQjJGM6gowSfK85lzmyoS5p2QLP1Vfzhu9UziRbbx1EmVAhr/RB8
- 1F4Lzdtm/DWizK5dptepd2kRxw9pkmUNXWVJtipleE/abtsZmKZ/5pTcKYGozFAxkA28YPUp/f
- zPU=
-X-IronPort-AV: E=Sophos;i="5.73,395,1583218800"; 
-   d="scan'208";a="79770140"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 May 2020 04:16:42 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 15 May 2020 04:16:42 -0700
-Received: from cristi-P53.lan (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Fri, 15 May 2020 04:16:39 -0700
-From:   <cristian.birsan@microchip.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Cristian Birsan <cristian.birsan@microchip.com>
-Subject: [PATCH v2 6/7] usb: gadget: udc: atmel: update endpoint allocation for sam9x60
-Date:   Fri, 15 May 2020 14:16:30 +0300
-Message-ID: <20200515111631.31210-7-cristian.birsan@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200515111631.31210-1-cristian.birsan@microchip.com>
-References: <20200515111631.31210-1-cristian.birsan@microchip.com>
+        Fri, 15 May 2020 07:18:12 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD178C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 04:18:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=GIdcvyq2kE8gcpK88REzvVaaDlKMW6+iuNTGRrLXlfM=; b=r8XOY0TrePE63Xd3nIt4PCULew
+        TiMaMn+aZbqFsyUdhkgXv5WocqqUPzTm0jc4puEHqt1cT+SXpAtURJZOID/e1UZeqgEdM0LeH6HnD
+        4L7HpYpygIJQgySonfLMjOwUyqlIXJ9SYM2I4FuCNrag8ywztNJf+RarXO0X4tOp4D8Jm0d/K4ezC
+        tz/wPAb9kuiKmh2Gi98yT70fgAksoXvRGwz+ZhvxrLA88ZvN9mHDMpI30ygbBthOONcpNFnt0FV7T
+        xpRx5QXeG5X0bfy+VrRX8ba1SFez2QRy8N7Nrs9BdRndM9f/Yb839yrdU/KuFO8mTkk9lyMThp8Ht
+        4hA4XSMg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZYLQ-0006J2-15; Fri, 15 May 2020 11:17:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E5F9A3011F0;
+        Fri, 15 May 2020 13:17:32 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C582620267E65; Fri, 15 May 2020 13:17:32 +0200 (CEST)
+Date:   Fri, 15 May 2020 13:17:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Jirka Hladky <jhladky@redhat.com>, Phil Auld <pauld@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Douglas Shakshober <dshaks@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+Message-ID: <20200515111732.GS2957@hirez.programming.kicks-ass.net>
+References: <20200320163843.GD3818@techsingularity.net>
+ <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
+ <20200507155422.GD3758@techsingularity.net>
+ <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
+ <20200508092212.GE3758@techsingularity.net>
+ <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
+ <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
+ <20200513153023.GF3758@techsingularity.net>
+ <20200514153122.GE2978@hirez.programming.kicks-ass.net>
+ <20200515084740.GJ3758@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515084740.GJ3758@techsingularity.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+On Fri, May 15, 2020 at 09:47:40AM +0100, Mel Gorman wrote:
 
-The DPRAM memory from the USB High Speed Device Port (UDPHS) hardware
-block was increased. This patch updates the endpoint allocation for sam9x60
-to take advantage of this larger memory. At the same time the
-constraint to allocate the endpoints in order was lifted. To handle old
-and new hardware in the same driver the capabilities (caps) structure
-was extended.
+> However, the wakeups are so rapid that the wakeup
+> happens while the server is descheduling. That forces the waker to spin
+> on smp_cond_load_acquire for longer. In this case, it can be cheaper to
+> add the task to the rq->wake_list even if that potentially requires an IPI.
 
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+Right, I think Rik ran into that as well at some point. He wanted to
+make ->on_cpu do a hand-off, but simply queueing the wakeup on the prev
+cpu (which is currently in the middle of schedule()) should be an easier
+proposition.
+
+Maybe something like this untested thing... could explode most mighty,
+didn't thing too hard.
+
 ---
- drivers/usb/gadget/udc/atmel_usba_udc.c | 22 ++++++++++++++++++----
- drivers/usb/gadget/udc/atmel_usba_udc.h |  1 +
- 2 files changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index 2b1a0b6df0fe..ecd0fa9823bb 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -1066,12 +1066,14 @@ static struct usb_ep *atmel_usba_match_ep(struct usb_gadget *gadget,
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index fa6c19d38e82..c07b92a0ee5d 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2312,7 +2312,7 @@ static void wake_csd_func(void *info)
+ 	sched_ttwu_pending();
+ }
  
- 		case USB_ENDPOINT_XFER_ISOC:
- 			ep->fifo_size = 1024;
--			ep->nr_banks = 2;
-+			if (ep->udc->caps->ep_prealloc)
-+				ep->nr_banks = 2;
- 			break;
+-static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
++static void __ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
+ {
+ 	struct rq *rq = cpu_rq(cpu);
  
- 		case USB_ENDPOINT_XFER_BULK:
- 			ep->fifo_size = 512;
--			ep->nr_banks = 1;
-+			if (ep->udc->caps->ep_prealloc)
-+				ep->nr_banks = 1;
- 			break;
- 
- 		case USB_ENDPOINT_XFER_INT:
-@@ -1081,7 +1083,8 @@ static struct usb_ep *atmel_usba_match_ep(struct usb_gadget *gadget,
- 			else
- 				ep->fifo_size =
- 				    roundup_pow_of_two(le16_to_cpu(desc->wMaxPacketSize));
--			ep->nr_banks = 1;
-+			if (ep->udc->caps->ep_prealloc)
-+				ep->nr_banks = 1;
- 			break;
- 		}
- 
-@@ -2034,16 +2037,27 @@ static void at91sam9g45_pulse_bias(struct usba_udc *udc)
- 
- static const struct usba_udc_caps at91sam9rl_caps = {
- 	.toggle_bias = at91sam9rl_toggle_bias,
-+	.ep_prealloc = true,
- };
- 
- static const struct usba_udc_caps at91sam9g45_caps = {
- 	.pulse_bias = at91sam9g45_pulse_bias,
-+	.ep_prealloc = true,
-+};
+@@ -2354,6 +2354,17 @@ bool cpus_share_cache(int this_cpu, int that_cpu)
+ {
+ 	return per_cpu(sd_llc_id, this_cpu) == per_cpu(sd_llc_id, that_cpu);
+ }
 +
-+static const struct usba_udc_caps sama5d3_caps = {
-+	.ep_prealloc = true,
-+};
++static bool ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
++{
++	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
++		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
++		__ttwu_queue_remote(p, cpu, wake_flags);
++		return true;
++	}
 +
-+static const struct usba_udc_caps at91sam9x60_caps = {
-+	.ep_prealloc = false,
- };
++	return false;
++}
+ #endif /* CONFIG_SMP */
  
- static const struct of_device_id atmel_udc_dt_ids[] = {
- 	{ .compatible = "atmel,at91sam9rl-udc", .data = &at91sam9rl_caps },
- 	{ .compatible = "atmel,at91sam9g45-udc", .data = &at91sam9g45_caps },
--	{ .compatible = "atmel,sama5d3-udc" },
-+	{ .compatible = "atmel,sama5d3-udc", .data = &sama5d3_caps },
-+	{ .compatible = "microchip,sam9x60-udc", .data = &at91sam9x60_caps },
- 	{ /* sentinel */ }
- };
+ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
+@@ -2362,11 +2373,8 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
+ 	struct rq_flags rf;
  
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.h b/drivers/usb/gadget/udc/atmel_usba_udc.h
-index 1a0f77bf8d4f..f9239e200e7a 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.h
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.h
-@@ -305,6 +305,7 @@ struct usba_request {
- struct usba_udc_caps {
- 	void (*toggle_bias)(struct usba_udc *udc, int is_on);
- 	void (*pulse_bias)(struct usba_udc *udc);
-+	bool ep_prealloc;
- };
+ #if defined(CONFIG_SMP)
+-	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
+-		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
+-		ttwu_queue_remote(p, cpu, wake_flags);
++	if (ttwu_queue_remote(p, cpu, wake_flags))
+ 		return;
+-	}
+ #endif
  
- struct usba_udc {
--- 
-2.17.1
-
+ 	rq_lock(rq, &rf);
+@@ -2550,7 +2558,15 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 	if (p->on_rq && ttwu_remote(p, wake_flags))
+ 		goto unlock;
+ 
++	if (p->in_iowait) {
++		delayacct_blkio_end(p);
++		atomic_dec(&task_rq(p)->nr_iowait);
++	}
++
+ #ifdef CONFIG_SMP
++	p->sched_contributes_to_load = !!task_contributes_to_load(p);
++	p->state = TASK_WAKING;
++
+ 	/*
+ 	 * Ensure we load p->on_cpu _after_ p->on_rq, otherwise it would be
+ 	 * possible to, falsely, observe p->on_cpu == 0.
+@@ -2581,15 +2597,10 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 	 * This ensures that tasks getting woken will be fully ordered against
+ 	 * their previous state and preserve Program Order.
+ 	 */
+-	smp_cond_load_acquire(&p->on_cpu, !VAL);
+-
+-	p->sched_contributes_to_load = !!task_contributes_to_load(p);
+-	p->state = TASK_WAKING;
++	if (READ_ONCE(p->on_cpu) && __ttwu_queue_remote(p, cpu, wake_flags))
++		goto unlock;
+ 
+-	if (p->in_iowait) {
+-		delayacct_blkio_end(p);
+-		atomic_dec(&task_rq(p)->nr_iowait);
+-	}
++	smp_cond_load_acquire(&p->on_cpu, !VAL);
+ 
+ 	cpu = select_task_rq(p, p->wake_cpu, SD_BALANCE_WAKE, wake_flags);
+ 	if (task_cpu(p) != cpu) {
+@@ -2597,14 +2608,6 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 		psi_ttwu_dequeue(p);
+ 		set_task_cpu(p, cpu);
+ 	}
+-
+-#else /* CONFIG_SMP */
+-
+-	if (p->in_iowait) {
+-		delayacct_blkio_end(p);
+-		atomic_dec(&task_rq(p)->nr_iowait);
+-	}
+-
+ #endif /* CONFIG_SMP */
+ 
+ 	ttwu_queue(p, cpu, wake_flags);
