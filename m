@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA202C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74200C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCA220787
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9E12076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:17:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UqUPO/AS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="td/O+zfm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgEONRD (ORCPT
+        id S1726660AbgEONRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51224 "EHLO
+        Fri, 15 May 2020 09:17:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgEONRA (ORCPT
+        with ESMTP id S1726216AbgEONRA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 May 2020 09:17:00 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CBA5C061A0C;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6DCCC05BD09;
         Fri, 15 May 2020 06:17:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=VHXm1L+rObZHMg/ZFaxYy0B7In8iJsSQq6tf5Ix1Zow=; b=UqUPO/AS2C7nEDmWKnfBwxvMuZ
-        FRpK0JzrFPRL2ip0W/rlV4zc+quu0zhsUrETROgrrcdhcstdxlSvrVuc6TKNc00LFhLjFLzumzuAy
-        6Dnmk/NQ75lXIs//uCViZIXhm1wkb5XRsibNmobrMfdjrDIla4Ew5BeWk12LiITWkMRyVPzvJ6Hd9
-        zRdEjLk3Hdtf6ckuqUFfxObSB/iuajVnA2RbJ1HvZbibSIPWTsgVh98aOvTJBcSY3atAw0GEGFGDF
-        bUy3XL78CHh9tr4nt9PaD/zdQFzh3lQicCf+Zrg3Lyv1MU0B+8M3ReoV5w31s2CMKQuFV1NBuNXIm
-        Umkj+nnA==;
+        bh=n+nEZyido/DxHe/n1547nGNhqWH1ViJvKc/xC6MlKVQ=; b=td/O+zfmxpLo/MrXYYDpm9YR7t
+        DHh0UbDLqOSyVakWYeqflEpWUwsRRZdJdboX0UOxtO4uddNwi+pMLamucxbcA1AFOPrmXF1y0R7JO
+        +jMDHJtSLbo9tf2WAb2vCzkjxvIwJySsyPHvSh8sAkFcWWBwdXXwf5kpsZWAjvCSCxTC9N0hrZDsA
+        CT7PaPeBDfJXhvfv3V6xMoFqSxojbKbRfpnT4skSwzwcxb+UpknT/lcXRINb4oj9kGE+sjIbo3aGD
+        +5EqYIh7UnhrjdHwbXvknml0fhjzlKzl7Z8unM9AQvccJswAhHwd98RAJGEV/2QusLA8TDGBZtBUs
+        zLQnRpWQ==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZaCy-0005Rz-8b; Fri, 15 May 2020 13:17:00 +0000
+        id 1jZaCy-0005Tq-Dm; Fri, 15 May 2020 13:17:00 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 01/36] mm: Move PageDoubleMap bit
-Date:   Fri, 15 May 2020 06:16:21 -0700
-Message-Id: <20200515131656.12890-2-willy@infradead.org>
+Subject: [PATCH v4 03/36] mm: Allow hpages to be arbitrary order
+Date:   Fri, 15 May 2020 06:16:23 -0700
+Message-Id: <20200515131656.12890-4-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200515131656.12890-1-willy@infradead.org>
 References: <20200515131656.12890-1-willy@infradead.org>
@@ -57,31 +57,148 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-PG_private_2 is defined as being PF_ANY (applicable to tail pages
-as well as regular & head pages).  That means that the first tail
-page of a double-map page will appear to have Private2 set.  Use the
-Workingset bit instead which is defined as PF_HEAD so any attempt to
-access the Workingset bit on a tail page will redirect to the head page's
-Workingset bit.
+Remove the assumption in hpage_nr_pages() that compound pages are
+necessarily PMD sized.  Move the relevant parts of mm.h to before the
+include of huge_mm.h so we can use an inline function rather than a macro.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/page-flags.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/huge_mm.h |  5 +--
+ include/linux/mm.h      | 96 ++++++++++++++++++++---------------------
+ 2 files changed, 50 insertions(+), 51 deletions(-)
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 222f6f7b2bb3..de6e0696f55c 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -164,7 +164,7 @@ enum pageflags {
- 	PG_slob_free = PG_private,
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index cfbb0a87c5f0..6bec4b5b61e1 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -265,11 +265,10 @@ static inline spinlock_t *pud_trans_huge_lock(pud_t *pud,
+ 	else
+ 		return NULL;
+ }
++
+ static inline int hpage_nr_pages(struct page *page)
+ {
+-	if (unlikely(PageTransHuge(page)))
+-		return HPAGE_PMD_NR;
+-	return 1;
++	return compound_nr(page);
+ }
  
- 	/* Compound pages. Stored in first tail page's flags */
--	PG_double_map = PG_private_2,
-+	PG_double_map = PG_workingset,
+ struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 581e56275bc4..088acbda722d 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -671,6 +671,54 @@ int vma_is_stack_for_current(struct vm_area_struct *vma);
+ struct mmu_gather;
+ struct inode;
  
- 	/* non-lru isolated movable page */
- 	PG_isolated = PG_reclaim,
++static inline unsigned int compound_order(struct page *page)
++{
++	if (!PageHead(page))
++		return 0;
++	return page[1].compound_order;
++}
++
++static inline bool hpage_pincount_available(struct page *page)
++{
++	/*
++	 * Can the page->hpage_pinned_refcount field be used? That field is in
++	 * the 3rd page of the compound page, so the smallest (2-page) compound
++	 * pages cannot support it.
++	 */
++	page = compound_head(page);
++	return PageCompound(page) && compound_order(page) > 1;
++}
++
++static inline int compound_pincount(struct page *page)
++{
++	VM_BUG_ON_PAGE(!hpage_pincount_available(page), page);
++	page = compound_head(page);
++	return atomic_read(compound_pincount_ptr(page));
++}
++
++static inline void set_compound_order(struct page *page, unsigned int order)
++{
++	page[1].compound_order = order;
++}
++
++/* Returns the number of pages in this potentially compound page. */
++static inline unsigned long compound_nr(struct page *page)
++{
++	return 1UL << compound_order(page);
++}
++
++/* Returns the number of bytes in this potentially compound page. */
++static inline unsigned long page_size(struct page *page)
++{
++	return PAGE_SIZE << compound_order(page);
++}
++
++/* Returns the number of bits needed for the number of bytes in a page */
++static inline unsigned int page_shift(struct page *page)
++{
++	return PAGE_SHIFT + compound_order(page);
++}
++
+ /*
+  * FIXME: take this include out, include page-flags.h in
+  * files which need it (119 of them)
+@@ -875,54 +923,6 @@ static inline compound_page_dtor *get_compound_page_dtor(struct page *page)
+ 	return compound_page_dtors[page[1].compound_dtor];
+ }
+ 
+-static inline unsigned int compound_order(struct page *page)
+-{
+-	if (!PageHead(page))
+-		return 0;
+-	return page[1].compound_order;
+-}
+-
+-static inline bool hpage_pincount_available(struct page *page)
+-{
+-	/*
+-	 * Can the page->hpage_pinned_refcount field be used? That field is in
+-	 * the 3rd page of the compound page, so the smallest (2-page) compound
+-	 * pages cannot support it.
+-	 */
+-	page = compound_head(page);
+-	return PageCompound(page) && compound_order(page) > 1;
+-}
+-
+-static inline int compound_pincount(struct page *page)
+-{
+-	VM_BUG_ON_PAGE(!hpage_pincount_available(page), page);
+-	page = compound_head(page);
+-	return atomic_read(compound_pincount_ptr(page));
+-}
+-
+-static inline void set_compound_order(struct page *page, unsigned int order)
+-{
+-	page[1].compound_order = order;
+-}
+-
+-/* Returns the number of pages in this potentially compound page. */
+-static inline unsigned long compound_nr(struct page *page)
+-{
+-	return 1UL << compound_order(page);
+-}
+-
+-/* Returns the number of bytes in this potentially compound page. */
+-static inline unsigned long page_size(struct page *page)
+-{
+-	return PAGE_SIZE << compound_order(page);
+-}
+-
+-/* Returns the number of bits needed for the number of bytes in a page */
+-static inline unsigned int page_shift(struct page *page)
+-{
+-	return PAGE_SHIFT + compound_order(page);
+-}
+-
+ void free_compound_page(struct page *page);
+ 
+ #ifdef CONFIG_MMU
 -- 
 2.26.2
 
