@@ -2,130 +2,102 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 486ECC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7BB20787
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:25:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cXzxL1Ts"
+	by mail.kernel.org (Postfix) with ESMTP id 9A23F20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589534796;
+	bh=JONR1pyDiZUuVzDV4dMV5uAVGjvbIMtv5fbdNtZJQJI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zbAvKIczgQtx2nARxUHMljfVm1MdKwmBTDohNbiE0PGH340NCHMHzbBs8jEUZN+rQ
+	 KFKNNj80rRqRriW+7LjHjZTosbbLKlSWWI74aNKiiBGMHP3REsPLaPXcyiUeryWQ/X
+	 F+xEygF1hXKF6IXJCpnHoyNYc5sHlR1ixpg4wbk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgEOJZr (ORCPT
+        id S1728094AbgEOJ0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:25:47 -0400
-Received: from ozlabs.org ([203.11.71.1]:45893 "EHLO ozlabs.org"
+        Fri, 15 May 2020 05:26:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbgEOJZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:25:47 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727116AbgEOJ0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 05:26:35 -0400
+Received: from localhost (p5486CC07.dip0.t-ipconnect.de [84.134.204.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Njgq5ZcLz9sSF;
-        Fri, 15 May 2020 19:25:43 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589534745;
-        bh=muRLTUUOnYbHS5PIqo+UvMZCb0F7z3QuHuwqATdQsjY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cXzxL1TscSm0gRAqy2KIZOL2igmFAa9KmiNN0sKEH9T+raSu5iLJx70KhcCFOJo7b
-         SKYYyfzl4da5wQw0LHjWKMmPq/yuiXdqCaIogXvnPmfT02pPyn0/WsC3RIFMi5ep+6
-         d7uaq7VyMTmoh7WUvfuq+iYH4UMRU8h20gqHkHBEb5GG0ysSUprQpRs3wUih69E1Wz
-         1uf+d/tZjCRXpVvO5IsxzRiT78g8PpFRFzCoA9bUexIWcNnilQ20T+lEqfuERdd1Li
-         trtI9QWMWxp1lLyYnDJ4nkxFlP92Pej4vBQtnl9zV5Dzx+Pjz6oEqlj025IQJr1Vsa
-         DUjWm5qh2pUyA==
-Date:   Fri, 15 May 2020 19:25:41 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: linux-next: manual merge of the notifications tree with the vfs
- tree
-Message-ID: <20200515192541.41b263e9@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 53824206F1;
+        Fri, 15 May 2020 09:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589534795;
+        bh=JONR1pyDiZUuVzDV4dMV5uAVGjvbIMtv5fbdNtZJQJI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KXai6YkiZMm63/30RRwO6O6lX2sos3XjZi1OeX33TJi8uY9uz5zoDHc9rxPrUpVh1
+         UUd5IXcrHntKLeLmcELp+ER0FaptSqknwrifF6K/jdQHdh0/lVozMcaY5MVRF7XfVd
+         pNcJBZzF1n1Qtu2AdbgBEnPjlP345J+ZOoopxIG8=
+Date:   Fri, 15 May 2020 11:26:31 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        linus.walleij@linaro.org
+Subject: Re: [PATCH] i2c: at91: Restore pinctrl state if can't get scl/sda
+ gpios
+Message-ID: <20200515092631.GB2077@ninjato>
+References: <20200513111322.111114-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/vRB8DqTHPTLJVuIbUWj=jR4";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dc+cDN39EJAMEtIO"
+Content-Disposition: inline
+In-Reply-To: <20200513111322.111114-1-codrin.ciubotariu@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/vRB8DqTHPTLJVuIbUWj=jR4
-Content-Type: text/plain; charset=US-ASCII
+
+--dc+cDN39EJAMEtIO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Wed, May 13, 2020 at 02:13:22PM +0300, Codrin Ciubotariu wrote:
+> If there is a strict pinmux or if simply the scl/sda gpios are missing,
+> the pins will remain in gpio mode, compromizing the I2C bus.
+> Change to the default state of the pins before returning the error.
+>=20
+> Fixes: a53acc7ebf27 ("i2c: at91: Fix pinmux after devm_gpiod_get() for bu=
+s recovery")
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-Today's linux-next merge of the notifications tree got a conflict in:
+I squashed it into the other patch and applied it to for-current,
+thanks!
 
-  fs/mount.h
 
-between commit:
-
-  9f6c61f96f2d ("proc/mounts: add cursor")
-
-from the vfs tree and commit:
-
-  cd7109637b0b ("watch_queue: Implement mount topology and attribute change=
- notifications")
-
-from the notifications tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/mount.h
-index c7abb7b394d8,9a49ea1e7365..000000000000
---- a/fs/mount.h
-+++ b/fs/mount.h
-@@@ -158,4 -161,16 +165,18 @@@ static inline bool is_anon_ns(struct mn
-  	return ns->seq =3D=3D 0;
-  }
- =20
- +extern void mnt_cursor_del(struct mnt_namespace *ns, struct mount *cursor=
-);
-++
-+ #ifdef CONFIG_MOUNT_NOTIFICATIONS
-+ extern void notify_mount(struct mount *triggered,
-+ 			 struct mount *aux,
-+ 			 enum mount_notification_subtype subtype,
-+ 			 u32 info_flags);
-+ #else
-+ static inline void notify_mount(struct mount *triggered,
-+ 				struct mount *aux,
-+ 				enum mount_notification_subtype subtype,
-+ 				u32 info_flags)
-+ {
-+ }
-+ #endif
-
---Sig_/vRB8DqTHPTLJVuIbUWj=jR4
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--dc+cDN39EJAMEtIO
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6+YBUACgkQAVBC80lX
-0GyKYgf/VYfmeQnDJWjVMtojtpnAKXS38U7KlUREBn7Ok6croZHAoIjKI/gR8Lrm
-xLIaXcfCMmrJKS0XcUVcCyDLCnSoqt2JF7VfmPEy9vfPdBOOQt1wyZ6Z5eje1Ss7
-MvQBXBbSndEQS3cEY7rtWKfWmgiDBOQbq4MXRaKdmsFyBKY5Twib1LGyNUSCdSlI
-ra5i9q1vffXuoSdCUts3dHarwUjX0zCsgmgBmGOgTSFNeWFFNeE4dxBMl+Ma4Ss1
-aqQewcLptnBKnaSEsgc7dPhh53KWigSSreKGvmpNrumenCakF/mTK7zI27hbre+B
-jTlVnps+prSsYzcb5mnFH9ScyC6p9g==
-=oo3F
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6+YEcACgkQFA3kzBSg
+KbZIIw//RKnTmZzSi3ZieTQnZ64Pv7lEIn6QAM9FBzNk0Pzk8s5maVdQCzWq4/Ho
+CPO1Dk/R1qWQxikxvyKx9sfqVOIXVVLiNs9lYFmMkdQPoALrVvbQicwimZFyUjNO
+8zE1/LXvhLLU4UeP0oM+3OsD4v+5AvQ6igq84Etx2hfHO65w463NpP+tv6ut6q8R
+Zc8UVpJTRf9NGYtk8h3AvThMT+R0KNaEOe445HNLVi8bUg+3cPpDExOrdMJcwqRl
+QykdNi18hi05ATx+PqWDzSQIbUnLGVeEYQ/U3X14AJkfI+mJ0lFtWzK2RkOgUSbg
++m6JCs1/knFQOXE5hIc/S8RDX8Ags8uw1ztmcEvSQ4x8gSDtznWFHWkGo2g/2XeM
+ZkttSMuwfHGebvQwSSmHEJdfi4h5IHax0qgf6IjLYaygA0n9Am7FBij6SKVTecxB
+tgYroBOIX0FoJRvMxpF7TtIQQaK/IEPhotPt21ayT/worPk7Fj4pbBFBSBX9sPIg
+Ydf/8JvTivFgPv6vcT+KV6DxJ5KmWdyuGd3mzh8JnlvEvl5sL6powbU2z8/yPpaK
+2vBF2d1bdFy7kStu5McgvKROKCN+FVZBXOnNXOiHTYURQgpck1VqXuscl5xUkbci
+nzyNwMVQ48o5ptBOMmHMUSC1MTg5Mxyq+7B3x0ZipY2SmPXdk68=
+=Doda
 -----END PGP SIGNATURE-----
 
---Sig_/vRB8DqTHPTLJVuIbUWj=jR4--
+--dc+cDN39EJAMEtIO--
