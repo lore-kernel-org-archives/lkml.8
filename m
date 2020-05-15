@@ -2,227 +2,143 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDEBC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 544E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 042D42074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:38:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589542737;
-	bh=+S6mlhgbIwCKyftKptzsPmNaoU/0SlgMilrpE31kyiw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=mvIFP/plu+f4jMpKSzC3lu/20OWw/JmBeAw09x24cqKp7GCD3PRzTfnGMZdHq0wsz
-	 9lrLqmaKzsrrtgutzaJeBDCnxSrI9rLbDOSunKQ5BsFtCgKI8iAe5d9dSKc/JnbRC1
-	 TyDpVDTdwRUDeTHmgAhlOq40TZ094UdeqbNiRRJY=
+	by mail.kernel.org (Postfix) with ESMTP id 29701207C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgEOLi4 (ORCPT
+        id S1726213AbgEOLjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:38:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55986 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 07:39:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:54454 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgEOLiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:38:55 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0096B2065C;
-        Fri, 15 May 2020 11:38:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589542734;
-        bh=+S6mlhgbIwCKyftKptzsPmNaoU/0SlgMilrpE31kyiw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=r3jXPxZ9s8xL1hJJzYfSfII/OZKEJz2jTjEfyJYykW+sHhDzeVo4j+p+Due+naIqa
-         oeN9L7qn3DHdFydtEZXSaTvjboqUOkkIwXOBHmLOFCsBU6jXfYHTYT+ac2kC2l4BuW
-         ifIlnD8M7D4ccXe+VpvyZXiuC09h8/HOiWA/otq0=
-Message-ID: <61b1f19edcc349641b5383c2ac70cbf9a15ba4bd.camel@kernel.org>
-Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>,
-        Amir Goldstein <amir73il@gmail.com>
-Cc:     Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        fstests <fstests@vger.kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Date:   Fri, 15 May 2020 07:38:52 -0400
-In-Reply-To: <20200515111548.GA54598@suse.com>
-References: <20200514111453.GA99187@suse.com>
-         <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
-         <20200514124845.GA12559@suse.com>
-         <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
-         <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
-         <20200515111548.GA54598@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        id S1726046AbgEOLjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:39:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15873D6E;
+        Fri, 15 May 2020 04:39:47 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.24.119])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EFB3B3F305;
+        Fri, 15 May 2020 04:39:44 -0700 (PDT)
+Date:   Fri, 15 May 2020 12:39:42 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        harb@amperecomputing.com
+Subject: Re: [PATCH v3 4/7] firmware: smccc: Drop smccc_version enum and use
+ ARM_SMCCC_VERSION_1_x instead
+Message-ID: <20200515113942.GD67718@C02TD0UTHF1T.local>
+References: <20200506164411.3284-1-sudeep.holla@arm.com>
+ <20200506164411.3284-5-sudeep.holla@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506164411.3284-5-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-15 at 12:15 +0100, Luis Henriques wrote:
-> On Fri, May 15, 2020 at 09:42:24AM +0300, Amir Goldstein wrote:
-> > +CC: fstests
-> > 
-> > On Thu, May 14, 2020 at 4:15 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > > On Thu, 2020-05-14 at 13:48 +0100, Luis Henriques wrote:
-> > > > On Thu, May 14, 2020 at 08:10:09AM -0400, Jeff Layton wrote:
-> > > > > On Thu, 2020-05-14 at 12:14 +0100, Luis Henriques wrote:
-> > > > > > Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
-> > > > > > a file handle to dentry"), this fixes another corner case with
-> > > > > > name_to_handle_at/open_by_handle_at.  The issue has been detected by
-> > > > > > xfstest generic/467, when doing:
-> > > > > > 
-> > > > > >  - name_to_handle_at("/cephfs/myfile")
-> > > > > >  - open("/cephfs/myfile")
-> > > > > >  - unlink("/cephfs/myfile")
-> > > > > >  - open_by_handle_at()
-> > > > > > 
-> > > > > > The call to open_by_handle_at should not fail because the file still
-> > > > > > exists and we do have a valid handle to it.
-> > > > > > 
-> > > > > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> > > > > > ---
-> > > > > >  fs/ceph/export.c | 13 +++++++++++--
-> > > > > >  1 file changed, 11 insertions(+), 2 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/fs/ceph/export.c b/fs/ceph/export.c
-> > > > > > index 79dc06881e78..8556df9d94d0 100644
-> > > > > > --- a/fs/ceph/export.c
-> > > > > > +++ b/fs/ceph/export.c
-> > > > > > @@ -171,12 +171,21 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
-> > > > > > 
-> > > > > >  static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
-> > > > > >  {
-> > > > > > + struct ceph_inode_info *ci;
-> > > > > >   struct inode *inode = __lookup_inode(sb, ino);
-> > > > > > +
-> > > > > >   if (IS_ERR(inode))
-> > > > > >           return ERR_CAST(inode);
-> > > > > >   if (inode->i_nlink == 0) {
-> > > > > > -         iput(inode);
-> > > > > > -         return ERR_PTR(-ESTALE);
-> > > > > > +         bool is_open;
-> > > > > > +         ci = ceph_inode(inode);
-> > > > > > +         spin_lock(&ci->i_ceph_lock);
-> > > > > > +         is_open = __ceph_is_file_opened(ci);
-> > > > > > +         spin_unlock(&ci->i_ceph_lock);
-> > > > > > +         if (!is_open) {
-> > > > > > +                 iput(inode);
-> > > > > > +                 return ERR_PTR(-ESTALE);
-> > > > > > +         }
-> > > > > >   }
-> > > > > >   return d_obtain_alias(inode);
-> > > > > >  }
-> > > > > 
-> > > > > Thanks Luis. Out of curiousity, is there any reason we shouldn't ignore
-> > > > > the i_nlink value here? Does anything obviously break if we do?
-> > > > 
-> > > > Yes, the scenario described in commit 03f219041fdb is still valid, which
-> > > > is basically the same but without the extra open(2):
-> > > > 
-> > > >   - name_to_handle_at("/cephfs/myfile")
-> > > >   - unlink("/cephfs/myfile")
-> > > >   - open_by_handle_at()
-> > > > 
-> > > 
-> > > Ok, I guess we end up doing some delayed cleanup, and that allows the
-> > > inode to be found in that situation.
-> > > 
-> > > > The open_by_handle_at man page isn't really clear about these 2 scenarios,
-> > > > but generic/426 will fail if -ESTALE isn't returned.  Want me to add a
-> > > > comment to the code, describing these 2 scenarios?
-> > > > 
-> > > 
-> > > (cc'ing Amir since he added this test)
-> > > 
-> > > I don't think there is any hard requirement that open_by_handle_at
-> > > should fail in that situation. It generally does for most filesystems
-> > > due to the way they handle cl794798fa xfsqa: test open_by_handle() on unlinked and freed inode clusters
-> > eaning up unlinked inodes, but I don't
-> > > think it's technically illegal to allow the inode to still be found. If
-> > > the caller cares about whether it has been unlinked it can always test
-> > > i_nlink itself.
-> > > 
-> > > Amir, is this required for some reason that I'm not aware of?
-> > 
-> > Hi Jeff,
-> > 
-> > The origin of this test is in fstests commit:
-> > 794798fa xfsqa: test open_by_handle() on unlinked and freed inode clusters
-> > 
-> > It was introduced to catch an xfs bug, so this behavior is the expectation
-> > of xfs filesystem, but note that it is not a general expectation to fail
-> > open_by_handle() after unlink(), it is an expectation to fail open_by_handle()
-> > after unlink() + sync() + drop_caches.
+On Wed, May 06, 2020 at 05:44:08PM +0100, Sudeep Holla wrote:
+> Instead of maintaining 2 sets of enums/macros for tracking SMCCC version,
+> let us drop smccc_version enum and use ARM_SMCCC_VERSION_1_x directly
+> instead.
 > 
-> Yes, sorry I should have mentioned the sync+drop_caches in the
-> description.
+> This is in preparation to drop smccc_version here and move it separately
+> under drivers/firmware/smccc.
 > 
-> > I have later converted the test to generic, because I needed to check the
-> > same expectation for overlayfs use case, which is:
-> > The original inode is always there (in lower layer), unlink creates a whiteout
-> > mark and open_by_handle should treat that as ESTALE, otherwise the
-> > unlinked files would be accessible to nfs clients forever.
-> > 
+> Reviewed-by: Steven Price <steven.price@arm.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-Ok, that makes sense. 
-
-The situation with Ceph is a bit different I think. I suspect that we're
-cleaning the inode out of the client's caches after drop_caches, but
-then we end up issuing a lookup by inode number to the MDS and it
-returns an inode that it may be in the process of purging.
-
-> > 
-> > In overlayfs, we handle the open file case by returning a dentry only
-> > in case the inode with deletion mark in question is already in inode cache,
-> > but we take care not to populate inode cache with the check.
-> > It is easier, because we do not need to get inode into cache for checking
-> > the delete marker.
-> > 
-> > Maybe you could instead check in __fh_to_dentry():
-> > 
-> >     if (inode->i_nlink == 0 && atomic_read(&inode->i_count) == 1)) {
-> >         iput(inode);
-> >         return ERR_PTR(-ESTALE);
-> >     }
-> > 
-> > The above is untested, so I don't know if it's enough to pass generic/426.
-> 
-> Yes, I can confirm that this also fixes the issue -- both tests pass.
-> __ceph_is_file_opened() uses some internal counters per inode, incremented
-> each time a file is open in a specific mode.  The problem is that these
-> counters require some extra locking (maybe they should be atomic_t?), so
-> you're suggestion is probably better.
-> 
-> > Note that generic/467 also checks the same behavior for rmdir().
-> 
-> Yeah, but the only test-case failing with cephfs is the one described
-> above (i.e. "open_by_handle -dkr ...").
-> 
-> > If you decide that ceph does not need to comply to this behavior,
-> > then we probably need to whitelist/blocklist the filesystems that
-> > want to test this behavior, which will be a shame.
-> 
-> Unless Jeff has any objection, I'm happy sending v2, simplifying the patch
-> to use your simpler solution (and mentioning sync+drop_caches in the
-> commit message).
-> 
-
-The real question I have is whether this is truly a client-side issue,
-or if the MDS is satisfying lookup-by-ino requests with inodes that just
-haven't yet been fully purged. If so, then the right fix may be in the
-MDS.
-
-Can we determine that one way or the other?
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
 Thanks,
--- 
-Jeff Layton <jlayton@kernel.org>
+Mark.
 
+> ---
+>  arch/arm64/kernel/paravirt.c | 2 +-
+>  drivers/firmware/psci/psci.c | 8 ++++----
+>  include/linux/psci.h         | 7 +------
+>  3 files changed, 6 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
+> index 1ef702b0be2d..295d66490584 100644
+> --- a/arch/arm64/kernel/paravirt.c
+> +++ b/arch/arm64/kernel/paravirt.c
+> @@ -120,7 +120,7 @@ static bool has_pv_steal_clock(void)
+>  	struct arm_smccc_res res;
+>  
+>  	/* To detect the presence of PV time support we require SMCCC 1.1+ */
+> -	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
+> +	if (arm_smccc_1_1_get_conduit() == SMCCC_CONDUIT_NONE)
+>  		return false;
+>  
+>  	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
+> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> index 2937d44b5df4..6a56d7196697 100644
+> --- a/drivers/firmware/psci/psci.c
+> +++ b/drivers/firmware/psci/psci.c
+> @@ -54,12 +54,12 @@ bool psci_tos_resident_on(int cpu)
+>  
+>  struct psci_operations psci_ops = {
+>  	.conduit = SMCCC_CONDUIT_NONE,
+> -	.smccc_version = SMCCC_VERSION_1_0,
+> +	.smccc_version = ARM_SMCCC_VERSION_1_0,
+>  };
+>  
+>  enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void)
+>  {
+> -	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
+> +	if (psci_ops.smccc_version < ARM_SMCCC_VERSION_1_1)
+>  		return SMCCC_CONDUIT_NONE;
+>  
+>  	return psci_ops.conduit;
+> @@ -411,8 +411,8 @@ static void __init psci_init_smccc(void)
+>  	if (feature != PSCI_RET_NOT_SUPPORTED) {
+>  		u32 ret;
+>  		ret = invoke_psci_fn(ARM_SMCCC_VERSION_FUNC_ID, 0, 0, 0);
+> -		if (ret == ARM_SMCCC_VERSION_1_1) {
+> -			psci_ops.smccc_version = SMCCC_VERSION_1_1;
+> +		if (ret >= ARM_SMCCC_VERSION_1_1) {
+> +			psci_ops.smccc_version = ret;
+>  			ver = ret;
+>  		}
+>  	}
+> diff --git a/include/linux/psci.h b/include/linux/psci.h
+> index a67712b73b6c..29bd0671e5bb 100644
+> --- a/include/linux/psci.h
+> +++ b/include/linux/psci.h
+> @@ -21,11 +21,6 @@ bool psci_power_state_is_valid(u32 state);
+>  int psci_set_osi_mode(void);
+>  bool psci_has_osi_support(void);
+>  
+> -enum smccc_version {
+> -	SMCCC_VERSION_1_0,
+> -	SMCCC_VERSION_1_1,
+> -};
+> -
+>  struct psci_operations {
+>  	u32 (*get_version)(void);
+>  	int (*cpu_suspend)(u32 state, unsigned long entry_point);
+> @@ -36,7 +31,7 @@ struct psci_operations {
+>  			unsigned long lowest_affinity_level);
+>  	int (*migrate_info_type)(void);
+>  	enum arm_smccc_conduit conduit;
+> -	enum smccc_version smccc_version;
+> +	u32 smccc_version;
+>  };
+>  
+>  extern struct psci_operations psci_ops;
+> -- 
+> 2.17.1
+> 
