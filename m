@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B5CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B06C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75F5A20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B780720709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:18:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bThR5Xdc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sdW8qN5S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgEONSM (ORCPT
+        id S1727918AbgEONSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51268 "EHLO
+        Fri, 15 May 2020 09:18:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgEONRD (ORCPT
+        with ESMTP id S1726532AbgEONRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 May 2020 09:17:03 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD9BC061A0C;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47FB8C05BD16;
         Fri, 15 May 2020 06:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=7jF/5Wz0vEdYXDOMS0hCwx2KuSkqA3em8Ujbgxg5dVM=; b=bThR5XdcGlFQIv9J5sxkcNpxLe
-        3bVHB29orPrx+KmFcA/Ab8Ls5Trsf8Y1fG/Oug3dqYaKmpXnUi3RLY8q4THZGctwPj5rk/VYg1BNc
-        ZbE9OKHL9jgbu+6GmTAVBhDy0SjKKxTrm9vEK8L0Dl3xYMd8ob8x0ZTXWIkFGEtecGDTbh0JXRqBL
-        NNz3YIiJW8Kzm5bL+garMuDv5MSov9vdW9w/zAzdAWb23oRmQejaUzni2VOFkwtZKan+8QBAsyFjf
-        T+TAH6E0gtEfk9LHFkQvOECH4MPoGGvVo32a93kRagAi3pufRGPbC9XVq2Hkw1YJokt7seva3rOU5
-        TckdIrOg==;
+        bh=p4lv0+UmHnq6RBjJImhnJUw/ZMfw21W2VRJ0b1bCXuY=; b=sdW8qN5So8cJXAzWdPawX/KqO4
+        NC9n6+aVddyFi1llwITFS6OvPB/oFzyVetFDa0is5DugdChYKM/6RsjpXxK7HEecJfYXDtBYmtYHZ
+        4ZVJQupg5T1Iap6Yb/K0Qh7RRH35GlaRK+/nQkTpUmy3gT5z+qFb7htPJqjhfZpp5ldgrVvCJqez4
+        PDwhwMgqLQhkivacvTdoNazVglQD0u9kNWen4w7rqu7S6IYHZxwf163UnWxTcE7sajpQ+B69ehpCX
+        AuEfSHzvj0YqVdCK5M98/W5zwTFGA5Fun7yhBRX6HJykToXUW3IjZm2cM11+UNM4OvuF5cZnU88C2
+        AHMtl14A==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZaD0-0005jB-4C; Fri, 15 May 2020 13:17:02 +0000
+        id 1jZaCz-0005hF-Sl; Fri, 15 May 2020 13:17:01 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 24/36] mm: Remove page fault assumption of compound page size
-Date:   Fri, 15 May 2020 06:16:44 -0700
-Message-Id: <20200515131656.12890-25-willy@infradead.org>
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH v4 21/36] mm: Add __page_cache_alloc_order
+Date:   Fri, 15 May 2020 06:16:41 -0700
+Message-Id: <20200515131656.12890-22-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200515131656.12890-1-willy@infradead.org>
 References: <20200515131656.12890-1-willy@infradead.org>
@@ -57,36 +58,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-A compound page in the page cache will not necessarily be of PMD size,
-so check explicitly.
+This new function allows page cache pages to be allocated that are
+larger than an order-0 page.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- mm/memory.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/linux/pagemap.h | 24 +++++++++++++++++++++---
+ mm/filemap.c            | 12 ++++++++----
+ 2 files changed, 29 insertions(+), 7 deletions(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index f703fe8c8346..d68ce428ddd2 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3549,13 +3549,14 @@ static vm_fault_t do_set_pmd(struct vm_fault *vmf, struct page *page)
- 	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
- 	pmd_t entry;
- 	int i;
--	vm_fault_t ret;
-+	vm_fault_t ret = VM_FAULT_FALLBACK;
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index c75d7fb7ccbc..97f36ea16116 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -239,15 +239,33 @@ static inline int page_cache_add_speculative(struct page *page, int count)
+ 	return __page_cache_add_speculative(page, count);
+ }
  
- 	if (!transhuge_vma_suitable(vma, haddr))
--		return VM_FAULT_FALLBACK;
-+		return ret;
++static inline gfp_t thp_gfpmask(gfp_t gfp)
++{
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++	/* We'd rather allocate smaller pages than stall a page fault */
++	gfp |= GFP_TRANSHUGE_LIGHT;
++	gfp &= ~__GFP_DIRECT_RECLAIM;
++#endif
++	return gfp;
++}
++
+ #ifdef CONFIG_NUMA
+-extern struct page *__page_cache_alloc(gfp_t gfp);
++extern struct page *__page_cache_alloc_order(gfp_t gfp, unsigned int order);
+ #else
+-static inline struct page *__page_cache_alloc(gfp_t gfp)
++static inline
++struct page *__page_cache_alloc_order(gfp_t gfp, unsigned int order)
+ {
+-	return alloc_pages(gfp, 0);
++	if (order == 0)
++		return alloc_pages(gfp, 0);
++	return prep_transhuge_page(alloc_pages(thp_gfpmask(gfp), order));
+ }
+ #endif
  
--	ret = VM_FAULT_FALLBACK;
- 	page = compound_head(page);
-+	if (page_order(page) != HPAGE_PMD_ORDER)
-+		return ret;
++static inline struct page *__page_cache_alloc(gfp_t gfp)
++{
++	return __page_cache_alloc_order(gfp, 0);
++}
++
+ static inline struct page *page_cache_alloc(struct address_space *x)
+ {
+ 	return __page_cache_alloc(mapping_gfp_mask(x));
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 23a051a7ef0f..9abba062973a 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -941,24 +941,28 @@ int add_to_page_cache_lru(struct page *page, struct address_space *mapping,
+ EXPORT_SYMBOL_GPL(add_to_page_cache_lru);
  
- 	/*
- 	 * Archs like ppc64 need additonal space to store information
+ #ifdef CONFIG_NUMA
+-struct page *__page_cache_alloc(gfp_t gfp)
++struct page *__page_cache_alloc_order(gfp_t gfp, unsigned int order)
+ {
+ 	int n;
+ 	struct page *page;
+ 
++	if (order > 0)
++		gfp = thp_gfpmask(gfp);
++
+ 	if (cpuset_do_page_mem_spread()) {
+ 		unsigned int cpuset_mems_cookie;
+ 		do {
+ 			cpuset_mems_cookie = read_mems_allowed_begin();
+ 			n = cpuset_mem_spread_node();
+-			page = __alloc_pages_node(n, gfp, 0);
++			page = __alloc_pages_node(n, gfp, order);
++			prep_transhuge_page(page);
+ 		} while (!page && read_mems_allowed_retry(cpuset_mems_cookie));
+ 
+ 		return page;
+ 	}
+-	return alloc_pages(gfp, 0);
++	return prep_transhuge_page(alloc_pages(gfp, order));
+ }
+-EXPORT_SYMBOL(__page_cache_alloc);
++EXPORT_SYMBOL(__page_cache_alloc_order);
+ #endif
+ 
+ /*
 -- 
 2.26.2
 
