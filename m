@@ -2,169 +2,129 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EC2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D743BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6865A20758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FFD20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgEOPSz (ORCPT
+        id S1726786AbgEOPT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:18:55 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:59415 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgEOPSz (ORCPT
+        Fri, 15 May 2020 11:19:59 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37898 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgEOPT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:18:55 -0400
-Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04FFI6fi099445;
-        Sat, 16 May 2020 00:18:06 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp);
- Sat, 16 May 2020 00:18:06 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04FFI5l1099429
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sat, 16 May 2020 00:18:06 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: linux-next boot error: general protection fault in
- tomoyo_get_local_path
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-References: <0000000000002f0c7505a5b0e04c@google.com>
-Cc:     syzbot <syzbot+c1af344512918c61362c@syzkaller.appspotmail.com>,
-        jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, linux-security-module@vger.kernel.org,
-        serge@hallyn.com, sfr@canb.auug.org.au,
-        syzkaller-bugs@googlegroups.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <c3461e26-1407-2262-c709-dac0df3da2d0@i-love.sakura.ne.jp>
-Date:   Sat, 16 May 2020 00:18:00 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 15 May 2020 11:19:58 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 534A98029EC9;
+        Fri, 15 May 2020 15:19:55 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id pnymTfqmVuML; Fri, 15 May 2020 18:19:51 +0300 (MSK)
+Date:   Fri, 15 May 2020 18:19:48 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Long Cheng <long.cheng@mediatek.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        <linux-mips@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/4] serial: 8250_dw: Fix common clocks usage race
+ condition
+Message-ID: <20200515151948.264q2uktwv6xjgle@mobilestation>
+References: <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506233136.11842-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506233136.11842-5-Sergey.Semin@baikalelectronics.ru>
+ <20200515141046.GF1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <0000000000002f0c7505a5b0e04c@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200515141046.GF1634618@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is
-
-        if (sb->s_magic == PROC_SUPER_MAGIC && *pos == '/') {
-                char *ep;
-                const pid_t pid = (pid_t) simple_strtoul(pos + 1, &ep, 10);
-                struct pid_namespace *proc_pidns = proc_pid_ns(d_inode(dentry)); // <= here
-
-                if (*ep == '/' && pid && pid ==
-                    task_tgid_nr_ns(current, proc_pidns)) {
-
-which was added by commit c59f415a7cb6e1e1 ("Use proc_pid_ns() to get pid_namespace from the proc superblock").
-
-@@ -161,9 +162,10 @@ static char *tomoyo_get_local_path(struct dentry *dentry, char * const buffer,
-        if (sb->s_magic == PROC_SUPER_MAGIC && *pos == '/') {
-                char *ep;
-                const pid_t pid = (pid_t) simple_strtoul(pos + 1, &ep, 10);
-+               struct pid_namespace *proc_pidns = proc_pid_ns(d_inode(dentry));
-
-                if (*ep == '/' && pid && pid ==
--                   task_tgid_nr_ns(current, sb->s_fs_info)) {
-+                   task_tgid_nr_ns(current, proc_pidns)) {
-                        pos = ep - 5;
-                        if (pos < buffer)
-                                goto out;
-
-Alexey and Eric, any clue?
-
-On 2020/05/15 23:46, syzbot wrote:
-> Hello,
+On Fri, May 15, 2020 at 05:10:46PM +0300, Andy Shevchenko wrote:
+> On Thu, May 07, 2020 at 02:31:35AM +0300, Serge Semin wrote:
+> > The race condition may happen if the UART reference clock is shared with
+> > some other device (on Baikal-T1 SoC it's another DW UART port). In this
+> > case if that device changes the clock rate while serial console is using
+> > it the DW 8250 UART port might not only end up with an invalid uartclk
+> > value saved, but may also experience a distorted output data since
+> > baud-clock could have been changed. In order to fix this lets at least
+> > try to adjust the 8250 port setting like UART clock rate in case if the
+> > reference clock rate change is discovered. The driver will call the new
+> > method to update 8250 UART port clock rate settings. It's done by means of
+> > the clock event notifier registered at the port startup and unregistered
+> > in the shutdown callback method.
 > 
-> syzbot found the following crash on:
+> I'm wondering if clock framework itself can provide such a notifier?
 > 
-> HEAD commit:    bdecf38f Add linux-next specific files for 20200515
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=155a43b2100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=27a5e30c87a59937
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c1af344512918c61362c
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > Note 1. In order to avoid deadlocks we had to execute the UART port update
+> > method in a dedicated deferred work. This is due to (in my opinion
+> > redundant) the clock update implemented in the dw8250_set_termios()
+> > method.
 > 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+c1af344512918c61362c@syzkaller.appspotmail.com
+> So, and how you propose to update the clock when ->set_termios() is called?
+
+First of all If you are worried about the current implementation, please don't,
+it still updates the clock in set_termios (please see the set_termios
+code). The method hasn't changed much and does the updating the same way it did
+before.
+
+Secondly, 8250 driver should be using the same reference clock as it is
+pre-defined by the platform with no change. The baud rate updates are supposed to
+be performed by the divider embedded into the 8250 controller, otherwise the
+divisor functionality is left completely unused. If a platform engineer needs to
+speed the uart up, the ref clock rate can be tuned by for instance the
+"assigned-clock-rates" property.
+
 > 
-> general protection fault, probably for non-canonical address 0xdffffc0000000005: 0000 [#1] PREEMPT SMP KASAN
-> KASAN: null-ptr-deref in range [0x0000000000000028-0x000000000000002f]
-> CPU: 0 PID: 6698 Comm: sshd Not tainted 5.7.0-rc5-next-20200515-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:tomoyo_get_local_path+0x450/0x800 security/tomoyo/realpath.c:165
-> Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 b4 03 00 00 48 b8 00 00 00 00 00 fc ff df 4d 8b 7f 60 49 8d 7f 28 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 87 03 00 00 48 b8 00 00 00 00 00 fc ff df 4d 8b
-> RSP: 0018:ffffc900063d7450 EFLAGS: 00010206
-> RAX: dffffc0000000000 RBX: ffff88809975c000 RCX: ffffffff8363deda
-> RDX: 0000000000000005 RSI: ffffffff8363dee8 RDI: 0000000000000028
-> RBP: 1ffff92000c7ae8b R08: ffff8880a47644c0 R09: fffffbfff155a0a2
-> R10: ffffffff8aad050f R11: fffffbfff155a0a1 R12: ffff88809df3cfea
-> R13: ffff88809df3c000 R14: 0000000000001a2a R15: 0000000000000000
-> FS:  00007efe13ce28c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000055e78cf578f5 CR3: 00000000987ed000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  tomoyo_realpath_from_path+0x393/0x620 security/tomoyo/realpath.c:282
->  tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
->  tomoyo_path_number_perm+0x1c2/0x4d0 security/tomoyo/file.c:723
->  tomoyo_path_mknod+0x10d/0x190 security/tomoyo/tomoyo.c:246
->  security_path_mknod+0x116/0x180 security/security.c:1072
->  may_o_create fs/namei.c:2905 [inline]
->  lookup_open+0x5ae/0x1320 fs/namei.c:3046
->  open_last_lookups fs/namei.c:3155 [inline]
->  path_openat+0x93c/0x27f0 fs/namei.c:3343
->  do_filp_open+0x192/0x260 fs/namei.c:3373
->  do_sys_openat2+0x585/0x7d0 fs/open.c:1179
->  do_sys_open+0xc3/0x140 fs/open.c:1195
->  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> RIP: 0033:0x7efe11e4b6f0
-> Code: 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 83 3d 19 30 2c 00 00 75 10 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 fe 9d 01 00 48 89 04 24
-> RSP: 002b:00007ffc3d0894d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-> RAX: ffffffffffffffda RBX: 000055e78f0bc110 RCX: 00007efe11e4b6f0
-> RDX: 00000000000001b6 RSI: 0000000000000241 RDI: 000055e78cf578f5
-> RBP: 0000000000000004 R08: 0000000000000004 R09: 0000000000000001
-> R10: 0000000000000240 R11: 0000000000000246 R12: 000055e78cf2851e
-> R13: 0000000000000001 R14: 0000000000000000 R15: 0000000000000000
-> Modules linked in:
-> ---[ end trace 0a58064de06d50f4 ]---
-> RIP: 0010:tomoyo_get_local_path+0x450/0x800 security/tomoyo/realpath.c:165
-> Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 b4 03 00 00 48 b8 00 00 00 00 00 fc ff df 4d 8b 7f 60 49 8d 7f 28 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 87 03 00 00 48 b8 00 00 00 00 00 fc ff df 4d 8b
-> RSP: 0018:ffffc900063d7450 EFLAGS: 00010206
-> RAX: dffffc0000000000 RBX: ffff88809975c000 RCX: ffffffff8363deda
-> RDX: 0000000000000005 RSI: ffffffff8363dee8 RDI: 0000000000000028
-> RBP: 1ffff92000c7ae8b R08: ffff8880a47644c0 R09: fffffbfff155a0a2
-> R10: ffffffff8aad050f R11: fffffbfff155a0a1 R12: ffff88809df3cfea
-> R13: ffff88809df3c000 R14: 0000000000001a2a R15: 0000000000000000
-> FS:  00007efe13ce28c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000055dfe16c15f8 CR3: 00000000987ed000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Note 2. Before the ref clock is manually changed by the custom
+> > set_termios() function we swap the port uartclk value with new rate
+> > adjusted to be suitable for the requested baud. It is necessary in
+> > order to effectively disable a functionality of the ref clock events
+> > handler for the current UART port, since uartclk update will be done
+> > a bit further in the generic serial8250_do_set_termios() function.
+> 
+> ...
+> 
+> > +	struct notifier_block	clk_notifier;
+> > +	struct work_struct	clk_work;
+> 
+> Oh, this seems too much.
+> Perhaps, the compatible based quirk with your initial approach is much better for time being.
+
+It's already in 8250_dw, useful not for a single platform and won't hurt any
+other one. So I'll leave it here and wait for the Greg feedback.
+
+-Sergey
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 > 
 > 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-
