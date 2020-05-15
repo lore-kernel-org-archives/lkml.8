@@ -4,23 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B935C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0235C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E61D207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 790AF20759
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgEOOA1 (ORCPT
+        id S1726504AbgEOOAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:00:27 -0400
-Received: from 8bytes.org ([81.169.241.247]:43292 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgEOOA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:00:27 -0400
+        Fri, 15 May 2020 10:00:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726345AbgEOOA3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 10:00:29 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAFB1C061A0C;
+        Fri, 15 May 2020 07:00:28 -0700 (PDT)
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 4A493261; Fri, 15 May 2020 16:00:25 +0200 (CEST)
+        id 28808457; Fri, 15 May 2020 16:00:26 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
@@ -35,9 +39,9 @@ Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
         Joerg Roedel <jroedel@suse.de>, joro@8bytes.org,
         linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         linux-arch@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH v3 1/7] mm: Add functions to track page directory modifications
-Date:   Fri, 15 May 2020 16:00:17 +0200
-Message-Id: <20200515140023.25469-2-joro@8bytes.org>
+Subject: [PATCH v3 5/7] x86/mm/32: Implement arch_sync_kernel_mappings()
+Date:   Fri, 15 May 2020 16:00:21 +0200
+Message-Id: <20200515140023.25469-6-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200515140023.25469-1-joro@8bytes.org>
 References: <20200515140023.25469-1-joro@8bytes.org>
@@ -48,141 +52,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Add page-table allocation functions which will keep track of changed
-directory entries. They are needed for new PGD, P4D, PUD, and PMD
-entries and will be used in vmalloc and ioremap code to decide whether
-any changes in the kernel mappings need to be synchronized between
-page-tables in the system.
+Implement the function to sync changes in vmalloc and ioremap ranges
+to all page-tables.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Acked-by: Andy Lutomirski <luto@kernel.org>
 ---
- include/asm-generic/5level-fixup.h |  5 ++--
- include/asm-generic/pgtable.h      | 23 +++++++++++++++
- include/linux/mm.h                 | 46 ++++++++++++++++++++++++++++++
- 3 files changed, 72 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/pgtable-2level_types.h |  2 ++
+ arch/x86/include/asm/pgtable-3level_types.h |  2 ++
+ arch/x86/mm/fault.c                         | 25 +++++++++++++--------
+ 3 files changed, 20 insertions(+), 9 deletions(-)
 
-diff --git a/include/asm-generic/5level-fixup.h b/include/asm-generic/5level-fixup.h
-index 4c74b1c1d13b..58046ddc08d0 100644
---- a/include/asm-generic/5level-fixup.h
-+++ b/include/asm-generic/5level-fixup.h
-@@ -17,8 +17,9 @@
- 	((unlikely(pgd_none(*(p4d))) && __pud_alloc(mm, p4d, address)) ? \
- 		NULL : pud_offset(p4d, address))
+diff --git a/arch/x86/include/asm/pgtable-2level_types.h b/arch/x86/include/asm/pgtable-2level_types.h
+index 6deb6cd236e3..7f6ccff0ba72 100644
+--- a/arch/x86/include/asm/pgtable-2level_types.h
++++ b/arch/x86/include/asm/pgtable-2level_types.h
+@@ -20,6 +20,8 @@ typedef union {
  
--#define p4d_alloc(mm, pgd, address)	(pgd)
--#define p4d_offset(pgd, start)		(pgd)
-+#define p4d_alloc(mm, pgd, address)		(pgd)
-+#define p4d_alloc_track(mm, pgd, address, mask)	(pgd)
-+#define p4d_offset(pgd, start)			(pgd)
+ #define SHARED_KERNEL_PMD	0
  
- #ifndef __ASSEMBLY__
- static inline int p4d_none(p4d_t p4d)
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index 329b8c8ca703..bf1418ae91a2 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -1209,6 +1209,29 @@ static inline bool arch_has_pfn_modify_check(void)
- # define PAGE_KERNEL_EXEC PAGE_KERNEL
++#define ARCH_PAGE_TABLE_SYNC_MASK	PGTBL_PMD_MODIFIED
++
+ /*
+  * traditional i386 two-level paging structure:
+  */
+diff --git a/arch/x86/include/asm/pgtable-3level_types.h b/arch/x86/include/asm/pgtable-3level_types.h
+index 33845d36897c..80fbb4a9ed87 100644
+--- a/arch/x86/include/asm/pgtable-3level_types.h
++++ b/arch/x86/include/asm/pgtable-3level_types.h
+@@ -27,6 +27,8 @@ typedef union {
+ #define SHARED_KERNEL_PMD	(!static_cpu_has(X86_FEATURE_PTI))
  #endif
  
-+/*
-+ * Page Table Modification bits for pgtbl_mod_mask.
-+ *
-+ * These are used by the p?d_alloc_track*() set of functions an in the generic
-+ * vmalloc/ioremap code to track at which page-table levels entries have been
-+ * modified. Based on that the code can better decide when vmalloc and ioremap
-+ * mapping changes need to be synchronized to other page-tables in the system.
-+ */
-+#define		__PGTBL_PGD_MODIFIED	0
-+#define		__PGTBL_P4D_MODIFIED	1
-+#define		__PGTBL_PUD_MODIFIED	2
-+#define		__PGTBL_PMD_MODIFIED	3
-+#define		__PGTBL_PTE_MODIFIED	4
++#define ARCH_PAGE_TABLE_SYNC_MASK	(SHARED_KERNEL_PMD ? 0 : PGTBL_PMD_MODIFIED)
 +
-+#define		PGTBL_PGD_MODIFIED	BIT(__PGTBL_PGD_MODIFIED)
-+#define		PGTBL_P4D_MODIFIED	BIT(__PGTBL_P4D_MODIFIED)
-+#define		PGTBL_PUD_MODIFIED	BIT(__PGTBL_PUD_MODIFIED)
-+#define		PGTBL_PMD_MODIFIED	BIT(__PGTBL_PMD_MODIFIED)
-+#define		PGTBL_PTE_MODIFIED	BIT(__PGTBL_PTE_MODIFIED)
-+
-+/* Page-Table Modification Mask */
-+typedef unsigned int pgtbl_mod_mask;
-+
- #endif /* !__ASSEMBLY__ */
- 
- #ifndef io_remap_pfn_range
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 5a323422d783..022fe682af9e 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2078,13 +2078,54 @@ static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
- 	return (unlikely(p4d_none(*p4d)) && __pud_alloc(mm, p4d, address)) ?
- 		NULL : pud_offset(p4d, address);
+ /*
+  * PGDIR_SHIFT determines what a top-level page table entry can map
+  */
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index a51df516b87b..edeb2adaf31f 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -190,16 +190,13 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
+ 	return pmd_k;
  }
-+
-+static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
-+				     unsigned long address,
-+				     pgtbl_mod_mask *mod_mask)
-+
-+{
-+	if (unlikely(pgd_none(*pgd))) {
-+		if (__p4d_alloc(mm, pgd, address))
-+			return NULL;
-+		*mod_mask |= PGTBL_PGD_MODIFIED;
-+	}
-+
-+	return p4d_offset(pgd, address);
-+}
-+
- #endif /* !__ARCH_HAS_5LEVEL_HACK */
  
-+static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
-+				     unsigned long address,
-+				     pgtbl_mod_mask *mod_mask)
-+{
-+	if (unlikely(p4d_none(*p4d))) {
-+		if (__pud_alloc(mm, p4d, address))
-+			return NULL;
-+		*mod_mask |= PGTBL_P4D_MODIFIED;
-+	}
-+
-+	return pud_offset(p4d, address);
-+}
-+
- static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
+-static void vmalloc_sync(void)
++void arch_sync_kernel_mappings(unsigned long start, unsigned long end)
  {
- 	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
- 		NULL: pmd_offset(pud, address);
+-	unsigned long address;
+-
+-	if (SHARED_KERNEL_PMD)
+-		return;
++	unsigned long addr;
+ 
+-	for (address = VMALLOC_START & PMD_MASK;
+-	     address >= TASK_SIZE_MAX && address < VMALLOC_END;
+-	     address += PMD_SIZE) {
++	for (addr = start & PMD_MASK;
++	     addr >= TASK_SIZE_MAX && addr < VMALLOC_END;
++	     addr += PMD_SIZE) {
+ 		struct page *page;
+ 
+ 		spin_lock(&pgd_lock);
+@@ -210,13 +207,23 @@ static void vmalloc_sync(void)
+ 			pgt_lock = &pgd_page_get_mm(page)->page_table_lock;
+ 
+ 			spin_lock(pgt_lock);
+-			vmalloc_sync_one(page_address(page), address);
++			vmalloc_sync_one(page_address(page), addr);
+ 			spin_unlock(pgt_lock);
+ 		}
+ 		spin_unlock(&pgd_lock);
+ 	}
  }
-+
-+static inline pmd_t *pmd_alloc_track(struct mm_struct *mm, pud_t *pud,
-+				     unsigned long address,
-+				     pgtbl_mod_mask *mod_mask)
+ 
++static void vmalloc_sync(void)
 +{
-+	if (unlikely(pud_none(*pud))) {
-+		if (__pmd_alloc(mm, pud, address))
-+			return NULL;
-+		*mod_mask |= PGTBL_PUD_MODIFIED;
-+	}
++	unsigned long address;
 +
-+	return pmd_offset(pud, address);
++	if (SHARED_KERNEL_PMD)
++		return;
++
++	arch_sync_kernel_mappings(VMALLOC_START, VMALLOC_END);
 +}
- #endif /* CONFIG_MMU */
- 
- #if USE_SPLIT_PTE_PTLOCKS
-@@ -2200,6 +2241,11 @@ static inline void pgtable_pte_page_dtor(struct page *page)
- 	((unlikely(pmd_none(*(pmd))) && __pte_alloc_kernel(pmd))? \
- 		NULL: pte_offset_kernel(pmd, address))
- 
-+#define pte_alloc_kernel_track(pmd, address, mask)			\
-+	((unlikely(pmd_none(*(pmd))) &&					\
-+	  (__pte_alloc_kernel(pmd) || ({*(mask)|=PGTBL_PMD_MODIFIED;0;})))?\
-+		NULL: pte_offset_kernel(pmd, address))
 +
- #if USE_SPLIT_PMD_PTLOCKS
- 
- static struct page *pmd_to_page(pmd_t *pmd)
+ void vmalloc_sync_mappings(void)
+ {
+ 	vmalloc_sync();
 -- 
 2.17.1
 
