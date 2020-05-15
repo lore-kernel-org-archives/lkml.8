@@ -2,86 +2,105 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC82C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B790C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3B2206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:40:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589550014;
-	bh=YlRqbizbDUDTopYguDtmZlRZK5uhZ+T9IBMGLE6FFG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qwNGGTZq4FoUHl6OMziU0/SYVRsBXgP2XlhuepAppPPAnM46pyUuFmUOOd4VW9zU3
-	 yaZFLAOtApQFV54bUfWlZsAnevEQeogIS5N/K4BtQRhjrhZ3fcjh/i4kHhiANXUyWX
-	 t8go9rQrdCMW0LrCt5Gr/f3UGX/GMmykGS35PFzw=
+	by mail.kernel.org (Postfix) with ESMTP id E2C9220657
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbgEONkN (ORCPT
+        id S1726228AbgEONna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:40:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbgEONkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:40:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 846D920657;
-        Fri, 15 May 2020 13:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589550013;
-        bh=YlRqbizbDUDTopYguDtmZlRZK5uhZ+T9IBMGLE6FFG0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KlUTF3UXugwuu3yKgH5TogMJAH/ih9w9swdWI23cKog/YdmcgNajgD7JQaQOium79
-         l1gyIMRH4I8nZE4z0NYoN5mNnYdgPtdw7fU0jeawQonOADvzEBLdg0bl+1UgFBRGHt
-         rvVgOe5sIfH/xtaIB0HisqTEzyT2babOWbHuQPFU=
-Date:   Fri, 15 May 2020 15:40:09 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Siddharth Chandrasekaran <siddharth@embedjournal.com>
-Cc:     Siddharth Chandrasekaran <csiddharth@vmware.com>,
-        srostedt@vmware.com, linux-kernel@vger.kernel.org,
-        stable@kernel.org, srivatsab@vmware.com, dchinner@redhat.com,
-        darrick.wong@oracle.com
-Subject: Re: [PATCH] Backport security fixe to 4.9 and 4.4 stable trees
-Message-ID: <20200515134009.GB2046686@kroah.com>
-References: <cover.1589486724.git.csiddharth@vmware.com>
- <20200515124945.GA93755@csiddharth-a01.vmware.com>
- <20200515125701.GA1934886@kroah.com>
- <20200515132943.GA97579@csiddharth-a01.vmware.com>
+        Fri, 15 May 2020 09:43:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbgEONn3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 09:43:29 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACAAFC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:43:29 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jZac2-00016e-TB; Fri, 15 May 2020 15:42:55 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id AE6E5100606; Fri, 15 May 2020 15:42:53 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 3 13/29] x86/traps: Prepare for using DEFINE_IDTENTRY
+In-Reply-To: <87mu6azp7m.fsf@nanos.tec.linutronix.de>
+References: <20200505134354.774943181@linutronix.de> <20200505134904.556327833@linutronix.de> <CALCETrUyA5bN2ScrdhwEYZSUpyOhO+MaEu1X3PwX6vHGGCkqCg@mail.gmail.com> <87mu6azp7m.fsf@nanos.tec.linutronix.de>
+Date:   Fri, 15 May 2020 15:42:53 +0200
+Message-ID: <874kshxqjm.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515132943.GA97579@csiddharth-a01.vmware.com>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 06:59:43PM +0530, Siddharth Chandrasekaran wrote:
-> On Fri, May 15, 2020 at 02:57:01PM +0200, Greg KH wrote:
-> > On Fri, May 15, 2020 at 06:19:45PM +0530, Siddharth Chandrasekaran wrote:
-> > > Please ignore this patch set, I accidentally added another patch I was
-> > > working on. Will send v2 with the right patches.
-> > 
-> > What patch set?  I see nothing in this email, so I have no idea what you
-> > are referring to :(
-> 
-> Apologies! Looks like my email thread was broken. I was referring to
-> the thread here: https://lkml.org/lkml/2020/5/14/1326 with subject:
->   
->   "[PATCH] Backport security fixe to 4.9 and 4.4 stable trees"
-> 
-> The corrected version (v2) of this patch should have reached you
-> (hopefully) with the subject:
-> 
->   "[PATCH v2] Backport xfs security fix to 4.9 and 4.4 stable trees"
+Andy,
 
-Sorry, I see no such email in my staging patch queue.
+Thomas Gleixner <tglx@linutronix.de> writes:
+> In historic kernels si_addr was simply set to regs->ip and the uprobe
+> muck changed that in commit b02ef20a9fba08 ("uprobes/x86: Fix the wrong
+> ->si_addr when xol triggers a trap")
+>     
+>     If the probed insn triggers a trap, ->si_addr = regs->ip is technically
+>     correct, but this is not what the signal handler wants; we need to pass
+>     the address of the probed insn, not the address of xol slot.
+>
+> Now that I filled my own blanks, I think that I can come up with a
+> halfways useful comment.
 
-Do you have a link to the series on lore.kernel.org?  lkml.org is a mess
-and not under our control.
+That's what I came up with (delta patch)
 
-greg k-h
+Thanks,
+
+        tglx
+
+8<---------------
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -205,6 +205,16 @@ static void do_error_trap(struct pt_regs
+ 	}
+ }
+ 
++/*
++ * Posix requires to provide the address of the faulting instruction for
++ * SIGILL (#UD) and SIGFPE (#DE) in the si_addr member of siginfo_t.
++ *
++ * This address is usually regs->ip, but when an uprobe moved the code out
++ * of line then regs->ip points to the XOL code which would confuse
++ * anything which analyzes the fault address vs. the unmodified binary. If
++ * a trap happened in XOL code then uprobe maps regs->ip back to the
++ * original instruction address.
++ */
+ static __always_inline void __user *error_get_trap_addr(struct pt_regs *regs)
+ {
+ 	return (void __user *)uprobe_get_trap_addr(regs);
