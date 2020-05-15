@@ -2,38 +2,38 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31085207D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8446207C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbgEPALT (ORCPT
+        id S1728208AbgEPALX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 20:11:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41170 "EHLO
+        Fri, 15 May 2020 20:11:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728100AbgEPALJ (ORCPT
+        by vger.kernel.org with ESMTP id S1728108AbgEPALK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 20:11:09 -0400
+        Fri, 15 May 2020 20:11:10 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42BFEC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 17:11:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DC0FC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 17:11:10 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jZkPb-0002Wt-C2; Sat, 16 May 2020 02:10:43 +0200
+        id 1jZkPU-0002Pl-4Q; Sat, 16 May 2020 02:10:36 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id CFF36FF834;
-        Sat, 16 May 2020 02:10:42 +0200 (CEST)
-Message-Id: <20200515235127.311082011@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 6249CFF834;
+        Sat, 16 May 2020 02:10:35 +0200 (CEST)
+Message-Id: <20200515235126.724725645@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sat, 16 May 2020 01:46:16 +0200
+Date:   Sat, 16 May 2020 01:46:10 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V6 29/37] x86/entry: Convert XEN hypercall vector to IDTENTRY_SYSVEC
+Subject: [patch V6 23/37] x86/entry: Provide IDTENTRY_SYSVEC
 References: <20200515234547.710474468@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -72,143 +72,167 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Convert the last oldstyle defined vector to IDTENTRY_SYSVEC
-  - Implement the C entry point with DEFINE_IDTENTRY_SYSVEC
-  - Emit the ASM stub with DECLARE_IDTENTRY_SYSVEC
-  - Remove the ASM idtentries in 64bit
-  - Remove the BUILD_INTERRUPT entries in 32bit
-  - Remove the old prototypes
+Provide a IDTENTRY variant for system vectors to consolidate the different
+mechanisms to emit the ASM stubs for 32 an 64 bit.
 
-Fixup the related XEN code by providing the primary C entry point in x86 to
-avoid cluttering the generic code with X86'isms.
+On 64bit this also moves the stack switching from ASM to C code. 32bit will
+excute the system vectors w/o stack switching as before. As some of the
+system vector handlers require access to pt_regs this requires a new stack
+switching macro which can handle an argument.
 
-No functional change.
+The alternative solution would be to implement the set_irq_regs() dance
+right in the entry macro, but most system vector handlers do not require
+it, so avoid the overhead.
+
+Provide the entry/exit handling as inline functions so the scheduler IPI
+can use it to implement lightweight entry handling depending on trace point
+enablement. This ensures that the code is consistent.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
 
----
- arch/x86/entry/entry_32.S        |    5 -----
- arch/x86/entry/entry_64.S        |    5 -----
- arch/x86/include/asm/idtentry.h  |    4 ++++
- arch/x86/xen/enlighten_hvm.c     |   12 ++++++++++++
- drivers/xen/events/events_base.c |    6 ++----
- include/xen/events.h             |    7 -------
- 6 files changed, 18 insertions(+), 21 deletions(-)
-
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 9723b7803b17..1db655409dbf 100644
 --- a/arch/x86/entry/entry_32.S
 +++ b/arch/x86/entry/entry_32.S
-@@ -1337,11 +1337,6 @@ SYM_FUNC_START(xen_failsafe_callback)
- SYM_FUNC_END(xen_failsafe_callback)
- #endif /* CONFIG_XEN_PV */
+@@ -765,6 +765,10 @@ SYM_CODE_START_LOCAL(asm_\cfunc)
+ SYM_CODE_END(asm_\cfunc)
+ .endm
  
--#ifdef CONFIG_XEN_PVHVM
--BUILD_INTERRUPT3(xen_hvm_callback_vector, HYPERVISOR_CALLBACK_VECTOR,
--		 xen_evtchn_do_upcall)
--#endif
--
- SYM_CODE_START_LOCAL_NOALIGN(handle_exception)
- 	/* the function address is in %gs's slot on the stack */
- 	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
++.macro idtentry_sysvec vector cfunc
++	idtentry \vector asm_\cfunc \cfunc has_error_code=0
++.endm
++
+ /*
+  * Include the defines which emit the idt entries which are shared
+  * shared between 32 and 64 bit.
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 8faf54389cd1..2c0eb5c2100a 100644
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -1111,11 +1111,6 @@ SYM_CODE_START(xen_failsafe_callback)
- SYM_CODE_END(xen_failsafe_callback)
- #endif /* CONFIG_XEN_PV */
+@@ -542,6 +542,14 @@ SYM_CODE_END(\asmsym)
+ .endm
  
--#ifdef CONFIG_XEN_PVHVM
--apicinterrupt3 HYPERVISOR_CALLBACK_VECTOR \
--	xen_hvm_callback_vector xen_evtchn_do_upcall
--#endif
--
  /*
-  * Save all registers in pt_regs, and switch gs if needed.
-  * Use slow, but surefire "are we in kernel?" check.
++ * System vectors which invoke their handlers directly and are not
++ * going through the regular common device interrupt handling code.
++ */
++.macro idtentry_sysvec vector cfunc
++	idtentry \vector asm_\cfunc \cfunc has_error_code=0
++.endm
++
++/*
+  * MCE and DB exceptions
+  */
+ #define CPU_TSS_IST(x) PER_CPU_VAR(cpu_tss_rw) + (TSS_ist + (x) * 8)
+diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
+index 29bcb6315ab9..43658fcedae8 100644
 --- a/arch/x86/include/asm/idtentry.h
 +++ b/arch/x86/include/asm/idtentry.h
-@@ -620,6 +620,10 @@ DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_STIME
- DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_CALLBACK_VECTOR,	sysvec_acrn_hv_callback);
- #endif
+@@ -6,6 +6,9 @@
+ #include <asm/trapnr.h>
  
-+#ifdef CONFIG_XEN_PVHVM
-+DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_CALLBACK_VECTOR,	sysvec_xen_hvm_callback);
-+#endif
+ #ifndef __ASSEMBLY__
++#include <linux/hardirq.h>
 +
- #undef X86_TRAP_OTHER
++#include <asm/irq_stack.h>
  
- #endif
---- a/arch/x86/xen/enlighten_hvm.c
-+++ b/arch/x86/xen/enlighten_hvm.c
-@@ -13,6 +13,7 @@
- #include <asm/smp.h>
- #include <asm/reboot.h>
- #include <asm/setup.h>
-+#include <asm/idtentry.h>
- #include <asm/hypervisor.h>
- #include <asm/e820/api.h>
- #include <asm/early_ioremap.h>
-@@ -118,6 +119,17 @@ static void __init init_hvm_pv_info(void
- 		this_cpu_write(xen_vcpu_id, smp_processor_id());
- }
+ void idtentry_enter(struct pt_regs *regs);
+ void idtentry_exit(struct pt_regs *regs);
+@@ -207,6 +210,85 @@ __visible noinstr void func(struct pt_regs *regs,			\
+ 									\
+ static __always_inline void __##func(struct pt_regs *regs, u8 vector)
  
-+DEFINE_IDTENTRY_SYSVEC(sysvec_xen_hvm_callback)
-+{
-+	struct pt_regs *old_regs = set_irq_regs(regs);
++/**
++ * DECLARE_IDTENTRY_SYSVEC - Declare functions for system vector entry points
++ * @vector:	Vector number (ignored for C)
++ * @func:	Function name of the entry point
++ *
++ * Declares three functions:
++ * - The ASM entry point: asm_##func
++ * - The XEN PV trap entry point: xen_##func (maybe unused)
++ * - The C handler called from the ASM entry point
++ *
++ * Maps to DECLARE_IDTENTRY().
++ */
++#define DECLARE_IDTENTRY_SYSVEC(vector, func)				\
++	DECLARE_IDTENTRY(vector, func)
 +
-+	inc_irq_stat(irq_hv_callback_count);
 +
-+	xen_hvm_evtchn_do_upcall();
++/**
++ * DEFINE_IDTENTRY_SYSVEC - Emit code for system vector IDT entry points
++ * @func:	Function name of the entry point
++ *
++ * idtentry_enter/exit() and irq_enter/exit_rcu() are invoked before the
++ * function body. KVM L1D flush request is set.
++ *
++ * Runs the function on the interrupt stack if the entry hit kernel mode
++ */
++#define DEFINE_IDTENTRY_SYSVEC(func)					\
++static void __##func(struct pt_regs *regs);				\
++									\
++__visible noinstr void func(struct pt_regs *regs)			\
++{									\
++	idtentry_enter(regs);						\
++	instrumentation_begin();					\
++	irq_enter_rcu();						\
++	kvm_set_cpu_l1tf_flush_l1d();					\
++	if (!irq_needs_irq_stack(regs))					\
++		__##func (regs);					\
++	else								\
++		run_on_irqstack(__##func, regs);			\
++	irq_exit_rcu();							\
++	lockdep_hardirq_exit();						\
++	instrumentation_end();						\
++	idtentry_exit(regs);						\
++}									\
++									\
++static noinline void __##func(struct pt_regs *regs)
 +
-+	set_irq_regs(old_regs);
-+}
++/**
++ * DEFINE_IDTENTRY_SYSVEC_SIMPLE - Emit code for simple system vector IDT
++ *				   entry points
++ * @func:	Function name of the entry point
++ *
++ * Runs the function on the interrupted stack. No switch to IRQ stack.
++ * Used for 'empty' vectors like reschedule IPI and KVM posted interrupt
++ * vectors.
++ *
++ * Uses conditional RCU and does not invoke irq_enter/exit_rcu() to avoid
++ * the overhead. This is correct vs. NOHZ. If this hits in dynticks idle
++ * then the exit path from the inner idle loop will restart the tick.  If
++ * it hits user mode with ticks off then the scheduler will take care of
++ * restarting it.
++ */
++#define DEFINE_IDTENTRY_SYSVEC_SIMPLE(func)				\
++static void __##func(struct pt_regs *regs);				\
++									\
++__visible noinstr void func(struct pt_regs *regs)			\
++{									\
++	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
++									\
++	instrumentation_begin();					\
++	__irq_enter_raw();						\
++	kvm_set_cpu_l1tf_flush_l1d();					\
++	__##func (regs);						\
++	__irq_exit_raw();						\
++	instrumentation_end();						\
++	idtentry_exit_cond_rcu(regs, rcu_exit);				\
++}									\
++									\
++static void __##func(struct pt_regs *regs)
 +
- #ifdef CONFIG_KEXEC_CORE
- static void xen_hvm_shutdown(void)
- {
---- a/drivers/xen/events/events_base.c
-+++ b/drivers/xen/events/events_base.c
-@@ -37,6 +37,7 @@
- #ifdef CONFIG_X86
- #include <asm/desc.h>
- #include <asm/ptrace.h>
-+#include <asm/idtentry.h>
- #include <asm/irq.h>
- #include <asm/io_apic.h>
- #include <asm/i8259.h>
-@@ -1236,9 +1237,6 @@ void xen_evtchn_do_upcall(struct pt_regs
- 	struct pt_regs *old_regs = set_irq_regs(regs);
+ #ifdef CONFIG_X86_64
+ /**
+  * DECLARE_IDTENTRY_IST - Declare functions for IST handling IDT entry points
+@@ -342,6 +424,10 @@ __visible noinstr void func(struct pt_regs *regs,			\
+ #define DECLARE_IDTENTRY_IRQ(vector, func)				\
+ 	idtentry_irq vector func
  
- 	irq_enter();
--#ifdef CONFIG_X86
--	inc_irq_stat(irq_hv_callback_count);
--#endif
- 
- 	__xen_evtchn_do_upcall();
- 
-@@ -1658,7 +1656,7 @@ static __init void xen_alloc_callback_ve
- 		return;
- 
- 	pr_info("Xen HVM callback vector for event delivery is enabled\n");
--	alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR, xen_hvm_callback_vector);
-+	alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR, asm_sysvec_xen_hvm_callback);
- }
- #else
- void xen_setup_callback_vector(void) {}
---- a/include/xen/events.h
-+++ b/include/xen/events.h
-@@ -90,13 +90,6 @@ unsigned int irq_from_evtchn(evtchn_port
- int irq_from_virq(unsigned int cpu, unsigned int virq);
- evtchn_port_t evtchn_from_irq(unsigned irq);
- 
--#ifdef CONFIG_XEN_PVHVM
--/* Xen HVM evtchn vector callback */
--void xen_hvm_callback_vector(void);
--#ifdef CONFIG_TRACING
--#define trace_xen_hvm_callback_vector xen_hvm_callback_vector
--#endif
--#endif
- int xen_set_callback_via(uint64_t via);
- void xen_evtchn_do_upcall(struct pt_regs *regs);
- void xen_hvm_evtchn_do_upcall(void);
++/* System vector entries */
++#define DECLARE_IDTENTRY_SYSVEC(vector, func)				\
++	idtentry_sysvec vector func
++
+ #ifdef CONFIG_X86_64
+ # define DECLARE_IDTENTRY_MCE(vector, func)				\
+ 	idtentry_mce_db vector asm_##func func
 
