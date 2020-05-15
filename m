@@ -2,156 +2,92 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A68BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5BBC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9CE620671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44FE920671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:37:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i7phLR6o"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZlhQE/DX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgEOOhW (ORCPT
+        id S1726668AbgEOOhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:37:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35606 "EHLO
+        Fri, 15 May 2020 10:37:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726718AbgEOOhT (ORCPT
+        by vger.kernel.org with ESMTP id S1726163AbgEOOhM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:37:19 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D224C05BD0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 07:37:19 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 145so1015395pfw.13
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 07:37:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GkgSQWYyEHrVohFFMSyphZgO4DDabSVNfncbmH3+PSA=;
-        b=i7phLR6oslO+nKsuBoJMm/9bH/JqIgx0izgjVqNpzYrr5so+8tSWN9Yf5iu61KRlBK
-         Udu9CbA+KyxU6EBm8+gDNGEL/mh1EmL9zpEH2ZzYj91LqaHO8SRqBPJ4m+Ti1YEJzzGA
-         jofFicakkW+mtqfl3m559FLv+sFicL0eDLX0k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GkgSQWYyEHrVohFFMSyphZgO4DDabSVNfncbmH3+PSA=;
-        b=HMVHoYALVqMBjVYamBbGW+lM+QZADgNt+7gNveJRrMzDqAa2oRzDi+ErnRTaDArZDA
-         cxjte1WeI314pLKMUE27+hEqofQg/yKJlPo043WSyXKiy6/QH0ieOsOvhGhgS0uLBsfM
-         oyTEVVCEch8/+HHqUrijQZ4vg1izJ0KPqDBx6eEHTJYYhu+4F76BRM2xRMKh6dvwPdyA
-         gQmhTakZ8nyO5e8KwhASjIkId/GdxUHM3y1LVz3EgjGQnhthR/jiFCoSYUpMfpeqQ756
-         DSNB2yqKuPLqwWYp3NLL2cBsgfhqL4K1XZ9d+WUIJgNdB35jmPp3rojra89YVT9kTOMz
-         279w==
-X-Gm-Message-State: AOAM533gBFx8SHaRbw35LasgoaMGjnAQakRSCGKiQmAQgMJzK2CaN+Mp
-        KwiiT2YhXfZYUEwZZmYDuJ7l+g==
-X-Google-Smtp-Source: ABdhPJwe+mQWxHy+Y8MG1su17GDYNjf0sGvC5GumLd2b2yGuoh3drABp261K8+gyS8kDmn+Bp9fFfw==
-X-Received: by 2002:a62:18c1:: with SMTP id 184mr3649253pfy.277.1589553438673;
-        Fri, 15 May 2020 07:37:18 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q134sm2132257pfc.143.2020.05.15.07.37.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 07:37:17 -0700 (PDT)
-Date:   Fri, 15 May 2020 07:37:16 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Christian Heimes <christian@python.org>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        John Johansen <john.johansen@canonical.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        "Lev R. Oshvang ." <levonshe@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Subject: Re: How about just O_EXEC? (was Re: [PATCH v5 3/6] fs: Enable to
- enforce noexec mounts or file exec through O_MAYEXEC)
-Message-ID: <202005150732.17C5EE0@keescook>
-References: <20200505153156.925111-4-mic@digikod.net>
- <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
- <202005131525.D08BFB3@keescook>
- <202005132002.91B8B63@keescook>
- <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
- <202005140830.2475344F86@keescook>
- <CAEjxPJ4R_juwvRbKiCg5OGuhAi1ZuVytK4fKCDT_kT6VKc8iRg@mail.gmail.com>
- <b740d658-a2da-5773-7a10-59a0ca52ac6b@digikod.net>
- <202005142343.D580850@keescook>
- <87a729wpu1.fsf@oldenburg2.str.redhat.com>
+        Fri, 15 May 2020 10:37:12 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89220C061A0C;
+        Fri, 15 May 2020 07:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=Z9YRs5dLpbvo98tj/Cgt22OOiGK6aHhMzE6epEWfQXc=; b=ZlhQE/DX4CKjdZl8xexqucGXRW
+        ecW0xdoSIe9Gq35tRpeBiirXpnuIuOEEr39MdMGz1PdURhzPLiTO5wahIkK5vw1PmAPLFD99ZDzpT
+        KfzkqvYyTU9LhznNbxGajjy8tQzBZAfMQC8HJfqoH5Sirl+L4HEisHonX50JZQe8vvMnXzsqw+8nd
+        n6IBEp27INvtNKjvuFTjxPOaCyavRVTpfVxqewr8imN9jFg90CqXRttj3krRvgExHWVSdjYWekCmo
+        h0GSVtWiDytYP4TT9HxbBtbdWa/cwt6vJMcpLMC4v/k/iown67sSCkP/8V0MX4v+5BPt/UyLUKy9X
+        x8dhpzzg==;
+Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZbSK-0003qc-Oh; Fri, 15 May 2020 14:36:57 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Roman Zippel <zippel@linux-m68k.org>
+Cc:     Jessica Yu <jeyu@kernel.org>, Michal Simek <monstr@monstr.eu>,
+        x86@kernel.org, linux-alpha@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-c6x-dev@linux-c6x.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 03/29] powerpc: unexport flush_icache_user_range
+Date:   Fri, 15 May 2020 16:36:20 +0200
+Message-Id: <20200515143646.3857579-4-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200515143646.3857579-1-hch@lst.de>
+References: <20200515143646.3857579-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87a729wpu1.fsf@oldenburg2.str.redhat.com>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 10:43:34AM +0200, Florian Weimer wrote:
-> * Kees Cook:
-> 
-> > Maybe I've missed some earlier discussion that ruled this out, but I
-> > couldn't find it: let's just add O_EXEC and be done with it. It actually
-> > makes the execve() path more like openat2() and is much cleaner after
-> > a little refactoring. Here are the results, though I haven't emailed it
-> > yet since I still want to do some more testing:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=kspp/o_exec/v1
-> 
-> I think POSIX specifies O_EXEC in such a way that it does not confer
-> read permissions.  This seems incompatible with what we are trying to
-> achieve here.
+flush_icache_user_range is only used by copy_to_user_page, which is
+only used by core VM code.
 
-I was trying to retain this behavior, since we already make this
-distinction between execve() and uselib() with the MAY_* flags:
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/powerpc/mm/mem.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-execve():
-        struct open_flags open_exec_flags = {
-                .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
-                .acc_mode = MAY_EXEC,
-
-uselib():
-        static const struct open_flags uselib_flags = {
-                .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
-                .acc_mode = MAY_READ | MAY_EXEC,
-
-I tried to retain this in my proposal, in the O_EXEC does not imply
-MAY_READ:
-
-+	/* Should execution permissions be checked on open? */
-+	if (flags & O_EXEC) {
-+		flags |= __FMODE_EXEC;
-+		acc_mode |= MAY_EXEC;
-+	}
-
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 041ed7cfd341a..f0d1bf0a8e14f 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -587,7 +587,6 @@ void flush_icache_user_range(struct vm_area_struct *vma, struct page *page,
+ 	flush_icache_range(maddr, maddr + len);
+ 	kunmap(page);
+ }
+-EXPORT_SYMBOL(flush_icache_user_range);
+ 
+ /*
+  * System memory should not be in /proc/iomem but various tools expect it
 -- 
-Kees Cook
+2.26.2
+
