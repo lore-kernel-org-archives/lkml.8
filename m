@@ -2,129 +2,166 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B53C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55F8320758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589557683;
-	bh=fY7QOXGBh0lpGAIxCDNmsPeDdy5A2yrYmjB29nGWprQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=BxjLXmVWKZindkudpYvJcZtfIW7h35YtJFe4kUe6w2zClMr8GFxPSNvXBApUlZyWJ
-	 7+YmsCqYLTotfjuWFYHGwV5MGO9oxvuCSiLRz8rWCUV7VMMx2m+7O15ADw3BF6T/tW
-	 picNxZoy6Hz32EFJzdYVc/I4qeHwZwpPFRNZ314I=
+	by mail.kernel.org (Postfix) with ESMTP id 38AD42076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:50:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XbNk7MuQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgEOPsC (ORCPT
+        id S1726624AbgEOPuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46760 "EHLO
+        Fri, 15 May 2020 11:50:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726183AbgEOPsC (ORCPT
+        by vger.kernel.org with ESMTP id S1726227AbgEOPuT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:48:02 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5CE3C061A0C;
-        Fri, 15 May 2020 08:48:01 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id e25so2758202ljg.5;
-        Fri, 15 May 2020 08:48:01 -0700 (PDT)
+        Fri, 15 May 2020 11:50:19 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A55CDC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:50:18 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k19so1020411pll.9
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:50:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=fY7QOXGBh0lpGAIxCDNmsPeDdy5A2yrYmjB29nGWprQ=;
-        b=CzAwOlmtrTHtfOLwXGDNH5mdDHhccw59oErotMjJWD63gA06itD516Lis1jro+RomX
-         rWSuJCMxcBDxPWHz7qreT9kpqMXF8kKog0eBUJMb0gh+2XcxW2PoKlC8K/SlS0In1xMX
-         VeUKn6PfTd2RqrZsZ/tfAIRyQ8MA2ekL2dpbQNECN/FWTByzmQzHy5eDWcMMs4cQBi6K
-         n7zp28LSe085flkXj1CFfxnGLFfDge8y+dMpMh0EUNMYCnKPlF0pDIcua1ipmZ07/cgX
-         xgJw8W6DxA2qU+O99Vqh54qemuGtqwiLVJ90AYmykxQ/LC7SPrwGpZLlbBNEVHqzjEmQ
-         2wkA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=maNQlt0vCXUutQdGjL8vBhpeTRE+KVofJhs1eAnXh6g=;
+        b=XbNk7MuQ57Rts4Z0qNTKjgNqv1OpA6t+Nc11jH0CcE5DjXS7oVuq2I56+d2MDC75jJ
+         nDjDvlSzADQw/PQCIl8/DxXmgfrveGmE6Hw9eY461U1BxfLAfoewmC1zHAQ7NjHaBVwq
+         48yzco9HijnVPOEH6uI2cCSke9LuzsUIGaAQQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=fY7QOXGBh0lpGAIxCDNmsPeDdy5A2yrYmjB29nGWprQ=;
-        b=PT2V+Smrf9jacCdN2QFIrDIPTa/wLnju4yg3N2lFVWRC/xtoc1ppdjLxM7D/Q5qr6C
-         wlAJtPG/lUkzecaSApMKBTrroMAdvq1PYfzDrRC8b0WdQw5C1GJdQv86QG+9ZSrdThxO
-         pRP3K4rgWS1OQ73CPAGpR29207LeYluQ5TLTs78Cww/i24ag0YPaDQfrFFBS0HMiKpKg
-         EtZb5kMWowaVIUVTmGr4w9htxRk5lpD9SexNFIdNRqLCzl4j6VuXut1r9uVkJ1/MoiBR
-         T5enRe01jwe4q9qo3v9xD32u+OKRj/08Mozmx0XvYBoKqy01U46LVqr1r9O6bxLLUjNB
-         dIew==
-X-Gm-Message-State: AOAM532H5LOzvfYg3qYwc+irbfqOwcUOu2EmRZJZZRxG7kbyMh5YWykv
-        yRCZfT0v8CHLQunZwRJyIEBQCboRqnw=
-X-Google-Smtp-Source: ABdhPJz/P6sVSzkBIRzmjJBZsgaxl0KCNezmjR0txnFFdP+igtkidAQc14vrHt6s01x5lNq9mKCAPg==
-X-Received: by 2002:a2e:7807:: with SMTP id t7mr2735173ljc.151.1589557680369;
-        Fri, 15 May 2020 08:48:00 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id b8sm1519077lfq.70.2020.05.15.08.47.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 May 2020 08:47:59 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     cristian.birsan@microchip.com, gregkh@linuxfoundation.org,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        ludovic.desroches@microchip.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: Re: [PATCH v2 1/7] usb: gadget: udc: atmel: use of_find_matching_node_and_match
-In-Reply-To: <20200515111631.31210-2-cristian.birsan@microchip.com>
-References: <20200515111631.31210-1-cristian.birsan@microchip.com> <20200515111631.31210-2-cristian.birsan@microchip.com>
-Date:   Fri, 15 May 2020 18:47:54 +0300
-Message-ID: <87a7292o9h.fsf@kernel.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=maNQlt0vCXUutQdGjL8vBhpeTRE+KVofJhs1eAnXh6g=;
+        b=JRvWjrWTUZFTusIuZ3+8q6XjBJq0aQV7CUVFTfYidsGa+tYLAhFYdyCO7nqFojDoZk
+         mvYhlpJSqVRmKadAfgd8WPHzB6fayA+jsRvEjtrHYOgbf+xMyvt++7QsPZi5LyLDS3Mu
+         09kqqeJRhgMBc2n5tHK7mWMJ6EllFcWC3RYEPl2JAdf1O+vjKA535nuhkUvUIqlu/jxJ
+         IFYjhpiA35omMrqRhUeRLM6EEoFv+fSnyXg5rKmS/sIHhX9sDbT0XoKAWh/Rq24TAEfh
+         YWdgehLabic84naeu+djUCAw6u7O1lZ31Vfzzx+pUBB8X/7kzuNm0JzgGWRb0Fs88Tgc
+         uUAw==
+X-Gm-Message-State: AOAM531EgJNVag5ZkAHrNAjdPC3qR0X1cEWoGH/jr56Gl8JRyV3+1bKP
+        Mkk3pSqzmcOAISt42oxLGUqDTg==
+X-Google-Smtp-Source: ABdhPJzV9V5xkT+PRgcjtkcfzF74hfXgdSbJTDs6Pij7aSIOh0B9fva/6CPrsQhWRfBllA/W9iJm5Q==
+X-Received: by 2002:a17:90a:5584:: with SMTP id c4mr459126pji.51.1589557818127;
+        Fri, 15 May 2020 08:50:18 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b24sm2247218pfi.4.2020.05.15.08.50.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 08:50:17 -0700 (PDT)
+Date:   Fri, 15 May 2020 08:50:16 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Christian Heimes <christian@python.org>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        John Johansen <john.johansen@canonical.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        "Lev R. Oshvang ." <levonshe@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Subject: Re: How about just O_EXEC? (was Re: [PATCH v5 3/6] fs: Enable to
+ enforce noexec mounts or file exec through O_MAYEXEC)
+Message-ID: <202005150847.2B1ED8F81@keescook>
+References: <202005131525.D08BFB3@keescook>
+ <202005132002.91B8B63@keescook>
+ <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
+ <202005140830.2475344F86@keescook>
+ <CAEjxPJ4R_juwvRbKiCg5OGuhAi1ZuVytK4fKCDT_kT6VKc8iRg@mail.gmail.com>
+ <b740d658-a2da-5773-7a10-59a0ca52ac6b@digikod.net>
+ <202005142343.D580850@keescook>
+ <87a729wpu1.fsf@oldenburg2.str.redhat.com>
+ <202005150732.17C5EE0@keescook>
+ <87r1vluuli.fsf@oldenburg2.str.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87r1vluuli.fsf@oldenburg2.str.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 15, 2020 at 04:43:37PM +0200, Florian Weimer wrote:
+> * Kees Cook:
+> 
+> > On Fri, May 15, 2020 at 10:43:34AM +0200, Florian Weimer wrote:
+> >> * Kees Cook:
+> >> 
+> >> > Maybe I've missed some earlier discussion that ruled this out, but I
+> >> > couldn't find it: let's just add O_EXEC and be done with it. It actually
+> >> > makes the execve() path more like openat2() and is much cleaner after
+> >> > a little refactoring. Here are the results, though I haven't emailed it
+> >> > yet since I still want to do some more testing:
+> >> > https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=kspp/o_exec/v1
+> >> 
+> >> I think POSIX specifies O_EXEC in such a way that it does not confer
+> >> read permissions.  This seems incompatible with what we are trying to
+> >> achieve here.
+> >
+> > I was trying to retain this behavior, since we already make this
+> > distinction between execve() and uselib() with the MAY_* flags:
+> >
+> > execve():
+> >         struct open_flags open_exec_flags = {
+> >                 .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
+> >                 .acc_mode = MAY_EXEC,
+> >
+> > uselib():
+> >         static const struct open_flags uselib_flags = {
+> >                 .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
+> >                 .acc_mode = MAY_READ | MAY_EXEC,
+> >
+> > I tried to retain this in my proposal, in the O_EXEC does not imply
+> > MAY_READ:
+> 
+> That doesn't quite parse for me, sorry.
+> 
+> The point is that the script interpreter actually needs to *read* those
+> files in order to execute them.
 
-<cristian.birsan@microchip.com> writes:
+I think I misunderstood what you meant (Mickaël got me sorted out
+now). If O_EXEC is already meant to be "EXEC and _not_ READ nor WRITE",
+then yes, this new flag can't be O_EXEC. I was reading the glibc
+documentation (which treats it as a permission bit flag, not POSIX,
+which treats it as a complete mode description).
 
-> From: Claudiu Beznea <claudiu.beznea@microchip.com>
->
-> Instead of trying to match every possible compatible use
-> of_find_matching_node_and_match() and pass the compatible array.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
-
-please rebase on my testing/next
-
-checking file drivers/usb/gadget/udc/atmel_usba_udc.c
-Hunk #1 succeeded at 2098 (offset 46 lines).
-Hunk #2 FAILED at 2074.
-1 out of 2 hunks FAILED
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6+uaoACgkQzL64meEa
-mQaUtRAA3SxQzSLjX4nXtqmtPbL5JtWzIl4VGUcv1DxNrv3yVahSwJtl5VTvyDVC
-41lnQFiq10ZqUaaf7GTDcBsVJmLVsBcNLy8dPkL+5Y+HK5bkCIi9l3fVV4JAg12q
-J1QtMxXrIUuiGUGsq8S2LIQBVxfMyZh6yf7KYGqS8mMAS79KxQEs05aRLyFRWbih
-Z5PCYoR0K76PP7lkomrbeOepvLxjD939KHXV9cqMVZHTfmzcbVGDIFreomtktQjt
-Y5VvjaXsANuQIf+14nUPcGB9qkO8GPOJ9ftbXQahRgHm9l4BDbAcHPZaubS2hY04
-Ww9dBOH89s7mrbqlXfcWNNrcv9EmfmqM+Ayy3yTA5eAt4Ot94WRX1vsTa1uTtr1Q
-FJs/z3JY8IIt+wsV9k0xzC1ZKJmm/L7DGliisdEZpZiTV1kLLshVMEuZCEiR025c
-usbBr4iPJHU0pOJL4B6KLuF9beI23QtlRtu+1gGUkCpaIFfNHiyGs8MsQ9RKcpp1
-6l0VnHnqEJtRWgfG2OvwMlJIGzXSrLw0owSpbMNfnOeuFTScahj9pPaaAfeG5+qb
-HpaO52O+OPB0sQYC7LZUDuz7x0u3wegNcUIXl+bsbJRfbG7c8ceQeNSGtoZKe73Q
-0GHb3F6rgaRDGW2hyI+l9V7hDREY8lgR9hRa/4SKngpKdcFcnls=
-=T2cw
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+Kees Cook
