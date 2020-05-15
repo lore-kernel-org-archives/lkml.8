@@ -2,83 +2,128 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFE02206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:42:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="AZZYZviL"
+	by mail.kernel.org (Postfix) with ESMTP id 5466C206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:45:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728038AbgEOJmg (ORCPT
+        id S1728038AbgEOJpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:42:36 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:47894 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727898AbgEOJmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:42:35 -0400
-Received: from zn.tnic (p200300EC2F0D67007C15A407D89B0951.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6700:7c15:a407:d89b:951])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 438BA1EC01CE;
-        Fri, 15 May 2020 11:42:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589535754;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=5gkrZq/IEhDDuR+s/yBh+vMl5WPtO3zfU2c3ocaZwdU=;
-        b=AZZYZviL9qURA7ZhT50uva1ykwPTjizYJ3zU3ijygI2fX3r/NpSuGdJUCF66K1LLs/pRJ6
-        euG/SZaqwZxiN8Qu+PNAaUunQLNB1/qVJ+hQhJGOKf7Ex/nymTUOXl7WzPpGerNNbEVhGM
-        qIZAQYt9zPSvcF+1IF1vehKpxd+1+yQ=
-Date:   Fri, 15 May 2020 11:42:30 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-Message-ID: <20200515094230.GA19017@zn.tnic>
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
- <20200426165753.GA11046@wind.enjellic.com>
- <87d07gk24l.fsf@nanos.tec.linutronix.de>
- <20200508190226.GA31465@wind.enjellic.com>
- <20200508195635.GR27052@linux.intel.com>
- <20200514091637.GA25156@wind.enjellic.com>
- <20200514161559.GA15603@linux.intel.com>
- <20200514162054.GE9266@zn.tnic>
- <666f4c3865fcd92e7d5c8437e69399cb55fb88a9.camel@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <666f4c3865fcd92e7d5c8437e69399cb55fb88a9.camel@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 15 May 2020 05:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727116AbgEOJpW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 05:45:22 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFF6C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 02:45:22 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 428AA379; Fri, 15 May 2020 11:45:20 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, jroedel@suse.de,
+        Jerry Snitselaar <jsnitsel@redhat.com>
+Subject: [PATCH] iommu: Implement deferred domain attachment
+Date:   Fri, 15 May 2020 11:45:19 +0200
+Message-Id: <20200515094519.20338-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 12:28:54PM +0300, Jarkko Sakkinen wrote:
-> Uh oh, should probably address this. Should I send v31 today with a "nosgx"
-> patch added? Sorry for missing this one :-/
+From: Joerg Roedel <jroedel@suse.de>
 
-Not the whole thing - just the one patch as a reply to your thread pls.
+The IOMMU core code has support for deferring the attachment of a domain
+to a device. This is needed in kdump kernels where the new domain must
+not be attached to a device before the device driver takes it over.
 
-Thx.
+But this needs support from the dma-ops code too, to actually do the
+late attachment when there are DMA-API calls for the device. This got
+lost in the AMD IOMMU driver after converting it to the dma-iommu code.
 
+Do the late attachment in the dma-iommu code-path to fix the issue.
+
+Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Tom Murphy <murphyt7@tcd.ie>
+Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Tested-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Fixes: be62dbf554c5 ("iommu/amd: Convert AMD iommu driver to the dma-iommu api")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ drivers/iommu/iommu.c | 33 +++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 4050569188be..f54ebb964271 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1889,13 +1889,19 @@ void iommu_domain_free(struct iommu_domain *domain)
+ }
+ EXPORT_SYMBOL_GPL(iommu_domain_free);
+ 
+-static int __iommu_attach_device(struct iommu_domain *domain,
+-				 struct device *dev)
++static bool __iommu_is_attach_deferred(struct iommu_domain *domain,
++				       struct device *dev)
++{
++	if (!domain->ops->is_attach_deferred)
++		return false;
++
++	return domain->ops->is_attach_deferred(domain, dev);
++}
++
++static int __iommu_attach_device_no_defer(struct iommu_domain *domain,
++					  struct device *dev)
+ {
+ 	int ret;
+-	if ((domain->ops->is_attach_deferred != NULL) &&
+-	    domain->ops->is_attach_deferred(domain, dev))
+-		return 0;
+ 
+ 	if (unlikely(domain->ops->attach_dev == NULL))
+ 		return -ENODEV;
+@@ -1903,9 +1909,19 @@ static int __iommu_attach_device(struct iommu_domain *domain,
+ 	ret = domain->ops->attach_dev(domain, dev);
+ 	if (!ret)
+ 		trace_attach_device_to_domain(dev);
++
+ 	return ret;
+ }
+ 
++static int __iommu_attach_device(struct iommu_domain *domain,
++				 struct device *dev)
++{
++	if (__iommu_is_attach_deferred(domain, dev))
++		return 0;
++
++	return __iommu_attach_device_no_defer(domain, dev);
++}
++
+ int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
+ {
+ 	struct iommu_group *group;
+@@ -2023,7 +2039,12 @@ EXPORT_SYMBOL_GPL(iommu_get_domain_for_dev);
+  */
+ struct iommu_domain *iommu_get_dma_domain(struct device *dev)
+ {
+-	return dev->iommu_group->default_domain;
++	struct iommu_domain *domain = dev->iommu_group->default_domain;
++
++	if (__iommu_is_attach_deferred(domain, dev))
++		__iommu_attach_device_no_defer(domain, dev);
++
++	return domain;
+ }
+ 
+ /*
 -- 
-Regards/Gruss,
-    Boris.
+2.25.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
