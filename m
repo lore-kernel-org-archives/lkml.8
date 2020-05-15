@@ -2,97 +2,211 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F95FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF60C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3FA207C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589541024;
-	bh=SLJ8q9ALaDgv+nU5BF1TbEJ2mglM/zXsGZrXaSF5RsM=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=l68CF8W0nJ1khJn81lR29GGjC1hkvTiS2Eebwffemw8KPY6JiBTk2DUim4O5UqhD6
-	 eJkE4HsYX0DaAka1ACioOQ1PHYwC8pNams19Q9Q+kvVDFXILjP/zMCXFtM1CT7EgFm
-	 35X1Gz6KJraxdUKJrQQeWjWalweQ9lScw9doCVis=
+	by mail.kernel.org (Postfix) with ESMTP id AB4A320759
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgEOLKX (ORCPT
+        id S1726177AbgEOLKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:10:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44750 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 07:10:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35838 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbgEOLKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:10:23 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1FDB2074D;
-        Fri, 15 May 2020 11:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589541023;
-        bh=SLJ8q9ALaDgv+nU5BF1TbEJ2mglM/zXsGZrXaSF5RsM=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=2OKpYtBFi78dOyoTHb5nG6B3uf262CEL31o5mUV0yWCV11KTrU1ZGh68tURsMZLib
-         s9/tQAYeeTVvOU+AfihLQ5n4Sn3J7DFtrSccZWJdBPJZ0v4wqpp27+tM/KN8INudmv
-         se6BD/ZE3sy5SJ/Huo2J2voX/QAxLh2z5RhsNN+s=
-Date:   Fri, 15 May 2020 12:10:20 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     nicoleotsuka@gmail.com, robh+dt@kernel.org, lgirdwood@gmail.com,
-        tiwai@suse.com, alsa-devel@alsa-project.org, timur@kernel.org,
-        Xiubo.Lee@gmail.com, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        perex@perex.cz, festevam@gmail.com, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <cover.1589537601.git.shengjiu.wang@nxp.com>
-References: <cover.1589537601.git.shengjiu.wang@nxp.com>
-Subject: Re: [PATCH v2 0/2] ASoC: fsl_esai: Add support for imx8qm
-Message-Id: <158954102051.28239.13020944644998998751.b4-ty@kernel.org>
+        id S1725995AbgEOLKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:10:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3EC1AAE61;
+        Fri, 15 May 2020 11:10:46 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 211BC1E056A; Fri, 15 May 2020 13:10:43 +0200 (CEST)
+Date:   Fri, 15 May 2020 13:10:43 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/2 V4] MM: replace PF_LESS_THROTTLE with
+ PF_LOCAL_THROTTLE
+Message-ID: <20200515111043.GK9569@quack2.suse.cz>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name>
+ <87v9miydai.fsf@notabene.neil.brown.name>
+ <87ftdgw58w.fsf@notabene.neil.brown.name>
+ <87wo6gs26e.fsf@notabene.neil.brown.name>
+ <87tv1ks24t.fsf@notabene.neil.brown.name>
+ <20200416151906.GQ23739@quack2.suse.cz>
+ <87zhb5r30c.fsf@notabene.neil.brown.name>
+ <20200422124600.GH8775@quack2.suse.cz>
+ <871rnob8z3.fsf@notabene.neil.brown.name>
+ <87y2pw9udb.fsf@notabene.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87y2pw9udb.fsf@notabene.neil.brown.name>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 May 2020 18:10:49 +0800, Shengjiu Wang wrote:
-> Add support for imx8qm.
+On Wed 13-05-20 17:17:20, NeilBrown wrote:
 > 
-> Shengjiu Wang (2):
->   ASoC: fsl_esai: introduce SoC specific data
->   ASoC: fsl_esai: Add new compatible string for imx8qm
+> PF_LESS_THROTTLE exists for loop-back nfsd (and a similar need in the
+> loop block driver and callers of prctl(PR_SET_IO_FLUSHER)), where a
+> daemon needs to write to one bdi (the final bdi) in order to free up
+> writes queued to another bdi (the client bdi).
 > 
-> Changes in v2
-> - drop the 0002 patch in v1, the dma relate limitation should
->   be done in dma driver, or define a new DMA API for it.
+> The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
+> pages, so that it can still dirty pages after other processses have been
+> throttled.  The purpose of this is to avoid deadlock that happen when
+> the PF_LESS_THROTTLE process must write for any dirty pages to be freed,
+> but it is being thottled and cannot write.
 > 
-> [...]
+> This approach was designed when all threads were blocked equally,
+> independently on which device they were writing to, or how fast it was.
+> Since that time the writeback algorithm has changed substantially with
+> different threads getting different allowances based on non-trivial
+> heuristics.  This means the simple "add 25%" heuristic is no longer
+> reliable.
+> 
+> The important issue is not that the daemon needs a *larger* dirty page
+> allowance, but that it needs a *private* dirty page allowance, so that
+> dirty pages for the "client" bdi that it is helping to clear (the bdi for
+> an NFS filesystem or loop block device etc) do not affect the throttling
+> of the deamon writing to the "final" bdi.
+> 
+> This patch changes the heuristic so that the task is not throttled when
+> the bdi it is writing to has a dirty page count below below (or equal
+> to) the free-run threshold for that bdi.  This ensures it will always be
+> able to have some pages in flight, and so will not deadlock.
+> 
+> In a steady-state, it is expected that PF_LOCAL_THROTTLE tasks might
+> still be throttled by global threshold, but that is acceptable as it is
+> only the deadlock state that is interesting for this flag.
+> 
+> This approach of "only throttle when target bdi is busy" is consistent
+> with the other use of PF_LESS_THROTTLE in current_may_throttle(), were
+> it causes attention to be focussed only on the target bdi.
+> 
+> So this patch
+>  - renames PF_LESS_THROTTLE to PF_LOCAL_THROTTLE,
+>  - removes the 25% bonus that that flag gives, and
+>  - If PF_LOCAL_THROTTLE is set, don't delay at all unless the
+>    global and the local free-run thresholds are exceeded.
+> 
+> Note that previously realtime threads were treated the same as
+> PF_LESS_THROTTLE threads.  This patch does *not* change the behvaiour for
+> real-time threads, so it is now different from the behaviour of nfsd and
+> loop tasks.  I don't know what is wanted for realtime.
+> 
+> Acked-by: Chuck Lever <chuck.lever@oracle.com> (for nfsd change)
+> Signed-off-by: NeilBrown <neilb@suse.de>
 
-Applied to
+The idea looks good to me. It will still have the "threads may hit hard
+wall" behavior when BDI freerun threshold is crossed at the moment we are
+very close to the global limit but that should be rare. So I think for now
+this good enough.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
+The patch looks good to me so feel free to add:
 
-Thanks!
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-[1/2] ASoC: fsl_esai: introduce SoC specific data
-      commit: 6878e75204e1d0420fd8130bad33f88053ba44de
-[2/2] ASoC: fsl_esai: Add new compatible string for imx8qm
-      commit: d59628b310a77e616ce2e5857e6ede5bf96c6784
+Throttling patches usually go through mm tree so ask Andrew to pick them
+up.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+								Honza
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> @@ -1653,8 +1652,12 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
+>  		if (dirty <= dirty_freerun_ceiling(thresh, bg_thresh) &&
+>  		    (!mdtc ||
+>  		     m_dirty <= dirty_freerun_ceiling(m_thresh, m_bg_thresh))) {
+> -			unsigned long intv = dirty_poll_interval(dirty, thresh);
+> -			unsigned long m_intv = ULONG_MAX;
+> +			unsigned long intv;
+> +			unsigned long m_intv;
+> +
+> +		free_running:
+> +			intv = dirty_poll_interval(dirty, thresh);
+> +			m_intv = ULONG_MAX;
+>  
+>  			current->dirty_paused_when = now;
+>  			current->nr_dirtied = 0;
+> @@ -1673,9 +1676,20 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
+>  		 * Calculate global domain's pos_ratio and select the
+>  		 * global dtc by default.
+>  		 */
+> -		if (!strictlimit)
+> +		if (!strictlimit) {
+>  			wb_dirty_limits(gdtc);
+>  
+> +			if ((current->flags & PF_LOCAL_THROTTLE) &&
+> +			    gdtc->wb_dirty <
+> +			    dirty_freerun_ceiling(gdtc->wb_thresh,
+> +						  gdtc->wb_bg_thresh))
+> +				/*
+> +				 * LOCAL_THROTTLE tasks must not be throttled
+> +				 * when below the per-wb freerun ceiling.
+> +				 */
+> +				goto free_running;
+> +		}
+> +
+>  		dirty_exceeded = (gdtc->wb_dirty > gdtc->wb_thresh) &&
+>  			((gdtc->dirty > gdtc->thresh) || strictlimit);
+>  
+> @@ -1689,9 +1703,20 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
+>  			 * both global and memcg domains.  Choose the one
+>  			 * w/ lower pos_ratio.
+>  			 */
+> -			if (!strictlimit)
+> +			if (!strictlimit) {
+>  				wb_dirty_limits(mdtc);
+>  
+> +				if ((current->flags & PF_LOCAL_THROTTLE) &&
+> +				    mdtc->wb_dirty <
+> +				    dirty_freerun_ceiling(mdtc->wb_thresh,
+> +							  mdtc->wb_bg_thresh))
+> +					/*
+> +					 * LOCAL_THROTTLE tasks must not be
+> +					 * throttled when below the per-wb
+> +					 * freerun ceiling.
+> +					 */
+> +					goto free_running;
+> +			}
+>  			dirty_exceeded |= (mdtc->wb_dirty > mdtc->wb_thresh) &&
+>  				((mdtc->dirty > mdtc->thresh) || strictlimit);
+>  
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index a37c87b5aee2..b2f5deb3603c 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1878,13 +1878,13 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+>  
+>  /*
+>   * If a kernel thread (such as nfsd for loop-back mounts) services
+> - * a backing device by writing to the page cache it sets PF_LESS_THROTTLE.
+> + * a backing device by writing to the page cache it sets PF_LOCAL_THROTTLE.
+>   * In that case we should only throttle if the backing device it is
+>   * writing to is congested.  In other cases it is safe to throttle.
+>   */
+>  static int current_may_throttle(void)
+>  {
+> -	return !(current->flags & PF_LESS_THROTTLE) ||
+> +	return !(current->flags & PF_LOCAL_THROTTLE) ||
+>  		current->backing_dev_info == NULL ||
+>  		bdi_write_congested(current->backing_dev_info);
+>  }
+> -- 
+> 2.26.2
+> 
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
 
-Thanks,
-Mark
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
