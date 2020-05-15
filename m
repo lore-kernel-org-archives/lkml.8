@@ -2,94 +2,98 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB631C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27319C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8055207C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0156F2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:09:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgEOPJN (ORCPT
+        id S1726953AbgEOPJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:09:13 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:21397 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726219AbgEOPJK (ORCPT
+        Fri, 15 May 2020 11:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726219AbgEOPJ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:09:10 -0400
-X-IronPort-AV: E=Sophos;i="5.73,395,1583161200"; 
-   d="scan'208";a="47188317"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 16 May 2020 00:09:07 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id AC0BB400D4CD;
-        Sat, 16 May 2020 00:09:03 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 00/17] RZ/G1H describe I2C, IIC, MMC0, SATA, AVB, RWDT and APMU nodes
-Date:   Fri, 15 May 2020 16:08:40 +0100
-Message-Id: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 15 May 2020 11:09:28 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC8A8C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:09:28 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jZbxK-00036p-JR; Fri, 15 May 2020 17:08:58 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id F03C1100606; Fri, 15 May 2020 17:08:56 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
+Subject: Re: [patch V5 04/38] x86: Make hardware latency tracing explicit
+In-Reply-To: <20200514214349.24642172@oasis.local.home>
+References: <20200512210059.056244513@linutronix.de> <20200512213809.784331304@linutronix.de> <20200514214349.24642172@oasis.local.home>
+Date:   Fri, 15 May 2020 17:08:56 +0200
+Message-ID: <87a729dylz.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-This patch series describes i2c, iic, mmc0, sdhi, sata, AVB, apmu and
-RWDT on R8A7742 SoC.
+> On Tue, 12 May 2020 23:01:03 +0200
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+>> --- a/arch/x86/kernel/cpu/mce/core.c
+>> +++ b/arch/x86/kernel/cpu/mce/core.c
+>> @@ -1916,7 +1916,7 @@ static __always_inline void exc_machine_
+>>  	    mce_check_crashing_cpu())
+>>  		return;
+>>  
+>> -	nmi_enter();
+>> +	nmi_enter_notrace();
+>
+> Now a machine check exception could happen and be a cause of latency
+> (although there may be more issues if it does). The "nmi_enter trace"
+> version does two things. One is for time measurements (if available),
+> and the other is just letting the hardware latency know it happen (a
+> simple increment).
+>
+> The only thing that is checked is "smp_processor_id()" (I just
+> remembered it doesn't need per cpu, as it only runs on a single CPU at
+> a time).
+>
+> Could the notrace version supply the increment, and leave the
+> trace_clock() in the trace version?
 
-Cheers,
-Prabhakar
-
-Lad Prabhakar (17):
-  dt-bindings: i2c: renesas,i2c: Document r8a7742 support
-  dt-bindings: i2c: renesas,iic: Document r8a7742 support
-  ARM: dts: r8a7742: Add I2C and IIC support
-  dt-bindings: mmc: renesas,sdhi: Document r8a7742 support
-  mmc: renesas_sdhi_sys_dmac: Add support for r8a7742 SoC
-  ARM: dts: r8a7742: Add SDHI nodes
-  ARM: dts: r8a7742: Add MMC0 node
-  dt-bindings: ata: renesas,rcar-sata: Add r8a7742 support
-  ARM: dts: r8a7742: Add sata nodes
-  dt-bindings: net: renesas,ravb: Add support for r8a7742 SoC
-  dt-bindings: net: renesas,ether: Document R8A7742 SoC
-  ARM: dts: r8a7742: Add Ethernet AVB support
-  ARM: dts: r8a7742: Add Ether support
-  dt-bindings: power: renesas,apmu: Document r8a7742 support
-  ARM: dts: r8a7742: Add APMU nodes
-  dt-bindings: watchdog: renesas,wdt: Document r8a7742 support
-  ARM: dts: r8a7742: Add RWDT node
-
- .../devicetree/bindings/ata/renesas,rcar-sata.yaml |   1 +
- .../devicetree/bindings/i2c/renesas,i2c.txt        |   1 +
- .../devicetree/bindings/i2c/renesas,iic.txt        |   1 +
- .../devicetree/bindings/mmc/renesas,sdhi.txt       |   1 +
- .../devicetree/bindings/net/renesas,ether.yaml     |   1 +
- .../devicetree/bindings/net/renesas,ravb.txt       |   1 +
- .../devicetree/bindings/power/renesas,apmu.yaml    |   1 +
- .../devicetree/bindings/watchdog/renesas,wdt.txt   |   1 +
- arch/arm/boot/dts/r8a7742.dtsi                     | 270 +++++++++++++++++++++
- drivers/mmc/host/renesas_sdhi_sys_dmac.c           |   1 +
- 10 files changed, 279 insertions(+)
-
--- 
-2.7.4
-
+Yes, I can split it up that way.
