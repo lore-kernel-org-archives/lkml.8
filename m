@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0593DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D40A8206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2116620727
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uwjR9RDm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lWDuCPSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgEOQuv (ORCPT
+        id S1727001AbgEOQuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:50:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56956 "EHLO
+        Fri, 15 May 2020 12:50:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726557AbgEOQuT (ORCPT
+        by vger.kernel.org with ESMTP id S1726525AbgEOQuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:50:19 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33B6C05BD0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:50:18 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id n77so3281634ybf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:50:18 -0700 (PDT)
+        Fri, 15 May 2020 12:50:17 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 122CCC05BD09
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:50:17 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id g15so3191246qvx.6
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:50:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=BlBgjK5xziAM5vwiVDuTtOoE4PbK5TxWadJH4JBlKYM=;
-        b=uwjR9RDmlKmjmScHj3v7Ni5ICzuU//nG6viIyAoAF/WkjBrWDIARVrcYd7aEu8mHOq
-         cNl9et0QdfJz+zPaPLpyymL5L7phhW0iMu5HrtI05joIngtoKv05HP/dSZ5NmfWwLYxY
-         O2Zkkem36vWYls2D49elB9STe2MbzOJRZ72i1jM+ioGkVCtqvJd4K3PXvhb3N1usK0b3
-         f9xg+VxC8fEqgM3rDXEx2mqpfRdkXxVf8LdL8Md7vCG66TIfYwRPYq3znv0sv3tZXs+v
-         Z7g/XVFAbGKcqoFK3I33p7T4Fwxt1ISxUpT0Qt23vOU1gRxqIrmpvdVcpc2Rh2U5biYx
-         Oeqw==
+         :cc;
+        bh=6zJdeczCxXIR05ROPjfL5M3I5d1ozekeF2WaxmhUPXo=;
+        b=lWDuCPSEHnSqfmNmK7U6zSigGtw2pUvPEmqBm3E79EfmUdhRFZKr9rmmlG8SLtiTLY
+         8HCqoaQuGDPxignnWBj97QPYO0GwwkgCH1z0wTKLYpS7vxYkxdK21eAfNqBq1eACYnKW
+         X/07rqk/NxKbF66ALRKpmYyVR/Wyx+OYTCq24+o2G2V49wg3xHyYb7VUXnnmYcp+gEQF
+         nL2XDaWLaYS/Je45LXoeJJMo6D2hMR2jOfXa7nomoK6/lPSR11Brli1vClEnVFZqT/pv
+         2sIB00W6zEXOfVYKy1WDxw2k2tj56W5+R3oq9j7OmEXIeXAyCBwW0+ZP4ExwI5AK0m5d
+         F/Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=BlBgjK5xziAM5vwiVDuTtOoE4PbK5TxWadJH4JBlKYM=;
-        b=gkvoay42xLoWs0bBxBBhYMfXmpPHuQa2fWYtouhpWkkjKfyFzjEc1d2Y6lFWzyaoVW
-         RIgwnMiV3BeSBIqrCXXzuVVWiHpJ/dQjfL5CEpwwRrvZL/c1mesF/AiW+nVwH4bumIdX
-         fHCcbbmTUhzO92OzuKv6+AbHWOeASz6G1zOPm9AGIXIG/pRf73Yqj74XVnZECCUOBhty
-         9dOrr2kx+mdEC2fzyc2DkfMfQOyAZm7j99/MjnHFsBFzPDx3ht/HrzbZlo5bs+SwSKvv
-         pQo/YU0HUtfZP9+umTRDo/05cefqGspuETu54BwjIKViV43Q9hDZ2ytlZDULcgkdPRdt
-         2+PA==
-X-Gm-Message-State: AOAM531UImfKoozA/tewPdO3Kl8PiB4j/ikKcaekac0KFkExva+zhcpO
-        ldPiRMHae0Z8pW9vvDnYdoOK2QxfBJBI
-X-Google-Smtp-Source: ABdhPJzrDFvQNIcFMi0Solen5ZfhZvieWElQgZDit3xL+BENKdhSdyY5DiSL/W90JbqHijIdRCyezZEgBUmU
-X-Received: by 2002:a5b:7c8:: with SMTP id t8mr6515278ybq.223.1589561417932;
- Fri, 15 May 2020 09:50:17 -0700 (PDT)
-Date:   Fri, 15 May 2020 09:50:03 -0700
+         :references:subject:from:to:cc;
+        bh=6zJdeczCxXIR05ROPjfL5M3I5d1ozekeF2WaxmhUPXo=;
+        b=mY01iszEBny8ZJqJRK9Y0AeXhYH2k9KlL7Zab2jBeTaAlx9Lvx+8tjq+E3xFtXEisb
+         N42ZLrxzIEw78pLe6NCokLvlqe7GQzSPpwEyNLSNwF0JG6CHWzZjIgbj0LbbeWJHx1iq
+         6VDSX4M1C2GnSky+/TinVyQnfnqGJYZFumJbLJvWEyZKPAEyGcZCtrRf/dlxx6g0vR0A
+         40x3D6gEqjq+LBSJe7bSv5sy9KfMS/EBDaRh0Tfc5ajNb+p1qeJm//QW5osPpNxU2HXO
+         4eheP0CYfndP61HZf1jtgQTUDrO2ukCqEvrL1yX7hL8s450L+GAYApxUhqldCPAZbHKk
+         S/Lg==
+X-Gm-Message-State: AOAM532ddkBdhMUN4wsfsDIxF8VVrSUtyWXk39bIJqrdLONBfoYG967x
+        5mJKNOJyllk2hmc5nJSQ/O9eKVfVYeZ0
+X-Google-Smtp-Source: ABdhPJzJeU3KJoEKMsk2E7nrlFXgcd2WBQbWwlr2cF809BRrmVmF2HWm35q7vDzY8rUFv8F6tFzwUDUNfz/I
+X-Received: by 2002:a0c:b58a:: with SMTP id g10mr4291860qve.225.1589561416205;
+ Fri, 15 May 2020 09:50:16 -0700 (PDT)
+Date:   Fri, 15 May 2020 09:50:02 -0700
 In-Reply-To: <20200515165007.217120-1-irogers@google.com>
-Message-Id: <20200515165007.217120-4-irogers@google.com>
+Message-Id: <20200515165007.217120-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20200515165007.217120-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH v2 3/7] libbpf hashmap: Fix signedness warnings
+Subject: [PATCH v2 2/7] libbpf hashmap: Remove unused #include
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -90,54 +90,32 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following warnings:
-
-hashmap.c: In function =E2=80=98hashmap__clear=E2=80=99:
-hashmap.h:150:20: error: comparison of integer expressions of different sig=
-nedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 {aka =E2=80=98l=
-ong unsigned int=E2=80=99} [-Werror=3Dsign-compare]
-  150 |  for (bkt =3D 0; bkt < map->cap; bkt++)        \
-
-hashmap.c: In function =E2=80=98hashmap_grow=E2=80=99:
-hashmap.h:150:20: error: comparison of integer expressions of different sig=
-nedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 {aka =E2=80=98l=
-ong unsigned int=E2=80=99} [-Werror=3Dsign-compare]
-  150 |  for (bkt =3D 0; bkt < map->cap; bkt++)        \
+Remove #include of libbpf_internal.h that is unused.
+Discussed in this thread:
+https://lore.kernel.org/lkml/CAEf4BzZRmiEds_8R8g4vaAeWvJzPb4xYLnpF0X2VNY8oTzkphQ@mail.gmail.com/
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/bpf/hashmap.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ tools/lib/bpf/hashmap.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/lib/bpf/hashmap.c b/tools/lib/bpf/hashmap.c
-index cffb96202e0d..a405dad068f5 100644
---- a/tools/lib/bpf/hashmap.c
-+++ b/tools/lib/bpf/hashmap.c
-@@ -60,7 +60,7 @@ struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
- void hashmap__clear(struct hashmap *map)
+diff --git a/tools/lib/bpf/hashmap.h b/tools/lib/bpf/hashmap.h
+index bae8879cdf58..e823b35e7371 100644
+--- a/tools/lib/bpf/hashmap.h
++++ b/tools/lib/bpf/hashmap.h
+@@ -15,7 +15,6 @@
+ #else
+ #include <bits/reg.h>
+ #endif
+-#include "libbpf_internal.h"
+ 
+ static inline size_t hash_bits(size_t h, int bits)
  {
- 	struct hashmap_entry *cur, *tmp;
--	int bkt;
-+	size_t bkt;
-=20
- 	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
- 		free(cur);
-@@ -100,8 +100,7 @@ static int hashmap_grow(struct hashmap *map)
- 	struct hashmap_entry **new_buckets;
- 	struct hashmap_entry *cur, *tmp;
- 	size_t new_cap_bits, new_cap;
--	size_t h;
--	int bkt;
-+	size_t h, bkt;
-=20
- 	new_cap_bits =3D map->cap_bits + 1;
- 	if (new_cap_bits < HASHMAP_MIN_CAP_BITS)
---=20
+-- 
 2.26.2.761.g0e0b3e54be-goog
 
