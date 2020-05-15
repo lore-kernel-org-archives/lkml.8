@@ -2,127 +2,85 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3985C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758E3C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3CD820758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46E012078C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:54:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589547271;
+	bh=TotoL9YXsj+E4MwRDKyj3GbWs9IEi6m6QDbCpdIsCQM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ze1aUgwYF7p8tYdkGZJZYr1jiroddm+n4+fghA9hZAoeqjl/ZwohtPYJrYrys6qo/
+	 h05DXvAY4vnlfMlD/kQ0+wuIXY2BYC0Pav/pMcQdl03Ec5td9jMbbW9d5GV36ddny9
+	 Gyl93B3UWsrTwSUffZKtn38ng/4bJeHNYvOh7JdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726223AbgEOMxt (ORCPT
+        id S1726238AbgEOMya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:53:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:55580 "EHLO foss.arm.com"
+        Fri, 15 May 2020 08:54:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726141AbgEOMxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:53:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B96E81042;
-        Fri, 15 May 2020 05:53:47 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.6])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4DAD3F305;
-        Fri, 15 May 2020 05:53:45 -0700 (PDT)
-Date:   Fri, 15 May 2020 13:53:42 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        harb@amperecomputing.com
-Subject: Re: [PATCH v3 5/7] firmware: smccc: Refactor SMCCC specific bits
- into separate file
-Message-ID: <20200515125342.GB1591@bogus>
-References: <20200506164411.3284-1-sudeep.holla@arm.com>
- <20200506164411.3284-6-sudeep.holla@arm.com>
- <20200515114953.GE67718@C02TD0UTHF1T.local>
+        id S1726168AbgEOMy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 08:54:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4FF420787;
+        Fri, 15 May 2020 12:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589547268;
+        bh=TotoL9YXsj+E4MwRDKyj3GbWs9IEi6m6QDbCpdIsCQM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M/zXyDtwPlnFMqEQDPslfgMp9FZncwD5Y623ZF6geSYAJDxstXP18RdhxSzkoQv5C
+         +2UlOmeRnhVgPrsdSsTLzBIoBlufLx5x7KT25dXY3Q0bvDa0jwMOPg8fBIZblClI6G
+         YRoRBwIqyER8H2ya1QhRxnTyos5uf8y+IjyLsbZs=
+Date:   Fri, 15 May 2020 14:54:17 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Emil Velikov <emil.l.velikov@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, Jiri Slaby <jslaby@suse.com>,
+        linux-kernel@vger.kernel.org, Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org
+Subject: Re: [PATCH 01/11] tty/sysrq: alpha: export and use
+ __sysrq_get_key_op()
+Message-ID: <20200515125417.GA1928406@kroah.com>
+References: <20200513214351.2138580-1-emil.l.velikov@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200515114953.GE67718@C02TD0UTHF1T.local>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200513214351.2138580-1-emil.l.velikov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 12:49:53PM +0100, Mark Rutland wrote:
-> On Wed, May 06, 2020 at 05:44:09PM +0100, Sudeep Holla wrote:
-> > In order to add newer SMCCC v1.1+ functionality and to avoid cluttering
-> > PSCI firmware driver with SMCCC bits, let us move the SMCCC specific
-> > details under drivers/firmware/smccc/smccc.c
-> >
-> > We can also drop conduit and smccc_version from psci_operations structure
-> > as SMCCC was the sole user and now it maintains those.
-> >
-> > No functionality change in this patch though.
-> >
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > ---
-> >  MAINTAINERS                     |  9 +++++++++
-> >  drivers/firmware/Makefile       |  3 ++-
-> >  drivers/firmware/psci/psci.c    | 19 ++++---------------
-> >  drivers/firmware/smccc/Makefile |  3 +++
-> >  drivers/firmware/smccc/smccc.c  | 26 ++++++++++++++++++++++++++
-> >  include/linux/arm-smccc.h       | 11 +++++++++++
-> >  include/linux/psci.h            |  2 --
-> >  7 files changed, 55 insertions(+), 18 deletions(-)
-> >  create mode 100644 drivers/firmware/smccc/Makefile
-> >  create mode 100644 drivers/firmware/smccc/smccc.c
-> >
-> > Hi Mark, Lorenzo,
-> >
-> > I have replicated PSCI entry in MAINTAINERS file and added myself to
-> > for SMCCC entry. If you prefer I can merge it under PSCI. Let me know
-> > your preference along with other review comments.
->
-> > +SECURE MONITOR CALL(SMC) CALLING CONVENTION (SMCCC)
-> > +M:	Mark Rutland <mark.rutland@arm.com>
-> > +M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > +M:	Sudeep Holla <sudeep.holla@arm.com>
-> > +L:	linux-arm-kernel@lists.infradead.org
-> > +S:	Maintained
-> > +F:	drivers/firmware/smccc/
-> > +F:	include/linux/arm-smccc.h
->
-> As per the above, I'm fine with having this separate from the PSCI
-> entry, and I'm fine with sharing this maintainership.
->
+On Wed, May 13, 2020 at 10:43:41PM +0100, Emil Velikov wrote:
+> Export a pointer to the sysrq_get_key_op(). This way we can cleanly
+> unregister it, instead of the current solutions of modifuing it inplace.
+> 
+> Since __sysrq_get_key_op() is no longer used externally, let's make it
+> a static function.
+> 
+> This patch will allow us to limit access to each and every sysrq op and
+> constify the sysrq handling.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jiri Slaby <jslaby@suse.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Richard Henderson <rth@twiddle.net>
+> Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+> Cc: Matt Turner <mattst88@gmail.com>
+> Cc: linux-alpha@vger.kernel.org
+> Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
+> ---
+> Please keep me in the CC list, as I'm not subscribed to the list.
+> 
+> IMHO it would be better if this gets merged this via the tty tree.
 
-Thanks.
+All now taken, thanks!
 
-> > diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
->
-> > +/**
-> > + * arm_smccc_version_init() - Sets SMCCC version and conduit
-> > + * @version: SMCCC version v1.1 or above
-> > + * @conduit: SMCCC_CONDUIT_SMC or SMCCC_CONDUIT_HVC
-> > + *
-> > + * When SMCCCv1.1 or above is not present, defaults to ARM_SMCCC_VERSION_1_0
-> > + * and SMCCC_CONDUIT_NONE respectively.
-> > + */
-> > +void __init arm_smccc_version_init(u32 version, enum arm_smccc_conduit conduit);
->
-> Given we only expect the PSCI code to call this, could we avoid putting
-> this in a header and just define it within psci.c?
->
-
-Sure I will do that, I was playing on safer side to avoid any tools picking on
-such trivial things 😄
-
-> Either way:
->
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
->
-
-Thanks again.
-
---
-Regards,
-Sudeep
+greg k-h
