@@ -2,123 +2,115 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB256C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 872DE206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:08:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="x7FsSMeR";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="yXZ59Xkm"
+	by mail.kernel.org (Postfix) with ESMTP id 5F279206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbgEOOIF (ORCPT
+        id S1726231AbgEOOKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:08:05 -0400
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:17500 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgEOOIE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:08:04 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 49NqxY6pWBzKmcq;
-        Fri, 15 May 2020 16:08:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
-        content-transfer-encoding:content-language:content-type
-        :content-type:in-reply-to:mime-version:date:date:message-id:from
-        :from:references:subject:subject:received; s=mail20150812; t=
-        1589551673; bh=qv1xNIRxXTkvkBNyyMVAn5b8Ba07+r3xwLtiauKCVTs=; b=x
-        7FsSMeRd62wU+YsfopNMCegjFBHtJ7kJ3eNOwzjhpT8yolYlJhLaBTzLvNikJnnc
-        kd4UdHWCocKdVIxTFKxKClv7D3NFs8XcVcSAiX7N11PvFGbpKcdp8gI67aZBbEl4
-        qv/gpK1wCUp/s8MXKZ8rQoCOkFKIzS6J5E5wmyqRpJFWfAA49MJLXBhUbzgHUbh3
-        +KTuxjV6T80Zn/WGPBMKqwmKRLoacEJslXkH78tCcJ+6vkmqJRxLMPU0zNXF2w0B
-        RA/4PnPj258OpnN/D/LlAui3/ehRIpChHKQl62r+sqwkuNmKV+Mp5rFudN7Yq8eJ
-        ezQqzSNG40SlnuEJ6eNBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1589551677;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Rb+uR4nJRc2QwiNLGPRwPBQIIOQwboa4xHyF3v/J6GE=;
-        b=yXZ59Xkm/AR/Ooe4/n6DdvX+QWTLzpR4RD1cTDWYWA/vY2tDQt7XDEGHJRYROB0KEp5c82
-        shwwhXdcwO5sg7OGwo3WkIoKxjrO6PwgF65Y7jDJDrZOOU7cDZ2RoAXxtmffw5JGVQeqe1
-        5FSLrhsJFuJcpD9srQTmkFHPlbDlNNwNdQO686ZgZnqi77RCFrUpWB3sL0f6pzOBzw2coU
-        A+qTAMa239QWvW8obaamD+/pFR6zxy0fhjM/w1E5LXXLw9AfYjZobN3dqmDzwd9Ghvxypj
-        f73LvVKAXNw7aOxLeNCzzDBXRxPGCoOjO0pXpubcq66VM0D+nALv1O7N03wotg==
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id JoIvjFjp25qn; Fri, 15 May 2020 16:07:53 +0200 (CEST)
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the Trekstor
- Yourbook C11B
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Otmar Meier <otmarjun.meier@nexgo.de>
-References: <20200512204009.4751-1-bernhardu@mailbox.org>
- <2656984b-3eec-c6d0-f992-8f1f8973fe3e@redhat.com>
- <CAHp75VejzaZL26ztQMFGjAAMC3B8mkSnXSvGhyFeiHUbUUpp=w@mail.gmail.com>
-From:   =?UTF-8?Q?Bernhard_=c3=9cbelacker?= <bernhardu@mailbox.org>
-Message-ID: <4787d347-b761-6283-7f9d-34c1a11b909f@mailbox.org>
-Date:   Fri, 15 May 2020 16:07:52 +0200
+        Fri, 15 May 2020 10:10:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:23237 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbgEOOKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 10:10:49 -0400
+IronPort-SDR: Lvl0LWOKuTBWMprfi1yX22tZOyO0qrSB9ym2Q/OTsbcqKrj8+7rbdUtM9bcsdc0/MFu4U25FFW
+ q8HtMsC4DO2w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 07:10:49 -0700
+IronPort-SDR: 54TbqBR7CXjYDsu+yd9jQlAkaAjG99wMxI2ia8etFYijKsxS7dIc+1yj3hatPR1kLCRXXsU3Hi
+ WXtG+gio5/OQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="372701841"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 15 May 2020 07:10:44 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZb30-006sqV-VP; Fri, 15 May 2020 17:10:46 +0300
+Date:   Fri, 15 May 2020 17:10:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Long Cheng <long.cheng@mediatek.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] serial: 8250_dw: Fix common clocks usage race
+ condition
+Message-ID: <20200515141046.GF1634618@smile.fi.intel.com>
+References: <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506233136.11842-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506233136.11842-5-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VejzaZL26ztQMFGjAAMC3B8mkSnXSvGhyFeiHUbUUpp=w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 8BA321778
-X-Rspamd-Score: -4.91 / 15.00 / 15.00
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506233136.11842-5-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 07, 2020 at 02:31:35AM +0300, Serge Semin wrote:
+> The race condition may happen if the UART reference clock is shared with
+> some other device (on Baikal-T1 SoC it's another DW UART port). In this
+> case if that device changes the clock rate while serial console is using
+> it the DW 8250 UART port might not only end up with an invalid uartclk
+> value saved, but may also experience a distorted output data since
+> baud-clock could have been changed. In order to fix this lets at least
+> try to adjust the 8250 port setting like UART clock rate in case if the
+> reference clock rate change is discovered. The driver will call the new
+> method to update 8250 UART port clock rate settings. It's done by means of
+> the clock event notifier registered at the port startup and unregistered
+> in the shutdown callback method.
 
-Am 13.05.20 um 19:17 schrieb Andy Shevchenko:
-> On Tue, May 12, 2020 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi,
->> On 5/12/20 10:40 PM, Bernhard Übelacker wrote:
->>> Add touchscreen info for the Trekstor Yourbook C11B. It seems to
->>> use the same touchscreen as the Primebook C11, so we only add a new DMI
->>> match.
->>>
->>> Cc: Otmar Meier <otmarjun.meier@nexgo.de>
->>> Reported-and-tested-by: Otmar Meier <otmarjun.meier@nexgo.de>
->>> Signed-off-by: Bernhard Übelacker <bernhardu@mailbox.org>
->>
->> Thank you, patch looks good to me:
->>
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> This doesn't apply to our for-next.
-> Please, rebase, add Hans' tag and resend, thanks!
+I'm wondering if clock framework itself can provide such a notifier?
+
+> Note 1. In order to avoid deadlocks we had to execute the UART port update
+> method in a dedicated deferred work. This is due to (in my opinion
+> redundant) the clock update implemented in the dw8250_set_termios()
+> method.
+
+So, and how you propose to update the clock when ->set_termios() is called?
+
+> Note 2. Before the ref clock is manually changed by the custom
+> set_termios() function we swap the port uartclk value with new rate
+> adjusted to be suitable for the requested baud. It is necessary in
+> order to effectively disable a functionality of the ref clock events
+> handler for the current UART port, since uartclk update will be done
+> a bit further in the generic serial8250_do_set_termios() function.
+
+...
+
+> +	struct notifier_block	clk_notifier;
+> +	struct work_struct	clk_work;
+
+Oh, this seems too much.
+Perhaps, the compatible based quirk with your initial approach is much better for time being.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Hello Andy,
-I am not sure against which git tree I should rebase?
-
-I tried to rebase against the branch for-next in the git tree below.
-And tried to apply the patch saved from my
-thunderbird and got no error.
-
-Is this the right git tree?
-
-Kind regards,
-Bernhard
-
-
-$ git clone -b for-next --single-branch --depth=10000  git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git
-$ cd linux-gpio-intel
-$ LANG=C git am ../'[PATCH] platform_x86: touchscreen_dmi: Add info for the Trekstor Yourbook C11B.eml'
-Applying: platform/x86: touchscreen_dmi: Add info for the Trekstor Yourbook C11B
