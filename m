@@ -2,227 +2,157 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B149C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5380C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA0D20671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A519C206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kkmrCP9G"
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="LHcajwAy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgEOFrI (ORCPT
+        id S1726718AbgEOFry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 01:47:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725899AbgEOFrI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 01:47:08 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDAA3C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:47:07 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id 82so781208lfh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:47:07 -0700 (PDT)
+        Fri, 15 May 2020 01:47:54 -0400
+Received: from mail-eopbgr770091.outbound.protection.outlook.com ([40.107.77.91]:36416
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725899AbgEOFry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 01:47:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iLG1LHFYkwOG/13CaN9YjKuPJfQDK7oXWiAFkjyPcwD6fc7BKhLw7nGN3SJ95iy5jLxSrElDJ8vDNyNr0p42zobiGkpMyObzj28WYNhzinojHJFRP7OAkzxxvV5As3xMQo/VxY+N9lz83tDTCLEF6Q4vEqpFqJbfwVpinWVIrJl31l4CUxm1QEk9h5aeeoHNhxKvoP07cEQ/TMV5OHdUHJG55cuW7nbCgytBI+Y9FKOe/LV+MALBfCm02pi6AuZxJhl3/r+lhtaGo2ncjsqPjsGVRyKjJjcP4weWZPjwYp+EsNm2o2F8qhgwvzzJUR+0Q7SHhQtRP7m47fZs4/m+Tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mAtwRKp9mAuzqCypxqw/MGu697UqNGt5PSOWckM5FMk=;
+ b=B1bWBEVkAheXy5Nn+HbFIPtub/psuw9Wcnhadj/dUoQN8a0jNT/XG6lUuX8ZhM40FXjXQYcBi9ePh7YQE0he3Ha0T/KaiKps4rm+l5pv7ORqGP3pPdS6LuOVv0TFCpGvCty069SEjX8285M2DZk4x/p5naA1AbIoRxlj153jp//yoGJtwsYwnh8J+7vVS1v03CcEYvs6xAonKHnDijlyeUeailqVh+/i695YWwfBx5D8bmbmVT/qjNjB7lhbRvhC+ieOx8+Sv5ytUuQZ0qjzdx/aNYA7iOajkdW1i7jxQfmaAyNVb8oWybEBZh58AIWCBiHdv2BupDsIv08In0OQhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qT+j8TJJ9iCnluDMt3Pn9caZLk/zokXSMj6l5Z16g+s=;
-        b=kkmrCP9Gx0JjbKINF0Mhte17DK/Hk7blYGJ6tZPU42+CqxZaHjv4IbruGvl43g4R/2
-         wbRyyI27sIX8CTY9HgdyiRqWSiATQy/a2eV4ZjU43Z+KPaIMYvrtVt0xgIrDN3qRs/mV
-         x+ruIEYM7j4Mfldd8Hu8j0zB1LgDGgD1NVDof+rbyigq4q9IT9osIHoyDVm0HPh9mJOJ
-         z6vmt3vV+7dNurDkB/ZbdCmGeYKnTZqL38k8vJYvuHhyNFmJpm+lQBacAVkTdma5ck2a
-         dPeRwGfqo3Wm2I42EKj/WI9YPvuz1BFMTG93O10/Za6GQGYJD1AERm9XcJ7UtyMf/jRb
-         Epsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qT+j8TJJ9iCnluDMt3Pn9caZLk/zokXSMj6l5Z16g+s=;
-        b=evtdovTwJ9QGYQKVDfUhRLvvC1fGNr2eQ3WYQU209FQO2z6YCcXdMl+A/MET0f4ncu
-         F1rOke4cLs2f510znSJ1bFkbRgd9cb/kgDBa94DAyVk02FsrlqQqA6Gn1h5Pj17PHix9
-         +o6A0gxw4bQ/V7D0glFFx/URKRyK7f73RzuxpYXb88drreC+oNihvRn0+900Q7G6bePk
-         w7JuUaJ2/J8tVPQTRma6nAtjohaiqPa4/aDsMBVNGWW0nVnt1+RtzQhK8ho2sliH7kq6
-         limENcfkBi/KhZNKoN+376UJ773HvY2LkLFANyky5FYGt4D37mLDyDDUqwF+wXGy4lrn
-         ueBg==
-X-Gm-Message-State: AOAM532C9hYo5/kLWowmLoB8shvAUUe243fViRhVIWnCqUf5P5+KwBnS
-        drtmle9lnzUIiReINniygZGF1WIUoFdVTjNLn9y6mQ==
-X-Google-Smtp-Source: ABdhPJxcrxR+ThiPtxW1/TnXXheQ5A39xJ4bcu6PTv+fcQLASiAieu7AF7+kRZeYxcHIbg1H1cARbAQGiTaekTo6v/A=
-X-Received: by 2002:ac2:5106:: with SMTP id q6mr1178193lfb.59.1589521626102;
- Thu, 14 May 2020 22:47:06 -0700 (PDT)
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mAtwRKp9mAuzqCypxqw/MGu697UqNGt5PSOWckM5FMk=;
+ b=LHcajwAyH1uiSPTro16B83GkRYLL8kmy18eU2roX2rHFEnRXM3q5BCny0J+fVZKQRBZFUhlBETUHh4FzpP7ahErTAUf+O+Sg4I72UraatR0pbuXAvW2Ww/P4ZHCoeymLJoB9w7j/VnsEGrMAt4uObLB10NA7yHo3F2gEVciUX+4=
+Authentication-Results: analogixsemi.com; dkim=none (message not signed)
+ header.d=none;analogixsemi.com; dmarc=none action=none
+ header.from=analogixsemi.com;
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
+ by BY5PR04MB6533.namprd04.prod.outlook.com (2603:10b6:a03:1df::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Fri, 15 May
+ 2020 05:47:48 +0000
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f]) by BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f%6]) with mapi id 15.20.3000.022; Fri, 15 May 2020
+ 05:47:48 +0000
+Date:   Fri, 15 May 2020 13:47:39 +0800
+From:   Xin Ji <xji@analogixsemi.com>
+To:     devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: [PATCH v11 0/2] Add initial support for slimport anx7625
+Message-ID: <cover.1589511894.git.xji@analogixsemi.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK2PR03CA0053.apcprd03.prod.outlook.com
+ (2603:1096:202:17::23) To BY5PR04MB6739.namprd04.prod.outlook.com
+ (2603:10b6:a03:229::8)
 MIME-Version: 1.0
-References: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org>
- <20200512142533.ta4uejwmq5gchtlx@holly.lan> <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
- <20200514084230.GO17734@linux-b0ei>
-In-Reply-To: <20200514084230.GO17734@linux-b0ei>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Fri, 15 May 2020 11:16:54 +0530
-Message-ID: <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
-Subject: Re: [PATCH] kgdb: Fix broken handling of printk() in NMI context
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xin-VirtualBox (114.247.245.254) by HK2PR03CA0053.apcprd03.prod.outlook.com (2603:1096:202:17::23) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.3021.11 via Frontend Transport; Fri, 15 May 2020 05:47:47 +0000
+X-Originating-IP: [114.247.245.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ea8ca748-e4e3-4031-1971-08d7f8937fa3
+X-MS-TrafficTypeDiagnostic: BY5PR04MB6533:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR04MB6533306235AFE27FF51A099EC7BD0@BY5PR04MB6533.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 04041A2886
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Icg2AMDYxW4wwcFPVSpBXNnqsoXb1M6ZAxrPPql83PttfJu8ExzTkWRZyLyQbQFL1FguCVHO7eAC/ckXh821Q1M5eLFdiT+sMAySntM8GJHfpvYOsDBjUkOp5Z4rJO8ZvHvGQlb8oztJD0I6+l8pAkabbKElJOuJZbggbTt3jpXbfPHn0zKjp0DV9tprApYVivTYHbUrL1GsBXyMePN7+NjZJdjB+riyGb0zB1/p3BOrLUHjjMxBva4utvglTfliLCZY0smpk6Iaz9kOjO2pkBtJLdYU8bebB+cXI9LUmcbPEXXq9AdTT9vf6b0Dt7pWdHdMODbB/whXtb9svgOlhTTs7I49HX6oW71d9XW4IokMwqZKAeD2DqkPNouD9Bm2BPSp7lVcR1bpNQr7run6aT8SHF6vhhNSaZJKZU9pnQyUGRMeCL6w4RiutITMwhT3
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39840400004)(376002)(136003)(346002)(366004)(396003)(7416002)(6666004)(6496006)(5660300002)(26005)(16526019)(86362001)(186003)(52116002)(66946007)(54906003)(66556008)(110136005)(66476007)(316002)(4326008)(36756003)(8676002)(956004)(107886003)(8936002)(6486002)(478600001)(2906002)(2616005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: iCUHo4g7uiBR8+hS5b5Mp73fp9Ct32wQ3e9aHfNSmnHEL+/kX1tHx/vFYBsuXSqIx01JZbn6G+K2e+NEa4qDGwJU04GxpQHLVjsx2/OuB3PJf6ZcCunwleKERQNetZ/B4lIHfAojk36dtUiCkF7PrwZYl/knb4OCxspjAjA54JUZ3uq86JLr4fGWus/9d95u+eSlVL3P2XEnIscxbGxxDj2ugeTLYD6iP6IUeqSAVR223rnoQHYvjrliZKRqGwObR//7C3+caG8D0HUcB4oIacf3DLWKevPFUUplw7ybNm/2xtP/QzYmijUgP8OH/RgPfG6G2BaU/3OwpEC7u8XGG7hlUYNxB42Xx9S0MK1PeLiF1tJ+W0ju7rIDNKmc8IGL8IXKYXGDUQm2VU4r27fxPWeGNH3DitcvJbN65kS2mLiEARXChYObCWkq10Vray2D44huMBK2qi3JrheMlZ2SkYz3SPcZhTRRo4eQlLUUWZcX9FNgw4woqM4yhO7sRBhD
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea8ca748-e4e3-4031-1971-08d7f8937fa3
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2020 05:47:48.4129
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WhcqP552pHlzvHkpXXSB1Of/sQj96UaFZuwXLnvVsJqZrWPRNZezg+JuLSN+bI7LNsNkSAa6/BgSsBYnByrJew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB6533
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
+Hi all,
 
-On Thu, 14 May 2020 at 14:13, Petr Mladek <pmladek@suse.com> wrote:
->
-> On Wed 2020-05-13 19:04:48, Sumit Garg wrote:
-> > On Tue, 12 May 2020 at 19:55, Daniel Thompson
-> > <daniel.thompson@linaro.org> wrote:
-> > >
-> > > On Tue, May 12, 2020 at 02:18:34PM +0530, Sumit Garg wrote:
-> > > > Since commit 42a0bb3f7138 ("printk/nmi: generic solution for safe printk
-> > > > in NMI"), kgdb entry in NMI context defaults to use safe NMI printk()
-> > >
-> > > I didn't see the author on Cc: nor any of the folks whose hands it
-> > > passed through. It would definitely be good to involve them in this
-> > > discussion.
-> > >
-> >
-> > Thanks for updating the Cc: list.
-> >
-> > >
-> > > > which involves CPU specific buffers and deferred printk() until exit from
-> > > > NMI context.
-> > > >
-> > > > But kgdb being a stop-the-world debugger, we don't want to defer printk()
-> > > > especially backtrace on corresponding CPUs. So instead switch to normal
-> > > > printk() mode in kgdb_cpu_enter() if entry is in NMI context.
-> > >
-> > > So, firstly I should *definitely* take a mea cupla for not shouting
-> > > about this at the time (I was on Cc:... twice). Only thing I can say
-> > > confidently is that the test suite didn't yell about this and so I
-> > > didn't look at this as closely as I should have done (and that it
-> > > didn't yell is mostly because I'm still building out the test suite
-> > > coverage).
-> > >
-> > > Anyhow...
-> > >
-> > > This feels a little like we are smearing the printk() interception logic
-> > > across the kernel in ways that make things hard to read. If we accepted
-> > > this patch we then have, the new NMI interception logic, the old kdb
-> > > interception logic and some hacks in the kgdb trap handler to defang the
-> > > NMI interception logic and force the kdb logic to kick in.
-> > >
-> > > Wouldn't it be better to migrate kdb interception logic up a couple of
-> > > levels so that it continues to function even when we are in nmi printk
-> > > mode. That way *all* the printk() interception code would end up in
-> > > one place.
-> > >
-> >
-> > Yes it would be better to have all printk() interception code at one
-> > place. Let me see if I can come up with an integrated logic.
->
-> It might be enough to move the kdb_check from vprintk_default()
-> to vprintk_func().
->
-> I have never used kdb. I did not know that it was able to stop
-> kernel in any context.
->
-> Would this work? It is only compile tested!
+The following series add support for the Slimport ANX7625 transmitter, a
+ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable device.
 
-Thanks for this fix patch. It did resolve the issue and now I am able
-to see the backtrace in the kdb shell. So we can go ahead with your
-patch and drop mine.
 
->
-> From 14ae6c9f0cbd1479cb898c864c7ab46e20f3cf6f Mon Sep 17 00:00:00 2001
-> From: Petr Mladek <pmladek@suse.com>
-> Date: Thu, 14 May 2020 10:37:44 +0200
-> Subject: [PATCH] printk/kdb: Redirect printk messages into kdb in any context
->
-> kdb is able to stop kernel even in NMI context where printk() is redirected
-> to the printk_safe() lockless variant. Move the check and redirect to kdb
-> even in this case.
->
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
->  kernel/printk/printk.c      | 14 +-------------
->  kernel/printk/printk_safe.c |  8 ++++++++
->  2 files changed, 9 insertions(+), 13 deletions(-)
->
+This is the v11 version, any mistakes, please let me know, I will fix it in
+the next series.
 
-Reported-by: Sumit Garg <sumit.garg@linaro.org>
-Tested-by: Sumit Garg <sumit.garg@linaro.org>
+Change history:
+v11: Fix comments from Rob Herring
+ - Update commit message.
+ - Remove unused label.
 
--Sumit
+v10: Fix comments from Rob Herring, Daniel.
+ - Fix dt_binding_check warning.
+ - Update description.
 
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index 9a9b6156270b..63a1aa377cd9 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -35,7 +35,6 @@
->  #include <linux/memblock.h>
->  #include <linux/syscalls.h>
->  #include <linux/crash_core.h>
-> -#include <linux/kdb.h>
->  #include <linux/ratelimit.h>
->  #include <linux/kmsg_dump.h>
->  #include <linux/syslog.h>
-> @@ -2036,18 +2035,7 @@ EXPORT_SYMBOL(vprintk);
->
->  int vprintk_default(const char *fmt, va_list args)
->  {
-> -       int r;
-> -
-> -#ifdef CONFIG_KGDB_KDB
-> -       /* Allow to pass printk() to kdb but avoid a recursion. */
-> -       if (unlikely(kdb_trap_printk && kdb_printf_cpu < 0)) {
-> -               r = vkdb_printf(KDB_MSGSRC_PRINTK, fmt, args);
-> -               return r;
-> -       }
-> -#endif
-> -       r = vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, 0, fmt, args);
-> -
-> -       return r;
-> +       return vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, 0, fmt, args);
->  }
->  EXPORT_SYMBOL_GPL(vprintk_default);
->
-> diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
-> index d9a659a686f3..81734497c625 100644
-> --- a/kernel/printk/printk_safe.c
-> +++ b/kernel/printk/printk_safe.c
-> @@ -6,6 +6,7 @@
->  #include <linux/preempt.h>
->  #include <linux/spinlock.h>
->  #include <linux/debug_locks.h>
-> +#include <linux/kdb.h>
->  #include <linux/smp.h>
->  #include <linux/cpumask.h>
->  #include <linux/irq_work.h>
-> @@ -359,6 +360,13 @@ void __printk_safe_exit(void)
->
->  __printf(1, 0) int vprintk_func(const char *fmt, va_list args)
->  {
-> +#ifdef CONFIG_KGDB_KDB
-> +       /* Allow to pass printk() to kdb but avoid a recursion. */
-> +       if (unlikely(kdb_trap_printk && kdb_printf_cpu < 0)) {
-> +               return vkdb_printf(KDB_MSGSRC_PRINTK, fmt, args);
-> +       }
-> +#endif
-> +
->         /*
->          * Try to use the main logbuf even in NMI. But avoid calling console
->          * drivers that might have their own locks.
-> --
-> 2.26.1
->
+v9: Fix comments from Sam, Nicolas, Daniel
+ - Remove extcon interface.
+ - Remove DPI support.
+ - Fix dt_binding_check complains.
+ - Code clean up and update description.
+
+v8: Fix comments from Nicolas.
+ - Fix several coding format.
+ - Update description.
+
+v7:
+ - Fix critical timing(eg:odd hfp/hbp) in "mode_fixup" interface,
+   enhance MIPI RX tolerance by setting register MIPI_DIGITAL_ADJ_1 to 0x3D.
+
+
+Xin Ji (2):
+  dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter DT schema
+  drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP bridge driver
+
+ .../bindings/display/bridge/analogix,anx7625.yaml  |   95 +
+ drivers/gpu/drm/bridge/Makefile                    |    2 +-
+ drivers/gpu/drm/bridge/analogix/Kconfig            |    8 +
+ drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
+ drivers/gpu/drm/bridge/analogix/anx7625.c          | 1961 ++++++++++++++++++++
+ drivers/gpu/drm/bridge/analogix/anx7625.h          |  397 ++++
+ 6 files changed, 2463 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
+
+-- 
+2.7.4
+
