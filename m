@@ -2,86 +2,101 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB13C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F54FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4C8420758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA83820758
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:30:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=embedjournal.com header.i=siddharth@embedjournal.com header.b="IbnNVfB4"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="VUjaUsVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgEONaC (ORCPT
+        id S1726250AbgEONaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:30:02 -0400
-Received: from sender4-of-o53.zoho.com ([136.143.188.53]:21369 "EHLO
-        sender4-of-o53.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgEONaB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:30:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1589549390; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=mthFjg5pIaPTOiYVHLAQL4I7wuCFuFTnnt3pCEtfIm0fqNzy3Dc/XYfFzk9hEmnb0sdAU59B/vo/NNIx3BSYMGbN4mQzAVHmgoq/20q0EyGQcolH2uCQHeWjvijZUwBCXmfEYdGaKmz3+JD+9PJTbaAaxo6jjE77xIqznRCorhs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1589549390; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=tFYxYwnB4fcfztIGAf4NeU68AEc97Y1dhPbj/7sR+iY=; 
-        b=WukZAVeR+U09SJXD+gL3sZYLrut6ZUFjhfaLoRZejXBs20/uvi0vnim+aHMYdbXJQqUD6kBprFVxHoK5D5ssmUWMzVcfm0hXVtwgkbGZeoC2Usro4DWlJipf2/l+R45ZyRceqckYVcna6TxZcs48IaRApL07+vThHfstccqXi5w=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=embedjournal.com;
-        spf=pass  smtp.mailfrom=siddharth@embedjournal.com;
-        dmarc=pass header.from=<siddharth@embedjournal.com> header.from=<siddharth@embedjournal.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589549390;
-        s=zoho; d=embedjournal.com; i=siddharth@embedjournal.com;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        bh=tFYxYwnB4fcfztIGAf4NeU68AEc97Y1dhPbj/7sR+iY=;
-        b=IbnNVfB4GcQGCho0SlcM7xwg72CV4dvLs77OI8JkcVQYjYcGTZlB1tAoxfsbHxIa
-        C0K2YAv0/PSlHeDENrkFL8g8tiSFnbnQNysiu3BXUM171RIieo1bj6ecxw5A9d72Vm8
-        sjgo3264lJ5BkgB6APXPFaGCdsMtxD+MDgUCUDrk=
-Received: from csiddharth-a01.vmware.com (115.97.41.221 [115.97.41.221]) by mx.zohomail.com
-        with SMTPS id 1589549389648876.3212680013104; Fri, 15 May 2020 06:29:49 -0700 (PDT)
-Date:   Fri, 15 May 2020 18:59:43 +0530
-From:   Siddharth Chandrasekaran <siddharth@embedjournal.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Siddharth Chandrasekaran <csiddharth@vmware.com>,
-        srostedt@vmware.com, linux-kernel@vger.kernel.org,
-        stable@kernel.org, srivatsab@vmware.com, dchinner@redhat.com,
-        darrick.wong@oracle.com
-Subject: Re: [PATCH] Backport security fixe to 4.9 and 4.4 stable trees
-Message-ID: <20200515132943.GA97579@csiddharth-a01.vmware.com>
-References: <cover.1589486724.git.csiddharth@vmware.com>
- <20200515124945.GA93755@csiddharth-a01.vmware.com>
- <20200515125701.GA1934886@kroah.com>
+        Fri, 15 May 2020 09:30:17 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:35466 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbgEONaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 09:30:16 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49Nq5x0fTgz8j;
+        Fri, 15 May 2020 15:30:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1589549414; bh=YhB2JsZedxwN/B0OR0Q2lPRzMCO96sFs8wnazr66xiA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VUjaUsVKtUrnMR6cwbBIf5YkkpBfI3oQfiB7seL4Jr+YGEGDsR1TP/ynHi/NHLI8b
+         ZtlqWJL1ima5A6MTYIuf3T05sWlwe9Rkg6O9Biwc2jyxj7aDqMUviAuKmRMgisLYVg
+         xB9eAAsoPGso/w1GskeocPjPquQE9gqy9IxeFMBW5WDalHYDehVxzVLskMe1JDU8YV
+         LZXCwNw+Nb5QpeEbHm8Z+8vBdm/9e/DRsfMpeo1zXkIgTjTuD44czwTVXFUMK2XeDo
+         x8wE9jOJ1pToKB8OoMcRfWX0GIxJeXBG+gzZVcE9gU+ZswKiX/HgTTqZDpUSqEJCyi
+         2R3OJQeBXobNQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Fri, 15 May 2020 15:30:11 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Zack Pearsall <zpearsall@yahoo.com>,
+        linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: tps65910: Correct power-off programming sequence
+Message-ID: <20200515110754.GB20564@qmqm.qmqm.pl>
+References: <20200514205022.7024-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-2
 Content-Disposition: inline
-In-Reply-To: <20200515125701.GA1934886@kroah.com>
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200514205022.7024-1-digetx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 02:57:01PM +0200, Greg KH wrote:
-> On Fri, May 15, 2020 at 06:19:45PM +0530, Siddharth Chandrasekaran wrote:
-> > Please ignore this patch set, I accidentally added another patch I was
-> > working on. Will send v2 with the right patches.
+On Thu, May 14, 2020 at 11:50:21PM +0300, Dmitry Osipenko wrote:
+> This patch fixes system shutdown on a devices that use TPS65910 as a
+> system's power controller. In accordance to the TPS65910 datasheet, the
+> PMIC's state-machine transitions into the OFF state only when DEV_OFF
+> bit of DEVCTRL_REG is set. The ON / SLEEP states also should be cleared,
+> otherwise PMIC won't get into a proper state on shutdown. Devices like
+> Nexus 7 tablet and Ouya game console are now shutting down properly.
 > 
-> What patch set?  I see nothing in this email, so I have no idea what you
-> are referring to :(
+> Tested-by: Zack Pearsall <zpearsall@yahoo.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/mfd/tps65910.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
+> index 11959021b50a..22116cee411d 100644
+> --- a/drivers/mfd/tps65910.c
+> +++ b/drivers/mfd/tps65910.c
+> @@ -440,8 +440,16 @@ static void tps65910_power_off(void)
+>  			DEVCTRL_PWR_OFF_MASK) < 0)
+>  		return;
+>  
+> -	tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
+> -			DEVCTRL_DEV_ON_MASK);
+> +	if (tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
+> +			DEVCTRL_DEV_SLP_MASK) < 0)
+> +		return;
+> +
+> +	if (tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
+> +			DEVCTRL_DEV_ON_MASK) < 0)
+> +		return;
+> +
+> +	tps65910_reg_set_bits(tps65910, TPS65910_DEVCTRL,
+> +			DEVCTRL_DEV_OFF_MASK);
+>  }
 
-Apologies! Looks like my email thread was broken. I was referring to
-the thread here: https://lkml.org/lkml/2020/5/14/1326 with subject:
-  
-  "[PATCH] Backport security fixe to 4.9 and 4.4 stable trees"
+Isn't it enough to update the DEVCTRL with just one
+tps65910_reg_update_bits()?
 
-The corrected version (v2) of this patch should have reached you
-(hopefully) with the subject:
-
-  "[PATCH v2] Backport xfs security fix to 4.9 and 4.4 stable trees"
-
-Thanks!
-
--- Sid.
+Best Regards
+Micha³ Miros³aw
