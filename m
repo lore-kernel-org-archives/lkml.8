@@ -2,178 +2,66 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A58C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18483C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44EAD2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:36:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U/8Wfjg7"
+	by mail.kernel.org (Postfix) with ESMTP id 01D2E2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726288AbgEORgK (ORCPT
+        id S1726465AbgEORhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:36:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726183AbgEORgK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:36:10 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28D5FC061A0C;
-        Fri, 15 May 2020 10:36:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=KPB9Sq7v2TPIcM7TwZzzPQ/MWQa+9wV74BLtgx752QQ=; b=U/8Wfjg7133SCpQIG23VFFwrAZ
-        twxYvuI7OiFfpjrFh9POhb8+hW0O0twkQdQa3wWY8PoGelF3Y8KremKd+FnWEhkp4tfLweqZygl8t
-        9Kj/SlpYGVg/9mUb4XUDA+qleSCXx8pf0k5tkT43mWMCStsFiOqWt5XCPGjj5UiFfmYBz9H0HJjNj
-        tmt/oqSYw6oOH0wp46JZqHPaorOJF8IMCuvVtPyMVlxDlGF5asN6/RU41czRdIdVVtQBrLeZknHCa
-        uQ19ijNuZOWlV4UvaDOcsGsUMQeAJyPpXVXVvz9OGL7O93uGEn4mB3cuxYBanRc0DBY75sMJbfq8c
-        xI6f1kNg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZeFg-00077f-VP; Fri, 15 May 2020 17:36:05 +0000
-Subject: Re: [PATCH -next] nfs: fsinfo: fix build when CONFIG_NFS_V4 is not
- enabled
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "viro@ZenIV.linux.org.uk" <viro@ZenIV.linux.org.uk>,
-        "dhowells@redhat.com" <dhowells@redhat.com>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-References: <f91b8f29-271a-b5cd-410b-a43a399d34aa@infradead.org>
- <7c446f9f404135f0f4109e03646c4ce598484cae.camel@hammerspace.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <8e6ff78d-1c18-789b-a0ef-adf87a891a58@infradead.org>
-Date:   Fri, 15 May 2020 10:36:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 15 May 2020 13:37:18 -0400
+Received: from ms.lwn.net ([45.79.88.28]:53476 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726212AbgEORhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:37:18 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 613B1736;
+        Fri, 15 May 2020 17:37:17 +0000 (UTC)
+Date:   Fri, 15 May 2020 11:37:16 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Sandipan Das <sandipan@linux.ibm.com>
+Subject: Re: [PATCH] Documentation: update numastat explanation
+Message-ID: <20200515113716.29853dc8@lwn.net>
+In-Reply-To: <20200507120217.12313-1-vbabka@suse.cz>
+References: <20200507120217.12313-1-vbabka@suse.cz>
+Organization: LWN.net
 MIME-Version: 1.0
-In-Reply-To: <7c446f9f404135f0f4109e03646c4ce598484cae.camel@hammerspace.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/20 10:33 AM, Trond Myklebust wrote:
-> On Fri, 2020-05-15 at 10:27 -0700, Randy Dunlap wrote:
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Fix multiple build errors when CONFIG_NFS_V4 is not enabled.
->>
->> ../fs/nfs/fsinfo.c: In function 'nfs_fsinfo_get_supports':
->> ../fs/nfs/fsinfo.c:153:12: error: 'const struct nfs_server' has no
->> member named 'attr_bitmask'
->>   if (server->attr_bitmask[0] & FATTR4_WORD0_SIZE)
->>             ^~
->> ../fs/nfs/fsinfo.c:155:12: error: 'const struct nfs_server' has no
->> member named 'attr_bitmask'
->>   if (server->attr_bitmask[1] & FATTR4_WORD1_NUMLINKS)
->>             ^~
->> ../fs/nfs/fsinfo.c:158:12: error: 'const struct nfs_server' has no
->> member named 'attr_bitmask'
->>   if (server->attr_bitmask[0] & FATTR4_WORD0_ARCHIVE)
->>             ^~
->> ../fs/nfs/fsinfo.c:160:12: error: 'const struct nfs_server' has no
->> member named 'attr_bitmask'
->>   if (server->attr_bitmask[0] & FATTR4_WORD0_HIDDEN)
->>             ^~
->> ../fs/nfs/fsinfo.c:162:12: error: 'const struct nfs_server' has no
->> member named 'attr_bitmask'
->>   if (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM)
->>             ^~
->> ../fs/nfs/fsinfo.c: In function 'nfs_fsinfo_get_features':
->> ../fs/nfs/fsinfo.c:205:12: error: 'const struct nfs_server' has no
->> member named 'attr_bitmask'
->>   if (server->attr_bitmask[0] & FATTR4_WORD0_CASE_INSENSITIVE)
->>             ^~
->> ../fs/nfs/fsinfo.c:207:13: error: 'const struct nfs_server' has no
->> member named 'attr_bitmask'
->>   if ((server->attr_bitmask[0] & FATTR4_WORD0_ARCHIVE) ||
->>              ^~
->> ../fs/nfs/fsinfo.c:208:13: error: 'const struct nfs_server' has no
->> member named 'attr_bitmask'
->>       (server->attr_bitmask[0] & FATTR4_WORD0_HIDDEN) ||
->>              ^~
->> ../fs/nfs/fsinfo.c:209:13: error: 'const struct nfs_server' has no
->> member named 'attr_bitmask'
->>       (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM))
->>              ^~
->>
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: linux-nfs@vger.kernel.org
->> Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
->> Cc: Anna Schumaker <anna.schumaker@netapp.com>
->> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
->> Cc: linux-fsdevel@vger.kernel.org
->> Cc: David Howells <dhowells@redhat.com>
->> ---
->>  fs/nfs/fsinfo.c |    5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> --- linux-next-20200515.orig/fs/nfs/fsinfo.c
->> +++ linux-next-20200515/fs/nfs/fsinfo.c
->> @@ -5,6 +5,7 @@
->>   * Written by David Howells (dhowells@redhat.com)
->>   */
->>  
->> +#include <linux/kconfig.h>
->>  #include <linux/nfs_fs.h>
->>  #include <linux/windows.h>
->>  #include "internal.h"
->> @@ -150,6 +151,7 @@ static int nfs_fsinfo_get_supports(struc
->>  		sup->stx_mask |= STATX_CTIME;
->>  	if (server->caps & NFS_CAP_MTIME)
->>  		sup->stx_mask |= STATX_MTIME;
->> +#if IS_ENABLED(CONFIG_NFS_V4)
->>  	if (server->attr_bitmask[0] & FATTR4_WORD0_SIZE)
->>  		sup->stx_mask |= STATX_SIZE;
->>  	if (server->attr_bitmask[1] & FATTR4_WORD1_NUMLINKS)
->> @@ -161,6 +163,7 @@ static int nfs_fsinfo_get_supports(struc
->>  		sup->win_file_attrs |= ATTR_HIDDEN;
->>  	if (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM)
->>  		sup->win_file_attrs |= ATTR_SYSTEM;
->> +#endif
->>  
->>  	sup->stx_attributes = STATX_ATTR_AUTOMOUNT;
->>  	return sizeof(*sup);
->> @@ -202,12 +205,14 @@ static int nfs_fsinfo_get_features(struc
->>  	if (server->caps & NFS_CAP_MTIME)
->>  		fsinfo_set_feature(ft, FSINFO_FEAT_HAS_MTIME);
->>  
->> +#if IS_ENABLED(CONFIG_NFS_V4)
->>  	if (server->attr_bitmask[0] & FATTR4_WORD0_CASE_INSENSITIVE)
->>  		fsinfo_set_feature(ft, FSINFO_FEAT_NAME_CASE_INDEP);
->>  	if ((server->attr_bitmask[0] & FATTR4_WORD0_ARCHIVE) ||
->>  	    (server->attr_bitmask[0] & FATTR4_WORD0_HIDDEN) ||
->>  	    (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM))
->>  		fsinfo_set_feature(ft, FSINFO_FEAT_WINDOWS_ATTRS);
->> +#endif
->>  
->>  	return sizeof(*ft);
->>  }
+On Thu,  7 May 2020 14:02:17 +0200
+Vlastimil Babka <vbabka@suse.cz> wrote:
+
+> During recent patch discussion [1] it became apparent that the "other_node"
+> definition in the numastat documentation has always been different from actual
+> implementation. It was also noted that the stats can be innacurate on systems
+> with memoryless nodes.
 > 
-> This whole thing needs to be reviewed and acked by the NFS community,
+> This patch corrects the other_node definition (with minor tweaks to two more
+> definitions), adds a note about memoryless nodes and also two introductory
+> paragraphs to the numastat documentation.
+> 
+> [1] https://lore.kernel.org/linux-mm/20200504070304.127361-1-sandipan@linux.ibm.com/T/#u
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  Documentation/admin-guide/numastat.rst | 31 +++++++++++++++++++++++---
+>  1 file changed, 28 insertions(+), 3 deletions(-)
 
-Certainly.
+Applied, thanks.
 
-> and quite frankly I'm inclined to NAK this. This is the second time
-> David tries to push this unwanted rewrite of totally unrelated code.
-
-No problem on that. I just want it to build cleanly.
-
-thanks.
--- 
-~Randy
-
+jon
