@@ -2,90 +2,71 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7703AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3342070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3E52076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589573705;
+	bh=4gnhVAShCJYYFd9LGgl0TpihpjTE3xLvNuOuo6w89Zc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=t6sbjvLwlSUpJzOLYw1VLFxK5GVPNOeSqXUSf8yNr/Z1T8D/alYPcZYXl3AMhFwJ4
+	 aIUaZFicbWl/K94L8+j9Wqv6RmzdMaNNsmE5++57IYiKp+wpkxlVffe8LBt1klGCy6
+	 c4Sj2mWzb1EgFoipDUyjFFxQiy2GqR40DQNqsnxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgEOUOY (ORCPT
+        id S1726607AbgEOUPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:14:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbgEOUOY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:14:24 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CA9C061A0C;
-        Fri, 15 May 2020 13:14:23 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZgiT-009GPf-NM; Fri, 15 May 2020 20:13:57 +0000
-Date:   Fri, 15 May 2020 21:13:57 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Alexey Gladkov <gladkov.alexey@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        syzbot <syzbot+c1af344512918c61362c@syzkaller.appspotmail.com>,
-        jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, linux-security-module@vger.kernel.org,
-        serge@hallyn.com, sfr@canb.auug.org.au,
-        syzkaller-bugs@googlegroups.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: linux-next boot error: general protection fault in
- tomoyo_get_local_path
-Message-ID: <20200515201357.GG23230@ZenIV.linux.org.uk>
-References: <0000000000002f0c7505a5b0e04c@google.com>
- <c3461e26-1407-2262-c709-dac0df3da2d0@i-love.sakura.ne.jp>
- <72cb7aea-92bd-d71b-2f8a-63881a35fad8@i-love.sakura.ne.jp>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <72cb7aea-92bd-d71b-2f8a-63881a35fad8@i-love.sakura.ne.jp>
+        Fri, 15 May 2020 16:15:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726168AbgEOUPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 16:15:04 -0400
+Subject: Re: [GIT PULL] Kselftest update for Linux 5.7-rc6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589573703;
+        bh=4gnhVAShCJYYFd9LGgl0TpihpjTE3xLvNuOuo6w89Zc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=YJp2cwYxo5T+ED9qfAprMQ8NZMHSjcAVYJcEAECDvccyruSR//AEca7z9gKY8cXRh
+         3XzDvL0ILrok9p5IY8QsNl9jzVwSRy1eTcaSjoYJLKx3t4aT3b+aeJSuKW068s1LZH
+         +dRifEaiLqTHqr8DWhMy5i+giNoewsZFMSXSLi8A=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <0cb258e7-e5ef-b42d-ef9b-2ee979a91aa0@linuxfoundation.org>
+References: <0cb258e7-e5ef-b42d-ef9b-2ee979a91aa0@linuxfoundation.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <0cb258e7-e5ef-b42d-ef9b-2ee979a91aa0@linuxfoundation.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
+ tags/linux-kselftest-5.7-rc6
+X-PR-Tracked-Commit-Id: 851c4df54dc1bcae41d07e46e3d89e035b0a7140
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ce24729667cf8aaebf290613a6026a50a22c3eee
+Message-Id: <158957370371.26450.14505996827121272311.pr-tracker-bot@kernel.org>
+Date:   Fri, 15 May 2020 20:15:03 +0000
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     torvalds@linux-foundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>, mpe@ellerman.id.au,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, Kees Cook <keescook@chromium.org>,
+        shuah <shuah@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 12:36:28AM +0900, Tetsuo Handa wrote:
-> On 2020/05/16 0:18, Tetsuo Handa wrote:
-> > This is
-> > 
-> >         if (sb->s_magic == PROC_SUPER_MAGIC && *pos == '/') {
-> >                 char *ep;
-> >                 const pid_t pid = (pid_t) simple_strtoul(pos + 1, &ep, 10);
-> >                 struct pid_namespace *proc_pidns = proc_pid_ns(d_inode(dentry)); // <= here
-> > 
-> >                 if (*ep == '/' && pid && pid ==
-> >                     task_tgid_nr_ns(current, proc_pidns)) {
-> > 
-> > which was added by commit c59f415a7cb6e1e1 ("Use proc_pid_ns() to get pid_namespace from the proc superblock").
-> > 
-> > @@ -161,9 +162,10 @@ static char *tomoyo_get_local_path(struct dentry *dentry, char * const buffer,
-> >         if (sb->s_magic == PROC_SUPER_MAGIC && *pos == '/') {
-> >                 char *ep;
-> >                 const pid_t pid = (pid_t) simple_strtoul(pos + 1, &ep, 10);
-> > +               struct pid_namespace *proc_pidns = proc_pid_ns(d_inode(dentry));
-> > 
-> >                 if (*ep == '/' && pid && pid ==
-> > -                   task_tgid_nr_ns(current, sb->s_fs_info)) {
-> > +                   task_tgid_nr_ns(current, proc_pidns)) {
-> >                         pos = ep - 5;
-> >                         if (pos < buffer)
-> >                                 goto out;
-> > 
-> > Alexey and Eric, any clue?
-> > 
-> 
-> A similar bug (racing inode destruction with open() on proc filesystem) was fixed as
-> commit 6f7c41374b62fd80 ("tomoyo: Don't use nifty names on sockets."). Then, it might
-> not be safe to replace dentry->d_sb->s_fs_info with dentry->d_inode->i_sb->s_fs_info .
+The pull request you sent on Fri, 15 May 2020 11:42:30 -0600:
 
-Could you explain why do you want to bother with d_inode() anyway?  Anything that
-does dentry->d_inode->i_sb can bloody well use dentry->d_sb.  And that's never
-changed over the struct dentry lifetime - ->d_sb is set on allocation and never
-modified afterwards.
+> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux-kselftest-5.7-rc6
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ce24729667cf8aaebf290613a6026a50a22c3eee
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
