@@ -2,73 +2,110 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6508DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4622078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA8F2078C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:18:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UCgyVCrL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgEOOR5 (ORCPT
+        id S1726275AbgEOORu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:17:57 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4793 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726248AbgEOORx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:17:53 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BD873D6B1D4BB6337E45;
-        Fri, 15 May 2020 22:17:48 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 15 May 2020 22:17:37 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, Luo Jiaxing <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH 3/4] scsi: hisi_sas: Add SAS_RAS_INTR0 to debugfs register name list
-Date:   Fri, 15 May 2020 22:13:44 +0800
-Message-ID: <1589552025-165012-4-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1589552025-165012-1-git-send-email-john.garry@huawei.com>
-References: <1589552025-165012-1-git-send-email-john.garry@huawei.com>
+        Fri, 15 May 2020 10:17:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726160AbgEOORr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 10:17:47 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53B39C061A0C;
+        Fri, 15 May 2020 07:17:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=v1b+koX9aKkCpLP5KsbA1c0ns2JdCdDM2wQyt2wy9Nw=; b=UCgyVCrLlY2GcbgEUFlxjexZvP
+        X13+Bvt5Sm10QJmbkpFC1yqWZ0sAV93SeLj9hIHCPrBJQhtGifoVVqLXkkVmVR3ggXKvb3yAGxjMl
+        cJenei+aE7tY8vixRd8femgEShi1xghEBxzR5PnP0aNnzxrm/qBS7/C5tk8efpIKAP0/35Uem6tvP
+        yKztd0CBKbKSMlO3SPXagJeQHb+dNEy0Xel0VZ27ymdl+WB7dLEyZVxy+E6Wyy2T+k2ep7iX4TiKz
+        jO0oNVtpNCynaAzhjtqe67zFmBtDHJngqrSzyLpQ2iRu5OOVAVER+2AwqMGnR79ZDIu2rGKIcVQnz
+        /7E2PLGg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZb92-0002JY-HL; Fri, 15 May 2020 14:17:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5CB40300455;
+        Fri, 15 May 2020 16:16:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 47D1320267E67; Fri, 15 May 2020 16:16:57 +0200 (CEST)
+Date:   Fri, 15 May 2020 16:16:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v3 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
+Message-ID: <20200515141657.GF2940@hirez.programming.kicks-ass.net>
+References: <20200515140023.25469-1-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515140023.25469-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo Jiaxing <luojiaxing@huawei.com>
+On Fri, May 15, 2020 at 04:00:16PM +0200, Joerg Roedel wrote:
+> Joerg Roedel (7):
+>   mm: Add functions to track page directory modifications
+>   mm/vmalloc: Track which page-table levels were modified
+>   mm/ioremap: Track which page-table levels were modified
+>   x86/mm/64: Implement arch_sync_kernel_mappings()
+>   x86/mm/32: Implement arch_sync_kernel_mappings()
+>   mm: Remove vmalloc_sync_(un)mappings()
+>   x86/mm: Remove vmalloc faulting
+> 
+>  arch/x86/include/asm/pgtable-2level_types.h |   2 +
+>  arch/x86/include/asm/pgtable-3level_types.h |   2 +
+>  arch/x86/include/asm/pgtable_64_types.h     |   2 +
+>  arch/x86/include/asm/switch_to.h            |  23 ---
+>  arch/x86/kernel/setup_percpu.c              |   6 +-
+>  arch/x86/mm/fault.c                         | 176 +-------------------
+>  arch/x86/mm/init_64.c                       |   5 +
+>  arch/x86/mm/pti.c                           |   8 +-
+>  arch/x86/mm/tlb.c                           |  37 ----
+>  drivers/acpi/apei/ghes.c                    |   6 -
+>  include/asm-generic/5level-fixup.h          |   5 +-
+>  include/asm-generic/pgtable.h               |  23 +++
+>  include/linux/mm.h                          |  46 +++++
+>  include/linux/vmalloc.h                     |  18 +-
+>  kernel/notifier.c                           |   1 -
+>  kernel/trace/trace.c                        |  12 --
+>  lib/ioremap.c                               |  46 +++--
+>  mm/nommu.c                                  |  12 --
+>  mm/vmalloc.c                                | 109 +++++++-----
+>  19 files changed, 204 insertions(+), 335 deletions(-)
 
-Register SAS_RAS_INTR0 can help us to figure out which ECC error was
-occurred. This register is helpful to locate RAS issue, so we add it to
-the list of debugfs register name list for easier retrieval.
+I'm thinking this improves the status-quo, so:
 
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 1 +
- 1 file changed, 1 insertion(+)
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index 41e07e9f6c8a..df9f06224f8f 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -2901,6 +2901,7 @@ static const struct hisi_sas_debugfs_reg debugfs_axi_reg = {
- };
- 
- static const struct hisi_sas_debugfs_reg_lu debugfs_ras_reg_lu[] = {
-+	HISI_SAS_DEBUGFS_REG(SAS_RAS_INTR0),
- 	HISI_SAS_DEBUGFS_REG(SAS_RAS_INTR1),
- 	HISI_SAS_DEBUGFS_REG(SAS_RAS_INTR0_MASK),
- 	HISI_SAS_DEBUGFS_REG(SAS_RAS_INTR1_MASK),
--- 
-2.16.4
-
+Like Andy, I think I'd like x86_64 to pre-populate, but that can easily
+be done on top and should not hold this back.
