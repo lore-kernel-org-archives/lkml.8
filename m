@@ -2,190 +2,101 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75753C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F2EC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59C50207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 098B9207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:38:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l4tX9YFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgEOOiu (ORCPT
+        id S1728317AbgEOOir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:38:50 -0400
-Received: from mga07.intel.com ([134.134.136.100]:12181 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728305AbgEOOiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:38:46 -0400
-IronPort-SDR: VBdJGM+6FEOt7f270+tz0qAc9CQkkNw1/uXBETl1+XoghfSA/tFR/I/cJKvb8JYHR4lsuODwKD
- ZYB7q8BL2AHw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 07:38:44 -0700
-IronPort-SDR: PD+AYiubg3C62FfKS8r9a0bj7vD8rH+SxOT6MhaEKi4ZHN5L0aST1DwpDrwFQjE7dmGEMLQQ5M
- v4NPqCcAXmuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="252392201"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 15 May 2020 07:38:39 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZbU2-006tAz-3l; Fri, 15 May 2020 17:38:42 +0300
-Date:   Fri, 15 May 2020 17:38:42 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
+        Fri, 15 May 2020 10:38:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728215AbgEOOi0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 10:38:26 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19E83C061A0C;
+        Fri, 15 May 2020 07:38:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=4ek5EujzgHPIbdEvHkQJFfygtnYVEDi+YXEorFGRVI0=; b=l4tX9YFz1biQcqnXAemRnxp5lx
+        7vqRgeqRIM/XatP0wlI3r53NWkSatcw1JkXrkTawHRnmaQBlT8KuOTt+J4BcCTkdGkQu3rT7bWyke
+        NX9OoUXznrAXIJQctXHyRhx9Y2p3y64yEKDoJRhsu0CyLBLe+T587LSnThHwB4WLxmPrd/Rkr3c50
+        Z+g03UXrGqenMeETgm8UGInxZ7ETcQM2A1HTnzRQvjDcKBE1QA76OmzUAkN+IRiyrbC/4Smuc9tEg
+        J4Dd1AmjTzPqWdEyWEo9O7WTJXIJhU65h5gjraEBoNCOLQqqryFgdSjtY44x78yOGMWmDj7qUiYHo
+        qWAE+Z9Q==;
+Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZbTY-0005IX-Ha; Fri, 15 May 2020 14:38:13 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Clement Leger <cleger@kalray.eu>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/19] spi: dw: Use DMA max burst to set the request
- thresholds
-Message-ID: <20200515143842.GG1634618@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-11-Sergey.Semin@baikalelectronics.ru>
+        Roman Zippel <zippel@linux-m68k.org>
+Cc:     Jessica Yu <jeyu@kernel.org>, Michal Simek <monstr@monstr.eu>,
+        x86@kernel.org, linux-alpha@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-c6x-dev@linux-c6x.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 28/29] nommu: use flush_icache_user_range in brk and mmap
+Date:   Fri, 15 May 2020 16:36:45 +0200
+Message-Id: <20200515143646.3857579-29-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200515143646.3857579-1-hch@lst.de>
+References: <20200515143646.3857579-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515104758.6934-11-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 01:47:49PM +0300, Serge Semin wrote:
-> Each channel of DMA controller may have a limited length of burst
-> transaction (number of IO operations performed at ones in a single
-> DMA client request). This parameter can be used to setup the most
-> optimal DMA Tx/Rx data level values. In order to avoid the Tx buffer
-> overrun we can set the DMA Tx level to be of FIFO depth minus the
-> maximum burst transactions length. To prevent the Rx buffer underflow
-> the DMA Rx level should be set to the maximum burst transactions length.
-> This commit setups the DMA channels and the DW SPI DMA Tx/Rx levels
-> in accordance with these rules.
+These obviously operate on user addresses.
 
-It's good one, but see my comments.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ mm/nommu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-I think this patch should go before previous one.
-(and without changes regarding FIFO length)
-
-> +static void mid_spi_maxburst_init(struct dw_spi *dws)
-> +{
-> +	struct dma_slave_caps caps;
-> +	u32 max_burst, def_burst;
-> +	int ret;
-> +
-> +	def_burst = dws->fifo_len / 2;
-> +
-> +	ret = dma_get_slave_caps(dws->rxchan, &caps);
-> +	if (!ret && caps.max_burst)
-> +		max_burst = caps.max_burst;
-> +	else
-> +		max_burst = RX_BURST_LEVEL;
-> +
-
-> +	dws->rxburst = (def_burst > max_burst) ? max_burst : def_burst;
-
-min() ?
-
-> +
-> +	ret = dma_get_slave_caps(dws->txchan, &caps);
-> +	if (!ret && caps.max_burst)
-> +		max_burst = caps.max_burst;
-> +	else
-> +		max_burst = TX_BURST_LEVEL;
-> +
-
-> +	dws->txburst = (def_burst > max_burst) ? max_burst : def_burst;
-
-Ditto.
-
-> +}
-> +
->  static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
->  {
->  	struct dw_dma_slave slave = {0};
-> @@ -67,6 +92,8 @@ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
->  	dws->master->dma_rx = dws->rxchan;
->  	dws->master->dma_tx = dws->txchan;
->  
-> +	mid_spi_maxburst_init(dws);
-> +
->  	return 0;
->  
->  free_rxchan:
-> @@ -92,6 +119,8 @@ static int mid_spi_dma_init_generic(struct device *dev, struct dw_spi *dws)
->  	dws->master->dma_rx = dws->rxchan;
->  	dws->master->dma_tx = dws->txchan;
->  
-> +	mid_spi_maxburst_init(dws);
-> +
->  	return 0;
->  }
->  
-> @@ -195,7 +224,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
->  	memset(&txconf, 0, sizeof(txconf));
->  	txconf.direction = DMA_MEM_TO_DEV;
->  	txconf.dst_addr = dws->dma_addr;
-> -	txconf.dst_maxburst = TX_BURST_LEVEL;
-> +	txconf.dst_maxburst = dws->txburst;
->  	txconf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->  	txconf.dst_addr_width = convert_dma_width(dws->n_bytes);
->  	txconf.device_fc = false;
-> @@ -268,7 +297,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
->  	memset(&rxconf, 0, sizeof(rxconf));
->  	rxconf.direction = DMA_DEV_TO_MEM;
->  	rxconf.src_addr = dws->dma_addr;
-> -	rxconf.src_maxburst = RX_BURST_LEVEL;
-> +	rxconf.src_maxburst = dws->rxburst;
->  	rxconf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->  	rxconf.src_addr_width = convert_dma_width(dws->n_bytes);
->  	rxconf.device_fc = false;
-> @@ -293,8 +322,8 @@ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
->  {
->  	u16 imr = 0, dma_ctrl = 0;
->  
-> -	dw_writel(dws, DW_SPI_DMARDLR, RX_BURST_LEVEL - 1);
-> -	dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - TX_BURST_LEVEL);
-> +	dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
-> +	dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - dws->txburst);
->  
->  	if (xfer->tx_buf) {
->  		dma_ctrl |= SPI_DMA_TDMAE;
-
-...
-
->  	/* DMA info */
->  	struct dma_chan		*txchan;
-> +	u32			txburst;
->  	struct dma_chan		*rxchan;
-> +	u32			rxburst;
-
-Leave u32 together, it may be optimal on 64-bit architectures where ABIs require padding.
-
+diff --git a/mm/nommu.c b/mm/nommu.c
+index 318df4e236c99..aed7acaed2383 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -443,7 +443,7 @@ SYSCALL_DEFINE1(brk, unsigned long, brk)
+ 	/*
+ 	 * Ok, looks good - let it rip.
+ 	 */
+-	flush_icache_range(mm->brk, brk);
++	flush_icache_user_range(mm->brk, brk);
+ 	return mm->brk = brk;
+ }
+ 
+@@ -1287,7 +1287,7 @@ unsigned long do_mmap(struct file *file,
+ 	/* we flush the region from the icache only when the first executable
+ 	 * mapping of it is made  */
+ 	if (vma->vm_flags & VM_EXEC && !region->vm_icache_flushed) {
+-		flush_icache_range(region->vm_start, region->vm_end);
++		flush_icache_user_range(region->vm_start, region->vm_end);
+ 		region->vm_icache_flushed = true;
+ 	}
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.26.2
 
