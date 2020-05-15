@@ -2,225 +2,74 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E3320671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:30:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589524245;
-	bh=5BPO5JOrsWA3xwcO04i0UU/4/rK/crN27ZUfrrjfZ64=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z1Br/Cmrzlk3ULkKtN4MvvV9ppKx/VWwkgbAwcy1w2loY20iCWKTApGG9Xd/fnnN3
-	 YaxEYwaDRRlsOBBldtgkIodplUZgULfy2L+ZRt1P1L4lc1Zko/FTWEZ6XFISwDuZNs
-	 SE2nfR4w6QRFRD1DXXTdDC4hnrXKjV7Zr6WKAKa0=
+	by mail.kernel.org (Postfix) with ESMTP id 50CD72065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:33:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgEOGao (ORCPT
+        id S1726525AbgEOGd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:30:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47940 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 02:33:27 -0400
+Received: from verein.lst.de ([213.95.11.211]:55034 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgEOGao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:30:44 -0400
-Received: from localhost (unknown [122.178.196.30])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14D742065F;
-        Fri, 15 May 2020 06:30:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589524243;
-        bh=5BPO5JOrsWA3xwcO04i0UU/4/rK/crN27ZUfrrjfZ64=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VeApkunDE7aQorh4drljCQnoyUYwIw/GESsHrtTlIkpqhCo6IjU+Nse+8v6OLkpns
-         VXj3QIkeOtBEz8xWr/4iBWPVE9v5msSOUjmlvQtRPEfitQk0oFWEbA8Vub52FkXE4f
-         7LUPAFAWMJAP5atUOolLVTtL9FtouP7ts7I6QbNA=
-Date:   Fri, 15 May 2020 12:00:39 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200515063039.GH333670@vkoul-mobl>
-References: <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
- <20200511021016.wptcgnc3iq3kadgz@mobilestation>
- <20200511115813.GG8216@sirena.org.uk>
- <20200511134502.hjbu5evkiuh75chr@mobilestation>
- <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
- <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
- <20200511210714.GO185537@smile.fi.intel.com>
- <20200511210800.GP185537@smile.fi.intel.com>
- <20200512124206.l3uv5hg2zimi24dq@mobilestation>
+        id S1726205AbgEOGd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 02:33:27 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 499BB68BFE; Fri, 15 May 2020 08:33:24 +0200 (CEST)
+Date:   Fri, 15 May 2020 08:33:24 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     David Miller <davem@davemloft.net>
+Cc:     hch@lst.de, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] ipv6: symbol_get to access a sit symbol
+Message-ID: <20200515063324.GA31377@lst.de>
+References: <20200514145101.3000612-1-hch@lst.de> <20200514145101.3000612-5-hch@lst.de> <20200514.175355.167885308958584692.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200512124206.l3uv5hg2zimi24dq@mobilestation>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200514.175355.167885308958584692.davem@davemloft.net>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Serge,
-
-On 12-05-20, 15:42, Serge Semin wrote:
-> Vinod,
+On Thu, May 14, 2020 at 05:53:55PM -0700, David Miller wrote:
+> You're not undoing one, but two levels of abstraction here.
 > 
-> Could you join the discussion for a little bit?
-> 
-> In order to properly fix the problem discussed in this topic, we need to
-> introduce an additional capability exported by DMA channel handlers on per-channel
-> basis. It must be a number, which would indicate an upper limitation of the SG list
-> entries amount.
-> Something like this would do it:
-> struct dma_slave_caps {
-> ...
-> 	unsigned int max_sg_nents;
-> ...
+> Is this "ipip6_tunnel_locate()" call part of the SIT ioctl implementation?
 
-Looking at the discussion, I agree we should can this up in the
-interface. The max_dma_len suggests the length of a descriptor allowed,
-it does not convey the sg_nents supported which in the case of nollp is
-one.
+Yes.  Take a look at the convoluted case handling the
+SIOCADDTUNNEL and SIOCCHGTUNNEL commands in ipip6_tunnel_ioctl.
 
-Btw is this is a real hardware issue, I have found that value of such
-hardware is very less and people did fix it up in subsequent revs to add
-llp support.
+> Where did it come from?   Why are ->ndo_do_ioctl() implementations no longer
+> allowed from here?
 
-Also, another question is why this cannot be handled in driver, I agree
-your hardware does not support llp but that does not stop you from
-breaking a multi_sg list into N hardware descriptors and keep submitting
-them (for this to work submission should be done in isr and not in bh,
-unfortunately very few driver take that route). TBH the max_sg_nents or
-max_dma_len are HW restrictions and SW *can* deal with then :-)
+The problem is that we feed kernel pointers to it, which requires
+set_fs address space overrides that I plan to kill off entirely.
 
-In an idea world, you should break the sw descriptor submitted into N hw
-descriptors and submit to hardware and let user know when the sw
-descriptor is completed. Of course we do not do that :(
+> Honestly, this feels like a bit much.
 
-> };
-> As Andy suggested it's value should be interpreted as:
-> 0          - unlimited number of entries,
-> 1:MAX_UINT - actual limit to the number of entries.
+My initial plan was to add a ->tunnel_ctl method to the net_device_ops,
+and lift the copy_{to,from}_user for SIOCADDTUNNEL, SIOCCHGTUNNEL,
+SIOCDELTUNNEL and maybe SIOCGETTUNNEL to net/socket.c.  But that turned
+out to have two problems:
 
-Hmm why 0, why not MAX_UINT for unlimited?
+ - first these ioctls names use SIOCDEVPRIVATE range, that can also
+   be implemented by other drivers
+ - the ip_tunnel_parm struture is only used by the ipv4 tunneling
+   drivers (including sit), the "real" ipv6 tunnels use a
+   ip6_tnl_parm or ip6_tnl_parm structure instead
 
-> In addition to that seeing the dma_get_slave_caps() method provide the caps only
-> by getting them from the DMA device descriptor, while we need to have an info on
-> per-channel basis, it would be good to introduce a new DMA-device callback like:
-> struct dma_device {
-> ...
-> 	int (*device_caps)(struct dma_chan *chan,
-> 			   struct dma_slave_caps *caps);
+But if you don't like the symbol_get approach, I could do the
+tunnel_ctl operation, just for the іpv4-ish tunnels, and only for
+the kernel callers.
 
-Do you have a controller where channel caps are on per-channel basis?
-
-> ...
-> };
-> So the DMA driver could override the generic DMA device capabilities with the
-> values specific to the DMA channels. Such functionality will be also helpful for
-> the max-burst-len parameter introduced by this patchset, since depending on the
-> IP-core synthesis parameters it may be channel-specific.
-> 
-> Alternatively we could just introduce a new fields to the dma_chan structure and
-> retrieve the new caps values from them in the dma_get_slave_caps() method.
-> Though the solution with callback I like better.
-> 
-> What is your opinion about this? What solution you'd prefer?
-> 
-> On Tue, May 12, 2020 at 12:08:00AM +0300, Andy Shevchenko wrote:
-> > On Tue, May 12, 2020 at 12:07:14AM +0300, Andy Shevchenko wrote:
-> > > On Mon, May 11, 2020 at 10:32:55PM +0300, Serge Semin wrote:
-> > > > On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
-> > > > > On Mon, May 11, 2020 at 4:48 PM Serge Semin
-> > > > > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > > > >
-> > > > > > On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
-> > > > > > > On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
-> > > > > > >
-> > > > > > > > Alas linearizing the SPI messages won't help in this case because the DW DMA
-> > > > > > > > driver will split it into the max transaction chunks anyway.
-> > > > > > >
-> > > > > > > That sounds like you need to also impose a limit on the maximum message
-> > > > > > > size as well then, with that you should be able to handle messages up
-> > > > > > > to whatever that limit is.  There's code for that bit already, so long
-> > > > > > > as the limit is not too low it should be fine for most devices and
-> > > > > > > client drivers can see the limit so they can be updated to work with it
-> > > > > > > if needed.
-> > > > > >
-> > > > > > Hmm, this might work. The problem will be with imposing such limitation through
-> > > > > > the DW APB SSI driver. In order to do this I need to know:
-> > > > > > 1) Whether multi-block LLP is supported by the DW DMA controller.
-> > > > > > 2) Maximum DW DMA transfer block size.
-> > > > > > Then I'll be able to use this information in the can_dma() callback to enable
-> > > > > > the DMA xfers only for the safe transfers. Did you mean something like this when
-> > > > > > you said "There's code for that bit already" ? If you meant the max_dma_len
-> > > > > > parameter, then setting it won't work, because it just limits the SG items size
-> > > > > > not the total length of a single transfer.
-> > > > > >
-> > > > > > So the question is of how to export the multi-block LLP flag from DW DMAc
-> > > > > > driver. Andy?
-> > > > > 
-> > > > > I'm not sure I understand why do you need this being exported. Just
-> > > > > always supply SG list out of single entry and define the length
-> > > > > according to the maximum segment size (it's done IIRC in SPI core).
-> > > > 
-> > > > Finally I see your point. So you suggest to feed the DMA engine with SG list
-> > > > entries one-by-one instead of sending all of them at once in a single
-> > > > dmaengine_prep_slave_sg() -> dmaengine_submit() -> dma_async_issue_pending()
-> > > > session. Hm, this solution will work, but there is an issue. There is no
-> > > > guarantee, that Tx and Rx SG lists are symmetric, consisting of the same
-> > > > number of items with the same sizes. It depends on the Tx/Rx buffers physical
-> > > > address alignment and their offsets within the memory pages. Though this
-> > > > problem can be solved by making the Tx and Rx SG lists symmetric. I'll have
-> > > > to implement a clever DMA IO loop, which would extract the DMA
-> > > > addresses/lengths from the SG entries and perform the single-buffer DMA 
-> > > > transactions with the DMA buffers of the same length.
-> > > > 
-> > > > Regarding noLLP being exported. Obviously I intended to solve the problem in a
-> > > > generic way since the problem is common for noLLP DW APB SSI/DW DMAC combination.
-> > > > In order to do this we need to know whether the multi-block LLP feature is
-> > > > unsupported by the DW DMA controller. We either make such info somehow exported
-> > > > from the DW DMA driver, so the DMA clients (like Dw APB SSI controller driver)
-> > > > could be ready to work around the problem; or just implement a flag-based quirk
-> > > > in the DMA client driver, which would be enabled in the platform-specific basis
-> > > > depending on the platform device actually detected (for instance, a specific
-> > > > version of the DW APB SSI IP). AFAICS You'd prefer the later option. 
-> > > 
-> > > So, we may extend the struct of DMA parameters to tell the consumer amount of entries (each of which is no longer than maximum segment size) it can afford:
-> > > - 0: Auto (DMA driver handles any cases itself)
-> > > - 1: Only single entry
-> > > - 2: Up to two...
-> > 
-> > It will left implementation details (or i.o.w. obstacles or limitation) why DMA
-> > can't do otherwise.
-> 
-> Sounds good. Thanks for assistance.
-> 
-> -Sergey
-> 
-> > 
-> > -- 
-> > With Best Regards,
-> > Andy Shevchenko
-> > 
-> > 
-
--- 
-~Vinod
+---end quoted text---
