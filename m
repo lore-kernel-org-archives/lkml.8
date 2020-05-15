@@ -2,96 +2,148 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC636C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C20DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA64820671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FEBA20671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgEOBnx (ORCPT
+        id S1727029AbgEOBtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 21:43:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727084AbgEOBnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 21:43:53 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 224802065F;
-        Fri, 15 May 2020 01:43:51 +0000 (UTC)
-Date:   Thu, 14 May 2020 21:43:49 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch V5 04/38] x86: Make hardware latency tracing explicit
-Message-ID: <20200514214349.24642172@oasis.local.home>
-In-Reply-To: <20200512213809.784331304@linutronix.de>
-References: <20200512210059.056244513@linutronix.de>
-        <20200512213809.784331304@linutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 14 May 2020 21:49:13 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49342 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726100AbgEOBtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 21:49:13 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E464DE8851E4BA132951;
+        Fri, 15 May 2020 09:49:10 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.101) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Fri, 15 May 2020
+ 09:49:03 +0800
+Subject: Re: [RFC PATCH 2/3] cpufreq: Add SW BOOST support for drivers without
+ frequency table
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+CC:     <viresh.kumar@linaro.org>, <Souvik.Chakravarty@arm.com>,
+        <Thanu.Rangarajan@arm.com>, <Sudeep.Holla@arm.com>,
+        <guohanjun@huawei.com>, <john.garry@huawei.com>,
+        <jonathan.cameron@huawei.com>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1588929064-30270-1-git-send-email-wangxiongfeng2@huawei.com>
+ <1588929064-30270-3-git-send-email-wangxiongfeng2@huawei.com>
+ <5858421.kfVlu25t0p@kreacher>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <7325b64c-85f7-21fe-3860-faa10ab1cf21@huawei.com>
+Date:   Fri, 15 May 2020 09:49:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <5858421.kfVlu25t0p@kreacher>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.101]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 23:01:03 +0200
-Thomas Gleixner <tglx@linutronix.de> wrote:
-
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -1916,7 +1916,7 @@ static __always_inline void exc_machine_
->  	    mce_check_crashing_cpu())
->  		return;
->  
-> -	nmi_enter();
-> +	nmi_enter_notrace();
-
-Now a machine check exception could happen and be a cause of latency
-(although there may be more issues if it does). The "nmi_enter trace"
-version does two things. One is for time measurements (if available),
-and the other is just letting the hardware latency know it happen (a
-simple increment).
-
-The only thing that is checked is "smp_processor_id()" (I just
-remembered it doesn't need per cpu, as it only runs on a single CPU at
-a time).
-
-Could the notrace version supply the increment, and leave the
-trace_clock() in the trace version?
-
--- Steve
 
 
->  	/*
->  	 * The call targets are marked noinstr, but objtool can't figure
->  	 * that out because it's an indirect call. Annotate it.
+On 2020/5/14 22:16, Rafael J. Wysocki wrote:
+> On Friday, May 8, 2020 11:11:03 AM CEST Xiongfeng Wang wrote:
+>> Software-managed BOOST get the boost frequency by check the flag
+>> CPUFREQ_BOOST_FREQ at driver's frequency table. But some cpufreq driver
+>> don't have frequency table and use other methods to get the frequency
+>> range, such CPPC cpufreq driver.
+>>
+>> To add SW BOOST support for drivers without frequency table, we add
+>> members in 'cpufreq_policy.cpufreq_cpuinfo' to record the max frequency
+>> of boost mode and non-boost mode. The cpufreq driver initialize these two
+>> members when probing.
+>>
+>> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+>> ---
+>>  drivers/cpufreq/cpufreq.c | 23 +++++++++++++++--------
+>>  include/linux/cpufreq.h   |  2 ++
+>>  2 files changed, 17 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+>> index 475fb1b..a299426 100644
+>> --- a/drivers/cpufreq/cpufreq.c
+>> +++ b/drivers/cpufreq/cpufreq.c
+>> @@ -2508,15 +2508,22 @@ static int cpufreq_boost_set_sw(int state)
+>>  	int ret = -EINVAL;
+>>  
+>>  	for_each_active_policy(policy) {
+>> -		if (!policy->freq_table)
+>> -			continue;
+>> -
+>> -		ret = cpufreq_frequency_table_cpuinfo(policy,
+>> +		if (policy->freq_table) {
+>> +			ret = cpufreq_frequency_table_cpuinfo(policy,
+>>  						      policy->freq_table);
+>> -		if (ret) {
+>> -			pr_err("%s: Policy frequency update failed\n",
+>> -			       __func__);
+>> -			break;
+>> +			if (ret) {
+>> +				pr_err("%s: Policy frequency update failed\n",
+>> +				       __func__);
+>> +				break;
+>> +			}
+>> +		} else if (policy->cpuinfo.boost_max_freq) {
+>> +			if (state)
+>> +				policy->max = policy->cpuinfo.boost_max_freq;
+>> +			else
+>> +				policy->max = policy->cpuinfo.nonboost_max_freq;
+>> +			policy->cpuinfo.max_freq = policy->max;
+>> +		} else {
+>> +			continue;
+>>  		}
 > 
+> Why do you need to update this function?
+
+My original thought is to reuse the current SW BOOST code as possible, but this
+seems to change the cpufreq core too much.
+
+> 
+> The driver should be able to provide its own ->set_boost callback just fine,
+> shouldn't it?
+
+Thanks for your advice. This is better. I will provide a '->set_boost' callback
+for CPPC driver. But I will need to export 'cpufreq_policy_list' and make the
+macro 'for_each_active_policy' public.
+
+Thanks,
+Xiongfeng
+
+> 
+>>  
+>>  		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
+>> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+>> index 018dce8..c3449e6 100644
+>> --- a/include/linux/cpufreq.h
+>> +++ b/include/linux/cpufreq.h
+>> @@ -43,6 +43,8 @@ enum cpufreq_table_sorting {
+>>  struct cpufreq_cpuinfo {
+>>  	unsigned int		max_freq;
+>>  	unsigned int		min_freq;
+>> +	unsigned int		boost_max_freq;
+>> +	unsigned int		nonboost_max_freq;
+>>  
+>>  	/* in 10^(-9) s = nanoseconds */
+>>  	unsigned int		transition_latency;
+>>
+> 
+> 
+> 
+> 
+> 
+> .
+> 
+
