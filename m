@@ -2,100 +2,105 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FEBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D495B20657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165A8206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:12:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589566343;
+	bh=73OlL8aAHw/qHS2fhCK5bC0tPIfPWjo8BAd8n2Rsg9k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R89pw9PpXsctBYmWpzcw0Id3wQPEv/COnptmD7ClIMfomYcueRhRoe5QpJnFzTFRh
+	 1YjTkknYFycGs0XpKXO00sfXLRgsJ+sfh9LCw3DOc7gZz0xNl7avYlXnCHMA820b0t
+	 hsf5Tkd9ym6QYTwXKAklyShitc0zkm2ucV8buIrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgEOSKP (ORCPT
+        id S1726251AbgEOSMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 14:10:15 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2216 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726144AbgEOSKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 14:10:14 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 669A4E797090C6838CB5;
-        Fri, 15 May 2020 19:10:12 +0100 (IST)
-Received: from [127.0.0.1] (10.47.1.24) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Fri, 15 May
- 2020 19:10:11 +0100
-Subject: Re: [PATCH v4 0/2] irqchip/gic-v3-its: Balance LPI affinity across
- CPUs
-To:     Marc Zyngier <maz@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     chenxiang <chenxiang66@hisilicon.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>, <kernel-team@android.com>
-References: <20200515165752.121296-1-maz@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <f87f34fa-a512-7f73-2f53-85333257dd8e@huawei.com>
-Date:   Fri, 15 May 2020 19:09:16 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 15 May 2020 14:12:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgEOSMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 14:12:22 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1757720657;
+        Fri, 15 May 2020 18:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589566341;
+        bh=73OlL8aAHw/qHS2fhCK5bC0tPIfPWjo8BAd8n2Rsg9k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RZq+4m+MbmcsUOmuWiIVeaZON/FBTdHa1RnObTVIaWt6Rmq3Wv/kSMsA7Vvk3KNbJ
+         UQOmt6xDMmB4mzUjJzwQL3WBA6KSWnmVV5zrUR1ah5riGqHwJYFFDM0KVQFjcCC0iU
+         Ne1sOeXJWpel+EDgkO2zlleExbBA9zZm5tiK3/8s=
+Date:   Fri, 15 May 2020 19:12:19 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] spi: dw: Clear DMAC register when done or stopped
+Message-ID: <20200515181219.GN5066@sirena.org.uk>
+References: <20200515174856.1406-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515175100.GL5066@sirena.org.uk>
+ <20200515175420.qgejailgnzswxtdz@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <20200515165752.121296-1-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.1.24]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="i6vqABX3nJKXLk01"
+Content-Disposition: inline
+In-Reply-To: <20200515175420.qgejailgnzswxtdz@mobilestation>
+X-Cookie: Avoid contact with eyes.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/05/2020 17:57, Marc Zyngier wrote:
-> When mapping a LPI, the ITS driver picks the first possible
-> affinity, which is in most cases CPU0, assuming that if
-> that's not suitable, someone will come and set the affinity
-> to something more interesting.
-> 
-> It apparently isn't the case, and people complain of poor
-> performance when many interrupts are glued to the same CPU.
-> So let's place the interrupts by finding the "least loaded"
-> CPU (that is, the one that has the fewer LPIs mapped to it).
-> So called 'managed' interrupts are an interesting case where
-> the affinity is actually dictated by the kernel itself, and
-> we should honor this.
-> 
 
-Cheers Marc, I ran these again and the figures look good:
-NVMe with nvme.use_threaded_interrupts=1/0
-Before: 1000K/1100K IOPS
-After: 1100K/1400K IOPS
+--i6vqABX3nJKXLk01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-For some reason v5.7-rc5 looks more stable than rc4 (which I tested 
-previously).
+On Fri, May 15, 2020 at 08:54:20PM +0300, Serge Semin wrote:
+> On Fri, May 15, 2020 at 06:51:00PM +0100, Mark Brown wrote:
+> > On Fri, May 15, 2020 at 08:48:54PM +0300, Serge Semin wrote:
 
-Tested-by: John Garry <john.garry@huawei.com>
+> > > Acked-by: Mark Brown <broonie@kernel.org>
 
-> * From v3:
->    - Always pre-decrement/post-increment affinity to avoid useless
->      changes of affinity (John)
->    - Don't use the node mask as a superset of the proposed affinity
->      as the ACPI tables can't really describe this (John)
->    - Rebased on v5.7-rc5
-> 
-> * From v2:
->    - Split accounting from CPU selection
->    - Track managed and unmanaged interrupts separately
-> 
-> Marc Zyngier (2):
->    irqchip/gic-v3-its: Track LPI distribution on a per CPU basis
->    irqchip/gic-v3-its: Balance initial LPI affinity across CPUs
-> 
->   drivers/irqchip/irq-gic-v3-its.c | 170 ++++++++++++++++++++++++++-----
->   1 file changed, 143 insertions(+), 27 deletions(-)
-> 
+> > I didn't ack this but Andy did (or at least the for-5.8 version)?
 
+> Andy said he needs Fixes field to get his RB tag. You said:
+> "This and patch 4 look good ..." Normally this means to get Acked-by.
+
+Unless someone explicitly gives you a tag for something you shouldn't
+usually assume that one applies, especially with maintainers giving acks
+on their own trees since that has process meaning - it's saying that the
+maintainer is OK with it being applied to some other tree which is
+something it's worth being careful about.
+
+On the other hand if someone says "if you do X you can add tag Y" and
+you do X then you can generally add the tag if you do Y.
+
+--i6vqABX3nJKXLk01
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6+24IACgkQJNaLcl1U
+h9AKRAf9FsLiuXXPimqzs6k+kUCNB8ERlZ4CxGz8nUE7UOpRTNEsyRIyynHZv1Lp
+e7wbn+UswCncBf5PYsdMdJUa2UVf0QdQNJYRlorJJjH2vwqC5P0jkURrkLwDX/tP
+w0lRYJYDNGxsGq2Zqqhl60mfC2+HkJ0SBoAPyFQQP4VKzaRwZu1F4FHtR/VoZpnn
+2mdbGO4m+8bydtXRhybs/7vzdS4Wtpd+G10xfJhqztuJc0YdapJ7eRJ29UDzVfT7
+l4Wd/gNrqFNHtKF4P9ihO346Chcu42RzmkpCVQt37sdhJ7q/y6JmHst5rrtOCC17
+VGe1HTV3eC8Jfn9BZLom8+vvewHLRw==
+=yXEI
+-----END PGP SIGNATURE-----
+
+--i6vqABX3nJKXLk01--
