@@ -7,62 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E05C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA7DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3EE206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DF2206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:57:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j0EVcEkU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EZrZEXW7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgEOG5E (ORCPT
+        id S1727858AbgEOG5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:57:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48392 "EHLO
+        Fri, 15 May 2020 02:57:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726879AbgEOG4n (ORCPT
+        by vger.kernel.org with ESMTP id S1726695AbgEOG4h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:56:43 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F36A1C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:42 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id j6so1658331qvn.9
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:42 -0700 (PDT)
+        Fri, 15 May 2020 02:56:37 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2CF9C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:36 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id n36so1618870qvg.22
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=HRcsgixZKIGHXE809MZwKkXe7/yWNFRQw3Pqfn6iPQ4=;
-        b=j0EVcEkUBLjPQgdo3WSyM3qJ84Z+fbTZaJe/5D+JTuRP4nQM87i/fzxocDWW33TKP0
-         KWVRqqAGrHS/zckUbOO9aOYW+AaTF0WycfWPgIQKnZu7I0pMHT3WB9nv/r7FCKd43QtM
-         /lbxGNGZCFS8wXUCTC6hR9ecRXJvX65b67ftpeDTLYb9RtQCN0azwYHUXxOAIWjXlDqT
-         EWrj9dO3op7IaLqNKerRK5f3alhUP6wi/TiEgXjMbeRw+ipFRXzYJrZhgZOEjbz0BlQy
-         YcgLhsTOSNZ3P0u0hFLaYgsgbRoQF/ejZU30j5+INhQHqe4p+07dP/KWEpDVvRk5ABj4
-         UyYQ==
+         :cc:content-transfer-encoding;
+        bh=BlBgjK5xziAM5vwiVDuTtOoE4PbK5TxWadJH4JBlKYM=;
+        b=EZrZEXW7Viyk80Bux2NOOgwyk1D6bHXWVb/zlJ7c5MJdmc/2B55H2QFyMiG/6Jh3oe
+         5RwV0XnzkKjqLyJ4L1WTK03fYm0P4+W+zxkf5AbSvcWZdZoSbjUzSBroTZx8DEmMszcy
+         2V/caUMHX3fCDFKQWYvT+Q3i4j+VCljdEk41+w+qTQCMTbvXUAx43MobqI3DrMcNWeu4
+         bCszGbUeYdunqPsjaHsNJQXJwg39Lzr4M2imLnC5Tza+41rvDHVzTqB4rlMjoI11c9Uz
+         6zkfdg1u6D5ocppBaDpCnunArW32oHIUfartVuiUILVUWdgbSjz4M+TTCSI0AcY0XXG1
+         fd2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=HRcsgixZKIGHXE809MZwKkXe7/yWNFRQw3Pqfn6iPQ4=;
-        b=Ym96JWKOV4SNS0qUn/+n11QOYTgtlegCYcwPdHCv7JaQxjrg0H9xMcKcQCHA+jLrSa
-         9JUdwA3JDbLsv1obnWoREla8H5ijDjdST4CBrOXKjwniujTnHlAVWCOc4RI8t5cJY6vW
-         maArsGRGCeQH+P+jXpi6TpIsg90lrfx4VZIlioFqcU/jE0ylCpXdKbOp4fJXVGBeNCx3
-         RpZIlMlg729wxAGAaKVpB8qTk6UaVghDflhAB1cePLM7MGgWH8WgBR+3az61aQxp5iy6
-         40E7VAOzVYZrjGATBYaJxIZvm+PHvQOAL3rcoo7MdyUvVtz/W2dyQO6dtHqLpFWZjsEw
-         h0Dw==
-X-Gm-Message-State: AOAM533moMBsocuOLMhvGoffy7bYQ/elFWOj1ipSKVADXw5KX3f2F2mB
-        pO7uarbP4IxqiLdeCZaHFiUCmrh95b8n
-X-Google-Smtp-Source: ABdhPJwSFLjEFtRA2Y0gUBr1G22pIPriwKT5ufbbnoybsN93DW5fiomOe6xfzfWE6tcnEJeXnwfNiLMlj5N8
-X-Received: by 2002:ad4:5903:: with SMTP id ez3mr2102437qvb.105.1589525802128;
- Thu, 14 May 2020 23:56:42 -0700 (PDT)
-Date:   Thu, 14 May 2020 23:56:22 -0700
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=BlBgjK5xziAM5vwiVDuTtOoE4PbK5TxWadJH4JBlKYM=;
+        b=KUEHHmqZFzOJLuo37q+baBGfTDpVLtvSrWVy86j64ckhagk0pVOgnp+PPbtq33DjvC
+         ldMQvBl7RuF/2RN5F3VQhrR372Q938ZHW1Zu2CpA8EnNnOx8R+xDbxOYadMKFteaKuw3
+         oip+rZpNeQIRfP9mAIgicpdjzz/D1iBsIhu3b6fPbGu7LZkAfxxtPHALLKYeN0YNyghP
+         QOYDB7koyHQhg3yZC3+D8ELeDUVFLaN1nuMYVSB2mMkqj622Iqv75clYsXbQq+pXOIQ/
+         UyApYzlKleqXh36kz/YBqoog5PJJFQY0GsxUREfb0Yg2CcuMt/Oewc2WBSfN1PGl424A
+         H1+w==
+X-Gm-Message-State: AOAM533pt6ptlDbliZ8CdXQvluSIaLxL5k1yj6ldXLt58j6AQJ4CPall
+        QnmB/dHDp6VZ39ZG34BCEaZVNkjc+aIU
+X-Google-Smtp-Source: ABdhPJz8XtegKSh8yOMx1iWS4vUX0ml1o219kpFcONA39sezAoXcY+JdpGmDcGCC+GD5zV3AYR4TQQRMVetq
+X-Received: by 2002:a0c:8262:: with SMTP id h89mr1968365qva.173.1589525796081;
+ Thu, 14 May 2020 23:56:36 -0700 (PDT)
+Date:   Thu, 14 May 2020 23:56:19 -0700
 In-Reply-To: <20200515065624.21658-1-irogers@google.com>
-Message-Id: <20200515065624.21658-7-irogers@google.com>
+Message-Id: <20200515065624.21658-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20200515065624.21658-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH 6/8] perf test: Provide a subtest callback to ask for the
- reason for skipping a subtest
+Subject: [PATCH 3/8] libbpf hashmap: Fix signedness warnings
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -89,74 +88,56 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org
 Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>, Paul Clarke <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now subtests can inform why a test was skipped. The upcoming patch
-improvint PMU event metric testing will use it.
+Fixes the following warnings:
+
+hashmap.c: In function =E2=80=98hashmap__clear=E2=80=99:
+hashmap.h:150:20: error: comparison of integer expressions of different sig=
+nedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 {aka =E2=80=98l=
+ong unsigned int=E2=80=99} [-Werror=3Dsign-compare]
+  150 |  for (bkt =3D 0; bkt < map->cap; bkt++)        \
+
+hashmap.c: In function =E2=80=98hashmap_grow=E2=80=99:
+hashmap.h:150:20: error: comparison of integer expressions of different sig=
+nedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 {aka =E2=80=98l=
+ong unsigned int=E2=80=99} [-Werror=3Dsign-compare]
+  150 |  for (bkt =3D 0; bkt < map->cap; bkt++)        \
 
 Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kajol Jain <kjain@linux.ibm.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paul Clarke <pc@us.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20200513212933.41273-1-irogers@google.com
-[ split from a larger patch ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c | 11 +++++++++--
- tools/perf/tests/tests.h        |  1 +
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ tools/lib/bpf/hashmap.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 3471ec52ea11..baee735e6aa5 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -429,8 +429,15 @@ static int test_and_print(struct test *t, bool force_skip, int subtest)
- 	case TEST_OK:
- 		pr_info(" Ok\n");
- 		break;
--	case TEST_SKIP:
--		color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip\n");
-+	case TEST_SKIP: {
-+		const char *skip_reason = NULL;
-+		if (t->subtest.skip_reason)
-+			skip_reason = t->subtest.skip_reason(subtest);
-+		if (skip_reason)
-+			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (%s)\n", skip_reason);
-+		else
-+			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip\n");
-+	}
- 		break;
- 	case TEST_FAIL:
- 	default:
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index d6d4ac34eeb7..88e45aeab94f 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -34,6 +34,7 @@ struct test {
- 		bool skip_if_fail;
- 		int (*get_nr)(void);
- 		const char *(*get_desc)(int subtest);
-+		const char *(*skip_reason)(int subtest);
- 	} subtest;
- 	bool (*is_supported)(void);
- 	void *priv;
--- 
+diff --git a/tools/lib/bpf/hashmap.c b/tools/lib/bpf/hashmap.c
+index cffb96202e0d..a405dad068f5 100644
+--- a/tools/lib/bpf/hashmap.c
++++ b/tools/lib/bpf/hashmap.c
+@@ -60,7 +60,7 @@ struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
+ void hashmap__clear(struct hashmap *map)
+ {
+ 	struct hashmap_entry *cur, *tmp;
+-	int bkt;
++	size_t bkt;
+=20
+ 	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
+ 		free(cur);
+@@ -100,8 +100,7 @@ static int hashmap_grow(struct hashmap *map)
+ 	struct hashmap_entry **new_buckets;
+ 	struct hashmap_entry *cur, *tmp;
+ 	size_t new_cap_bits, new_cap;
+-	size_t h;
+-	int bkt;
++	size_t h, bkt;
+=20
+ 	new_cap_bits =3D map->cap_bits + 1;
+ 	if (new_cap_bits < HASHMAP_MIN_CAP_BITS)
+--=20
 2.26.2.761.g0e0b3e54be-goog
 
