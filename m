@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59287C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD6C2078B
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6550207C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgEPALp (ORCPT
+        id S1728295AbgEPALr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 20:11:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41182 "EHLO
+        Fri, 15 May 2020 20:11:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728129AbgEPALM (ORCPT
+        by vger.kernel.org with ESMTP id S1728135AbgEPALM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 May 2020 20:11:12 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6608FC061A0C
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B636C05BD09
         for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 17:11:12 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jZkPe-0002Z7-12; Sat, 16 May 2020 02:10:46 +0200
+        id 1jZkPl-0002gZ-Ae; Sat, 16 May 2020 02:10:53 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 530FDFF834;
-        Sat, 16 May 2020 02:10:45 +0200 (CEST)
-Message-Id: <20200515235127.498652915@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id C3595FF834;
+        Sat, 16 May 2020 02:10:52 +0200 (CEST)
+Message-Id: <20200515235128.106581861@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sat, 16 May 2020 01:46:18 +0200
+Date:   Sat, 16 May 2020 01:46:24 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V6 31/37] x86/entry: Remove the apic/BUILD interrupt leftovers
+Subject: [patch V6 37/37] x86/entry: Remove the TRACE_IRQS cruft
 References: <20200515234547.710474468@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -72,280 +72,85 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Remove all the code which was there to emit the system vector stubs. All
-users are gone.
-
-Move the now unused GET_CR2_INTO macro muck to head_64.S where the last
-user is. Fixup the eye hurting comment there while at it.
+No more users.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-index 98da0d3c0b1a..4208c1e3f601 100644
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -351,23 +351,3 @@ For 32-bit we have the following conventions - kernel is built with
- 	call stackleak_erase
- #endif
- .endm
--
--/*
-- * This does 'call enter_from_user_mode' unless we can avoid it based on
-- * kernel config or using the static jump infrastructure.
-- */
--.macro CALL_enter_from_user_mode
--#ifdef CONFIG_CONTEXT_TRACKING
--#ifdef CONFIG_JUMP_LABEL
--	STATIC_JUMP_IF_FALSE .Lafter_call_\@, context_tracking_key, def=0
--#endif
--	call enter_from_user_mode
--.Lafter_call_\@:
--#endif
--.endm
--
--#ifdef CONFIG_PARAVIRT_XXL
--#define GET_CR2_INTO(reg) GET_CR2_INTO_AX ; _ASM_MOV %_ASM_AX, reg
--#else
--#define GET_CR2_INTO(reg) _ASM_MOV %cr2, reg
--#endif
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index b84c1c0a2fd8..97b02a776db0 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1233,24 +1233,6 @@ SYM_FUNC_END(entry_INT80_32)
- #endif
- .endm
- 
--#define BUILD_INTERRUPT3(name, nr, fn)			\
--SYM_FUNC_START(name)					\
--	ASM_CLAC;					\
--	pushl	$~(nr);					\
--	SAVE_ALL switch_stacks=1;			\
--	ENCODE_FRAME_POINTER;				\
--	TRACE_IRQS_OFF					\
--	movl	%esp, %eax;				\
--	call	fn;					\
--	jmp	ret_from_intr;				\
--SYM_FUNC_END(name)
--
--#define BUILD_INTERRUPT(name, nr)		\
--	BUILD_INTERRUPT3(name, nr, smp_##name);	\
--
--/* The include is where all of the SMP etc. interrupts come from */
--#include <asm/entry_arch.h>
--
- #ifdef CONFIG_PARAVIRT
- SYM_CODE_START(native_iret)
- 	iret
 diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 38dc4d1f7a7b..7292525e2557 100644
+index dce3ede7207e..fcdb41ac5c2e 100644
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -658,108 +658,7 @@ SYM_CODE_END(\asmsym)
-  */
- #include <asm/idtentry.h>
+@@ -53,19 +53,6 @@ SYM_CODE_START(native_usergs_sysret64)
+ SYM_CODE_END(native_usergs_sysret64)
+ #endif /* CONFIG_PARAVIRT */
  
--/*
-- * Interrupt entry helper function.
-- *
-- * Entry runs with interrupts off. Stack layout at entry:
-- * +----------------------------------------------------+
-- * | regs->ss						|
-- * | regs->rsp						|
-- * | regs->eflags					|
-- * | regs->cs						|
-- * | regs->ip						|
-- * +----------------------------------------------------+
-- * | regs->orig_ax = ~(interrupt number)		|
-- * +----------------------------------------------------+
-- * | return address					|
-- * +----------------------------------------------------+
-- */
--SYM_CODE_START(interrupt_entry)
--	UNWIND_HINT_IRET_REGS offset=16
--	ASM_CLAC
--	cld
--
--	testb	$3, CS-ORIG_RAX+8(%rsp)
--	jz	1f
--	SWAPGS
--	FENCE_SWAPGS_USER_ENTRY
--	/*
--	 * Switch to the thread stack. The IRET frame and orig_ax are
--	 * on the stack, as well as the return address. RDI..R12 are
--	 * not (yet) on the stack and space has not (yet) been
--	 * allocated for them.
--	 */
--	pushq	%rdi
--
--	/* Need to switch before accessing the thread stack. */
--	SWITCH_TO_KERNEL_CR3 scratch_reg=%rdi
--	movq	%rsp, %rdi
--	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rsp
--
--	 /*
--	  * We have RDI, return address, and orig_ax on the stack on
--	  * top of the IRET frame. That means offset=24
--	  */
--	UNWIND_HINT_IRET_REGS base=%rdi offset=24
--
--	pushq	7*8(%rdi)		/* regs->ss */
--	pushq	6*8(%rdi)		/* regs->rsp */
--	pushq	5*8(%rdi)		/* regs->eflags */
--	pushq	4*8(%rdi)		/* regs->cs */
--	pushq	3*8(%rdi)		/* regs->ip */
--	UNWIND_HINT_IRET_REGS
--	pushq	2*8(%rdi)		/* regs->orig_ax */
--	pushq	8(%rdi)			/* return address */
--
--	movq	(%rdi), %rdi
--	jmp	2f
--1:
--	FENCE_SWAPGS_KERNEL_ENTRY
--2:
--	PUSH_AND_CLEAR_REGS save_ret=1
--	ENCODE_FRAME_POINTER 8
--
--	testb	$3, CS+8(%rsp)
--	jz	1f
--
--	/*
--	 * IRQ from user mode.
--	 *
--	 * We need to tell lockdep that IRQs are off.  We can't do this until
--	 * we fix gsbase, and we should do it before enter_from_user_mode
--	 * (which can take locks).  Since TRACE_IRQS_OFF is idempotent,
--	 * the simplest way to handle it is to just call it twice if
--	 * we enter from user mode.  There's no reason to optimize this since
--	 * TRACE_IRQS_OFF is a no-op if lockdep is off.
--	 */
--	TRACE_IRQS_OFF
--
--	CALL_enter_from_user_mode
--
--1:
--	ENTER_IRQ_STACK old_rsp=%rdi save_ret=1
--	/* We entered an interrupt context - irqs are off: */
--	TRACE_IRQS_OFF
--
--	ret
--SYM_CODE_END(interrupt_entry)
--_ASM_NOKPROBE(interrupt_entry)
--
- SYM_CODE_START_LOCAL(common_interrupt_return)
--ret_from_intr:
--	DISABLE_INTERRUPTS(CLBR_ANY)
--	TRACE_IRQS_OFF
--
--	LEAVE_IRQ_STACK
--
--	testb	$3, CS(%rsp)
--	jz	retint_kernel
--
--	/* Interrupt came from user space */
--.Lretint_user:
--	mov	%rsp,%rdi
--	call	prepare_exit_to_usermode
--
- SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
- #ifdef CONFIG_DEBUG_ENTRY
- 	/* Assert that pt_regs indicates user mode. */
-@@ -802,23 +701,6 @@ SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
- 	INTERRUPT_RETURN
- 
- 
--/* Returning to kernel space */
--retint_kernel:
--#ifdef CONFIG_PREEMPTION
--	/* Interrupts are off */
--	/* Check if we need preemption */
--	btl	$9, EFLAGS(%rsp)		/* were interrupts off? */
+-.macro TRACE_IRQS_FLAGS flags:req
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-	btl	$9, \flags		/* interrupts off? */
 -	jnc	1f
--	cmpl	$0, PER_CPU_VAR(__preempt_count)
--	jnz	1f
--	call	preempt_schedule_irq
+-	TRACE_IRQS_ON
 -1:
 -#endif
--	/*
--	 * The iretq could re-enable interrupts:
--	 */
--	TRACE_IRQS_IRETQ
+-.endm
 -
- SYM_INNER_LABEL(restore_regs_and_return_to_kernel, SYM_L_GLOBAL)
- #ifdef CONFIG_DEBUG_ENTRY
- 	/* Assert that pt_regs indicates kernel mode. */
-@@ -932,31 +814,6 @@ SYM_CODE_END(common_interrupt_return)
- _ASM_NOKPROBE(common_interrupt_return)
- 
+-.macro TRACE_IRQS_IRETQ
+-	TRACE_IRQS_FLAGS EFLAGS(%rsp)
+-.endm
+-
  /*
-- * APIC interrupts.
-- */
--.macro apicinterrupt3 num sym do_sym
--SYM_CODE_START(\sym)
--	UNWIND_HINT_IRET_REGS
--	pushq	$~(\num)
--	call	interrupt_entry
--	UNWIND_HINT_REGS indirect=1
--	call	\do_sym	/* rdi points to pt_regs */
--	jmp	ret_from_intr
--SYM_CODE_END(\sym)
--_ASM_NOKPROBE(\sym)
--.endm
--
--/* Make sure APIC interrupt handlers end up in the irqentry section: */
--#define PUSH_SECTION_IRQENTRY	.pushsection .irqentry.text, "ax"
--#define POP_SECTION_IRQENTRY	.popsection
--
--.macro apicinterrupt num sym do_sym
--PUSH_SECTION_IRQENTRY
--apicinterrupt3 \num \sym \do_sym
--POP_SECTION_IRQENTRY
--.endm
--
--/*
-  * Reload gs selector with exception handling
-  * edi:  new selector
+  * 64-bit SYSCALL instruction entry. Up to 6 arguments in registers.
   *
-diff --git a/arch/x86/include/asm/entry_arch.h b/arch/x86/include/asm/entry_arch.h
-deleted file mode 100644
-index 3e841ed5c17a..000000000000
---- a/arch/x86/include/asm/entry_arch.h
-+++ /dev/null
-@@ -1,12 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * This file is designed to contain the BUILD_INTERRUPT specifications for
-- * all of the extra named interrupt vectors used by the architecture.
-- * Usually this is the Inter Process Interrupts (IPIs)
-- */
+diff --git a/arch/x86/entry/thunk_64.S b/arch/x86/entry/thunk_64.S
+index 34f980c9b766..ccd32877a3c4 100644
+--- a/arch/x86/entry/thunk_64.S
++++ b/arch/x86/entry/thunk_64.S
+@@ -3,7 +3,6 @@
+  * Save registers before calling assembly functions. This avoids
+  * disturbance of register allocation in some inline assembly constructs.
+  * Copyright 2001,2002 by Andi Kleen, SuSE Labs.
+- * Added trace_hardirqs callers - Copyright 2007 Steven Rostedt, Red Hat, Inc.
+  */
+ #include <linux/linkage.h>
+ #include "calling.h"
+@@ -37,11 +36,6 @@ SYM_FUNC_END(\name)
+ 	_ASM_NOKPROBE(\name)
+ 	.endm
+ 
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller,1
+-	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
+-#endif
 -
--/*
-- * The following vectors are part of the Linux architecture, there
-- * is no hardware IRQ pin equivalent for them, they are triggered
-- * through the ICC by us (IPIs)
-- */
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 4bbc770af632..5ad021708849 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -29,15 +29,16 @@
- #ifdef CONFIG_PARAVIRT_XXL
- #include <asm/asm-offsets.h>
- #include <asm/paravirt.h>
-+#define GET_CR2_INTO(reg) GET_CR2_INTO_AX ; _ASM_MOV %_ASM_AX, reg
- #else
- #define INTERRUPT_RETURN iretq
-+#define GET_CR2_INTO(reg) _ASM_MOV %cr2, reg
+ #ifdef CONFIG_PREEMPTION
+ 	THUNK preempt_schedule_thunk, preempt_schedule
+ 	THUNK preempt_schedule_notrace_thunk, preempt_schedule_notrace
+@@ -49,8 +43,7 @@ SYM_FUNC_END(\name)
+ 	EXPORT_SYMBOL(preempt_schedule_notrace_thunk)
  #endif
  
--/* we are not able to switch in one step to the final KERNEL ADDRESS SPACE
-+/*
-+ * We are not able to switch in one step to the final KERNEL ADDRESS SPACE
-  * because we need identity-mapped pages.
-- *
-  */
--
- #define l4_index(x)	(((x) >> 39) & 511)
- #define pud_index(x)	(((x) >> PUD_SHIFT) & (PTRS_PER_PUD-1))
+-#if defined(CONFIG_TRACE_IRQFLAGS) \
+- || defined(CONFIG_PREEMPTION)
++#ifdef CONFIG_PREEMPTION
+ SYM_CODE_START_LOCAL_NOALIGN(.L_restore)
+ 	popq %r11
+ 	popq %r10
+diff --git a/arch/x86/include/asm/irqflags.h b/arch/x86/include/asm/irqflags.h
+index e00f064b009e..8ddff8dbaed5 100644
+--- a/arch/x86/include/asm/irqflags.h
++++ b/arch/x86/include/asm/irqflags.h
+@@ -172,14 +172,4 @@ static inline int arch_irqs_disabled(void)
+ }
+ #endif /* !__ASSEMBLY__ */
  
+-#ifdef __ASSEMBLY__
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-#  define TRACE_IRQS_ON		call trace_hardirqs_on_thunk;
+-#  define TRACE_IRQS_OFF	call trace_hardirqs_off_thunk;
+-#else
+-#  define TRACE_IRQS_ON
+-#  define TRACE_IRQS_OFF
+-#endif
+-#endif /* __ASSEMBLY__ */
+-
+ #endif
 
