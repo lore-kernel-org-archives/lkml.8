@@ -2,168 +2,124 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B837EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961F0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE7E206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1C820767
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgEOLvG (ORCPT
+        id S1726252AbgEOLvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:51:06 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2212 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726062AbgEOLvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:51:06 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 58A4C1273F1470C21441;
-        Fri, 15 May 2020 12:51:04 +0100 (IST)
-Received: from [127.0.0.1] (10.47.1.24) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Fri, 15 May
- 2020 12:51:01 +0100
-Subject: Re: [PATCH v3 0/2] irqchip/gic-v3-its: Balance LPI affinity across
- CPUs
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        luojiaxing <luojiaxing@huawei.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>
-References: <20200316115433.9017-1-maz@kernel.org>
- <9171c554-50d2-142b-96ae-1357952fce52@huawei.com>
- <80b673a7-1097-c5fa-82c0-1056baa5309d@huawei.com>
- <f2971d1c-50f8-bf5a-8b16-8d84a631b0ba@huawei.com>
- <7c05b08b-2edc-7f97-0175-898e9772673e@huawei.com>
- <668f819c8747104814245cd6faebdd9a@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <a22aaa72-4f5f-40d4-33e0-0aff8b65fdc2@huawei.com>
-Date:   Fri, 15 May 2020 12:50:06 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 15 May 2020 07:51:53 -0400
+Received: from mga06.intel.com ([134.134.136.31]:16270 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbgEOLvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:51:53 -0400
+IronPort-SDR: RcUnhiy93GDKfk3mR8+XGUcUlUFXfwvE4TcQcU2qzd3nx5++VLP+bcTW+Vvak8dD4IimkAEMKX
+ FrvUAv3Ila6A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 04:51:52 -0700
+IronPort-SDR: 042pc2NGEgzvIuFUXXH0dKWeFDRG+rGacAhxCGg+YExy5368QwdOxq+sPPkxAuBo15Mq1QROhS
+ hTW6BbpLJmZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="252362213"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 15 May 2020 04:51:48 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZYsZ-006qo3-AS; Fri, 15 May 2020 14:51:51 +0300
+Date:   Fri, 15 May 2020 14:51:51 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        linux-mips@vger.kernel.org,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/19] dt-bindings: spi: dw: Add Tx/Rx DMA properties
+Message-ID: <20200515115151.GU185537@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <668f819c8747104814245cd6faebdd9a@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.1.24]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515104758.6934-2-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 15, 2020 at 01:47:40PM +0300, Serge Semin wrote:
+> Since commit 22d48ad7bfac ("spi: dw: Add Elkhart Lake PSE DMA support")
+> the spi-dw-mid.c module supports a platform DMA engine handling the DW APB
+> SSI controller requests. Lets alter the DW SPI bindings file to accept the
+> Rx and Tx DMA line specifiers.
 
+I'm wondering if these properties are implied by the SPI generic one?
+(forgive me if I'm not understanding all DT schema relations)
 
-Hi Marc,
+Per se looks good.
 
-> Absolutely. Life has got in the way, so let me page it back in...
-
-Great
-
->>
->> [PATCH 2/2] irqchip/gic-v3-its: Handle no overlap of non-managed irq
->>   affinity mask
->>
->> In selecting the target CPU for a non-managed interrupt, we may select
->> a
->> target CPU outside the requested affinity mask.
->>
->> This is because there may be no overlap of the ITS node mask and the
->> requested CPU affinity mask. The requested affinity mask may be coming
->> from userspace or some drivers which try to set irq affinity, see [0].
->>
->> In this case, just ignore the ITS node cpumask. This is a deviation
->> from
->> what Thomas described. Having said that, I am not sure if the
->> interrupt is ever bound to a node for us.
->>
->> [0]
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/hisilicon/hisi_uncore_pmu.c#n417
->>
->> ---
->>   drivers/irqchip/irq-gic-v3-its.c | 4 ----
->>   1 file changed, 4 deletions(-)
->>
->> diff --git a/drivers/irqchip/irq-gic-v3-its.c
->> b/drivers/irqchip/irq-gic-v3-its.c
->> index 2b18feb..12d5d4b4 100644
->> --- a/drivers/irqchip/irq-gic-v3-its.c
->> +++ b/drivers/irqchip/irq-gic-v3-its.c
->> @@ -1584,10 +1584,6 @@ static int its_select_cpu(struct irq_data *d,
->>   			cpumask_and(tmpmask, cpumask_of_node(node), aff_mask);
->>   			cpumask_and(tmpmask, tmpmask, cpu_online_mask);
->>
->> -			/* If that doesn't work, try the nodemask itself */
->> -			if (cpumask_empty(tmpmask))
->> -				cpumask_and(tmpmask, cpumask_of_node(node), cpu_online_mask);
->> -
->>   			cpu = cpumask_pick_least_loaded(d, tmpmask);
->>   			if (cpu < nr_cpu_ids)
->>   				goto out;
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
+> Cc: linux-mips@vger.kernel.org
 > 
-> I'm really not sure. Shouldn't we then drop the wider search on
-> cpu_inline_mask, because userspace could have given us something
-> that we cannot deal with?
-
-It's not just userspace. Some drivers call irq_set_affinity{_hint}}() 
-also, with a non-overlapping affinity mask.
-
-We could just error these requests, but some drivers rely on this 
-behavior. Consider the uncore driver I mentioned above, which WARNs when 
-the affinity setting fails. So it tries to set the affinity with the 
-cpumask of the cluster associated with the device, but with D06's ITS 
-config, below, there may be no overlap.
-
+> ---
 > 
-> What you are advocating for is a strict adherence to the provided
-> mask, and it doesn't seem to be what other architectures are providing.
-> I consider the userspace-provided affinity as a hint more that anything
-> else, as in this case the kernel does know better (routing the interrupt
-> to a foreign node might be costly, or even impossible, see the TX1
-> erratum).
-
-Right
-
+> Changelog v2:
+> - Revert the order of the DT changes: first add the DMA channels support,
+>   then perform the binding file conversion.
+> ---
+>  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
->   From what I remember of the earlier discussion, you saw an issue on
-> a system with two sockets and a single ITS, with the node mask limited
-> to the first socket. Is that correct?
+> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+> index 7a4702edf896..020e3168ee41 100644
+> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+> @@ -23,6 +23,8 @@ Optional properties:
+>  - num-cs : The number of chipselects. If omitted, this will default to 4.
+>  - reg-io-width : The I/O register width (in bytes) implemented by this
+>    device.  Supported values are 2 or 4 (the default).
+> +- dmas : Phandle + identifiers of Tx and Rx DMA channels.
+> +- dma-names : Contains the names of the DMA channels. Must be "tx" and "rx".
+>  
+>  Child nodes as per the generic SPI binding.
+>  
+> -- 
+> 2.25.1
+> 
 
-A bit more complicated: 2 sockets, 2 NUMA nodes per socket, and ITS 
-config as follows:
-D06ES  1x ITS with proximity node #0
-
-root@(none)$ dmesg | grep ITS
-[ 0.000000] SRAT: PXM 0 -> ITS 0 -> Node 0
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-D06CS
-2x ITS with proximity node #0, #2
-
-estuary:/$ dmesg | grep ITS
-[    0.000000] SRAT: PXM 0 -> ITS 0 -> Node 0
-[    0.000000] SRAT: PXM 2 -> ITS 1 -> Node 2
-
-It complicates things.
-
-We could add extra intelligence to record if an node has an ITS 
-associated. In the case of that not being true, we would fallback on the 
-requested affin only (for case of no overlap). It gets a bit more messy 
-then.
-
-Thanks,
-John
