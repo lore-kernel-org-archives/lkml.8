@@ -2,452 +2,154 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9411DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACF8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 631432070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD76F2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:25:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a0VhCxzu"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="ICAlGijx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgEOTYs (ORCPT
+        id S1726660AbgEOTZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 15:24:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726227AbgEOTYr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 15:24:47 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1DA9C05BD09
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 12:24:47 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id g11so1304015plp.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 12:24:47 -0700 (PDT)
+        Fri, 15 May 2020 15:25:12 -0400
+Received: from mail-co1nam11on2127.outbound.protection.outlook.com ([40.107.220.127]:17505
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726206AbgEOTZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 15:25:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bVp7q8ciQiq5qYjk6frTtXyTljlvSvj49cfdg4MZmVYxmLEreHvbf4iDUKL959F6FCEor7x0ZWEu1yXJIW8yNVyGKEEZvOGj54akCq6CD0kNXCTtczUslW1IYb+Dk/gHYVXCdly6/mV5wx37rdtlO552z6DPDXyTjuJN5TPb4cPmCWnyaHPgA2dGcBmOw7cGcsTWcvSod/7nokJrirzgKH4xAJBmKQlcw9AIYb/R38GNCsH22dvEJ71zwOhl7jNHd/uMMLapGryJ4+nzTxjZyFLekiG1wwbStLGNgyoKJYA/ezQRsw9BFec0od8OGqhI87aWnwhw3/EpoIbrMwmEkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1OgmjdGF6wPU3xIv5703pTeMeMlxOsvo5ko1SpqQv4w=;
+ b=hCL3xVPGzWEZZ00xSDo/dU4NmicbLtIzIthT3l+BwrgxZoPZC8JoHrcqDXBHHTq7qkV6MOkuZLdxoVc2uFvkhcU2zVFyPlieWONjGB+2q8V5EWbXcupHwD9RZ/phdGGwdozIxzgJePnNjh79Zvba3PYkidd5qxs0wsL4euJJ0G4C11cfBgnJli/H7+yq+y+MrJUCBZpEEZnrhyV+Nrj4qxw+0gfK6voRaKYTi1ZzvxNYXe27u1tTUws1mUurmYYTy7d5fdoewZz1mVlh9fhDvpxeCPtICxt264Zz01XbTacpdKNZIBbIQg2bBMu9eigc7EFvoqTmovNo03GUtzJJ+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0X/3u6xgTc64z4mbUPC5Tq8BsfZh50im1LnhaApPDfQ=;
-        b=a0VhCxzuyN9ezRnMWKcqic+hO3e4AQGqu4VSk5ZD9sCmItbLI8vjEa1FQ6RjgJ0Ctt
-         bJV2FLiY73HZw9SE3LgXQ+kSHPQfQpKiH96EZkTo6IzSpIYMdEHZgv5x2xa3JL31TGA9
-         L3GbIoDChOgbqkSeVdzLnVZdHzAAtPnN84XYK0HjwmistgV9xIGVddE1fJ4clMuUGPXq
-         ogZTCwbXj9RZ2iwRDPY3US4Cq/HiG3lkuSY/HZr9USrmgfxcKk0uNKDhJ4QNGYf8wGJY
-         gIcBntQTzms+FAHTX+QQlx3hibfYkRktz4D/5gf4k0e/73eod+JLnTBIf+O861qgiVqw
-         SeJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0X/3u6xgTc64z4mbUPC5Tq8BsfZh50im1LnhaApPDfQ=;
-        b=gGA7VEdM+Zxx7jQPaUEjRVqRokulTigbI57r6BDur8LBj0ijgUsMPZ60PtdhRh6el7
-         aMi2ldI4pfJp2et+5bPdZfvlML3kBfaHQ35lvTx/tKCzZwo5snQHNvVTZwSs6wgzxnKe
-         hOGKyk8loKBKGVIUHYByXP6Bm1nXjEtYvTt13sidkgZ0L3Ls/kOAcfp4l3yCSgsDtVW8
-         Mg2ZYhhI7RlKpXWp0pB2vxBWXmoVlXV31jQBsiItsI7H8AeY1CZZOTXGpbf17Lf/jMbW
-         I7s9XI4zIrTWNDhq8RXsydMR4DqhfiAXJhSCKjgcN+IKK1cDepQC97TKQwwCjJ/pHDYj
-         lA4w==
-X-Gm-Message-State: AOAM5331auTp+vOq7FeEMjMT+eqnDJyFxaP9mTTRKkxsn2spKGW/bkxv
-        aVIwQkmHHkA9vOqf2QPh7mE6iA==
-X-Google-Smtp-Source: ABdhPJxDWnkf+1IwZWuleDAlLecH4wikfvXhjAefWd4/wJrq3PF6i1tr68qjz65bcp+XFKZuRHLyHQ==
-X-Received: by 2002:a17:90b:1045:: with SMTP id gq5mr5130721pjb.105.1589570687162;
-        Fri, 15 May 2020 12:24:47 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id h193sm2582138pfe.30.2020.05.15.12.24.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 12:24:45 -0700 (PDT)
-Date:   Fri, 15 May 2020 13:24:43 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     ohad@wizery.com, loic.pallardy@st.com, arnaud.pouliquen@st.com,
-        s-anna@ti.com, linux-remoteproc@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 03/14] remoteproc: Add new operation and flags for
- synchronistation
-Message-ID: <20200515192443.GA24201@xps15>
-References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
- <20200424200135.28825-4-mathieu.poirier@linaro.org>
- <20200506002253.GC2329931@builder.lan>
- <20200508210123.GA5650@xps15>
- <20200514013224.GE16107@builder.lan>
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1OgmjdGF6wPU3xIv5703pTeMeMlxOsvo5ko1SpqQv4w=;
+ b=ICAlGijx9SzyihYJRmx+nznplHVJhmwkTJhQwC9zXPbHOXmQv/6ieRtzfdKKgCxLvoJfRLtTJf2SJwR2Ada8oWd7jHqSk2Fp0b6Nf3iozkNbS43VpR3auInUP6rcMJLZxq1Ef/GlXUWv1WyJMgzrgbkT3Jvbcn3K3n50S8fQCtI=
+Authentication-Results: amperecomputing.com; dkim=none (message not signed)
+ header.d=none;amperecomputing.com; dmarc=none action=none
+ header.from=os.amperecomputing.com;
+Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
+ BYAPR01MB4133.prod.exchangelabs.com (2603:10b6:a03:5f::17) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2979.35; Fri, 15 May 2020 19:25:09 +0000
+Received: from BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::296c:b848:8bf0:6f2c]) by BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::296c:b848:8bf0:6f2c%5]) with mapi id 15.20.2979.033; Fri, 15 May 2020
+ 19:25:09 +0000
+From:   Tuan Phan <tuanphan@os.amperecomputing.com>
+Cc:     patches@amperecomputing.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Neil Leeder <nleeder@codeaurora.org>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4] ACPI/IORT: Fix PMCG node single ID mapping handling.
+Date:   Fri, 15 May 2020 12:24:46 -0700
+Message-Id: <1589570686-5780-1-git-send-email-tuanphan@os.amperecomputing.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR07CA0099.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::40) To BYAPR01MB4598.prod.exchangelabs.com
+ (2603:10b6:a03:8a::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514013224.GE16107@builder.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from aptiov-dev-Latitude-E7470.amperecomputing.com (4.28.12.214) by BYAPR07CA0099.namprd07.prod.outlook.com (2603:10b6:a03:12b::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3000.20 via Frontend Transport; Fri, 15 May 2020 19:25:08 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [4.28.12.214]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 25de0aaf-faf7-4ea2-feb1-08d7f905ae31
+X-MS-TrafficTypeDiagnostic: BYAPR01MB4133:|BYAPR01MB4133:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR01MB41330246EE05BF334790C37CE0BD0@BYAPR01MB4133.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 04041A2886
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Ve5j2odSFQStkdnDD427HAJfe7xXrOzhh+eX5o+rZj/qVtPOwbUd2hgYDXUp4BfQm1FSK52FEdM7iQmrTTClorKOjno+07TeuquZDuMpvzmerVAvyMeK2rFRO6KMrulrnBCMorG1zvfQGLzkWiAq7iSlEyQwdtb/Gwl697EhmW6owvq94867AJQJn0im5JXiVv+DKXfl4w+em2SAI6LWu8NkDBvMh9gXfqESWHZKoh9tNpkMllhJrsWmSszTGFtlUXfuKPYc5piOZr/VIh1y445pT+LeMzBxOh5f0y9qC+niE1dgKg+ZFoYvp+nMF9LMolnsuAwXcRIenh1Seerr0nsLCPieuVSrsF3rg8MfcDjxvJruELDbd7y/bYbLCEVngqSmiXLandO6q4ZeeXTW6esi78VojM91SfUXkRdlktAS7LqTH0LA6GbV5OjDgbeAOfCdGH2xOsfw3Cheztf5dAAJl3W49cSZxIRFS2plr2Y=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(366004)(39840400004)(396003)(66476007)(66556008)(6506007)(66946007)(2616005)(956004)(6512007)(8676002)(8936002)(54906003)(86362001)(2906002)(52116002)(478600001)(6486002)(186003)(316002)(5660300002)(4326008)(6666004)(26005)(7416002)(109986005)(16526019)(266003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: SZT5G/jjNtWL1vTY/TvZq4i18sOSTAxAXV8zBbzoTwUYGud8+DHQuK7vjPqK2CjDkoPU+xR67qzdV0woqyn9tiDJJBBJM/UndkpTJ52sTBxQhLw2BRi8q0suBAX9bWBARTP9oYLWOW/1pkVzzg12KO9Xy3tb5aM41Jda38h3FCBl4VCCMk4nH81IH0LeHwVFGIf5HrUI4tnD2xBGjXKzEbQLjVytHetBt8hthkIJMXgtQqkpL2GgqON7kTFMhr02CMauC3FTwbpRziADHxTopE1CyOXZ5bonyQa2fzRoWt/EGAP+38vYu8D6YQQhpCRROD7qAOwFsDk4Ygg7Ccmai4wA/KSyOGY4JP5wmAYjN2DeZojQXXAGgHOhX80laAoCgA8FxIlyoVYJTPOyVQui1iHg+9nocsBbYme1DwNtEUMnsJuEGW49wAGy45LViuwcvgh26BTA3Ys02sJRKJ0+Yoghp70C85PPgL4VuDgDXaM=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25de0aaf-faf7-4ea2-feb1-08d7f905ae31
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2020 19:25:09.3246
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6n0mAt0v9FUeiMPKM4KayAElpsXtHckuSB17w3IXkyeT/A3Su7SWOqFs8LBoKJj/Z0+frPTT33NO5Gp32IJxfYmFNDWgR3heWVCFY0Lz6AjRoLJeunkcFEKuWZ+r1Aew
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB4133
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good day Bjorn,
+An IORT PMCG node can have no ID mapping if its overflow interrupt is
+wire based therefore the code that parses the PMCG node can not assume
+the node will always have a single mapping present at index 0.
 
-On Wed, May 13, 2020 at 06:32:24PM -0700, Bjorn Andersson wrote:
-> On Fri 08 May 14:01 PDT 2020, Mathieu Poirier wrote:
-> 
-> > On Tue, May 05, 2020 at 05:22:53PM -0700, Bjorn Andersson wrote:
-> > > On Fri 24 Apr 13:01 PDT 2020, Mathieu Poirier wrote:
-> > > 
-> > > > Add a new sync_ops to support use cases where the remoteproc
-> > > > core is synchronising with the remote processor.  Exactly when to use
-> > > > the synchronisation operations is directed by the flags in structure
-> > > > rproc_sync_flags.
-> > > > 
-> > > 
-> > > I'm sorry, but no matter how many times I read these patches I have to
-> > > translate "synchronising" to "remote controlled", and given the number
-> > > of comments clarifying this makes me feel that we could perhaps come up
-> > > with a better name?
-> > 
-> > "remote controlled" as in "someone else is managing the remote processor" ?
-> > It could also mean the remoteproc core is "remote controlling" the
-> > remote processor, exactly what it currently does today...
-> > 
-> 
-> You're right and this would certainly not help the confusion.
-> 
-> > How about "autonomous", as in the remote processor doesn't need us to boot or
-> > switch it off.  I'm open to any other suggestions.
-> > 
-> > > 
-> > > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > > > ---
-> > > >  include/linux/remoteproc.h | 24 ++++++++++++++++++++++++
-> > > >  1 file changed, 24 insertions(+)
-> > > > 
-> > > > diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> > > > index ac4082f12e8b..ceb3b2bba824 100644
-> > > > --- a/include/linux/remoteproc.h
-> > > > +++ b/include/linux/remoteproc.h
-> > > > @@ -353,6 +353,23 @@ enum rsc_handling_status {
-> > > >  	RSC_IGNORED	= 1,
-> > > >  };
-> > > >  
-> > > > +/**
-> > > > + * struct rproc_sync_flags - platform specific flags indicating which
-> > > > + *			      rproc_ops to use at specific times during
-> > > > + *			      the rproc lifecycle.
-> > > > + * @on_init: true if synchronising with the remote processor at
-> > > > + *	     initialisation time
-> > > > + * @after_stop: true if synchronising with the remote processor after it was
-> > > > + *		stopped from the cmmand line
-> > > > + * @after_crash: true if synchronising with the remote processor after
-> > > > + *		 it has crashed
-> > > > + */
-> > > > +struct rproc_sync_flags {
-> > > > +	bool on_init;
-> > > 
-> > > This indirectly splits the RPROC_OFFLINE state in an "offline" and
-> > > "already-booted" state. Wouldn't it be clearer to represent this with a
-> > > new RPROC_ALREADY_BOOTED state?
-> > > 
-> > 
-> > I suggested that at some point in the past but it was in a different context.  I
-> > will revisit to see how doing so could apply here.
-> > 
-> 
-> How about we introduce a new state named DETACHED and make the platform
-> drivers specify that the remote processor is in either OFFLINE (as
-> today) or DETACHED during initialization.
+Fix iort_get_id_mapping_index() by checking for an overflow interrupt
+and mapping count.
 
-That is certainly an idea that is growing on me.  Up to now I used the on_init
-flag to express duality in the OFFLINE state.  But based on the comments that came
-back from yourself, Arnaud and Suman it is clear that my approach is anything
-but clear.  As such I am eager to try something else.
+Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG").
 
-> 
-> Then on_init = true would be the action of going from DETACHED to
-> RUNNING, which would involve the following actions:
-> 
-> 1) find resource table
-> 2) prepare device (?)
-> 3) handle resources
-> 4) allocate carveouts (?)
-> 5) prepare subdevices
-> 6) "attach"
-> 7) start subdevices
-> 
-> on_init = false would represent the transition from OFFLINE to RUNNING,
-> which today involve the following actions:
-> 
-> 1) request firmware
-> 2) prepare device
-> 3) parse fw
-> 4) handle resources
-> 5) allocate carveouts
-> 6) load segments
-> 7) find resource table
-> 8) prepare subdevices
-> 9) "boot"
-> 10) start subdevices
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
+Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+---
+v1 -> v2:
+- Use pmcg node to detect wired base overflow interrupt.
 
-If we add a DETACHED state I don't see a scenario where we need the on_init
-variable.  When DETACHED is set by the platform we know the MCU is running and
-it becomes a matter of when the core attach to it, i.e at initialisation time or
-once the kernel has finished booting, and that is already taken care of by the
-auto_boot variable.  
+v2 -> v3:
+- Address Hanjun and Robin's comments.
 
-The steps you have outlined above to describe the transitions are accurate.
+v3 -> v4:
+- Update the title and description as mentioned by Lorenzo.
 
-> 
-> > > > +	bool after_stop;
-> > > 
-> > > What does it mean when this is true? That Linux can shut the remote core
-> > > down, but someone else will start it?
-> > 
-> > It tells the remoteproc core how to interact with the remote processor after the
-> > latter has been switched off.
-> 
-> Understood.
-> 
-> > For example, we could want to boot the remote
-> > processor from the boot loader so that minimal functionality can be provided
-> > while the kernel boots.  Once the kernel and user space are in place, the remote
-> > processor is explicitly stopped and booted once again, but this time with a
-> > firmware image that offers full functionality.
-> > 
-> 
-> This would be the { on_init = true, after_stop = false } use case, with
-> the new state would relate to the journey of DETACHED -> RUNNING ->
-> OFFLINE.
+ drivers/acpi/arm64/iort.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Yes
-
-> 
-> As such the next boot would represent above OFFLINE -> RUNNING case,
-> which we already support today.
-
-Correct.  This is the level of functionality sought by ST and TI.  Xilinx seems to
-have the same requirements as well.
-
-> 
-> > It could also be that the remoteproc core can stop the remote processor, but the
-> > remote processor will automatically reboot itself.  In that case the remoteproc
-> > core will simply synchronise with the remote processor, as it does when .on_init
-> > == true.
-> > 
-> 
-> I've not been able to come up with a reasonable use case for the {
-> on_init = ture, after_stop = true } scenario.
-
-That one is a little trickier - see the next comment.
-
-> 
-> But Wendy previously talked about the need to "detach" Linux from a
-> running remote processor, by somehow just letting it know that the
-> communication is down - to allow Linux to be rebooted while the remote
-> was running. So if we support a transition from RUNNING to DETACHED
-> using a sequence of something like:
-> 
-> 1) stop subdevices
-> 2) "detach"
-> 3) unprepare subdevices
-> 4) release carveouts (?)
-> 5) unprepare device (?)
-> 
-> Then perhaps the after_stop could naturally be the transition from
-> DETACHED to RUNNING, either with or without a reboot of the system
-> in between?
-
-I see two scenarios for after_stop == true:
-
-1) A "detach" scenario as you mentioned above.  In this case the stop() function
-would inform (using a mechanism that is platform specific) the MCU that the core
-is shutting down.  In this case the MCU would put itself back in "waiting mode",
-waiting for the core to show signs of life again.  On the core side this would
-be a DETACHED to RUNNING transition.  Wheter the application processor reboots
-or not should not be relevant to the MCU.
-
-2) An "MCU reboot in autonomous mode" scenario.  Here the stop() function would
-switch off the MCU.  From there the MCU could automatically restarts itself or
-be restarted by some other entity.  In this scenario I would expect the start()
-function to block until the MCU is ready to proceed with the rest of the
-remoteproc core initialisation steps.
-
-From a remoteproc core perspective, both are handled by a DETACHED -> RUNNING
-transition.  This is the functionality NXP is looking for.   
-
-> 
-> > > 
-> > > > +	bool after_crash;
-> > > 
-> > > Similarly what is the expected steps to be taken by the core when this
-> > > is true? Should rproc_report_crash() simply stop/start the subdevices
-> > > and upon one of the ops somehow tell the remote controller that it can
-> > > proceed with the recovery?
-> > 
-> > The exact same sequence of steps will be carried out as they are today, except
-> > that if after_crash == true, the remoteproc core won't be switching the remote
-> > processor on, exactly as it would do when on_init == true.
-> > 
-> 
-> Just to make sure we're on the same page:
-> 
-> after_crash = false is what we have today, and would mean:
-> 
-> 1) stop subdevices
-> 2) power off
-> 3) unprepare subdevices
-> 4) generate coredump
-> 5) request firmware
-> 6) load segments
-> 7) find resource table
-> 8) prepare subdevices
-> 9) "boot"
-> 10) start subdevices
-
-Exactly
-
-> 
-> after_crash = true would mean:
-> 
-> 1) stop subdevices
-> 2) "detach"
-> 3) unprepare subdevices
-> 4) prepare subdevices
-> 5) "attach"
-> 6) start subdevices
->
-
-Yes
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index ed3d2d1..12bb70e 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -414,6 +414,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
+ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+ {
+ 	struct acpi_iort_smmu_v3 *smmu;
++	struct acpi_iort_pmcg *pmcg;
  
-> State diagram wise both of these would represent the transition RUNNING
-> -> CRASHED -> RUNNING, but somehow the platform driver needs to be able
-> to specify which of these sequences to perform. Per your naming
-> suggestion above, this does sound like a "autonomous_recovery" boolean
-> to me.
-
-Right, semantically "rproc->autonomous" would apply quite well.
-
-In function rproc_crash_handler_work(), a call to rproc_set_sync_flag() has been
-strategically placed to set the value of rproc->autonomous based on
-"after_crash".  From there the core knows which rproc_ops to use.  Here too we
-have to rely on the rproc_ops provided by the platform to do the right thing
-based on the scenario to enact.
-
-> 
-> > These flags are there to indicate how to set rproc::sync_with_rproc after
-> > different events, that is when the remoteproc core boots, when the remoteproc
-> > has been stopped or when it has crashed.
-> > 
-> 
-> Right, that was clear from your patches. Sorry that my reply didn't
-> convey the information that I had understood this.
-> 
-> > > 
-> > > > +};
-> > > > +
-> > > >  /**
-> > > >   * struct rproc_ops - platform-specific device handlers
-> > > >   * @start:	power on the device and boot it
-> > > > @@ -459,6 +476,9 @@ struct rproc_dump_segment {
-> > > >   * @firmware: name of firmware file to be loaded
-> > > >   * @priv: private data which belongs to the platform-specific rproc module
-> > > >   * @ops: platform-specific start/stop rproc handlers
-> > > > + * @sync_ops: platform-specific start/stop rproc handlers when
-> > > > + *	      synchronising with a remote processor.
-> > > > + * @sync_flags: Determine the rproc_ops to choose in specific states.
-> > > >   * @dev: virtual device for refcounting and common remoteproc behavior
-> > > >   * @power: refcount of users who need this rproc powered up
-> > > >   * @state: state of the device
-> > > > @@ -482,6 +502,7 @@ struct rproc_dump_segment {
-> > > >   * @table_sz: size of @cached_table
-> > > >   * @has_iommu: flag to indicate if remote processor is behind an MMU
-> > > >   * @auto_boot: flag to indicate if remote processor should be auto-started
-> > > > + * @sync_with_rproc: true if currently synchronising with the rproc
-> > > >   * @dump_segments: list of segments in the firmware
-> > > >   * @nb_vdev: number of vdev currently handled by rproc
-> > > >   */
-> > > > @@ -492,6 +513,8 @@ struct rproc {
-> > > >  	const char *firmware;
-> > > >  	void *priv;
-> > > >  	struct rproc_ops *ops;
-> > > > +	struct rproc_ops *sync_ops;
-> > > 
-> > > Do we really need two rproc_ops, given that both are coming from the
-> > > platform driver and the sync_flags will define which one to look at?
-> > > 
-> > > Can't the platform driver just provide an ops table that works with the
-> > > flags it passes?
-> > 
-> > That is the approach Loic took in a previous patchset [1] and that was rejected.
-> > It also lead to all of the platform drivers testing rproc->flag before carring
-> > different actions, something you indicated could be done in the core.  This
-> > patch does exactly that, i.e move the testing of rproc->flag to the core and
-> > calls the right function based on that.
-> > 
-> 
-> I think I see what you mean, as we use "start" for both syncing and
-> starting the core, a { on_init = true, after_stop = false } setup either
-> needs two tables or force conditionals on the platform driver.
-> 
-> > The end result is the same and I'm happy with one or the other, I will need to
-> > know which one.
-> > 
-> 
-> How about adding a new ops named "attach" to rproc_ops, which the
-> platform driver can specify if it supports attaching an already running
-> processor?
-
-Using "attach_ops" works for me.  But would "autonomous_ops", to correlate with
-rproc::autonomous, add clarity?  Either way work equally well for me. 
-
-> 
-> > The advantage with the approach I'm proposing is that everything is controlled
-> > in the core, i.e what ops is called and when to set rproc->flag based on
-> > different states the remote processor transitions through.
-> > 
-> 
-> I still think keeping things in the core is the right thing to do.
->
-
-Let's continue down that path then.
+ 	switch (node->type) {
+ 	case ACPI_IORT_NODE_SMMU_V3:
+@@ -441,6 +442,10 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
  
-> 
-> Please let me know what you think!
+ 		return smmu->id_mapping_index;
+ 	case ACPI_IORT_NODE_PMCG:
++		pmcg = (struct acpi_iort_pmcg *)node->node_data;
++		if (pmcg->overflow_gsiv || node->mapping_count == 0)
++			return -EINVAL;
++
+ 		return 0;
+ 	default:
+ 		return -EINVAL;
+-- 
+2.7.4
 
-From the above conversion I believe our views are pretty much aligned.
-
-> 
-> PS. If we agree on this the three transitions becomes somewhat
-> independent, so I think it makes sense to first land support for the
-> DETACHED -> RUNNING transition (and the stm32 series), then follow up
-> with RUNNING -> DETACHED and autonomous recovery separately.
-
-We can certainly proceed that way.
-
-Thanks for the time,
-Mathieu
-
-> 
-> Regards,
-> Bjorn
-> 
-> > Thanks,
-> > Mathieu
-> > 
-> > 
-> > [1]. https://patchwork.kernel.org/patch/11265869/
-> > 
-> > > 
-> > > Regards,
-> > > Bjorn
-> > > 
-> > > > +	struct rproc_sync_flags sync_flags;
-> > > >  	struct device dev;
-> > > >  	atomic_t power;
-> > > >  	unsigned int state;
-> > > > @@ -515,6 +538,7 @@ struct rproc {
-> > > >  	size_t table_sz;
-> > > >  	bool has_iommu;
-> > > >  	bool auto_boot;
-> > > > +	bool sync_with_rproc;
-> > > >  	struct list_head dump_segments;
-> > > >  	int nb_vdev;
-> > > >  	u8 elf_class;
-> > > > -- 
-> > > > 2.20.1
-> > > > 
