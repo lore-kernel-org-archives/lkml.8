@@ -2,103 +2,117 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4871C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0932C2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB72C2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMChNp0F"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CSoxSEe2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgEOKOt (ORCPT
+        id S1728333AbgEOKOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:14:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728351AbgEOKOo (ORCPT
+        Fri, 15 May 2020 06:14:43 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43398 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728047AbgEOKOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:14:44 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB16C061A0C;
-        Fri, 15 May 2020 03:14:44 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id j127so437216vke.4;
-        Fri, 15 May 2020 03:14:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EZ6OfaKWMNYLsq/vPPXTECTxhgHBG6tG/ll2X5nosuY=;
-        b=CMChNp0FChPCbFs3F+MPjQ8mCacNZi+APaqwCEJMony0vvfP4fzBL/plYi1PTDsgjK
-         3QT3ITHBA23ywLRg/M8uhZvZvgMqYwefgNad/vATXqp5pZCAy5KnBj2Lnm47dp+fm07g
-         luF6VNtLHrIuV7oxuc2jQ2uEQe2HUEvZOr72HWZhEgMhQVS6Bb+jTOtbmSis2Q9HU4km
-         Rw+76lFSY3QaXJQmOnNFPR7Ya4yfLqY9yugsS076acxRvt1+K6DjB6LbVYs0KpcOtdd8
-         k2Ke3achgeQ0U5rXPq3LNHZ6+oXMPBlKrgMuI0+qhdU3YD3/GsU9mbdxp1MmB+3gVpQz
-         7Rbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EZ6OfaKWMNYLsq/vPPXTECTxhgHBG6tG/ll2X5nosuY=;
-        b=cmcjLLwcd73W5X5R0ekQqwNoiAcQcHJfgKH2O9BF2GPfPPfpdTb10pwwvjIw5kjgpE
-         6fm6kAhzo9nNFHyOMGorOYHK+uF0dI4wWo+sxRhvY7pFNcFV/+1b2pbrOHag8Q3Lg0O7
-         nwHJANsHX/HqdXE23K5QWLi99ibmLOzt8rQJ0gKfIf26cjDmFhR4HeEDwDNsCKzsFM45
-         nK3eHto45lx/m4kfsuI+49uzojwFRUpysQQXaQfmIpM0V3ZhTrLrniCAbAYuoV5wZMF0
-         kL0w6xLkpkbg8KbN6d05iUnL4XO5mAfcRmRiTRtcF1ytHn1SE4bdlzZncK0fRCerF6Ma
-         FOWw==
-X-Gm-Message-State: AOAM530Z/9pwK5ctqvDMgFY6YhcFhv7IzMJ4CyuGF+7b86E+S9+SRZV3
-        1IKboODpQFsWc/ZpxUCW+rSdcMtGPJXugmbmnH4=
-X-Google-Smtp-Source: ABdhPJwySImY4STiLUyhyA0RYWBwnXcjZprr971z+NO8BgHmDKAA0Y4ycqtqtV/2t6BMdwfeII55n5dCjcYyTEMlNyk=
-X-Received: by 2002:a1f:2f91:: with SMTP id v139mr2005615vkv.22.1589537682435;
- Fri, 15 May 2020 03:14:42 -0700 (PDT)
+        Fri, 15 May 2020 06:14:38 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04FAEKJM120008;
+        Fri, 15 May 2020 05:14:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589537660;
+        bh=5VD+ZVOvXQx3TUmellcch5gik8b6+bYkOX6VNcCUEp0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=CSoxSEe2X9CPHZzR6JUpwFS5KEX2i05Nz07Z8cadYjaS+sdLoEwvxhlMHECWY3X+/
+         Z0l2m2SKD+bt6YVBGD7aaFXan0KhVTBi1gYIwtDK2L6AreFB55huoLLbhCflJq5x98
+         RGq7Gy3LtYqrNRFt8gbLlUjI52f1Q2IdY0qUCgj0=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04FAEK0D114544
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 15 May 2020 05:14:20 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 15
+ May 2020 05:14:19 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 15 May 2020 05:14:19 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04FAEFE7038725;
+        Fri, 15 May 2020 05:14:18 -0500
+Subject: Re: [PATCH v2] arm64: dts: ti: k3-am654-main: Update otap-del-sel
+ values
+To:     Faiz Abbas <faiz_abbas@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>
+References: <20200507181526.12529-1-faiz_abbas@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <c59653d0-2e24-8917-f5b9-8c1044786bc9@ti.com>
+Date:   Fri, 15 May 2020 13:14:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200513214351.2138580-1-emil.l.velikov@gmail.com>
- <20200513214351.2138580-10-emil.l.velikov@gmail.com> <CAJZ5v0iM5H03=RTtk2sZtUzaW0XJ+AaX1M00C8QjvaNz0ZE3bQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iM5H03=RTtk2sZtUzaW0XJ+AaX1M00C8QjvaNz0ZE3bQ@mail.gmail.com>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Fri, 15 May 2020 11:11:57 +0100
-Message-ID: <CACvgo52myKJ+3s8pYPnqNBxWqg6bCHQXqGJrLwmrSvocuqU=pg@mail.gmail.com>
-Subject: Re: [PATCH 10/11] kernel/power: constify sysrq_key_op
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200507181526.12529-1-faiz_abbas@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020 at 12:21, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Wed, May 13, 2020 at 11:46 PM Emil Velikov <emil.l.velikov@gmail.com> wrote:
-> >
-> > With earlier commits, the API no longer discards the const-ness of the
-> > sysrq_key_op. As such we can add the notation.
-> >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Jiri Slaby <jslaby@suse.com>
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Cc: Len Brown <len.brown@intel.com>
-> > Cc: linux-pm@vger.kernel.org
-> > Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
->
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-Thanks
+On 07/05/2020 21:15, Faiz Abbas wrote:
+> According to the latest AM65x Data Manual[1], a different output tap
+> delay value is optimum for a given speed mode. Update these values.
+> 
+> [1] http://www.ti.com/lit/gpn/am6526
+> 
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+> v2: Rebased to the latest mainline kernel
+> 
+>   arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 12 +++++++++++-
+>   1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> index 11887c72f23a..6cd9701e4ead 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> @@ -244,7 +244,17 @@
+>   		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
+>   		mmc-ddr-1_8v;
+>   		mmc-hs200-1_8v;
+> -		ti,otap-del-sel = <0x2>;
+> +		ti,otap-del-sel-legacy = <0x0>;
+> +		ti,otap-del-sel-mmc-hs = <0x0>;
+> +		ti,otap-del-sel-sd-hs = <0x0>;
+> +		ti,otap-del-sel-sdr12 = <0x0>;
+> +		ti,otap-del-sel-sdr25 = <0x0>;
+> +		ti,otap-del-sel-sdr50 = <0x8>;
+> +		ti,otap-del-sel-sdr104 = <0x5>;
 
-> and I'm assuming that this is going to be applied along with the rest
-> of the series.
->
-I believe so, although I have not heard anything from the TTY maintainers yet.
+Isn't this wrong? Doc claims the value for sdr104 should be 0x7?
 
--Emil
+-Tero
+
+> +		ti,otap-del-sel-ddr50 = <0x5>;
+> +		ti,otap-del-sel-ddr52 = <0x5>;
+> +		ti,otap-del-sel-hs200 = <0x5>;
+> +		ti,otap-del-sel-hs400 = <0x0>;
+>   		ti,trm-icp = <0x8>;
+>   		dma-coherent;
+>   	};
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
