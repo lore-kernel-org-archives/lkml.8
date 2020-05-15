@@ -2,90 +2,88 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFEBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50865C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71CD52073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9FB3206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:06:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T9Hj/h33"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xVbecPPq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgEOVE5 (ORCPT
+        id S1726831AbgEOVG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:04:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44730 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726179AbgEOVE5 (ORCPT
+        Fri, 15 May 2020 17:06:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbgEOVG2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:04:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589576696;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3caG0B1RGM0w2YEbxxrwWnjt85G7AlSJ61zuBN9U0lE=;
-        b=T9Hj/h33x+hcV36RDRcl1F6Q3uRQUmHuWQSC2rJkGl47WPWm0zd4YOrDo9tCjf7jpE+d8w
-        x1Yu7oknfSeeODx0JgYUoRzFDuvT3JOYPTHsFFm/n/ac+zxufrTKzFvgGrZyVsfD7qgV1v
-        917w+jcMzlXL5NLdPtf0XfzrzAWQX9A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-W0DOlcrlPGuDq6Uu0tbPDw-1; Fri, 15 May 2020 17:04:52 -0400
-X-MC-Unique: W0DOlcrlPGuDq6Uu0tbPDw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDC361005510;
-        Fri, 15 May 2020 21:04:50 +0000 (UTC)
-Received: from treble (ovpn-117-151.rdu2.redhat.com [10.10.117.151])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1B98E5D9C9;
-        Fri, 15 May 2020 21:04:50 +0000 (UTC)
-Date:   Fri, 15 May 2020 16:04:48 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Matt Helsley <mhelsley@vmware.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC][PATCH 5/5] objtool: Report missing support for subcommands
-Message-ID: <20200515210448.jqseippuz52wx7ct@treble>
-References: <cover.1588888003.git.mhelsley@vmware.com>
- <38a0c7a1ec8d98238379a322866c0432befc259b.1588888003.git.mhelsley@vmware.com>
+        Fri, 15 May 2020 17:06:28 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC634C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 14:06:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rVW8KezM3i3HcZ5WoaIxiJ9RRMgtGJtV0/SuZwNn25U=; b=xVbecPPq9oJGttjPZ+wLz1nfl
+        0Wyv5gVizqqLjk/7dSGcf05+nUTO/+vUG57jxAUcdyZSrAf/NrRiL0dovMKAXqDhv719/HOf50ieD
+        6S3IJTlNoGIlQo+Mhx01Qzlt0bf00oR6z5WDhWcNorOZiSEaxOiUDpqdQNznYVH6XiCNqkvWCVxkx
+        8GNzLn6CrD4aOEW7oJ/KDIxD27cge6AsPgrjclDCAeumWWbdw1+/eKFpgZjEHAMhGI66xeP3wVJ1e
+        1e2YVtALC/wbMPk1YbXxb6GuSheNlok+UT6JvYteYh44uEvUoDakiiNUBEc8rQQ4Oc6e5H6KfR4w2
+        XU2rHKvxQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60910)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jZhX2-0006kl-Mb; Fri, 15 May 2020 22:06:17 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jZhX1-0001rt-5y; Fri, 15 May 2020 22:06:11 +0100
+Date:   Fri, 15 May 2020 22:06:11 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     ebiederm@xmission.com, kexec@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: kexec: arm: possible overwrite of initrd
+Message-ID: <20200515210611.GS1551@shell.armlinux.org.uk>
+References: <20200515135712.GA5979@Red>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <38a0c7a1ec8d98238379a322866c0432befc259b.1588888003.git.mhelsley@vmware.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200515135712.GA5979@Red>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 10:35:13AM -0700, Matt Helsley wrote:
-> The check and orc-related subcommands for objtool are x86-specific.
-> To make this clear to anyone using the tool return a non-zero exit
-> code and indicate in the help and usage output which commands are
-> (and are not) available.
+On Fri, May 15, 2020 at 03:57:12PM +0200, Corentin Labbe wrote:
+> Hello
 > 
-> Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+> Following https://lkml.org/lkml/2020/4/6/96 I was able to boot my Cubieboard4 via kexec reliabily.
 
-I think I'd rather the simplest approach of just having the weak
-functions print an error and return an error code.  At least for now I
-don't think we need to go through the trouble of advertising whether
-certain commands are available.  Technically they are available, they
-just always fail :-)
+You can try increasing the kernel size that kexec thinks the kernel
+needs, but it should be extremely accurate with modern kexec.
 
-And, people don't tend to use objtool directly anyway.
+--image-size $((0x01dc8154 + 0x10000))
 
-BTW, several of the patches didn't apply cleanly to tip/master, so
-you'll probably need to rebase for v2.  There've been a lot of objtool
-changes lately.  Peter's been busy...
+will add 64k on top of what you currently have.  Note where the first
+figure comes from (you'll find it in the debug output, see
+"Resulting kernel space").
+
+The best I can say is try playing around with that - but, kexec's
+calculations should be spot on to stop the booting kernel from
+overwriting the initrd.
+
+The only way to debug that is to get the booted kernel to hexdump the
+initrd so it's possible to see what happened to it.
 
 -- 
-Josh
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
