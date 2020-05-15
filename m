@@ -2,147 +2,58 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86792C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB01FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72789206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903BE206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgEOQCV (ORCPT
+        id S1726732AbgEOQCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:02:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58892 "EHLO mx2.suse.de"
+        Fri, 15 May 2020 12:02:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59038 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbgEOQCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:02:21 -0400
+        id S1726183AbgEOQCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 12:02:48 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 37AFCABC2;
-        Fri, 15 May 2020 16:02:21 +0000 (UTC)
-Subject: Re: [PATCH v3 5/5] lib/test_sysctl: support testing of sysctl. boot
- parameter
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-References: <20200427180433.7029-1-vbabka@suse.cz>
- <20200427180433.7029-6-vbabka@suse.cz>
- <20200427183913.GH11244@42.do-not-panic.com>
- <028d1996-9f4c-20c6-fb2a-706baa919dde@suse.cz>
- <20200511183155.GT11244@42.do-not-panic.com>
- <d07e1dc9-cc2d-d471-2882-8ec563878fe7@suse.cz>
- <20200513131532.GO11244@42.do-not-panic.com>
- <CAB=NE6WGN=TiXE3PL3sAXa+5q9n8a83-vONMv1c1_HLMqnzPew@mail.gmail.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <305af605-1e60-cf84-fada-6ce1ca37c102@suse.cz>
-Date:   Fri, 15 May 2020 18:02:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by mx2.suse.de (Postfix) with ESMTP id CD6A9AC6E;
+        Fri, 15 May 2020 16:02:49 +0000 (UTC)
+Date:   Fri, 15 May 2020 18:02:45 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 0/3] lib/vsprintf: Introduce %ptT for time64_t
+Message-ID: <20200515160245.GW17734@linux-b0ei>
+References: <20200415170046.33374-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAB=NE6WGN=TiXE3PL3sAXa+5q9n8a83-vONMv1c1_HLMqnzPew@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415170046.33374-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/20 3:17 PM, Luis Chamberlain wrote:
-> On Wed, May 13, 2020 at 7:15 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
->> > >
->> > > You want to:
->> > >
->> > >
->> > > # Kselftest framework requirement - SKIP code is 4.
->> > > ksft_skip=4
->> > >
->> > >>  sysctl_test_0007()
->> > >>  {
->> > >>    TARGET="${SYSCTL}/boot_int"
->> > >> +  if [ ! -f $TARGET ]; then
->> > >> +          echo "Skipping test for $TARGET as it is not present ..."
->> > >> +          return 0
->> > >> +  fi
->> > >
->> > > And return 4 instead.
->> >
->> > If I return it from the function, nobody will care, AFAICS. If I 'exit
->> > $ksft_skip', is that correct if it's just a single test out of 7?
->>
->> yes please do that.
-> 
-> Ah but once we add test_0008() it may be supported.. so I think return
-> would be OK
+On Wed 2020-04-15 20:00:43, Andy Shevchenko wrote:
+> It is a logical continuation of previously applied %ptR for struct rtc_time.
+> We have few users of time64_t that would like to print it.
 
-OK
+It seems that everything was explained and the patches look good to
+me. If we allowed %ptR then it makes sense to allow %ptT as well.
 
-----8<----
-From 4311b356f177aaa4e21bd3d2a2169e5bd50ab62d Mon Sep 17 00:00:00 2001
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Mon, 11 May 2020 12:59:49 +0200
-Subject: [PATCH] lib/test_sysctl: support testing of sysctl. boot parameter -
- fix
+For all three patches:
 
-Skip the new test if boot_int sysctl is not present, otherwise, per Luis,
-"This would fail if someone uses this script to test an older kernel, and
-the scripts in selftests are supposed to work with older kernels."
+Rewieved-by: Petr Mladek <pmladek@suse.com>
 
-Suggested-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- tools/testing/selftests/sysctl/sysctl.sh | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/sysctl/sysctl.sh b/tools/testing/selftests/sysctl/sysctl.sh
-index ef6417b8067b..ab44d3e65986 100755
---- a/tools/testing/selftests/sysctl/sysctl.sh
-+++ b/tools/testing/selftests/sysctl/sysctl.sh
-@@ -756,10 +756,15 @@ sysctl_test_0006()
- sysctl_test_0007()
- {
- 	TARGET="${SYSCTL}/boot_int"
-+	if [ ! -f $TARGET ]; then
-+		echo "Skipping test for $TARGET as it is not present ..."
-+		return $ksft_skip
-+	fi
-+
- 	if [ -d $DIR ]; then
- 		echo "Boot param test only possible sysctl_test is built-in, not module:"
- 		cat $TEST_DIR/config >&2
--		return 0
-+		return $ksft_skip
- 	fi
- 
- 	echo -n "Testing if $TARGET is set to 1 ..."
-@@ -785,6 +790,7 @@ sysctl_test_0007()
- 
- 	echo "Skipping test, expected kernel parameter missing."
- 	echo "To perform this test, make sure kernel is booted with parameter: sysctl.debug.test_sysctl.boot_int=1"
-+	return $ksft_skip
- }
- 
- list_tests()
--- 
-2.26.2
-
-
+Best Regards,
+Petr
