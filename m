@@ -2,431 +2,245 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C563C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEDEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F17C20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:14:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lSebWezq"
+	by mail.kernel.org (Postfix) with ESMTP id 8A1052073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589537685;
+	bh=Rm55P1g29RzmulH7WYu/+UpeNv0RkBorxUspG69nAe8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VMwDGjXAmYEJYDtTDf5c91akV66HmDUSrJxVeajDqnqgTt8Jfo8CJYNqB9mgm7YfD
+	 pUPlf9+zLAA8moFBevL3VcvCH4P7pKhedXM/o1alrVrd07srNJNfze9UMHL5+6aWxR
+	 ZP3wdGS8gWFsCDRDPk8XV9s86DSmQM9b+VPqzLkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgEOKOg (ORCPT
+        id S1728353AbgEOKOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:14:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728047AbgEOKOd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:14:33 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E0EC061A0C;
-        Fri, 15 May 2020 03:14:33 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Fri, 15 May 2020 06:14:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728181AbgEOKOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 06:14:42 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Nkm75Fvfz9sTc;
-        Fri, 15 May 2020 20:14:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589537672;
-        bh=/1zKFi9F8iKSZ06Lp7Ym8283SXKPfj8jQQxg/D2jDYo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lSebWezqZniNDVIVz6/diqLA87mmk3WkTgnc+qR2qIJin85Qf+K+BWYB0Dj8yluMc
-         ddqwUQatxAyjDkOwAZVMqCJf1oQ/WqhWWZPn29eF3c3t8dcU5LKwrzWlaENc6fgih6
-         z6nPBCmm0leVvdScnclHNfzQYTZTYVwUhVMVFWPP7x5aRE3cNkfO7KIl5sFHGREv7n
-         33U0IZ2Wwl5H9whfW9dAzhCeGkU7DjtwieJ/JDu3IGhBj4OKcEEdhDEqHh0UZNvTIL
-         lu/G3grgaFsNsSku1pMbKhU0FHMnHbBqyEX3dN1vTMll56Zp2rU6mmKxor0foOIOZC
-         KMt3NXPzkF97Q==
-Date:   Fri, 15 May 2020 20:14:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: linux-next: manual merge of the fsinfo tree with the vfs tree
-Message-ID: <20200515201430.3d8b2238@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id E861720709;
+        Fri, 15 May 2020 10:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589537682;
+        bh=Rm55P1g29RzmulH7WYu/+UpeNv0RkBorxUspG69nAe8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rtJvRrplSZRXulBMsWFJ2z53lp+Vt9sScf22YYTzJM2E+tIbzZAekmbAo4K5rYiof
+         0HjEReDOAa08syurR0BYOBW8JAqgLwUIrufxJM2zIJ28vDYge9S2D9xGqx2H2oQ6BG
+         4Nng4SJJbR/CAp/9TOi3RMt+aHBWlL3c31tGBgKA=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jZXMW-00CX9a-1u; Fri, 15 May 2020 11:14:40 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/IL.gFL_aoGg4qR7aGZ_Z6lN";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 15 May 2020 11:14:39 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        chenxiang <chenxiang66@hisilicon.com>,
+        Robin Murphy <robin.murphy@arm.com>, luojiaxing@huawei.com,
+        Ming Lei <ming.lei@redhat.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 0/2] irqchip/gic-v3-its: Balance LPI affinity across
+ CPUs
+In-Reply-To: <7c05b08b-2edc-7f97-0175-898e9772673e@huawei.com>
+References: <20200316115433.9017-1-maz@kernel.org>
+ <9171c554-50d2-142b-96ae-1357952fce52@huawei.com>
+ <80b673a7-1097-c5fa-82c0-1056baa5309d@huawei.com>
+ <f2971d1c-50f8-bf5a-8b16-8d84a631b0ba@huawei.com>
+ <7c05b08b-2edc-7f97-0175-898e9772673e@huawei.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <668f819c8747104814245cd6faebdd9a@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: john.garry@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net, chenxiang66@hisilicon.com, robin.murphy@arm.com, luojiaxing@huawei.com, ming.lei@redhat.com, wangzhou1@hisilicon.com, tglx@linutronix.de, will@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/IL.gFL_aoGg4qR7aGZ_Z6lN
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi John,
 
-Hi all,
+On 2020-05-14 13:05, John Garry wrote:
+>> 
+>> +       its_inc_lpi_count(d, cpu);
+>> +
+>>          return IRQ_SET_MASK_OK_DONE;
+>>   }
+>> 
+>> Results look ok:
+>>      nvme.use_threaded_interrupts=1    =0*
+>> Before    950K IOPs            1000K IOPs
+>> After    1100K IOPs            1150K IOPs
+>> 
+>> * as mentioned before, this is quite unstable and causes lockups. 
+>> JFYI, there was an attempt to fix this:
+>> 
+>> https://lore.kernel.org/linux-nvme/20191209175622.1964-1-kbusch@kernel.org/
+>> 
+> 
+> Hi Marc,
+> 
+> Just wondering if we can try to get this series over the line?
 
-Today's linux-next merge of the fsinfo tree got conflicts in:
+Absolutely. Life has got in the way, so let me page it back in...
 
-  arch/alpha/kernel/syscalls/syscall.tbl
-  arch/arm/tools/syscall.tbl
-  arch/ia64/kernel/syscalls/syscall.tbl
-  arch/m68k/kernel/syscalls/syscall.tbl
-  arch/microblaze/kernel/syscalls/syscall.tbl
-  arch/mips/kernel/syscalls/syscall_n32.tbl
-  arch/mips/kernel/syscalls/syscall_n64.tbl
-  arch/mips/kernel/syscalls/syscall_o32.tbl
-  arch/parisc/kernel/syscalls/syscall.tbl
-  arch/powerpc/kernel/syscalls/syscall.tbl
-  arch/s390/kernel/syscalls/syscall.tbl
-  arch/sh/kernel/syscalls/syscall.tbl
-  arch/sparc/kernel/syscalls/syscall.tbl
-  arch/x86/entry/syscalls/syscall_32.tbl
-  arch/x86/entry/syscalls/syscall_64.tbl
-  arch/xtensa/kernel/syscalls/syscall.tbl
+> So I tested the patches on v5.7-rc5, and get similar performance
+> improvement to above.
+> 
+> I did apply a couple of patches, below, to remedy the issues I
+> experienced for my D06CS.
 
-between commit:
+Comments on that below.
 
-  c8ffd8bcdd28 ("vfs: add faccessat2 syscall")
+> 
+> Thanks,
+> John
+> 
+> 
+> ---->8
+> 
+> 
+> [PATCH 1/2] irqchip/gic-v3-its: Don't double account for target CPU
+>  assignment
+> 
+> In its_set_affinity(), when a managed irq is already assigned to a CPU,
+> we may needlessly reassign the irq to another CPU.
+> 
+> This is because when selecting the target CPU, being the least loaded
+> CPU in the mask, we account of that irq still being assigned to a CPU;
+> thereby we may unfairly select another CPU.
+> 
+> Modify this behaviour to pre-decrement the current target CPU LPI count
+> when finding the least loaded CPU.
+> 
+> Alternatively we may be able to just bail out early when the current
+> target CPU already falls within the requested mask.
+> 
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+> b/drivers/irqchip/irq-gic-v3-its.c
+> index 73f5c12..2b18feb 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -1636,6 +1636,8 @@ static int its_set_affinity(struct irq_data *d,
+> const struct cpumask *mask_val,
+>  	if (irqd_is_forwarded_to_vcpu(d))
+>  		return -EINVAL;
+> 
+> +	its_dec_lpi_count(d, its_dev->event_map.col_map[id]);
+> +
+>  	if (!force)
+>  		cpu = its_select_cpu(d, mask_val);
+>  	else
+> @@ -1646,14 +1648,14 @@ static int its_set_affinity(struct irq_data
+> *d, const struct cpumask *mask_val,
+> 
+>  	/* don't set the affinity when the target cpu is same as current one 
+> */
+>  	if (cpu != its_dev->event_map.col_map[id]) {
+> -		its_inc_lpi_count(d, cpu);
+> -		its_dec_lpi_count(d, its_dev->event_map.col_map[id]);
+>  		target_col = &its_dev->its->collections[cpu];
+>  		its_send_movi(its_dev, target_col, id);
+>  		its_dev->event_map.col_map[id] = cpu;
+>  		irq_data_update_effective_affinity(d, cpumask_of(cpu));
+>  	}
+> 
+> +	its_inc_lpi_count(d, cpu);
+> +
 
-from the vfs tree and commit:
+I'm OK with that change, as it removes unnecessary churn.
 
-  1b3979fc0f0c ("fsinfo: Add fsinfo() syscall to query filesystem informati=
-on")
+>  	return IRQ_SET_MASK_OK_DONE;
+>  }
+> 
+> ---
+> 
+> 
+> [PATCH 2/2] irqchip/gic-v3-its: Handle no overlap of non-managed irq
+>  affinity mask
+> 
+> In selecting the target CPU for a non-managed interrupt, we may select 
+> a
+> target CPU outside the requested affinity mask.
+> 
+> This is because there may be no overlap of the ITS node mask and the
+> requested CPU affinity mask. The requested affinity mask may be coming
+> from userspace or some drivers which try to set irq affinity, see [0].
+> 
+> In this case, just ignore the ITS node cpumask. This is a deviation 
+> from
+> what Thomas described. Having said that, I am not sure if the
+> interrupt is ever bound to a node for us.
+> 
+> [0] 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/hisilicon/hisi_uncore_pmu.c#n417
+> 
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+> b/drivers/irqchip/irq-gic-v3-its.c
+> index 2b18feb..12d5d4b4 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -1584,10 +1584,6 @@ static int its_select_cpu(struct irq_data *d,
+>  			cpumask_and(tmpmask, cpumask_of_node(node), aff_mask);
+>  			cpumask_and(tmpmask, tmpmask, cpu_online_mask);
+> 
+> -			/* If that doesn't work, try the nodemask itself */
+> -			if (cpumask_empty(tmpmask))
+> -				cpumask_and(tmpmask, cpumask_of_node(node), cpu_online_mask);
+> -
+>  			cpu = cpumask_pick_least_loaded(d, tmpmask);
+>  			if (cpu < nr_cpu_ids)
+>  				goto out;
 
-from the fsinfo tree.
+I'm really not sure. Shouldn't we then drop the wider search on
+cpu_inline_mask, because userspace could have given us something
+that we cannot deal with?
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+What you are advocating for is a strict adherence to the provided
+mask, and it doesn't seem to be what other architectures are providing.
+I consider the userspace-provided affinity as a hint more that anything
+else, as in this case the kernel does know better (routing the interrupt
+to a foreign node might be costly, or even impossible, see the TX1
+erratum).
 
-I also added the following patch:
+ From what I remember of the earlier discussion, you saw an issue on
+a system with two sockets and a single ITS, with the node mask limited
+to the first socket. Is that correct?
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Fri, 15 May 2020 20:10:32 +1000
-Subject: [PATCH] extra syscall updates
+I'll respin the series today and report it with you first patch
+squased in.
 
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- arch/arm64/include/asm/unistd.h   | 2 +-
- arch/arm64/include/asm/unistd32.h | 2 +-
- include/uapi/asm-generic/unistd.h | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+Thanks,
 
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unist=
-d.h
-index 86a9d7b3eabe..949788f5ba40 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -38,7 +38,7 @@
- #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
- #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
-=20
--#define __NR_compat_syscalls		442
-+#define __NR_compat_syscalls		443
- #endif
-=20
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/uni=
-std32.h
-index a524549e1e6b..d49b63db5b08 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -889,7 +889,7 @@ __SYSCALL(__NR_faccessat2, sys_faccessat2)
- __SYSCALL(__NR_watch_mount, sys_watch_mount)
- #define __NR_watch_sb 441
- __SYSCALL(__NR_watch_sb, sys_watch_sb)
--#define __NR_fsinfo 441
-+#define __NR_fsinfo 442
- __SYSCALL(__NR_fsinfo, sys_fsinfo)
-=20
- /*
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/u=
-nistd.h
-index 4b676c2483f8..9018bb54bfa3 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -861,11 +861,11 @@ __SYSCALL(__NR_faccessat2, sys_faccessat2)
- __SYSCALL(__NR_watch_mount, sys_watch_mount)
- #define __NR_watch_sb 441
- __SYSCALL(__NR_watch_sb, sys_watch_sb)
--#define __NR_fsinfo 441
-+#define __NR_fsinfo 442
- __SYSCALL(__NR_fsinfo, sys_fsinfo)
-=20
- #undef __NR_syscalls
--#define __NR_syscalls 442
-+#define __NR_syscalls 443
-=20
- /*
-  * 32 bit systems traditionally used different
---=20
-2.26.2
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/alpha/kernel/syscalls/syscall.tbl
-index 0dd59fd28c81,4d0b07dde12d..000000000000
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@@ -477,6 -477,6 +477,7 @@@
-  # 545 reserved for clone3
-  547	common	openat2				sys_openat2
-  548	common	pidfd_getfd			sys_pidfd_getfd
- -549	common	watch_mount			sys_watch_mount
- -550	common	watch_sb			sys_watch_sb
- -551	common	fsinfo				sys_fsinfo
- +549	common	faccessat2			sys_faccessat2
- +550	common	watch_mount			sys_watch_mount
- +551	common	watch_sb			sys_watch_sb
-++552	common	fsinfo				sys_fsinfo
-diff --cc arch/arm/tools/syscall.tbl
-index df4aeba36c40,fdda8382b420..000000000000
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@@ -451,6 -451,6 +451,7 @@@
-  435	common	clone3				sys_clone3
-  437	common	openat2				sys_openat2
-  438	common	pidfd_getfd			sys_pidfd_getfd
- -439	common	watch_mount			sys_watch_mount
- -440	common	watch_sb			sys_watch_sb
- -441	common	fsinfo				sys_fsinfo
- +439	common	faccessat2			sys_faccessat2
- +440	common	watch_mount			sys_watch_mount
- +441	common	watch_sb			sys_watch_sb
-++442	common	fsinfo				sys_fsinfo
-diff --cc arch/ia64/kernel/syscalls/syscall.tbl
-index 6e12406f2205,2316e60e031a..000000000000
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@@ -358,6 -358,6 +358,7 @@@
-  # 435 reserved for clone3
-  437	common	openat2				sys_openat2
-  438	common	pidfd_getfd			sys_pidfd_getfd
- -439	common	watch_mount			sys_watch_mount
- -440	common	watch_sb			sys_watch_sb
- -441	common	fsinfo				sys_fsinfo
- +439	common	faccessat2			sys_faccessat2
- +440	common	watch_mount			sys_watch_mount
- +441	common	watch_sb			sys_watch_sb
-++442	common	fsinfo				sys_fsinfo
-diff --cc arch/m68k/kernel/syscalls/syscall.tbl
-index d6f020ba7c7a,efc2723ca91f..000000000000
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@@ -437,6 -437,6 +437,7 @@@
-  435	common	clone3				__sys_clone3
-  437	common	openat2				sys_openat2
-  438	common	pidfd_getfd			sys_pidfd_getfd
- -439	common	watch_mount			sys_watch_mount
- -440	common	watch_sb			sys_watch_sb
- -441	common	fsinfo				sys_fsinfo
- +439	common	faccessat2			sys_faccessat2
- +440	common	watch_mount			sys_watch_mount
- +441	common	watch_sb			sys_watch_sb
-++442	common	fsinfo				sys_fsinfo
-diff --cc arch/microblaze/kernel/syscalls/syscall.tbl
-index d3db934ef48a,745c0f462fce..000000000000
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@@ -443,6 -443,6 +443,7 @@@
-  435	common	clone3				sys_clone3
-  437	common	openat2				sys_openat2
-  438	common	pidfd_getfd			sys_pidfd_getfd
- -439	common	watch_mount			sys_watch_mount
- -440	common	watch_sb			sys_watch_sb
- -441	common	fsinfo				sys_fsinfo
- +439	common	faccessat2			sys_faccessat2
- +440	common	watch_mount			sys_watch_mount
- +441	common	watch_sb			sys_watch_sb
-++442	common	fsinfo				sys_fsinfo
-diff --cc arch/mips/kernel/syscalls/syscall_n32.tbl
-index 9a3aad3b0e33,499f83562a8c..000000000000
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@@ -376,6 -376,6 +376,7 @@@
-  435	n32	clone3				__sys_clone3
-  437	n32	openat2				sys_openat2
-  438	n32	pidfd_getfd			sys_pidfd_getfd
- -439	n32	watch_mount			sys_watch_mount
- -440	n32	watch_sb			sys_watch_sb
- -441	n32	fsinfo				sys_fsinfo
- +439	n32	faccessat2			sys_faccessat2
- +440	n32	watch_mount			sys_watch_mount
- +441	n32	watch_sb			sys_watch_sb
-++442	n32	fsinfo				sys_fsinfo
-diff --cc arch/mips/kernel/syscalls/syscall_n64.tbl
-index 430e7c05fea6,b3188bc3ab3c..000000000000
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@@ -352,6 -352,6 +352,7 @@@
-  435	n64	clone3				__sys_clone3
-  437	n64	openat2				sys_openat2
-  438	n64	pidfd_getfd			sys_pidfd_getfd
- -439	n64	watch_mount			sys_watch_mount
- -440	n64	watch_sb			sys_watch_sb
- -441	n64	fsinfo				sys_fsinfo
- +439	n64	faccessat2			sys_faccessat2
- +440	n64	watch_mount			sys_watch_mount
- +441	n64	watch_sb			sys_watch_sb
-++442	n64	fsinfo				sys_fsinfo
-diff --cc arch/mips/kernel/syscalls/syscall_o32.tbl
-index f7404c028e03,1a3e8ed5e538..000000000000
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@@ -425,6 -425,6 +425,7 @@@
-  435	o32	clone3				__sys_clone3
-  437	o32	openat2				sys_openat2
-  438	o32	pidfd_getfd			sys_pidfd_getfd
- -439	o32	watch_mount			sys_watch_mount
- -440	o32	watch_sb			sys_watch_sb
- -441	o32	fsinfo				sys_fsinfo
- +439	o32	faccessat2			sys_faccessat2
- +440	o32	watch_mount			sys_watch_mount
- +441	o32	watch_sb			sys_watch_sb
-++442	o32	fsinfo				sys_fsinfo
-diff --cc arch/parisc/kernel/syscalls/syscall.tbl
-index 9841479242a5,2572c215d861..000000000000
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@@ -435,6 -435,6 +435,7 @@@
-  435	common	clone3				sys_clone3_wrapper
-  437	common	openat2				sys_openat2
-  438	common	pidfd_getfd			sys_pidfd_getfd
- -439	common	watch_mount			sys_watch_mount
- -440	common	watch_sb			sys_watch_sb
- -441	common	fsinfo				sys_fsinfo
- +439	common	faccessat2			sys_faccessat2
- +440	common	watch_mount			sys_watch_mount
- +441	common	watch_sb			sys_watch_sb
-++442	common	fsinfo				sys_fsinfo
-diff --cc arch/powerpc/kernel/syscalls/syscall.tbl
-index f74b23ba70b2,1f318c68048b..000000000000
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@@ -527,6 -527,6 +527,7 @@@
-  435	spu	clone3				sys_ni_syscall
-  437	common	openat2				sys_openat2
-  438	common	pidfd_getfd			sys_pidfd_getfd
- -439	common	watch_mount			sys_watch_mount
- -440	common	watch_sb			sys_watch_sb
- -441	common	fsinfo				sys_fsinfo
- +439	common	faccessat2			sys_faccessat2
- +440	common	watch_mount			sys_watch_mount
- +441	common	watch_sb			sys_watch_sb
-++442	common	fsinfo				sys_fsinfo
-diff --cc arch/s390/kernel/syscalls/syscall.tbl
-index 0e7fc0a9592b,ae4cefd3dd1b..000000000000
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@@ -440,6 -440,6 +440,7 @@@
-  435  common	clone3			sys_clone3			sys_clone3
-  437  common	openat2			sys_openat2			sys_openat2
-  438  common	pidfd_getfd		sys_pidfd_getfd			sys_pidfd_getfd
- -439	common	watch_mount		sys_watch_mount			sys_watch_mount
- -440	common	watch_sb		sys_watch_sb			sys_watch_sb
- -441  common	fsinfo			sys_fsinfo			sys_fsinfo
- +439  common	faccessat2		sys_faccessat2			sys_faccessat2
- +440	common	watch_mount		sys_watch_mount			sys_watch_mount
- +441	common	watch_sb		sys_watch_sb			sys_watch_sb
-++442  common	fsinfo			sys_fsinfo			sys_fsinfo
-diff --cc arch/sh/kernel/syscalls/syscall.tbl
-index f283107b9d6b,05945b9aee4b..000000000000
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@@ -440,6 -440,6 +440,7 @@@
-  # 435 reserved for clone3
-  437	common	openat2				sys_openat2
-  438	common	pidfd_getfd			sys_pidfd_getfd
- -439	common	watch_mount			sys_watch_mount
- -440	common	watch_sb			sys_watch_sb
- -441	common	fsinfo				sys_fsinfo
- +439	common	faccessat2			sys_faccessat2
- +440	common	watch_mount			sys_watch_mount
- +441	common	watch_sb			sys_watch_sb
-++442	common	fsinfo				sys_fsinfo
-diff --cc arch/sparc/kernel/syscalls/syscall.tbl
-index 408117c427bd,b71b34d4b45c..000000000000
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@@ -483,6 -483,6 +483,7 @@@
-  # 435 reserved for clone3
-  437	common	openat2			sys_openat2
-  438	common	pidfd_getfd			sys_pidfd_getfd
- -439	common	watch_mount			sys_watch_mount
- -440	common	watch_sb			sys_watch_sb
- -441	common	fsinfo				sys_fsinfo
- +439	common	faccessat2			sys_faccessat2
- +440	common	watch_mount			sys_watch_mount
- +441	common	watch_sb			sys_watch_sb
-++442	common	fsinfo				sys_fsinfo
-diff --cc arch/x86/entry/syscalls/syscall_32.tbl
-index 41be37dcb8ea,e26b34e99850..000000000000
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@@ -442,6 -442,6 +442,7 @@@
-  435	i386	clone3			sys_clone3
-  437	i386	openat2			sys_openat2
-  438	i386	pidfd_getfd		sys_pidfd_getfd
- -439	i386	watch_mount		sys_watch_mount
- -440	i386	watch_sb		sys_watch_sb
- -441	i386	fsinfo			sys_fsinfo
- +439	i386	faccessat2		sys_faccessat2
- +440	i386	watch_mount		sys_watch_mount
- +441	i386	watch_sb		sys_watch_sb
-++442	i386	fsinfo			sys_fsinfo
-diff --cc arch/x86/entry/syscalls/syscall_64.tbl
-index beb4e906f604,4578b3309c7f..000000000000
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@@ -359,9 -359,9 +359,10 @@@
-  435	common	clone3			sys_clone3
-  437	common	openat2			sys_openat2
-  438	common	pidfd_getfd		sys_pidfd_getfd
- -439	common	watch_mount		sys_watch_mount
- -440	common	watch_sb		sys_watch_sb
- -441	common	fsinfo			sys_fsinfo
- +439	common	faccessat2		sys_faccessat2
- +440	common	watch_mount		sys_watch_mount
- +441	common	watch_sb		sys_watch_sb
-++442	common	fsinfo			sys_fsinfo
- =20
-  #
-  # x32-specific system call numbers start at 512 to avoid cache impact
-diff --cc arch/xtensa/kernel/syscalls/syscall.tbl
-index c35d13531382,e1ec25099d10..000000000000
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@@ -408,6 -408,6 +408,7 @@@
-  435	common	clone3				sys_clone3
-  437	common	openat2				sys_openat2
-  438	common	pidfd_getfd			sys_pidfd_getfd
- -439	common	watch_mount			sys_watch_mount
- -440	common	watch_sb			sys_watch_sb
- -441	common	fsinfo				sys_fsinfo
- +439	common	faccessat2			sys_faccessat2
- +440	common	watch_mount			sys_watch_mount
- +441	common	watch_sb			sys_watch_sb
-++442	common	fsinfo				sys_fsinfo
-
---Sig_/IL.gFL_aoGg4qR7aGZ_Z6lN
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6+a4YACgkQAVBC80lX
-0GyQqQf+JpFPbbsvYTTwmhhtsuAzzfUU3IyIXVGSmx5D00bhpod5jE0dH8Uj9zWn
-E+7PaapORQtOHsZBy4vGcdB1l0i8Qgx+GuGBt94X8nlWLDm3WFuJPijjjRB3387s
-mzbARdjnA1lk4zc6aMDwyp0AQhDxq1zT1bFoFMjaNWhhH2Jn038sdRWk0ruMRYuN
-fudZ2tb+pQgdWPpzccEQW9C+lRMr91Qyt3/05PS3avVuYD3swFmU4caC0UwwOwmg
-VKVPEihuz/OAxtEMdxZgtJ0T5S3C+pUM4Q+N2nEQ6QhrN9QiB5cQ8snkhz9+LNN7
-OO0TW+kePjO4pPlxgZw+dx7oq9NdtA==
-=M4e9
------END PGP SIGNATURE-----
-
---Sig_/IL.gFL_aoGg4qR7aGZ_Z6lN--
+         M.
+-- 
+Jazz is not dead. It just smells funny...
