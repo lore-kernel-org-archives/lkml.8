@@ -2,132 +2,96 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88904C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8332076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:13:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="xD33G4jC"
+	by mail.kernel.org (Postfix) with ESMTP id 6A488207C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:14:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgEOPNh (ORCPT
+        id S1726721AbgEOPON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:13:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41362 "EHLO
+        Fri, 15 May 2020 11:14:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726266AbgEOPNg (ORCPT
+        by vger.kernel.org with ESMTP id S1726188AbgEOPON (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:13:36 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0723FC05BD09
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:13:36 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id f4so1073458pgi.10
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bfBhHYTtohVO95sNvjwzNyBK2wYpRf6EXbUlmqF97hY=;
-        b=xD33G4jCnZyZK/tVplz8bvqfeTRe8c8TYLRHnuCfRcELdIU9IUSSMWdH4cg8VNjBTB
-         XFKndQLtX8nj+DkAz7hT1qCu84OdkLnoxEIHrNIWszFtboQ2VAP05Qz0KdE5f5gSr/Fr
-         EhDnYKdxeQBr0qrekR4PnuQD6V26t4Sb1RMDxwnuiABeZOY2piNE8c/+NVO9+OjysYnz
-         fgqdjcRmmxb01XKczSvP6+Ve5gdeM5ipZ8mI+Wj28HgWDe4sd3PG5FhDQxanwZw6joxz
-         JN9EFqwErcw7YRJ6fQC+5d+v9jcQEqlqsPck3/o763qssedKbJwO/M7sFOEfMaP2fsW7
-         kELg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bfBhHYTtohVO95sNvjwzNyBK2wYpRf6EXbUlmqF97hY=;
-        b=Lme6ieJ2zhM19nBOsCEZArMsWgVAQ7zJwdbXvRM/SKi6Y14DHqnF5rkmFp/kfYC//E
-         yEAA/lPFDFPdxwXhfTOqCQpwWqzKp2SMTSb3zUviE5pSRhOIUsSUBx5sLw1fC093k7GO
-         EiSLmnvwn6s4IVlBwOSdIBswOYpU3lGQCcNXg+n6MkWdDF8bjkmk2yCzs/g3fx7xZVkf
-         BjeRVX1LnZqf6v287ggEUYhvru8TP3HSjN3egAPmZNEFTK3Cd2r93g/y+1Y8NPY+H1HO
-         8R8gDse+oWuzpCtM1wODgl5T+0JOfUBP0doJrymKycFQQWt1HyIVdSgiJyNKHWdVo17P
-         gaXg==
-X-Gm-Message-State: AOAM532XM5ogkp3zDu1A/lb2XMcvoMBdYxq4IGLPEK0OjZuWYsG4tYwf
-        S1pqzjCjaOo0a1qCPvs43s6vQQ==
-X-Google-Smtp-Source: ABdhPJwjkUi4YQauXs6/fEa1OaygsEMg8M7xaZVFabwiAKCRkC0c9/HThyf43z2ib0G01cAbex7X0g==
-X-Received: by 2002:a62:1d4c:: with SMTP id d73mr4244848pfd.226.1589555615469;
-        Fri, 15 May 2020 08:13:35 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:aca2:b1c9:3206:e390? ([2605:e000:100e:8c61:aca2:b1c9:3206:e390])
-        by smtp.gmail.com with ESMTPSA id co16sm823398pjb.55.2020.05.15.08.13.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 08:13:34 -0700 (PDT)
-Subject: Re: [PATCH 0/2] io_uring: add a CQ ring flag to enable/disable
- eventfd notification
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20200515105414.68683-1-sgarzare@redhat.com>
- <eaab5cc7-0297-a8f8-f7a9-e00bcf12b678@kernel.dk>
- <20200515143419.f3uggj7h3nyolfqb@steredhat>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a7ac101d-0f5d-2ab2-b36b-b40607d65878@kernel.dk>
-Date:   Fri, 15 May 2020 09:13:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 15 May 2020 11:14:13 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B9CC061A0C;
+        Fri, 15 May 2020 08:14:12 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id CBFDA2A3488
+Received: by earth.universe (Postfix, from userid 1000)
+        id C07A63C08C6; Fri, 15 May 2020 17:14:08 +0200 (CEST)
+Date:   Fri, 15 May 2020 17:14:08 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Emil Velikov <emil.velikov@collabora.com>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCHv1 03/19] power: supply: core: add manufacture date
+ properties
+Message-ID: <20200515151408.vbj75fag6ya5g2bq@earth.universe>
+References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+ <20200513185615.508236-4-sebastian.reichel@collabora.com>
+ <20200515144732.GC2836808@arch-x1c3>
 MIME-Version: 1.0
-In-Reply-To: <20200515143419.f3uggj7h3nyolfqb@steredhat>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3xq2l5oxqmhxeqpo"
+Content-Disposition: inline
+In-Reply-To: <20200515144732.GC2836808@arch-x1c3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/20 8:34 AM, Stefano Garzarella wrote:
-> On Fri, May 15, 2020 at 08:24:58AM -0600, Jens Axboe wrote:
->> On 5/15/20 4:54 AM, Stefano Garzarella wrote:
->>> The first patch adds the new 'cq_flags' field for the CQ ring. It
->>> should be written by the application and read by the kernel.
->>>
->>> The second patch adds a new IORING_CQ_NEED_WAKEUP flag that can be
->>> used by the application to enable/disable eventfd notifications.
->>>
->>> I'm not sure the name is the best one, an alternative could be
->>> IORING_CQ_NEED_EVENT.
->>>
->>> This feature can be useful if the application are using eventfd to be
->>> notified when requests are completed, but they don't want a notification
->>> for every request.
->>> Of course the application can already remove the eventfd from the event
->>> loop, but as soon as it adds the eventfd again, it will be notified,
->>> even if it has already handled all the completed requests.
->>>
->>> The most important use case is when the registered eventfd is used to
->>> notify a KVM guest through irqfd and we want a mechanism to
->>> enable/disable interrupts.
->>>
->>> I also extended liburing API and added a test case here:
->>> https://github.com/stefano-garzarella/liburing/tree/eventfd-disable
->>
->> Don't mind the feature, and I think the patches look fine. But the name
->> is really horrible, I'd have no idea what that flag does without looking
->> at the code or a man page. Why not call it IORING_CQ_EVENTFD_ENABLED or
->> something like that? Or maybe IORING_CQ_EVENTFD_DISABLED, and then you
->> don't have to muck with the default value either. The app would set the
->> flag to disable eventfd, temporarily, and clear it again when it wants
->> notifications again.
-> 
-> You're clearly right! :-) The name was horrible.
 
-Sometimes you go down that path on naming and just can't think of
-the right one. I think we've all been there.
+--3xq2l5oxqmhxeqpo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I agree that IORING_CQ_EVENTFD_DISABLED should be the best.
-> I'll send a v2 changing the name and removing the default value.
+Hi,
 
-Great thanks, and please do queue a pull for the liburing side too.
+On Fri, May 15, 2020 at 03:47:32PM +0100, Emil Velikov wrote:
+> On 2020/05/13, Sebastian Reichel wrote:
+> > Some smart batteries store their manufacture date, which is
+> > useful to identify the battery and/or to know about the cell
+> > quality.
+> >=20
+> Have you considered exposing this as a single file? Say following
+> the ISO8601 format - YYYY-MM-DD.
 
--- 
-Jens Axboe
+Yes. My initial implementation was exactly that. The thing is, that
+I suspect some fuel gauge implementations may only expose the year
+or just year + month. I chose 3 files, since receiving 'YYYY-MM'
+instead of full ISO code might be more unexpected than not having
+the DAY file available. But I don't have a strong opinion on this.
 
+-- Sebastian
+
+--3xq2l5oxqmhxeqpo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6+sbgACgkQ2O7X88g7
++prQgQ/8DObxqwSGq8FRackNMigPfBZos5u1g1+5PprsLQ9E7zb0ibMFybVRGQse
+PJa82uqIwP4lYAyZx6EwFBeOFhI6i9A5sHEugiuarjRAJjXZuyW3YjObCw/UfC54
+eUkVm6F4iy7r3NyucF+be398TDZEEwJ+fqIIOY/YagSurMpxR3Pdemy2mDAxykI9
+ZJXIT5on3/L0X7E0Trdx1IyfeQQfvLjTtJaBV3J+WaIYViIb+pkMpHsSZD1SOLi+
+qOLT31pXXp87D9xicCLU5ayWgdIxi93fGMEQnGHcfIbNjjD8ncGy2BBR/tbsU065
+lqO7edflFoXocf35ZQCLzCXK+AfNkYw1GZw+URAnh5icGK41IHVPNe041YFrySCs
+8qzl7f7/G+WUznezbxFYpqtRpNW2KfThnezhJsV+Istc1zhE6hCCliBVmXlcJjO/
+Ts2FlER/OfePg99I7TRtnr/Ld49gX74S9balftKrrvc18e0U4+J1B8c9cqe0reWo
+8OVpPvQ1b7HQ5/VzsmhJf0QpXp1vG+EHD8toIt5EwCtPfmr9lzHOIo63YdElsCvP
+b1qRVHv9Sc/Rusfg4aE8Lqsor5SnMoE988Tj8lhFpJD5pucK91WxGzfyWtb6qtnp
+QHx0gsVOQCZBQYSSudMEPNSqH9P0qSHTfwtKCnyNSKqo2s37zuU=
+=D2js
+-----END PGP SIGNATURE-----
+
+--3xq2l5oxqmhxeqpo--
