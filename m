@@ -2,93 +2,85 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD79C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFD4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 090672065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589539181;
-	bh=PrM+xPGfJLUiyDISNpS4vjvmsRnmHt+gojfva9KvB1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YTh5Fm5giZ3dh507u0pLpshWpMGe+T77MCv5bOqYzpWJ6DQw34jTr+MhKcFYp3eWZ
-	 K9TuiUNNgcNE4eIBGP1i8bcLxdpQyB7uyPoTgBKBjHcUeEibCjCQm3LCR/yg+II3UG
-	 fQG51Fvk4RjiMhMEGeSZYC8s1yIlhDd/TQen91tU=
+	by mail.kernel.org (Postfix) with ESMTP id 27C752074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgEOKjk (ORCPT
+        id S1728288AbgEOKkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:39:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728013AbgEOKji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:39:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE6FF207CB;
-        Fri, 15 May 2020 10:39:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589539178;
-        bh=PrM+xPGfJLUiyDISNpS4vjvmsRnmHt+gojfva9KvB1U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xKedetK3gPz0GVdrzVQ0d2O10La+Y6bjL3cWBrZWWII43x/E4CYjMQXu8/BW6fZUM
-         rh3QHk9e8A0x0zyw3F8au4UiM9tovwygfrHoJpIIAwzwWPGPmslwTrjQg5pd9oAXCN
-         MBdfy7hljbo4joxXXgyVWcCioRg2NLkQcvSja5rc=
-Date:   Fri, 15 May 2020 12:39:36 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Emil Velikov <emil.l.velikov@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH 10/11] kernel/power: constify sysrq_key_op
-Message-ID: <20200515103936.GA1712181@kroah.com>
-References: <20200513214351.2138580-1-emil.l.velikov@gmail.com>
- <20200513214351.2138580-10-emil.l.velikov@gmail.com>
- <CAJZ5v0iM5H03=RTtk2sZtUzaW0XJ+AaX1M00C8QjvaNz0ZE3bQ@mail.gmail.com>
- <CACvgo52myKJ+3s8pYPnqNBxWqg6bCHQXqGJrLwmrSvocuqU=pg@mail.gmail.com>
+        Fri, 15 May 2020 06:40:06 -0400
+Received: from cheddar.halon.org.uk ([93.93.131.118]:58194 "EHLO
+        cheddar.halon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728013AbgEOKkF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 06:40:05 -0400
+X-Greylist: delayed 2113 seconds by postgrey-1.27 at vger.kernel.org; Fri, 15 May 2020 06:40:04 EDT
+Received: from bsmtp by cheddar.halon.org.uk with local-bsmtp (Exim 4.92)
+        (envelope-from <steve@einval.com>)
+        id 1jZXCM-0005Bp-LR; Fri, 15 May 2020 11:04:10 +0100
+Received: from steve by tack.einval.org with local (Exim 4.92)
+        (envelope-from <steve@einval.com>)
+        id 1jZXBi-0000Vp-4M; Fri, 15 May 2020 11:03:30 +0100
+Date:   Fri, 15 May 2020 11:03:30 +0100
+From:   Steve McIntyre <steve@einval.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>,
+        Nils =?iso-8859-1?Q?=D6stlund?= <nils@naltan.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
+        Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>
+Subject: Re: [PATCH v4 4/6] partitions/efi: Support GPT entry lookup at a
+ non-standard location
+Message-ID: <20200515100320.GB30674@tack.einval.com>
+References: <20200515014143.12984-1-digetx@gmail.com>
+ <20200515014143.12984-5-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACvgo52myKJ+3s8pYPnqNBxWqg6bCHQXqGJrLwmrSvocuqU=pg@mail.gmail.com>
+In-Reply-To: <20200515014143.12984-5-digetx@gmail.com>
+X-attached: none
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 11:11:57AM +0100, Emil Velikov wrote:
-> On Thu, 14 May 2020 at 12:21, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Wed, May 13, 2020 at 11:46 PM Emil Velikov <emil.l.velikov@gmail.com> wrote:
-> > >
-> > > With earlier commits, the API no longer discards the const-ness of the
-> > > sysrq_key_op. As such we can add the notation.
-> > >
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: Jiri Slaby <jslaby@suse.com>
-> > > Cc: linux-kernel@vger.kernel.org
-> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > Cc: Len Brown <len.brown@intel.com>
-> > > Cc: linux-pm@vger.kernel.org
-> > > Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
-> >
-> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> Thanks
-> 
-> > and I'm assuming that this is going to be applied along with the rest
-> > of the series.
-> >
-> I believe so, although I have not heard anything from the TTY maintainers yet.
+On Fri, May 15, 2020 at 04:41:41AM +0300, Dmitry Osipenko wrote:
+>Most of consumer-grade NVIDIA Tegra devices use a proprietary bootloader
+>that can't be easily replaced because it's locked down using Secure Boot
+>cryptography singing and the crypto keys aren't given to a device owner.
+              ^^^^^^^ typo
+>These devices usually have eMMC storage that is partitioned using a custom
+>NVIDIA Tegra partition table format.  Of course bootloader and other
+>"special things" are stored on the eMMC storage, and thus, the partition
+>format can't be changed.
 
-I will take them all, thanks.
+...
 
-greg k-h
+-- 
+Steve McIntyre, Cambridge, UK.                                steve@einval.com
+"Further comment on how I feel about IBM will appear once I've worked out
+ whether they're being malicious or incompetent. Capital letters are forecast."
+ Matthew Garrett, http://www.livejournal.com/users/mjg59/30675.html
+
