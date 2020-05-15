@@ -2,72 +2,154 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D67C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA7DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4F62065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43BE205CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:19:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IC9yJMxM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgEOVOJ (ORCPT
+        id S1727029AbgEOVTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:14:09 -0400
-Received: from elvis.franken.de ([193.175.24.41]:54590 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgEOVOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:14:09 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jZheg-000560-00; Fri, 15 May 2020 23:14:06 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 1B051C04A5; Fri, 15 May 2020 23:06:47 +0200 (CEST)
-Date:   Fri, 15 May 2020 23:06:47 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
- if CPU_FREQ enabled
-Message-ID: <20200515210647.GA22922@alpha.franken.de>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
- <20200508154150.GB22247@alpha.franken.de>
- <20200511133121.cz5axbwynhmqkx7x@mobilestation>
- <20200515074827.6p5zx4sb3bmavjih@mobilestation>
+        Fri, 15 May 2020 17:19:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726183AbgEOVTH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 17:19:07 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A617C061A0C;
+        Fri, 15 May 2020 14:19:06 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x12so3240292qts.9;
+        Fri, 15 May 2020 14:19:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:from:date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc;
+        bh=srt7QXlq4v2mVg2Pcb9Nrsj43p0okN5hPOgneLc3kDU=;
+        b=IC9yJMxMC2Bc6jWNDzMmlDB3+fmkmwHp/GWWHThRou0USteQZjoXvCa34feLiTCRPN
+         dNOQYkuPLcaKLQ2We2ulkNlRwkMMmhx806CbAZ9kqYqCxubYJcM2Sv0AgQ2WuhvN1vry
+         bj/pQzLlWwep0QtWwhaLgCxiu1pg+1P3BXOMJ7s5hNFL4H7WSgkS8heVf55vmEXwNLLR
+         9D7vXoMh2Vl7M4/dAE97wulo0+0v6qrh6Xck/V53alDcLm77Tf3Tc9KkK4VgLQxSPMQb
+         +6fLLcND3PXxIwflu/ffcUfn5qBNK1WA8oHUpGIfjbs1ZHbMHnivwVKvFE1cxJYo0uQC
+         /lfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:from:date:user-agent:in-reply-to
+         :references:mime-version:content-transfer-encoding:subject:to:cc;
+        bh=srt7QXlq4v2mVg2Pcb9Nrsj43p0okN5hPOgneLc3kDU=;
+        b=ZIsMR9Ifqi3KOg+DhznC6GbHNGQjNtf7DHU0zfiFm3u1KKp4kJFsZvdOKqIH+MYYyu
+         B4adPQT5y2+f3+dkHYq4qoYprI2exzH5CrLw+LjJH38TE2YPbU6i+UOSVa8ppmyjtelD
+         t2348rMZbhMVmTLjkJvAX9x6q9weJTQ3A8yzTqsUZlxu4OmLPvxyRvl/T1nkDChzDxhS
+         zbrgjB0+ABEoBkx1bOEqo8e+tU/NSUPkIplvCzhYdI2MK3egVGCDWCdyQKRtfXUXU0Mv
+         Uo7joT2BZMD49WQ65w3LqmAa7U+hbnIXELkCXOFLNGaxqyxX3OSjaPSubUmfr9EsiuuN
+         K/rg==
+X-Gm-Message-State: AOAM531WHtYjfVA4b2eEa67DsivK3UaQ/rb2F12SnEIwAck7XnCqqm1+
+        ZPIaR6AnwtinjqGSaUONSlU=
+X-Google-Smtp-Source: ABdhPJyzrzazSLyxQqTYcTXRILBssVzRq+eZQpILUE2lrhccijlaN/BQkScN0/xmxqKfyyqk5ZtR3A==
+X-Received: by 2002:ac8:6b8a:: with SMTP id z10mr5471891qts.373.1589577545145;
+        Fri, 15 May 2020 14:19:05 -0700 (PDT)
+Received: from [192.168.86.185] ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id d7sm2420093qkk.26.2020.05.15.14.19.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 May 2020 14:19:04 -0700 (PDT)
+Message-ID: <5ebf0748.1c69fb81.f8310.eef3@mx.google.com>
+From:   arnaldo.melo@gmail.com
+Date:   Fri, 15 May 2020 18:18:45 -0300
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAEf4BzZ5=_yu1kL77n+Oc0K9oaDi4J=c+7CV8D0AXs2hBxhNbw@mail.gmail.com>
+References: <20200515165007.217120-1-irogers@google.com> <20200515170036.GA10230@kernel.org> <CAEf4BzZ5=_yu1kL77n+Oc0K9oaDi4J=c+7CV8D0AXs2hBxhNbw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515074827.6p5zx4sb3bmavjih@mobilestation>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 0/7] Copy hashmap to tools/perf/util, use in perf expr
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 10:48:27AM +0300, Serge Semin wrote:
-> Thomas,
-> Could you take a look at my comment below so I could proceed with the
-> patchset v3 development?
+<bpf@vger.kernel.org>,Stephane Eranian <eranian@google.com>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Message-ID: <79BCBAF7-BF5F-4556-A923-56E9D82FB570@gmail.com>
 
-I can't help, but using r4k clocksource with changing frequency is
-probaly only usefull as a random generator. So IMHO the only two
-options are disabling it or implement what arch/x86/kernel/tsc.c does.
 
-Thomas.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+On May 15, 2020 4:42:46 PM GMT-03:00, Andrii Nakryiko <andrii=2Enakryiko@g=
+mail=2Ecom> wrote:
+>On Fri, May 15, 2020 at 10:01 AM Arnaldo Carvalho de Melo
+><arnaldo=2Emelo@gmail=2Ecom> wrote:
+>>
+>> Em Fri, May 15, 2020 at 09:50:00AM -0700, Ian Rogers escreveu:
+>> > Perf's expr code currently builds an array of strings then removes
+>> > duplicates=2E The array is larger than necessary and has recently
+>been
+>> > increased in size=2E When this was done it was commented that a
+>hashmap
+>> > would be preferable=2E
+>> >
+>> > libbpf has a hashmap but libbpf isn't currently required to build
+>> > perf=2E To satisfy various concerns this change copies libbpf's
+>hashmap
+>> > into tools/perf/util, it then adds a check in perf that the two are
+>in
+>> > sync=2E
+>> >
+>> > Andrii's patch to hashmap from bpf-next is brought into this set to
+>> > fix issues with hashmap__clear=2E
+>> >
+>> > Two minor changes to libbpf's hashmap are made that remove an
+>unused
+>> > dependency and fix a compiler warning=2E
+>>
+>> Andrii/Alexei/Daniel, what do you think about me merging these fixes
+>in my
+>> perf-tools-next branch?
+>
+>I'm ok with the idea, but it's up to maintainers to coordinate this :)
+
+Good to know, do I'll take all patches except the ones touching libppf, wi=
+ll just make sure the copy is done with the patches applied=2E
+
+At some point they'll land in libbpf and the warning from check_headers=2E=
+sh will be resolved=2E
+
+Thanks,
+
+- Arnaldo
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
