@@ -2,85 +2,124 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C4CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 981CA2065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589520491;
-	bh=ClA2IxxG1MI3wu7KclT20O32qm2052KEbxXrz8qkzGk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Pwxq/Sb3gVGhaD4TYX2GEaiaKoA0zOvVRWYL8BrsMACrexYjNOMJmsWXLLYGbd0or
-	 QI63BTydZOLsO17fA6oqFEffHnNy7r0hEUXueO3wmI2N+6fURXbLESyO+h9cxgMl2d
-	 7FMKrw5XTMqf4Wbxjj2OL6V/MRrDjWVBW2nuOsK0=
+	by mail.kernel.org (Postfix) with ESMTP id E35C2206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:28:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F2YOZ5e8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgEOF2L (ORCPT
+        id S1726622AbgEOF2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 01:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36750 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 01:28:45 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46107 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgEOF2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 01:28:10 -0400
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725899AbgEOF2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 01:28:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC092207BB
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 05:28:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589520490;
-        bh=ClA2IxxG1MI3wu7KclT20O32qm2052KEbxXrz8qkzGk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=E1xaEDe8UYBtBcg42VRwGPuBUXICT2YNh5HG8EhImeNfv8dm7U5VeAWQ89d+yPXri
-         ziLC/nLMsQUy1A25HMdBYMrAqoiOilv4Ap6wmcVlkAfhsoXQ5KP8v7TWGcb0Kw5YaP
-         DGdQjhfCcQVHIB7bWNVt+qaJRYGagStD7glhQkiw=
-Received: by mail-wr1-f49.google.com with SMTP id w7so1874925wre.13
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:28:09 -0700 (PDT)
-X-Gm-Message-State: AOAM531bCHswhuYpuzULkndS3KX2Jv0OPmRoWhEy5oEveN53kmkmf2HS
-        PDzrHA546Tx6jUdVlaRZuuo3kSgi3uBWGewDrBejfQ==
-X-Google-Smtp-Source: ABdhPJxVtg+KNox8nSHMLbESkZEIfk4gI+H7v05x6BOtJWiNA7kEiZ5xGkM/HqE44OjQMYdHzEhHZyXEO5gL0vBChxs=
-X-Received: by 2002:adf:fe45:: with SMTP id m5mr2112386wrs.257.1589520488390;
- Thu, 14 May 2020 22:28:08 -0700 (PDT)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49NcQK13Bmz9sT8;
+        Fri, 15 May 2020 15:28:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589520522;
+        bh=sjZPEx98jKfSUT+oFkRxErP0wKXkP0n+li1XeXx8L0c=;
+        h=Date:From:To:Cc:Subject:From;
+        b=F2YOZ5e8EeuWsC30SDFgXaJCjQ9NAVVkA7hoirCSAlJplawvr3YUK0KIHLY7bL+2C
+         TZl/FBMvrpwvVTyj7SPR/zF3gXPpgJ+0GNPLj4i+oIZAzdFUZtFuPOCdVL/sjyVFZn
+         GWk0lXjpHrScqTvJM47PckKKLb6gfJ4txDnx2kWY3tvn6F/f8f3f2IhHbzPo6iGs3C
+         3Qa13tOrBoams6SlYy2JXUlzSZGFrYpYmWUhhMZCNCjLeULcxbCTdqpggze1ys88cH
+         Aege9rdmzibVjzhV58JKGGbL5c+1RF5kBZHmElgvDOO68Ei9XlpyW4qFI7RCUYGRhd
+         M9xkMuPyNsuKw==
+Date:   Fri, 15 May 2020 15:28:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rob Herring <robherring2@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alex Elder <elder@linaro.org>
+Subject: linux-next: manual merge of the devicetree tree with the net-next
+ tree
+Message-ID: <20200515152838.551bb944@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200505134926.578885807@linutronix.de> <20200505135314.992621707@linutronix.de>
-In-Reply-To: <20200505135314.992621707@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 14 May 2020 22:27:57 -0700
-X-Gmail-Original-Message-ID: <CALCETrWN-SXT+3zzofSu1nwVNZO-FqYv7u8w9HcVH245JV8y4A@mail.gmail.com>
-Message-ID: <CALCETrWN-SXT+3zzofSu1nwVNZO-FqYv7u8w9HcVH245JV8y4A@mail.gmail.com>
-Subject: Re: [patch V4 part 4 17/24] x86/entry/64: Remove error code clearing
- from #DB and #MCE ASM stub
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/qTz1s0EtMguppuYLY5rSzZE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:16 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> The C entry points do not expect an error code.
+--Sig_/qTz1s0EtMguppuYLY5rSzZE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+Today's linux-next merge of the devicetree tree got a conflict in:
+
+  Documentation/devicetree/bindings/net/qcom,ipa.yaml
+
+between commit:
+
+  8456c54408a2 ("dt-bindings: net: add IPA iommus property")
+
+from the net-next tree and commit:
+
+  fba5618451d2 ("dt-bindings: Fix incorrect 'reg' property sizes")
+
+from the devicetree tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/devicetree/bindings/net/qcom,ipa.yaml
+index 7b749fc04c32,b2ac7606095b..000000000000
+--- a/Documentation/devicetree/bindings/net/qcom,ipa.yaml
++++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+@@@ -171,10 -162,9 +169,10 @@@ examples
+                  modem-init;
+                  modem-remoteproc =3D <&mss_pil>;
+ =20
+ +                iommus =3D <&apps_smmu 0x720 0x3>;
+-                 reg =3D <0 0x1e40000 0 0x7000>,
+-                         <0 0x1e47000 0 0x2000>,
+-                         <0 0x1e04000 0 0x2c000>;
++                 reg =3D <0x1e40000 0x7000>,
++                         <0x1e47000 0x2000>,
++                         <0x1e04000 0x2c000>;
+                  reg-names =3D "ipa-reg",
+                              "ipa-shared",
+                              "gsi";
+
+--Sig_/qTz1s0EtMguppuYLY5rSzZE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6+KIYACgkQAVBC80lX
+0GxWuAf9FKYqZB81Iy5sUxmNsP2EG1Rd+cOY0Ge0BXqL5qVUGHMynnRLF6tYWlVv
+jPMMLBp+3curjcNAk6QspKL6ZqSLavNXOupArdBdmOudte3YCZUDtNZzK05HT5aP
+fEpjskFq1r0bJwANLROFL9tKgdoWFscWxV+jDzMHQmPZlmTJh3hd97nklgQeISp0
+g3NL1NA6r0L5u8DwgLq5sGHP0J8p7LF9JHB5HQF07wsrvyIsMW0SxXhBdcLj+e0O
++vbVaHYKjGvYRi+pgHflDwPKOyLVxB4QcJYBMLU9kchoxKY2Ti56fv8C2ADAFUXv
+NvVjFRZkc1KE5FB0JlztoGGob/q0Mw==
+=gg+y
+-----END PGP SIGNATURE-----
+
+--Sig_/qTz1s0EtMguppuYLY5rSzZE--
