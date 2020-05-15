@@ -2,49 +2,50 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E39C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0915F2078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4337F20759
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:18:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ET9GLrmZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iuOFhlgn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgEONSQ (ORCPT
+        id S1727951AbgEONSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:18:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51244 "EHLO
+        Fri, 15 May 2020 09:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgEONRD (ORCPT
+        with ESMTP id S1726521AbgEONRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:17:03 -0400
+        Fri, 15 May 2020 09:17:02 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE0CC05BD0D;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10B86C05BD15;
         Fri, 15 May 2020 06:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=9r9vORbOytoazW3UXAiDTCw79E+Sm2pnv9qrsCelaEs=; b=ET9GLrmZusiuGd8+w8wbCKtksq
-        dHQouvGiIMBcgTOT5pbeue0pK+qjSdB4XU53P5KZf+KkVyWWMLGd/5A7XSv+hk8gMvOSOzRbA/CBS
-        zpROQ0FzI6PUN9sdNnMI64kAIza+LuDxMTcwDacw5xYVpT1GmY6vfRWQIljHVlR726StSb3Bq3E1E
-        ABUqKezeRQBX1+lpFso9xn4dngqpoIJNBOS4xFWiojxiVRA/ui30BwtXQBry49aSljgMHIU7sNmqE
-        5DWE0n/jlkooNQ9JbFG5QRNiXeQFyKJM+YNLO84ZMqhdtACVIY/aaGrFsm8CstM34BdFES1qrnpt5
-        p/9GiqWg==;
+        bh=VARbJRt66GXZ9qiKVVic699Ba+6i1AmoDjPwsJmH6Ms=; b=iuOFhlgnlcx6SQ7hEqNpUQ3dMr
+        QTXFFcteC9OWWeKIyo+8QUCuNxXO8SzJsPfdOwWjmqvJaj9J9mBNtxtpt3r/67C/rCOhh2YIHFk2x
+        E0AxiJP8JUKEwUtkZhomuzxXfbrVuloYRnPiACIMkxkuTYt32L4a/aRBzrjwXM+9mZ8MNTK9tI144
+        J1okA/4oqxZoHbBM77ZWJYim90hsqAR1v85cstt3lHsXfvaGDZu3EMDnpuHpSQBEAVrF+AjfRptzc
+        /ooYfibK0dwVdWGidz89O/JqmNZLxEJa/ddG+c69TRMYj5UkOj4hsewVB7XPDSZLW4Qqv8XePa845
+        GeBejWRQ==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZaD0-0005kH-8J; Fri, 15 May 2020 13:17:02 +0000
+        id 1jZaCz-0005gl-RK; Fri, 15 May 2020 13:17:01 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 26/36] mm: Avoid splitting large pages
-Date:   Fri, 15 May 2020 06:16:46 -0700
-Message-Id: <20200515131656.12890-27-willy@infradead.org>
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH v4 20/36] mm: Make prep_transhuge_page return its argument
+Date:   Fri, 15 May 2020 06:16:40 -0700
+Message-Id: <20200515131656.12890-21-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200515131656.12890-1-willy@infradead.org>
 References: <20200515131656.12890-1-willy@infradead.org>
@@ -57,29 +58,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-If the filesystem supports large pages, then do not split them before
-removing them from the page cache; remove them as a unit.
----
- mm/vmscan.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+By permitting NULL or order-0 pages as an argument, and returning the
+argument, callers can write:
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index b06868fc4926..51e6c135575d 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1271,9 +1271,10 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 				/* Adding to swap updated mapping */
- 				mapping = page_mapping(page);
- 			}
--		} else if (unlikely(PageTransHuge(page))) {
-+		} else if (PageTransHuge(page)) {
- 			/* Split file THP */
--			if (split_huge_page_to_list(page, page_list))
-+			if (!mapping_large_pages(mapping) &&
-+			    split_huge_page_to_list(page, page_list))
- 				goto keep_locked;
- 		}
+	return prep_transhuge_page(alloc_pages(...));
+
+instead of assigning the result to a temporary variable and conditionally
+passing that to prep_transhuge_page().
+
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ include/linux/huge_mm.h | 7 +++++--
+ mm/huge_memory.c        | 9 +++++++--
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 1f6245091917..6a8502278f41 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -193,7 +193,7 @@ extern unsigned long thp_get_unmapped_area(struct file *filp,
+ 		unsigned long addr, unsigned long len, unsigned long pgoff,
+ 		unsigned long flags);
  
+-extern void prep_transhuge_page(struct page *page);
++extern struct page *prep_transhuge_page(struct page *page);
+ extern void free_transhuge_page(struct page *page);
+ bool is_transparent_hugepage(struct page *page);
+ 
+@@ -358,7 +358,10 @@ static inline bool transhuge_vma_suitable(struct vm_area_struct *vma,
+ 	return false;
+ }
+ 
+-static inline void prep_transhuge_page(struct page *page) {}
++static inline struct page *prep_transhuge_page(struct page *page)
++{
++	return page;
++}
+ 
+ static inline bool is_transparent_hugepage(struct page *page)
+ {
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 6ecd1045113b..7a5e2b470bc7 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -508,15 +508,20 @@ static inline struct deferred_split *get_deferred_split_queue(struct page *page)
+ }
+ #endif
+ 
+-void prep_transhuge_page(struct page *page)
++struct page *prep_transhuge_page(struct page *page)
+ {
++	if (!page || compound_order(page) == 0)
++		return page;
+ 	/*
+-	 * we use page->mapping and page->indexlru in second tail page
++	 * we use page->mapping and page->index in second tail page
+ 	 * as list_head: assuming THP order >= 2
+ 	 */
++	BUG_ON(compound_order(page) == 1);
+ 
+ 	INIT_LIST_HEAD(page_deferred_list(page));
+ 	set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
++
++	return page;
+ }
+ 
+ bool is_transparent_hugepage(struct page *page)
 -- 
 2.26.2
 
