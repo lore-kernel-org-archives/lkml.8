@@ -2,106 +2,185 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AECEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57905C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12F5E205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F8DD205CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:06:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ABtk6hl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgEOJGj (ORCPT
+        id S1728019AbgEOJGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:06:39 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4787 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726922AbgEOJGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:06:39 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 95C3FEB4EA6DAC2EFC8B;
-        Fri, 15 May 2020 17:06:36 +0800 (CST)
-Received: from [127.0.0.1] (10.67.102.197) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Fri, 15 May 2020
- 17:06:29 +0800
-Subject: Re: [PATCH 2/4] proc/sysctl: add shared variables -1
-To:     Kees Cook <keescook@chromium.org>
-CC:     <mcgrof@kernel.org>, <yzaikin@google.com>, <adobriyan@gmail.com>,
-        <mingo@kernel.org>, <peterz@infradead.org>,
-        <akpm@linux-foundation.org>, <yamada.masahiro@socionext.com>,
-        <bauerman@linux.ibm.com>, <gregkh@linuxfoundation.org>,
-        <skhan@linuxfoundation.org>, <dvyukov@google.com>,
-        <svens@stackframe.org>, <joel@joelfernandes.org>,
-        <tglx@linutronix.de>, <Jisheng.Zhang@synaptics.com>,
-        <pmladek@suse.com>, <bigeasy@linutronix.de>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <wangle6@huawei.com>
-References: <1589517224-123928-1-git-send-email-nixiaoming@huawei.com>
- <1589517224-123928-3-git-send-email-nixiaoming@huawei.com>
- <202005150105.33CAEEA6C5@keescook>
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-Message-ID: <88f3078b-9419-b9c6-e789-7d6e50ca2cef@huawei.com>
-Date:   Fri, 15 May 2020 17:06:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 15 May 2020 05:06:50 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:37555 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbgEOJGt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 05:06:49 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200515090648euoutp02ca23d34b2e28f8de83766f769dbe24fe~PKGURWJye0696006960euoutp02R;
+        Fri, 15 May 2020 09:06:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200515090648euoutp02ca23d34b2e28f8de83766f769dbe24fe~PKGURWJye0696006960euoutp02R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589533608;
+        bh=Rgf0DcSHGDxAPO+e54+qqjmUM1+sR1ls1YqjuvhAlng=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ABtk6hl+oLDnWJ965GufGG8Mo7IDRjRyRS2jQNP3QwKJbZL0VI7ADppDL6usWRadw
+         6rzSLhSZ9UiIjPd3pQSVKFUqrg24s4HC0+MWVtQX6Fu5dnHBcPuEvC6MpJa479hgY5
+         rgLyH1XeDemqZJMq72Vy90nutrPpsddti1LFDvEU=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200515090647eucas1p127b1f85b98f1044df800d7f5878973e6~PKGUAd8Wu1172411724eucas1p1F;
+        Fri, 15 May 2020 09:06:47 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 03.64.60679.7AB5EBE5; Fri, 15
+        May 2020 10:06:47 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200515090647eucas1p21018edfd835730c9a68dcb186349ee74~PKGTqgs6w1476614766eucas1p2W;
+        Fri, 15 May 2020 09:06:47 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200515090647eusmtrp12fd4a9a4f13f1c13c2a06a2843cdfbf6~PKGTpjEep0296002960eusmtrp1q;
+        Fri, 15 May 2020 09:06:47 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-24-5ebe5ba7e364
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 52.FD.07950.7AB5EBE5; Fri, 15
+        May 2020 10:06:47 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200515090647eusmtip2e03fda35d17045664eaf97456b7f3c36~PKGTdAkmO3032830328eusmtip2o;
+        Fri, 15 May 2020 09:06:47 +0000 (GMT)
+From:   Lukasz Stelmach <l.stelmach@samsung.com>
+To:     Stephan Mueller <smueller@chronox.de>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 1/2] hwrng: iproc-rng200 - Set the quality value
+Date:   Fri, 15 May 2020 11:06:46 +0200
+In-Reply-To: <2080864.23lDWg4Bvs@tauon.chronox.de> (Stephan Mueller's
+        message of "Fri, 15 May 2020 10:32:22 +0200")
+Message-ID: <dleftjblmp8t3t.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <202005150105.33CAEEA6C5@keescook>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.197]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURT1daYz08biUDRekahp8EONFXF7rtG4vWhcvowRRauMSKDFtIJL
+        ohCMIggFS1BbMVRRKCi0FKyIIgYX1AaLuMREFBQaFRTEJZGKxJbBxL9zz73n3CWXo5SlTCgX
+        p9sn6HWaBBUjp10P+j3TS6JuR0cU5EzFf0wPWFx51i7F5dn3aezJKKGwr+cei48W2Rl8sisM
+        53R0U9jjcbDY2fFSitve9kvws9oCBp/13JZga16nFFtdRoS95ioG91zpRDjfXU7jxocZ1NIQ
+        8ttnQsTS1sSQb8+fS8gNyxuWFDnrGeK6M5k4yzIYUn/+KkuqLqUQY3UZIsZPDkTs1S9okvY4
+        XUq+OydsDNoiXxQjJMQlC/oZS3bI95w/o9x7OfhAfft1aSqqC8pEMg742dDia6MykZxT8jYE
+        xXVeiRj8QPC52c6IwXcE7/KL0D9JzoCNFRMlCCq6OoaDDwgeOl76JRzH8GooL98cEIzmp8CL
+        9MIhJ4p/IoWBcy1UIBHCr4CWk6ckAUzzk6G1tIwNYBmfBN6vliFewc+DL/aaITyGnw/VH9tY
+        kQ+GR+ZOOoApXgtmz2cUaAB8OweNtipKHHUFFN7zMiIOga7GalbEYeDOy6IDgwKfAnmmuaI2
+        C4Gr4Bct1iyE1ie+Ye0yaLA1sWJ9ELz6Eiz2DQKT6wwl0go4cVwpVodDRc6tYZdQyO6yDR+O
+        QGdeHy3e6hiC5kwvk4smWf5bx/LfOha/LeW/nb12hkhPg+IL3ZSIF0NFRS9tRdIyNFZIMmhj
+        BUOkTtivNmi0hiRdrHpXotaJ/E/rHmz8UYNqB3Y2IJ5DqpGKiPy6aKVUk2w4qG1A4X6n944r
+        zSiU1iXqBNVoxXr7zWilIkZz8JCgT9yuT0oQDA1oPEerxipmXfy0TcnHavYJ8YKwV9D/y0o4
+        WWgqMhb1eguWrg0ejOn3WcPw6q3GdT9XOlxzrp2eIid9LnPCuws3TcUpsjHtb9nswaaJPWml
+        y3fvJgPukrVRkYt6fo/LslhHxKl772bGc0+X5KpSZ8Ufnv1hQtrK1km9yepVVsnhTRfvHF9j
+        zh0V2e1+rdhwo0+/vHJBdsR42SBKn3YkSkUb9mhmTqX0Bs1fgbXITbwDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHffZedsHZ25z0sKJi1IcuTjdbexYqUiNe+hBBgyJrNutFy11s
+        7yZZRKIfdJPsKuVwubBlOufWsnnDNCm7SE0r/VJpFyXLWlRElBptjqBvP87/dw7nwOFhIjch
+        4R0yWRmLSW+QkgJ86M/98dSm3Nu69MCICM2fG+SiG5f8BPKduoejsL0JQ78jd7mootFPouqP
+        y9DpdzMYCocDXBR8N0agifFfHPSsu55El8K3Och9fpJA7lANQFN1N0kU8U4CVDvkw9H9B3Ys
+        J5me/X0O0M6JxyT97flzDt3lfMWlG4N9JB3qX00HW+wk3edq5dI3r56ka9pbAF3zIQBof/so
+        Tpc/qiTo78HlO5L2yDItZpuVWVloZq1Z0lw5UsjkaiRTbFDL5BmqfZsUSmladuZBxnCohLGk
+        Ze+XFbouioo9i4/2ve4gykBvkgPweZDaAE/PXec6gIAnojwAehu+4g7AiwYS2OwqiDvJcG7M
+        QcadKQAdb8NkzCEpGfT5dsccMbUGjlY2LDgY1U3AF9VjRCxIpjTwafVZToxFlBw2dYWxGOPU
+        aviyuYUbYz5lg8MVATzGQkoFP/s7F/wUSg3bpye48fpi+LBucsHBqCL4w/seOwMo53+R87/I
+        GV0Pi+7k706Ll9fBa1dmsDhnwba2L7gbEC1AzNhYY4GRVchYvZG1mQpkB8zGIIh+RGjwV3sn
+        cER2DgCKB6SJwvTaXp2I0JewpcYBsCo65m3AOwwkuMlsYqRi4XZ/j04kPKgvPcZYzHkWm4Fh
+        B4AyeudZTJJywBz9NZM1T66Uq5BarspQZWxE0iXCKurOXhFVoLcyRQxTzFj+9XF4fEkZOOzR
+        vLIKanb1q34oTpTBia0PZrcotCMVwkFMyaRfSJj+dpXXU+8qn8l0jT4K28uOf29zJQa068fn
+        Q/n6wyunV5Rs25yneXOrQ5jaysEGxdOS/KJQFb8o52fVR0/p1FJtgmpIY+nVCUZHkNaQ8/JZ
+        XfmiI08uf+oHX9NaI8OtUpwt1MvXYhZW/xeIRrh8MwMAAA==
+X-CMS-MailID: 20200515090647eucas1p21018edfd835730c9a68dcb186349ee74
+X-Msg-Generator: CA
+X-RootMTR: 20200515090647eucas1p21018edfd835730c9a68dcb186349ee74
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200515090647eucas1p21018edfd835730c9a68dcb186349ee74
+References: <2080864.23lDWg4Bvs@tauon.chronox.de>
+        <CGME20200515090647eucas1p21018edfd835730c9a68dcb186349ee74@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/15 16:06, Kees Cook wrote:
-> On Fri, May 15, 2020 at 12:33:42PM +0800, Xiaoming Ni wrote:
->> Add the shared variable SYSCTL_NEG_ONE to replace the variable neg_one
->> used in both sysctl_writes_strict and hung_task_warnings.
->>
->> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
->> ---
->>   fs/proc/proc_sysctl.c     | 2 +-
->>   include/linux/sysctl.h    | 1 +
->>   kernel/hung_task_sysctl.c | 3 +--
->>   kernel/sysctl.c           | 3 +--
-> 
-> How about doing this refactoring in advance of the extraction patch?
-Before  advance of the extraction patch, neg_one is only used in one 
-file, does it seem to have no value for refactoring?
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+It was <2020-05-15 pi=C4=85 10:32>, when Stephan Mueller wrote:
+> Am Freitag, 15. Mai 2020, 00:18:41 CEST schrieb Lukasz Stelmach:
+>
+>> I am running tests using SP800-90B tools and the first issue I can see
+>> is the warning that samples contain less than 1e6 bytes of data. I know
+>> little about maths behind random number generators, but I have noticed
+>> that the bigger chunk of data from an RNG I feed into either ent or ea_i=
+id
+>> the higher entropy they report. That is why I divided the data into 1024
+>> bit chunks in the first place. To get worse results. With ea_iid they
+>> get even worse (128 bytes of random data)
+>
+> I read that you seem to just take the output data from the RNG. If this i=
+s=20
+> correct, I think we can stop right here. The output of an RNG is usually =
+after=20
+> post-processing commonly provided by a cryptographic function.
+>
+> Thus, when processing the output of the RNG all what we measure here is t=
+he=20
+> quality of the cryptographic post-processing and not the entropy that may=
+ be=20
+> present in the data.
+>
+> What we need is to access the noise source and analyze this with the give=
+n=20
+> tool set. And yes, the analysis may require adjusting the data to a forma=
+t=20
+> that can be consumed and analyzed by the statistical tests.
 
-> 
->>   4 files changed, 4 insertions(+), 5 deletions(-)
->>
->> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
->> index b6f5d45..acae1fa 100644
->> --- a/fs/proc/proc_sysctl.c
->> +++ b/fs/proc/proc_sysctl.c
->> @@ -23,7 +23,7 @@
->>   static const struct inode_operations proc_sys_dir_operations;
->>   
->>   /* shared constants to be used in various sysctls */
->> -const int sysctl_vals[] = { 0, 1, INT_MAX };
->> +const int sysctl_vals[] = { 0, 1, INT_MAX, -1 };
->>   EXPORT_SYMBOL(sysctl_vals);
->>   
->>   /* Support for permanently empty directories */
->> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
->> index 02fa844..6d741d6 100644
->> --- a/include/linux/sysctl.h
->> +++ b/include/linux/sysctl.h
->> @@ -41,6 +41,7 @@
->>   #define SYSCTL_ZERO	((void *)&sysctl_vals[0])
->>   #define SYSCTL_ONE	((void *)&sysctl_vals[1])
->>   #define SYSCTL_INT_MAX	((void *)&sysctl_vals[2])
->> +#define SYSCTL_NEG_ONE	((void *)&sysctl_vals[3])
-> 
-> Nit: let's keep these value-ordered? i.e. -1, 0, 1, INT_MAX.
-Thanks for guidance, your method is better
+I took data from /dev/hwrng which is directly connected to the
+hardware. See rng_dev_read() in drivers/char/hw_random/core.c.
 
-Thanks.
-Xiaoming Ni
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl6+W6YACgkQsK4enJil
+gBDM+wgAqKajSG8VdU0jbHzag/4aYJErE1pxTpDqEjsEkF7cMeaMwpOjLskALmDu
+ukYcpFmBPQCN4s0wHx4TTmh+TWPosnYwEgKwlQx8pZ5Y2k/rQ1F6+j5wnjOgISto
++pVuNtuec1S4mXQaN69EfpNFWKrOPvfLLKx1XWHceJ+Qiwy9Hbf+DX0wUW20c3pN
+A0RSMIHFOuNHsfqeCRLJxm93GNuNnZl+lyI6fPtbGDDubn2wJQ9R5xJUrHAV95sA
+VIFyBVxrq8o9vSBnRic2WA6PHqa5NQQQyOiw8sOcJAhtpQmbEj7m8NwnQAkW27EP
+4IWU/gPKFHmM5jYTvdjkqat66a9ddA==
+=JDyg
+-----END PGP SIGNATURE-----
+--=-=-=--
