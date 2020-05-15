@@ -6,144 +6,86 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E61C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71742C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39222207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5176A207C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgEOOuS (ORCPT
+        id S1726266AbgEOOvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:50:18 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:37756 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbgEOOuQ (ORCPT
+        Fri, 15 May 2020 10:51:53 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:46947 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgEOOvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:50:16 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D200D80004AB;
-        Fri, 15 May 2020 14:50:12 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qNFvQdwkClUN; Fri, 15 May 2020 17:50:11 +0300 (MSK)
-Date:   Fri, 15 May 2020 17:50:07 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Long Cheng <long.cheng@mediatek.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        <linux-mips@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/4] serial: 8250_dw: Simplify the ref clock rate
- setting procedure
-Message-ID: <20200515145007.xjrx5mminxrh374d@mobilestation>
-References: <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru>
- <20200506233136.11842-1-Sergey.Semin@baikalelectronics.ru>
- <20200506233136.11842-4-Sergey.Semin@baikalelectronics.ru>
- <20200515140547.GE1634618@smile.fi.intel.com>
+        Fri, 15 May 2020 10:51:52 -0400
+X-Originating-IP: 90.65.91.255
+Received: from localhost (lfbn-lyo-1-1912-bdcst.w90-65.abo.wanadoo.fr [90.65.91.255])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id D2319240032;
+        Fri, 15 May 2020 14:51:49 +0000 (UTC)
+Date:   Fri, 15 May 2020 16:51:49 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Tudor.Ambarus@microchip.com
+Cc:     Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Codrin.Ciubotariu@microchip.com
+Subject: Re: [PATCH 00/16] ARM: dts: at91: sama5d2: Rework Flexcom definitions
+Message-ID: <20200515145149.GU34497@piout.net>
+References: <20200514050301.147442-1-tudor.ambarus@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515140547.GE1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200514050301.147442-1-tudor.ambarus@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 05:05:47PM +0300, Andy Shevchenko wrote:
-> On Thu, May 07, 2020 at 02:31:34AM +0300, Serge Semin wrote:
-> > Really instead of twice checking the clk_round_rate() return value
-> > we could do it once, and if it isn't error the clock rate can be changed.
-> > By doing so we decrease a number of ret-value tests and remove a weird
-> > goto-based construction implemented in the dw8250_set_termios() method.
+On 14/05/2020 05:03:06+0000, Tudor.Ambarus@microchip.com wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
 > 
-> >  	rate = clk_round_rate(d->clk, baud * 16);
-> > -	if (rate < 0)
-> > -		ret = rate;
+> Rework the sama5d2 SoC flexcom definitions. The Flexcom IPs are
+> in the SoC. Move all the flexcom nodes together with their function
+> definitions in the SoC dtsi. Boards will just fill the pins and enable
+> the desired functions. With this we remove the duplication of the
+> flexcom definitions across the sama5d2 boards.
 > 
-> > -	else if (rate == 0)
-> > -		ret = -ENOENT;
+> Round the flexcom support and add the missing flexcom definitions.
+> All the flexcom functions are now defined.
 > 
-> This case now handled differently.
-> I don't think it's good idea to change semantics.
+> Apart of the aliases and the new flx0 i2c function on sama5d2_xplained,
+> the only functional change that this patch set adds, is that it uart5,
+> uart6 and uart7 inherit the atmel,fifo-size = <32>; optional property.
+> These nodes have both the FIFO size described and the DMA enabled.
+> uart5 was tested on sama5d27-wlsom1-ek. On uart6 and uart7 a
+> Bluetooth module can be connected. Tested BT uart7 on sama5d2-icp.
 > 
-> So, I don't see how this, after leaving the rate==0 case, would be better than
-> original one.
+> Tudor Ambarus (16):
+>   ARM: dts: at91: sama5d2: Fix the label numbering for flexcom functions
+>   ARM: dts: at91: sama5d2: Move flx4 definitions in the SoC dtsi
+>   ARM: dts: at91: sama5d2: Move flx3 definitions in the SoC dtsi
+>   ARM: dts: at91: sama5d2: Move flx2 definitions in the SoC dtsi
+>   ARM: dts: at91: sama5d2: Move flx1 definitions in the SoC dtsi
+>   ARM: dts: at91: sama5d2: Move flx0 definitions in the SoC dtsi
+>   ARM: dts: at91: sama5d2: Specify the FIFO size for the Flexcom UART
+>   ARM: dts: at91: sama5d2: Add DMA bindings for the SPI and UART flx4
+>     functions
+>   ARM: dts: at91: sama5d2: Add DMA bindings for the flx3 SPI function
+>   ARM: dts: at91: sama5d2: Add DMA bindings for the flx1 I2C function
+>   ARM: dts: at91: sama5d2: Add DMA bindings for the SPI and I2C flx0
+>     functions
+>   ARM: dts: at91: sama5d2: Add missing flexcom definitions
+>   ARM: dts: at91: sama5d2: Remove i2s and tcb aliases from SoC dtsi
+>   ARM: dts: at91: sama5d2_xplained: Add alias for DBGU
+>   ARM: dts: at91: sama5d2_xplained: Describe the flx0 I2C function
+>   ARM: dts: at91: sama5d2_ptc_ek: Add comments to describe the aliases
+> 
+Applied, thanks.
 
-Semantic doesn't change. The code does exactly the same as before. If it didn't
-I either would have provided a comment about this or just didn't introduce the
-change in the first place. I guess you just don't see the whole picture of the
-method. Take a look in the code. The ret variable's been used to skip the
-"p->uartclk = rate" assignment. That's it. So the (rate == 0) will still be
-considered as error condition, which causes the clock rate left unchanged.
-Here is the code diff so you wouldn't need to dive deep into the driver
-sources:
-
-<	clk_disable_unprepare(d->clk);
-<	rate = clk_round_rate(d->clk, baud * 16);
-<	if (rate < 0)
-<		ret = rate;
-<	else if (rate == 0)
-<		ret = -ENOENT;
-<	else
-<		ret = clk_set_rate(d->clk, rate);
-<	clk_prepare_enable(d->clk);
-<
-<	if (ret)
-<		goto out;
-<
-<	p->uartclk = rate;
-<
-<out:
----
->       clk_disable_unprepare(d->clk);
->       rate = clk_round_rate(d->clk, baud * 16);
->       if (rate > 0) {
->              ret = clk_set_rate(d->clk, rate);
->              if (!ret)
->                      p->uartclk = rate;
->       }
->       clk_prepare_enable(d->clk);
-
--Sergey
-
-> 
-> > -	else
-> > +	if (rate > 0) {
-> >  		ret = clk_set_rate(d->clk, rate);
-> > +		if (!ret)
-> > +			p->uartclk = rate;
-> > +	}
-> >  	clk_prepare_enable(d->clk);
-> >  
-> > -	if (ret)
-> > -		goto out;
-> > -
-> > -	p->uartclk = rate;
-> > -
-> > -out:
-> >  	p->status &= ~UPSTAT_AUTOCTS;
-> >  	if (termios->c_cflag & CRTSCTS)
-> >  		p->status |= UPSTAT_AUTOCTS;
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
