@@ -2,140 +2,145 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6217206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F8A2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:17:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="reqsbm6k"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P4Iii1at"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgEOJQ2 (ORCPT
+        id S1728015AbgEOJR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:16:28 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:59354 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbgEOJQ2 (ORCPT
+        Fri, 15 May 2020 05:17:26 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38575 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727857AbgEOJRZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:16:28 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200515091625euoutp0180d69a14aab46e7e80ff4374e352ef59~PKOt5t-yE1638216382euoutp01F
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:16:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200515091625euoutp0180d69a14aab46e7e80ff4374e352ef59~PKOt5t-yE1638216382euoutp01F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589534185;
-        bh=Ie2EAXxlBaVO9eW+/38zLNexPrP9VRA8wVermRed4F4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=reqsbm6kf9xIJliJw7vsYI45QsJcOvgiQCoSlXHAkmkDfEP+Ta/QsCoCIZoiGtcYb
-         QzY5uNOzFF+XhkMNdHa73qppkXGF6GlW/JYHh4nTjocdjNojeC7z9bS4MCwXr8JOa6
-         2vQnGJMT54CeiBSExjUrvXxojX8kjnEqLnsEUZaw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200515091625eucas1p24fdb1d38e487a7abb396a6562e5b3a41~PKOtnxc423263732637eucas1p2U;
-        Fri, 15 May 2020 09:16:25 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 90.AB.60698.8ED5EBE5; Fri, 15
-        May 2020 10:16:24 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200515091624eucas1p1d7c1a75daa6096d78bfe34e63b1bb7b4~PKOtTbJ4a2803928039eucas1p1w;
-        Fri, 15 May 2020 09:16:24 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200515091624eusmtrp211c61991d9c279978b0132a4c72c752b~PKOtSvbJ31201512015eusmtrp24;
-        Fri, 15 May 2020 09:16:24 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-50-5ebe5de8958b
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 56.6F.07950.8ED5EBE5; Fri, 15
-        May 2020 10:16:24 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200515091624eusmtip133d56722f5ff177725146b609245e358~PKOss5iVn2529825298eusmtip1f;
-        Fri, 15 May 2020 09:16:23 +0000 (GMT)
-Subject: Re: [PATCH 0/2] opp: core: add regulators enable and disable
-To:     Viresh Kumar <viresh.kumar@linaro.org>, k.konieczny@samsung.com,
-        peron.clem@gmail.com, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>, broonie@kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <d9da5bc0-820d-59b9-a19a-32e5480313e9@samsung.com>
-Date:   Fri, 15 May 2020 11:16:25 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.0
+        Fri, 15 May 2020 05:17:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589534244;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mnRre2Cx4ihUmsSYvpskeloE4Blh3L+V4XuwzK66mi0=;
+        b=P4Iii1atA6lNryeNNVXerKJ9TF0kR6JPrrspqdkCO34DsixQTq7XZupi7qCG7b5NnGIRF/
+        n4k4d1R+KCo9t3ys9jxxbH7eFEv2rc12Ob9nLHCCgQOriwIMkDRnHTMH9SFRedVnOM+mzj
+        hrkBBbX7hJccOCKObugHMRJCOdKcqoQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-302-e0TBRx52PWahR22LB9MItA-1; Fri, 15 May 2020 05:17:20 -0400
+X-MC-Unique: e0TBRx52PWahR22LB9MItA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 69715835BA8;
+        Fri, 15 May 2020 09:17:17 +0000 (UTC)
+Received: from krava (unknown [10.40.194.127])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7835478B23;
+        Fri, 15 May 2020 09:17:10 +0000 (UTC)
+Date:   Fri, 15 May 2020 11:17:07 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 4/8] libbpf hashmap: Localize static hashmap__* symbols
+Message-ID: <20200515091707.GC3511648@krava>
+References: <20200515065624.21658-1-irogers@google.com>
+ <20200515065624.21658-5-irogers@google.com>
 MIME-Version: 1.0
-In-Reply-To: <cover.1589528491.git.viresh.kumar@linaro.org>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SfSyUcRzf757nnnvQ8dxRvsO0rnVblJfpj0fKGG23/rDW+stGrjw7wrF7
-        EP4ySlwUmsWxiFbcytsh563ImF1eorwlxSwkZTkvqSl3D+W/z/fz/Xx+n+9n+5GY2MB3ICOV
-        8YxKKY+WEJZ4U8/PwZMLIR2hHq2PvemCmTmCLvtRyKdHWkoIejWnG9FfN/t59PsHIzj92jDM
-        p7dH63A6s3sdo+vWZLTuUw/hZyXTaz4IZPXaLEI2NdpGyBre3cJldxq0SNY7/pwnW613viAI
-        tjwTzkRHJjIqd98wy4jlvlkirpWfpH1YjqWiWlyNLEigTsH6mwlMjSxJMVWJ4FeOkc8NRgT3
-        FjsJblhFUHl3jL9n6dms5HGLJwiMOVm7/u8IOl/0I5PKljoHE+lq81t2VDuCxVeNZgtGPUJQ
-        MpTOM6kIyhPUy2rChIWUL6yurJjdOHUM5gfGBCZ8kAoBQ4UOcRoR9BXNmU+3oHxAU/zZzGPU
-        YUhvLMY4bA+Tc6XmMKCmBaBt6CG4wwNha7xgt7ctfOltEHDYCf7o9wzpCGYGngm4IRvBSFoh
-        4lQ+MDWwtfMSuRNxHGpa3DnaHwxVNwQmGihrGF8WcUdYQ37TfYyjhZCZIebUUtD0Vv+L7Rwa
-        xnKRRLOvmmZfHc2+Opr/uWUI1yJ7JoGNUTCsl5K57sbKY9gEpcLtamxMPdr5Yobt3rVm1PH7
-        SheiSCQ5IPQoaA8V8+WJbHJMFwISk9gJg2paQ8XCcHlyCqOKvaxKiGbYLuRI4hJ7oVf5YoiY
-        UsjjmSiGiWNUe1seaeGQigKHyOnawoW3RY8OxX+8WWXFGlMuZlrrKpY885WF0Rl+rqXMN2lY
-        cL/I8bzTRnOAjdJtLG2jw/upR7XNpRObpTbDs0tb+smza7dtpfM614CSoKgFkUurFOW2zUjo
-        FOcwhbErTz+46ekYXzVsMX1aRyYdyctWvVTUJpdc80+ZPCrB2Qi5pwumYuV/ARhrHKdeAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLIsWRmVeSWpSXmKPExsVy+t/xu7ovYvfFGWzerWYx9eETNosFn2aw
-        WlzeNYfN4nPvEUaLNz/OMlncnneZxeLM6UusFv+ubWSx6Djyjdli41cPi80PjrE5cHvsnHWX
-        3WPTqk42jzvX9rB5bLnazuLRt2UVo8fxG9uZPD5vkgtgj9KzKcovLUlVyMgvLrFVija0MNIz
-        tLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DLeHvyEVvBbtaKVQsXMTcwbmDpYuTkkBAw
-        kTj2YwVTFyMXh5DAUkaJO9eus0IkZCROTmuAsoUl/lzrYoMoessoceP9CrCEsICrxM3mLlaQ
-        hIjAXkaJY5dms4A4zAJLGCU27rjBCtHSxyjx5Xs/WAubgKFE11uQWZwcvAJ2Ep8/fGAEsVkE
-        VCWen7vODmKLCsRKrL7WyghRIyhxcuYTsGM5BawlZs1+BhZnFjCTmLf5ITOELS/RvHU2lC0u
-        cevJfKYJjEKzkLTPQtIyC0nLLCQtCxhZVjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgRG7bZj
-        P7fsYOx6F3yIUYCDUYmH12Dq3jgh1sSy4srcQ4wSHMxKIrx+63fHCfGmJFZWpRblxxeV5qQW
-        H2I0BXpuIrOUaHI+MKHklcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1OTS1ILYLpY+Lg
-        lGpgnOeruJ8xOl/8wodvln9tI+LXf7Nulvxcfsirs37vyRu9xed+Zk5Okn//ia338c9Liznc
-        tkrU5v5ekHhk85yPKRGfYoVLgp3Ul7hv7yrccerFJv3ipeVr/61VY5qe+jdWQml/Y6nmQScP
-        lxfXnSzMWG9pPdpQdlxNhmVtBK+S7euHe9S417zMVWIpzkg01GIuKk4EAJeFRxfwAgAA
-X-CMS-MailID: 20200515091624eucas1p1d7c1a75daa6096d78bfe34e63b1bb7b4
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200515075745eucas1p2f14c7fcec7c3d190704ddc6f608b6ce9
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200515075745eucas1p2f14c7fcec7c3d190704ddc6f608b6ce9
-References: <CGME20200515075745eucas1p2f14c7fcec7c3d190704ddc6f608b6ce9@eucas1p2.samsung.com>
-        <cover.1589528491.git.viresh.kumar@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515065624.21658-5-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
+On Thu, May 14, 2020 at 11:56:20PM -0700, Ian Rogers wrote:
+> Localize the hashmap__* symbols in libbpf.a. To allow for a version in
+> libapi.
+> 
+> Before:
+> $ nm libbpf.a
+> ...
+> 000000000002088a t hashmap_add_entry
+> 000000000001712a t hashmap__append
+> 0000000000020aa3 T hashmap__capacity
+> 000000000002099c T hashmap__clear
+> 00000000000208b3 t hashmap_del_entry
+> 0000000000020fc1 T hashmap__delete
+> 0000000000020f29 T hashmap__find
+> 0000000000020c6c t hashmap_find_entry
+> 0000000000020a61 T hashmap__free
+> 0000000000020b08 t hashmap_grow
+> 00000000000208dd T hashmap__init
+> 0000000000020d35 T hashmap__insert
+> 0000000000020ab5 t hashmap_needs_to_grow
+> 0000000000020947 T hashmap__new
+> 0000000000000775 t hashmap__set
+> 00000000000212f8 t hashmap__set
+> 0000000000020a91 T hashmap__size
+> ...
+> 
+> After:
+> $ nm libbpf.a
+> ...
+> 000000000002088a t hashmap_add_entry
+> 000000000001712a t hashmap__append
+> 0000000000020aa3 t hashmap__capacity
+> 000000000002099c t hashmap__clear
+> 00000000000208b3 t hashmap_del_entry
+> 0000000000020fc1 t hashmap__delete
+> 0000000000020f29 t hashmap__find
+> 0000000000020c6c t hashmap_find_entry
+> 0000000000020a61 t hashmap__free
+> 0000000000020b08 t hashmap_grow
+> 00000000000208dd t hashmap__init
+> 0000000000020d35 t hashmap__insert
+> 0000000000020ab5 t hashmap_needs_to_grow
+> 0000000000020947 t hashmap__new
+> 0000000000000775 t hashmap__set
+> 00000000000212f8 t hashmap__set
+> 0000000000020a91 t hashmap__size
+> ...
 
-On 15.05.2020 09:57, Viresh Kumar wrote:
-> This series reintroduces the usage of regulator_enable/disable() to the
-> OPP core after the previous attempt was reverted [1] shortly after getting
-> applied. This time the regulator is enabled only after it is configured
-> by the OPP core.
->
-> Marek, Kamil and Clément: Can you guys please test this out and report
-> if this doesn't work as expected ?
+I think this will break bpf selftests which use hashmap,
+we need to find some other way to include this
 
-Works fine for my test cases, especially Samsung Chromebook Peach-Pit/Pi 
-still boots fine. Feel free to add to the both patches:
+either to use it from libbpf directly, or use the api version
+only if the libbpf is not compiled in perf, we could use
+following to detect that:
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+      CFLAGS += -DHAVE_LIBBPF_SUPPORT
+      $(call detected,CONFIG_LIBBPF)
 
-Thanks!
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+jirka
 
