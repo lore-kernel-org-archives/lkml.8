@@ -2,204 +2,156 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68710206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:59:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KEEKWvbt"
+	by mail.kernel.org (Postfix) with ESMTP id A5E30206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgEOP7G (ORCPT
+        id S1727059AbgEOP7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:59:06 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:42176 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726283AbgEOP7F (ORCPT
+        Fri, 15 May 2020 11:59:34 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:52103 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726607AbgEOP7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:59:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589558343; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=qxsW8J//wgvAmbboym2DVFK7T00YKI0V2xlBc3zGI9A=;
- b=KEEKWvbt+O6HXnwQsAaEoIYWqSgmNqLEOWTh0z5E3xveaK90fuJ1Ti3B+I1CH5J/CGZuzyGD
- KHXbT2TmggNBOTMuYmjWqN0apvplZwwdNEc0HX39+GvEqJgC52nEGN0DWL+8inxXM7Q/DtoX
- 4NhjQPpmSGzxX4DmpfXV+HmZBJc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebebc30.7fd92b617f10-smtp-out-n05;
- Fri, 15 May 2020 15:58:40 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 243A2C43636; Fri, 15 May 2020 15:58:40 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1D64AC433D2;
-        Fri, 15 May 2020 15:58:39 +0000 (UTC)
+        Fri, 15 May 2020 11:59:33 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R591e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TydckkE_1589558367;
+Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0TydckkE_1589558367)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 15 May 2020 23:59:28 +0800
+From:   Lai Jiangshan <laijs@linux.alibaba.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Michel Lespinasse <walken@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Rik van Riel <riel@redhat.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH V2 1/2] rbtree_latch: quit searching when reaching to maximum depth
+Date:   Fri, 15 May 2020 15:59:08 +0000
+Message-Id: <20200515155912.1713-1-laijs@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200515150122.GY2957@hirez.programming.kicks-ass.net>
+References: <20200515150122.GY2957@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 15 May 2020 21:28:39 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Tingwei Zhang <tingwei@codeaurora.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH] coresight: etm4x: Add support to disable trace unit power
- up
-In-Reply-To: <20200515155144.GA7085@xps15>
-References: <20200514105915.27516-1-saiprakash.ranjan@codeaurora.org>
- <20200514180055.GA29384@xps15>
- <2c932d57288508cc72a6ee323cf5595e@codeaurora.org>
- <CANLsYkxun2EWGeLU42ShbqkJMtCTh+Q9L3t=CXQR+-2zVuuJYg@mail.gmail.com>
- <a0f8f01f28506e10001885e387d3cb4f@codeaurora.org>
- <20200515155144.GA7085@xps15>
-Message-ID: <89be7790b7fdd4b0268919e060198926@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+lib/rbtree.c has ensured that there is not possible to
+inadvertently cause (temporary) loops in the tree structure
+as seen in program order of the modifier. But loop is still
+possible to be seen in searcher due to CPU's reordering.
 
-On 2020-05-15 21:21, Mathieu Poirier wrote:
-> On Fri, May 15, 2020 at 08:37:13PM +0530, Sai Prakash Ranjan wrote:
->> Hi Mathieu,
->> 
->> On 2020-05-15 20:22, Mathieu Poirier wrote:
->> > On Thu, 14 May 2020 at 12:39, Sai Prakash Ranjan
->> > <saiprakash.ranjan@codeaurora.org> wrote:
->> > >
->> > > Hi Mathieu,
->> > >
->> > > On 2020-05-14 23:30, Mathieu Poirier wrote:
->> > > > Good morning Sai,
->> > > >
->> > > > On Thu, May 14, 2020 at 04:29:15PM +0530, Sai Prakash Ranjan wrote:
->> > > >> From: Tingwei Zhang <tingwei@codeaurora.org>
->> > > >>
->> > > >> On some Qualcomm Technologies Inc. SoCs like SC7180, there
->> > > >> exists a hardware errata where the APSS (Application Processor
->> > > >> SubSystem)/CPU watchdog counter is stopped when ETM register
->> > > >> TRCPDCR.PU=1.
->> > > >
->> > > > Fun stuff...
->> > > >
->> > >
->> > > Yes :)
->> > >
->> > > >> Since the ETMs share the same power domain as
->> > > >> that of respective CPU cores, they are powered on when the
->> > > >> CPU core is powered on. So we can disable powering up of the
->> > > >> trace unit after checking for this errata via new property
->> > > >> called "qcom,tupwr-disable".
->> > > >>
->> > > >> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
->> > > >> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> > > >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> > > >
->> > > > Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> > > > Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
->> > > >
->> > >
->> > > Tingwei is the author, so if I understand correctly, his signed-off-by
->> > > should appear first, am I wrong?
->> >
->> > It's a gray area and depends on who's code is more prevalent in the
->> > patch.  If Tingwei wrote the most of the code then his name is in the
->> > "from:" section, yours as co-developer and he signs off on it (as I
->> > suggested).  If you did most of the work then it is the opposite.
->> > Adding a Co-developed and a signed-off with the same name doesn't make
->> > sense.
->> >
->> 
->> I did check the documentation for submitting patches:
->> Documentation/process/submitting-patches.rst. And it clearly states
->> that "Co-developed-by must be followed by Signed-off by the co-author
->> and the last Signed-off-by: must always be that of the developer
->> submitting the patch".
->> 
->> Quoting below from the doc:
->> 
->> Co-developed-by: <snip> ...Since
->> Co-developed-by: denotes authorship, every Co-developed-by: must be
->> immediately
->> followed by a Signed-off-by: of the associated co-author.  Standard 
->> sign-off
->> procedure applies, i.e. the ordering of Signed-off-by: tags should 
->> reflect
->> the
->> chronological history of the patch insofar as possible, regardless of
->> whether
->> the author is attributed via From: or Co-developed-by:.  Notably, the 
->> last
->> Signed-off-by: must always be that of the developer submitting the 
->> patch.
-> 
-> Ah yes, glad to see that got clarified.  You can ignore my 
-> recommendation on
-> that snippet.
-> 
->> 
->> > >
->> > > >> ---
->> > > >>  .../devicetree/bindings/arm/coresight.txt     |  6 ++++
->> > > >>  drivers/hwtracing/coresight/coresight-etm4x.c | 29
->> > > >> ++++++++++++-------
->> > > >
->> > > > Please split in two patches.
->> > > >
->> > >
->> > > Sure, I will split the dt-binding into separate patch, checkpatch did
->> > > warn.
->> >
->> > And you still sent me the patch...  I usually run checkpatch before
->> > all the submissions I review and flatly ignore patches that return
->> > errors.  You got lucky...
->> >
->> 
->> I did not mean to ignore it or else I wouldn't have run checkpatch 
->> itself.
->> I checked other cases like "arm,scatter-gather" where the binding and 
->> the
->> driver change was in a single patch, hence I thought it's not a very 
->> strict
->> rule.
-> 
-> The patch has another warning for a line over 80 characters, that 
-> should have
-> been fixed before sending.  Putting DT changes in a separate patch is 
-> always
-> better for the DT people.  They review tons of patches and making their 
-> life
-> easier is always a good thing.
-> 
+for example:
+modifier				searcher
 
-Ok, I will fix this and resend. I did not want to change it in case if 
-it affects
-readability since most maintainers prefer to ignore this 80 characters 
-warning if
-it affects readability. I will keep this in mind for future patches as 
-well.
+left rotate at parent
+parent->rb_right is node
+					search to parent
+					parent->rb_right is node
+				     +->see node->rb_left changed
+WRITE_ONCE(parent->rb_right, tmp);-+ |  node->rb_left is parennt
+no smp_wmb(), some ARCHs can       | |
+reorder these two writes           | |  loop long between
+WRITE_ONCE(node->rb_left, parent);-+-+  parent and node
+				   |
+				   +--->finally see
+					parent->rb_right
 
-Thanks,
-Sai
+The long loop won't stop until the modifer's CPU flushes
+its writes. Too avoid it, we should limit the searching depth.
+There are no more than (1<<BITS_PER_LONG)-1 nodes in the tree.
+And the max_depth of a tree is no more than 2*lg(node_count+1),
+which is no mare than 2*BITS_PER_LONG.
+
+So the searching should stop when diving down up to
+2*BITS_PER_LONG depth.
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Michel Lespinasse <walken@google.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Rik van Riel <riel@redhat.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+---
+ include/linux/rbtree_latch.h | 39 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/include/linux/rbtree_latch.h b/include/linux/rbtree_latch.h
+index 7d012faa509a..638942f53c0a 100644
+--- a/include/linux/rbtree_latch.h
++++ b/include/linux/rbtree_latch.h
+@@ -102,11 +102,47 @@ __lt_erase(struct latch_tree_node *ltn, struct latch_tree_root *ltr, int idx)
+ 	rb_erase(&ltn->node[idx], &ltr->tree[idx]);
+ }
+ 
++/*
++ * Beware when rbtree is being searched in RCU read sites.
++ *
++ * lib/rbtree.c has ensured that there is not possible to
++ * inadvertently cause (temporary) loops in the tree structure
++ * as seen in program order of the modifier. But loop is still
++ * possible to be seen in searcher due to CPU's reordering.
++ *
++ * for example:
++ * modifier				   searcher
++ *
++ * left rotate at parent		   search to parent
++ * parent->rb_right is node		   parent->rb_right is node
++ *					+->see node->rb_left changed
++ * WRITE_ONCE(parent->rb_right, tmp);-+ |  node->rb_left is parennt
++ * no smp_wmb(), some ARCHs can       | |
++ * reorder these two writes           | |  loop long between
++ * WRITE_ONCE(node->rb_left, parent);-+-+  parent and node
++ *				      |
++ *				      +--->finally see
++ *					   parent->rb_right
++ *
++ * The long loop won't stop until the searcher finally see the changes
++ * from the modifier. Too avoid it, we should limit the searching depth.
++ *
++ * Limited by the address space of the kernel, there are no more than
++ * (1<<BITS_PER_LONG)-1 nodes in the tree. And the max_depth of a tree is
++ * no more than 2*lg(node_count+1), which is no mare than 2*BITS_PER_LONG.
++ *
++ * So the searching should stop when diving down up to
++ * 2*BITS_PER_LONG depth.
++ *
++ * Note: the above problem is not subject to the TSO memory model, such as
++ * x86, which can dispense with the depth check.
++ */
+ static __always_inline struct latch_tree_node *
+ __lt_find(void *key, struct latch_tree_root *ltr, int idx,
+ 	  int (*comp)(void *key, struct latch_tree_node *node))
+ {
+ 	struct rb_node *node = rcu_dereference_raw(ltr->tree[idx].rb_node);
++	int depth = 2 * BITS_PER_LONG;
+ 	struct latch_tree_node *ltn;
+ 	int c;
+ 
+@@ -120,6 +156,9 @@ __lt_find(void *key, struct latch_tree_root *ltr, int idx,
+ 			node = rcu_dereference_raw(node->rb_right);
+ 		else
+ 			return ltn;
++
++		if (!IS_ENABLED(CONFIG_X86) && (--depth < 0))
++			break;
+ 	}
+ 
+ 	return NULL;
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.20.1
+
