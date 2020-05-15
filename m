@@ -2,146 +2,138 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F94C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D41C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDA92065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9592065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:45:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VgV4vnHk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xP+CinPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgEOKo7 (ORCPT
+        id S1728427AbgEOKp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:44:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55768 "EHLO
+        Fri, 15 May 2020 06:45:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728013AbgEOKo6 (ORCPT
+        with ESMTP id S1728213AbgEOKpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:44:58 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABCDC061A0C;
-        Fri, 15 May 2020 03:44:56 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id 188so1397410lfa.10;
-        Fri, 15 May 2020 03:44:56 -0700 (PDT)
+        Fri, 15 May 2020 06:45:24 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F1BC05BD09
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 03:45:23 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l18so2976695wrn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 03:45:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RP/C+T1G9Ut2iOKolnfVAMBSxN8RIC6J9bPF0F0wsOU=;
-        b=VgV4vnHk/xDyNeMazwEiccDn0tx607GkqAOjIVpkNcQlpKA0yk6QiIq2iiw/SvrSMB
-         /9T4YYOqWgMKy3laVmhj6LZUdWgwoI8hGn47Dm0lPfoPycjfU6/wMY1nl29Fao6HPGAM
-         IUyMLt/wNsvIUCri6O4MQM7X4ETd6JL163HEvI61Wu8j/lpbVYHQK8LOQEYoGqlyiy8v
-         dhgExbU/7wjjZ5mWJCq05sx5zobMgfSBZuJkoRRgZoeg530AGaW6dfWL+HC+0xOaCOc5
-         7ya49tN5yXHlC12FfLWHVvjka9pwf8SJ/y7szscZMq2whuiUq5QemangKzSbVyXtIL68
-         Dd9g==
+        d=linaro.org; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Cd7qB8BAMww/iv9WmCLhIPHREYnAoZQ6w79B6P0E6xg=;
+        b=xP+CinPdhHJdBjl9cEQqmu4DEA3UtVXZdBP7jqRNyAo0v9749k2ET+YUkOxJpV8x48
+         /zi9CEO2JexEpMGzWxjP+uS7KXXviQr7dpYE8UAf3Yhvjt9YIOIeSMSlQ6arlBHRgllI
+         GSyelo7kJIw2le571fQUHCKuHVftyT/NiPioOYLVs6camgsZAbgkYFMSwOu7e0nwDQB6
+         a66nTFdjPwh+BuzvO8QOtsWxvH/AFnK4HGT8J7Yxoybk1PSqW7a62ZOMEAodFlT86hS5
+         0iw+hj9gW3zvmz1F0DySLxkKplkE60LPynfbBQtp7qra3lLh2Qoqa+pqhfZeVVv8unTh
+         Z1tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RP/C+T1G9Ut2iOKolnfVAMBSxN8RIC6J9bPF0F0wsOU=;
-        b=qOd1kp5WQhzrb7JYhcDMid2k+Lw0hCrXkN8g5euwtwQaI/BUgI9EHqb9JceckVgD/t
-         cvLLzJF3dZRgOwP8y1L4DwQjNAW4Iap9+l/cBiSzWqaljQQOhNjpvfwHWOmrG8i9EWFo
-         VWUqh9VtLmyFbn8sNLSATNyBtFJoJmmfDmI0Y0a1koyciUkKvR7pSh8gylsQlOwwalfj
-         KvANTVuZsu6PgiBEyjN29EEbsJeg50IsV2q9X4zecsKtLiJg4JStwga2uR1U8t+PWRa8
-         NpPllxATe/WRE6YtxVVNWflQouL89PlvObZeL9yA7hmlFXyxOk9KOqyxA36u/HYUwSVR
-         U6AQ==
-X-Gm-Message-State: AOAM5316VJ2h+ZCR7pFHA4C05Im1jRGfohBuEnqWV3qvdw2FBwf+CFJH
-        7lkK5YNieQ8QzZ3Sf0tsMQcOEsSkROfQDFIZBOg=
-X-Google-Smtp-Source: ABdhPJwrShfI7gSIURk9dxTDqiEefZ5tzPAA1hhJWtIIiOZzjgjSBp4ntBv8ZrLyRmdnBk7A5M2eKz4h7R+uK1TVd10=
-X-Received: by 2002:ac2:5212:: with SMTP id a18mr1971443lfl.83.1589539495366;
- Fri, 15 May 2020 03:44:55 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Cd7qB8BAMww/iv9WmCLhIPHREYnAoZQ6w79B6P0E6xg=;
+        b=ZpAIzn+Rz3K+rlot+Svh6DlGsCEXhNBu26BSIlghdq70/M8nstC5UOmWAmyy09U/+m
+         W4IkcIpeUsiM2PpoiX433oXXB8QDgSA9sJssz4PFhWCRmy+JEsqutTxpR0N1fP9XwNGQ
+         Mq9nm+hXqc/DrhPv8mLvr/azP9o/F7k6VAcO8liCZb6ubcrx+UJTZZvq37F/JIvhP5TL
+         HwOpMBYgJO/ZEbVlohBmuxpeQZsUZhrhMnrtyfJPE0WO+uM3jmN9/Q0JL8lmoUtgBT9w
+         3IfyZKfFQKAPz4aSj+cUe00h1eO9i6z4H4dLqN4nfRyqFNQvQGc5wb6dhb9l6cBbk0jg
+         g53A==
+X-Gm-Message-State: AOAM533znwEgUOQbBz5MrO7PbZ0dGldzCjSkB++/BOnXpMa52Stek261
+        lVSNTVS5bAGXoTYiUz/NYCaDiQ==
+X-Google-Smtp-Source: ABdhPJzbfw5o04oHo9dS73R/kDPCPBnMrv+TxxiUYGhV32BiVaTVeZw53f6QhVV5pucVUf2qfhjPXw==
+X-Received: by 2002:adf:dd01:: with SMTP id a1mr3533148wrm.224.1589539522608;
+        Fri, 15 May 2020 03:45:22 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id b14sm3022482wmb.18.2020.05.15.03.45.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 03:45:21 -0700 (PDT)
+Date:   Fri, 15 May 2020 11:45:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     devicetree@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] mfd: Introduce QTI I2C PMIC controller
+Message-ID: <20200515104520.GK271301@dell>
+References: <cover.1588115326.git.gurus@codeaurora.org>
+ <5644dea146f8b49a5b827c56392ff916bfb343e9.1588115326.git.gurus@codeaurora.org>
+ <20200429075010.GX3559@dell>
+ <20200501011319.GA28441@codeaurora.org>
 MIME-Version: 1.0
-References: <20200515021731.cb5y557wsxf66fo3@debian.debian-2>
- <SN4PR0401MB35985CFC199D20362EBFD8E09BBD0@SN4PR0401MB3598.namprd04.prod.outlook.com>
- <CAKq8=3KyewqQLdo-GjERuOfKe5ZrmQ+bRPfFRWiyZkjdEVvSeA@mail.gmail.com> <SN4PR0401MB35989B816CB1DA4BCB75B1FC9BBD0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-In-Reply-To: <SN4PR0401MB35989B816CB1DA4BCB75B1FC9BBD0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-From:   Bo YU <tsu.yubo@gmail.com>
-Date:   Fri, 15 May 2020 18:44:44 +0800
-Message-ID: <CAKq8=3L7u05wneTt=DRPNU6dCrg=OMN-Zcp9XgTcd3MWbjPKUg@mail.gmail.com>
-Subject: Re: [PATCH -next] fs/btrfs: Fix unlocking in btrfs_ref_tree_mod
-To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Cc:     "clm@fb.com" <clm@fb.com>,
-        "josef@toxicpanda.com" <josef@toxicpanda.com>,
-        "sterba@suse.com" <sterba@suse.com>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200501011319.GA28441@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 5:36 PM Johannes Thumshirn
-<Johannes.Thumshirn@wdc.com> wrote:
->
-> On 15/05/2020 11:24, Bo YU wrote:
-> > Hi,
-> > On Fri, May 15, 2020 at 5:03 PM Johannes Thumshirn
-> > <Johannes.Thumshirn@wdc.com> wrote:
-> >>
-> >> On 15/05/2020 04:17, Bo YU wrote:
-> >>> It adds spin_lock() in add_block_entry() but out path does not unlock
-> >>> it.
-> >>
-> >> Which call path doesn't unlock it? There is an out_unlock label with a
-> >> spin_unlock() right above your insert. So either coverity messed something
-> >> up or the call path that needs the unlock has to jump to out_unlock instead
-> >> of out.
-> > This is out label without unlocking it. It will be offered spin_lock
-> > in add_block_entry()
-> > for be. But here I was worried about that unlock it in if() whether it
-> > is right or not.
-> >
->
-> No add_block_entry() returns with the ref_verify_lock held on success only:
-> static struct block_entry *add_block_entry(struct btrfs_fs_info *fs_info,
->                                            u64 bytenr, u64 len,
->                                            u64 root_objectid)
-> {
->         struct block_entry *be = NULL, *exist;
->         struct root_entry *re = NULL;
->
->         re = kzalloc(sizeof(struct root_entry), GFP_KERNEL);
->         be = kzalloc(sizeof(struct block_entry), GFP_KERNEL);
->         if (!be || !re) {
->                 kfree(re);
->                 kfree(be);
->                 return ERR_PTR(-ENOMEM);
->         }
->         be->bytenr = bytenr;
->         be->len = len;
->
->         re->root_objectid = root_objectid;
->         re->num_refs = 0;
->
->         spin_lock(&fs_info->ref_verify_lock);
-> [...]
->
->
-> While the code caller checks for an error:
->
-> if (action == BTRFS_ADD_DELAYED_EXTENT) {
->                 /*
->                  * For subvol_create we'll just pass in whatever the parent root
->                  * is and the new root objectid, so let's not treat the passed
->                  * in root as if it really has a ref for this bytenr.
->                  */
->                 be = add_block_entry(fs_info, bytenr, num_bytes, ref_root);
->                 if (IS_ERR(be)) {
->                         kfree(ref);
->                         kfree(ra);
->                         ret = PTR_ERR(be);
->                         goto out;
->                 }
->
-> So if add_block_entry returns -ENOMEM it didn't take the lock and thus no unlock
-> is needed.
-Ok,  I got it. Please drop it.
-Thank you!
->
-> Or did I miss something?
+On Thu, 30 Apr 2020, Guru Das Srinagesh wrote:
+
+> On Wed, Apr 29, 2020 at 08:50:10AM +0100, Lee Jones wrote:
+> > On Tue, 28 Apr 2020, Guru Das Srinagesh wrote:
+> > 
+> > > The Qualcomm Technologies, Inc. I2C PMIC Controller is used by
+> > > multi-function PMIC devices which communicate over the I2C bus.  The
+> > > controller enumerates all child nodes as platform devices, and
+> > > instantiates a regmap interface for them to communicate over the I2C
+> > > bus.
+> > > 
+> > > The controller also controls interrupts for all of the children platform
+> > > devices.  The controller handles the summary interrupt by deciphering
+> > > which peripheral triggered the interrupt, and which of the peripheral
+> > > interrupts were triggered.  Finally, it calls the interrupt handlers for
+> > > each of the virtual interrupts that were registered.
+> > > 
+> > > Nicholas Troast is the original author of this driver.
+> > > 
+> > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> > > ---
+> > >  drivers/mfd/Kconfig         |  11 +
+> > >  drivers/mfd/Makefile        |   1 +
+> > >  drivers/mfd/qcom-i2c-pmic.c | 737 ++++++++++++++++++++++++++++++++++++++++++++
+> > 
+> > The vast majority of this driver deals with IRQ handling.  Why can't
+> > this be split out into its own IRQ Chip driver and moved to
+> > drivers/irqchip?
+> 
+> There appear to be quite a few in-tree MFD drivers that register IRQ
+> controllers, like this driver does:
+> 
+> $ grep --exclude-dir=.git -rnE "irq_domain_(add|create).+\(" drivers/mfd | wc -l
+> 23
+> 
+> As a further example, drivers/mfd/stpmic1.c closely resembles this
+> driver in that it uses both devm_regmap_add_irq_chip() as well as
+> devm_of_platform_populate().
+> 
+> As such, it seems like this driver is in line with some of the
+> architectural choices that have been accepted in already-merged drivers.
+> Could you please elaborate on your concerns?
+
+It is true that *basic* IRQ domain support has been added to these
+drivers in the past.  However, IMHO the support added to this driver
+goes beyond those realms such that it would justify a driver of its
+own.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
