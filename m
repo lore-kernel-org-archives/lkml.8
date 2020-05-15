@@ -2,148 +2,142 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C20DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F38CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FEBA20671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F06D20643
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgEOBtN (ORCPT
+        id S1727899AbgEOB6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 21:49:13 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49342 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726100AbgEOBtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 21:49:13 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E464DE8851E4BA132951;
-        Fri, 15 May 2020 09:49:10 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.101) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Fri, 15 May 2020
- 09:49:03 +0800
-Subject: Re: [RFC PATCH 2/3] cpufreq: Add SW BOOST support for drivers without
- frequency table
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC:     <viresh.kumar@linaro.org>, <Souvik.Chakravarty@arm.com>,
-        <Thanu.Rangarajan@arm.com>, <Sudeep.Holla@arm.com>,
-        <guohanjun@huawei.com>, <john.garry@huawei.com>,
-        <jonathan.cameron@huawei.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1588929064-30270-1-git-send-email-wangxiongfeng2@huawei.com>
- <1588929064-30270-3-git-send-email-wangxiongfeng2@huawei.com>
- <5858421.kfVlu25t0p@kreacher>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <7325b64c-85f7-21fe-3860-faa10ab1cf21@huawei.com>
-Date:   Fri, 15 May 2020 09:49:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 14 May 2020 21:58:03 -0400
+Received: from mo-csw1514.securemx.jp ([210.130.202.153]:60968 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727029AbgEOB6D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 21:58:03 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1514) id 04F1vpEE019955; Fri, 15 May 2020 10:57:51 +0900
+X-Iguazu-Qid: 34trWq5axJpfcHTLpk
+X-Iguazu-QSIG: v=2; s=0; t=1589507870; q=34trWq5axJpfcHTLpk; m=w5eBYxUhChjcH2wqSnG8reWK/fF+ZPfw05MuqPGwb3Q=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1513) id 04F1vmF5022340;
+        Fri, 15 May 2020 10:57:49 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id 04F1vm6H012841;
+        Fri, 15 May 2020 10:57:48 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 04F1vmkV011077;
+        Fri, 15 May 2020 10:57:48 +0900
+From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        daniel.sangorrin@toshiba.co.jp,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] e1000e: Relax condition to trigger reset for ME workaround
+References: <20200512044347.3810257-1-punit1.agrawal@toshiba.co.jp>
+        <CAKgT0Uf86d8wnAMSLO4hn4+mfCH5fP4e8OsAYknE0m3Y7in9gw@mail.gmail.com>
+Date:   Fri, 15 May 2020 10:57:47 +0900
+In-Reply-To: <CAKgT0Uf86d8wnAMSLO4hn4+mfCH5fP4e8OsAYknE0m3Y7in9gw@mail.gmail.com>
+        (Alexander Duyck's message of "Thu, 14 May 2020 07:57:31 -0700")
+X-TSB-HOP: ON
+Message-ID: <87v9kym02s.fsf@kokedama.swc.toshiba.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <5858421.kfVlu25t0p@kreacher>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.101]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Alexander Duyck <alexander.duyck@gmail.com> writes:
 
-
-On 2020/5/14 22:16, Rafael J. Wysocki wrote:
-> On Friday, May 8, 2020 11:11:03 AM CEST Xiongfeng Wang wrote:
->> Software-managed BOOST get the boost frequency by check the flag
->> CPUFREQ_BOOST_FREQ at driver's frequency table. But some cpufreq driver
->> don't have frequency table and use other methods to get the frequency
->> range, such CPPC cpufreq driver.
+> On Mon, May 11, 2020 at 9:45 PM Punit Agrawal
+> <punit1.agrawal@toshiba.co.jp> wrote:
 >>
->> To add SW BOOST support for drivers without frequency table, we add
->> members in 'cpufreq_policy.cpufreq_cpuinfo' to record the max frequency
->> of boost mode and non-boost mode. The cpufreq driver initialize these two
->> members when probing.
+>> It's an error if the value of the RX/TX tail descriptor does not match
+>> what was written. The error condition is true regardless the duration
+>> of the interference from ME. But the code only performs the reset if
+>> E1000_ICH_FWSM_PCIM2PCI_COUNT (2000) iterations of 50us delay have
+>> transpired. The extra condition can lead to inconsistency between the
+>> state of hardware as expected by the driver.
 >>
->> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+>> Fix this by dropping the check for number of delay iterations.
+>>
+>> Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+>> Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+>> Cc: "David S. Miller" <davem@davemloft.net>
+>> Cc: intel-wired-lan@lists.osuosl.org
+>> Cc: netdev@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
 >> ---
->>  drivers/cpufreq/cpufreq.c | 23 +++++++++++++++--------
->>  include/linux/cpufreq.h   |  2 ++
->>  2 files changed, 17 insertions(+), 8 deletions(-)
+>> Hi,
 >>
->> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
->> index 475fb1b..a299426 100644
->> --- a/drivers/cpufreq/cpufreq.c
->> +++ b/drivers/cpufreq/cpufreq.c
->> @@ -2508,15 +2508,22 @@ static int cpufreq_boost_set_sw(int state)
->>  	int ret = -EINVAL;
->>  
->>  	for_each_active_policy(policy) {
->> -		if (!policy->freq_table)
->> -			continue;
->> -
->> -		ret = cpufreq_frequency_table_cpuinfo(policy,
->> +		if (policy->freq_table) {
->> +			ret = cpufreq_frequency_table_cpuinfo(policy,
->>  						      policy->freq_table);
->> -		if (ret) {
->> -			pr_err("%s: Policy frequency update failed\n",
->> -			       __func__);
->> -			break;
->> +			if (ret) {
->> +				pr_err("%s: Policy frequency update failed\n",
->> +				       __func__);
->> +				break;
->> +			}
->> +		} else if (policy->cpuinfo.boost_max_freq) {
->> +			if (state)
->> +				policy->max = policy->cpuinfo.boost_max_freq;
->> +			else
->> +				policy->max = policy->cpuinfo.nonboost_max_freq;
->> +			policy->cpuinfo.max_freq = policy->max;
->> +		} else {
->> +			continue;
->>  		}
-> 
-> Why do you need to update this function?
-
-My original thought is to reuse the current SW BOOST code as possible, but this
-seems to change the cpufreq core too much.
-
-> 
-> The driver should be able to provide its own ->set_boost callback just fine,
-> shouldn't it?
-
-Thanks for your advice. This is better. I will provide a '->set_boost' callback
-for CPPC driver. But I will need to export 'cpufreq_policy_list' and make the
-macro 'for_each_active_policy' public.
-
-Thanks,
-Xiongfeng
-
-> 
->>  
->>  		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
->> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
->> index 018dce8..c3449e6 100644
->> --- a/include/linux/cpufreq.h
->> +++ b/include/linux/cpufreq.h
->> @@ -43,6 +43,8 @@ enum cpufreq_table_sorting {
->>  struct cpufreq_cpuinfo {
->>  	unsigned int		max_freq;
->>  	unsigned int		min_freq;
->> +	unsigned int		boost_max_freq;
->> +	unsigned int		nonboost_max_freq;
->>  
->>  	/* in 10^(-9) s = nanoseconds */
->>  	unsigned int		transition_latency;
+>> The issue was noticed through code inspection while backporting the
+>> workaround for TDT corruption. Sending it out as an RFC as I am not
+>> familiar with the hardware internals of the e1000e.
 >>
-> 
-> 
-> 
-> 
-> 
-> .
-> 
+>> Another unresolved question is the inherent racy nature of the
+>> workaround - the ME could block access again after releasing the
+>> device (i.e., BIT(E1000_ICH_FWSM_PCIM2PCI) clear) but before the
+>> driver performs the write. Has this not been a problem?
+>>
+>> Any feedback on the patch or the more information on the issues
+>> appreciated.
+>>
+>> Thanks,
+>> Punit
+>>
+>>  drivers/net/ethernet/intel/e1000e/netdev.c | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+>> index 177c6da80c57..5ed4d7ed35b3 100644
+>> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
+>> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+>> @@ -607,11 +607,11 @@ static void e1000e_update_rdt_wa(struct e1000_ring *rx_ring, unsigned int i)
+>>  {
+>>         struct e1000_adapter *adapter = rx_ring->adapter;
+>>         struct e1000_hw *hw = &adapter->hw;
+>> -       s32 ret_val = __ew32_prepare(hw);
+>>
+>> +       __ew32_prepare(hw);
+>>         writel(i, rx_ring->tail);
+>>
+>> -       if (unlikely(!ret_val && (i != readl(rx_ring->tail)))) {
+>> +       if (unlikely(i != readl(rx_ring->tail))) {
+>>                 u32 rctl = er32(RCTL);
+>>
+>>                 ew32(RCTL, rctl & ~E1000_RCTL_EN);
+>> @@ -624,11 +624,11 @@ static void e1000e_update_tdt_wa(struct e1000_ring *tx_ring, unsigned int i)
+>>  {
+>>         struct e1000_adapter *adapter = tx_ring->adapter;
+>>         struct e1000_hw *hw = &adapter->hw;
+>> -       s32 ret_val = __ew32_prepare(hw);
+>>
+>> +       __ew32_prepare(hw);
+>>         writel(i, tx_ring->tail);
+>>
+>> -       if (unlikely(!ret_val && (i != readl(tx_ring->tail)))) {
+>> +       if (unlikely(i != readl(tx_ring->tail))) {
+>>                 u32 tctl = er32(TCTL);
+>>
+>>                 ew32(TCTL, tctl & ~E1000_TCTL_EN);
+>
+> You are eliminating the timeout check in favor of just verifying if
+> the write succeeded or not. Seems pretty straight forward to me.
+>
+> One other change you may consider making would be to drop the return
+> value from __ew32_prepare since it doesn't appear to be used anywhere,
+> make the function static, and maybe get rid of the prototype in
+> e1000.h.
+>
+> Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
+Thanks! I will send out an update dropping the return and the prototype.
