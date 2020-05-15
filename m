@@ -2,38 +2,38 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6240C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 877ED207C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AB84207CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgEPAKk (ORCPT
+        id S1728417AbgEPAMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 20:10:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41038 "EHLO
+        Fri, 15 May 2020 20:12:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726247AbgEPAKi (ORCPT
+        by vger.kernel.org with ESMTP id S1727790AbgEPAKj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 20:10:38 -0400
+        Fri, 15 May 2020 20:10:39 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67965C05BD09
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 17:10:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90209C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 17:10:39 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jZkP2-00022I-Iw; Sat, 16 May 2020 02:10:08 +0200
+        id 1jZkP7-00026Z-H6; Sat, 16 May 2020 02:10:13 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 13D39100605;
-        Sat, 16 May 2020 02:10:08 +0200 (CEST)
-Message-Id: <20200515235124.466962628@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 0A3A7100605;
+        Sat, 16 May 2020 02:10:13 +0200 (CEST)
+Message-Id: <20200515235124.891319901@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sat, 16 May 2020 01:45:48 +0200
+Date:   Sat, 16 May 2020 01:45:52 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V6 01/37] tracing/hwlat: Use ktime_get_mono_fast_ns()
+Subject: [patch V6 05/37] genirq: Provide irq_enter/exit_rcu()
 References: <20200515234547.710474468@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,148 +71,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Timestamping in the hardware latency detector uses sched_clock() underneath
-and depends on CONFIG_GENERIC_SCHED_CLOCK=n because sched clocks from that
-subsystem are not NMI safe.
 
-ktime_get_mono_fast_ns() is NMI safe and available on all architectures.
-
-Replace the time getter, get rid of the CONFIG_GENERIC_SCHED_CLOCK=n
-dependency and cleanup the horrible macro maze which encapsulates u64 math
-in u64 macros.
+irq_enter()/exit() include the RCU handling. To properly separate the RCU
+handling provide variants which contain only the non-RCU related
+functionality.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- kernel/trace/trace_hwlat.c |   59 +++++++++++++++++++--------------------------
- 1 file changed, 25 insertions(+), 34 deletions(-)
 
---- a/kernel/trace/trace_hwlat.c
-+++ b/kernel/trace/trace_hwlat.c
-@@ -131,29 +131,19 @@ static void trace_hwlat_sample(struct hw
- 		trace_buffer_unlock_commit_nostack(buffer, event);
+diff --git a/include/linux/hardirq.h b/include/linux/hardirq.h
+index a4c5a1df067e..f6f25fab34cb 100644
+--- a/include/linux/hardirq.h
++++ b/include/linux/hardirq.h
+@@ -43,7 +43,11 @@ extern void rcu_nmi_exit(void);
+ /*
+  * Enter irq context (on NO_HZ, update jiffies):
+  */
+-extern void irq_enter(void);
++void irq_enter(void);
++/*
++ * Like irq_enter(), but RCU is already watching.
++ */
++void irq_enter_rcu(void);
+ 
+ /*
+  * Exit irq context without processing softirqs:
+@@ -58,7 +62,12 @@ extern void irq_enter(void);
+ /*
+  * Exit irq context and process softirqs if needed:
+  */
+-extern void irq_exit(void);
++void irq_exit(void);
++
++/*
++ * Like irq_exit(), but return with RCU watching.
++ */
++void irq_exit_rcu(void);
+ 
+ #ifndef arch_nmi_enter
+ #define arch_nmi_enter()	do { } while (0)
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index a47c6dd57452..beb8e3a66c7c 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -339,12 +339,11 @@ asmlinkage __visible void do_softirq(void)
+ 	local_irq_restore(flags);
  }
  
--/* Macros to encapsulate the time capturing infrastructure */
--#define time_type	u64
--#define time_get()	trace_clock_local()
--#define time_to_us(x)	div_u64(x, 1000)
--#define time_sub(a, b)	((a) - (b))
--#define init_time(a, b)	(a = b)
--#define time_u64(a)	a
--
-+/*
-+ * Timestamping uses ktime_get_mono_fast(), the NMI safe access to
-+ * CLOCK_MONOTONIC.
-+ */
- void trace_hwlat_callback(bool enter)
- {
- 	if (smp_processor_id() != nmi_cpu)
- 		return;
- 
--	/*
--	 * Currently trace_clock_local() calls sched_clock() and the
--	 * generic version is not NMI safe.
--	 */
--	if (!IS_ENABLED(CONFIG_GENERIC_SCHED_CLOCK)) {
--		if (enter)
--			nmi_ts_start = time_get();
--		else
--			nmi_total_ts += time_get() - nmi_ts_start;
--	}
-+	if (enter)
-+		nmi_ts_start = ktime_get_mono_fast_ns();
-+	else
-+		nmi_total_ts += ktime_get_mono_fast_ns() - nmi_ts_start;
- 
- 	if (enter)
- 		nmi_count++;
-@@ -165,20 +155,22 @@ void trace_hwlat_callback(bool enter)
-  * Used to repeatedly capture the CPU TSC (or similar), looking for potential
-  * hardware-induced latency. Called with interrupts disabled and with
-  * hwlat_data.lock held.
-+ *
-+ * Use ktime_get_mono_fast() here as well because it does not wait on the
-+ * timekeeping seqcount like ktime_get_mono().
+-/*
+- * Enter an interrupt context.
++/**
++ * irq_enter_rcu - Enter an interrupt context with RCU watching
   */
- static int get_sample(void)
+-void irq_enter(void)
++void irq_enter_rcu(void)
  {
- 	struct trace_array *tr = hwlat_trace;
- 	struct hwlat_sample s;
--	time_type start, t1, t2, last_t2;
-+	u64 start, t1, t2, last_t2, thresh;
- 	s64 diff, outer_diff, total, last_total = 0;
- 	u64 sample = 0;
--	u64 thresh = tracing_thresh;
- 	u64 outer_sample = 0;
- 	int ret = -1;
- 	unsigned int count = 0;
- 
--	do_div(thresh, NSEC_PER_USEC); /* modifies interval value */
-+	thresh = div_u64(tracing_thresh, NSEC_PER_USEC);
- 
- 	nmi_cpu = smp_processor_id();
- 	nmi_total_ts = 0;
-@@ -188,18 +180,20 @@ static int get_sample(void)
- 
- 	trace_hwlat_callback_enabled = true;
- 
--	init_time(last_t2, 0);
--	start = time_get(); /* start timestamp */
-+	/* start timestamp */
-+	start = ktime_get_mono_fast_ns();
- 	outer_diff = 0;
-+	last_t2 = 0;
- 
- 	do {
- 
--		t1 = time_get();	/* we'll look for a discontinuity */
--		t2 = time_get();
-+		/* we'll look for a discontinuity */
-+		t1 = ktime_get_mono_fast_ns();
-+		t2 = ktime_get_mono_fast_ns();
- 
--		if (time_u64(last_t2)) {
-+		if (last_t2) {
- 			/* Check the delta from outer loop (t2 to next t1) */
--			outer_diff = time_to_us(time_sub(t1, last_t2));
-+			outer_diff = div_u64(t1 - last_t2, NSEC_PER_USEC);
- 			/* This shouldn't happen */
- 			if (outer_diff < 0) {
- 				pr_err(BANNER "time running backwards\n");
-@@ -210,7 +204,8 @@ static int get_sample(void)
- 		}
- 		last_t2 = t2;
- 
--		total = time_to_us(time_sub(t2, start)); /* sample width */
-+		/* sample width */
-+		total = div_u64(t2 - start, NSEC_PER_USEC);
- 
- 		/* Check for possible overflows */
- 		if (total < last_total) {
-@@ -220,7 +215,7 @@ static int get_sample(void)
- 		last_total = total;
- 
- 		/* This checks the inner loop (t1 to t2) */
--		diff = time_to_us(time_sub(t2, t1));     /* current diff */
-+		diff = div_u64(t2 - t1, NSEC_PER_USEC);
- 
- 		if (diff > thresh || outer_diff > thresh) {
- 			if (!count)
-@@ -251,15 +246,11 @@ static int get_sample(void)
- 
- 		ret = 1;
- 
--		/* We read in microseconds */
--		if (nmi_total_ts)
--			do_div(nmi_total_ts, NSEC_PER_USEC);
+-	rcu_irq_enter();
+ 	if (is_idle_task(current) && !in_interrupt()) {
+ 		/*
+ 		 * Prevent raise_softirq from needlessly waking up ksoftirqd
+@@ -354,10 +353,18 @@ void irq_enter(void)
+ 		tick_irq_enter();
+ 		_local_bh_enable();
+ 	}
 -
- 		hwlat_data.count++;
- 		s.seqnum = hwlat_data.count;
- 		s.duration = sample;
- 		s.outer_duration = outer_sample;
--		s.nmi_total_ts = nmi_total_ts;
-+		s.nmi_total_ts = div_u64(nmi_total_ts, NSEC_PER_USEC);
- 		s.nmi_count = nmi_count;
- 		s.count = count;
- 		trace_hwlat_sample(&s);
+ 	__irq_enter();
+ }
+ 
++/**
++ * irq_enter - Enter an interrupt context including RCU update
++ */
++void irq_enter(void)
++{
++	rcu_irq_enter();
++	irq_enter_rcu();
++}
++
+ static inline void invoke_softirq(void)
+ {
+ 	if (ksoftirqd_running(local_softirq_pending()))
+@@ -397,10 +404,12 @@ static inline void tick_irq_exit(void)
+ #endif
+ }
+ 
+-/*
+- * Exit an interrupt context. Process softirqs if needed and possible:
++/**
++ * irq_exit_rcu() - Exit an interrupt context without updating RCU
++ *
++ * Also processes softirqs if needed and possible.
+  */
+-void irq_exit(void)
++void irq_exit_rcu(void)
+ {
+ #ifndef __ARCH_IRQ_EXIT_IRQS_DISABLED
+ 	local_irq_disable();
+@@ -413,6 +422,16 @@ void irq_exit(void)
+ 		invoke_softirq();
+ 
+ 	tick_irq_exit();
++}
++
++/**
++ * irq_exit - Exit an interrupt context, update RCU and lockdep
++ *
++ * Also processes softirqs if needed and possible.
++ */
++void irq_exit(void)
++{
++	irq_exit_rcu();
+ 	rcu_irq_exit();
+ 	 /* must be last! */
+ 	lockdep_hardirq_exit();
 
