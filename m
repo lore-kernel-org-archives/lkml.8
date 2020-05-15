@@ -2,167 +2,141 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F584C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D33DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 622A8206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 049EE206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:30:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aw48zZmW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgEOQ24 (ORCPT
+        id S1726261AbgEOQaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:28:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:58858 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbgEOQ24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:28:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 573512F;
-        Fri, 15 May 2020 09:28:55 -0700 (PDT)
-Received: from [10.57.27.64] (unknown [10.57.27.64])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 492B13F305;
-        Fri, 15 May 2020 09:28:54 -0700 (PDT)
-Subject: Re: [PATCH] iommu: Implement deferred domain attachment
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, jroedel@suse.de,
-        linux-kernel@vger.kernel.org, Tom Murphy <murphyt7@tcd.ie>,
-        jsnitsel@redhat.com
-References: <20200515094519.20338-1-joro@8bytes.org>
- <d4e1cd9e-fc83-d41a-49c0-8f14f44b2701@arm.com>
- <20200515161400.GZ18353@8bytes.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e7bdcbf1-a713-618d-3e02-037f509a17e9@arm.com>
-Date:   Fri, 15 May 2020 17:28:53 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 15 May 2020 12:30:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726162AbgEOQaQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 12:30:16 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7447AC061A0C;
+        Fri, 15 May 2020 09:30:16 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id x20so2688749ejb.11;
+        Fri, 15 May 2020 09:30:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hbfeRIKdWre9WvsAQKF446bIFocBJT9zt7xvIEJNE8U=;
+        b=Aw48zZmWUp8zyE2RVrFrRfE6jdinw/kwE65P1fNNbNUot+CswwkN0SxtZv46YVC49O
+         TYfMIfDAWeYur9yj/1Qji+smQ9EV71thycX/Rs3KSQkRzueejFvzXfd0S1BOZnggvE8j
+         kwAdSqJUJnQl8Pv+bGr4ZbhMLZ68ylyAFrCTJKggunxY8wwZDI2XYs4TlnSinXAqWcsc
+         5ObekLJNZ3poxKkPruq2VXAAk6tps1mkGwWg0Id5GpRgJ1zchGxTq2krRkXgcw+7QRXQ
+         yWJMmXmiCAQ7RY8a0p8pqtVieHOBKfSTZYAXMhn+nNN43W5FXnu9sghD43XGgy+COl4I
+         Hu0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hbfeRIKdWre9WvsAQKF446bIFocBJT9zt7xvIEJNE8U=;
+        b=CriWyVjBftDdTu6sRjqqbzO+0NesgyjpH/20fYXP1h2g3hH6muAVIzpGxAIDkj+sr6
+         uc26ObF+eCgDVnoLC8h0D7kmO4juxM/O4SyeN61kmmehtVXl8uhDOoPHM0axtcMnQNPM
+         wTr530Li0YpOSxO0b4PHhThMOUrabmufZ29WltP4WHp0AdrgBID9ToanFpdgFnkwupC6
+         Qpyk1qmIbrSBgkdCqr+6x/2IbA1X0o68BYiN0yP/VFQAxAVK0/TQ7l1pEPvaImbFqyjN
+         y8UuZzOOL68bF4I/gREF2vWb48CJ6P7epTozJS0tvLXpNPiFF5u1kjIz4XcfAo4PYI2J
+         NC6w==
+X-Gm-Message-State: AOAM531xJYpxxoQ13JQGhRHlTUfvdL3NoxNGYIXtpUANzy+ju7D3FM0L
+        pYWLaOcQw+TgujDBfUFMiKRTWRScw6ZYPbgFjTs=
+X-Google-Smtp-Source: ABdhPJw/hoHIGtZ88S8c8KUEHlOImAzFp7L0wnH7gS4sCyYz4HLzzXQD78TY6vWYmDSpC9K6SumOL39cKjrsSZejF+w=
+X-Received: by 2002:a17:906:add7:: with SMTP id lb23mr3731728ejb.6.1589560215122;
+ Fri, 15 May 2020 09:30:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200515161400.GZ18353@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200515031813.30283-1-xulin.sun@windriver.com>
+In-Reply-To: <20200515031813.30283-1-xulin.sun@windriver.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 15 May 2020 19:30:04 +0300
+Message-ID: <CA+h21hqOOdaogK2SqWioLz9+=9LPqPsZ1xgvrwDA0G_kotN8ew@mail.gmail.com>
+Subject: Re: [PATCH] net: mscc: ocelot: replace readx_poll_timeout with readx_poll_timeout_atomic
+To:     Xulin Sun <xulin.sun@windriver.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, xulinsun@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-15 17:14, Joerg Roedel wrote:
-> On Fri, May 15, 2020 at 04:42:23PM +0100, Robin Murphy wrote:
->>>    struct iommu_domain *iommu_get_dma_domain(struct device *dev)
->>>    {
->>> -	return dev->iommu_group->default_domain;
->>> +	struct iommu_domain *domain = dev->iommu_group->default_domain;
->>> +
->>> +	if (__iommu_is_attach_deferred(domain, dev))
->>> +		__iommu_attach_device_no_defer(domain, dev);
->>
->> This raises a red flag, since iommu-dma already has explicit deferred attach
->> handling where it should need it, immediately after this is called to
->> retrieve the domain. The whole thing smells to me like we should have an
->> explicit special-case in iommu_probe_device() rather than hooking
->> __iommu_attach_device() in general then having to bodge around the fallout
->> elsewhere.
-> 
-> Good point, I missed that. But it didn't work for its only user, the
-> AMD IOMMU driver, the reason is that it calls iommu_attach_device(),
-> which in its code-path checks for deferred attaching again and bails
-> out, without do the real attachment.
-> 
-> But below updated fix should work. Jerry, could you please test it
-> again?
-> 
->  From 4e262dedcd36c7572312c65e66416da74fc78047 Mon Sep 17 00:00:00 2001
-> From: Joerg Roedel <jroedel@suse.de>
-> Date: Fri, 15 May 2020 11:25:03 +0200
-> Subject: [PATCH] iommu: Fix deferred domain attachment
-> 
-> The IOMMU core code has support for deferring the attachment of a domain
-> to a device. This is needed in kdump kernels where the new domain must
-> not be attached to a device before the device driver takes it over.
-> 
-> When the AMD IOMMU driver got converted to use the dma-iommu
-> implementation, the deferred attaching got lost. The code in
-> dma-iommu.c has support for deferred attaching, but it calls into
-> iommu_attach_device() to actually do it. But iommu_attach_device()
-> will check if the device should be deferred in it code-path and do
-> nothing, breaking deferred attachment.
-> 
-> Provide a function in IOMMU core code to reliably attach a device to a
-> domain without any deferred checks and also without other safe-guards.
-> 
-> Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-> Cc: Tom Murphy <murphyt7@tcd.ie>
-> Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> Fixes: 795bbbb9b6f8 ("iommu/dma-iommu: Handle deferred devices")
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Hi Xulin,
+
+On Fri, 15 May 2020 at 06:23, Xulin Sun <xulin.sun@windriver.com> wrote:
+>
+> This fixes call trace like below to use atomic safe API:
+>
+> BUG: sleeping function called from invalid context at drivers/net/ethernet/mscc/ocelot.c:59
+> in_atomic(): 1, irqs_disabled(): 0, pid: 3778, name: ifconfig
+> INFO: lockdep is turned off.
+> Preemption disabled at:
+> [<ffff2b163c83b78c>] dev_set_rx_mode+0x24/0x40
+> Hardware name: LS1028A RDB Board (DT)
+> Call trace:
+> dump_backtrace+0x0/0x140
+> show_stack+0x24/0x30
+> dump_stack+0xc4/0x10c
+> ___might_sleep+0x194/0x230
+> __might_sleep+0x58/0x90
+> ocelot_mact_forget+0x74/0xf8
+> ocelot_mc_unsync+0x2c/0x38
+> __hw_addr_sync_dev+0x6c/0x130
+> ocelot_set_rx_mode+0x8c/0xa0
+> __dev_set_rx_mode+0x58/0xa0
+> dev_set_rx_mode+0x2c/0x40
+> __dev_open+0x120/0x190
+> __dev_change_flags+0x168/0x1c0
+> dev_change_flags+0x3c/0x78
+> devinet_ioctl+0x6c4/0x7c8
+> inet_ioctl+0x2b8/0x2f8
+> sock_do_ioctl+0x54/0x260
+> sock_ioctl+0x21c/0x4d0
+> do_vfs_ioctl+0x6d4/0x968
+> ksys_ioctl+0x84/0xb8
+> __arm64_sys_ioctl+0x28/0x38
+> el0_svc_common.constprop.0+0x78/0x190
+> el0_svc_handler+0x70/0x90
+> el0_svc+0x8/0xc
+>
+> Signed-off-by: Xulin Sun <xulin.sun@windriver.com>
 > ---
->   drivers/iommu/dma-iommu.c |  4 ++--
->   drivers/iommu/iommu.c     | 37 ++++++++++++++++++++++++++++++++-----
->   include/linux/iommu.h     |  2 ++
->   3 files changed, 36 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index ba128d1cdaee..403fda04ea98 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -362,8 +362,8 @@ static int iommu_dma_deferred_attach(struct device *dev,
->   		return 0;
->   
->   	if (unlikely(ops->is_attach_deferred &&
-> -			ops->is_attach_deferred(domain, dev)))
-> -		return iommu_attach_device(domain, dev);
-> +		     ops->is_attach_deferred(domain, dev)))
-> +		return iommu_attach_device_no_defer(domain, dev);
 
-Wouldn't it be simpler to just invoke ops->attach_dev directly and avoid 
-having to formalise a public interface that nobody else should ever use 
-anyway?
+The code path which you presented in your stack trace is impossible
+using code available currently in mainline.
 
-That said, unless I've entirely misunderstood the situation I still 
-think that something like the below makes more sense (apologies for 
-broken whitespace).
+>  drivers/net/ethernet/mscc/ocelot.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
+> index b4731df186f4..6c82ab1b3fa6 100644
+> --- a/drivers/net/ethernet/mscc/ocelot.c
+> +++ b/drivers/net/ethernet/mscc/ocelot.c
+> @@ -56,7 +56,7 @@ static inline int ocelot_mact_wait_for_completion(struct ocelot *ocelot)
+>  {
+>         u32 val;
+>
+> -       return readx_poll_timeout(ocelot_mact_read_macaccess,
+> +       return readx_poll_timeout_atomic(ocelot_mact_read_macaccess,
+>                 ocelot, val,
+>                 (val & ANA_TABLES_MACACCESS_MAC_TABLE_CMD_M) ==
+>                 MACACCESS_CMD_IDLE,
+> --
+> 2.17.1
+>
 
-Robin.
-
------>8-----
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 2b471419e26c..1a52e530774c 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -704,6 +704,7 @@ int iommu_group_add_device(struct iommu_group 
-*group, struct device *dev)
-  {
-         int ret, i = 0;
-         struct group_device *device;
-+       struct iommu_domain *domain;
-
-         device = kzalloc(sizeof(*device), GFP_KERNEL);
-         if (!device)
-@@ -746,8 +747,11 @@ int iommu_group_add_device(struct iommu_group 
-*group, struct device *dev)
-
-         mutex_lock(&group->mutex);
-         list_add_tail(&device->list, &group->devices);
--       if (group->domain)
--               ret = __iommu_attach_device(group->domain, dev);
-+       domain = group->domain;
-+       if (domain && (!domain->ops->is_attach_deferred ||
-+                      !domain->ops->is_attach_deferred(domain, dev)))
-+               ret = __iommu_attach_device(domain, dev);
-+       }
-         mutex_unlock(&group->mutex);
-         if (ret)
-                 goto err_put_group;
-@@ -1652,9 +1656,6 @@ static int __iommu_attach_device(struct 
-iommu_domain *domain,
-                                  struct device *dev)
-  {
-         int ret;
--       if ((domain->ops->is_attach_deferred != NULL) &&
--           domain->ops->is_attach_deferred(domain, dev))
--               return 0;
-
-         if (unlikely(domain->ops->attach_dev == NULL))
-                 return -ENODEV;
+Regards,
+-Vladimir
