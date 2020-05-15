@@ -2,91 +2,157 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52619C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9D14206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:24:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIriAWOy"
+	by mail.kernel.org (Postfix) with ESMTP id 2B1C2206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgEOJYL (ORCPT
+        id S1728052AbgEOJYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727825AbgEOJYL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:24:11 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B05EC061A0C;
-        Fri, 15 May 2020 02:24:10 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id l19so1454979lje.10;
-        Fri, 15 May 2020 02:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b4HN69hvAxNrKtFX3cEwdX4CzgjCipjYhqqjmfpMvn4=;
-        b=hIriAWOy1p+4acNH2XQv3Jh4M5FeOOMDWHmGL+S0YJbxS7YXk+DdQwX19nvR5qM30+
-         s4W/K7FdDJ26TyBi4Bv7/pGymP8dnU/zG482HsOSaUK56eqT1unCNMC6KvnczGOjy1cR
-         LWDqKZyqUrT1do0HYwd89K9n4yJ5OAYGX3ar8gvnVky2qFXwtmhdJSx41VQv/vLSyfPZ
-         /0KPRofovYl3n/onlgTU+ikybQb3is85/Dv1VPbtL3+mfW8b2WE4eJtvRS0xIn3MKkqR
-         2e1FUfDgv8isaMmI+OqwZ1y2qyPy5Jpg13iolFJ+gPHTX+qy4QBtGe1yenG7gX8DXFrE
-         tpDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b4HN69hvAxNrKtFX3cEwdX4CzgjCipjYhqqjmfpMvn4=;
-        b=gIgsNI6mYtQWzdh1p3XemSbZv6CnRiMZEzrLm8qq63c4QqP1OzKYhDXG7H/s/Vw8l7
-         +cclwg9gf1TZ2MJMKc+6/TlC6CExUrXEbLrnriV1Iw0VKvgFjiEqxSKSOvUcCaU1Ol19
-         0cuJTcmK4Ju0bGLHDvTTssxkxFTCNrsa6yq/6a56PP9ay/B7lx1B81FVgQ3GbImBWqCh
-         eQBeCviWEZW/yjOqj8bi2hbb2VV0g3pj840Z7kK/M2Bb7WWkm4tc8PW6+w8rN9p03aud
-         WHBd1IMxJ/cJjkASzFXWgHDBh9b1DmeF4/h6BWhiZLqtNsKl/F8inIHt9/dgKAJz+GEA
-         zCjw==
-X-Gm-Message-State: AOAM533T4ogwx3qzj3gOqtDTjHtgwO+TFlOLy64UmB3VcJ9YsTM9+8zq
-        hSbs3nH6vRsIfXeOOnQPsYJNzGouGyJ46OB9gII=
-X-Google-Smtp-Source: ABdhPJxqhBbSrg8tCxhJyS+sWLLZoa8qH+jxXWgEv6AhM+XGSKLzKOru+Paq7nMeAOnXyRyIVIudd62cmmzQTAW5g6Y=
-X-Received: by 2002:a2e:b8c9:: with SMTP id s9mr1791449ljp.100.1589534648591;
- Fri, 15 May 2020 02:24:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200515021731.cb5y557wsxf66fo3@debian.debian-2> <SN4PR0401MB35985CFC199D20362EBFD8E09BBD0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-In-Reply-To: <SN4PR0401MB35985CFC199D20362EBFD8E09BBD0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-From:   Bo YU <tsu.yubo@gmail.com>
-Date:   Fri, 15 May 2020 17:23:56 +0800
-Message-ID: <CAKq8=3KyewqQLdo-GjERuOfKe5ZrmQ+bRPfFRWiyZkjdEVvSeA@mail.gmail.com>
-Subject: Re: [PATCH -next] fs/btrfs: Fix unlocking in btrfs_ref_tree_mod
-To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Cc:     "clm@fb.com" <clm@fb.com>,
-        "josef@toxicpanda.com" <josef@toxicpanda.com>,
-        "sterba@suse.com" <sterba@suse.com>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Fri, 15 May 2020 05:24:20 -0400
+Received: from mga03.intel.com ([134.134.136.65]:45578 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727825AbgEOJYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 05:24:20 -0400
+IronPort-SDR: W6EVZav80yoFPmH41Cv8PmNun3rZsblxc3QQI1JtYB6nHxNk6FwL7PMlT5t1ziTKdbeNJ4TpTJ
+ JDTGOZPNlWcw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 02:24:19 -0700
+IronPort-SDR: F0AKFMJPL4EX/lvNyOWlwpRD2P3asI/5LY0GhP76dw1Wgu9K9JrMiXpkFDbLQadd8G2afu0qL+
+ HIXoBhuA3Jvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,394,1583222400"; 
+   d="scan'208";a="438251000"
+Received: from mgpinon-mobl.ger.corp.intel.com ([10.252.55.74])
+  by orsmga005.jf.intel.com with ESMTP; 15 May 2020 02:24:15 -0700
+Message-ID: <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com>
+Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, luto@kernel.org
+Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
+        ak@linux.intel.com, ravi.v.shankar@intel.com,
+        chang.seok.bae@intel.com
+Date:   Fri, 15 May 2020 12:24:14 +0300
+In-Reply-To: <20200511045311.4785-1-sashal@kernel.org>
+References: <20200511045311.4785-1-sashal@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Fri, May 15, 2020 at 5:03 PM Johannes Thumshirn
-<Johannes.Thumshirn@wdc.com> wrote:
->
-> On 15/05/2020 04:17, Bo YU wrote:
-> > It adds spin_lock() in add_block_entry() but out path does not unlock
-> > it.
->
-> Which call path doesn't unlock it? There is an out_unlock label with a
-> spin_unlock() right above your insert. So either coverity messed something
-> up or the call path that needs the unlock has to jump to out_unlock instead
-> of out.
-This is out label without unlocking it. It will be offered spin_lock
-in add_block_entry()
-for be. But here I was worried about that unlock it in if() whether it
-is right or not.
+On Mon, 2020-05-11 at 00:52 -0400, Sasha Levin wrote:
+> Benefits:
+> Currently a user process that wishes to read or write the FS/GS base must
+> make a system call. But recent X86 processors have added new instructions
+> for use in 64-bit mode that allow direct access to the FS and GS segment
+> base addresses.  The operating system controls whether applications can
+> use these instructions with a %cr4 control bit.
+> 
+> In addition to benefits to applications, performance improvements to the
+> OS context switch code are possible by making use of these instructions. A
+> third party reported out promising performance numbers out of their
+> initial benchmarking of the previous version of this patch series [9].
+> 
+> Enablement check:
+> The kernel provides information about the enabled state of FSGSBASE to
+> applications using the ELF_AUX vector. If the HWCAP2_FSGSBASE bit is set in
+> the AUX vector, the kernel has FSGSBASE instructions enabled and
+> applications can use them.
+> 
+> Kernel changes:
+> Major changes made in the kernel are in context switch, paranoid path, and
+> ptrace. In a context switch, a task's FS/GS base will be secured regardless
+> of its selector. In the paranoid path, GS base is unconditionally
+> overwritten to the kernel GS base on entry and the original GS base is
+> restored on exit. Ptrace includes divergence of FS/GS index and base
+> values.
+> 
+> Security:
+> For mitigating the Spectre v1 SWAPGS issue, LFENCE instructions were added
+> on most kernel entries. Those patches are dependent on previous behaviors
+> that users couldn't load a kernel address into the GS base. These patches
+> change that assumption since the user can load any address into GS base.
+> The changes to the kernel entry path in this patch series take account of
+> the SWAPGS issue.
+> 
+> Changes from v11:
+> 
+>  - Rebase to v5.7-rc5, fix 32bit compilation error.
+> 
+> 
+> Andi Kleen (2):
+>   x86/fsgsbase/64: Add intrinsics for FSGSBASE instructions
+>   x86/elf: Enumerate kernel FSGSBASE capability in AT_HWCAP2
+> 
+> Andy Lutomirski (4):
+>   x86/cpu: Add 'unsafe_fsgsbase' to enable CR4.FSGSBASE
+>   x86/entry/64: Clean up paranoid exit
+>   x86/fsgsbase/64: Use FSGSBASE in switch_to() if available
+>   x86/fsgsbase/64: Enable FSGSBASE on 64bit by default and add a chicken
+>     bit
+> 
+> Chang S. Bae (9):
+>   x86/ptrace: Prevent ptrace from clearing the FS/GS selector
+>   selftests/x86/fsgsbase: Test GS selector on ptracer-induced GS base
+>     write
+>   x86/entry/64: Switch CR3 before SWAPGS in paranoid entry
+>   x86/entry/64: Introduce the FIND_PERCPU_BASE macro
+>   x86/entry/64: Handle FSGSBASE enabled paranoid entry/exit
+>   x86/entry/64: Document GSBASE handling in the paranoid path
+>   x86/fsgsbase/64: Enable FSGSBASE instructions in helper functions
+>   x86/fsgsbase/64: Use FSGSBASE instructions on thread copy and ptrace
+>   selftests/x86/fsgsbase: Test ptracer-induced GS base write with
+>     FSGSBASE
+> 
+> Sasha Levin (1):
+>   x86/fsgsbase/64: move save_fsgs to header file
+> 
+> Thomas Gleixner (1):
+>   Documentation/x86/64: Add documentation for GS/FS addressing mode
+> 
+> Tony Luck (1):
+>   x86/speculation/swapgs: Check FSGSBASE in enabling SWAPGS mitigation
+> 
+>  .../admin-guide/kernel-parameters.txt         |   2 +
+>  Documentation/x86/entry_64.rst                |   9 +
+>  Documentation/x86/x86_64/fsgs.rst             | 199 ++++++++++++++++++
+>  Documentation/x86/x86_64/index.rst            |   1 +
+>  arch/x86/entry/calling.h                      |  40 ++++
+>  arch/x86/entry/entry_64.S                     | 131 +++++++++---
+>  arch/x86/include/asm/fsgsbase.h               |  45 +++-
+>  arch/x86/include/asm/inst.h                   |  15 ++
+>  arch/x86/include/uapi/asm/hwcap2.h            |   3 +
+>  arch/x86/kernel/cpu/bugs.c                    |   6 +-
+>  arch/x86/kernel/cpu/common.c                  |  22 ++
+>  arch/x86/kernel/process.c                     |   9 +-
+>  arch/x86/kernel/process.h                     |  72 +++++++
+>  arch/x86/kernel/process_64.c                  | 142 +++++++------
+>  arch/x86/kernel/ptrace.c                      |  17 +-
+>  tools/testing/selftests/x86/fsgsbase.c        |  24 ++-
+>  16 files changed, 608 insertions(+), 129 deletions(-)
+>  create mode 100644 Documentation/x86/x86_64/fsgs.rst
+> 
+
+Can you put me to the CC-loop for this patches. Some SGX-enabled
+frameworks such as Graphene use out-of-tree changes to achieve this.
+That's where the interest to possibly test this comes from.
+
+Thanks.
+
+[*] https://github.com/oscarlab/graphene
+
+/Jarkko
+
