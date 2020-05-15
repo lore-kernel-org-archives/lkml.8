@@ -2,126 +2,152 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 311AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BB7C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0810F20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E2520758
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:41:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gC6/t6UF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VWRdhHya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgEOTla (ORCPT
+        id S1726717AbgEOTld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 15:41:30 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:48508 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgEOTl3 (ORCPT
+        Fri, 15 May 2020 15:41:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52533 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726718AbgEOTlc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 15:41:29 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04FJfRWj014855;
-        Fri, 15 May 2020 14:41:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589571687;
-        bh=hvXKcUkV7XpnUy1BQBCRXKA20QIPtE7iW2gyUhNIc9Y=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=gC6/t6UFEtbLPV8Uaw9XfQmchwCPHQ7YZmLDtOsWb8Jna++Z02eMdlnovUO/N7o4c
-         foIQHuBf8dc3AaZgcAtBTDBt4uDYBQ3K+Q/RPoN3NyVDS50ujC8cCNYeWzmQK38RSs
-         WzAZVPoonunkPO7dE2D+WknppDxfLPCY4ey1k0Pc=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04FJfRt8081646
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 15 May 2020 14:41:27 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 15
- May 2020 14:41:26 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 15 May 2020 14:41:26 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04FJfQU6029933;
-        Fri, 15 May 2020 14:41:26 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <sre@kernel.org>
-CC:     <sspatil@android.com>, <linux-pm@vger.kernel.org>,
-        <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH 1/3] power_supply: Add additional health properties to the header
-Date:   Fri, 15 May 2020 14:31:46 -0500
-Message-ID: <20200515193148.8502-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200515193148.8502-1-dmurphy@ti.com>
-References: <20200515193148.8502-1-dmurphy@ti.com>
+        Fri, 15 May 2020 15:41:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589571691;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OUOZlTx+NnYcTtCx+Ldkfxstccp83o8CLEeza083+h4=;
+        b=VWRdhHyax0yMPxv0e63mv9I3pIpNQ1D0/zZ09oTPVgHVoCtlIp+fRJ/PoIBMQeMpQtZ2hQ
+        ZbZ8+7EElPZD1JT8gvr8oFDKqsoR5AoqVqK9vrYRmyaF4VHKTA1nEMhHqKPG+L5BFn6pP1
+        wab3oeHbSFMjWckz9ldiAP4XrPgGSWQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-5h7CuIQlMNSSU3X4nvjb1Q-1; Fri, 15 May 2020 15:41:27 -0400
+X-MC-Unique: 5h7CuIQlMNSSU3X4nvjb1Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A2411030986;
+        Fri, 15 May 2020 19:41:23 +0000 (UTC)
+Received: from krava (unknown [10.40.192.69])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4CA7462971;
+        Fri, 15 May 2020 19:41:16 +0000 (UTC)
+Date:   Fri, 15 May 2020 21:41:15 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 7/7] perf expr: Migrate expr ids table to a hashmap
+Message-ID: <20200515194115.GA3577540@krava>
+References: <20200515165007.217120-1-irogers@google.com>
+ <20200515165007.217120-8-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515165007.217120-8-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+On Fri, May 15, 2020 at 09:50:07AM -0700, Ian Rogers wrote:
 
-HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken from the JEITA spec.
+SNIP
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index b071df373f8b..37be5a368d6e 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -85,8 +85,7 @@ static void metricgroup__rblist_init(struct rblist *metric_events)
+>  
+>  struct egroup {
+>  	struct list_head nd;
+> -	int idnum;
+> -	const char **ids;
+> +	struct expr_parse_ctx pctx;
+>  	const char *metric_name;
+>  	const char *metric_expr;
+>  	const char *metric_unit;
+> @@ -94,19 +93,21 @@ struct egroup {
+>  };
+>  
+>  static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+> -				      const char **ids,
+> -				      int idnum,
+> +				      struct expr_parse_ctx *pctx,
+>  				      struct evsel **metric_events,
+>  				      bool *evlist_used)
+>  {
+>  	struct evsel *ev;
+> -	int i = 0, j = 0;
+>  	bool leader_found;
+> +	const size_t idnum = hashmap__size(&pctx->ids);
+> +	size_t i = 0;
+> +	int j = 0;
+> +	double *val_ptr;
+>  
+>  	evlist__for_each_entry (perf_evlist, ev) {
+>  		if (evlist_used[j++])
+>  			continue;
+> -		if (!strcmp(ev->name, ids[i])) {
+> +		if (hashmap__find(&pctx->ids, ev->name, (void **)&val_ptr)) {
 
-Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- Documentation/ABI/testing/sysfs-class-power | 2 +-
- drivers/power/supply/power_supply_sysfs.c   | 2 +-
- include/linux/power_supply.h                | 3 +++
- 3 files changed, 5 insertions(+), 2 deletions(-)
+hum, you sure it's doing the same thing as before?
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index bf3b48f022dc..9f3fd01a9373 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -190,7 +190,7 @@ Description:
- 		Valid values: "Unknown", "Good", "Overheat", "Dead",
- 			      "Over voltage", "Unspecified failure", "Cold",
- 			      "Watchdog timer expire", "Safety timer expire",
--			      "Over current"
-+			      "Over current", "Warm", "Cool", "Hot"
- 
- What:		/sys/class/power_supply/<supply_name>/precharge_current
- Date:		June 2017
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index f37ad4eae60b..d0d549611794 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -61,7 +61,7 @@ static const char * const power_supply_charge_type_text[] = {
- static const char * const power_supply_health_text[] = {
- 	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
- 	"Unspecified failure", "Cold", "Watchdog timer expire",
--	"Safety timer expire", "Over current"
-+	"Safety timer expire", "Over current", "Warm", "Cool", "Hot"
- };
- 
- static const char * const power_supply_technology_text[] = {
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index dcd5a71e6c67..8670e90c1d51 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -61,6 +61,9 @@ enum {
- 	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
- 	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
- 	POWER_SUPPLY_HEALTH_OVERCURRENT,
-+	POWER_SUPPLY_HEALTH_WARM,
-+	POWER_SUPPLY_HEALTH_COOL,
-+	POWER_SUPPLY_HEALTH_HOT,
- };
- 
- enum {
--- 
-2.26.2
+hashmap__find will succede all the time in here, while the
+previous code was looking for the start of the group ...
+the logic in here is little convoluted, so maybe I'm
+missing some point in here ;-)
+
+jirka
+
+>  			if (!metric_events[i])
+>  				metric_events[i] = ev;
+>  			i++;
+> @@ -118,7 +119,8 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+>  			memset(metric_events, 0,
+>  				sizeof(struct evsel *) * idnum);
+>  
+> -			if (!strcmp(ev->name, ids[i])) {
+> +			if (hashmap__find(&pctx->ids, ev->name,
+> +					  (void **)&val_ptr)) {
+>  				if (!metric_events[i])
+>  					metric_events[i] = ev;
+
+SNIP
 
