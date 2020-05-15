@@ -2,99 +2,115 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3F7C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A4F20671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A9120671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:23:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UXq6yCSb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alW5P+uE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgEOPW5 (ORCPT
+        id S1726907AbgEOPXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:22:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24234 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726228AbgEOPW5 (ORCPT
+        Fri, 15 May 2020 11:23:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726228AbgEOPXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:22:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589556176;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HUXlVHVDew6Pt3rQAcFMVAmdI76CZRZY959odxV7XQU=;
-        b=UXq6yCSbV8edS0c/m5LOup+pyMPyCO3nhcNPu3tP5azr5s/iR7Vd6Z0DSUb2Uc6AYPjyzW
-        yOx/lUPO77OqkSZzcAP08Gbz52KQpOt54OvgboK/0XjfvCj3G8mhxIhJYpjex/xL4EANbF
-        uXGxFQ1bZ+7D8kz6ubrdm/SzLRjrM2A=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-128-W1HwUj4_PeqAZywcV4pquQ-1; Fri, 15 May 2020 11:22:54 -0400
-X-MC-Unique: W1HwUj4_PeqAZywcV4pquQ-1
-Received: by mail-qt1-f198.google.com with SMTP id h1so2798278qtu.13
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:22:54 -0700 (PDT)
+        Fri, 15 May 2020 11:23:00 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A67CC061A0C;
+        Fri, 15 May 2020 08:22:59 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id y18so1080045pfl.9;
+        Fri, 15 May 2020 08:22:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=JXjW8Fwqqx8e6N0SOGdmxsBYaPVx0pjA+VT2dzb7g4k=;
+        b=alW5P+uETtrTiaACW/tUwzhy3RCwja3lJqg1Lbd4iEe4TEO5mTDUK0tloWjLUiHl8x
+         EuKfWC5TaQbe4P6uqsCBiLuQ1Z6lgBPzIv+aBIDGn6yAo554QIpCo/zRfn7Bvb4jHj/S
+         pNnDpJC4JBuklJK49L4ydNuy0fEFWW7KI3LtobUmnNOqvT5f8qAW8OkTkgv49KOpnloD
+         RTVAsgrcFT3KF8Z0oN5RDmSDriAogUs/k+gAdSwUe1nd8dheJDfMou2ygm8WkHitqXY9
+         Oy2a2k4RCo0ruaH/FkbeKHGtDwpGDtIHOkSxK8kp8Qz8B5NJFf7+bP4dEU7Sji6H+Po9
+         xdXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HUXlVHVDew6Pt3rQAcFMVAmdI76CZRZY959odxV7XQU=;
-        b=jBjtMr+wKLepseXiJXl+pHRsmfHx+EbS2nFtWBfXdRvQl0HZ1UZrBr5HMA7VHylDUQ
-         /VuJwHoikS5YJ9ih7VhmeEMsAUXMKNRnv75ACI85gTw2PqhH+HP7nQP71gmFOtATZKO2
-         NUCpgYOVH2aBqD9XfPNfBv9xwjN6HHIgCLS2G+uicuyARsm+MdWojrQ9R/EYTlHM2X9s
-         BLHqyM+x0uOxhqmnzVxuu3bDue2k3+IXMeKEIU1Q2xHtf9u2X3Uf+GfHPEuk/fKH4HTy
-         boYwpZQ1QjYFF7LaFjH+GE8t8l7BJNkif7tESqiyP3ckFeLoKpiB1Dta9K+bQc0c7Ij0
-         KmSw==
-X-Gm-Message-State: AOAM532D2OKPvU+o68qPLSKrhAqNH98qoHXj7r3e7I3ISA4bywaWIeoi
-        9Yu9aeP09Gd1yZeYQR9VNENTeFzaN3GYBG82FG4la09TGwKvXJIm8WXkii3i36Qpaa27ry9dII0
-        GdLmiKpWfsm/y+ClHpXw6lmY+
-X-Received: by 2002:a37:643:: with SMTP id 64mr3421460qkg.99.1589556174151;
-        Fri, 15 May 2020 08:22:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzRAwA2xdxuhP8vOOprcU5gdcl4p5EwlfhbJap+VnVrYrharU53VdbVu9YOHDr3i4Xs+InCQA==
-X-Received: by 2002:a37:643:: with SMTP id 64mr3421434qkg.99.1589556173861;
-        Fri, 15 May 2020 08:22:53 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id l133sm1798296qke.105.2020.05.15.08.22.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 08:22:53 -0700 (PDT)
-Date:   Fri, 15 May 2020 11:22:51 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cohuck@redhat.com
-Subject: Re: [PATCH 0/2] vfio/type1/pci: IOMMU PFNMAP invalidation
-Message-ID: <20200515152251.GB499802@xz-x1>
-References: <158947414729.12590.4345248265094886807.stgit@gimli.home>
- <20200514212538.GB449815@xz-x1>
- <20200514161712.14b34984@w520.home>
- <20200514222415.GA24575@ziepe.ca>
- <20200514165517.3df5a9ef@w520.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200514165517.3df5a9ef@w520.home>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=JXjW8Fwqqx8e6N0SOGdmxsBYaPVx0pjA+VT2dzb7g4k=;
+        b=lCI1PNi4t7/8D9ayLuHmt3pd1u4cEA7nOPGi3xNqGWFRyk5LDKGPEkpRVokdteWnVU
+         4/mI4JTJmFqeXqPdbpNFUnmtMNZshYnNOXhne4HuRbfxTTAqDDfhgy/RG9HsGmiUeeOc
+         gJWuI4vBKK+2Cm5doP2qsa4NV7FeyxoLheVXQs789yuQExXt8gGuAx33sd0wSLXEyx6E
+         dsPm2RCy5jEiyB2PCWvBncgzO+0tqnaq6+xkapO7CPCQwPbRMVYu5h19q8Ag23huIupW
+         IXw9NDVsW9W/OvtrSSGB5jTrJI06rWmQRUEDdwhwxIa2otoQP1dHI0mBz3oOTrBkfYlV
+         M+Ow==
+X-Gm-Message-State: AOAM531CP91Oqk0h5B4ywI6BzSVyfTs0Dpn8Ro0C0sdxVNY1vuRNL6yX
+        xljE7N0RJkftqj57B3x39I4XUAc+
+X-Google-Smtp-Source: ABdhPJy9aGh/4wMhQRWaxXuCWxaoEDf873E7pBLKiaUv4NwXPA1PMgY9TlorzZfhHvs0ynr32C4DSQ==
+X-Received: by 2002:a62:6341:: with SMTP id x62mr4494195pfb.289.1589556179070;
+        Fri, 15 May 2020 08:22:59 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id t7sm1848406pjf.30.2020.05.15.08.22.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 May 2020 08:22:58 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] hwmon fixes for v5.7-rc6
+Date:   Fri, 15 May 2020 08:22:56 -0700
+Message-Id: <20200515152256.175107-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 04:55:17PM -0600, Alex Williamson wrote:
-> > I'm not if this makes sense, can't we arrange to directly trap the
-> > IOMMU failure and route it into qemu if that is what is desired?
-> 
-> Can't guarantee it, some systems wire that directly into their
-> management processor so that they can "protect their users" regardless
-> of whether they want or need it.  Yay firmware first error handling,
-> *sigh*.  Thanks,
+Hi Linus,
 
-Sorry to be slightly out of topic - Alex, does this mean the general approach
-of fault reporting from vfio to the userspace is not gonna work too?
+Please pull hwmon fixes for Linux v5.7-rc6 from signed tag:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.7-rc6
 
 Thanks,
+Guenter
+------
 
--- 
-Peter Xu
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
 
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.7-rc6
+
+for you to fetch changes up to 333e22db228f0bd0c839553015a6a8d3db4ba569:
+
+  hwmon: (da9052) Synchronize access with mfd (2020-05-13 10:06:09 -0700)
+
+----------------------------------------------------------------
+hwmon fixes for v5.7-rc6
+
+Fix ADC access synchronization problem with da9052 driver
+Fix temperature limit and status reporting in nct7904 driver
+Fix drivetemp temperature reporting if SCT is supported
+but SCT data tables are not.
+
+----------------------------------------------------------------
+Amy Shih (2):
+      hwmon: (nct7904) Read all SMI status registers in probe function
+      hwmon: (nct7904) Fix incorrect range of temperature limit registers
+
+Guenter Roeck (1):
+      hwmon: (drivetemp) Fix SCT support if SCT data tables are not supported
+
+Samu Nuutamo (1):
+      hwmon: (da9052) Synchronize access with mfd
+
+ drivers/hwmon/da9052-hwmon.c |  4 ++--
+ drivers/hwmon/drivetemp.c    |  2 +-
+ drivers/hwmon/nct7904.c      | 12 +++++++++++-
+ 3 files changed, 14 insertions(+), 4 deletions(-)
