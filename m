@@ -2,138 +2,111 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D873C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE64C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9BC420709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:42:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HuhqVP38"
+	by mail.kernel.org (Postfix) with ESMTP id 16CC620709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgEOUmx (ORCPT
+        id S1726550AbgEOUnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:42:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgEOUmx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:42:53 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 122BFC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:42:53 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id s21so3347657ejd.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:42:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dz+fWfDJYsM+tFXNBKAA9wqSLEoWW+Ek7ibRNvsSK4A=;
-        b=HuhqVP38EnG9v4J11YxP/SXESV/y9N9Mu6eqUgsjR3b5rpD8n4+8IAl9zZCsrjaWmD
-         bdt5vMFXqOH9VSAXo2uCH7i/Ba3MPOVWUkfld1CKVR5VAHxoKMI27hnZ8B0isc+6plTd
-         3i257scz/DFqUsV55sLUnz31Qoj2gddWUVCcN/YbtfWdubh/Bp+ZHdrWrkIHvntpjws4
-         ec5mBj941nZXLGJEuYPzkaPI7Mj7PZqiO4ArfmnD1sh0cjzfSc7MqPcHm2FhD0UCsdnF
-         sOKaWk03AmsyDohBerKzNpwjZJQzFJPHDRCfs70bXTfPdYsTCAAUrVQHG1mloMy+PbuF
-         YcZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dz+fWfDJYsM+tFXNBKAA9wqSLEoWW+Ek7ibRNvsSK4A=;
-        b=l3dQL6Uy5Z6zYwnVWRyKX2zWyxYZhhEtenpwGE3dG0NOSejnQWOQ/O0e5qYo9EF+WV
-         RpSc1SrerJxlah3DEUIroknMTF8PDoz+6wTwyyVb/bYVnZBEWApjyHu0jynowpgCdvbu
-         yZVAwz0+2C+ezQnfRJ59VJnNrtUloUlW6poo5J9whgzm4sHsWONd5i9GIt3DjBqz360f
-         a1RPfwHDvMRy0H38DaffsUgWBT2lYoC7nKZI9irMhuSNJmGpmxLubNs0gukfKLe/NVTj
-         1Ogryhs+rnt6YkRbm8mEQ+SX7Ve/4mb8CONNuIiKEXDeGRm8U1JeNYe9fDzVf4MmdXQh
-         lE7g==
-X-Gm-Message-State: AOAM532mns0cWT77f6Cxl2sRqSTMmU6vBco27FDs9lZmhkudUvMA2hRE
-        SrxiooSm86O/yiRGGIrAI6HkNlRfA7gn50aBke6QWA==
-X-Google-Smtp-Source: ABdhPJxqgAkYgYezisODwIMgNYIOCNmXUdqnBOG6D2B2uk0jS3Oca1lw0nYuQyVFttqz+Kniz2zo7IYbtafB+LdjELA=
-X-Received: by 2002:a17:906:55c3:: with SMTP id z3mr4688303ejp.180.1589575371237;
- Fri, 15 May 2020 13:42:51 -0700 (PDT)
+        Fri, 15 May 2020 16:43:43 -0400
+Received: from mga06.intel.com ([134.134.136.31]:54172 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbgEOUnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 16:43:43 -0400
+IronPort-SDR: mNCkszfwk4KQHK2Lz6zEGNhkiVKp+GSUZjs+ja2ronjKAYmgvG47Xs+T8HdUjtLVDRCoDSwdqm
+ xhbELYhOGfNg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 13:43:42 -0700
+IronPort-SDR: C/gpw8Hg3aXmhOkQDX7IUHG1v0S+g5qIRBnJsr7Y+/NmNAq9VKvrzCW5T1qa5mt+WqpIHY8BJc
+ Q0RPRwBIrFSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,396,1583222400"; 
+   d="scan'208";a="372798275"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga001.fm.intel.com with ESMTP; 15 May 2020 13:43:41 -0700
+Date:   Fri, 15 May 2020 13:43:41 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vivek Goyal <vgoyal@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
+ token info
+Message-ID: <20200515204341.GF17572@linux.intel.com>
+References: <20200511164752.2158645-1-vkuznets@redhat.com>
+ <20200511164752.2158645-3-vkuznets@redhat.com>
+ <20200512152709.GB138129@redhat.com>
+ <87o8qtmaat.fsf@vitty.brq.redhat.com>
+ <20200512155339.GD138129@redhat.com>
+ <20200512175017.GC12100@linux.intel.com>
+ <20200513125241.GA173965@redhat.com>
+ <0733213c-9514-4b04-6356-cf1087edd9cf@redhat.com>
+ <20200515184646.GD17572@linux.intel.com>
+ <d84b6436-9630-1474-52e5-ffcc4d2bd70a@redhat.com>
 MIME-Version: 1.0
-References: <20200515172756.27185-1-will@kernel.org>
-In-Reply-To: <20200515172756.27185-1-will@kernel.org>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Fri, 15 May 2020 13:42:40 -0700
-Message-ID: <CABCJKucXmMD82mQ0rSMjfByXD42htTjkde3TsKTVP-jvuqkZwQ@mail.gmail.com>
-Subject: Re: [PATCH 0/6] Clean up Shadow Call Stack patches for 5.8
-To:     Will Deacon <will@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@am.com>,
-        Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d84b6436-9630-1474-52e5-ffcc4d2bd70a@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 10:28 AM Will Deacon <will@kernel.org> wrote:
->
-> Hi all,
->
-> Here's a series of cleanups I hacked together on top of a modified v13
-> of the Shadow Call Stack patches from Sami:
->
->   https://lore.kernel.org/r/20200515172355.GD23334@willie-the-truck
->
-> The main changes are:
->
->   * Move code out of arch/arm64 and into the core implementation
->   * Store the full SCS stack pointer instead of the offset
->   * Code simplification and general style things
->
-> I'd like to queue this on top early next week so that it can spend some
-> quality time in linux-next.
->
-> Cheers,
->
-> Will
->
-> Cc: Sami Tolvanen <samitolvanen@google.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Mark Rutland <mark.rutland@am.com>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: <kernel-team@android.com>
->
-> --->8
->
-> Will Deacon (6):
->   arm64: scs: Store absolute SCS stack pointer value in thread_info
->   scs: Move accounting into alloc/free functions
->   arm64: scs: Use 'scs_sp' register alias for x18
->   scs: Move scs_overflow_check() out of architecture code
->   scs: Remove references to asm/scs.h from core code
->   scs: Move DEFINE_SCS macro into core code
->
->  arch/Kconfig                         |  4 +--
->  arch/arm64/include/asm/scs.h         | 29 ++++------------
->  arch/arm64/include/asm/thread_info.h |  4 +--
->  arch/arm64/kernel/asm-offsets.c      |  2 +-
->  arch/arm64/kernel/entry.S            | 10 +++---
->  arch/arm64/kernel/head.S             |  2 +-
->  arch/arm64/kernel/process.c          |  2 --
->  arch/arm64/kernel/scs.c              |  6 +---
->  include/linux/scs.h                  | 16 +++++----
->  kernel/sched/core.c                  |  3 ++
->  kernel/scs.c                         | 52 +++++++++++++---------------
->  11 files changed, 55 insertions(+), 75 deletions(-)
->
-> --
-> 2.26.2.761.g0e0b3e54be-goog
+On Fri, May 15, 2020 at 09:18:07PM +0200, Paolo Bonzini wrote:
+> On 15/05/20 20:46, Sean Christopherson wrote:
+> > Why even bother using 'struct kvm_vcpu_pv_apf_data' for the #PF case?  VMX
+> > only requires error_code[31:16]==0 and SVM doesn't vet it at all, i.e. we
+> > can (ab)use the error code to indicate an async #PF by setting it to an
+> > impossible value, e.g. 0xaaaa (a is for async!).  That partciular error code
+> > is even enforced by the SDM, which states:
+> 
+> Possibly, but it's water under the bridge now.
 
-Thanks, Will. I tested these on my SCS tree and didn't run into any
-issues. Looks good to me.
+Why is that?  I thought we were redoing the entire thing because the current
+ABI is unfixably broken?  In other words, since the guest needs to change,
+why are we keeping any of the current async #PF pieces?  E.g. why keep using
+#PF instead of usurping something like #NP?
 
-Sami
+> And the #PF mechanism also has the problem with NMIs that happen before the
+> error code is read and page faults happening in the handler.
+
+Hrm, I think there's no unfixable problem except for a pathological
+#PF->NMI->#DB->#PF scenario.  But it is a problem :-(
+
+FWIW, the error code isn't a problem, CR2 is the killer.  The issue Andy
+originally pointed out is
+
+  #PF: async page fault (KVM_PV_REASON_PAGE_NOT_PRESENT)
+     NMI: before CR2 or KVM_PF_REASON_PAGE_NOT_PRESENT
+       #PF: normal page fault (NMI handler accesses user memory, e.g. perf)
+
+With current async #PF, the problem is that CR2 and apf_reason are out of
+sync, not that CR2 or the error code are lost.  E.g. the above could also
+happen with a regular #PF on both ends, and obviously that works just fine.
+
+In other words, the error code doesn't suffer the same problem because it's
+pushed on the stack, not shoved into a static memory location.
+
+CR2 is the real problem, even though it's saved by the NMI handler.  The
+simple case where the NMI handler hits an async #PF before it can save CR2
+is avoidable by KVM not injecting #PF if NMIs are blocked.  The pathological
+case would be if there's a #DB at the beginning of the NMI handler; the IRET
+from the #DB would unblock NMIs and then open up the guest to hitting an
+async #PF on the NMI handler before CR2 is saved by the guest. :-(
