@@ -6,48 +6,57 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8057DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6689A20756
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C0F20727
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgEOSAS (ORCPT
+        id S1726379AbgEOSBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 14:00:18 -0400
-Received: from ms.lwn.net ([45.79.88.28]:53664 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbgEOSAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 14:00:18 -0400
+        Fri, 15 May 2020 14:01:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726144AbgEOSBK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 14:01:10 -0400
+X-Greylist: delayed 387 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 15 May 2020 11:01:09 PDT
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA54C061A0C;
+        Fri, 15 May 2020 11:01:09 -0700 (PDT)
 Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 1D477845;
-        Fri, 15 May 2020 18:00:17 +0000 (UTC)
-Date:   Fri, 15 May 2020 12:00:16 -0600
+        by ms.lwn.net (Postfix) with ESMTPSA id D3C3572D;
+        Fri, 15 May 2020 18:01:08 +0000 (UTC)
+Date:   Fri, 15 May 2020 12:01:07 -0600
 From:   Jonathan Corbet <corbet@lwn.net>
 To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
         Daniel Jordan <daniel.m.jordan@oracle.com>,
         Mike Rapoport <rppt@linux.ibm.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 06/14] docs: debugging-via-ohci1394.txt: add it to the
- core-api book
-Message-ID: <20200515120016.2083479c@lwn.net>
-In-Reply-To: <9b489d36d08ad89d3ad5aefef1f52a0715b29716.1588345503.git.mchehab+huawei@kernel.org>
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-ia64@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 07/14] docs: add IRQ documentation at the core-api book
+Message-ID: <20200515120107.459b63e8@lwn.net>
+In-Reply-To: <2da7485c3718e1442e6b4c2dd66857b776e8899b.1588345503.git.mchehab+huawei@kernel.org>
 References: <cover.1588345503.git.mchehab+huawei@kernel.org>
-        <9b489d36d08ad89d3ad5aefef1f52a0715b29716.1588345503.git.mchehab+huawei@kernel.org>
+        <2da7485c3718e1442e6b4c2dd66857b776e8899b.1588345503.git.mchehab+huawei@kernel.org>
 Organization: LWN.net
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -57,22 +66,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  1 May 2020 17:37:50 +0200
+On Fri,  1 May 2020 17:37:51 +0200
 Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-> There is an special chapter inside the core-api book about
-> some debug infrastructure like tracepoints and debug objects.
+> There are 4 IRQ documentation files under Documentation/*.txt.
 > 
-> It sounded to me that this is the best place to add a chapter
-> explaining how to use a FireWire controller to do remote
-> kernel debugging, as explained on this document.
+> Move them into a new directory (core-api/irq) and add a new
+> index file for it.
+> 
+> While here, use a title markup for the Debugging section of the
+> irq-domain.rst file.
 > 
 > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-I've applied this, but core-api really seems like the wrong place for
-this.  It would be good to rethink our layout a bit at some point in the
-near future...
-
-Thanks,
+Applied, thanks.
 
 jon
