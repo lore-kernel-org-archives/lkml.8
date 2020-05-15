@@ -2,183 +2,225 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 452A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE3020728
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68E3320671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589524184;
-	bh=tNRbN0oUcBL5YSzkP67CXqh1nByKJvY/krMJtSW68Ts=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=bKHuEtCkyG3VZq2l8UjieIzC3QOhmwdWcFxO4aIOWyG2uP/+GV3XgjUrMCljsSAci
-	 75ur6Ky/blWwrNfuASqx2K7sxM8NQ3xEB3S1Wu2S+BgpNT+fdn8qgTrcbZOGv7cK9p
-	 2M9vWGgAm7pCdVRxl6r4r9r3TxfhROZsW1xHoxtc=
+	s=default; t=1589524245;
+	bh=5BPO5JOrsWA3xwcO04i0UU/4/rK/crN27ZUfrrjfZ64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z1Br/Cmrzlk3ULkKtN4MvvV9ppKx/VWwkgbAwcy1w2loY20iCWKTApGG9Xd/fnnN3
+	 YaxEYwaDRRlsOBBldtgkIodplUZgULfy2L+ZRt1P1L4lc1Zko/FTWEZ6XFISwDuZNs
+	 SE2nfR4w6QRFRD1DXXTdDC4hnrXKjV7Zr6WKAKa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbgEOG3n (ORCPT
+        id S1726675AbgEOGao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726205AbgEOG3l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:29:41 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88AF0C061A0C;
-        Thu, 14 May 2020 23:29:40 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a21so950152ljj.11;
-        Thu, 14 May 2020 23:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=Amf4MMj2VGQ1xYWqB5Hox97fpmf7o1e1Pv6Ynpzq9ZA=;
-        b=jsC4kphUL2op1Q0Gul+GW8ZzHn+Fz0rAKVrK4mQufYYlRh7PR/cZXKwUGc+r5CpaSm
-         nIMbq79+co4bXWG1LYPLwQiW+br8gexZXlEjaAoCTt822Fk+xsHEuBl1W9LzMtM7CNqv
-         T0WXBCd1d87zMNTO4mimrV6MV1t5p5r4iy44ILOtUijNxieHe5oZ0DVXYZckx+pph1gQ
-         JdYT8TK5ICJqyBnFUi9mOBYqsL5pL/Ma5VG/1wXFsF53hxNr7rQvu5JEQvSVvOcv9SDU
-         9vMUAOBMN7b4VEpiDXUr92gtp3XjHEzMBlVDSXKcA+DJbPCOtX79VYLtl2hYgFYww1Ts
-         8GoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=Amf4MMj2VGQ1xYWqB5Hox97fpmf7o1e1Pv6Ynpzq9ZA=;
-        b=DPT2P5NEaacq7swaEsPep8WVSfUSViO5i9aQG+o3Be4rfu9TCwU+DmGw7vk3F2O4PZ
-         G1Svn1pFhN8lGdSlgl16AwMtneJwzyiLryufMMa5I3E+YlJOtMnWXkI18begS7cNWmX2
-         np+/ooMY0bwsjme5Yf73yHT+4IH4tt9kDVzZ6lyttR7xoRa0oMzeiqskckoVlRkbtmWe
-         D0/m4KevG2PUgcPu5YzHeHBhGuWH18tLOTRqeR9MFOReXu7mMPcQA0S/yFrPG2wMUy8C
-         Z1XLvdo6j6uJRJ2HZk2d8DwmKeqhDI9U/I6ThMQ9XksoYtKX+WV3Wxu3wcemN0B/0qDv
-         m2Yg==
-X-Gm-Message-State: AOAM533nxpA3wyVklbNCuR6iM9vvLETBHLgnNft9QZ8vchPXQvHHM7/E
-        eKafBpiTTsbbm/rl/guYRow=
-X-Google-Smtp-Source: ABdhPJyCsKXkodP4IvvysE0kpE+Bv7kllWtuMRULgUzrmOXWuUHVqaHLeOZ11THfL9Ig83wrRiHTyQ==
-X-Received: by 2002:a2e:9605:: with SMTP id v5mr1263833ljh.102.1589524178897;
-        Thu, 14 May 2020 23:29:38 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id u4sm834419lfu.81.2020.05.14.23.29.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 May 2020 23:29:38 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
-In-Reply-To: <090e48d7-7988-eea1-bf39-f6820578d354@linaro.org>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <1585718145-29537-3-git-send-email-sanm@codeaurora.org> <878shu4uwk.fsf@kernel.org> <875zcy4uuj.fsf@kernel.org> <20200514171352.GP4525@google.com> <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org> <87tv0h3fpv.fsf@kernel.org> <090e48d7-7988-eea1-bf39-f6820578d354@linaro.org>
-Date:   Fri, 15 May 2020 09:29:33 +0300
-Message-ID: <87r1vl3e42.fsf@kernel.org>
+        Fri, 15 May 2020 02:30:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbgEOGao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 02:30:44 -0400
+Received: from localhost (unknown [122.178.196.30])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14D742065F;
+        Fri, 15 May 2020 06:30:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589524243;
+        bh=5BPO5JOrsWA3xwcO04i0UU/4/rK/crN27ZUfrrjfZ64=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VeApkunDE7aQorh4drljCQnoyUYwIw/GESsHrtTlIkpqhCo6IjU+Nse+8v6OLkpns
+         VXj3QIkeOtBEz8xWr/4iBWPVE9v5msSOUjmlvQtRPEfitQk0oFWEbA8Vub52FkXE4f
+         7LUPAFAWMJAP5atUOolLVTtL9FtouP7ts7I6QbNA=
+Date:   Fri, 15 May 2020 12:00:39 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200515063039.GH333670@vkoul-mobl>
+References: <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+ <20200511115813.GG8216@sirena.org.uk>
+ <20200511134502.hjbu5evkiuh75chr@mobilestation>
+ <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
+ <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
+ <20200511210714.GO185537@smile.fi.intel.com>
+ <20200511210800.GP185537@smile.fi.intel.com>
+ <20200512124206.l3uv5hg2zimi24dq@mobilestation>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512124206.l3uv5hg2zimi24dq@mobilestation>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Serge,
 
+On 12-05-20, 15:42, Serge Semin wrote:
+> Vinod,
+> 
+> Could you join the discussion for a little bit?
+> 
+> In order to properly fix the problem discussed in this topic, we need to
+> introduce an additional capability exported by DMA channel handlers on per-channel
+> basis. It must be a number, which would indicate an upper limitation of the SG list
+> entries amount.
+> Something like this would do it:
+> struct dma_slave_caps {
+> ...
+> 	unsigned int max_sg_nents;
+> ...
 
-Hi,
+Looking at the discussion, I agree we should can this up in the
+interface. The max_dma_len suggests the length of a descriptor allowed,
+it does not convey the sg_nents supported which in the case of nollp is
+one.
 
-Georgi Djakov <georgi.djakov@linaro.org> writes:
->>>>>> Sandeep Maheswaram <sanm@codeaurora.org> writes:
->>>>>>> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
->>>>>>> +{
->>>>>>> +	struct device *dev =3D qcom->dev;
->>>>>>> +	int ret;
->>>>>>> +
->>>>>>> +	if (!device_is_bound(&qcom->dwc3->dev))
->>>>>>> +		return -EPROBE_DEFER;
->>>>>>
->>>>>> this breaks allmodconfig. I'm dropping this series from my queue for
->>>>>> this merge window.
->>>>>
->>>>> Sorry, I meant this patch ;-)
->>>>
->>>> I guess that's due to INTERCONNECT being a module. There is currently a
->>>
->>> I believe it's because of this:
->>> ERROR: modpost: "device_is_bound" [drivers/usb/dwc3/dwc3-qcom.ko] undef=
-ined!
->>>
->>>> discussion about this  with Viresh and Georgi in response to another
->>>> automated build failure. Viresh suggests changing CONFIG_INTERCONNECT
->>>> from tristate to bool, which seems sensible to me given that interconn=
-ect
->>>> is a core subsystem.
->>>
->>> The problem you are talking about would arise when INTERCONNECT=3Dm and
->>> USB_DWC3_QCOM=3Dy and it definitely exists here and could be triggered =
-with
->>> randconfig build. So i suggest to squash also the diff below.
->>>
->>> Thanks,
->>> Georgi
->>>
->>> ---8<---
->>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
->>> index 206caa0ea1c6..6661788b1a76 100644
->>> --- a/drivers/usb/dwc3/Kconfig
->>> +++ b/drivers/usb/dwc3/Kconfig
->>> @@ -129,6 +129,7 @@ config USB_DWC3_QCOM
->>>  	tristate "Qualcomm Platform"
->>>  	depends on ARCH_QCOM || COMPILE_TEST
->>>  	depends on EXTCON || !EXTCON
->>> +	depends on INTERCONNECT || !INTERCONNECT
->>=20
->> I would prefer to see a patch adding EXPORT_SYMBOL_GPL() to device_is_bo=
-und()
->
-> Agree, but just to clarify, that these are two separate issues that need =
-to
-> be fixed. The device_is_bound() is the first one and USB_DWC3_QCOM=3Dy co=
-mbined
-> with INTERCONNECT=3Dm is the second one.
+Btw is this is a real hardware issue, I have found that value of such
+hardware is very less and people did fix it up in subsequent revs to add
+llp support.
 
-If INTERCONNECT=3Dm, QCOM3 shouldn't be y. I think the following is
-enough:
+Also, another question is why this cannot be handled in driver, I agree
+your hardware does not support llp but that does not stop you from
+breaking a multi_sg list into N hardware descriptors and keep submitting
+them (for this to work submission should be done in isr and not in bh,
+unfortunately very few driver take that route). TBH the max_sg_nents or
+max_dma_len are HW restrictions and SW *can* deal with then :-)
 
-	depends on INTERCONNECT=3Dy || INTERCONNECT=3DUSB_DWC3_QCOM
+In an idea world, you should break the sw descriptor submitted into N hw
+descriptors and submit to hardware and let user know when the sw
+descriptor is completed. Of course we do not do that :(
 
-=2D-=20
-balbi
+> };
+> As Andy suggested it's value should be interpreted as:
+> 0          - unlimited number of entries,
+> 1:MAX_UINT - actual limit to the number of entries.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Hmm why 0, why not MAX_UINT for unlimited?
 
------BEGIN PGP SIGNATURE-----
+> In addition to that seeing the dma_get_slave_caps() method provide the caps only
+> by getting them from the DMA device descriptor, while we need to have an info on
+> per-channel basis, it would be good to introduce a new DMA-device callback like:
+> struct dma_device {
+> ...
+> 	int (*device_caps)(struct dma_chan *chan,
+> 			   struct dma_slave_caps *caps);
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6+Ns0ACgkQzL64meEa
-mQbAXRAAx1nSiv+90Ab9qTZwL9hwRv7Z81MYwG4smKR+OwjyzOR7s9P7KX7OiRvx
-nnoleEKaK596cmTgrFxejEKrs5ASfMh8d8r9nZyv+PALk+uIf5t/IdQ+GrzC9Odg
-TaFHL1FsV63YsCL94rkhYNDlFZr9HcF0FslmbW8Edk5BrdMn7CJiihpGEj2woowc
-o4R4iWfletBlWIDffYq/KnHZbNfai1NOPlS1Tqu+qLtH50UMUGYD42OehueZK8id
-J9+BGUBJVx4fCHAN5KyWuOm0BKzd4c9uQJRP7Yr6jlK5Q3fG7xqlyvXC0a38eHhm
-VuMCR2WATX2EhMD6zR+O+d7+od0pyaM+6pzLzVsJrj5v/235Ncwt3t8PUAESoNI/
-6jvQ3TqVRfArjUU9lWIoez3t82CHbLpNW7XNgCo7aXE0YWqudek0HX1jShT86Oyg
-tcdYc3EfBXQyRm893r7zD055MT75xwhfE7I+snc16b1xdPHIDvFZJo9/5Q6BmJq+
-FSIBHqKOLP+s4lqAVKdmdxki1OKc8wY1K3LB8mT5ksAkaPmhqCBPJ8k8tf9ldxNC
-eL+7W7Ja/cXZ5Uu/Gvv7wxP83sER6jXuGbbtxHU9GUAfVWN/0oHFa2OsXo9pxCPY
-6fFr6/b0nBD+SWgIFt2ZaFgBisebVRrAVdck8I0mqcyJwbF2yMo=
-=2Mnr
------END PGP SIGNATURE-----
---=-=-=--
+Do you have a controller where channel caps are on per-channel basis?
+
+> ...
+> };
+> So the DMA driver could override the generic DMA device capabilities with the
+> values specific to the DMA channels. Such functionality will be also helpful for
+> the max-burst-len parameter introduced by this patchset, since depending on the
+> IP-core synthesis parameters it may be channel-specific.
+> 
+> Alternatively we could just introduce a new fields to the dma_chan structure and
+> retrieve the new caps values from them in the dma_get_slave_caps() method.
+> Though the solution with callback I like better.
+> 
+> What is your opinion about this? What solution you'd prefer?
+> 
+> On Tue, May 12, 2020 at 12:08:00AM +0300, Andy Shevchenko wrote:
+> > On Tue, May 12, 2020 at 12:07:14AM +0300, Andy Shevchenko wrote:
+> > > On Mon, May 11, 2020 at 10:32:55PM +0300, Serge Semin wrote:
+> > > > On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
+> > > > > On Mon, May 11, 2020 at 4:48 PM Serge Semin
+> > > > > <Sergey.Semin@baikalelectronics.ru> wrote:
+> > > > > >
+> > > > > > On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
+> > > > > > > On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
+> > > > > > >
+> > > > > > > > Alas linearizing the SPI messages won't help in this case because the DW DMA
+> > > > > > > > driver will split it into the max transaction chunks anyway.
+> > > > > > >
+> > > > > > > That sounds like you need to also impose a limit on the maximum message
+> > > > > > > size as well then, with that you should be able to handle messages up
+> > > > > > > to whatever that limit is.  There's code for that bit already, so long
+> > > > > > > as the limit is not too low it should be fine for most devices and
+> > > > > > > client drivers can see the limit so they can be updated to work with it
+> > > > > > > if needed.
+> > > > > >
+> > > > > > Hmm, this might work. The problem will be with imposing such limitation through
+> > > > > > the DW APB SSI driver. In order to do this I need to know:
+> > > > > > 1) Whether multi-block LLP is supported by the DW DMA controller.
+> > > > > > 2) Maximum DW DMA transfer block size.
+> > > > > > Then I'll be able to use this information in the can_dma() callback to enable
+> > > > > > the DMA xfers only for the safe transfers. Did you mean something like this when
+> > > > > > you said "There's code for that bit already" ? If you meant the max_dma_len
+> > > > > > parameter, then setting it won't work, because it just limits the SG items size
+> > > > > > not the total length of a single transfer.
+> > > > > >
+> > > > > > So the question is of how to export the multi-block LLP flag from DW DMAc
+> > > > > > driver. Andy?
+> > > > > 
+> > > > > I'm not sure I understand why do you need this being exported. Just
+> > > > > always supply SG list out of single entry and define the length
+> > > > > according to the maximum segment size (it's done IIRC in SPI core).
+> > > > 
+> > > > Finally I see your point. So you suggest to feed the DMA engine with SG list
+> > > > entries one-by-one instead of sending all of them at once in a single
+> > > > dmaengine_prep_slave_sg() -> dmaengine_submit() -> dma_async_issue_pending()
+> > > > session. Hm, this solution will work, but there is an issue. There is no
+> > > > guarantee, that Tx and Rx SG lists are symmetric, consisting of the same
+> > > > number of items with the same sizes. It depends on the Tx/Rx buffers physical
+> > > > address alignment and their offsets within the memory pages. Though this
+> > > > problem can be solved by making the Tx and Rx SG lists symmetric. I'll have
+> > > > to implement a clever DMA IO loop, which would extract the DMA
+> > > > addresses/lengths from the SG entries and perform the single-buffer DMA 
+> > > > transactions with the DMA buffers of the same length.
+> > > > 
+> > > > Regarding noLLP being exported. Obviously I intended to solve the problem in a
+> > > > generic way since the problem is common for noLLP DW APB SSI/DW DMAC combination.
+> > > > In order to do this we need to know whether the multi-block LLP feature is
+> > > > unsupported by the DW DMA controller. We either make such info somehow exported
+> > > > from the DW DMA driver, so the DMA clients (like Dw APB SSI controller driver)
+> > > > could be ready to work around the problem; or just implement a flag-based quirk
+> > > > in the DMA client driver, which would be enabled in the platform-specific basis
+> > > > depending on the platform device actually detected (for instance, a specific
+> > > > version of the DW APB SSI IP). AFAICS You'd prefer the later option. 
+> > > 
+> > > So, we may extend the struct of DMA parameters to tell the consumer amount of entries (each of which is no longer than maximum segment size) it can afford:
+> > > - 0: Auto (DMA driver handles any cases itself)
+> > > - 1: Only single entry
+> > > - 2: Up to two...
+> > 
+> > It will left implementation details (or i.o.w. obstacles or limitation) why DMA
+> > can't do otherwise.
+> 
+> Sounds good. Thanks for assistance.
+> 
+> -Sergey
+> 
+> > 
+> > -- 
+> > With Best Regards,
+> > Andy Shevchenko
+> > 
+> > 
+
+-- 
+~Vinod
