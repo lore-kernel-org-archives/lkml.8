@@ -2,146 +2,141 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB75C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED20720758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:05:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589555133;
-	bh=1zPqQ8sIvNSMWgPCrIdx+Kb+Xb8hmdEK8vwfDgbo3QE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=VhWCNhSRsrKIG6zS7FPs6Qp6TetN9xop5mv9loQfOs92b0xmkNmyvDUC4pYIpHp9J
-	 Xjw17hjigFF86JY0Rx8bMDWZoVGj8XUQUiDdUDDXJli1mQsbrwnYmz4W1Gavr3xHuN
-	 2VrsJF5DyXeOXGQhYwUdPEwMH6HCBn2uVNGhWgzc=
+	by mail.kernel.org (Postfix) with ESMTP id A3D102075F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgEOPFc (ORCPT
+        id S1726624AbgEOPFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:05:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46230 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 11:05:47 -0400
+Received: from mga05.intel.com ([192.55.52.43]:28339 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgEOPFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:05:32 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 597F120728;
-        Fri, 15 May 2020 15:05:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589555131;
-        bh=1zPqQ8sIvNSMWgPCrIdx+Kb+Xb8hmdEK8vwfDgbo3QE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Q2pHovYL2JZbX31jVnD7s478qfEpgQNHT/OMDNLBSs38erSE2BD6fUk65FmWlxOR2
-         552ed+mz5R74AeRS+TUNoBLoWT6lmU/7YffEzhgE30cl2myL3d9jBGsMa0VlIZMK7u
-         Gfa7pAPQBWPanBYjMvElhcaZmoz+i32/4zUpphcA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C360135226DF; Fri, 15 May 2020 08:05:30 -0700 (PDT)
-Date:   Fri, 15 May 2020 08:05:30 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     Boqun Feng <boqun.feng@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
+        id S1726140AbgEOPFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 11:05:46 -0400
+IronPort-SDR: MHM+E/F2RjRegcbJ5yG++1J3qOtHcitfn+3Cs17Ip0MdAmtUHM2T4JlsXFXVbLI3+ZgxpZ3Qvx
+ X0fKuLp8sU/w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 08:05:45 -0700
+IronPort-SDR: EX+/kA0HXNH84sqyToqDVeH2rEi9LIuOqiQ6K0oN24pfAe2f1Rat9eUkw4gWcL3iD9ayQ886Np
+ VcYqaY6I9WsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="252057189"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 15 May 2020 08:05:40 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZbuA-006tTf-Vz; Fri, 15 May 2020 18:05:42 +0300
+Date:   Fri, 15 May 2020 18:05:42 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Long Cheng <long.cheng@mediatek.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH RESEND 3/4] Documentation/litmus-tests: Merge atomic's
- README into top-level one
-Message-ID: <20200515150530.GG2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <fd7e7c6f-fda1-7f2b-19f3-a09b73b10de8@gmail.com>
- <CAEXW_YSjo2hgvg-FN_MR7FVEcp-7gH17jb0-262k+ydSuuDjuQ@mail.gmail.com>
- <20200512163022.GI2869@paulmck-ThinkPad-P72>
- <09a8f418-0a46-87ea-dbdb-a43efc66476c@gmail.com>
- <6d162e69-5d2f-1fbf-1588-ab19c30e7311@gmail.com>
- <20200514004618.GA94665@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200514171656.GR2869@paulmck-ThinkPad-P72>
- <0ded5099-fe59-914a-d0dd-999cc334ff0a@gmail.com>
- <20200514224558.GZ2869@paulmck-ThinkPad-P72>
- <ed5b16b9-b522-8f9b-847b-e18d6387017e@gmail.com>
+        Russell King <linux@armlinux.org.uk>,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] serial: 8250_dw: Simplify the ref clock rate
+ setting procedure
+Message-ID: <20200515150542.GN1634618@smile.fi.intel.com>
+References: <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506233136.11842-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506233136.11842-4-Sergey.Semin@baikalelectronics.ru>
+ <20200515140547.GE1634618@smile.fi.intel.com>
+ <20200515145007.xjrx5mminxrh374d@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ed5b16b9-b522-8f9b-847b-e18d6387017e@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200515145007.xjrx5mminxrh374d@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 12:01:41AM +0900, Akira Yokosawa wrote:
-> On Thu, 14 May 2020 15:45:58 -0700, Paul E. McKenney wrote:
-> > On Fri, May 15, 2020 at 07:03:33AM +0900, Akira Yokosawa wrote:
-> >> On Thu, 14 May 2020 10:16:56 -0700, Paul E. McKenney wrote:
-> >>> On Thu, May 14, 2020 at 08:46:18AM +0800, Boqun Feng wrote:
-> >>>> On Wed, May 13, 2020 at 06:39:03AM +0900, Akira Yokosawa wrote:
-> >>>>> From 96fa6680e3b990633ecbb6d11acf03a161b790bd Mon Sep 17 00:00:00 2001
-> >>>>> From: Akira Yokosawa <akiyks@gmail.com>
-> >>>>> Date: Sun, 10 May 2020 15:12:57 +0900
-> >>>>> Subject: [PATCH RESEND 3/4] Documentation/litmus-tests: Merge atomic's README into top-level one
-> >>>>>
-> >>>>> Where Documentation/litmus-tests/README lists RCU litmus tests,
-> >>>>> Documentation/litmus-tests/atomic/README lists atomic litmus tests.
-> >>>>> For symmetry, merge the latter into former, with some context
-> >>>>> adjustment in the introduction.
-> >>>>>
-> >>>>> Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
-> >>>>> Acked-by: Andrea Parri <parri.andrea@gmail.com>
-> >>>>> Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> >>>>
-> >>>> Acked-by: Boqun Feng <boqun.feng@gmail.com>
-> >>>>
-> >>>> Thanks!
-> >>>
-> >>> Applied, and thank you all!
-> >>>
-> >>> I rebased, cancelling the revert with the original, resulting in an
-> >>> updated lkmm branch on -rcu.  There was one minor conflict, so could
-> >>> one of you please check to make sure that I resolved things appropriately?
-> >>
-> >> One thing I noticed.
-> >>
-> >> Commit b2998782ded4 ("Documentation/litmus-tests: Clarify about the RCU
-> >> pre-initialization test")'s change log says:
-> >>
-> >>     Since this test returned to tools/memory-model/, make sure that it is
-> >>                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>     at least referenced from Documentation/litmus-tests/'s README.
-> >>
-> >> Because of the rebase, this needs amendment as well as the title.
-> >>
-> >> Something like
-> >>
-> >>     Documentation/litumus-tests: Cite a relevant litmus test in tools/memory-model
-> >>
-> >>     For ease of finding the RCU related litmus test under
-> >>     tools/memory-model/, add an entry in README.
-> >>
-> >> ?
+On Fri, May 15, 2020 at 05:50:07PM +0300, Serge Semin wrote:
+> On Fri, May 15, 2020 at 05:05:47PM +0300, Andy Shevchenko wrote:
+> > On Thu, May 07, 2020 at 02:31:34AM +0300, Serge Semin wrote:
+> > > Really instead of twice checking the clk_round_rate() return value
+> > > we could do it once, and if it isn't error the clock rate can be changed.
+> > > By doing so we decrease a number of ret-value tests and remove a weird
+> > > goto-based construction implemented in the dw8250_set_termios() method.
 > > 
-> > Good catch, and yes, I will update that on the next rebase.
+> > >  	rate = clk_round_rate(d->clk, baud * 16);
+> > > -	if (rate < 0)
+> > > -		ret = rate;
 > > 
-> > Any other things in need of adjustment?
+> > > -	else if (rate == 0)
+> > > -		ret = -ENOENT;
+> > 
+> > This case now handled differently.
+> > I don't think it's good idea to change semantics.
+> > 
+> > So, I don't see how this, after leaving the rate==0 case, would be better than
+> > original one.
 > 
-> Aside from the missing Signed-off-by tags Stephen pointed out, I don't
-> see anything.
+> Semantic doesn't change. The code does exactly the same as before. If it didn't
+> I either would have provided a comment about this or just didn't introduce the
+> change in the first place. I guess you just don't see the whole picture of the
+> method. Take a look in the code. The ret variable's been used to skip the
+> "p->uartclk = rate" assignment. That's it. So the (rate == 0) will still be
+> considered as error condition, which causes the clock rate left unchanged.
+> Here is the code diff so you wouldn't need to dive deep into the driver
+> sources:
+> 
+> <	clk_disable_unprepare(d->clk);
+> <	rate = clk_round_rate(d->clk, baud * 16);
+> <	if (rate < 0)
+> <		ret = rate;
+> <	else if (rate == 0)
+> <		ret = -ENOENT;
+> <	else
+> <		ret = clk_set_rate(d->clk, rate);
+> <	clk_prepare_enable(d->clk);
+> <
+> <	if (ret)
+> <		goto out;
+> <
+> <	p->uartclk = rate;
+> <
+> <out:
+> ---
+> >       clk_disable_unprepare(d->clk);
+> >       rate = clk_round_rate(d->clk, baud * 16);
+> >       if (rate > 0) {
+> >              ret = clk_set_rate(d->clk, rate);
+> >              if (!ret)
+> >                      p->uartclk = rate;
+> >       }
+> >       clk_prepare_enable(d->clk);
 
-Yeah, I did mess that up!  ;-)
+Thanks.
+Indeed, in the above it looks clear.
 
-Thank you for checking!!!
 
-							Thanx, Paul
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
