@@ -2,121 +2,94 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3966B2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:40:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WPgjtmvu"
+	by mail.kernel.org (Postfix) with ESMTP id A8AA72065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbgEOLk1 (ORCPT
+        id S1726241AbgEOLkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:40:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgEOLk1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:40:27 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A090DC061A0C;
-        Fri, 15 May 2020 04:40:26 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id d7so1379809eja.7;
-        Fri, 15 May 2020 04:40:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=vx+rjdJtrqWDo1iVdx81WH5syu+StElM96JO8y30OpU=;
-        b=WPgjtmvuU+9RwoLj/n0H1YhScjg1h4Hgu330I4kqOUDcfeSuQOZKl+5ux8rbb0A1+r
-         7ELm48Nk8g4Iq8itsNp7nRoCsTlAKAoHnK2ah+xePeZp2pK0stb6n4zW7y9MitNbYdDS
-         bNg0TemLo6X1Wgm4LbjMS91beAkfCoPyvVNVG0xkHsjsU38LIBSiNPr88k5yhaJMl2mH
-         5eqEVtZV3131W/HDvA1aAfjmoreTAFOE/V6gi/szPbw3TsONPhAJeXwsxwdtqP1sG/pY
-         Ej20wI+N6z6ZiALRxth0w2i3BmnjBrdrQ0f5/Jd0EBrHTFEvOrXEbpUpoKxv8TREGGdn
-         cagQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=vx+rjdJtrqWDo1iVdx81WH5syu+StElM96JO8y30OpU=;
-        b=HZGYHONT4WO708GtyeZN6eKcpcXCGLpq6LXJk/r5n0iKT14Quw1CzxtpW9ElCZ4/95
-         IBS7ZMKrLSPYjFOJPRsAk/M7EAmhe+L8tZdELGkjDLQLFN1w0VoQCnBM+oKFeUAWpV7L
-         9YLUqQ4VB8IVq4puPqIXIppH2SPAPTMIlIWNnw7fA4AkQwUBDm2SsnzOBJ4N4IcQoWMI
-         CwTisAzrKa3B8c+vv6LYPrBS5t9fkB+r9DU8pZnEnwtkqCUfhA7/Ah340bfHlMQb3lpT
-         hdh7+5Dg3Ht6wc8PqxNTMiszU5SkWwlSqTWCYL6rox8ZF4qN6TUe1ujis7dbz+0T8PL+
-         rx9Q==
-X-Gm-Message-State: AOAM531nfBhkprFPJojQTX+spcT+vp+o+jJJmf5VO7UBQOld7Q56Hbsd
-        Dd8u/0sgSIXINyysxgs17Wh0U8H/z5Q/A/phfPA=
-X-Google-Smtp-Source: ABdhPJx0AgOk2Zn12eGSfHnaAvM6elutzBoNttSm5PyZ1UJxJxfvsS0M4rtJbN9T/Be3JEHKy9yQwj/NrvyofhO0SFM=
-X-Received: by 2002:a17:906:add7:: with SMTP id lb23mr2366474ejb.6.1589542825282;
- Fri, 15 May 2020 04:40:25 -0700 (PDT)
+        Fri, 15 May 2020 07:40:43 -0400
+Received: from mga09.intel.com ([134.134.136.24]:32479 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726003AbgEOLkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:40:43 -0400
+IronPort-SDR: BLVIduF9zAxdiLkiPEki+ME4jlxwifFFB3sPZdEIC4hHpnnxoMAZGM04F2TQAVIUIS9rThsR3y
+ StSR0VKiZQzw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 04:40:43 -0700
+IronPort-SDR: Zxm93dBj9QeuaxwdKrGE0EN+mN8jDYSRw9LLjluNBQVeEX+0HcpZst/qTiBxgupCSun+htzg6Y
+ x2dIMorsXzvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="287758924"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 15 May 2020 04:40:40 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZYho-006qhy-8y; Fri, 15 May 2020 14:40:44 +0300
+Date:   Fri, 15 May 2020 14:40:44 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Fengping Yu <fengping.yu@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/3] drivers: input: keyboard: Add mtk keypad driver
+Message-ID: <20200515114044.GR185537@smile.fi.intel.com>
+References: <20200515062007.28346-1-fengping.yu@mediatek.com>
+ <20200515062007.28346-3-fengping.yu@mediatek.com>
+ <20200515093016.rw5bmvoumgzvkqrc@pengutronix.de>
 MIME-Version: 1.0
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Fri, 15 May 2020 13:40:14 +0200
-Message-ID: <CAKgNAkioH1z-pVimHziWP=ZtyBgCOwoC7ekWGFwzaZ1FPYg-tA@mail.gmail.com>
-Subject: Setting mount propagation type in new mount API
-To:     David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Petr Vorel <pvorel@suse.cz>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        linux-man <linux-man@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515093016.rw5bmvoumgzvkqrc@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello David, Miklos,
+On Fri, May 15, 2020 at 11:30:16AM +0200, Marco Felsch wrote:
+> On 20-05-15 14:20, Fengping Yu wrote:
 
-I've been looking at the new mount API (fsopen(), fsconfig(),
-fsmount(), move_mount(), etc.) and among the details that remain
-mysterious to me is this: how does one set the propagation type
-(private/shared/slave/unbindable) of a new mount and change the
-propagation type of an existing mount?
+...
 
-I've looked at the kernel source for a bit, and did not see how this
-is possible.
+> > +	depends on OF && HAVE_CLK
+> 
+> Please drop those deps and instead use:
 
-The draft manual pages sent out a few months ago provide little clue,
-with the only hint being in the draft fsopen(2) page, which says of
-fsmount():
++1
 
-       fsmount()  takes the file descriptor returned by fsopen() and cre=E2=
-=80=90
-       ates a mount object for the filesystem root specified there.   The
-       attributes of the mount object are set from the mount_attrs param=E2=
-=80=90
-       eter.  The attributes specify the propagation and  mount  restric=E2=
-=80=90
-       tions to be applied to accesses through this mount.
+> depends on ARCH_MEDIATEK && ARM64
 
-However, that text appears *not* to be true. The 'mount_attrs'
-argument of fsmount() does not seem to permit specification of
-propagation type, since in the kernel there is this check:
+I would go even further
+	depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
 
-        if (attr_flags & ~(MOUNT_ATTR_RDONLY |
-                           MOUNT_ATTR_NOSUID |
-                           MOUNT_ATTR_NODEV |
-                           MOUNT_ATTR_NOEXEC |
-                           MOUNT_ATTR__ATIME |
-                           MOUNT_ATTR_NODIRATIME))
-                return -EINVAL;
+> There are still some missing deps:
+> 
+> select CONFIG_REGMAP_MMIO
+> select INPUT_MATRIXKMAP
 
-Thanks,
+...
 
-Michael
+> > +#define MTK_KPD_DEBOUNCE_MAX_US		256000 /*256ms */
+> 
+> Thanks for aligning the defines but the 256ms comment is still useless
+> as Andy already said.
+
+Yes, it seems my comments partially (?) have been ignored.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---=20
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
