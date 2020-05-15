@@ -2,125 +2,108 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA201C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF0C207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1B92074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:24:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="L7ckxl/r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mU7NZ5lT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgEOKYX (ORCPT
+        id S1728219AbgEOKYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:24:23 -0400
-Received: from mail-m971.mail.163.com ([123.126.97.1]:47828 "EHLO
-        mail-m971.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728060AbgEOKYX (ORCPT
+        Fri, 15 May 2020 06:24:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728060AbgEOKYa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:24:23 -0400
-X-Greylist: delayed 920 seconds by postgrey-1.27 at vger.kernel.org; Fri, 15 May 2020 06:24:21 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Tqawr
-        mDPq3bBcSlye5lx1tCeB2nEFRoYFenapfXH87A=; b=L7ckxl/rxr8dXhvoe31zB
-        HFCSWouIkW+rOTgUeE9O5ibFFPzKYRoTF32kp7fBVrx7t0sso3jyCCt3Z8tJfVxe
-        S81S7oK//nOKd5oQrMhMunnYW7avHRZB17SpucX80Wrnp7v1OyW1JYONXVTJezW5
-        JcfMaDIMwMay+g8CdUkQV0=
-Received: from localhost.localdomain.localdomain (unknown [103.244.59.3])
-        by smtp1 (Coremail) with SMTP id GdxpCgDH55sFar5ebFPaAA--.1521S2;
-        Fri, 15 May 2020 18:08:06 +0800 (CST)
-From:   Xiaochun Lee <lixiaochun.2888@163.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, linux-kernel@vger.kernel.org,
-        Xiaochun Lee <lixc17@lenovo.com>
-Subject: [PATCH v2] x86/PCI: Mark Power Control Unit as having non-compliant BARs
-Date:   Fri, 15 May 2020 06:07:51 -0400
-Message-Id: <1589537271-46459-1-git-send-email-lixiaochun.2888@163.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 15 May 2020 06:24:30 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD0CC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 03:24:30 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mq3so728433pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 03:24:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PGybp4d555g//9H3GiWo4hvFh60jsI+s9m8Oige6iHM=;
+        b=mU7NZ5lTbT5eBu8L5irKydmLWQdyjrqCs7Ncjj9uLohQKJ+Sh7nq+Cqcks/IQjyMdv
+         UY4CkOMjWuf/EhUm8Nrme9nle0BqJSr4o/wrW5VM61L8fiQb6STCQ6g9aMEZvrOYO5r1
+         hr7orQ8oqmedWZ9EuLxi0lBJDoPtlhJ0CvoRL65sUXi3tgyd7Y8O9/dc4DZF4FSmsB3Z
+         a4icTgldsj7/BpPxyMOQbVqmglv6HatFAXiryJA0Y2q05fOSETGzE6Mi0zafN585zwGp
+         NQQRqo2xZtOkjOPmHaqHwwt/krpwfxFW2+yh1lWvBNr6GIDjXhbVmyFVfXxUz5raBCSe
+         IXjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PGybp4d555g//9H3GiWo4hvFh60jsI+s9m8Oige6iHM=;
+        b=Ph+TsMMgRbTQ6+GNA37JVmyBRnopCqo6w1ZYMxlWOk/mFtk5P6bfRwgJO1vOsMgu6c
+         qV5slcTfksvxfaUidqNSHgwMjfyGabI4DfjzekhOyxyyYTQ/B5RHB7aI+sslxZGCVJxP
+         WIRyMY7RxAI5Nxad35GMBzgI2N+90UQQARcHLrgfWHCQI4uJ0MvLoCxCEGHqrLjhN9n5
+         NemDMa/eccnizyjuRqA+q6XzDVmja7wVEL3NmQZ9EnWV1tn/+CYiqsCajVKc0A0G3/1Z
+         fHX9NWWzcRjPt/pfZHCXEiu2YJ1moDyua+HNiDXBFaqO2zvXNkc3fq6fxlOqOHyb4I+5
+         heGg==
+X-Gm-Message-State: AOAM532uzFpOaTFl9If/7pVsNs/j5btFYm8WK3a7kZnCsCIldotie3Cl
+        3ay3CwPKJojFSHTjpJCglAG9K3t/
+X-Google-Smtp-Source: ABdhPJyNmjuyT3RDx6u+RHl1lI/BSy3F2aEZvDw9NwTz8Dsv0aIVB/7o/9VsJm7v+zskOFPCOOoCGA==
+X-Received: by 2002:a17:90a:e147:: with SMTP id ez7mr2724356pjb.128.1589538270185;
+        Fri, 15 May 2020 03:24:30 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id gn20sm1301945pjb.24.2020.05.15.03.24.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 03:24:29 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Fri, 15 May 2020 19:24:27 +0900
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] printk: replace ringbuffer
+Message-ID: <20200515102427.GB42471@jagdpanzerIV.localdomain>
+References: <20200501094010.17694-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: GdxpCgDH55sFar5ebFPaAA--.1521S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZw18Ww1DXFW7XF1DJw1kZrb_yoW5GFWfpF
-        45tay09rWkKas3KFs7uan7WF1DCanxXa1rC39xuw1jg3Z8AasIqFySka45ZFW5Jr1kWF47
-        ZrnIq348XayrXFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jov38UUUUU=
-X-Originating-IP: [103.244.59.3]
-X-CM-SenderInfo: 5ol0xtprfk30aosymmi6rwjhhfrp/1tbiQAclQFSIfGDw1QAAsH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501094010.17694-1-john.ogness@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaochun Lee <lixc17@lenovo.com>
+On (20/05/01 11:46), John Ogness wrote:
+> Hello,
+> 
+> Here is a v2 for the first series to rework the printk subsystem. The
+> v1 and history are here [0]. This first series only replaces the
+> existing ringbuffer implementation. No locking is removed. No
+> semantics/behavior of printk are changed.
+> 
+> The VMCOREINFO is updated. RFC patches for the external tools
+> crash(8) [1] and makedumpfile(8) [2] have been submitted that allow
+> the new ringbuffer to be correctly read.
+> 
+> This series is in line with the agreements [3] made at the meeting
+> during LPC2019 in Lisbon, with 1 exception: support for dictionaries
+> will not be discontinued [4]. Dictionaries are stored in a separate
+> buffer so that they cannot interfere with the human-readable buffer.
 
-The device [8086:a26c] is a Power Control Unit of
-Intel Ice Lake Server Processor and devices [8086:a1ec,a1ed]
-are the Power Control Unit of Intel Xeon Scalable Processor,
-kernel treats their pci BARs as a base address register that
-leading to a boot failure like:
-"pci 0000:00:11.0: [Firmware Bug]: reg 0x30: invalid BAR (can't size)".
+I'm willing to bless this. The code looks good to me, nice job guys.
 
-The symptoms in Ice Lake processor is:
-"QU99 ICE LAKE ES1 HCC 24C 185W 3200 L-0"
+Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-The information of the device [8086:a26c] list as below:
-00:11.0 Unassigned class [ff00]: Intel Corporation Device a26c (rev 03)
-        Subsystem: Lenovo Device 7811
-        Flags: fast devsel, NUMA node 0
-        Expansion ROM at <ignored> [disabled]
-        Capabilities: [80] Power Management version 3
-
-The symptoms in Xeon Scalable Processor is:
-"Intel(R) Xeon(R) Gold 5117 CPU @ 2.00GHz"
-"Intel(R) Xeon(R) Gold 6252 CPU @ 2.00GHz"
-
-The information of the Device [8086:a1ec] list as below:
-00:11.0 Unassigned class [ff00]: Intel Corporation C620 Series Chipset Family MROM 0 [8086:a1ec] (rev 09)
-        Subsystem: Lenovo Device [17aa:7805]
-        Latency: 0, Cache Line Size: 64 bytes
-        NUMA node: 0
-        Expansion ROM at <ignored> [disabled]
-        Capabilities: [80] Power Management version 3
-
-There are no other BARs on this devices, so mark the PCU as having
-non-compliant BARs, therefore we don't try to probe any of them.
-
-Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
----
- arch/x86/pci/fixup.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-index e723559..d9abc67 100644
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -563,6 +563,9 @@ static void twinhead_reserve_killing_zone(struct pci_dev *dev)
-  * Erratum BDF2
-  * PCI BARs in the Home Agent Will Return Non-Zero Values During Enumeration
-  * http://www.intel.com/content/www/us/en/processors/xeon/xeon-e5-v4-spec-update.html
-+ *
-+ * Device [8086:a26c]
-+ * Devices [8086:a1ec,a1ed]
-  */
- static void pci_invalid_bar(struct pci_dev *dev)
- {
-@@ -572,6 +575,9 @@ static void pci_invalid_bar(struct pci_dev *dev)
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ec, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ed, pci_invalid_bar);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26c, pci_invalid_bar);
- 
- /*
-  * Device [1022:7808]
--- 
-1.8.3.1
-
+	-ss
