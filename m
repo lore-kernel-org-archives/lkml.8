@@ -2,138 +2,118 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E76C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A14B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C68C22074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589550543;
-	bh=HFbyjxC4aSz/WBBxS/2xZgacqhZC2KmQgAjkHuWCFrY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=18sHZ+PfqdpnjP8af3KSN8q8TKLVXTZsxATEsvOk3lOhn+tZSbmOBS7fSoJbAsSVG
-	 txAVc6MzQA04vTe1RhTIqIHVoEQ9LpGpVkksY99CwNpL2wCve+dgn+XOvXy2EeQ7F5
-	 rQhWTSZ/EyGjPWAcu7IurMN0ibxw93oFHzv2aPCI=
+	by mail.kernel.org (Postfix) with ESMTP id 897B8207C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbgEONtC (ORCPT
+        id S1726278AbgEONuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:49:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 09:50:00 -0400
+Received: from mga12.intel.com ([192.55.52.136]:36886 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbgEONtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:49:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C258206D4;
-        Fri, 15 May 2020 13:49:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589550541;
-        bh=HFbyjxC4aSz/WBBxS/2xZgacqhZC2KmQgAjkHuWCFrY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=00Cvbmn3DhDyA5RGAF9XzorUyjuSIZWm4CXlkZKSgld116pjWFtF9lEYaVixaogvI
-         7pbuBIdmtOgP7uS3I3KPObiUQyQD+6iZD/YGNwmuNmoZVHEZAnreKXGWJ+MSBSWApo
-         UKMvRZ96g0IZeK99jNNPe/LTJJifN+B5RyXsOsSE=
-Date:   Fri, 15 May 2020 15:48:59 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Matej Dujava <mdujava@kocurkovo.cz>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] staging: vt6655: vt6656: change order of makefile
- variable definitions
-Message-ID: <20200515134859.GA2112248@kroah.com>
-References: <1589397351-24655-1-git-send-email-mdujava@kocurkovo.cz>
- <1589397351-24655-3-git-send-email-mdujava@kocurkovo.cz>
+        id S1726170AbgEONt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 09:49:59 -0400
+IronPort-SDR: sXQOCjE5HQ0vSAYPnkz1DhBUyxj9s7CjF7b+bh7qWkxcNYcBL0nzGb10YrUva5ZrVKGGwryvS6
+ y+1Qz3DyJe4g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 06:49:59 -0700
+IronPort-SDR: BibcYwQTyVwhQBhrCBTD249UDIxXGOKHBgoTpppgtNKDlwkBjQMn45YAFZwMteTXHE+E9p+hYb
+ AmcNGHPSuTUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="253798627"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 15 May 2020 06:49:54 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZaiq-006seQ-Cw; Fri, 15 May 2020 16:49:56 +0300
+Date:   Fri, 15 May 2020 16:49:56 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clement Leger <cleger@kalray.eu>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 08/19] spi: dw: Discard dma_width member of the dw_spi
+ structure
+Message-ID: <20200515134956.GC1634618@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-9-Sergey.Semin@baikalelectronics.ru>
+ <20200515130305.GA1634618@smile.fi.intel.com>
+ <20200515130559.psq2zwfhovt6rzhl@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589397351-24655-3-git-send-email-mdujava@kocurkovo.cz>
+In-Reply-To: <20200515130559.psq2zwfhovt6rzhl@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 09:15:51PM +0200, Matej Dujava wrote:
-> This patch will add indentation to multiline variable and put
-> obj-$(CONFIG_X) at the beginning of the file. This order of variables is
-> used in other drives, so this will make vt665x Makefiles fit into the
-> pattern.
-> 
-> Indentation is fixed in vt6655/Makefile.
-> 
-> Order of variable declaration is changed in vt6656/Makefile.
-> 
-> Signed-off-by: Matej Dujava <mdujava@kocurkovo.cz>
-> ---
-> v1: Initial patch
-> v2: This patch was split from original bigger patch
-> v3: Added more info about what and why it's removed
-> 
->  drivers/staging/vt6655/Makefile | 24 ++++++++++++------------
->  drivers/staging/vt6656/Makefile |  4 ++--
->  2 files changed, 14 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/staging/vt6655/Makefile b/drivers/staging/vt6655/Makefile
-> index e70357ec0af8..eda08a1516ab 100644
-> --- a/drivers/staging/vt6655/Makefile
-> +++ b/drivers/staging/vt6655/Makefile
-> @@ -1,15 +1,15 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
-> -vt6655_stage-y +=	device_main.o \
-> -	card.o \
-> -	channel.o \
-> -	mac.o \
-> -	baseband.o \
-> -	rxtx.o \
-> -	dpc.o \
-> -	power.o \
-> -	srom.o \
-> -	key.o \
-> -	rf.o
-> -
->  obj-$(CONFIG_VT6655) +=	vt6655_stage.o
-> +
-> +vt6655_stage-y +=	device_main.o \
-> +			card.o \
-> +			channel.o \
-> +			mac.o \
-> +			baseband.o \
-> +			rxtx.o \
-> +			dpc.o \
-> +			power.o \
-> +			srom.o \
-> +			key.o \
-> +			rf.o
-> diff --git a/drivers/staging/vt6656/Makefile b/drivers/staging/vt6656/Makefile
-> index f696a9d7a143..aac323d6a684 100644
-> --- a/drivers/staging/vt6656/Makefile
-> +++ b/drivers/staging/vt6656/Makefile
-> @@ -1,5 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
-> +obj-$(CONFIG_VT6656) +=	vt6656_stage.o
-> +
->  vt6656_stage-y +=	main_usb.o \
->  			card.o  \
->  			mac.o   \
-> @@ -11,5 +13,3 @@ vt6656_stage-y +=	main_usb.o \
->  			rf.o \
->  			usbpipe.o \
->  			channel.o
-> -
-> -obj-$(CONFIG_VT6656) +=	vt6656_stage.o
+On Fri, May 15, 2020 at 04:05:59PM +0300, Serge Semin wrote:
+> On Fri, May 15, 2020 at 04:03:05PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 15, 2020 at 01:47:47PM +0300, Serge Semin wrote:
+> > > This member has exactly the same value as n_bytes of the DW SPI private
+> > > data object, it's calculated at the same point of the transfer method,
+> > > n_bytes isn't changed during the whole transfer, and they even serve for
+> > > the same purpose - keep number of bytes per transfer word, though the
+> > > dma_width is used only to calculate the DMA source/destination addresses
+> > > width, which n_bytes could be also utilized for. Taking all of these
+> > > into account let's replace the dma_width member usage with n_bytes one
+> > > and remove the former.
+> > 
+> > I've no strong opinion about this.
+> > So, after addressing one issue below,
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I still fail to understand the need for this patch at all.  It doesn't
-clean anything up, nor change anything.  There is no rule that this has
-to be in one order or the other, and in fact, I like the order that the
-files currently have :)
+...
 
-thanks,
+> > > -static enum dma_slave_buswidth convert_dma_width(u32 dma_width) {
+> > > -	if (dma_width == 1)
+> > 
+> > > +static enum dma_slave_buswidth convert_dma_width(u8 n_bytes) {
+> > 
+> > It seems somebody (maybe even me) at some point messed up between enum
+> > definition and function that returns an enum.
+> > 
+> > For what said, { should be on the separate line.
+> 
+> See the patch 16/19: "spi: dw: Cleanup generic DW DMA code namings"
+> in this series.
 
-greg k-h
+Since you are touching that line here, it makes sense to do it here rather than
+ping-pong to other patch in very same series.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
