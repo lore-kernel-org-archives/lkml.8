@@ -2,125 +2,97 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC78C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63DEC207F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C1020829
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:46:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jd9ZIIqm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ciiFFIfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgEOQqm (ORCPT
+        id S1726444AbgEOQqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:46:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56360 "EHLO
+        Fri, 15 May 2020 12:46:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726171AbgEOQql (ORCPT
+        by vger.kernel.org with ESMTP id S1726171AbgEOQqs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:46:41 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10759C061A0C;
-        Fri, 15 May 2020 09:46:41 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id k18so3478770ion.0;
-        Fri, 15 May 2020 09:46:41 -0700 (PDT)
+        Fri, 15 May 2020 12:46:48 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCB4BC061A0C;
+        Fri, 15 May 2020 09:46:48 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id 4so2503837qtb.4;
+        Fri, 15 May 2020 09:46:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IMMZB+JJUc5qOhBX30QBDnuLbX4rAj6sJgfoOfzhTFo=;
-        b=jd9ZIIqmnVwcFulPqO2uRcF1lTkQA5Qjj7Pz7UvCRcQNcFp6/T08hPQ8o5XsacIFkM
-         7qe7gg1MRBRkL08HnDdyO6JIxIsnjS7zn/wu9kWXLSSetKntC80LPEf/z7+rer1D2hYW
-         0w8CziOoGZoNwjORGfnl871aV7NgnO6G2a0lKUjhkmoz+grRZN1rmB+UH21bvQX9jxSY
-         T9aWhxkeGHPAExBHJNx9G77/MilqiZEot7ElYC4NgTxp9AOr3UN+Cw3JCjcqblXpfNGk
-         Rvq0HtS1hpo8ju5+/bjCUfIClpB2u0XgGkEZpf8Tp/Tf5i4rO42BIEUaDsbg6m1iY+Jt
-         zdNQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lhyrD7fgcAIDzketu+eiu4fOBdbGHW2Sbb4y7tusfjc=;
+        b=ciiFFIfJa2m5ZMcG1Egga+yCC0p/qlLtMIDWP5VpB+mIrZHz4n6taU/dk2jphDQ81e
+         WCcDaCCgBCWIvvHLuwsQdEFJ8pHS1EOXPM5Lf6VNpf2b224OJ6d23un0Zigl79hN/BUU
+         CpRSCOvP+yZyZ4PCU4xcV8z95vYxJukoRcI6AJVsmxCWhirZtiLVYVnKu8KDQeeC4mgs
+         yuCOQ8dbRZGOdesKQmO7Q6/GKdTUbCw5XTxxJtZ51tU2/RZqGoQPsgiwZp/229BEjZJ2
+         7rIy0CHojmbbJBiPijyme0lplBYyNdlxoqHPW6Lj6EZR4xcHyubFmI3+VxV50mc5hSw/
+         vSGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IMMZB+JJUc5qOhBX30QBDnuLbX4rAj6sJgfoOfzhTFo=;
-        b=pzF/J89PXNqTpLHk61wiTgiM96qU9FdAGQlLQzZFCvxlSJxrZ6CtikeD7b+LJMzt5z
-         71bk/fe5dmFaOqFUGjL+M8XCl0awVOIJ0sXfA9GN1DDKPRf90P5up0w26QncsArmTNHx
-         Qbxzi1eAkFdB1FTNiwUvFGnHD9tzj1qMx6WbL2NX4nzLHnAy1fB2mViejxgWtFyKg2ke
-         H4tgjSpJ1EgVfuY39Fjg/OcHn1OLS1gC6qN1yq1l6UjWmWN0yY5iozZlfiw+yzI3iWkQ
-         ZIIAzwJMRzAvAwjHTeqwYKunoDy5i7X7tXIL3eeECRp/PcAaZt0it0zjf3hK19DasSxW
-         8eKQ==
-X-Gm-Message-State: AOAM532atvaZxPbR9Alb0l/8EOQvhsKjqoVDLwGVc95+WMAKSHAG0/p/
-        BJyuwi9OHJcAGh7IaQBy/u/dER46RtaHiECgZZ8=
-X-Google-Smtp-Source: ABdhPJzC3X3JusgKAS/v3FgUIMyfhdCffuY2x8sqOBBV7q9YUvBYNbZ+ftC93DN0kkxM1kr6nsLzm7Rn8ArTRZkg/CQ=
-X-Received: by 2002:a02:70c8:: with SMTP id f191mr2113705jac.117.1589561200309;
- Fri, 15 May 2020 09:46:40 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lhyrD7fgcAIDzketu+eiu4fOBdbGHW2Sbb4y7tusfjc=;
+        b=U3g0bVcElHQHkZp3B0yewhs0ycCrQ1V+I6o+RPm7eTiMAWnoZhki/wEwAw2oO71nZu
+         CKdCTET2fqrO39uXl/Yx/Rg4Zu0QAC9EtppAz9V1TqYCNGLclbMABtczmuPH8AwAionJ
+         dabnXmD7Aw0sE7ZX7tsqLLZ3CvCqjQ/oPnGHYXMHYJrWY6cQ6SxFd9tqIoeZ/0vpG2Di
+         P0VVOWaMOfIZujNW37ceGBSxiK8UDFvNSzgXWPdMSP8D9RxTXy4h9ErY8w5zJwUQ+6xp
+         STlLHLSd0/b7gNIeEUZ8inN6jANca/gyXpJ0nM4tQxZIvYZe4sqBwzDG++CHyB42loeE
+         aKqg==
+X-Gm-Message-State: AOAM533fPXYVRyrjo5cNnEYL+ilTJD/AOeLnphRH1+QqfvADzL3BDmjt
+        RPD/YAVoPGjiqXIj/lobGbZBtbM9vwY=
+X-Google-Smtp-Source: ABdhPJwpwHs3AHa06mvPBXiioFkqQ+A/KU8cTdGp2lopcCxfDXqA5koTGvbygFwLoeRwS7qhmrLCCw==
+X-Received: by 2002:ac8:7619:: with SMTP id t25mr4431652qtq.130.1589561207503;
+        Fri, 15 May 2020 09:46:47 -0700 (PDT)
+Received: from alpha-Inspiron-5480.lan ([170.84.225.240])
+        by smtp.gmail.com with ESMTPSA id g20sm1918530qki.75.2020.05.15.09.46.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 09:46:46 -0700 (PDT)
+From:   Ramon Fontes <ramonreisfontes@gmail.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+Cc:     johannes@sipsolutions.net, kvalo@codeaurora.org,
+        davem@davemloft.net, Ramon Fontes <ramonreisfontes@gmail.com>
+Subject: [PATCH] mac80211_hwsim: report the WIPHY_FLAG_SUPPORTS_5_10_MHZ capability
+Date:   Fri, 15 May 2020 13:46:40 -0300
+Message-Id: <20200515164640.97276-1-ramonreisfontes@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
-In-Reply-To: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Fri, 15 May 2020 11:46:29 -0500
-Message-ID: <CABb+yY1wJMzakpz0h6ZxAh4Z3OB718f+Wq3RP0R4NZ_U=vRMkw@mail.gmail.com>
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 12:17 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> - The hardware gives us the capability to write the register in
->   parallel, i.e. we can write 0x800 and 0x400 together without any
->   software locks, and so these 32 bits should be considered as separate
->   channel even if only one interrupt is issued by the hardware finally.
->   This shouldn't be called as virtualization of the channels, as the
->   hardware supports this (as clearly mentioned in the TRM) and it takes
->   care of handling the signal properly.
->
-I'll leave this one open to bikeshed arguments.
+Signed-off-by: Ramon Fontes <ramonreisfontes@gmail.com>
+---
+ drivers/net/wireless/mac80211_hwsim.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> - With serialization, if we use only one channel as today at every
->   priority, if there are 5 requests to send signal to the receiver and
->   the dvfs request is the last one in queue (which may be called from
->   scheduler's hot path with fast switching), it unnecessarily needs to
->   wait for the first four transfers to finish due to the software
->   locking imposed by the mailbox framework. This adds additional delay,
->   maybe of few ms only, which isn't required by the hardware but just by
->   the software and few ms can be important in scheduler's hotpath.
->
-As I asked you yesterday over the call, it may help if you could share
-some numbers to back up the doomsday scenario.
-I don't believe mailbox will be a bottleneck, unless you send commands
-in a while(1) ... but even then you have to compare against the
-virtual-channel implementation. (Not to forget one usually doesn't
-need/want the dvfs, power, clock, hotplug all happening at the _same_
-time)
+diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
+index 0528d4cb4..67f97ac36 100644
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -2995,6 +2995,7 @@ static int mac80211_hwsim_new_radio(struct genl_info *info,
+ 	hw->wiphy->flags |= WIPHY_FLAG_SUPPORTS_TDLS |
+ 			    WIPHY_FLAG_HAS_REMAIN_ON_CHANNEL |
+ 			    WIPHY_FLAG_AP_UAPSD |
++                            WIPHY_FLAG_SUPPORTS_5_10_MHZ |
+ 			    WIPHY_FLAG_HAS_CHANNEL_SWITCH;
+ 	hw->wiphy->features |= NL80211_FEATURE_ACTIVE_MONITOR |
+ 			       NL80211_FEATURE_AP_MODE_CHAN_WIDTH_CHANGE |
+-- 
+2.25.1
 
-Please note, SCMI... lets not pretend it is not about making scmi work
-with mhu :) ...  itself uses shared-memory transfers and
-wait_for_completion_timeout  in scmi_do_xfer().   If some platform
-_really-really_ faced speed bottlenecks, it would come to want to
-exchange 32-bit encoded command/response over the mhu register,
-asynchronously and totally bypassing shmem... which is possible only
-now.
-
-
-> - With the current approach it isn't possible to assign different bits
->   (or doorbell numbers) to clients from DT and the only way of doing
->   that without adding new bindings is by extending #mbox-cells to accept
->   a value of 2 as done in this patch.
->
-I am afraid you are confused. You can use bit/doorbell-6 by passing
-0x40 to mhu as the data to send.
-
-Cheers!
