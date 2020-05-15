@@ -2,182 +2,208 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B00AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD5220758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C1D20671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:35:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cGanwmtl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbgEOD2p (ORCPT
+        id S1728270AbgEODfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 23:28:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:47880 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728166AbgEOD2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 23:28:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 863611042;
-        Thu, 14 May 2020 20:28:44 -0700 (PDT)
-Received: from [192.168.0.129] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D7DF3F68F;
-        Thu, 14 May 2020 20:28:41 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH V2] arm64/cpuinfo: Move HWCAP name arrays alongside their
- bit definitions
-To:     Will Deacon <will@kernel.org>
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>
-References: <1588858150-26823-1-git-send-email-anshuman.khandual@arm.com>
- <20200513150405.GS21779@arm.com>
- <0999fa28-3ee7-3f02-4def-a0c6013ec6dd@arm.com>
- <20200514073613.GB4280@willie-the-truck>
-Message-ID: <8ddd0ca5-07c9-3a99-2ec6-4a201725ebe8@arm.com>
-Date:   Fri, 15 May 2020 08:58:05 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 14 May 2020 23:35:36 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:48795 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726176AbgEODff (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 23:35:35 -0400
+X-UUID: b42f5585e85a4a3bb48a1461f84878a5-20200515
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=VxhYLuYYOUOPauVln+W+RafLc/0dBm6EzZm2DoQqFmU=;
+        b=cGanwmtltlb50v9nBDJldJMBTElcXI9IYhedmxWhkOk8RecTuAYUla7kWlH0wb8KE5XwkKcIUckE8BlrQQIve9vWoQ0crt1o5jwLEckqKa58y01eKjskh5FDELLjP5zF7uLWcDWB1BownmhJz0BpzZlabHEkxbOMimrIH6JucWU=;
+X-UUID: b42f5585e85a4a3bb48a1461f84878a5-20200515
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 469382611; Fri, 15 May 2020 11:35:27 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 15 May 2020 11:35:22 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 15 May 2020 11:35:24 +0800
+Message-ID: <1589513724.16252.3.camel@mtksdaap41>
+Subject: Re: [PATCH v14 03/11] soc: mediatek: Add basic_clk_name to
+ scp_power_data
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+CC:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "Rob Herring" <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        Fan Chen <fan.chen@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 15 May 2020 11:35:24 +0800
+In-Reply-To: <1589176947.21832.9.camel@mtksdaap41>
+References: <1588752963-19934-1-git-send-email-weiyi.lu@mediatek.com>
+         <1588752963-19934-4-git-send-email-weiyi.lu@mediatek.com>
+         <7ad67855-a3f8-f979-8849-3765bd8289d3@collabora.com>
+         <1589176947.21832.9.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200514073613.GB4280@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: AE0EB50745E17FFC46BA5D313A2DD7F2096360A4F9CCEF4C7F6FE617EB23E18B2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+T24gTW9uLCAyMDIwLTA1LTExIGF0IDE0OjAyICswODAwLCBXZWl5aSBMdSB3cm90ZToNCj4gT24g
+V2VkLCAyMDIwLTA1LTA2IGF0IDIzOjAxICswMjAwLCBFbnJpYyBCYWxsZXRibyBpIFNlcnJhIHdy
+b3RlOg0KPiA+IEhpIFdlaXlpLA0KPiA+IA0KPiA+IFRoYW5rIHlvdSBmb3IgeW91ciBwYXRjaC4N
+Cj4gPiANCj4gPiBPbiA2LzUvMjAgMTA6MTUsIFdlaXlpIEx1IHdyb3RlOg0KPiA+ID4gVHJ5IHRv
+IHN0b3AgZXh0ZW5kaW5nIHRoZSBjbGtfaWQgb3IgY2xrX25hbWVzIGlmIHRoZXJlIGFyZQ0KPiA+
+ID4gbW9yZSBhbmQgbW9yZSBuZXcgQkFTSUMgY2xvY2tzLiBUbyBnZXQgaXRzIG93biBjbG9ja3Mg
+YnkgdGhlDQo+ID4gPiBiYXNpY19jbGtfbmFtZSBvZiBlYWNoIHBvd2VyIGRvbWFpbi4NCj4gPiA+
+IEFuZCB0aGVuIHVzZSBiYXNpY19jbGtfbmFtZSBzdHJpbmdzIGZvciBhbGwgY29tcGF0aWJsZXMs
+IGluc3RlYWQgb2YNCj4gPiA+IG1peGluZyBjbGtfaWQgYW5kIGNsa19uYW1lLg0KPiA+ID4gDQo+
+ID4gPiBTaWduZWQtb2ZmLWJ5OiBXZWl5aSBMdSA8d2VpeWkubHVAbWVkaWF0ZWsuY29tPg0KPiA+
+ID4gUmV2aWV3ZWQtYnk6IE5pY29sYXMgQm9pY2hhdCA8ZHJpbmtjYXRAY2hyb21pdW0ub3JnPg0K
+PiA+ID4gLS0tDQo+ID4gPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5cy5jIHwgMTM0
+ICsrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDQxIGluc2VydGlvbnMoKyksIDkzIGRlbGV0aW9ucygtKQ0KPiA+ID4gDQo+ID4gPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5cy5jIGIvZHJpdmVycy9z
+b2MvbWVkaWF0ZWsvbXRrLXNjcHN5cy5jDQo+ID4gPiBpbmRleCBmNjY5ZDM3Li5jOWMzY2Y3IDEw
+MDY0NA0KPiA+ID4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5cy5jDQo+ID4g
+PiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nwc3lzLmMNCj4gPiA+IEBAIC03OCwz
+NCArNzgsNiBAQA0KPiA+ID4gICNkZWZpbmUgUFdSX1NUQVRVU19ISUYxCQkJQklUKDI2KQkvKiBN
+VDc2MjIgKi8NCj4gPiA+ICAjZGVmaW5lIFBXUl9TVEFUVVNfV0IJCQlCSVQoMjcpCS8qIE1UNzYy
+MiAqLw0KPiA+ID4gIA0KPiA+ID4gLWVudW0gY2xrX2lkIHsNCj4gPiA+IC0JQ0xLX05PTkUsDQo+
+ID4gPiAtCUNMS19NTSwNCj4gPiA+IC0JQ0xLX01GRywNCj4gPiA+IC0JQ0xLX1ZFTkMsDQo+ID4g
+PiAtCUNMS19WRU5DX0xULA0KPiA+ID4gLQlDTEtfRVRISUYsDQo+ID4gPiAtCUNMS19WREVDLA0K
+PiA+ID4gLQlDTEtfSElGU0VMLA0KPiA+ID4gLQlDTEtfSlBHREVDLA0KPiA+ID4gLQlDTEtfQVVE
+SU8sDQo+ID4gPiAtCUNMS19NQVgsDQo+ID4gPiAtfTsNCj4gPiA+IC0NCj4gPiA+IC1zdGF0aWMg
+Y29uc3QgY2hhciAqIGNvbnN0IGNsa19uYW1lc1tdID0gew0KPiA+ID4gLQlOVUxMLA0KPiA+ID4g
+LQkibW0iLA0KPiA+ID4gLQkibWZnIiwNCj4gPiA+IC0JInZlbmMiLA0KPiA+ID4gLQkidmVuY19s
+dCIsDQo+ID4gPiAtCSJldGhpZiIsDQo+ID4gPiAtCSJ2ZGVjIiwNCj4gPiA+IC0JImhpZl9zZWwi
+LA0KPiA+ID4gLQkianBnZGVjIiwNCj4gPiA+IC0JImF1ZGlvIiwNCj4gPiA+IC0JTlVMTCwNCj4g
+PiA+IC19Ow0KPiA+ID4gLQ0KPiA+ID4gICNkZWZpbmUgTUFYX0NMS1MJMw0KPiA+ID4gIA0KPiA+
+ID4gIC8qKg0KPiA+ID4gQEAgLTExNiw3ICs4OCw3IEBAIGVudW0gY2xrX2lkIHsNCj4gPiA+ICAg
+KiBAc3JhbV9wZG5fYml0czogVGhlIG1hc2sgZm9yIHNyYW0gcG93ZXIgY29udHJvbCBiaXRzLg0K
+PiA+ID4gICAqIEBzcmFtX3Bkbl9hY2tfYml0czogVGhlIG1hc2sgZm9yIHNyYW0gcG93ZXIgY29u
+dHJvbCBhY2tlZCBiaXRzLg0KPiA+ID4gICAqIEBidXNfcHJvdF9tYXNrOiBUaGUgbWFzayBmb3Ig
+c2luZ2xlIHN0ZXAgYnVzIHByb3RlY3Rpb24uDQo+ID4gPiAtICogQGNsa19pZDogVGhlIGJhc2lj
+IGNsb2NrcyByZXF1aXJlZCBieSB0aGlzIHBvd2VyIGRvbWFpbi4NCj4gPiA+ICsgKiBAYmFzaWNf
+Y2xrX25hbWU6IFRoZSBiYXNpYyBjbG9ja3MgcmVxdWlyZWQgYnkgdGhpcyBwb3dlciBkb21haW4u
+DQo+ID4gPiAgICogQGNhcHM6IFRoZSBmbGFnIGZvciBhY3RpdmUgd2FrZS11cCBhY3Rpb24uDQo+
+ID4gPiAgICovDQo+ID4gPiAgc3RydWN0IHNjcF9kb21haW5fZGF0YSB7DQo+ID4gPiBAQCAtMTI2
+LDcgKzk4LDcgQEAgc3RydWN0IHNjcF9kb21haW5fZGF0YSB7DQo+ID4gPiAgCXUzMiBzcmFtX3Bk
+bl9iaXRzOw0KPiA+ID4gIAl1MzIgc3JhbV9wZG5fYWNrX2JpdHM7DQo+ID4gPiAgCXUzMiBidXNf
+cHJvdF9tYXNrOw0KPiA+ID4gLQllbnVtIGNsa19pZCBjbGtfaWRbTUFYX0NMS1NdOw0KPiA+ID4g
+Kwljb25zdCBjaGFyICpiYXNpY19jbGtfbmFtZVtNQVhfQ0xLU107DQo+ID4gDQo+ID4gSSBvbmx5
+IHJldmlld2VkIHYxMywgc28gc29ycnkgaWYgdGhpcyB3YXMgYWxyZWFkeSBkaXNjdXNzZWQuIEkg
+YW0gd29uZGVyaW5nIGlmDQo+ID4gd291bGQgYmUgYmV0dGVyIHRha2UgYWR2YW50YWdlIG9mIHRo
+ZSBkZXZtX2Nsa19idWxrX2dldCgpIGZ1bmN0aW9uIGluc3RlYWQgb2YNCj4gPiBraW5kIG9mIHJl
+aW1wbGVtZW50aW5nIHRoZSBzYW1lLCBzb21ldGhpbmcgbGlrZSB0aGlzDQo+ID4gDQo+ID4gCWNv
+bnN0IHN0cnVjdCBjbGtfYnVsa19kYXRhICpiYXNpY19jbG9ja3M7DQo+ID4gDQo+IA0KPiBJIHRo
+b3VnaHQgaXQgc2hvdWxkIGJlIGNvbnN0IHN0cnVjdCBjbGtfYnVsa19kYXRhDQo+IGJhc2ljX2Ns
+b2Nrc1tNQVhfQ0xLU107IGluc3RlYWQgb2YgY29uc3Qgc3RydWN0IGNsa19idWxrX2RhdGENCj4g
+KmJhc2ljX2Nsb2NrczsgaW4gc3RydWN0IHNjcF9kb21haW5fZGF0YSBkYXRhIHR5cGUNCj4gDQo+
+ID4gPiAgCXU4IGNhcHM7DQo+ID4gPiAgfTsNCj4gPiA+ICANCj4gPiA+IEBAIC00MTEsMTIgKzM4
+MywxOSBAQCBzdGF0aWMgaW50IHNjcHN5c19wb3dlcl9vZmYoc3RydWN0IGdlbmVyaWNfcG1fZG9t
+YWluICpnZW5wZCkNCj4gPiA+ICAJcmV0dXJuIHJldDsNCj4gPiA+ICB9DQo+ID4gPiAgDQo+ID4g
+PiAtc3RhdGljIHZvaWQgaW5pdF9jbGtzKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsIHN0
+cnVjdCBjbGsgKipjbGspDQo+ID4gPiArc3RhdGljIGludCBpbml0X2Jhc2ljX2Nsa3Moc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqcGRldiwgc3RydWN0IGNsayAqKmNsaywNCj4gPiA+ICsJCQljb25z
+dCBjaGFyICogY29uc3QgKm5hbWUpDQo+ID4gPiAgew0KPiA+ID4gIAlpbnQgaTsNCj4gPiA+ICAN
+Cj4gPiA+IC0JZm9yIChpID0gQ0xLX05PTkUgKyAxOyBpIDwgQ0xLX01BWDsgaSsrKQ0KPiA+ID4g
+LQkJY2xrW2ldID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsIGNsa19uYW1lc1tpXSk7DQo+ID4g
+PiArCWZvciAoaSA9IDA7IGkgPCBNQVhfQ0xLUyAmJiBuYW1lW2ldOyBpKyspIHsNCj4gPiA+ICsJ
+CWNsa1tpXSA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCBuYW1lW2ldKTsNCj4gPiA+ICsNCj4g
+PiA+ICsJCWlmIChJU19FUlIoY2xrW2ldKSkNCj4gPiA+ICsJCQlyZXR1cm4gUFRSX0VSUihjbGtb
+aV0pOw0KPiA+ID4gKwl9DQo+ID4gDQo+ID4gWW91IHdpbGwgYmUgYWJsZSB0byByZW1vdmUgdGhp
+cyBmdW5jdGlvbiwgc2VlIGJlbG93IC4uLg0KPiA+IA0KPiA+ID4gKw0KPiA+ID4gKwlyZXR1cm4g
+MDsNCj4gPiA+ICB9DQo+ID4gPiAgDQo+ID4gPiAgc3RhdGljIHN0cnVjdCBzY3AgKmluaXRfc2Nw
+KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsDQo+ID4gPiBAQCAtNDI2LDkgKzQwNSw4IEBA
+IHN0YXRpYyBzdHJ1Y3Qgc2NwICppbml0X3NjcChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
+LA0KPiA+ID4gIHsNCj4gPiA+ICAJc3RydWN0IGdlbnBkX29uZWNlbGxfZGF0YSAqcGRfZGF0YTsN
+Cj4gPiA+ICAJc3RydWN0IHJlc291cmNlICpyZXM7DQo+ID4gPiAtCWludCBpLCBqOw0KPiA+ID4g
+KwlpbnQgaSwgcmV0Ow0KPiA+ID4gIAlzdHJ1Y3Qgc2NwICpzY3A7DQo+ID4gPiAtCXN0cnVjdCBj
+bGsgKmNsa1tDTEtfTUFYXTsNCj4gPiA+ICANCj4gPiA+ICAJc2NwID0gZGV2bV9remFsbG9jKCZw
+ZGV2LT5kZXYsIHNpemVvZigqc2NwKSwgR0ZQX0tFUk5FTCk7DQo+ID4gPiAgCWlmICghc2NwKQ0K
+PiA+ID4gQEAgLTQ4MSw4ICs0NTksNiBAQCBzdGF0aWMgc3RydWN0IHNjcCAqaW5pdF9zY3Aoc3Ry
+dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCj4gPiA+ICANCj4gPiA+ICAJcGRfZGF0YS0+bnVt
+X2RvbWFpbnMgPSBudW07DQo+ID4gPiAgDQo+ID4gPiAtCWluaXRfY2xrcyhwZGV2LCBjbGspOw0K
+PiA+ID4gLQ0KPiA+ID4gIAlmb3IgKGkgPSAwOyBpIDwgbnVtOyBpKyspIHsNCj4gPiA+ICAJCXN0
+cnVjdCBzY3BfZG9tYWluICpzY3BkID0gJnNjcC0+ZG9tYWluc1tpXTsNCj4gPiA+ICAJCXN0cnVj
+dCBnZW5lcmljX3BtX2RvbWFpbiAqZ2VucGQgPSAmc2NwZC0+Z2VucGQ7DQo+ID4gPiBAQCAtNDkz
+LDE3ICs0NjksOSBAQCBzdGF0aWMgc3RydWN0IHNjcCAqaW5pdF9zY3Aoc3RydWN0IHBsYXRmb3Jt
+X2RldmljZSAqcGRldiwNCj4gPiA+ICANCj4gPiA+ICAJCXNjcGQtPmRhdGEgPSBkYXRhOw0KPiA+
+ID4gIA0KPiA+ID4gLQkJZm9yIChqID0gMDsgaiA8IE1BWF9DTEtTICYmIGRhdGEtPmNsa19pZFtq
+XTsgaisrKSB7DQo+ID4gPiAtCQkJc3RydWN0IGNsayAqYyA9IGNsa1tkYXRhLT5jbGtfaWRbal1d
+Ow0KPiA+ID4gLQ0KPiA+ID4gLQkJCWlmIChJU19FUlIoYykpIHsNCj4gPiA+IC0JCQkJZGV2X2Vy
+cigmcGRldi0+ZGV2LCAiJXM6IGNsayB1bmF2YWlsYWJsZVxuIiwNCj4gPiA+IC0JCQkJCWRhdGEt
+Pm5hbWUpOw0KPiA+ID4gLQkJCQlyZXR1cm4gRVJSX0NBU1QoYyk7DQo+ID4gPiAtCQkJfQ0KPiA+
+ID4gLQ0KPiA+ID4gLQkJCXNjcGQtPmNsa1tqXSA9IGM7DQo+ID4gPiAtCQl9DQo+ID4gPiArCQly
+ZXQgPSBpbml0X2Jhc2ljX2Nsa3MocGRldiwgc2NwZC0+Y2xrLCBkYXRhLT5iYXNpY19jbGtfbmFt
+ZSk7DQo+ID4gPiArCQlpZiAocmV0KQ0KPiA+ID4gKwkJCXJldHVybiBFUlJfUFRSKHJldCk7DQo+
+ID4gDQo+ID4gSnVzdCBjYWxsOg0KPiA+IA0KPiA+IAlyZXQgPSBkZXZtX2Nsa19idWxrX2dldCgm
+cGRldi0+ZGV2LCBBUlJBWV9TSVpFKGJhc2ljX2Nsb2NrcyksDQo+ID4gCQkJCWRhdGEtPmJhc2lj
+X2Nsb2Nrcyk7DQo+ID4gCWlmIChyZXQpDQo+ID4gCQlyZXR1cm4gRVJSX1BUUihyZXQpOw0KPiA+
+IA0KPiA+ID4gIA0KPiA+ID4gIAkJZ2VucGQtPm5hbWUgPSBkYXRhLT5uYW1lOw0KPiA+ID4gIAkJ
+Z2VucGQtPnBvd2VyX29mZiA9IHNjcHN5c19wb3dlcl9vZmY7DQo+ID4gPiBAQCAtNTYwLDcgKzUy
+OCw2IEBAIHN0YXRpYyB2b2lkIG10a19yZWdpc3Rlcl9wb3dlcl9kb21haW5zKHN0cnVjdCBwbGF0
+Zm9ybV9kZXZpY2UgKnBkZXYsDQo+ID4gPiAgCQkuY3RsX29mZnMgPSBTUE1fQ09OTl9QV1JfQ09O
+LA0KPiA+ID4gIAkJLmJ1c19wcm90X21hc2sgPSBNVDI3MDFfVE9QX0FYSV9QUk9UX0VOX0NPTk5f
+TSB8DQo+ID4gPiAgCQkJCSBNVDI3MDFfVE9QX0FYSV9QUk9UX0VOX0NPTk5fUywNCj4gPiA+IC0J
+CS5jbGtfaWQgPSB7Q0xLX05PTkV9LA0KPiA+ID4gIAkJLmNhcHMgPSBNVEtfU0NQRF9BQ1RJVkVf
+V0FLRVVQLA0KPiA+ID4gIAl9LA0KPiA+ID4gIAlbTVQyNzAxX1BPV0VSX0RPTUFJTl9ESVNQXSA9
+IHsNCj4gPiA+IEBAIC01NjgsNyArNTM1LDcgQEAgc3RhdGljIHZvaWQgbXRrX3JlZ2lzdGVyX3Bv
+d2VyX2RvbWFpbnMoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCj4gPiA+ICAJCS5zdGFf
+bWFzayA9IFBXUl9TVEFUVVNfRElTUCwNCj4gPiA+ICAJCS5jdGxfb2ZmcyA9IFNQTV9ESVNfUFdS
+X0NPTiwNCj4gPiA+ICAJCS5zcmFtX3Bkbl9iaXRzID0gR0VOTUFTSygxMSwgOCksDQo+ID4gPiAt
+CQkuY2xrX2lkID0ge0NMS19NTX0sDQo+ID4gPiArCQkuYmFzaWNfY2xrX25hbWUgPSB7Im1tIn0s
+DQo+ID4gDQo+ID4gCQkuYmFzaWNfY2xvY2tzW10gPSB7DQo+ID4gCQkJeyAuaWQgPSAibW0iIH0s
+DQo+ID4gCQl9Ow0KPiA+IA0KPiANCj4gVGhvc2UgYmFzaWMgY2xvY2tzIHdpdGhvdXQgZ2l2ZW4g
+YSBuYW1lIChuYW1lOiBudWxsKSB3b3VsZCBnZXQgaW5jb3JyZWN0DQo+IGNsb2NrIHZpYSBjbGtf
+YnVsa19nZXQoLi4uKSBkdWUgdG8gDQo+IA0KPiAvKioNCj4gICogb2ZfcGFyc2VfY2xrc3BlYygp
+IC0gUGFyc2UgYSBEVCBjbG9jayBzcGVjaWZpZXIgZm9yIGEgZ2l2ZW4gZGV2aWNlDQo+IG5vZGUN
+Cj4gICogQG5wOiBkZXZpY2Ugbm9kZSB0byBwYXJzZSBjbG9jayBzcGVjaWZpZXIgZnJvbQ0KPiAg
+KiBAaW5kZXg6IGluZGV4IG9mIHBoYW5kbGUgdG8gcGFyc2UgY2xvY2sgb3V0IG9mLiBJZiBpbmRl
+eCA8IDAsIEBuYW1lDQo+IGlzIHVzZWQNCj4gICogQG5hbWU6IGNsb2NrIG5hbWUgdG8gZmluZCBh
+bmQgcGFyc2UuIElmIG5hbWUgaXMgTlVMTCwgdGhlIGluZGV4IGlzDQo+IHVzZWQNCj4gDQo+IEFu
+ZCB0aGUgaW5kZXggaXMgMCBoZXJlIGluIHRoaXMgY2FsbHN0YWNrDQo+IA0KPiBJIGd1ZXNzIHNv
+bWV0aGluZyBuZWVkIHRvIGJlIGltcHJvdmVkIGJlZm9yZSB3ZSB1c2UgdGhlIGNsa19idWxrXyBB
+UElzLg0KPiANCg0KSGkgRW5yaWMsDQoNCkFjY29yZGluZyB0byB0aGUgcmVzdWx0IGFib3ZlLCBp
+cyBpdCBuZWNlc3NhcnkgdG8gY2hhbmdlIHRoZSBBUElzIG9yDQptYXliZSBJIHNob3VsZCBzZW5k
+IHRoZSBuZXh0IHZlcnNpb24gdjE1IGZpcnN0IHRvIGZpeCBvdGhlciBwcm9ibGVtcyB5b3UNCm1l
+bnRpb25lZD8gTWFueSB0aGFua3MuDQoNCj4gDQo+ID4gPiAgCQkuYnVzX3Byb3RfbWFzayA9IE1U
+MjcwMV9UT1BfQVhJX1BST1RfRU5fTU1fTTAsDQo+ID4gPiAgCQkuY2FwcyA9IE1US19TQ1BEX0FD
+VElWRV9XQUtFVVAsDQo+ID4gPiAgCX0sDQo+ID4gPiBAQCAtNTc4LDcgKzU0NSw3IEBAIHN0YXRp
+YyB2b2lkIG10a19yZWdpc3Rlcl9wb3dlcl9kb21haW5zKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
+KnBkZXYsDQo+ID4gPiAgCQkuY3RsX29mZnMgPSBTUE1fTUZHX1BXUl9DT04sDQo+ID4gPiAgCQku
+c3JhbV9wZG5fYml0cyA9IEdFTk1BU0soMTEsIDgpLA0KPiA+ID4gIAkJLnNyYW1fcGRuX2Fja19i
+aXRzID0gR0VOTUFTSygxMiwgMTIpLA0KPiA+ID4gLQkJLmNsa19pZCA9IHtDTEtfTUZHfSwNCj4g
+PiA+ICsJCS5iYXNpY19jbGtfbmFtZSA9IHsibWZnIn0sDQo+ID4gDQo+ID4gCQkuYmFzaWNfY2xv
+Y2tzW10gPSB7DQo+ID4gCQkJeyAuaWQgPSAibWZnIiB9LA0KPiA+IAkJfTsNCj4gPiANCj4gPiA+
+ICAJCS5jYXBzID0gTVRLX1NDUERfQUNUSVZFX1dBS0VVUCwNCj4gPiA+ICAJfSwNCj4gPiA+ICAJ
+W01UMjcwMV9QT1dFUl9ET01BSU5fVkRFQ10gPSB7DQo+ID4gPiBAQCAtNTg3LDcgKzU1NCw3IEBA
+IHN0YXRpYyB2b2lkIG10a19yZWdpc3Rlcl9wb3dlcl9kb21haW5zKHN0cnVjdCBwbGF0Zm9ybV9k
+ZXZpY2UgKnBkZXYsDQo+ID4gPiAgCQkuY3RsX29mZnMgPSBTUE1fVkRFX1BXUl9DT04sDQo+ID4g
+PiAgCQkuc3JhbV9wZG5fYml0cyA9IEdFTk1BU0soMTEsIDgpLA0KPiA+ID4gIAkJLnNyYW1fcGRu
+X2Fja19iaXRzID0gR0VOTUFTSygxMiwgMTIpLA0KPiA+ID4gLQkJLmNsa19pZCA9IHtDTEtfTU19
+LA0KPiA+ID4gKwkJLmJhc2ljX2Nsa19uYW1lID0geyJtbSJ9LA0KPiA+IA0KPiA+IC4uLg0KPiA+
+IA0KPiA+IFtzbmlwXQ0KPiANCj4gDQoNCg==
 
-
-On 05/14/2020 01:06 PM, Will Deacon wrote:
-> On Thu, May 14, 2020 at 07:14:58AM +0530, Anshuman Khandual wrote:
->> On 05/13/2020 08:34 PM, Dave Martin wrote:
->>> On Thu, May 07, 2020 at 06:59:10PM +0530, Anshuman Khandual wrote:
->>>> diff --git a/arch/arm64/include/asm/hwcap.h b/arch/arm64/include/asm/hwcap.h
->>>> index 0f00265248b5..589ac02e1ddd 100644
->>>> --- a/arch/arm64/include/asm/hwcap.h
->>>> +++ b/arch/arm64/include/asm/hwcap.h
->>>> @@ -8,18 +8,27 @@
->>>>  #include <uapi/asm/hwcap.h>
->>>>  #include <asm/cpufeature.h>
->>>>  
->>>> +#define COMPAT_HWCAP_SWP	(1 << 0)
->>>>  #define COMPAT_HWCAP_HALF	(1 << 1)
->>>>  #define COMPAT_HWCAP_THUMB	(1 << 2)
->>>> +#define COMPAT_HWCAP_26BIT	(1 << 3)
->>>>  #define COMPAT_HWCAP_FAST_MULT	(1 << 4)
->>>> +#define COMPAT_HWCAP_FPA	(1 << 5)
->>>>  #define COMPAT_HWCAP_VFP	(1 << 6)
->>>>  #define COMPAT_HWCAP_EDSP	(1 << 7)
->>>> +#define COMPAT_HWCAP_JAVA	(1 << 8)
->>>> +#define COMPAT_HWCAP_IWMMXT	(1 << 9)
->>>> +#define COMPAT_HWCAP_CRUNCH	(1 << 10)
->>>> +#define COMPAT_HWCAP_THUMBEE	(1 << 11)
->>>>  #define COMPAT_HWCAP_NEON	(1 << 12)
->>>>  #define COMPAT_HWCAP_VFPv3	(1 << 13)
->>>> +#define COMPAT_HWCAP_VFPV3D16	(1 << 14)
->>>>  #define COMPAT_HWCAP_TLS	(1 << 15)
->>>>  #define COMPAT_HWCAP_VFPv4	(1 << 16)
->>>>  #define COMPAT_HWCAP_IDIVA	(1 << 17)
->>>>  #define COMPAT_HWCAP_IDIVT	(1 << 18)
->>>>  #define COMPAT_HWCAP_IDIV	(COMPAT_HWCAP_IDIVA|COMPAT_HWCAP_IDIVT)
->>>> +#define COMPAT_HWCAP_VFPD32	(1 << 19)
->>>>  #define COMPAT_HWCAP_LPAE	(1 << 20)
->>>>  #define COMPAT_HWCAP_EVTSTRM	(1 << 21)
->>>
->>> With the possible exception of SWP (does the swp emulation allow us to
->>> report this as supported?), I think all these weren't mentioned because
->>> they aren't included in ARMv8 and so can never be reported.
->>>
->>> If we find ourselves reporting them, there's a bug somewhere.
->>>
->>> So, can we just default all obsolete string entries to NULL?
->>>
->>> When generating the cpuinfo strings we could WARN and just emit an empty
->>> string for that hwcap.
->>
->> All these above will be a change in the existing user visible behavior on
->> the system and this patch never intended to create one.
-> 
-> Why is it a change? We've never reported e.g. "java" on an arm64 kernel, so
-
-We already have "java" defined in existing compat_hwcap_str[] array even
-though it might never get set in compat_elf_hwcap. AFAICS, compat_elf_hwcap
-will have the following capabilities set (at the most).
-
-Via COMPAT_ELF_HWCAP_DEFAULT
-
-01.  COMPAT_HWCAP_HALF
-02.  COMPAT_HWCAP_THUMB
-03.  COMPAT_HWCAP_FAST_MULT
-04.  COMPAT_HWCAP_EDSP
-05.  COMPAT_HWCAP_TLS
-06.  COMPAT_HWCAP_IDIV
-07.  COMPAT_HWCAP_LPAE
-
-Via setup_elf_hwcaps(compat_elf_hwcaps) <-- setup_cpu_features()
-
-8.  COMPAT_HWCAP_NEON
-9.  COMPAT_HWCAP_VFPv4
-10. COMPAT_HWCAP_VFP
-11. COMPAT_HWCAP_VFPv3
-
-Via arch_timer_set_evtstrm_feature()
-
-12. COMPAT_HWCAP_EVTSTRM
-
-The code exists for "java" string to be displayed with /proc/cpuinfo but it
-may never get triggered as compat_elf_hwcap will never have JAVA capability
-unless there is a bug as you had rightly mentioned.
-
-The current patch preserves status quo without fixing the underlying problem
-("java" should have been dropped from possible /proc/cpuinfo display strings
-as it can never happen). It tries to formalize what is already being done.
-
-arch/arm64/kernel/cpuinfo.c
-
-static int c_show(struct seq_file *m, void *v)
-{
-	....
-#ifdef CONFIG_COMPAT
-	for (j = 0; compat_hwcap_str[j]; j++)
-		if (compat_elf_hwcap & (1 << j))
-		seq_printf(m, " %s", compat_hwcap_str[j]);
-	....
-#endif
-	....
-}
-
-When compat_hwcap_str[j] == "java" just define COMPAT_HWCAP_JAVA as (1 << j).
-
-> I agree with Dave that we shouldn't be adding this string. If it /ever/ ends
-> up in userspace it's because something has gone horribly wrong. NULL would
-> be much better. Couldn't you achieve that by simply omitting these entries?
-> e.g. deleting things like:
-> 
-> 	[COMPAT_KERNEL_HWCAP(JAVA)]     = "java",
-> 
-> completely (including the COMPAT_HWCAP_JAVA definition)?
-
-Right, dropping these above will fix the existing underlying problem. But the
-only point here is should that be done in this patch (which keeps everything
-as is) or with a separate patch fixing an already existing problem.
-
-> 
->> Hence, I will just defer this to maintainers on whether we should change
->> existing /proc/cpuinfo output (including non-practically-possible ones on
->> ARMv8) or even treat swap emulation as SWP.
-> 
-> SWP is fine because we emulate it and so userspace can use it. Removing that
-> *would* be a change in behaviour. I don't think the compat ABI is broken
-> here, so please don't change it without good reason.
-
-Understood, this patch was not trying to change the compat ABI. SWP just gets
-carried over as is like before.
