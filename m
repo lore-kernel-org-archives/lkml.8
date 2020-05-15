@@ -2,103 +2,111 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA19C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C389E20758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:08:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YgpXD3qY"
+	by mail.kernel.org (Postfix) with ESMTP id 1F0D920657
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbgEOMID (ORCPT
+        id S1726231AbgEOMIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:08:03 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56892 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgEOMID (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:08:03 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04FC7ncL069619;
-        Fri, 15 May 2020 07:07:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589544469;
-        bh=P2WNi7x0Zj8xqyBPxb8DBbQOS164uI/PXBCVTPhezlo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YgpXD3qY4FRwgn8ktmFMnOrKc0z7ACElFFeK/6D1FGNS9fUe0Mmg68P+RVh1L2Vzs
-         V2wbIgg3Hi3Nbsyk34iZ4EyPvLCcpLEbOVafiACntP20Wq8wU+cnjPBDKkUavmGsLr
-         +Ey8hdQ46uK+0bBXKHbSp8Yq0TjN3ArpESP9xrEw=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04FC7ntd052692
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 15 May 2020 07:07:49 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 15
- May 2020 07:07:48 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 15 May 2020 07:07:49 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04FC7ivD003821;
-        Fri, 15 May 2020 07:07:45 -0500
-Subject: Re: [PATCH AUTOSEL 5.6 30/62] net: Make PTP-specific drivers depend
- on PTP_1588_CLOCK
-To:     Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Clay McClure <clay@daemons.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-References: <20200514185147.19716-1-sashal@kernel.org>
- <20200514185147.19716-30-sashal@kernel.org>
- <CAK8P3a1Yh-qeh_CCVQZFcT0JMvhoxHx72KUWf3FXYD4yk_ptTw@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <2b087eec-98b8-dedf-410c-c966d9802c89@ti.com>
-Date:   Fri, 15 May 2020 15:07:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 15 May 2020 08:08:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:54982 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgEOMIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 08:08:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39021D6E;
+        Fri, 15 May 2020 05:08:16 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.24.119])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 195183F305;
+        Fri, 15 May 2020 05:08:13 -0700 (PDT)
+Date:   Fri, 15 May 2020 13:08:11 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        harb@amperecomputing.com
+Subject: Re: [PATCH v3 6/7] firmware: smccc: Add function to fetch SMCCC
+ version
+Message-ID: <20200515120811.GF67718@C02TD0UTHF1T.local>
+References: <20200506164411.3284-1-sudeep.holla@arm.com>
+ <20200506164411.3284-7-sudeep.holla@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1Yh-qeh_CCVQZFcT0JMvhoxHx72KUWf3FXYD4yk_ptTw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506164411.3284-7-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 15/05/2020 00:40, Arnd Bergmann wrote:
-> On Thu, May 14, 2020 at 8:52 PM Sasha Levin <sashal@kernel.org> wrote:
->>
->> From: Clay McClure <clay@daemons.net>
->>
->> [ Upstream commit b6d49cab44b567b3e0a5544b3d61e516a7355fad ]
->>
->> Commit d1cbfd771ce8 ("ptp_clock: Allow for it to be optional") changed
->> all PTP-capable Ethernet drivers from `select PTP_1588_CLOCK` to `imply
->> PTP_1588_CLOCK`, "in order to break the hard dependency between the PTP
->> clock subsystem and ethernet drivers capable of being clock providers."
+On Wed, May 06, 2020 at 05:44:10PM +0100, Sudeep Holla wrote:
+> For backward compatibility reasons, PSCI maintains SMCCC version as
+> SMCCC didn't provide ARM_SMCCC_VERSION_FUNC_ID until v1.1
 > 
-> I don't think this one should be backported unless 3a9dd3ecb207 ("kconfig:
-> make 'imply' obey the direct dependency") is already backported to v5.6
-> (which I don't think it should either).
-> 
-Yes. pls, drop it. It's rather optimization, not a fix.
-And it might introduce build failures.
+> Let us provide accessors to fetch the SMCCC version in PSCI so that
+> other SMCCC v1.1+ features can use it.
 
--- 
-Best regards,
-grygorii
+Stale commit message? This was factored out of PSCI in the prior commit.
+
+> Reviewed-by: Steven Price <steven.price@arm.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/firmware/smccc/smccc.c | 4 ++++
+>  include/linux/arm-smccc.h      | 9 +++++++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/drivers/firmware/smccc/smccc.c b/drivers/firmware/smccc/smccc.c
+> index 488699aae24f..672974df0dfe 100644
+> --- a/drivers/firmware/smccc/smccc.c
+> +++ b/drivers/firmware/smccc/smccc.c
+> @@ -24,3 +24,7 @@ enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void)
+>  	return smccc_conduit;
+>  }
+>  
+> +u32 arm_smccc_version_get(void)
+> +{
+> +	return smccc_version;
+> +}
+
+Could we please call this arm_smccc_get_version(), to align with the
+existing arm_smccc_1_1_get_conduit()?
+
+> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+> index 11fb20bfa8f7..8dd54dad1ec5 100644
+> --- a/include/linux/arm-smccc.h
+> +++ b/include/linux/arm-smccc.h
+> @@ -109,6 +109,15 @@ void __init arm_smccc_version_init(u32 version, enum arm_smccc_conduit conduit);
+>   */
+>  enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void);
+>  
+> +/**
+> + * arm_smccc_version_get()
+> + *
+> + * Returns the version to be used for SMCCCv1.1 or later.
+> + *
+> + * When SMCCCv1.1 or above is not present, assumes and returns SMCCCv1.0.
+> + */
+> +u32 arm_smccc_version_get(void);
+
+Can we please reword the last line to something like:
+
+| When SMCCCv1.1 or above is not present, returns SMCCCv1.0, but this
+| does not imply the presence of firmware or a valid conduit. Callers
+| handling SMCCCv1.0 must determine the conduit by other means.
+
+With all that:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Thanks,
+Mark.
