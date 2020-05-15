@@ -2,179 +2,440 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 532EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2685C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30A1F204EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:20:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UEYxWKhr"
+	by mail.kernel.org (Postfix) with ESMTP id 87735204EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgEOLUd (ORCPT
+        id S1726349AbgEOLUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:20:33 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:49159 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726217AbgEOLUb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:20:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589541631; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=1OX94c5DVErd4QJ5QC03HLjvrFguY5uhejhppx3Mmtw=; b=UEYxWKhrqjporgt4qgRj0jadxotI8GMs/Qsvaul99LYjSnnECLkPllBheN08o7taLDdv2RVp
- ljg6+AAev/ZVz0MBDZoZTxRyuMkkwUvfvlHSI5ufE2b7HDb6HJdBtsmEbIqU3SZSdZUHK61n
- kTDUnXiuXE+aE/dema5BDcKyMGM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5ebe7afed915e862f6f6332f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 15 May 2020 11:20:30
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E125EC43636; Fri, 15 May 2020 11:20:29 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D269C433D2;
-        Fri, 15 May 2020 11:20:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0D269C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: [PATCH V1 3/3] mmc: sdhci: Allow platform controlled voltage switching
-Date:   Fri, 15 May 2020 16:48:54 +0530
-Message-Id: <1589541535-8523-4-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+        Fri, 15 May 2020 07:20:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42096 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbgEOLUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:20:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1E2AEAA4F;
+        Fri, 15 May 2020 11:20:41 +0000 (UTC)
+Date:   Fri, 15 May 2020 13:20:38 +0200
+Message-ID: <s5hblmpmol5.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 5.6-rc6
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vijay Viswanath <vviswana@codeaurora.org>
+Linus,
 
-If vendor platform drivers are controlling whole logic of voltage
-switching, then sdhci driver no need control vqmmc regulator.
-So skip enabling/disable vqmmc from SDHC driver.
+please pull sound fixes for v5.7-rc6 from:
 
-Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.7-rc6
+
+The topmost commit is b590b38ca305d6d7902ec7c4f7e273e0069f3bcc
+
+----------------------------------------------------------------
+
+sound fixes for 5.7-rc6
+
+The things look good and calming down; the only change to ALSA core
+is the fix for racy rawmidi buffer accesses spotted by syzkaller,
+and the rest are all small device-specific quirks for HD-audio and
+USB-audio devices.
+
+----------------------------------------------------------------
+
+Andrew Oakley (1):
+      ALSA: usb-audio: add mapping for ASRock TRX40 Creator
+
+Chris Chiu (1):
+      ALSA: hda/realtek - Enable headset mic of ASUS GL503VM with ALC295
+
+Jesus Ramos (1):
+      ALSA: usb-audio: Add control message quirk delay for Kingston HyperX headset
+
+Jian-Hong Pan (2):
+      ALSA: hda/realtek - Enable headset mic of ASUS UX550GE with ALC295
+      ALSA: hda/realtek: Enable headset mic of ASUS UX581LV with ALC295
+
+Kai-Heng Feng (2):
+      Revert "ALSA: hda/realtek: Fix pop noise on ALC225"
+      ALSA: hda/realtek - Fix S3 pop noise on Dell Wyse
+
+Mike Pozulp (1):
+      ALSA: hda/realtek: Add quirk for Samsung Notebook
+
+Takashi Iwai (3):
+      ALSA: rawmidi: Fix racy buffer resize under concurrent accesses
+      ALSA: hda/realtek - Add COEF workaround for ASUS ZenBook UX431DA
+      ALSA: hda/realtek - Limit int mic boost for Thinkpad T530
+
+Takashi Sakamoto (1):
+      ALSA: firewire-lib: fix 'function sizeof not defined' error of tracepoints format
+
 ---
- drivers/mmc/host/sdhci.c | 32 +++++++++++++++++++-------------
- drivers/mmc/host/sdhci.h |  1 +
- 2 files changed, 20 insertions(+), 13 deletions(-)
+ include/sound/rawmidi.h             |  1 +
+ sound/core/rawmidi.c                | 31 ++++++++++++++--
+ sound/firewire/amdtp-stream-trace.h |  3 +-
+ sound/pci/hda/patch_realtek.c       | 74 +++++++++++++++++++++++++++++++++++--
+ sound/usb/mixer_maps.c              |  5 +++
+ sound/usb/quirks-table.h            |  1 +
+ sound/usb/quirks.c                  |  9 +++--
+ 7 files changed, 111 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 1bb6b67..c010823 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -4098,6 +4098,7 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	unsigned int override_timeout_clk;
- 	u32 max_clk;
- 	int ret;
-+	bool enable_vqmmc = false;
+diff --git a/include/sound/rawmidi.h b/include/sound/rawmidi.h
+index a36b7227a15a..334842daa904 100644
+--- a/include/sound/rawmidi.h
++++ b/include/sound/rawmidi.h
+@@ -61,6 +61,7 @@ struct snd_rawmidi_runtime {
+ 	size_t avail_min;	/* min avail for wakeup */
+ 	size_t avail;		/* max used buffer for wakeup */
+ 	size_t xruns;		/* over/underruns counter */
++	int buffer_ref;		/* buffer reference count */
+ 	/* misc */
+ 	spinlock_t lock;
+ 	wait_queue_head_t sleep;
+diff --git a/sound/core/rawmidi.c b/sound/core/rawmidi.c
+index 20dd08e1f675..2a688b711a9a 100644
+--- a/sound/core/rawmidi.c
++++ b/sound/core/rawmidi.c
+@@ -120,6 +120,17 @@ static void snd_rawmidi_input_event_work(struct work_struct *work)
+ 		runtime->event(runtime->substream);
+ }
  
- 	WARN_ON(host == NULL);
- 	if (host == NULL)
-@@ -4111,9 +4112,12 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	 * the host can take the appropriate action if regulators are not
- 	 * available.
- 	 */
--	ret = mmc_regulator_get_supply(mmc);
--	if (ret)
--		return ret;
-+	if (!mmc->supply.vqmmc) {
-+		ret = mmc_regulator_get_supply(mmc);
-+		if (ret)
-+			return ret;
-+		enable_vqmmc  = true;
-+	}
- 
- 	DBG("Version:   0x%08x | Present:  0x%08x\n",
- 	    sdhci_readw(host, SDHCI_HOST_VERSION),
-@@ -4373,7 +4377,15 @@ int sdhci_setup_host(struct sdhci_host *host)
- 		mmc->caps |= MMC_CAP_NEEDS_POLL;
- 
- 	if (!IS_ERR(mmc->supply.vqmmc)) {
--		ret = regulator_enable(mmc->supply.vqmmc);
-+		if (enable_vqmmc) {
-+			ret = regulator_enable(mmc->supply.vqmmc);
-+			if (ret) {
-+				pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
-+					mmc_hostname(mmc), ret);
-+				mmc->supply.vqmmc = ERR_PTR(-EINVAL);
-+			}
-+			host->vqmmc_enabled = !ret;
-+		}
- 
- 		/* If vqmmc provides no 1.8V signalling, then there's no UHS */
- 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
-@@ -4386,12 +4398,6 @@ int sdhci_setup_host(struct sdhci_host *host)
- 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 2700000,
- 						    3600000))
- 			host->flags &= ~SDHCI_SIGNALING_330;
--
--		if (ret) {
--			pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
--				mmc_hostname(mmc), ret);
--			mmc->supply.vqmmc = ERR_PTR(-EINVAL);
--		}
- 	}
- 
- 	if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V) {
-@@ -4625,7 +4631,7 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	return 0;
- 
- unreg:
--	if (!IS_ERR(mmc->supply.vqmmc))
-+	if (host->vqmmc_enabled)
- 		regulator_disable(mmc->supply.vqmmc);
- undma:
- 	if (host->align_buffer)
-@@ -4643,7 +4649,7 @@ void sdhci_cleanup_host(struct sdhci_host *host)
++/* buffer refcount management: call with runtime->lock held */
++static inline void snd_rawmidi_buffer_ref(struct snd_rawmidi_runtime *runtime)
++{
++	runtime->buffer_ref++;
++}
++
++static inline void snd_rawmidi_buffer_unref(struct snd_rawmidi_runtime *runtime)
++{
++	runtime->buffer_ref--;
++}
++
+ static int snd_rawmidi_runtime_create(struct snd_rawmidi_substream *substream)
  {
- 	struct mmc_host *mmc = host->mmc;
+ 	struct snd_rawmidi_runtime *runtime;
+@@ -669,6 +680,11 @@ static int resize_runtime_buffer(struct snd_rawmidi_runtime *runtime,
+ 		if (!newbuf)
+ 			return -ENOMEM;
+ 		spin_lock_irq(&runtime->lock);
++		if (runtime->buffer_ref) {
++			spin_unlock_irq(&runtime->lock);
++			kvfree(newbuf);
++			return -EBUSY;
++		}
+ 		oldbuf = runtime->buffer;
+ 		runtime->buffer = newbuf;
+ 		runtime->buffer_size = params->buffer_size;
+@@ -1019,8 +1035,10 @@ static long snd_rawmidi_kernel_read1(struct snd_rawmidi_substream *substream,
+ 	long result = 0, count1;
+ 	struct snd_rawmidi_runtime *runtime = substream->runtime;
+ 	unsigned long appl_ptr;
++	int err = 0;
  
--	if (!IS_ERR(mmc->supply.vqmmc))
-+	if (host->vqmmc_enabled)
- 		regulator_disable(mmc->supply.vqmmc);
+ 	spin_lock_irqsave(&runtime->lock, flags);
++	snd_rawmidi_buffer_ref(runtime);
+ 	while (count > 0 && runtime->avail) {
+ 		count1 = runtime->buffer_size - runtime->appl_ptr;
+ 		if (count1 > count)
+@@ -1039,16 +1057,19 @@ static long snd_rawmidi_kernel_read1(struct snd_rawmidi_substream *substream,
+ 		if (userbuf) {
+ 			spin_unlock_irqrestore(&runtime->lock, flags);
+ 			if (copy_to_user(userbuf + result,
+-					 runtime->buffer + appl_ptr, count1)) {
+-				return result > 0 ? result : -EFAULT;
+-			}
++					 runtime->buffer + appl_ptr, count1))
++				err = -EFAULT;
+ 			spin_lock_irqsave(&runtime->lock, flags);
++			if (err)
++				goto out;
+ 		}
+ 		result += count1;
+ 		count -= count1;
+ 	}
++ out:
++	snd_rawmidi_buffer_unref(runtime);
+ 	spin_unlock_irqrestore(&runtime->lock, flags);
+-	return result;
++	return result > 0 ? result : err;
+ }
  
- 	if (host->align_buffer)
-@@ -4780,7 +4786,7 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
+ long snd_rawmidi_kernel_read(struct snd_rawmidi_substream *substream,
+@@ -1342,6 +1363,7 @@ static long snd_rawmidi_kernel_write1(struct snd_rawmidi_substream *substream,
+ 			return -EAGAIN;
+ 		}
+ 	}
++	snd_rawmidi_buffer_ref(runtime);
+ 	while (count > 0 && runtime->avail > 0) {
+ 		count1 = runtime->buffer_size - runtime->appl_ptr;
+ 		if (count1 > count)
+@@ -1373,6 +1395,7 @@ static long snd_rawmidi_kernel_write1(struct snd_rawmidi_substream *substream,
+ 	}
+       __end:
+ 	count1 = runtime->avail < runtime->buffer_size;
++	snd_rawmidi_buffer_unref(runtime);
+ 	spin_unlock_irqrestore(&runtime->lock, flags);
+ 	if (count1)
+ 		snd_rawmidi_output_trigger(substream, 1);
+diff --git a/sound/firewire/amdtp-stream-trace.h b/sound/firewire/amdtp-stream-trace.h
+index 16c7f6605511..26e7cb555d3c 100644
+--- a/sound/firewire/amdtp-stream-trace.h
++++ b/sound/firewire/amdtp-stream-trace.h
+@@ -66,8 +66,7 @@ TRACE_EVENT(amdtp_packet,
+ 		__entry->irq,
+ 		__entry->index,
+ 		__print_array(__get_dynamic_array(cip_header),
+-			      __get_dynamic_array_len(cip_header),
+-			      sizeof(u8)))
++			      __get_dynamic_array_len(cip_header), 1))
+ );
  
- 	destroy_workqueue(host->complete_wq);
+ #endif
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index c16f63957c5a..dc2302171a71 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5856,6 +5856,15 @@ static void alc233_alc662_fixup_lenovo_dual_codecs(struct hda_codec *codec,
+ 	}
+ }
  
--	if (!IS_ERR(mmc->supply.vqmmc))
-+	if (host->vqmmc_enabled)
- 		regulator_disable(mmc->supply.vqmmc);
++static void alc225_fixup_s3_pop_noise(struct hda_codec *codec,
++				      const struct hda_fixup *fix, int action)
++{
++	if (action != HDA_FIXUP_ACT_PRE_PROBE)
++		return;
++
++	codec->power_save_node = 1;
++}
++
+ /* Forcibly assign NID 0x03 to HP/LO while NID 0x02 to SPK for EQ */
+ static void alc274_fixup_bind_dacs(struct hda_codec *codec,
+ 				    const struct hda_fixup *fix, int action)
+@@ -5960,6 +5969,7 @@ enum {
+ 	ALC269_FIXUP_HP_LINE1_MIC1_LED,
+ 	ALC269_FIXUP_INV_DMIC,
+ 	ALC269_FIXUP_LENOVO_DOCK,
++	ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST,
+ 	ALC269_FIXUP_NO_SHUTUP,
+ 	ALC286_FIXUP_SONY_MIC_NO_PRESENCE,
+ 	ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT,
+@@ -6045,6 +6055,7 @@ enum {
+ 	ALC233_FIXUP_ACER_HEADSET_MIC,
+ 	ALC294_FIXUP_LENOVO_MIC_LOCATION,
+ 	ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE,
++	ALC225_FIXUP_S3_POP_NOISE,
+ 	ALC700_FIXUP_INTEL_REFERENCE,
+ 	ALC274_FIXUP_DELL_BIND_DACS,
+ 	ALC274_FIXUP_DELL_AIO_LINEOUT_VERB,
+@@ -6080,9 +6091,12 @@ enum {
+ 	ALC294_FIXUP_ASUS_DUAL_SPK,
+ 	ALC285_FIXUP_THINKPAD_HEADSET_JACK,
+ 	ALC294_FIXUP_ASUS_HPE,
++	ALC294_FIXUP_ASUS_COEF_1B,
+ 	ALC285_FIXUP_HP_GPIO_LED,
+ 	ALC285_FIXUP_HP_MUTE_LED,
+ 	ALC236_FIXUP_HP_MUTE_LED,
++	ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET,
++	ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
+ };
  
- 	if (host->align_buffer)
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 8d2a096..24d27e1 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -570,6 +570,7 @@ struct sdhci_host {
- 	u32 caps1;		/* CAPABILITY_1 */
- 	bool read_caps;		/* Capability flags have been read */
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -6280,6 +6294,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT
+ 	},
++	[ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc269_fixup_limit_int_mic_boost,
++		.chained = true,
++		.chain_id = ALC269_FIXUP_LENOVO_DOCK,
++	},
+ 	[ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc269_fixup_pincfg_no_hp_to_lineout,
+@@ -6932,6 +6952,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 			{ }
+ 		},
+ 		.chained = true,
++		.chain_id = ALC225_FIXUP_S3_POP_NOISE
++	},
++	[ALC225_FIXUP_S3_POP_NOISE] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc225_fixup_s3_pop_noise,
++		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
+ 	},
+ 	[ALC700_FIXUP_INTEL_REFERENCE] = {
+@@ -7204,6 +7230,17 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC294_FIXUP_ASUS_HEADSET_MIC
+ 	},
++	[ALC294_FIXUP_ASUS_COEF_1B] = {
++		.type = HDA_FIXUP_VERBS,
++		.v.verbs = (const struct hda_verb[]) {
++			/* Set bit 10 to correct noisy output after reboot from
++			 * Windows 10 (due to pop noise reduction?)
++			 */
++			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x1b },
++			{ 0x20, AC_VERB_SET_PROC_COEF, 0x4e4b },
++			{ }
++		},
++	},
+ 	[ALC285_FIXUP_HP_GPIO_LED] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc285_fixup_hp_gpio_led,
+@@ -7216,6 +7253,22 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc236_fixup_hp_mute_led,
+ 	},
++	[ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET] = {
++		.type = HDA_FIXUP_VERBS,
++		.v.verbs = (const struct hda_verb[]) {
++			{ 0x1a, AC_VERB_SET_PIN_WIDGET_CONTROL, 0xc5 },
++			{ }
++		},
++	},
++	[ALC295_FIXUP_ASUS_MIC_NO_PRESENCE] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x19, 0x01a1913c }, /* use as headset mic, without its own jack detect */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC269_FIXUP_HEADSET_MODE
++	},
+ };
  
-+	bool vqmmc_enabled;	/* Vqmmc is enabled */
- 	unsigned int            ocr_avail_sdio;	/* OCR bit masks */
- 	unsigned int            ocr_avail_sd;
- 	unsigned int            ocr_avail_mmc;
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
-
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7383,8 +7436,10 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x18b1, "Asus MJ401TA", ALC256_FIXUP_ASUS_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x18f1, "Asus FX505DT", ALC256_FIXUP_ASUS_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x19ce, "ASUS B9450FA", ALC294_FIXUP_ASUS_HPE),
++	SND_PCI_QUIRK(0x1043, 0x19e1, "ASUS UX581LV", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
+ 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
++	SND_PCI_QUIRK(0x1043, 0x1b11, "ASUS UX431DA", ALC294_FIXUP_ASUS_COEF_1B),
+ 	SND_PCI_QUIRK(0x1043, 0x1b13, "Asus U41SV", ALC269_FIXUP_INV_DMIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1bbd, "ASUS Z550MA", ALC255_FIXUP_ASUS_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1043, 0x1c23, "Asus X55U", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+@@ -7410,6 +7465,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x10ec, 0x10f2, "Intel Reference board", ALC700_FIXUP_INTEL_REFERENCE),
+ 	SND_PCI_QUIRK(0x10f7, 0x8338, "Panasonic CF-SZ6", ALC269_FIXUP_HEADSET_MODE),
+ 	SND_PCI_QUIRK(0x144d, 0xc109, "Samsung Ativ book 9 (NP900X3G)", ALC269_FIXUP_INV_DMIC),
++	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
++	SND_PCI_QUIRK(0x144d, 0xc176, "Samsung Notebook 9 Pro (NP930MBE-K04US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x144d, 0xc740, "Samsung Ativ book 8 (NP870Z5G)", ALC269_FIXUP_ATIV_BOOK_8),
+ 	SND_PCI_QUIRK(0x1458, 0xfa53, "Gigabyte BXBT-2807", ALC283_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1462, 0xb120, "MSI Cubi MS-B120", ALC283_FIXUP_HEADSET_MIC),
+@@ -7426,7 +7483,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x21b8, "Thinkpad Edge 14", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x21ca, "Thinkpad L412", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x21e9, "Thinkpad Edge 15", ALC269_FIXUP_SKU_IGNORE),
+-	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK),
++	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST),
+ 	SND_PCI_QUIRK(0x17aa, 0x21fa, "Thinkpad X230", ALC269_FIXUP_LENOVO_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x21f3, "Thinkpad T430", ALC269_FIXUP_LENOVO_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x21fb, "Thinkpad T430s", ALC269_FIXUP_LENOVO_DOCK),
+@@ -7565,6 +7622,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC269_FIXUP_HEADSET_MODE, .name = "headset-mode"},
+ 	{.id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC, .name = "headset-mode-no-hp-mic"},
+ 	{.id = ALC269_FIXUP_LENOVO_DOCK, .name = "lenovo-dock"},
++	{.id = ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST, .name = "lenovo-dock-limit-boost"},
+ 	{.id = ALC269_FIXUP_HP_GPIO_LED, .name = "hp-gpio-led"},
+ 	{.id = ALC269_FIXUP_HP_DOCK_GPIO_MIC1_LED, .name = "hp-dock-gpio-mic1-led"},
+ 	{.id = ALC269_FIXUP_DELL1_MIC_NO_PRESENCE, .name = "dell-headset-multi"},
+@@ -7993,6 +8051,18 @@ static const struct snd_hda_pin_quirk alc269_pin_fixup_tbl[] = {
+ 		{0x12, 0x90a60130},
+ 		{0x17, 0x90170110},
+ 		{0x21, 0x03211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1043, "ASUS", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
++		{0x12, 0x90a60120},
++		{0x17, 0x90170110},
++		{0x21, 0x04211030}),
++	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1043, "ASUS", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
++		{0x12, 0x90a60130},
++		{0x17, 0x90170110},
++		{0x21, 0x03211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1043, "ASUS", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
++		{0x12, 0x90a60130},
++		{0x17, 0x90170110},
++		{0x21, 0x03211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL4_MIC_NO_PRESENCE,
+ 		{0x14, 0x90170110},
+ 		{0x21, 0x04211020}),
+@@ -8209,8 +8279,6 @@ static int patch_alc269(struct hda_codec *codec)
+ 		spec->gen.mixer_nid = 0;
+ 		break;
+ 	case 0x10ec0225:
+-		codec->power_save_node = 1;
+-		/* fall through */
+ 	case 0x10ec0295:
+ 	case 0x10ec0299:
+ 		spec->codec_variant = ALC269_TYPE_ALC225;
+diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
+index 0260c750e156..bfdc6ad52785 100644
+--- a/sound/usb/mixer_maps.c
++++ b/sound/usb/mixer_maps.c
+@@ -549,6 +549,11 @@ static const struct usbmix_ctl_map usbmix_ctl_maps[] = {
+ 		.map = trx40_mobo_map,
+ 		.connector_map = trx40_mobo_connector_map,
+ 	},
++	{	/* Asrock TRX40 Creator */
++		.id = USB_ID(0x26ce, 0x0a01),
++		.map = trx40_mobo_map,
++		.connector_map = trx40_mobo_connector_map,
++	},
+ 	{ 0 } /* terminator */
+ };
+ 
+diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
+index a1df4c5b4f8c..6313c30f5c85 100644
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3563,6 +3563,7 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
+ ALC1220_VB_DESKTOP(0x0414, 0xa002), /* Gigabyte TRX40 Aorus Pro WiFi */
+ ALC1220_VB_DESKTOP(0x0db0, 0x0d64), /* MSI TRX40 Creator */
+ ALC1220_VB_DESKTOP(0x0db0, 0x543d), /* MSI TRX40 */
++ALC1220_VB_DESKTOP(0x26ce, 0x0a01), /* Asrock TRX40 Creator */
+ #undef ALC1220_VB_DESKTOP
+ 
+ #undef USB_DEVICE_VENDOR_SPEC
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 848a4cc25bed..d8a765be5dfe 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1636,13 +1636,14 @@ void snd_usb_ctl_msg_quirk(struct usb_device *dev, unsigned int pipe,
+ 	    && (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
+ 		msleep(20);
+ 
+-	/* Zoom R16/24, Logitech H650e, Jabra 550a needs a tiny delay here,
+-	 * otherwise requests like get/set frequency return as failed despite
+-	 * actually succeeding.
++	/* Zoom R16/24, Logitech H650e, Jabra 550a, Kingston HyperX needs a tiny
++	 * delay here, otherwise requests like get/set frequency return as
++	 * failed despite actually succeeding.
+ 	 */
+ 	if ((chip->usb_id == USB_ID(0x1686, 0x00dd) ||
+ 	     chip->usb_id == USB_ID(0x046d, 0x0a46) ||
+-	     chip->usb_id == USB_ID(0x0b0e, 0x0349)) &&
++	     chip->usb_id == USB_ID(0x0b0e, 0x0349) ||
++	     chip->usb_id == USB_ID(0x0951, 0x16ad)) &&
+ 	    (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
+ 		usleep_range(1000, 2000);
+ }
