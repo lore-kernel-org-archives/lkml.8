@@ -2,67 +2,130 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7606C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5CF20758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:57:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589547425;
-	bh=5LfETwNLRvbv2GFgFzYNckimigSr+gEHh5GgDJDslC8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qh9bEZ8wnUyoaJMS44rQstfqY3pDh6Q2N61cPktEa826dHT/qK8jk5RKg45SVvLBZ
-	 +nJglVc72SGOcPGb/6Tx23nmrMbl08Xvx7A5hCHrbPFmxK5wv8DmxWUZ1SKzSYulHH
-	 l0KkAyyn9Mu265yeg9kOapgvwPn3qrIr5wN/S1rs=
+	by mail.kernel.org (Postfix) with ESMTP id C7D202074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgEOM5E (ORCPT
+        id S1726241AbgEOM6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:57:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40446 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 08:58:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:55652 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgEOM5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:57:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CE2D2074D;
-        Fri, 15 May 2020 12:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589547423;
-        bh=5LfETwNLRvbv2GFgFzYNckimigSr+gEHh5GgDJDslC8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zmPFsow88V3GkdL2eRgAfvpUwHPvhHjMh8f6/iry+oQKv+yxVhuNxZ1JNzlJPxvCb
-         oxtnBH/CQ8G2XsnNdY63GZwd3hZO/dPdK1/GzdJ5sEioz1dIFQA0mk5XV6a5qJKTld
-         l7GZWiq5rWWGlr/FWVRCfGqlfKrnFbUuslue8iNA=
-Date:   Fri, 15 May 2020 14:57:01 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Siddharth Chandrasekaran <siddharth@embedjournal.com>
-Cc:     Siddharth Chandrasekaran <csiddharth@vmware.com>,
-        srostedt@vmware.com, linux-kernel@vger.kernel.org,
-        stable@kernel.org, srivatsab@vmware.com, dchinner@redhat.com,
-        darrick.wong@oracle.com
-Subject: Re: [PATCH] Backport security fixe to 4.9 and 4.4 stable trees
-Message-ID: <20200515125701.GA1934886@kroah.com>
-References: <cover.1589486724.git.csiddharth@vmware.com>
- <20200515124945.GA93755@csiddharth-a01.vmware.com>
+        id S1726162AbgEOM6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 08:58:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF37E1042;
+        Fri, 15 May 2020 05:58:19 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.6])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5DF3B3F305;
+        Fri, 15 May 2020 05:58:10 -0700 (PDT)
+Date:   Fri, 15 May 2020 13:57:58 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        harb@amperecomputing.com
+Subject: Re: [PATCH v3 6/7] firmware: smccc: Add function to fetch SMCCC
+ version
+Message-ID: <20200515125758.GC1591@bogus>
+References: <20200506164411.3284-1-sudeep.holla@arm.com>
+ <20200506164411.3284-7-sudeep.holla@arm.com>
+ <20200515120811.GF67718@C02TD0UTHF1T.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200515124945.GA93755@csiddharth-a01.vmware.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200515120811.GF67718@C02TD0UTHF1T.local>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 06:19:45PM +0530, Siddharth Chandrasekaran wrote:
-> Please ignore this patch set, I accidentally added another patch I was
-> working on. Will send v2 with the right patches.
+On Fri, May 15, 2020 at 01:08:11PM +0100, Mark Rutland wrote:
+> On Wed, May 06, 2020 at 05:44:10PM +0100, Sudeep Holla wrote:
+> > For backward compatibility reasons, PSCI maintains SMCCC version as
+> > SMCCC didn't provide ARM_SMCCC_VERSION_FUNC_ID until v1.1
+> > 
+> > Let us provide accessors to fetch the SMCCC version in PSCI so that
+> > other SMCCC v1.1+ features can use it.
+> 
+> Stale commit message? This was factored out of PSCI in the prior commit.
+>
 
-What patch set?  I see nothing in this email, so I have no idea what you
-are referring to :(
+Duh ! Will drop that.
 
-greg k-h
+> > Reviewed-by: Steven Price <steven.price@arm.com>
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > ---
+> >  drivers/firmware/smccc/smccc.c | 4 ++++
+> >  include/linux/arm-smccc.h      | 9 +++++++++
+> >  2 files changed, 13 insertions(+)
+> > 
+> > diff --git a/drivers/firmware/smccc/smccc.c b/drivers/firmware/smccc/smccc.c
+> > index 488699aae24f..672974df0dfe 100644
+> > --- a/drivers/firmware/smccc/smccc.c
+> > +++ b/drivers/firmware/smccc/smccc.c
+> > @@ -24,3 +24,7 @@ enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void)
+> >  	return smccc_conduit;
+> >  }
+> >  
+> > +u32 arm_smccc_version_get(void)
+> > +{
+> > +	return smccc_version;
+> > +}
+> 
+> Could we please call this arm_smccc_get_version(), to align with the
+> existing arm_smccc_1_1_get_conduit()?
+>
+
+Right will fix that. (I may suddenly got into SCMI mode where Greg or
+someone asked me change all the function names to have verb at the end 😁)
+
+> > diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+> > index 11fb20bfa8f7..8dd54dad1ec5 100644
+> > --- a/include/linux/arm-smccc.h
+> > +++ b/include/linux/arm-smccc.h
+> > @@ -109,6 +109,15 @@ void __init arm_smccc_version_init(u32 version, enum arm_smccc_conduit conduit);
+> >   */
+> >  enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void);
+> >  
+> > +/**
+> > + * arm_smccc_version_get()
+> > + *
+> > + * Returns the version to be used for SMCCCv1.1 or later.
+> > + *
+> > + * When SMCCCv1.1 or above is not present, assumes and returns SMCCCv1.0.
+> > + */
+> > +u32 arm_smccc_version_get(void);
+> 
+> Can we please reword the last line to something like:
+>
+> | When SMCCCv1.1 or above is not present, returns SMCCCv1.0, but this
+> | does not imply the presence of firmware or a valid conduit. Callers
+> | handling SMCCCv1.0 must determine the conduit by other means.
+>
+
+Sure
+
+> With all that:
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> 
+
+Thanks,
+
+-- 
+Regards,
+Sudeep
