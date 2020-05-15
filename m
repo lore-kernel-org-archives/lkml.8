@@ -2,284 +2,215 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84097C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C209C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69248207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCBF62076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:52:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UZ8+sJI+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgEOOwB (ORCPT
+        id S1726254AbgEOOwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:52:01 -0400
-Received: from mga05.intel.com ([192.55.52.43]:27030 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgEOOwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:52:00 -0400
-IronPort-SDR: mcba1R6OENUDv8qeuAeBMuMpKFu0TewZVwf+BZOafk94r9SFtOGRSamz1cyOB9MEYbptMUIm6Z
- veTCvgsM9VBg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 07:51:59 -0700
-IronPort-SDR: HwPk1H61Q+H4zsEv20ReDwzqDvKEXNvgEDK9TQ2yu/lH1xQmk6pcwVrQyzaEjrKy38GcLsoRkW
- sro0LQ8ZJSxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="341999325"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 15 May 2020 07:51:52 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZbgn-006tLt-NT; Fri, 15 May 2020 17:51:53 +0300
-Date:   Fri, 15 May 2020 17:51:53 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Eddie James <eajames@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Raymond Tan <raymond.tan@intel.com>,
-        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 13/19] spi: dw: Move Non-DMA code to the DW PCIe-SPI
- driver
-Message-ID: <20200515145153.GJ1634618@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-14-Sergey.Semin@baikalelectronics.ru>
+        Fri, 15 May 2020 10:52:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726144AbgEOOwf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 10:52:35 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BC1FC05BD09
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 07:52:35 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id k6so3039909iob.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 07:52:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vydHQTzj3c686TmTMHL1QqAtMRNRd4XB3MteF3kHgAs=;
+        b=UZ8+sJI+p0f3is3kkpc69G6irKX6PH1tH/sgzavBs66A67D3Q6q/lwNTuPV3zb6U68
+         kqyrxtvEIkD7xcxvxSbLBvuowF52WJLwD3Ss7hSzlm66kdDyGCH1rpB63yzx+J5uHGcT
+         ZEo3HnRA6MgTbSPk0O2J8ZLHIDgWLFLcxrCJLMU7oRNLQNXO9B9bgaIzsaINvzb92+2e
+         HYHMjemU7Or55Oo6WkBlhT7O8JQd5nisDmoJ4k31ZH8J+2mulyDIfylPXwIxqZF1t8db
+         +k+i08xW0fNlzPv6B0FXdlzkwrIobKrR06ywlxbxIX+C4SkvQTd0iuquFfGoKywD3Mmg
+         6wiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vydHQTzj3c686TmTMHL1QqAtMRNRd4XB3MteF3kHgAs=;
+        b=rWPXthu9u3Ylo6nho4OHWCXpkvORcrQm0FjREjfJcHjZ2jQnfq7nUx8JBN/Cs0yWg/
+         HHzyd6mp0HW0IPcfZjO/dxKzCReyy/VLT2w3YNsjc8TpPvx8PGs3tJjqWOxLjWk7C9fh
+         SLoj0UXao48wnxs76Y1+9fC3cZE43xVe7/9JDrvvKf+fVhH6p2jhUkftt8YMDaQviiMn
+         jdqWxARwF5tQVcfVdnoxSyv0FBSogpJyAyT2O4A7tUCQWiz5Ey2SrL7/lDobDmKhBFYi
+         Ao26K/wqzIctE0G8Z4MBScq2aagrbg5uGkhmI3a+7jnQxesGlVL5TgAUiqZkKQolohGQ
+         UMQw==
+X-Gm-Message-State: AOAM530iV04GWHOVubFhAdgcNyuQ66dbEJlno0R44V52lQv0Dqj5ePQj
+        f0Vj+/AEvKJqVT4QQw4iYLkk3TU0HJj4HFGWE+30ew==
+X-Google-Smtp-Source: ABdhPJyzKkiEkV8gyGv78TG2faQUaA8S/y2Gi7ZBEVgHXbh3X8djjspFmWdU7Sbf0WvFrTABd+a2aIxBe6daar4yk9U=
+X-Received: by 2002:a02:2708:: with SMTP id g8mr3682319jaa.52.1589554354623;
+ Fri, 15 May 2020 07:52:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515104758.6934-14-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200514105915.27516-1-saiprakash.ranjan@codeaurora.org>
+ <20200514180055.GA29384@xps15> <2c932d57288508cc72a6ee323cf5595e@codeaurora.org>
+In-Reply-To: <2c932d57288508cc72a6ee323cf5595e@codeaurora.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Fri, 15 May 2020 08:52:23 -0600
+Message-ID: <CANLsYkxun2EWGeLU42ShbqkJMtCTh+Q9L3t=CXQR+-2zVuuJYg@mail.gmail.com>
+Subject: Re: [PATCH] coresight: etm4x: Add support to disable trace unit power up
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Tingwei Zhang <tingwei@codeaurora.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Mike Leach <mike.leach@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 01:47:52PM +0300, Serge Semin wrote:
-> This is a preparation patch before adding the DW DMA support into the
-> DW SPI MMIO driver. We need to unpin the Non-DMA-specific code from the
-> intended to be generic DW APB SSI DMA code. This isn't that hard,
-> since the most part of the spi-dw-mid.c driver in fact implements a
-> generic DMA interface for the DW SPI controller driver. The only Intel
-> MID specifics concern getting the max frequency from the MRST Clock
-> Control Unit and fetching the DMA controller channels from
-> corresponding PCIe DMA controller. Since first one is related with the
-> SPI interface configuration we moved it' implementation into the
-> DW PCIe-SPI driver module. After that former spi-dw-mid.c file
-> can be just renamed to be the DW SPI DMA module optionally compiled in to
-> the DW APB SSI core driver.
+On Thu, 14 May 2020 at 12:39, Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Hi Mathieu,
+>
+> On 2020-05-14 23:30, Mathieu Poirier wrote:
+> > Good morning Sai,
+> >
+> > On Thu, May 14, 2020 at 04:29:15PM +0530, Sai Prakash Ranjan wrote:
+> >> From: Tingwei Zhang <tingwei@codeaurora.org>
+> >>
+> >> On some Qualcomm Technologies Inc. SoCs like SC7180, there
+> >> exists a hardware errata where the APSS (Application Processor
+> >> SubSystem)/CPU watchdog counter is stopped when ETM register
+> >> TRCPDCR.PU=1.
+> >
+> > Fun stuff...
+> >
+>
+> Yes :)
+>
+> >> Since the ETMs share the same power domain as
+> >> that of respective CPU cores, they are powered on when the
+> >> CPU core is powered on. So we can disable powering up of the
+> >> trace unit after checking for this errata via new property
+> >> called "qcom,tupwr-disable".
+> >>
+> >> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+> >> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> >
+> > Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> > Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+> >
+>
+> Tingwei is the author, so if I understand correctly, his signed-off-by
+> should appear first, am I wrong?
 
-Cc list here is huge!
+It's a gray area and depends on who's code is more prevalent in the
+patch.  If Tingwei wrote the most of the code then his name is in the
+"from:" section, yours as co-developer and he signs off on it (as I
+suggested).  If you did most of the work then it is the opposite.
+Adding a Co-developed and a signed-off with the same name doesn't make
+sense.
 
-I think this patch should go immediately after bunch of fixes.
+>
+> >> ---
+> >>  .../devicetree/bindings/arm/coresight.txt     |  6 ++++
+> >>  drivers/hwtracing/coresight/coresight-etm4x.c | 29
+> >> ++++++++++++-------
+> >
+> > Please split in two patches.
+> >
+>
+> Sure, I will split the dt-binding into separate patch, checkpatch did
+> warn.
 
-...
+And you still sent me the patch...  I usually run checkpatch before
+all the submissions I review and flatly ignore patches that return
+errors.  You got lucky...
 
-> -obj-$(CONFIG_SPI_DESIGNWARE)		+= spi-dw.o
-> +obj-$(CONFIG_SPI_DESIGNWARE)		+= spi-dw-core.o
-> +spi-dw-core-y				:= spi-dw.o
-> +spi-dw-core-$(CONFIG_SPI_DW_DMA)	+= spi-dw-dma.o
-
-We may leave module name the same, right?
-
-obj-$(CONFIG_SPI_DESIGNWARE)		+= spi-dw.o
-spi-dw-y				:= spi-dw-core.o
-spi-dw-$(CONFIG_SPI_DW_DMA)		+= spi-dw-dma.o
-
->  obj-$(CONFIG_SPI_DW_MMIO)		+= spi-dw-mmio.o
-> -obj-$(CONFIG_SPI_DW_PCI)		+= spi-dw-midpci.o
-> -spi-dw-midpci-objs			:= spi-dw-pci.o spi-dw-mid.o
-> +obj-$(CONFIG_SPI_DW_PCI)		+= spi-dw-pci.o
-
-> -/* Some specific info for SPI0 controller on Intel MID */
-> -
-> -/* HW info for MRST Clk Control Unit, 32b reg per controller */
-> -#define MRST_SPI_CLK_BASE	100000000	/* 100m */
-> -#define MRST_CLK_SPI_REG	0xff11d86c
-> -#define CLK_SPI_BDIV_OFFSET	0
-> -#define CLK_SPI_BDIV_MASK	0x00000007
-> -#define CLK_SPI_CDIV_OFFSET	9
-> -#define CLK_SPI_CDIV_MASK	0x00000e00
-> -#define CLK_SPI_DISABLE_OFFSET	8
-> -
-> -int dw_spi_mid_init_mfld(struct dw_spi *dws)
-> -{
-> -	void __iomem *clk_reg;
-> -	u32 clk_cdiv;
-> -
-> -	clk_reg = ioremap(MRST_CLK_SPI_REG, 16);
-> -	if (!clk_reg)
-> -		return -ENOMEM;
-> -
-> -	/* Get SPI controller operating freq info */
-> -	clk_cdiv = readl(clk_reg + dws->bus_num * sizeof(u32));
-> -	clk_cdiv &= CLK_SPI_CDIV_MASK;
-> -	clk_cdiv >>= CLK_SPI_CDIV_OFFSET;
-> -	dws->max_freq = MRST_SPI_CLK_BASE / (clk_cdiv + 1);
-> -
-> -	iounmap(clk_reg);
-> -
-> -	/* Register hook to configure CTRLR0 */
-> -	dws->update_cr0 = dw_spi_update_cr0;
-> -
-> -	dw_spi_mid_setup_dma_mfld(dws);
-> -	return 0;
-> -}
-> -
-> -int dw_spi_mid_init_generic(struct dw_spi *dws)
-> -{
-> -	/* Register hook to configure CTRLR0 */
-> -	dws->update_cr0 = dw_spi_update_cr0;
-> -
-> -	dw_spi_mid_setup_dma_generic(dws);
-> -	return 0;
-> -}
-> +EXPORT_SYMBOL_GPL(dw_spi_mid_setup_dma_generic);
-> diff --git a/drivers/spi/spi-dw-pci.c b/drivers/spi/spi-dw-pci.c
-> index dde54a918b5d..c13707b8493e 100644
-> --- a/drivers/spi/spi-dw-pci.c
-> +++ b/drivers/spi/spi-dw-pci.c
-> @@ -15,6 +15,15 @@
->  
->  #define DRIVER_NAME "dw_spi_pci"
->  
-> +/* HW info for MRST Clk Control Unit, 32b reg per controller */
-> +#define MRST_SPI_CLK_BASE	100000000	/* 100m */
-> +#define MRST_CLK_SPI_REG	0xff11d86c
-> +#define CLK_SPI_BDIV_OFFSET	0
-> +#define CLK_SPI_BDIV_MASK	0x00000007
-> +#define CLK_SPI_CDIV_OFFSET	9
-> +#define CLK_SPI_CDIV_MASK	0x00000e00
-> +#define CLK_SPI_DISABLE_OFFSET	8
-> +
->  struct spi_pci_desc {
->  	int	(*setup)(struct dw_spi *);
->  	u16	num_cs;
-> @@ -22,20 +31,55 @@ struct spi_pci_desc {
->  	u32	max_freq;
->  };
->  
-> +static int spi_mid_init(struct dw_spi *dws)
-> +{
-> +	void __iomem *clk_reg;
-> +	u32 clk_cdiv;
-> +
-> +	clk_reg = ioremap(MRST_CLK_SPI_REG, 16);
-> +	if (!clk_reg)
-> +		return -ENOMEM;
-> +
-> +	/* Get SPI controller operating freq info */
-> +	clk_cdiv = readl(clk_reg + dws->bus_num * sizeof(u32));
-> +	clk_cdiv &= CLK_SPI_CDIV_MASK;
-> +	clk_cdiv >>= CLK_SPI_CDIV_OFFSET;
-> +	dws->max_freq = MRST_SPI_CLK_BASE / (clk_cdiv + 1);
-> +
-> +	iounmap(clk_reg);
-> +
-> +	/* Register hook to configure CTRLR0 */
-> +	dws->update_cr0 = dw_spi_update_cr0;
-> +
-> +	dw_spi_mid_setup_dma_mfld(dws);
-> +
-> +	return 0;
-> +}
-> +
-> +static int spi_generic_init(struct dw_spi *dws)
-> +{
-> +	/* Register hook to configure CTRLR0 */
-> +	dws->update_cr0 = dw_spi_update_cr0;
-> +
-> +	dw_spi_mid_setup_dma_generic(dws);
-> +
-> +	return 0;
-> +}
-> +
->  static struct spi_pci_desc spi_pci_mid_desc_1 = {
-> -	.setup = dw_spi_mid_init_mfld,
-> +	.setup = spi_mid_init,
->  	.num_cs = 5,
->  	.bus_num = 0,
->  };
->  
->  static struct spi_pci_desc spi_pci_mid_desc_2 = {
-> -	.setup = dw_spi_mid_init_mfld,
-> +	.setup = spi_mid_init,
->  	.num_cs = 2,
->  	.bus_num = 1,
->  };
->  
->  static struct spi_pci_desc spi_pci_ehl_desc = {
-> -	.setup = dw_spi_mid_init_generic,
-> +	.setup = spi_generic_init,
->  	.num_cs = 2,
->  	.bus_num = -1,
->  	.max_freq = 100000000,
-> diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-> index d0c8b7d3a5d2..75fdcc5e7642 100644
-> --- a/drivers/spi/spi-dw.h
-> +++ b/drivers/spi/spi-dw.h
-> @@ -265,8 +265,16 @@ extern u32 dw_spi_update_cr0_v1_01a(struct spi_controller *master,
->  				    struct spi_device *spi,
->  				    struct spi_transfer *transfer);
->  
-> -/* platform related setup */
-> -extern int dw_spi_mid_init_mfld(struct dw_spi *dws);
-> -extern int dw_spi_mid_init_generic(struct dw_spi *dws);
-> +#ifdef CONFIG_SPI_DW_DMA
-> +
-> +extern void dw_spi_mid_setup_dma_mfld(struct dw_spi *dws);
-> +extern void dw_spi_mid_setup_dma_generic(struct dw_spi *dws);
-> +
-
-I would drop blank lines and extern keywords.
-
-> +#else
-
-> +
-> +static inline void dw_spi_mid_setup_dma_mfld(struct dw_spi *dws) {}
-> +static inline void dw_spi_mid_setup_dma_generic(struct dw_spi *dws) {}
-> +
-
-Ditto for blank lines.
-
-> +#endif /* !CONFIG_SPI_DW_DMA */
->  
->  #endif /* DW_SPI_HEADER_H */
-> -- 
-> 2.25.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>
+> >>  2 files changed, 25 insertions(+), 10 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt
+> >> b/Documentation/devicetree/bindings/arm/coresight.txt
+> >> index 846f6daae71b..d2030128fe46 100644
+> >> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> >> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> >> @@ -108,6 +108,12 @@ its hardware characteristcs.
+> >>      * arm,cp14: must be present if the system accesses ETM/PTM
+> >> management
+> >>        registers via co-processor 14.
+> >>
+> >> +    * qcom,tupwr-disable: boolean. Indicates that trace unit power up
+> >> can
+> >> +      be disabled on Qualcomm Technologies Inc. systems where ETMs are
+> >> in
+> >> +      the same power domain as their CPU cores. This property is
+> >> required
+> >> +      to identify such systems with hardware errata where the CPU
+> >> watchdog
+> >> +      counter is stopped when TRCPDCR.PU=1.
+> >> +
+> >
+> > I think something like "qcom,skip-power-up" would be clearer.
+> >
+> > Also, a better choice of words is that TRCPDCR.PU does not have to be
+> > set on
+> > Qualcomm...
+> >
+>
+> Yes "qcom,skip-power-up" is a lot better, thanks. Also will use
+> something as
+> you suggested for description.
+>
+> >>  * Optional property for TMC:
+> >>
+> >>      * arm,buffer-size: size of contiguous buffer space for TMC ETR
+> >> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c
+> >> b/drivers/hwtracing/coresight/coresight-etm4x.c
+> >> index fb0f5f4f3a91..6886b44f6947 100644
+> >> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+> >> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+> >> @@ -104,6 +104,11 @@ struct etm4_enable_arg {
+> >>      int rc;
+> >>  };
+> >>
+> >> +static inline bool etm4_can_disable_tupwr(struct device *dev)
+> >> +{
+> >> +    return fwnode_property_present(dev_fwnode(dev),
+> >> "qcom,tupwr-disable");
+> >> +}
+> >> +
+> >
+> > Please call fwnode_property_present() at initialisation time to set a
+> > new
+> > drvdata::skip_power_up variable.  From there just switch on that in
+> > etm4_enable/disable_hw().
+> >
+>
+> Will do, thanks.
+>
+> Thanks,
+> Sai
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+> member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
