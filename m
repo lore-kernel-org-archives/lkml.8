@@ -2,145 +2,108 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D29BC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B666AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC4B620709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:15:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="QH28/sC8"
+	by mail.kernel.org (Postfix) with ESMTP id 9339420709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:17:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbgEOXPs (ORCPT
+        id S1726946AbgEOXRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 19:15:48 -0400
-Received: from mail-eopbgr140053.outbound.protection.outlook.com ([40.107.14.53]:19244
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726183AbgEOXPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 19:15:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SK9akejPruwS71Xm4vL+UT2ifJbP5Os6AJZP9LMw//D2rQMR8nPuNx7KiZQSMKgk6KLK3l3tR+cz+ucJiYh+57h56tDCTzNN9CpynV4N8nLHBNKsXUujHc2bE5XIvhJ3JNISJh4KNuJZBQqfEYi+YDsennuOHv5inVupkEjviT6yYhWKE4o8jLTyfbEjTdGuvuiKuyZCGSeuzhn0zd3FRjY+YDem7AYK50LwM2XElCZYvrRSl4zM07Ih37+jKLr7/mWgP+b834p8harcgkpsBGCXz1xPiY9kvb3nAEFxyEC7HLmxNQx48UZ4CteoxGxkvIN1T0I9wRtzNQScAwT0RQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rR+gLqBvIT3+9zxGdtXTiqYrmB+NehR+aYGhMkHESOk=;
- b=fpBPf3BsbZ1uBIq9B+y7v6R5GCtz6MuVogwXW/EzcY1mweCtIQlJ/2yGGCU0BeiML7ZMwFnwOZooEoX0Yvgze64C845EnIkdJA+7I2fWdBDVBHj1UgQIm9rYI2S6PDSv/6mhJOFQ0bVGLxXmIDAtz0vF3jWBvtJsPnvb43VJLAswqQzsmm54hECGgZX1A+CCb/hAcd40XegLGryKRE81rtuvdk1IwzhGqCgx5Sdijlv3NSnXwTBtX8mS5I3Hx2Z+bD/lSBwlD71wvryOuP0CQVtX+NCYQ2WHv8T9NA8btj/4PURO3DxTwSkNcoG4sgDwSGzGKUvnEDcBfDZN7OtePg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rR+gLqBvIT3+9zxGdtXTiqYrmB+NehR+aYGhMkHESOk=;
- b=QH28/sC8RC1bAVLHEyR33xmeutRBselzHqrEZzYc5wFSCbtpIUn6sAdpNLDnsOtFVDMnrMPKVQIRkRXRBGuqlWQR3c2YQ2btfqLDeDW7aidwtTb/J6pGLm3MQOEVkFHQoLBrSCSpQlJ4xbnaOo9H9QSOR5fi6IvSwFG+PqsZ37s=
-Authentication-Results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB5982.eurprd05.prod.outlook.com (2603:10a6:803:e4::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Fri, 15 May
- 2020 23:15:43 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3000.022; Fri, 15 May 2020
- 23:15:42 +0000
-Date:   Fri, 15 May 2020 20:15:38 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     linux-rdma@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH] mm/hmm/test: destroy xa_array instead of looping
-Message-ID: <20200515231538.GD24561@mellanox.com>
-References: <20200513214507.30592-1-rcampbell@nvidia.com>
+        Fri, 15 May 2020 19:17:00 -0400
+Received: from mga02.intel.com ([134.134.136.20]:24010 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726183AbgEOXRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 19:17:00 -0400
+IronPort-SDR: MnN96HectqR7Qc8tYZoXMOyIwn4jPHD//pLJC3Pwjnp3rmnx7NpX1imP2M+gLkwFdFJ2e7CD5J
+ PFcGmZqsDnWQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 16:16:59 -0700
+IronPort-SDR: PHU/VX9vgI/7VIW37J4x5i+7JOJ9G2tdqImmyZ5/EMGp3IeC6e/K7lE9ayaAny0Z+tF2Hvas1n
+ m+js3FvpH83A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,396,1583222400"; 
+   d="scan'208";a="263342711"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 15 May 2020 16:16:59 -0700
+Date:   Fri, 15 May 2020 16:16:59 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vivek Goyal <vgoyal@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
+ token info
+Message-ID: <20200515231659.GM17572@linux.intel.com>
+References: <20200512152709.GB138129@redhat.com>
+ <87o8qtmaat.fsf@vitty.brq.redhat.com>
+ <20200512155339.GD138129@redhat.com>
+ <20200512175017.GC12100@linux.intel.com>
+ <20200513125241.GA173965@redhat.com>
+ <0733213c-9514-4b04-6356-cf1087edd9cf@redhat.com>
+ <20200515184646.GD17572@linux.intel.com>
+ <d84b6436-9630-1474-52e5-ffcc4d2bd70a@redhat.com>
+ <20200515204341.GF17572@linux.intel.com>
+ <943cfc2f-5b18-e00a-f5a2-4577472a1ff5@redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513214507.30592-1-rcampbell@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR07CA0021.namprd07.prod.outlook.com
- (2603:10b6:208:1a0::31) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR07CA0021.namprd07.prod.outlook.com (2603:10b6:208:1a0::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26 via Frontend Transport; Fri, 15 May 2020 23:15:42 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jZjYI-0001vI-OI; Fri, 15 May 2020 20:15:38 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 011a953f-e07f-4830-c823-08d7f925e378
-X-MS-TrafficTypeDiagnostic: VI1PR05MB5982:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB5982984A463DB7CBA89E644ACFBD0@VI1PR05MB5982.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 04041A2886
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /qooYkgnUqVRlS5VB9K7jNRyNqkJQ0bPX4BJgt/NB79FD4YSSnDjbIF5YxDSoi0hPptyAlMrudU5xC/ZjVIslzov5SBlVJaerYtRIwRuQ0yMpXlPcGlcC4OCR0uiijvl3cRo5wY53f4J4CgGuKgytVKfI9OCMqR6caQcEYLnbCIr6aSzTfBqYF1wqxpHv5X/t5fvrGOFxtvO9Oc+rECoGZFHrjEkdFIluD+7qKRjjSUyNn0Tm5CIESaIJYtSlmnRqjGddLmZZ4IwWfrTvAcYT99ow7VfB66gZG+MxrwWvswg12VgCl0YF5JGH3c1BNe2PRj1S/0Dmf4XQa7FlfYJROLNrTVxdcxVwetk+j7JNUCDsDANGrNiagoD58B5qOPthvZeoEf9k0BGK3nIRznU62TLk7gXNa4BMhcb4weW/N/MZYG0yD2rdaYYcMbqGGApOAH3iv7mO6EGr+fJGhtyZheSU24mUifJKUfhOAgWjA0UkAAU4fVrGG91iN1wCjlN
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(346002)(396003)(376002)(366004)(5660300002)(7416002)(478600001)(36756003)(33656002)(4326008)(2616005)(316002)(9746002)(9786002)(8676002)(54906003)(52116002)(86362001)(8936002)(66476007)(66946007)(66556008)(6916009)(186003)(26005)(2906002)(1076003)(24400500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: LovFComTvo+EQ0YIeu1gYzMhBPNU+w4Y417w4fXl/bvEPfeGp5mcZqXa1E7ypuXyPHrw29XbuzvuXwSwCiBYWxXCr8dR1XDhWooDB5O0GDCjmobNA8JAmSqETI/+hZb5LwzVJjq3zIlX3cJtYqlZjNzR4jHVFnUrjOYpQh8c7tJXOkNE4CPwx8gM6bFdEZHW9JvuP7aSZj/aVOGD2U3Fh28SNBigGYi5ycwJfhg0jnoBf1XRbYRyDzzT0fo2xAHUXRNTAfg5URgXTieSv30wQgmmFn/Ffn97Mu7v5mNg4pfsTo6hdQj+bMEawpFku+9i9nmQpmi1Qp8w+q6nYp5+WbObksxBg7CVaErgJftiPcyo8HHwosH0qcZrd7kUI/JlJSiUfrDj5lmPv7EDYDeXArTTFZGGgY/vSu1HADq/+TlNdiRuc2trGYQUo1jCWo9f7N7CsZKAo5VZOVol3eXefisBnrXXsunSEC+e0GemmNY=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 011a953f-e07f-4830-c823-08d7f925e378
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2020 23:15:42.7540
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HQLQ9f5msyGRwirlCO2ep2bRj0FXGcJX2tF5gGgGDSHZ2S3EtvbV8D3zP4D6D4I4FYJ91RNRO8nuh12tu+11vQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5982
+In-Reply-To: <943cfc2f-5b18-e00a-f5a2-4577472a1ff5@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 02:45:07PM -0700, Ralph Campbell wrote:
-> The test driver uses an xa_array to store virtual to physical address
-> translations for a simulated hardware device. The MMU notifier
-> invalidation callback is used to keep the table consistent with the CPU
-> page table and is frequently called only for a page or two. However, if
-> the test process exits unexpectedly or is killed, the range can be
-> [0..ULONG_MAX] in which case calling xa_erase() for every possible PFN
-> results in CPU timeouts. Munmap() can result in a large range being
-> invalidated but in that case, the xa_array is likely to contain entries
-> that need to be invalidated.
-> Check for [0..ULONG_MAX] explicitly and just destroy the whole table.
+On Sat, May 16, 2020 at 12:23:31AM +0200, Paolo Bonzini wrote:
+> On 15/05/20 22:43, Sean Christopherson wrote:
+> > On Fri, May 15, 2020 at 09:18:07PM +0200, Paolo Bonzini wrote:
+> >> On 15/05/20 20:46, Sean Christopherson wrote:
+> >>> Why even bother using 'struct kvm_vcpu_pv_apf_data' for the #PF case?  VMX
+> >>> only requires error_code[31:16]==0 and SVM doesn't vet it at all, i.e. we
+> >>> can (ab)use the error code to indicate an async #PF by setting it to an
+> >>> impossible value, e.g. 0xaaaa (a is for async!).  That partciular error code
+> >>> is even enforced by the SDM, which states:
+> >>
+> >> Possibly, but it's water under the bridge now.
+> > 
+> > Why is that?  I thought we were redoing the entire thing because the current
+> > ABI is unfixably broken?  In other words, since the guest needs to change,
+> > why are we keeping any of the current async #PF pieces?  E.g. why keep using
+> > #PF instead of usurping something like #NP?
 > 
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> Because that would be 3 ABIs to support instead of 2.  The #PF solution
+> is only broken as long as you allow async PF from ring 0 (which wasn't
+> even true except for preemptable kernels) _and_ have NMIs that can
+> generate page faults.  We also have the #PF vmexit part for nested
+> virtualization.  This adds up and makes a quick fix for 'page not ready'
+> notifications not that quick.
 > 
-> This patch is based on Jason Gunthorpe's hmm tree and should be folded
-> into the ("mm/hmm/test: add selftest driver for HMM") patch once this
-> patch is reviewed, etc.
-> 
->  lib/test_hmm.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/lib/test_hmm.c b/lib/test_hmm.c
-> index 8b36c26b717b..b89852ec3c29 100644
-> +++ b/lib/test_hmm.c
-> @@ -201,7 +201,13 @@ static void dmirror_do_update(struct dmirror *dmirror, unsigned long start,
->  	 * The XArray doesn't hold references to pages since it relies on
->  	 * the mmu notifier to clear page pointers when they become stale.
->  	 * Therefore, it is OK to just clear the entry.
-> +	 * However, if the entire address space is being invalidated, it
-> +	 * takes too long to clear them one at a time so destroy the array.
->  	 */
-> +	if (start == 0 && end == ULONG_MAX) {
-> +		xa_destroy(&dmirror->pt);
-> +		return;
-> +	}
->  	for (pfn = start >> PAGE_SHIFT; pfn < (end >> PAGE_SHIFT); pfn++)
->  		xa_erase(&dmirror->pt, pfn);
->  }
+> However, interrupts for 'page ready' do have a bunch of advantages (more
+> control on what can be preempted by the notification, a saner check for
+> new page faults which is effectively a bug fix) so it makes sense to get
+> them in more quickly (probably 5.9 at this point due to the massive
+> cleanups that are being done around interrupt vectors).
 
-Just use xa_for_each_range() instead of the naive loop, it already
-optimizes against membership and avoids the need for the xa_destroy
-hack
+Ah, so the plan is to fix 'page ready' for the current ABI, but keep the
+existing 'page not ready' part because it's not thaaaat broken.  Correct?
 
-Jason
+In that case, is Andy's patch to kill KVM_ASYNC_PF_SEND_ALWAYS in the guest
+being picked up?
+
+I'll read through your #VE stuff on Monday :-).
