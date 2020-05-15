@@ -2,160 +2,140 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79639C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50C882065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6217206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 09:16:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PUrrnF4F"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="reqsbm6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgEOJPr (ORCPT
+        id S1727992AbgEOJQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 05:15:47 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44526 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727837AbgEOJPq (ORCPT
+        Fri, 15 May 2020 05:16:28 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:59354 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727837AbgEOJQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 05:15:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589534145;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/5awcNeBjTNuGjgZ8wQMW9no+F30tdMR8rr0G98WOb4=;
-        b=PUrrnF4FKQSZxSw0csN8FDAqlNzENWf/jryaBSRXrbb5Od1yS9gd7G7+epLY36spfAVlPc
-        d/FccOebp4UJhm+J5qiAyl0bSWgnpVuk4AhqxK5yWJussyyJDgwO78NZZsiZ1Yfk7hCRTt
-        f/QtMO1C/nJCmYEi/2qMw2D70sFwHIo=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-325-t_m2kxuhMVmScts-aFHLug-1; Fri, 15 May 2020 05:15:43 -0400
-X-MC-Unique: t_m2kxuhMVmScts-aFHLug-1
-Received: by mail-qt1-f197.google.com with SMTP id z29so1753293qtj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 02:15:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/5awcNeBjTNuGjgZ8wQMW9no+F30tdMR8rr0G98WOb4=;
-        b=E+7wPj6PWGUHnybzrz/pFHWh2h1EwtFjbbhxE8JTM3DiDSDfKMkjcAovyuwNgoeFn7
-         KtFutBTIfHW+JxSkgkC9P9eEneQ3+v8qmxLkhdNyjnekGNct7TbrVi0fNkMiY43EfniY
-         RbPn+lj1bxaTdTog+6JJrlGpxa7sU7iMGw6VHWyCt/yzmawTyUQ4ZDvkg+QnzP4ufqih
-         NA0nO7W+TGrXzrnEdQntV01yu0RFp6jv2EVNOcUw1GzFf35JJLzKspWv4RoL25L6xQIH
-         s4qWDoyMx3nVPfp0uQCkwqSQAVM65nBesDngxM0cRTkSQIQSrQH1qreLiaXfv3ZTy2qz
-         nHmQ==
-X-Gm-Message-State: AOAM533xzk1DFzBOoxYtGUmR1eHiuNwbw8gKYmQOYg3gAuU1uM8GEkra
-        ROI3WUsc952HZ8S2WVrE080/gcCjEgfFsR5T7Unyo5BKKk6OPY6byvY2pwIvUMi0kCzG+ohbfLa
-        Meqs1Zpi9D1wuAEC2Eu5H2YOmUtPrTbvSC1x5t2H2
-X-Received: by 2002:ac8:380d:: with SMTP id q13mr2372094qtb.200.1589534142852;
-        Fri, 15 May 2020 02:15:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx8nyyO55A3mAp5k/ZtXVWiRwhEwxpHzlb/m+SHwSRPOCkAKQQlYUW1tRALhgZ0tlz8hGPGU5nXJcBAoRq0W1Y=
-X-Received: by 2002:ac8:380d:: with SMTP id q13mr2372075qtb.200.1589534142649;
- Fri, 15 May 2020 02:15:42 -0700 (PDT)
+        Fri, 15 May 2020 05:16:28 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200515091625euoutp0180d69a14aab46e7e80ff4374e352ef59~PKOt5t-yE1638216382euoutp01F
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:16:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200515091625euoutp0180d69a14aab46e7e80ff4374e352ef59~PKOt5t-yE1638216382euoutp01F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589534185;
+        bh=Ie2EAXxlBaVO9eW+/38zLNexPrP9VRA8wVermRed4F4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=reqsbm6kf9xIJliJw7vsYI45QsJcOvgiQCoSlXHAkmkDfEP+Ta/QsCoCIZoiGtcYb
+         QzY5uNOzFF+XhkMNdHa73qppkXGF6GlW/JYHh4nTjocdjNojeC7z9bS4MCwXr8JOa6
+         2vQnGJMT54CeiBSExjUrvXxojX8kjnEqLnsEUZaw=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200515091625eucas1p24fdb1d38e487a7abb396a6562e5b3a41~PKOtnxc423263732637eucas1p2U;
+        Fri, 15 May 2020 09:16:25 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 90.AB.60698.8ED5EBE5; Fri, 15
+        May 2020 10:16:24 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200515091624eucas1p1d7c1a75daa6096d78bfe34e63b1bb7b4~PKOtTbJ4a2803928039eucas1p1w;
+        Fri, 15 May 2020 09:16:24 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200515091624eusmtrp211c61991d9c279978b0132a4c72c752b~PKOtSvbJ31201512015eusmtrp24;
+        Fri, 15 May 2020 09:16:24 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-50-5ebe5de8958b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 56.6F.07950.8ED5EBE5; Fri, 15
+        May 2020 10:16:24 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200515091624eusmtip133d56722f5ff177725146b609245e358~PKOss5iVn2529825298eusmtip1f;
+        Fri, 15 May 2020 09:16:23 +0000 (GMT)
+Subject: Re: [PATCH 0/2] opp: core: add regulators enable and disable
+To:     Viresh Kumar <viresh.kumar@linaro.org>, k.konieczny@samsung.com,
+        peron.clem@gmail.com, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>
+Cc:     linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>, broonie@kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <d9da5bc0-820d-59b9-a19a-32e5480313e9@samsung.com>
+Date:   Fri, 15 May 2020 11:16:25 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1588063937-5744-1-git-send-email-bhsharma@redhat.com>
- <20200428100745.GA15300@C02TD0UTHF1T.local> <CACi5LpM9_O6gRgMgfAXrmZuaO111xJk3=xtjYXK5rKhTF7Znsg@mail.gmail.com>
-In-Reply-To: <CACi5LpM9_O6gRgMgfAXrmZuaO111xJk3=xtjYXK5rKhTF7Znsg@mail.gmail.com>
-From:   Bhupesh Sharma <bhsharma@redhat.com>
-Date:   Fri, 15 May 2020 14:45:29 +0530
-Message-ID: <CACi5LpPqjm6Tc7vP1oCt4ZFm0UQTMMr3CZuVGhA4Swz-DxjvsA@mail.gmail.com>
-Subject: Re: [PATCH] hw_breakpoint: Remove unused '__register_perf_hw_breakpoint'
- declaration
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bhupesh SHARMA <bhupesh.linux@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <cover.1589528491.git.viresh.kumar@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SfSyUcRzf757nnnvQ8dxRvsO0rnVblJfpj0fKGG23/rDW+stGrjw7wrF7
+        EP4ySlwUmsWxiFbcytsh563ImF1eorwlxSwkZTkvqSl3D+W/z/fz/Xx+n+9n+5GY2MB3ICOV
+        8YxKKY+WEJZ4U8/PwZMLIR2hHq2PvemCmTmCLvtRyKdHWkoIejWnG9FfN/t59PsHIzj92jDM
+        p7dH63A6s3sdo+vWZLTuUw/hZyXTaz4IZPXaLEI2NdpGyBre3cJldxq0SNY7/pwnW613viAI
+        tjwTzkRHJjIqd98wy4jlvlkirpWfpH1YjqWiWlyNLEigTsH6mwlMjSxJMVWJ4FeOkc8NRgT3
+        FjsJblhFUHl3jL9n6dms5HGLJwiMOVm7/u8IOl/0I5PKljoHE+lq81t2VDuCxVeNZgtGPUJQ
+        MpTOM6kIyhPUy2rChIWUL6yurJjdOHUM5gfGBCZ8kAoBQ4UOcRoR9BXNmU+3oHxAU/zZzGPU
+        YUhvLMY4bA+Tc6XmMKCmBaBt6CG4wwNha7xgt7ctfOltEHDYCf7o9wzpCGYGngm4IRvBSFoh
+        4lQ+MDWwtfMSuRNxHGpa3DnaHwxVNwQmGihrGF8WcUdYQ37TfYyjhZCZIebUUtD0Vv+L7Rwa
+        xnKRRLOvmmZfHc2+Opr/uWUI1yJ7JoGNUTCsl5K57sbKY9gEpcLtamxMPdr5Yobt3rVm1PH7
+        SheiSCQ5IPQoaA8V8+WJbHJMFwISk9gJg2paQ8XCcHlyCqOKvaxKiGbYLuRI4hJ7oVf5YoiY
+        UsjjmSiGiWNUe1seaeGQigKHyOnawoW3RY8OxX+8WWXFGlMuZlrrKpY885WF0Rl+rqXMN2lY
+        cL/I8bzTRnOAjdJtLG2jw/upR7XNpRObpTbDs0tb+smza7dtpfM614CSoKgFkUurFOW2zUjo
+        FOcwhbErTz+46ekYXzVsMX1aRyYdyctWvVTUJpdc80+ZPCrB2Qi5pwumYuV/ARhrHKdeAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLIsWRmVeSWpSXmKPExsVy+t/xu7ovYvfFGWzerWYx9eETNosFn2aw
+        WlzeNYfN4nPvEUaLNz/OMlncnneZxeLM6UusFv+ubWSx6Djyjdli41cPi80PjrE5cHvsnHWX
+        3WPTqk42jzvX9rB5bLnazuLRt2UVo8fxG9uZPD5vkgtgj9KzKcovLUlVyMgvLrFVija0MNIz
+        tLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DLeHvyEVvBbtaKVQsXMTcwbmDpYuTkkBAw
+        kTj2YwVTFyMXh5DAUkaJO9eus0IkZCROTmuAsoUl/lzrYoMoessoceP9CrCEsICrxM3mLlaQ
+        hIjAXkaJY5dms4A4zAJLGCU27rjBCtHSxyjx5Xs/WAubgKFE11uQWZwcvAJ2Ep8/fGAEsVkE
+        VCWen7vODmKLCsRKrL7WyghRIyhxcuYTsGM5BawlZs1+BhZnFjCTmLf5ITOELS/RvHU2lC0u
+        cevJfKYJjEKzkLTPQtIyC0nLLCQtCxhZVjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgRG7bZj
+        P7fsYOx6F3yIUYCDUYmH12Dq3jgh1sSy4srcQ4wSHMxKIrx+63fHCfGmJFZWpRblxxeV5qQW
+        H2I0BXpuIrOUaHI+MKHklcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1OTS1ILYLpY+Lg
+        lGpgnOeruJ8xOl/8wodvln9tI+LXf7Nulvxcfsirs37vyRu9xed+Zk5Okn//ia338c9Liznc
+        tkrU5v5ekHhk85yPKRGfYoVLgp3Ul7hv7yrccerFJv3ipeVr/61VY5qe+jdWQml/Y6nmQScP
+        lxfXnSzMWG9pPdpQdlxNhmVtBK+S7euHe9S417zMVWIpzkg01GIuKk4EAJeFRxfwAgAA
+X-CMS-MailID: 20200515091624eucas1p1d7c1a75daa6096d78bfe34e63b1bb7b4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200515075745eucas1p2f14c7fcec7c3d190704ddc6f608b6ce9
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200515075745eucas1p2f14c7fcec7c3d190704ddc6f608b6ce9
+References: <CGME20200515075745eucas1p2f14c7fcec7c3d190704ddc6f608b6ce9@eucas1p2.samsung.com>
+        <cover.1589528491.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter, Frederic, Ingo
+Hi Viresh,
 
-On Thu, Apr 30, 2020 at 9:49 AM Bhupesh Sharma <bhsharma@redhat.com> wrote:
+On 15.05.2020 09:57, Viresh Kumar wrote:
+> This series reintroduces the usage of regulator_enable/disable() to the
+> OPP core after the previous attempt was reverted [1] shortly after getting
+> applied. This time the regulator is enabled only after it is configured
+> by the OPP core.
 >
-> Hi Mark,
->
-> Thanks for the review.
->
-> On Tue, Apr 28, 2020 at 3:37 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > Hi Bhupesh,
-> >
-> > On Tue, Apr 28, 2020 at 02:22:17PM +0530, Bhupesh Sharma wrote:
-> > > commit b326e9560a28 ("hw-breakpoints: Use overflow handler instead of
-> > > the event callback") removed '__register_perf_hw_breakpoint' function
-> > > usage and replaced it with 'register_perf_hw_breakpoint' function.
-> > >
-> > > Remove the left-over unused '__register_perf_hw_breakpoint' declaration
-> > > from 'hw_breakpoint.h' as well.
-> > >
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: Will Deacon <will@kernel.org>
-> > > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> >
-> > This is generic code, so I'm a bit confused as to why you've sent it to
-> > us. I'd expect this to go via the perf core maintainers (cc'd).
->
-> Oops, my bad. Seems my git patch sending script messed up while
-> picking up the perf maintainers (who should have been Cc'ed on the
-> patch) :(
->
-> Thanks for adding them in the Cc list.
->
-> Hi Peter, Frederic, Ingo - Kindly help review this patch and help
-> apply the patch (if suitable).
+> Marek, Kamil and Clément: Can you guys please test this out and report
+> if this doesn't work as expected ?
 
-Ping. Any comments on this patch?
+Works fine for my test cases, especially Samsung Chromebook Peach-Pit/Pi 
+still boots fine. Feel free to add to the both patches:
 
-Thanks,
-Bhupesh
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-> > FWIW, this looks sane to me, so:
-> >
-> > Acked-by: Mark Rutland <mark.rutland@arm.com>
-> >
-> > Mark.
-> >
-> > > ---
-> > >  include/linux/hw_breakpoint.h | 3 ---
-> > >  1 file changed, 3 deletions(-)
-> > >
-> > > diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
-> > > index 6058c3844a76..fe1302da8e0f 100644
-> > > --- a/include/linux/hw_breakpoint.h
-> > > +++ b/include/linux/hw_breakpoint.h
-> > > @@ -72,7 +72,6 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
-> > >                           void *context);
-> > >
-> > >  extern int register_perf_hw_breakpoint(struct perf_event *bp);
-> > > -extern int __register_perf_hw_breakpoint(struct perf_event *bp);
-> > >  extern void unregister_hw_breakpoint(struct perf_event *bp);
-> > >  extern void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events);
-> > >
-> > > @@ -115,8 +114,6 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
-> > >                           void *context)              { return NULL; }
-> > >  static inline int
-> > >  register_perf_hw_breakpoint(struct perf_event *bp)   { return -ENOSYS; }
-> > > -static inline int
-> > > -__register_perf_hw_breakpoint(struct perf_event *bp)         { return -ENOSYS; }
-> > >  static inline void unregister_hw_breakpoint(struct perf_event *bp)   { }
-> > >  static inline void
-> > >  unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events)      { }
-> > > --
-> > > 2.7.4
-> > >
-> >
+Thanks!
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
