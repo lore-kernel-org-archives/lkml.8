@@ -2,142 +2,107 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F38CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E02BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F06D20643
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD8420643
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:58:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bHwtY2fP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgEOB6D (ORCPT
+        id S1728015AbgEOB6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 21:58:03 -0400
-Received: from mo-csw1514.securemx.jp ([210.130.202.153]:60968 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbgEOB6D (ORCPT
+        Thu, 14 May 2020 21:58:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727029AbgEOB6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 21:58:03 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1514) id 04F1vpEE019955; Fri, 15 May 2020 10:57:51 +0900
-X-Iguazu-Qid: 34trWq5axJpfcHTLpk
-X-Iguazu-QSIG: v=2; s=0; t=1589507870; q=34trWq5axJpfcHTLpk; m=w5eBYxUhChjcH2wqSnG8reWK/fF+ZPfw05MuqPGwb3Q=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1513) id 04F1vmF5022340;
-        Fri, 15 May 2020 10:57:49 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id 04F1vm6H012841;
-        Fri, 15 May 2020 10:57:48 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 04F1vmkV011077;
-        Fri, 15 May 2020 10:57:48 +0900
-From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        daniel.sangorrin@toshiba.co.jp,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] e1000e: Relax condition to trigger reset for ME workaround
-References: <20200512044347.3810257-1-punit1.agrawal@toshiba.co.jp>
-        <CAKgT0Uf86d8wnAMSLO4hn4+mfCH5fP4e8OsAYknE0m3Y7in9gw@mail.gmail.com>
-Date:   Fri, 15 May 2020 10:57:47 +0900
-In-Reply-To: <CAKgT0Uf86d8wnAMSLO4hn4+mfCH5fP4e8OsAYknE0m3Y7in9gw@mail.gmail.com>
-        (Alexander Duyck's message of "Thu, 14 May 2020 07:57:31 -0700")
-X-TSB-HOP: ON
-Message-ID: <87v9kym02s.fsf@kokedama.swc.toshiba.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 14 May 2020 21:58:17 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F68DC061A0C;
+        Thu, 14 May 2020 18:58:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=MigIs8+MSs175TeEb7Pa4gsLZS9q5xByc1dl+HIlrjI=; b=bHwtY2fPAXiCAJTE92WpQJ8hkD
+        NV225SU2KCY5/IpoGIk4zgOjXVq1excRKzaM4OOab2arXZ7WK0O8Vpp8PVF9gbjpL8TuJ3YKIL/wM
+        ewPIpXqPkmDG2pOD7WS6btZ06s71Bcx2KNoS9txFlHhpTAlFrjeHXdt0Inzw/wAeD7VxpJxG+fGSM
+        1AqCrfB4xixXsLru2AjhnVE7ZyYwvQxxBvs8yf7rHWBiz0ADuR5q0siv01fR/rr/3riGGyLEmm8mr
+        Lcy7mVqyx8o0ePnQCOSEHQBJFQLcERBghWOBPDfaljQkgd+MTIt3SoOSDkRUWKj9tmmao5Cc7Lj6h
+        Jl5cgWVw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZPbz-0002KY-E5; Fri, 15 May 2020 01:58:07 +0000
+Subject: Re: [PATCH v4 3/6] partitions: Introduce NVIDIA Tegra Partition Table
+To:     Dmitry Osipenko <digetx@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>,
+        =?UTF-8?Q?Nils_=c3=96stlund?= <nils@naltan.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
+        Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>
+References: <20200515014143.12984-1-digetx@gmail.com>
+ <20200515014143.12984-4-digetx@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <055fc187-6181-6ccb-04a8-ab4324270ed7@infradead.org>
+Date:   Thu, 14 May 2020 18:58:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200515014143.12984-4-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexander Duyck <alexander.duyck@gmail.com> writes:
+On 5/14/20 6:41 PM, Dmitry Osipenko wrote:
+> diff --git a/block/partitions/Kconfig b/block/partitions/Kconfig
+> index 702689a628f0..2c1408cba1a6 100644
+> --- a/block/partitions/Kconfig
+> +++ b/block/partitions/Kconfig
+> @@ -268,3 +268,11 @@ config CMDLINE_PARTITION
+>  	help
+>  	  Say Y here if you want to read the partition table from bootargs.
+>  	  The format for the command line is just like mtdparts.
+> +
+> +config TEGRA_PARTITION
+> +	bool "NVIDIA Tegra Partition support" if PARTITION_ADVANCED
+> +	default y if ARCH_TEGRA
+> +	depends on (ARCH_TEGRA && MMC_BLOCK) || COMPILE_TEST
 
-> On Mon, May 11, 2020 at 9:45 PM Punit Agrawal
-> <punit1.agrawal@toshiba.co.jp> wrote:
->>
->> It's an error if the value of the RX/TX tail descriptor does not match
->> what was written. The error condition is true regardless the duration
->> of the interference from ME. But the code only performs the reset if
->> E1000_ICH_FWSM_PCIM2PCI_COUNT (2000) iterations of 50us delay have
->> transpired. The extra condition can lead to inconsistency between the
->> state of hardware as expected by the driver.
->>
->> Fix this by dropping the check for number of delay iterations.
->>
->> Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
->> Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
->> Cc: "David S. Miller" <davem@davemloft.net>
->> Cc: intel-wired-lan@lists.osuosl.org
->> Cc: netdev@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> ---
->> Hi,
->>
->> The issue was noticed through code inspection while backporting the
->> workaround for TDT corruption. Sending it out as an RFC as I am not
->> familiar with the hardware internals of the e1000e.
->>
->> Another unresolved question is the inherent racy nature of the
->> workaround - the ME could block access again after releasing the
->> device (i.e., BIT(E1000_ICH_FWSM_PCIM2PCI) clear) but before the
->> driver performs the write. Has this not been a problem?
->>
->> Any feedback on the patch or the more information on the issues
->> appreciated.
->>
->> Thanks,
->> Punit
->>
->>  drivers/net/ethernet/intel/e1000e/netdev.c | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
->> index 177c6da80c57..5ed4d7ed35b3 100644
->> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
->> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
->> @@ -607,11 +607,11 @@ static void e1000e_update_rdt_wa(struct e1000_ring *rx_ring, unsigned int i)
->>  {
->>         struct e1000_adapter *adapter = rx_ring->adapter;
->>         struct e1000_hw *hw = &adapter->hw;
->> -       s32 ret_val = __ew32_prepare(hw);
->>
->> +       __ew32_prepare(hw);
->>         writel(i, rx_ring->tail);
->>
->> -       if (unlikely(!ret_val && (i != readl(rx_ring->tail)))) {
->> +       if (unlikely(i != readl(rx_ring->tail))) {
->>                 u32 rctl = er32(RCTL);
->>
->>                 ew32(RCTL, rctl & ~E1000_RCTL_EN);
->> @@ -624,11 +624,11 @@ static void e1000e_update_tdt_wa(struct e1000_ring *tx_ring, unsigned int i)
->>  {
->>         struct e1000_adapter *adapter = tx_ring->adapter;
->>         struct e1000_hw *hw = &adapter->hw;
->> -       s32 ret_val = __ew32_prepare(hw);
->>
->> +       __ew32_prepare(hw);
->>         writel(i, tx_ring->tail);
->>
->> -       if (unlikely(!ret_val && (i != readl(tx_ring->tail)))) {
->> +       if (unlikely(i != readl(tx_ring->tail))) {
->>                 u32 tctl = er32(TCTL);
->>
->>                 ew32(TCTL, tctl & ~E1000_TCTL_EN);
->
-> You are eliminating the timeout check in favor of just verifying if
-> the write succeeded or not. Seems pretty straight forward to me.
->
-> One other change you may consider making would be to drop the return
-> value from __ew32_prepare since it doesn't appear to be used anywhere,
-> make the function static, and maybe get rid of the prototype in
-> e1000.h.
->
-> Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+That looks odd. Such depends are more often like:
+	depends on MMC_BLOCK && (ARCH_TEGRA || COMPILE_TEST)
 
-Thanks! I will send out an update dropping the return and the prototype.
+but that's just my experience. If this works when ARCH_TEGRA and MMC_BLOCK
+are not set and COMPILE_TEST is set, that's fine.
+
+> +	help
+> +	  Say Y here if you would like to be able to read the hard disk
+> +	  partition table format used by NVIDIA Tegra machines.
+
+thanks.
+-- 
+~Randy
+
