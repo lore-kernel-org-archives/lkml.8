@@ -2,229 +2,125 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 012F8207F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63DEC207F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:46:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QECgooPW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jd9ZIIqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgEOQpf (ORCPT
+        id S1726275AbgEOQqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:45:35 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46152 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726185AbgEOQpe (ORCPT
+        Fri, 15 May 2020 12:46:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726171AbgEOQql (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:45:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589561133;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+IBvKYnMRct6wIVYk1OHcT0bp5/WnDeiDsV8CVPaV/4=;
-        b=QECgooPWYpPmKqiqQ9PAiKUs/Go7y+kcTQ5C5+KV/hSt/WlVczLsGAislwSOYX1NxquHav
-        uvQGPMLs3XTBJI0pgLSDDMqCrzHnRRLdVgEli6IlBR5YkNAFxWApBHYV15i5LX8+H0rqCa
-        UJMWE6KTun7QeC+B8E1l7bZkUgnXn+g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-311-00j2DJWnOzuUdvc1IhJFqw-1; Fri, 15 May 2020 12:45:29 -0400
-X-MC-Unique: 00j2DJWnOzuUdvc1IhJFqw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9AF0218B6450;
-        Fri, 15 May 2020 16:45:12 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 94C9C579A0;
-        Fri, 15 May 2020 16:45:10 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAEjxPJ5wW2qHYDsqKr5rjnRJ++4f2LXobCQkKZvWCSb_j0WN6w@mail.gmail.com>
-References: <CAEjxPJ5wW2qHYDsqKr5rjnRJ++4f2LXobCQkKZvWCSb_j0WN6w@mail.gmail.com> <CAEjxPJ6pFdDfm55pv9bT3CV5DTFF9VqzRmG_Xi5bKNxPaGuOLg@mail.gmail.com> <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk> <CAEjxPJ4=ZN_jKP2nX5mrMA3OxC8XLsYEmCPCD-78H4XQw=_hCA@mail.gmail.com> <3999877.1589475539@warthog.procyon.org.uk>
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     dhowells@redhat.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        keyrings@vger.kernel.org, SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] keys: Move permissions checking decisions into the checking code
+        Fri, 15 May 2020 12:46:41 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10759C061A0C;
+        Fri, 15 May 2020 09:46:41 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id k18so3478770ion.0;
+        Fri, 15 May 2020 09:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IMMZB+JJUc5qOhBX30QBDnuLbX4rAj6sJgfoOfzhTFo=;
+        b=jd9ZIIqmnVwcFulPqO2uRcF1lTkQA5Qjj7Pz7UvCRcQNcFp6/T08hPQ8o5XsacIFkM
+         7qe7gg1MRBRkL08HnDdyO6JIxIsnjS7zn/wu9kWXLSSetKntC80LPEf/z7+rer1D2hYW
+         0w8CziOoGZoNwjORGfnl871aV7NgnO6G2a0lKUjhkmoz+grRZN1rmB+UH21bvQX9jxSY
+         T9aWhxkeGHPAExBHJNx9G77/MilqiZEot7ElYC4NgTxp9AOr3UN+Cw3JCjcqblXpfNGk
+         Rvq0HtS1hpo8ju5+/bjCUfIClpB2u0XgGkEZpf8Tp/Tf5i4rO42BIEUaDsbg6m1iY+Jt
+         zdNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IMMZB+JJUc5qOhBX30QBDnuLbX4rAj6sJgfoOfzhTFo=;
+        b=pzF/J89PXNqTpLHk61wiTgiM96qU9FdAGQlLQzZFCvxlSJxrZ6CtikeD7b+LJMzt5z
+         71bk/fe5dmFaOqFUGjL+M8XCl0awVOIJ0sXfA9GN1DDKPRf90P5up0w26QncsArmTNHx
+         Qbxzi1eAkFdB1FTNiwUvFGnHD9tzj1qMx6WbL2NX4nzLHnAy1fB2mViejxgWtFyKg2ke
+         H4tgjSpJ1EgVfuY39Fjg/OcHn1OLS1gC6qN1yq1l6UjWmWN0yY5iozZlfiw+yzI3iWkQ
+         ZIIAzwJMRzAvAwjHTeqwYKunoDy5i7X7tXIL3eeECRp/PcAaZt0it0zjf3hK19DasSxW
+         8eKQ==
+X-Gm-Message-State: AOAM532atvaZxPbR9Alb0l/8EOQvhsKjqoVDLwGVc95+WMAKSHAG0/p/
+        BJyuwi9OHJcAGh7IaQBy/u/dER46RtaHiECgZZ8=
+X-Google-Smtp-Source: ABdhPJzC3X3JusgKAS/v3FgUIMyfhdCffuY2x8sqOBBV7q9YUvBYNbZ+ftC93DN0kkxM1kr6nsLzm7Rn8ArTRZkg/CQ=
+X-Received: by 2002:a02:70c8:: with SMTP id f191mr2113705jac.117.1589561200309;
+ Fri, 15 May 2020 09:46:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <196729.1589561109.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Fri, 15 May 2020 17:45:09 +0100
-Message-ID: <196730.1589561109@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+In-Reply-To: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Fri, 15 May 2020 11:46:29 -0500
+Message-ID: <CABb+yY1wJMzakpz0h6ZxAh4Z3OB718f+Wq3RP0R4NZ_U=vRMkw@mail.gmail.com>
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Smalley <stephen.smalley.work@gmail.com> wrote:
+On Fri, May 15, 2020 at 12:17 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> - The hardware gives us the capability to write the register in
+>   parallel, i.e. we can write 0x800 and 0x400 together without any
+>   software locks, and so these 32 bits should be considered as separate
+>   channel even if only one interrupt is issued by the hardware finally.
+>   This shouldn't be called as virtualization of the channels, as the
+>   hardware supports this (as clearly mentioned in the TRM) and it takes
+>   care of handling the signal properly.
+>
+I'll leave this one open to bikeshed arguments.
 
-> >      (1) KEY_FLAG_KEEP in key->flags - The key may not be deleted and/=
-or things
-> >          may not be removed from the keyring.
-> =
+> - With serialization, if we use only one channel as today at every
+>   priority, if there are 5 requests to send signal to the receiver and
+>   the dvfs request is the last one in queue (which may be called from
+>   scheduler's hot path with fast switching), it unnecessarily needs to
+>   wait for the first four transfers to finish due to the software
+>   locking imposed by the mailbox framework. This adds additional delay,
+>   maybe of few ms only, which isn't required by the hardware but just by
+>   the software and few ms can be important in scheduler's hotpath.
+>
+As I asked you yesterday over the call, it may help if you could share
+some numbers to back up the doomsday scenario.
+I don't believe mailbox will be a bottleneck, unless you send commands
+in a while(1) ... but even then you have to compare against the
+virtual-channel implementation. (Not to forget one usually doesn't
+need/want the dvfs, power, clock, hotplug all happening at the _same_
+time)
 
-> Why can't they be deleted / removed?  They can't ever be deleted or
-> removed or for some period of time?
+Please note, SCMI... lets not pretend it is not about making scmi work
+with mhu :) ...  itself uses shared-memory transfers and
+wait_for_completion_timeout  in scmi_do_xfer().   If some platform
+_really-really_ faced speed bottlenecks, it would come to want to
+exchange 32-bit encoded command/response over the mhu register,
+asynchronously and totally bypassing shmem... which is possible only
+now.
 
-This is only settable internally to keep special keys, such as the blackli=
-st
-loaded from the EFI BIOS, from being removed.
 
-> >      (2) KEY_FLAG_ROOT_CAN_CLEAR in key->flags - The keyring can be cl=
-eared by
-> >          CAP_SYS_ADMIN.
-> =
+> - With the current approach it isn't possible to assign different bits
+>   (or doorbell numbers) to clients from DT and the only way of doing
+>   that without adding new bindings is by extending #mbox-cells to accept
+>   a value of 2 as done in this patch.
+>
+I am afraid you are confused. You can use bit/doorbell-6 by passing
+0x40 to mhu as the data to send.
 
-> Why do some keyrings get this flag and others do not?  Under what
-> conditions?  Why is CAP_SYS_ADMIN the right capability for this?
-> =
-
-> >      (3) KEY_FLAG_ROOT_CAN_INVAL in key->flags - The key can be invali=
-dated by
-> >          CAP_SYS_ADMIN.
-> =
-
-> Ditto.
-
-So that the sysadmin can clear, say, the NFS idmapper keyring or invalidat=
-e
-DNS lookup keys.
-
-> >      (4) An appropriate auth token being set in cred->request_key_auth=
- that
-> >          gives a process transient permission to view and instantiate =
-a key.
-> >          This is used by the kernel to delegate instantiation to users=
-pace.
-> =
-
-> Is this ever allowed across different credentials?
-
-The kernel upcalls by spawning a daemon.  I want to change this as it's no=
-t
-compatible with containers since namespaces make this problematic.
-
-> When?
-
-The request_key() system call will do this.  The normal use case is someth=
-ing
-like the AFS filesystem asking for a key so that it can do an operation.  =
-The
-possibility exists for the kernel to upcall, say, to something that does a=
-klog
-on behalf of the user - but aklog in turn needs to get the TGT out of the
-keyrings.
-
-> Why?  Is there a check between the different credentials before the
-> auth token is created?
-
-No.  I don't even know what the target creds will necessarily be at this
-point.
-
-> >     Note that this requires some tweaks to the testsuite as some of th=
-e
-> >     error codes change.
-> =
-
-> Which testsuite?  keyring or selinux or both?
-
-The keyring testsuite.  No idea about the SELinux one.
-
-> What error codes change (from what to what)?  Does this constitute an AB=
-I
-> change?
-
-The following:
-
- (1) Passing the wrong type of key to KEYCTL_DH_COMPUTE now gets you
-     EOPNOTSUPP rather than ENOKEY.  This is now as documented in the manu=
-al
-     page.
-
- (2) Passing key ID 0 or an invalid negative key ID to KEYCTL_DH_COMPUTE n=
-ow
-     gets you EINVAL rather than ENOKEY.
-
- (3) Passing key ID 0 or an invalid negative key ID to KEYCTL_READ now get=
-s
-     you EINVAL rather than ENOKEY.
-
-Technically, it consistutes an ABI change, I suppose, but I think it is
-probably sufficiently minor.
-
-Or maybe on (2) and (3) I should go the other way.  You get ENOKEY for inv=
-alid
-key IDs (such as 0 or unsupported negative ones) across all callers of
-lookup_user_key().  This would at least by consistent with the manual page=
-s.
-
-> I like moving more of the permission checking logic into the security
-> modules and giving them greater visibility and control.  That said, I
-> am somewhat concerned by the scale of this change, by the extent to
-> which you are exposing keyring internals inside the security modules,
-> and by the extent to which logic is getting duplicated in each
-> security module.
-
-It's what you asked for.
-
-Now, I don't know if the LSM needs to know that the main keyutils permissi=
-ons
-checker invoked an override.  At least one of the overrides will have gone
-through the LSM anyway when capable() was called.
-
-> I'd suggest a more incremental approach, e.g. start with just the enum
-> patch, then migrate the easy cases, then consider the more complicated
-> cases.  And possibly we need multiple different security hooks for the
-> keyring subsystem that are more specialized for the complicated cases.  =
-If
-> we authorize the delegation up front, we don't need to check it later.
-
-I'll consider it.  But I really need to get what I'm going to include in t=
-he
-middle of the notifications patchset sorted now - or risk the notification=
-s
-and fsinfo patchsets getting bumped again.
-
-Maybe what's needed is a pair of hooks whereby the call to capable() is
-replaced with LSM hook specifically to ask about the overrides:
-
-	security_key_use_sysadmin_override(key, cred);
-	security_key_use_construction_override(key, cred);
-
-And/or a hook to ask whether the process is allowed to do the request_key(=
-)
-call that they want:
-
-	security_request_key(struct key_type *type,
-			     const char *description,
-			     struct key_tag *domain_tag,
-			     const void *callout_info,
-			     size_t callout_len,
-			     void *aux);
-
-I don't really want to do a "can the kernel delegate to process X?" hook j=
-ust
-at the moment, since I want to change/extend that code and I don't want to
-commit to any particular security information being present yet.
-
-I can go back to the enum patch for the moment if you and Casey can put up
-with that for the moment?
-
-David
-
+Cheers!
