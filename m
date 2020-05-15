@@ -2,135 +2,104 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB30C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70313C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 809FA206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:57:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L1Pcz6gn"
+	by mail.kernel.org (Postfix) with ESMTP id 44A4B206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589525958;
+	bh=9cSL3vu771NfN0pfXk55qxsvH0Q6psTuls0f4Kl3nyk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DgR+VukS4I7+HVIz/9EE1Ztg81dSR2djeofrUPvmddIwRpRQzXzz9AUeNGSQdNoZp
+	 Bzy13hUbWbf1qwXUtB1V6JPjIVgt/zxv1dndxK2wglG+XlGCSCsVhCCaF7tzfacFR7
+	 SKv0qDGayZ+014rI5Ox5xPpO0kqeZe7iPDg0/m5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgEOG4h (ORCPT
+        id S1726670AbgEOG7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:56:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726615AbgEOG4d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:56:33 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D396C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:33 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id o11so1386158qti.23
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=tvl7gLFsS/dAedcEqfrKtncclZsMityBUyr8g2OugcQ=;
-        b=L1Pcz6gnqUzZkJrzhBUQp0QUfmzqMeD11Syg0lPwtZra+G6eYVcIwSdxLHbea30lMH
-         VPEiAhP4to/UFfvAX0LAMJ1tyxOpktCcAdayUEcYBXl6F8VgXGGU/TEUYJ3y15A/3R5E
-         YU6LMqnfuUcMQBUHHdnob6YvUNLUlY7ezab93T8g6Q4fi9fcQCkBISB+hhwPcYVCeE8R
-         1CUJySRpZreY8cMtNlU8Cm6Tfuw8qoyN8n86PLRd4NRTktgnuecp7WTaCr2RQI8IQ5td
-         cCkgS+2KoQy94ltW9Gy0mZAHyMKpiXB+4bjqQRJZt7KHphQ7+zuJxxd+VRgQ0t2PZ1MJ
-         xouw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=tvl7gLFsS/dAedcEqfrKtncclZsMityBUyr8g2OugcQ=;
-        b=IFj5B5GmK/IL4jGkkf1j7WRORK7Bnr56Daxy+0So+kDXRs08G7WTgW5f5TCl9FViqm
-         c526JC2/Dlt1EdCMJaC/1wNLqL3oFnl7cpft4NNyymztGdp3bkjzQ7qPmqI4DVHGwcMn
-         6DElIixu846NqIeGKFvCYueKzKuRyAKmBsva2W17iMuE1RiE3IGlzW8pZfBZZyHGaqv0
-         kdSFmmt2gDc/hVUvkxGZS2A4xdeIKOckWlG7YkeY7EGH4QEChpl+aw/jX246z3yUYvc0
-         ViXYwrONPOampeZuEcAq3uaSqFgX4OLyPNYxH3ZicgWn2GRAx0M46Q4pwpLG8E/tzHNi
-         KnDw==
-X-Gm-Message-State: AOAM5300DCTNESf2o+8MBoq1pC5u+VoVUfB2mV52JJk+dlmhS0E96AZM
-        pvMTrI5Naz+tqYyVzzAwiJGPX8WUvSbm
-X-Google-Smtp-Source: ABdhPJxDHoNPBj+Xy4XlruWwU/uTMdd15h3I5dMGic4z9Trd8Ynf0UfZutAZW27seEr+Fu0dO/wbEvgsqVcx
-X-Received: by 2002:a0c:ac41:: with SMTP id m1mr2102104qvb.71.1589525792231;
- Thu, 14 May 2020 23:56:32 -0700 (PDT)
-Date:   Thu, 14 May 2020 23:56:17 -0700
-In-Reply-To: <20200515065624.21658-1-irogers@google.com>
-Message-Id: <20200515065624.21658-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20200515065624.21658-1-irogers@google.com>
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH 1/8] libbpf: Fix memory leak and possible double-free in hashmap__clear
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Alston Tang <alston64@fb.com>, Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 15 May 2020 02:59:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726295AbgEOG7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 02:59:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22A5E206F1;
+        Fri, 15 May 2020 06:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589525956;
+        bh=9cSL3vu771NfN0pfXk55qxsvH0Q6psTuls0f4Kl3nyk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h0nJ5i9FRXXLDiRk9PQvQz2HX7KTJbOK7l4R/yzu2bL+RY5VgFcsP8jUrV62+sOh+
+         vBuBclR8xIDNt0FUEpOppB7Dkbxpze2UmF0WLmHw2xD1W2AmMAupw7cWrUXDRgqMoL
+         thWwyXkaKoYjxikJ9pWY2j4/71Oe39VxpmrWNRh0=
+Date:   Fri, 15 May 2020 08:59:14 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Christian Gromm <christian.gromm@microchip.com>,
+        devel@driverdev.osuosl.org
+Subject: Re: [PATCH AUTOSEL 5.6 16/62] most: core: use function
+ subsys_initcall()
+Message-ID: <20200515065914.GB1006524@kroah.com>
+References: <20200514185147.19716-1-sashal@kernel.org>
+ <20200514185147.19716-16-sashal@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514185147.19716-16-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+On Thu, May 14, 2020 at 02:51:01PM -0400, Sasha Levin wrote:
+> From: Christian Gromm <christian.gromm@microchip.com>
+> 
+> [ Upstream commit 5e56bc06e18dfc8a66180fa369384b36e2ab621a ]
+> 
+> This patch replaces function module_init() with subsys_initcall().
+> It is needed to ensure that the core module of the driver is
+> initialized before a component tries to register with the core. This
+> leads to a NULL pointer dereference if the driver is configured as
+> in-tree.
+> 
+> Signed-off-by: Christian Gromm <christian.gromm@microchip.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/r/1587741394-22021-1-git-send-email-christian.gromm@microchip.com
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/staging/most/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/most/core.c b/drivers/staging/most/core.c
+> index 0c4ae6920d77d..409c48c597f2f 100644
+> --- a/drivers/staging/most/core.c
+> +++ b/drivers/staging/most/core.c
+> @@ -1484,7 +1484,7 @@ static void __exit most_exit(void)
+>  	ida_destroy(&mdev_id);
+>  }
+>  
+> -module_init(most_init);
+> +subsys_initcall(most_init);
+>  module_exit(most_exit);
+>  MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR("Christian Gromm <christian.gromm@microchip.com>");
 
-Fix memory leak in hashmap_clear() not freeing hashmap_entry structs for each
-of the remaining entries. Also NULL-out bucket list to prevent possible
-double-free between hashmap__clear() and hashmap__free().
+This is not needed in 5.6 and older kernels due to the most/core.c code
+being in staging for these releases.  It only became an issue when it
+moved out of staging.
 
-Running test_progs-asan flavor clearly showed this problem.
+So please drop this from here and any older trees you might have
+selected it for.
 
-Reported-by: Alston Tang <alston64@fb.com>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200429012111.277390-5-andriin@fb.com
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/lib/bpf/hashmap.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+thanks,
 
-diff --git a/tools/lib/bpf/hashmap.c b/tools/lib/bpf/hashmap.c
-index 54c30c802070..cffb96202e0d 100644
---- a/tools/lib/bpf/hashmap.c
-+++ b/tools/lib/bpf/hashmap.c
-@@ -59,7 +59,14 @@ struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
- 
- void hashmap__clear(struct hashmap *map)
- {
-+	struct hashmap_entry *cur, *tmp;
-+	int bkt;
-+
-+	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
-+		free(cur);
-+	}
- 	free(map->buckets);
-+	map->buckets = NULL;
- 	map->cap = map->cap_bits = map->sz = 0;
- }
- 
--- 
-2.26.2.761.g0e0b3e54be-goog
-
+greg k-h
