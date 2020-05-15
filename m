@@ -2,178 +2,137 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69339C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9695AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4532076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:07:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vhExOYJ6"
+	by mail.kernel.org (Postfix) with ESMTP id 7E6D02076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgEOPHe (ORCPT
+        id S1726727AbgEOPIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:07:34 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:33968 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726227AbgEOPHe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:07:34 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589555253; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=GD3MSVnurBHbUadPkaSVqaLd1/4uCYhA66rh1sVq/Fc=;
- b=vhExOYJ6n/SzUz7BG0k0tJCGPx8dSqawdByQg1nPVOwnjU8LAm/+cd2epQYjF82MpLMwG6dm
- 1kA1YCCD8plW53T3o/WTWpgb1JCHsKfW5xOfBeBMxMWp1X0JenJyPBjn3fugZl5/8eqeB05y
- c738hfovVi8f3CeLvMlk2BQHFGM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ebeb02775dd50406e3fe241 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 15 May 2020 15:07:19
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CAF95C43636; Fri, 15 May 2020 15:07:18 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A1BF8C433F2;
-        Fri, 15 May 2020 15:07:13 +0000 (UTC)
+        Fri, 15 May 2020 11:08:22 -0400
+Received: from mga06.intel.com ([134.134.136.31]:30332 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726248AbgEOPIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 11:08:21 -0400
+IronPort-SDR: 03KPQs3+8c13VIvq/NtdVP3rq732cgCH+NnjvI2mK9bJmLaSymBZUcKI9/8Y/TuzLIlfhVz58g
+ wuiCCLosyTRA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 08:08:21 -0700
+IronPort-SDR: KN+Wg87nK8SnMqebrA5QJEz/3xsD/rYTEyQsxaeuNjYdmePiwQbiGrKQN3c/S0v5063fyk0q1N
+ z8hCmYZjdaSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="253813911"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 15 May 2020 08:08:16 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZbwg-006tV6-Bb; Fri, 15 May 2020 18:08:18 +0300
+Date:   Fri, 15 May 2020 18:08:18 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Jay Fang <f.fangjian@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stephen Boyd <swboyd@chromium.org>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 17/19] spi: dw: Add DMA support to the DW SPI MMIO
+ driver
+Message-ID: <20200515150818.GP1634618@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-18-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 15 May 2020 20:37:13 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Tingwei Zhang <tingwei@codeaurora.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH] coresight: etm4x: Add support to disable trace unit power
- up
-In-Reply-To: <CANLsYkxun2EWGeLU42ShbqkJMtCTh+Q9L3t=CXQR+-2zVuuJYg@mail.gmail.com>
-References: <20200514105915.27516-1-saiprakash.ranjan@codeaurora.org>
- <20200514180055.GA29384@xps15>
- <2c932d57288508cc72a6ee323cf5595e@codeaurora.org>
- <CANLsYkxun2EWGeLU42ShbqkJMtCTh+Q9L3t=CXQR+-2zVuuJYg@mail.gmail.com>
-Message-ID: <a0f8f01f28506e10001885e387d3cb4f@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515104758.6934-18-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+On Fri, May 15, 2020 at 01:47:56PM +0300, Serge Semin wrote:
+> Since the common code in the spi-dw-dma.c driver is ready to be used
+> by the MMIO driver and now provides a method to generically (on any
+> DT or ACPI-based platforms) retrieve the Tx/Rx DMA channel handlers,
+> we can use it and a set of the common DW SPI DMA callbacks to enable
+> DMA at least for generic "snps,dw-apb-ssi" and "snps,dwc-ssi-1.01a"
+> devices.
 
-On 2020-05-15 20:22, Mathieu Poirier wrote:
-> On Thu, 14 May 2020 at 12:39, Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> Hi Mathieu,
->> 
->> On 2020-05-14 23:30, Mathieu Poirier wrote:
->> > Good morning Sai,
->> >
->> > On Thu, May 14, 2020 at 04:29:15PM +0530, Sai Prakash Ranjan wrote:
->> >> From: Tingwei Zhang <tingwei@codeaurora.org>
->> >>
->> >> On some Qualcomm Technologies Inc. SoCs like SC7180, there
->> >> exists a hardware errata where the APSS (Application Processor
->> >> SubSystem)/CPU watchdog counter is stopped when ETM register
->> >> TRCPDCR.PU=1.
->> >
->> > Fun stuff...
->> >
->> 
->> Yes :)
->> 
->> >> Since the ETMs share the same power domain as
->> >> that of respective CPU cores, they are powered on when the
->> >> CPU core is powered on. So we can disable powering up of the
->> >> trace unit after checking for this errata via new property
->> >> called "qcom,tupwr-disable".
->> >>
->> >> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
->> >> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> >
->> > Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> > Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
->> >
->> 
->> Tingwei is the author, so if I understand correctly, his signed-off-by
->> should appear first, am I wrong?
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
 > 
-> It's a gray area and depends on who's code is more prevalent in the
-> patch.  If Tingwei wrote the most of the code then his name is in the
-> "from:" section, yours as co-developer and he signs off on it (as I
-> suggested).  If you did most of the work then it is the opposite.
-> Adding a Co-developed and a signed-off with the same name doesn't make
-> sense.
+> Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> ---
+>  drivers/spi/spi-dw-mmio.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-
-I did check the documentation for submitting patches:
-Documentation/process/submitting-patches.rst. And it clearly states
-that "Co-developed-by must be followed by Signed-off by the co-author
-and the last Signed-off-by: must always be that of the developer
-submitting the patch".
-
-Quoting below from the doc:
-
-Co-developed-by: <snip> ...Since
-Co-developed-by: denotes authorship, every Co-developed-by: must be 
-immediately
-followed by a Signed-off-by: of the associated co-author.  Standard 
-sign-off
-procedure applies, i.e. the ordering of Signed-off-by: tags should 
-reflect the
-chronological history of the patch insofar as possible, regardless of 
-whether
-the author is attributed via From: or Co-developed-by:.  Notably, the 
-last
-Signed-off-by: must always be that of the developer submitting the 
-patch.
-
->> 
->> >> ---
->> >>  .../devicetree/bindings/arm/coresight.txt     |  6 ++++
->> >>  drivers/hwtracing/coresight/coresight-etm4x.c | 29
->> >> ++++++++++++-------
->> >
->> > Please split in two patches.
->> >
->> 
->> Sure, I will split the dt-binding into separate patch, checkpatch did
->> warn.
-> 
-> And you still sent me the patch...  I usually run checkpatch before
-> all the submissions I review and flatly ignore patches that return
-> errors.  You got lucky...
+> diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+> index 0894b4c09496..e23d0c53a664 100644
+> --- a/drivers/spi/spi-dw-mmio.c
+> +++ b/drivers/spi/spi-dw-mmio.c
+> @@ -149,6 +149,8 @@ static int dw_spi_dw_apb_init(struct platform_device *pdev,
+>  	/* Register hook to configure CTRLR0 */
+>  	dwsmmio->dws.update_cr0 = dw_spi_update_cr0;
+>  
+> +	dw_spi_dma_setup_generic(&dwsmmio->dws);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -158,6 +160,8 @@ static int dw_spi_dwc_ssi_init(struct platform_device *pdev,
+>  	/* Register hook to configure CTRLR0 */
+>  	dwsmmio->dws.update_cr0 = dw_spi_update_cr0_v1_01a;
+>  
+> +	dw_spi_dma_setup_generic(&dwsmmio->dws);
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.25.1
 > 
 
-I did not mean to ignore it or else I wouldn't have run checkpatch 
-itself.
-I checked other cases like "arm,scatter-gather" where the binding and 
-the
-driver change was in a single patch, hence I thought it's not a very 
-strict rule.
-
-Thanks,
-Sai
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+With Best Regards,
+Andy Shevchenko
+
+
