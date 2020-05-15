@@ -2,246 +2,271 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2121FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D576EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CFC62076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3CC20756
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:55:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RsqaKJAc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgEORzi (ORCPT
+        id S1726656AbgEORzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:55:38 -0400
-Received: from mga07.intel.com ([134.134.136.100]:26829 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726557AbgEORzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:55:35 -0400
-IronPort-SDR: stbtdaglhcGp/EGrUkZFsPJI/hmqw3bb/XdyRDzyS4xViGGe9B4RxRjUFW4KvPYJ/+o8PbuZLc
- yqj7S0/y/+xw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 10:55:35 -0700
-IronPort-SDR: TBKh+ihMjMtoxPYH+OtfEHSMh9mvSuJosODBNQBSufQTKe072TnEDrjnulbwFEepL7H3HK4iCq
- 8a0UTnYXbaSA==
-X-IronPort-AV: E=Sophos;i="5.73,396,1583222400"; 
-   d="scan'208";a="464804660"
-Received: from msethi-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.178.149])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 10:55:34 -0700
-From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [RFC PATCH 2/2] PCI: Add basic Compute eXpress Link DVSEC decode
-Date:   Fri, 15 May 2020 10:55:28 -0700
-Message-Id: <20200515175528.980103-3-sean.v.kelley@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200515175528.980103-1-sean.v.kelley@linux.intel.com>
-References: <20200515175528.980103-1-sean.v.kelley@linux.intel.com>
+        Fri, 15 May 2020 13:55:44 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37448 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726521AbgEORzg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:55:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589565333;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=PfIWRsElvqGc1a1ZBGt5Fj6BS3GWuiq8tGXZcYtnc2s=;
+        b=RsqaKJAc0X1usDYqNsvTUHNYcnkU7DokDc4Z2Vfy8iIzJGMq6SCXZwCQ6lavKIO/hFcTRl
+        8UiGwCCvW+X+qhYfFsW3dMUX9xDiRigV4joW07jqesTkT9FtrOCB5ZXmeqAc5aUt09uuWJ
+        LUBqH+u11v8jAB5+dPvG/rUDaVZ38Jo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-320-ugvvugxwPda0kLyZTmCMoA-1; Fri, 15 May 2020 13:55:29 -0400
+X-MC-Unique: ugvvugxwPda0kLyZTmCMoA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B03368005AD;
+        Fri, 15 May 2020 17:55:24 +0000 (UTC)
+Received: from optiplex-lnx.redhat.com (unknown [10.10.110.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CFE111C8;
+        Fri, 15 May 2020 17:55:14 +0000 (UTC)
+From:   Rafael Aquini <aquini@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-doc@vger.kernel.org, kexec@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, dyoung@redhat.com, bhe@redhat.com,
+        corbet@lwn.net, mcgrof@kernel.org, keescook@chromium.org,
+        akpm@linux-foundation.org, cai@lca.pw, rdunlap@infradead.org,
+        tytso@mit.edu, bunk@kernel.org, torvalds@linux-foundation.org,
+        gregkh@linuxfoundation.org, labbott@redhat.com, jeffm@suse.com,
+        jikos@kernel.org, jeyu@suse.de, tiwai@suse.de, AnDavis@suse.com,
+        rpalethorpe@suse.de
+Subject: [PATCH v5] kernel: add panic_on_taint
+Date:   Fri, 15 May 2020 13:55:02 -0400
+Message-Id: <20200515175502.146720-1-aquini@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compute eXpress Link is a new CPU interconnect created with
-workload accelerators in mind. The interconnect relies on PCIe Electrical
-and Physical interconnect for communication. CXL devices enumerate to the
-OS as an ACPI-described PCIe Root Complex Integrated Endpoint.
+Analogously to the introduction of panic_on_warn, this patch introduces a kernel
+option named panic_on_taint in order to provide a simple and generic way to stop
+execution and catch a coredump when the kernel gets tainted by any given flag.
 
-This patch introduces the bare minimum support by simply looking for and
-caching the DVSEC CXL Extended Capability. Currently, only CXL.io (which
-is mandatory to be configured by BIOS) is enabled. In future, we will
-also add support for CXL.cache and CXL.mem.
+This is useful for debugging sessions as it avoids having to rebuild the kernel
+to explicitly add calls to panic() into the code sites that introduce the taint
+flags of interest. For instance, if one is interested in proceeding with a
+post-mortem analysis at the point a given code path is hitting a bad page
+(i.e. unaccount_page_cache_page(), or slab_bug()), a coredump can be collected
+by rebooting the kernel with 'panic_on_taint=0x20' amended to the command line.
 
-DocLink: https://www.computeexpresslink.org/
+Another, perhaps less frequent, use for this option would be as a mean for
+assuring a security policy case where only a subset of taints, or no single
+taint (in paranoid mode), is allowed for the running system.
+The optional switch 'nousertaint' is handy in this particular scenario,
+as it will avoid userspace induced crashes by writes to sysctl interface
+/proc/sys/kernel/tainted causing false positive hits for such policies.
 
-Originally-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
+Suggested-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Rafael Aquini <aquini@redhat.com>
 ---
- drivers/pci/Kconfig  |  9 +++++
- drivers/pci/Makefile |  1 +
- drivers/pci/cxl.c    | 89 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h    |  7 ++++
- drivers/pci/probe.c  |  1 +
- include/linux/pci.h  |  1 +
- 6 files changed, 108 insertions(+)
- create mode 100644 drivers/pci/cxl.c
+Changelog:
+* v2: get rid of unnecessary/misguided compiler hints		(Luis)
+      enhance documentation text for the new kernel parameter	(Randy)
+* v3: drop sysctl interface, keep it only as a kernel parameter	(Luis)
+* v4: change panic_on_taint input from alphabetical taint flags
+      to hexadecimal bitmasks, for clarity and extendability	(Luis)
+* v5: add doc note on the potential effects of panic_on_taint
+      with notaintuser on writes to kernel.tainted sysctl knob	(Luis)
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 4bef5c2bae9f..eafb200b320b 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -115,6 +115,15 @@ config XEN_PCIDEV_FRONTEND
- 	  The PCI device frontend driver allows the kernel to import arbitrary
- 	  PCI devices from a PCI backend to support PCI driver domains.
+ Documentation/admin-guide/kdump/kdump.rst     |  8 +++++
+ .../admin-guide/kernel-parameters.txt         | 13 +++++++
+ Documentation/admin-guide/sysctl/kernel.rst   |  7 ++++
+ include/linux/kernel.h                        |  3 ++
+ kernel/panic.c                                | 34 +++++++++++++++++++
+ kernel/sysctl.c                               | 11 +++++-
+ 6 files changed, 75 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index ac7e131d2935..2da65fef2a1c 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -521,6 +521,14 @@ will cause a kdump to occur at the panic() call.  In cases where a user wants
+ to specify this during runtime, /proc/sys/kernel/panic_on_warn can be set to 1
+ to achieve the same behaviour.
  
-+config PCI_CXL
-+	bool "Enable PCI Compute eXpress Link"
-+	depends on PCI
-+	help
-+	  Say Y here if you want the PCI core to detect CXL devices, decode, and
-+	  cache the DVSEC CXL Extended Capability as configured by BIOS.
++Trigger Kdump on add_taint()
++============================
 +
-+	  When in doubt, say N.
++The kernel parameter panic_on_taint facilitates a conditional call to panic()
++from within add_taint() whenever the value set in this bitmask matches with the
++bit flag being set by add_taint().
++This will cause a kdump to occur at the add_taint()->panic() call.
 +
- config PCI_ATS
- 	bool
+ Contact
+ =======
  
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 522d2b974e91..465eee31e999 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -30,6 +30,7 @@ obj-$(CONFIG_PCI_PF_STUB)	+= pci-pf-stub.o
- obj-$(CONFIG_PCI_ECAM)		+= ecam.o
- obj-$(CONFIG_PCI_P2PDMA)	+= p2pdma.o
- obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
-+obj-$(CONFIG_PCI_CXL)		+= cxl.o
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index d9197499aad1..27b988acb4db 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3422,6 +3422,19 @@
+ 			bit 4: print ftrace buffer
+ 			bit 5: print all printk messages in buffer
  
- # Endpoint library must be initialized before its users
- obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
-diff --git a/drivers/pci/cxl.c b/drivers/pci/cxl.c
-new file mode 100644
-index 000000000000..f02bdd7b77f2
---- /dev/null
-+++ b/drivers/pci/cxl.c
-@@ -0,0 +1,89 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Compute eXpress Link Support
-+ */
++	panic_on_taint=	Bitmask for conditionally call panic() in add_taint()
++			Format: <hex>[,nousertaint]
++			Hexadecimal bitmask representing the set of TAINT flags
++			that will cause the kernel to panic when add_taint() is
++			called with any of the flags in this set.
++			The optional switch "nousertaint" can be utilized to
++			prevent userspace forced crashes by writing to sysctl
++			/proc/sys/kernel/tainted any flagset matching with the
++			bitmask set on panic_on_taint.
++			See Documentation/admin-guide/tainted-kernels.rst for
++			extra details on the taint flags that users can pick
++			to compose the bitmask to assign to panic_on_taint.
 +
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/pci.h>
-+#include <linux/pci_regs.h>
+ 	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
+ 			on a WARN().
+ 
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index c6c27db68d4c..427ce0a86b36 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -1241,6 +1241,13 @@ ORed together. The letters are seen in "Tainted" line of Oops reports.
+ 
+ See :doc:`/admin-guide/tainted-kernels` for more information.
+ 
++Note:
++  writes to this sysctl interface will fail with ``EINVAL`` if the kernel is
++  booted with the command line option ``panic_on_taint=<bitmask>,nousertaint``
++  and any of the ORed together values being written to ``tainted`` match with
++  the bitmask declared on panic_on_taint.
++  See :doc:`/admin-guide/kernel-parameters` for more details on that particular
++  kernel command line option and its optional ``nousertaint`` switch.
+ 
+ threads-max
+ ===========
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 04a5885cec1b..82d91547d122 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -534,6 +534,8 @@ extern int panic_on_oops;
+ extern int panic_on_unrecovered_nmi;
+ extern int panic_on_io_nmi;
+ extern int panic_on_warn;
++extern unsigned long panic_on_taint;
++extern bool panic_on_taint_nousertaint;
+ extern int sysctl_panic_on_rcu_stall;
+ extern int sysctl_panic_on_stackoverflow;
+ 
+@@ -602,6 +604,7 @@ extern enum system_states {
+ #define TAINT_AUX			16
+ #define TAINT_RANDSTRUCT		17
+ #define TAINT_FLAGS_COUNT		18
++#define TAINT_FLAGS_MAX			((1UL << TAINT_FLAGS_COUNT) - 1)
+ 
+ struct taint_flag {
+ 	char c_true;	/* character printed when tainted */
+diff --git a/kernel/panic.c b/kernel/panic.c
+index ec6d7d788ce7..85568bbfb12b 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -52,6 +52,8 @@ static int pause_on_oops_flag;
+ static DEFINE_SPINLOCK(pause_on_oops_lock);
+ bool crash_kexec_post_notifiers;
+ int panic_on_warn __read_mostly;
++unsigned long panic_on_taint;
++bool panic_on_taint_nousertaint = false;
+ 
+ int panic_timeout = CONFIG_PANIC_TIMEOUT;
+ EXPORT_SYMBOL_GPL(panic_timeout);
+@@ -442,6 +444,11 @@ void add_taint(unsigned flag, enum lockdep_ok lockdep_ok)
+ 		pr_warn("Disabling lock debugging due to kernel taint\n");
+ 
+ 	set_bit(flag, &tainted_mask);
 +
-+#define PCI_DVSEC_VENDOR_ID_CXL		0x1e98
-+#define PCI_DVSEC_ID_CXL_DEV		0x0
-+
-+#define PCI_CXL_CAP			0x0a
-+#define PCI_CXL_CTRL			0x0c
-+#define PCI_CXL_STS			0x0e
-+#define PCI_CXL_CTRL2			0x10
-+#define PCI_CXL_STS2			0x12
-+#define PCI_CXL_LOCK			0x14
-+
-+#define PCI_CXL_CACHE			BIT(0)
-+#define PCI_CXL_IO			BIT(1)
-+#define PCI_CXL_MEM			BIT(2)
-+#define PCI_CXL_HDM_COUNT(reg)		(((reg) & (3 << 4)) >> 4)
-+#define PCI_CXL_VIRAL			BIT(14)
-+
-+/*
-+ * pci_find_cxl_capability - Identify and return offset to Vendor-Specific
-+ * capabilities.
-+ *
-+ * CXL makes use of Designated Vendor-Specific Extended Capability (DVSEC)
-+ * to uniquely identify both DVSEC Vendor ID and DVSEC ID aligning with
-+ * PCIe r5.0, sec 7.9.6.2
-+ */
-+static int pci_find_cxl_capability(struct pci_dev *dev)
-+{
-+	u16 vendor, id;
-+	int pos = 0;
-+
-+	while ((pos = pci_find_next_ext_capability(dev, pos,
-+						   PCI_EXT_CAP_ID_DVSEC))) {
-+		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1,
-+				     &vendor);
-+		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &id);
-+		if (vendor == PCI_DVSEC_VENDOR_ID_CXL &&
-+		    id == PCI_DVSEC_ID_CXL_DEV)
-+			return pos;
++	if (tainted_mask & panic_on_taint) {
++		panic_on_taint = 0;
++		panic("panic_on_taint set ...");
 +	}
+ }
+ EXPORT_SYMBOL(add_taint);
+ 
+@@ -697,3 +704,30 @@ static int __init oops_setup(char *s)
+ 	return 0;
+ }
+ early_param("oops", oops_setup);
++
++static int __init panic_on_taint_setup(char *s)
++{
++	char *taint_str;
++
++	if (!s)
++		return -EINVAL;
++
++	taint_str = strsep(&s, ",");
++	if (kstrtoul(taint_str, 16, &panic_on_taint))
++		return -EINVAL;
++
++	/* make sure panic_on_taint doesn't hold out-of-range TAINT flags */
++	panic_on_taint &= TAINT_FLAGS_MAX;
++
++	if (!panic_on_taint)
++		return -EINVAL;
++
++	if (s && !strcmp(s, "nousertaint"))
++		panic_on_taint_nousertaint = true;
++
++	pr_info("panic_on_taint: bitmask=0x%lx nousertaint_mode=%sabled\n",
++		panic_on_taint, panic_on_taint_nousertaint ? "en" : "dis");
 +
 +	return 0;
 +}
-+
-+void pci_cxl_init(struct pci_dev *dev)
-+{
-+	u16 cap, ctrl, status, ctrl2, status2, lock;
-+	int pos;
-+
-+	/* Only for PCIe */
-+	if (!pci_is_pcie(dev))
-+		return;
-+
-+	/* Only for Device 0 Function 0, Root Complex Integrated Endpoints */
-+	if (dev->devfn != 0 || (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END))
-+		return;
-+
-+	pos = pci_find_cxl_capability(dev);
-+	if (!pos)
-+		return;
-+
-+	dev->cxl_cap = pos;
-+
-+	pci_read_config_word(dev, pos + PCI_CXL_CAP, &cap);
-+	pci_read_config_word(dev, pos + PCI_CXL_CTRL, &ctrl);
-+	pci_read_config_word(dev, pos + PCI_CXL_STS, &status);
-+	pci_read_config_word(dev, pos + PCI_CXL_CTRL2, &ctrl2);
-+	pci_read_config_word(dev, pos + PCI_CXL_STS2, &status2);
-+	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
-+
-+	dev_info(&dev->dev, "CXL: Cache%c IO%c Mem%c Viral%c HDMCount %d\n",
-+		 (cap & PCI_CXL_CACHE) ? '+' : '-',
-+		 (cap & PCI_CXL_IO) ? '+' : '-',
-+		 (cap & PCI_CXL_MEM) ? '+' : '-',
-+		 (cap & PCI_CXL_VIRAL) ? '+' : '-',
-+		 PCI_CXL_HDM_COUNT(cap));
-+
-+	dev_info(&dev->dev, "CXL: cap ctrl status ctrl2 status2 lock\n");
-+	dev_info(&dev->dev, "CXL: %04x %04x %04x %04x %04x %04x\n",
-+		 cap, ctrl, status, ctrl2, status2, lock);
-+}
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 6d3f75867106..d9905e2dee95 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -469,6 +469,13 @@ static inline void pci_ats_init(struct pci_dev *d) { }
- static inline void pci_restore_ats_state(struct pci_dev *dev) { }
- #endif /* CONFIG_PCI_ATS */
++early_param("panic_on_taint", panic_on_taint_setup);
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 349cab382081..c8ec67c1e137 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -865,11 +865,20 @@ static int proc_taint(struct ctl_table *table, int write,
+ 		return err;
  
-+#ifdef CONFIG_PCI_CXL
-+/* Compute eXpress Link */
-+void pci_cxl_init(struct pci_dev *dev);
-+#else
-+static inline void pci_cxl_init(struct pci_dev *dev) { }
-+#endif
+ 	if (write) {
++		int i;
 +
- #ifdef CONFIG_PCI_PRI
- void pci_pri_init(struct pci_dev *dev);
- void pci_restore_pri_state(struct pci_dev *pdev);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 77b8a145c39b..c55df0ae8f06 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2371,6 +2371,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_ptm_init(dev);		/* Precision Time Measurement */
- 	pci_aer_init(dev);		/* Advanced Error Reporting */
- 	pci_dpc_init(dev);		/* Downstream Port Containment */
-+	pci_cxl_init(dev);		/* Compute eXpress Link */
- 
- 	pcie_report_downtraining(dev);
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 83ce1cdf5676..0c9145f48456 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -315,6 +315,7 @@ struct pci_dev {
- 	u16		aer_cap;	/* AER capability offset */
- 	struct aer_stats *aer_stats;	/* AER stats for this device */
- #endif
-+	u16		cxl_cap;	/* CXL capability offset */
- 	u8		pcie_cap;	/* PCIe capability offset */
- 	u8		msi_cap;	/* MSI capability offset */
- 	u8		msix_cap;	/* MSI-X capability offset */
++		/*
++		 * If we are relying on panic_on_taint not producing
++		 * false positives due to userspace input, bail out
++		 * before setting the requested taint flags.
++		 */
++		if (panic_on_taint_nousertaint && (tmptaint & panic_on_taint))
++			return -EINVAL;
++
+ 		/*
+ 		 * Poor man's atomic or. Not worth adding a primitive
+ 		 * to everyone's atomic.h for this
+ 		 */
+-		int i;
+ 		for (i = 0; i < TAINT_FLAGS_COUNT; i++)
+ 			if ((1UL << i) & tmptaint)
+ 				add_taint(i, LOCKDEP_STILL_OK);
 -- 
-2.26.2
+2.25.4
 
