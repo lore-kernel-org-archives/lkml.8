@@ -2,177 +2,235 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3423C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB43C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAD3220709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D2E20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:46:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntWeU88/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q9Q88arg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgEOTm7 (ORCPT
+        id S1726261AbgEOTqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 15:42:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55772 "EHLO
+        Fri, 15 May 2020 15:46:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726168AbgEOTm6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726206AbgEOTqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 15:42:58 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A9CC061A0C;
-        Fri, 15 May 2020 12:42:58 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id i68so3015845qtb.5;
-        Fri, 15 May 2020 12:42:58 -0700 (PDT)
+        Fri, 15 May 2020 15:46:54 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A31D0C05BD0A
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 12:46:54 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y18so1470654pfl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 12:46:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3FeZo7wxUKF5f4TtRFTT/9ikqtb4RICo/S0MwMu9vSo=;
-        b=ntWeU88/ZODmBoBJzxsMHcHPQwhBwu/fsT+NjYCYj3tSizmOSPq+zKlQSL8S518Zvn
-         FFSY2R2OrJuWcD5ry1+6WepFZBKDQ/1UMJ76idiDBu8Y2PYwv0Y6f7Fl/eotDeoow9iV
-         nNEtFFTV0qoqsWYGRCL2wNLWlUrTAodVTnbBEsx83QY6BOSb8ittkAC27dJIOSx1T6gd
-         /6ZEGsPYBBy/B4fBvUHffHEoP4sJfd6GwVQ0n8YPMaejW9t91Qz6uWyHwEXttgQ+AwGd
-         faVnP8CNbSxSxsJWQBICNwMeaN7KNLZIFFSBTplH0z+fpDq9GFcmff4KD+PJLFVitnUf
-         yCVg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qHFnsbgrSS4StOIenlkUVZXooyvIhnf9sBRBZNkUxwQ=;
+        b=Q9Q88argmmjbLp2fCN86SmyNT6CTlbnyCjllZlrZmXbFTt2I/vXcG0UiFQsfrdl2M6
+         omiB3E2tkak1x2S0KzduyTbK2fpc6aIVEiToqOSzO5Z+KGQ/ixVPmoCKgyyeY85ePBaZ
+         pR8MmAGbN98jOc7nK+pEDqmQRXPj+ectonE1N+8xP9A3vbhEGmTaW++SFt9o11+b6zFz
+         R5QI94xI/7RY7OYhrD62UfxNl7se7rr8oiNahRoy6nU2FrMvw39NlcvKMAWvIIuuFoOf
+         VtaK2gmWlYvf5m1f2PLZGb6SUOhU/0wS9q1JRZR3J5GSKc6msxjexbNnEYjjokWWaTZW
+         8ccg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3FeZo7wxUKF5f4TtRFTT/9ikqtb4RICo/S0MwMu9vSo=;
-        b=JLdPHbNk2sUPN/sWgLZUWtFXfWsQuG16k2KLkch9TfqfUYmMMpgNVLPIHE63T+VAyj
-         sG3AKkGk6lAfP7cfptgnhrKzwNNrPmiBzc0aLKz0jUriRN/S+8PywNzdz3KXyKOZPNNW
-         RjWtVPpIrLzyQOCer+4npz26EMbv/wk5kUUUrhpL1LQl2gMHuo3la5/fNghmhx2vxE9P
-         DRtdbo4ccQBxPYMP9qQmNH06ElPRAN9t7DS/RCpBsG6h56CGKsmdhQs8zmUGhQThFjxo
-         Z9mVhHYojnZd9gmo3D/vFnACVZOrg8xH4L7smqJwxHpmbADHt2PZPGYTQJt1gKK8fIRb
-         tAPg==
-X-Gm-Message-State: AOAM5319D9K0i2BXv507s4zgmudqIRnH49oocWxNpVYy3yrvRsLXsXCZ
-        owlrKy/spYXd/YaQK3kOlwgeZ2Sm/oG5EmTEN0Q=
-X-Google-Smtp-Source: ABdhPJydym0mkVZTYgwU9sGeeAr5aapv8UMqIAmPaxOtjLJUJJgBDkya5IjfjdAlrGdaVBwHpG6V2rczHCoOprxGlzA=
-X-Received: by 2002:ac8:424b:: with SMTP id r11mr5248216qtm.171.1589571777348;
- Fri, 15 May 2020 12:42:57 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qHFnsbgrSS4StOIenlkUVZXooyvIhnf9sBRBZNkUxwQ=;
+        b=tg9XFKkrpS4wBMbL7i3xznpJV4CRc3A/wHdhlXsM6uznpOB53oQ32WgXAHvML0XETp
+         RAkx3T3Ki57GutdlV0KcEElky5bPseT2Eeo4mVozgDc6mMxGiLEhq1isaUjtdKDCRRa3
+         RbiWvCQKY1pNe+1LRq+31+xOweU/nBHFU1JolZ86MPreQ8uxnETLPolWALCvk8Gh7kRP
+         q/QC4XeYPwETM/+XxyNloftL1lqzIRDP+BK2Lxqj0MsZ0+C2iDdXwwdBNidLHzzCIws1
+         lLhH2Fgz7E5Wf9a2SioIkDAkIFKmFW06993cuB4PSWtm6BWTHzai3G0yd9Ep1cLyPmxD
+         KI9Q==
+X-Gm-Message-State: AOAM532EYYOHbf2FKNfIoKxetnlW3E4srXrlm8AcXTUa1dHoRwTf5+1u
+        02TkybwBMz0XPd2PWNq2qkbQrQ==
+X-Google-Smtp-Source: ABdhPJz2S4OKkT9pAG2qWpgs+3SZglys/JTnKn/Hb4Bpe0zcY3Mp9xBPg6TctMyMvSmt3IJ1aHxs8Q==
+X-Received: by 2002:a62:1b84:: with SMTP id b126mr5552921pfb.123.1589572013822;
+        Fri, 15 May 2020 12:46:53 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id lj12sm2169968pjb.21.2020.05.15.12.46.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 12:46:53 -0700 (PDT)
+Date:   Fri, 15 May 2020 13:46:51 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     ohad@wizery.com, loic.pallardy@st.com, arnaud.pouliquen@st.com,
+        s-anna@ti.com, linux-remoteproc@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 05/14] remoteproc: Refactor function rproc_fw_boot()
+Message-ID: <20200515194651.GB24201@xps15>
+References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
+ <20200424200135.28825-6-mathieu.poirier@linaro.org>
+ <20200506003341.GD2329931@builder.lan>
+ <20200508212756.GB5650@xps15>
+ <20200514021055.GF16107@builder.lan>
 MIME-Version: 1.0
-References: <20200515165007.217120-1-irogers@google.com> <20200515170036.GA10230@kernel.org>
-In-Reply-To: <20200515170036.GA10230@kernel.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 15 May 2020 12:42:46 -0700
-Message-ID: <CAEf4BzZ5=_yu1kL77n+Oc0K9oaDi4J=c+7CV8D0AXs2hBxhNbw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] Copy hashmap to tools/perf/util, use in perf expr
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514021055.GF16107@builder.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 10:01 AM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Fri, May 15, 2020 at 09:50:00AM -0700, Ian Rogers escreveu:
-> > Perf's expr code currently builds an array of strings then removes
-> > duplicates. The array is larger than necessary and has recently been
-> > increased in size. When this was done it was commented that a hashmap
-> > would be preferable.
-> >
-> > libbpf has a hashmap but libbpf isn't currently required to build
-> > perf. To satisfy various concerns this change copies libbpf's hashmap
-> > into tools/perf/util, it then adds a check in perf that the two are in
-> > sync.
-> >
-> > Andrii's patch to hashmap from bpf-next is brought into this set to
-> > fix issues with hashmap__clear.
-> >
-> > Two minor changes to libbpf's hashmap are made that remove an unused
-> > dependency and fix a compiler warning.
->
-> Andrii/Alexei/Daniel, what do you think about me merging these fixes in my
-> perf-tools-next branch?
+On Wed, May 13, 2020 at 07:10:55PM -0700, Bjorn Andersson wrote:
+> On Fri 08 May 14:27 PDT 2020, Mathieu Poirier wrote:
+> 
+> > On Tue, May 05, 2020 at 05:33:41PM -0700, Bjorn Andersson wrote:
+> > > On Fri 24 Apr 13:01 PDT 2020, Mathieu Poirier wrote:
+> > > 
+> > > > Refactor function rproc_fw_boot() in order to better reflect the work
+> > > > that is done when supporting scenarios where the remoteproc core is
+> > > > synchronising with a remote processor.
+> > > > 
+> > > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > > > ---
+> > > >  drivers/remoteproc/remoteproc_core.c | 10 ++++++----
+> > > >  1 file changed, 6 insertions(+), 4 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> > > > index a02593b75bec..e90a21de9de1 100644
+> > > > --- a/drivers/remoteproc/remoteproc_core.c
+> > > > +++ b/drivers/remoteproc/remoteproc_core.c
+> > > > @@ -1370,9 +1370,9 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
+> > > >  }
+> > > >  
+> > > >  /*
+> > > > - * take a firmware and boot a remote processor with it.
+> > > > + * boot or synchronise with a remote processor.
+> > > >   */
+> > > > -static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+> > > > +static int rproc_actuate_device(struct rproc *rproc, const struct firmware *fw)
+> > > 
+> > > Per patch 4 this function will if rproc_needs_syncing() be called with
+> > > fw == NULL, it's not obvious to me that the various operations on "fw"
+> > > in this function are valid anymore.
+> > 
+> > That is right, all firmware related operations in this function are found in
+> > remoteproc_internal.h where the value of rproc->sync_with_mcu is checked before
+> > moving forward. That allows us to avoid introducing a new function similar to
+> > rproc_fw_boot() but without firmware operations or peppering the code with if
+> > statements.
+> > 
+> 
+> As I wrote in my other reply, the two mechanisms seems to consist of the
+> following steps:
+> 
+> boot the core:
+> 1) request firmware
+> 2) prepare device
+> 3) parse fw
+> 4) handle resources
+> 5) allocate carveouts
+> 6) load segments
+> 7) find resource table
+> 8) prepare subdevices
+> 9) power on
+> 10) start subdevices
+> 
+> sync:
+> 1) prepare device (?)
+> 2) handle resources
+> 3) allocate carveouts (?)
+> 4) prepare subdevices
+> 5) attach
+> 6) start subdevices
+> 
+> Rather than relying on the state flag and missing ops will turn the
+> first list into the second list I conceptually prefer having two
+> separate functions that are easy to reason about.
 
-I'm ok with the idea, but it's up to maintainers to coordinate this :)
+I reflected long and hard about doing just that...
 
->
-> - Arnaldo
->
-> > Two perf test changes are also brought in as they need refactoring to
-> > account for the expr API change and it is expected they will land
-> > ahead of this.
-> > https://lore.kernel.org/lkml/20200513062236.854-2-irogers@google.com/
-> >
-> > Tested with 'perf test' and 'make -C tools/perf build-test'.
-> >
-> > The hashmap change was originally part of an RFC:
-> > https://lore.kernel.org/lkml/20200508053629.210324-1-irogers@google.com/
-> >
-> > v2. moves hashmap into tools/perf/util rather than libapi, to allow
-> > hashmap's libbpf symbols to be visible when built statically for
-> > testing.
-> >
-> > Andrii Nakryiko (1):
-> >   libbpf: Fix memory leak and possible double-free in hashmap__clear
-> >
-> > Ian Rogers (6):
-> >   libbpf hashmap: Remove unused #include
-> >   libbpf hashmap: Fix signedness warnings
-> >   tools lib/api: Copy libbpf hashmap to tools/perf/util
-> >   perf test: Provide a subtest callback to ask for the reason for
-> >     skipping a subtest
-> >   perf test: Improve pmu event metric testing
-> >   perf expr: Migrate expr ids table to a hashmap
-> >
-> >  tools/lib/bpf/hashmap.c         |  10 +-
-> >  tools/lib/bpf/hashmap.h         |   1 -
-> >  tools/perf/check-headers.sh     |   4 +
-> >  tools/perf/tests/builtin-test.c |  18 ++-
-> >  tools/perf/tests/expr.c         |  40 +++---
-> >  tools/perf/tests/pmu-events.c   | 169 ++++++++++++++++++++++-
-> >  tools/perf/tests/tests.h        |   4 +
-> >  tools/perf/util/Build           |   4 +
-> >  tools/perf/util/expr.c          | 129 +++++++++--------
-> >  tools/perf/util/expr.h          |  26 ++--
-> >  tools/perf/util/expr.y          |  22 +--
-> >  tools/perf/util/hashmap.c       | 238 ++++++++++++++++++++++++++++++++
-> >  tools/perf/util/hashmap.h       | 177 ++++++++++++++++++++++++
-> >  tools/perf/util/metricgroup.c   |  87 ++++++------
-> >  tools/perf/util/stat-shadow.c   |  49 ++++---
-> >  15 files changed, 798 insertions(+), 180 deletions(-)
-> >  create mode 100644 tools/perf/util/hashmap.c
-> >  create mode 100644 tools/perf/util/hashmap.h
-> >
-> > --
-> > 2.26.2.761.g0e0b3e54be-goog
-> >
->
-> --
->
-> - Arnaldo
+> 
+> But I haven't done any refactoring or implemented this, so in practice
+> the two might just be a lot of duplication(?)
+
+Exactly - duplication and maintenance are my prime concern.  Right now some
+functions in the OFFLINE -> RUNNING are clearly not needed when dealing with a
+DETACHED -> RUNNING scenarios, but with I am convinced people will find ways to
+do something creative with the callbacks.  In the end I fear the new functions
+we spin off to deal with DETACHED -> RUNNING scenarios will end up looking very
+similar to the current implementation.
+
+With that in mind I simply did all the work in remoteproc_internal.h and left
+the core functions intact.
+
+We can try spinning off new functions in the next revision, just to test my
+theory and see how much gets duplicated.
+
+> 
+> > > 
+> > > >  {
+> > > >  	struct device *dev = &rproc->dev;
+> > > >  	const char *name = rproc->firmware;
+> > > > @@ -1382,7 +1382,9 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+> > > >  	if (ret)
+> > > >  		return ret;
+> > > >  
+> > > > -	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
+> > > > +	if (!rproc_needs_syncing(rproc))
+> > > 
+> > > Can't we make this check on fw, to make the relationship "if we where
+> > > passed a firmware object, we're going to load and boot that firmware"?
+> > 
+> > It can but I specifically decided to use rproc_needs_syncing() to be consistent
+> > with the rest of the patchset.  That way all we need to do is grep for
+> > rproc_needs_syncing to get all the places where a decision about synchronising
+> > with a remote processor is made.
+> > 
+> 
+> Conceptually we have a single "to sync or not to sync", but I think
+> we're invoking rproc_needs_syncing() 8 times during rproc_fw_boot() and
+> each of those operations may or may not do anything.
+
+As I said above, I'll try spinning off new functions in the next revision.  From
+there we can decide how best to move forward.
+
+> 
+> There are certain operations where I see it makes sense for a driver to
+> either implement or not, but I think that e.g. for a rproc in OFFLINE
+> state we should just require ops->start to be specified - because it
+> doesn't make sense to enter rproc_start() if ops->start is a nop.
+
+At this time ops->start() doesn't have to be specified... But as you say it
+won't do much good and this is something we can easily spot when reviewing
+patches.
+
+Thanks for the review,
+Mathieu
+
+> 
+> Regards,
+> Bjorn
+> 
+> > > 
+> > > Regards,
+> > > Bjorn
+> > > 
+> > > > +		dev_info(dev, "Booting fw image %s, size %zd\n",
+> > > > +			 name, fw->size);
+> > > >  
+> > > >  	/*
+> > > >  	 * if enabling an IOMMU isn't relevant for this rproc, this is
+> > > > @@ -1818,7 +1820,7 @@ int rproc_boot(struct rproc *rproc)
+> > > >  		}
+> > > >  	}
+> > > >  
+> > > > -	ret = rproc_fw_boot(rproc, firmware_p);
+> > > > +	ret = rproc_actuate_device(rproc, firmware_p);
+> > > >  
+> > > >  	release_firmware(firmware_p);
+> > > >  
+> > > > -- 
+> > > > 2.20.1
+> > > > 
