@@ -2,168 +2,104 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DBDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E682B2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59E12076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:29:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q03Rh3l3"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="LvF5D1R9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X7fiQswa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgEOO3Y (ORCPT
+        id S1726298AbgEOO3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:29:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726140AbgEOO3X (ORCPT
+        Fri, 15 May 2020 10:29:42 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:53459 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726185AbgEOO3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:29:23 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF36C061A0C;
-        Fri, 15 May 2020 07:29:22 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id s1so2671592qkf.9;
-        Fri, 15 May 2020 07:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dtNRvYDLFJiXxv3gO1edkx9pgOz+9ogJg6Qke0J72co=;
-        b=Q03Rh3l3PaEOnIUoHwy/z/RndYeBqFW8NxPJuf+VyQrlfQfjBkUpYtoLrIs/8JBfvd
-         ELK4ULr1mg5KpeWPQEGyHYGtzHA5Cb+dsIVBl+c36e90OG2IFF4rxoUynes0BiBzF0UM
-         7L9osjFDgE7JNwWhp23FWc8A30tNFqj8eHloehb24su3dkl6bf+YMTle3mPB8+wBNKic
-         uiG8gEcLI03SBnyc0Gjqg8AyEKWdxRkD5ZBh5HrVIbSh6P55Id/wNDTnirvmXz7RtuBC
-         YWVb+1BFPBoygLWpYZTt3LGJo+YpgR+lPNCQ5PnQZFyJKki2HaWQ51RN5/ZWPtXqCPvZ
-         m7qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dtNRvYDLFJiXxv3gO1edkx9pgOz+9ogJg6Qke0J72co=;
-        b=RSh+yDHzHIsKvk4H4bgrb+1q6PzjMGqRLKZKoHEbXxnk+yVqgRd3jY6J2I3aIJ83gB
-         oLN4Ga9+QQYTb4AdiwaGJF1yjdFKT43zRJW1AbBAKi4luaBsIiVh2PxyrUkcbz07rJao
-         e0QMMM1e0I4RSdWfcW4mh42+Kxm0D5Xbk+9tT+V7Wi94iwZ+0XOaMi0SFYFQ8bb+ppHp
-         lO8R0hcfd/tq0IwXfJrNuVIq3WoOjHTi6xJ1JA1T/WvEMD/IVpIHD+yQsNYQv7YSIdli
-         t2x4V3j4079QKPH6sJAgBZJvCnGS2kHdkUpvc2vWxHmeSaYW4VxibjZxOQAS5NyeHApr
-         eaqw==
-X-Gm-Message-State: AOAM5332TdqHWyps0byn0fX2geB5TrBhKwnDYk98DeC+UHRS10zQ5tiF
-        u2hGYH3C9J7MEuSXFxfffGY=
-X-Google-Smtp-Source: ABdhPJysGFcWv4VjZ7ky/8tpAB2PUgvUimjPJY5k3jHTJtiagHzdx0sPogoh5GKYhzi3gPxLznPFXw==
-X-Received: by 2002:a05:620a:1502:: with SMTP id i2mr3502223qkk.420.1589552961490;
-        Fri, 15 May 2020 07:29:21 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id t12sm1662483qkt.77.2020.05.15.07.29.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 07:29:20 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0AC0740AFD; Fri, 15 May 2020 11:29:18 -0300 (-03)
-Date:   Fri, 15 May 2020 11:29:17 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 4/8] libbpf hashmap: Localize static hashmap__* symbols
-Message-ID: <20200515142917.GT5583@kernel.org>
-References: <20200515065624.21658-1-irogers@google.com>
- <20200515065624.21658-5-irogers@google.com>
- <20200515091707.GC3511648@krava>
+        Fri, 15 May 2020 10:29:41 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 59CA85C00B1;
+        Fri, 15 May 2020 10:29:40 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Fri, 15 May 2020 10:29:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=ENf2VykawarrI6+ThDLsGlF0jo7
+        wyHbRUSfCvk9dWEo=; b=LvF5D1R9/RN2SoQfGtlmJzV3Yfg6A44xIfPKkTWQiaH
+        jrNbl3JrY4IuhZibteziDhsHrReJDBAW9ohWZsMJgAhRScQSgAATu6+ltCBiHdAS
+        JStzcNx4/oH/ybr9EgIbaUsfQQ0CfPoKaa6tYLFaNqsy1hVuFXqcP8PDtn/TAfgd
+        EZzAC3ASM1uWvIbNMhq1tNjir8834OwUCM7YSrR5+NYFXl/8/2cfr0ofYQLRfGsy
+        XWIZYA6Kcg8hpU/fSIwkHkStZf2SslPpHxfxYeX4Xn6ONWTVau1I9423KXEIaJnQ
+        wYuha117JZqwwxj1l465OqTt1SOvN67/4nwWr5sb44A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ENf2Vy
+        kawarrI6+ThDLsGlF0jo7wyHbRUSfCvk9dWEo=; b=X7fiQswaI4xM66NOJoDDHE
+        y5MRWIY2zJ/85vO363tVczF0jJqP459sBjPMl5VMhnai6pneAk6KnD7hEERFo1Fl
+        g/fDA6wyjyLgLVcdfy7a10hz7gWTfb+GlGlojpRdx7gR+fz4/tcHMM4b2O/cpaDy
+        vdMSZyGJ7yE6QVFjs8Hg3xV7/AdEe/DfYoQu7yUiQwKbJ4QRn6Vf1+KWFyo1JjH2
+        YeV+OLIyraSpCnS+btx5z4i6EVm/kf5ffZauehyuUP8J2fmmOhJMq5zhgjYK7zeo
+        4BzXUscseZdBDJmOO0IYaB1ajUI9wa7WMR+PTH0Zzyz1B8Ekp8TZmYdUjespgCZw
+        ==
+X-ME-Sender: <xms:Uqe-XjhrWlj4ZQukpdCit3TYm423yZLtPK-AkRqwuWNPQjSZmWD_Ow>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrleekgdejhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehttdertd
+    dttddvnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeen
+    ucggtffrrghtthgvrhhnpeevueehjefgfffgiedvudekvdektdelleelgefhleejieeuge
+    egveeuuddukedvteenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsthgvrhfu
+    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtoh
+    hm
+X-ME-Proxy: <xmx:Uqe-XgATaorwb7dNNjmQvb1U-I2Sym99bRCN3fbj_KpsvTsqkeq0kA>
+    <xmx:Uqe-XjFvnLcvjd4UA_qAmUCIVS5louA_SwziMYbozi4ANLybNlPaSQ>
+    <xmx:Uqe-XgTKkP1ay9tn2-9UnHlvGymIj3vLobE4Ea1Uxx5Ciw6lvivT3A>
+    <xmx:VKe-Xmbhm33NJcvDZpz0w56AQ3q8XFTcZ7NvZMg0mpDJq3U2Fdx2PQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5B37E3280059;
+        Fri, 15 May 2020 10:29:38 -0400 (EDT)
+Date:   Fri, 15 May 2020 16:29:26 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Akira Shimahara <akira215corp@gmail.com>
+Cc:     rdunlap@infradead.org, zbr@ioremap.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/9] w1_therm: adding code comments and code reordering
+Message-ID: <20200515142926.GA2438037@kroah.com>
+References: <20200511203535.409599-1-akira215corp@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515091707.GC3511648@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200511203535.409599-1-akira215corp@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, May 15, 2020 at 11:17:07AM +0200, Jiri Olsa escreveu:
-> On Thu, May 14, 2020 at 11:56:20PM -0700, Ian Rogers wrote:
-> > Localize the hashmap__* symbols in libbpf.a. To allow for a version in
-> > libapi.
-> > 
-> > Before:
-> > $ nm libbpf.a
-> > ...
-> > 000000000002088a t hashmap_add_entry
-> > 000000000001712a t hashmap__append
-> > 0000000000020aa3 T hashmap__capacity
-> > 000000000002099c T hashmap__clear
-> > 00000000000208b3 t hashmap_del_entry
-> > 0000000000020fc1 T hashmap__delete
-> > 0000000000020f29 T hashmap__find
-> > 0000000000020c6c t hashmap_find_entry
-> > 0000000000020a61 T hashmap__free
-> > 0000000000020b08 t hashmap_grow
-> > 00000000000208dd T hashmap__init
-> > 0000000000020d35 T hashmap__insert
-> > 0000000000020ab5 t hashmap_needs_to_grow
-> > 0000000000020947 T hashmap__new
-> > 0000000000000775 t hashmap__set
-> > 00000000000212f8 t hashmap__set
-> > 0000000000020a91 T hashmap__size
-> > ...
-> > 
-> > After:
-> > $ nm libbpf.a
-> > ...
-> > 000000000002088a t hashmap_add_entry
-> > 000000000001712a t hashmap__append
-> > 0000000000020aa3 t hashmap__capacity
-> > 000000000002099c t hashmap__clear
-> > 00000000000208b3 t hashmap_del_entry
-> > 0000000000020fc1 t hashmap__delete
-> > 0000000000020f29 t hashmap__find
-> > 0000000000020c6c t hashmap_find_entry
-> > 0000000000020a61 t hashmap__free
-> > 0000000000020b08 t hashmap_grow
-> > 00000000000208dd t hashmap__init
-> > 0000000000020d35 t hashmap__insert
-> > 0000000000020ab5 t hashmap_needs_to_grow
-> > 0000000000020947 t hashmap__new
-> > 0000000000000775 t hashmap__set
-> > 00000000000212f8 t hashmap__set
-> > 0000000000020a91 t hashmap__size
-> > ...
+On Mon, May 11, 2020 at 10:35:35PM +0200, Akira Shimahara wrote:
+> Adding code comments to split code in dedicated parts. After the global
+> declarations (defines, macros and function declarations), code is organized
+> as follow :
+>  - Device and family dependent structures and functions
+>  - Interfaces functions
+>  - Helpers functions
+>  - Hardware functions
+>  - Sysfs interface functions
 > 
-> I think this will break bpf selftests which use hashmap,
-> we need to find some other way to include this
+> Signed-off-by: Akira Shimahara <akira215corp@gmail.com>
+> ---
+> Main motivation on the first patch of this serie is to clean up the code,
+> document it and reorder it to prepare the next patches, which are clearer
+> after this.
 > 
-> either to use it from libbpf directly, or use the api version
-> only if the libbpf is not compiled in perf, we could use
-> following to detect that:
-> 
->       CFLAGS += -DHAVE_LIBBPF_SUPPORT
->       $(call detected,CONFIG_LIBBPF)
+> One main point is to keep all device/family dependent code gather at the
+> beginning to ease adding new devices if required.
 
-And have it in tools/perf/util/ instead?
+Thanks for sticking with this.  Nice work, all now queued up.
 
-
-- Arnaldo
+greg k-h
