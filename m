@@ -6,125 +6,94 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07663C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7CCD206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA35206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:53:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QVbQZPOq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LTQTy1Hp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgEOQwb (ORCPT
+        id S1727033AbgEOQxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:52:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726023AbgEOQwa (ORCPT
+        Fri, 15 May 2020 12:53:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48662 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726023AbgEOQxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:52:30 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 542F5C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:52:30 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id y13so1637740vsk.8
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:52:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=//QUXJb2hfEP5KSpFr1jCZS2lxtzuUgoxlZm2dmFvFY=;
-        b=QVbQZPOqP3I4QaDmNr61NBvJ2m4f0FA0qcnvxdFVkElx5ChUuXTVkiqBWPo1Lc9Svp
-         gfslahjg2HvG56kqiAX8dTsXZpoCex+FFddG1M9rgY2zxl3BsjVqUNAAccrlXYZYnbeU
-         c4XsdUEEqV52JxZSsm03Nz8rVclM6Q6jWWzWI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=//QUXJb2hfEP5KSpFr1jCZS2lxtzuUgoxlZm2dmFvFY=;
-        b=aOxJuqBVoSLUDwL02h8C0Er6PFzrfWgHrsJVai2TE1JFaeGkUtbRlm/BqhBgyXHQQy
-         ziU9yRiMqqtLV4Z7wULc9QMVXX7WE0vKN5RtiT1LqwO6e9ABNw6vlRZ59IR9jm22wGuJ
-         S/JzID8HytvNdfOVk2k4+fPcdr586FjU6co5hwtQwHHHg70YGP0EBeu2liZtS6/ex3kh
-         0PqVEHuwPXOtDbTsidjW3tEwXBUL87Mm1IOa5CMydSwljeeULRdDzqA5G9tE8RTyZLYJ
-         BTPqMKLLhTHLH/5C5kMcJ0rNBEw7yuAj9IbwDuhvpZo+VRYRktcGHYYxnkAGBSne8paF
-         2MJg==
-X-Gm-Message-State: AOAM532Jup6AlYVTC83O9SrzwuUyehh0La8uuSjPgaAaG12WaVemN8RB
-        4W7uG9thx1DrigMDNZ3M2ydZusW49pU=
-X-Google-Smtp-Source: ABdhPJzguSJv+eHQdbvxIvO3IXMqnkHpe2Nh7uJgB0TqNgMsz/1XC95bDX+faPpKVYT/T5TpLvTRIw==
-X-Received: by 2002:a67:f9d0:: with SMTP id c16mr3388262vsq.53.1589561549338;
-        Fri, 15 May 2020 09:52:29 -0700 (PDT)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id u63sm591149vsc.13.2020.05.15.09.52.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 09:52:28 -0700 (PDT)
-Received: by mail-ua1-f47.google.com with SMTP id k3so1027040ual.8
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:52:28 -0700 (PDT)
-X-Received: by 2002:ab0:69cc:: with SMTP id u12mr268225uaq.22.1589561548021;
- Fri, 15 May 2020 09:52:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org>
- <20200512142533.ta4uejwmq5gchtlx@holly.lan> <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
- <20200514084230.GO17734@linux-b0ei> <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
- <20200515085021.GS17734@linux-b0ei> <20200515103308.GD42471@jagdpanzerIV.localdomain>
- <CAFA6WYOBsimP1j8Fwq4OcePEug4MGoaY3wTTTVydHtTphZ-FTw@mail.gmail.com> <20200515163638.GI42471@jagdpanzerIV.localdomain>
-In-Reply-To: <20200515163638.GI42471@jagdpanzerIV.localdomain>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 15 May 2020 09:52:16 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XohG8ErL=_fyuA+MXEmfp55aW+SxSunb6YPRYj77bOxQ@mail.gmail.com>
-Message-ID: <CAD=FV=XohG8ErL=_fyuA+MXEmfp55aW+SxSunb6YPRYj77bOxQ@mail.gmail.com>
-Subject: Re: [PATCH] printk/kdb: Redirect printk messages into kdb in any context
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Sumit Garg <sumit.garg@linaro.org>, Petr Mladek <pmladek@suse.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fri, 15 May 2020 12:53:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589561610;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gN8Ffkm75Z04j5uijHXbjpI4CgfRAT5o0xWHEAmKzV4=;
+        b=LTQTy1Hp92ZH/93lZOVcssDrHZur8fZalYvnHhDcQOHRx/xRm5nkVWzhpZw7UQ7ecHssr5
+        ZCX5icXjuIUkCjslivb93FcD3ED4yvjemZ7/hfuvxk+5HDYmz5yWDwL5stWTkDQERkN0Hu
+        HBd3E+kv2gkUBSQ3zbHG6qdDS0cw1TI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-388-cSjPPTozMs-pT9w2NnPfzw-1; Fri, 15 May 2020 12:53:28 -0400
+X-MC-Unique: cSjPPTozMs-pT9w2NnPfzw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5DF4819200C0;
+        Fri, 15 May 2020 16:53:25 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8977F5D9C9;
+        Fri, 15 May 2020 16:53:21 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <954ef5ce2e47472f8b41300bf59209c5@garmin.com>
+References: <954ef5ce2e47472f8b41300bf59209c5@garmin.com> <20200515152321.9280-1-nate.karstens@garmin.com> <20200515160342.GE23230@ZenIV.linux.org.uk>
+To:     "Karstens, Nate" <Nate.Karstens@garmin.com>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Eric Dumazet" <edumazet@google.com>,
+        David Laight <David.Laight@aculab.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Changli Gao <xiaosuo@gmail.com>
+Subject: Re: [PATCH v2] Implement close-on-fork
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <197933.1589561600.1@warthog.procyon.org.uk>
+Date:   Fri, 15 May 2020 17:53:20 +0100
+Message-ID: <197934.1589561600@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Karstens, Nate <Nate.Karstens@garmin.com> wrote:
 
-On Fri, May 15, 2020 at 9:36 AM Sergey Senozhatsky
-<sergey.senozhatsky@gmail.com> wrote:
->
-> On (20/05/15 17:32), Sumit Garg wrote:
-> > > Can I please have some context what problem does this solve?
-> >
-> > You can find the problem description here [1] which leads to this fix.
->
-> [..]
->
-> > [1] https://lkml.org/lkml/2020/5/12/213
->
-> Thanks for the link. I'm slightly surprised it took so many years
-> to notice the addition of printk_nmi/printk_safe :)
+> > already has a portable solution
+> 
+> What is the solution?
 
-I haven't looked at all the details, but IIUC we don't normally enter
-kgdb on the primary CPU through a NMI context, but the secondary ones
-(on x86) always do.  Most things are run on the primary CPU and I
-think it's relatively unlikely for people to change the primary CPU
-(though it is possible).
+sys_spawn(const char *path, const char **argv, const char **envv,
+	  unsigned long clone_flags, unsigned int nfds, int *fds);
 
-Probably things got worse when I changed the way "btc" worked to make
-it common between all architectures.  See commit 9ef50a686b53
-("UPSTREAM: kdb: Fix stack crawling on 'running' CPUs that aren't the
-master").  Though theoretically someone could have changed masters and
-reproduced the problem with a simple "bt" before my patch, now a
-relatively normal command "btc" would tickle the problem.  I didn't
-notice it because I work almost totally on arm/arm64 machines and they
-don't have NMI (yet).
+maybe?
 
-In general I've always wondered about why (historically) kgdb bugs
-have sometimes gone unnoticed for a period of time.  That does seem to
-be changing, though, and I've seen a few longstanding bugs getting
-fixed recently.  :-)
+David
 
-
--Doug
