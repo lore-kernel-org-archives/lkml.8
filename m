@@ -6,68 +6,59 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9E6C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21373C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA7E020759
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFBC320767
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589545640;
-	bh=rTEWsgn+qCr9lplWq/BIcCkxBpW4/f/dy/uL3g7unUc=;
+	s=default; t=1589545793;
+	bh=TSw0eQ4WFON1EfGnsaXykmfInnksvvWfn5CeBUYDKZ8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uECCdFr/X6Bcd1Ek8mS37I9yPfW/aza3dLbsDlkMgvg5zI69jti2POf+udqJyjBJV
-	 T3nXIguhbDiy77QSUX3djsA8+QsIjDUUZfiuzTsPG8UfI6XbM+iuk424AB+uc5XxOm
-	 Jj6l1F2yrCfoSpgY28p1oz+ZDpVOZ+VCwExzL338=
+	b=AA3lmJyYZwn81QIqlrdprKW6TIzthHWarmSVGbBwkMoIWouvY2udW14tYmx5/4XLk
+	 1XC9pYcu82XcfEI6nwGsbLWx5oqzvMx/Qflfyn7sCYLPfoKrnTS/Nb6M0HzpWYEgkp
+	 GIwy7/qpnk8C96yIhlxAD5HgDYJFA6IBU4A6A0LU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgEOM1T (ORCPT
+        id S1726188AbgEOM3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:27:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46074 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 08:29:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbgEOM1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:27:19 -0400
+        id S1726097AbgEOM3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 08:29:51 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6C7120709;
-        Fri, 15 May 2020 12:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5F1C20709;
+        Fri, 15 May 2020 12:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589545638;
-        bh=rTEWsgn+qCr9lplWq/BIcCkxBpW4/f/dy/uL3g7unUc=;
+        s=default; t=1589545791;
+        bh=TSw0eQ4WFON1EfGnsaXykmfInnksvvWfn5CeBUYDKZ8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OZ0XzhL8p2NCTGctGWmwun3ymZUbYbHsmiHdqyr+OephbMGINv4Y1JTRz+Pjitf+w
-         ecLlzSyDe1U0XP417i1aTXtOoZNX/KiTdm0E4Q3mTw515OY9iFrMXlNc0YdvSwo6KW
-         J6CUbDvzbUxWyFNkhJ7+7reIpysL3jofoF3UYIZg=
-Date:   Fri, 15 May 2020 13:27:15 +0100
+        b=0zrjkXD5prKmI21EFxcPboIH8No7ixNf15Rsmdnc2qtfHdsB/Hp0ApaqPdfJYJi81
+         6dNOLkRVMEi53mRtc+X0lelK5wpjUInjMNu6VJS3Sypur771BaG9XXE6emWPQfPcM3
+         Dvh1O3AFYAGqoE+WXqTPU6yT1aYhcQjX8HFTzhVc=
+Date:   Fri, 15 May 2020 13:29:48 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        linux-mips@vger.kernel.org,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/19] dt-bindings: spi: dw: Add Tx/Rx DMA properties
-Message-ID: <20200515122715.GC5066@sirena.org.uk>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-2-Sergey.Semin@baikalelectronics.ru>
- <20200515115151.GU185537@smile.fi.intel.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Steve Lee <steves.lee.maxim@gmail.com>, lgirdwood@gmail.com,
+        perex@perex.cz, tiwai@suse.com, ckeepax@opensource.cirrus.com,
+        geert@linux-m68k.org, rf@opensource.wolfsonmicro.com,
+        shumingf@realtek.com, srinivas.kandagatla@linaro.org,
+        dmurphy@ti.com, jack.yu@realtek.com, nuno.sa@analog.com,
+        steves.lee@maximintegrated.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        alsa-devel@alsa-project.org, ryan.lee.maxim@gmail.com,
+        ryans.lee@maximintegrated.com
+Subject: Re: [V5 PATCH 2/2] ASoC: max98390: Added Amplifier Driver
+Message-ID: <20200515122948.GD5066@sirena.org.uk>
+References: <20200515070742.14151-1-steves.lee@maximintegrated.com>
+ <CAJKOXPf-Q-e_K-puR-N2NRwQCmaKD=EczzON4rBymvV2CyoiTg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GZVR6ND4mMseVXL/"
+        protocol="application/pgp-signature"; boundary="F8dlzb82+Fcn6AgP"
 Content-Disposition: inline
-In-Reply-To: <20200515115151.GU185537@smile.fi.intel.com>
+In-Reply-To: <CAJKOXPf-Q-e_K-puR-N2NRwQCmaKD=EczzON4rBymvV2CyoiTg@mail.gmail.com>
 X-Cookie: Avoid contact with eyes.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,37 +67,30 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---GZVR6ND4mMseVXL/
+--F8dlzb82+Fcn6AgP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, May 15, 2020 at 02:51:51PM +0300, Andy Shevchenko wrote:
-> On Fri, May 15, 2020 at 01:47:40PM +0300, Serge Semin wrote:
+On Fri, May 15, 2020 at 10:42:24AM +0200, Krzysztof Kozlowski wrote:
 
-> > Since commit 22d48ad7bfac ("spi: dw: Add Elkhart Lake PSE DMA support")
-> > the spi-dw-mid.c module supports a platform DMA engine handling the DW APB
-> > SSI controller requests. Lets alter the DW SPI bindings file to accept the
-> > Rx and Tx DMA line specifiers.
+> Your "From" address still does not match the Signed-off-by. Set the
+> author of commit to the signed-off person.
 
-> I'm wondering if these properties are implied by the SPI generic one?
-> (forgive me if I'm not understanding all DT schema relations)
+git commit --amend --author='foo <foo@example.com>'
 
-Which SPI generic DMA bindings are you thinking of here?  There aren't
-any in spi-controller.yaml.
-
---GZVR6ND4mMseVXL/
+--F8dlzb82+Fcn6AgP
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6+iqMACgkQJNaLcl1U
-h9Dp6gf9E0FZAmLIwqiCItWiZVEDddJB64GzjCuY0mIub+iSPJjn2/MqY4VDU97d
-SZQ/QA9pVDqJLIoHwykq2AI/M/q7B3l7cuWV12Y+eDyhAFxSVeHNqt1CBWwRgeId
-3fRq6p2ujk7Xv9rlwU7MVgGh0ybueBHu5Rin1SsWahRrrzNmeZOJWAP3bsY5BFcc
-GajMzUnq4e3KqeW6Rr8eraFh8RCRqFmmHhaujzhQ57LnG9dVelnU8IicNL5i0so4
-z5c802PN//YIL8vKe+NyoPvbzvE3qTBrKZVU5GnAZjoGP/6dMSDeEgtkYkLvimOR
-D0F1/FR4iWhIOyr2DDqp69yBEb+taA==
-=j+6g
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6+izwACgkQJNaLcl1U
+h9CR8gf+O5UGnkbhnV4MHHRYgchqTnJBXc/DysgCP0lEx+qj2ycTVhqvpCK0662l
+RTBrIQ7JkSbGhHji7PzXkwjd/R8mr9eFuyxA7SkHzzR3q+cdChWg8kkKthwpp0FT
+3LZItFkIDVziTwPVtZH0WYQLbAeesYTeGHg46c6WiZScn0IOUclODGkOs6lhXVBT
+HctDZoXRtP8muMUOwEmaprVOdJXM6rlJNUS1uYJVBSSuN7gvyKhkmDkX0En/l0IC
+u5UJacONloOu5ZYcutPJM/oqanR7dLkRX34VKru20jaXUYXvrO+P1lwtcfFeT10D
+rvWdiGqqPMdak6i5Ej4HnPpXNvup1w==
+=UNQm
 -----END PGP SIGNATURE-----
 
---GZVR6ND4mMseVXL/--
+--F8dlzb82+Fcn6AgP--
