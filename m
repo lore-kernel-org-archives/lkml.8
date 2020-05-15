@@ -2,165 +2,189 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27267C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B79C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E853C2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:24:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Y0Zf8seE"
+	by mail.kernel.org (Postfix) with ESMTP id 85C5320657
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgEONYo (ORCPT
+        id S1726293AbgEON1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:24:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbgEONYn (ORCPT
+        Fri, 15 May 2020 09:27:00 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43696 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbgEON05 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:24:43 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F89C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:24:43 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id b6so2424470qkh.11
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:24:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QaWgWrHuxPFWiLAhp4MGw0Ee13FyqS0FhmE2+InAr5c=;
-        b=Y0Zf8seELSKB++cOysfnNke0Q1k76yTJbnwd9rRfJFzYLkxIfL9/nlC1CVvTkXY1r9
-         X237RzZx508nP1DQhXxUfM8ufYAA/sDlD7aXCy1RECkqi3B88KBqXqAgLfXdeea+JOKP
-         sr2HNKzwKT7a/5CHP+mQyk4HPqmfnePuexg9SGO+XsHXBaYAmhb3LohQz8G652U4JNdY
-         435kJdjSIfXUjHSpqzxa2p+WSHdqN33IjL7oO0ZM4yziSaY7z58qoJOvFZhf5gANOz29
-         cJF7y8i/lutV2jpKNQPdSLpWfP9YWiF7zl3araZDTay9TmA9VA9SJMWWSaxODkYdbBr5
-         t/LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QaWgWrHuxPFWiLAhp4MGw0Ee13FyqS0FhmE2+InAr5c=;
-        b=pIxnvasazeDFNcyEX9jH31KtUMJPHX5LeQrCoqyL8E4REu519NazMRRUltd8Q0PVTN
-         I/b/CNmuPGwkgw7/jZhBp4CcSPz8aNYKHzwk1KxZGBdB1Y2MVSqSmI+hWK1T+buvfeEL
-         mGkXoR06reA1CwLO5cAzkCCkIOvawaHgoFKfHF7mP2jJPmB93m8eK8O28jUTvv88ZseH
-         zJXnfOxpSbtEYydYsDsTwoyhgZnz2PSgO4nQQfidcZS7v/W0PERqeGdEl5CShDZ+C6Q9
-         MFE2g7MAVcsVKZN6nWKUeBM/Pgd64UviZBxDLEHduhvoFUxmeSS9iGePjZmak4kkWNMt
-         DCrA==
-X-Gm-Message-State: AOAM533a9DTPeZdHh7dUruaf61egkiQGX59mekoyN/08fPwRu1IQn0HD
-        zpjf12ECKYk+mcEF2THJa1tMnw==
-X-Google-Smtp-Source: ABdhPJyglpfBWXibDDxv4gJRiM6bCFQxrloF93IYOhe1B1YqX0LapZGO/P4tWM2dZqB+l9qK9jPRRQ==
-X-Received: by 2002:a37:9e06:: with SMTP id h6mr3248738qke.400.1589549082491;
-        Fri, 15 May 2020 06:24:42 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:90a4])
-        by smtp.gmail.com with ESMTPSA id t67sm1516787qka.17.2020.05.15.06.24.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 06:24:41 -0700 (PDT)
-Date:   Fri, 15 May 2020 09:24:21 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Shakeel Butt <shakeelb@google.com>, Mel Gorman <mgorman@suse.de>,
-        Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] memcg: expose root cgroup's memory.stat
-Message-ID: <20200515132421.GC591266@cmpxchg.org>
-References: <20200508170630.94406-1-shakeelb@google.com>
- <20200508214405.GA226164@cmpxchg.org>
- <CALvZod5VHHUV+_AXs4+5sLOPGyxm709kQ1q=uHMPVxW8pwXZ=g@mail.gmail.com>
- <20200515082955.GJ29153@dhcp22.suse.cz>
+        Fri, 15 May 2020 09:26:57 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: evelikov)
+        with ESMTPSA id B1F332A2B8B
+Date:   Fri, 15 May 2020 14:24:16 +0100
+From:   Emil Velikov <emil.velikov@collabora.com>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCHv1 1/2] power: supply: gpio-charger: add
+ charge-current-limit feature
+Message-ID: <20200515132416.GA2836808@arch-x1c3>
+References: <20200513115601.360642-1-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515082955.GJ29153@dhcp22.suse.cz>
+In-Reply-To: <20200513115601.360642-1-sebastian.reichel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 10:29:55AM +0200, Michal Hocko wrote:
-> On Sat 09-05-20 07:06:38, Shakeel Butt wrote:
-> > On Fri, May 8, 2020 at 2:44 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > >
-> > > On Fri, May 08, 2020 at 10:06:30AM -0700, Shakeel Butt wrote:
-> > > > One way to measure the efficiency of memory reclaim is to look at the
-> > > > ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
-> > > > not updated consistently at the system level and the ratio of these are
-> > > > not very meaningful. The pgsteal and pgscan are updated for only global
-> > > > reclaim while pgrefill gets updated for global as well as cgroup
-> > > > reclaim.
-> > > >
-> > > > Please note that this difference is only for system level vmstats. The
-> > > > cgroup stats returned by memory.stat are actually consistent. The
-> > > > cgroup's pgsteal contains number of reclaimed pages for global as well
-> > > > as cgroup reclaim. So, one way to get the system level stats is to get
-> > > > these stats from root's memory.stat, so, expose memory.stat for the root
-> > > > cgroup.
-> > > >
-> > > >       from Johannes Weiner:
-> > > >       There are subtle differences between /proc/vmstat and
-> > > >       memory.stat, and cgroup-aware code that wants to watch the full
-> > > >       hierarchy currently has to know about these intricacies and
-> > > >       translate semantics back and forth.
+Hi Sebastian,
+
+I've left a few trivial suggestions, although I suspect only one of them
+really matters. Namely - I think as-is the code changes the legacy behaviour
+when OF is missing.
+
+Mind you, this is my third time skimming through power/supply, so take it with
+a grain of salt.
+
+On 2020/05/13, Sebastian Reichel wrote:
+> Add new charge-current-limit feature to gpio-charger. This also
+> makes the online status GPIO optional, since hardware might only
+> expose the charge-current-limit feature and there is no good reason
+> to have it mandatory now that different GPIOs are supported.
 > 
-> Can we have those subtle differences documented please?
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/power/supply/gpio-charger.txt    |  11 +-
+>  drivers/power/supply/gpio-charger.c           | 176 ++++++++++++++++--
+>  2 files changed, 174 insertions(+), 13 deletions(-)
 > 
-> > > >
-> > > >       Generally having the fully recursive memory.stat at the root
-> > > >       level could help a broader range of usecases.
-> > >
-> > > The changelog begs the question why we don't just "fix" the
-> > > system-level stats. It may be useful to include the conclusions from
-> > > that discussion, and why there is value in keeping the stats this way.
-> > >
-> > 
-> > Right. Andrew, can you please add the following para to the changelog?
-> > 
-> > Why not fix the stats by including both the global and cgroup reclaim
-> > activity instead of exposing root cgroup's memory.stat? The reason is
-> > the benefit of having metrics exposing the activity that happens
-> > purely due to machine capacity rather than localized activity that
-> > happens due to the limits throughout the cgroup tree. Additionally
-> > there are userspace tools like sysstat(sar) which reads these stats to
-> > inform about the system level reclaim activity. So, we should not
-> > break such use-cases.
-> > 
-> > > > Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> > > > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> > >
-> > > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> > 
-> > Thanks a lot.
-> 
-> I was quite surprised that the patch is so simple TBH. For some reason
-> I've still had memories that we do not account for root memcg (likely
-> because mem_cgroup_is_root(memcg) bail out in the try_charge. But stats
-> are slightly different here.
+> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> index 0fb33b2c62a6..dbfd29029f69 100644
+> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> @@ -2,8 +2,6 @@ gpio-charger
+>  
+>  Required properties :
+>   - compatible : "gpio-charger"
+> - - gpios : GPIO indicating the charger presence.
+> -   See GPIO binding in bindings/gpio/gpio.txt .
+>   - charger-type : power supply type, one of
+>       unknown
+>       battery
+> @@ -15,7 +13,13 @@ Required properties :
+>       usb-aca (USB accessory charger adapter)
+>  
+>  Optional properties:
+> + - gpios : GPIO indicating the charger presence.
+> +   See GPIO binding in bindings/gpio/gpio.txt .
+>   - charge-status-gpios: GPIO indicating whether a battery is charging.
+> + - charge-current-limit-gpios: Output GPIOs specifiers for limiting the charge current
+> + - charge-current-limit-mapping: List of touples with current in uA and a GPIO bitmap (in this order).
+> +                                The GPIOs are encoded in the same order as specified in charge-current-limit-gpios.
+> +				The touples must be provided in descending order of the current limit.
 
-Yep, we skip the page_counter for root, but keep in mind that cgroup1
-*does* have a root-level memory.stat, so (for the most part) we've
-been keeping consumer stats for the root level the whole time.
+Minor tweaks:
 
-> counters because they are not really all the same. E.g.
-> - mem_cgroup_charge_statistics accounts for each memcg
+	List of tuples with current in uA and a GPIO bitmap.
+	Tuples must be sorted in descending order of the current limit.
+	GPIOs are encoded in the order as specified in charge-current-limit-gpios.
 
-Yep, that's heritage from cgroup1.
 
-> - memcg_charge_kernel_stack relies on pages being associated with a
->   memcg and that in turn relies on __memcg_kmem_charge_page which bails
->   out on root memcg
+> +static int init_charge_current_limit(struct device *dev,
+> +				    struct gpio_charger *gpio_charger)
+> +{
+> +	int i, len;
+> +	u32 cur_limit = U32_MAX;
+> +
+> +	gpio_charger->current_limit_gpios = devm_gpiod_get_array_optional(dev,
+> +		"charge-current-limit", GPIOD_OUT_LOW);
+> +	if (IS_ERR(gpio_charger->current_limit_gpios)) {
+> +		dev_err(dev, "error getting current-limit GPIOs\n");
+> +		return PTR_ERR(gpio_charger->current_limit_gpios);
+> +	}
+> +
+> +	if (!gpio_charger->current_limit_gpios)
+> +		return 0;
+> +
+> +	len = device_property_read_u32_array(dev, "charge-current-limit-mapping",
+> +		NULL, 0);
+> +	if (len < 0)
 
-You're right. It should only bypass the page_counter, but still set
-page->mem_cgroup = root_mem_cgroup, just like user pages.
+The properly is optional, although I'm not sure if having an 'empty' properly
+(len == 0) should be considered an error as indicated by -ENOMEM below or not.
 
-This counter also doesn't get exported on cgroup1, so it would indeed
-be a new bug. It needs to be fixed before this patch here.
+Worth documenting that, unless it's covered already.
 
-> - memcg_charge_slab (NR_SLAB*) skips over root memcg as well
+> +		return len;
+> +
+> +	if (len % 2) {
+> +		dev_err(dev, "invalid charge-current-limit-mapping length\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	gpio_charger->current_limit_map = devm_kmalloc_array(dev,
+> +		len / 2, sizeof(*gpio_charger->current_limit_map), GFP_KERNEL);
+> +	if (!gpio_charger->current_limit_map)
+> +		return -ENOMEM;
+> +
+> +	gpio_charger->current_limit_map_size = len / 2;
+> +
+> +	len = device_property_read_u32_array(dev, "charge-current-limit-mapping",
+> +		(u32*) gpio_charger->current_limit_map, len);
+> +	if (len < 0)
+> +		return len;
+> +
+> +	for (i=0; i < gpio_charger->current_limit_map_size; i++) {
+> +		if (gpio_charger->current_limit_map[i].limit_ua > cur_limit) {
+> +			dev_err(dev, "invalid charge-current-limit-mapping\n");
+Would make sense to use something more descriptive than "invalid". Say "not
+sorted by current descending order"?
 
-Same thing with these two.
+
+> @@ -137,18 +270,19 @@ static int gpio_charger_probe(struct platform_device *pdev)
+
+>  	/*
+>  	 * If this fails and we're not using device tree, try the
+>  	 * legacy platform data method.
+>  	 */
+> -	if (IS_ERR(gpio_charger->gpiod) && !dev->of_node) {
+> +	if (!gpio_charger->gpiod && !dev->of_node) {
+The original code will attempt the legacy code for ... (from the doc)
+
+ * ..., -ENOENT if no GPIO has been assigned to the requested function, or
+ * another IS_ERR() code if an error occurred while trying to acquire the GPIO.
+
+While the new code will only consider -ENOENT.
+
+Using IS_ERR_OR_NULL(gpio_charger->gpiod) should preserve the original
+behaviour.
+
+
+>  		/* Non-DT: use legacy GPIO numbers */
+>  		if (!gpio_is_valid(pdata->gpio)) {
+>  			dev_err(dev, "Invalid gpio pin in pdata\n");
+> @@ -173,18 +307,38 @@ static int gpio_charger_probe(struct platform_device *pdev)
+>  		return PTR_ERR(gpio_charger->gpiod);
+>  	}
+>  
+> +	if (gpio_charger->gpiod &&
+> +	    num_props < ARRAY_SIZE(gpio_charger_properties)) {
+> +		gpio_charger_properties[num_props] = POWER_SUPPLY_PROP_ONLINE;
+The ARRAY_SIZE() check here (and below) are always true, albeit not dead code.
+
+IMHO the beefy comment above gpio_charger_properties, plus review process is
+enough to catch these issues, so it can be dropped.
+
+
+>  	charger_desc = &gpio_charger->charger_desc;
+>  	charger_desc->properties = gpio_charger_properties;
+
+Aside: any particular reason why power_supply_desc::properties isn't const?
+
+-Emil
