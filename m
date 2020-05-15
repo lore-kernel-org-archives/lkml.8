@@ -2,124 +2,100 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961F0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1C820767
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA72820759
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbgEOLvx (ORCPT
+        id S1726177AbgEOL60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:51:53 -0400
-Received: from mga06.intel.com ([134.134.136.31]:16270 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgEOLvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:51:53 -0400
-IronPort-SDR: RcUnhiy93GDKfk3mR8+XGUcUlUFXfwvE4TcQcU2qzd3nx5++VLP+bcTW+Vvak8dD4IimkAEMKX
- FrvUAv3Ila6A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 04:51:52 -0700
-IronPort-SDR: 042pc2NGEgzvIuFUXXH0dKWeFDRG+rGacAhxCGg+YExy5368QwdOxq+sPPkxAuBo15Mq1QROhS
- hTW6BbpLJmZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="252362213"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 15 May 2020 04:51:48 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZYsZ-006qo3-AS; Fri, 15 May 2020 14:51:51 +0300
-Date:   Fri, 15 May 2020 14:51:51 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        linux-mips@vger.kernel.org,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/19] dt-bindings: spi: dw: Add Tx/Rx DMA properties
-Message-ID: <20200515115151.GU185537@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-2-Sergey.Semin@baikalelectronics.ru>
+        Fri, 15 May 2020 07:58:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52914 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgEOL60 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:58:26 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jZYys-0000GF-HN; Fri, 15 May 2020 11:58:22 +0000
+Date:   Fri, 15 May 2020 13:58:21 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     Tycho Andersen <tycho@tycho.ws>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 3/4] seccomp: Add SECCOMP_USER_NOTIF_FLAG_PIDFD to get
+ pidfd on listener trap
+Message-ID: <20200515115821.5qvkaeuxzklhikuo@wittgenstein>
+References: <20200124091743.3357-1-sargun@sargun.me>
+ <20200124091743.3357-4-sargun@sargun.me>
+ <20200124180332.GA4151@cisco>
+ <CAMp4zn_WXwxJ6Md4rgFzdAY_xea4TmVDdQc1iJDObEMm5Yc79g@mail.gmail.com>
+ <20200126054256.GB4151@cisco>
+ <CAMp4zn_Xv2iicmH2Nc4-EZceD7T8AFe9PQRNX4bNEiAuoKs+vA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200515104758.6934-2-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAMp4zn_Xv2iicmH2Nc4-EZceD7T8AFe9PQRNX4bNEiAuoKs+vA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 01:47:40PM +0300, Serge Semin wrote:
-> Since commit 22d48ad7bfac ("spi: dw: Add Elkhart Lake PSE DMA support")
-> the spi-dw-mid.c module supports a platform DMA engine handling the DW APB
-> SSI controller requests. Lets alter the DW SPI bindings file to accept the
-> Rx and Tx DMA line specifiers.
-
-I'm wondering if these properties are implied by the SPI generic one?
-(forgive me if I'm not understanding all DT schema relations)
-
-Per se looks good.
-
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-> Cc: linux-mips@vger.kernel.org
+On Fri, May 15, 2020 at 04:49:14AM -0700, Sargun Dhillon wrote:
+> On Sat, Jan 25, 2020 at 9:42 PM Tycho Andersen <tycho@tycho.ws> wrote:
 > 
-> ---
+> > On Fri, Jan 24, 2020 at 12:09:37PM -0800, Sargun Dhillon wrote:
+> > > On Fri, Jan 24, 2020 at 10:03 AM Tycho Andersen <tycho@tycho.ws> wrote:
+> > > >
+> > > > On Fri, Jan 24, 2020 at 01:17:42AM -0800, Sargun Dhillon wrote:
+> > > > > Currently, this just opens the group leader of the thread that
+> > triggere
+> > > > > the event, as pidfds (currently) are limited to group leaders.
+> > > >
+> > > > I don't love the semantics of this; when they're not limited to thread
+> > > > group leaders any more, we won't be able to change this. Is that work
+> > > > far off?
+> > > >
+> > > > Tycho
+> > >
+> > > We would be able to change this in the future if we introduced a flag
+> > like
+> > > SECCOMP_USER_NOTIF_FLAG_PIDFD_THREAD which would send a
+> > > pidfd that's for the thread, and not just the group leader. The flag
+> > could
+> > > either be XOR with SECCOMP_USER_NOTIF_FLAG_PIDFD, or
+> > > could require both. Alternatively, we can rename
+> > > SECCOMP_USER_NOTIF_FLAG_PIDFD to
+> > > SECCOMP_USER_NOTIF_FLAG_GROUP_LEADER_PIDFD.
+> >
+> > Ok, but then isn't this just another temporary API? Seems like it's
+> > worth waiting until the Right Way exists.
+> >
+> > Tycho
+> >
 > 
-> Changelog v2:
-> - Revert the order of the DT changes: first add the DMA channels support,
->   then perform the binding file conversion.
-> ---
->  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> It's been a few months. It does not appear like much progress has been made
+> moving away from
+> pidfd being only useful for leaders.
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> index 7a4702edf896..020e3168ee41 100644
-> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> @@ -23,6 +23,8 @@ Optional properties:
->  - num-cs : The number of chipselects. If omitted, this will default to 4.
->  - reg-io-width : The I/O register width (in bytes) implemented by this
->    device.  Supported values are 2 or 4 (the default).
-> +- dmas : Phandle + identifiers of Tx and Rx DMA channels.
-> +- dma-names : Contains the names of the DMA channels. Must be "tx" and "rx".
->  
->  Child nodes as per the generic SPI binding.
->  
-> -- 
-> 2.25.1
-> 
+> I would either like to respin this patch, or at a minimum, include the
+> process group leader pid number
+> in the seccomp notification, to simplify things for tracers.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I'd prefer if you went with the second option where you include the
+process group leader pid number.
+I'm against adding countless ways of producing pidfds through various
+unrelated apis. The api is still quite fresh so I'd like to not overdo
+it.
 
-
+Christian
