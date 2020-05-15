@@ -2,100 +2,149 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73928C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B7EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5253020758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0267520709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:26:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WLHC5KfE"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="QnAl9q4F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgEOPZ6 (ORCPT
+        id S1727915AbgEOP0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:25:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43296 "EHLO
+        Fri, 15 May 2020 11:26:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726241AbgEOPZ6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726188AbgEOP0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:25:58 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D97ACC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:25:57 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u188so3118619wmu.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:25:57 -0700 (PDT)
+        Fri, 15 May 2020 11:26:24 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B218C05BD09
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:26:23 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id f15so1007121plr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:26:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4YHxui3Yo0vMHsmaXOJkEoFjwBV06P7bv7E8zziz5hQ=;
-        b=WLHC5KfExF6hPKo7XxaA64czaJ7BpoHLU2zJICyp3N6zf6g0Vz7Ph3aIbdNXAiCrOP
-         tCbYqwUu4plPR/NdJdRZvUjxei0rh8/YA/1+lG34HUVqWq+9tW7M1/9WoNIlK1ChRmRt
-         FtiWhlL+mdGntWnLltUD93FSVO6Q5VQCVMEaissAi0MSH3OWJmd8fovGarXXhoHPA7Cc
-         h/zjCz6NPCujmxrfEKJ5IUQzqUhdXa6zLo7R2i4rDhTiUFozm0g/1c4+tZkBvy31sEvf
-         unYFk2EIKZ4XRkziKU6DzIwHGm2BA/B5Pw6A4MI3p+wf8Vwq3765fAuEnv3dimZiyAx7
-         F03A==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LliiKcH82187Ei8bkdTXbelsSpYlSsXvGYR9ZJz3ZGg=;
+        b=QnAl9q4FMT3RTcx21fu1lA2YNiX3reW05bHM+U4uBWvV+e3p1ldsSdmS5NxA4xgmmR
+         bkHlfm6VmW6X6uSUHlo7ae9rQE6OXXFbuqvNov4mBhD+xqQ7+Kc4CV9umMQ7v+00VZkO
+         Kz+EVA8TAzKzrehCfU6F8hW76gHm/fDBLCCK+d6VCvj1ZTXIuQ/tsqXLbSzm3cobI0k0
+         KzTaVThkrZm3XuoOnkUHJEaqAm1DYkr2ajRkTX2++BgfwlQ/Nad/4A4FAss9RXxMSlbd
+         encOs1fUurYyiRJvfuM61PQ1cWTdERBfEIYOv1Nc3SuCnYxxywPmq5pjWJEKKSSWBHmP
+         ac8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=4YHxui3Yo0vMHsmaXOJkEoFjwBV06P7bv7E8zziz5hQ=;
-        b=NqNGD+dTWO9r4TkVuYaKat04rlVcncialuF8lGD9pfQZsljRCu4Q2rCp+wqZptxWxF
-         ViGX77gBugln/Lph3wkU+L0ublA6JcvfBYgfVC2F4fYe6Y/jWHuuZ2FXC0yl0TWExEUH
-         K9+OsuO7KKADlK9v7D1LWJhZ1Hl7HY5ZtOVE2c6RYB43l9OwqJO48VmcyzRxdrgKlhsG
-         t7J8ADn8JlXs9tboRG1KM9/4E0dnIrof4wE2vkVJeYzCoQgVhINTySOpNOx4JK7Rj38h
-         T2Lv38jx5k75TxZy066WPiwEDOOKFeFpQ0bVgNPVf6ZH9RyZnw1RuBxPKywOAjSEOIdy
-         51Hw==
-X-Gm-Message-State: AOAM531FBtJkx/++BX7XlEfSVjISMdPkVIlE4lN10nDpeVi92stlRzsj
-        K7TCPFhKzQwjI8i8I+Zl3ZdrCA==
-X-Google-Smtp-Source: ABdhPJw3mKWVBSJfaO5wBBJqm/u5qU4h/LdI+37noVfSRuxmHsjjAxJo3FbZwUFQLSDIbvqJipPA8A==
-X-Received: by 2002:a1c:6042:: with SMTP id u63mr4545603wmb.65.1589556356308;
-        Fri, 15 May 2020 08:25:56 -0700 (PDT)
-Received: from localhost ([2a01:4b00:8523:2d03:d11b:f847:8002:7411])
-        by smtp.gmail.com with ESMTPSA id y185sm4005761wmy.11.2020.05.15.08.25.55
+        bh=LliiKcH82187Ei8bkdTXbelsSpYlSsXvGYR9ZJz3ZGg=;
+        b=aNf6VB6kYdzjsiR9G3aCuyxsChcf9YuFFwz2Cd6UHCZK5nyVDLJddN0/NqqolrkP/d
+         Ex7WpR/4N0hV9kk6i8bApIa0UhqC6v11evV0AwqjxuTpX7Xalo90IMW7CfDDnWPzQtaL
+         lu3B2bGz1q76OxNXxaojBbcyu60CkASXswGM9NPO/mA1h8yGb7XWU1diIf7DspqeKQS2
+         l1VgYWIhKkdpUTAXZTO8YJzdCpa6F9HvNgGJWdiVNO5hnMGVPXDskJuADf/1oci6nWj6
+         2b8TP2A5cKznUIQswb6T9hDOLaud/Df1PHDUoB+3mFyOJIPNixRayUF/+np0a7gNQGyf
+         880g==
+X-Gm-Message-State: AOAM531nTUbsN1qwSSwbrUXqzGsvI66TcFovxznYY9GAeDJ6a8vbyPfH
+        cgJuFSbFaYtPGZfumsgYju1MTg2kQ1s=
+X-Google-Smtp-Source: ABdhPJxUPrXABjDzIPXp+x/8r/5wxyI+DEBaiWyfzWvYHWm4zV72ZTN0iUWez+vYQdK762O6l+fF5Q==
+X-Received: by 2002:a17:90b:4d0d:: with SMTP id mw13mr3875034pjb.218.1589556382711;
+        Fri, 15 May 2020 08:26:22 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:aca2:b1c9:3206:e390? ([2605:e000:100e:8c61:aca2:b1c9:3206:e390])
+        by smtp.gmail.com with ESMTPSA id z66sm2200459pfz.141.2020.05.15.08.26.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 08:25:55 -0700 (PDT)
-From:   David Brazdil <dbrazdil@google.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, David Brazdil <dbrazdil@google.com>
-Subject: [PATCH] arm64: kvm: Fix incorrect comment on kvm_get_hyp_vector()
-Date:   Fri, 15 May 2020 16:25:50 +0100
-Message-Id: <20200515152550.83810-1-dbrazdil@google.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 15 May 2020 08:26:21 -0700 (PDT)
+Subject: Re: [PATCH 0/2] io_uring: add a CQ ring flag to enable/disable
+ eventfd notification
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20200515105414.68683-1-sgarzare@redhat.com>
+ <eaab5cc7-0297-a8f8-f7a9-e00bcf12b678@kernel.dk>
+ <20200515143419.f3uggj7h3nyolfqb@steredhat>
+ <a7ac101d-0f5d-2ab2-b36b-b40607d65878@kernel.dk>
+ <20200515152418.oi6btvogplmuezfn@steredhat>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b297e61f-3647-54f2-b9a6-21707158fed9@kernel.dk>
+Date:   Fri, 15 May 2020 09:26:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200515152418.oi6btvogplmuezfn@steredhat>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The comment used to say that kvm_get_hyp_vector is only called on VHE systems.
-In fact, it is also called from the nVHE init function cpu_init_hyp_mode().
-Fix the comment to stop confusing devs.
+On 5/15/20 9:24 AM, Stefano Garzarella wrote:
+> On Fri, May 15, 2020 at 09:13:33AM -0600, Jens Axboe wrote:
+>> On 5/15/20 8:34 AM, Stefano Garzarella wrote:
+>>> On Fri, May 15, 2020 at 08:24:58AM -0600, Jens Axboe wrote:
+>>>> On 5/15/20 4:54 AM, Stefano Garzarella wrote:
+>>>>> The first patch adds the new 'cq_flags' field for the CQ ring. It
+>>>>> should be written by the application and read by the kernel.
+>>>>>
+>>>>> The second patch adds a new IORING_CQ_NEED_WAKEUP flag that can be
+>>>>> used by the application to enable/disable eventfd notifications.
+>>>>>
+>>>>> I'm not sure the name is the best one, an alternative could be
+>>>>> IORING_CQ_NEED_EVENT.
+>>>>>
+>>>>> This feature can be useful if the application are using eventfd to be
+>>>>> notified when requests are completed, but they don't want a notification
+>>>>> for every request.
+>>>>> Of course the application can already remove the eventfd from the event
+>>>>> loop, but as soon as it adds the eventfd again, it will be notified,
+>>>>> even if it has already handled all the completed requests.
+>>>>>
+>>>>> The most important use case is when the registered eventfd is used to
+>>>>> notify a KVM guest through irqfd and we want a mechanism to
+>>>>> enable/disable interrupts.
+>>>>>
+>>>>> I also extended liburing API and added a test case here:
+>>>>> https://github.com/stefano-garzarella/liburing/tree/eventfd-disable
+>>>>
+>>>> Don't mind the feature, and I think the patches look fine. But the name
+>>>> is really horrible, I'd have no idea what that flag does without looking
+>>>> at the code or a man page. Why not call it IORING_CQ_EVENTFD_ENABLED or
+>>>> something like that? Or maybe IORING_CQ_EVENTFD_DISABLED, and then you
+>>>> don't have to muck with the default value either. The app would set the
+>>>> flag to disable eventfd, temporarily, and clear it again when it wants
+>>>> notifications again.
+>>>
+>>> You're clearly right! :-) The name was horrible.
+>>
+>> Sometimes you go down that path on naming and just can't think of
+>> the right one. I think we've all been there.
+> 
+> :-)
+> 
+>>
+>>> I agree that IORING_CQ_EVENTFD_DISABLED should be the best.
+>>> I'll send a v2 changing the name and removing the default value.
+>>
+>> Great thanks, and please do queue a pull for the liburing side too.
+> 
+> For the liburing side do you prefer a PR on github or posting the
+> patches on io-uring@vger.kernel.org with 'liburing' tag?
 
-Signed-off-by: David Brazdil <dbrazdil@google.com>
----
- arch/arm64/include/asm/kvm_mmu.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Either one is fine. I tend to prefer patches, but that's mostly because
+various contributors on the liburing side don't have the same kind of
+patch writing etiquette that we do on the kernel side. Hence they need
+massaging in terms of commit messages, and patches are then easier. But
+for you, just do what you prefer. I never use the github merge features,
+always do it manually myself anyway.
 
-diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
-index 30b0e8d6b895..796f6a2e794a 100644
---- a/arch/arm64/include/asm/kvm_mmu.h
-+++ b/arch/arm64/include/asm/kvm_mmu.h
-@@ -473,7 +473,7 @@ static inline int kvm_write_guest_lock(struct kvm *kvm, gpa_t gpa,
- extern void *__kvm_bp_vect_base;
- extern int __kvm_harden_el2_vector_slot;
- 
--/*  This is only called on a VHE system */
-+/*  This is called on both VHE and !VHE systems */
- static inline void *kvm_get_hyp_vector(void)
- {
- 	struct bp_hardening_data *data = arm64_get_bp_hardening_data();
 -- 
-2.26.2
+Jens Axboe
 
