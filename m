@@ -2,138 +2,99 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D21C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED07DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8CD120758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD20A20758
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:34:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OuObXm34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgEONcv (ORCPT
+        id S1726204AbgEONes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:32:51 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:39195 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgEONcu (ORCPT
+        Fri, 15 May 2020 09:34:48 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42616 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgEONes (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:32:50 -0400
-Received: from mail-qv1-f54.google.com ([209.85.219.54]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N8GIa-1j4jqL03iy-0148bL; Fri, 15 May 2020 15:32:49 +0200
-Received: by mail-qv1-f54.google.com with SMTP id p4so1036078qvr.10;
-        Fri, 15 May 2020 06:32:48 -0700 (PDT)
-X-Gm-Message-State: AOAM533LC1JhRL8lBvEYosRM/J8mL0QJapJt9PSOWop9bWdP0bC6/eRk
-        yd+VsM6iU/j2hJQvBX0zTgy6w+UKWY+IFV6U63I=
-X-Google-Smtp-Source: ABdhPJxRaY7zY8QTvNzuxerWSaqGbHKOK4FIyf/5qJLFxDuhmkrh8pWdFCVTHGQsHaBEpA8LvsOh8UJboFLS9sON+fo=
-X-Received: by 2002:a0c:eb11:: with SMTP id j17mr3448680qvp.197.1589549567720;
- Fri, 15 May 2020 06:32:47 -0700 (PDT)
+        Fri, 15 May 2020 09:34:48 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04FDHCaw189812;
+        Fri, 15 May 2020 13:34:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=bvCOtrlT3KuGFoRo5xNHnOKzuN1WQn5Zi9f9eT0ob+Y=;
+ b=OuObXm34KPeWvimMtlSeVVJ0BzpcvIzJ6513QjvVtZDrwFJ4R3umpZmzVneeJ6jHldSJ
+ Vetnu8gIjOES7FAmvCR87Ue1O4pnBPP+xs8OYEDFnV9lOk73DK09N2BhVmtkhTjk1sC4
+ PiiTo/TYU38xQYyKPIM/9CXZJGyPYwcuo/f52aWwF4Ql1/e6fhP1mTcGCFHdpKdaqOFz
+ rXetWniIg2tda9VdcXidJak/BdIpE8wv2oYKVbQy5JtHqiZHoixOfXKI5TN7L1mAW/6p
+ 9vK18QbBwKxSB08SBvev0u30pX80Wqzp6XQ0HXxBK3JvT6rKIxJF87Otm5epajcl1JkF Zg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 311nu5kgh2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 15 May 2020 13:34:33 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04FDI9qR059636;
+        Fri, 15 May 2020 13:32:33 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 3100yk1rmx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 May 2020 13:32:33 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04FDWVJW030293;
+        Fri, 15 May 2020 13:32:31 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 15 May 2020 06:32:30 -0700
+Date:   Fri, 15 May 2020 16:32:24 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     John Oldman <john.oldman@polehill.co.uk>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        kai.heng.feng@canonical.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: rtl8723bs: os_de: if-else coding style issues
+Message-ID: <20200515133224.GE2078@kadam>
+References: <20200515124930.3406-1-john.oldman@polehill.co.uk>
 MIME-Version: 1.0
-References: <20200514075942.10136-1-brgl@bgdev.pl> <20200514075942.10136-11-brgl@bgdev.pl>
-In-Reply-To: <20200514075942.10136-11-brgl@bgdev.pl>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 15 May 2020 15:32:31 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com>
-Message-ID: <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com>
-Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:/5ofnXw9mU5dIgLefv/eRsDvP8+vTrIU+kLDXUGITnkQuWac4Lv
- lCUzHqRE2GvIKbgKOqokob5YjwHyKX97w0rAAWhXtQOfANy41OWqbOBppqecviSzLFkmNz+
- 2baHX4ARSd0lXB90Re+J/7eya76FB9t4m55bGplGQ+RfBZSx9IL4TuVFvxJp5ov/6iHHmpn
- 4slNhioblUkWT2Ewt3K6Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PSBO+4J/98g=:gGROTXY0ptE/pYUSwwvuox
- LQJix53g2u4f43J6wPGIlXEN9Sfdb91HjNyChil2D95CJzrRnaWlVruZOo55mgKhe92Ohy/yg
- 87OxKYoBj1Mb2P4J3L/V3fwqP/gav9cVeaxsCo20ZFaZKoDvkYvfSlIPYU3uurK/xeEFAMAbt
- qTjRN9SdEVq/n4qttKKMYTG9tw1Shau5JApHNfoB7BxtG3qf9SbAGxOsqaARuc47qUYax1dZ6
- 1578a9XMcwHoKjC8rsWVu3m9WcdNS0qVH9VIH+rzArN+G81B1CaboTmEgNF2cPqd9xRvMp/Oz
- 7EA5phTtB26zA7YNb5q6Zv55A0kKSfzPK571gneJm4rDtsS8/J3JbjXme+g8hKNmUH4xQN2yS
- iDZLbWuwlWzjeKIeMxXkK8QMGCaN0sHeY0/LtUgY8BVQ+unPpjmLQC3ry/CyVIKmEZkrWEkGR
- Xce+CMpI83rqIg857MjSgpzciN7wok2nNy0BPk8DJZb9HOjlpUxE0szWAxIn5VjzOsVZhTSLi
- 3m/Z6AUId97YB+eqRUNSHlLaam1G55PHrKKd80C8B0vLof15lLICwSnOQi33wDKI8vO4/WT/t
- BGRcMNIu1vThyBFAC2NRdPVihx7d37eDljyoIJRK4o1OpPhV/daih5x8HZQkE4ftEFRFBNcwe
- vtAgLAJdJcS/SsDR+JCwKabWvHHbCJItJfZT0uRLp71Imow6FV5+a3LR7CMEKbFSVfv3U8p7F
- rhiCgx08UIIgJbUEGAZm4+lL+yaVY+NZPwhReHOUocFaLcjNfELZBJkcAbWJ+Qiicg08kgcv/
- xV8uJmISTCGfylAtb0x0tUGlBv+WL8b/dblBJFamBW0aVbHB00=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515124930.3406-1-john.oldman@polehill.co.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9621 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 bulkscore=0
+ phishscore=0 suspectscore=0 adultscore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005150116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9621 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 mlxscore=0
+ adultscore=0 priorityscore=1501 mlxlogscore=999 impostorscore=0
+ suspectscore=0 spamscore=0 lowpriorityscore=0 cotscore=-2147483648
+ bulkscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005150116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 10:00 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> +static int mtk_mac_ring_pop_tail(struct mtk_mac_ring *ring,
-> +                                struct mtk_mac_ring_desc_data *desc_data)
+On Fri, May 15, 2020 at 01:49:30PM +0100, John Oldman wrote:
+> @@ -1167,9 +1166,8 @@ void rtw_dev_unload(struct adapter *padapter)
+>  			DBG_871X_LEVEL(_drv_always_, "%s: driver in IPS-FWLPS\n", __func__);
+>  			pdbgpriv->dbg_dev_unload_inIPS_cnt++;
+>  			LeaveAllPowerSaveMode(padapter);
+> -		} else {
+> +		} else
+>  			DBG_871X_LEVEL(_drv_always_, "%s: driver not in IPS\n", __func__);
+> -		}
 
-I took another look at this function because of your comment on the locking
-the descriptor updates, which seemed suspicious as the device side does not
-actually use the locks to access them
+You didn't run checkpatch on this patch.  The rule is that if one side
+of the if else statement has curly braces then all sides get curly
+braces even if they're just one line long.
 
-> +{
-> +       struct mtk_mac_ring_desc *desc = &ring->descs[ring->tail];
-> +       unsigned int status;
-> +
-> +       /* Let the device release the descriptor. */
-> +       dma_rmb();
-> +       status = desc->status;
-> +       if (!(status & MTK_MAC_DESC_BIT_COWN))
-> +               return -1;
+regards,
+dan carpenter
 
-The dma_rmb() seems odd here, as I don't see which prior read
-is being protected by this.
-
-> +       desc_data->len = status & MTK_MAC_DESC_MSK_LEN;
-> +       desc_data->flags = status & ~MTK_MAC_DESC_MSK_LEN;
-> +       desc_data->dma_addr = ring->dma_addrs[ring->tail];
-> +       desc_data->skb = ring->skbs[ring->tail];
-> +
-> +       desc->data_ptr = 0;
-> +       desc->status = MTK_MAC_DESC_BIT_COWN;
-> +       if (status & MTK_MAC_DESC_BIT_EOR)
-> +               desc->status |= MTK_MAC_DESC_BIT_EOR;
-> +
-> +       /* Flush writes to descriptor memory. */
-> +       dma_wmb();
-
-The comment and the barrier here seem odd as well. I would have expected
-a barrier after the update to the data pointer, and only a single store
-but no read of the status flag instead of the read-modify-write,
-something like
-
-      desc->data_ptr = 0;
-      dma_wmb(); /* make pointer update visible before status update */
-      desc->status = MTK_MAC_DESC_BIT_COWN | (status & MTK_MAC_DESC_BIT_EOR);
-
-> +       ring->tail = (ring->tail + 1) % MTK_MAC_RING_NUM_DESCS;
-> +       ring->count--;
-
-I would get rid of the 'count' here, as it duplicates the information
-that is already known from the difference between head and tail, and you
-can't update it atomically without holding a lock around the access to
-the ring. The way I'd do this is to have the head and tail pointers
-in separate cache lines, and then use READ_ONCE/WRITE_ONCE
-and smp barriers to access them, with each one updated on one
-thread but read by the other.
-
-     Arnd
