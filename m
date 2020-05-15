@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0805EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0455CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF9B920759
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D457220759
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:19:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KpzoZBbA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q274EttH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgEONTE (ORCPT
+        id S1726700AbgEONTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:19:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51248 "EHLO
+        Fri, 15 May 2020 09:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgEONRB (ORCPT
+        with ESMTP id S1726283AbgEONRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 May 2020 09:17:01 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB7EC05BD0A;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BA0EC05BD0F;
         Fri, 15 May 2020 06:17:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=dD9nVOWGwAdtF5Vt0w+D5s2gKPxSD7JmOgMrMrHOmY4=; b=KpzoZBbAmjWwdFJxwedHsBhPKW
-        O3aGMgxi6+pOIdZGp7theZ4uKfR1dHwNTQ7neJc3I6hzjbwadOEIV3FvvNndyRNZyWVgfF8lP5xCW
-        9hIVgtBTwTFQG1ISQ2Wd4iOJFtEXJdGjIOUv91w48CVK84HYFtRTibvxE397mC8C+4l7fLWE8IoCN
-        0xVTwOcqZDpPrFn4Tl/lcHs1C4ZYEJ6e8OqjRwUEF9p8ABnXpyUwKvkcw6fLF3A8j6bzW/GXBma/R
-        YSk7GvPr4Nd32nXa9FqM9IJMpm+gQhIJ2SNXuUVbF9Ul1LDmopxTpZJl9OI6umJ4VyfoVimZZEZ/J
-        6t9H/HfQ==;
+        bh=tyoiEDA4aqW5ranAPIIS6qQtQA5yS6rXGQxRGVOBB6U=; b=q274EttHo7r0I5CRKcIo0vMGvO
+        kTjwH48Pzqk7VvoStQSzD7WlZ5qx6w1gJLvCPEU3vbVNEENSSO+FBwGy/Gbowc0i+7V1hB+N2LZie
+        DSTRhm0piT6mfku3SVRIbzGkVD6uYWkyZej7hr2QI6NzVRmIGrEhFawBF3qMzExHMfSaVP+QyCYMl
+        byYVwjoDZ1GlpBW7IFsADmm8HDNv+q99kncOpBY7eMcyuoa2o4onA01fp5PY8hsXklfhL2ii5BLKC
+        zA4mOXNTseoBY7NLHptD1de0ZR481/Ssehh1wKb8hMXqPBHs474FmadJbIQXS6R7VmLLvLT01XJd2
+        MWxoQjig==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZaCz-0005c0-9J; Fri, 15 May 2020 13:17:01 +0000
+        id 1jZaCz-0005aD-4I; Fri, 15 May 2020 13:17:01 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 13/36] iomap: Support arbitrarily many blocks per page
-Date:   Fri, 15 May 2020 06:16:33 -0700
-Message-Id: <20200515131656.12890-14-willy@infradead.org>
+Subject: [PATCH v4 11/36] fs: Support THPs in zero_user_segments
+Date:   Fri, 15 May 2020 06:16:31 -0700
+Message-Id: <20200515131656.12890-12-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200515131656.12890-1-willy@infradead.org>
 References: <20200515131656.12890-1-willy@infradead.org>
@@ -57,80 +57,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Size the uptodate array dynamically.  Now that this array is protected
-by a spinlock, we can use bitmap functions to set the bits in this array
-instead of a loop around set_bit().
+We can only kmap() one subpage of a THP at a time, so loop over all
+relevant subpages, skipping ones which don't need to be zeroed.  This is
+too large to inline when THPs are enabled and we actually need highmem,
+so put it in highmem.c.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- fs/iomap/buffered-io.c | 27 +++++++++------------------
- 1 file changed, 9 insertions(+), 18 deletions(-)
+ include/linux/highmem.h | 15 +++++++---
+ mm/highmem.c            | 62 +++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 71 insertions(+), 6 deletions(-)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 4bc37bf8d057..4a79061073eb 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -22,14 +22,14 @@
- #include "../internal.h"
- 
- /*
-- * Structure allocated for each page when block size < PAGE_SIZE to track
-+ * Structure allocated for each page when block size < page size to track
-  * sub-page uptodate status and I/O completions.
-  */
- struct iomap_page {
- 	atomic_t		read_count;
- 	atomic_t		write_count;
- 	spinlock_t		uptodate_lock;
--	DECLARE_BITMAP(uptodate, PAGE_SIZE / 512);
-+	unsigned long		uptodate[];
- };
- 
- static inline struct iomap_page *to_iomap_page(struct page *page)
-@@ -45,15 +45,14 @@ static struct iomap_page *
- iomap_page_create(struct inode *inode, struct page *page)
- {
- 	struct iomap_page *iop = to_iomap_page(page);
-+	unsigned int nr_blocks = i_blocks_per_page(inode, page);
- 
--	if (iop || i_blocks_per_page(inode, page) <= 1)
-+	if (iop || nr_blocks <= 1)
- 		return iop;
- 
--	iop = kmalloc(sizeof(*iop), GFP_NOFS | __GFP_NOFAIL);
--	atomic_set(&iop->read_count, 0);
--	atomic_set(&iop->write_count, 0);
-+	iop = kzalloc(struct_size(iop, uptodate, BITS_TO_LONGS(nr_blocks)),
-+				GFP_NOFS | __GFP_NOFAIL);
- 	spin_lock_init(&iop->uptodate_lock);
--	bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
- 
- 	/*
- 	 * migrate_page_move_mapping() assumes that pages with private data have
-@@ -146,20 +145,12 @@ iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
- 	struct iomap_page *iop = to_iomap_page(page);
- 	struct inode *inode = page->mapping->host;
- 	unsigned first = off >> inode->i_blkbits;
--	unsigned last = (off + len - 1) >> inode->i_blkbits;
--	bool uptodate = true;
-+	unsigned count = len >> inode->i_blkbits;
- 	unsigned long flags;
--	unsigned int i;
- 
- 	spin_lock_irqsave(&iop->uptodate_lock, flags);
--	for (i = 0; i < i_blocks_per_page(inode, page); i++) {
--		if (i >= first && i <= last)
--			set_bit(i, iop->uptodate);
--		else if (!test_bit(i, iop->uptodate))
--			uptodate = false;
--	}
--
--	if (uptodate)
-+	bitmap_set(iop->uptodate, first, count);
-+	if (bitmap_full(iop->uptodate, i_blocks_per_page(inode, page)))
- 		SetPageUptodate(page);
- 	spin_unlock_irqrestore(&iop->uptodate_lock, flags);
+diff --git a/include/linux/highmem.h b/include/linux/highmem.h
+index ea5cdbd8c2c3..74614903619d 100644
+--- a/include/linux/highmem.h
++++ b/include/linux/highmem.h
+@@ -215,13 +215,18 @@ static inline void clear_highpage(struct page *page)
+ 	kunmap_atomic(kaddr);
  }
+ 
++#if defined(CONFIG_HIGHMEM) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
++void zero_user_segments(struct page *page, unsigned start1, unsigned end1,
++		unsigned start2, unsigned end2);
++#else /* !HIGHMEM || !TRANSPARENT_HUGEPAGE */
+ static inline void zero_user_segments(struct page *page,
+-	unsigned start1, unsigned end1,
+-	unsigned start2, unsigned end2)
++		unsigned start1, unsigned end1,
++		unsigned start2, unsigned end2)
+ {
++	unsigned long i;
+ 	void *kaddr = kmap_atomic(page);
+ 
+-	BUG_ON(end1 > PAGE_SIZE || end2 > PAGE_SIZE);
++	BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
+ 
+ 	if (end1 > start1)
+ 		memset(kaddr + start1, 0, end1 - start1);
+@@ -230,8 +235,10 @@ static inline void zero_user_segments(struct page *page,
+ 		memset(kaddr + start2, 0, end2 - start2);
+ 
+ 	kunmap_atomic(kaddr);
+-	flush_dcache_page(page);
++	for (i = 0; i < hpage_nr_pages(page); i++)
++		flush_dcache_page(page + i);
+ }
++#endif /* !HIGHMEM || !TRANSPARENT_HUGEPAGE */
+ 
+ static inline void zero_user_segment(struct page *page,
+ 	unsigned start, unsigned end)
+diff --git a/mm/highmem.c b/mm/highmem.c
+index 64d8dea47dd1..3a85c66ef532 100644
+--- a/mm/highmem.c
++++ b/mm/highmem.c
+@@ -367,9 +367,67 @@ void kunmap_high(struct page *page)
+ 	if (need_wakeup)
+ 		wake_up(pkmap_map_wait);
+ }
+-
+ EXPORT_SYMBOL(kunmap_high);
+-#endif
++
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++void zero_user_segments(struct page *page, unsigned start1, unsigned end1,
++		unsigned start2, unsigned end2)
++{
++	unsigned int i;
++
++	BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
++
++	for (i = 0; i < hpage_nr_pages(page); i++) {
++		void *kaddr;
++		unsigned this_end;
++
++		if (end1 == 0 && start2 >= PAGE_SIZE) {
++			start2 -= PAGE_SIZE;
++			end2 -= PAGE_SIZE;
++			continue;
++		}
++
++		if (start1 >= PAGE_SIZE) {
++			start1 -= PAGE_SIZE;
++			end1 -= PAGE_SIZE;
++			if (start2) {
++				start2 -= PAGE_SIZE;
++				end2 -= PAGE_SIZE;
++			}
++			continue;
++		}
++
++		kaddr = kmap_atomic(page + i);
++
++		this_end = min_t(unsigned, end1, PAGE_SIZE);
++		if (end1 > start1)
++			memset(kaddr + start1, 0, this_end - start1);
++		end1 -= this_end;
++		start1 = 0;
++
++		if (start2 >= PAGE_SIZE) {
++			start2 -= PAGE_SIZE;
++			end2 -= PAGE_SIZE;
++		} else {
++			this_end = min_t(unsigned, end2, PAGE_SIZE);
++			if (end2 > start2)
++				memset(kaddr + start2, 0, this_end - start2);
++			end2 -= this_end;
++			start2 = 0;
++		}
++
++		kunmap_atomic(kaddr);
++		flush_dcache_page(page + i);
++
++		if (!end1 && !end2)
++			break;
++	}
++
++	BUG_ON((start1 | start2 | end1 | end2) != 0);
++}
++EXPORT_SYMBOL(zero_user_segments);
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
++#endif /* CONFIG_HIGHMEM */
+ 
+ #if defined(HASHED_PAGE_VIRTUAL)
+ 
 -- 
 2.26.2
 
