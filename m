@@ -2,158 +2,126 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A43CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC0312074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:38:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="yJV5DF33"
+	by mail.kernel.org (Postfix) with ESMTP id 1D4562074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgEOMiL (ORCPT
+        id S1726302AbgEOMi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:38:11 -0400
-Received: from mx01-sz.bfs.de ([194.94.69.67]:57319 "EHLO mx01-sz.bfs.de"
+        Fri, 15 May 2020 08:38:27 -0400
+Received: from mga07.intel.com ([134.134.136.100]:3357 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgEOMiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:38:10 -0400
-Received: from SRVEX01-SZ.bfs.intern (exchange-sz.bfs.de [10.129.90.31])
-        by mx01-sz.bfs.de (Postfix) with ESMTPS id CA71220320;
-        Fri, 15 May 2020 14:38:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
-        t=1589546287;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ppKbetCczRPxYojNsxLooBtfmJ0vphP053kEHBki1gc=;
-        b=yJV5DF337dYDB94SlXzGeeSFtM+t+kyXBFEewX47UBZfxzEcN/7vzS8ERu/uF+ARN0mir8
-        1Gpd3fCY1Ju0o7q+MYxFvdiw4Mw6oUHflbXBRmo7FYG6VNIEM1JPMBxe74BaatGPQw4TCC
-        UJ85rW2eVH6LNRANJs/AIsBH6Sp0rJdgZpysHOFnLg71RENfRKBb+OfJr3FLksAtbbNWH5
-        isvPevS/Ruk53abXa7SPrNny9cnmxS/HBsWO+7xcOmKMWwWUMvC+qktzD0wYX7lfiy0b/o
-        0DxzpYDHcWZCnvKigElYLN3kyFCWxQukGSFPu3wDmrmhdmf0EBlUVdW/HRiCyA==
-Received: from SRVEX01-SZ.bfs.intern (10.129.90.31) by SRVEX01-SZ.bfs.intern
- (10.129.90.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.1913.5; Fri, 15 May
- 2020 14:38:07 +0200
-Received: from SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a]) by
- SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a%6]) with mapi id
- 15.01.1913.005; Fri, 15 May 2020 14:38:07 +0200
-From:   Walter Harms <wharms@bfs.de>
-To:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: AW: [PATCH] rtlwifi: rtl8192ee: remove redundant for-loop
-Thread-Topic: [PATCH] rtlwifi: rtl8192ee: remove redundant for-loop
-Thread-Index: AQHWKqLOi1fXAItzAU2fpWUNjofas6ipEGuf
-Date:   Fri, 15 May 2020 12:38:07 +0000
-Message-ID: <73b8d798ffa048418be8443f90a79377@bfs.de>
-References: <20200515102226.29819-1-colin.king@canonical.com>
-In-Reply-To: <20200515102226.29819-1-colin.king@canonical.com>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.137.16.40]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1726144AbgEOMi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 08:38:27 -0400
+IronPort-SDR: vmOVCjeoYqyfrZoIZVeVOihqSQ793G60qjiJ/U0NJkRU38JxaIsfhz2VFf5JJ3qziU7RmfIzBu
+ OhkVoQ2emEqg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 05:38:26 -0700
+IronPort-SDR: AOM6JheAe7dIdYRzcBx6pLczsGNik9Ktz+q65bTBzKNtWzIDkpRPxkH5ij8g0VhpKWCkej5+wM
+ vd8cUu4QS8dA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="253785230"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 15 May 2020 05:38:22 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZZbc-006rEO-7B; Fri, 15 May 2020 15:38:24 +0300
+Date:   Fri, 15 May 2020 15:38:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Clement Leger <cleger@kalray.eu>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 07/19] spi: dw: Discard unused void priv pointer
+Message-ID: <20200515123824.GB185537@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-8-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Authentication-Results: mx01-sz.bfs.de;
-        none
-X-Spamd-Result: default: False [-2.89 / 7.00];
-         ARC_NA(0.00)[];
-         HAS_XOIP(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         RCPT_COUNT_THREE(0.00)[4];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         NEURAL_HAM(-0.00)[-0.884];
-         TO_DN_EQ_ADDR_ALL(0.00)[];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         BAYES_HAM(-2.89)[99.53%]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515104758.6934-8-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-if someone has same spare time,
-this driver need a bit more love ...
+On Fri, May 15, 2020 at 01:47:46PM +0300, Serge Semin wrote:
+> Seeing the "void *priv" member of the dw_spi data structure is unused
+> let's remove it. The glue-layers can embed the DW APB SSI controller
+> descriptor into their private data object. MMIO driver for instance
+> already utilizes that design pattern.
 
-SO far i can see in rtl92ee_phy_iq_calibrate:
-* IQK_MATRIX_REG_NUM should be used instead 8 hardcoded.
-* the for-loop in the beginning is obfuscating that it sets  simply final_c=
-andidate
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-this can be cleaned:
-      reg_e94 =3D result[final_candidate][0];
-      rtlphy->reg_e94 =3D reg_e94;
-      reg_e9c =3D result[final_candidate][1];
-      rtlphy->reg_e9c =3D reg_e9c;
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> 
+> ---
+> 
+> Changelog v2:
+> - It's a new patch created as a result of more thorough driver study.
+> ---
+>  drivers/spi/spi-dw.h | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+> index 60e9e430ce7b..b6ab81e0c747 100644
+> --- a/drivers/spi/spi-dw.h
+> +++ b/drivers/spi/spi-dw.h
+> @@ -147,8 +147,6 @@ struct dw_spi {
+>  	dma_addr_t		dma_addr; /* phy address of the Data register */
+>  	const struct dw_spi_dma_ops *dma_ops;
+>  
+> -	/* Bus interface info */
+> -	void			*priv;
+>  #ifdef CONFIG_DEBUG_FS
+>  	struct dentry *debugfs;
+>  #endif
+> -- 
+> 2.25.1
+> 
 
-only reg_e94, reg_ea4 is used later ?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-jm2c,
-wh=20
-
-________________________________________
-Von: kernel-janitors-owner@vger.kernel.org <kernel-janitors-owner@vger.kern=
-el.org> im Auftrag von Colin King <colin.king@canonical.com>
-Gesendet: Freitag, 15. Mai 2020 12:22
-An: Kalle Valo; David S . Miller; linux-wireless@vger.kernel.org; netdev@vg=
-er.kernel.org
-Cc: kernel-janitors@vger.kernel.org; linux-kernel@vger.kernel.org
-Betreff: [PATCH] rtlwifi: rtl8192ee: remove redundant for-loop
-
-From: Colin Ian King <colin.king@canonical.com>
-
-The for-loop seems to be redundant, the assignments for indexes
-0..2 are being over-written by the last index 3 in the loop. Remove
-the loop and use index 3 instead.
-
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- .../net/wireless/realtek/rtlwifi/rtl8192ee/phy.c   | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/phy.c b/drivers=
-/net/wireless/realtek/rtlwifi/rtl8192ee/phy.c
-index 6dba576aa81e..bb291b951f4d 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/phy.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/phy.c
-@@ -2866,14 +2866,12 @@ void rtl92ee_phy_iq_calibrate(struct ieee80211_hw *=
-hw, bool b_recovery)
-                }
-        }
-
--       for (i =3D 0; i < 4; i++) {
--               reg_e94 =3D result[i][0];
--               reg_e9c =3D result[i][1];
--               reg_ea4 =3D result[i][2];
--               reg_eb4 =3D result[i][4];
--               reg_ebc =3D result[i][5];
--               reg_ec4 =3D result[i][6];
--       }
-+       reg_e94 =3D result[3][0];
-+       reg_e9c =3D result[3][1];
-+       reg_ea4 =3D result[3][2];
-+       reg_eb4 =3D result[3][4];
-+       reg_ebc =3D result[3][5];
-+       reg_ec4 =3D result[3][6];
-
-        if (final_candidate !=3D 0xff) {
-                reg_e94 =3D result[final_candidate][0];
---
-2.25.1
 
