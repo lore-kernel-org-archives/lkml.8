@@ -2,165 +2,147 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69204C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965B7C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2EA2078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C852075F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H7UtYf9x"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FKqNBS+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgEOOn3 (ORCPT
+        id S1726597AbgEOOn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:43:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53508 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726144AbgEOOn2 (ORCPT
+        Fri, 15 May 2020 10:43:56 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49692 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726144AbgEOOn4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:43:28 -0400
+        Fri, 15 May 2020 10:43:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589553807;
+        s=mimecast20190719; t=1589553834;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=X1xZ8JfBmNTiGkLsqL/RqkMRLzuSs2G8A+ZbL9b5Sgw=;
-        b=H7UtYf9x8X/6t204rJy4dTJV7NlKU1VaV+61u9j/RKzQuG0dScvHqccDF412enQY2RRza5
-        feQU5n9DcCNL85G6NCK9P3DnQL2OlOqzL8P9P3pCIhnOgbcA83K9yg35KBwouSvyaKj6LW
-        /CTFfpNNg88HVKPRdr43/8gpkfjL9yQ=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-392-8joFrlu_PyyBj3ZAoUP9Bw-1; Fri, 15 May 2020 10:43:17 -0400
-X-MC-Unique: 8joFrlu_PyyBj3ZAoUP9Bw-1
-Received: by mail-ej1-f72.google.com with SMTP id du3so1160040ejc.15
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 07:43:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X1xZ8JfBmNTiGkLsqL/RqkMRLzuSs2G8A+ZbL9b5Sgw=;
-        b=NiR8MNweSDp1F9462MMS9MK6nTWHhBj5kgu+A28EGs60xoO8AHVklAOzrlyfmyj7ER
-         S4AeMcyRA49cy/cFYwH8f/S5YRQRtj5pK7teGcAPKKzNBe/69WJdLGR9uYLhPWSaQS4i
-         p0nTdd/PzrOgONvkBHNfeTHZ0FIFwMckjCNkJ0bAUKeisS7aOxUAa7B9otC3SDwAbhxS
-         jHG+vIqNbjZS/sgYP2lolsuHoarwkqGW88P1coOLUBdnWq7C7CdzDdygtmG4j2A/LOO+
-         cNw3AIEIXmuZMuyk9/2pHvKIijpnCBLuRIeipyG6I6jDlU87c27i0vXOu78DcVpZwLpj
-         m5Jw==
-X-Gm-Message-State: AOAM532znR39dH6EPpS2fcWpH/5w0xerdkKle/Ix7pEKPe6TRTFeAKBt
-        L5HlJfQrg1dFlkAaB3TIK9+7iwQEqAOkP5D72scswBR4dhochCGZuiocAdPWcKZeZebIilEW9/r
-        7cJLSFu5pENbJwY31Qlr5kOmV3yHuORP0bZ4a2UiN
-X-Received: by 2002:a17:906:5004:: with SMTP id s4mr3193003ejj.13.1589553796404;
-        Fri, 15 May 2020 07:43:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzcynxps1KUucQoqq7068tMVHGCDv6crpjonW5YwDES9DmvKGln6WCa0YEZZgSZ7g+qltCxkx4fwqpnxFZZ12Q=
-X-Received: by 2002:a17:906:5004:: with SMTP id s4mr3192981ejj.13.1589553796108;
- Fri, 15 May 2020 07:43:16 -0700 (PDT)
+        bh=hR6lCjnUOV2j2gabpoQGpgvPB5RUTChOvM8hrmj3dmQ=;
+        b=FKqNBS+Hk2mCfqAwAmbGul8UIk4bHZNzykfRliiIOevpZKtEjqovYdjFurgvll+3ESpg7O
+        tUKsHbA1tJfjocp1RsZDry4W7TCQvZkKUWCJiy7yHB0hU6M8UN0H+tgHv9uYjYV782gQi5
+        rz7370VMZ89t6UqoJ5Pk0U/+zFY6+Xo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-IBhV3vZSOp6wkLbJJ_diLA-1; Fri, 15 May 2020 10:43:52 -0400
+X-MC-Unique: IBhV3vZSOp6wkLbJJ_diLA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C02C78018A2;
+        Fri, 15 May 2020 14:43:47 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-112-77.ams2.redhat.com [10.36.112.77])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8C92A5C241;
+        Fri, 15 May 2020 14:43:39 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Christian Heimes <christian@python.org>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        John Johansen <john.johansen@canonical.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        "Lev R. Oshvang ." <levonshe@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Subject: Re: How about just O_EXEC? (was Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec through O_MAYEXEC)
+References: <20200505153156.925111-4-mic@digikod.net>
+        <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
+        <202005131525.D08BFB3@keescook> <202005132002.91B8B63@keescook>
+        <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
+        <202005140830.2475344F86@keescook>
+        <CAEjxPJ4R_juwvRbKiCg5OGuhAi1ZuVytK4fKCDT_kT6VKc8iRg@mail.gmail.com>
+        <b740d658-a2da-5773-7a10-59a0ca52ac6b@digikod.net>
+        <202005142343.D580850@keescook>
+        <87a729wpu1.fsf@oldenburg2.str.redhat.com>
+        <202005150732.17C5EE0@keescook>
+Date:   Fri, 15 May 2020 16:43:37 +0200
+In-Reply-To: <202005150732.17C5EE0@keescook> (Kees Cook's message of "Fri, 15
+        May 2020 07:37:16 -0700")
+Message-ID: <87r1vluuli.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-References: <CAE4VaGC09OfU2zXeq2yp_N0zXMbTku5ETz0KEocGi-RSiKXv-w@mail.gmail.com>
- <20200320152251.GC3818@techsingularity.net> <CAE4VaGBGbTT8dqNyLWAwuiqL8E+3p1_SqP6XTTV71wNZMjc9Zg@mail.gmail.com>
- <20200320163843.GD3818@techsingularity.net> <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
- <20200507155422.GD3758@techsingularity.net> <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
- <20200508092212.GE3758@techsingularity.net> <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
- <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com> <20200513153023.GF3758@techsingularity.net>
-In-Reply-To: <20200513153023.GF3758@techsingularity.net>
-From:   Jirka Hladky <jhladky@redhat.com>
-Date:   Fri, 15 May 2020 16:43:04 +0200
-Message-ID: <CAE4VaGB=AqOmaHBv4cr85pWVrXyTqFEKvMvnJ3RTkhjxKx+G1g@mail.gmail.com>
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Douglas Shakshober <dshaks@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Complete shot in the dark but restore adjust_numa_imbalance() and try
-> this
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 1a9983da4408..0b31f4468d5b 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -2393,7 +2393,7 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
->         struct rq_flags rf;
->  #if defined(CONFIG_SMP)
-> -       if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
-> +       if (sched_feat(TTWU_QUEUE)) {
->                 sched_clock_cpu(cpu); /* Sync clocks across CPUs */
->                 ttwu_queue_remote(p, cpu, wake_flags);
->                 return;
+* Kees Cook:
 
-Hi Mel,
-
-we have performance results for the proposed patch above ^^^.
-Unfortunately, it hasn't helped the performance.
-
-Jirka
-
-
-On Wed, May 13, 2020 at 5:30 PM Mel Gorman <mgorman@techsingularity.net> wrote:
+> On Fri, May 15, 2020 at 10:43:34AM +0200, Florian Weimer wrote:
+>> * Kees Cook:
+>> 
+>> > Maybe I've missed some earlier discussion that ruled this out, but I
+>> > couldn't find it: let's just add O_EXEC and be done with it. It actually
+>> > makes the execve() path more like openat2() and is much cleaner after
+>> > a little refactoring. Here are the results, though I haven't emailed it
+>> > yet since I still want to do some more testing:
+>> > https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=kspp/o_exec/v1
+>> 
+>> I think POSIX specifies O_EXEC in such a way that it does not confer
+>> read permissions.  This seems incompatible with what we are trying to
+>> achieve here.
 >
-> On Wed, May 13, 2020 at 04:57:15PM +0200, Jirka Hladky wrote:
-> > Hi Mel,
-> >
-> > we have tried the kernel with adjust_numa_imbalance() crippled to just
-> > return the imbalance it's given.
-> >
-> > It has solved all the performance problems I have reported.
-> > Performance is the same as with 5.6 kernel (before the patch was
-> > applied).
-> >
-> > * solved the performance drop upto 20%  with single instance
-> > SPECjbb2005 benchmark on 8 NUMA node servers (particularly on AMD EPYC
-> > Rome systems) => this performance drop was INCREASING with higher
-> > threads counts (10% for 16 threads and 20 % for 32 threads)
-> > * solved the performance drop for low load scenarios (SPECjvm2008 and NAS)
-> >
-> > Any suggestions on how to proceed? One approach is to turn
-> > "imbalance_min" into the kernel tunable. Any other ideas?
-> >
-> > https://github.com/torvalds/linux/blob/4f8a3cc1183c442daee6cc65360e3385021131e4/kernel/sched/fair.c#L8914
-> >
+> I was trying to retain this behavior, since we already make this
+> distinction between execve() and uselib() with the MAY_* flags:
 >
-> Complete shot in the dark but restore adjust_numa_imbalance() and try
-> this
+> execve():
+>         struct open_flags open_exec_flags = {
+>                 .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
+>                 .acc_mode = MAY_EXEC,
 >
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 1a9983da4408..0b31f4468d5b 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -2393,7 +2393,7 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
->         struct rq_flags rf;
+> uselib():
+>         static const struct open_flags uselib_flags = {
+>                 .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
+>                 .acc_mode = MAY_READ | MAY_EXEC,
 >
->  #if defined(CONFIG_SMP)
-> -       if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
-> +       if (sched_feat(TTWU_QUEUE)) {
->                 sched_clock_cpu(cpu); /* Sync clocks across CPUs */
->                 ttwu_queue_remote(p, cpu, wake_flags);
->                 return;
->
-> --
-> Mel Gorman
-> SUSE Labs
->
+> I tried to retain this in my proposal, in the O_EXEC does not imply
+> MAY_READ:
 
+That doesn't quite parse for me, sorry.
 
--- 
--Jirka
+The point is that the script interpreter actually needs to *read* those
+files in order to execute them.
+
+Thanks,
+Florian
 
