@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB200C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B952820787
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE05B20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgEOMyl (ORCPT
+        id S1726283AbgEOMyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:54:41 -0400
-Received: from [66.170.99.2] ([66.170.99.2]:42628 "EHLO
+        Fri, 15 May 2020 08:54:43 -0400
+Received: from [66.170.99.2] ([66.170.99.2]:34154 "EHLO
         sid-build-box.eng.vmware.com" rhost-flags-FAIL-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726168AbgEOMyk (ORCPT
+        by vger.kernel.org with ESMTP id S1726245AbgEOMyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:54:40 -0400
+        Fri, 15 May 2020 08:54:41 -0400
 Received: by sid-build-box.eng.vmware.com (Postfix, from userid 1000)
-        id 46702BA20C7; Fri, 15 May 2020 18:24:39 +0530 (IST)
+        id 69622BA20C9; Fri, 15 May 2020 18:24:40 +0530 (IST)
 From:   Siddharth Chandrasekaran <csiddharth@vmware.com>
 To:     gregkh@linuxfoundation.org
 Cc:     srostedt@vmware.com, linux-kernel@vger.kernel.org,
         stable@kernel.org, srivatsab@vmware.com, csiddharth@vmware.com,
         siddharth@embedjournal.com, dchinner@redhat.com,
         darrick.wong@oracle.com, srivatsa@csail.mit.edu
-Subject: [PATCH 4.4 v2] xfs: validate cached inodes are free when allocated
-Date:   Fri, 15 May 2020 18:24:12 +0530
-Message-Id: <76dad64209a2a477a757d6b235b461d78dadea43.1589544531.git.csiddharth@vmware.com>
+Subject: [PATCH 4.9 v2] xfs: validate cached inodes are free when allocated
+Date:   Fri, 15 May 2020 18:24:13 +0530
+Message-Id: <3f8268eea9c4a430273b2202d711f2b1bf0c321b.1589544531.git.csiddharth@vmware.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1589544531.git.csiddharth@vmware.com>
 References: <cover.1589544531.git.csiddharth@vmware.com>
@@ -92,10 +92,10 @@ Signed-off-by: Siddharth Chandrasekaran <csiddharth@vmware.com>
  1 file changed, 50 insertions(+), 7 deletions(-)
 
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index adbc1f5..7efeefb 100644
+index 86a4911..d668d30 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -135,6 +135,46 @@ xfs_inode_free(
+@@ -308,6 +308,46 @@ xfs_reinit_inode(
  }
  
  /*
@@ -142,7 +142,7 @@ index adbc1f5..7efeefb 100644
   * Check the validity of the inode we just found it the cache
   */
  static int
-@@ -183,12 +223,12 @@ xfs_iget_cache_hit(
+@@ -356,12 +396,12 @@ xfs_iget_cache_hit(
  	}
  
  	/*
@@ -150,7 +150,7 @@ index adbc1f5..7efeefb 100644
 +	 * Check the inode free state is valid. This also detects lookup
 +	 * racing with unlinks.
  	 */
--	if (ip->i_d.di_mode == 0 && !(flags & XFS_IGET_CREATE)) {
+-	if (VFS_I(ip)->i_mode == 0 && !(flags & XFS_IGET_CREATE)) {
 -		error = -ENOENT;
 +	error = xfs_iget_check_free_state(ip, flags);
 +	if (error)
@@ -159,11 +159,11 @@ index adbc1f5..7efeefb 100644
  
  	/*
  	 * If IRECLAIMABLE is set, we've torn down the VFS inode already.
-@@ -298,10 +338,13 @@ xfs_iget_cache_miss(
+@@ -471,10 +511,13 @@ xfs_iget_cache_miss(
  
  	trace_xfs_iget_miss(ip);
  
--	if ((ip->i_d.di_mode == 0) && !(flags & XFS_IGET_CREATE)) {
+-	if ((VFS_I(ip)->i_mode == 0) && !(flags & XFS_IGET_CREATE)) {
 -		error = -ENOENT;
 +	/*
 +	 * Check the inode free state is valid. This also detects lookup
