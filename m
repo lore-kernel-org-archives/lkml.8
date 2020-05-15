@@ -2,95 +2,168 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8887CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8FC2076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E682B2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:29:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="KRvNnNJB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q03Rh3l3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgEOO1u (ORCPT
+        id S1726245AbgEOO3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:27:50 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:49885 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgEOO1u (ORCPT
+        Fri, 15 May 2020 10:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726140AbgEOO3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:27:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589552869; x=1621088869;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0AgeZMJbdU9KyuRMCIUBu9McO6vER1rNgjfIxpR274I=;
-  b=KRvNnNJB0HVfuseGhqUR63+tun9Xkdo6d/3QrajlL0Tfh9Jc17y170Yb
-   kD5c6nM5fsesBe8rS6H9hUsJnZ2/MllbY+3agriQnImwOTuvQU/IpWC78
-   q/BYCzaviqRISummCmCUx5TMKcILJX3IShHMHWWHo5Vll2S5TudZtTvhd
-   zqDBWWQKG1WeC7l4ud8e2Gej1WV55kea+4SUCAT94hTPuIUnN12Ktrh9P
-   sVTfoHV5xjJzWssdjN0rATcCGmTU23Jv+AJTxQR/i6/5OI7a+qsTwHc6Y
-   NiXmo2A6NGJ+4rn5Y2/6OoiGefoR3T9jUZ/A4o/yIA2XSbzp6CFtDyn7u
-   A==;
-IronPort-SDR: zUxu1mdSuJ3C0VOKq9t5RCnhqUBxbNxPvczwXo6LzTRvz2lQnXu5v7wXQKdVigzrMMpTz+EdSc
- /MirwJyXyPyEidppEp8ncornFCklQ36fIhbgdDnhbU8rN9l6orsNmkgOhAjAEXM8UuqQ/ySa5E
- +a7PjsZosn5Ix6XFhtnJfPzZ3yXxevmfP4rlZunzd5bqvt19NPOqhgDkrvvj98X+VjL5NxGyoj
- i1pXdHglL1KVHqkuXR/eAM1KydX0NQ9Ueihi0USx9WZ4syPGEFkz2ZHuDoruZcE7S6ETh73DxU
- aJg=
-X-IronPort-AV: E=Sophos;i="5.73,395,1583218800"; 
-   d="scan'208";a="73584368"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 May 2020 07:27:49 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 15 May 2020 07:27:50 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 15 May 2020 07:27:30 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <eugen.hristev@microchip.com>,
-        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
-Subject: [PATCH] clk: at91: Add peripheral clock for PTC
-Date:   Fri, 15 May 2020 17:27:20 +0300
-Message-ID: <20200515142720.290206-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 15 May 2020 10:29:23 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF36C061A0C;
+        Fri, 15 May 2020 07:29:22 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id s1so2671592qkf.9;
+        Fri, 15 May 2020 07:29:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dtNRvYDLFJiXxv3gO1edkx9pgOz+9ogJg6Qke0J72co=;
+        b=Q03Rh3l3PaEOnIUoHwy/z/RndYeBqFW8NxPJuf+VyQrlfQfjBkUpYtoLrIs/8JBfvd
+         ELK4ULr1mg5KpeWPQEGyHYGtzHA5Cb+dsIVBl+c36e90OG2IFF4rxoUynes0BiBzF0UM
+         7L9osjFDgE7JNwWhp23FWc8A30tNFqj8eHloehb24su3dkl6bf+YMTle3mPB8+wBNKic
+         uiG8gEcLI03SBnyc0Gjqg8AyEKWdxRkD5ZBh5HrVIbSh6P55Id/wNDTnirvmXz7RtuBC
+         YWVb+1BFPBoygLWpYZTt3LGJo+YpgR+lPNCQ5PnQZFyJKki2HaWQ51RN5/ZWPtXqCPvZ
+         m7qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dtNRvYDLFJiXxv3gO1edkx9pgOz+9ogJg6Qke0J72co=;
+        b=RSh+yDHzHIsKvk4H4bgrb+1q6PzjMGqRLKZKoHEbXxnk+yVqgRd3jY6J2I3aIJ83gB
+         oLN4Ga9+QQYTb4AdiwaGJF1yjdFKT43zRJW1AbBAKi4luaBsIiVh2PxyrUkcbz07rJao
+         e0QMMM1e0I4RSdWfcW4mh42+Kxm0D5Xbk+9tT+V7Wi94iwZ+0XOaMi0SFYFQ8bb+ppHp
+         lO8R0hcfd/tq0IwXfJrNuVIq3WoOjHTi6xJ1JA1T/WvEMD/IVpIHD+yQsNYQv7YSIdli
+         t2x4V3j4079QKPH6sJAgBZJvCnGS2kHdkUpvc2vWxHmeSaYW4VxibjZxOQAS5NyeHApr
+         eaqw==
+X-Gm-Message-State: AOAM5332TdqHWyps0byn0fX2geB5TrBhKwnDYk98DeC+UHRS10zQ5tiF
+        u2hGYH3C9J7MEuSXFxfffGY=
+X-Google-Smtp-Source: ABdhPJysGFcWv4VjZ7ky/8tpAB2PUgvUimjPJY5k3jHTJtiagHzdx0sPogoh5GKYhzi3gPxLznPFXw==
+X-Received: by 2002:a05:620a:1502:: with SMTP id i2mr3502223qkk.420.1589552961490;
+        Fri, 15 May 2020 07:29:21 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id t12sm1662483qkt.77.2020.05.15.07.29.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 07:29:20 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0AC0740AFD; Fri, 15 May 2020 11:29:18 -0300 (-03)
+Date:   Fri, 15 May 2020 11:29:17 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 4/8] libbpf hashmap: Localize static hashmap__* symbols
+Message-ID: <20200515142917.GT5583@kernel.org>
+References: <20200515065624.21658-1-irogers@google.com>
+ <20200515065624.21658-5-irogers@google.com>
+ <20200515091707.GC3511648@krava>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515091707.GC3511648@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PMC generates the peripheral clock for the PTC.
+Em Fri, May 15, 2020 at 11:17:07AM +0200, Jiri Olsa escreveu:
+> On Thu, May 14, 2020 at 11:56:20PM -0700, Ian Rogers wrote:
+> > Localize the hashmap__* symbols in libbpf.a. To allow for a version in
+> > libapi.
+> > 
+> > Before:
+> > $ nm libbpf.a
+> > ...
+> > 000000000002088a t hashmap_add_entry
+> > 000000000001712a t hashmap__append
+> > 0000000000020aa3 T hashmap__capacity
+> > 000000000002099c T hashmap__clear
+> > 00000000000208b3 t hashmap_del_entry
+> > 0000000000020fc1 T hashmap__delete
+> > 0000000000020f29 T hashmap__find
+> > 0000000000020c6c t hashmap_find_entry
+> > 0000000000020a61 T hashmap__free
+> > 0000000000020b08 t hashmap_grow
+> > 00000000000208dd T hashmap__init
+> > 0000000000020d35 T hashmap__insert
+> > 0000000000020ab5 t hashmap_needs_to_grow
+> > 0000000000020947 T hashmap__new
+> > 0000000000000775 t hashmap__set
+> > 00000000000212f8 t hashmap__set
+> > 0000000000020a91 T hashmap__size
+> > ...
+> > 
+> > After:
+> > $ nm libbpf.a
+> > ...
+> > 000000000002088a t hashmap_add_entry
+> > 000000000001712a t hashmap__append
+> > 0000000000020aa3 t hashmap__capacity
+> > 000000000002099c t hashmap__clear
+> > 00000000000208b3 t hashmap_del_entry
+> > 0000000000020fc1 t hashmap__delete
+> > 0000000000020f29 t hashmap__find
+> > 0000000000020c6c t hashmap_find_entry
+> > 0000000000020a61 t hashmap__free
+> > 0000000000020b08 t hashmap_grow
+> > 00000000000208dd t hashmap__init
+> > 0000000000020d35 t hashmap__insert
+> > 0000000000020ab5 t hashmap_needs_to_grow
+> > 0000000000020947 t hashmap__new
+> > 0000000000000775 t hashmap__set
+> > 00000000000212f8 t hashmap__set
+> > 0000000000020a91 t hashmap__size
+> > ...
+> 
+> I think this will break bpf selftests which use hashmap,
+> we need to find some other way to include this
+> 
+> either to use it from libbpf directly, or use the api version
+> only if the libbpf is not compiled in perf, we could use
+> following to detect that:
+> 
+>       CFLAGS += -DHAVE_LIBBPF_SUPPORT
+>       $(call detected,CONFIG_LIBBPF)
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- drivers/clk/at91/sama5d2.c | 1 +
- 1 file changed, 1 insertion(+)
+And have it in tools/perf/util/ instead?
 
-diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-index ff7e3f727082..73b287fbecb8 100644
---- a/drivers/clk/at91/sama5d2.c
-+++ b/drivers/clk/at91/sama5d2.c
-@@ -89,6 +89,7 @@ static const struct {
- 	{ .n = "i2s1_clk",    .id = 55, .r = { .min = 0, .max = 83000000 }, },
- 	{ .n = "can0_clk",    .id = 56, .r = { .min = 0, .max = 83000000 }, },
- 	{ .n = "can1_clk",    .id = 57, .r = { .min = 0, .max = 83000000 }, },
-+	{ .n = "ptc_clk",     .id = 58, .r = { .min = 0, .max = 83000000 }, },
- 	{ .n = "classd_clk",  .id = 59, .r = { .min = 0, .max = 83000000 }, },
- };
- 
--- 
-2.25.1
 
+- Arnaldo
