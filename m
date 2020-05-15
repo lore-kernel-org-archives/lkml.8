@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01047C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D052220671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB60720671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:10:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xIGvyUUH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V1iYdjiO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgEOHKJ (ORCPT
+        id S1727063AbgEOHKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 03:10:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50530 "EHLO
+        Fri, 15 May 2020 03:10:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726863AbgEOHKG (ORCPT
+        by vger.kernel.org with ESMTP id S1726953AbgEOHKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 03:10:06 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B1EC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:10:05 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id p7so328600vkf.5
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:10:05 -0700 (PDT)
+        Fri, 15 May 2020 03:10:10 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772A6C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:10:09 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id u12so652094vsq.0
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:10:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Mjd+prrjNqDXqBM9/JBw7x6PcberMvd4v5JGZhudn1M=;
-        b=xIGvyUUHtSqMRzFRXRnD4nfC2if8wa39ovV9GvseHD7I+pK+Gw9uLPMl82g51Trnpr
-         s4GcWcpuS6KMNpb+Dn0pHR4t/X562i0PfW1GttkjayRQUz1ZMPrun3msXt5FLjOEqTc1
-         bJyPfm/TErT0RZpuMAfhfxmSiVVnMhaWLgLVaVwMH3yAb/zDtGjLyrGPAc0DuZgiHZH3
-         ZqyAtZuxpydnmVosRFn5gNQcyF1j2ezdm/wiDPpQ28z52Qu284jLsUpZU2RcwLCZsi5X
-         fDAx2E0RqlZbQMjD5XPdklOD17tGn9YBeQWIn9+ukQ1eDivxTrTabIiV4Ja6AAKK/Qvx
-         22NQ==
+        bh=myGyyZuzORGXEjWjyinqgW2ioJBRbKGcje8Lfk9tAJ4=;
+        b=V1iYdjiOBUzaZsw9VykUGi6O3id6OkuKqKwhHbS7Ia6GpcTJZHMx8pkdASMjcCODmr
+         x9qzM6Z+XeTcaiCtNUzNOE69Z3Ai4uwnSXHD6paK4pJBja1MfDlyIuoLErPxTJ2dQNzZ
+         BEIwKsUoRXtLfiEgDgOGgUY/C27XjDKycTr+wTsOJqgq8l/RLGEdHcnuJUHZ8Kwl2mK6
+         N/7PBniq8Gi/d7/Q1bL6mTsSZXL8S7npqAYqFix4H11vG0hS192A4jQdzPHL0GKVhlph
+         XOipgyMJVJ6zfeC4hIG578pr6Po4V9J8UNz3CJxyc+LHJANsVlqF3hJ4UkygWYmIN5yp
+         0+Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Mjd+prrjNqDXqBM9/JBw7x6PcberMvd4v5JGZhudn1M=;
-        b=GxF8vcRFXxpH50rytf0aySagnChesSj1fi8Tp+9n+RXcs07NU4vuM7DRoo1BRAFDay
-         WxvgzQmIeYS3gtWHltZ9YcCyemx+SLBa0H33rlquWO7HLSACD3qO5OI+k62hHGyMjSCG
-         c7zUXCTA9vaCLtlpiTEoGFDfD7SKh1yW1WhrzK02MMpx9DJoa5FyntHzYYgI0BRcLDHj
-         YrP4oOZgIiKdAI2ULCq6How0c7KF6t346YooXJMp/+C/0gRwcFLFD3BwZmCiK0GoQxnX
-         zEA9w+rtm600agf1PQFuQNasXFvxyO9L3GSoXo85fzo/EtPM8K0PpWeawQcCug2SbHm+
-         Qk5w==
-X-Gm-Message-State: AOAM532FZ2rKQ7pwpyXHsD8OX4JHBpzroG1rzIR6Diud5zPOlXYYl2zW
-        pBsyX3AcCyTy06t64cFeUFB0L9KstWhf+fgxPQgCDA==
-X-Google-Smtp-Source: ABdhPJwxZbZR68HiY+mo1Hhtcs9d5uEygTDNwRq8jwAS5SfojmWEhuvdsHyCL/tLbuQOhpQ1qL4iS9ld5jUBImTv2d8=
-X-Received: by 2002:ac5:cded:: with SMTP id v13mr1701498vkn.59.1589526604780;
- Fri, 15 May 2020 00:10:04 -0700 (PDT)
+        bh=myGyyZuzORGXEjWjyinqgW2ioJBRbKGcje8Lfk9tAJ4=;
+        b=LS4wX0+/nKG2HkZOt3PRQyLx2Kqe1kigXYVa8Pl1giBcenhAYNsZ4r9uHjI4SnL1GJ
+         r2omrN9bwib6VdCdz9L7ukGhKmABYoCWg4RmOWPdwhdvTHfWkSY1u/PIbyf1VK4PWWEa
+         TmNBRB0ZKgDmhH4tp4Yg4EHN++gf3h5bJcr7npBDoHjQa5T8bWLD1Fu3Wtg5gtq2AvGg
+         QEOTh/QzTL99pRelf+lM34QqUhvvjpO0+OaygXIilaJ+9d48lIB+I7jCDxFLXCo3HC2Y
+         iS3cy1PmsQ+h5KcLMMHGuZfmuB4wqX2J/W5YmUudvir5yFxEvQQpBjNDZjGpQ1eOcoOa
+         +/hg==
+X-Gm-Message-State: AOAM531VHhduy0VpW446cqrdXqLB5CxEHOvARJ406Ss7oDWyRfF1p+/R
+        oTn02U8QtxGYjeCjrvKxa3zEIiJ0C0X5DCHzjJtMJQ==
+X-Google-Smtp-Source: ABdhPJwWT9hZyFsNUs1oXPi53/yyClKjwQlDhz3XUttz3eZZvyWLoaaa83hLU9+m5NTVHoY6N8fZU3lwC03rOLFfkFQ=
+X-Received: by 2002:a05:6102:5d6:: with SMTP id v22mr99713vsf.191.1589526608698;
+ Fri, 15 May 2020 00:10:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200515141926.52e088fe@xhacker.debian>
-In-Reply-To: <20200515141926.52e088fe@xhacker.debian>
+References: <20200513182602.3636a551@xhacker.debian>
+In-Reply-To: <20200513182602.3636a551@xhacker.debian>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 15 May 2020 09:09:28 +0200
-Message-ID: <CAPDyKFqD2YKbQYAFSZT=v2kwT4ssW79Zxda0NAUtbUaq4CEQwA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-of-dwcmshc: add suspend/resume support
+Date:   Fri, 15 May 2020 09:09:31 +0200
+Message-ID: <CAPDyKFr90VZof91VBzLU6JWsna43c++QxL9Z3WREVC7NZTQ=QQ@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-of-dwcmshc: implement specific set_uhs_signaling
 To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
@@ -72,9 +72,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 May 2020 at 08:19, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
+On Wed, 13 May 2020 at 12:26, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
 >
-> Add dwcmshc specific system-level suspend and resume support.
+> We need a different set_uhs_signaling implementation for
+> MMC_TIMING_MMC_HS and MMC_TIMING_MMC_HS400.
 >
 > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
@@ -85,70 +86,61 @@ Uffe
 
 
 > ---
->  drivers/mmc/host/sdhci-of-dwcmshc.c | 43 +++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
+>  drivers/mmc/host/sdhci-of-dwcmshc.c | 31 ++++++++++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
 >
 > diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> index a9ed0e006e06..64ac0dbee95c 100644
+> index a5137845a1c7..a9ed0e006e06 100644
 > --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
 > +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> @@ -163,6 +163,48 @@ static int dwcmshc_remove(struct platform_device *pdev)
->         return 0;
+> @@ -16,6 +16,9 @@
+>
+>  #include "sdhci-pltfm.h"
+>
+> +/* DWCMSHC specific Mode Select value */
+> +#define DWCMSHC_CTRL_HS400             0x7
+> +
+>  #define BOUNDARY_OK(addr, len) \
+>         ((addr | (SZ_128M - 1)) == ((addr + len - 1) | (SZ_128M - 1)))
+>
+> @@ -46,10 +49,36 @@ static void dwcmshc_adma_write_desc(struct sdhci_host *host, void **desc,
+>         sdhci_adma_write_desc(host, desc, addr, len, cmd);
 >  }
 >
-> +#ifdef CONFIG_PM_SLEEP
-> +static int dwcmshc_suspend(struct device *dev)
+> +static void dwcmshc_set_uhs_signaling(struct sdhci_host *host,
+> +                                     unsigned int timing)
 > +{
-> +       struct sdhci_host *host = dev_get_drvdata(dev);
-> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +       struct dwcmshc_priv *priv = sdhci_pltfm_priv(pltfm_host);
-> +       int ret;
+> +       u16 ctrl_2;
 > +
-> +       ret = sdhci_suspend_host(host);
-> +       if (ret)
-> +               return ret;
-> +
-> +       clk_disable_unprepare(pltfm_host->clk);
-> +       if (!IS_ERR(priv->bus_clk))
-> +               clk_disable_unprepare(priv->bus_clk);
-> +
-> +       return ret;
+> +       ctrl_2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+> +       /* Select Bus Speed Mode for host */
+> +       ctrl_2 &= ~SDHCI_CTRL_UHS_MASK;
+> +       if ((timing == MMC_TIMING_MMC_HS200) ||
+> +           (timing == MMC_TIMING_UHS_SDR104))
+> +               ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
+> +       else if (timing == MMC_TIMING_UHS_SDR12)
+> +               ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
+> +       else if ((timing == MMC_TIMING_UHS_SDR25) ||
+> +                (timing == MMC_TIMING_MMC_HS))
+> +               ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
+> +       else if (timing == MMC_TIMING_UHS_SDR50)
+> +               ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
+> +       else if ((timing == MMC_TIMING_UHS_DDR50) ||
+> +                (timing == MMC_TIMING_MMC_DDR52))
+> +               ctrl_2 |= SDHCI_CTRL_UHS_DDR50;
+> +       else if (timing == MMC_TIMING_MMC_HS400)
+> +               ctrl_2 |= DWCMSHC_CTRL_HS400;
+> +       sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
 > +}
 > +
-> +static int dwcmshc_resume(struct device *dev)
-> +{
-> +       struct sdhci_host *host = dev_get_drvdata(dev);
-> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +       struct dwcmshc_priv *priv = sdhci_pltfm_priv(pltfm_host);
-> +       int ret;
-> +
-> +       ret = clk_prepare_enable(pltfm_host->clk);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (!IS_ERR(priv->bus_clk)) {
-> +               ret = clk_prepare_enable(priv->bus_clk);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       return sdhci_resume_host(host);
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(dwcmshc_pmops, dwcmshc_suspend, dwcmshc_resume);
-> +
->  static const struct of_device_id sdhci_dwcmshc_dt_ids[] = {
->         { .compatible = "snps,dwcmshc-sdhci" },
->         {}
-> @@ -173,6 +215,7 @@ static struct platform_driver sdhci_dwcmshc_driver = {
->         .driver = {
->                 .name   = "sdhci-dwcmshc",
->                 .of_match_table = sdhci_dwcmshc_dt_ids,
-> +               .pm = &dwcmshc_pmops,
->         },
->         .probe  = dwcmshc_probe,
->         .remove = dwcmshc_remove,
+>  static const struct sdhci_ops sdhci_dwcmshc_ops = {
+>         .set_clock              = sdhci_set_clock,
+>         .set_bus_width          = sdhci_set_bus_width,
+> -       .set_uhs_signaling      = sdhci_set_uhs_signaling,
+> +       .set_uhs_signaling      = dwcmshc_set_uhs_signaling,
+>         .get_max_clock          = sdhci_pltfm_clk_get_max_clock,
+>         .reset                  = sdhci_reset,
+>         .adma_write_desc        = dwcmshc_adma_write_desc,
 > --
 > 2.26.2
 >
