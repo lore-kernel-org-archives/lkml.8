@@ -2,253 +2,174 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8772C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85CEE20657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C610206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:31:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pRLpDEx1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AwQU4FZ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgEOIam (ORCPT
+        id S1727836AbgEOIbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:30:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34850 "EHLO
+        Fri, 15 May 2020 04:31:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726694AbgEOIam (ORCPT
+        by vger.kernel.org with ESMTP id S1727113AbgEOIbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:30:42 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3E18C061A0C;
-        Fri, 15 May 2020 01:30:41 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id b8so739268ybn.0;
-        Fri, 15 May 2020 01:30:41 -0700 (PDT)
+        Fri, 15 May 2020 04:31:48 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4EB1C05BD0A
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 01:31:48 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id v128so1519566oia.7
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 01:31:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EC0F16Lhf+mGr9sBBMIazR5Y1Rhhl5byvyHX6wEiBSA=;
-        b=pRLpDEx1Oe+fTmC/biGMXuMA0uac1MntTWM5YhXJxnljsaKtNfN84KMoe8IIqanVX/
-         4HqhjGaAOv9dC3mxRrFUMbpUeykI2wHus829SN2eCeETavkB1LSLPCTcahUsBnBl+Uus
-         TXpomhTDN2Z/KdHpJACLdG9wtOR8VewLby8rAVNHL3FDjwFBVcw6FKWbXjhs/QQ0YbYP
-         Kz8rm3HoAc3HygRinCrZblgESJxgQq0oIopLw3JTvcwBRK3B52n6UC2W40Sq89CDNx4b
-         YuT/tHGESqEndPyxSgrumAded88CTc27uf1cuwaILhBiXokUPDnAkLjEal0hwLJX3DFM
-         YKmg==
+        bh=qH+EwBLeoTrVnjbfZOg/tXxPcMHnGZvYgXulHKPhGds=;
+        b=AwQU4FZ+/b1Gt5/SnZhbk1z+4qLxmM69app8fOWHEdscysuzaIgES+BUe0BsQxVfTt
+         tHfXEGUATu9ZndTbYaNDMn+I0SC9ybzqrf4EXrWxgn+jKMmqpRbTx5LV5CUNhmq64VZJ
+         rKItQltA814EtSEBq58E/Ug7Snd87vXNSNKK4VvjplKeI2mkmRn3N5Oklx1NNee1m7Hf
+         qGkxPJPoCkbeg0HVbUdLbL3M35ds5gUUyAb6iXfBA5wuZj9epKU1K7ZambfaofWhgHa3
+         8B2WtoO4BuLK6teLmgTmF3G7XYF5aXjcyZTFEyCjlMV71uMKIYUzAm4GBJis72cdGeqZ
+         4a3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EC0F16Lhf+mGr9sBBMIazR5Y1Rhhl5byvyHX6wEiBSA=;
-        b=ld3y4eoOyU/t6cEswhcSedQg8Bmy2IYtN4BYYGu4LlInPnnnVfZouaUXR9jERJnWaC
-         cTrsdjaCK0ZvDmKDVg/xXGoXVZdCkRvvrkBllvuKEpgds219eGf01fiR+zwCFgwL/Vqw
-         9gvvqhqECVtqU/VbV7w2GblQD8nSH6n30u4XAxFRYbIiZHc+yO1K2HODmlBQwDBwXAhl
-         xXDpqUzeYJrfw7y9RHH3h2NKYyIxlWbrzW12hx4MsAzvAHpNFjf9l3jFRsiKvEIa34Hx
-         OnoqU4nSyiDNjlU813Ks1qH7SxM9HiK9C7iNQ79Qs36ndjaNoQlSpW0d4ympQ2D/RqvW
-         6Dag==
-X-Gm-Message-State: AOAM532SeRmPrD4sT6l27GTAahIJXvpVirW0I5al0PQV8/NrsRSuxRau
-        bBOdozg5FK5ENG+j2e6Zsp8ZULN1mwKi4lSlrHDWkroM
-X-Google-Smtp-Source: ABdhPJyorroK1wIpDSj3snZLmNxYQFwFupZ+Hyj/bGWY4gBbB5HKXHs+1Ft6QvjZfk6wdA87myP6piV07MBWNHH6cSo=
-X-Received: by 2002:a25:bb03:: with SMTP id z3mr3630143ybg.6.1589531440987;
- Fri, 15 May 2020 01:30:40 -0700 (PDT)
+        bh=qH+EwBLeoTrVnjbfZOg/tXxPcMHnGZvYgXulHKPhGds=;
+        b=ApAIuQ+dbAX8uMjxcGzTXJ22iwbhsHkLmytif7r9i6/3pE/fTfgPQIBOLhEcvbWRYn
+         /VUaEG4R673GL8YoYXZNwGCIbMc+t+kAsytuRtybP50fLzFW76KoqgP79q9vAV3XLDvt
+         54l0ZveCMAGnn/Pga0QlpcL7Jt3cKtnmAlbUoo8cMbNXGCgO8AvXD/p3Ofs9364f7Mjx
+         1bz1Qm8tTLbQIDTO4e8hA72nQg0gsovph0gaG3J2Zg7EeZpG7M121gd1Hb6cS+wzBmn2
+         RraAi8IYlC3kTxA4CIlZC9ARIKPf2jXgYYtG+eWCAXChXk5uj/LV2XBbFEwZbQNJbHKO
+         flSA==
+X-Gm-Message-State: AOAM531yRiFxnIgqNJR4P3a/YDFEzGPrSbQScLH5O37maB9jCtLB2i1G
+        ZJ+1PrKQyCBJeSB93RqHHNKnJcdboWPlsTCTlQ/4Hg==
+X-Google-Smtp-Source: ABdhPJy28bLOOaddFHAGxZVzh5D5A7M9Z00/42Bv2Msat2DEz6gGAy0wE+LNMGBCnOUDZRJIQNie/7RhEfsNWbjYGeA=
+X-Received: by 2002:aca:f146:: with SMTP id p67mr1387057oih.56.1589531507959;
+ Fri, 15 May 2020 01:31:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <CABUN9aCXZBTdYHSK5oSVX-HAA1wTWmyBW_ked_ydsCjsV-Ckaw@mail.gmail.com>
- <20200513160116.GA2491@localhost.localdomain> <CABUN9aCuoA+CXLujUxXyiKWQPkwq9_eOXNqOR=MK7dPY++Fxng@mail.gmail.com>
- <20200513213230.GE2491@localhost.localdomain>
-In-Reply-To: <20200513213230.GE2491@localhost.localdomain>
-From:   Jonas Falkevik <jonas.falkevik@gmail.com>
-Date:   Fri, 15 May 2020 10:30:29 +0200
-Message-ID: <CABUN9aBoxXjdPk9piKAZV-2dYOCEnuXr-4H5ZVVvqeMMFRsf7A@mail.gmail.com>
-Subject: Re: [PATCH] sctp: check assoc before SCTP_ADDR_{MADE_PRIM,ADDED} event
-To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc:     Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xin Long <lucien.xin@gmail.com>
+References: <20200422111014.616233-1-robert.foss@linaro.org> <20200514172223.GF14092@vkoul-mobl>
+In-Reply-To: <20200514172223.GF14092@vkoul-mobl>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Fri, 15 May 2020 10:31:36 +0200
+Message-ID: <CAG3jFyuaU-HNq4nnRQfz04a+t=pLvKz82vRpJi7r_KGxuSYC-A@mail.gmail.com>
+Subject: Re: [PATCH v1] arm64: dts: qcom: apq8016-sbc-d3: Add Qualcomm APQ8016
+ SBC + D3 mezzanine
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:32 PM Marcelo Ricardo Leitner
-<marcelo.leitner@gmail.com> wrote:
+On Thu, 14 May 2020 at 19:22, Vinod Koul <vkoul@kernel.org> wrote:
 >
-> On Wed, May 13, 2020 at 10:11:05PM +0200, Jonas Falkevik wrote:
-> > On Wed, May 13, 2020 at 6:01 PM Marcelo Ricardo Leitner
-> > <marcelo.leitner@gmail.com> wrote:
-> > >
-> > > On Wed, May 13, 2020 at 04:52:16PM +0200, Jonas Falkevik wrote:
-> > > > Do not generate SCTP_ADDR_{MADE_PRIM,ADDED} events for SCTP_FUTURE_ASSOC assocs.
-> > >
-> > > How did you get them?
-> > >
+> On 22-04-20, 13:10, Robert Foss wrote:
+> > Add device treee support for the Qualcomm APQ8016 SBC, otherwise known as
+> > the Dragonboard 410c with the D3 mezzanine expansion board.
 > >
-> > I think one case is when receiving INIT chunk in sctp_sf_do_5_1B_init().
-> > Here a closed association is created, sctp_make_temp_assoc().
-> > Which is later used when calling sctp_process_init().
-> > In sctp_process_init() one of the first things are to call
-> > sctp_assoc_add_peer()
-> > on the closed / temp assoc.
+> > The D3 mezzanine ships in a kit with a OmniVision 5640 sensor module,
+> > which is what this DT targets.
 > >
-> > sctp_assoc_add_peer() are generating the SCTP_ADDR_ADDED event on the socket
-> > for the potentially new association.
+> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/Makefile           |  1 +
+> >  arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts | 45 +++++++++++++++++++++
+> >  2 files changed, 46 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> > index cc103f7020fd..025362471929 100644
+> > --- a/arch/arm64/boot/dts/qcom/Makefile
+> > +++ b/arch/arm64/boot/dts/qcom/Makefile
+> > @@ -1,5 +1,6 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  dtb-$(CONFIG_ARCH_QCOM)      += apq8016-sbc.dtb
+> > +dtb-$(CONFIG_ARCH_QCOM)      += apq8016-sbc-d3.dtb
+> >  dtb-$(CONFIG_ARCH_QCOM)      += apq8096-db820c.dtb
+> >  dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
+> >  dtb-$(CONFIG_ARCH_QCOM)      += ipq6018-cp01-c1.dtb
+> > diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
+> > new file mode 100644
+> > index 000000000000..1b85adeeada1
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
+> > @@ -0,0 +1,45 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
 >
-> I see, thanks. The SCTP_FUTURE_ASSOC means something different. It is
-> for setting/getting socket options that will be used for new asocs. In
-> this case, it is just a coincidence that asoc_id is not set (but
-> initialized to 0) and SCTP_FUTURE_ASSOC is also 0.
+> Dual BSD + GPL please
 
-yes, you are right, I overlooked that.
-
-> Moreso, if I didn't
-> miss anything, it would block valid events, such as those from
->  sctp_sf_do_5_1D_ce
->    sctp_process_init
-> because sctp_process_init will only call sctp_assoc_set_id() by its
-> end.
-
-Do we want these events at this stage?
-Since the association is a newly established one, have the peer address changed?
-Should we enqueue these messages with sm commands instead?
-And drop them if we don't have state SCTP_STATE_ESTABLISHED?
+Thanks.
 
 >
-> I can't see a good reason for generating any event on temp assocs. So
-> I'm thinking the checks on this patch should be on whether the asoc is
-> a temporary one instead. WDYT?
+> > +/*
+> > + * Copyright (c) 2015, The Linux Foundation. All rights reserved.
 >
+> we are in 2020 now :)
 
-Agree, we shouldn't rely on coincidence.
-Either check temp instead or the above mentioned state?
-
-> Then, considering the socket is locked, both code points should be
-> allocating the IDR earlier. It's expensive, yes (point being, it could
-> be avoided in case of other failures), but it should be generating
-> events with the right assoc id. Are you interested in pursuing this
-> fix as well?
-
-Sure.
-
-If we check temp status instead, we would need to allocate IDR earlier,
-as you mention. So that we send the notification with correct assoc id.
-
-But shouldn't the SCTP_COMM_UP, for a newly established association, be the
-first notification event sent?
-The SCTP_COMM_UP notification is enqueued later in sctp_sf_do_5_1D_ce().
-
+Maybe I should fix that.
+I'll change the name of the d3 mezzanine to d3camera as well.
 
 >
-> >
-> > $ cat sctp.bpftrace
-> > #!/usr/local/bin/bpftrace
-> >
-> > BEGIN
-> > {
-> >    printf("Tracing sctp_assoc_add_peer\n");
-> >    printf("Hit Ctrl-C to end.\n");
-> > }
-> >
-> > kprobe:sctp_assoc_add_peer
-> > {
-> >    @[kstack]=count();
-> > }
-> >
-> > $ sudo bpftrace sctp.bpftrace
-> > Attaching 2 probes...
-> > Tracing sctp_assoc_add_peer
-> > Hit Ctrl-C to end.
-> > ^C
-> >
-> > @[
-> >    sctp_assoc_add_peer+1
-> >    sctp_process_init+77
-> >    sctp_sf_do_5_1B_init+615
-> >    sctp_do_sm+132
-> >    sctp_endpoint_bh_rcv+256
-> >    sctp_rcv+2379
-> >    ip_protocol_deliver_rcu+393
-> >    ip_local_deliver_finish+68
-> >    ip_local_deliver+203
-> >    ip_rcv+156
-> >    __netif_receive_skb_one_core+96
-> >    process_backlog+164
-> >    net_rx_action+312
-> >    __softirqentry_text_start+238
-> >    do_softirq_own_stack+42
-> >    do_softirq.part.0+65
-> >    __local_bh_enable_ip+75
-> >    ip_finish_output2+415
-> >    ip_output+102
-> >    __ip_queue_xmit+364
-> >    sctp_packet_transmit+1814
-> >    sctp_outq_flush_ctrl.constprop.0+394
-> >    sctp_outq_flush+86
-> >    sctp_do_sm+3914
-> >    sctp_primitive_ASSOCIATE+44
-> >    __sctp_connect+707
-> >    sctp_inet_connect+98
-> >    __sys_connect+156
-> >    __x64_sys_connect+22
-> >    do_syscall_64+91
-> >    entry_SYSCALL_64_after_hwframe+68
-> > ]: 1
-> > ...
-> >
-> > > I'm thinking you're fixing a side-effect of another issue here. For
-> > > example, in sctp_assoc_update(), it first calls sctp_assoc_add_peer()
-> > > to only then call sctp_assoc_set_id(), which would generate the event
-> > > you might have seen. In this case, it should be allocating IDR before,
-> > > so that the event can be sent with the right assoc_id already.
-> > >
-> > > >
-> > > > These events are described in rfc6458#section-6.1
-> > > > SCTP_PEER_ADDR_CHANGE:
-> > > > This tag indicates that an address that is
-> > > > part of an existing association has experienced a change of
-> > > > state (e.g., a failure or return to service of the reachability
-> > > > of an endpoint via a specific transport address).
-> > > >
-> > > > Signed-off-by: Jonas Falkevik <jonas.falkevik@gmail.com>
-> > > > ---
-> > > >  net/sctp/associola.c | 11 ++++++++---
-> > > >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/net/sctp/associola.c b/net/sctp/associola.c
-> > > > index 437079a4883d..0c5dd295f9b8 100644
-> > > > --- a/net/sctp/associola.c
-> > > > +++ b/net/sctp/associola.c
-> > > > @@ -432,8 +432,10 @@ void sctp_assoc_set_primary(struct sctp_association *asoc,
-> > > >          changeover = 1 ;
-> > > >
-> > > >      asoc->peer.primary_path = transport;
-> > > > -    sctp_ulpevent_nofity_peer_addr_change(transport,
-> > > > -                          SCTP_ADDR_MADE_PRIM, 0);
-> > > > +    if (sctp_assoc2id(asoc) != SCTP_FUTURE_ASSOC)
-> > > > +        sctp_ulpevent_nofity_peer_addr_change(transport,
-> > > > +                              SCTP_ADDR_MADE_PRIM,
-> > > > +                              0);
-> > > >
-> > > >      /* Set a default msg_name for events. */
-> > > >      memcpy(&asoc->peer.primary_addr, &transport->ipaddr,
-> > > > @@ -714,7 +716,10 @@ struct sctp_transport *sctp_assoc_add_peer(struct
-> > > > sctp_association *asoc,
-> > > >      list_add_tail_rcu(&peer->transports, &asoc->peer.transport_addr_list);
-> > > >      asoc->peer.transport_count++;
-> > > >
-> > > > -    sctp_ulpevent_nofity_peer_addr_change(peer, SCTP_ADDR_ADDED, 0);
-> > > > +    if (sctp_assoc2id(asoc) != SCTP_FUTURE_ASSOC)
-> > > > +        sctp_ulpevent_nofity_peer_addr_change(peer,
-> > > > +                              SCTP_ADDR_ADDED,
-> > > > +                              0);
-> > > >
-> > > >      /* If we do not yet have a primary path, set one.  */
-> > > >      if (!asoc->peer.primary_path) {
-> > > > --
-> > > > 2.25.3
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "apq8016-sbc.dtsi"
+> > +
+> > +/ {
+> > +     model = "Qualcomm Technologies, Inc. APQ 8016 SBC w/ D3 Mezzanine";
+> > +     compatible = "qcom,apq8016-sbc", "qcom,apq8016", "qcom,sbc";
+> > +};
+> > +
+> > +&cci_i2c0 {
+> > +     /delete-node/ camera_rear@3b;
+> > +
+> > +     camera_rear@76 {
+> > +             compatible = "ovti,ov5640";
+> > +             reg = <0x76>;
+> > +
+> > +             enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
+> > +             reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&camera_rear_default>;
+> > +
+> > +             clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
+> > +             clock-names = "xclk";
+> > +             clock-frequency = <23880000>;
+> > +
+> > +             vdddo-supply = <&camera_vdddo_1v8>;
+> > +             vdda-supply = <&camera_vdda_2v8>;
+> > +             vddd-supply = <&camera_vddd_1v5>;
+> > +
+> > +             status = "ok";
+> > +
+> > +             port {
+> > +                     ov5640_ep: endpoint {
+> > +                             clock-lanes = <1>;
+> > +                             data-lanes = <0 2>;
+> > +                             remote-endpoint = <&csiphy0_ep>;
+> > +                     };
+> > +             };
+> > +     };
+> > +};
+> > --
+> > 2.25.1
+>
+> --
+> ~Vinod
