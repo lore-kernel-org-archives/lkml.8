@@ -2,270 +2,71 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E272C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF46DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A80120643
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:43:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wn54dpHM"
+	by mail.kernel.org (Postfix) with ESMTP id AD80F2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgEOVnc (ORCPT
+        id S1727768AbgEOVpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:43:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726266AbgEOVnb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:43:31 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B287C061A0C;
-        Fri, 15 May 2020 14:43:31 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id s21so3461914ejd.2;
-        Fri, 15 May 2020 14:43:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I9ahSfeyShLOrWsmfKHouJCqywa7cbIcbln/4DdMMCU=;
-        b=Wn54dpHMi3XoICHM8rVqShWSCb2wOpkY5urudPAHJpFFfcELHrHdAttUP1YAR3w/6e
-         HdGtyDoz3jz+g6I32ZZIw9B5StLgFYW+e8Fz/iVCRTJyKb0SpQg/js7Iz4b6+LDTph6B
-         z+wmhFY/btS+s1BdhMd78yaCaN55Vw1Wg1fTn41/36BqOm1LWNg+a7lRU1nu/PHW+3xj
-         c6Z8R0aFKnr68+evwuUdKtZKx2IsrMSOSwsBM475ee5LPu/khr9lA6xA5oRJp9+o4plL
-         0HjaEjty8rY6DvlxlL0GeqdAfG9ySBYDrsE7lfGDsJPm3lrMPEXJoXZA9zmVCloHI/S/
-         o3Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I9ahSfeyShLOrWsmfKHouJCqywa7cbIcbln/4DdMMCU=;
-        b=OdGvtJ9hiW47BphfP6IUHDmMC+453bgFCDsjHtNTP4nVWLiJL503EIyWXICJl2q15V
-         dT5BC+JRbgZREdXscUIlYpGf2tQs4Ijf86RLF7WmudXlWarhNiRnICHcB7wYBi4/0Jrj
-         bHCnL3CTtMyZOpKkMxQWLHV8QXYr7LwPKzOHjvoVl6j0lDC/7OLct8MwNbDAR6VXDilV
-         1sbtil7JJdBRX9yRr/hifG7yqyz+Dfj6whpUGSpDSTBRPTEPlmmAGf/42HTo0Be7VFRx
-         G/3HqIABEtZakuqhBA8Th71IlIxi77Fc8C2nTBLdnz1lD8dFfEwSXylA+DscOSxnCs2H
-         zWOA==
-X-Gm-Message-State: AOAM532bLajpTTKqtlKqBQ95BORwt784C0A2KzbDZQt1Pcrvrq+0pOva
-        U7v9LmeZeY1PT11zN2bFXZpd+3sFn5TKul88q8A=
-X-Google-Smtp-Source: ABdhPJwnvn7N+iI77U+bO5uCLHA4ErVqBCG9iPTIw+yMIYf+68B5/Jxm7UW5cr1MDUQguyXPg0L56r3T7udQCzXaASU=
-X-Received: by 2002:a17:906:2503:: with SMTP id i3mr4539530ejb.293.1589579009383;
- Fri, 15 May 2020 14:43:29 -0700 (PDT)
+        Fri, 15 May 2020 17:45:31 -0400
+Received: from gentwo.org ([3.19.106.255]:33900 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726228AbgEOVpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 17:45:31 -0400
+Received: by gentwo.org (Postfix, from userid 1002)
+        id D25713EBE5; Fri, 15 May 2020 21:45:30 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id D01E83EA5E;
+        Fri, 15 May 2020 21:45:30 +0000 (UTC)
+Date:   Fri, 15 May 2020 21:45:30 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Roman Gushchin <guro@fb.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/19] mm: slub: implement SLUB version of
+ obj_to_index()
+In-Reply-To: <20200513005741.GA67541@carbon.dhcp.thefacebook.com>
+Message-ID: <alpine.DEB.2.22.394.2005152142570.119998@www.lameter.com>
+References: <20200423000530.GA63356@carbon.lan> <alpine.DEB.2.21.2004250208500.7624@www.lameter.com> <20200425024625.GA107755@carbon.lan> <alpine.DEB.2.21.2004271618340.27701@www.lameter.com> <20200427164638.GC114719@carbon.DHCP.thefacebook.com>
+ <alpine.DEB.2.21.2004301625490.1693@www.lameter.com> <20200430171558.GA339283@carbon.dhcp.thefacebook.com> <alpine.DEB.2.22.394.2005022353330.1987@www.lameter.com> <20200504182922.GA20009@carbon.dhcp.thefacebook.com> <alpine.DEB.2.22.394.2005082130570.65713@www.lameter.com>
+ <20200513005741.GA67541@carbon.dhcp.thefacebook.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-References: <20200506140208.v2.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
-In-Reply-To: <20200506140208.v2.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 15 May 2020 14:43:48 -0700
-Message-ID: <CAF6AEGvXkeOrHGMHo=C1zXhDc9rquQJc8oGDB4VDfhTfdtqyTg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] drm/bridge: ti-sn65dsi86: Implement lane
- reordering + polarity
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 2:03 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> The ti-sn65dsi86 MIPI DSI to eDP bridge chip supports arbitrary
-> remapping of eDP lanes and also polarity inversion.  Both of these
-> features have been described in the device tree bindings for the
-> device since the beginning but were never implemented in the driver.
-> Implement both of them.
->
-> Part of this change also allows you to (via the same device tree
-> bindings) specify to use fewer than the max number of DP lanes that
-> the panel reports.  This could be useful if your display supports more
-> lanes but only a few are hooked up on your board.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+On Tue, 12 May 2020, Roman Gushchin wrote:
 
-Reviewed-by: Rob Clark <robdclark@gmail.com>
+> > Add it to the metadata at the end of the object. Like the debugging
+> > information or the pointer for RCU freeing.
+>
+> Enabling debugging metadata currently disables the cache merging.
+> I doubt that it's acceptable to sacrifice the cache merging in order
+> to embed the memcg pointer?
 
-> ---
-> This patch is based upon my my outstanding series[1] not because there
-> is any real requirement but simply to avoid merge conflicts.  I
-> believe that my previous series is ready to land.  If, however, you'd
-> prefer that I rebase this patch somewhere atop something else then
-> please shout.
->
-> [1] https://lore.kernel.org/r/20200430194617.197510-1-dianders@chromium.org
->
-> Changes in v2:
-> - Use SN_MAX_DP_LANES instead of 4 in one place.
-> - Comment that we aren't doing full validation of dts params.
-> - Check dp_lanes <= SN_MAX_DP_LANES to avoid buffer overrun.
-> - Add missing of_node_put()
->
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 82 ++++++++++++++++++++++-----
->  1 file changed, 68 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> index 1a125423eb07..534b712dccf8 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -50,8 +50,12 @@
->  #define SN_CHA_VERTICAL_BACK_PORCH_REG         0x36
->  #define SN_CHA_HORIZONTAL_FRONT_PORCH_REG      0x38
->  #define SN_CHA_VERTICAL_FRONT_PORCH_REG                0x3A
-> +#define SN_LN_ASSIGN_REG                       0x59
-> +#define  LN_ASSIGN_WIDTH                       2
->  #define SN_ENH_FRAME_REG                       0x5A
->  #define  VSTREAM_ENABLE                                BIT(3)
-> +#define  LN_POLRS_OFFSET                       4
-> +#define  LN_POLRS_MASK                         0xf0
->  #define SN_DATA_FORMAT_REG                     0x5B
->  #define  BPP_18_RGB                            BIT(0)
->  #define SN_HPD_DISABLE_REG                     0x5C
-> @@ -98,6 +102,7 @@
->
->  #define SN_REGULATOR_SUPPLY_NUM                4
->
-> +#define SN_MAX_DP_LANES                        4
->  #define SN_NUM_GPIOS                   4
->
->  /**
-> @@ -115,6 +120,8 @@
->   * @enable_gpio:  The GPIO we toggle to enable the bridge.
->   * @supplies:     Data for bulk enabling/disabling our regulators.
->   * @dp_lanes:     Count of dp_lanes we're using.
-> + * @ln_assign:    Value to program to the LN_ASSIGN register.
-> + * @ln_polr:      Value for the 4-bit LN_POLRS field of SN_ENH_FRAME_REG.
->   *
->   * @gchip:        If we expose our GPIOs, this is used.
->   * @gchip_output: A cache of whether we've set GPIOs to output.  This
-> @@ -140,6 +147,8 @@ struct ti_sn_bridge {
->         struct gpio_desc                *enable_gpio;
->         struct regulator_bulk_data      supplies[SN_REGULATOR_SUPPLY_NUM];
->         int                             dp_lanes;
-> +       u8                              ln_assign;
-> +       u8                              ln_polrs;
->
->         struct gpio_chip                gchip;
->         DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
-> @@ -707,26 +716,20 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
->         int dp_rate_idx;
->         unsigned int val;
->         int ret = -EINVAL;
-> +       int max_dp_lanes;
->
-> -       /*
-> -        * Run with the maximum number of lanes that the DP sink supports.
-> -        *
-> -        * Depending use cases, we might want to revisit this later because:
-> -        * - It's plausible that someone may have run fewer lines to the
-> -        *   sink than the sink actually supports, assuming that the lines
-> -        *   will just be driven at a higher rate.
-> -        * - The DP spec seems to indicate that it's more important to minimize
-> -        *   the number of lanes than the link rate.
-> -        *
-> -        * If we do revisit, it would be important to measure the power impact.
-> -        */
-> -       pdata->dp_lanes = ti_sn_get_max_lanes(pdata);
-> +       max_dp_lanes = ti_sn_get_max_lanes(pdata);
-> +       pdata->dp_lanes = min(pdata->dp_lanes, max_dp_lanes);
->
->         /* DSI_A lane config */
-> -       val = CHA_DSI_LANES(4 - pdata->dsi->lanes);
-> +       val = CHA_DSI_LANES(SN_MAX_DP_LANES - pdata->dsi->lanes);
->         regmap_update_bits(pdata->regmap, SN_DSI_LANES_REG,
->                            CHA_DSI_LANES_MASK, val);
->
-> +       regmap_write(pdata->regmap, SN_LN_ASSIGN_REG, pdata->ln_assign);
-> +       regmap_update_bits(pdata->regmap, SN_ENH_FRAME_REG, LN_POLRS_MASK,
-> +                          pdata->ln_polrs << LN_POLRS_OFFSET);
-> +
->         /* set dsi clk frequency value */
->         ti_sn_bridge_set_dsi_rate(pdata);
->
-> @@ -1063,6 +1066,55 @@ static int ti_sn_setup_gpio_controller(struct ti_sn_bridge *pdata)
->         return ret;
->  }
->
-> +static void ti_sn_bridge_parse_lanes(struct ti_sn_bridge *pdata,
-> +                                    struct device_node *np)
-> +{
-> +       u32 lane_assignments[SN_MAX_DP_LANES] = { 0, 1, 2, 3 };
-> +       u32 lane_polarities[SN_MAX_DP_LANES] = { };
-> +       struct device_node *endpoint;
-> +       u8 ln_assign = 0;
-> +       u8 ln_polrs = 0;
-> +       int dp_lanes;
-> +       int i;
-> +
-> +       /*
-> +        * Read config from the device tree about lane remapping and lane
-> +        * polarities.  These are optional and we assume identity map and
-> +        * normal polarity if nothing is specified.  It's OK to specify just
-> +        * data-lanes but not lane-polarities but not vice versa.
-> +        *
-> +        * Error checking is light (we just make sure we don't crash or
-> +        * buffer overrun) and we assume dts is well formed and specifying
-> +        * mappings that the hardware supports.
-> +        */
-> +       endpoint = of_graph_get_endpoint_by_regs(np, 1, -1);
-> +       dp_lanes = of_property_count_u32_elems(endpoint, "data-lanes");
-> +       if (dp_lanes > 0 && dp_lanes <= SN_MAX_DP_LANES) {
-> +               of_property_read_u32_array(endpoint, "data-lanes",
-> +                                          lane_assignments, dp_lanes);
-> +               of_property_read_u32_array(endpoint, "lane-polarities",
-> +                                          lane_polarities, dp_lanes);
-> +       } else {
-> +               dp_lanes = SN_MAX_DP_LANES;
-> +       }
-> +       of_node_put(endpoint);
-> +
-> +       /*
-> +        * Convert into register format.  Loop over all lanes even if
-> +        * data-lanes had fewer elements so that we nicely initialize
-> +        * the LN_ASSIGN register.
-> +        */
-> +       for (i = SN_MAX_DP_LANES - 1; i >= 0; i--) {
-> +               ln_assign = ln_assign << LN_ASSIGN_WIDTH | lane_assignments[i];
-> +               ln_polrs = ln_polrs << 1 | lane_polarities[i];
-> +       }
-> +
-> +       /* Stash in our struct for when we power on */
-> +       pdata->dp_lanes = dp_lanes;
-> +       pdata->ln_assign = ln_assign;
-> +       pdata->ln_polrs = ln_polrs;
-> +}
-> +
->  static int ti_sn_bridge_probe(struct i2c_client *client,
->                               const struct i2c_device_id *id)
->  {
-> @@ -1105,6 +1157,8 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
->                 return ret;
->         }
->
-> +       ti_sn_bridge_parse_lanes(pdata, client->dev.of_node);
-> +
->         ret = ti_sn_bridge_parse_regulators(pdata);
->         if (ret) {
->                 DRM_ERROR("failed to parse regulators\n");
-> --
-> 2.26.2.645.ge9eca65c58-goog
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Well then keep the merging even if you have a memcg pointer.
+
+The disabling for debugging is only to simplify debugging. You dont have
+to deal with multiple caches actually using the same storage structures.
+
+> Figuring out all these details will likely take several weeks, so the whole
+> thing will be delayed for one-two major releases (in the best case). Given that
+> the current implementation saves ~40% of slab memory, I think there is some value
+> in delivering it as it is. So I wonder if the idea of embedding the pointer
+> should be considered a blocker, or it can be implemented of top of the proposed
+> code (given it's not a user-facing api or something like this)?
+
+Sorry no idea from my end here.
+
