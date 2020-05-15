@@ -2,202 +2,103 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C371BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1F42078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F4C20756
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 23:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="qVHejHX0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LOE/kShL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgEOXkc (ORCPT
+        id S1726725AbgEOXuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 19:40:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726223AbgEOXkb (ORCPT
+        Fri, 15 May 2020 19:50:08 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47580 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726198AbgEOXuH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 19:40:31 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F33BC05BD09
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 16:40:30 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z26so1615858pfk.12
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 16:40:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kJzFvwUo6iwn8/DhNKCJMUEDGhhpSA9N+Qu+KJbXwr8=;
-        b=qVHejHX0vz/9v+B4nZFIfZakrLDKIV9dHq+Own9O52KzZBA6raffF1PWe0K7xm7t8/
-         DoTt32O7hItE3VUMFDIU7ZCEo0FOR+235oUGGtNZeCten6HNw9qw6heNeGMeWHv20iG/
-         1d9tYLqDdjGo4H7TkWoE6HgQQVuwXuzQxpBQw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kJzFvwUo6iwn8/DhNKCJMUEDGhhpSA9N+Qu+KJbXwr8=;
-        b=QYGtM5YZFmuQg2RjZ8QwIyFZsaivYXhCfi7dIx2IPpyfduy7QixoNiqZtrfPGZf4tK
-         EjZjZkZWCJJ0ryP6ZkAUr66B1SDxWX//Jlod2Hhh4YmXmZbwpxmjef5qm+Iz4xEhg3li
-         mKhk1+x68zHplpGYnYp/p8ooICqNGYOWMzUNZTZorD5fZ/U2B5t8T+BUVUryxiijuFbN
-         NFfvdTOfgtjgV3WTlTg0IDWieIIWlMlyT8TjKZ0mByGmdABL+z/3kQ1Sl77gRb8zem8I
-         Mqm2Lb2jbt0dSk2VBAx5f01hB9KsGTGFC1ytrNXK1oWXvhek3vqnPyYbGSBSc3IXMOn8
-         +bQw==
-X-Gm-Message-State: AOAM533Z+3vJUugfYVPDiYRmNh2rgNwI+AfL9BNOakWHCfpJTJm3w6E+
-        g56ZfPhL5IzK2l+O6I7uPnaqO6uFHjibMA==
-X-Google-Smtp-Source: ABdhPJyDbT/37zGxxJ04QtTD4suKPeXcd688xN9h0qJJSHQhZSh5RAyLeHbzDChQBhC95TREq+CLWQ==
-X-Received: by 2002:aa7:9302:: with SMTP id 2mr6304335pfj.256.1589586029248;
-        Fri, 15 May 2020 16:40:29 -0700 (PDT)
-Received: from ubuntu.netflix.com (203.20.25.136.in-addr.arpa. [136.25.20.203])
-        by smtp.gmail.com with ESMTPSA id x20sm1264990pfc.211.2020.05.15.16.40.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 16:40:28 -0700 (PDT)
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org
-Cc:     Sargun Dhillon <sargun@sargun.me>, christian.brauner@ubuntu.com,
-        tycho@tycho.ws, keescook@chromium.org, cyphar@cyphar.com
-Subject: [PATCH] seccomp: Add group_leader pid to seccomp_notif
-Date:   Fri, 15 May 2020 16:40:05 -0700
-Message-Id: <20200515234005.32370-1-sargun@sargun.me>
-X-Mailer: git-send-email 2.20.1
+        Fri, 15 May 2020 19:50:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589586606;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Hw3RkCsgcQacr6zjV1u999K3NhEH21GsqpqwnnfF7j0=;
+        b=LOE/kShLy3W8yXhbc2TAIxVMuH/Ebl05F/9u/jGl0+afA7bgUjLNPKxYE1Usr8hm9G3Acu
+        v02Cv+QF60/bQrLGCx2EhaWZ0wcztAiMXP/T5js/s7/QmxsWTvcJOt95AxVjN7j+XT6hvj
+        SJpUsn4zt7VhuHaMp+LwnCBM3fmMthE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-115-ICg31iNCP2q4ZAaE7I9IYw-1; Fri, 15 May 2020 19:50:03 -0400
+X-MC-Unique: ICg31iNCP2q4ZAaE7I9IYw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B9CA1841958;
+        Fri, 15 May 2020 23:50:02 +0000 (UTC)
+Received: from [10.10.118.190] (ovpn-118-190.rdu2.redhat.com [10.10.118.190])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 828C51943D;
+        Fri, 15 May 2020 23:50:01 +0000 (UTC)
+Subject: Re: [PATCH target] target: Add initiatorname to NON_EXISTENT_LUN
+ error
+To:     Lance Digby <lance.digby@gmail.com>, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cd119ce943d9ec62ef1bff237ebb49e35a337c3b.1589407872.git.lance.digby@gmail.com>
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <93c437ce-f881-9f54-5e39-afa8afd96141@redhat.com>
+Date:   Fri, 15 May 2020 18:50:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cd119ce943d9ec62ef1bff237ebb49e35a337c3b.1589407872.git.lance.digby@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This includes the thread group leader ID in the seccomp_notif. This is
-immediately useful for opening up a pidfd for the group leader, as
-pidfds only work on group leaders.
+On 5/13/20 11:01 PM, Lance Digby wrote:
+> The NON_EXISTENT_LUN error can be written without an error condition
+>  on the initiator responsible. Adding the initiatorname to this message
+>  will reduce the effort required to fix this when many initiators are
+> supported by a target.
+> 
+> Signed-off-by: Lance Digby <lance.digby@gmail.com>
+> ---
+>  drivers/target/target_core_device.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
+> index 4cee113..604dea0 100644
+> --- a/drivers/target/target_core_device.c
+> +++ b/drivers/target/target_core_device.c
+> @@ -100,9 +100,10 @@
+>  		 */
+>  		if (unpacked_lun != 0) {
+>  			pr_err("TARGET_CORE[%s]: Detected NON_EXISTENT_LUN"
+> -				" Access for 0x%08llx\n",
+> +				" Access for 0x%08llx from %s\n",
+>  				se_cmd->se_tfo->fabric_name,
+> -				unpacked_lun);
+> +				unpacked_lun,
+> +				se_sess->se_node_acl->initiatorname);
 
-Previously, it was considered to include an actual pidfd in the
-seccomp_notif structure[1], but it was suggested to avoid proliferating
-mechanisms to create pidfds[2].
+You can do nacl->initiatorname.
 
-[1]: https://lkml.org/lkml/2020/1/24/133
-[2]: https://lkml.org/lkml/2020/5/15/481
+Do you also want add the name to the tmr case? It's probably not common,
+but the error message would be consistent.
 
-Suggested-by: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: Sargun Dhillon <sargun@sargun.me>
----
- include/uapi/linux/seccomp.h                  |  2 +
- kernel/seccomp.c                              |  1 +
- tools/testing/selftests/seccomp/seccomp_bpf.c | 50 +++++++++++++++++++
- 3 files changed, 53 insertions(+)
-
-diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-index c1735455bc53..f0c272ef0f1e 100644
---- a/include/uapi/linux/seccomp.h
-+++ b/include/uapi/linux/seccomp.h
-@@ -75,6 +75,8 @@ struct seccomp_notif {
- 	__u32 pid;
- 	__u32 flags;
- 	struct seccomp_data data;
-+	__u32 tgid;
-+	__u8 pad0[4];
- };
- 
- /*
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index 55a6184f5990..538bcbbcf4da 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -1061,6 +1061,7 @@ static long seccomp_notify_recv(struct seccomp_filter *filter,
- 
- 	unotif.id = knotif->id;
- 	unotif.pid = task_pid_vnr(knotif->task);
-+	unotif.tgid = task_tgid_vnr(knotif->task);
- 	unotif.data = *(knotif->data);
- 
- 	knotif->state = SECCOMP_NOTIFY_SENT;
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index c0aa46ce14f6..5658c6e95461 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -187,6 +187,8 @@ struct seccomp_notif {
- 	__u32 pid;
- 	__u32 flags;
- 	struct seccomp_data data;
-+	__u32 tgid;
-+	__u8 pad0[4];
- };
- 
- struct seccomp_notif_resp {
-@@ -3226,6 +3228,8 @@ TEST(user_notification_basic)
- 		req.pid = 0;
- 		EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
- 	}
-+	EXPECT_EQ(pid, req.pid);
-+	EXPECT_EQ(pid, req.tgid);
- 
- 	pollfd.fd = listener;
- 	pollfd.events = POLLIN | POLLOUT;
-@@ -3453,6 +3457,7 @@ TEST(user_notification_child_pid_ns)
- 
- 	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
- 	EXPECT_EQ(req.pid, pid);
-+	EXPECT_EQ(req.tgid, pid);
- 
- 	resp.id = req.id;
- 	resp.error = 0;
-@@ -3686,6 +3691,51 @@ TEST(user_notification_continue)
- 	}
- }
- 
-+void *getppid_thread(void *arg)
-+{
-+	int *tid = arg;
-+
-+	*tid = syscall(__NR_gettid);
-+	if (*tid <= 0)
-+		return (void *)(long)errno;
-+	return NULL;
-+}
-+
-+TEST(user_notification_groupleader)
-+{
-+	struct seccomp_notif_resp resp = {};
-+	struct seccomp_notif req = {};
-+	int ret, listener, tid, pid;
-+	pthread_t thread;
-+	void *status;
-+
-+	pid = getpid();
-+	ASSERT_GT(pid, 0);
-+
-+	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-+	ASSERT_EQ(0, ret) {
-+		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-+	}
-+
-+	listener = user_trap_syscall(__NR_gettid,
-+				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+	ASSERT_GE(listener, 0);
-+
-+	ASSERT_EQ(0, pthread_create(&thread, NULL, getppid_thread, &tid));
-+
-+	ASSERT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
-+	resp.id = req.id;
-+	resp.flags = SECCOMP_USER_NOTIF_FLAG_CONTINUE;
-+	ASSERT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0);
-+
-+	ASSERT_EQ(0, pthread_join(thread, &status));
-+	ASSERT_EQ(0, status);
-+
-+	EXPECT_EQ(tid, req.pid);
-+	EXPECT_EQ(pid, req.tgid);
-+}
-+
-+
- /*
-  * TODO:
-  * - add microbenchmarks
--- 
-2.20.1
+>  			return TCM_NON_EXISTENT_LUN;
+>  		}
+>  
 
