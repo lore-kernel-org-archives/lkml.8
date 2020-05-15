@@ -2,168 +2,103 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA2AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2407C20657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C389E20758
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:08:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="McV/fMz0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YgpXD3qY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbgEOMGO (ORCPT
+        id S1726217AbgEOMID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:06:14 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:31551 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726240AbgEOMGO (ORCPT
+        Fri, 15 May 2020 08:08:03 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56892 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgEOMID (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:06:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589544372; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=SPYp2YDyVuaw6uCp5OOGpG4DBGumTLBzvLR2arIhqlY=;
- b=McV/fMz0PCoin/nlXeYB2MO8zsmas1dgDyxS713KT84D8Ue4BOHw+yVjCursv74AOAS+Dv41
- mOhWBYqGuSgWHQD8q07Wz7wJJ0Iy/OQOnvgNRv06mGSBUU0jbQnnLKnTlXMR7YWAouAi4fUG
- 7f5T3dVkXiaBePXyAGfQaXmgoq4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebe85a1.7fd5b5a07768-smtp-out-n03;
- Fri, 15 May 2020 12:05:53 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 027D7C43636; Fri, 15 May 2020 12:05:52 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kalyan_t)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6D22AC433D2;
-        Fri, 15 May 2020 12:05:51 +0000 (UTC)
+        Fri, 15 May 2020 08:08:03 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04FC7ncL069619;
+        Fri, 15 May 2020 07:07:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589544469;
+        bh=P2WNi7x0Zj8xqyBPxb8DBbQOS164uI/PXBCVTPhezlo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=YgpXD3qY4FRwgn8ktmFMnOrKc0z7ACElFFeK/6D1FGNS9fUe0Mmg68P+RVh1L2Vzs
+         V2wbIgg3Hi3Nbsyk34iZ4EyPvLCcpLEbOVafiACntP20Wq8wU+cnjPBDKkUavmGsLr
+         +Ey8hdQ46uK+0bBXKHbSp8Yq0TjN3ArpESP9xrEw=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04FC7ntd052692
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 15 May 2020 07:07:49 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 15
+ May 2020 07:07:48 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 15 May 2020 07:07:49 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04FC7ivD003821;
+        Fri, 15 May 2020 07:07:45 -0500
+Subject: Re: [PATCH AUTOSEL 5.6 30/62] net: Make PTP-specific drivers depend
+ on PTP_1588_CLOCK
+To:     Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Clay McClure <clay@daemons.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+References: <20200514185147.19716-1-sashal@kernel.org>
+ <20200514185147.19716-30-sashal@kernel.org>
+ <CAK8P3a1Yh-qeh_CCVQZFcT0JMvhoxHx72KUWf3FXYD4yk_ptTw@mail.gmail.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <2b087eec-98b8-dedf-410c-c966d9802c89@ti.com>
+Date:   Fri, 15 May 2020 15:07:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <CAK8P3a1Yh-qeh_CCVQZFcT0JMvhoxHx72KUWf3FXYD4yk_ptTw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 15 May 2020 17:35:51 +0530
-From:   kalyan_t@codeaurora.org
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, mkrishn@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        travitej@codeaurora.org, LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>
-Subject: Re: [Freedreno] [PATCH] drm/msm/dpu: ensure device suspend happens
- during PM sleep
-In-Reply-To: <CAD=FV=UJGivCyp=t0J++1DbSFDVf+5zSCcXgh83VZtssBmavjg@mail.gmail.com>
-References: <1588339863-1322-1-git-send-email-kalyan_t@codeaurora.org>
- <CAD=FV=UJGivCyp=t0J++1DbSFDVf+5zSCcXgh83VZtssBmavjg@mail.gmail.com>
-Message-ID: <32c01e9a5277bdbdbab868eb71688184@codeaurora.org>
-X-Sender: kalyan_t@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-14 21:47, Doug Anderson wrote:
-> Hi,
+
+
+On 15/05/2020 00:40, Arnd Bergmann wrote:
+> On Thu, May 14, 2020 at 8:52 PM Sasha Levin <sashal@kernel.org> wrote:
+>>
+>> From: Clay McClure <clay@daemons.net>
+>>
+>> [ Upstream commit b6d49cab44b567b3e0a5544b3d61e516a7355fad ]
+>>
+>> Commit d1cbfd771ce8 ("ptp_clock: Allow for it to be optional") changed
+>> all PTP-capable Ethernet drivers from `select PTP_1588_CLOCK` to `imply
+>> PTP_1588_CLOCK`, "in order to break the hard dependency between the PTP
+>> clock subsystem and ethernet drivers capable of being clock providers."
 > 
-> On Fri, May 1, 2020 at 6:31 AM Kalyan Thota <kalyan_t@codeaurora.org> 
-> wrote:
->> 
->> "The PM core always increments the runtime usage counter
->> before calling the ->suspend() callback and decrements it
->> after calling the ->resume() callback"
->> 
->> DPU and DSI are managed as runtime devices. When
->> suspend is triggered, PM core adds a refcount on all the
->> devices and calls device suspend, since usage count is
->> already incremented, runtime suspend was not getting called
->> and it kept the clocks on which resulted in target not
->> entering into XO shutdown.
->> 
->> Add changes to force suspend on runtime devices during pm sleep.
->> 
->> Changes in v1:
->>  - Remove unnecessary checks in the function
->>     _dpu_kms_disable_dpu (Rob Clark).
->> 
->> Changes in v2:
->>  - Avoid using suspend_late to reset the usagecount
->>    as suspend_late might not be called during suspend
->>    call failures (Doug).
->> 
->> Changes in v3:
->>  - Use force suspend instead of managing device usage_count
->>    via runtime put and get API's to trigger callbacks (Doug).
->> 
->> Changes in v4:
->>  - Check the return values of pm_runtime_force_suspend and
->>    pm_runtime_force_resume API's and pass appropriately (Doug).
->> 
->> Changes in v5:
+> I don't think this one should be backported unless 3a9dd3ecb207 ("kconfig:
+> make 'imply' obey the direct dependency") is already backported to v5.6
+> (which I don't think it should either).
 > 
-> Can you please put the version number properly in your subject?  It's
-> really hard to tell one version of your patch from another.
-> 
-> 
->>  - With v4 patch, test cycle has uncovered issues in device resume.
->> 
->>    On bubs: cmd tx failures were seen as SW is sending panel off
->>    commands when the dsi resources are turned off.
->> 
->>    Upon suspend, DRM driver will issue a NULL composition to the
->>    dpu, followed by turning off all the HW blocks.
->> 
->>    v5 changes will serialize the NULL commit and resource unwinding
->>    by handling them under PM prepare and PM complete phases there by
->>    ensuring that clks are on when panel off commands are being
->>    processed.
-> 
-> I'm still most definitely not an expert in how all the DRM pieces all
-> hook up together, but the solution you have in this patch seems wrong
-> to me.  As far as I can tell the "prepare" state isn't supposed to be
-> actually doing the suspend work and here that's exactly what you're
-> doing.  I think you should find a different solution to ensure
-> ordering is correct.
-> 
-> -Doug
-> 
+Yes. pls, drop it. It's rather optimization, not a fix.
+And it might introduce build failures.
 
-Hi,
-
-Prepare and Complete are callbacks defined as part of Sleep and Resume 
-sequence
-
-Entering PM SUSPEND the phases are : prepare --> suspend --> 
-suspend_late --> suspend_noirq.
-While leaving PM SUSPEND the phases are: resume_noirq --> resume_early 
---> resume --> complete.
-
-The reason to push drm suspend handling to PM prepare phase is that 
-parent here will trigger a modeset to turn off the timing and 
-subsequently the panel.
-the child devices should not turn of their clocks before parent unwinds 
-the composition. Hence they are serialized as per the sequence mentioned 
-above.
-
-A similar approach is taken by other driver that use drm framework. In 
-this driver, the device registers for prepare and complete callbacks to 
-handle drm_suspend and drm_resume.
-https://gitlab.freedesktop.org/drm/msm/-/blob/msm-next/drivers/gpu/drm/exynos/exynos_drm_drv.c#L163
-
-
-Kalyan
-
-
-_______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+-- 
+Best regards,
+grygorii
