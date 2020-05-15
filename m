@@ -2,81 +2,118 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B851FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1AD20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C7D2078C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:34:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726226AbgEOMbN (ORCPT
+        id S1726189AbgEOMe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:31:13 -0400
-Received: from smtprelay0033.hostedemail.com ([216.40.44.33]:49356 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726097AbgEOMbN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:31:13 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 6142F182CED5B;
-        Fri, 15 May 2020 12:31:12 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: elbow04_7edc9eac87751
-X-Filterd-Recvd-Size: 1930
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 15 May 2020 12:31:11 +0000 (UTC)
-Message-ID: <134d34de7e35861f33d3a1d9ffd8a70b0f92df33.camel@perches.com>
-Subject: Re: get_maintainer.pl: unexpected behaviour for path/to//file
-From:   Joe Perches <joe@perches.com>
-To:     Emil Velikov <emil.l.velikov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Fri, 15 May 2020 05:31:10 -0700
-In-Reply-To: <20200515105203.2792466-1-emil.l.velikov@gmail.com>
-References: <20200515105203.2792466-1-emil.l.velikov@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Fri, 15 May 2020 08:34:28 -0400
+Received: from mga02.intel.com ([134.134.136.20]:41036 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726135AbgEOMe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 08:34:28 -0400
+IronPort-SDR: keOjbwkoTF9lWGhnKGJsTEJvGWiRV0CDML6TwifEUEdzhmvxsQDWIhMznU5fQJ7XZoxikFHPaT
+ DR0GZEg36V/g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 05:34:27 -0700
+IronPort-SDR: cp7Lgk901XUmqKnJIsGc2FR6/YL28h6EFJti6vxQK0auGxok/lx527wJBHVZIzAMf2n7+leKuB
+ PPCPyHuCpu/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="252020463"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 15 May 2020 05:34:20 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZZXi-006rB1-P0; Fri, 15 May 2020 15:34:22 +0300
+Date:   Fri, 15 May 2020 15:34:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/19] spi: dw: Discard static DW DMA slave structures
+Message-ID: <20200515123422.GZ185537@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-7-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515104758.6934-7-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-15 at 11:52 +0100, Emil Velikov wrote:
-> Hi Joe,
-> 
-> Recently I've noticed that get_maintainer behaves differently if there
-> is a double, sequential, forward slash in the path.
-> 
-> AFAICT there should be no distinction between the two. Or at least many
-> existing applications and scripts consider them one and the same.
-> 
-> I've tried fixing this, although my perl isn't quite up-to scratch.
-> Is this some weird bug or some intended feature?
+On Fri, May 15, 2020 at 01:47:45PM +0300, Serge Semin wrote:
+> Having them declared is redundant since each struct dw_dma_chan has
+> the same structure embedded and the structure from the passed dma_chan
+> private pointer will be copied there as a result of the next calls
+> chain:
+> dma_request_channel() -> find_candidate() -> dma_chan_get() ->
+> device_alloc_chan_resources() = dwc_alloc_chan_resources() ->
+> dw_dma_filter().
+> So just remove the static dw_dma_chan structures and use a locally
+> declared data instance with dst_id/src_id set to the same values as
+> the static copies used to have.
 
-Not really an intended feature.
-The code counts slashes for directory depth.
+...
 
-I suppose it might be simpler to do this:
----
- scripts/get_maintainer.pl | 1 +
- 1 file changed, 1 insertion(+)
+> -static struct dw_dma_slave mid_dma_tx = { .dst_id = 1 };
+> -static struct dw_dma_slave mid_dma_rx = { .src_id = 0 };
 
-diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-index 6d973f3685f9..eaaf9373dbcf 100755
---- a/scripts/get_maintainer.pl
-+++ b/scripts/get_maintainer.pl
-@@ -538,6 +538,7 @@ foreach my $file (@ARGV) {
- 	} elsif (!(-f $file)) {
- 	    die "$P: file '${file}' not found\n";
- 	}
-+	$file =~ s@//@/@g;	# compress file double slashes
-     }
-     if ($from_filename || ($file ne "&STDIN" && vcs_file_exists($file))) {
- 	$file =~ s/^\Q${cur_path}\E//;	#strip any absolute path
+> +	struct dw_dma_slave slave = {0};
+
+I really would like to leave them separated and as in the original form, i.e.
+
+	struct dw_dma_slave tx = { .dst_id = 1 };
+	struct dw_dma_slave rx = { .src_id = 0 };
+
+those src and dst IDs are put in that form on purpose...
+
+> +	/* 1. Init rx channel (.src_id = 0, .dst_id = 0) */
+
+...this comment adds a bit of confusion.
+(Needs more time to parse and understand what IDs are in use)
+
+> +	slave.dma_dev = &dma_dev->dev;
+> +	dws->rxchan = dma_request_channel(mask, mid_spi_dma_chan_filter, &slave);
+
+> +	/* 2. Init tx channel (.src_id = 0, .dst_id = 1) */
+
+Ditto.
+
+P.S. Just a recommendation for the future: in all your patches try to be less
+invasive where it's possible.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
