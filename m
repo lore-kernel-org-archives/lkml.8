@@ -2,79 +2,166 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E1FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482A5C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DCC0206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2606C206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589524662;
-	bh=/sejV8BirlA+9XJW7afKnpotS1fQXEqPb8/TeQ6TDYA=;
+	s=default; t=1589524798;
+	bh=93lBsLTBqlQejJikWc3upfa85v4ns9u2hhd3qLSyww0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zvN4qFER39bVRnfFTtNbFT1EJMgjGPzNIXjGZ8NWv2l3PJjF7gkZLZaRpEvOAoejY
-	 Rw9pLeEOXGa2Iv9W0rikDwaaA7WfmQ4TgHEHVwC3Ba1xpUH15ExAbyKIgs4v0sy3e6
-	 me2f73hzhX43kbZ/j97nZOnoc/+xrefDXtN8iLvM=
+	b=KMgLkiXeXQwKwNIrv84xtdS351WNO8ddhg4t5BbcCnJLvaG721ChraBot+Mth+U7c
+	 5XwAkHVLrf5efDXLhgER+wodIGpv1f6iszYs7QqZikfwtvNsRAWyyfGsC0v9NaIopL
+	 2BcOhU24/fmWdHL6Vz9GKOUa1nBNnXbV2QQqCfYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgEOGhl (ORCPT
+        id S1726584AbgEOGj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:37:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50884 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 02:39:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgEOGhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:37:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726205AbgEOGj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 02:39:57 -0400
+Received: from localhost (unknown [122.178.196.30])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 718992065F;
-        Fri, 15 May 2020 06:37:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 339DE2065F;
+        Fri, 15 May 2020 06:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589524660;
-        bh=/sejV8BirlA+9XJW7afKnpotS1fQXEqPb8/TeQ6TDYA=;
+        s=default; t=1589524795;
+        bh=93lBsLTBqlQejJikWc3upfa85v4ns9u2hhd3qLSyww0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xxppYZUv2kisbDZrnltv/c6K4fzrP9l7WQz1h1yifRH3No6IR1HFWaAEvQdB6QxOn
-         Yo376PHcJjyyqnHjzp8yJ5swSubvROWSCeI4gp/Q3z0YET3LnSw8T8+nnlJxz3Qt7V
-         +V7jy71pWwfHu+RtWWNHDBIB7V8aJJi57utGHspQ=
-Date:   Fri, 15 May 2020 08:37:38 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     arnd@arndb.de, manivannan.sadhasivam@linaro.org,
-        bjorn.andersson@linaro.org, wufan@codeaurora.org,
-        pratanan@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        b=1hFvoudcCdvBbJVFrvhJpkAapPz7B/Gc13HDjme8Hcvka9bgKYhZuT7MlPtINkXiG
+         ToOdyuEwEAprJ/1uNeHuZMNSAKzFLEK8VsJ0cL/GHH1RpCwTqcpxHCnpB70EOflmMT
+         HdMOR4/GbLixWrWGuUOLV5TqURAh2vLT6GytoRAw=
+Date:   Fri, 15 May 2020 12:09:50 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/8] qaic: Add skeleton driver
-Message-ID: <20200515063738.GA1006524@kroah.com>
-References: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
- <1589465266-20056-2-git-send-email-jhugo@codeaurora.org>
- <bc74cb1d-cd97-819c-5e0d-e9cd1e01dbf4@codeaurora.org>
+Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
+ config
+Message-ID: <20200515063950.GI333670@vkoul-mobl>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
+ <20200508114153.GK185537@smile.fi.intel.com>
+ <20200512140820.ssjv6pl7busqqi3t@mobilestation>
+ <20200512191208.GG185537@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bc74cb1d-cd97-819c-5e0d-e9cd1e01dbf4@codeaurora.org>
+In-Reply-To: <20200512191208.GG185537@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 06:43:06PM -0600, Jeffrey Hugo wrote:
-> On 5/14/2020 8:07 AM, Jeffrey Hugo wrote:
-> > +#define QAIC_NAME			"Qualcomm Cloud AI 100"
-> <snip>
-> > +static struct pci_driver qaic_pci_driver = {
-> > +	.name = QAIC_NAME,
+On 12-05-20, 22:12, Andy Shevchenko wrote:
+> On Tue, May 12, 2020 at 05:08:20PM +0300, Serge Semin wrote:
+> > On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
+> > > On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
+> > > > IP core of the DW DMA controller may be synthesized with different
+> > > > max burst length of the transfers per each channel. According to Synopsis
+> > > > having the fixed maximum burst transactions length may provide some
+> > > > performance gain. At the same time setting up the source and destination
+> > > > multi size exceeding the max burst length limitation may cause a serious
+> > > > problems. In our case the system just hangs up. In order to fix this
+> > > > lets introduce the max burst length platform config of the DW DMA
+> > > > controller device and don't let the DMA channels configuration code
+> > > > exceed the burst length hardware limitation. Depending on the IP core
+> > > > configuration the maximum value can vary from channel to channel.
+> > > > It can be detected either in runtime from the DWC parameter registers
+> > > > or from the dedicated dts property.
+> > > 
+> > > I'm wondering what can be the scenario when your peripheral will ask something
+> > > which is not supported by DMA controller?
+> > 
+> > I may misunderstood your statement, because seeing your activity around my
+> > patchsets including the SPI patchset and sometimes very helpful comments,
+> > this question answer seems too obvious to see you asking it.
+> > 
+> > No need to go far for an example. See the DW APB SSI driver. Its DMA module
+> > specifies the burst length to be 16, while not all of ours channels supports it.
+> > Yes, originally it has been developed for the Intel Midfield SPI, but since I
+> > converted the driver into a generic code we can't use a fixed value. For instance
+> > in our hardware only two DMA channels of total 16 are capable of bursting up to
+> > 16 bytes (data items) at a time, the rest of them are limited with up to 4 bytes
+> > burst length. While there are two SPI interfaces, each of which need to have two
+> > DMA channels for communications. So I need four channels in total to allocate to
+> > provide the DMA capability for all interfaces. In order to set the SPI controller
+> > up with valid optimized parameters the max-burst-length is required. Otherwise we
+> > can end up with buffers overrun/underrun.
 > 
-> A question about the community's preference here.
+> Right, and we come to the question which channel better to be used by SPI and
+> the rest devices. Without specific filter function you can easily get into a
+> case of inverted optimizations, when SPI got channels with burst = 4, while
+> it's needed 16, and other hardware otherwise. Performance wise it's worse
+> scenario which we may avoid in the first place, right?
+
+If one has channels which are different and described as such in DT,
+then I think it does make sense to specify in your board-dt about the
+specific channels you would require...
 > 
-> Our driver name is very verbose due to the desire to have the proper
-> "branding".  However, I can see it being a bit obtuse, particularly in logs.
+> > > Peripheral needs to supply a lot of configuration parameters specific to the
+> > > DMA controller in use (that's why we have struct dw_dma_slave).
+> > > So, seems to me the feasible approach is supply correct data in the first place.
+> > 
+> > How to supply a valid data if clients don't know the DMA controller limitations
+> > in general?
 > 
-> Would the community prefer something more succinct here, such as "qaic"?
+> This is a good question. DMA controllers are quite different and having unified
+> capabilities structure for all is almost impossible task to fulfil. That's why
+> custom filter function(s) can help here. Based on compatible string you can
+> implement whatever customized quirks like two functions, for example, to try 16
+> burst size first and fallback to 4 if none was previously found.
+> 
+> > > If you have specific channels to acquire then you probably need to provide a
+> > > custom xlate / filter functions. Because above seems a bit hackish workaround
+> > > of dynamic channel allocation mechanism.
+> > 
+> > No, I don't have a specific channel to acquire and in general you may use any
+> > returned from the DMA subsystem (though some platforms may need a dedicated
+> > channels to use, in this case xlate / filter is required). In our SoC any DW DMAC
+> > channel can be used for any DMA-capable peripherals like SPI, I2C, UART. But the
+> > their DMA settings must properly and optimally configured. It can be only done
+> > if you know the DMA controller parameters like max burst length, max block-size,
+> > etc.
+> > 
+> > So no. The change proposed by this patch isn't workaround, but a useful feature,
+> > moreover expected to be supported by the generic DMA subsystem.
+> 
+> See above.
+> 
+> > > But let's see what we can do better. Since maximum is defined on the slave side
+> > > device, it probably needs to define minimum as well, otherwise it's possible
+> > > that some hardware can't cope underrun bursts.
+> > 
+> > There is no need to define minimum if such limit doesn't exists except a
+> > natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
+> > added such capability into the generic DMA subsystem so far.
+> 
+> There is a contract between provider and consumer about DMA resource. That's
+> why both sides should participate in fulfilling it. Theoretically it may be a
+> hardware that doesn't support minimum burst available in DMA by a reason. For
+> such we would need minimum to be provided as well.
 
-Make it the same a KBUILD_MODNAME and then no one can complain :)
+Agreed and if required caps should be extended to tell consumer the
+minimum values supported.
 
-thanks,
-
-greg k-h
+-- 
+~Vinod
