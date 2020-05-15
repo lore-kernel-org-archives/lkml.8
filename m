@@ -2,120 +2,129 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07663C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2116620727
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7CCD206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:52:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lWDuCPSE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QVbQZPOq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgEOQuw (ORCPT
+        id S1726597AbgEOQwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:50:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56946 "EHLO
+        Fri, 15 May 2020 12:52:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726525AbgEOQuR (ORCPT
+        by vger.kernel.org with ESMTP id S1726023AbgEOQwa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:50:17 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 122CCC05BD09
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:50:17 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id g15so3191246qvx.6
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:50:17 -0700 (PDT)
+        Fri, 15 May 2020 12:52:30 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 542F5C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:52:30 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id y13so1637740vsk.8
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:52:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6zJdeczCxXIR05ROPjfL5M3I5d1ozekeF2WaxmhUPXo=;
-        b=lWDuCPSEHnSqfmNmK7U6zSigGtw2pUvPEmqBm3E79EfmUdhRFZKr9rmmlG8SLtiTLY
-         8HCqoaQuGDPxignnWBj97QPYO0GwwkgCH1z0wTKLYpS7vxYkxdK21eAfNqBq1eACYnKW
-         X/07rqk/NxKbF66ALRKpmYyVR/Wyx+OYTCq24+o2G2V49wg3xHyYb7VUXnnmYcp+gEQF
-         nL2XDaWLaYS/Je45LXoeJJMo6D2hMR2jOfXa7nomoK6/lPSR11Brli1vClEnVFZqT/pv
-         2sIB00W6zEXOfVYKy1WDxw2k2tj56W5+R3oq9j7OmEXIeXAyCBwW0+ZP4ExwI5AK0m5d
-         F/Eg==
+        bh=//QUXJb2hfEP5KSpFr1jCZS2lxtzuUgoxlZm2dmFvFY=;
+        b=QVbQZPOqP3I4QaDmNr61NBvJ2m4f0FA0qcnvxdFVkElx5ChUuXTVkiqBWPo1Lc9Svp
+         gfslahjg2HvG56kqiAX8dTsXZpoCex+FFddG1M9rgY2zxl3BsjVqUNAAccrlXYZYnbeU
+         c4XsdUEEqV52JxZSsm03Nz8rVclM6Q6jWWzWI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=6zJdeczCxXIR05ROPjfL5M3I5d1ozekeF2WaxmhUPXo=;
-        b=mY01iszEBny8ZJqJRK9Y0AeXhYH2k9KlL7Zab2jBeTaAlx9Lvx+8tjq+E3xFtXEisb
-         N42ZLrxzIEw78pLe6NCokLvlqe7GQzSPpwEyNLSNwF0JG6CHWzZjIgbj0LbbeWJHx1iq
-         6VDSX4M1C2GnSky+/TinVyQnfnqGJYZFumJbLJvWEyZKPAEyGcZCtrRf/dlxx6g0vR0A
-         40x3D6gEqjq+LBSJe7bSv5sy9KfMS/EBDaRh0Tfc5ajNb+p1qeJm//QW5osPpNxU2HXO
-         4eheP0CYfndP61HZf1jtgQTUDrO2ukCqEvrL1yX7hL8s450L+GAYApxUhqldCPAZbHKk
-         S/Lg==
-X-Gm-Message-State: AOAM532ddkBdhMUN4wsfsDIxF8VVrSUtyWXk39bIJqrdLONBfoYG967x
-        5mJKNOJyllk2hmc5nJSQ/O9eKVfVYeZ0
-X-Google-Smtp-Source: ABdhPJzJeU3KJoEKMsk2E7nrlFXgcd2WBQbWwlr2cF809BRrmVmF2HWm35q7vDzY8rUFv8F6tFzwUDUNfz/I
-X-Received: by 2002:a0c:b58a:: with SMTP id g10mr4291860qve.225.1589561416205;
- Fri, 15 May 2020 09:50:16 -0700 (PDT)
-Date:   Fri, 15 May 2020 09:50:02 -0700
-In-Reply-To: <20200515165007.217120-1-irogers@google.com>
-Message-Id: <20200515165007.217120-3-irogers@google.com>
-Mime-Version: 1.0
-References: <20200515165007.217120-1-irogers@google.com>
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH v2 2/7] libbpf hashmap: Remove unused #include
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=//QUXJb2hfEP5KSpFr1jCZS2lxtzuUgoxlZm2dmFvFY=;
+        b=aOxJuqBVoSLUDwL02h8C0Er6PFzrfWgHrsJVai2TE1JFaeGkUtbRlm/BqhBgyXHQQy
+         ziU9yRiMqqtLV4Z7wULc9QMVXX7WE0vKN5RtiT1LqwO6e9ABNw6vlRZ59IR9jm22wGuJ
+         S/JzID8HytvNdfOVk2k4+fPcdr586FjU6co5hwtQwHHHg70YGP0EBeu2liZtS6/ex3kh
+         0PqVEHuwPXOtDbTsidjW3tEwXBUL87Mm1IOa5CMydSwljeeULRdDzqA5G9tE8RTyZLYJ
+         BTPqMKLLhTHLH/5C5kMcJ0rNBEw7yuAj9IbwDuhvpZo+VRYRktcGHYYxnkAGBSne8paF
+         2MJg==
+X-Gm-Message-State: AOAM532Jup6AlYVTC83O9SrzwuUyehh0La8uuSjPgaAaG12WaVemN8RB
+        4W7uG9thx1DrigMDNZ3M2ydZusW49pU=
+X-Google-Smtp-Source: ABdhPJzguSJv+eHQdbvxIvO3IXMqnkHpe2Nh7uJgB0TqNgMsz/1XC95bDX+faPpKVYT/T5TpLvTRIw==
+X-Received: by 2002:a67:f9d0:: with SMTP id c16mr3388262vsq.53.1589561549338;
+        Fri, 15 May 2020 09:52:29 -0700 (PDT)
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
+        by smtp.gmail.com with ESMTPSA id u63sm591149vsc.13.2020.05.15.09.52.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2020 09:52:28 -0700 (PDT)
+Received: by mail-ua1-f47.google.com with SMTP id k3so1027040ual.8
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:52:28 -0700 (PDT)
+X-Received: by 2002:ab0:69cc:: with SMTP id u12mr268225uaq.22.1589561548021;
+ Fri, 15 May 2020 09:52:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org>
+ <20200512142533.ta4uejwmq5gchtlx@holly.lan> <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
+ <20200514084230.GO17734@linux-b0ei> <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
+ <20200515085021.GS17734@linux-b0ei> <20200515103308.GD42471@jagdpanzerIV.localdomain>
+ <CAFA6WYOBsimP1j8Fwq4OcePEug4MGoaY3wTTTVydHtTphZ-FTw@mail.gmail.com> <20200515163638.GI42471@jagdpanzerIV.localdomain>
+In-Reply-To: <20200515163638.GI42471@jagdpanzerIV.localdomain>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 15 May 2020 09:52:16 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XohG8ErL=_fyuA+MXEmfp55aW+SxSunb6YPRYj77bOxQ@mail.gmail.com>
+Message-ID: <CAD=FV=XohG8ErL=_fyuA+MXEmfp55aW+SxSunb6YPRYj77bOxQ@mail.gmail.com>
+Subject: Re: [PATCH] printk/kdb: Redirect printk messages into kdb in any context
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Sumit Garg <sumit.garg@linaro.org>, Petr Mladek <pmladek@suse.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove #include of libbpf_internal.h that is unused.
-Discussed in this thread:
-https://lore.kernel.org/lkml/CAEf4BzZRmiEds_8R8g4vaAeWvJzPb4xYLnpF0X2VNY8oTzkphQ@mail.gmail.com/
+Hi,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/lib/bpf/hashmap.h | 1 -
- 1 file changed, 1 deletion(-)
+On Fri, May 15, 2020 at 9:36 AM Sergey Senozhatsky
+<sergey.senozhatsky@gmail.com> wrote:
+>
+> On (20/05/15 17:32), Sumit Garg wrote:
+> > > Can I please have some context what problem does this solve?
+> >
+> > You can find the problem description here [1] which leads to this fix.
+>
+> [..]
+>
+> > [1] https://lkml.org/lkml/2020/5/12/213
+>
+> Thanks for the link. I'm slightly surprised it took so many years
+> to notice the addition of printk_nmi/printk_safe :)
 
-diff --git a/tools/lib/bpf/hashmap.h b/tools/lib/bpf/hashmap.h
-index bae8879cdf58..e823b35e7371 100644
---- a/tools/lib/bpf/hashmap.h
-+++ b/tools/lib/bpf/hashmap.h
-@@ -15,7 +15,6 @@
- #else
- #include <bits/reg.h>
- #endif
--#include "libbpf_internal.h"
- 
- static inline size_t hash_bits(size_t h, int bits)
- {
--- 
-2.26.2.761.g0e0b3e54be-goog
+I haven't looked at all the details, but IIUC we don't normally enter
+kgdb on the primary CPU through a NMI context, but the secondary ones
+(on x86) always do.  Most things are run on the primary CPU and I
+think it's relatively unlikely for people to change the primary CPU
+(though it is possible).
 
+Probably things got worse when I changed the way "btc" worked to make
+it common between all architectures.  See commit 9ef50a686b53
+("UPSTREAM: kdb: Fix stack crawling on 'running' CPUs that aren't the
+master").  Though theoretically someone could have changed masters and
+reproduced the problem with a simple "bt" before my patch, now a
+relatively normal command "btc" would tickle the problem.  I didn't
+notice it because I work almost totally on arm/arm64 machines and they
+don't have NMI (yet).
+
+In general I've always wondered about why (historically) kgdb bugs
+have sometimes gone unnoticed for a period of time.  That does seem to
+be changing, though, and I've seen a few longstanding bugs getting
+fixed recently.  :-)
+
+
+-Doug
