@@ -2,127 +2,120 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C92C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7A0204EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04259204EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:27:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GOJTHYCd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgEOC1h (ORCPT
+        id S1728026AbgEOC16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 22:27:37 -0400
-Received: from twhmllg4.macronix.com ([211.75.127.132]:10014 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgEOC1h (ORCPT
+        Thu, 14 May 2020 22:27:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726140AbgEOC15 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 22:27:37 -0400
-Received: from twhfm1p2.macronix.com (twhfmlp2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id 04F2Q5pA045600;
-        Fri, 15 May 2020 10:26:05 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id 8019D69F055CB487B644;
-        Fri, 15 May 2020 10:26:05 +0800 (CST)
-In-Reply-To: <20200506094028.2asq56goslfd2ngo@yadavpratyush.com>
-References: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw> <20200421092328.129308f6@collabora.com> <20200427175536.2mmei2fy6f7bg6jm@yadavpratyush.com> <OF18214CA5.6A9B2B30-ON48258558.001D894C-48258558.002249E0@mxic.com.tw> <20200428085401.574wmo6qddmumd7q@yadavpratyush.com> <OF04289CE2.B346916F-ON48258559.002280BD-48258559.00295800@mxic.com.tw> <20200429181856.kkavelcczylg4yxf@yadavpratyush.com> <OF28AE0642.4F34D6BB-ON4825855F.002D6E58-4825855F.003458C9@mxic.com.tw> <20200506094028.2asq56goslfd2ngo@yadavpratyush.com>
-To:     "Pratyush Yadav" <me@yadavpratyush.com>
-Cc:     "Boris Brezillon" <boris.brezillon@collabora.com>,
-        broonie@kernel.org, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, miquel.raynal@bootlin.com,
-        "Pratyush Yadav" <p.yadav@ti.com>, richard@nod.at,
-        tudor.ambarus@microchip.com, vigneshr@ti.com
-Subject: Re: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
+        Thu, 14 May 2020 22:27:57 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B69A4C061A0C;
+        Thu, 14 May 2020 19:27:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=l1ppkroZfvKOp4u6lj/eUcZNGxMPKtmd0dNs/JoZOcs=; b=GOJTHYCdm8PWaqtRIRy+tTqWfk
+        dxtkHibSZBFuZsmpFbeFHDoireSy0SHOec4elKy943mhmou6V2eLmxVvtfufl7vBHC9YnwoluX7MO
+        tIFEvqqHRc0DDFahtcHgmGAt10A9PikQO8NcRpcTaStoulfv5qlspULTyTuWinpvdMrIWkMwEUfGr
+        PAMZ/Qsqj+oQF4pgYKhd+EtbYUMoq7caH+qPcJkJykiU69/g7n9wxKe8HKrFV+g4oACaBsrPXajU8
+        8f2+25D88bzWXC0zljNVsxMsfmSIn15MAIK4Ch0lyph4QG9IUK7XScJAKtcZEDZmlo2iWhghxcLz0
+        4YKVXXbA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZQ4r-0005MB-6k; Fri, 15 May 2020 02:27:57 +0000
+Subject: Re: [PATCH 1/4] selftests: Fix kselftest O=objdir build from
+ cluttering top level objdir
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>, shuah@kernel.org
+Cc:     mpe@ellerman.id.au, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1583358715.git.skhan@linuxfoundation.org>
+ <58d954867391c90fe0792d87e09a82bda26ba4fc.1583358715.git.skhan@linuxfoundation.org>
+ <7hwo7qijn0.fsf@baylibre.com>
+ <ceb910b1-2ab7-b27f-7e53-c445d96cdeb1@linuxfoundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <11765b79-f19c-4aea-5c4a-d9ad24e550de@infradead.org>
+Date:   Thu, 14 May 2020 19:27:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-KeepSent: 03B5329E:56965A70-48258569:000878CE;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF03B5329E.56965A70-ON48258569.000878CE-48258569.000D5FFD@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Fri, 15 May 2020 10:26:05 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2020/05/15 AM 10:26:05,
-        Serialize complete at 2020/05/15 AM 10:26:05
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com 04F2Q5pA045600
+In-Reply-To: <ceb910b1-2ab7-b27f-7e53-c445d96cdeb1@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Pratyush,
-
-> > > > I can't apply your patches to enable xSPI Octal mode for 
-> > > > mx25uw51245g because your patches set up Octal protocol first and 
-> > > > then using Octal protocol to write Configuration Register 2(CFG 
-> > > > Reg2). I think driver
-> > > > should write CFG Reg2 in SPI 1-1-1 mode (power on state) and make 
-sure
-> > > > write CFG Reg 2 is success and then setup Octa protocol in the 
-last.
-> > > 
-> > > Register writes should work in 1S mode, because nor->reg_proto is 
-only 
-> > > set _after_ 8D mode is enabled (see spi_nor_octal_dtr_enable()). In 
-> > > fact, both patch 15 and 16 in my series use register writes in 1S 
-mode.
-> > 
-> > but I didn't see driver roll back "nor->read/write_proto = 1" 
-> > if xxx->octal_dtr_enable() return failed!
+On 3/11/20 4:31 PM, Shuah Khan wrote:
+> On 3/11/20 4:58 PM, Kevin Hilman wrote:
+>> Shuah Khan <skhan@linuxfoundation.org> writes:
+>>
+>>> make kselftest-all O=objdir builds create generated objects in objdir.
+>>> This clutters the top level directory with kselftest objects. Fix it
+>>> to create sub-directory under objdir for kselftest objects.
+>>>
+>>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+>>
+>> Only somewhat related to this patch, another problem that wasn't in your
+>> doci is that the current O= support doesn't support relative paths.
+>>
 > 
-> I copied what spi_nor_quad_enable() did, and made failure fatal. So if 
-> xxx->octal_dtr_enable() fails, the probe would fail and the flash would 
-> be unusable. You can try your hand at a fallback system where you try 
-
-IMHO, it's not a good for system booting from SPI-NOR, 
-driver should still keep system alive in SPI 1-1-1 mode in case of 
-enable Octal/Quad failed.
-
-Therefore, my patches is to setup nor->read/write_proto = 8 in case 
-driver enable Octal mode is success. And to enable Octal mode in
-spi_nor_late_init_params()rather than as spi_nor_quad_enable()did.
-
-> all possible protocols available, but I think that should be a different 
-
-> patchset.
+> Yes I am aware of it and it is in the document as something that will
+> be addressed later.
 > 
-> -- 
-> Regards,
-> Pratyush Yadav
+> "Note: Relative paths don’t work - supporting relative paths breaks work-flows e.g:
+> powerpc. Explore fix. Compile work-flows. Not planning to support at the moment."
 
-thanks & best regards,
-Mason
+Hi,
+Sorry to be dense but where is this documented (as quoted above)?
 
-CONFIDENTIALITY NOTE:
+Thanks.
 
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
+>> For example, using O=/tmp/build-arm64 works, but O=build-arm64 doesn't.
+>> Try this:
+>>
+>> $ make ARCH=arm64 HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu- O=build-arm64 defconfig
+>> $ make ARCH=arm64 HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu- O=build-arm64 kselftest-all
+>> make[1]: Entering directory '/work/kernel/linux/build-arm64'
+>> make --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
+>>     ARCH=arm64 -C ../../.. headers_install
+>> make[4]: ../scripts/Makefile.build: No such file or directory
+>> make[4]: *** No rule to make target '../scripts/Makefile.build'.  Stop.
+>> Makefile:500: recipe for target 'scripts_basic' failed
+>> make[3]: *** [scripts_basic] Error 2
+>> Makefile:151: recipe for target 'khdr' failed
+>> make[2]: *** [khdr] Error 2
+>> /work/kernel/linux/Makefile:1220: recipe for target 'kselftest-all' failed
+>> make[1]: *** [kselftest-all] Error 2
+>> make[1]: Leaving directory '/work/kernel/linux/build-arm64'
+>> Makefile:179: recipe for target 'sub-make' failed
+>> make: *** [sub-make] Error 2
+>>
+> 
+> I am looking to address build and install issues first.
+> 
+> thanks,
+> -- Shuah
 
-Macronix International Co., Ltd.
 
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+-- 
+~Randy
 
