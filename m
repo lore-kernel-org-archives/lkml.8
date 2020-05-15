@@ -2,213 +2,84 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E38C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B419A206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:22:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVPLPfvh"
+	by mail.kernel.org (Postfix) with ESMTP id B67C0206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:22:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgEOAWC (ORCPT
+        id S1728362AbgEOAW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 20:22:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726287AbgEOAWB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 20:22:01 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A18EC061A0C;
-        Thu, 14 May 2020 17:22:00 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id f13so879126qkh.2;
-        Thu, 14 May 2020 17:22:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=15AOlchk7fRad5R+3mC2j7vHmPP4kH2DOR0zT0J1IlQ=;
-        b=jVPLPfvhAovcC8rbfLFbYTtjbMxwQDVqknMtcLy2eSPVkV6z5Eygrv7v99gYGwLuVH
-         1sGpB9XA+70nUQiU6lJCE20sH8kRRzQcvWcYb/gi2OyD6/jdjGfG3S415ykU/oNWM/Sz
-         453CcYhyTeSYBkfqntwMT8+Fq5Z/0cMG5PiUqNJVpmIjws4QKCQjrkfTlKS34XpXs2qz
-         4/+TIWMlshe+icQJZXB7Uno0XcAkPEqQFi3ud9lS2DHarRl9P3wHs2u3Jc/j9LGj6L1E
-         5QY2HsbJmp1hENgFFNMDoUbNmMEf0+8ZyFnX3w1XT8csv1iUBSM1c05NVNFhYq7cda9K
-         EK3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=15AOlchk7fRad5R+3mC2j7vHmPP4kH2DOR0zT0J1IlQ=;
-        b=AJyGf9ohcyaWUuv2MuSofOXGeYTF2z3vXZTfl94HRnTxxJoeMFDjjcv17UvjOuQXN2
-         HSzFW+mN6f8EWdx0nLjjFUJZRw1jOYgXe9BonTvXYBRGi1Uw5wZjFPb3bBfC54fL0HMM
-         2MFP7V+71gsuZCYKpyp+0HeXpmBNrvKL/2d+oF9TUo1m3Ox3p1Nbyjigtsdj4tCFKDCP
-         7O2QfjD7xJYhpJIxiF+kuzfNEtXP/1OPsN17E1gjerbGFJtT6L8Is7Eda6nlJBiTFZ9e
-         Wd4SM2siZ2oJ/poFyEO2P0aJ+MjIgzo5/CAwX1TqXfzvcvm27cZS9uCdwr3nWr47hrEG
-         answ==
-X-Gm-Message-State: AOAM530aKNsYiF+q94mTyPK7Y+U8RijwaMqj7PzPoKQNZnxwLA7kDz0y
-        ZT/+x+ddZKts5RaQzjNpMRyxU0PRWaUpKOX1MII=
-X-Google-Smtp-Source: ABdhPJx76qqdezdu7tfRxjKpBlo0kO/Pkg1f596NjE/xYp3qW2czrDoypUgpP7RlicUy9lrhb044F6QTB3hQSG1JfLs=
-X-Received: by 2002:a05:620a:2049:: with SMTP id d9mr1025378qka.449.1589502119791;
- Thu, 14 May 2020 17:21:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com> <1589263005-7887-8-git-send-email-alan.maguire@oracle.com>
-In-Reply-To: <1589263005-7887-8-git-send-email-alan.maguire@oracle.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 14 May 2020 17:21:48 -0700
-Message-ID: <CAEf4BzYRT9QNtkjqP6k=BmCzVEyswR9boLRw2gDfR=rAg-gV8w@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 7/7] bpf: add tests for %pT format specifier
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>, Joe Perches <joe@perches.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Martin Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>
+        Thu, 14 May 2020 20:22:56 -0400
+Received: from mga18.intel.com ([134.134.136.126]:18747 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726287AbgEOAWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 20:22:55 -0400
+IronPort-SDR: hrkeZvzs8AuDfsB+Vi3qM/b/cURaPAhnpgCElNVSiyin5lX3emI1fG4RzQ7ZKuAzhLJ91PgBuL
+ ftMXDparxILA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 17:22:55 -0700
+IronPort-SDR: OZ4ixah5KYXcx6c/A5+OSoQO30BXj+L/WT0S1pQ97QZjRxynR+7g+fXQ8ka5JpY/wppQEfHkWG
+ I3uhiHFqwfLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
+   d="scan'208";a="281038937"
+Received: from ashadrin-mobl1.ccr.corp.intel.com ([10.249.38.112])
+  by orsmga002.jf.intel.com with ESMTP; 14 May 2020 17:22:48 -0700
+Message-ID: <3f9c2463e3063552d9a720e1dec90eb316e49751.camel@linux.intel.com>
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>
+Date:   Fri, 15 May 2020 03:22:36 +0300
+In-Reply-To: <87mu6axqjh.fsf@nanos.tec.linutronix.de>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+         <CAOASepPFe_ucuwe7JW_-+VBQ4=+sHqyGXOdA9kUbcYA_9=v0sA@mail.gmail.com>
+         <0d485f780ac9809229290762931cd591e6f8156a.camel@linux.intel.com>
+         <87mu6axqjh.fsf@nanos.tec.linutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 10:59 PM Alan Maguire <alan.maguire@oracle.com> wrote:
->
-> tests verify we get > 0 return value from bpf_trace_print()
-> using %pT format specifier with various modifiers/pointer
-> values.
->
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> ---
+On Thu, 2020-05-14 at 21:30 +0200, Thomas Gleixner wrote:
+> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> writes:
+> > General question: maybe it would be easiest that I issue a pull request
+> > once everyone feels that the series is ready to be pulled and stop sending
+> > new versions of the series?
+> 
+> Might be the easiest for you, but I prefer a final series in email.
+> 
+> Thanks,
+> 
+>         tglx
 
-There is no need to use perf buffer for returning results to
-user-space. See prog_tests/skeleton.c and progs/test_skeleton.c for a
-very minimalistic and simple way to do tests like this.
+For me both are just as easy or as hard :-)
 
->  .../selftests/bpf/prog_tests/trace_printk_btf.c    | 83 ++++++++++++++++++++++
->  .../selftests/bpf/progs/netif_receive_skb.c        | 81 +++++++++++++++++++++
->  2 files changed, 164 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/trace_printk_btf.c
->  create mode 100644 tools/testing/selftests/bpf/progs/netif_receive_skb.c
+Just wanted to query the preference.
 
-[...]
+/Jarkko
 
-> diff --git a/tools/testing/selftests/bpf/progs/netif_receive_skb.c b/tools/testing/selftests/bpf/progs/netif_receive_skb.c
-> new file mode 100644
-> index 0000000..b5148df
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/netif_receive_skb.c
-> @@ -0,0 +1,81 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2020, Oracle and/or its affiliates. */
-> +#include <linux/bpf.h>
-> +#include <stdbool.h>
-> +#include <bpf/bpf_helpers.h>
-> +#include <bpf/bpf_endian.h>
-> +#include <bpf/bpf_tracing.h>
-> +
-> +char _license[] SEC("license") = "GPL";
-> +
-> +struct {
-> +       __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-> +       __uint(key_size, sizeof(int));
-> +       __uint(value_size, sizeof(int));
-> +} perf_buf_map SEC(".maps");
-> +
-> +struct result {
-> +       int ret;
-> +       int subtest;
-> +       int num_subtest;
-> +};
-> +
-> +typedef struct {
-> +       int counter;
-> +} atomic_t;
-> +typedef struct refcount_struct {
-> +       atomic_t refs;
-> +} refcount_t;
-> +
-> +struct sk_buff {
-> +       /* field names and sizes should match to those in the kernel */
-> +       unsigned int len, data_len;
-> +       __u16 mac_len, hdr_len, queue_mapping;
-> +       struct net_device *dev;
-> +       /* order of the fields doesn't matter */
-> +       refcount_t users;
-> +       unsigned char *data;
-> +       char __pkt_type_offset[0];
-> +       char cb[48];
-> +};
-
-
-please use vmlinux.h instead of duplicating these definitions (which
-also will start failing, when sk_buff definition will change).
-
-> +
-> +#define CHECK_PRINTK(_fmt, _p, res)                                    \
-> +       do {                                                            \
-> +               char fmt[] = _fmt;                                      \
-> +               ++(res)->num_subtest;                                   \
-> +               if ((res)->ret >= 0) {                                  \
-> +                       ++(res)->subtest;                               \
-> +                       (res)->ret = bpf_trace_printk(fmt, sizeof(fmt), \
-> +                                                     (_p));            \
-> +               }                                                       \
-> +       } while (0)
-> +
-> +/* TRACE_EVENT(netif_receive_skb,
-> + *     TP_PROTO(struct sk_buff *skb),
-> + */
-> +SEC("tp_btf/netif_receive_skb")
-> +int BPF_PROG(trace_netif_receive_skb, struct sk_buff *skb)
-> +{
-> +       char skb_type[] = "struct sk_buff";
-> +       struct __btf_ptr nullp = { .ptr = 0, .type = skb_type };
-> +       struct __btf_ptr p = { .ptr = skb, .type = skb_type };
-> +       struct result res = { 0, 0 };
-> +
-> +       CHECK_PRINTK("%pT\n", &p, &res);
-> +       CHECK_PRINTK("%pTc\n", &p, &res);
-> +       CHECK_PRINTK("%pTN\n", &p, &res);
-> +       CHECK_PRINTK("%pTx\n", &p, &res);
-> +       CHECK_PRINTK("%pT0\n", &p, &res);
-> +       CHECK_PRINTK("%pTcNx0\n", &p, &res);
-> +       CHECK_PRINTK("%pT\n", &nullp, &res);
-> +       CHECK_PRINTK("%pTc\n", &nullp, &res);
-> +       CHECK_PRINTK("%pTN\n", &nullp, &res);
-> +       CHECK_PRINTK("%pTx\n", &nullp, &res);
-> +       CHECK_PRINTK("%pT0\n", &nullp, &res);
-> +       CHECK_PRINTK("%pTcNx0\n", &nullp, &res);
-
-with global variables this would be:
-
-int pT = 0;
-int pTc = 0;
-/* and so on */
-
-then inside BPF_PROG:
-
-pT = bpf_printk("%pT\n", &p);
-pTc = bpf_printk("%pTc\n", &p);
-/* and so on */
-
-CHECK_PRINTK isn't necessary, IMO. bpf_printk is defined in bpf_helpers.h
-
-> +
-> +       bpf_perf_event_output(ctx, &perf_buf_map, BPF_F_CURRENT_CPU,
-> +                             &res, sizeof(res));
-> +
-> +       return 0;
-> +}
-> --
-> 1.8.3.1
->
