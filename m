@@ -2,153 +2,130 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADE9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC77C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76A602078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:39:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OENN5BUC"
+	by mail.kernel.org (Postfix) with ESMTP id C5AFC20671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbgEOOjw (ORCPT
+        id S1726563AbgEOOkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:39:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727098AbgEOOhh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:37:37 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C551C061A0C;
-        Fri, 15 May 2020 07:37:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=tuZN2xrlpt1mzaSPTZQmZcxarUCgYHN/WWoYWZD5CMA=; b=OENN5BUCXaUFPu7vI1494p7r4i
-        S2dWDz0q6EWysp938RuBPRMV7kgePBmLH86pBEtpSxJyy42RL6Y+aCvaXjvJsMsI0Y4cyNO31G5iS
-        EDmw72wTcCGqP425Pzg2PhrQeX9C+wPmSNKyptdRpxxMAO8Jbpjz23AKJX/zySzDflvnXEYd/KAWK
-        vmOpVRfCzg8IGj9xt5P0AqH8hWqou3lR/3g0g4llT+vsNPlUKFazS2BA6cnVS0ADrmPONbFmj9wV2
-        JISTWNjwp8dRFxxV5zRFRImsFzOhhILf6BR9L1clZ+G5XbmEr/KM3Eliay6Xe7YkhFBk3k/YJSHzP
-        0aBKdEYw==;
-Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZbSb-0004At-Ol; Fri, 15 May 2020 14:37:14 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
+        Fri, 15 May 2020 10:40:55 -0400
+Received: from mga06.intel.com ([134.134.136.31]:28147 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgEOOky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 10:40:54 -0400
+IronPort-SDR: j7NeS0c8vCQJlJT0B2FckR9uTMK+3uKCEq7fK2xCmYs4hk97gMbrKHdv+5H9ie+moA734p+tll
+ iGb0VLQIp54w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 07:40:54 -0700
+IronPort-SDR: sE4KrJfb+F950VrQYghbTdseYseoCD3GtYpM+afg0mMFUPGBgSSsRVnmo6M9PHNfcRnmX+ydfZ
+ w+2wluTqA70Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="263206144"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 15 May 2020 07:40:48 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZbW6-006tCc-Uq; Fri, 15 May 2020 17:40:50 +0300
+Date:   Fri, 15 May 2020 17:40:50 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Roman Zippel <zippel@linux-m68k.org>
-Cc:     Jessica Yu <jeyu@kernel.org>, Michal Simek <monstr@monstr.eu>,
-        x86@kernel.org, linux-alpha@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-c6x-dev@linux-c6x.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 09/29] arm64: use asm-generic/cacheflush.h
-Date:   Fri, 15 May 2020 16:36:26 +0200
-Message-Id: <20200515143646.3857579-10-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200515143646.3857579-1-hch@lst.de>
-References: <20200515143646.3857579-1-hch@lst.de>
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Clement Leger <cleger@kalray.eu>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 12/19] spi: dw: Fix Rx-only DMA transfers
+Message-ID: <20200515144050.GI1634618@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-13-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515104758.6934-13-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARM64 needs almost no cache flushing routines of its own.  Rely on
-asm-generic/cacheflush.h for the defaults.
+On Fri, May 15, 2020 at 01:47:51PM +0300, Serge Semin wrote:
+> Tx-only DMA transfers are working perfectly fine since in this case
+> the code just ignores the Rx FIFO overflow interrupts. But it turns
+> out the SPI Rx-only transfers are broken since nothing pushing any
+> data to the shift registers, so the Rx FIFO is left empty and the
+> SPI core subsystems just returns a timeout error. Since DW DMAC
+> driver doesn't support something like cyclic write operations of
+> a single byte to a device register, the only way to support the
+> Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
+> This is what we intend to fix in this commit by setting the
+> SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/arm64/include/asm/cacheflush.h | 46 ++++-------------------------
- 1 file changed, 5 insertions(+), 41 deletions(-)
+I'm fine with this if Mark considers this right thing to do.
+So, conditionally
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
-index e6cca3d4acf70..03a5a187163ab 100644
---- a/arch/arm64/include/asm/cacheflush.h
-+++ b/arch/arm64/include/asm/cacheflush.h
-@@ -94,20 +94,7 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
- #endif
- 	kick_all_cpus_sync();
- }
--
--static inline void flush_cache_mm(struct mm_struct *mm)
--{
--}
--
--static inline void flush_cache_page(struct vm_area_struct *vma,
--				    unsigned long user_addr, unsigned long pfn)
--{
--}
--
--static inline void flush_cache_range(struct vm_area_struct *vma,
--				     unsigned long start, unsigned long end)
--{
--}
-+#define flush_icache_range flush_icache_range
- 
- /*
-  * Cache maintenance functions used by the DMA API. No to be used directly.
-@@ -123,12 +110,7 @@ extern void __dma_flush_area(const void *, size_t);
-  */
- extern void copy_to_user_page(struct vm_area_struct *, struct page *,
- 	unsigned long, void *, const void *, unsigned long);
--#define copy_from_user_page(vma, page, vaddr, dst, src, len) \
--	do {							\
--		memcpy(dst, src, len);				\
--	} while (0)
--
--#define flush_cache_dup_mm(mm) flush_cache_mm(mm)
-+#define copy_to_user_page copy_to_user_page
- 
- /*
-  * flush_dcache_page is used when the kernel has written to the page
-@@ -154,29 +136,11 @@ static __always_inline void __flush_icache_all(void)
- 	dsb(ish);
- }
- 
--#define flush_dcache_mmap_lock(mapping)		do { } while (0)
--#define flush_dcache_mmap_unlock(mapping)	do { } while (0)
--
--/*
-- * We don't appear to need to do anything here.  In fact, if we did, we'd
-- * duplicate cache flushing elsewhere performed by flush_dcache_page().
-- */
--#define flush_icache_page(vma,page)	do { } while (0)
--
--/*
-- * Not required on AArch64 (PIPT or VIPT non-aliasing D-cache).
-- */
--static inline void flush_cache_vmap(unsigned long start, unsigned long end)
--{
--}
--
--static inline void flush_cache_vunmap(unsigned long start, unsigned long end)
--{
--}
--
- int set_memory_valid(unsigned long addr, int numpages, int enable);
- 
- int set_direct_map_invalid_noflush(struct page *page);
- int set_direct_map_default_noflush(struct page *page);
- 
--#endif
-+#include <asm-generic/cacheflush.h>
-+
-+#endif /* __ASM_CACHEFLUSH_H */
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> ---
+>  drivers/spi/spi-dw.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+> index 1edb8cdd11ee..31607b40147d 100644
+> --- a/drivers/spi/spi-dw.c
+> +++ b/drivers/spi/spi-dw.c
+> @@ -517,6 +517,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+>  			dev_warn(dev, "DMA init failed\n");
+>  		} else {
+>  			master->can_dma = dws->dma_ops->can_dma;
+> +			master->flags |= SPI_CONTROLLER_MUST_TX;
+>  		}
+>  	}
+>  
+> -- 
+> 2.25.1
+> 
+
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
+
 
