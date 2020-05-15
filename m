@@ -2,203 +2,146 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D65E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA3CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B38BB20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0101020709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:03:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KQhWFuX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgEOLCi (ORCPT
+        id S1726217AbgEOLDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:02:38 -0400
-Received: from mga02.intel.com ([134.134.136.20]:34967 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725986AbgEOLCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:02:37 -0400
-IronPort-SDR: gXjKOn1sLgtqXpfQ8dXEWTFJN9qYziQ/MPIQOnGWNW+hT9HGhO3HQhGJD7u+PJIFCmeN2YHNlh
- u6z1ZeAoyGNw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 04:02:33 -0700
-IronPort-SDR: 1mBcVMARjkwPGldXiTtuXy5onzfD0YAbn0kDlc8pRF5TnH5clp7gR7gsvvI5j+8jPapKKOV2bf
- SyxjLrqE1Zsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="464869783"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 15 May 2020 04:02:28 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZY6o-006qO1-St; Fri, 15 May 2020 14:02:30 +0300
-Date:   Fri, 15 May 2020 14:02:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200515110230.GM185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
- <20200508114153.GK185537@smile.fi.intel.com>
- <20200512140820.ssjv6pl7busqqi3t@mobilestation>
- <20200512191208.GG185537@smile.fi.intel.com>
- <20200512194734.j5xvm3khijpp5tkh@mobilestation>
+        Fri, 15 May 2020 07:03:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgEOLDM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:03:12 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0382FC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 04:03:11 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id z4so716181wmi.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 04:03:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iqpq12gc8bTtNBtY5ZIVdxCDS9UGGhps1DCBy7t56Sc=;
+        b=KQhWFuX/FjBpvSsD5C4JlqNzD53keqf6x1HZUfMWY9SjMgRvTGdIRcgtfxx+yEhOua
+         7FJGFLE/tL21fgq7R1DP6qTmAsILkA7I4iQbUswloXIptvbMaIjLiQ+JuFAqdrgh1K0q
+         MbxDuvveGypUJvaM4vhgWjhk+g01QInFSXY+fXcmb8H23HUhzpdgrUgoAPnLuzrQOkWm
+         MTgueJG/9fB0PYlgMmHxWSLuDK4wk/ybO7LPPQ3E9Jono3Ly/QGKv6JYwPBZAB34Hyb6
+         0R3efCIjIciXDeRMX/oaSGKEeTMXO5WiPRNUMAvLtFGnUIaQHpXivbwnoRATQBzMBAMS
+         ZKfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iqpq12gc8bTtNBtY5ZIVdxCDS9UGGhps1DCBy7t56Sc=;
+        b=Vo2CZ8RutbRmCIVELzzGHwpSaTSaWyZwz1e0ajTszDvRhCu4MRN8+8Volp687hcMXZ
+         ICfOXuZTFUw49c4ZF7Vkuec34+cn8C3j2QMRM5YqtAJwQUBsiX1tlTcijsEhmX/hTc9u
+         U88xzIGxZ8OrrZ6Uy6qEnqHLpy32FWh0n21aCud4fQ60Cc6682gy9cIxBhGtNJjm2Nq6
+         Zt8uzQoYONjntQYA8Y3L8mEX7o0aUlVmhkW94JveMwvvK0yQt52YxK/9mkt4B+jKERnG
+         QorWl/YkUKPhvf0AGSf+qXOxboz08RFthwryDQucZntSxvEtL/lIvWNsRywA38fLXqSp
+         aryw==
+X-Gm-Message-State: AOAM530sP7I0IPjVz+yuo2V+MU4qB9Su/Gw1zO90JXAqp3P95t8Hwomi
+        iv2IgOmizFTn/e3ICd46M2JpVw==
+X-Google-Smtp-Source: ABdhPJz09zqvaqC1JaFDugl18vq78E+RNFXiDIdWvrDoMdsvhWsiQds56u5FrbQHPH1HGgUnZIcgDA==
+X-Received: by 2002:a1c:bbc5:: with SMTP id l188mr3289666wmf.163.1589540589509;
+        Fri, 15 May 2020 04:03:09 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:28df:6b80:d69f:9c0a? ([2a01:e34:ed2f:f020:28df:6b80:d69f:9c0a])
+        by smtp.googlemail.com with ESMTPSA id z12sm458111wmc.6.2020.05.15.04.03.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2020 04:03:08 -0700 (PDT)
+Subject: Re: [PATCH v4 4/4] thermal: cpuidle: Register cpuidle cooling device
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Lukasz Luba <lukasz.luba@arm.com>, rui.zhang@intel.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "open list:CPU IDLE TIME MANAGEMENT FRAMEWORK" 
+        <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CPUIDLE DRIVER - ARM PSCI" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200429103644.5492-1-daniel.lezcano@linaro.org>
+ <20200429103644.5492-4-daniel.lezcano@linaro.org>
+ <99b3bc79-f48a-3d51-a8ae-8b9ca4856d36@arm.com>
+ <04b5da25-d591-b08a-e554-6e084d7ea908@linaro.org>
+ <f3cee834-4946-10bd-a504-df6cf62d9e90@linaro.org>
+ <20200515095751.GA25267@bogus>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <6faac4ac-b711-11ad-32e7-26ae930db6fa@linaro.org>
+Date:   Fri, 15 May 2020 13:03:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512194734.j5xvm3khijpp5tkh@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200515095751.GA25267@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 10:47:34PM +0300, Serge Semin wrote:
-> On Tue, May 12, 2020 at 10:12:08PM +0300, Andy Shevchenko wrote:
-> > On Tue, May 12, 2020 at 05:08:20PM +0300, Serge Semin wrote:
-> > > On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
-> > > > On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
-> > > > > IP core of the DW DMA controller may be synthesized with different
-> > > > > max burst length of the transfers per each channel. According to Synopsis
-> > > > > having the fixed maximum burst transactions length may provide some
-> > > > > performance gain. At the same time setting up the source and destination
-> > > > > multi size exceeding the max burst length limitation may cause a serious
-> > > > > problems. In our case the system just hangs up. In order to fix this
-> > > > > lets introduce the max burst length platform config of the DW DMA
-> > > > > controller device and don't let the DMA channels configuration code
-> > > > > exceed the burst length hardware limitation. Depending on the IP core
-> > > > > configuration the maximum value can vary from channel to channel.
-> > > > > It can be detected either in runtime from the DWC parameter registers
-> > > > > or from the dedicated dts property.
-> > > > 
-> > > > I'm wondering what can be the scenario when your peripheral will ask something
-> > > > which is not supported by DMA controller?
-> > > 
-> > > I may misunderstood your statement, because seeing your activity around my
-> > > patchsets including the SPI patchset and sometimes very helpful comments,
-> > > this question answer seems too obvious to see you asking it.
-> > > 
-> > > No need to go far for an example. See the DW APB SSI driver. Its DMA module
-> > > specifies the burst length to be 16, while not all of ours channels supports it.
-> > > Yes, originally it has been developed for the Intel Midfield SPI, but since I
-> > > converted the driver into a generic code we can't use a fixed value. For instance
-> > > in our hardware only two DMA channels of total 16 are capable of bursting up to
-> > > 16 bytes (data items) at a time, the rest of them are limited with up to 4 bytes
-> > > burst length. While there are two SPI interfaces, each of which need to have two
-> > > DMA channels for communications. So I need four channels in total to allocate to
-> > > provide the DMA capability for all interfaces. In order to set the SPI controller
-> > > up with valid optimized parameters the max-burst-length is required. Otherwise we
-> > > can end up with buffers overrun/underrun.
-> > 
-> > Right, and we come to the question which channel better to be used by SPI and
-> > the rest devices. Without specific filter function you can easily get into a
-> > case of inverted optimizations, when SPI got channels with burst = 4, while
-> > it's needed 16, and other hardware otherwise. Performance wise it's worse
-> > scenario which we may avoid in the first place, right?
+On 15/05/2020 11:58, Sudeep Holla wrote:
+> On Mon, May 04, 2020 at 08:00:01PM +0200, Daniel Lezcano wrote:
+>>
+>> Hi,
+>>
+>> On 29/04/2020 23:01, Daniel Lezcano wrote:
+>>> On 29/04/2020 22:02, Lukasz Luba wrote:
+>>>>
+>>>>
+>>>> On 4/29/20 11:36 AM, Daniel Lezcano wrote:
+>>>>> The cpuidle driver can be used as a cooling device by injecting idle
+>>>>> cycles. The DT binding for the idle state added an optional
+>>>>>
+>>>>> When the property is set, register the cpuidle driver with the idle
+>>>>> state node pointer as a cooling device. The thermal framework will do
+>>>>> the association automatically with the thermal zone via the
+>>>>> cooling-device defined in the device tree cooling-maps section.
+>>>>>
+>>>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>>>> ---
+>>>>>   - V4:
+>>>>>     - Do not check the return value as the function does no longer
+>>>>> return one
+>>>>> ---
+>>>
+>>> [ ... ]
+>>>
+>>>> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+>>>
+>>> Thanks Lukasz for the review.
+>>>
+>>> Rafael, as Lorenzo and Sudeep are not responsive, could you consider ack
+>>> this patch so I can merge the series through the thermal tree ?
+>>
+>> Gentle ping ... Sudeep, Lorenzo or Rafael ?
+>>
 > 
-> If we start thinking like you said, we'll get stuck at a problem of which interfaces
-> should get faster DMA channels and which one should be left with slowest. In general
-> this task can't be solved, because without any application-specific requirement
-> they all are equally valuable and deserve to have the best resources allocated.
-> So we shouldn't assume that some interface is better or more valuable than
-> another, therefore in generic DMA client code any filtering is redundant.
+> Sorry for the delay. I ignore this as it was generic and I was fine with
+> it. Didn't know you were waiting me, sorry for that.
 
-True, that's why I called it platform dependent quirks. You may do whatever you
-want / need to preform on your hardware best you can. If it's okay for your
-hardware to have this inverse optimization, than fine, generic DMA client
-should really not care about it.
+No problem, thanks for the ack.
 
-> > > > Peripheral needs to supply a lot of configuration parameters specific to the
-> > > > DMA controller in use (that's why we have struct dw_dma_slave).
-> > > > So, seems to me the feasible approach is supply correct data in the first place.
-> > > 
-> > > How to supply a valid data if clients don't know the DMA controller limitations
-> > > in general?
-> > 
-> > This is a good question. DMA controllers are quite different and having unified
-> > capabilities structure for all is almost impossible task to fulfil. That's why
-> > custom filter function(s) can help here. Based on compatible string you can
-> > implement whatever customized quirks like two functions, for example, to try 16
-> > burst size first and fallback to 4 if none was previously found.
-> 
-> Right. As I said in the previous email it's up to the corresponding platforms to
-> decide the criteria of the filtering including the max-burst length value.
+> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 
-Correct!
+Rafael, if you are ok with that, I'll take this patch in the thermal
+tree along with the others.
 
-> Even though the DW DMA channels resources aren't uniform on Baikal-T1 SoC I also
-> won't do the filter-based channel allocation, because I can't predict the SoC
-> application. Some of them may be used on a platform with active SPI interface
-> utilization, some with specific requirements to UARTs and so on.
-
-It's your choice as platform maintainer.
-
-> > > > If you have specific channels to acquire then you probably need to provide a
-> > > > custom xlate / filter functions. Because above seems a bit hackish workaround
-> > > > of dynamic channel allocation mechanism.
-> > > 
-> > > No, I don't have a specific channel to acquire and in general you may use any
-> > > returned from the DMA subsystem (though some platforms may need a dedicated
-> > > channels to use, in this case xlate / filter is required). In our SoC any DW DMAC
-> > > channel can be used for any DMA-capable peripherals like SPI, I2C, UART. But the
-> > > their DMA settings must properly and optimally configured. It can be only done
-> > > if you know the DMA controller parameters like max burst length, max block-size,
-> > > etc.
-> > > 
-> > > So no. The change proposed by this patch isn't workaround, but a useful feature,
-> > > moreover expected to be supported by the generic DMA subsystem.
-> > 
-> > See above.
-> > 
-> > > > But let's see what we can do better. Since maximum is defined on the slave side
-> > > > device, it probably needs to define minimum as well, otherwise it's possible
-> > > > that some hardware can't cope underrun bursts.
-> > > 
-> > > There is no need to define minimum if such limit doesn't exists except a
-> > > natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
-> > > added such capability into the generic DMA subsystem so far.
-> > 
-> > There is a contract between provider and consumer about DMA resource. That's
-> > why both sides should participate in fulfilling it. Theoretically it may be a
-> > hardware that doesn't support minimum burst available in DMA by a reason. For
-> > such we would need minimum to be provided as well.
-> 
-> I don't think 'theoretical' consideration counts when implementing something in
-> kernel. That 'theoretical' may never happen, but you'll end up supporting a
-> dummy functionality. Practicality is what kernel developers normally place
-> before anything else.
-
-The point here is to avoid half-baked solutions.
-
-I'm not against max-burst logic on top of the existing interface, but would be
-better if we allow the range, in this case it will work for any DMA controller
-(as be part of DMA engine family).
-
-I guess we need summarize this very long discussion and settle the next steps.
-
-(if you can provide in short form anybody can read in 1 minute it would be
- nice, I already forgot tons of paragraphs you sent here, esp. taking into
- account tons of paragraphs in the other Baikal related series)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
