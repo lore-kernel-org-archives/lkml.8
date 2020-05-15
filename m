@@ -2,85 +2,274 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7446C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C071220734
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589510551;
-	bh=OfQLHjO9LOV02Uz+SEV+a9/4ng7mJONtaETGbnltb7U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Iz7MF0DTUi9A77PIdTV/euskoYGJRs9n/i2pkBHeNWKlzcdw84tfQJxQqMI2WJP17
-	 hr1dBfZAc43XGY4OWthtBAHEpDmPAUPmG521fkN0BKWlUHIZjIknewGdBU0GF5GvHY
-	 rGGUjFKC5D8OlGN92FxtVQfLgHXOHrqvBHPirgjw=
+	by mail.kernel.org (Postfix) with ESMTP id 8EDCE206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:46:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="fsq4n7q7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgEOCmb (ORCPT
+        id S1728103AbgEOCqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 22:42:31 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37591 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgEOCma (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 22:42:30 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z17so786974oto.4;
-        Thu, 14 May 2020 19:42:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qhA31OEEIMS3cmtOlMX5LEdCP8LUU9nCDYnHhjMZQ94=;
-        b=lxUSCbFGzl5NHYZyO1KYPqKByJwhAkoVrzjEwN5DxHeyrwI6qbLPZcXcEsf1kW2Jrd
-         zQtXJ+nqE9yxYj9LLVCazvOTu/TsjngS+fzAts9/ts+XoTI5UCCCkzX0prHcblKoQL6q
-         48zJXKfa2T3RDQ3ixNh9PjQFTKlQ3i08Jzy9FJTpG1tAaICROxokvZNJLjLGnybrGzcr
-         8N12bNqnbowSXcgBW/Ct2ms73mrLdGB1yCG9WPYdPhg7G8Y+sDq3RlWwOI1hZAIc5t0p
-         sDdX/bj0zWpuXCsFdoVuTc7MHYJuvzllf/3RJVNkKIzB8vJjbWknBSSRiyhqmso/GPCs
-         FTHA==
-X-Gm-Message-State: AOAM530ivU2ELzPPZNX1IwDCuor8vjfGfWB3GCuVcH6c+NOdX1NgdxqU
-        H6VebtXzRVvCqi73aMj8tg==
-X-Google-Smtp-Source: ABdhPJwJ6r+UQNDYSl9WyyXMu1dSVzcRRbNO85ZUFZ8EbBTT4VE/4hWMneEb6iOQf9L6xLmuZ98yoA==
-X-Received: by 2002:a9d:730b:: with SMTP id e11mr763055otk.9.1589510550174;
-        Thu, 14 May 2020 19:42:30 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l192sm256071ooc.3.2020.05.14.19.42.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 19:42:29 -0700 (PDT)
-Received: (nullmailer pid 18636 invoked by uid 1000);
-        Fri, 15 May 2020 02:42:28 -0000
-Date:   Thu, 14 May 2020 21:42:28 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Mike Looijmans <mike.looijmans@topic.nl>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com
-Subject: Re: [PATCH] clk: clk-si5341: Add support for the Si5345 series
-Message-ID: <20200515024228.GA18577@bogus>
-References: <20200507061544.11388-1-mike.looijmans@topic.nl>
-MIME-Version: 1.0
+        Thu, 14 May 2020 22:46:03 -0400
+Received: from mail-eopbgr700092.outbound.protection.outlook.com ([40.107.70.92]:17825
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726345AbgEOCqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 22:46:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WenjPcFGgg2hvr8fgTL422xlnzXkX8PeDUuqlFYR+xb+iHP6QbO66kzajp61pOKSu7AZW+YG2AgjwMnDxCpFr2DtbDD7d2kUg28HXQoua7+mRBJbbYc06/9tvjy3LnVOKVHZSOkjaFKDdTupgllmTeEVEFvmfi+wlBdt8AO3jwM/BPiZ//Y/Ce6GS/8F1dbALAXxd9CYvcs3cmiXO9OTPVE4hhetREX8RBP+eWT6lL+XuYFurTokaIxvkWpqFvk57YoNyA+tpMz+HJONE8LzSvbh/Rkj6wLCR6bwYdVJOcfVT33rpqX8FCZOwZgnBmv46RFsydzPhJ7L1NqDVP3JAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ugfZ6U/q5VakCvs/r70vo820Lx99Y5fQA/SjnrGWhrY=;
+ b=gy2fi5TC4ihS1KTG1P4rUd9ybE2NfgoCF+SeWdHq3xthu5xdZYbKoXyRu2OvvDsFdhaXi3kqLnqyKxYdg55b8Z3kYTV96gtZigk91iMoxmeKBEZMgFeZS/6HxA7TWP3oBZq2mZbP4jVPvCEfJKFKIhizWqQRm7nZToipZs9weUPlHq1NgMwSxaENzh//Z26RR0G5mNwAilfLY81VIReKarOB/aQ7WGnal7EVYN6cR0ULULtN5IfqcXtR+wmNnNI4qUb0QZ4PiSC9wRFoWGFyXx4wtV8GA+n+782nCafWuotjJ3cTFcNxFfc8hDX3Irk1eZu1w9DmcDVcc7zPni42XA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ugfZ6U/q5VakCvs/r70vo820Lx99Y5fQA/SjnrGWhrY=;
+ b=fsq4n7q77zFlKWZHhuM9CcW0gtQ87Nu9UhKpJrhEd8zl5ikgvqotOj72CPr3viMaxpIqJ3eFocccc5WSP1V8L4FuGEmGNAR3yBUKx0+vv3HqynQ0Xn/ooUFypcnCvMicBIsbdrKNiCpvpWFhvM/WXCdbfbUCGq45yhOIH9RMchk=
+Authentication-Results: analogixsemi.com; dkim=none (message not signed)
+ header.d=none;analogixsemi.com; dmarc=none action=none
+ header.from=analogixsemi.com;
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
+ by BY5PR04MB6583.namprd04.prod.outlook.com (2603:10b6:a03:1d3::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Fri, 15 May
+ 2020 02:45:59 +0000
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f]) by BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f%6]) with mapi id 15.20.3000.022; Fri, 15 May 2020
+ 02:45:58 +0000
+Date:   Fri, 15 May 2020 10:45:52 +0800
+From:   Xin Ji <xji@analogixsemi.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v10 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter binding
+Message-ID: <20200515024552.GA11753@xin-VirtualBox>
+References: <cover.1588747998.git.xji@analogixsemi.com>
+ <b720f7d2c5338813d31b7f715f59ca68c367d5a8.1588747998.git.xji@analogixsemi.com>
+ <20200514145432.GA6091@bogus>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507061544.11388-1-mike.looijmans@topic.nl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200514145432.GA6091@bogus>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK2PR06CA0016.apcprd06.prod.outlook.com
+ (2603:1096:202:2e::28) To BY5PR04MB6739.namprd04.prod.outlook.com
+ (2603:10b6:a03:229::8)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xin-VirtualBox (114.247.245.254) by HK2PR06CA0016.apcprd06.prod.outlook.com (2603:1096:202:2e::28) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.3000.25 via Frontend Transport; Fri, 15 May 2020 02:45:58 +0000
+X-Originating-IP: [114.247.245.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9ccce5ed-8c26-4624-543e-08d7f87a18f0
+X-MS-TrafficTypeDiagnostic: BY5PR04MB6583:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR04MB65837A370268722E5C0FC8A7C7BD0@BY5PR04MB6583.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-Forefront-PRVS: 04041A2886
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UqEWEg/X8iIa+znI8yLYOZX0/TAl9tbeVRAaOhyvknmkKVsG3gyzWZqBxIXJNml2enKYlBgTvdAvR0h2JZWh1Ex5rbBuNpBxXZ/ruYJr5g0aKhIfkWRlgRZ93F8KEb1NSqhOhaC8oTFbXOn95FpOKrW1qA2ImvWmb2uA/Vff75vApYKkXiv787wNoNYiRvTw4NoY3vcUW1H50+WobQZkP8Yi10kv2jJhQ1uimWPhhv+Q+fhycTNxI3N50PzHaa5UrCf7MpAHkePHoHMbeY2ac0rIgtzggKr7Jw03nNTLo7oHKF0o94nz+YHdTgmqPStqezGLElzQURAb5YCq1M2rs/2o5j6PBPCSQjJRfQjG+wFMYyZ829xgbHa0DIyTgo7Kj0uHq/GdCbpDH8fIDjnRf+01Nm3jjYba5UcHYXc/L/z0Zvlc5kRZNFXtqNcteAbLh0aXt0z6I+OV9VpuhSSCI7a+762lfDW0Gzj8m+qNe9kgIa41k/ejJieZXK0wdNwbNAT3AeyNQly0KuyMLxk3QA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(136003)(376002)(366004)(396003)(39840400004)(8936002)(2906002)(6496006)(52116002)(8676002)(316002)(6916009)(86362001)(54906003)(16526019)(7416002)(26005)(186003)(956004)(55016002)(4326008)(66946007)(1076003)(33716001)(5660300002)(9686003)(66556008)(478600001)(107886003)(33656002)(66476007)(6666004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: y976YP3kawGNAFPOYmD+WLiJCIsmiMQqB7LOsHSvp6wFlEdsrgu2yvkXdqLbbUaPCYqKSQX8B8l4hd2QmS7FtQ5RDy5AEFXrS7mv+klnpYfdu2cAVI7XHETV6V7Zadaxhiib07mEHDrdhPXxNM3jFdt/vfl20DQLhNofnEjZyXuL9xOozrvqu/mo/TqjENIvlJvQXN3ZvNYe5Us7U+jGqTf8QefMOZybBS7MJVn/NaLsyR0VcAWNZ7U7w2pxu6FiUjjW2HxXtypUfmpt9HdK0Pn/pQO1Qx9tKQXxdBJJnzN4gNNF/oCeIdMOf46P2V6wrsYEy4jAUJLPr/faTBZidoRUuIChxESq6pU5NzHRDGcLqSfMf+ZFjc2JffC1ELyPpGB8akPQ7ELrT3l8HE9ECJh4bQKqZm4BGlYelAUKLT4Adk3eBK7FAtKZAJBXqe3c5RWIceCghodoaGuolH8rlwo4tu9+GwyhunMKiri/n/ZT4rgRbdSxyPj4rBHyIoCg
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ccce5ed-8c26-4624-543e-08d7f87a18f0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2020 02:45:58.7233
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pqz+qU3xje6GJ9oXnD5pPlqfdh+FloccM0M4DdPzd0TsHNyust/7ilgxysseOqNncuS8zRd0UtuWleUpb1DRIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB6583
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  7 May 2020 08:15:44 +0200, Mike Looijmans wrote:
-> Add support for the Si5342, Si5344 and Si5345 chips. These are equivalent
-> to the Si5341 family, but with more clock input options (which are not
-> supported yet by this driver).
-> 
-> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-> ---
->  .../bindings/clock/silabs,si5341.txt          | 11 ++-
->  drivers/clk/clk-si5341.c                      | 69 +++++++++++++++++--
->  2 files changed, 74 insertions(+), 6 deletions(-)
-> 
+Hi Rob Herring,
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thanks for your comments.
+
+On Thu, May 14, 2020 at 09:54:32AM -0500, Rob Herring wrote:
+> On Wed, May 06, 2020 at 03:04:20PM +0800, Xin Ji wrote:
+> > The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
+> > for portable device. It converts MIPI to DisplayPort 1.3 4K.
+> > 
+> > You can add support to your board with binding.
+> 
+> We have an example in the binding, no reason to also put in the commit 
+> msg.
+OK
+> 
+> > 
+> > Example:
+> > 	anx7625_bridge: encoder@58 {
+> > 		compatible = "analogix,anx7625";
+> > 		reg = <0x58>;
+> > 		status = "okay";
+> > 		enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
+> > 		reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
+> > 
+> > 		ports {
+> > 			#address-cells = <1>;
+> > 			#size-cells = <0>;
+> > 
+> > 			mipi2dp_bridge_in: port@0 {
+> > 				reg = <0>;
+> > 				anx7625_in: endpoint {
+> > 					remote-endpoint = <&mipi_dsi>;
+> > 				};
+> > 			};
+> > 
+> > 			mipi2dp_bridge_out: port@1 {
+> > 				reg = <1>;
+> > 				anx7625_out: endpoint {
+> > 					remote-endpoint = <&panel_in>;
+> > 				};
+> > 			};
+> > 		};
+> > 	};
+> > 
+> > Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> > ---
+> >  .../bindings/display/bridge/analogix,anx7625.yaml  | 98 ++++++++++++++++++++++
+> >  1 file changed, 98 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml b/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+> > new file mode 100644
+> > index 0000000..6e54176
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+> > @@ -0,0 +1,98 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +# Copyright 2019 Analogix Semiconductor, Inc.
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/display/bridge/analogix,anx7625.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
+> > +
+> > +maintainers:
+> > +  - Xin Ji <xji@analogixsemi.com>
+> > +
+> > +description: |
+> > +  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
+> > +  designed for portable devices.
+> > +
+> > +properties:
+> > +  "#address-cells": true
+> > +  "#size-cells": true
+> 
+> These don't belong here.
+OK
+> 
+> > +
+> > +  compatible:
+> > +    items:
+> > +      - const: analogix,anx7625
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    description: used for interrupt pin B8.
+> > +    maxItems: 1
+> > +
+> > +  enable-gpios:
+> > +    description: used for power on chip control, POWER_EN pin D2.
+> > +    maxItems: 1
+> > +
+> > +  reset-gpios:
+> > +    description: used for reset chip control, RESET_N pin B7.
+> > +    maxItems: 1
+> > +
+> > +  ports:
+> > +    type: object
+> > +
+> > +    properties:
+> > +      port@0:
+> > +        type: object
+> > +        description:
+> > +          Video port for MIPI DSI input.
+> > +
+> > +      port@1:
+> > +        type: object
+> > +        description:
+> > +          Video port for panel or connector.
+> > +
+> > +    required:
+> > +        - port@0
+> > +        - port@1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - ports
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +
+> > +    i2c0 {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        anx7625_bridge: encoder@58 {
+> 
+> Drop any unused labels.
+OK
+> 
+> > +            compatible = "analogix,anx7625";
+> > +            reg = <0x58>;
+> > +            enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
+> > +            reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
+> > +
+> > +            ports {
+> > +                #address-cells = <1>;
+> > +                #size-cells = <0>;
+> > +
+> > +                mipi2dp_bridge_in: port@0 {
+> > +                    reg = <0>;
+> > +                    anx7625_in: endpoint {
+> > +                        remote-endpoint = <&mipi_dsi>;
+> > +                    };
+> > +                };
+> > +
+> > +                mipi2dp_bridge_out: port@1 {
+> > +                    reg = <1>;
+> > +                    anx7625_out: endpoint {
+> > +                        remote-endpoint = <&panel_in>;
+> > +                    };
+> > +                };
+> > +            };
+> > +        };
+> > +    };
+> > -- 
+> > 2.7.4
+> > 
