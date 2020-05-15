@@ -2,81 +2,80 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E71C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85661C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21B112078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D252078C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589552576;
-	bh=P1wz18FD1v+ELmsuVnl//xXDeQTb7E8QMzUzntx7yCE=;
+	s=default; t=1589552629;
+	bh=6R+Xi8P/zfipyLDRIy6hLIDaQEC20tzTQym4EoyHh/I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m1RGbKaxr8NJ3cmMPFwWQSLTM0f75AeT2pmHDWfOWmMmFIJdBm1snwlPmbiL37j+x
-	 hd2HOXrb3XbI6B6ue8YgBuCdlcC6cXswb35SclYllXt8WG05kTTHE067tSQLV+rd3/
-	 kYk0IfraLVRoyRf2yK/X/WxrSpRfXlrK7NP5na2o=
+	b=qUMIp4e7BqsrcWKkqju/ycdS9CeS3pq4ZEcNdBAT/JCQ9BUaTM5onnOwB8uYqUA7d
+	 j8wgXL+BYTeXPkVQjd+nG8REZ1Q6gIGEw1bVlirZOCqc255MHapPPfMLmSJ5lXXmVp
+	 6CHiNYaZy9pBp9hYGI1nqcPTciLyqiv3i8Ie6w4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726221AbgEOOWz (ORCPT
+        id S1726229AbgEOOXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:22:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41922 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 10:23:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgEOOWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:22:55 -0400
+        id S1726140AbgEOOXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 10:23:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 239922076A;
-        Fri, 15 May 2020 14:22:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93CFE2076A;
+        Fri, 15 May 2020 14:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589552573;
-        bh=P1wz18FD1v+ELmsuVnl//xXDeQTb7E8QMzUzntx7yCE=;
+        s=default; t=1589552628;
+        bh=6R+Xi8P/zfipyLDRIy6hLIDaQEC20tzTQym4EoyHh/I=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XgusqbOcZyTJyECfVxc4oUD/Yr2F4jSZmZjI0fFQbOjJGIE/XhU2iiZWRDucqXtXC
-         MegvSrBPs2GxyTu+X+Ueb55ryH32xHHh326Cy/NwNTrLNguuw4V171WP9LWdPhpqJz
-         6fLwPv6Gyzfg5pOmSPK2SdUPhl8tlPNL8u5YK9jM=
-Date:   Fri, 15 May 2020 16:22:51 +0200
+        b=eHPePjMW3i3M8c2Y7Y8wblCRASGmrd7emqY5oB6OTqfHa+x9HjbsYbmP18QuTU55U
+         lytDX2mAO29R4A/zkkjbVpfw0kHxPsK/A4luRg75pxABOWveLsrpQ2Ud2LXAg+UQE9
+         GxUo8fkv4ptPyMQo/HWwlD/hZeKoIib0xQm5Nkaw=
+Date:   Fri, 15 May 2020 16:23:45 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
-        Mike Leach <mike.leach@linaro.org>, linux.cj@gmail.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] coresight: cti: remove incorrect NULL return check
-Message-ID: <20200515142251.GA2407979@kroah.com>
-References: <20200507053547.13707-1-calvin.johnson@oss.nxp.com>
- <CANLsYkzeHpZygbQtz8Ed7dEaVMz362ftHQJ50DrBYR=+72NpJQ@mail.gmail.com>
+To:     Samuel Iglesias =?iso-8859-1?Q?Gons=E1lvez?= 
+        <siglesias@igalia.com>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Jens Taprogge <jens.taprogge@taprogge.org>,
+        Zhouyang Jia <jiazhouyang09@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        industrypack-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH -next] ipack: tpci200: fix error return code in
+ tpci200_register()
+Message-ID: <20200515142345.GA2409034@kroah.com>
+References: <20200507094237.13599-1-weiyongjun1@huawei.com>
+ <eaaa54dbe413bf3f13f08c267e6c31c497afb509.camel@igalia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CANLsYkzeHpZygbQtz8Ed7dEaVMz362ftHQJ50DrBYR=+72NpJQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <eaaa54dbe413bf3f13f08c267e6c31c497afb509.camel@igalia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 12:00:21PM -0600, Mathieu Poirier wrote:
-> Hi Greg,
+On Thu, May 07, 2020 at 04:34:06PM +0200, Samuel Iglesias Gonsálvez wrote:
+> Hello Wei,
 > 
-> On Wed, 6 May 2020 at 23:36, Calvin Johnson <calvin.johnson@oss.nxp.com> wrote:
-> >
-> > fwnode_find_reference() doesn't return NULL and hence that check
-> > should be avoided.
-> >
-> > Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
-> > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Thanks for the patch!
 > 
-> I just noticed you were not CC'ed on the original conversation Calvin
-> and I had and as such you probably don't know what to do with this
-> patch.  Please see if you can pick it up as a fix for 5.7.  If that is
-> not possible I will queue it up for inclusion in the 5.8 cycle.
+> Patch is,
+> 
+> Acked-by: Samuel Iglesias Gonsalvez <siglesias@igalia.com>
+> 
+> Greg, Would you mind picking this patch series through your char-misc
+> tree?
 
-I can take this for 5.7-final, thanks.
+Sure, will do.
 
 greg k-h
