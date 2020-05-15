@@ -2,94 +2,106 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9E0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8AA72065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114EE20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:41:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQ9HX6rw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbgEOLkn (ORCPT
+        id S1726228AbgEOLl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:40:43 -0400
-Received: from mga09.intel.com ([134.134.136.24]:32479 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726003AbgEOLkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:40:43 -0400
-IronPort-SDR: BLVIduF9zAxdiLkiPEki+ME4jlxwifFFB3sPZdEIC4hHpnnxoMAZGM04F2TQAVIUIS9rThsR3y
- StSR0VKiZQzw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 04:40:43 -0700
-IronPort-SDR: Zxm93dBj9QeuaxwdKrGE0EN+mN8jDYSRw9LLjluNBQVeEX+0HcpZst/qTiBxgupCSun+htzg6Y
- x2dIMorsXzvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="287758924"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 15 May 2020 04:40:40 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZYho-006qhy-8y; Fri, 15 May 2020 14:40:44 +0300
-Date:   Fri, 15 May 2020 14:40:44 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Fengping Yu <fengping.yu@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 2/3] drivers: input: keyboard: Add mtk keypad driver
-Message-ID: <20200515114044.GR185537@smile.fi.intel.com>
-References: <20200515062007.28346-1-fengping.yu@mediatek.com>
- <20200515062007.28346-3-fengping.yu@mediatek.com>
- <20200515093016.rw5bmvoumgzvkqrc@pengutronix.de>
+        Fri, 15 May 2020 07:41:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725986AbgEOLl6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:41:58 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63635C061A0C;
+        Fri, 15 May 2020 04:41:58 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id l3so1914221edq.13;
+        Fri, 15 May 2020 04:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=RWK3xRBK3vF039IvGRjdVtIEkl1uwsII0GmOE8enEhg=;
+        b=AQ9HX6rwWWp133kyVs2PIJL5t+b/npGe7W2nKwSP00VnDRcm0saijkshcdRXR10VlL
+         N3QvsCS9Nf+I1JhMOMiw+s9X5sS4vLhmyuKy3L+93WpWfow7gI05+dOZYGAI5r4cU8y1
+         rJx1+S0EECUThKB3RqnhXEQreTT8itZR/odWs96CLWvXaxSos2ymicfJwUvXxUq2Cyaf
+         KnRBdDXaLTKwoY3NlxhBOVeOCPlpn00Mf7t+vRbun0vUbFkFWOI+2VVcglalTkwpQD0C
+         ktLCP3/1ggat4CkA0bkiK1Ciph/UfOrPoEWagk2/a3RWjWai3Tb1ecqCvmVFj90S59jX
+         vAPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=RWK3xRBK3vF039IvGRjdVtIEkl1uwsII0GmOE8enEhg=;
+        b=fk+1CluEiGkXyUhm63vK/uOzFStDzAHfwJiWN2c8vHmxtwl8aES4zFsL20rMnMGg1U
+         PXVd8djpqY1+Zgc+mCFYjO1Ym9JX/H5jpAv2q24bU2Whuq8kQOIm6ILNkxXEmsD2u5p4
+         Fo0ReN7oKxeawUNx4eP4ybWD91xvStXrFlCLLMdHKknt6F9mkRew5xLJZf2SZ+8H8hBW
+         eAbpJCZWEmyfyVZ2yVismcmvADWOCF8W8os/k5QGII0ZTLEO1d+e1FwYrn/U8Q78gQmx
+         d+ZQ1Wjkx6jmDMLY5r6z5CEckSxD5TDtX1Hat7PDQ25k0lBwS1dh+bAzyEtqVBsr4OxW
+         KC7A==
+X-Gm-Message-State: AOAM532GYI1BrYj/HjvcXJSg+5qmMxDuTdiCuH0vVmjJ/1hRQOntfCtg
+        A0TA7evDuenonPls9fGAR/AfnoDrENFS1pzoGn04lw==
+X-Google-Smtp-Source: ABdhPJz1RIomfe7RiC1u7TKWUXwQNw8CcWTmJoSxNcIZssX43Bjmg42p6f/3pmGxPvbz7iDqC86FN17PdfSdI+NU9sg=
+X-Received: by 2002:a05:6402:c0f:: with SMTP id co15mr2299648edb.286.1589542917105;
+ Fri, 15 May 2020 04:41:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515093016.rw5bmvoumgzvkqrc@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <CAKgNAkhL0zCj11LS9vfae872YVeRsxdz20sZWuXdi+UjH21=0g@mail.gmail.com>
+ <20200410104132.294639-1-christian@brauner.io> <b7550fcd-ba12-e64a-3228-e6668b31a8a7@gmail.com>
+ <CAKgNAkhQr+sKGAu+KcxPEsuwG3kjQOyzVW7E1yM9cMtSZrhW9A@mail.gmail.com> <20200423101420.udkmlhnfg57lsshi@wittgenstein>
+In-Reply-To: <20200423101420.udkmlhnfg57lsshi@wittgenstein>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Fri, 15 May 2020 13:41:46 +0200
+Message-ID: <CAKgNAkhXxWFE8msNkJ3117ChacWsfiMsBptZsVJOnxGtuDTX0Q@mail.gmail.com>
+Subject: Re: [PATCH] clone.2: Document CLONE_INTO_CGROUP
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 11:30:16AM +0200, Marco Felsch wrote:
-> On 20-05-15 14:20, Fengping Yu wrote:
+Hello Christian,
 
-...
+Ping!
 
-> > +	depends on OF && HAVE_CLK
-> 
-> Please drop those deps and instead use:
+Thanks,
 
-+1
+Michael
 
-> depends on ARCH_MEDIATEK && ARM64
+On Thu, 23 Apr 2020 at 12:14, Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> On Tue, Apr 21, 2020 at 04:30:46PM +0200, Michael Kerrisk (man-pages) wrote:
+> > Hi Christian,
+> >
+> > Ping!
+>
+> Will likely take a few days until I can get around to prepare a second
+> version. Sorry for the delay!
+>
+> Christian
 
-I would go even further
-	depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
 
-> There are still some missing deps:
-> 
-> select CONFIG_REGMAP_MMIO
-> select INPUT_MATRIXKMAP
-
-...
-
-> > +#define MTK_KPD_DEBOUNCE_MAX_US		256000 /*256ms */
-> 
-> Thanks for aligning the defines but the 256ms comment is still useless
-> as Andy already said.
-
-Yes, it seems my comments partially (?) have been ignored.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
