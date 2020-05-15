@@ -7,61 +7,62 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D05C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54872C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8BFF206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B21020728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:35:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rOovWDSJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NNmMCJFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgEOFfN (ORCPT
+        id S1726660AbgEOFfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 01:35:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35696 "EHLO
+        Fri, 15 May 2020 01:35:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726537AbgEOFfJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726551AbgEOFfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 May 2020 01:35:09 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB2FC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:35:07 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id u38so1260093qtc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:35:07 -0700 (PDT)
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79043C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:35:09 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id y8so1397312ybn.20
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:35:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=EZoy6w7ha0DNuHCPHtXM/SP1BLypAsOupCZ9P6v8cMM=;
-        b=rOovWDSJYXWE5Bmy7IlspRdZnHrW3vC8hO0zRosezAonLPXvCkp4SGejQLIRYpLSlv
-         QfdRJ92IBQkIQW188k9n/iXvg4qHBBRuydnWHU1LlPDJfpnfaDdF2WcN96jNPK3XknVN
-         ClYXIl7QaaHGPmUiYUPJZOqBCncHbos5xkyX+i68aMXwhfkmGKjGQ1HyjlobIvmNmhna
-         4+6OZLy3n/1ROIjmOYDG2XgMTFSaARz1ChwsCyhnPfL96S1evSHhST4tjA9s2RapQXna
-         wBgOw9417hZKdE4zXjSNPWBk88p7+sdHK6Q7yRi2pmCfb0iyD/O0jUiI8GPItZDnZFzY
-         aIxA==
+        bh=RUCHt3IUTaAuIZ5RcDy4DbI7lEInPDSWSCSV1x0aJWU=;
+        b=NNmMCJFsnc8QFuD5OYt292G7roqEzHRNUYulBcoESHwmzCM16suaXcwxL7JDzWuXay
+         Dz81ANTMnpkXBwhmnbiMvHbNioUQM/0Jpu3HXydj063az53GvyNz/ybUZi60vtEftqsX
+         5y3CuDlXPN0VWTHOizdO8em6WneEBZOh05j/7gzZ+EyL4MN+N+nBFKGcWK9B06gY26KJ
+         EGI22WFBwOcvhbXCvYFfJ+BLuzRTTJq8pGhTf0uMvGUdpHIb43ZqlK9z+ik7oP4ePFz0
+         M6M70Lurbci12BP0XFdJqAvYdNFGYV/6XA+xhipiiPq+tnAWLrAKkNFkoATNHlcwVIG2
+         kS+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=EZoy6w7ha0DNuHCPHtXM/SP1BLypAsOupCZ9P6v8cMM=;
-        b=uYrPyt6Lag0wCNqYmWFM5m1N8GfOUqkMSJekOwHdFLfUngIbBBTH82nukOKjOEtw4q
-         svyQ58wlLk9TU84xsGjRGoVHHcZsp2IldB7PGd7R1tGkU4BVMbxBJITxiLHbBjc5sbfg
-         pN2iaE7yX03ZSctk589MuQBNtsM2lSBLr4Jttj9OSaUyK4hYkEm9CwINNkxhQSR+kq+C
-         ypjdAndYUHSTDCw+5CImj9SqUVyw0uJ0y9G7sC+7XhxbRU/zpgh1MPe/luFKquTuApfL
-         xWRP3yg1QKjjnycWgmat4tQII3npO7CR7ainusoMLnbHH5EtdurFSfHDugZjljc6DInK
-         A5JQ==
-X-Gm-Message-State: AOAM530wKAV7hRqeb1Ugv/TCW4NqYVg331hoJA4ZvT2J/3jyj86todtP
-        2a5ybxjunYq0Is0IW1fmECIW8qIqXcnAN0Y=
-X-Google-Smtp-Source: ABdhPJwaE6/0XCEsVs67aBW7TEyiScvmgrKOX5Hlong/h0NOfDzB7vfDCEcF3sKLCbo5eLpiZQ6wtkRsTF4+GrQ=
-X-Received: by 2002:a05:6214:70a:: with SMTP id b10mr1910835qvz.186.1589520906395;
- Thu, 14 May 2020 22:35:06 -0700 (PDT)
-Date:   Thu, 14 May 2020 22:34:57 -0700
+        bh=RUCHt3IUTaAuIZ5RcDy4DbI7lEInPDSWSCSV1x0aJWU=;
+        b=eLu4gjbzeFRqF4cM5mOkZC06n6Zr/+R84j4z/3wIBeKLizwx1UT4u2OnxOg5KBkVJd
+         Tf0xpH65lf3Z3M+4//gLCnpHizjJE+CMkHxZGzsPor2MvCngCKbFkstBFkYtYIoEogoO
+         zC/cqdqIiNunAqbY+ZwSNKKfiz3a3MaQSXT5hruM7KOXb/Ez/75C52G88Nvz0p/13ozr
+         q0iHoRAqHogvIMWJolWX5g1PyorETEAzvWFlr1/pYnaDfAteqc2PiW2G6zZJ97UlkVZt
+         gufRQrLmoOB6hH5NI2lmwNPhHrtVbIoGqE9ldQjs6f4sHCxiCvzMn06A16UNoQvwUiMU
+         TFAA==
+X-Gm-Message-State: AOAM531yRbjfJfhcn7l06zY7snqikZ1R2ew+kVaFAmJcH9SIhbbvQEpD
+        Q5Ahqnlhcv0xVp6zmD2mFLahENMEcADN9Fo=
+X-Google-Smtp-Source: ABdhPJz5Il4KBtVez3mKTqB6IUL3C6pYb+iGjAt2GhlZ7PEp1DIpmYHxcPfv+5v4AeIr7I9PrnjCEiAD3DCPmSY=
+X-Received: by 2002:a25:ba8b:: with SMTP id s11mr2591447ybg.310.1589520908664;
+ Thu, 14 May 2020 22:35:08 -0700 (PDT)
+Date:   Thu, 14 May 2020 22:34:58 -0700
 In-Reply-To: <20200515053500.215929-1-saravanak@google.com>
-Message-Id: <20200515053500.215929-2-saravanak@google.com>
+Message-Id: <20200515053500.215929-3-saravanak@google.com>
 Mime-Version: 1.0
 References: <20200515053500.215929-1-saravanak@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH v1 1/4] driver core: Move code to the right part of the file
+Subject: [PATCH v1 2/4] driver core: Look for waiting consumers only for a
+ fwnode's primary device
 From:   Saravana Kannan <saravanak@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -77,92 +78,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit just moves around code to match the general organization of
-the file.
+Commit 4dbe191c046e ("driver core: Add device links from fwnode only for
+the primary device") skipped linking a fwnode's secondary device to
+the suppliers listed in its fwnode.
+
+However, a fwnode's secondary device can't be found using
+get_dev_from_fwnode(). So, there's no point in trying to see if devices
+waiting for suppliers might want to link to a fwnode's secondary device.
+
+This commit removes that unnecessary step for devices that aren't a
+fwnode's primary device and also moves the code to a more appropriate
+part of the file.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/base/core.c | 60 ++++++++++++++++++++++-----------------------
- 1 file changed, 30 insertions(+), 30 deletions(-)
+ drivers/base/core.c | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/base/core.c b/drivers/base/core.c
-index c9045521596f..2b454aae64b5 100644
+index 2b454aae64b5..f585d92e09d0 100644
 --- a/drivers/base/core.c
 +++ b/drivers/base/core.c
-@@ -1143,6 +1143,36 @@ static void device_links_purge(struct device *dev)
- 	device_links_write_unlock();
+@@ -1173,6 +1173,21 @@ static bool fw_devlink_is_permissive(void)
+ 	return fw_devlink_flags == DL_FLAG_SYNC_STATE_ONLY;
  }
  
-+static u32 fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
-+static int __init fw_devlink_setup(char *arg)
++static void fw_devlink_link_device(struct device *dev)
 +{
-+	if (!arg)
-+		return -EINVAL;
++	int fw_ret;
 +
-+	if (strcmp(arg, "off") == 0) {
-+		fw_devlink_flags = 0;
-+	} else if (strcmp(arg, "permissive") == 0) {
-+		fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
-+	} else if (strcmp(arg, "on") == 0) {
-+		fw_devlink_flags = DL_FLAG_AUTOPROBE_CONSUMER;
-+	} else if (strcmp(arg, "rpm") == 0) {
-+		fw_devlink_flags = DL_FLAG_AUTOPROBE_CONSUMER |
-+				   DL_FLAG_PM_RUNTIME;
++	device_link_add_missing_supplier_links();
++
++	if (fw_devlink_flags && fwnode_has_op(dev->fwnode, add_links)) {
++		fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
++		if (fw_ret == -ENODEV && !fw_devlink_is_permissive())
++			device_link_wait_for_mandatory_supplier(dev);
++		else if (fw_ret)
++			device_link_wait_for_optional_supplier(dev);
 +	}
-+	return 0;
-+}
-+early_param("fw_devlink", fw_devlink_setup);
-+
-+u32 fw_devlink_get_flags(void)
-+{
-+	return fw_devlink_flags;
-+}
-+
-+static bool fw_devlink_is_permissive(void)
-+{
-+	return fw_devlink_flags == DL_FLAG_SYNC_STATE_ONLY;
 +}
 +
  /* Device links support end. */
  
  int (*platform_notify)(struct device *dev) = NULL;
-@@ -2345,36 +2375,6 @@ static int device_private_init(struct device *dev)
- 	return 0;
- }
+@@ -2407,7 +2422,7 @@ int device_add(struct device *dev)
+ 	struct device *parent;
+ 	struct kobject *kobj;
+ 	struct class_interface *class_intf;
+-	int error = -EINVAL, fw_ret;
++	int error = -EINVAL;
+ 	struct kobject *glue_dir = NULL;
+ 	bool is_fwnode_dev = false;
  
--static u32 fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
--static int __init fw_devlink_setup(char *arg)
--{
--	if (!arg)
--		return -EINVAL;
+@@ -2524,16 +2539,8 @@ int device_add(struct device *dev)
+ 	 * waiting consumers can link to it before the driver is bound to the
+ 	 * device and the driver sync_state callback is called for this device.
+ 	 */
+-	device_link_add_missing_supplier_links();
 -
--	if (strcmp(arg, "off") == 0) {
--		fw_devlink_flags = 0;
--	} else if (strcmp(arg, "permissive") == 0) {
--		fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
--	} else if (strcmp(arg, "on") == 0) {
--		fw_devlink_flags = DL_FLAG_AUTOPROBE_CONSUMER;
--	} else if (strcmp(arg, "rpm") == 0) {
--		fw_devlink_flags = DL_FLAG_AUTOPROBE_CONSUMER |
--				   DL_FLAG_PM_RUNTIME;
+-	if (fw_devlink_flags && is_fwnode_dev &&
+-	    fwnode_has_op(dev->fwnode, add_links)) {
+-		fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
+-		if (fw_ret == -ENODEV && !fw_devlink_is_permissive())
+-			device_link_wait_for_mandatory_supplier(dev);
+-		else if (fw_ret)
+-			device_link_wait_for_optional_supplier(dev);
 -	}
--	return 0;
--}
--early_param("fw_devlink", fw_devlink_setup);
--
--u32 fw_devlink_get_flags(void)
--{
--	return fw_devlink_flags;
--}
--
--static bool fw_devlink_is_permissive(void)
--{
--	return fw_devlink_flags == DL_FLAG_SYNC_STATE_ONLY;
--}
--
- /**
-  * device_add - add device to device hierarchy.
-  * @dev: device.
++	if (is_fwnode_dev)
++		fw_devlink_link_device(dev);
+ 
+ 	bus_probe_device(dev);
+ 	if (parent)
 -- 
 2.26.2.761.g0e0b3e54be-goog
 
