@@ -2,152 +2,157 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B448C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDDAC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0791B2074A
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:20:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589599228;
-	bh=tPI2ZvjluD65tz0sPdtXPCuXpZXv/GTWLwcV36ouWkU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NmHfuN6O/qMjOFyhrdg6kXtGd9A9ii3rQI9iuwgi7faS2MzijYSDM4sqTMYb37/g/
-	 nHo4tG0PszZJw0FdZPGWTvLegER0xm4l22Gut8ZyGP8ywZL96TFkx/0gzX86IpfRnc
-	 1VxflbaWbUJPWlMeoM4rKxfM1CTR4zqUmKoCdKfQ=
+	by mail.kernel.org (Postfix) with ESMTP id C5A35206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgEPDU0 (ORCPT
+        id S1727936AbgEPDYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 23:20:26 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43214 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbgEPDUI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 23:20:08 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v63so1921053pfb.10;
-        Fri, 15 May 2020 20:20:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vwSG5ItKx2r5dbDOPcw9Nyt7jOYmxP5wgs6FTcAWgW0=;
-        b=N4wlRF8X2a+WSScdS073qLAmZNTdK5aqHvvkYF75cO8DW8xslivIFMLFG60Qyrs23J
-         qVGRrpZMhmpEpqL5+A1dE1yohricljlPwAOXjENBvjbSznV7Fg2h30NTOMGjq/VUjFUB
-         2c2HWS7Hngs4lpyMa1ocQ/Ztkdt+idgRAgf92TijAXWAS1Bskvnza2vSHN3TARp/d9d3
-         SCFTZ5Zxls/okAKBVxfZIjmNCil4dpi96G/Rio6sTiH0BciJXFWqpQji9rEm1B4VsXok
-         i5AEv/yp071yao8mQbIbQ6X0uYItpsMb+ISAkyx3Bmdx1appkHkxnKYKbAoEbHqgNRSy
-         2dsQ==
-X-Gm-Message-State: AOAM533f0BzafIUizszWJLbMUD+wgbWwhTFYml78vMGCHrCwVI2J2NsQ
-        x4VupU1ibd2b8vPdsrqDFopMWv9lOI6iFw==
-X-Google-Smtp-Source: ABdhPJwU3+TI8g+EyIeQPhXO+/cx+sT8afNbB1U4k6Kb4bGm6M4IeutMRhzShn9t7OeCKVjIaOL/UA==
-X-Received: by 2002:a63:da10:: with SMTP id c16mr2649800pgh.208.1589599206435;
-        Fri, 15 May 2020 20:20:06 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id z18sm3070391pfj.148.2020.05.15.20.20.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 20:20:04 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id BBBAC422E5; Sat, 16 May 2020 03:19:59 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org
-Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v5 6/7] blktrace: break out of blktrace setup on concurrent calls
-Date:   Sat, 16 May 2020 03:19:55 +0000
-Message-Id: <20200516031956.2605-7-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200516031956.2605-1-mcgrof@kernel.org>
-References: <20200516031956.2605-1-mcgrof@kernel.org>
+        Fri, 15 May 2020 23:24:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50948 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726247AbgEPDYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 23:24:48 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1EB7E3846B1DB85CBE38;
+        Sat, 16 May 2020 11:24:46 +0800 (CST)
+Received: from localhost.localdomain (10.175.118.36) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 16 May 2020 11:24:36 +0800
+From:   Luo bin <luobin9@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <luobin9@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
+Subject: [PATCH net-next v1] hinic: add set_channels ethtool_ops support
+Date:   Fri, 15 May 2020 19:42:12 +0000
+Message-ID: <20200515194212.10381-1-luobin9@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.118.36]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We use one blktrace per request_queue, that means one per the entire
-disk.  So we cannot run one blktrace on say /dev/vda and then /dev/vda1,
-or just two calls on /dev/vda.
+add support to change TX/RX queue number with ethtool -L
 
-We check for concurrent setup only at the very end of the blktrace setup though.
-
-If we try to run two concurrent blktraces on the same block device the
-second one will fail, and the first one seems to go on. However when
-one tries to kill the first one one will see things like this:
-
-The kernel will show these:
-
-```
-debugfs: File 'dropped' in directory 'nvme1n1' already present!
-debugfs: File 'msg' in directory 'nvme1n1' already present!
-debugfs: File 'trace0' in directory 'nvme1n1' already present!
-``
-
-And userspace just sees this error message for the second call:
-
-```
-blktrace /dev/nvme1n1
-BLKTRACESETUP(2) /dev/nvme1n1 failed: 5/Input/output error
-```
-
-The first userspace process #1 will also claim that the files
-were taken underneath their nose as well. The files are taken
-away form the first process given that when the second blktrace
-fails, it will follow up with a BLKTRACESTOP and BLKTRACETEARDOWN.
-This means that even if go-happy process #1 is waiting for blktrace
-data, we *have* been asked to take teardown the blktrace.
-
-This can easily be reproduced with break-blktrace [0] run_0005.sh test.
-
-Just break out early if we know we're already going to fail, this will
-prevent trying to create the files all over again, which we know still
-exist.
-
-[0] https://github.com/mcgrof/break-blktrace
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Luo bin <luobin9@huawei.com>
 ---
- kernel/trace/blktrace.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ .../net/ethernet/huawei/hinic/hinic_ethtool.c | 46 +++++++++++++++----
+ .../net/ethernet/huawei/hinic/hinic_main.c    |  2 +-
+ drivers/net/ethernet/huawei/hinic/hinic_tx.c  |  5 ++
+ 3 files changed, 44 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 6c10a1427de2..ac6650828d49 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -3,6 +3,9 @@
-  * Copyright (C) 2006 Jens Axboe <axboe@kernel.dk>
-  *
-  */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/kernel.h>
- #include <linux/blkdev.h>
- #include <linux/blktrace_api.h>
-@@ -493,6 +496,16 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 	 */
- 	strreplace(buts->name, '/', '_');
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+index ace18d258049..9796c1fbe132 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+@@ -619,14 +619,43 @@ static void hinic_get_channels(struct net_device *netdev,
+ 	struct hinic_dev *nic_dev = netdev_priv(netdev);
+ 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
  
-+	/*
-+	 * bdev can be NULL, as with scsi-generic, this is a helpful as
-+	 * we can be.
-+	 */
-+	if (q->blk_trace) {
-+		pr_warn("Concurrent blktraces are not allowed on %s\n",
-+			buts->name);
-+		return -EBUSY;
+-	channels->max_rx = hwdev->nic_cap.max_qps;
+-	channels->max_tx = hwdev->nic_cap.max_qps;
+-	channels->max_other = 0;
+-	channels->max_combined = 0;
+-	channels->rx_count = hinic_hwdev_num_qps(hwdev);
+-	channels->tx_count = hinic_hwdev_num_qps(hwdev);
+-	channels->other_count = 0;
+-	channels->combined_count = 0;
++	channels->max_combined = nic_dev->max_qps;
++	channels->combined_count = hinic_hwdev_num_qps(hwdev);
++}
++
++static int hinic_set_channels(struct net_device *netdev,
++			      struct ethtool_channels *channels)
++{
++	struct hinic_dev *nic_dev = netdev_priv(netdev);
++	unsigned int count = channels->combined_count;
++	int err;
++
++	if (!count) {
++		netif_err(nic_dev, drv, netdev,
++			  "Unsupported combined_count: 0\n");
++		return -EINVAL;
 +	}
 +
- 	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
- 	if (!bt)
- 		return -ENOMEM;
++	netif_info(nic_dev, drv, netdev, "Set max combined queue number from %d to %d\n",
++		   hinic_hwdev_num_qps(nic_dev->hwdev), count);
++
++	if (netif_running(netdev)) {
++		netif_info(nic_dev, drv, netdev, "Restarting netdev\n");
++		hinic_close(netdev);
++
++		nic_dev->hwdev->nic_cap.num_qps = count;
++
++		err = hinic_open(netdev);
++		if (err) {
++			netif_err(nic_dev, drv, netdev,
++				  "Failed to open netdev\n");
++			return -EFAULT;
++		}
++	} else {
++		nic_dev->hwdev->nic_cap.num_qps = count;
++	}
++
++	return 0;
+ }
+ 
+ static int hinic_get_rss_hash_opts(struct hinic_dev *nic_dev,
+@@ -1219,6 +1248,7 @@ static const struct ethtool_ops hinic_ethtool_ops = {
+ 	.get_ringparam = hinic_get_ringparam,
+ 	.set_ringparam = hinic_set_ringparam,
+ 	.get_channels = hinic_get_channels,
++	.set_channels = hinic_set_channels,
+ 	.get_rxnfc = hinic_get_rxnfc,
+ 	.set_rxnfc = hinic_set_rxnfc,
+ 	.get_rxfh_key_size = hinic_get_rxfh_key_size,
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+index e3ff119fe341..2c07b03bf6e5 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+@@ -326,7 +326,6 @@ static void hinic_enable_rss(struct hinic_dev *nic_dev)
+ 	int i, node, err = 0;
+ 	u16 num_cpus = 0;
+ 
+-	nic_dev->max_qps = hinic_hwdev_max_num_qps(hwdev);
+ 	if (nic_dev->max_qps <= 1) {
+ 		nic_dev->flags &= ~HINIC_RSS_ENABLE;
+ 		nic_dev->rss_limit = nic_dev->max_qps;
+@@ -1043,6 +1042,7 @@ static int nic_dev_init(struct pci_dev *pdev)
+ 	nic_dev->rq_depth = HINIC_RQ_DEPTH;
+ 	nic_dev->sriov_info.hwdev = hwdev;
+ 	nic_dev->sriov_info.pdev = pdev;
++	nic_dev->max_qps = num_qps;
+ 
+ 	sema_init(&nic_dev->mgmt_lock, 1);
+ 
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+index 4c66a0bc1b28..6da761d7a6ef 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+@@ -470,6 +470,11 @@ netdev_tx_t hinic_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
+ 	struct hinic_txq *txq;
+ 	struct hinic_qp *qp;
+ 
++	if (unlikely(!netif_carrier_ok(netdev))) {
++		dev_kfree_skb_any(skb);
++		return NETDEV_TX_OK;
++	}
++
+ 	txq = &nic_dev->txqs[q_id];
+ 	qp = container_of(txq->sq, struct hinic_qp, sq);
+ 
 -- 
-2.26.2
+2.17.1
 
