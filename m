@@ -2,117 +2,138 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5012C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D873C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A611220709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589575248;
-	bh=7/Rpg+KXflBLuZsnLoyMnGo3Y9ufgp8qwJuPpO7BwaA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=n6Z6LEqrKpoQSI/9TKgRPRAUrpB9CQGyHY9dnJbrIZhCiR6Fmwj7HZfdg2rol94IC
-	 6QruydojI8e8tAjNCfbpaWeV/+3kI8yjk0gYBwZThDok8jdv6bx4506+jPoLROQi6F
-	 3gJHv9hv0rY5G6DlyOu6si7xtQwI0Uk+fFVNdN6w=
+	by mail.kernel.org (Postfix) with ESMTP id D9BC420709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:42:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HuhqVP38"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbgEOUkr (ORCPT
+        id S1726245AbgEOUmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:40:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbgEOUkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:40:47 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90FD92065C;
-        Fri, 15 May 2020 20:40:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589575247;
-        bh=7/Rpg+KXflBLuZsnLoyMnGo3Y9ufgp8qwJuPpO7BwaA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yYiOrVlBnM3aO59WMqUm3FSSQzFJGNL3VqcYNpP/dJzArRZ14W3EckZ3tyQpIm3P+
-         MrBsYFDV0RlVmYXRJ5hqynPd8nRvqZpfj1XibvEeXHaFByurO0jEiypqW5nKXCJHlS
-         5FbAPrnmkaWnlNtI5oAHxBPHONNGNE0HtTdo43GQ=
-Date:   Fri, 15 May 2020 13:40:46 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Bibo Mao <maobibo@loongson.cn>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org
-Subject: Re: [PATCH 2/3] mm/memory.c: Update local TLB if PTE entry exists
-Message-Id: <20200515134046.cf107c6a13b9604c46ad71b8@linux-foundation.org>
-In-Reply-To: <1589515809-32422-2-git-send-email-maobibo@loongson.cn>
-References: <1589515809-32422-1-git-send-email-maobibo@loongson.cn>
-        <1589515809-32422-2-git-send-email-maobibo@loongson.cn>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 15 May 2020 16:42:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgEOUmx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 16:42:53 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 122BFC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:42:53 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id s21so3347657ejd.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:42:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dz+fWfDJYsM+tFXNBKAA9wqSLEoWW+Ek7ibRNvsSK4A=;
+        b=HuhqVP38EnG9v4J11YxP/SXESV/y9N9Mu6eqUgsjR3b5rpD8n4+8IAl9zZCsrjaWmD
+         bdt5vMFXqOH9VSAXo2uCH7i/Ba3MPOVWUkfld1CKVR5VAHxoKMI27hnZ8B0isc+6plTd
+         3i257scz/DFqUsV55sLUnz31Qoj2gddWUVCcN/YbtfWdubh/Bp+ZHdrWrkIHvntpjws4
+         ec5mBj941nZXLGJEuYPzkaPI7Mj7PZqiO4ArfmnD1sh0cjzfSc7MqPcHm2FhD0UCsdnF
+         sOKaWk03AmsyDohBerKzNpwjZJQzFJPHDRCfs70bXTfPdYsTCAAUrVQHG1mloMy+PbuF
+         YcZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dz+fWfDJYsM+tFXNBKAA9wqSLEoWW+Ek7ibRNvsSK4A=;
+        b=l3dQL6Uy5Z6zYwnVWRyKX2zWyxYZhhEtenpwGE3dG0NOSejnQWOQ/O0e5qYo9EF+WV
+         RpSc1SrerJxlah3DEUIroknMTF8PDoz+6wTwyyVb/bYVnZBEWApjyHu0jynowpgCdvbu
+         yZVAwz0+2C+ezQnfRJ59VJnNrtUloUlW6poo5J9whgzm4sHsWONd5i9GIt3DjBqz360f
+         a1RPfwHDvMRy0H38DaffsUgWBT2lYoC7nKZI9irMhuSNJmGpmxLubNs0gukfKLe/NVTj
+         1Ogryhs+rnt6YkRbm8mEQ+SX7Ve/4mb8CONNuIiKEXDeGRm8U1JeNYe9fDzVf4MmdXQh
+         lE7g==
+X-Gm-Message-State: AOAM532mns0cWT77f6Cxl2sRqSTMmU6vBco27FDs9lZmhkudUvMA2hRE
+        SrxiooSm86O/yiRGGIrAI6HkNlRfA7gn50aBke6QWA==
+X-Google-Smtp-Source: ABdhPJxqgAkYgYezisODwIMgNYIOCNmXUdqnBOG6D2B2uk0jS3Oca1lw0nYuQyVFttqz+Kniz2zo7IYbtafB+LdjELA=
+X-Received: by 2002:a17:906:55c3:: with SMTP id z3mr4688303ejp.180.1589575371237;
+ Fri, 15 May 2020 13:42:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200515172756.27185-1-will@kernel.org>
+In-Reply-To: <20200515172756.27185-1-will@kernel.org>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Fri, 15 May 2020 13:42:40 -0700
+Message-ID: <CABCJKucXmMD82mQ0rSMjfByXD42htTjkde3TsKTVP-jvuqkZwQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] Clean up Shadow Call Stack patches for 5.8
+To:     Will Deacon <will@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@am.com>,
+        Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 May 2020 12:10:08 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
+On Fri, May 15, 2020 at 10:28 AM Will Deacon <will@kernel.org> wrote:
+>
+> Hi all,
+>
+> Here's a series of cleanups I hacked together on top of a modified v13
+> of the Shadow Call Stack patches from Sami:
+>
+>   https://lore.kernel.org/r/20200515172355.GD23334@willie-the-truck
+>
+> The main changes are:
+>
+>   * Move code out of arch/arm64 and into the core implementation
+>   * Store the full SCS stack pointer instead of the offset
+>   * Code simplification and general style things
+>
+> I'd like to queue this on top early next week so that it can spend some
+> quality time in linux-next.
+>
+> Cheers,
+>
+> Will
+>
+> Cc: Sami Tolvanen <samitolvanen@google.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Mark Rutland <mark.rutland@am.com>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: <kernel-team@android.com>
+>
+> --->8
+>
+> Will Deacon (6):
+>   arm64: scs: Store absolute SCS stack pointer value in thread_info
+>   scs: Move accounting into alloc/free functions
+>   arm64: scs: Use 'scs_sp' register alias for x18
+>   scs: Move scs_overflow_check() out of architecture code
+>   scs: Remove references to asm/scs.h from core code
+>   scs: Move DEFINE_SCS macro into core code
+>
+>  arch/Kconfig                         |  4 +--
+>  arch/arm64/include/asm/scs.h         | 29 ++++------------
+>  arch/arm64/include/asm/thread_info.h |  4 +--
+>  arch/arm64/kernel/asm-offsets.c      |  2 +-
+>  arch/arm64/kernel/entry.S            | 10 +++---
+>  arch/arm64/kernel/head.S             |  2 +-
+>  arch/arm64/kernel/process.c          |  2 --
+>  arch/arm64/kernel/scs.c              |  6 +---
+>  include/linux/scs.h                  | 16 +++++----
+>  kernel/sched/core.c                  |  3 ++
+>  kernel/scs.c                         | 52 +++++++++++++---------------
+>  11 files changed, 55 insertions(+), 75 deletions(-)
+>
+> --
+> 2.26.2.761.g0e0b3e54be-goog
 
-> If there are two threads hitting page fault at the same page,
-> one thread updates PTE entry and local TLB, the other can
-> update local tlb also, rather than give up and do page fault
-> again.
->
-> ...
->
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -1770,8 +1770,8 @@ static vm_fault_t insert_pfn(struct vm_area_struct *vma, unsigned long addr,
->  			}
->  			entry = pte_mkyoung(*pte);
->  			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
-> -			if (ptep_set_access_flags(vma, addr, pte, entry, 1))
-> -				update_mmu_cache(vma, addr, pte);
-> +			ptep_set_access_flags(vma, addr, pte, entry, 1);
-> +			update_mmu_cache(vma, addr, pte);
+Thanks, Will. I tested these on my SCS tree and didn't run into any
+issues. Looks good to me.
 
-Presumably these changes mean that other architectures will run
-update_mmu_cache() more frequently than they used to.  How much more
-frequently, and what will be the impact of this change?  (Please fully
-explain all this in the changelog).
-
->  		}
->  		goto out_unlock;
->  	}
->
-> ...
->
-> @@ -2463,7 +2462,8 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
->  		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
->  		locked = true;
->  		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
-> -			/* The PTE changed under us. Retry page fault. */
-> +			/* The PTE changed under us, update local tlb */
-> +			pdate_mmu_cache(vma, addr, vmf->pte);
-
-Missing a 'u' there.  Which tells me this patch isn't the one which you
-tested!
-
->  			ret = false;
->  			goto pte_unlock;
->  		}
->
-> ...
->
+Sami
