@@ -2,174 +2,256 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBBF206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A7720758
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 10:28:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GBd2GeA6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CXEYEEqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgEOK2D (ORCPT
+        id S1728245AbgEOK2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 06:28:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53086 "EHLO
+        Fri, 15 May 2020 06:28:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728060AbgEOK2C (ORCPT
+        with ESMTP id S1728139AbgEOK2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 06:28:02 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA01FC061A0C;
-        Fri, 15 May 2020 03:28:00 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id b6so604793uak.6;
-        Fri, 15 May 2020 03:28:00 -0700 (PDT)
+        Fri, 15 May 2020 06:28:53 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06EA7C05BD09
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 03:28:53 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id e1so2926201wrt.5
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 03:28:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3n9AM9nUet+cKV+6rKTLJ2mxhROsEpoAkrE2eV2F+EI=;
-        b=GBd2GeA6ataobGDg4jQ4FXSHegGNPaQOmwt2GXy5yXDDA4iYjmYrAyuXfpcqPOa5YC
-         SF9w+wnW3gVanphCuwC/a4oviMWmCoXQneufhGcsnrpK5Ad0ik3r1jHO8tUXr5h1LNTz
-         58e7y69b+tbJCwxalQ7E3P5ZZF80hxgfXQ6Pz+ouc8M8+xqhJyP5mL1aE/msDqlsnlNj
-         0H95XbJIIBUk+cC+t4q5msndpSKxlWiQmNeJ23MscOK28PbdH7u9kpaJRqF2V4m3xHZL
-         m1zPrVnnHk8NJc221dc+9pBZrYE8pk2/kHML83MaIZRvBw27+h4eO9R5Y8xIEb13e1xY
-         bZ9A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=xpA4uoROidais1iNpnkNzF9vq5C6X235V0wZ35uHdEI=;
+        b=CXEYEEqcvkty6QbjHU8IC9+4m00nYkEX+SNv9RcxVR5/SFF+YXke+BvJ6oVoOabQdZ
+         zNfD971SDDWzHM8i6tMy7Ide1qyTwoimukooCDQG010KoMF5GvG2qiwCDrJzTOJ/ST1J
+         prbm8Ynnzt8vqseddRKMMZbinTDqtdohbq4rUwGgpc6TUwZFSsD+mzok7VbjTnaA+NPE
+         7SxmiCj38OP6B2dbzDqJc0ZqywE58/rTxvAnd+HOSQ/e7PuK5vIet7N3V1P5fBuJTFqx
+         810hQ3AwpINxJ1EOF2q5K54I50ZckVeqd/fsfxWyzTJVbsxau3rGuKWQxQF/tGuS+Hp3
+         egGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3n9AM9nUet+cKV+6rKTLJ2mxhROsEpoAkrE2eV2F+EI=;
-        b=udsFXlncpptlTixSpJ4oeREjZwf9xBNDXc7rXeJaJePVyASiBqIwEklW4mWghTwy7f
-         Uln6KOAtTfhgpBC0EyGSGW5XS+djsMavFJl0Dl6pGPHiQVdb88vUSMA3qsWj/Ul1tNqx
-         Ot7R/Xze2H6ShJ2pSoqivcb8wcGp7HXzQ9Lze3n8GEKR2RFDnQWO3Wr6Aegc9ctieEzz
-         Q1zMxzPnRjsfj9u93uJngOKZOC9DV9MClB+nHZcFqI+h+YXduHJHyTw/uIxCocN2w3VE
-         D4ZLCIrxVgeFQiN/gLI1U7uXpZ4GaMKY9ZqlY9T5mqcIx1QwIUfTpQlVeKfwye6lZAta
-         N0xw==
-X-Gm-Message-State: AOAM531uhpCJu75pofPb6csZRPFviTkDPrEF9g8vGKx8GnKwrpfgtxdA
-        PZ4PNKsyv97OLUrv+b6YiqJe1en5wlsm06kT+pQ=
-X-Google-Smtp-Source: ABdhPJwklJ5H1ic2J2YXfycgYALz3yo5uNGEUuzlAu3/5Yu2QHdMkr06dR+9Ff99k9fEmbwDkLDnmKHi4E+YFv57mes=
-X-Received: by 2002:ab0:662:: with SMTP id f89mr2162219uaf.118.1589538479980;
- Fri, 15 May 2020 03:27:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=xpA4uoROidais1iNpnkNzF9vq5C6X235V0wZ35uHdEI=;
+        b=TXtfWwcv4jzFuzyDhcGR+ROW3vgD52ghks2GE7BTkrrPvQCyESWhHnSN3s8fnbxxNL
+         H4eK3afliCMJtac81WZJDleEDU2G1gsAmJimmjtgHxAHeBdG7/SN8OEv5fqtVWw9DRYv
+         1Sel4HrnRahKZAgOc244Us/+mpUNPp5K6EXj2HOwt5FnjV1mAvRIjGwjq8FBUqzQ0b6z
+         zCxdfF/ZxFKGG6ZyHO40rrsnHFIEwo9NU/M+EmJu7paocAK3kZ5f2s7Jdx1lBfQywJz6
+         mfrX0DZBjddJ7Jc2xCMyhKStlF+qghJKHN4b62nCW5Ali2+qF9JwbQDDKjRLPV5BKLzQ
+         OMfw==
+X-Gm-Message-State: AOAM5319UKdpDRLWFKewzfPbyH7EuiohtvXbdDot+J9cQHLt2QrYUfmd
+        1+M03DLVDdgjda2u6/EwA+B1nw==
+X-Google-Smtp-Source: ABdhPJxTv+9YnkgoMuYBGuW3wQDNEiVk0bNzw09WJsjwgIV7JP0J+YUnU47dJL1yqsEb92xCMVOBXw==
+X-Received: by 2002:adf:a1d7:: with SMTP id v23mr3514719wrv.155.1589538531500;
+        Fri, 15 May 2020 03:28:51 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id j16sm2878629wru.13.2020.05.15.03.28.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 03:28:50 -0700 (PDT)
+Date:   Fri, 15 May 2020 11:28:48 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
+ reg property
+Message-ID: <20200515102848.GH271301@dell>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-4-michael@walle.cc>
+ <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
 MIME-Version: 1.0
-References: <20200511123846.96594-1-christian.gmeiner@gmail.com>
- <CAH9NwWcJNhUVkzd0KAfJyxNZJ9a71KLzipW+qRwhgEWUmnnxmg@mail.gmail.com>
- <X0BDAQ.L99CTJZCDEJE3@crapouillou.net> <a51cb70623c4c2441bb8df8385f56c99392b8435.camel@pengutronix.de>
-In-Reply-To: <a51cb70623c4c2441bb8df8385f56c99392b8435.camel@pengutronix.de>
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-Date:   Fri, 15 May 2020 12:27:48 +0200
-Message-ID: <CAH9NwWc6zUvoJ0xep9zO2Ocm8BzR7nRNx9=EQuwb5DXsX-J0Zw@mail.gmail.com>
-Subject: Re: [PATCH] drm/etnaviv: fix perfmon domain interation
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Fr., 15. Mai 2020 um 12:24 Uhr schrieb Lucas Stach <l.stach@pengutronix.=
-de>:
->
-> Am Freitag, den 15.05.2020, 12:12 +0200 schrieb Paul Cercueil:
-> > Hi Christian,
-> >
-> > Le ven. 15 mai 2020 =C3=A0 12:09, Christian Gmeiner
-> > <christian.gmeiner@gmail.com> a =C3=A9crit :
-> > > Am Mo., 11. Mai 2020 um 14:38 Uhr schrieb Christian Gmeiner
-> > > <christian.gmeiner@gmail.com>:
-> > > >  The GC860 has one GPU device which has a 2d and 3d core. In this
-> > > > case
-> > > >  we want to expose perfmon information for both cores.
-> > > >
-> > > >  The driver has one array which contains all possible perfmon domai=
-ns
-> > > >  with some meta data - doms_meta. Here we can see that for the GC86=
-0
-> > > >  two elements of that array are relevant:
-> > > >
-> > > >    doms_3d: is at index 0 in the doms_meta array with 8 perfmon
-> > > > domains
-> > > >    doms_2d: is at index 1 in the doms_meta array with 1 perfmon
-> > > > domain
-> > > >
-> > > >  The userspace driver wants to get a list of all perfmon domains an=
-d
-> > > >  their perfmon signals. This is done by iterating over all domains
-> > > > and
-> > > >  their signals. If the userspace driver wants to access the domain
-> > > > with
-> > > >  id 8 the kernel driver fails and returns invalid data from doms_3d
-> > > > with
-> > > >  and invalid offset.
-> > > >
-> > > >  This results in:
-> > > >    Unable to handle kernel paging request at virtual address 000000=
-00
-> > > >
-> > > >  On such a device it is not possible to use the userspace driver at
-> > > > all.
-> > > >
-> > > >  The fix for this off-by-one error is quite simple.
-> > > >
-> > > >  Reported-by: Paul Cercueil <paul@crapouillou.net>
-> > > >  Tested-by: Paul Cercueil <paul@crapouillou.net>
-> > > >  Fixes: ed1dd899baa3 ("drm/etnaviv: rework perfmon query
-> > > > infrastructure")
-> > > >  Cc: stable@vger.kernel.org
-> > > >  Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-> > > >  ---
-> > > >   drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 2 +-
-> > > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > >  diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > > > b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > > >  index e6795bafcbb9..35f7171e779a 100644
-> > > >  --- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > > >  +++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > > >  @@ -453,7 +453,7 @@ static const struct etnaviv_pm_domain
-> > > > *pm_domain(const struct etnaviv_gpu *gpu,
-> > > >                  if (!(gpu->identity.features & meta->feature))
-> > > >                          continue;
-> > > >
-> > > >  -               if (meta->nr_domains < (index - offset)) {
-> > > >  +               if ((meta->nr_domains - 1) < (index - offset)) {
-> > > >                          offset +=3D meta->nr_domains;
-> > > >                          continue;
-> > > >                  }
-> > > >  --
-> > > >  2.26.2
-> > > >
-> > >
-> > > ping
-> >
-> > I'll merge it tomorrow if there's no further feedback.
->
-> Huh? Etnaviv patches are going through the etnaviv tree.
->
-> We now have two different solutions to the same issue. I first want to
-> dig into the code to see why two developers can get confused enough by
-> the code to come up with totally different fixes.
->
+On Thu, 30 Apr 2020, Michael Walle wrote:
 
-You will see that the solutions are not totally different. I really hoped t=
-o
-get this fixed in the 5.7 release.. but I think its now too late.
+> Hi Lee,
+> 
+> Am 2020-04-23 19:45, schrieb Michael Walle:
+> > There might be multiple children with the device tree compatible, for
+> > example if a MFD has multiple instances of the same function. In this
+> > case only the first is matched and the other children get a wrong
+> > of_node reference.
+> > Add a new option to match also against the unit address of the child
+> > node. Additonally, a new helper OF_MFD_CELL_REG is added.
+> 
+> 
+> Do you think this is feasible? I guess this is the biggest uncertainty
+> for me at the moment in this patch series.
 
---=20
-greets
---
-Christian Gmeiner, MSc
+I think it sounds fine in principle.  So long as it doesn't change the
+existing behaviour when of_reg isn't set.
 
-https://christian-gmeiner.info/privacypolicy
+> > Signed-off-by: Michael Walle <michael@walle.cc>
+> > ---
+> >  drivers/mfd/mfd-core.c   | 29 ++++++++++++++++++++---------
+> >  include/linux/mfd/core.h | 26 ++++++++++++++++++++------
+> >  2 files changed, 40 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> > index e735565969b3..4ecb376338f7 100644
+> > --- a/drivers/mfd/mfd-core.c
+> > +++ b/drivers/mfd/mfd-core.c
+> > @@ -117,6 +117,7 @@ static int mfd_add_device(struct device *parent, int
+> > id,
+> >  	struct device_node *np = NULL;
+> >  	int ret = -ENOMEM;
+> >  	int platform_id;
+> > +	u32 of_reg;
+> >  	int r;
+> > 
+> >  	if (id == PLATFORM_DEVID_AUTO)
+> > @@ -151,16 +152,26 @@ static int mfd_add_device(struct device *parent,
+> > int id,
+> > 
+> >  	if (parent->of_node && cell->of_compatible) {
+> >  		for_each_child_of_node(parent->of_node, np) {
+> > -			if (of_device_is_compatible(np, cell->of_compatible)) {
+> > -				if (!of_device_is_available(np)) {
+> > -					/* Ignore disabled devices error free */
+> > -					ret = 0;
+> > -					goto fail_alias;
+> > -				}
+> > -				pdev->dev.of_node = np;
+> > -				pdev->dev.fwnode = &np->fwnode;
+> > -				break;
+> > +			if (!of_device_is_compatible(np, cell->of_compatible))
+> > +				continue;
+> > +
+> > +			/* also match the unit address if set */
+
+Please use correct grammar in comments (leaving off the full-stop).
+
+> > +			if (cell->of_reg & MFD_OF_REG_VALID) {
+> > +				if (of_property_read_u32(np, "reg", &of_reg))
+> > +					continue;
+> > +				if ((cell->of_reg & MFD_OF_REG_MASK) != of_reg)
+> > +					continue;
+> >  			}
+> > +
+> > +			if (!of_device_is_available(np)) {
+> > +				/* Ignore disabled devices error free */
+> > +				ret = 0;
+> > +				goto fail_alias;
+> > +			}
+> > +
+> > +			pdev->dev.of_node = np;
+> > +			pdev->dev.fwnode = &np->fwnode;
+> > +			break;
+> >  		}
+> >  	}
+> > 
+> > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+> > index d01d1299e49d..c2c0ad6b14f3 100644
+> > --- a/include/linux/mfd/core.h
+> > +++ b/include/linux/mfd/core.h
+> > @@ -13,8 +13,11 @@
+> >  #include <linux/platform_device.h>
+> > 
+> >  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
+> > +#define MFD_OF_REG_VALID	BIT(31)
+
+What about 64bit platforms?
+
+> > +#define MFD_OF_REG_MASK		GENMASK(30, 0)
+> > 
+> > -#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,
+> > _match)\
+> > +#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> > +		     _of_reg, _match)					\
+> >  	{								\
+> >  		.name = (_name),					\
+> >  		.resources = (_res),					\
+> > @@ -22,24 +25,32 @@
+> >  		.platform_data = (_pdata),				\
+> >  		.pdata_size = (_pdsize),				\
+> >  		.of_compatible = (_compat),				\
+> > +		.of_reg = (_of_reg),					\
+> >  		.acpi_match = (_match),					\
+> >  		.id = (_id),						\
+> >  	}
+> > 
+> > +#define OF_MFD_CELL_REG(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> > +			_of_reg)					\
+> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> > +		     ((_of_reg) | MFD_OF_REG_VALID), NULL)		\
+> > +
+> >  #define OF_MFD_CELL(_name, _res, _pdata, _pdsize,_id, _compat)		\
+> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, NULL)	\
+> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> > +		     0, NULL)						\
+> > 
+> >  #define ACPI_MFD_CELL(_name, _res, _pdata, _pdsize, _id, _match)	\
+> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, _match)	\
+> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0,	\
+> > +		     _match)						\
+> > 
+> >  #define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id)		\
+> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, NULL)	\
+> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, NULL) \
+> > 
+> >  #define MFD_CELL_RES(_name, _res)					\
+> > -	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, NULL)		\
+> > +	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, NULL)		\
+> > 
+> >  #define MFD_CELL_NAME(_name)						\
+> > -	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)		\
+> > +	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, NULL)		\
+> > 
+> >  struct irq_domain;
+> >  struct property_entry;
+> > @@ -78,6 +89,9 @@ struct mfd_cell {
+> >  	 */
+> >  	const char		*of_compatible;
+> > 
+> > +	/* matching the reg property if set */
+
+Proper grammar please.
+
+"OF unit address for device matching"
+
+> > +	unsigned int		of_reg;
+> > +
+> >  	/* Matches ACPI */
+> >  	const struct mfd_cell_acpi_match	*acpi_match;
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
