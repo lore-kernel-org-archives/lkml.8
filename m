@@ -2,101 +2,159 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A67FC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38F1F20671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:17:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="CYrRX15U"
+	by mail.kernel.org (Postfix) with ESMTP id 5E4B0206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgEORRG (ORCPT
+        id S1726639AbgEORR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:17:06 -0400
-Received: from www.zeus03.de ([194.117.254.33]:51108 "EHLO mail.zeus03.de"
+        Fri, 15 May 2020 13:17:26 -0400
+Received: from mga06.intel.com ([134.134.136.31]:40304 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbgEORRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:17:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=y/oPAlM3y149jK6KpGqj8Z5Pq8h3
-        NvzaLZuF1iAdHP4=; b=CYrRX15UMLFe4N6YaFxcYR8WOHMQYtKoR7HPoaaAO+Rl
-        dR/GJ7di9Z84KJeaSs8G3YYjMiWTux0qNUlZFXyV6WGdCGWDxmCWhm+4rW2owioe
-        XIcDBF0dR2IqrM+SWBqISth438neo+uCJqOloNYRaYYbdCMCnL00HQYTE31gGj4=
-Received: (qmail 72585 invoked from network); 15 May 2020 19:17:00 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 15 May 2020 19:17:00 +0200
-X-UD-Smtp-Session: l3s3148p1@hA4w+7KlTKogAwDPXwnHAMSqtBM6FBGP
-Date:   Fri, 15 May 2020 19:17:00 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 04/17] dt-bindings: mmc: renesas,sdhi: Document r8a7742
- support
-Message-ID: <20200515171700.GE19423@ninjato>
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S1726234AbgEORR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:17:26 -0400
+IronPort-SDR: gTFY0z8T1aHndE0GxJgUIWzJR/MmGCG7K42pXOX56t7uT6a6ptCyj56tIH56/ThZH/3Gjyi7nm
+ EZKZBTXapedg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 10:17:25 -0700
+IronPort-SDR: 7MnTdwkuMers0lYv33plALP2vtppPeppnkcXTZay8G0+W3inqSnnMVjABiMmLXQKJk936BWdO7
+ bVM1PG+H/3EQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,396,1583222400"; 
+   d="scan'208";a="438382735"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 15 May 2020 10:17:24 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jZdxb-000DRy-MP; Sat, 16 May 2020 01:17:23 +0800
+Date:   Sat, 16 May 2020 01:17:07 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 7463f811eaa72cc4f06c2488c576f83f705fcc4d
+Message-ID: <5ebece93.AnXU3tPeURjVfHAW%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u5E4XgoOPWr4PD9E"
-Content-Disposition: inline
-In-Reply-To: <1589555337-5498-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: 7463f811eaa72cc4f06c2488c576f83f705fcc4d  Merge branch 'linus'
 
---u5E4XgoOPWr4PD9E
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 565m
 
-On Fri, May 15, 2020 at 04:08:44PM +0100, Lad Prabhakar wrote:
-> Document SDHI controller for RZ/G1H (R8A7742) SoC, which is compatible
-> with R-Car Gen2 SoC family.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
-as.com>
+configs tested: 92
+configs skipped: 1
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+mips                             allyesconfig
+m68k                             allyesconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+arc                                 defconfig
+arc                              allyesconfig
+microblaze                        allnoconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a005-20200515
+x86_64               randconfig-a003-20200515
+x86_64               randconfig-a006-20200515
+x86_64               randconfig-a004-20200515
+x86_64               randconfig-a001-20200515
+x86_64               randconfig-a002-20200515
+i386                 randconfig-a012-20200515
+i386                 randconfig-a016-20200515
+i386                 randconfig-a014-20200515
+i386                 randconfig-a011-20200515
+i386                 randconfig-a013-20200515
+i386                 randconfig-a015-20200515
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+x86_64                              defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
---u5E4XgoOPWr4PD9E
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6+zowACgkQFA3kzBSg
-KbbvIw/9EYa5/sZYqiy76zk/MTv8kk/gPlGwTIjDi2HRy9v89chDKR0n3nVsmAh9
-syTTZT+eIjYSBFMHNr16WfrLBEEe8lWND0daeubEka3tu3/XMcuBOzMXydVzjpdt
-cf6ypbS1YrjSgy8ITo2w8rROpvDv4evP4UKSlJrar7ABLKuY0HZZ3b6JXXjy3JIx
-/JueAAj1RqIwJ/2wTUiBdThfKDKh1tzm2fhV41dfd4t1S8NOnhBzz9zjnDJQ/8Zg
-FJA9TBgPznA16ybyW+kx01+smxxPiKp0uaICTVzftA09Zi+/dkjuFpWx6GShPZ7G
-08bcdZRD5wNjRWcDxXt12oh6l4x2rnwebBl+5FpzJAPc7imRBIcYvuVpJI3Ev9aL
-TDaqoKUWO4k+qHzP5f67cAjARnHh3SyJTePon+1k1L4k1vNC691utDTiGhdEaQ+E
-uLNcMR9bcuFkjQMkKTV7AY07sE6ojXxlKhvGaR122Z5LxtW5+ah620e0QkxArqJ7
-xLbjpahEKrAV4vunMDWW8+vEY3uTLHOM/EvBACC6CL52B3nQPEeRwhbrqYpHhb1l
-PuaOBezOdCOpIOnNm+zHFX5JD7YPNQ3bRh6VjSBgW66yX+mjlkJJV7QR3qXPx4RR
-hCOU+zTdBNM9mgXSidnl9M7slanJKkKmCn4LszbKUAj2+G+Wdsg=
-=m9/n
------END PGP SIGNATURE-----
-
---u5E4XgoOPWr4PD9E--
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
