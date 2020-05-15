@@ -2,184 +2,140 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D78C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A19EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 881F8206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E819A206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:58:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rchzu2My"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="PKXsO+RP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgEOH5h (ORCPT
+        id S1727827AbgEOH6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 03:57:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57880 "EHLO
+        Fri, 15 May 2020 03:58:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726694AbgEOH5g (ORCPT
+        by vger.kernel.org with ESMTP id S1726708AbgEOH6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 03:57:36 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24750C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:57:36 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q9so619305pjm.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=i82OIY1bYQbyJzRSDLLGone074RtLiKElmKq69ozmwo=;
-        b=rchzu2MyGa3HyG/512UyVQcFwnXN1N1nsah8b+GSkQszpRWGuaiE4uwiOslb1NylNS
-         q5Urs27/53sZjq57KD8ZcAu1OIvv/XArlobMbXhYVUu8jXlOhKw4slrY3UjYzBJF8iMC
-         lUiglLAX8tHM7n8kuPkA5LbUgfeuqV27fvyZgHx0A+4H2gDHNe7K3KvtdAgZ+Q4hSDrh
-         c6Ydrs5aPEY0IpLIIGmpUw8WD0JPQw6PnURPuFrxqGOBMgKtj5OgWInZMJFT98G0/rRD
-         MQ/xN8LiROtmmkPlDRFvZjjIBzrrGx0l5VXAGaHjLWbauSzisC8qsjfzQ5gMZ+zBpBE3
-         d3KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=i82OIY1bYQbyJzRSDLLGone074RtLiKElmKq69ozmwo=;
-        b=Vpppv1nbX4HhLN9V3fEh/KIT1GTmTqZ2xkOkuJRUXmDaWQihePfz54qY98CjCCkVbu
-         PPZgaO51BzUVUkZO/2o6han2mmJ1utykprudPDB8uvzJPm6RoHb11T7Uyg4+u6iBEkuQ
-         KwRdknsanqih6sWfoWNbZ+hSYntZgMBohGTNov7bqPPAKMKSFeCGUZU/seIVTEJw5nDW
-         Pz18WNgRbJgOkUM2o58uzIzPw2375tDJKftiCB5uJlM33EOBi0BTamrRbr0QVxRwabRC
-         r4XMAsaD1YMaCLw3GX2nUYjHu3YZ87yeYl0t9Oo5PzBf3dMhbgUFptvbwmuEfVwWWhvi
-         TNuw==
-X-Gm-Message-State: AOAM533UDE/iAfS/O7Hxrk+M9jiOQq/4BaDwopqdBzYUbaLhehEpiqYL
-        B0NOCnrtBS/G6quOgvB6u669qA==
-X-Google-Smtp-Source: ABdhPJwne+EPKn2djmWv8FItxoMi+OtCkrj/QUPK/4bzdDvflDHpDZXhuSrh/+p6cZXR+cwCcluF6g==
-X-Received: by 2002:a17:90a:d703:: with SMTP id y3mr2076859pju.75.1589529455681;
-        Fri, 15 May 2020 00:57:35 -0700 (PDT)
-Received: from localhost ([122.167.130.103])
-        by smtp.gmail.com with ESMTPSA id i14sm1272294pfo.162.2020.05.15.00.57.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 May 2020 00:57:35 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     k.konieczny@samsung.com, peron.clem@gmail.com,
-        m.szyprowski@samsung.com, Viresh Kumar <vireshk@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>, broonie@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] opp: core: add regulators enable and disable
-Date:   Fri, 15 May 2020 13:27:21 +0530
-Message-Id: <81eb2efeeed1556d124065252f32777838a6d850.1589528491.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
-In-Reply-To: <cover.1589528491.git.viresh.kumar@linaro.org>
-References: <cover.1589528491.git.viresh.kumar@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 15 May 2020 03:58:47 -0400
+Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA8CAC061A0C;
+        Fri, 15 May 2020 00:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589529524;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=BlFVs+ve08LHwN7Uvu0hVD6GgM0+61h79p2IJC+S0j0=;
+        b=PKXsO+RPOPgskbFCzDFhDroaXIImvP6pbOse2kXKSoXd/RydTZvTqG7ixZ3H4My6cg
+        qiJd4o1RdcT9i4U4iZOjahCZfu0iA32TrSa5LQN5i/qWU3BXuosi8knTNzqOTwl5glWe
+        VgAHzBnAFN0veaKzT2e0nOuS4+I5JDJ8VsvqA3saguzUi+llKrlWb+z5ctw3USJ5u30O
+        sL9n9ii2u81PVWgzb6Pu2UvYz01ks17ZudXRjYS5MyoqHQTcdnP9Vh8S/g42oZ+6KKYZ
+        yLjlDwk0mTNsFn0+FPvBXJrWenPnkEAkboZ6fOine7w6U1EbDIKWSDqbjsrgHcuo62mw
+        rQ8Q==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vtwDOvBTU="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id R0acebw4F7wWYfs
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 15 May 2020 09:58:32 +0200 (CEST)
+Subject: Re: [PATCH v7 01/12] dt-bindings: add img,pvrsgx.yaml for Imagination GPUs
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200503150143.GG37466@atomide.com>
+Date:   Fri, 15 May 2020 09:58:31 +0200
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9A411DCE-A882-4868-9265-532D79922F6E@goldelico.com>
+References: <cover.1587760454.git.hns@goldelico.com> <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com> <NMCE9Q.LWG45P20NBVJ@crapouillou.net> <28138EC0-0FA5-4F97-B528-3442BF087C7A@goldelico.com> <TEAR9Q.6HI5DFRO5U0I3@crapouillou.net> <3D8B59D6-83E3-4FE6-9C99-E2E5616A8139@goldelico.com> <8EER9Q.C206SXNSICP7@crapouillou.net> <20200503150143.GG37466@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamil Konieczny <k.konieczny@samsung.com>
+Hi Tony,
 
-Add enable regulators to dev_pm_opp_set_regulators() and disable
-regulators to dev_pm_opp_put_regulators(). Even if bootloader
-leaves regulators enabled, they should be enabled in kernel in
-order to increase the reference count.
+> Am 03.05.2020 um 17:01 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * Paul Cercueil <paul@crapouillou.net> [200503 14:19]:
+>> You have a new SoC with a SGX, and you only need to enable one clock =
+to get
+>> it to work. So you create a devicetree node which receives only one =
+clock.
+>>=20
+>> Turns out, that the bootloader was enabling the other 3 clocks, and =
+since
+>> the last release, it doesn't anymore. You're left with having to =
+support a
+>> broken devicetree.
+>>=20
+>> That's the kind of problem that can be easily avoided by enforcing =
+the
+>> number of clocks that have to be provided.
+>=20
+> The number of clocks depends on how it's wired for the SoC.
+>=20
+> On omaps, there's are no controls for additinoal SGX clocks. Sure some
+> of the clocks may be routed to multple places internally by the =
+wrapper
+> module. But we have no control over that.
+>=20
+> If we wanted to specify just the "fck" clock on omaps, then we can
+> do it with something like this:
+>=20
+> allOf:
+>  - if:
+>    properites:
+>      compatible:
+>        enum:
+> 	  - "ti,omap4-sgx544-112"
+> 	  - "ti,omap5-sgx544-116"
+> 	  - "ti,dra7-sgx544-116"
+>    then:
+>      properties:
+>        clocks:
+> 	  minItems: 1
+> 	  maxItems: 1
+>=20
+>        clock-names:
+> 	  const: fck
+>=20
+>    required:
+>      - clocks
+>      - clock-names
 
-Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
-[ Viresh: Enable the regulator only after it is programmed and add a
-	  flag to track its status. ]
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/opp/core.c | 28 ++++++++++++++++++++++++++--
- drivers/opp/opp.h  |  2 ++
- 2 files changed, 28 insertions(+), 2 deletions(-)
+will add to v8 of this series as a separate patch on top of the
+general one. This should make it easier to have a focussed discussion
+and revert/bisect if something goes wrong.
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index dda8164fad56..da6533d5526f 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -664,7 +664,7 @@ static inline int _generic_set_opp_clk_only(struct device *dev, struct clk *clk,
- 	return ret;
- }
- 
--static int _generic_set_opp_regulator(const struct opp_table *opp_table,
-+static int _generic_set_opp_regulator(struct opp_table *opp_table,
- 				      struct device *dev,
- 				      unsigned long old_freq,
- 				      unsigned long freq,
-@@ -699,6 +699,18 @@ static int _generic_set_opp_regulator(const struct opp_table *opp_table,
- 			goto restore_freq;
- 	}
- 
-+	/*
-+	 * Enable the regulator after setting its voltages, otherwise it breaks
-+	 * some boot-enabled regulators.
-+	 */
-+	if (unlikely(!opp_table->regulator_enabled)) {
-+		ret = regulator_enable(reg);
-+		if (ret < 0)
-+			dev_warn(dev, "Failed to enable regulator: %d", ret);
-+		else
-+			opp_table->regulator_enabled = true;
-+	}
-+
- 	return 0;
- 
- restore_freq:
-@@ -825,11 +837,16 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 		if (!_get_opp_count(opp_table))
- 			return 0;
- 
--		if (!opp_table->required_opp_tables) {
-+		if (!opp_table->required_opp_tables && !opp_table->regulators) {
- 			dev_err(dev, "target frequency can't be 0\n");
- 			ret = -EINVAL;
- 		}
- 
-+		if (opp_table->regulator_enabled) {
-+			regulator_disable(opp_table->regulators[0]);
-+			opp_table->regulator_enabled = false;
-+		}
-+
- 		ret = _set_required_opps(dev, opp_table, NULL);
- 		goto put_opp_table;
- 	}
-@@ -1675,6 +1692,13 @@ void dev_pm_opp_put_regulators(struct opp_table *opp_table)
- 	/* Make sure there are no concurrent readers while updating opp_table */
- 	WARN_ON(!list_empty(&opp_table->opp_list));
- 
-+	if (opp_table->regulator_enabled) {
-+		for (i = opp_table->regulator_count - 1; i >= 0; i--)
-+			regulator_disable(opp_table->regulators[i]);
-+
-+		opp_table->regulator_enabled = false;
-+	}
-+
- 	for (i = opp_table->regulator_count - 1; i >= 0; i--)
- 		regulator_put(opp_table->regulators[i]);
- 
-diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-index d14e27102730..b4b2713d84f1 100644
---- a/drivers/opp/opp.h
-+++ b/drivers/opp/opp.h
-@@ -144,6 +144,7 @@ enum opp_table_access {
-  * @clk: Device's clock handle
-  * @regulators: Supply regulators
-  * @regulator_count: Number of power supply regulators. Its value can be -1
-+ * @regulator_enabled: Set to true if regulators were previously enabled.
-  * (uninitialized), 0 (no opp-microvolt property) or > 0 (has opp-microvolt
-  * property).
-  * @genpd_performance_state: Device's power domain support performance state.
-@@ -189,6 +190,7 @@ struct opp_table {
- 	struct clk *clk;
- 	struct regulator **regulators;
- 	int regulator_count;
-+	bool regulator_enabled;
- 	bool genpd_performance_state;
- 	bool is_genpd;
- 
--- 
-2.25.0.rc1.19.g042ed3e048af
+BR and thanks,
+Nikolaus
 
