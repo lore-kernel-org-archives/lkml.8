@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE74C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0641CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95969206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D095720760
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:56:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AMis5iCt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GJojiVvC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgEOG4q (ORCPT
+        id S1727798AbgEOG4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:56:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48382 "EHLO
+        Fri, 15 May 2020 02:56:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726722AbgEOG4m (ORCPT
+        by vger.kernel.org with ESMTP id S1727109AbgEOG4s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:56:42 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B26FC05BD09
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:41 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id m9so1629404qvl.18
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:41 -0700 (PDT)
+        Fri, 15 May 2020 02:56:48 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAB62C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:46 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id z1so1601340ybm.5
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:56:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=x6LP+ciDY4RCiG/s/KExKhc3Bihf0x1pjrWNO79ic+U=;
-        b=AMis5iCt3aVs8bAeWYA+2hJYwYYIsw5wAGUlAwd2FHdkAscpOiLrQfWkMexWQL/FdV
-         BeWoRWMEPl6v1c2BTCw/RoT5XIBkDYSs0sEwM9/+1rTKfKO09mOpvUkC3UQZUhmxo3ka
-         1IPNYOOisIo9AmJ73Q37Dqf8a1pOdNK8oAcQtOoDl8wUxh+eBU7QA5u81c1nesj8OWSS
-         MOJrT9Q3/nQn71Z4F+AK+DBE9ZWiKQoLfcoA5I694kmDD3LIKFxkYqaFRjJJbGHzRKre
-         RSuyplCXFjqhonTk+7fYX4L71qAAb+lFyLpVgZLeAPnXMsgqT8sXMhb5r1K36DQ35xqs
-         HopA==
+        bh=ASXgkl9jjy97Vpt8ThFDh/vzQo4yJ10C2p5zMR9IFP0=;
+        b=GJojiVvC4Xwev66Pkan0IFOjzyWd7pAaohzST4ZVmrciflpEo+Rp3NyJGGM3HLFHez
+         uuYr1TnzHLKZ52btL6CJeN4UhuZuQ3fnwo/sXVqeCpZZ4dUERs26gQtFTjpywqpdKJdb
+         QqS9InjR/ywXcMRzZkCTGjihOvlLE7HYFRH7B3mRaRS8ARcJKZFnQxtrs591yftC9vkr
+         4uiO24lwP6sNcvx6AScuOQW9Z1ckX/07KKcsp0pYzq25yTQYYh83vQciN3b4rYSjU8kS
+         RnTMqMsoD+kyEJwXPzHGXBYAAMdqbvLyI+rMTW3RtcNEJT9pcBMyeCkE8UWoW+DsPHbl
+         T6UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=x6LP+ciDY4RCiG/s/KExKhc3Bihf0x1pjrWNO79ic+U=;
-        b=VIIIj7KIIu/oWadjBtEIc/LYpMauw4GyIXZwXmAAlDni/VU/GAaKdFE23VHA2K/W+a
-         Ipqys3gPpFIi8gQKs8CWqvxz1aro9MmBNdYqQumj7nt1TyokVHINi36MTXcJdaT2rZGC
-         J8a8WG8q1OiQCBykNg6+awudyUlxe6TQQq0jewnVIRfPb6n5CAyMUu7JfN9JdBHkVi4X
-         eeQXwuqHHo1CRAHVRI+ofktzxbpf5j5O0idwgqZ/ujQmeeXtkGj9NkIq4SHNRmNhmEWs
-         Eh4mmHpzTrYdtKZAs3u+dF8tG5RTsT3iK/d5+jPhww+95am2yK68Gbc3Rj727RxQLK5s
-         Oniw==
-X-Gm-Message-State: AOAM532AZZ/Q3k3jv+myviAFU6JwLqInpfeU3v5/x0RDaFTxj3Q0YGeF
-        q5sNLhnZKVX18MMQd36gCpAxiIkEf9Mv
-X-Google-Smtp-Source: ABdhPJxBahYwCzOGyVWRvHYjPNoLRl7jhRzgs3VwaG3zrGcgYhV+hC4dygILP9fAvSLAatp3bCsz7luEzTE2
-X-Received: by 2002:a0c:b45c:: with SMTP id e28mr2137447qvf.74.1589525800107;
- Thu, 14 May 2020 23:56:40 -0700 (PDT)
-Date:   Thu, 14 May 2020 23:56:21 -0700
+        bh=ASXgkl9jjy97Vpt8ThFDh/vzQo4yJ10C2p5zMR9IFP0=;
+        b=I4llPPPEIY+GcKwNlE5WYTEIuU90jPZisZXiBi0HoFWl2e1rycai9/QIxtF0nSGkTk
+         y9BDIu+q5JgGxIxIki/pmzaSN1OAk+8CXypmpLbFdaU3z7lbEeVMNsz8dlZHlYozdnWd
+         p9o9F0nXOhq9V+3XtBzPORMyPVUxWEAbbb+uAmFWc4B8MfsUshE/ryx/Jl2MkgcJ8bat
+         INOKqpl+Cl8NADt0hUFoX58mG9CpxBfTsMb2cqPNvVXoJsWcH58UifpdWdKXWKAnLaS7
+         K55gHU+5+IvEa3gBuVeWZUdpwkyK6gwJ8iUsF+rcgpvtpea9RPwFlsaKyii6+D5+tiOU
+         Wvww==
+X-Gm-Message-State: AOAM533tqI4FQJ46HZo5CIcmr6BF7UkZYbagiVrju8mB3cNcDRvSa8f4
+        s7UBAeX4JWPRQO6tLF6neRhaZWkzqaPH
+X-Google-Smtp-Source: ABdhPJzOmEg9tICLafCKUYry6ScxTMNQ/Vqn/NS2thX2FUAiW2pEaeSQP9fPqk66WjITsXsBIQP1TzllKVaT
+X-Received: by 2002:a25:7903:: with SMTP id u3mr3366128ybc.251.1589525805856;
+ Thu, 14 May 2020 23:56:45 -0700 (PDT)
+Date:   Thu, 14 May 2020 23:56:24 -0700
 In-Reply-To: <20200515065624.21658-1-irogers@google.com>
-Message-Id: <20200515065624.21658-6-irogers@google.com>
+Message-Id: <20200515065624.21658-9-irogers@google.com>
 Mime-Version: 1.0
 References: <20200515065624.21658-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH 5/8] tools lib/api: Copy libbpf hashmap to libapi
+Subject: [PATCH 8/8] perf expr: Migrate expr ids table to a hashmap
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -95,475 +95,727 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow use of hashmap in more than just libbpf, where it isn't an
-exported symbol. Place in libapi as that is a required part of
-tools/perf whereas libbpf is currently optional.
-Modify perf's check-headers.sh script to check that the files are kept
-in sync, in the same way kernel headers are checked. This will warn if
-they are out of sync at the start of a perf build.
+Use a hashmap between a char* string and a double* value. While bpf's
+hashmap entries are size_t in size, we can't guarantee sizeof(size_t) >=
+sizeof(double). Avoid a memory allocation when gathering ids by making 0.0
+a special value encoded as NULL.
+
+Original map suggestion by Andi Kleen:
+https://lore.kernel.org/lkml/20200224210308.GQ160988@tassilo.jf.intel.com/
+and seconded by Jiri Olsa:
+https://lore.kernel.org/lkml/20200423112915.GH1136647@krava/
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/api/Build         |   1 +
- tools/lib/api/hashmap.c     | 238 ++++++++++++++++++++++++++++++++++++
- tools/lib/api/hashmap.h     | 177 +++++++++++++++++++++++++++
- tools/perf/check-headers.sh |   4 +
- 4 files changed, 420 insertions(+)
- create mode 100644 tools/lib/api/hashmap.c
- create mode 100644 tools/lib/api/hashmap.h
+ tools/perf/tests/expr.c       |  40 ++++++-----
+ tools/perf/tests/pmu-events.c |  25 +++----
+ tools/perf/util/expr.c        | 129 +++++++++++++++++++---------------
+ tools/perf/util/expr.h        |  22 +++---
+ tools/perf/util/expr.y        |  22 +-----
+ tools/perf/util/metricgroup.c |  87 +++++++++++------------
+ tools/perf/util/stat-shadow.c |  49 ++++++++-----
+ 7 files changed, 193 insertions(+), 181 deletions(-)
 
-diff --git a/tools/lib/api/Build b/tools/lib/api/Build
-index 6e2373db5598..2c8787a88080 100644
---- a/tools/lib/api/Build
-+++ b/tools/lib/api/Build
-@@ -2,6 +2,7 @@ libapi-y += fd/
- libapi-y += fs/
- libapi-y += cpu.o
- libapi-y += debug.o
-+libapi-y += hashmap.o
- libapi-y += str_error_r.o
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index 3f742612776a..5e606fd5a2c6 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -19,11 +19,9 @@ static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
+ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+ {
+ 	const char *p;
+-	const char **other;
+-	double val;
+-	int i, ret;
++	double val, *val_ptr;
++	int ret;
+ 	struct expr_parse_ctx ctx;
+-	int num_other;
  
- $(OUTPUT)str_error_r.o: ../str_error_r.c FORCE
-diff --git a/tools/lib/api/hashmap.c b/tools/lib/api/hashmap.c
-new file mode 100644
-index 000000000000..a405dad068f5
---- /dev/null
-+++ b/tools/lib/api/hashmap.c
-@@ -0,0 +1,238 @@
-+// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+ 	expr__ctx_init(&ctx);
+ 	expr__add_id(&ctx, "FOO", 1);
+@@ -52,25 +50,29 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+ 	ret = expr__parse(&val, &ctx, p, 1);
+ 	TEST_ASSERT_VAL("missing operand", ret == -1);
+ 
++	hashmap__clear(&ctx.ids);
+ 	TEST_ASSERT_VAL("find other",
+-			expr__find_other("FOO + BAR + BAZ + BOZO", "FOO", &other, &num_other, 1) == 0);
+-	TEST_ASSERT_VAL("find other", num_other == 3);
+-	TEST_ASSERT_VAL("find other", !strcmp(other[0], "BAR"));
+-	TEST_ASSERT_VAL("find other", !strcmp(other[1], "BAZ"));
+-	TEST_ASSERT_VAL("find other", !strcmp(other[2], "BOZO"));
+-	TEST_ASSERT_VAL("find other", other[3] == NULL);
++			expr__find_other("FOO + BAR + BAZ + BOZO", "FOO",
++					 &ctx, 1) == 0);
++	TEST_ASSERT_VAL("find other", hashmap__size(&ctx.ids) == 3);
++	TEST_ASSERT_VAL("find other", hashmap__find(&ctx.ids, "BAR",
++						    (void **)&val_ptr));
++	TEST_ASSERT_VAL("find other", hashmap__find(&ctx.ids, "BAZ",
++						    (void **)&val_ptr));
++	TEST_ASSERT_VAL("find other", hashmap__find(&ctx.ids, "BOZO",
++						    (void **)&val_ptr));
+ 
++	hashmap__clear(&ctx.ids);
+ 	TEST_ASSERT_VAL("find other",
+-			expr__find_other("EVENT1\\,param\\=?@ + EVENT2\\,param\\=?@", NULL,
+-				   &other, &num_other, 3) == 0);
+-	TEST_ASSERT_VAL("find other", num_other == 2);
+-	TEST_ASSERT_VAL("find other", !strcmp(other[0], "EVENT1,param=3/"));
+-	TEST_ASSERT_VAL("find other", !strcmp(other[1], "EVENT2,param=3/"));
+-	TEST_ASSERT_VAL("find other", other[2] == NULL);
++			expr__find_other("EVENT1\\,param\\=?@ + EVENT2\\,param\\=?@",
++					 NULL, &ctx, 3) == 0);
++	TEST_ASSERT_VAL("find other", hashmap__size(&ctx.ids) == 2);
++	TEST_ASSERT_VAL("find other", hashmap__find(&ctx.ids, "EVENT1,param=3/",
++						    (void **)&val_ptr));
++	TEST_ASSERT_VAL("find other", hashmap__find(&ctx.ids, "EVENT2,param=3/",
++						    (void **)&val_ptr));
+ 
+-	for (i = 0; i < num_other; i++)
+-		zfree(&other[i]);
+-	free((void *)other);
++	expr__ctx_clear(&ctx);
+ 
+ 	return 0;
+ }
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index e21f0addcfbb..3de59564deb0 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -433,8 +433,6 @@ static int test_parsing(void)
+ 	struct pmu_events_map *map;
+ 	struct pmu_event *pe;
+ 	int i, j, k;
+-	const char **ids;
+-	int idnum;
+ 	int ret = 0;
+ 	struct expr_parse_ctx ctx;
+ 	double result;
+@@ -446,29 +444,34 @@ static int test_parsing(void)
+ 			break;
+ 		j = 0;
+ 		for (;;) {
++			struct hashmap_entry *cur;
++			size_t bkt;
 +
-+/*
-+ * Generic non-thread safe hash map implementation.
-+ *
-+ * Copyright (c) 2019 Facebook
-+ */
-+#include <stdint.h>
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <errno.h>
-+#include <linux/err.h>
-+#include "hashmap.h"
-+
-+/* make sure libbpf doesn't use kernel-only integer typedefs */
-+#pragma GCC poison u8 u16 u32 u64 s8 s16 s32 s64
-+
-+/* start with 4 buckets */
-+#define HASHMAP_MIN_CAP_BITS 2
-+
-+static void hashmap_add_entry(struct hashmap_entry **pprev,
-+			      struct hashmap_entry *entry)
+ 			pe = &map->table[j++];
+ 			if (!pe->name && !pe->metric_group && !pe->metric_name)
+ 				break;
+ 			if (!pe->metric_expr)
+ 				continue;
+-			if (expr__find_other(pe->metric_expr, NULL,
+-						&ids, &idnum, 0) < 0) {
++			expr__ctx_init(&ctx);
++			if (expr__find_other(pe->metric_expr, NULL, &ctx, 0)
++				  < 0) {
+ 				expr_failure("Parse other failed", map, pe);
+ 				ret++;
+ 				continue;
+ 			}
+-			expr__ctx_init(&ctx);
+ 
+ 			/*
+ 			 * Add all ids with a made up value. The value may
+ 			 * trigger divide by zero when subtracted and so try to
+ 			 * make them unique.
+ 			 */
+-			for (k = 0; k < idnum; k++)
+-				expr__add_id(&ctx, ids[k], k + 1);
++			k = 1;
++			hashmap__for_each_entry((&ctx.ids), cur, bkt)
++				expr__add_id(&ctx, strdup(cur->key), k++);
+ 
+-			for (k = 0; k < idnum; k++) {
+-				if (check_parse_id(ids[k], map == cpus_map, pe))
++			hashmap__for_each_entry((&ctx.ids), cur, bkt) {
++				if (check_parse_id(cur->key, map == cpus_map,
++						   pe))
+ 					ret++;
+ 			}
+ 
+@@ -476,9 +479,7 @@ static int test_parsing(void)
+ 				expr_failure("Parse failed", map, pe);
+ 				ret++;
+ 			}
+-			for (k = 0; k < idnum; k++)
+-				zfree(&ids[k]);
+-			free(ids);
++			expr__ctx_clear(&ctx);
+ 		}
+ 	}
+ 	/* TODO: fail when not ok */
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index 8b4ce704a68d..f64ab91c432b 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -4,25 +4,76 @@
+ #include "expr.h"
+ #include "expr-bison.h"
+ #include "expr-flex.h"
++#include <linux/kernel.h>
+ 
+ #ifdef PARSER_DEBUG
+ extern int expr_debug;
+ #endif
+ 
++static size_t key_hash(const void *key, void *ctx __maybe_unused)
 +{
-+	entry->next = *pprev;
-+	*pprev = entry;
++	const char *str = (const char *)key;
++	size_t hash = 0;
++
++	while (*str != '\0') {
++		hash *= 31;
++		hash += *str;
++		str++;
++	}
++	return hash;
 +}
 +
-+static void hashmap_del_entry(struct hashmap_entry **pprev,
-+			      struct hashmap_entry *entry)
++static bool key_equal(const void *key1, const void *key2,
++		    void *ctx __maybe_unused)
 +{
-+	*pprev = entry->next;
-+	entry->next = NULL;
++	return !strcmp((const char *)key1, (const char *)key2);
 +}
 +
-+void hashmap__init(struct hashmap *map, hashmap_hash_fn hash_fn,
-+		   hashmap_equal_fn equal_fn, void *ctx)
-+{
-+	map->hash_fn = hash_fn;
-+	map->equal_fn = equal_fn;
-+	map->ctx = ctx;
+ /* Caller must make sure id is allocated */
+-void expr__add_id(struct expr_parse_ctx *ctx, const char *name, double val)
++int expr__add_id(struct expr_parse_ctx *ctx, const char *name, double val)
+ {
+-	int idx;
++	double *val_ptr = NULL, *old_val = NULL;
++	char *old_key = NULL;
++	int ret;
 +
-+	map->buckets = NULL;
-+	map->cap = 0;
-+	map->cap_bits = 0;
-+	map->sz = 0;
++	if (val != 0.0) {
++		val_ptr = malloc(sizeof(double));
++		if (!val_ptr)
++			return -ENOMEM;
++		*val_ptr = val;
++	}
++	ret = hashmap__set(&ctx->ids, name, val_ptr,
++			   (const void **)&old_key, (void **)&old_val);
++	free(old_key);
++	free(old_val);
++	return ret;
 +}
 +
-+struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
-+			     hashmap_equal_fn equal_fn,
-+			     void *ctx)
++int expr__get_id(struct expr_parse_ctx *ctx, const char *id, double *val_ptr)
 +{
-+	struct hashmap *map = malloc(sizeof(struct hashmap));
-+
-+	if (!map)
-+		return ERR_PTR(-ENOMEM);
-+	hashmap__init(map, hash_fn, equal_fn, ctx);
-+	return map;
++	double *data;
+ 
+-	assert(ctx->num_ids < MAX_PARSE_ID);
+-	idx = ctx->num_ids++;
+-	ctx->ids[idx].name = name;
+-	ctx->ids[idx].val = val;
++	if (!hashmap__find(&ctx->ids, id, (void **)&data))
++		return -1;
++	*val_ptr = (data == NULL) ?  0.0 : *data;
++	return 0;
+ }
+ 
+ void expr__ctx_init(struct expr_parse_ctx *ctx)
+ {
+-	ctx->num_ids = 0;
++	hashmap__init(&ctx->ids, key_hash, key_equal, NULL);
 +}
 +
-+void hashmap__clear(struct hashmap *map)
++void expr__ctx_clear(struct expr_parse_ctx *ctx)
 +{
-+	struct hashmap_entry *cur, *tmp;
++	struct hashmap_entry *cur;
 +	size_t bkt;
 +
-+	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
-+		free(cur);
++	hashmap__for_each_entry((&ctx->ids), cur, bkt) {
++		free((char *)cur->key);
++		free(cur->value);
 +	}
-+	free(map->buckets);
-+	map->buckets = NULL;
-+	map->cap = map->cap_bits = map->sz = 0;
-+}
-+
-+void hashmap__free(struct hashmap *map)
-+{
-+	if (!map)
-+		return;
-+
-+	hashmap__clear(map);
-+	free(map);
-+}
-+
-+size_t hashmap__size(const struct hashmap *map)
-+{
-+	return map->sz;
-+}
-+
-+size_t hashmap__capacity(const struct hashmap *map)
-+{
-+	return map->cap;
-+}
-+
-+static bool hashmap_needs_to_grow(struct hashmap *map)
-+{
-+	/* grow if empty or more than 75% filled */
-+	return (map->cap == 0) || ((map->sz + 1) * 4 / 3 > map->cap);
-+}
-+
-+static int hashmap_grow(struct hashmap *map)
-+{
-+	struct hashmap_entry **new_buckets;
-+	struct hashmap_entry *cur, *tmp;
-+	size_t new_cap_bits, new_cap;
-+	size_t h, bkt;
-+
-+	new_cap_bits = map->cap_bits + 1;
-+	if (new_cap_bits < HASHMAP_MIN_CAP_BITS)
-+		new_cap_bits = HASHMAP_MIN_CAP_BITS;
-+
-+	new_cap = 1UL << new_cap_bits;
-+	new_buckets = calloc(new_cap, sizeof(new_buckets[0]));
-+	if (!new_buckets)
-+		return -ENOMEM;
-+
-+	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
-+		h = hash_bits(map->hash_fn(cur->key, map->ctx), new_cap_bits);
-+		hashmap_add_entry(&new_buckets[h], cur);
-+	}
-+
-+	map->cap = new_cap;
-+	map->cap_bits = new_cap_bits;
-+	free(map->buckets);
-+	map->buckets = new_buckets;
-+
-+	return 0;
-+}
-+
-+static bool hashmap_find_entry(const struct hashmap *map,
-+			       const void *key, size_t hash,
-+			       struct hashmap_entry ***pprev,
-+			       struct hashmap_entry **entry)
-+{
-+	struct hashmap_entry *cur, **prev_ptr;
-+
-+	if (!map->buckets)
-+		return false;
-+
-+	for (prev_ptr = &map->buckets[hash], cur = *prev_ptr;
-+	     cur;
-+	     prev_ptr = &cur->next, cur = cur->next) {
-+		if (map->equal_fn(cur->key, key, map->ctx)) {
-+			if (pprev)
-+				*pprev = prev_ptr;
-+			*entry = cur;
-+			return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+
-+int hashmap__insert(struct hashmap *map, const void *key, void *value,
-+		    enum hashmap_insert_strategy strategy,
-+		    const void **old_key, void **old_value)
-+{
-+	struct hashmap_entry *entry;
-+	size_t h;
-+	int err;
-+
-+	if (old_key)
-+		*old_key = NULL;
-+	if (old_value)
-+		*old_value = NULL;
-+
-+	h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
-+	if (strategy != HASHMAP_APPEND &&
-+	    hashmap_find_entry(map, key, h, NULL, &entry)) {
-+		if (old_key)
-+			*old_key = entry->key;
-+		if (old_value)
-+			*old_value = entry->value;
-+
-+		if (strategy == HASHMAP_SET || strategy == HASHMAP_UPDATE) {
-+			entry->key = key;
-+			entry->value = value;
-+			return 0;
-+		} else if (strategy == HASHMAP_ADD) {
-+			return -EEXIST;
-+		}
-+	}
-+
-+	if (strategy == HASHMAP_UPDATE)
-+		return -ENOENT;
-+
-+	if (hashmap_needs_to_grow(map)) {
-+		err = hashmap_grow(map);
-+		if (err)
-+			return err;
-+		h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
-+	}
-+
-+	entry = malloc(sizeof(struct hashmap_entry));
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	entry->key = key;
-+	entry->value = value;
-+	hashmap_add_entry(&map->buckets[h], entry);
-+	map->sz++;
-+
-+	return 0;
-+}
-+
-+bool hashmap__find(const struct hashmap *map, const void *key, void **value)
-+{
-+	struct hashmap_entry *entry;
-+	size_t h;
-+
-+	h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
-+	if (!hashmap_find_entry(map, key, h, NULL, &entry))
-+		return false;
-+
-+	if (value)
-+		*value = entry->value;
-+	return true;
-+}
-+
-+bool hashmap__delete(struct hashmap *map, const void *key,
-+		     const void **old_key, void **old_value)
-+{
-+	struct hashmap_entry **pprev, *entry;
-+	size_t h;
-+
-+	h = hash_bits(map->hash_fn(key, map->ctx), map->cap_bits);
-+	if (!hashmap_find_entry(map, key, h, &pprev, &entry))
-+		return false;
-+
-+	if (old_key)
-+		*old_key = entry->key;
-+	if (old_value)
-+		*old_value = entry->value;
-+
-+	hashmap_del_entry(pprev, entry);
-+	free(entry);
-+	map->sz--;
-+
-+	return true;
-+}
-+
-diff --git a/tools/lib/api/hashmap.h b/tools/lib/api/hashmap.h
-new file mode 100644
-index 000000000000..e823b35e7371
---- /dev/null
-+++ b/tools/lib/api/hashmap.h
-@@ -0,0 +1,177 @@
-+/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
-+
-+/*
-+ * Generic non-thread safe hash map implementation.
-+ *
-+ * Copyright (c) 2019 Facebook
-+ */
-+#ifndef __LIBBPF_HASHMAP_H
-+#define __LIBBPF_HASHMAP_H
-+
-+#include <stdbool.h>
-+#include <stddef.h>
-+#ifdef __GLIBC__
-+#include <bits/wordsize.h>
-+#else
-+#include <bits/reg.h>
-+#endif
-+
-+static inline size_t hash_bits(size_t h, int bits)
-+{
-+	/* shuffle bits and return requested number of upper bits */
-+	return (h * 11400714819323198485llu) >> (__WORDSIZE - bits);
-+}
-+
-+typedef size_t (*hashmap_hash_fn)(const void *key, void *ctx);
-+typedef bool (*hashmap_equal_fn)(const void *key1, const void *key2, void *ctx);
-+
-+struct hashmap_entry {
-+	const void *key;
-+	void *value;
-+	struct hashmap_entry *next;
-+};
-+
-+struct hashmap {
-+	hashmap_hash_fn hash_fn;
-+	hashmap_equal_fn equal_fn;
-+	void *ctx;
-+
-+	struct hashmap_entry **buckets;
-+	size_t cap;
-+	size_t cap_bits;
-+	size_t sz;
-+};
-+
-+#define HASHMAP_INIT(hash_fn, equal_fn, ctx) {	\
-+	.hash_fn = (hash_fn),			\
-+	.equal_fn = (equal_fn),			\
-+	.ctx = (ctx),				\
-+	.buckets = NULL,			\
-+	.cap = 0,				\
-+	.cap_bits = 0,				\
-+	.sz = 0,				\
-+}
-+
-+void hashmap__init(struct hashmap *map, hashmap_hash_fn hash_fn,
-+		   hashmap_equal_fn equal_fn, void *ctx);
-+struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
-+			     hashmap_equal_fn equal_fn,
-+			     void *ctx);
-+void hashmap__clear(struct hashmap *map);
-+void hashmap__free(struct hashmap *map);
-+
-+size_t hashmap__size(const struct hashmap *map);
-+size_t hashmap__capacity(const struct hashmap *map);
-+
-+/*
-+ * Hashmap insertion strategy:
-+ * - HASHMAP_ADD - only add key/value if key doesn't exist yet;
-+ * - HASHMAP_SET - add key/value pair if key doesn't exist yet; otherwise,
-+ *   update value;
-+ * - HASHMAP_UPDATE - update value, if key already exists; otherwise, do
-+ *   nothing and return -ENOENT;
-+ * - HASHMAP_APPEND - always add key/value pair, even if key already exists.
-+ *   This turns hashmap into a multimap by allowing multiple values to be
-+ *   associated with the same key. Most useful read API for such hashmap is
-+ *   hashmap__for_each_key_entry() iteration. If hashmap__find() is still
-+ *   used, it will return last inserted key/value entry (first in a bucket
-+ *   chain).
-+ */
-+enum hashmap_insert_strategy {
-+	HASHMAP_ADD,
-+	HASHMAP_SET,
-+	HASHMAP_UPDATE,
-+	HASHMAP_APPEND,
-+};
-+
-+/*
-+ * hashmap__insert() adds key/value entry w/ various semantics, depending on
-+ * provided strategy value. If a given key/value pair replaced already
-+ * existing key/value pair, both old key and old value will be returned
-+ * through old_key and old_value to allow calling code do proper memory
-+ * management.
-+ */
-+int hashmap__insert(struct hashmap *map, const void *key, void *value,
-+		    enum hashmap_insert_strategy strategy,
-+		    const void **old_key, void **old_value);
-+
-+static inline int hashmap__add(struct hashmap *map,
-+			       const void *key, void *value)
-+{
-+	return hashmap__insert(map, key, value, HASHMAP_ADD, NULL, NULL);
-+}
-+
-+static inline int hashmap__set(struct hashmap *map,
-+			       const void *key, void *value,
-+			       const void **old_key, void **old_value)
-+{
-+	return hashmap__insert(map, key, value, HASHMAP_SET,
-+			       old_key, old_value);
-+}
-+
-+static inline int hashmap__update(struct hashmap *map,
-+				  const void *key, void *value,
-+				  const void **old_key, void **old_value)
-+{
-+	return hashmap__insert(map, key, value, HASHMAP_UPDATE,
-+			       old_key, old_value);
-+}
-+
-+static inline int hashmap__append(struct hashmap *map,
-+				  const void *key, void *value)
-+{
-+	return hashmap__insert(map, key, value, HASHMAP_APPEND, NULL, NULL);
-+}
-+
-+bool hashmap__delete(struct hashmap *map, const void *key,
-+		     const void **old_key, void **old_value);
-+
-+bool hashmap__find(const struct hashmap *map, const void *key, void **value);
-+
-+/*
-+ * hashmap__for_each_entry - iterate over all entries in hashmap
-+ * @map: hashmap to iterate
-+ * @cur: struct hashmap_entry * used as a loop cursor
-+ * @bkt: integer used as a bucket loop cursor
-+ */
-+#define hashmap__for_each_entry(map, cur, bkt)				    \
-+	for (bkt = 0; bkt < map->cap; bkt++)				    \
-+		for (cur = map->buckets[bkt]; cur; cur = cur->next)
-+
-+/*
-+ * hashmap__for_each_entry_safe - iterate over all entries in hashmap, safe
-+ * against removals
-+ * @map: hashmap to iterate
-+ * @cur: struct hashmap_entry * used as a loop cursor
-+ * @tmp: struct hashmap_entry * used as a temporary next cursor storage
-+ * @bkt: integer used as a bucket loop cursor
-+ */
-+#define hashmap__for_each_entry_safe(map, cur, tmp, bkt)		    \
-+	for (bkt = 0; bkt < map->cap; bkt++)				    \
-+		for (cur = map->buckets[bkt];				    \
-+		     cur && ({tmp = cur->next; true; });		    \
-+		     cur = tmp)
-+
-+/*
-+ * hashmap__for_each_key_entry - iterate over entries associated with given key
-+ * @map: hashmap to iterate
-+ * @cur: struct hashmap_entry * used as a loop cursor
-+ * @key: key to iterate entries for
-+ */
-+#define hashmap__for_each_key_entry(map, cur, _key)			    \
-+	for (cur = ({ size_t bkt = hash_bits(map->hash_fn((_key), map->ctx),\
-+					     map->cap_bits);		    \
-+		     map->buckets ? map->buckets[bkt] : NULL; });	    \
-+	     cur;							    \
-+	     cur = cur->next)						    \
-+		if (map->equal_fn(cur->key, (_key), map->ctx))
-+
-+#define hashmap__for_each_key_entry_safe(map, cur, tmp, _key)		    \
-+	for (cur = ({ size_t bkt = hash_bits(map->hash_fn((_key), map->ctx),\
-+					     map->cap_bits);		    \
-+		     cur = map->buckets ? map->buckets[bkt] : NULL; });	    \
-+	     cur && ({ tmp = cur->next; true; });			    \
-+	     cur = tmp)							    \
-+		if (map->equal_fn(cur->key, (_key), map->ctx))
-+
-+#endif /* __LIBBPF_HASHMAP_H */
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index cf147db4e5ca..87fcffa33a4d 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -128,4 +128,8 @@ check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in
- # diff non-symmetric files
- check_2 tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
++	hashmap__clear(&ctx->ids);
+ }
  
-+# check duplicated library files
-+check_2 tools/lib/api/hashmap.h tools/lib/bpf/hashmap.h
-+check_2 tools/lib/api/hashmap.c tools/lib/bpf/hashmap.c
+ static int
+@@ -56,61 +107,25 @@ __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
+ 	return ret;
+ }
+ 
+-int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr, int runtime)
++int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
++		const char *expr, int runtime)
+ {
+ 	return __expr__parse(final_val, ctx, expr, EXPR_PARSE, runtime) ? -1 : 0;
+ }
+ 
+-static bool
+-already_seen(const char *val, const char *one, const char **other,
+-	     int num_other)
+-{
+-	int i;
+-
+-	if (one && !strcasecmp(one, val))
+-		return true;
+-	for (i = 0; i < num_other; i++)
+-		if (!strcasecmp(other[i], val))
+-			return true;
+-	return false;
+-}
+-
+-int expr__find_other(const char *expr, const char *one, const char ***other,
+-		     int *num_other, int runtime)
++int expr__find_other(const char *expr, const char *one,
++		     struct expr_parse_ctx *ctx, int runtime)
+ {
+-	int err, i = 0, j = 0;
+-	struct expr_parse_ctx ctx;
+-
+-	expr__ctx_init(&ctx);
+-	err = __expr__parse(NULL, &ctx, expr, EXPR_OTHER, runtime);
+-	if (err)
+-		return -1;
+-
+-	*other = malloc((ctx.num_ids + 1) * sizeof(char *));
+-	if (!*other)
+-		return -ENOMEM;
+-
+-	for (i = 0, j = 0; i < ctx.num_ids; i++) {
+-		const char *str = ctx.ids[i].name;
+-
+-		if (already_seen(str, one, *other, j))
+-			continue;
+-
+-		str = strdup(str);
+-		if (!str)
+-			goto out;
+-		(*other)[j++] = str;
+-	}
+-	(*other)[j] = NULL;
+-
+-out:
+-	if (i != ctx.num_ids) {
+-		while (--j)
+-			free((char *) (*other)[i]);
+-		free(*other);
+-		err = -1;
++	double *old_val = NULL;
++	char *old_key = NULL;
++	int ret = __expr__parse(NULL, ctx, expr, EXPR_OTHER, runtime);
 +
- cd tools/perf
++	if (one) {
++		hashmap__delete(&ctx->ids, one,
++				(const void **)&old_key, (void **)&old_val);
++		free(old_key);
++		free(old_val);
+ 	}
+ 
+-	*num_other = j;
+-	return err;
++	return ret;
+ }
+diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+index 40fc452b0f2b..03c961e85e65 100644
+--- a/tools/perf/util/expr.h
++++ b/tools/perf/util/expr.h
+@@ -2,17 +2,10 @@
+ #ifndef PARSE_CTX_H
+ #define PARSE_CTX_H 1
+ 
+-#define EXPR_MAX_OTHER 64
+-#define MAX_PARSE_ID EXPR_MAX_OTHER
+-
+-struct expr_parse_id {
+-	const char *name;
+-	double val;
+-};
++#include <api/hashmap.h>
+ 
+ struct expr_parse_ctx {
+-	int num_ids;
+-	struct expr_parse_id ids[MAX_PARSE_ID];
++	struct hashmap ids;
+ };
+ 
+ struct expr_scanner_ctx {
+@@ -21,9 +14,12 @@ struct expr_scanner_ctx {
+ };
+ 
+ void expr__ctx_init(struct expr_parse_ctx *ctx);
+-void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
+-int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr, int runtime);
+-int expr__find_other(const char *expr, const char *one, const char ***other,
+-		int *num_other, int runtime);
++void expr__ctx_clear(struct expr_parse_ctx *ctx);
++int expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
++int expr__get_id(struct expr_parse_ctx *ctx, const char *id, double *val_ptr);
++int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
++		const char *expr, int runtime);
++int expr__find_other(const char *expr, const char *one,
++		struct expr_parse_ctx *ids, int runtime);
+ 
+ #endif
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index 21e82a1e11a2..ec5a48bf5f34 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -46,19 +46,6 @@ static void expr_error(double *final_val __maybe_unused,
+ 	pr_debug("%s\n", s);
+ }
+ 
+-static int lookup_id(struct expr_parse_ctx *ctx, char *id, double *val)
+-{
+-	int i;
+-
+-	for (i = 0; i < ctx->num_ids; i++) {
+-		if (!strcasecmp(ctx->ids[i].name, id)) {
+-			*val = ctx->ids[i].val;
+-			return 0;
+-		}
+-	}
+-	return -1;
+-}
+-
+ %}
+ %%
+ 
+@@ -72,12 +59,7 @@ all_other: all_other other
+ 
+ other: ID
+ {
+-	if (ctx->num_ids + 1 >= EXPR_MAX_OTHER) {
+-		pr_err("failed: way too many variables");
+-		YYABORT;
+-	}
+-
+-	ctx->ids[ctx->num_ids++].name = $1;
++	expr__add_id(ctx, $1, 0.0);
+ }
+ |
+ MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
+@@ -92,7 +74,7 @@ if_expr:
+ 	;
+ 
+ expr:	  NUMBER
+-	| ID			{ if (lookup_id(ctx, $1, &$$) < 0) {
++	| ID			{ if (expr__get_id(ctx, $1, &$$)) {
+ 					pr_debug("%s not found\n", $1);
+ 					YYABORT;
+ 				  }
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index b071df373f8b..37be5a368d6e 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -85,8 +85,7 @@ static void metricgroup__rblist_init(struct rblist *metric_events)
+ 
+ struct egroup {
+ 	struct list_head nd;
+-	int idnum;
+-	const char **ids;
++	struct expr_parse_ctx pctx;
+ 	const char *metric_name;
+ 	const char *metric_expr;
+ 	const char *metric_unit;
+@@ -94,19 +93,21 @@ struct egroup {
+ };
+ 
+ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+-				      const char **ids,
+-				      int idnum,
++				      struct expr_parse_ctx *pctx,
+ 				      struct evsel **metric_events,
+ 				      bool *evlist_used)
+ {
+ 	struct evsel *ev;
+-	int i = 0, j = 0;
+ 	bool leader_found;
++	const size_t idnum = hashmap__size(&pctx->ids);
++	size_t i = 0;
++	int j = 0;
++	double *val_ptr;
+ 
+ 	evlist__for_each_entry (perf_evlist, ev) {
+ 		if (evlist_used[j++])
+ 			continue;
+-		if (!strcmp(ev->name, ids[i])) {
++		if (hashmap__find(&pctx->ids, ev->name, (void **)&val_ptr)) {
+ 			if (!metric_events[i])
+ 				metric_events[i] = ev;
+ 			i++;
+@@ -118,7 +119,8 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 			memset(metric_events, 0,
+ 				sizeof(struct evsel *) * idnum);
+ 
+-			if (!strcmp(ev->name, ids[i])) {
++			if (hashmap__find(&pctx->ids, ev->name,
++					  (void **)&val_ptr)) {
+ 				if (!metric_events[i])
+ 					metric_events[i] = ev;
+ 				i++;
+@@ -175,19 +177,20 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 	list_for_each_entry (eg, groups, nd) {
+ 		struct evsel **metric_events;
+ 
+-		metric_events = calloc(sizeof(void *), eg->idnum + 1);
++		metric_events = calloc(sizeof(void *),
++				hashmap__size(&eg->pctx.ids) + 1);
+ 		if (!metric_events) {
+ 			ret = -ENOMEM;
+ 			break;
+ 		}
+-		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
+-					 metric_events, evlist_used);
++		evsel = find_evsel_group(perf_evlist, &eg->pctx, metric_events,
++					evlist_used);
+ 		if (!evsel) {
+ 			pr_debug("Cannot resolve %s: %s\n",
+ 					eg->metric_name, eg->metric_expr);
+ 			continue;
+ 		}
+-		for (i = 0; i < eg->idnum; i++)
++		for (i = 0; metric_events[i]; i++)
+ 			metric_events[i]->collect_stat = true;
+ 		me = metricgroup__lookup(metric_events_list, evsel, true);
+ 		if (!me) {
+@@ -415,20 +418,20 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
+ }
+ 
+ static void metricgroup__add_metric_weak_group(struct strbuf *events,
+-					       const char **ids,
+-					       int idnum)
++					       struct expr_parse_ctx *ctx)
+ {
++	struct hashmap_entry *cur;
++	size_t bkt, i = 0;
+ 	bool no_group = false;
+-	int i;
+ 
+-	for (i = 0; i < idnum; i++) {
+-		pr_debug("found event %s\n", ids[i]);
++	hashmap__for_each_entry((&ctx->ids), cur, bkt) {
++		pr_debug("found event %s\n", (const char *)cur->key);
+ 		/*
+ 		 * Duration time maps to a software event and can make
+ 		 * groups not count. Always use it outside a
+ 		 * group.
+ 		 */
+-		if (!strcmp(ids[i], "duration_time")) {
++		if (!strcmp(cur->key, "duration_time")) {
+ 			if (i > 0)
+ 				strbuf_addf(events, "}:W,");
+ 			strbuf_addf(events, "duration_time");
+@@ -437,21 +440,22 @@ static void metricgroup__add_metric_weak_group(struct strbuf *events,
+ 		}
+ 		strbuf_addf(events, "%s%s",
+ 			i == 0 || no_group ? "{" : ",",
+-			ids[i]);
++			(const char *)cur->key);
+ 		no_group = false;
++		i++;
+ 	}
+ 	if (!no_group)
+ 		strbuf_addf(events, "}:W");
+ }
+ 
+ static void metricgroup__add_metric_non_group(struct strbuf *events,
+-					      const char **ids,
+-					      int idnum)
++					      struct expr_parse_ctx *ctx)
+ {
+-	int i;
++	struct hashmap_entry *cur;
++	size_t bkt;
+ 
+-	for (i = 0; i < idnum; i++)
+-		strbuf_addf(events, ",%s", ids[i]);
++	hashmap__for_each_entry((&ctx->ids), cur, bkt)
++		strbuf_addf(events, ",%s", (const char *)cur->key);
+ }
+ 
+ static void metricgroup___watchdog_constraint_hint(const char *name, bool foot)
+@@ -495,32 +499,32 @@ int __weak arch_get_runtimeparam(void)
+ static int __metricgroup__add_metric(struct strbuf *events,
+ 		struct list_head *group_list, struct pmu_event *pe, int runtime)
+ {
+-
+-	const char **ids;
+-	int idnum;
+ 	struct egroup *eg;
+ 
+-	if (expr__find_other(pe->metric_expr, NULL, &ids, &idnum, runtime) < 0)
+-		return -EINVAL;
+-
+-	if (events->len > 0)
+-		strbuf_addf(events, ",");
+-
+-	if (metricgroup__has_constraint(pe))
+-		metricgroup__add_metric_non_group(events, ids, idnum);
+-	else
+-		metricgroup__add_metric_weak_group(events, ids, idnum);
+-
+ 	eg = malloc(sizeof(*eg));
+ 	if (!eg)
+ 		return -ENOMEM;
+ 
+-	eg->ids = ids;
+-	eg->idnum = idnum;
++	expr__ctx_init(&eg->pctx);
+ 	eg->metric_name = pe->metric_name;
+ 	eg->metric_expr = pe->metric_expr;
+ 	eg->metric_unit = pe->unit;
+ 	eg->runtime = runtime;
++
++	if (expr__find_other(pe->metric_expr, NULL, &eg->pctx, runtime) < 0) {
++		expr__ctx_clear(&eg->pctx);
++		free(eg);
++		return -EINVAL;
++	}
++
++	if (events->len > 0)
++		strbuf_addf(events, ",");
++
++	if (metricgroup__has_constraint(pe))
++		metricgroup__add_metric_non_group(events, &eg->pctx);
++	else
++		metricgroup__add_metric_weak_group(events, &eg->pctx);
++
+ 	list_add_tail(&eg->nd, group_list);
+ 
+ 	return 0;
+@@ -603,12 +607,9 @@ static int metricgroup__add_metric_list(const char *list, struct strbuf *events,
+ static void metricgroup__free_egroups(struct list_head *group_list)
+ {
+ 	struct egroup *eg, *egtmp;
+-	int i;
+ 
+ 	list_for_each_entry_safe (eg, egtmp, group_list, nd) {
+-		for (i = 0; i < eg->idnum; i++)
+-			zfree(&eg->ids[i]);
+-		zfree(&eg->ids);
++		expr__ctx_clear(&eg->pctx);
+ 		list_del_init(&eg->nd);
+ 		free(eg);
+ 	}
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 9bd7a8d2a858..c44dc814b377 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -323,35 +323,46 @@ void perf_stat__collect_metric_expr(struct evlist *evsel_list)
+ {
+ 	struct evsel *counter, *leader, **metric_events, *oc;
+ 	bool found;
+-	const char **metric_names;
++	struct expr_parse_ctx ctx;
++	struct hashmap_entry *cur;
++	size_t bkt;
+ 	int i;
+-	int num_metric_names;
+ 
++	expr__ctx_init(&ctx);
+ 	evlist__for_each_entry(evsel_list, counter) {
+ 		bool invalid = false;
+ 
+ 		leader = counter->leader;
+ 		if (!counter->metric_expr)
+ 			continue;
++
++		expr__ctx_clear(&ctx);
+ 		metric_events = counter->metric_events;
+ 		if (!metric_events) {
+-			if (expr__find_other(counter->metric_expr, counter->name,
+-						&metric_names, &num_metric_names, 1) < 0)
++			if (expr__find_other(counter->metric_expr,
++					     counter->name,
++					     &ctx, 1) < 0)
+ 				continue;
+ 
+ 			metric_events = calloc(sizeof(struct evsel *),
+-					       num_metric_names + 1);
+-			if (!metric_events)
++					       hashmap__size(&ctx.ids) + 1);
++			if (!metric_events) {
++				expr__ctx_clear(&ctx);
+ 				return;
++			}
+ 			counter->metric_events = metric_events;
+ 		}
+ 
+-		for (i = 0; i < num_metric_names; i++) {
++		i = 0;
++		hashmap__for_each_entry((&ctx.ids), cur, bkt) {
++			const char *metric_name = (const char *)cur->key;
++
+ 			found = false;
+ 			if (leader) {
+ 				/* Search in group */
+ 				for_each_group_member (oc, leader) {
+-					if (!strcasecmp(oc->name, metric_names[i]) &&
++					if (!strcasecmp(oc->name,
++							metric_name) &&
+ 						!oc->collect_stat) {
+ 						found = true;
+ 						break;
+@@ -360,7 +371,8 @@ void perf_stat__collect_metric_expr(struct evlist *evsel_list)
+ 			}
+ 			if (!found) {
+ 				/* Search ignoring groups */
+-				oc = perf_stat__find_event(evsel_list, metric_names[i]);
++				oc = perf_stat__find_event(evsel_list,
++							   metric_name);
+ 			}
+ 			if (!oc) {
+ 				/* Deduping one is good enough to handle duplicated PMUs. */
+@@ -373,27 +385,28 @@ void perf_stat__collect_metric_expr(struct evlist *evsel_list)
+ 				 * of events. So we ask the user instead to add the missing
+ 				 * events.
+ 				 */
+-				if (!printed || strcasecmp(printed, metric_names[i])) {
++				if (!printed ||
++				    strcasecmp(printed, metric_name)) {
+ 					fprintf(stderr,
+ 						"Add %s event to groups to get metric expression for %s\n",
+-						metric_names[i],
++						metric_name,
+ 						counter->name);
+-					printed = strdup(metric_names[i]);
++					printed = strdup(metric_name);
+ 				}
+ 				invalid = true;
+ 				continue;
+ 			}
+-			metric_events[i] = oc;
++			metric_events[i++] = oc;
+ 			oc->collect_stat = true;
+ 		}
+ 		metric_events[i] = NULL;
+-		free(metric_names);
+ 		if (invalid) {
+ 			free(metric_events);
+ 			counter->metric_events = NULL;
+ 			counter->metric_expr = NULL;
+ 		}
+ 	}
++	expr__ctx_clear(&ctx);
+ }
+ 
+ static double runtime_stat_avg(struct runtime_stat *st,
+@@ -738,7 +751,10 @@ static void generic_metric(struct perf_stat_config *config,
+ 
+ 	expr__ctx_init(&pctx);
+ 	/* Must be first id entry */
+-	expr__add_id(&pctx, name, avg);
++	n = strdup(name);
++	if (!n)
++		return;
++	expr__add_id(&pctx, n, avg);
+ 	for (i = 0; metric_events[i]; i++) {
+ 		struct saved_value *v;
+ 		struct stats *stats;
+@@ -814,8 +830,7 @@ static void generic_metric(struct perf_stat_config *config,
+ 			     (metric_name ? metric_name : name) : "", 0);
+ 	}
+ 
+-	for (i = 1; i < pctx.num_ids; i++)
+-		zfree(&pctx.ids[i].name);
++	expr__ctx_clear(&pctx);
+ }
+ 
+ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
 -- 
 2.26.2.761.g0e0b3e54be-goog
 
