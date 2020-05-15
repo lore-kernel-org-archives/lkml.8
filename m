@@ -2,136 +2,151 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6389C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D278C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A16C620643
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:24:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DU4JC8Ih"
+	by mail.kernel.org (Postfix) with ESMTP id 657AE206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589531400;
+	bh=lTpdO6tdiL525zVDHeQG7T2xnMDRELvWwuK37gyv7wc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bk2X/22hvlkI5/D9tiDsuUArOF9IE1GaSv4rBkSFECWFtK7Tjss6DeaYKI+zEFjZC
+	 GOYxR08NatfsQcR4OUMcGTxKSoPqbuZHIBKg3m/b2FQlZ99LUROGh4pSOx1yew49Ql
+	 berS8lVi90FIxQ7pEvCnkbeAbx2S4RKfwgWKGqj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgEOIYw (ORCPT
+        id S1727050AbgEOI37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:24:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47747 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726694AbgEOIYw (ORCPT
+        Fri, 15 May 2020 04:29:59 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35826 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgEOI37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:24:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589531090;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0DQftDX0379nFESU6WazrW1lD4fM3GC98zH3yfUsrwE=;
-        b=DU4JC8Ihy/bwGsg4hANYlhSwQmaAoCLM3prjkLXeBlBA30XbL3yX7Qz2jD2YfyB6UZzvwh
-        /6sjzhi7UyBMYuZpuZnA/Ouwfu3UqAcD862pe3sRCDmxn2DYhi06sMg+7964VMxc2k2Z+9
-        xfI9qA9Ns8uuujrvSii5ddIjDt6XZto=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-460-5OivfA2kNfOdwdUTKLC_CA-1; Fri, 15 May 2020 04:24:49 -0400
-X-MC-Unique: 5OivfA2kNfOdwdUTKLC_CA-1
-Received: by mail-wr1-f72.google.com with SMTP id d16so795156wrv.18
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 01:24:49 -0700 (PDT)
+        Fri, 15 May 2020 04:29:59 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n5so1683111wmd.0;
+        Fri, 15 May 2020 01:29:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=0DQftDX0379nFESU6WazrW1lD4fM3GC98zH3yfUsrwE=;
-        b=LPKgPKBD/SfhManSe0RCEXEfiRRviFTH/sN+cJ4lepTqw+l3JSyKc8lBXzRTxNZ+mo
-         tIrSlzfjCzbjeXkNQxrYuSOw2PM30tIKuc9CTUVYmOGptPL5zGuuX3ocFOygCSF4jbpH
-         bNMTNGPk/ZD1OMoswSp4OP/V6SxDljLzbjXkKemjTnbljpAiXsRVBxSMnhiNxTb1i3kV
-         m3GQohWSOIvKNDk15iaTR53phm0dEOB9VkKUOywR2XhyKPx0JskdD6s1VQTEpOaM06x4
-         /y0I1+qA30pGMxj2VigqptUFoFvNg9JI2n104cv7rE+TA93c+3i8XD2Y2ffB7q5U6V7v
-         H4Fg==
-X-Gm-Message-State: AOAM532iERilnaBdOqUKCUavJ4pcshtvrpFKbL9CbUoYkc482qxvFGzG
-        s9M4Mo8ZUlVM5cny3/3x7FTQrw7YGq9QEEN83+oAcE6zR/g1jWJQ7h5D4XfDzEU0yfHd32SsAk/
-        3Yff+TqOIjV5jnj035CLiaNoN
-X-Received: by 2002:a5d:62c7:: with SMTP id o7mr2914716wrv.212.1589531087915;
-        Fri, 15 May 2020 01:24:47 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwWc8/zKYnO5ihSmyMO25yKM3a8VD+LjoaKKI+gb3ocgg3J9JGwXdm6ilapNMfvQgQoDQ4XVw==
-X-Received: by 2002:a5d:62c7:: with SMTP id o7mr2914689wrv.212.1589531087638;
-        Fri, 15 May 2020 01:24:47 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id r11sm2419027wrv.14.2020.05.15.01.24.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AffiWICTihWrD0jhH/25k+Jany7wx9bJeNI7R897D5A=;
+        b=pPrK8V4Bvs2P/6Up5OEof3JuOkE+GAsxF303ofEiR56PcMIqluYiUk+ylVyfn3vHa/
+         Ho7gtRbOSYnw+swh6bqAGnDnxZEDy4bPMYZLSdq7iuwSQPh4ozB1Hs92xQscGyLH11vM
+         Qgg14FBBjXITUcE4Dz5XDDRD9axxRcGbOtHNSMxjJgtYMKV219Iyz2oum5/2WxGWLPhc
+         c2qSYkchZS4hDLDemLWJyDY2nodgpPUNpt+WplT6mrZ+pkuVp42pa1CKIroj+wY54XSe
+         UZv4spn/Iq10FbJeCuPEWlC3NU/o6LtPL2cGNo+ZqXwmHt/472QBqwkBVicFCJ5Gp39q
+         y2/w==
+X-Gm-Message-State: AOAM531oho4D6yDWvvztZ6ZrbrRXypDRskR9wB0QercZnnfOQFXhzfVZ
+        9z6XRrfzlCrYnrsxh2cG+Yg=
+X-Google-Smtp-Source: ABdhPJwIeOGeKtkO402/Kz2PFC3Ze6Zk4Xt5gmJSEXDWr6dlaKMniPW1X/R4tk3nopbtZrNkt/8Dyg==
+X-Received: by 2002:a05:600c:231a:: with SMTP id 26mr2882752wmo.59.1589531396993;
+        Fri, 15 May 2020 01:29:56 -0700 (PDT)
+Received: from localhost (ip-37-188-249-36.eurotel.cz. [37.188.249.36])
+        by smtp.gmail.com with ESMTPSA id h137sm54689649wme.0.2020.05.15.01.29.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 01:24:46 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Tsirkin <mst@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, x86@kernel.org
-Subject: Re: [PATCH RFC 2/5] KVM: x86: introduce KVM_MEM_ALLONES memory
-In-Reply-To: <20200514191823.GA15847@linux.intel.com>
-References: <20200514180540.52407-1-vkuznets@redhat.com> <20200514180540.52407-3-vkuznets@redhat.com> <20200514191823.GA15847@linux.intel.com>
-Date:   Fri, 15 May 2020 10:24:45 +0200
-Message-ID: <87imgxwqpe.fsf@vitty.brq.redhat.com>
+        Fri, 15 May 2020 01:29:56 -0700 (PDT)
+Date:   Fri, 15 May 2020 10:29:55 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Mel Gorman <mgorman@suse.de>,
+        Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] memcg: expose root cgroup's memory.stat
+Message-ID: <20200515082955.GJ29153@dhcp22.suse.cz>
+References: <20200508170630.94406-1-shakeelb@google.com>
+ <20200508214405.GA226164@cmpxchg.org>
+ <CALvZod5VHHUV+_AXs4+5sLOPGyxm709kQ1q=uHMPVxW8pwXZ=g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod5VHHUV+_AXs4+5sLOPGyxm709kQ1q=uHMPVxW8pwXZ=g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Sat 09-05-20 07:06:38, Shakeel Butt wrote:
+> On Fri, May 8, 2020 at 2:44 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > On Fri, May 08, 2020 at 10:06:30AM -0700, Shakeel Butt wrote:
+> > > One way to measure the efficiency of memory reclaim is to look at the
+> > > ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
+> > > not updated consistently at the system level and the ratio of these are
+> > > not very meaningful. The pgsteal and pgscan are updated for only global
+> > > reclaim while pgrefill gets updated for global as well as cgroup
+> > > reclaim.
+> > >
+> > > Please note that this difference is only for system level vmstats. The
+> > > cgroup stats returned by memory.stat are actually consistent. The
+> > > cgroup's pgsteal contains number of reclaimed pages for global as well
+> > > as cgroup reclaim. So, one way to get the system level stats is to get
+> > > these stats from root's memory.stat, so, expose memory.stat for the root
+> > > cgroup.
+> > >
+> > >       from Johannes Weiner:
+> > >       There are subtle differences between /proc/vmstat and
+> > >       memory.stat, and cgroup-aware code that wants to watch the full
+> > >       hierarchy currently has to know about these intricacies and
+> > >       translate semantics back and forth.
 
-> On Thu, May 14, 2020 at 08:05:37PM +0200, Vitaly Kuznetsov wrote:
->> PCIe config space can (depending on the configuration) be quite big but
->> usually is sparsely populated. Guest may scan it by accessing individual
->> device's page which, when device is missing, is supposed to have 'pci
->> holes' semantics: reads return '0xff' and writes get discarded. Currently,
->> userspace has to allocate real memory for these holes and fill them with
->> '0xff'. Moreover, different VMs usually require different memory.
->> 
->> The idea behind the feature introduced by this patch is: let's have a
->> single read-only page filled with '0xff' in KVM and map it to all such
->> PCI holes in all VMs. This will free userspace of obligation to allocate
->> real memory. Later, this will also allow us to speed up access to these
->> holes as we can aggressively map the whole slot upon first fault.
->> 
->> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>  Documentation/virt/kvm/api.rst  | 22 ++++++---
->>  arch/x86/include/uapi/asm/kvm.h |  1 +
->>  arch/x86/kvm/x86.c              |  9 ++--
->>  include/linux/kvm_host.h        | 15 ++++++-
->>  include/uapi/linux/kvm.h        |  2 +
->>  virt/kvm/kvm_main.c             | 79 +++++++++++++++++++++++++++++++--
->>  6 files changed, 113 insertions(+), 15 deletions(-)
->> 
->> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
->> index d871dacb984e..2b87d588a7e0 100644
->> --- a/Documentation/virt/kvm/api.rst
->> +++ b/Documentation/virt/kvm/api.rst
->> @@ -1236,7 +1236,8 @@ yet and must be cleared on entry.
->>  
->>    /* for kvm_memory_region::flags */
->>    #define KVM_MEM_LOG_DIRTY_PAGES	(1UL << 0)
->> -  #define KVM_MEM_READONLY	(1UL << 1)
->> +  #define KVM_MEM_READONLY		(1UL << 1)
->> +  #define KVM_MEM_ALLONES		(1UL << 2)
->
-> Why not call this KVM_MEM_PCI_HOLE or something else that better conveys
-> that this is memslot is intended to emulate PCI master abort semantics?
->
+Can we have those subtle differences documented please?
 
-Becuase there's always hope this can be usefult for something else but
-PCI? :-) Actually, I was thinking about generalizing this a little bit
-to something like KVM_MEM_CONSTANT with a way to set the pattern but I'm
-failing to see any need for anything but all-ones or all-zeroes. Maybe
-other-than-x86 architectures have some needs?
+> > >
+> > >       Generally having the fully recursive memory.stat at the root
+> > >       level could help a broader range of usecases.
+> >
+> > The changelog begs the question why we don't just "fix" the
+> > system-level stats. It may be useful to include the conclusions from
+> > that discussion, and why there is value in keeping the stats this way.
+> >
+> 
+> Right. Andrew, can you please add the following para to the changelog?
+> 
+> Why not fix the stats by including both the global and cgroup reclaim
+> activity instead of exposing root cgroup's memory.stat? The reason is
+> the benefit of having metrics exposing the activity that happens
+> purely due to machine capacity rather than localized activity that
+> happens due to the limits throughout the cgroup tree. Additionally
+> there are userspace tools like sysstat(sar) which reads these stats to
+> inform about the system level reclaim activity. So, we should not
+> break such use-cases.
+> 
+> > > Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> > > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> >
+> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> 
+> Thanks a lot.
 
-I'm definitely fine with renaming this to KVM_MEM_PCI_HOLE.
+I was quite surprised that the patch is so simple TBH. For some reason
+I've still had memories that we do not account for root memcg (likely
+because mem_cgroup_is_root(memcg) bail out in the try_charge. But stats
+are slightly different here. I have started looking at different stat
+counters because they are not really all the same. E.g. 
+- mem_cgroup_charge_statistics accounts for each memcg
+- memcg_charge_kernel_stack relies on pages being associated with a
+  memcg and that in turn relies on __memcg_kmem_charge_page which bails
+  out on root memcg
+- memcg_charge_slab (NR_SLAB*) skips over root memcg as well
+- __mod_lruvec_page_state relies on page->mem_cgroup as well but this
+  one is ok for paths which go through commit_charge path.
+
+That being said we should really double check which stats are
+accounted properly. At least MEMCG_KERNEL_STACK_KB won't unless I am
+misreading the code.
+
+I do not mind displaying the root's memcg stats but a) a closer look had
+to be done for each counter and b) a clarification of differences from
+the global vmstat counters would be really handy.
 
 -- 
-Vitaly
-
+Michal Hocko
+SUSE Labs
