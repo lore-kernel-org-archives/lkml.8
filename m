@@ -6,83 +6,105 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A67C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 202C2206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE51207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589544833;
-	bh=wO3WfBzz3sXFu/UmGn0py5JO3lUtLdiDwLGHsADKYzQ=;
+	s=default; t=1589545099;
+	bh=9Dg/geS2WY+PUCSchXgvzv5fjHqTZmz9+jvLFZU/CVk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WlqX/dtIX8wLrTrzFRFZ8YUNrDoQGiM/yNPn0BeaiRdyiR4cW65fvogJznf+clb+w
-	 XWmE2OxsMhumtWBgrIDuxlA1rk5B3NVSux48urjOOTybcIirHhfKF3upIudAySYlDP
-	 7z1oc7Fh91PqOeXE/pl8cC0zuuxfI+kRnP2k8MuQ=
+	b=1VyWsm0BG6jj3fvmI86wbbgWab4QfRNj8fA/jVS1coxSUZvJ8jiMoWXf816mD+8Yi
+	 /O7ZzQBdHwx79CEcvc8B7NDqfFBe104m+f8HWzOQSYKX/vnYhXtCegWp8nzYqxKCu6
+	 HS/iq9vxGDRoODHj3/OR8R19tjWL2QMEafPbkUkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgEOMNw (ORCPT
+        id S1726171AbgEOMSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:13:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38638 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 08:18:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgEOMNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:13:52 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1726097AbgEOMSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 08:18:18 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 610E220657;
-        Fri, 15 May 2020 12:13:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 314F620657;
+        Fri, 15 May 2020 12:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589544831;
-        bh=wO3WfBzz3sXFu/UmGn0py5JO3lUtLdiDwLGHsADKYzQ=;
+        s=default; t=1589545097;
+        bh=9Dg/geS2WY+PUCSchXgvzv5fjHqTZmz9+jvLFZU/CVk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OsxPPfg8b47Ez+Exn/r04LsRNi/MOD4RC8HIxKVhYoBXCknPhrB81UTnuY82bTnST
-         xjZFUoU/z4q1C6LQ2OtKCL9UCkY8wFJqidpfGSwzLxp3GbF9pGYjx0i+hlHR1148wq
-         h56oGW78rqtJVj2ZPA/uRZnJIASubirSvGrbrUtg=
-Date:   Fri, 15 May 2020 13:13:47 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Keno Fischer <keno@juliacomputing.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: PTRACE_SYSEMU behavior difference on arm64
-Message-ID: <20200515121346.GA22919@willie-the-truck>
-References: <CABV8kRyHrDMK4o=UZZZWJMuQNjPA8Xuoj-JFF-Lsx26fBTR0WA@mail.gmail.com>
+        b=CQQTEjckxGY/W83cT10BNBZpSDTjsBfPUY2FAR25YZH/9JWCBOUPJQJwtg6k5cO8B
+         9swqCX90fbexiEfXNmj5VBA6MMcXdsKYCU1I8XywHW4ZlrXOYjz9tXZJYJlZuFIJUV
+         9KFNoM4hPDFlo8tos+IBi17ssR511l4fBOSAByxE=
+Date:   Fri, 15 May 2020 13:18:15 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/19] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200515121815.GB5066@sirena.org.uk>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-3-Sergey.Semin@baikalelectronics.ru>
+ <20200515120111.GV185537@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
 Content-Disposition: inline
-In-Reply-To: <CABV8kRyHrDMK4o=UZZZWJMuQNjPA8Xuoj-JFF-Lsx26fBTR0WA@mail.gmail.com>
+In-Reply-To: <20200515120111.GV185537@smile.fi.intel.com>
+X-Cookie: Avoid contact with eyes.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Keno,
 
-On Fri, May 15, 2020 at 07:15:35AM -0400, Keno Fischer wrote:
-> The behavior of PTRACE_SYSEMU on arm64
-> appears to differ substantially from that of x86 and powerpc
-> (the other two architectures on which this feature is implemented).
-> In particular, after PTRACE_SYSEMU the syscall will always
-> be skipped on x86 and powerpc, but executed on arm64 unless
-> the syscall-entry stop was again continued using PTRACE_SYSEMU.
-> The skipping behavior is also documented in the manpage,
-> so I suspect this may just be a bug (the skipping behavior
-> makes sense to me and is what I would expect).
-> The reason this happens is that `syscall_trace_enter`
-> re-checks TIF_SYSCALL_EMU after the ptrace stop, but at that
-> point it may have already been superseded by a new ptrace
-> request. x86 and power save the original value of the flag,
-> rather than acting on the new value. I can submit a patch to
-> fix this, but wanted to check first whether this was intentional.
-> If it is, I can fix the man page instead.
+--uZ3hkaAS1mZxFaxD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Please send a patch, since this looks like a silly bug to me. But it also
-means that nobody is using this on arm64, so we could also consider removing
-it entirely. Did you spot this because you are trying to use it for
-something or just by inspection/unit-testing?
+On Fri, May 15, 2020 at 03:01:11PM +0300, Andy Shevchenko wrote:
 
-Will
+> General question, doesn't spi core provides us some helpers like
+> spi_delay_exec()?
+
+Well, nobody wrote one.  It's also a bit tricky to handle given that
+often you're checking some controller specific things while a FIFO in
+the IP drains/fills, though nothing insurmountable.
+
+--uZ3hkaAS1mZxFaxD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6+iIYACgkQJNaLcl1U
+h9Ai9gf+L810S4G5FCw8xL+m5zD7ORCJcMsd3SyOTjWilDCVqE0lho+9a9VgkUGX
+tXDOyyVkifm7oAFMOZRSyO5AtoP6TT8+YqWhtBeXshAkp3SESd5prUL6RcRyoYOi
+g3LGxYtMxOOs+qXjBzWgv/XVANdxtzIEnFvuXdZyMKernn0/O430Wu8L0KQVTwlG
+379zc5OSsqCCGpYXFFmPFZnUxuDZMQCLwIQXH5YAK5nuNm5OxaAdTL3yGvm8z2Kd
+0HiCxfIEoDkoE3yPE9nRRs9AYrzIBjVFho63Llc4i06PEEkOaxpTJR5cWAxsHsQz
+vbar6grUb1yOarmWFEoQnNo3tdWTQg==
+=oiQY
+-----END PGP SIGNATURE-----
+
+--uZ3hkaAS1mZxFaxD--
