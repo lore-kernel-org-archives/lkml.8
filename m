@@ -2,201 +2,124 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B77C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF5EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8477320787
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60C520728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="notruPyO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1D0v8CH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgEOTlg (ORCPT
+        id S1727050AbgEOTmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 15:41:36 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:48528 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726732AbgEOTle (ORCPT
+        Fri, 15 May 2020 15:42:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726188AbgEOTmB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 15:41:34 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04FJfWsi014881;
-        Fri, 15 May 2020 14:41:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589571692;
-        bh=aNAqnPafOIHJEDzD0ZOb6pUjTvOyPosvVU/R0S1SQmE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=notruPyOyadzPsHs4BHXQlHXEqp+Y816LerNEQObcuKKPCFXNuDFBSLBz/Cn0sPUN
-         83IMMs/sTVDTGn0GqAdGEFGpBP29zat6ZR430dDKvMQ2V7ECTC7A19Tfpsh2BDO92P
-         BsgFGHvnnWUa52pTNE74QkkYA5SOrprX58Bh2/nE=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04FJfWoS021073;
-        Fri, 15 May 2020 14:41:32 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 15
- May 2020 14:41:32 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 15 May 2020 14:41:32 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04FJfVcl035446;
-        Fri, 15 May 2020 14:41:32 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <sre@kernel.org>
-CC:     <sspatil@android.com>, <linux-pm@vger.kernel.org>,
-        <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Subject: [PATCH 2/3] Add the bindings for the bq25150 and bq25155 500mA charging ICs from Texas Instruments.
-Date:   Fri, 15 May 2020 14:31:47 -0500
-Message-ID: <20200515193148.8502-3-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200515193148.8502-1-dmurphy@ti.com>
-References: <20200515193148.8502-1-dmurphy@ti.com>
+        Fri, 15 May 2020 15:42:01 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34AB8C061A0C;
+        Fri, 15 May 2020 12:42:01 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id f83so3803811qke.13;
+        Fri, 15 May 2020 12:42:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O4VLOaxbVjaBb7rcCBZ6LrCtmkCPRdVq27mw9nxBaj4=;
+        b=X1D0v8CHkxZGBLI08rsxQ5szdvBF1c7L0WvMpT+c8aV+etCL4JfGVda3XuY4vfqAFb
+         tkuob9MO7KJK7tksUHzE8eV6BDbjUxc4GE6s1RmQj5/fD1VVQt0aphJLesWrdegQ9Hqg
+         JVdM3aafixEsmfEoo4YzxtcvLwSboqmLEGK2GJBBw6Q9nHUu/MYd2r+6rtdjmhpT0hRg
+         hTU8eiQGAv44YITo8dK4F0P8mJBsNFp/c4JOtEXHaN1p0yLJ0zLZsxNiRmUElZIDaoza
+         +EL6cPi5ogGF028e9vXfLDAHxK6UwwLXEkzaUJZZILy1WR/ggeJp0peRgxzioGaRCiRh
+         0RoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O4VLOaxbVjaBb7rcCBZ6LrCtmkCPRdVq27mw9nxBaj4=;
+        b=QnVGkQWhmLCEmixhRR7LkUnw2ApIMRPxXXeeLfZzvT/3tebYhZeQdbRJbFCHv3CKwY
+         hBhXR+VjAbMMzIH0zqH7+Q9v8JSWlB5UkQsZQ0e8IWmlkn1E4HFPV9fVtwbzGqD4jWW0
+         PiVfHgDjSWSP3Wk62pu+BZBP/lYh5VgvoagbhOaTrD9+IzyZhf+VkDjaHrtH+ubNo3jN
+         je0P7CBeMarF3EMQ1sRE0FOduOj9y0KQW8A6jReha+UXdyU0HAYdPxaj8tU1zHpI44Sb
+         SguZWsu+4PomHkn/NsBUCq5C2d1uEX3cTyqBjeehKnJxjTkN0Hd0HKADvPqUP5yWzBZ1
+         bOCg==
+X-Gm-Message-State: AOAM531d8AhkoVcZm3EhwE+aZELg5uESKAR0qxvMo3ubVl7AbGpo3pp1
+        iwkRQSMTlBPwuwdAx9Qkb7iii3sB87nA2H/LBNY=
+X-Google-Smtp-Source: ABdhPJwJfc9T+wPnVFBd8XbU/1XIFlRTqkMR+w2UsuzOY8PX48sfJ/ggkX6FLRlHsveICoRtlmxcj7edKdzXJuGSeu8=
+X-Received: by 2002:ae9:e713:: with SMTP id m19mr5166675qka.39.1589571720452;
+ Fri, 15 May 2020 12:42:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200515165007.217120-1-irogers@google.com> <20200515165007.217120-5-irogers@google.com>
+In-Reply-To: <20200515165007.217120-5-irogers@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 15 May 2020 12:41:49 -0700
+Message-ID: <CAEf4BzZn4DTYFipFb60BMMURKjTddi9VR+5WKW7ussQhWp6kXQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] tools lib/api: Copy libbpf hashmap to tools/perf/util
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+On Fri, May 15, 2020 at 9:50 AM Ian Rogers <irogers@google.com> wrote:
+>
+> Allow use of hashmap in perf. Modify perf's check-headers.sh script to
+> check that the files are kept in sync, in the same way kernel headers are
+> checked. This will warn if they are out of sync at the start of a perf
+> build.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
 
-The BQ2515X family of devices are highly integrated battery management
-ICs that integrate the most common functions for wearbale devices
-namely a charger, an output voltage rail, ADC for battery and system
-monitoring, and a push-button controller.
+Given you want to make sure they stay 1 to 1, would just creating a
+symlink work instead of copying the code?
 
-Datasheets:
-http://www.ti.com/lit/ds/symlink/bq25150.pdf
-http://www.ti.com/lit/ds/symlink/bq25155.pdf
+Either way, I think hashmap is stable and not going to change
+frequently, so whichever way is fine with me.
 
-Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
----
- .../bindings/power/supply/bq2515x.yaml        | 106 ++++++++++++++++++
- 1 file changed, 106 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq2515x.yaml b/Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-new file mode 100644
-index 000000000000..83487957fc8c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-@@ -0,0 +1,106 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright (C) 2020 Texas Instruments Incorporated
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/power/supply/bq2515x.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: TI bq2515x 500-mA Linear charger family
-+
-+maintainers:
-+  - Dan Murphy <dmurphy@ti.com>
-+  - Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-+
-+description: |
-+  The BQ2515x family is a highly integrated battery charge management IC that
-+  integrates the most common functions for wearable devices, namely a charger,
-+  an output voltage rail, ADC for battery and system monitoring, and
-+  push-button controller.
-+
-+  Specifications about the charger can be found at:
-+    http://www.ti.com/lit/ds/symlink/bq25150.pdf
-+    http://www.ti.com/lit/ds/symlink/bq25155.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,bq25150
-+      - ti,bq25155
-+
-+  reg:
-+    maxItems: 1
-+    description: I2C address of the charger.
-+
-+  ac-detect-gpios:
-+    description: |
-+       GPIO used for connecting the bq2515x device PG (AC Detect)
-+       pin.  This pin should be used if possible as this is the
-+       recommended way to obtain the charger's input PG state.
-+       If this pin is not specified a software-based approach for PG
-+       detection is used.
-+
-+  reset-gpios:
-+    description: |
-+       GPIO used for hardware reset.
-+
-+  low-power-gpios:
-+    description: |
-+       GPIO used for low power mode of IC.
-+
-+  charge-enable-gpios:
-+    description: |
-+       GPIO used to turn on and off charging.
-+
-+  constant-charge-current-max-microamp:
-+    description: |
-+       Maximum charging current in micro Amps.
-+    minimum: 50000
-+    maximum: 600000
-+
-+  precharge-current-max-microamp:
-+    description: |
-+       Maximum precharging current in micro Amps.
-+    minimum: 1250
-+    maximum: 77500
-+
-+  input-current-limit-microamp:
-+    description: |
-+       Maximum input current in micro Amps.
-+    minimum: 50000
-+    maximum: 500000
-+
-+  constant-charge-voltage-max-microvolt:
-+    description: |
-+       Maximum charging voltage in micro volts.
-+    minimum: 3600000
-+    maximum: 4600000
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    bat: battery {
-+      compatible = "simple-battery";
-+      constant-charge-current-max-microamp = <50000>;
-+      precharge-current-microamp = <2500>;
-+      constant-charge-voltage-max-microvolt = <4000000>;
-+    };
-+    #include <dt-bindings/gpio/gpio.h>
-+    i2c0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      bq25150: charger@6b {
-+        compatible = "ti,bq25150";
-+        reg = <0x6b>;
-+        monitored-battery = <&bat>;
-+        input-current-limit-microamp = <100000>;
-+
-+        ac-detect-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-+        reset-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-+        low-power-gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
-+        charge-enable-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
-+      };
-+    };
--- 
-2.26.2
+>  tools/perf/check-headers.sh |   4 +
+>  tools/perf/util/Build       |   4 +
+>  tools/perf/util/hashmap.c   | 238 ++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/hashmap.h   | 177 +++++++++++++++++++++++++++
+>  4 files changed, 423 insertions(+)
+>  create mode 100644 tools/perf/util/hashmap.c
+>  create mode 100644 tools/perf/util/hashmap.h
+>
 
+[...]
