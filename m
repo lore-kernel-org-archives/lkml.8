@@ -2,113 +2,121 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2604CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA41C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F15DF206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:50:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HX9dpDaW"
+	by mail.kernel.org (Postfix) with ESMTP id 89A85206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:50:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgEOGu2 (ORCPT
+        id S1726569AbgEOGuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:50:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726205AbgEOGu1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:50:27 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8107EC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:50:27 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id z1so536906pfn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 23:50:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:mime-version:message-id
-         :content-transfer-encoding;
-        bh=7XHHtEVCTq9EorQyCY4/UvWYJNsYHxtqr43sHEkAmWw=;
-        b=HX9dpDaWHlXuHM6lY8eDCQGhpbMQf3qtPGEUQfyO+SU8a+5FrPc9GMheuX7QwikzKc
-         /JfzAc/dal971cbYAgGsl3FZrm25dGi/um5phwKFPZNPohJ5YNfKIAtF3RwZCr7/cn+s
-         o9Zk/zZoxxQKae3m+4F7j2PuPLbVPHRUd76xQTePvGvlybUeFySfi0V8SIDWVLGTav5a
-         /lddvGb4c7N9e1ABTygLkqwvkQ1Oihv1qeKx/+EbcpG/Q5MP9g3poLEuqSazW7HSRrnC
-         YVoqJReUflB6OU2c/L+ofQ/n+aUBWkZysQklwztl8eynhkstmR1PQmynQsMT9SHORTzt
-         Z3sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:mime-version:message-id
-         :content-transfer-encoding;
-        bh=7XHHtEVCTq9EorQyCY4/UvWYJNsYHxtqr43sHEkAmWw=;
-        b=b9R7E0c0kC+SdFLP0/NbBpgtwO5j5NCPpTpdISuJD8lSXCPN9Xs4in1ppmIu62Bmr/
-         oBsYim1lL26xURTGHA+sjT1bvwyTTH5hKVGNX82zRD1+xrtCxdMiIl+N7FBn3glO8sfd
-         M5LPpZO57hYeedQiQuL3eNTLT4d58p+7oS+H6TbioB57LWlVFFoBy2bjlBr5sAgTcB7w
-         6jjq5T6UwCc4ALhIkTwWI1IrFUDZoNv52s9Xa/v6EDskeAUCIrUWuJXWq5DwOOb/uUhB
-         ra3F9U/R7nN8Cm64G8wJadGCczvMhcISN3ttSURpysCrC/zdF0surVU4n5fEkOKVRQm3
-         xRyw==
-X-Gm-Message-State: AOAM531uEkX/mUHrlL2OyEbIFJNQ0V169jgpvsXmHo9BWCytz6mj/idl
-        SHQ569PfQ2HT6OnVrFK/+YoiEtIc
-X-Google-Smtp-Source: ABdhPJwsPyoTCoo6JlALOTwHr0STJx1657ad1ODOumBxpC7KU7yIsP01keF2eGOOtO/Zn4G6jtEINw==
-X-Received: by 2002:a63:5a41:: with SMTP id k1mr1858578pgm.424.1589525426898;
-        Thu, 14 May 2020 23:50:26 -0700 (PDT)
-Received: from localhost ([61.68.67.54])
-        by smtp.gmail.com with ESMTPSA id p5sm964133pgk.28.2020.05.14.23.50.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 23:50:26 -0700 (PDT)
-Date:   Fri, 15 May 2020 16:50:19 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Possibility of conflicting memory types in lazier TLB mode?
-To:     Rik van Riel <riel@surriel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
+        Fri, 15 May 2020 02:50:37 -0400
+Received: from mga04.intel.com ([192.55.52.120]:30828 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726205AbgEOGuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 02:50:37 -0400
+IronPort-SDR: cl+KXt2VhA3oHDRgjbxOMS8CYGLgvCv1ohKtRk57qGKUwdxJXGtbcD2JL+1OXJK+2CfFZeNesW
+ kAso3i8SeMXg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 23:50:32 -0700
+IronPort-SDR: PRl64UCM5ptkwKKmskj4xQpjPeiy6WW2NKmsxz/noxNIW+QNiH1NFJpGlLJtSKvUBUqRcnJns9
+ Ih45BWIAyhLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,394,1583222400"; 
+   d="scan'208";a="298958476"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga008.jf.intel.com with ESMTP; 14 May 2020 23:50:30 -0700
+Subject: Re: [PATCH] xhci: Fix log mistake of xhci_start
+To:     jiahao <jiahao243@gmail.com>, mathias.nyman@intel.com,
+        gregkh@linuxfoundation.org, jiahao@xiaomi.com
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1589521506-19492-1-git-send-email-jiahao@xiaomi.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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 fiD/
+Message-ID: <dd0ff565-2222-8bf0-c379-5e5d97975e98@linux.intel.com>
+Date:   Fri, 15 May 2020 09:53:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Message-Id: <1589523957.s4pf3vd48l.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1589521506-19492-1-git-send-email-jiahao@xiaomi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rik,
+On 15.5.2020 8.45, jiahao wrote:
+> It is obvious that XCHI_MAX_HALT_USEC is usec,
+>  not milliseconds; Replace 'milliseconds' with
+> 'usec' of the debug message.
+> 
+> Signed-off-by: jiahao <jiahao@xiaomi.com>
+> ---
+>  drivers/usb/host/xhci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+> index bee5dec..d011472 100644
+> --- a/drivers/usb/host/xhci.c
+> +++ b/drivers/usb/host/xhci.c
+> @@ -147,7 +147,7 @@ int xhci_start(struct xhci_hcd *xhci)
+>  			STS_HALT, 0, XHCI_MAX_HALT_USEC);
+>  	if (ret == -ETIMEDOUT)
+>  		xhci_err(xhci, "Host took too long to start, "
+> -				"waited %u microseconds.\n",
+> +				"waited %u usec.\n",
 
-Commit 145f573b89a62 ("Make lazy TLB mode lazier").
+It already says "microseconds", no need to change it
 
-A couple of questions here (and I don't know the x86 architecture too=20
-well let alone the ASID stuff, so bear with me). I'm assuming, and it=20
-appears to be in the x86 manual that you can't map the same physical=20
-page with conflicting memory types on different processors in general
-(or in different ASIDs on the same processor?)
+-Mathias
 
-Firstly, the freed_tables check, that's to prevent CPUs in the lazy mode=20
-with this mm loaded in their ASID from bringing in new translations=20
-based on random "stuff" if they happen to speculatively load userspace=20
-addresses (but in lazy mode they would never explicitly load such=20
-addresses), right?
-
-I'm guessing that's a problem but the changed pte case is not, is=20
-because the table walker is going to barf if it sees garbage, but a=20
-valid pte is okay.
-
-Now the intel manual says conflicting attributes are bad because you'll=20
-lose cache coherency on stores. But the speculative accesses from the=20
-lazy thread will never push stores to cache coherency and result of the=20
-loads doesn't matter, so maybe that's how this special case avoids the
-problem.
-
-But what about if there are (real, not speculative) stores in the store=20
-queue still on the lazy thread from when it was switched, that have not=20
-yet become coherent? The page is freed by another CPU and reallocated
-for something that maps it as nocache. Do you have a coherency problem=20
-there?
-
-Ensuring the store queue is drained when switching to lazy seems like it=20
-would fix it, maybe context switch code does that already or you have=20
-some other trick or reason it's not a problem. Am I way off base here?
-
-Thanks,
-Nick
