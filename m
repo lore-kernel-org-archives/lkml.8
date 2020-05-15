@@ -2,166 +2,132 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44886C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE79C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 251E120759
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6A320657
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbgEOMFZ (ORCPT
+        id S1726246AbgEOMF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:05:25 -0400
-Received: from mga07.intel.com ([134.134.136.100]:1322 "EHLO mga07.intel.com"
+        Fri, 15 May 2020 08:05:57 -0400
+Received: from mga11.intel.com ([192.55.52.93]:4688 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbgEOMFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:05:24 -0400
-IronPort-SDR: Ugf58e9f/6IPi/RDFs/Mb64SEO1EI8c/y3qJ+SFQSq6faO1m1YqCX10uSDKgk3N0s2Hs2pIFzh
- 5Tednkmq6FMA==
+        id S1726112AbgEOMF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 08:05:56 -0400
+IronPort-SDR: pbNWTpnTexALeOgUTQEJWtgskadJOYSEAPv7RTbh6zLW7pZmxF6YzFs4fyvcWzzFhHOskXad9k
+ y1i8qEAfy3dg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 05:05:17 -0700
-IronPort-SDR: I6Wn7AwZIvcUrD++sALforAjGf8WE4z/6KSboxCDBePEIuvcpJ7kd2ah2WcEj3fHXBSB/+5QhO
- K7rFjQh8eXBQ==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 05:05:56 -0700
+IronPort-SDR: ETu/rW6/uFdF7TdKoh27Q9VwNarsKv/Nw6Rqg/wuXAUPeJO4JbkpXTzyU+NuZoqdLKCQMtm7hB
+ 56shWPE1OBtQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="253779837"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 15 May 2020 05:05:12 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZZ5W-006quz-9s; Fri, 15 May 2020 15:05:14 +0300
-Date:   Fri, 15 May 2020 15:05:14 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Clement Leger <cleger@kalray.eu>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        "wuxu.wu" <wuxu.wu@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 04/19] spi: dw: Fix native CS being unset
-Message-ID: <20200515120514.GX185537@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-5-Sergey.Semin@baikalelectronics.ru>
+   d="scan'208";a="372670460"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 15 May 2020 05:05:53 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 15 May 2020 15:05:52 +0300
+Date:   Fri, 15 May 2020 15:05:52 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:USB NETWORKING DRIVERS" <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-acpi@vger.kernel.org,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>
+Subject: Re: [PATCH 2/4] usb: typec: mux: intel_pmc_mux: Support for static
+ SBU/HSL orientation
+Message-ID: <20200515120552.GC1511@kuha.fi.intel.com>
+References: <20200507150900.12102-1-heikki.krogerus@linux.intel.com>
+ <20200507150900.12102-3-heikki.krogerus@linux.intel.com>
+ <20200507224041.GA247416@google.com>
+ <20200508111840.GG645261@kuha.fi.intel.com>
+ <20200511133202.GA2085641@kuha.fi.intel.com>
+ <20200511175719.GA136540@google.com>
+ <20200512142251.GD2085641@kuha.fi.intel.com>
+ <20200512191910.GD136540@google.com>
+ <CACeCKad4BebiBJS_wO=FdWVWypgOD822Dir7HeRBf0uXUuJusA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515104758.6934-5-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CACeCKad4BebiBJS_wO=FdWVWypgOD822Dir7HeRBf0uXUuJusA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 01:47:43PM +0300, Serge Semin wrote:
-> Commit 6e0a32d6f376 ("spi: dw: Fix default polarity of native
-> chipselect") attempted to fix the problem when GPIO active-high
-> chip-select is utilized to communicate with some SPI slave. It fixed
-> the problem, but broke the normal native CS support. At the same time
-> the reversion commit ada9e3fcc175 ("spi: dw: Correct handling of native
-> chipselect") didn't solve the problem either, since it just inverted
-> the set_cs() polarity perception without taking into account that
-> CS-high might be applicable. Here is what is done to finally fix the
-> problem.
-> 
-> DW SPI controller demands any native CS being set in order to proceed
-> with data transfer. So in order to activate the SPI communications we
-> must set any bit in the Slave Select DW SPI controller register no
-> matter whether the platform requests the GPIO- or native CS. Preferably
-> it should be the bit corresponding to the SPI slave CS number. But
-> currently the dw_spi_set_cs() method activates the chip-select
-> only if the second argument is false. Since the second argument of the
-> set_cs callback is expected to be a boolean with "is-high" semantics
-> (actual chip-select pin state value), the bit in the DW SPI Slave
-> Select register will be set only if SPI core requests the driver
-> to set the CS in the low state. So this will work for active-low
-> GPIO-based CS case, and won't work for active-high CS setting
-> the bit when SPI core actually needs to deactivate the CS.
-> 
-> This commit fixes the problem for all described cases. So no matter
-> whether an SPI slave needs GPIO- or native-based CS with active-high
-> or low signal the corresponding bit will be set in SER.
+Hi Prashant,
 
-Nice catch!
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> I just realized, the issue I initially pointed out would apply to the
+> connect message too, i.e I'm not sure if "normal" orientation setting
+> handles the case where port orientation is reversed correctly.
+> Overall, I am not sure that re-using the typec_orientations[] string
+> list is the best option for this use-case.
+> we're looking for "normal" (i.e follows port->orientation) and "fixed"
+> (i.e is always the same orientation, regardless of what
+> port->orientation is), so it is perhaps better to just define a new
+> array just for this driver.
 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Fixes: ada9e3fcc175 ("spi: dw: Correct handling of native chipselect")
-> Fixes: 6e0a32d6f376 ("spi: dw: Fix default polarity of native chipselect")
-> Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v2:
-> - Add a comment about SER register, that it must be set to activate the
->   SPI communications.
-> ---
->  drivers/spi/spi-dw.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-> index 6de196df9c96..450c8218caeb 100644
-> --- a/drivers/spi/spi-dw.c
-> +++ b/drivers/spi/spi-dw.c
-> @@ -124,8 +124,16 @@ static inline void dw_spi_debugfs_remove(struct dw_spi *dws)
->  void dw_spi_set_cs(struct spi_device *spi, bool enable)
->  {
->  	struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
-> +	bool cs_high = !!(spi->mode & SPI_CS_HIGH);
->  
-> -	if (!enable)
-> +	/*
-> +	 * DW SPI controller demands any native CS being set in order to
-> +	 * proceed with data transfer. So in order to activate the SPI
-> +	 * communications we must set a corresponding bit in the Slave
-> +	 * Enable register no matter whether the SPI core is configured to
-> +	 * support active-high or active-low CS level.
-> +	 */
-> +	if (cs_high == enable)
->  		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
->  	else if (dws->cs_override)
->  		dw_writel(dws, DW_SPI_SER, 0);
-> -- 
-> 2.25.1
-> 
+Sorry, I got sidetracked with that Alternate-Direct Request stuff.
+Let's start over..
+
+The property itself is the indicator that the orientation is fixed for
+those lines, not its value. If the property exists, we know the
+orientation is fixed, and if it doesn't exist, we know we need to use
+the cable plug orientation. So if we only want to use the property as
+a flag, then it does not need to have any value at all. It would be a
+boolean property.
+
+But we would then always leave the ORI-HSL field with value 0 when the
+orientation is fixed, and that would rule out the possibility of
+supporting a platform where we have to use a fixed value of 1 there
+(fixed-reversed). If we ever needed to support configuration like
+that, then we would need to add a new property.
+
+That scenario may not be relevant on this platform, and it may seem
+like an unlikely, or even impossible case now, but experience (and the
+north mux-agent documentation) tells me we should prepare also for
+that. That is why I use the typec_orientation strings as the values
+for these properties. Then the fixed-reversed orientation is also
+covered with the same properties if we ever need to support it.
+
+Maybe this code would be better, or more clear in the driver:
+
+/*
+ * Returns the value for the HSL-ORI field.
+ */
+static int hsl_orientation(struct pmc_usb_port *port)
+{
+        enum typec_orientation orientation;
+
+        /*
+         * Is the orientation fixed:
+         *   Yes, use the fixed orientation.
+         *   No, use cable plug orientation.
+         */
+        if (port->hsl_orientation)
+                orientation = hsl_orientation;
+        else
+                orientation = port->orientation;
+
+        switch (orientation) {
+        case TYPEC_ORIENTATION_NORMAL:
+                return 0;
+        case TYPEC_ORIENTATION_REVERSE:
+                return 1;
+        }
+
+        return -EINVAL;
+}
+
+thanks,
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+heikki
