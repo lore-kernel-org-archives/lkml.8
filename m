@@ -2,85 +2,146 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03F932076A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F8F20671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:31:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cVfP1EZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgEOPal (ORCPT
+        id S1727780AbgEOPbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:30:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:58186 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbgEOPak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:30:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26C1D2F;
-        Fri, 15 May 2020 08:30:40 -0700 (PDT)
-Received: from [10.57.27.64] (unknown [10.57.27.64])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C26B23F71E;
-        Fri, 15 May 2020 08:30:37 -0700 (PDT)
-Subject: Re: [PATCH 06/14] arm64: dts: sparx5: Add basic cpu support
-To:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Marc Zyngier <maz@misterjones.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, SoC Team <soc@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Olof Johansson <olof@lixom.net>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>
-References: <20200513125532.24585-1-lars.povlsen@microchip.com>
- <20200513125532.24585-7-lars.povlsen@microchip.com>
- <2d230dab95ee96727a42f9c242c93c18@misterjones.org>
- <871rnlp740.fsf@soft-dev15.microsemi.net>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <18c0d9ef-9a2b-31d0-b317-f051bb26a907@arm.com>
-Date:   Fri, 15 May 2020 16:30:36 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 15 May 2020 11:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726872AbgEOPbA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 11:31:00 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9957C05BD0D
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:30:59 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id y10so1034670ybm.12
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:30:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8M59T4cDEOJLPfWM3NacG+hlwu0HRvMBD7PQYBjxWz0=;
+        b=cVfP1EZHgz8zdenOeWvamnc44GBqLYOdr2WmAyykkyFcAcIDQ0SV5/TAmshikDIQvo
+         yulpVfC68Xv6ngiE6t/ar4WCoTC7n8dOzgdF0s4AwSjprKEmd6/x8y0xNTO1ts6dbKRu
+         HygxDJEWJDMfefS2YpJfD9lUwOJQzZwpxGZrCeOX2xIR2XmDWnRHejKeeLEPSsIfEycx
+         NcMYydsGE/GFGoRpzpQnm92PyE7h0lsWZp/wQ6nxOlUzgqAo5JPE9937EGZ3EQvzvUO2
+         5sebEPqx/YzaSzx7L8Z3nGUFkvkov/gwZzpiOLfHeDqul8vNOpDG74jjK2mZQjtJoQhR
+         iVoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8M59T4cDEOJLPfWM3NacG+hlwu0HRvMBD7PQYBjxWz0=;
+        b=YpSuj8KyZeJYQG3FPWqxfpJ10GBNHY7JgPdUeybGHql3i5hLquHzDwepHyU/2+5wAn
+         mb09w+C87pUsfrervl6XUOW6lciHFvGps+ervm63Vjr3x4cKwKutM2oPvVTQGSwZDw0g
+         EF2FU73ZRnyqv9OyP0r47IYEduJbtmlFmargS0dWl1Pau+XXu4pHcpubjer7POU/X2Ub
+         UuLK4xjWlDQ4vnlybj9QAjm8NGDnftHvfQVpfi63wdAdoSj11F+DpBnj1rDUiAhI6rms
+         IqQu1HlN2lBfOB4K3dyKKV2wkYOzfMa+rUFhEk4BzPTPKadUwTqIViq69Pz7WQVqchVm
+         6DlA==
+X-Gm-Message-State: AOAM532GBUx2vQwXznl1V+IfxFEWtSytjO29D9NOmOZcB02X4R4/aEr4
+        PoNFDRnzKpzWFZ4lRimw+RD89oUrNzpMWFO75C6Eyg==
+X-Google-Smtp-Source: ABdhPJyg03gRNMcKKRrxVXRbR4cVi3Fqy+ZyhRAq39W/it2u5muxghok2hQKiZQw0d7oCO0JyzBdjBNN7sHeSqgFZ/E=
+X-Received: by 2002:a25:8182:: with SMTP id p2mr6384609ybk.408.1589556658495;
+ Fri, 15 May 2020 08:30:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <871rnlp740.fsf@soft-dev15.microsemi.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200515152321.9280-1-nate.karstens@garmin.com>
+In-Reply-To: <20200515152321.9280-1-nate.karstens@garmin.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Fri, 15 May 2020 08:30:47 -0700
+Message-ID: <CANn89iKr_9MyRpdB4pcHm08ccH_M42etDnrOzpVKUYfhSKvxQw@mail.gmail.com>
+Subject: Re: [PATCH v2] Implement close-on-fork
+To:     Nate Karstens <nate.karstens@garmin.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        David Laight <David.Laight@aculab.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-alpha@vger.kernel.org, linux-parisc@vger.kernel.org,
+        sparclinux@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Changli Gao <xiaosuo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-15 16:09, Lars Povlsen wrote:
-[...]
->>> +             cpu0: cpu@0 {
->>> +                     compatible = "arm,cortex-a53", "arm,armv8";
+On Fri, May 15, 2020 at 8:23 AM Nate Karstens <nate.karstens@garmin.com> wrote:
+>
+>
+> Series of 4 patches to implement close-on-fork. Tests have been
+> published to https://github.com/nkarstens/ltp/tree/close-on-fork
+> and cover close-on-fork functionality in the following syscalls:
+>
+>  * accept(4)
+>  * dup3(2)
+>  * fcntl(2)
+>  * open(2)
+>  * socket(2)
+>  * socketpair(2)
+>  * unshare(2)
+>
+> Addresses underlying issue in that there is no way to prevent
+> a fork() from duplicating a file descriptor. The existing
+> close-on-exec flag partially-addresses this by allowing the
+> parent process to mark a file descriptor as exclusive to itself,
+> but there is still a period of time the failure can occur
+> because the auto-close only occurs during the exec().
+>
+> One manifestation of this is a race conditions in system(), which
+> (depending on the implementation) is non-atomic in that it first
+> calls a fork() and then an exec().
+>
+> This functionality was approved by the Austin Common Standards
+> Revision Group for inclusion in the next revision of the POSIX
+> standard (see issue 1318 in the Austin Group Defect Tracker).
+>
+> ---
+>
+> This is v2 of the change. See https://lkml.org/lkml/2020/4/20/113
+> for the original work.
+>
+> Thanks to everyone who provided comments on the first series of
+> patches. Here are replies to specific comments:
+>
+> > I suggest we group the two bits of a file (close_on_exec, close_on_fork)
+> > together, so that we do not have to dirty two separate cache lines.
+>
+> I could be mistaken, but I don't think this would improve efficiency.
+> The close-on-fork and close-on-exec flags are read at different
+> times. If you assume separate syscalls for fork and exec then
+> there are several switches between when the two flags are read.
+> In addition, the close-on-fork flags in the new process must be
+> cleared, which will be much harder if the flags are interleaved.
 
-Side note: only one compatible string for the real CPU please, running a 
-DT bindings check should complain about that.
+:/
 
->>> +                     device_type = "cpu";
->>> +                     reg = <0x0 0x0>;
->>> +                     enable-method = "spin-table";
->>
->> Really? This is 2020, not 2012 any more. Surely a new platform
->> boots using PSCI, and not *this*.
->>
-> 
-> We don't currently support PSCI. The platform does not have TrustZone,
-> hence we don't use ATF.
-AIUI, part of the purpose of ATF is to provide a nice standardised 
-platform interface regardless of whether you care about Secure software 
-or not. It shouldn't take much to knock up a trivial ATF port that just 
-uses an internal spin-table for its PSCI backend - in fact I suspect 
-that's probably just a copy-paste from the RPi3 port ;)
+Fast path in big and performance sensitive applications is not fork()
+and/or exec().
 
-Robin.
+This is open()/close() and others (socket(), accept(), ...)
+
+We do not want them to access extra cache lines for this new feature.
+
+Sorry, I will say no to these patches in their current form.
