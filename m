@@ -2,291 +2,180 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A488EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B132C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 804542065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558C12065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:32:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yOpRlpg1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726160AbgEOLcH (ORCPT
+        id S1726188AbgEOLcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:32:07 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20732 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725986AbgEOLcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:32:07 -0400
-IronPort-SDR: u7vtr1XZB8JHEHCpa2nWTffl9Il6kNOURk82g1RpBso35Hiy/PcQb4AKJ4Mr+fK9T1AiA90wJk
- qqZjAJMQ7dsQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 04:32:03 -0700
-IronPort-SDR: KgV2VQJIyAaFGq6mVcq678/SPvoLtkXcfg1/U5AGszWcVp/t1Jee7/0/nsQJWCZOdloZiieLTA
- 5TBROoKzpLVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="410438404"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 15 May 2020 04:31:59 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZYZO-006qdX-QI; Fri, 15 May 2020 14:32:02 +0300
-Date:   Fri, 15 May 2020 14:32:02 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     akpm@linux-foundation.org, vilhelm.gray@gmail.com,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/4] lib/test_bitmap.c: Add for_each_set_clump test
- cases
-Message-ID: <20200515113202.GO185537@smile.fi.intel.com>
-References: <cover.1589497311.git.syednwaris@gmail.com>
- <f4d924971feb15b0044eeefdd969b36747d2322b.1589497312.git.syednwaris@gmail.com>
+        Fri, 15 May 2020 07:32:33 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56060 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725986AbgEOLcd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:32:33 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04FBWJTN029039;
+        Fri, 15 May 2020 06:32:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589542339;
+        bh=FBPM0tfxUgFMucOY7ciuW2TKyNmhw7Ptun8SfEM32Yc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=yOpRlpg1yqyCCA+cY2AyJMwySObitQn8jVweWkNL4ELVevQBhMk8yXp/XUTZdVJXL
+         1pEoHYIA+A3PyqX1kjhRpvTVUxqbShngkBwiGdgzvVvUmzdtyIQ34AMHMdHYQUnzMa
+         2TuHg8XxGflf6y7R2u+1bJ7FtvmGiPt40HRv+y6M=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04FBWJBP121748;
+        Fri, 15 May 2020 06:32:19 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 15
+ May 2020 06:32:18 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 15 May 2020 06:32:19 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04FBWGIv063336;
+        Fri, 15 May 2020 06:32:17 -0500
+Subject: Re: linux-next: manual merge of the drm-misc tree with the
+ drm-misc-fixes tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+References: <20200421115241.704f2fbf@canb.auug.org.au>
+ <c299b6d5-a786-1620-2863-8814a1242cf8@ti.com>
+ <20200423131727.1e0f2d9f@canb.auug.org.au>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <4b46d98a-e8ca-0140-b082-3af88e1bc1fc@ti.com>
+Date:   Fri, 15 May 2020 14:32:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f4d924971feb15b0044eeefdd969b36747d2322b.1589497312.git.syednwaris@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200423131727.1e0f2d9f@canb.auug.org.au>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 04:48:46AM +0530, Syed Nayyar Waris wrote:
-> The introduction of the generic for_each_set_clump macro need test
-> cases to verify the implementation. This patch adds test cases for
-> scenarios in which clump sizes are 8 bits, 24 bits, 30 bits and 6 bits.
-> The cases contain situations where clump is getting split at the word
-> boundary and also when zeroes are present in the start and middle of
-> bitmap.
+Hi Stephen,
 
-Thanks for an update. Looks pretty much okay to me, though one nit below.
-After addressing,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-> ---
-> Changes in v6:
->  - Make 'for loop' inside 'test_for_each_set_clump' more succinct.
+On 23/04/2020 06:17, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Changes in v5:
->  - No change.
+> On Tue, 21 Apr 2020 09:10:25 +0300 Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+>>
+>> On 21/04/2020 04:52, Stephen Rothwell wrote:
+>>>
+>>> Today's linux-next merge of the drm-misc tree got a conflict in:he drm-misc tree with the drm-misc-fixes tree
+>>>
+>>>     drivers/gpu/drm/tidss/tidss_encoder.c
+>>>
+>>> between commit:
+>>>
+>>>     9da67433f64e ("drm/tidss: fix crash related to accessing freed memory")
+>>>
+>>> from the drm-misc-fixes tree and commit:
+>>>
+>>>     b28ad7deb2f2 ("drm/tidss: Use simple encoder")
+>>>
+>>> from the drm-misc tree.
+>>>
+>>> I fixed it up (I just used the latter version of this file) and can
+>>
+>> We need to use "drm/tidss: fix crash related to accessing freed memory" version.
+>>
+>>> carry the fix as necessary. This is now fixed as far as linux-next is
+>>> concerned, but any non trivial conflicts should be mentioned to your
+>>> upstream maintainer when your tree is submitted for merging.  You may
+>>> also want to consider cooperating with the maintainer of the conflicting
+>>> tree to minimise any particularly complex conflicts.
+>>
+>> I have fixed this with drm-misc's dim tool, so I presume the conflict goes away when drm-misc-fixes
+>> is merged to drm-fixes, and drm-fixes is then at some point merged to drm-misc-next.
+>>
+>> It was a bit bad timing with the "drm/tidss: Use simple encoder", which removes the plumbing I
+>> needed to implement the fix. So I effectively revert the "drm/tidss: Use simple encoder".
+>>
+>>    Tomi
+>>
 > 
-> Changes in v4:
->  - Use 'for' loop in test function of 'for_each_set_clump'.
-> 
-> Changes in v3:
->  - No Change.
-> 
-> Changes in v2:
->  - Unify different tests for 'for_each_set_clump'. Pass test data as
->    function parameters.
->  - Remove unnecessary bitmap_zero calls.
-> 
->  lib/test_bitmap.c | 142 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 142 insertions(+)
-> 
-> diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
-> index 6b13150667f5..673c512a5bbd 100644
-> --- a/lib/test_bitmap.c
-> +++ b/lib/test_bitmap.c
-> @@ -155,6 +155,38 @@ static bool __init __check_eq_clump8(const char *srcfile, unsigned int line,
->  	return true;
->  }
->  
-> +static bool __init __check_eq_clump(const char *srcfile, unsigned int line,
-> +				    const unsigned int offset,
-> +				    const unsigned int size,
-> +				    const unsigned long *const clump_exp,
-> +				    const unsigned long *const clump,
-> +				    const unsigned long clump_size)
-> +{
-> +	unsigned long exp;
-> +
-> +	if (offset >= size) {
-> +		pr_warn("[%s:%u] bit offset for clump out-of-bounds: expected less than %u, got %u\n",
-> +			srcfile, line, size, offset);
-> +		return false;
-> +	}
-> +
-> +	exp = clump_exp[offset / clump_size];
-> +	if (!exp) {
-> +		pr_warn("[%s:%u] bit offset for zero clump: expected nonzero clump, got bit offset %u with clump value 0",
-> +			srcfile, line, offset);
-> +		return false;
-> +	}
-> +
-> +	if (*clump != exp) {
-> +		pr_warn("[%s:%u] expected clump value of 0x%lX, got clump value of 0x%lX",
-> +			srcfile, line, exp, *clump);
-> +		return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +
->  #define __expect_eq(suffix, ...)					\
->  	({								\
->  		int result = 0;						\
-> @@ -172,6 +204,7 @@ static bool __init __check_eq_clump8(const char *srcfile, unsigned int line,
->  #define expect_eq_pbl(...)		__expect_eq(pbl, ##__VA_ARGS__)
->  #define expect_eq_u32_array(...)	__expect_eq(u32_array, ##__VA_ARGS__)
->  #define expect_eq_clump8(...)		__expect_eq(clump8, ##__VA_ARGS__)
-> +#define expect_eq_clump(...)		__expect_eq(clump, ##__VA_ARGS__)
->  
->  static void __init test_zero_clear(void)
->  {
-> @@ -577,6 +610,28 @@ static void noinline __init test_mem_optimisations(void)
->  	}
->  }
->  
-> +static const unsigned long clump_bitmap_data[] __initconst = {
-> +	0x38000201,
-> +	0x05ff0f38,
-> +	0xeffedcba,
-> +	0xbbbbabcd,
-> +	0x000000aa,
-> +	0x000000aa,
-> +	0x00ff0000,
-> +	0xaaaaaa00,
-> +	0xff000000,
-> +	0x00aa0000,
-> +	0x00000000,
-> +	0x00000000,
-> +	0x00000000,
-> +	0x0f000000,
-> +	0x00ff0000,
-> +	0xaaaaaa00,
-> +	0xff000000,
-> +	0x00aa0000,
-> +	0x00000ac0,
-> +};
-> +
->  static const unsigned char clump_exp[] __initconst = {
->  	0x01,	/* 1 bit set */
->  	0x02,	/* non-edge 1 bit set */
-> @@ -588,6 +643,92 @@ static const unsigned char clump_exp[] __initconst = {
->  	0x05,	/* non-adjacent 2 bits set */
->  };
->  
-> +static const unsigned long clump_exp1[] __initconst = {
-> +	0x01,	/* 1 bit set */
-> +	0x02,	/* non-edge 1 bit set */
-> +	0x00,	/* zero bits set */
-> +	0x38,	/* 3 bits set across 4-bit boundary */
-> +	0x38,	/* Repeated clump */
-> +	0x0F,	/* 4 bits set */
-> +	0xFF,	/* all bits set */
-> +	0x05,	/* non-adjacent 2 bits set */
-> +};
-> +
-> +static const unsigned long clump_exp2[] __initconst = {
-> +	0xfedcba,	/* 24 bits */
-> +	0xabcdef,
-> +	0xaabbbb,	/* Clump split between 2 words */
-> +	0x000000,	/* zeroes in between */
-> +	0x0000aa,
-> +	0x000000,
-> +	0x0000ff,
-> +	0xaaaaaa,
-> +	0x000000,
-> +	0x0000ff,
-> +};
-> +
-> +static const unsigned long clump_exp3[] __initconst = {
-> +	0x00000000,	/* starting with 0s*/
-> +	0x00000000,	/* All 0s */
-> +	0x00000000,
-> +	0x00000000,
-> +	0x3f00000f,     /* Non zero set */
-> +	0x2aa80003,
-> +	0x00000aaa,
-> +	0x00003fc0,
-> +};
-> +
-> +static const unsigned long clump_exp4[] __initconst = {
-> +	0x00,
-> +	0x2b,
-> +};
-> +
-> +struct clump_test_data {
+> This is now a conflict between the drm and drm-misc-fixes trees.
 
-> +	unsigned long data[256];
+The fix ("drm/tidss: fix crash related to accessing freed memory") is in v5.7-rc3, and the conflicting change ("drm/tidss: Use simple encoder") in drm-next.
 
-DECLARE_BITMAP() ?
+The conflict resolution in linux-next drops the fix and take the change from drm-next, which causes crash on module removal.
 
-> +	unsigned long count;
-> +	unsigned long offset;
-> +	unsigned long limit;
-> +	unsigned long clump_size;
-> +	unsigned long const *exp;
+Here's the diff I made on top of linux-next to fix it. Essentially dropping the simple-encoder change, and reapplying the fix. This should be fixed in drm-next when Dave next time pulls in Linus' branch.
 
-> +} clump_test_data[] = { {{0}, 2, 0, 64, 8, clump_exp1},
-> +			{{0}, 8, 2, 240, 24, clump_exp2},
-> +			{{0}, 8, 10, 240, 30, clump_exp3},
-> +			{{0}, 1, 18, 18, 6, clump_exp4} };
+diff --git a/drivers/gpu/drm/tidss/tidss_encoder.c b/drivers/gpu/drm/tidss/tidss_encoder.c
+index 4c0558286f5e..e624cdcbb567 100644
+--- a/drivers/gpu/drm/tidss/tidss_encoder.c
++++ b/drivers/gpu/drm/tidss/tidss_encoder.c
+@@ -56,25 +56,38 @@ static int tidss_encoder_atomic_check(struct drm_encoder *encoder,
+ 	return 0;
+ }
+ 
++static void tidss_encoder_destroy(struct drm_encoder *encoder)
++{
++	drm_encoder_cleanup(encoder);
++	kfree(encoder);
++}
++
+ static const struct drm_encoder_helper_funcs encoder_helper_funcs = {
+ 	.atomic_check = tidss_encoder_atomic_check,
+ };
+ 
++static const struct drm_encoder_funcs encoder_funcs = {
++	.destroy = tidss_encoder_destroy,
++};
++
+ struct drm_encoder *tidss_encoder_create(struct tidss_device *tidss,
+ 					 u32 encoder_type, u32 possible_crtcs)
+ {
+ 	struct drm_encoder *enc;
+ 	int ret;
+ 
+-	enc = devm_kzalloc(tidss->dev, sizeof(*enc), GFP_KERNEL);
++	enc = kzalloc(sizeof(*enc), GFP_KERNEL);
+ 	if (!enc)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	enc->possible_crtcs = possible_crtcs;
+ 
+-	ret = drm_simple_encoder_init(&tidss->ddev, enc, encoder_type);
+-	if (ret < 0)
++	ret = drm_encoder_init(&tidss->ddev, enc, &encoder_funcs,
++			       encoder_type, NULL);
++	if (ret < 0) {
++		kfree(enc);
+ 		return ERR_PTR(ret);
++	}
+ 
+ 	drm_encoder_helper_add(enc, &encoder_helper_funcs);
+ 
 
-Please, split structure definition and test data.
 
-> +
-> +static void __init prepare_test_data(unsigned int index)
-> +{
-> +	int i;
-> +	unsigned long width = 0;
-> +
-> +	for(i = 0; i < clump_test_data[index].count; i++)
-> +	{
-> +		bitmap_set_value(clump_test_data[index].data,
-> +			clump_bitmap_data[(clump_test_data[index].offset)++], width, 32);
-> +		width += 32;
-> +	}
-> +}
-> +
-> +static void __init execute_for_each_set_clump_test(unsigned int index)
-> +{
-> +	unsigned long start, clump;
-> +
-> +	for_each_set_clump(start, clump, clump_test_data[index].data,
-> +						clump_test_data[index].limit,
-> +						clump_test_data[index].clump_size)
-> +	expect_eq_clump(start, clump_test_data[index].limit, clump_test_data[index].exp,
-> +						&clump, clump_test_data[index].clump_size);
-> +}
-> +
-> +static void __init test_for_each_set_clump(void)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(clump_test_data); i++) {
-> +		prepare_test_data(i);
-> +		execute_for_each_set_clump_test(i);
-> +	}
-> +}
-> +
->  static void __init test_for_each_set_clump8(void)
->  {
->  #define CLUMP_EXP_NUMBITS 64
-> @@ -623,6 +764,7 @@ static void __init selftest(void)
->  	test_bitmap_parselist_user();
->  	test_mem_optimisations();
->  	test_for_each_set_clump8();
-> +	test_for_each_set_clump();
->  }
->  
->  KSTM_MODULE_LOADERS(test_bitmap);
-> -- 
-> 2.26.2
-> 
+ Tomi
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
