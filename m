@@ -2,59 +2,133 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E62AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6DE2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D507620657
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:30:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SHm0yMQt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgEOHaF (ORCPT
+        id S1726726AbgEOHaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 03:30:05 -0400
-Received: from elvis.franken.de ([193.175.24.41]:54055 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbgEOHaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 03:30:04 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jZUnC-0007EJ-02; Fri, 15 May 2020 09:30:02 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id CF295C04A0; Fri, 15 May 2020 09:22:31 +0200 (CEST)
-Date:   Fri, 15 May 2020 09:22:31 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: Fix builds for VR41xx platforms
-Message-ID: <20200515072231.GC6722@alpha.franken.de>
-References: <20200514111235.58459-1-tsbogend@alpha.franken.de>
+        Fri, 15 May 2020 03:30:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726434AbgEOHaR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 03:30:17 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BC25C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:30:17 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id l73so3720524pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:30:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=Zry/fghQEm9+2SmdAD9KYKq3yHSvQsjUQtQVB34xriA=;
+        b=SHm0yMQt7M+jtPhtNKafVJznR2euW6fSXaD469u9JcMFSiDRJhy5vfa66OiUnAVWdS
+         Kf8+t8fk9waQwBCVM3cVql0YoCJeGk/vEv0ZRnNgjDUiLKlZ1yLOq07q8KMnuS53iN3u
+         haQHu6aK2wZizHrgHEz8ObRTVcKM6jpXeONA1N2lWrjedIzYEaJ7u8E7lXqIMJcJTPa0
+         waHhBTmbKqcuVBHo20mOU/J5nprfCNRe938LDJGGLWyMMf61DX88W501kIkcbqjcvZQ/
+         TffY7/gDQRqo3iHgtb3gpirbUf01RYvHC+bmHFh5MWJaoHWryjRZNLgsnJ92bYOJy36n
+         nKrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=Zry/fghQEm9+2SmdAD9KYKq3yHSvQsjUQtQVB34xriA=;
+        b=QQfrUzw6Fpme+IDQsJagi7ndzyYqee+tcicFbxwiq3fUOWyDK90dXxCxzxtr0EXiiG
+         jlA/SxltewQ+GPtmK1nDyrhN+2idIkCVW9moMjxbaoZNuQUcIKeNmpgCF++x/GlEcHS6
+         ZN1slz9zDZMp7sk8yaH8XUTV0o3CbKU3Xun/5rmSbnrIZNiGwa9dJ2qXD9WdJfoAtDO/
+         KSwkDCzU/KLBKv4iBULsjITTWtYeiKOOamOArbQTbOPJk0p+dbnlkMpfZ416qkZJQ+hc
+         inCmxkPHzXWLWgasAbQKLcPFcqBLBRwlZM2y4/BMXNDWg23wJWQiWUjMnzkixAou4mUG
+         6knA==
+X-Gm-Message-State: AOAM530ffan6/zsXaLc1JElDljkz3veCTGXrLn3jY/dK/aowb7Fm0cRq
+        0bcwA9Ot46p+d5ytek8gppI=
+X-Google-Smtp-Source: ABdhPJwTflk1hrM+EFdHaLzv2AEsYLQc7675Kfjh5Y+cvzisBrlsBZUJrYfwB2C2EKLGsncle8IvBw==
+X-Received: by 2002:a17:902:fe8d:: with SMTP id x13mr2452917plm.198.1589527816555;
+        Fri, 15 May 2020 00:30:16 -0700 (PDT)
+Received: from localhost ([61.68.67.54])
+        by smtp.gmail.com with ESMTPSA id b16sm1168625pfp.89.2020.05.15.00.30.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 00:30:16 -0700 (PDT)
+Date:   Fri, 15 May 2020 17:30:09 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v4 2/2] powerpc/rtas: Implement reentrant rtas call
+To:     Allison Randal <allison@lohutok.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nadav Amit <namit@vmware.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20200514235138.150722-1-leobras.c@gmail.com>
+        <20200514235138.150722-3-leobras.c@gmail.com>
+In-Reply-To: <20200514235138.150722-3-leobras.c@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514111235.58459-1-tsbogend@alpha.franken.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Message-Id: <1589525800.2asfsw2zlu.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 01:12:34PM +0200, Thomas Bogendoerfer wrote:
-> Changing inclusion of Platform files, broke VR41xx platforms. Add Makefile
-> to vr41xx directory and traverse subdirs from it.
-> 
-> Fixes: 26bff9eb49201aeb ("MIPS: Only include the platformfile needed")
-> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> ---
->  arch/mips/vr41xx/Makefile | 5 +++++
->  arch/mips/vr41xx/Platform | 3 ---
->  2 files changed, 5 insertions(+), 3 deletions(-)
+Excerpts from Leonardo Bras's message of May 15, 2020 9:51 am:
+> Implement rtas_call_reentrant() for reentrant rtas-calls:
+> "ibm,int-on", "ibm,int-off",ibm,get-xive" and  "ibm,set-xive".
+>=20
+> On LoPAPR Version 1.1 (March 24, 2016), from 7.3.10.1 to 7.3.10.4,
+> items 2 and 3 say:
+>=20
+> 2 - For the PowerPC External Interrupt option: The * call must be
+> reentrant to the number of processors on the platform.
+> 3 - For the PowerPC External Interrupt option: The * argument call
+> buffer for each simultaneous call must be physically unique.
+>=20
+> So, these rtas-calls can be called in a lockless way, if using
+> a different buffer for each cpu doing such rtas call.
 
-applied to mips-next.
+What about rtas_call_unlocked? Do the callers need to take the rtas=20
+lock?
 
-Thomas.
+Machine checks must call ibm,nmi-interlock too, which we really don't=20
+want to take a lock for either. Hopefully that's in a class of its own
+and we can essentially ignore with respect to other rtas calls.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+The spec is pretty vague too :(
+
+"The ibm,get-xive call must be reentrant to the number of processors on=20
+the platform."
+
+This suggests ibm,get-xive can be called concurrently by multiple
+processors. It doesn't say anything about being re-entrant against any=20
+of the other re-entrant calls. Maybe that could be reasonably assumed,
+but I don't know if it's reasonable to assume it can be called=20
+concurrently with a *non-reentrant* call, is it?
+
+> For this, it was suggested to add the buffer (struct rtas_args)
+> in the PACA struct, so each cpu can have it's own buffer.
+
+You can't do this, paca is not limited to RTAS_INSTANTIATE_MAX.
+Which is good, because I didn't want you to add another 88 bytes to the=20
+paca :) Can you make it a pointer and allocate it separately? Check
+the slb_shadow allocation, you could use a similar pattern.
+
+The other option would be to have just one more rtas args, and have the=20
+crashing CPU always that. That would skirt the re-entrancy issue -- the
+concurrency is only ever a last resort. Would be a bit tricker though.
+
+Thanks,
+Nick
