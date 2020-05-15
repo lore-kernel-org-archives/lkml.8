@@ -2,161 +2,267 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CD0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D28BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 227BA2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:42:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZJ0eb3L8"
+	by mail.kernel.org (Postfix) with ESMTP id 6D99D20756
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589564557;
+	bh=wN4pLWMn+3tfXmhOG/kyRn07NArXLb90TO81ndvDrTs=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=ebaSdVFUW0pB6NcGosXcO6c3u9tadXyVfKLChv+Mw1JAJ6zpkT5Erwt9XN6iUyjsd
+	 npCh4B67iqLqLZiLUQ0JvHc7kb1n3kCPapq73ptcSVnIIQ7+ZwNBR6tSf9s4VB6+Qw
+	 aCWmgpfwXzVokU6sAR3Tzp3PjpDZhKcCG9FRdT3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgEORmY (ORCPT
+        id S1727119AbgEORmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:42:24 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58785 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726494AbgEORly (ORCPT
+        Fri, 15 May 2020 13:42:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726948AbgEORmd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:41:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589564514;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=8eXWyfVvTfwgxocNU4baj2GQMH1oLZpyjDe4vFpeDPQ=;
-        b=ZJ0eb3L86lXMCYURCmExuKUYMzvzvJvN63ICG6ehSb95gIkz2H+bA6BxcsvqRY6uddFB6m
-        /TJWYXhDG1ur4cNbk+TQjwira6VBudtIc2SZ+nXh8G+Sj2S9u4h9bOpQQfMD+kEGuR9Eu1
-        h0TYYdfyuBkxKyqQl5NOuSbY/97hmoA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-UW2S2PzeNjGf4ztG6-k39g-1; Fri, 15 May 2020 13:41:49 -0400
-X-MC-Unique: UW2S2PzeNjGf4ztG6-k39g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 10B5219200C2;
-        Fri, 15 May 2020 17:41:48 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 69F6210002CD;
-        Fri, 15 May 2020 17:41:47 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Cathy Avery <cavery@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: [PATCH 2/7] KVM: SVM: extract load_nested_vmcb_control
-Date:   Fri, 15 May 2020 13:41:39 -0400
-Message-Id: <20200515174144.1727-3-pbonzini@redhat.com>
-In-Reply-To: <20200515174144.1727-1-pbonzini@redhat.com>
-References: <20200515174144.1727-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Fri, 15 May 2020 13:42:33 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8C84C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 10:42:33 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id 79so3634365iou.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 10:42:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=kbz+a7Ana/YpiS97SnU2yCU3oWm5l70NClekg1sSYX0=;
+        b=QecfGUnpZA54+h22b3dmbpxn6J/pei7LP7Ci/GKCuh91Uu2w+j2sECO+I/YCbtHdRU
+         Z2APnq52h7RmgsNHaLAB/GEetuxrDU1mTk8GGIvs6JgDhqv8WaTmj9K1Pj/OZrzKUdeP
+         fsbCl9fwFOxkCQZXlmzP5mHV6VKWdCitFh+JM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=kbz+a7Ana/YpiS97SnU2yCU3oWm5l70NClekg1sSYX0=;
+        b=iwEVzVz1CNelGSSksLPc/V6QUS5GLTFr3io1K6zD35IZmGA0aY7HRVhuMNsm+EeQ8X
+         nWPOoW1smKTWh+hkXJJ1KzBOYo3/Box4z0pX0kGpEwlEFT5OkSrWx0vcWmof4Xgf1JLK
+         JhrASOdOpyc8vxHo9u6xqDDbfxwOEPl6aVcjraTgqIp4wEx/r+44jqLtoXIP0yZV2n5W
+         7Uv50mpS2CcNVghxUMSRHXyyNakKtZyYrZgt9P8GC6SFXvyqFdf4oKcnCr/H5IBfXMY6
+         s+2O8zg7U0bLRUUKnl/3XfF0jLEmeXuqNPUz5e340qbgfMtWsO53f3C2aJc2u282gK2S
+         6l/w==
+X-Gm-Message-State: AOAM530mQMzj54SXr+unT4CVr98iKS8bJMfZd+7aRhedGQqbXtaLQrEW
+        WqwRlO3Qpenz0Zx9ZKo5DaefPg==
+X-Google-Smtp-Source: ABdhPJy9mEwxgkBjK+X3qlQCx34qqPGIFsQmw8+/SE2MW76LXRWTQE49t4vHSagKfBWkE0ZeB3Yyhw==
+X-Received: by 2002:a02:2708:: with SMTP id g8mr4390363jaa.52.1589564552985;
+        Fri, 15 May 2020 10:42:32 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id c13sm1157502ilu.81.2020.05.15.10.42.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2020 10:42:32 -0700 (PDT)
+To:     torvalds@linux-foundation.org
+Cc:     Shuah Khan <skhan@linuxfoundation.org>, mpe@ellerman.id.au,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, Kees Cook <keescook@chromium.org>,
+        shuah <shuah@kernel.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kselftest update for Linux 5.7-rc6
+Message-ID: <0cb258e7-e5ef-b42d-ef9b-2ee979a91aa0@linuxfoundation.org>
+Date:   Fri, 15 May 2020 11:42:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="------------94BD8472E23703DFEF42AF49"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When restoring SVM nested state, the control state will be stored already
-in svm->nested by KVM_SET_NESTED_STATE.  We will not need to fish it out of
-L1's VMCB.  Pull everything into a separate function so that it is
-documented which fields are needed.
+This is a multi-part message in MIME format.
+--------------94BD8472E23703DFEF42AF49
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm/nested.c | 45 ++++++++++++++++++++++-----------------
- 1 file changed, 25 insertions(+), 20 deletions(-)
+Hi Linus,
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 22f75f66084f..e79acc852000 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -225,6 +225,27 @@ static bool nested_vmcb_checks(struct vmcb *vmcb)
- 	return true;
+Please pull the following Kselftest update for Linux 5.7-rc6.
+
+This Kselftest update for Linux 5.7-rc6 consists of
+
+- lkdtm runner fixes to prevent dmesg clearing and shellcheck errors
+- ftrace test handling when test module doesn't exist
+- nsfs test fix to replace zero-length array with flexible-array
+- dmabuf-heaps test fix to return clear error value
+
+diff is attached.
+
+thanks,
+-- Shuah
+
+----------------------------------------------------------------
+The following changes since commit 0e698dfa282211e414076f9dc7e83c1c288314fd:
+
+   Linux 5.7-rc4 (2020-05-03 14:56:04 -0700)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+tags/linux-kselftest-5.7-rc6
+
+for you to fetch changes up to 851c4df54dc1bcae41d07e46e3d89e035b0a7140:
+
+   selftests/lkdtm: Use grep -E instead of egrep (2020-05-08 09:46:17 -0600)
+
+----------------------------------------------------------------
+linux-kselftest-5.7-rc6
+
+This Kselftest update for Linux 5.7-rc6 consists of
+
+- lkdtm runner fixes to prevent dmesg clearing and shellcheck errors
+- ftrace test handling when test module doesn't exist
+- nsfs test fix to replace zero-length array with flexible-array
+- dmabuf-heaps test fix to return clear error value
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+       tools/testing: Replace zero-length array with flexible-array
+
+John Stultz (1):
+       kselftests: dmabuf-heaps: Fix confused return value on expected 
+error testing
+
+Michael Ellerman (2):
+       selftests/lkdtm: Don't clear dmesg when running tests
+       selftests/lkdtm: Use grep -E instead of egrep
+
+Po-Hsu Lin (1):
+       selftests/ftrace: mark irqsoff_tracer.tc test as unresolved if 
+the test module does not exist
+
+  tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c |  1 +
+  .../ftrace/test.d/preemptirq/irqsoff_tracer.tc     |  9 ++++++++-
+  tools/testing/selftests/lkdtm/run.sh               | 22 
+++++++++++++----------
+  tools/testing/selftests/nsfs/pidns.c               |  2 +-
+  4 files changed, 22 insertions(+), 12 deletions(-)
+----------------------------------------------------------------
+
+--------------94BD8472E23703DFEF42AF49
+Content-Type: text/x-patch; charset=UTF-8;
+ name="linux-kselftest-5.7-rc6.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-kselftest-5.7-rc6.diff"
+
+diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+index cd5e1f602ac9..909da9cdda97 100644
+--- a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
++++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+@@ -351,6 +351,7 @@ static int test_alloc_errors(char *heap_name)
+ 	}
+ 
+ 	printf("Expected error checking passed\n");
++	ret = 0;
+ out:
+ 	if (dmabuf_fd >= 0)
+ 		close(dmabuf_fd);
+diff --git a/tools/testing/selftests/ftrace/test.d/preemptirq/irqsoff_tracer.tc b/tools/testing/selftests/ftrace/test.d/preemptirq/irqsoff_tracer.tc
+index cbd174334a48..2b82c80edf69 100644
+--- a/tools/testing/selftests/ftrace/test.d/preemptirq/irqsoff_tracer.tc
++++ b/tools/testing/selftests/ftrace/test.d/preemptirq/irqsoff_tracer.tc
+@@ -17,7 +17,14 @@ unsup() { #msg
+     exit_unsupported
  }
  
-+static void load_nested_vmcb_control(struct vcpu_svm *svm, struct vmcb *nested_vmcb)
-+{
-+	if (kvm_get_rflags(&svm->vcpu) & X86_EFLAGS_IF)
-+		svm->vcpu.arch.hflags |= HF_HIF_MASK;
-+	else
-+		svm->vcpu.arch.hflags &= ~HF_HIF_MASK;
-+
-+	svm->nested.nested_cr3 = nested_vmcb->control.nested_cr3;
-+
-+	svm->nested.vmcb_msrpm = nested_vmcb->control.msrpm_base_pa & ~0x0fffULL;
-+	svm->nested.vmcb_iopm  = nested_vmcb->control.iopm_base_pa  & ~0x0fffULL;
-+
-+	/* cache intercepts */
-+	svm->nested.intercept_cr         = nested_vmcb->control.intercept_cr;
-+	svm->nested.intercept_dr         = nested_vmcb->control.intercept_dr;
-+	svm->nested.intercept_exceptions = nested_vmcb->control.intercept_exceptions;
-+	svm->nested.intercept            = nested_vmcb->control.intercept;
-+
-+	svm->vcpu.arch.tsc_offset += nested_vmcb->control.tsc_offset;
+-modprobe $MOD || unsup "$MOD module not available"
++unres() { #msg
++    reset_tracer
++    rmmod $MOD || true
++    echo $1
++    exit_unresolved
 +}
 +
- void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 			  struct vmcb *nested_vmcb)
- {
-@@ -232,15 +253,11 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 		is_intercept(svm, INTERCEPT_VINTR) ||
- 		is_intercept(svm, INTERCEPT_IRET);
++modprobe $MOD || unres "$MOD module not available"
+ rmmod $MOD
  
--	if (kvm_get_rflags(&svm->vcpu) & X86_EFLAGS_IF)
--		svm->vcpu.arch.hflags |= HF_HIF_MASK;
--	else
--		svm->vcpu.arch.hflags &= ~HF_HIF_MASK;
-+	svm->nested.vmcb = vmcb_gpa;
-+	load_nested_vmcb_control(svm, nested_vmcb);
+ grep -q "preemptoff" available_tracers || unsup "preemptoff tracer not enabled"
+diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
+index dadf819148a4..ee64ff8df8f4 100755
+--- a/tools/testing/selftests/lkdtm/run.sh
++++ b/tools/testing/selftests/lkdtm/run.sh
+@@ -25,13 +25,13 @@ fi
+ # Figure out which test to run from our script name.
+ test=$(basename $0 .sh)
+ # Look up details about the test from master list of LKDTM tests.
+-line=$(egrep '^#?'"$test"'\b' tests.txt)
++line=$(grep -E '^#?'"$test"'\b' tests.txt)
+ if [ -z "$line" ]; then
+ 	echo "Skipped: missing test '$test' in tests.txt"
+ 	exit $KSELFTEST_SKIP_TEST
+ fi
+ # Check that the test is known to LKDTM.
+-if ! egrep -q '^'"$test"'$' "$TRIGGER" ; then
++if ! grep -E -q '^'"$test"'$' "$TRIGGER" ; then
+ 	echo "Skipped: test '$test' missing in $TRIGGER!"
+ 	exit $KSELFTEST_SKIP_TEST
+ fi
+@@ -59,30 +59,32 @@ if [ -z "$expect" ]; then
+ 	expect="call trace:"
+ fi
  
--	if (nested_vmcb->control.nested_ctl & SVM_NESTED_CTL_NP_ENABLE) {
--		svm->nested.nested_cr3 = nested_vmcb->control.nested_cr3;
-+	if (nested_vmcb->control.nested_ctl & SVM_NESTED_CTL_NP_ENABLE)
- 		nested_svm_init_mmu_context(&svm->vcpu);
--	}
- 
- 	/* Load the nested guest state */
- 	svm->vmcb->save.es = nested_vmcb->save.es;
-@@ -275,25 +292,15 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 	svm->vcpu.arch.dr6  = nested_vmcb->save.dr6;
- 	svm->vmcb->save.cpl = nested_vmcb->save.cpl;
- 
--	svm->nested.vmcb_msrpm = nested_vmcb->control.msrpm_base_pa & ~0x0fffULL;
--	svm->nested.vmcb_iopm  = nested_vmcb->control.iopm_base_pa  & ~0x0fffULL;
+-# Clear out dmesg for output reporting
+-dmesg -c >/dev/null
 -
--	/* cache intercepts */
--	svm->nested.intercept_cr         = nested_vmcb->control.intercept_cr;
--	svm->nested.intercept_dr         = nested_vmcb->control.intercept_dr;
--	svm->nested.intercept_exceptions = nested_vmcb->control.intercept_exceptions;
--	svm->nested.intercept            = nested_vmcb->control.intercept;
--
- 	svm_flush_tlb(&svm->vcpu);
--	svm->vmcb->control.int_ctl = nested_vmcb->control.int_ctl | V_INTR_MASKING_MASK;
- 	if (nested_vmcb->control.int_ctl & V_INTR_MASKING_MASK)
- 		svm->vcpu.arch.hflags |= HF_VINTR_MASK;
+ # Prepare log for report checking
+-LOG=$(mktemp --tmpdir -t lkdtm-XXXXXX)
++LOG=$(mktemp --tmpdir -t lkdtm-log-XXXXXX)
++DMESG=$(mktemp --tmpdir -t lkdtm-dmesg-XXXXXX)
+ cleanup() {
+-	rm -f "$LOG"
++	rm -f "$LOG" "$DMESG"
+ }
+ trap cleanup EXIT
+ 
++# Save existing dmesg so we can detect new content below
++dmesg > "$DMESG"
++
+ # Most shells yell about signals and we're expecting the "cat" process
+ # to usually be killed by the kernel. So we have to run it in a sub-shell
+ # and silence errors.
+ ($SHELL -c 'cat <(echo '"$test"') >'"$TRIGGER" 2>/dev/null) || true
+ 
+ # Record and dump the results
+-dmesg -c >"$LOG"
++dmesg | diff --changed-group-format='%>' --unchanged-group-format='' "$DMESG" - > "$LOG" || true
++
+ cat "$LOG"
+ # Check for expected output
+-if egrep -qi "$expect" "$LOG" ; then
++if grep -E -qi "$expect" "$LOG" ; then
+ 	echo "$test: saw '$expect': ok"
+ 	exit 0
+ else
+-	if egrep -qi XFAIL: "$LOG" ; then
++	if grep -E -qi XFAIL: "$LOG" ; then
+ 		echo "$test: saw 'XFAIL': [SKIP]"
+ 		exit $KSELFTEST_SKIP_TEST
  	else
- 		svm->vcpu.arch.hflags &= ~HF_VINTR_MASK;
+diff --git a/tools/testing/selftests/nsfs/pidns.c b/tools/testing/selftests/nsfs/pidns.c
+index e0d86e1668c0..e3c772c6a7c7 100644
+--- a/tools/testing/selftests/nsfs/pidns.c
++++ b/tools/testing/selftests/nsfs/pidns.c
+@@ -27,7 +27,7 @@
+ #define __stack_aligned__	__attribute__((aligned(16)))
+ struct cr_clone_arg {
+ 	char stack[128] __stack_aligned__;
+-	char stack_ptr[0];
++	char stack_ptr[];
+ };
  
--	svm->vcpu.arch.tsc_offset += nested_vmcb->control.tsc_offset;
- 	svm->vmcb->control.tsc_offset = svm->vcpu.arch.tsc_offset;
- 
-+	svm->vmcb->control.int_ctl = nested_vmcb->control.int_ctl | V_INTR_MASKING_MASK;
- 	svm->vmcb->control.virt_ext = nested_vmcb->control.virt_ext;
- 	svm->vmcb->control.int_vector = nested_vmcb->control.int_vector;
- 	svm->vmcb->control.int_state = nested_vmcb->control.int_state;
-@@ -314,8 +321,6 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 	 */
- 	recalc_intercepts(svm);
- 
--	svm->nested.vmcb = vmcb_gpa;
--
- 	/*
- 	 * If L1 had a pending IRQ/NMI before executing VMRUN,
- 	 * which wasn't delivered because it was disallowed (e.g.
--- 
-2.18.2
+ static int child(void *args)
 
-
+--------------94BD8472E23703DFEF42AF49--
