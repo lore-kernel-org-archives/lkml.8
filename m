@@ -2,68 +2,71 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E86C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 129BC20787
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:30:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589563809;
-	bh=H7r8JOVXcXDVJJi5IhEOv9pbTm0V+PoBDVDqWSDZuM0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Y31u3y6b+aRZT3qcSWJuA99GjXAfZT+jgqyuzaeEYSeO5RA/JQYCDrXXxdNfrxIs2
-	 YlGXyeDq9JwLPOaOFddASM9wVKOfBoq9/T8D6u2mUvCECXw8N0TK39nnIWnXPvhcON
-	 XT22meXNjdjVyQpklllLgBvB8lYVEAcj9FX/qybk=
+	by mail.kernel.org (Postfix) with ESMTP id D30FA20727
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgEORaI (ORCPT
+        id S1727801AbgEORaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:30:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbgEORaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:30:05 -0400
-Subject: Re: [GIT PULL] hwmon fixes for v5.7-rc6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589563804;
-        bh=H7r8JOVXcXDVJJi5IhEOv9pbTm0V+PoBDVDqWSDZuM0=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=nJzA09EYFjF/awprp+XUyOQb/YzSGkOcyfH9fyYf70Hcjs/Xq5bkq696I8iAupOoD
-         wGzzwk/94bsGS38+BNargOEyE3HmzjE9YS36HDjGM47tEehjOM+er3n7UwqFLLaa0T
-         7/BO808LAZf6qwGGQGNiaOzBZZ9agh3HnukFB09o=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200515152256.175107-1-linux@roeck-us.net>
-References: <20200515152256.175107-1-linux@roeck-us.net>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200515152256.175107-1-linux@roeck-us.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git
- hwmon-for-v5.7-rc6
-X-PR-Tracked-Commit-Id: 333e22db228f0bd0c839553015a6a8d3db4ba569
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 051e6b7e34b9bd24f46725f74994a4d3a653966e
-Message-Id: <158956380473.31776.13184431620388889550.pr-tracker-bot@kernel.org>
-Date:   Fri, 15 May 2020 17:30:04 +0000
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+        Fri, 15 May 2020 13:30:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726233AbgEORaR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:30:17 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B40EAC061A0C;
+        Fri, 15 May 2020 10:30:17 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 3A084736;
+        Fri, 15 May 2020 17:30:17 +0000 (UTC)
+Date:   Fri, 15 May 2020 11:30:16 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Wang Wenhu <wenhu.wang@vivo.com>
+Cc:     alex.shi@linux.alibaba.com, harryxiyou@gmail.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com, luochucheng@vivo.com
+Subject: Re: [PATCH] doc: zh_CN: add translatation for debugfs.txt
+Message-ID: <20200515113016.43c12464@lwn.net>
+In-Reply-To: <20200509080535.7625-1-wenhu.wang@vivo.com>
+References: <20200408021528.14062-1-luochucheng@vivo.com>
+        <20200509080535.7625-1-wenhu.wang@vivo.com>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 15 May 2020 08:22:56 -0700:
+On Sat,  9 May 2020 01:05:35 -0700
+Wang Wenhu <wenhu.wang@vivo.com> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.7-rc6
+> From: Chucheng Luo <luochucheng@vivo.com>
+> 
+> Translate Documentation/filesystems/debugfs.txt into Chinese.
+> 
+> Signed-off-by: Chucheng Luo <luochucheng@vivo.com>
+> Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> [rebase for upstream conflict and minor change of subject]
+> Link: https://lore.kernel.org/linux-doc/20200408021528.14062-1-luochucheng@vivo.com/
+> ---
+> Note:
+>  * Did rebase as asked by Jonathan for the conflict when applied.
+>  * Also ajusted the subject description.
+>  * For their is no modification of new translated file, I appended
+>    the "Reviewed-by" tag from Alex.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/051e6b7e34b9bd24f46725f74994a4d3a653966e
+Applied, thanks.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+jon
