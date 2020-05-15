@@ -2,127 +2,115 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C70C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0021B20758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1402C206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:01:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Zu4c/PHw"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="1uWs4zKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbgEOTAo (ORCPT
+        id S1726275AbgEOTBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 15:00:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49196 "EHLO
+        Fri, 15 May 2020 15:01:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgEOTAn (ORCPT
+        with ESMTP id S1726023AbgEOTBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 15:00:43 -0400
-Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C37AC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 12:00:43 -0700 (PDT)
-Received: by mail-qv1-xf36.google.com with SMTP id a4so1627709qvj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 12:00:43 -0700 (PDT)
+        Fri, 15 May 2020 15:01:17 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E50C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 12:01:16 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id y18so1399169pfl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 12:01:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ISYBaVCiDO7G5hPAvDuNoncP6nuCvkrm7rgsOcxjwcw=;
-        b=Zu4c/PHwsdfJkmCnGu9P/wrmQcgMeRlEqyF6qOivOv0eYkFGKg2LsgCcwQC0GiElbQ
-         niUipZAUXLSU3JRvMKMwDElZNeOLp0Pg8W+i9/NAy7Ksf5z6BiBwFd+EQjRToKVF6AQd
-         gJN7/wiwQzro1D+3XWfUAq5s58kzu+4TVVt7E=
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:cc:from:to:message-id;
+        bh=Y4Tu4UqtalfMRN8mnNoM6mpqo/qALhm8HqxuxykVAjE=;
+        b=1uWs4zKf4rQGsgiboVezung6oJ1vpH+pnRdjBVMXfyDJyIS1CV4CGEncgYCMYLtvES
+         J64a013s9DcH76+W3dU+SmJg9kKInKG6ZE9zwbOwHHiEF+tWFwUc5DtppaydVC5Pgvpk
+         Vq5YwwtqTPtxl/CaAkIXHCZaKkgbWGm7TLEQBuU3MkjhHqlCiSuxEUG6v19ViH9O6Poh
+         honoDgGJO2bVhqjzz9OXcsfncuQjro2bAfQdZHJp7KU3aFgrYq3xUUlb4vI89dPqLOaI
+         lpHYhbWYiBEM/QtL78s/GHWVQBkGf9KAVUUIJdTi047noN0A7mKxlZfQ3pUi3kJFWrMD
+         fn0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ISYBaVCiDO7G5hPAvDuNoncP6nuCvkrm7rgsOcxjwcw=;
-        b=Vo1NrRUo36Jhl6V1V2Fv/jQHVslJp5F0/o/qUsHBTUf/0s+9nf3LsLtSG6rjRGZNO9
-         F2E6OLTHh9725KWAt+u0vEgssvVOgN8c/3GFJWrvicMjDWEtVQR43WfPkcRTj4F98vGi
-         5OfMlERvmdirI1v43lLCVi/ofefufSgPlNDcpA5JVTAh0mfWzOVkn3uxAn1AhuRX0ZwX
-         NAlMlH+kWPEQPA3TUPMeB0eSeluR4oTf3W7CV50z4sNoWgIGbaJ1FZUBP8uk98svpPBm
-         FLusoFprnK/ktLlNPy01Zkfq8bGQuGJHIEp6Nlr+LiUSuozWSh4njIXrXb4Tw4qGnx8H
-         /30Q==
-X-Gm-Message-State: AOAM5328kJi1XAPU6HbAMZTtwQtxnahg4bm0fwBo5FKb1AKfsIl4hCe/
-        bhK0ufTPl+fQkV4hdc8ISAoE4Q==
-X-Google-Smtp-Source: ABdhPJxodmJR2jrTOwrNyQoVsBIAqnIl/D5rerN8cdwppymJfPeg15LAWni3z06SHGuuWvMThd6nng==
-X-Received: by 2002:a05:6214:188a:: with SMTP id cx10mr5024693qvb.119.1589569242461;
-        Fri, 15 May 2020 12:00:42 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id z25sm2700717qtj.75.2020.05.15.12.00.41
+        h=x-gm-message-state:date:subject:cc:from:to:message-id;
+        bh=Y4Tu4UqtalfMRN8mnNoM6mpqo/qALhm8HqxuxykVAjE=;
+        b=XxK7qLiaUvWJkhF2KZ0iS9/MwiYuhsIJdjSR/KmJZbHXfApXm7ghI/hGDBJV0XhhuQ
+         X1V22ppmpNIlmD8rnFVsrbcqU8LpITys11w9VaNqxKN7rUEkGADwlM2tmwepq7UV+r9X
+         WAA1K1w18+g4kT8OwkYPjTvZsYJ9ukHszBf2DstDk8Ag1esl5t6NU9srRjD18QnQc3mV
+         TrfiBxCwWFd9n2pySCDfhuFnFyOIe/LKMkXIhKRpwaXlENMvzhUcvhugkoW4V/O8Hk9D
+         3Pc/E6qR6oy7aqc5+y5NGYeYbA3x1Jv0P95iMQBjNq+uCBZCvtSaAg3NY92fe58U8fld
+         A1Mw==
+X-Gm-Message-State: AOAM530c3jmdGSw0rUaf6h+p/kxYBcT2p7t00vdGf2jAYOi/ckHEZFdw
+        2mqN+z53ZwS1WhBut1JqDq7qfA==
+X-Google-Smtp-Source: ABdhPJw6LoHwUAxm+l8/QIdvGoJTT2nBrVnwuMLOr03EUKhztvF58+XxCYARunlt/hIb7c53IltMGQ==
+X-Received: by 2002:a63:175c:: with SMTP id 28mr4243174pgx.44.1589569276342;
+        Fri, 15 May 2020 12:01:16 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id g1sm2574162pfb.191.2020.05.15.12.01.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 12:00:41 -0700 (PDT)
-Date:   Fri, 15 May 2020 15:00:41 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 3 11/29] rcu: Provide rcu_irq_exit_preempt()
-Message-ID: <20200515190041.GB40692@google.com>
-References: <20200505134354.774943181@linutronix.de>
- <20200505134904.364456424@linutronix.de>
- <20200514024116.GA231286@google.com>
- <87blmqziek.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87blmqziek.fsf@nanos.tec.linutronix.de>
+        Fri, 15 May 2020 12:01:15 -0700 (PDT)
+Date:   Fri, 15 May 2020 12:01:15 -0700 (PDT)
+X-Google-Original-Date: Fri, 15 May 2020 11:58:33 PDT (-0700)
+Subject: [GIT PULL] RISC-V Fixes for 5.7-rc6
+CC:         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <mhng-0786a015-369a-4f54-aa78-f4550588e4ef@palmerdabbelt-glaptop1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 04:43:31PM +0200, Thomas Gleixner wrote:
-[...] 
-> > Or, if [1] is merged, then we could just combine the checks into one check.
-> > 	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) != 1,
-> > 			 "Bad RCU dynticks_nmi_nesting counter\n");
-> >
-> >> +	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
-> >> +			 "RCU in extended quiescent state!");
-> >
-> > Makes sense.
-> >
-> > BTW, I wonder if a better place to do this "don't enter scheduler while RCU
-> > is not watching" is rcu_note_context_switch()...
-> 
-> I actually want to catch even the case where we don't schedule, i.e.
-> 
->   if (ret_to_kernel) {
->      if (interrupts_on_after_return((regs)) {
->         if (IS_ENABLED(CONFIG_PREEMPTION)) {
->   	   if (!preempt_count()) {
->               /* Preemption is possible ... */
->        	      rcu_irq_exit_preempt();
->                  if (need_resched())
->                     schedule_preempt_irq();
-> 
-> that catches any exit where preemption is possible and RCU is not
-> watching after rcu_irq_exit().
-> 
-> It does not matter whether need-resched is set here or not. Any
-> interrupt/exception could set it.
+The following changes since commit 2ef96a5bb12be62ef75b5828c0aab838ebb29cb8:
 
-Yes, your way of doing it is better. Let us do it this way then.
+  Linux 5.7-rc5 (2020-05-10 15:16:58 -0700)
 
-Thanks!
+are available in the Git repository at:
 
- - Joel
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.7-rc6
 
+for you to fetch changes up to ed1ed4c0da5447c5e322481ce2ef9f03336c6ffb:
+
+  riscv: mmiowb: Fix implicit declaration of function 'smp_processor_id' (2020-05-13 17:11:46 -0700)
+
+----------------------------------------------------------------
+RISC-V Fixes for 5.7-rc6
+
+This consists of a handful of build fixes, all found by Huawei's autobuilder.
+None of these patches should have any functional impact on kernels that build,
+and they're mostly related to various features intermingling with !MMU.  While
+some of these might be better hoisted to generic code, it seems better to have
+the simple fixes in the meanwhile.
+
+As far as I know these are the only outstanding patches for 5.7.
+
+----------------------------------------------------------------
+Kefeng Wang (9):
+      riscv: perf_event: Make some funciton static
+      riscv: perf: RISCV_BASE_PMU should be independent
+      riscv: Fix unmet direct dependencies built based on SOC_VIRT
+      riscv: stacktrace: Fix undefined reference to `walk_stackframe'
+      riscv: Add pgprot_writecombine/device and PAGE_SHARED defination if NOMMU
+      riscv: Disable ARCH_HAS_DEBUG_VIRTUAL if NOMMU
+      riscv: Make SYS_SUPPORTS_HUGETLBFS depends on MMU
+      riscv: pgtable: Fix __kernel_map_pages build error if NOMMU
+      riscv: mmiowb: Fix implicit declaration of function 'smp_processor_id'
+
+ arch/riscv/Kconfig                  |  3 ++-
+ arch/riscv/Kconfig.socs             | 17 +++++++++--------
+ arch/riscv/include/asm/mmio.h       |  2 ++
+ arch/riscv/include/asm/mmiowb.h     |  1 +
+ arch/riscv/include/asm/perf_event.h |  8 ++------
+ arch/riscv/include/asm/pgtable.h    |  3 +++
+ arch/riscv/kernel/Makefile          |  2 +-
+ arch/riscv/kernel/perf_event.c      |  8 ++++----
+ arch/riscv/kernel/stacktrace.c      |  2 +-
+ 9 files changed, 25 insertions(+), 21 deletions(-)
