@@ -2,107 +2,182 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD17C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E65A6206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08EA120709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 00:05:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589501149;
+	bh=jQ3KvK9MnWgON7TlhG8OH9YLXkkEmuhoZEe3lPN4/fw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xG5nFyc2KRyXkuLqc3knMSeI0dHOjHZK9PEFqeKFqylXeV2H7lDDuGKjGLG+7/+cR
+	 txS51tYKFmSlJ1Z+fEgEXvRRMj4CwpDBB95Lg0qFxlpvnANuQp/RfKDd2tIqylSXXX
+	 5yNbVQIEkMYM5vWVI+L2rJ4bmaJjkff2oXwzhvLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgEOAAt (ORCPT
+        id S1727890AbgEOAFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 20:00:49 -0400
-Received: from mga07.intel.com ([134.134.136.100]:17357 "EHLO mga07.intel.com"
+        Thu, 14 May 2020 20:05:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbgEOAAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 20:00:47 -0400
-IronPort-SDR: qid2dEkSCvK+pyM55tMfjpyqTHN9m5Sqx+mMxHdlRszjyYJxVsFjxkCoU9OJrs4T/UrAm0WAw1
- ZgQr/rp0a4Ew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 17:00:46 -0700
-IronPort-SDR: ca6NGik9rwL5TfUuopCMa37yfmw6w+5tfFEmLEcDsO+j+WiMzKp0s+BHsnCUEhu0AryC6eHS/K
- TorQLC+Wgq5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
-   d="scan'208";a="266421400"
-Received: from ashadrin-mobl1.ccr.corp.intel.com ([10.249.38.112])
-  by orsmga006.jf.intel.com with ESMTP; 14 May 2020 17:00:37 -0700
-Message-ID: <956b284c2b144313fd158de75cba510eb98f71bf.camel@linux.intel.com>
-Subject: Re: [PATCH v4 1/4] KEYS: trusted: Add generic trusted keys framework
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>, dhowells@redhat.com,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Markus Wamser <Markus.Wamser@mixed-mode.de>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        op-tee@lists.trustedfirmware.org,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Date:   Fri, 15 May 2020 03:00:25 +0300
-In-Reply-To: <CAFA6WYMciZ=qkG3N_9YWzt_DJr2dGwdAy9diMXCJSNjr2o5ONA@mail.gmail.com>
-References: <1588758017-30426-1-git-send-email-sumit.garg@linaro.org>
-         <1588758017-30426-2-git-send-email-sumit.garg@linaro.org>
-         <07bb6080f8be9f6613f460e2d6e19f3d456e219c.camel@linux.intel.com>
-         <CAFA6WYMciZ=qkG3N_9YWzt_DJr2dGwdAy9diMXCJSNjr2o5ONA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2 
+        id S1726088AbgEOAFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 20:05:48 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F9AF2065C;
+        Fri, 15 May 2020 00:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589501147;
+        bh=jQ3KvK9MnWgON7TlhG8OH9YLXkkEmuhoZEe3lPN4/fw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I5GLDWFvfdHE7LIGIo0NGa6md2vEN7QltkvX4geczWjfger2//MrtB0eh5HbUHCna
+         +jN02+WmAQ78Ci9q8+F/bvQCAGTZyBiDx6zSB2uK9RhbRzzbNuDCa8Y7CaStFSryOD
+         hEpPH9bkm3kTkuNNjGDAy69230ZwgUsC5d0FMg9Y=
+Date:   Thu, 14 May 2020 19:10:25 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH perf/core] perf intel-pt: Fix clang build failure in
+ intel_pt_synth_pebs_sample
+Message-ID: <20200515001025.GU4897@embeddedor>
+References: <20200513234738.GA21211@embeddedor>
+ <20200514131030.GL5583@kernel.org>
+ <20200514150601.GS4897@embeddedor>
+ <CAP-5=fWTCFx80Hd_97_4AxFV4KsRyYptLbQfw=XVw_j8i-EAyg@mail.gmail.com>
+ <20200514220934.GT4897@embeddedor>
+ <CAP-5=fV5URsHn+SpW8N4XjkKT1vt2T1Us5FsqaJsoOW0zn=OxQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fV5URsHn+SpW8N4XjkKT1vt2T1Us5FsqaJsoOW0zn=OxQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-14 at 16:53 +0530, Sumit Garg wrote:
-> On Thu, 14 May 2020 at 05:55, Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> > On Wed, 2020-05-06 at 15:10 +0530, Sumit Garg wrote:
-> > > Current trusted keys framework is tightly coupled to use TPM device as
-> > > an underlying implementation which makes it difficult for implementations
-> > > like Trusted Execution Environment (TEE) etc. to provide trusked keys
-> > > support in case platform doesn't posses a TPM device.
-> > > 
-> > > So this patch tries to add generic trusted keys framework where underlying
-> > > implemtations like TPM, TEE etc. could be easily plugged-in.
-> > > 
-> > > Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > 
-> > I tend to agree how this is implemented and could merge it as such.
-> > 
-> > I'm just thinking if we could refine this patch in a way that instead of
-> > copying TRUSTED_DEBUG macro we could just replace pr_info() statements
-> > with pr_debug()?
+On Thu, May 14, 2020 at 03:46:05PM -0700, Ian Rogers wrote:
+> On Thu, May 14, 2020 at 3:04 PM Gustavo A. R. Silva
+> <gustavoars@kernel.org> wrote:
+> >
+> > On Thu, May 14, 2020 at 12:06:48PM -0700, Ian Rogers wrote:
+> > > On Thu, May 14, 2020 at 8:01 AM Gustavo A. R. Silva
+> > > <gustavoars@kernel.org> wrote:
+> > > >
+> > > > On Thu, May 14, 2020 at 10:10:30AM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > > Em Wed, May 13, 2020 at 06:47:38PM -0500, Gustavo A. R. Silva escreveu:
+> > > > > > Fix the following build failure generated with command
+> > > > > > $ make CC=clang HOSTCC=clang -C tools/ perf:
+> > > > > >
+> > > > > > util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
+> > > > > >                         struct branch_stack br_stack;
+> > > > > >                                             ^
+> > > > > > 1 error generated.
+> > > > > >
+> > > > > > Fix this by reordering the members of struct br.
+> > > > >
+> > > > > Yeah, I noticed that as far back as with ubuntu 16.04's clang:
+> > > > >
+> > > > > clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)
+> > > > >
+> > > > > util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU
+> > > > >       extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
+> > > > >                         struct branch_stack br_stack;
+> > > > >                                             ^
+> > > > > 1 error generated.
+> > > > >
+> > > > >
+> > > > > Will fold this with the bug introducing the problem to avoid bisection
+> > > > > problems.
+> > > > >
+> > > >
+> > > > I agree. Also, the commit hash of the "Fixes" tag only applies to the
+> > > > perf/core branch and, I guess that might create confusion.
+> > >
+> > >
+> > > So while this fixes the warning I believe it breaks the intent of the code.
+> > >
+> > > tools/perf/util/branch.h:
+> > > struct branch_stack {
+> > >        u64                     nr;
+> > >        u64                     hw_idx;
+> > >        struct branch_entry     entries[];
+> > > };
+> > >
+> > > tools/perf/util/intel-pt.c:
+> > >                struct {
+> > >                        struct branch_stack br_stack;
+> > >                        struct branch_entry entries[LBRS_MAX];
+> > >                } br;
+> > >
+> > > The array in br is trying to extend branch_stack's entries array. You
+> > > might have to do something like:
+> > >
+> > > alignas(alignof(branch_stack)) char storage[sizeof(branch_stack) +
+> > > sizeof(branch_entry) * LBRS_MAX];
+> > > struct branch_stack *br = &storage;
+> > >
+> > > malloc/free may be nicer on the eyeballs.
+> > >
+> >
+> > Yep, I'd go for zalloc/free. There are a couple of places where dynamic
+> > memory is being allocated for struct branch_stack:
+> >
+> > tools/perf/util/cs-etm.c-256-   if (etm->synth_opts.last_branch) {
+> > tools/perf/util/cs-etm.c:257:           size_t sz = sizeof(struct branch_stack);
+> > tools/perf/util/cs-etm.c-258-
+> > tools/perf/util/cs-etm.c-259-           sz += etm->synth_opts.last_branch_sz *
+> > tools/perf/util/cs-etm.c-260-                 sizeof(struct branch_entry);
+> > tools/perf/util/cs-etm.c-261-           tidq->last_branch = zalloc(sz);
+> >
+> > tools/perf/util/thread-stack.c-148-     if (br_stack_sz) {
+> > tools/perf/util/thread-stack.c:149:             size_t sz = sizeof(struct branch_stack);
+> > tools/perf/util/thread-stack.c-150-
+> > tools/perf/util/thread-stack.c-151-             sz += br_stack_sz * sizeof(struct branch_entry);
+> > tools/perf/util/thread-stack.c-152-             ts->br_stack_rb = zalloc(sz);
+> >
+> > there is even function intel_pt_alloc_br_stack().
+> >
+> > Just out of curiosity, why the need of such a hack in this case (the
+> > on-stack extension of branch_stack's entries array)?
 > 
-> AFAIU, TRUSTED_DEBUG being a security sensitive operation is only
-> meant to be used in development environments and should be strictly
-> disabled in production environments. But it may not always be true
-> with pr_debug() with CONFIG_DYNAMIC_DEBUG=y which allows the debug
-> paths to be compiled into the kernel which can be enabled/disabled at
-> runtime.
+> My guess would be that the lbr size is an architectural constant and
+> so avoiding malloc/free in what could be a hot loop was desirable.
+> As this is part of a larger patch set, is this the only place this
+> problem has been encountered? Perhaps a macro could perform the
+
+Yep. I just built linux-next --which contains all the flexible-array
+conversions-- with Clang --GCC doesn't catch this issue, not even GCC
+10-- and I don't see any other issue like this.
+
+I mean, I have run into these other two:
+
+https://lore.kernel.org/lkml/20200505235205.GA18539@embeddedor/
+https://lore.kernel.org/lkml/20200508163826.GA768@embeddedor/
+
+but those are due to the erroneous application of the sizeof operator
+to zero-length arrays.
+
+> complicated stack allocation I suggested. It may be nice to save
+> cycles if code this pattern is widespread and the code hot.
 > 
-> IMO we should keep this TRUSTED_DEBUG macro, so that users are aware
-> of its security sensitive nature and need to explicitly enable it to
-> debug.
 
-You are absolutely correct.
+Apparently, this is the only instace of this sort of issue in the whole
+codebase.
 
-/Jarkko
-
+Thanks
+--
+Gustavo
