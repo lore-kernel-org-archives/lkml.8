@@ -2,171 +2,81 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6271EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD41C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3CA20734
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589512200;
-	bh=mGIjQ5UgRZBwSrwRanDpjsWAq7KpK2H1hq9cmp4eX9c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DFZLmboW8e9eNysS/omdRb8+S2dZU20mOdTKw3nPru5g8Y2kKhZCZVBFwZodNOKt6
-	 1nLiVVBk31VqXGeIAHT8xQ+BRUpVNlhhnjDDkkrSi6qlw7qDnL6PCNxoBHd3JvTVVg
-	 3wMVx0F5mzIpiwX0D6wsX/yLlnxRAHTAzVtVSkrM=
+	by mail.kernel.org (Postfix) with ESMTP id 3018320734
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 03:10:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgEODJ7 (ORCPT
+        id S1727981AbgEODKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 23:09:59 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37562 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbgEODJ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 23:09:59 -0400
-Received: by mail-oi1-f196.google.com with SMTP id r25so1009589oij.4;
-        Thu, 14 May 2020 20:09:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cqCt031WyGhINaoPOgD7e/Ng/z3AcL7LFst4h8g4aQc=;
-        b=g9N9PA7n/xgm8dC2CLCXDj5O+006UZ1612/4lSVEoVDHZ8sufdh4snUKSpksekXbfr
-         MYaguVZTOP6RfFDREeU5IR3RXD5xBDaz4nCFC2z6DgFxAw8sOGnq1xR8m3dWw6QwiSGN
-         sugFDeqcAzLQg7uzP+AalXNfUgBhg8v501sk6e/nsXzq7mQreTCrnfj5m8LlkNBE/z+S
-         SFCVQps+D/i0ylXTZ+DNWSgGj96LIq7SckykYcVB3VRbh+6HB+BwMrjYjx4hagsdSjzH
-         910LDoIY6vztWYKljAjtN6Izgzg0WaG4tGH3eTwOFgqj2ztinxc+8VWuymefkntWjLAk
-         PD0Q==
-X-Gm-Message-State: AOAM532C1M8ga9DzGO4ZfVP+d1Rgmpu53UTDsUWJGOkCm/TdrUq0LLOZ
-        9wt2xDTyEBcU9vxw5HBtgIaKhv8=
-X-Google-Smtp-Source: ABdhPJxjfaFgbx+BckYEXFaVqvbzIdtHGFBM9fJhxsQAoJcIf8K3VIyKPMTm7k7hpJ6LJf1+1aoqsg==
-X-Received: by 2002:a05:6808:698:: with SMTP id k24mr733523oig.102.1589512197867;
-        Thu, 14 May 2020 20:09:57 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y22sm293187oih.57.2020.05.14.20.09.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 20:09:56 -0700 (PDT)
-Received: (nullmailer pid 24896 invoked by uid 1000);
-        Fri, 15 May 2020 03:09:56 -0000
-Date:   Thu, 14 May 2020 22:09:56 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, nikolaus.voss@loewensteinmedical.de,
-        andriy.shevchenko@linux.intel.com, garsilva@embeddedor.com,
-        keescook@chromium.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: usb: Add TI tps6598x device tree
- binding documentation
-Message-ID: <20200515030956.GA14495@bogus>
-References: <20200507214733.1982696-1-bryan.odonoghue@linaro.org>
- <20200507214733.1982696-2-bryan.odonoghue@linaro.org>
+        Thu, 14 May 2020 23:10:01 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:43792 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726192AbgEODKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 23:10:01 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX2sECL5ef+80AA--.32S3;
+        Fri, 15 May 2020 11:09:57 +0800 (CST)
+Subject: Re: [PATCH 1/2] MIPS: Loongson: Fix fatal error during GPU init
+To:     jiaxun.yang@flygoat.com,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>
+References: <1589508901-18077-1-git-send-email-yangtiezhu@loongson.cn>
+ <ECE71DFC-57D3-4132-BB85-609448B29238@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <636ba812-3849-2667-d625-ab7e35d5ac36@loongson.cn>
+Date:   Fri, 15 May 2020 11:09:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507214733.1982696-2-bryan.odonoghue@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ECE71DFC-57D3-4132-BB85-609448B29238@flygoat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9DxX2sECL5ef+80AA--.32S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Wr1xKw4xtryrCw1UWr1DAwb_yoWxtrg_Gr
+        yqkas8Gw4DJr48Za1UKFn5Zr1aka1DGrWxCFW7XF48C3sxJrs5Xrn8AryrGry5Ga1ktwsx
+        CF4jqrW0yrnFqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
+        bIxvr21lc2xSY4AK67AK6r48MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+        67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+        x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAI
+        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+        nxnUUI43ZEXa7VUUEfO7UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 10:47:32PM +0100, Bryan O'Donoghue wrote:
-> Add device tree binding documentation for the Texas Instruments tps6598x
-> Type-C chip driver.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
->  .../devicetree/bindings/usb/ti,tps6598x.yaml  | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml b/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
-> new file mode 100644
-> index 000000000000..8eaf4b6c4735
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/usb/ti,tps6598x.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Texas Instruments 6598x Type-C Port Switch and Power Delivery controller DT bindings
-> +
-> +maintainers:
-> +  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> +
-> +description: |
-> +  Texas Instruments 6598x Type-C Port Switch and Power Delivery controller
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,tps6598x
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: irq
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        tps6598x: tps6598x@38 {
-> +            compatible = "ti,tps6598x";
-> +            reg = <0x38>;
-> +
-> +            interrupt-parent = <&msmgpio>;
-> +            interrupts = <107 IRQ_TYPE_LEVEL_LOW>;
-> +            interrupt-names = "irq";
-> +
-> +            pinctrl-names = "default";
-> +            pinctrl-0 = <&typec_pins>;
-> +
-> +            typec_con: connector {
-> +                compatible = "usb-c-connector";
-> +                label = "USB-C";
-> +                port {
+On 05/15/2020 10:33 AM, Jiaxun Yang wrote:
+>
+> 于 2020年5月15日 GMT+08:00 上午10:15:00, Tiezhu Yang <yangtiezhu@loongson.cn> 写到:
+>> When ATI Radeon graphics card has been compiled directly into the kernel
+>> instead of as a module, we should make sure the firmware for the model
+>> (check available ones in /lib/firmware/radeon) is built-in to the kernel
+>> as well, otherwise there exists the following fatal error during GPU init,
+>> change CONFIG_DRM_RADEON=y to CONFIG_DRM_RADEON=m to fix it.
+>>
+> The commit message looks shocking.
+>
+> You'd better reword it as "MIPS: Loongson64: Mark GPU driver as module in Kconfig"
 
-The connector binding has specific numbering of the ports defined for 
-HS, SS, alt mode.
+OK, I will modify the patch subject and send v2.
 
-So you should have 'ports' here.
+>
+> Thanks.
 
-> +                    typec_ep: endpoint {
-> +                        remote-endpoint = <&otg_ep>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-> +...
-> -- 
-> 2.25.1
-> 
