@@ -2,139 +2,147 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86792C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EEFD206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:01:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="lbJ/D6GG"
+	by mail.kernel.org (Postfix) with ESMTP id 72789206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgEOQBm (ORCPT
+        id S1726860AbgEOQCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:01:42 -0400
-Received: from mail.efficios.com ([167.114.26.124]:45108 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgEOQBm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:01:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id E905A2B0445;
-        Fri, 15 May 2020 12:01:40 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id WvDpZCgW7c8G; Fri, 15 May 2020 12:01:40 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 7EB7E2B02F4;
-        Fri, 15 May 2020 12:01:40 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 7EB7E2B02F4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1589558500;
-        bh=/aqNzZiWyuXVYAibug7RythgCs3Q8Lsdz16EIlb5Tyc=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=lbJ/D6GGU42tlfpmNiHbQmDA2jyTSVHkD/r+v0Ne6vau2uECkEqiFySquEg8nEv1D
-         2AdQRYRiVjNh4N+VOr+gQuozwq0PAEyDjRC9blnkdYY+TTXLKY6xywrtaBCSI8EEeE
-         qqODC6wnpJNxyN4RxClpXpoi68+XowlC9eyVuQFxDvFf1Llpeogc/wj/VwhZb7aXxW
-         uvD603+ZbHACpuc54Kred4ERD9IcIsD56scysS/I5aaDwNMZTU9oYofyIf9NOvaXQ/
-         LG7wjA+KRmEzQs2LANQrbTQGMZjg7a26S1S48aZACJqU6qk1ttlH5bJTkEmDjkmON8
-         Pg96C+qJ+uDGQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id yIvyBPwYL-ii; Fri, 15 May 2020 12:01:40 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 6B6552B0798;
-        Fri, 15 May 2020 12:01:40 -0400 (EDT)
-Date:   Fri, 15 May 2020 12:01:40 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Fri, 15 May 2020 12:02:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58892 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726188AbgEOQCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 12:02:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 37AFCABC2;
+        Fri, 15 May 2020 16:02:21 +0000 (UTC)
+Subject: Re: [PATCH v3 5/5] lib/test_sysctl: support testing of sysctl. boot
+ parameter
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, paulmck <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, maz@kernel.org
-Message-ID: <1964654436.22367.1589558500351.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200515154525.GA23334@willie-the-truck>
-References: <20200505131602.633487962@linutronix.de> <20200505134100.771491291@linutronix.de> <427895535.20271.1589412514423.JavaMail.zimbra@efficios.com> <20200515140438.GA5974@lenoir> <20200515154525.GA23334@willie-the-truck>
-Subject: Re: [patch V4 part 1 27/36] arm64: Prepare arch_nmi_enter() for
- recursion
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+References: <20200427180433.7029-1-vbabka@suse.cz>
+ <20200427180433.7029-6-vbabka@suse.cz>
+ <20200427183913.GH11244@42.do-not-panic.com>
+ <028d1996-9f4c-20c6-fb2a-706baa919dde@suse.cz>
+ <20200511183155.GT11244@42.do-not-panic.com>
+ <d07e1dc9-cc2d-d471-2882-8ec563878fe7@suse.cz>
+ <20200513131532.GO11244@42.do-not-panic.com>
+ <CAB=NE6WGN=TiXE3PL3sAXa+5q9n8a83-vONMv1c1_HLMqnzPew@mail.gmail.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <305af605-1e60-cf84-fada-6ce1ca37c102@suse.cz>
+Date:   Fri, 15 May 2020 18:02:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <CAB=NE6WGN=TiXE3PL3sAXa+5q9n8a83-vONMv1c1_HLMqnzPew@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
-Thread-Topic: arm64: Prepare arch_nmi_enter() for recursion
-Thread-Index: Vn2wlOV3s1hSS0xvlByawy7gmci5vg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On May 15, 2020, at 11:45 AM, Will Deacon will@kernel.org wrote:
-
-> On Fri, May 15, 2020 at 04:04:39PM +0200, Frederic Weisbecker wrote:
->> On Wed, May 13, 2020 at 07:28:34PM -0400, Mathieu Desnoyers wrote:
->> > ----- On May 5, 2020, at 9:16 AM, Thomas Gleixner tglx@linutronix.de wrote:
->> > 
->> > > +#define arch_nmi_enter()						\
->> > [...]							\
->> > > +	___hcr = read_sysreg(hcr_el2);					\
->> > > +	if (!(___hcr & HCR_TGE)) {					\
->> > > +		write_sysreg(___hcr | HCR_TGE, hcr_el2);		\
->> > > +		isb();							\
->> > 
->> > Why is there an isb() above ^ ....
->> > 
->> > > +	}								\
->> > > +	/*								\
->> > [...]
->> > > -#define arch_nmi_exit()								\
->> > [...]
->> > > +	/*								\
->> > > +	 * Make sure ___ctx->cnt release is visible before we		\
->> > > +	 * restore the sysreg. Otherwise a new NMI occurring		\
->> > > +	 * right after write_sysreg() can be fooled and think		\
->> > > +	 * we secured things for it.					\
->> > > +	 */								\
->> > > +	barrier();							\
->> > > +	if (!___ctx->cnt && !(___hcr & HCR_TGE))			\
->> > > +		write_sysreg(___hcr, hcr_el2);				\
->> > 
->> > And not here ?
->> 
->> I have to defer to Will on this detail...
+On 5/13/20 3:17 PM, Luis Chamberlain wrote:
+> On Wed, May 13, 2020 at 7:15 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>> > >
+>> > > You want to:
+>> > >
+>> > >
+>> > > # Kselftest framework requirement - SKIP code is 4.
+>> > > ksft_skip=4
+>> > >
+>> > >>  sysctl_test_0007()
+>> > >>  {
+>> > >>    TARGET="${SYSCTL}/boot_int"
+>> > >> +  if [ ! -f $TARGET ]; then
+>> > >> +          echo "Skipping test for $TARGET as it is not present ..."
+>> > >> +          return 0
+>> > >> +  fi
+>> > >
+>> > > And return 4 instead.
+>> >
+>> > If I return it from the function, nobody will care, AFAICS. If I 'exit
+>> > $ksft_skip', is that correct if it's just a single test out of 7?
+>>
+>> yes please do that.
 > 
-> I think it's because we have to make sure that the register update has
-> taken effect before we can safely run the NMI handler (and so an ISB is
-> needed), but on the return path the exception return back to the interrupted
-> context has an implicit ISB so there's no need for an extra one here.
-> 
-> Make sense?
+> Ah but once we add test_0008() it may be supported.. so I think return
+> would be OK
 
-Sure, as long as instructions executed between write_sysreg() and return
-from exception do not care, which I think should be the case.
+OK
 
-Thanks,
+----8<----
+From 4311b356f177aaa4e21bd3d2a2169e5bd50ab62d Mon Sep 17 00:00:00 2001
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Mon, 11 May 2020 12:59:49 +0200
+Subject: [PATCH] lib/test_sysctl: support testing of sysctl. boot parameter -
+ fix
 
-Mathieu
+Skip the new test if boot_int sysctl is not present, otherwise, per Luis,
+"This would fail if someone uses this script to test an older kernel, and
+the scripts in selftests are supposed to work with older kernels."
 
+Suggested-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ tools/testing/selftests/sysctl/sysctl.sh | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/sysctl/sysctl.sh b/tools/testing/selftests/sysctl/sysctl.sh
+index ef6417b8067b..ab44d3e65986 100755
+--- a/tools/testing/selftests/sysctl/sysctl.sh
++++ b/tools/testing/selftests/sysctl/sysctl.sh
+@@ -756,10 +756,15 @@ sysctl_test_0006()
+ sysctl_test_0007()
+ {
+ 	TARGET="${SYSCTL}/boot_int"
++	if [ ! -f $TARGET ]; then
++		echo "Skipping test for $TARGET as it is not present ..."
++		return $ksft_skip
++	fi
++
+ 	if [ -d $DIR ]; then
+ 		echo "Boot param test only possible sysctl_test is built-in, not module:"
+ 		cat $TEST_DIR/config >&2
+-		return 0
++		return $ksft_skip
+ 	fi
+ 
+ 	echo -n "Testing if $TARGET is set to 1 ..."
+@@ -785,6 +790,7 @@ sysctl_test_0007()
+ 
+ 	echo "Skipping test, expected kernel parameter missing."
+ 	echo "To perform this test, make sure kernel is booted with parameter: sysctl.debug.test_sysctl.boot_int=1"
++	return $ksft_skip
+ }
+ 
+ list_tests()
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.26.2
+
+
