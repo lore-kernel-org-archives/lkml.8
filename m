@@ -2,195 +2,87 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F45C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E35DA206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FFF206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:16:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=juliacomputing-com.20150623.gappssmtp.com header.i=@juliacomputing-com.20150623.gappssmtp.com header.b="jUWlX02L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgEOLPz (ORCPT
+        id S1726217AbgEOLQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:15:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38828 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbgEOLPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:15:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BC8B5ABBD;
-        Fri, 15 May 2020 11:15:52 +0000 (UTC)
-Received: from localhost (webern.olymp [local])
-        by webern.olymp (OpenSMTPD) with ESMTPA id 57d1585e;
-        Fri, 15 May 2020 12:15:48 +0100 (WEST)
-Date:   Fri, 15 May 2020 12:15:48 +0100
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        fstests <fstests@vger.kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
-Message-ID: <20200515111548.GA54598@suse.com>
-References: <20200514111453.GA99187@suse.com>
- <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
- <20200514124845.GA12559@suse.com>
- <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
- <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
+        Fri, 15 May 2020 07:16:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgEOLQM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:16:12 -0400
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CFE8C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 04:16:12 -0700 (PDT)
+Received: by mail-io1-xd2e.google.com with SMTP id o5so2218893iow.8
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 04:16:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=juliacomputing-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=fG9RJAdiQR3KRVbi1EfJRtogMSIdgoMp1F7l88z9wa0=;
+        b=jUWlX02LSQ11rfJ6ZVLTgF5Vcv9IS6E6Er1PynDV1jN57S0PWqVwaItvlozJwFC7wq
+         I2o04DU+ury1VNLTs5zv+Ojcq9fbllDEIydDEIFkKjMIll8OOfhn6joxrSIL+BDPCQNM
+         Tunz7m5SspKk55ADs3bHcuDmxn7r8iTgNBionwhxuI3qrF6lWkOvO52UKwcJ6pmxDm/E
+         JufS8YmlONgtbkXVWAgOEjLwvE71LJhxj6GpRzlROlLnB4+oCHHNZQficBhwSWRMJ5Kb
+         OH7Fymgk27yDeRVLkLBuHkJjEi7pO265hEen8YlNPfnA/mLpjkDAFsv0Tr+BM4s/B1AR
+         h0ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=fG9RJAdiQR3KRVbi1EfJRtogMSIdgoMp1F7l88z9wa0=;
+        b=KUyRk24C/4JpPmtUy60V5aGYxJXI3AewCOoft+QZkdplCXrMWWlo9aEPBhnF7CTida
+         rzB0oVL4LYFkOGc0snI1xY4gVur/NXGp8/j0JqDLuEtb1xFMrvNHc+EVpELVmN70eOzL
+         9zlPRYwVkcwzSGdniTzKby8HIBMQ5k8wNin8aR2aYIJFkF0PGHtY4Ur7PgazYDywUv42
+         2JWJA5dlNyzB5AXNe1WVnhe4ZDJsGuVNcvjKg1q1uaQ24iAWuhBTNS4uOw+3FcRKRtke
+         NuDCWxvfVzVypSgfiAzDVuyfwkXlp4da8Od/errVjL+DT5tEHc6U70ETuUd+QX9uIs/I
+         TiSA==
+X-Gm-Message-State: AOAM531eQwN0I0t8aPERJsA45uGEHXHiwd4fwbAZzFLRfyg1/5zvNdEI
+        AiqqoBcowxQbw12SAWdhz9EWAR8bsS6ZDTIpM6RbeAUXfkE=
+X-Google-Smtp-Source: ABdhPJzR/BBg4yP9FlNiURi9PB43aqjraWAe8Mz6QOFhgtAH6GTFC0g6gOxZ0lmTiMqJgATJ2Mv6yW+UA4qIm8QKf5Q=
+X-Received: by 2002:a6b:6b04:: with SMTP id g4mr2398603ioc.75.1589541371180;
+ Fri, 15 May 2020 04:16:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
+From:   Keno Fischer <keno@juliacomputing.com>
+Date:   Fri, 15 May 2020 07:15:35 -0400
+Message-ID: <CABV8kRyHrDMK4o=UZZZWJMuQNjPA8Xuoj-JFF-Lsx26fBTR0WA@mail.gmail.com>
+Subject: PTRACE_SYSEMU behavior difference on arm64
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 09:42:24AM +0300, Amir Goldstein wrote:
-> +CC: fstests
-> 
-> On Thu, May 14, 2020 at 4:15 PM Jeff Layton <jlayton@kernel.org> wrote:
-> >
-> > On Thu, 2020-05-14 at 13:48 +0100, Luis Henriques wrote:
-> > > On Thu, May 14, 2020 at 08:10:09AM -0400, Jeff Layton wrote:
-> > > > On Thu, 2020-05-14 at 12:14 +0100, Luis Henriques wrote:
-> > > > > Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
-> > > > > a file handle to dentry"), this fixes another corner case with
-> > > > > name_to_handle_at/open_by_handle_at.  The issue has been detected by
-> > > > > xfstest generic/467, when doing:
-> > > > >
-> > > > >  - name_to_handle_at("/cephfs/myfile")
-> > > > >  - open("/cephfs/myfile")
-> > > > >  - unlink("/cephfs/myfile")
-> > > > >  - open_by_handle_at()
-> > > > >
-> > > > > The call to open_by_handle_at should not fail because the file still
-> > > > > exists and we do have a valid handle to it.
-> > > > >
-> > > > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> > > > > ---
-> > > > >  fs/ceph/export.c | 13 +++++++++++--
-> > > > >  1 file changed, 11 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/fs/ceph/export.c b/fs/ceph/export.c
-> > > > > index 79dc06881e78..8556df9d94d0 100644
-> > > > > --- a/fs/ceph/export.c
-> > > > > +++ b/fs/ceph/export.c
-> > > > > @@ -171,12 +171,21 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
-> > > > >
-> > > > >  static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
-> > > > >  {
-> > > > > + struct ceph_inode_info *ci;
-> > > > >   struct inode *inode = __lookup_inode(sb, ino);
-> > > > > +
-> > > > >   if (IS_ERR(inode))
-> > > > >           return ERR_CAST(inode);
-> > > > >   if (inode->i_nlink == 0) {
-> > > > > -         iput(inode);
-> > > > > -         return ERR_PTR(-ESTALE);
-> > > > > +         bool is_open;
-> > > > > +         ci = ceph_inode(inode);
-> > > > > +         spin_lock(&ci->i_ceph_lock);
-> > > > > +         is_open = __ceph_is_file_opened(ci);
-> > > > > +         spin_unlock(&ci->i_ceph_lock);
-> > > > > +         if (!is_open) {
-> > > > > +                 iput(inode);
-> > > > > +                 return ERR_PTR(-ESTALE);
-> > > > > +         }
-> > > > >   }
-> > > > >   return d_obtain_alias(inode);
-> > > > >  }
-> > > >
-> > > > Thanks Luis. Out of curiousity, is there any reason we shouldn't ignore
-> > > > the i_nlink value here? Does anything obviously break if we do?
-> > >
-> > > Yes, the scenario described in commit 03f219041fdb is still valid, which
-> > > is basically the same but without the extra open(2):
-> > >
-> > >   - name_to_handle_at("/cephfs/myfile")
-> > >   - unlink("/cephfs/myfile")
-> > >   - open_by_handle_at()
-> > >
-> >
-> > Ok, I guess we end up doing some delayed cleanup, and that allows the
-> > inode to be found in that situation.
-> >
-> > > The open_by_handle_at man page isn't really clear about these 2 scenarios,
-> > > but generic/426 will fail if -ESTALE isn't returned.  Want me to add a
-> > > comment to the code, describing these 2 scenarios?
-> > >
-> >
-> > (cc'ing Amir since he added this test)
-> >
-> > I don't think there is any hard requirement that open_by_handle_at
-> > should fail in that situation. It generally does for most filesystems
-> > due to the way they handle cl794798fa xfsqa: test open_by_handle() on unlinked and freed inode clusters
-> eaning up unlinked inodes, but I don't
-> > think it's technically illegal to allow the inode to still be found. If
-> > the caller cares about whether it has been unlinked it can always test
-> > i_nlink itself.
-> >
-> > Amir, is this required for some reason that I'm not aware of?
-> 
-> Hi Jeff,
-> 
-> The origin of this test is in fstests commit:
-> 794798fa xfsqa: test open_by_handle() on unlinked and freed inode clusters
-> 
-> It was introduced to catch an xfs bug, so this behavior is the expectation
-> of xfs filesystem, but note that it is not a general expectation to fail
-> open_by_handle() after unlink(), it is an expectation to fail open_by_handle()
-> after unlink() + sync() + drop_caches.
+The behavior of PTRACE_SYSEMU on arm64
+appears to differ substantially from that of x86 and powerpc
+(the other two architectures on which this feature is implemented).
+In particular, after PTRACE_SYSEMU the syscall will always
+be skipped on x86 and powerpc, but executed on arm64 unless
+the syscall-entry stop was again continued using PTRACE_SYSEMU.
+The skipping behavior is also documented in the manpage,
+so I suspect this may just be a bug (the skipping behavior
+makes sense to me and is what I would expect).
+The reason this happens is that `syscall_trace_enter`
+re-checks TIF_SYSCALL_EMU after the ptrace stop, but at that
+point it may have already been superseded by a new ptrace
+request. x86 and power save the original value of the flag,
+rather than acting on the new value. I can submit a patch to
+fix this, but wanted to check first whether this was intentional.
+If it is, I can fix the man page instead.
 
-Yes, sorry I should have mentioned the sync+drop_caches in the
-description.
-
-> I have later converted the test to generic, because I needed to check the
-> same expectation for overlayfs use case, which is:
-> The original inode is always there (in lower layer), unlink creates a whiteout
-> mark and open_by_handle should treat that as ESTALE, otherwise the
-> unlinked files would be accessible to nfs clients forever.
-> 
-> In overlayfs, we handle the open file case by returning a dentry only
-> in case the inode with deletion mark in question is already in inode cache,
-> but we take care not to populate inode cache with the check.
-> It is easier, because we do not need to get inode into cache for checking
-> the delete marker.
-> 
-> Maybe you could instead check in __fh_to_dentry():
-> 
->     if (inode->i_nlink == 0 && atomic_read(&inode->i_count) == 1)) {
->         iput(inode);
->         return ERR_PTR(-ESTALE);
->     }
-> 
-> The above is untested, so I don't know if it's enough to pass generic/426.
-
-Yes, I can confirm that this also fixes the issue -- both tests pass.
-__ceph_is_file_opened() uses some internal counters per inode, incremented
-each time a file is open in a specific mode.  The problem is that these
-counters require some extra locking (maybe they should be atomic_t?), so
-you're suggestion is probably better.
-
-> Note that generic/467 also checks the same behavior for rmdir().
-
-Yeah, but the only test-case failing with cephfs is the one described
-above (i.e. "open_by_handle -dkr ...").
-
-> If you decide that ceph does not need to comply to this behavior,
-> then we probably need to whitelist/blocklist the filesystems that
-> want to test this behavior, which will be a shame.
-
-Unless Jeff has any objection, I'm happy sending v2, simplifying the patch
-to use your simpler solution (and mentioning sync+drop_caches in the
-commit message).
-
-Cheers,
---
-Luis
+Keno
