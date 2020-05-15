@@ -2,142 +2,66 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11ACBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8FFF20671
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F45A20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgEOGUX (ORCPT
+        id S1726671AbgEOGVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:20:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726205AbgEOGUW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:20:22 -0400
-X-Greylist: delayed 368 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 14 May 2020 23:20:21 PDT
-Received: from forward100o.mail.yandex.net (forward100o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::600])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA013C05BD09;
-        Thu, 14 May 2020 23:20:21 -0700 (PDT)
-Received: from mxback6g.mail.yandex.net (mxback6g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:167])
-        by forward100o.mail.yandex.net (Yandex) with ESMTP id 22C324AC0FFB;
-        Fri, 15 May 2020 09:14:06 +0300 (MSK)
-Received: from sas8-b61c542d7279.qloud-c.yandex.net (sas8-b61c542d7279.qloud-c.yandex.net [2a02:6b8:c1b:2912:0:640:b61c:542d])
-        by mxback6g.mail.yandex.net (mxback/Yandex) with ESMTP id bA4VsG7Diq-E5l0N6Ia;
-        Fri, 15 May 2020 09:14:06 +0300
-Received: by sas8-b61c542d7279.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id S7NK2Jjz50-E3TenMqh;
-        Fri, 15 May 2020 09:14:04 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   free5lot <mail@free5lot.com>
-Subject: [PATCH 5.7-rc5] HID: apple: Swap the Fn and Left Control keys on
- Apple keyboards
-Message-ID: <27588684-a25a-83fd-7204-df3d6c20aac1@free5lot.com>
-Date:   Fri, 15 May 2020 13:14:00 +0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Fri, 15 May 2020 02:21:24 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:34332 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726252AbgEOGVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 02:21:24 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jZTiL-0007Ua-GG; Fri, 15 May 2020 16:20:58 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 15 May 2020 16:20:57 +1000
+Date:   Fri, 15 May 2020 16:20:57 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        David Sterba <dsterba@suse.com>,
+        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
+        Eric Biggers <ebiggers@google.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] crypto: blake2b - Fix clang optimization for ARMv7-M
+Message-ID: <20200515062057.GA22330@gondor.apana.org.au>
+References: <20200505135402.29356-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: ru
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505135402.29356-1-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows users to swap the Fn and left Control keys on all Apple
-keyboards: internal (e.g. Macbooks) and external (both wired and wireless).
-The patch adds a new hid-apple module param: swap_fn_leftctrl (off by default).
+On Tue, May 05, 2020 at 03:53:45PM +0200, Arnd Bergmann wrote:
+> When building for ARMv7-M, clang-9 or higher tries to unroll some loops,
+> which ends up confusing the register allocator to the point of generating
+> rather bad code and using more than the warning limit for stack frames:
+> 
+> warning: stack frame size of 1200 bytes in function 'blake2b_compress' [-Wframe-larger-than=]
+> 
+> Forcing it to not unroll the final loop avoids this problem.
+> 
+> Fixes: 91d689337fe8 ("crypto: blake2b - add blake2b generic implementation")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  crypto/blake2b_generic.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Signed-off-by: Zakhar Semenov <mail@free5lot.com>
----
-This patch was created to eliminate the inconvenience of having an unusual
-order of 4 left-bottom keys on Apple keyboards for GNU+Linux users.
-Now it's possible to swap the Fn and left Control keys on Macbooks and
-external Apple keyboards and have the same experience as on usual PC layout.
-
-The patch has been heavily tested for about 5 years by community at:
-https://github.com/free5lot/hid-apple-patched
-The patch is small and straightforward. The modified version of hid-apple
-is currently mentioned in wiki-documentation of several major GNU/Linux
-distributions (e.g. Ubuntu, Arch, openSUSE).
-
-
---- hid-apple.c.orig	2020-05-12 11:06:26.000000000 +0300
-+++ hid-apple.c	2020-05-15 20:00:00.000000000 +0300
-@@ -51,6 +51,12 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the
-  		"(For people who want to keep Windows PC keyboard muscle memory. "
-  		"[0] = as-is, Mac layout. 1 = swapped, Windows layout.)");
-
-+static unsigned int swap_fn_leftctrl;
-+module_param(swap_fn_leftctrl, uint, 0644);
-+MODULE_PARM_DESC(swap_fn_leftctrl, "Swap the Fn and left Control keys. "
-+		"(For people who want to keep PC keyboard muscle memory. "
-+		"[0] = as-is, Mac layout, 1 = swapped, PC layout)");
-+
-  struct apple_sc {
-  	unsigned long quirks;
-  	unsigned int fn_on;
-@@ -162,6 +168,11 @@ static const struct apple_key_translatio
-  	{ }
-  };
-
-+static const struct apple_key_translation swapped_fn_leftctrl_keys[] = {
-+	{ KEY_FN, KEY_LEFTCTRL },
-+	{ }
-+};
-+
-  static const struct apple_key_translation *apple_find_translation(
-  		const struct apple_key_translation *table, u16 from)
-  {
-@@ -183,9 +194,11 @@ static int hidinput_apple_event(struct h
-  	bool do_translate;
-  	u16 code = 0;
-
--	if (usage->code == KEY_FN) {
-+	u16 fn_keycode = (swap_fn_leftctrl) ? (KEY_LEFTCTRL) : (KEY_FN);
-+
-+	if (usage->code == fn_keycode) {
-  		asc->fn_on = !!value;
--		input_event(input, usage->type, usage->code, value);
-+		input_event(input, usage->type, KEY_FN, value);
-  		return 1;
-  	}
-
-@@ -270,6 +283,14 @@ static int hidinput_apple_event(struct h
-  		}
-  	}
-
-+	if (swap_fn_leftctrl) {
-+		trans = apple_find_translation(swapped_fn_leftctrl_keys, usage->code);
-+		if (trans) {
-+			input_event(input, usage->type, trans->to, value);
-+			return 1;
-+		}
-+	}
-+
-  	return 0;
-  }
-
-@@ -333,6 +354,11 @@ static void apple_setup_input(struct inp
-
-  	for (trans = apple_iso_keyboard; trans->from; trans++)
-  		set_bit(trans->to, input->keybit);
-+
-+	if (swap_fn_leftctrl) {
-+		for (trans = swapped_fn_leftctrl_keys; trans->from; trans++)
-+			set_bit(trans->to, input->keybit);
-+	}
-  }
-
-  static int apple_input_mapping(struct hid_device *hdev, struct hid_input *hi,
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
