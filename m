@@ -2,104 +2,97 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70313C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33376C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44A4B206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 06:59:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589525958;
-	bh=9cSL3vu771NfN0pfXk55qxsvH0Q6psTuls0f4Kl3nyk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DgR+VukS4I7+HVIz/9EE1Ztg81dSR2djeofrUPvmddIwRpRQzXzz9AUeNGSQdNoZp
-	 Bzy13hUbWbf1qwXUtB1V6JPjIVgt/zxv1dndxK2wglG+XlGCSCsVhCCaF7tzfacFR7
-	 SKv0qDGayZ+014rI5Ox5xPpO0kqeZe7iPDg0/m5o=
+	by mail.kernel.org (Postfix) with ESMTP id 14056206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:01:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgEOG7R (ORCPT
+        id S1726622AbgEOHBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 02:59:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33464 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 03:01:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42320 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726295AbgEOG7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 02:59:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22A5E206F1;
-        Fri, 15 May 2020 06:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589525956;
-        bh=9cSL3vu771NfN0pfXk55qxsvH0Q6psTuls0f4Kl3nyk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h0nJ5i9FRXXLDiRk9PQvQz2HX7KTJbOK7l4R/yzu2bL+RY5VgFcsP8jUrV62+sOh+
-         vBuBclR8xIDNt0FUEpOppB7Dkbxpze2UmF0WLmHw2xD1W2AmMAupw7cWrUXDRgqMoL
-         thWwyXkaKoYjxikJ9pWY2j4/71Oe39VxpmrWNRh0=
-Date:   Fri, 15 May 2020 08:59:14 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Christian Gromm <christian.gromm@microchip.com>,
-        devel@driverdev.osuosl.org
-Subject: Re: [PATCH AUTOSEL 5.6 16/62] most: core: use function
- subsys_initcall()
-Message-ID: <20200515065914.GB1006524@kroah.com>
-References: <20200514185147.19716-1-sashal@kernel.org>
- <20200514185147.19716-16-sashal@kernel.org>
+        id S1726295AbgEOHBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 03:01:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 33FC0ACFE;
+        Fri, 15 May 2020 07:01:16 +0000 (UTC)
+Subject: Re: [PATCH 1/1] xen/manage: enable C_A_D to force reboot
+To:     Dongli Zhang <dongli.zhang@oracle.com>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Cc:     boris.ostrovsky@oracle.com, sstabellini@kernel.org,
+        joe.jin@oracle.com, rose.wang@oracle.com
+References: <20200513233410.18120-1-dongli.zhang@oracle.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <e604a96d-087e-573b-c3bf-fc53005f8994@suse.com>
+Date:   Fri, 15 May 2020 09:01:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514185147.19716-16-sashal@kernel.org>
+In-Reply-To: <20200513233410.18120-1-dongli.zhang@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 02:51:01PM -0400, Sasha Levin wrote:
-> From: Christian Gromm <christian.gromm@microchip.com>
+On 14.05.20 01:34, Dongli Zhang wrote:
+> The systemd may be configured to mask ctrl-alt-del via "systemctl mask
+> ctrl-alt-del.target". As a result, the pv reboot would not work as signal
+> is ignored.
 > 
-> [ Upstream commit 5e56bc06e18dfc8a66180fa369384b36e2ab621a ]
+> This patch always enables C_A_D before the call of ctrl_alt_del() in order
+> to force the reboot.
+
+Hmm, I'm not sure this is a good idea.
+
+Suppose a guest admin is doing a critical update and wants to avoid a
+sudden reboot in between. By masking the reboot this would be possible,
+with your patch it isn't.
+
+In case a reboot is really mandatory it would still be possible to just
+kill the guest.
+
+I'm not completely opposed to the patch, but I think this is a change
+which should not be done easily.
+
+
+Juergen
+
 > 
-> This patch replaces function module_init() with subsys_initcall().
-> It is needed to ensure that the core module of the driver is
-> initialized before a component tries to register with the core. This
-> leads to a NULL pointer dereference if the driver is configured as
-> in-tree.
-> 
-> Signed-off-by: Christian Gromm <christian.gromm@microchip.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/r/1587741394-22021-1-git-send-email-christian.gromm@microchip.com
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Reported-by: Rose Wang <rose.wang@oracle.com>
+> Cc: Joe Jin <joe.jin@oracle.com>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
 > ---
->  drivers/staging/most/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   drivers/xen/manage.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
 > 
-> diff --git a/drivers/staging/most/core.c b/drivers/staging/most/core.c
-> index 0c4ae6920d77d..409c48c597f2f 100644
-> --- a/drivers/staging/most/core.c
-> +++ b/drivers/staging/most/core.c
-> @@ -1484,7 +1484,7 @@ static void __exit most_exit(void)
->  	ida_destroy(&mdev_id);
->  }
->  
-> -module_init(most_init);
-> +subsys_initcall(most_init);
->  module_exit(most_exit);
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("Christian Gromm <christian.gromm@microchip.com>");
+> diff --git a/drivers/xen/manage.c b/drivers/xen/manage.c
+> index cd046684e0d1..3190d0ecb52e 100644
+> --- a/drivers/xen/manage.c
+> +++ b/drivers/xen/manage.c
+> @@ -204,6 +204,13 @@ static void do_poweroff(void)
+>   static void do_reboot(void)
+>   {
+>   	shutting_down = SHUTDOWN_POWEROFF; /* ? */
+> +	/*
+> +	 * The systemd may be configured to mask ctrl-alt-del via
+> +	 * "systemctl mask ctrl-alt-del.target". As a result, the pv reboot
+> +	 * would not work. To enable C_A_D would force the reboot.
+> +	 */
+> +	C_A_D = 1;
+> +
+>   	ctrl_alt_del();
+>   }
+>   
+> 
 
-This is not needed in 5.6 and older kernels due to the most/core.c code
-being in staging for these releases.  It only became an issue when it
-moved out of staging.
-
-So please drop this from here and any older trees you might have
-selected it for.
-
-thanks,
-
-greg k-h
