@@ -2,106 +2,86 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B95C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46491206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63567206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:57:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="n+0DB1yD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bzUzwrUj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgEOP5C (ORCPT
+        id S1726786AbgEOP5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:57:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48214 "EHLO
+        Fri, 15 May 2020 11:57:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726248AbgEOP5A (ORCPT
+        by vger.kernel.org with ESMTP id S1726283AbgEOP5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:57:00 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E5AC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:57:00 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id g12so3207135wmh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:57:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=krFaMC2lrT1K+Syr+4jZzZaXrSNEEbWrNktPCbVpWWo=;
-        b=n+0DB1yDdrPo3rONQX55pP3UNCh19cfqvwxzJbGBzQBQG4oSwLqaKdYgFVhrJS0ojP
-         nK1Ls+rQumWp1kuyW9ghf3tPuMvN5sVKeZryhy5ksdnf6e1DsoUm863fY9yYk7TNZfBm
-         tbwwdTsazS4dOvLQQ/oMBOB+6rF3mFkRn7w8m1pD+kuN+QegIsc4J2MsBMFbj09QyAzV
-         MZ0jcChuPjMm5+5nKSWN233VzdEY36sl9mgqAEjUeoyjr7EL1nAk88DWwI1gqgDICwNo
-         c7yvxiREo4o0ZlZ8dqzzytIkyJqWLpOdQjiSgPVnYbNlzujvbV29TMisrHuENn/Na2uy
-         I4Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=krFaMC2lrT1K+Syr+4jZzZaXrSNEEbWrNktPCbVpWWo=;
-        b=I/bPzCrgX17eyvK1yrloYZIwu1RAjZsDh8cbotYyO4L9P6N6H6jeXhWWpfFVYPajwU
-         5lbLUKc413uClCmEav/9IhT/MgCmS93XxzGLwo1pXLqbEUZ6LDwcCTYI51+xapC6Kbho
-         SQv+ouiDN5fn+5KsKMfaj6NzEwBY025LABmgdEOSOt5yJp3ZnEFVDQqst1rB0vSd7gcR
-         ZYbZPidm5gJ0x5HLy40CX+1tfRdIveBltfMHpKGTaFPRfKaH40b1iLjAKPNQBnXDX59w
-         7rAFgOfNyKWAilpiuEBKNj4R1KCRNGE91EwSJOOjNAtBt6joWx0o7oGi1R0S2fcdY+GG
-         NhJA==
-X-Gm-Message-State: AOAM532Fh2Ami1/VR6rLAc+jCRmdvU00UFPxlZpyU/pf9p9KTidZjUZF
-        ECqQHD/OsPD3wp8eWLiaQ0hrWQ==
-X-Google-Smtp-Source: ABdhPJzo3onjocej9ABk9/r+VRRJsPU2Cpyk/e6mUFDGMEYA0ncCB8AXxGth8wlFlL1R3sLC2BicBA==
-X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr4610992wmk.168.1589558218375;
-        Fri, 15 May 2020 08:56:58 -0700 (PDT)
-Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id w15sm4006033wmi.35.2020.05.15.08.56.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 08:56:57 -0700 (PDT)
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-To:     netdev@vger.kernel.org
-Cc:     Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Fri, 15 May 2020 11:57:48 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC002C061A0C;
+        Fri, 15 May 2020 08:57:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=vg97Zc+yBbH72pdkZwDBNGODCPrdrEdYXXBAaIV2Oiw=; b=bzUzwrUjBws0tIpnnw6gyN9V0/
+        DEHrV9rVluyQUK+FkkQ1eobbrpCgDX5J1ZpBZlnmP/MjvMAlP952p1uy/0WAvi0Md/Hfiw3Ls4zih
+        WXY29L9IuNuFXLm1+of43Qf/L+4asIjGHEWNGUXw9ez8PnkiC7FOy9huhUcn0GCg/yrl0gOON5YFU
+        QqMg4LZ1RUNsWnTsSrkQgsKr5vKbLOqDS8YkkJ0O1BTSqd8RB5uK8jM7DtbTSsrmlMVLr8EGdpbRc
+        Z6H+F7nNTNM/Ng9QVTpmfc+4lxFZxc4lLU2pDnH5voOjqtDjqjozbkFFhHNjAJ2s0ocUy7a2ljjOj
+        g+gi0BIw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZciI-0006zr-4p; Fri, 15 May 2020 15:57:30 +0000
+Date:   Fri, 15 May 2020 08:57:30 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Nate Karstens <nate.karstens@garmin.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-        mptcp@lists.01.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net] selftests:mptcp:pm: rm the right tmp file
-Date:   Fri, 15 May 2020 17:54:41 +0200
-Message-Id: <20200515155442.1910397-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.25.1
+        Eric Dumazet <edumazet@google.com>,
+        David Laight <David.Laight@aculab.com>,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-parisc@vger.kernel.org,
+        sparclinux@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Changli Gao <xiaosuo@gmail.com>,
+        a.josey@opengroup.org
+Subject: Re: [PATCH v2] Implement close-on-fork
+Message-ID: <20200515155730.GF16070@bombadil.infradead.org>
+References: <20200515152321.9280-1-nate.karstens@garmin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515152321.9280-1-nate.karstens@garmin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"$err" is a variable pointing to a temp file. "$out" is not: only used
-as a local variable in "check()" and representing the output of a
-command line.
+On Fri, May 15, 2020 at 10:23:17AM -0500, Nate Karstens wrote:
+> Series of 4 patches to implement close-on-fork. Tests have been
+> published to https://github.com/nkarstens/ltp/tree/close-on-fork
+> and cover close-on-fork functionality in the following syscalls:
 
-Fixes: eedbc685321b (selftests: add PM netlink functional tests)
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- tools/testing/selftests/net/mptcp/pm_netlink.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[...]
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 9172746b6cf0..15f4f46ca3a9 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -30,7 +30,7 @@ ret=0
- 
- cleanup()
- {
--	rm -f $out
-+	rm -f $err
- 	ip netns del $ns1
- }
- 
--- 
-2.25.1
+> This functionality was approved by the Austin Common Standards
+> Revision Group for inclusion in the next revision of the POSIX
+> standard (see issue 1318 in the Austin Group Defect Tracker).
 
+NAK to this patch series, and the entire concept.
+
+Is there a way to persuade POSIX that they made a bad decision by
+standardising this mess?
