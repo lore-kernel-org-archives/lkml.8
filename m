@@ -2,128 +2,86 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 470E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2593206DC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF10D204EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 02:33:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZSiksqD7"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="apxtGyDt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgEOCdK (ORCPT
+        id S1727944AbgEOCdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 22:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728046AbgEOCdK (ORCPT
+        Thu, 14 May 2020 22:33:52 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17762 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726176AbgEOCdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 22:33:10 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8980C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 19:33:08 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id g7so231563uap.7
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 19:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8VpAp2g9upL2rOYKmKkLTm26YtCXwPgkFjRfp1ZdcwU=;
-        b=ZSiksqD70itmOtA5/mpFhEaFKroOkzqNz3C1bV0CEeEaMfImp3frbdNt0Xmo/fLo86
-         EaBKCnfB2TMo6CxQPvx7x/TXnN5x0PQFqpDO4bQZVe1Yv90UVWYDCPOmTUsM84lslDxW
-         5bXAnGx7C+3/YYnVyEp/BXt3BUGPBxircdhSI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8VpAp2g9upL2rOYKmKkLTm26YtCXwPgkFjRfp1ZdcwU=;
-        b=Uxx8Ar4YDlaXlqh/kRuRlpdkrTci9oKYek5OhFfmj8kl6HU5yLA7O/au7nuarg+Y5n
-         Bn4CB7y4mnwKvZfZkTnPsLUDBGYbhokcliBo0V+5mFJ4S5t5eeaLlRX7PdHFUIdctviL
-         gunQtC9BZwOG+vHTm/JGLo3dlXvzECEjOaXseVZ6uEOF9jb2OOEcZP5HCNoVus0ckntF
-         4eRXEIm7lKBLCVjkP9E8R59zAIH912wGD6uou161rusK+kS7ALEinlX0skP1SjbEANwc
-         Fa+j+KoyWTY94S4zMUeBL1BzKYw561bRkLQ/SkMSvthS2Oo/GFzFo+Z1JnbnYEu8drS0
-         xIGg==
-X-Gm-Message-State: AOAM531DlM5kIFJpoQw1UOWdG9ob/AqzTunydP3SgISu5m4a0d/ZzzFD
-        KHIbbprXovGQW5+g4iMm5J/Yr1TP9HE=
-X-Google-Smtp-Source: ABdhPJzixWefnTKx+zcUL7VnxB5is4BCzecOQWjo71U2IL5lRztzygspC9KayCGdGyojxwcqUWzEKg==
-X-Received: by 2002:ab0:705:: with SMTP id h5mr1306266uah.74.1589509987699;
-        Thu, 14 May 2020 19:33:07 -0700 (PDT)
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
-        by smtp.gmail.com with ESMTPSA id a2sm219660uae.10.2020.05.14.19.33.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 19:33:06 -0700 (PDT)
-Received: by mail-vs1-f49.google.com with SMTP id z1so312933vsn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 19:33:06 -0700 (PDT)
-X-Received: by 2002:a67:f5d6:: with SMTP id t22mr996043vso.73.1589509985541;
- Thu, 14 May 2020 19:33:05 -0700 (PDT)
+        Thu, 14 May 2020 22:33:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1589510015; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=XrNbjK2JzDL+oW9cOJ6TVXSX1BBA6clxLNBleupsCQY0k/jX+LQ77zeaNvBg/9jGpsjqqCCLO8sKBd5m49S0BvNVy07RF2TYzT6JEmMTH3jHTFL0+Ja/AEqgQKlecRFlM+wwTSqEKjaXKDvjKiLjslT3lGQcEcCuh2g9m7RHNuM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1589510015; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=0dz0tsk8IyniG3Mpw42gBiYzPUtONnY4I4J1LK/ahDI=; 
+        b=OyBPeGMLzZZ39SVoWCwgN+SI/SapdSwRJl6T5cDhInbUOg5EhNOrnenqxO+ueciQMNengPPOLokA3GT6t9oeXsFu3133/w8vehM9Txq/ckls797hFu8q/LtsLHuHV1GKI6nYDL9x1mjMNNJKY8034NgEr/5ND09cBiWhNkVGucU=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589510015;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=0dz0tsk8IyniG3Mpw42gBiYzPUtONnY4I4J1LK/ahDI=;
+        b=apxtGyDt4sOno14UVkRhMgW0f0yaBqLCNuJfE2Tf+R1+PzupJKEJ6rPdyjMG6fUD
+        uncU0+Xmy2jHgF6h89f4sAig+aBJg6uRv86+IqTgktelO3q3iO/TNlp5YzJdCXPSceJ
+        9KFkOUnJ66eQl8vp9GUl+y22RDQef5Qz/97ZMl3A=
+Received: from [127.0.0.1] (101.84.172.108 [101.84.172.108]) by mx.zoho.com.cn
+        with SMTPS id 1589510013492869.4167107598075; Fri, 15 May 2020 10:33:33 +0800 (CST)
+Date:   Fri, 15 May 2020 10:33:29 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>
+CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH 1/2] MIPS: Loongson: Fix fatal error during GPU init
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <1589508901-18077-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1589508901-18077-1-git-send-email-yangtiezhu@loongson.cn>
+Message-ID: <ECE71DFC-57D3-4132-BB85-609448B29238@flygoat.com>
 MIME-Version: 1.0
-References: <20200504104917.v6.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
- <20200504104917.v6.3.I2d44fc0053d019f239527a4e5829416714b7e299@changeid>
-In-Reply-To: <20200504104917.v6.3.I2d44fc0053d019f239527a4e5829416714b7e299@changeid>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 14 May 2020 19:32:53 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WpYm=1gUW2Tu4YMwDvn8r7_4xYQD2_bQFU=Po76xyowA@mail.gmail.com>
-Message-ID: <CAD=FV=WpYm=1gUW2Tu4YMwDvn8r7_4xYQD2_bQFU=Po76xyowA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/5] kernel/cpu_pm: Fix uninitted local in cpu_pm
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Colin Cross <ccross@android.com>,
-        Kevin Hilman <khilman@ti.com>,
-        Santosh Shilimkar <santosh.shilimkar@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Mon, May 4, 2020 at 10:50 AM Douglas Anderson <dianders@chromium.org> wrote:
+
+=E4=BA=8E 2020=E5=B9=B45=E6=9C=8815=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
+0:15:00, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
+>When ATI Radeon graphics card has been compiled directly into the kernel
+>instead of as a module, we should make sure the firmware for the model
+>(check available ones in /lib/firmware/radeon) is built-in to the kernel
+>as well, otherwise there exists the following fatal error during GPU init=
+,
+>change CONFIG_DRM_RADEON=3Dy to CONFIG_DRM_RADEON=3Dm to fix it=2E
 >
-> cpu_pm_notify() is basically a wrapper of notifier_call_chain().
-> notifier_call_chain() doesn't initialize *nr_calls to 0 before it
-> starts incrementing it--presumably it's up to the callers to do this.
->
-> Unfortunately the callers of cpu_pm_notify() don't init *nr_calls.
-> This potentially means you could get too many or two few calls to
-> CPU_PM_ENTER_FAILED or CPU_CLUSTER_PM_ENTER_FAILED depending on the
-> luck of the stack.
->
-> Let's fix this.
->
-> Fixes: ab10023e0088 ("cpu_pm: Add cpu power management notifiers")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> This seems to be an ownerless file.  I'm hoping this patch can just go
-> through the Qualcomm tree.  It would be nice if we could get an Ack
-> from Rafael or Greg KH though.
 
-Greg / Rafael: any thoughts on this patch?  Care to give it an Ack so
-it could go through the Qualcomm tree?
+The commit message looks shocking=2E
 
-Andrew: I think you are the adopter or orphan patches, usually.  If
-nobody else will take this patch, will you consider taking it into
-your tree?  It should be a super straightforward bugfix.  I'm happy to
-re-post it CCing you if need be.
+You'd better reword it as "MIPS: Loongson64: Mark GPU driver as module in =
+Kconfig"
 
-Thanks!
-
--Doug
+Thanks=2E
+--=20
+Jiaxun Yang
