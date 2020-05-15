@@ -2,132 +2,278 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C9FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA65C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 156EB2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:10:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="VqdlBCKX"
+	by mail.kernel.org (Postfix) with ESMTP id C15B920727
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 19:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589570045;
+	bh=apOLy+VtRP3m7NTRElJcV0sOBecelbtDF7OGamnhFZI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=wDWAi+2jVigm68C1GyYXXjwzxRQX4tbPKp3T/opdBxRQrf4hUnntV5PDPsF2YWvuE
+	 wAN5BMwedeVK4p3I1vCMjZ9Z5s5T1FFQ0PtA/bh0I46+sNEakU23dxziN8+r5uvECI
+	 zShzN2UjmsfGmY/ov84aFQTXsSlDtTUW/yPw736g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgEOTKa (ORCPT
+        id S1726261AbgEOTOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 15:10:30 -0400
-Received: from sonic309-27.consmr.mail.ne1.yahoo.com ([66.163.184.153]:37168
-        "EHLO sonic309-27.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726197AbgEOTK3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 15:10:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1589569828; bh=WPsHLe9g5yHs563Uuj+CpTBWcNmODYTyuyUfmE44vqo=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=VqdlBCKXlvcb6xUcWJSFqf3FFWpN4NUWuwnJl4pWDsaSAKlnMdpzPM+C/2DtZuqByMpjqBzkuUg1zwdaKmLffOiretaPppeB8lxsaCjY44tkIkDrmKLVbGzFLfZl8e+b3euLFz464L6jsiAN9fUhk/Vn/xOWE5GIyS9ppHnFIpjNnmIhXyEpUY3Yq4+8aiY2YqjyRX6LnWEZrjWIXvBm53kXyRfNSGfOiZj+WIL9mmw8wUTmSQe8fbuY7tAtZ8ZjVTe3WMG3Tc/BqqwSuOTjnYPAfAnEVsWnGt1B1G7bJWe/KMV0NsxIPcxHgB8TXyM2DVxGPbeUM0jSVKjz6NMjvw==
-X-YMail-OSG: Ywx85RgVM1lIzTeEuoPABPfKk3YhXfCGhBMkSBuN3H_t9anvp2uuaaDjMyJ2Vxn
- aYJSYaqOJyJv6j2icPGVcH8z.6.d6NhOztTFl4f5.2WSZgUufHXhlVDpyBRfr2hPFqLlpBNSgCaw
- ZJNARGa_jtcI3BGxI.nyPV5yMUuUFijwbh0RT_tDi7c4sQk3qAs4weSkNDCbNCcF9vemjHdm1i_g
- L68uKp1mzurjVw1jviH22m_JYgT0HHGQeV0dhRoT6EZMRvSErERGm.5XBMYylSUzBC1f_hPL7sOy
- 8MQVsdazxZkfiAYDk2ju7EPK2XMZ7N3NWUn0t4vLwdQ7V0r7pG8g.tzU6kwbfPKHLwULA2MH_5p9
- OAer8aC91HU5OSwCK1yZ0eoggu.fo6s6U9ZFjOjuTJEpIDztn..qjVFUVSG4J8hPtHU64L_0uS8m
- piQ0Ady6caKsDPZV2xgf64alIeUuBVV8cnUJXpeeZqXRlSJfzHlW.yGLKLbtrMRtGcqpBTlWOEqG
- 8eXM9dktUMWfJdhUHrBGIsJexukxiQT4NaK9XNVIPWTBs1jzQ0G2Ko2xGO.2inKwn6JR7L4ITaNy
- GN8R5yGinr339vwZwq2yJe6rTifm9sJqqa1VVIFauuBtSibq0a4.1j6dDS44Tr8LrDNWN2uJZltF
- SMQf7B7MLqPQDnxOt_4q9cZI8OJ1Mzxb7qM2XDHVy5v74kCE.qkE2rzYCFoQVCWGqlYESySeaxSq
- 15xHZpnd2VrwG88VwMclS5n7HWSW9IySrZJLr01zqbr1e2AXv9OLzIcHZtERsJIMs_ydISba.iMl
- MqVY.YN9_fcqSX5aJOTVuL3FKiol2wrMYdVYM6ogk_8DIFmZjw.X7Dc6t9nMAnO_y2AX0SBx1UKl
- .W6X23MSFhjPdJedmqU3NDWZotsV6GcepeCj10ZVhMx5yaekigv5Zwv4VMkQFooS5CEZdTjnlv6j
- dLpjBidhPSaHj8oT6ii8fKc_jFj0n2lx.yb0KqnXbsUWUb4njII8fb1eC1mlJpBv1ciTQgJDAvDR
- mncYuGaZqZQsfvvUt6ZghM.LU9KfTBhXPmg5VeHXELW44dwvJcMRg76IHtRWd3WTgrth1nWJJHxK
- ZdU8GWwUfSPuqnZTjfBtksnCWpeuMdyxHmloCPDGtTUKm9Y0fFJXgg.2dpQq4EEpCp_4Rs.252eB
- KusnFB0tqgFFjiXupmkaLPR0McDswWIK_6JG2MmZQ_Mm4yD0K3TSRh1cxKZLZCAWc4xFjorhuW6k
- EMHtZ7wNvYJ1LiHBo1VGWp.R1KEN0BZRhrCFdSIMZS.b9is3Bd52WMOHx2k54qf9P8P.QhmXcLGj
- hutvrNMsA9AEPrAQOuWAmk2MamZWCQPdSNPQ4HdiINQaQ80pBLYAOTkNzV7XVnoK0VwpuEciWHXy
- IBN3IZZT74vs6hFbkk3XMr_psxr2h
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Fri, 15 May 2020 19:10:28 +0000
-Received: by smtp421.mail.ne1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 066eda7e6dd4a51cab867d14eaeb9270;
-          Fri, 15 May 2020 19:10:24 +0000 (UTC)
-Subject: Re: [PATCH] keys: Move permissions checking decisions into the
- checking code
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        David Howells <dhowells@redhat.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Paul Moore <paul@paul-moore.com>, keyrings@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
+        Fri, 15 May 2020 15:14:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbgEOTOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 15:14:03 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98AA020727;
+        Fri, 15 May 2020 19:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589570042;
+        bh=apOLy+VtRP3m7NTRElJcV0sOBecelbtDF7OGamnhFZI=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Oe7w6ENAFn6T44rkvKXo1wrsRV0CRcZKfs2w49uaec8oF0+wRDQnjvGNpqG8NjvDG
+         WILG0riftuiHsTCdj+Ds05a9YyLrTDZr5umE+l/VQH8FQsMyll1NMOMPUA6cODtjnL
+         d27BuPV+OCnjRLnB0ltkoviWJgB7p1mjJ517lVoc=
+Message-ID: <e227d42fdc91587e34bc64ac252970d39d9b4eee.camel@kernel.org>
+Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Luis Henriques <lhenriques@suse.com>,
+        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <CAEjxPJ6pFdDfm55pv9bT3CV5DTFF9VqzRmG_Xi5bKNxPaGuOLg@mail.gmail.com>
- <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk>
- <CAEjxPJ4=ZN_jKP2nX5mrMA3OxC8XLsYEmCPCD-78H4XQw=_hCA@mail.gmail.com>
- <3999877.1589475539@warthog.procyon.org.uk>
- <CAEjxPJ5wW2qHYDsqKr5rjnRJ++4f2LXobCQkKZvWCSb_j0WN6w@mail.gmail.com>
- <196730.1589561109@warthog.procyon.org.uk>
- <CAEjxPJ6JGZxF_G63Y7M-CQpmt5Sqp2uFF4oEKS6NpNLZxXhXcA@mail.gmail.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <1ca402a1-5665-44b8-ef94-9473ebd6a32a@schaufler-ca.com>
-Date:   Fri, 15 May 2020 12:10:24 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        fstests <fstests@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Date:   Fri, 15 May 2020 15:14:00 -0400
+In-Reply-To: <CAOQ4uxiWZoSj3Pjwskd_hu-ErV9096hLt13CDcW6nEEvcwDNVA@mail.gmail.com>
+References: <20200514111453.GA99187@suse.com>
+         <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
+         <20200514124845.GA12559@suse.com>
+         <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
+         <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
+         <20200515111548.GA54598@suse.com>
+         <61b1f19edcc349641b5383c2ac70cbf9a15ba4bd.camel@kernel.org>
+         <CAOQ4uxiWZoSj3Pjwskd_hu-ErV9096hLt13CDcW6nEEvcwDNVA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-In-Reply-To: <CAEjxPJ6JGZxF_G63Y7M-CQpmt5Sqp2uFF4oEKS6NpNLZxXhXcA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Mailer: WebService/1.1.15941 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/2020 11:55 AM, Stephen Smalley wrote:
-> On Fri, May 15, 2020 at 12:45 PM David Howells <dhowells@redhat.com> wrote:
->> I can go back to the enum patch for the moment if you and Casey can put up
->> with that for the moment?
-> Yes, let's do that.
+On Fri, 2020-05-15 at 19:56 +0300, Amir Goldstein wrote:
+> On Fri, May 15, 2020 at 2:38 PM Jeff Layton <jlayton@kernel.org> wrote:
+> > On Fri, 2020-05-15 at 12:15 +0100, Luis Henriques wrote:
+> > > On Fri, May 15, 2020 at 09:42:24AM +0300, Amir Goldstein wrote:
+> > > > +CC: fstests
+> > > > 
+> > > > On Thu, May 14, 2020 at 4:15 PM Jeff Layton <jlayton@kernel.org> wrote:
+> > > > > On Thu, 2020-05-14 at 13:48 +0100, Luis Henriques wrote:
+> > > > > > On Thu, May 14, 2020 at 08:10:09AM -0400, Jeff Layton wrote:
+> > > > > > > On Thu, 2020-05-14 at 12:14 +0100, Luis Henriques wrote:
+> > > > > > > > Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
+> > > > > > > > a file handle to dentry"), this fixes another corner case with
+> > > > > > > > name_to_handle_at/open_by_handle_at.  The issue has been detected by
+> > > > > > > > xfstest generic/467, when doing:
+> > > > > > > > 
+> > > > > > > >  - name_to_handle_at("/cephfs/myfile")
+> > > > > > > >  - open("/cephfs/myfile")
+> > > > > > > >  - unlink("/cephfs/myfile")
+> > > > > > > >  - open_by_handle_at()
+> > > > > > > > 
+> > > > > > > > The call to open_by_handle_at should not fail because the file still
+> > > > > > > > exists and we do have a valid handle to it.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > > > > > > > ---
+> > > > > > > >  fs/ceph/export.c | 13 +++++++++++--
+> > > > > > > >  1 file changed, 11 insertions(+), 2 deletions(-)
+> > > > > > > > 
+> > > > > > > > diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+> > > > > > > > index 79dc06881e78..8556df9d94d0 100644
+> > > > > > > > --- a/fs/ceph/export.c
+> > > > > > > > +++ b/fs/ceph/export.c
+> > > > > > > > @@ -171,12 +171,21 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
+> > > > > > > > 
+> > > > > > > >  static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
+> > > > > > > >  {
+> > > > > > > > + struct ceph_inode_info *ci;
+> > > > > > > >   struct inode *inode = __lookup_inode(sb, ino);
+> > > > > > > > +
+> > > > > > > >   if (IS_ERR(inode))
+> > > > > > > >           return ERR_CAST(inode);
+> > > > > > > >   if (inode->i_nlink == 0) {
+> > > > > > > > -         iput(inode);
+> > > > > > > > -         return ERR_PTR(-ESTALE);
+> > > > > > > > +         bool is_open;
+> > > > > > > > +         ci = ceph_inode(inode);
+> > > > > > > > +         spin_lock(&ci->i_ceph_lock);
+> > > > > > > > +         is_open = __ceph_is_file_opened(ci);
+> > > > > > > > +         spin_unlock(&ci->i_ceph_lock);
+> > > > > > > > +         if (!is_open) {
+> > > > > > > > +                 iput(inode);
+> > > > > > > > +                 return ERR_PTR(-ESTALE);
+> > > > > > > > +         }
+> > > > > > > >   }
+> > > > > > > >   return d_obtain_alias(inode);
+> > > > > > > >  }
+> > > > > > > 
+> > > > > > > Thanks Luis. Out of curiousity, is there any reason we shouldn't ignore
+> > > > > > > the i_nlink value here? Does anything obviously break if we do?
+> > > > > > 
+> > > > > > Yes, the scenario described in commit 03f219041fdb is still valid, which
+> > > > > > is basically the same but without the extra open(2):
+> > > > > > 
+> > > > > >   - name_to_handle_at("/cephfs/myfile")
+> > > > > >   - unlink("/cephfs/myfile")
+> > > > > >   - open_by_handle_at()
+> > > > > > 
+> > > > > 
+> > > > > Ok, I guess we end up doing some delayed cleanup, and that allows the
+> > > > > inode to be found in that situation.
+> > > > > 
+> > > > > > The open_by_handle_at man page isn't really clear about these 2 scenarios,
+> > > > > > but generic/426 will fail if -ESTALE isn't returned.  Want me to add a
+> > > > > > comment to the code, describing these 2 scenarios?
+> > > > > > 
+> > > > > 
+> > > > > (cc'ing Amir since he added this test)
+> > > > > 
+> > > > > I don't think there is any hard requirement that open_by_handle_at
+> > > > > should fail in that situation. It generally does for most filesystems
+> > > > > due to the way they handle cl794798fa xfsqa: test open_by_handle() on unlinked and freed inode clusters
+> > > > eaning up unlinked inodes, but I don't
+> > > > > think it's technically illegal to allow the inode to still be found. If
+> > > > > the caller cares about whether it has been unlinked it can always test
+> > > > > i_nlink itself.
+> > > > > 
+> > > > > Amir, is this required for some reason that I'm not aware of?
+> > > > 
+> > > > Hi Jeff,
+> > > > 
+> > > > The origin of this test is in fstests commit:
+> > > > 794798fa xfsqa: test open_by_handle() on unlinked and freed inode clusters
+> > > > 
+> > > > It was introduced to catch an xfs bug, so this behavior is the expectation
+> > > > of xfs filesystem, but note that it is not a general expectation to fail
+> > > > open_by_handle() after unlink(), it is an expectation to fail open_by_handle()
+> > > > after unlink() + sync() + drop_caches.
+> > > 
+> > > Yes, sorry I should have mentioned the sync+drop_caches in the
+> > > description.
+> > > 
+> > > > I have later converted the test to generic, because I needed to check the
+> > > > same expectation for overlayfs use case, which is:
+> > > > The original inode is always there (in lower layer), unlink creates a whiteout
+> > > > mark and open_by_handle should treat that as ESTALE, otherwise the
+> > > > unlinked files would be accessible to nfs clients forever.
+> > > > 
+> > 
+> > Ok, that makes sense.
+> > 
+> > The situation with Ceph is a bit different I think. I suspect that we're
+> > cleaning the inode out of the client's caches after drop_caches, but
+> > then we end up issuing a lookup by inode number to the MDS and it
+> > returns an inode that it may be in the process of purging.
+> > 
+> > > > In overlayfs, we handle the open file case by returning a dentry only
+> > > > in case the inode with deletion mark in question is already in inode cache,
+> > > > but we take care not to populate inode cache with the check.
+> > > > It is easier, because we do not need to get inode into cache for checking
+> > > > the delete marker.
+> > > > 
+> > > > Maybe you could instead check in __fh_to_dentry():
+> > > > 
+> > > >     if (inode->i_nlink == 0 && atomic_read(&inode->i_count) == 1)) {
+> > > >         iput(inode);
+> > > >         return ERR_PTR(-ESTALE);
+> > > >     }
+> > > > 
+> > > > The above is untested, so I don't know if it's enough to pass generic/426.
+> > > 
+> > > Yes, I can confirm that this also fixes the issue -- both tests pass.
+> > > __ceph_is_file_opened() uses some internal counters per inode, incremented
+> > > each time a file is open in a specific mode.  The problem is that these
+> > > counters require some extra locking (maybe they should be atomic_t?), so
+> > > you're suggestion is probably better.
+> > > 
+> > > > Note that generic/467 also checks the same behavior for rmdir().
+> > > 
+> > > Yeah, but the only test-case failing with cephfs is the one described
+> > > above (i.e. "open_by_handle -dkr ...").
+> > > 
+> > > > If you decide that ceph does not need to comply to this behavior,
+> > > > then we probably need to whitelist/blocklist the filesystems that
+> > > > want to test this behavior, which will be a shame.
+> > > 
+> > > Unless Jeff has any objection, I'm happy sending v2, simplifying the patch
+> > > to use your simpler solution (and mentioning sync+drop_caches in the
+> > > commit message).
+> > > 
+> > 
+> > The real question I have is whether this is truly a client-side issue,
+> > or if the MDS is satisfying lookup-by-ino requests with inodes that just
+> > haven't yet been fully purged. If so, then the right fix may be in the
+> > MDS.
+> > 
+> > Can we determine that one way or the other?
+> > 
+> 
+> Questions:
+> 1. Does sync() result in fully purging inodes on MDS?
 
-OK by me.
+I don't think so, but again, that code is not trivial to follow. I do
+know that the MDS keeps around a "strays directory" which contains
+unlinked inodes that are lazily cleaned up. My suspicion is that it's
+satisfying lookups out of this cache as well.
+
+Which may be fine...the MDS is not required to be POSIX compliant after
+all. Only the fs drivers are.
+
+> 2. Is i_nlink synchronized among nodes on deferred delete?
+> IWO, can inode come back from the dead on client if another node
+> has linked it before i_nlink 0 was observed?
+
+No, that shouldn't happen. The caps mechanism should ensure that it
+can't be observed by other clients until after the change.
+
+That said, Luis' current patch doesn't ensure we have the correct caps
+to check the i_nlink. We may need to add that in before we can roll with
+this.
+
+> 3. Can an NFS client be "migrated" from one ceph node to another
+> with an open but unlinked file?
+> 
+
+No. Open files in ceph are generally per-client. You can't pass around a
+fd (or equivalent).
+
+> I think what the test is trying to verify is that a "fully purged" inodes
+> cannot be opened db handle, but there is no standard way to verify
+> "fully purged", so the test resorts to sync() + another sync() + drop_caches.
+> 
+
+Got it. That makes sense.
+
+> Is there anything else that needs to be done on ceph in order to flush
+> all deferred operations from this client to MDS?
+
+I'm leaning toward something like what Luis has proposed, but adding in
+appropriate cap handling.
+
+Basically, we have to consider the situation where one client has the
+file open and another client unlinks it, and then does an
+open_by_handle_at. Should it succeed in that case?
+
+I can see arguments for either way. 
+-- 
+Jeff Layton <jlayton@kernel.org>
 
