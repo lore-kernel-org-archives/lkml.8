@@ -2,117 +2,113 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A91C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68366C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 696352070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C422206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 18:51:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Hup5ZOpB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgEOSqr (ORCPT
+        id S1726304AbgEOSu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 14:46:47 -0400
-Received: from mga04.intel.com ([192.55.52.120]:21894 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726238AbgEOSqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 14:46:47 -0400
-IronPort-SDR: i3/ge2RAF+xNKhm6D8+xDGinQBkDxH/wavun5MkdP9n6FWxwyvo+1B9kRdpAw2nyiHl564Fut5
- Bb68AbU72tOg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 11:46:46 -0700
-IronPort-SDR: 3nFF7Vdveb0kAvH6CP5v3LJy6xFk/DYCbDl/wBEvvs7oko3gF2NS+Wzm9kfH2kVBksHuuF94k0
- dK+Lb67/9vQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,396,1583222400"; 
-   d="scan'208";a="299130175"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga008.jf.intel.com with ESMTP; 15 May 2020 11:46:46 -0700
-Date:   Fri, 15 May 2020 11:46:46 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Fri, 15 May 2020 14:50:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbgEOSu7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 14:50:59 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3B89C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 11:50:56 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0d67004cd1c8a6a574a4fa.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6700:4cd1:c8a6:a574:a4fa])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 27A941EC02DD;
+        Fri, 15 May 2020 20:50:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1589568655;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=YP9RZMqjeJZdVRtJI2gZU8UCFpzgV4mlHCpsx0w8oyQ=;
+        b=Hup5ZOpB1Xg26Fj3NIW+wcvZivoPvwYsr5cO9V6lKmE+EyALZrZuI/JCrQWx9dsN2FGObm
+        XZq9Rpw1QKsBdbI9egp4rs2K11bEJR9iWtYaH8BxR8i6lTx/L0CQyD3bYI4CmxCANmA1kg
+        G3mvDAhosBfq27HSXduiQinmStc7k1c=
+Date:   Fri, 15 May 2020 20:50:51 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dmitry Golovin <dima@golovin.in>
+Cc:     clang-built-linux@googlegroups.com,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
         "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
- token info
-Message-ID: <20200515184646.GD17572@linux.intel.com>
-References: <20200511164752.2158645-1-vkuznets@redhat.com>
- <20200511164752.2158645-3-vkuznets@redhat.com>
- <20200512152709.GB138129@redhat.com>
- <87o8qtmaat.fsf@vitty.brq.redhat.com>
- <20200512155339.GD138129@redhat.com>
- <20200512175017.GC12100@linux.intel.com>
- <20200513125241.GA173965@redhat.com>
- <0733213c-9514-4b04-6356-cf1087edd9cf@redhat.com>
+Subject: Re: [PATCH] x86/boot: allow a relocatable kernel to be linked with
+ lld
+Message-ID: <20200515185051.GC19017@zn.tnic>
+References: <20200501084215.242-1-dima@golovin.in>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0733213c-9514-4b04-6356-cf1087edd9cf@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200501084215.242-1-dima@golovin.in>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 05:59:43PM +0200, Paolo Bonzini wrote:
-> On 13/05/20 14:52, Vivek Goyal wrote:
-> >>> Also, type of event should not necessarily be tied to delivery method.
-> >>> For example if we end up introducing say, "KVM_PV_REASON_PAGE_ERROR", then
-> >>> I would think that event can be injected both using exception (#PF or #VE)
-> >>> as well as interrupt (depending on state of system).
-> >> Why bother preserving backwards compatibility?
-> > New machanism does not have to support old guests but old mechanism
-> > should probably continue to work and deprecated slowly, IMHO. Otherwise
-> > guests which were receiving async page faults will suddenly stop getting
-> > it over hypervisor upgrade and possibly see drop in performance.
-> 
-> Unfortunately, the old mechanism was broken enough, and in enough
-> different ways, that it's better to just drop it.
-> 
-> The new one using #VE is not coming very soon (we need to emulate it for
-> <Broadwell and AMD processors, so it's not entirely trivial) so we are
-> going to keep "page not ready" delivery using #PF for some time or even
-> forever.  However, page ready notification as #PF is going away for good.
+On Fri, May 01, 2020 at 08:42:13AM +0000, Dmitry Golovin wrote:
+> LLD by default disallows relocations in read-only segments. For a
 
-And isn't hardware based EPT Violation #VE going to require a completely
-different protocol than what is implemented today?  For hardware based #VE,
-KVM won't intercept the fault, i.e. the guest will need to make an explicit
-hypercall to request the page.  That seems like it'll be as time consuming
-to implement as emulating EPT Violation #VE in KVM.
+I need more info here about which segment is read-only?
 
-> That said, type1/type2 is quite bad. :)  Let's change that to page not
-> present / page ready.
+Is this something LLD does by default or what's happening?
 
-Why even bother using 'struct kvm_vcpu_pv_apf_data' for the #PF case?  VMX
-only requires error_code[31:16]==0 and SVM doesn't vet it at all, i.e. we
-can (ab)use the error code to indicate an async #PF by setting it to an
-impossible value, e.g. 0xaaaa (a is for async!).  That partciular error code
-is even enforced by the SDM, which states:
+Because my BFD-linked vmlinux has:
 
-  [SGX] this flag is set only if the P flag (bit 0) is 1 and the RSVD flag
-  (bit 3) and the PK flag (bit 5) are both 0.
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  LOAD           0x0000000000001000 0x0000000000000000 0x0000000000000000
+                 0x000000000070fa28 0x0000000000726b00  RWE    0x1000
+  LOAD           0x0000000000000000 0x0000000000727000 0x0000000000727000
+                 0x0000000000000000 0x0000000000007000  RW     0x1000
+  DYNAMIC        0x00000000007108f8 0x000000000070f8f8 0x000000000070f8f8
+                 0x0000000000000130 0x0000000000000130  RW     0x8
+  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000  RWE    0x10
 
-I.e. we've got bigger problems if hardware generates a !PRESENT, WRITE, RSVD,
-PK, SGX page fault :-)
+so what's up?
 
-Then the page ready becomes the only guest-side consumer of the in-memory
-struct, e.g. it can be renamed to something like kvm_vcpu_pv_apf_ready and
-doesn't need a reason field (though it still needs a "busy" bit) as written.
-It'd also eliminate the apf_put_user() in kvm_arch_async_page_not_present().
+> relocatable kernel, we pass -z notext to the linker to explicitly
+> allow relocations. This behavior is the default for BFD.
 
-I believe it would also allow implementing (in the future) "async #PF ready"
-as a ring buffer, i.e. allow kvm_check_async_pf_completion() to coalesce all
-ready pages into a single injected interrupt.
+Or are you saying that ld.bfd makes the text segment by default RW while
+ld.lld makes it read-only like the elf manpage says:
+
+"p_flags
+              This member holds a bit mask of flags relevant to the segment:
+
+              PF_X   An executable segment.
+              PF_W   A writable segment.
+              PF_R   A readable segment.
+
+              A text segment commonly has the flags PF_X and PF_R."
+
+IOW, don't be afraid to be more verbose in the commit message. :)
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
