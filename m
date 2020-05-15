@@ -7,44 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8362CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0130CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6828F20756
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D90FF207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgEORXA (ORCPT
+        id S1726725AbgEORXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:23:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33802 "EHLO
+        Fri, 15 May 2020 13:23:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726660AbgEORW6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726715AbgEORXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:22:58 -0400
+        Fri, 15 May 2020 13:23:00 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21447C05BD09;
-        Fri, 15 May 2020 10:22:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711A7C061A0C;
+        Fri, 15 May 2020 10:23:00 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jZe2v-0005Tg-Bm; Fri, 15 May 2020 19:22:53 +0200
+        id 1jZe2v-0005Tj-RU; Fri, 15 May 2020 19:22:54 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 04E3E1C0440;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 73D2A1C007F;
         Fri, 15 May 2020 19:22:53 +0200 (CEST)
-Date:   Fri, 15 May 2020 17:22:52 -0000
-From:   "tip-bot2 for Sami Tolvanen" <tip-bot2@linutronix.de>
+Date:   Fri, 15 May 2020 17:22:53 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: use gelf_getsymshndx to handle >64k sections
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
+Subject: [tip: objtool/core] objtool: Allow no-op CFI ops in alternatives
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200421220843.188260-2-samitolvanen@google.com>
-References: <20200421220843.188260-2-samitolvanen@google.com>
 MIME-Version: 1.0
-Message-ID: <158956337293.17951.13387427724649167304.tip-bot2@tip-bot2>
+Message-ID: <158956337331.17951.10214359711364574854.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,85 +58,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     28fe1d7bf89f8ed5be70b98a33932dbaf99345dd
-Gitweb:        https://git.kernel.org/tip/28fe1d7bf89f8ed5be70b98a33932dbaf99345dd
-Author:        Sami Tolvanen <samitolvanen@google.com>
-AuthorDate:    Tue, 21 Apr 2020 15:08:42 -07:00
+Commit-ID:     ab3852ab5cb8fd2e2c5bfa176e5f953353836907
+Gitweb:        https://git.kernel.org/tip/ab3852ab5cb8fd2e2c5bfa176e5f953353836907
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Fri, 08 May 2020 12:34:33 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Fri, 15 May 2020 10:35:13 +02:00
+CommitterDate: Fri, 15 May 2020 10:35:12 +02:00
 
-objtool: use gelf_getsymshndx to handle >64k sections
+objtool: Allow no-op CFI ops in alternatives
 
-Currently, objtool fails to load the correct section for symbols when
-the index is greater than SHN_LORESERVE. Use gelf_getsymshndx instead
-of gelf_getsym to handle >64k sections.
+Randy reported a false-positive:
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+  arch/x86/hyperv/hv_apic.o: warning: objtool: hv_apic_write()+0x25: alternative modifies stack
+
+What happens is that:
+
+	alternative_io("movl %0, %P1", "xchgl %0, %P1", X86_BUG_11AP,
+ 13d:   89 9d 00 d0 7f ff       mov    %ebx,-0x803000(%rbp)
+
+decodes to an instruction with CFI-ops because it modifies RBP.
+However, due to this being a !frame-pointer build, that should not in
+fact change the CFI state.
+
+So instead of dis-allowing any CFI-op, verify the op would've actually
+changed the CFI state.
+
+Fixes: 7117f16bf460 ("objtool: Fix ORC vs alternatives")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20200421220843.188260-2-samitolvanen@google.com
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
 ---
- tools/objtool/elf.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ tools/objtool/check.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index b6349ca..8422567 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -343,12 +343,14 @@ static int read_sections(struct elf *elf)
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 32dea5f..196a551 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2060,17 +2060,18 @@ static int handle_insn_ops(struct instruction *insn, struct insn_state *state)
+ 	struct stack_op *op;
  
- static int read_symbols(struct elf *elf)
- {
--	struct section *symtab, *sec;
-+	struct section *symtab, *symtab_shndx, *sec;
- 	struct symbol *sym, *pfunc;
- 	struct list_head *entry;
- 	struct rb_node *pnode;
- 	int symbols_nr, i;
- 	char *coldstr;
-+	Elf_Data *shndx_data = NULL;
-+	Elf32_Word shndx;
+ 	list_for_each_entry(op, &insn->stack_ops, list) {
++		struct cfi_state old_cfi = state->cfi;
+ 		int res;
  
- 	symtab = find_section_by_name(elf, ".symtab");
- 	if (!symtab) {
-@@ -356,6 +358,10 @@ static int read_symbols(struct elf *elf)
- 		return -1;
- 	}
+-		if (insn->alt_group) {
+-			WARN_FUNC("alternative modifies stack", insn->sec, insn->offset);
+-			return -1;
+-		}
+-
+ 		res = update_cfi_state(insn, &state->cfi, op);
+ 		if (res)
+ 			return res;
  
-+	symtab_shndx = find_section_by_name(elf, ".symtab_shndx");
-+	if (symtab_shndx)
-+		shndx_data = symtab_shndx->data;
++		if (insn->alt_group && memcmp(&state->cfi, &old_cfi, sizeof(struct cfi_state))) {
++			WARN_FUNC("alternative modifies stack", insn->sec, insn->offset);
++			return -1;
++		}
 +
- 	symbols_nr = symtab->sh.sh_size / symtab->sh.sh_entsize;
- 
- 	for (i = 0; i < symbols_nr; i++) {
-@@ -369,8 +375,9 @@ static int read_symbols(struct elf *elf)
- 
- 		sym->idx = i;
- 
--		if (!gelf_getsym(symtab->data, i, &sym->sym)) {
--			WARN_ELF("gelf_getsym");
-+		if (!gelf_getsymshndx(symtab->data, shndx_data, i, &sym->sym,
-+				      &shndx)) {
-+			WARN_ELF("gelf_getsymshndx");
- 			goto err;
- 		}
- 
-@@ -384,10 +391,13 @@ static int read_symbols(struct elf *elf)
- 		sym->type = GELF_ST_TYPE(sym->sym.st_info);
- 		sym->bind = GELF_ST_BIND(sym->sym.st_info);
- 
--		if (sym->sym.st_shndx > SHN_UNDEF &&
--		    sym->sym.st_shndx < SHN_LORESERVE) {
--			sym->sec = find_section_by_index(elf,
--							 sym->sym.st_shndx);
-+		if ((sym->sym.st_shndx > SHN_UNDEF &&
-+		     sym->sym.st_shndx < SHN_LORESERVE) ||
-+		    (shndx_data && sym->sym.st_shndx == SHN_XINDEX)) {
-+			if (sym->sym.st_shndx != SHN_XINDEX)
-+				shndx = sym->sym.st_shndx;
-+
-+			sym->sec = find_section_by_index(elf, shndx);
- 			if (!sym->sec) {
- 				WARN("couldn't find section for symbol %s",
- 				     sym->name);
+ 		if (op->dest.type == OP_DEST_PUSHF) {
+ 			if (!state->uaccess_stack) {
+ 				state->uaccess_stack = 1;
