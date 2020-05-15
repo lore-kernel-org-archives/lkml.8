@@ -2,123 +2,111 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8673C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91132C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8211620657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:06:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DUoew+YP"
+	by mail.kernel.org (Postfix) with ESMTP id 6A013206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:06:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgEOIGa (ORCPT
+        id S1727912AbgEOIG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726708AbgEOIG3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:06:29 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3748C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 01:06:29 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f15so619435plr.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 01:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jG2zPlUjuy3TaHmBjzz54CmTcwOEHnFNJYuMRLsgt3o=;
-        b=DUoew+YPlBJlFGhJMGcpvILcRmegBRmwn4SG3fljK7KRjGVaf+NbqI92muMsHhxSzd
-         uoD3o+TE+gzuBuLRMXyeGXGh/xmzjhB0YkePh8Qst7glNg/dJ9vLFvlTK+c+5GA2/Kb1
-         YMiG3vnsDsll6LQA876jclVWLpEEl50gQNWrc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jG2zPlUjuy3TaHmBjzz54CmTcwOEHnFNJYuMRLsgt3o=;
-        b=kh/c6vOIRYUUJ50gTyGlgXcXElIqTRkfFlJMJLKf7VFXVgeUlnll0xU2tF7MTl74lg
-         jmpSbcKrFpBjh4Cm0ufv72Xx042CXdpOdgMLV9VavMTzGl23v4acDEZulWRaRDOd82G0
-         hc15FxRyUyfzKf/10e2D6/OLD4JkcUvq8Ihq3HEKTJ87F+S1pufSb5l1YrE4D5Xy6DKm
-         HSZoRV+v3QU5sDIAvo+7APSazTYvdEWLajgMjdKFv2o3l0aL2AHGPkdrxfjVTMngnVmk
-         3z+pYVKon/QsXf/pVXu+0DwfqltMuW/Ay3WCEbzzS8uKD+/S9kkVVVFA2fLuWYRwJSmB
-         g2AQ==
-X-Gm-Message-State: AOAM5320Km+uRuxxPENzKPms284e2HRK1kW3nJV/qeFEp3dCfbBaCkQD
-        zLrTwTuz00uh+VaBTzNJheEE0A==
-X-Google-Smtp-Source: ABdhPJwivc3rrGEJYMaQgUVSdU6qrOT33KMO3Id4LWhkBY0GN66928/qLjX4HIpzdr1su8//lFZRIg==
-X-Received: by 2002:a17:902:6b4a:: with SMTP id g10mr2398745plt.141.1589529989396;
-        Fri, 15 May 2020 01:06:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e11sm1105913pgs.41.2020.05.15.01.06.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 01:06:28 -0700 (PDT)
-Date:   Fri, 15 May 2020 01:06:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     mcgrof@kernel.org, yzaikin@google.com, adobriyan@gmail.com,
-        mingo@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-        yamada.masahiro@socionext.com, bauerman@linux.ibm.com,
-        gregkh@linuxfoundation.org, skhan@linuxfoundation.org,
-        dvyukov@google.com, svens@stackframe.org, joel@joelfernandes.org,
-        tglx@linutronix.de, Jisheng.Zhang@synaptics.com, pmladek@suse.com,
-        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, wangle6@huawei.com
-Subject: Re: [PATCH 2/4] proc/sysctl: add shared variables -1
-Message-ID: <202005150105.33CAEEA6C5@keescook>
-References: <1589517224-123928-1-git-send-email-nixiaoming@huawei.com>
- <1589517224-123928-3-git-send-email-nixiaoming@huawei.com>
+        Fri, 15 May 2020 04:06:59 -0400
+Received: from mga03.intel.com ([134.134.136.65]:40032 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726708AbgEOIG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 04:06:58 -0400
+IronPort-SDR: jg8xj5GKq8r+WPuJadTCF2v6dza/EK7l2oDuBRqQAD+EhwpAHlyFOs1BVLluCioTepXWeraKha
+ ZRUC42ouC2fQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 01:06:58 -0700
+IronPort-SDR: y1UJqPzbkrsTCq4XzGUKwEyG7DqyQY5ttccd+stBOvqgSOZtIqrtZgGAdio0BI/x+gY5HlMblj
+ MYOuE+kpJedw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,394,1583222400"; 
+   d="scan'208";a="464826884"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 15 May 2020 01:06:56 -0700
+Received: from [10.213.147.163] (vramuthx-mobl1.gar.corp.intel.com [10.213.147.163])
+        by linux.intel.com (Postfix) with ESMTP id 361965804E0;
+        Fri, 15 May 2020 01:06:43 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v6 1/2] dt-bindings: mtd: Add Nand Flash Controller
+ support for Intel LGM SoC
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     masonccyang@mxic.com.tw, linux-mtd@lists.infradead.org,
+        richard@nod.at, boris.brezillon@collabora.com,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        miquel.raynal@bootlin.com, vigneshr@ti.com,
+        hauke.mehrtens@intel.com, devicetree@vger.kernel.org,
+        anders.roxell@linaro.org, arnd@arndb.de, robh+dt@kernel.org,
+        andriy.shevchenko@intel.com, linux-mips@vger.kernel.org,
+        cheol.yong.kim@intel.com, linux-kernel@vger.kernel.org,
+        qi-ming.wu@intel.com
+References: <20200513104615.7905-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200513104615.7905-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200514125709.GA8436@bogus>
+ <dc51e6af-bda8-d8b9-1782-f5c4d5d3fed7@linux.intel.com>
+Message-ID: <0ca30041-b2eb-5cff-9a90-f3021bc82622@linux.intel.com>
+Date:   Fri, 15 May 2020 16:06:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589517224-123928-3-git-send-email-nixiaoming@huawei.com>
+In-Reply-To: <dc51e6af-bda8-d8b9-1782-f5c4d5d3fed7@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 12:33:42PM +0800, Xiaoming Ni wrote:
-> Add the shared variable SYSCTL_NEG_ONE to replace the variable neg_one
-> used in both sysctl_writes_strict and hung_task_warnings.
+Hi Rob,
+
+On 15/5/2020 10:08 am, Ramuthevar, Vadivel MuruganX wrote:
+> Hi Rob,
 > 
-> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-> ---
->  fs/proc/proc_sysctl.c     | 2 +-
->  include/linux/sysctl.h    | 1 +
->  kernel/hung_task_sysctl.c | 3 +--
->  kernel/sysctl.c           | 3 +--
+> On 14/5/2020 8:57 pm, Rob Herring wrote:
+>> On Wed, 13 May 2020 18:46:14 +0800, Ramuthevar,Vadivel MuruganX wrote:
+>>> From: Ramuthevar Vadivel Murugan 
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>
+>>> Add YAML file for dt-bindings to support NAND Flash Controller
+>>> on Intel's Lightning Mountain SoC.
+>>>
+>>> Signed-off-by: Ramuthevar Vadivel Murugan 
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>> ---
+>>>   .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 83 
+>>> ++++++++++++++++++++++
+>>>   1 file changed, 83 insertions(+)
+>>>   create mode 100644 
+>>> Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>>>
+>>
+>>
+>> My bot found errors running 'make dt_binding_check' on your patch:
+>>
+>> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/intel,lgm-nand.example.dt.yaml: 
+>> nand-controller@e0f00000: 'dmas' is a dependency of 'dma-names'
+>>
+>> See https://patchwork.ozlabs.org/patch/1289160
+>>
+>> If you already ran 'make dt_binding_check' and didn't see the above
+>> error(s), then make sure dt-schema is up to date:
+>>
+>> pip3 install 
+>> git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+>>
+>> Please check and re-submit.Sure, will check and re-submit, Thanks!
 
-How about doing this refactoring in advance of the extraction patch?
-
->  4 files changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> index b6f5d45..acae1fa 100644
-> --- a/fs/proc/proc_sysctl.c
-> +++ b/fs/proc/proc_sysctl.c
-> @@ -23,7 +23,7 @@
->  static const struct inode_operations proc_sys_dir_operations;
->  
->  /* shared constants to be used in various sysctls */
-> -const int sysctl_vals[] = { 0, 1, INT_MAX };
-> +const int sysctl_vals[] = { 0, 1, INT_MAX, -1 };
->  EXPORT_SYMBOL(sysctl_vals);
->  
->  /* Support for permanently empty directories */
-> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-> index 02fa844..6d741d6 100644
-> --- a/include/linux/sysctl.h
-> +++ b/include/linux/sysctl.h
-> @@ -41,6 +41,7 @@
->  #define SYSCTL_ZERO	((void *)&sysctl_vals[0])
->  #define SYSCTL_ONE	((void *)&sysctl_vals[1])
->  #define SYSCTL_INT_MAX	((void *)&sysctl_vals[2])
-> +#define SYSCTL_NEG_ONE	((void *)&sysctl_vals[3])
-
-Nit: let's keep these value-ordered? i.e. -1, 0, 1, INT_MAX.
-
--- 
-Kees Cook
+Regards
+Vadivel
