@@ -2,89 +2,115 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1296820657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:11:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aQuQ7L7K"
+	by mail.kernel.org (Postfix) with ESMTP id 4C74620657
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgEOILC (ORCPT
+        id S1727823AbgEOILQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:11:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726714AbgEOILB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:11:01 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1634C05BD09
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 01:11:01 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id j21so628423pgb.7
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 01:11:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xOrE5zGn6uPvmnJr7dBeSUQ5HqdT7v+oxYQZGlXnk+k=;
-        b=aQuQ7L7Kspm6klbOPbMp85wrVBOSaFLGPXT2ylm2Afy/8IpK0mPfvSEdSe0lS8gV9F
-         lSbC2KcZQLcUd+RalxmvtSoHOKNH5H3GUoyNArCaRmplNtS71CZGR+49REu1kZmATNj0
-         ek0PqLhGJ97mwudkzZ3IV8oV6tboH+V8sy1Rw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xOrE5zGn6uPvmnJr7dBeSUQ5HqdT7v+oxYQZGlXnk+k=;
-        b=Asfo7qI3JliRAE0+aMeKn9/qD1to0vEOsvsh+klvGw/8YpW0bgZ9WcN0B/Sx5nl0AF
-         UVfimauaoKOFY2oG3+rSBpF7/14OtQJNESNRuyJAIxI9OSz9B61eQH8BSWI1+WwYaMPQ
-         MHrb13c8nIvmbaUAq510Yo4pA7vT/HqQvp1NQqGfKIlgbsr9b0fjsT6cREEFB0+S4nKi
-         mqG9s7VQ3Qg1hYVyhKwSTRYWcv90/2SwxH7zb2mdQEbAKq9d3bQcr65kfCBjdMJmDH38
-         /8TeqhrCgEEDRkZWCritn3byqkDXOjWzOmhItHfTDG9XyRNe2pXOxCOiEw+wokM/a46j
-         fIBw==
-X-Gm-Message-State: AOAM531Mvt/TJqqxYg5+G8ccCxqnekAnpfjwXLxjzPLvBUTPJ1KcvW2Q
-        giPWYZnNNo+BrqqmSuBa0kk50g==
-X-Google-Smtp-Source: ABdhPJyP3BeKXl/GD0/wS+1lUTuYpFPeJVCT1f8Nl02MY/sGyaBt5ioRr7b1dUWMy5lSsevjMtp1ew==
-X-Received: by 2002:a63:211b:: with SMTP id h27mr2033439pgh.207.1589530261328;
-        Fri, 15 May 2020 01:11:01 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i9sm1262581pfk.199.2020.05.15.01.11.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 01:11:00 -0700 (PDT)
-Date:   Fri, 15 May 2020 01:10:59 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     mcgrof@kernel.org, yzaikin@google.com, adobriyan@gmail.com,
-        mingo@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-        yamada.masahiro@socionext.com, bauerman@linux.ibm.com,
-        gregkh@linuxfoundation.org, skhan@linuxfoundation.org,
-        dvyukov@google.com, svens@stackframe.org, joel@joelfernandes.org,
-        tglx@linutronix.de, Jisheng.Zhang@synaptics.com, pmladek@suse.com,
-        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, wangle6@huawei.com
-Subject: Re: [PATCH 4/4] sysctl: Add register_sysctl_init() interface
-Message-ID: <202005150110.988A691@keescook>
-References: <1589517224-123928-1-git-send-email-nixiaoming@huawei.com>
- <1589517224-123928-5-git-send-email-nixiaoming@huawei.com>
+        Fri, 15 May 2020 04:11:16 -0400
+Received: from mga14.intel.com ([192.55.52.115]:61049 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726714AbgEOILQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 04:11:16 -0400
+IronPort-SDR: JAX6Q+Tg8o8xjKomrkQQUc8QQ61vPtZbHM1qA5yq8ZkBWKptqgZvEiWJVqqUCFuDZEiUr6dQ9B
+ TA8WieN4pn+A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 01:11:14 -0700
+IronPort-SDR: 0t00XxL70jqXX0GJ+KfI01HDFCWd+CcWGKRNnOh54ai/t1MavrOlvsWhqtaBew52cyYH1l2Jl7
+ YKnzh+xc5pEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,394,1583222400"; 
+   d="scan'208";a="298350913"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by fmsmga002.fm.intel.com with ESMTP; 15 May 2020 01:11:10 -0700
+Date:   Fri, 15 May 2020 16:11:09 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        "Kleen, Andi" <andi.kleen@intel.com>,
+        "Chen, Tim C" <tim.c.chen@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] mm/util.c: make vm_memory_committed() more accurate
+Message-ID: <20200515081109.GD69177@shbuild999.sh.intel.com>
+References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
+ <1588922717-63697-3-git-send-email-feng.tang@intel.com>
+ <20200515072307.GG29153@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589517224-123928-5-git-send-email-nixiaoming@huawei.com>
+In-Reply-To: <20200515072307.GG29153@dhcp22.suse.cz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 12:33:44PM +0800, Xiaoming Ni wrote:
-> In order to eliminate the duplicate code for registering the sysctl
-> interface during the initialization of each feature, add the
-> register_sysctl_init() interface
+On Fri, May 15, 2020 at 03:23:07PM +0800, Michal Hocko wrote:
+> On Fri 08-05-20 15:25:16, Feng Tang wrote:
+> > percpu_counter_sum_positive() will provide more accurate info.
+> 
+> Why do we need that?
 
-I think this should come before the code relocations.
+This is a preparation for patch 3/3, which will enlarge the batch size
+of percpu-counter 'vm_committed_as'. Andi Kleen concerned that may
+hurt the accuracy for those readers (currently only /proc/meminfo
+and hyperV balloon drivers for status check)
 
--- 
-Kees Cook
+As in worst case, the deviation could be 'batch * nr_cpus', and
+with patch 3/3, that could be totalram_pages/16.
+
+Thanks,
+Feng
+
+> > Its time cost is about 800 nanoseconds on a 2C/4T platform and
+> > 2~3 microseconds on a 2S/36C/72T server in normal case, and in
+> > worst case where vm_committed_as's spinlock is under severe
+> > contention, it costs 30~40 microseconds for the 2S/36C/72T sever,
+> > which should be fine for its two users: /proc/meminfo and HV ballon
+> > driver's status trace per second.
+> 
+> OK, this explains that the additional overhead is not terrible but there
+> is no actual information on why the imprecision is a problem.
+> 
+> > Signed-off-by: Feng Tang <feng.tang@intel.com>
+> > ---
+> >  mm/util.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/mm/util.c b/mm/util.c
+> > index 988d11e..3de78e9 100644
+> > --- a/mm/util.c
+> > +++ b/mm/util.c
+> > @@ -774,7 +774,7 @@ struct percpu_counter vm_committed_as ____cacheline_aligned_in_smp;
+> >   */
+> >  unsigned long vm_memory_committed(void)
+> >  {
+> > -	return percpu_counter_read_positive(&vm_committed_as);
+> > +	return percpu_counter_sum_positive(&vm_committed_as);
+> >  }
+> >  EXPORT_SYMBOL_GPL(vm_memory_committed);
+> >  
+> > -- 
+> > 2.7.4
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
