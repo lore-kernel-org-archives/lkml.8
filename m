@@ -2,117 +2,90 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC50C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E67EE206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE37206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:54:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+zhmsKd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VyH+Vnaw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgEOPw7 (ORCPT
+        id S1726717AbgEOPyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:52:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726250AbgEOPw5 (ORCPT
+        Fri, 15 May 2020 11:54:25 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25543 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726248AbgEOPyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:52:57 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B81C061A0C;
-        Fri, 15 May 2020 08:52:56 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id d22so2216335lfm.11;
-        Fri, 15 May 2020 08:52:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=l71weFdBgY/OPubK5TNcEV6JMPL70XXv0VPAI4BGmH8=;
-        b=h+zhmsKdPrBiA91DhveEfpS8srEtG6zUpM0LynXaeBAEpjymBb7cGgwHobsxSjveai
-         MczFjeQoUoR6hJ9K5WfBuDl6RUF3pIVcUH7a80+4OpUErSQVuHRoCukkkzKjzaC2mgjo
-         mjKXqx8t8tuPjiwOG5LF1XcrQz6VP+Z0Bk18SGdBx0GNTou6BwFy2NDR5le9ScpHhEqA
-         mYDelPDUPWjs3L6EPRXiDUmQ48Ni2B0+u1+p98HtmkYe4Bn57ASFvWY8W4/r1ZJzOOKK
-         5qCUawwktx2EmXiU3luK9jSBqVJJ/SHxbs9gvkyv1JoPU/81ttsidcCYJCD/KY40kdGA
-         e3EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=l71weFdBgY/OPubK5TNcEV6JMPL70XXv0VPAI4BGmH8=;
-        b=M1n47HXBz/zH+lDK0suR2M5L53Pt1vdvNiDnaoCCH36lkWQp8MuX28hYUEh6uwd93Z
-         EWL3n59rwWn7i3S3ubIQ8ZuMcdBlyI2HQfNWqHUZxp+b2WXY+NqdYw3LieNd4WUBx73W
-         72sOZXx3Lq9ROZisqNe+b0thI7zDMTdb/HVjCARQql+yr6n2ZLnVbWj5/Ghl6d4edT9a
-         DVMkFsqCEaagQWOSAyQagkCIXwDeuvREEX84ue9LOBwBLdPOBWKK8Ajparlg3iqJAf3X
-         hiVcUfJ2SUUzFxcJxTbikNduBWRbr8gQ5B7sji3p/0968DvnobG8rlgcfGjuPjdve3RV
-         Q6tg==
-X-Gm-Message-State: AOAM532Rg6gPSN/W9GBeA6zcaVhmiUi+LrbBHGbsiPogvSsvQkk/A5aG
-        VUJquoagHKPofhWV3yc6kvy16Lva
-X-Google-Smtp-Source: ABdhPJxTNdXAf1FtSIiCyjYkNMI+hY5ajiYzUnof3HI0p3oY3hAgh9KXwjPIo2BOWmWGbMMBMBBZgg==
-X-Received: by 2002:a19:2258:: with SMTP id i85mr2905186lfi.86.1589557975112;
-        Fri, 15 May 2020 08:52:55 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id r3sm1529811lfm.52.2020.05.15.08.52.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 08:52:54 -0700 (PDT)
-Subject: Re: [PATCH v4 4/6] partitions/efi: Support GPT entry lookup at a
- non-standard location
-To:     Steve McIntyre <steve@einval.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>,
-        =?UTF-8?Q?Nils_=c3=96stlund?= <nils@naltan.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
-        Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>
-References: <20200515014143.12984-1-digetx@gmail.com>
- <20200515014143.12984-5-digetx@gmail.com>
- <20200515100320.GB30674@tack.einval.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <2633429b-f014-15ea-c08c-d2157b0177b1@gmail.com>
-Date:   Fri, 15 May 2020 18:52:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 15 May 2020 11:54:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589558063;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WGF1RdECh7wTY0j1oOebqWNqb2M0++gn2OMVdOGWJas=;
+        b=VyH+Vnawm57BBNklWVufMR7hZBE4MCzgDgjGz9DRbMIOqlKc4+XddlhjskbHF05/2x/ZVK
+        niedx6/Y22m382Sn2lWwaN0+4bT3+x0/BjAGWb1NnbPc4uGBC9jxZyMdmyzyWaTM7ixNjk
+        as+qHvFIKJzeY7BcIBnDwwKjxYStph8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-254-sfmsUV6GPmCSS2DzrcwDSg-1; Fri, 15 May 2020 11:54:19 -0400
+X-MC-Unique: sfmsUV6GPmCSS2DzrcwDSg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3E48189952E;
+        Fri, 15 May 2020 15:54:18 +0000 (UTC)
+Received: from w520.home (ovpn-112-50.phx2.redhat.com [10.3.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 83A785C1D6;
+        Fri, 15 May 2020 15:54:15 +0000 (UTC)
+Date:   Fri, 15 May 2020 09:54:15 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cohuck@redhat.com
+Subject: Re: [PATCH 0/2] vfio/type1/pci: IOMMU PFNMAP invalidation
+Message-ID: <20200515095415.3dd4d253@w520.home>
+In-Reply-To: <20200515152251.GB499802@xz-x1>
+References: <158947414729.12590.4345248265094886807.stgit@gimli.home>
+        <20200514212538.GB449815@xz-x1>
+        <20200514161712.14b34984@w520.home>
+        <20200514222415.GA24575@ziepe.ca>
+        <20200514165517.3df5a9ef@w520.home>
+        <20200515152251.GB499802@xz-x1>
 MIME-Version: 1.0
-In-Reply-To: <20200515100320.GB30674@tack.einval.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.05.2020 13:03, Steve McIntyre пишет:
-> On Fri, May 15, 2020 at 04:41:41AM +0300, Dmitry Osipenko wrote:
->> Most of consumer-grade NVIDIA Tegra devices use a proprietary bootloader
->> that can't be easily replaced because it's locked down using Secure Boot
->> cryptography singing and the crypto keys aren't given to a device owner.
->               ^^^^^^^ typo
->> These devices usually have eMMC storage that is partitioned using a custom
->> NVIDIA Tegra partition table format.  Of course bootloader and other
->> "special things" are stored on the eMMC storage, and thus, the partition
->> format can't be changed.
-> 
-> ...
-> 
+On Fri, 15 May 2020 11:22:51 -0400
+Peter Xu <peterx@redhat.com> wrote:
 
-Thanks! I'll correct it in v5.
+> On Thu, May 14, 2020 at 04:55:17PM -0600, Alex Williamson wrote:
+> > > I'm not if this makes sense, can't we arrange to directly trap the
+> > > IOMMU failure and route it into qemu if that is what is desired?  
+> > 
+> > Can't guarantee it, some systems wire that directly into their
+> > management processor so that they can "protect their users" regardless
+> > of whether they want or need it.  Yay firmware first error handling,
+> > *sigh*.  Thanks,  
+> 
+> Sorry to be slightly out of topic - Alex, does this mean the general approach
+> of fault reporting from vfio to the userspace is not gonna work too?
+
+AFAIK these platforms only generate a fatal fault on certain classes of
+access which imply a potential for data loss, for example a DMA write to
+an invalid PTE entry.  The actual IOMMU page faulting mechanism should
+not be affected by this, or at least one would hope.  Thanks,
+
+Alex
+
