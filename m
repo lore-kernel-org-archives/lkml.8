@@ -2,118 +2,101 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F07C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D47C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBC0820643
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F031C20671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:58:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bC2YW/Fw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VLE+HX5x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgEOVtd (ORCPT
+        id S1727072AbgEOV6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:49:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47272 "EHLO
+        Fri, 15 May 2020 17:58:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728138AbgEOVta (ORCPT
+        by vger.kernel.org with ESMTP id S1726261AbgEOV6C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:49:30 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53A2BC05BD09;
-        Fri, 15 May 2020 14:49:30 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id o10so3441274ejn.10;
-        Fri, 15 May 2020 14:49:30 -0700 (PDT)
+        Fri, 15 May 2020 17:58:02 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25768C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 14:58:02 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id g6so4057195qvn.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 14:58:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hpbnK4RqqNcZZa0YjQ9eRujRX3tECBLfwP3DAbNQUT4=;
-        b=bC2YW/FwplFbWLCWambsxkLu8KVFHwMsi1FN0fqeZ4jIEGGBPIiMvZqCgJ6EZ7Y82x
-         Vy7G9gP6FqSXY7LqWVvfnyF+SGCn21icOVYZbO1W2hMni8j+idsw+8iQbKPkVcdUrzvu
-         028oAle2Y8JwqirTv16Tu/ipfj++/9KrNVwLeXyNACfxLzjNi+DWyr/D51yR8V1iRJl8
-         4K0S9MuYLaQQxXnIahvlLDvctVnxLrK9GD3PFzA+P0W3e0H3x8Do0zgx/Rw+91wxRhIp
-         c3scnsELejcLjPZjEmG+iinUuk1JgNL9VTtkcwUbB8/E23j4cymDCoS7lLdMrgGUoUBU
-         zU7g==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=kkSiaJvog94/aYOcgzYy16QWa/dLPfi5rMQqLSVlixs=;
+        b=VLE+HX5xG/MszCohlrtmOoUjX0QLWfFlKaiTQmZL08YQirgkZ4zeQ5/GMf1kKemxZM
+         d1474CJ+MVc0mS+YBXdwVNpSd80PVTIdI0dNN52YsJzDVFAVHYhwI5zEdXjgfh8+TZXU
+         gmWyuiCHQ8AX8vJ3Bsl4GiTe+ejqZHwOBcrcrJUoIPz087w84+qNUYhO7mv1SBwpuNmg
+         S2lwGwzXX2I14Cuu1VTro2FIztctotjk4lHPNtVGv/GqQAmFPbmplDFRll9eBP2E0n4k
+         HnK8E6LFPJnYYikuZbvDfNAiWwECI/gF3HYisG0DCWHGxM+IGP3aZZNKDiB7E3CZqYZ5
+         zLIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hpbnK4RqqNcZZa0YjQ9eRujRX3tECBLfwP3DAbNQUT4=;
-        b=IIWUWXYfNnJh4OYu0s5RB/KFssE0At247HdjVPneFiLyryO7Ly9pGupcpslQ7Smb22
-         YxZdJKCRoCE55LyznoEeXHid8Hs0spKSpb3jKO7E6jQAjDc3ujbrurIYUV/XqowbxfAu
-         17QK5ulDPnIyTVrcGFVqvPJ+xJ4onPP5fHScQ6JR7UUlrnrAz/N4rNqgNPui26EuoeG/
-         6zjOyEmuNs1uoA0sRSZj2yn1X8AN0fsicQIurc3rHGHkRbQh0bJCv4fI5BPjZFcIyi1m
-         qWyCqCbxWpYM0jyPaAljZEgBWF3Y1au/5XlIYSQdO20sr5jFsTk+ONBMR5wKTV4aJbEx
-         62rw==
-X-Gm-Message-State: AOAM533thX8VKu5jYks7H4sC8c3qMLM8vEdUMvgDXXi6v0JnUsh/aAxQ
-        stUTaNWxD7ax3iKfDVzKK0Uwb4ex7wmSYorYqbM=
-X-Google-Smtp-Source: ABdhPJxcOwuGB+qvjzbZYGfKzm25WDG8YmHx8jHmhDT9TWZ/bEKwEi5IfEnAbBzkagwaGEu5tLe0BjDXT69eoxYbszA=
-X-Received: by 2002:a17:906:29d3:: with SMTP id y19mr4804200eje.258.1589579369030;
- Fri, 15 May 2020 14:49:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200504213225.1.I21646c7c37ff63f52ae6cdccc9bc829fbc3d9424@changeid>
-In-Reply-To: <20200504213225.1.I21646c7c37ff63f52ae6cdccc9bc829fbc3d9424@changeid>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 15 May 2020 14:49:48 -0700
-Message-ID: <CAF6AEGs0qpzgGW8rYdmFqKW=QBbRxxzCWjO0LXsbm6hA0AJNyQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: Fix off-by-one error in clock choice
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=kkSiaJvog94/aYOcgzYy16QWa/dLPfi5rMQqLSVlixs=;
+        b=DMPx6Hy6suhJVU9n4tfkrxNRPkd4WJUiTH3zag1MC3MUZrZn4tJTHzLdRjp9+iy5Fq
+         OD9CjbQ73bhW1WuttKI3LBqXxEENZQqYwUErd1dHbzpVVfv2Y1ohc0lUy+Dswaol0Wol
+         tCL/fNJ/Prr2VUJPYoQ8XWgXL+HW9TZCzjcGfeEpmeZr+U8LyOQfM/ZDYd0t/fgXFOly
+         ZkVcNvOKYk9GOvZ2KZzy2E+ov/+XGV2Ic3WLjK1FKgLrpZc6lodBy1mDgcXMhEyBj+yV
+         nx8TCIKnmMaYEv01RHawcYA2fa0nSJOJ/K5I74C6pQCcmUNTXLRy5vu1+fJfFk18MG/5
+         t2zQ==
+X-Gm-Message-State: AOAM533e7yeqIQqa2vjOSS32wxacBlpX6Hgvt1t9kFkXH3A2hZWpZhqq
+        mIooDzZpUziUwSPtNuyAND0GwK5qnSSbiulzTS4/rmru/3BXam4TCYgfaqhuHec2WhB7PE0sP6w
+        HK/jyCRGNldOIeAmq/s90G7vsbi3mNwL5fuEHJ5A82jcepFTzS3OUAqvzoM8/rULMUrQjqu9k
+X-Google-Smtp-Source: ABdhPJzWy0s5cY8yHOiUUdo1R4y36YRSik9iPIwKh0dgQ3f4LBSu3KCs7sC7yODqnrofPQMThPg6HwJlFbrr
+X-Received: by 2002:a0c:b44c:: with SMTP id e12mr5551641qvf.30.1589579880899;
+ Fri, 15 May 2020 14:58:00 -0700 (PDT)
+Date:   Fri, 15 May 2020 14:57:30 -0700
+Message-Id: <20200515215733.20647-1-eranian@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
+Subject: [PATCH 0/3] perf/x86/rapl: Enable RAPL for AMD Fam17h
+From:   Stephane Eranian <eranian@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@elte.hu, irogers@google.com,
+        kim.phillips@amd.com, jolsa@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 9:32 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> If the rate in our table is _equal_ to the rate we want then it's OK
-> to pick it.  It doesn't need to be greater than the one we want.
->
-> Fixes: a095f15c00e2 ("drm/bridge: add support for sn65dsi86 bridge driver")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+This patch series adds support for AMD Fam17h RAPL counters. As per
+AMD PPR, Fam17h support Package RAPL counters to monitor power usage.
+The RAPL counter operates as with Intel RAPL. As such, it is beneficial
+to share the code.
 
-Reviewed-by: Rob Clark <robdclark@gmail.com>
+The series first moves the rapl.c file to common perf_events x86 and then
+adds the support.
+From the user's point of view, the interface is identical with
+/sys/devices/power. The energy-pkg event is the only one supported.
 
-> ---
->
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> index 6ad688b320ae..be000b0ca56b 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -475,7 +475,7 @@ static int ti_sn_bridge_calc_min_dp_rate_idx(struct ti_sn_bridge *pdata)
->                                    1000 * pdata->dp_lanes * DP_CLK_FUDGE_DEN);
->
->         for (i = 1; i < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut) - 1; i++)
-> -               if (ti_sn_bridge_dp_rate_lut[i] > dp_rate_mhz)
-> +               if (ti_sn_bridge_dp_rate_lut[i] >= dp_rate_mhz)
->                         break;
->
->         return i;
-> --
-> 2.26.2.526.g744177e7f7-goog
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+$ perf stat -a --per-socket -I 1000 -e power/energy-pkg/
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+
+Stephane Eranian (3):
+  perf/x86/rapl: move RAPL support to common x86 code
+  perf/x86/rapl: refactor code for Intel/AMD sharing
+  perf/x86/rapl: add AMD Fam17h RAPL support
+
+ arch/x86/events/Kconfig            |  8 ++---
+ arch/x86/events/Makefile           |  1 +
+ arch/x86/events/intel/Makefile     |  2 --
+ arch/x86/events/probe.c            |  4 +++
+ arch/x86/events/{intel => }/rapl.c | 55 +++++++++++++++++++++++++-----
+ arch/x86/include/asm/msr-index.h   |  3 ++
+ 6 files changed, 58 insertions(+), 15 deletions(-)
+ rename arch/x86/events/{intel => }/rapl.c (92%)
+
+-- 
+2.26.2.761.g0e0b3e54be-goog
+
