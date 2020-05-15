@@ -6,53 +6,54 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DCFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0345A2075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149F720671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 05:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589521155;
-	bh=hhJZrS4dQlrOqWtpzbORUG3FsoCBJnnxn4paG3NwSGE=;
+	s=default; t=1589521202;
+	bh=Ie/JTAhXDnOg+pAfpYp95/kDbcERYOP5umwIBu5IN4c=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BKucCN8wWSQwtt8s1Syt2OF0oN0FIsdzAlpu110FZQNUZGMLx9hhn9vVt53Ui8Y+2
-	 clpDuBm5zTkv8Bgn7e00ErbW/zJ3GMSzYb0hZ4GPqmB7Ot39uRITd0PV1Ad/ANuVFE
-	 bFKHe5Zi2SRCzgeFtzDyiix+KX/FMq1ruLbtLqdE=
+	b=Clu/A7rcrIj0DiWtKTpeeYatlwwkRooHtK3z5KFu+bgrLhWgZMZoeusu93AYp6MUJ
+	 r6iwM8rdGdCkuy9Qwna6nEevZwBMpYZyuvYNa3k4Z2yAbBnI/Xx/Mzk8Q5OP+32Sdb
+	 Vw7Jx7B911r0AqzdCuoXSNvzrWLTZOvEtBIb3WpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgEOFjO (ORCPT
+        id S1726664AbgEOFkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 01:39:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46010 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 01:40:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgEOFjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 01:39:13 -0400
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        id S1725899AbgEOFkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 01:40:00 -0400
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC635207D5
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 05:39:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 342EC20787
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 05:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589521153;
-        bh=hhJZrS4dQlrOqWtpzbORUG3FsoCBJnnxn4paG3NwSGE=;
+        s=default; t=1589521200;
+        bh=Ie/JTAhXDnOg+pAfpYp95/kDbcERYOP5umwIBu5IN4c=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=F5aYRi97x8bI6pkuCxd768c4bPWRH3DEwX2DhSO20o+h5VLWwT2Yx2AiOqOlOGpFf
-         U7+U3Hyh0FLTz8MJPFiLiABgBfxndYZTlhx/gkxKiRUOPXhxC7q/BZmeVkntwvIgyF
-         e9Q05B4VmRvfMSByxH4xJA58FDoZqtPuyxkuiifY=
-Received: by mail-wr1-f54.google.com with SMTP id h17so1938313wrc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:39:12 -0700 (PDT)
-X-Gm-Message-State: AOAM533A7C89vRJB/3s2oQmNlCpGP1Jw7YnsmyPG7NDonsPVgPJtiVyo
-        +r4fSPC5rcluCq1NH94NadT6V3n7uw5Ma2VFvE6ULA==
-X-Google-Smtp-Source: ABdhPJyf51GqXssxcRTstDl1tswRgHXC8Blvay7WP4A6ao00Ke3RW1j49q0aQfrKwzzoWHhbbm+oEZ2yTZwfpoIXcE8=
-X-Received: by 2002:adf:a389:: with SMTP id l9mr2277021wrb.18.1589521151382;
- Thu, 14 May 2020 22:39:11 -0700 (PDT)
+        b=FYj8hgBM4YpyGUzGmtMhPMyBMC3GhAJnQ2EyH1+cSx5QlXamEc1PJLEj/ruIWkMgt
+         Te6DxotShXiBmAhQ2DOJNs1f5TCxG0i9xCd48fE8p56WvUNZHqmsEexKBLBpLks/zd
+         Oiczi+ieqW8rAE5w9LAAfkwWmo8L0XVu76YLdlfc=
+Received: by mail-wr1-f45.google.com with SMTP id 50so1917990wrc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 22:40:00 -0700 (PDT)
+X-Gm-Message-State: AOAM532QCPwgwLAjuibWhwDoTlr6BT/SiE/uMr1i6Zs0iETpqbuw/iqw
+        1e7Ki3gU2OpUqiMS3ynEdw6v3xgyxRsqzV0RNdM72g==
+X-Google-Smtp-Source: ABdhPJxPs2A2vJtlQFcodeaRVydOCVotTvolEOxcboYqeQr0mt8fem1KbbLwrZ1WryBEmYDX/JqvkC8telU+JG62nCU=
+X-Received: by 2002:adf:f446:: with SMTP id f6mr2173928wrp.75.1589521198720;
+ Thu, 14 May 2020 22:39:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505134926.578885807@linutronix.de> <20200505135315.283276272@linutronix.de>
-In-Reply-To: <20200505135315.283276272@linutronix.de>
+References: <20200505134926.578885807@linutronix.de> <20200505135315.380927730@linutronix.de>
+In-Reply-To: <20200505135315.380927730@linutronix.de>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 14 May 2020 22:39:00 -0700
-X-Gmail-Original-Message-ID: <CALCETrWLvUtxqsM5fpWvjKan3_QE3ut8c+v8NQTV1RqC7zWE+g@mail.gmail.com>
-Message-ID: <CALCETrWLvUtxqsM5fpWvjKan3_QE3ut8c+v8NQTV1RqC7zWE+g@mail.gmail.com>
-Subject: Re: [patch V4 part 4 20/24] x86/traps: Restructure #DB handling
+Date:   Thu, 14 May 2020 22:39:46 -0700
+X-Gmail-Original-Message-ID: <CALCETrXbfcqTPwSzicbphxMCCBDfFv=zxtUVdWm9Z+xWAtB_vw@mail.gmail.com>
+Message-ID: <CALCETrXbfcqTPwSzicbphxMCCBDfFv=zxtUVdWm9Z+xWAtB_vw@mail.gmail.com>
+Subject: Re: [patch V4 part 4 21/24] x86/traps: Address objtool noinstr
+ complaints in #DB
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
@@ -79,8 +80,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue, May 5, 2020 at 7:16 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> Now that there are separate entry points, move the kernel/user_mode specifc
-> checks into the entry functions so the common handling code does not need
-> the extra mode checks. Make the code more readable while at it.
+> The functions invoked from handle_debug() can be instrumented. Tell objtool
+> about it.
 
 Acked-by: Andy Lutomirski <luto@kernel.org>
