@@ -2,120 +2,270 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4972AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E272C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9F420643
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A80120643
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 21:43:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wn54dpHM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgEOVge (ORCPT
+        id S1727123AbgEOVnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 17:36:34 -0400
-Received: from 9.mo69.mail-out.ovh.net ([46.105.56.78]:37851 "EHLO
-        9.mo69.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgEOVgd (ORCPT
+        Fri, 15 May 2020 17:43:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726266AbgEOVnb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 17:36:33 -0400
-Received: from player730.ha.ovh.net (unknown [10.110.208.124])
-        by mo69.mail-out.ovh.net (Postfix) with ESMTP id 324A58D1ED
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 23:17:22 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player730.ha.ovh.net (Postfix) with ESMTPSA id 6DB3312444F3A;
-        Fri, 15 May 2020 21:17:17 +0000 (UTC)
-Date:   Fri, 15 May 2020 23:17:01 +0200
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: sysctl/kernel: document unaligned controls
-Message-ID: <20200515231701.7dc1e6b2@heffalump.sk2.org>
-In-Reply-To: <20200515203601.401a46a9@heffalump.sk2.org>
-References: <20200515160406.8649-1-steve@sk2.org>
-        <20200515112735.67ee1148@lwn.net>
-        <20200515203601.401a46a9@heffalump.sk2.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 15 May 2020 17:43:31 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B287C061A0C;
+        Fri, 15 May 2020 14:43:31 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id s21so3461914ejd.2;
+        Fri, 15 May 2020 14:43:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I9ahSfeyShLOrWsmfKHouJCqywa7cbIcbln/4DdMMCU=;
+        b=Wn54dpHMi3XoICHM8rVqShWSCb2wOpkY5urudPAHJpFFfcELHrHdAttUP1YAR3w/6e
+         HdGtyDoz3jz+g6I32ZZIw9B5StLgFYW+e8Fz/iVCRTJyKb0SpQg/js7Iz4b6+LDTph6B
+         z+wmhFY/btS+s1BdhMd78yaCaN55Vw1Wg1fTn41/36BqOm1LWNg+a7lRU1nu/PHW+3xj
+         c6Z8R0aFKnr68+evwuUdKtZKx2IsrMSOSwsBM475ee5LPu/khr9lA6xA5oRJp9+o4plL
+         0HjaEjty8rY6DvlxlL0GeqdAfG9ySBYDrsE7lfGDsJPm3lrMPEXJoXZA9zmVCloHI/S/
+         o3Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I9ahSfeyShLOrWsmfKHouJCqywa7cbIcbln/4DdMMCU=;
+        b=OdGvtJ9hiW47BphfP6IUHDmMC+453bgFCDsjHtNTP4nVWLiJL503EIyWXICJl2q15V
+         dT5BC+JRbgZREdXscUIlYpGf2tQs4Ijf86RLF7WmudXlWarhNiRnICHcB7wYBi4/0Jrj
+         bHCnL3CTtMyZOpKkMxQWLHV8QXYr7LwPKzOHjvoVl6j0lDC/7OLct8MwNbDAR6VXDilV
+         1sbtil7JJdBRX9yRr/hifG7yqyz+Dfj6whpUGSpDSTBRPTEPlmmAGf/42HTo0Be7VFRx
+         G/3HqIABEtZakuqhBA8Th71IlIxi77Fc8C2nTBLdnz1lD8dFfEwSXylA+DscOSxnCs2H
+         zWOA==
+X-Gm-Message-State: AOAM532bLajpTTKqtlKqBQ95BORwt784C0A2KzbDZQt1Pcrvrq+0pOva
+        U7v9LmeZeY1PT11zN2bFXZpd+3sFn5TKul88q8A=
+X-Google-Smtp-Source: ABdhPJwnvn7N+iI77U+bO5uCLHA4ErVqBCG9iPTIw+yMIYf+68B5/Jxm7UW5cr1MDUQguyXPg0L56r3T7udQCzXaASU=
+X-Received: by 2002:a17:906:2503:: with SMTP id i3mr4539530ejb.293.1589579009383;
+ Fri, 15 May 2020 14:43:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/9ft7adtb_zW.icq2dphbXhV"; protocol="application/pgp-signature"
-X-Ovh-Tracer-Id: 495958913122520453
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrleekgdduheejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtsehgtderreertdejnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeevledvueefvdeivefftdeugeekveethefftdffteelheejkeejjeduffeiudetkeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeeftddrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+References: <20200506140208.v2.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
+In-Reply-To: <20200506140208.v2.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 15 May 2020 14:43:48 -0700
+Message-ID: <CAF6AEGvXkeOrHGMHo=C1zXhDc9rquQJc8oGDB4VDfhTfdtqyTg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] drm/bridge: ti-sn65dsi86: Implement lane
+ reordering + polarity
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9ft7adtb_zW.icq2dphbXhV
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 6, 2020 at 2:03 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> The ti-sn65dsi86 MIPI DSI to eDP bridge chip supports arbitrary
+> remapping of eDP lanes and also polarity inversion.  Both of these
+> features have been described in the device tree bindings for the
+> device since the beginning but were never implemented in the driver.
+> Implement both of them.
+>
+> Part of this change also allows you to (via the same device tree
+> bindings) specify to use fewer than the max number of DP lanes that
+> the panel reports.  This could be useful if your display supports more
+> lanes but only a few are hooked up on your board.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-On Fri, 15 May 2020 20:36:01 +0200, Stephen Kitt <steve@sk2.org> wrote:
+Reviewed-by: Rob Clark <robdclark@gmail.com>
 
-> On Fri, 15 May 2020 11:27:35 -0600, Jonathan Corbet <corbet@lwn.net> wrot=
-e:
-> > On Fri, 15 May 2020 18:04:06 +0200
-> > Stephen Kitt <steve@sk2.org> wrote:
-> >  =20
-> > > diff --git a/Documentation/index.rst b/Documentation/index.rst
-> > > index 9599c0f3eea8..17c38d899572 100644
-> > > --- a/Documentation/index.rst
-> > > +++ b/Documentation/index.rst
-> > > @@ -143,6 +143,7 @@ Architecture-agnostic documentation
-> > >     :maxdepth: 2
-> > > =20
-> > >     asm-annotations
-> > > +   unaligned-memory-access
-> > > =20
-> > >  Architecture-specific documentation
-> > >  -----------------------------------
-> > > diff --git a/Documentation/unaligned-memory-access.txt
-> > > b/Documentation/unaligned-memory-access.rst similarity index 100%
-> > > rename from Documentation/unaligned-memory-access.txt
-> > > rename to Documentation/unaligned-memory-access.rst   =20
-> >=20
-> > Adding this to the toctree is great, but I'd just as soon not leave it =
-in
-> > the top-level directory while we do that.  Since you're renaming it
-> > anyway, can you move it into process/?  It's not a perfect fit, but tha=
-t's
-> > where that type of material has been going so far. =20
->=20
-> I can indeed. Should it still be listed in the main toctree, or in the
-> process toctree?
-
-Never mind, I found the answer, =E2=80=9Csome overall technical guides that=
- have been
-put here for now for lack of a better place=E2=80=9D ;-).
-
-Regards,
-
-Stephen
-
---Sig_/9ft7adtb_zW.icq2dphbXhV
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl6/Bs0ACgkQgNMC9Yht
-g5ywhw/7Bu2YpW1FvW89RSQHRuV7ZdECufLxUkKFP7tUo+q0ocnt9pY4qiQfJCuu
-nZCJUtCjNX9eietABq9szmiOg5wXuJCDSgcJ/WGEcZ+FSqXsMIod8/rnnycOcdAr
-7ofwrWGUNkN51sDYowtNK2+/kaRj1xDIwKmciR1qI3P6EX2owLf7G6mrzm7V3QBi
-lfrEZKOjzfurMGosMDH27oomJKSZXzrGiR8ozJcX23jiAIw2R6Vt+wlBG6oyeM6x
-NKHibprJFNU6eXlQRHaxjo1Q/eSYv2y4KmkISvy6J26cJuW3RgxJWbVAUq7V4dDE
-D1t7f09GWYPBv5iZewZvJAUkE+UhwwPUvWZ0OvWT/3rg13ddsaI4dB9ywQdN0Iy4
-hs9izvpZlZEj/jUxumm99F3Y2gOac0xwVUSg45qwuy/RvK81ZNTL9f84UA2T37pp
-fN2YY6KXQHsKwda4WqeDS7GstgmU1GXWlE2iR1d/MRwo0TsrP4FuiV/g/HGmUeed
-Pg0jftUKnkjdZ52Ch2TNmSYhyBqDib84y/nhuDvoUyG5TJxIE8bjWF4xg7iiXFhq
-6PAbgg5pYuhgqWaJECiHd+GGYf7SvnyYP8LswYoYdhXdn3W5Rh+4q0iaFiNA3P+1
-mFDzvfgGShFzjK2Sntg6+a0l9c2Sf6QNBi4krTRooB44gM50JZw=
-=7I5b
------END PGP SIGNATURE-----
-
---Sig_/9ft7adtb_zW.icq2dphbXhV--
+> ---
+> This patch is based upon my my outstanding series[1] not because there
+> is any real requirement but simply to avoid merge conflicts.  I
+> believe that my previous series is ready to land.  If, however, you'd
+> prefer that I rebase this patch somewhere atop something else then
+> please shout.
+>
+> [1] https://lore.kernel.org/r/20200430194617.197510-1-dianders@chromium.org
+>
+> Changes in v2:
+> - Use SN_MAX_DP_LANES instead of 4 in one place.
+> - Comment that we aren't doing full validation of dts params.
+> - Check dp_lanes <= SN_MAX_DP_LANES to avoid buffer overrun.
+> - Add missing of_node_put()
+>
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 82 ++++++++++++++++++++++-----
+>  1 file changed, 68 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> index 1a125423eb07..534b712dccf8 100644
+> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> @@ -50,8 +50,12 @@
+>  #define SN_CHA_VERTICAL_BACK_PORCH_REG         0x36
+>  #define SN_CHA_HORIZONTAL_FRONT_PORCH_REG      0x38
+>  #define SN_CHA_VERTICAL_FRONT_PORCH_REG                0x3A
+> +#define SN_LN_ASSIGN_REG                       0x59
+> +#define  LN_ASSIGN_WIDTH                       2
+>  #define SN_ENH_FRAME_REG                       0x5A
+>  #define  VSTREAM_ENABLE                                BIT(3)
+> +#define  LN_POLRS_OFFSET                       4
+> +#define  LN_POLRS_MASK                         0xf0
+>  #define SN_DATA_FORMAT_REG                     0x5B
+>  #define  BPP_18_RGB                            BIT(0)
+>  #define SN_HPD_DISABLE_REG                     0x5C
+> @@ -98,6 +102,7 @@
+>
+>  #define SN_REGULATOR_SUPPLY_NUM                4
+>
+> +#define SN_MAX_DP_LANES                        4
+>  #define SN_NUM_GPIOS                   4
+>
+>  /**
+> @@ -115,6 +120,8 @@
+>   * @enable_gpio:  The GPIO we toggle to enable the bridge.
+>   * @supplies:     Data for bulk enabling/disabling our regulators.
+>   * @dp_lanes:     Count of dp_lanes we're using.
+> + * @ln_assign:    Value to program to the LN_ASSIGN register.
+> + * @ln_polr:      Value for the 4-bit LN_POLRS field of SN_ENH_FRAME_REG.
+>   *
+>   * @gchip:        If we expose our GPIOs, this is used.
+>   * @gchip_output: A cache of whether we've set GPIOs to output.  This
+> @@ -140,6 +147,8 @@ struct ti_sn_bridge {
+>         struct gpio_desc                *enable_gpio;
+>         struct regulator_bulk_data      supplies[SN_REGULATOR_SUPPLY_NUM];
+>         int                             dp_lanes;
+> +       u8                              ln_assign;
+> +       u8                              ln_polrs;
+>
+>         struct gpio_chip                gchip;
+>         DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
+> @@ -707,26 +716,20 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+>         int dp_rate_idx;
+>         unsigned int val;
+>         int ret = -EINVAL;
+> +       int max_dp_lanes;
+>
+> -       /*
+> -        * Run with the maximum number of lanes that the DP sink supports.
+> -        *
+> -        * Depending use cases, we might want to revisit this later because:
+> -        * - It's plausible that someone may have run fewer lines to the
+> -        *   sink than the sink actually supports, assuming that the lines
+> -        *   will just be driven at a higher rate.
+> -        * - The DP spec seems to indicate that it's more important to minimize
+> -        *   the number of lanes than the link rate.
+> -        *
+> -        * If we do revisit, it would be important to measure the power impact.
+> -        */
+> -       pdata->dp_lanes = ti_sn_get_max_lanes(pdata);
+> +       max_dp_lanes = ti_sn_get_max_lanes(pdata);
+> +       pdata->dp_lanes = min(pdata->dp_lanes, max_dp_lanes);
+>
+>         /* DSI_A lane config */
+> -       val = CHA_DSI_LANES(4 - pdata->dsi->lanes);
+> +       val = CHA_DSI_LANES(SN_MAX_DP_LANES - pdata->dsi->lanes);
+>         regmap_update_bits(pdata->regmap, SN_DSI_LANES_REG,
+>                            CHA_DSI_LANES_MASK, val);
+>
+> +       regmap_write(pdata->regmap, SN_LN_ASSIGN_REG, pdata->ln_assign);
+> +       regmap_update_bits(pdata->regmap, SN_ENH_FRAME_REG, LN_POLRS_MASK,
+> +                          pdata->ln_polrs << LN_POLRS_OFFSET);
+> +
+>         /* set dsi clk frequency value */
+>         ti_sn_bridge_set_dsi_rate(pdata);
+>
+> @@ -1063,6 +1066,55 @@ static int ti_sn_setup_gpio_controller(struct ti_sn_bridge *pdata)
+>         return ret;
+>  }
+>
+> +static void ti_sn_bridge_parse_lanes(struct ti_sn_bridge *pdata,
+> +                                    struct device_node *np)
+> +{
+> +       u32 lane_assignments[SN_MAX_DP_LANES] = { 0, 1, 2, 3 };
+> +       u32 lane_polarities[SN_MAX_DP_LANES] = { };
+> +       struct device_node *endpoint;
+> +       u8 ln_assign = 0;
+> +       u8 ln_polrs = 0;
+> +       int dp_lanes;
+> +       int i;
+> +
+> +       /*
+> +        * Read config from the device tree about lane remapping and lane
+> +        * polarities.  These are optional and we assume identity map and
+> +        * normal polarity if nothing is specified.  It's OK to specify just
+> +        * data-lanes but not lane-polarities but not vice versa.
+> +        *
+> +        * Error checking is light (we just make sure we don't crash or
+> +        * buffer overrun) and we assume dts is well formed and specifying
+> +        * mappings that the hardware supports.
+> +        */
+> +       endpoint = of_graph_get_endpoint_by_regs(np, 1, -1);
+> +       dp_lanes = of_property_count_u32_elems(endpoint, "data-lanes");
+> +       if (dp_lanes > 0 && dp_lanes <= SN_MAX_DP_LANES) {
+> +               of_property_read_u32_array(endpoint, "data-lanes",
+> +                                          lane_assignments, dp_lanes);
+> +               of_property_read_u32_array(endpoint, "lane-polarities",
+> +                                          lane_polarities, dp_lanes);
+> +       } else {
+> +               dp_lanes = SN_MAX_DP_LANES;
+> +       }
+> +       of_node_put(endpoint);
+> +
+> +       /*
+> +        * Convert into register format.  Loop over all lanes even if
+> +        * data-lanes had fewer elements so that we nicely initialize
+> +        * the LN_ASSIGN register.
+> +        */
+> +       for (i = SN_MAX_DP_LANES - 1; i >= 0; i--) {
+> +               ln_assign = ln_assign << LN_ASSIGN_WIDTH | lane_assignments[i];
+> +               ln_polrs = ln_polrs << 1 | lane_polarities[i];
+> +       }
+> +
+> +       /* Stash in our struct for when we power on */
+> +       pdata->dp_lanes = dp_lanes;
+> +       pdata->ln_assign = ln_assign;
+> +       pdata->ln_polrs = ln_polrs;
+> +}
+> +
+>  static int ti_sn_bridge_probe(struct i2c_client *client,
+>                               const struct i2c_device_id *id)
+>  {
+> @@ -1105,6 +1157,8 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
+>                 return ret;
+>         }
+>
+> +       ti_sn_bridge_parse_lanes(pdata, client->dev.of_node);
+> +
+>         ret = ti_sn_bridge_parse_regulators(pdata);
+>         if (ret) {
+>                 DRM_ERROR("failed to parse regulators\n");
+> --
+> 2.26.2.645.ge9eca65c58-goog
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
