@@ -4,86 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5433C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1306E206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA87206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 08:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgEOI4y (ORCPT
+        id S1727898AbgEOI6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 04:56:54 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44076 "EHLO huawei.com"
+        Fri, 15 May 2020 04:58:40 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:49776 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726922AbgEOI4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 04:56:54 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DBAF970E520CAE57BCD2;
-        Fri, 15 May 2020 16:56:51 +0800 (CST)
-Received: from [127.0.0.1] (10.67.102.197) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 15 May 2020
- 16:56:44 +0800
-Subject: Re: [PATCH 1/4] hung_task: Move hung_task sysctl interface to
- hung_task_sysctl.c
-To:     Kees Cook <keescook@chromium.org>
-CC:     <mcgrof@kernel.org>, <yzaikin@google.com>, <adobriyan@gmail.com>,
-        <mingo@kernel.org>, <peterz@infradead.org>,
-        <akpm@linux-foundation.org>, <yamada.masahiro@socionext.com>,
-        <bauerman@linux.ibm.com>, <gregkh@linuxfoundation.org>,
-        <skhan@linuxfoundation.org>, <dvyukov@google.com>,
-        <svens@stackframe.org>, <joel@joelfernandes.org>,
-        <tglx@linutronix.de>, <Jisheng.Zhang@synaptics.com>,
-        <pmladek@suse.com>, <bigeasy@linutronix.de>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <wangle6@huawei.com>
-References: <1589517224-123928-1-git-send-email-nixiaoming@huawei.com>
- <1589517224-123928-2-git-send-email-nixiaoming@huawei.com>
- <202005150103.6DD6F07@keescook>
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-Message-ID: <b72e0721-d08a-0fef-f55d-eb854483d04f@huawei.com>
-Date:   Fri, 15 May 2020 16:56:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1727050AbgEOI6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 04:58:39 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL9+4Wb5eaA41AA--.11S3;
+        Fri, 15 May 2020 16:58:33 +0800 (CST)
+Subject: Re: [PATCH 1/2] MIPS: Loongson: Fix fatal error during GPU init
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <1589508901-18077-1-git-send-email-yangtiezhu@loongson.cn>
+ <1264becb-44aa-9e29-4e67-d1b5fbc0b56c@cogentembedded.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <9472816e-f97f-349b-2f7c-6c6c636f5fec@loongson.cn>
+Date:   Fri, 15 May 2020 16:58:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-In-Reply-To: <202005150103.6DD6F07@keescook>
-Content-Type: text/plain; charset="gbk"; format=flowed
+In-Reply-To: <1264becb-44aa-9e29-4e67-d1b5fbc0b56c@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.197]
-X-CFilter-Loop: Reflected
+X-CM-TRANSID: AQAAf9DxL9+4Wb5eaA41AA--.11S3
+X-Coremail-Antispam: 1UD129KBjvJXoWrZry5Zw45ur18uF1xJFy7KFg_yoW8Jry5pF
+        W5Gan3KrWkJrZ5Kasrt3y7u34Y9an5XFy5Cw40kr1xCrsxur1kA3yUXw4DCFW8Gr4xKa4I
+        yFZ7G34F93WDZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r4j6F4U
+        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUkrcfUUU
+        UU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/15 16:04, Kees Cook wrote:
-> On Fri, May 15, 2020 at 12:33:41PM +0800, Xiaoming Ni wrote:
->> Move hung_task sysctl interface to hung_task_sysctl.c.
->> Use register_sysctl() to register the sysctl interface to avoid
->> merge conflicts when different features modify sysctl.c at the same time.
+On 05/15/2020 04:51 PM, Sergei Shtylyov wrote:
+> Hello!
+>
+> On 15.05.2020 5:15, Tiezhu Yang wrote:
+>
+>> When ATI Radeon graphics card has been compiled directly into the kernel
+>                                ^ driver
+
+Hi Sergei,
+
+Thanks for your review, I have been sent v2 with the updated commit message:
+https://lore.kernel.org/patchwork/patch/1242218/
+
+Thanks,
+Tiezhu Yang
+
+>
+>> instead of as a module, we should make sure the firmware for the model
+>> (check available ones in /lib/firmware/radeon) is built-in to the kernel
+>> as well, otherwise there exists the following fatal error during GPU 
+>> init,
+>> change CONFIG_DRM_RADEON=y to CONFIG_DRM_RADEON=m to fix it.
 >>
->> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
->> ---
->>   include/linux/sched/sysctl.h |  8 +----
->>   kernel/Makefile              |  4 ++-
->>   kernel/hung_task.c           |  6 ++--
->>   kernel/hung_task.h           | 21 ++++++++++++
->>   kernel/hung_task_sysctl.c    | 80 ++++++++++++++++++++++++++++++++++++++++++++
-> 
-> Why a separate file? That ends up needing changes to Makefile, the
-> creation of a new header file, etc. Why not just put it all into
-> hung_task.c directly?
-> 
-> -Kees
-> 
-But Luis Chamberlain's suggestion is to put the hung_task sysctl code in 
-a separate file. Details are in https://lkml.org/lkml/2020/5/13/762.
-I am a little confused, not sure which way is better.
-
-Thanks
-Xiaoming Ni
-
-
-
+>> [    1.900997] [drm] Loading RS780 Microcode
+>> [    1.905077] radeon 0000:01:05.0: Direct firmware load for 
+>> radeon/RS780_pfp.bin failed with error -2
+>> [    1.914140] r600_cp: Failed to load firmware "radeon/RS780_pfp.bin"
+>> [    1.920405] [drm:r600_init] *ERROR* Failed to load firmware!
+>> [    1.926069] radeon 0000:01:05.0: Fatal error during GPU init
+>> [    1.931729] [drm] radeon: finishing device.
+>>
+>> Fixes: 024e6a8b5bb1 ("MIPS: Loongson: Add a Loongson-3 default config 
+>> file")
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> [...]
+>
+> MBR, Sergei
 
