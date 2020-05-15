@@ -2,365 +2,117 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9369FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48E4820758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6CFF20758
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:52:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e+hvs8n9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgEOMuL (ORCPT
+        id S1726219AbgEOMwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:50:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:55516 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726135AbgEOMuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:50:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AFD81042;
-        Fri, 15 May 2020 05:50:10 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.24.119])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D37DC3F305;
-        Fri, 15 May 2020 05:50:07 -0700 (PDT)
-Date:   Fri, 15 May 2020 13:50:05 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        harb@amperecomputing.com
-Subject: Re: [PATCH v3 7/7] firmware: smccc: Add ARCH_SOC_ID support
-Message-ID: <20200515125005.GG67718@C02TD0UTHF1T.local>
-References: <20200506164411.3284-1-sudeep.holla@arm.com>
- <20200506164411.3284-8-sudeep.holla@arm.com>
+        Fri, 15 May 2020 08:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgEOMwM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 08:52:12 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7329FC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 05:52:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Z+Jyvc8F629bU/MQ39LYHqG/QpmGLVqISbuPj5aTL40=; b=e+hvs8n9Dg9ggBJp+KqoFUET0H
+        TE7G3GkwOLilDJKeaCbMjHlSL/D5ETMzqn5faToSoSfVKXLEbhNwFxZ2GdvmS7bK57wwnv3k3YjTd
+        xb3xecfKQu76MkGdigffM/5uD7RKKuu9OsrBHSooYg1zopCrW1AXz6BM1eCEMSYCiLgywFGsK4FRa
+        ixsxT/5DUJzfnqiBRWHKLZY9GujDwK5J01IY5XxQjoD/q8lteWYIFvoEKhhufhKZYK5Jpl5xluVDY
+        Klbqyt4n7yKOOSqvLgzfTShfW2LPWcRQM02qJaxEAfTedDlNEACPqsLE7v4uE7iec0Z4xaMezSp3z
+        9kAbxyDw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZZoK-0008NQ-0Q; Fri, 15 May 2020 12:51:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 86A4B300261;
+        Fri, 15 May 2020 14:51:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 71825202E0F9C; Fri, 15 May 2020 14:51:28 +0200 (CEST)
+Date:   Fri, 15 May 2020 14:51:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Jirka Hladky <jhladky@redhat.com>, Phil Auld <pauld@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Douglas Shakshober <dshaks@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+Message-ID: <20200515125128.GU2957@hirez.programming.kicks-ass.net>
+References: <20200507155422.GD3758@techsingularity.net>
+ <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
+ <20200508092212.GE3758@techsingularity.net>
+ <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
+ <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
+ <20200513153023.GF3758@techsingularity.net>
+ <20200514153122.GE2978@hirez.programming.kicks-ass.net>
+ <20200515084740.GJ3758@techsingularity.net>
+ <20200515112815.GT2957@hirez.programming.kicks-ass.net>
+ <20200515122231.GL3758@techsingularity.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200506164411.3284-8-sudeep.holla@arm.com>
+In-Reply-To: <20200515122231.GL3758@techsingularity.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 05:44:11PM +0100, Sudeep Holla wrote:
-> SMCCC v1.2 adds a new optional function SMCCC_ARCH_SOC_ID to obtain a
-> SiP defined SoC identification value. Add support for the same.
+On Fri, May 15, 2020 at 01:22:31PM +0100, Mel Gorman wrote:
+> On Fri, May 15, 2020 at 01:28:15PM +0200, Peter Zijlstra wrote:
+
+> > > +			if (val & _TIF_POLLING_NRFLAG)
+> > > +				goto activate;
+> > 
+> > I'm completely confused... the result here is that if you're polling you
+> > do _NOT_ queue on the wake_list, but instead immediately enqueue.
+> > 
+> > (which kinda makes sense, since if the remote CPU is idle, it doesn't
+> > have these lines in its cache anyway)
+> > 
 > 
-> Also using the SoC bus infrastructure, let us expose the platform
-> specific SoC atrributes under sysfs. We also provide custom sysfs for
-> the vendor ID as JEP-106 bank and identification code.
-> 
-> Reviewed-by: Steven Price <steven.price@arm.com>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> Crap, I rushed this and severely confused myself about what is going
 
-As with the earlier patch referring to SMCCCv1.2 specifically, I'm
-somewhat wary of this until the SMCCCv1.2 spec is final. Do we know what
-the timeline is for that?
+Hehe, and here I though I was confused :-)
 
-That needn't hold up the pure refactoring/cleanup portions of this
-series, and regardless I have some comments below on this patch.
+> on. It is definitely the case that flipping this check does not give
+> any benefit. The patch shows a benefit but I'm failing to understand
+> exactly why. How I ended up here was perf indicating a lot of time spent
+> on smp_cond_load_acquire() which made me look closely at ttwu_remote()
+> and looking at function graphs to compare the different types of wakeups
+> and their timings.
 
-> ---
->  drivers/firmware/smccc/Kconfig  |   8 ++
->  drivers/firmware/smccc/Makefile |   1 +
->  drivers/firmware/smccc/soc_id.c | 168 ++++++++++++++++++++++++++++++++
->  include/linux/arm-smccc.h       |   5 +
->  4 files changed, 182 insertions(+)
->  create mode 100644 drivers/firmware/smccc/soc_id.c
-> 
-> diff --git a/drivers/firmware/smccc/Kconfig b/drivers/firmware/smccc/Kconfig
-> index d93f1ab52cb2..15e7466179a6 100644
-> --- a/drivers/firmware/smccc/Kconfig
-> +++ b/drivers/firmware/smccc/Kconfig
-> @@ -15,3 +15,11 @@ config HAVE_ARM_SMCCC_DISCOVERY
->  	 implementation of PSCI_FEATURES(SMCCC_VERSION) which returns
->  	 success on firmware compliant to SMCCC v1.1 and above.
->  
-> +config ARM_SMCCC_SOC_ID
-> +	bool "SoC bus device for the ARM SMCCC SOC_ID"
-> +	depends on HAVE_ARM_SMCCC_DISCOVERY
-> +	default y
-> +	select SOC_BUS
-> +	help
-> +	  Include support for the SoC bus on the ARM SMCCC firmware based
-> +	  platforms providing some sysfs information about the SoC variant.
-> diff --git a/drivers/firmware/smccc/Makefile b/drivers/firmware/smccc/Makefile
-> index 6f369fe3f0b9..72ab84042832 100644
-> --- a/drivers/firmware/smccc/Makefile
-> +++ b/drivers/firmware/smccc/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
->  #
->  obj-$(CONFIG_HAVE_ARM_SMCCC_DISCOVERY)	+= smccc.o
-> +obj-$(CONFIG_ARM_SMCCC_SOC_ID)	+= soc_id.o
-> diff --git a/drivers/firmware/smccc/soc_id.c b/drivers/firmware/smccc/soc_id.c
-> new file mode 100644
-> index 000000000000..dc5dd3f1f59b
-> --- /dev/null
-> +++ b/drivers/firmware/smccc/soc_id.c
-> @@ -0,0 +1,168 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2020 Arm Limited
-> + */
-> +
-> +#define pr_fmt(fmt) "SMCCC: SOC_ID: " fmt
-> +
-> +#include <linux/arm-smccc.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/slab.h>
-> +#include <linux/sys_soc.h>
-> +
-> +#define SMCCC_SOC_ID_JEP106_BANK_IDX_MASK	GENMASK(30, 24)
-> +/*
-> + * As per the SMC Calling Convention specification v1.2 (ARM DEN 0028C)
-> + * Section 7.4 SMCCC_ARCH_SOC_ID bits[23:16] are JEP-106 identification
-> + * code with parity bit for the SiP. We can drop the parity bit.
-> + */
-> +#define SMCCC_SOC_ID_JEP106_ID_CODE_MASK	GENMASK(22, 16)
-> +#define SMCCC_SOC_ID_IMP_DEF_SOC_ID_MASK	GENMASK(15, 0)
-> +
-> +/* The bank index is equal to the for continuation code bank number - 1 */
-> +#define JEP106_BANK_CONT_CODE(x)	\
-> +	(u8)(FIELD_GET(SMCCC_SOC_ID_JEP106_BANK_IDX_MASK, (x)) + 1)
-> +#define JEP106_ID_CODE(x)	\
-> +	(u8)(FIELD_GET(SMCCC_SOC_ID_JEP106_ID_CODE_MASK, (x)))
-> +#define IMP_DEF_SOC_ID(x)	\
-> +	(u16)(FIELD_GET(SMCCC_SOC_ID_IMP_DEF_SOC_ID_MASK, (x)))
-> +
-> +static int soc_id_version;
-> +static struct soc_device *soc_dev;
-> +static struct soc_device_attribute *soc_dev_attr;
-> +
-> +static int smccc_map_error_codes(unsigned long a0)
-> +{
-> +	if (a0 >= SMCCC_RET_SUCCESS)
-> +		return 0;
+So the raisin we did this remote wakeup thing in the first place was
+that Oracle was having very heavy rq->lock cache-line contention. By
+farming off the enqueue to the CPU that was going to run the task
+anyway, the rq->lock (and the other runqueue structure lines) could stay
+in the CPU that was using them (hard). Less cacheline ping-pong, more
+win.
 
-As SMCCC_RET_SUCCESS is 0, and a0 is an unsigned long, this condition is
-true for all values of a0.
-
-I don't think this function is particularly helpful, since in the case
-of a failure it'd be nicer to log the original FW error code to dmesg
-for debugging, so we may as well leave it to the caller to check for
-the EOPNOTSUPP / error cases.
-
-e.g. where NOT_SUPPORTED is legitimate callers can do:
-
-	unsigned long ret = smccc_call_foo(...);
-	if (ret == SMCCC_RET_NOT_SUPPORTED)
-		return 0;
-	if ((int)ret < 0) 
-		pr_err("FOO returned %lx\n", ret)
-		return -EINVAL;
-	}
-
-	consume_ret_somehow(ret);
-
-... and where NOT_SUPPORTED is not legitimate, they can avoid the
-explicit check for that:
-
-	unsigned long ret = smccc_call_foo(...);
-	if ((int)ret < 0) {
-		pr_err("FOO returned %lx\n", ret)
-		return -EINVAL;
-	}
-
-	consume_ret_somehow(ret);
-
-> +	else if (a0 == SMCCC_RET_INVALID_PARAMETER)
-> +		return -EINVAL;
-> +	else if (a0 == SMCCC_RET_NOT_SUPPORTED)
-> +		return -EOPNOTSUPP;
-> +	return -EINVAL;
-> +}
-> +
-> +static int smccc_soc_id_support_check(void)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	if (arm_smccc_1_1_get_conduit() == SMCCC_CONDUIT_NONE) {
-> +		pr_err("%s: invalid SMCCC conduit\n", __func__);
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
-> +			     ARM_SMCCC_ARCH_SOC_ID, &res);
-> +
-> +	return smccc_map_error_codes(res.a0);
-> +}
-
-Which I think means we may as well get rid of this, too, and fold the
-conduit check into the start of smccc_soc_init().
-
-> +
-> +static ssize_t
-> +jep106_cont_bank_code_show(struct device *dev, struct device_attribute *attr,
-> +			   char *buf)
-> +{
-> +	return sprintf(buf, "%02x\n", JEP106_BANK_CONT_CODE(soc_id_version));
-> +}
-
-For the regs/identification values, we added a '0x' prefix to make it
-explicit that the values are hex. Can/should we do that here, or is that
-against conventions for soc bus files?
-
-> +
-> +static DEVICE_ATTR_RO(jep106_cont_bank_code);
-> +
-> +static ssize_t
-> +jep106_identification_code_show(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	return sprintf(buf, "%02x\n", JEP106_ID_CODE(soc_id_version));
-> +}
-> +
-> +static DEVICE_ATTR_RO(jep106_identification_code);
-> +
-> +static struct attribute *jep106_id_attrs[] = {
-> +	&dev_attr_jep106_cont_bank_code.attr,
-> +	&dev_attr_jep106_identification_code.attr,
-> +	NULL
-> +};
-> +
-> +ATTRIBUTE_GROUPS(jep106_id);
-> +
-> +static int __init smccc_soc_init(void)
-> +{
-> +	struct device *dev;
-> +	int ret, soc_id_rev;
-> +	struct arm_smccc_res res;
-> +	static char soc_id_str[8], soc_id_rev_str[12];
-> +
-> +	if (arm_smccc_version_get() < ARM_SMCCC_VERSION_1_2)
-> +		return 0;
-> +
-> +	ret = smccc_soc_id_support_check();
-> +	if (ret) {
-> +		pr_info("Feature not implemented, skipping ....\n");
-> +		return 0;
-> +	}
-
-As above, I think we should expand smccc_soc_id_support_check() inline
-here.
-
-> +
-> +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_SOC_ID, 0, &res);
-> +
-> +	ret = smccc_map_error_codes(res.a0);
-> +	if (ret) {
-> +		pr_err("Failed to fetch version, Err = %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	soc_id_version = res.a0;
-
-... and I think this'd be clearer like:
-
-	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_SOC_ID, 0, &res);
-	if ((int)res.a0) {
-		pr_err("ARCH_SOC_ID(0) returned error: %lx\n", res.a0); 
-		return -EINVAL;
-	}
-
-> +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_SOC_ID, 1, &res);
-> +
-> +	ret = smccc_map_error_codes(res.a0);
-> +	if (ret) {
-> +		pr_err("Failed to fetch revision, Err = %d\n", ret);
-> +		return ret;
-> +	}
-
-... likewise:
-
-	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_SOC_ID, 1, &res);
-	if ((int)res.a0) {
-		pr_err("ARCH_SOC_ID(1) returned error: %lx\n", res.a0); 
-		return -EINVAL;
-	}
-
-> +
-> +	soc_id_rev = res.a0;
-> +
-> +	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
-> +	if (!soc_dev_attr)
-> +		return -ENOMEM;
-> +
-> +	sprintf(soc_id_str, "0x%04x", IMP_DEF_SOC_ID(soc_id_version));
-> +	sprintf(soc_id_rev_str, "0x%08x", soc_id_rev);
-> +
-> +	soc_dev_attr->soc_id = soc_id_str;
-> +	soc_dev_attr->revision = soc_id_rev_str;
-
-Is there any expected format for these? e.g. would it make sense to add
-a prefix showing that these are JEP codes?
-
-Do we need to care about platform code which might also regsiter a soc
-device? ... or do we expect those to be mutually exclusive?
-
-Thanks,
-Mark.
-
-> +
-> +	soc_dev = soc_device_register(soc_dev_attr);
-> +	if (IS_ERR(soc_dev)) {
-> +		ret = PTR_ERR(soc_dev);
-> +		goto free_soc;
-> +	}
-> +
-> +	dev = soc_device_to_device(soc_dev);
-> +
-> +	ret = devm_device_add_groups(dev, jep106_id_groups);
-> +	if (ret) {
-> +		dev_err(dev, "sysfs create failed: %d\n", ret);
-> +		goto unregister_soc;
-> +	}
-> +
-> +	pr_info("ID = %s Revision = %s\n", soc_dev_attr->soc_id,
-> +		soc_dev_attr->revision);
-> +
-> +	return 0;
-> +
-> +unregister_soc:
-> +	soc_device_unregister(soc_dev);
-> +free_soc:
-> +	kfree(soc_dev_attr);
-> +	return ret;
-> +}
-> +module_init(smccc_soc_init);
-> +
-> +static void __exit smccc_soc_exit(void)
-> +{
-> +	if (soc_dev)
-> +		soc_device_unregister(soc_dev);
-> +	kfree(soc_dev_attr);
-> +}
-> +module_exit(smccc_soc_exit);
-> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-> index 8dd54dad1ec5..368dabe99d09 100644
-> --- a/include/linux/arm-smccc.h
-> +++ b/include/linux/arm-smccc.h
-> @@ -69,6 +69,11 @@
->  			   ARM_SMCCC_SMC_32,				\
->  			   0, 1)
->  
-> +#define ARM_SMCCC_ARCH_SOC_ID						\
-> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,				\
-> +			   ARM_SMCCC_SMC_32,				\
-> +			   0, 2)
-> +
->  #define ARM_SMCCC_ARCH_WORKAROUND_1					\
->  	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,				\
->  			   ARM_SMCCC_SMC_32,				\
-> -- 
-> 2.17.1
-> 
+The observation here is that if a CPU is idle, it's rq will not be
+contended.
