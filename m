@@ -2,100 +2,94 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A8EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3852070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589575464;
-	bh=N7sHR+WmOKrHS7sx3jSkXYhCK2mvTbDrj0hGOsattK8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ao+fWHosm86p5mbtBvTLlTUHC/OGknZrcJ5CoKWCkWPtcjMp4pPFl9xu/V8WKWfF8
-	 hIIVpGZmegIILW3/q+pusrqC6goEsyf9rr8/OjNC8EPveX73jgekRjIXDZUNEvvzDS
-	 mvUQr0kh0NKFvAy4QPL3wCIFwK+JKEU29M0g/kWg=
+	by mail.kernel.org (Postfix) with ESMTP id B5C4920709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 20:44:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=juliacomputing-com.20150623.gappssmtp.com header.i=@juliacomputing-com.20150623.gappssmtp.com header.b="EL/0ZmnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgEOUoY (ORCPT
+        id S1726703AbgEOUoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 16:44:24 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34302 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgEOUoX (ORCPT
+        Fri, 15 May 2020 16:44:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgEOUog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 16:44:23 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f6so1556771pgm.1;
-        Fri, 15 May 2020 13:44:23 -0700 (PDT)
+        Fri, 15 May 2020 16:44:36 -0400
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B20C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:44:36 -0700 (PDT)
+Received: by mail-io1-xd32.google.com with SMTP id k6so4201654iob.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 13:44:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=juliacomputing-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZTVysy0/5xwOZqQ9WQNRID/d39HXhyeJhmjEaIIRaN0=;
+        b=EL/0ZmnD4zV1ZPVNKBHoMD1mSHsptMNDFEbmH7JnUu6LaQ4VfgO5knsXEh6MYEQeTP
+         x6WwPmOekh+ZPaXQD8Z+xo3BOmxB1tO9oq7+xNZt4nHq9JzRRo/kB/noGdLRWBT72wr+
+         P1ivq1K9uQcrV08TEjn7FnTOvnTXXcCdBMwtjmWlzmm3YoB2Sh/3c0hh1k1Gm23ytsuc
+         SJIJKF34mbRnjxY5+8yXsBpuiVzmud5klBVFPi4jXlfSxuBwHl/v8Q4opiW2U+9CU6y0
+         nsxRbWhfSRRSqmGxHBA5+ptLqA/e7cg2K57L3Mzg58XskmMH/ra72iuZKIV1KdVbcQ6x
+         sfxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=31jlI11UdSuUne5CytA8aXHN1DKoQTYg2m0ehqqjq1w=;
-        b=Nr+wW/S0YqcnjY3rjCXDlQrzv69mSln+17NZYJDLMkCwVVBL60VVJL9eMr6Fjr6FRe
-         y1vMkFjtrFGZvpZYEa4V3B+VFXvBeYsjOW2yFXWIfCdbaw8qGUfXgEfA8JnEd77NpHkM
-         K1exf67FVJxF5dISa4eBFkR92IPx3QOCu6wdB7WU5RtOb9BL2gYFfQ/2I/ChL48SUQ3u
-         G2LvSldXyL79rsseNGTBQ7rylGTgVizsuMJ2MFwUO3d691/WAldvB4HSwfzwa9T3iPO2
-         zG6gdZZVIqOLNwHh3qh2ljcXbfk/ikpthkFBFGZEobrRlhhfFTdOM5Qc2nNrK74Ow5no
-         boWw==
-X-Gm-Message-State: AOAM531L1yg6BCFa3ACHakiMnjYtZArjgDej+/Xw3filWH3cQxXlEKmD
-        DlxfYWMHZ6LKoL7ZCdGelQBK/j14GqeJ1A==
-X-Google-Smtp-Source: ABdhPJw7XG8gdnNFvqQp/E+s55309E2Xi/QpwKoZegblz+akssDO8WQKCDIfy7AdJqwWny83PlCUZA==
-X-Received: by 2002:a62:e70b:: with SMTP id s11mr5672379pfh.32.1589575462477;
-        Fri, 15 May 2020 13:44:22 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id f6sm2707575pfd.175.2020.05.15.13.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 13:44:21 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id B5A6B40246; Fri, 15 May 2020 20:44:20 +0000 (UTC)
-Date:   Fri, 15 May 2020 20:44:20 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [PATCH v5 2/7] firmware: add offset to request_firmware_into_buf
-Message-ID: <20200515204420.GB11244@42.do-not-panic.com>
-References: <20200508002739.19360-1-scott.branden@broadcom.com>
- <20200508002739.19360-3-scott.branden@broadcom.com>
- <20200513003301.GH11244@42.do-not-panic.com>
- <3919bb12-522d-11fd-302b-91dc0fcff363@broadcom.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZTVysy0/5xwOZqQ9WQNRID/d39HXhyeJhmjEaIIRaN0=;
+        b=jqAdcx5m1HQ07XjU8p2S1eBuIGg2hZBQR+/QcFVWl/zXjdVbvZsg4PZAhdliv54HJe
+         oQCS5UzY3OjqDWSXxaG6UkXCzNsYfj4iQSZjjrb3ATw2vOM7H2L0I3fJMomWZhhqEeoe
+         E5y4Mwc4sxur/ldwCc9zehUVSy4rl2QYVbHJdb3lPUUmMyq+ALedmzj5d6dkAj9j+kVa
+         kvac54TNtD8YvgTSkRryqwNKZSbRfLJdZRrMPDWEYO93dxpptZbE5znsS55ctBI+btmk
+         WyHTbGFFhDz1oCxfkjZeG4C2co+QVrIKM5EppoGjtwzO5mD1KbMYuDcD/1DdTigR+iBT
+         6ZAw==
+X-Gm-Message-State: AOAM532+A8UceRaEpxbIAU4XaQCVjZo1kk+B3CvNSlpktGON5PQK1OD6
+        mPjp4OB9lBVr3Y+5X7SqyDiWuc1RkcNQsG9E+wKgJCXz
+X-Google-Smtp-Source: ABdhPJxkMGRph1yex/EqbfiAYz3QnSvMLGz7CWyEAilbUvr8xbLyxEr5zonPDuT1C9W5C/VYQ3poNHkI9BP8hLpTbKc=
+X-Received: by 2002:a02:7611:: with SMTP id z17mr4929634jab.143.1589575474548;
+ Fri, 15 May 2020 13:44:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3919bb12-522d-11fd-302b-91dc0fcff363@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CABV8kRyHrDMK4o=UZZZWJMuQNjPA8Xuoj-JFF-Lsx26fBTR0WA@mail.gmail.com>
+ <20200515121346.GA22919@willie-the-truck>
+In-Reply-To: <20200515121346.GA22919@willie-the-truck>
+From:   Keno Fischer <keno@juliacomputing.com>
+Date:   Fri, 15 May 2020 16:43:58 -0400
+Message-ID: <CABV8kRxD3_zh_WJy0jWVpxxNG_NSwoTJXdLd8Ym9Bm7PbHhftQ@mail.gmail.com>
+Subject: Re: PTRACE_SYSEMU behavior difference on arm64
+To:     Will Deacon <will@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:35:06AM -0700, Scott Branden wrote:
-> On 2020-05-12 5:33 p.m., Luis Chamberlain wrote:
-> > On Thu, May 07, 2020 at 05:27:34PM -0700, Scott Branden wrote:
-> > flags? But its a single variable enum!
-> fw_opt is an existing enum which doesn't really act like an enum.
-> It is a series of BIT defines in an enum that are then OR'd together in the
-> (existing) code?
+On Fri, May 15, 2020 at 8:13 AM Will Deacon <will@kernel.org> wrote:
+> But it also
+> means that nobody is using this on arm64, so we could also consider removing
+> it entirely. Did you spot this because you are trying to use it for
+> something or just by inspection/unit-testing?
 
-Indeed, in retrospect that is odd, it should be a u32 then. Please feel
-free to fix.
- 
-  Luis
+No, I was trying to port a tool from x86 and nothing made sense for
+many hours :). (it was quite a bit of debugging, because the
+syscall that it was supposed to skip installed a seccomp filter,
+which then later veto'd random syscalls making the
+symptoms quite confusing). Having PTRACE_SYSEMU isn't
+critical, but we might as well support it.
+It makes things a bit more efficient and is probably safer
+(if it works correctly ;). The patch is fairly small. Will validate
+and then send it here for review.
+
+
+Keno
