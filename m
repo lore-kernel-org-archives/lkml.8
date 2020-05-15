@@ -2,186 +2,99 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41611C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D65C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14210207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF5E20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 14:55:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rrJyTzWW"
+	dkim=pass (1024-bit key) header.d=kocurkovo.cz header.i=@kocurkovo.cz header.b="Vi/1DPnb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgEOOxr (ORCPT
+        id S1726248AbgEOOzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 10:53:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726513AbgEOOxq (ORCPT
+        Fri, 15 May 2020 10:55:42 -0400
+Received: from mail.kocurkovo.cz ([185.8.236.170]:59162 "EHLO
+        mail.kocurkovo.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgEOOzl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 10:53:46 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77EA5C05BD0A
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 07:53:46 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id o134so1272242ybg.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 07:53:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vCsP/Fi9p7wcfV9Mclr35lTEASR77uNfvxlH1mBaMZ8=;
-        b=rrJyTzWWBuvekmQCoKhKmu9E97sL1HhZfILkia5nrfYwCg8ZLbfuyE0cE5KyG0i8mi
-         49NKzHaM4i8z/KAZ1EtFqNyXCHgp0MCk4VmC/ZmGrGX3azcg51jkYwMIztSY11ezfoQi
-         lO0UCTySbozI2VRa0/XIx8acfh1lQMpFHkABYNBgpVm+ZxJOAwWqnZMt4g3/7725Gmvu
-         Xzv4mLy09jg+ygfm1QgXHpN2m2JwqHDETeVWlxGLmmfI328oAwJGG0s5YzwBKgKwiCwJ
-         GXLy8pTziiQv/Ra8jTYOXe5W8dLl9Z/XwjMLefN72eS9jaksgbYtUmakaE5LD0PJM4R0
-         S0pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vCsP/Fi9p7wcfV9Mclr35lTEASR77uNfvxlH1mBaMZ8=;
-        b=gpddVwAYb2b7VZ0B9NVex6NjIVX3iT6TT0Fwy/lEl91O3yMxFhOT2VWlMz+yVj+Q7v
-         jNN1JqARTCl1SirHAOzdLaQGXMlDoPxakV06KI7hVE6AVIqzxJEPMtJ/mIiiCgAyNJoy
-         hAaS+1xBt4LevnifW3X+chmlE/Kfwn9FiCCGBqZVUVoUGrIjn2MXb1miNlvHyxuWddo6
-         ozagoPhLEhLThd+aqdOPqU2ojl3J7DeM7ueCtY7PEzZmlGKTny1xaIxfrPYkDo7cRiy5
-         /ThLSQ3BgjLpcVcSi2vjI6IfNtoQ/t5YYKVVPru0js8uA+ua23NIMGffx5GNCLlEdizd
-         zFBg==
-X-Gm-Message-State: AOAM5309CoM8uBkCAEcZ7GGu1cQBqmNaUQ994i6P41uKIxpi2SmYGUtH
-        yosAR45Z+EP26csSoSQBa5gNT0D7tIUiJhLtlffhbQ==
-X-Google-Smtp-Source: ABdhPJw8jSkyMc5FSVgVToRMpPNdgOeX63z4+lZHo7PCQvk9iYtRCIfB6vIzmcoO/DF8X/yJdxNNjWzN9tqb8+vsbbU=
-X-Received: by 2002:a25:4446:: with SMTP id r67mr6029617yba.41.1589554425260;
- Fri, 15 May 2020 07:53:45 -0700 (PDT)
+        Fri, 15 May 2020 10:55:41 -0400
+Received: by mail.kocurkovo.cz (Postfix, from userid 1000)
+        id 78F5818CB; Fri, 15 May 2020 16:55:38 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.kocurkovo.cz 78F5818CB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kocurkovo.cz;
+        s=mail; t=1589554538;
+        bh=pDkXalda7bV0b2weLUQ604K7SfSCx5HTnM8p3DPSRY8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Vi/1DPnb/yS/pv4FXIMYNIM2Ezna9PHr5bxhd4jfRcaJWgVlZrQJzB6CI4QlnoD37
+         F58jBUqi5S/i/pz3Wv23A6qXHRRh/ZmQUzBRkWeaJcVj5YktChvTCeapq1nicbdF3b
+         WhGIRwKN1eFN3jzQZytEKmlqjjiuInJMYw+bFd98=
+Date:   Fri, 15 May 2020 16:55:38 +0200
+From:   Matej Dujava <mdujava@kocurkovo.cz>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Forest Bond <forest@alittletooquiet.net>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] staging: vt6655: vt6656: change order of makefile
+ variable definitions
+Message-ID: <20200515145538.GA28808@new.kocurkovo.cz>
+Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Forest Bond <forest@alittletooquiet.net>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <1589397351-24655-1-git-send-email-mdujava@kocurkovo.cz>
+ <1589397351-24655-3-git-send-email-mdujava@kocurkovo.cz>
+ <20200515134859.GA2112248@kroah.com>
 MIME-Version: 1.0
-References: <20200515065624.21658-1-irogers@google.com> <20200515065624.21658-5-irogers@google.com>
- <20200515091707.GC3511648@krava> <20200515142917.GT5583@kernel.org>
-In-Reply-To: <20200515142917.GT5583@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 15 May 2020 07:53:33 -0700
-Message-ID: <CAP-5=fXtXgnb4nrVtsoxQ6vj8YtzPicFsad6+jB5UUFqMzg4mw@mail.gmail.com>
-Subject: Re: [PATCH 4/8] libbpf hashmap: Localize static hashmap__* symbols
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200515134859.GA2112248@kroah.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 7:29 AM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
+On Fri, May 15, 2020 at 03:48:59PM +0200, Greg Kroah-Hartman wrote:
+>I still fail to understand the need for this patch at all.  It doesn't
+>clean anything up, nor change anything.  There is no rule that this has
+>to be in one order or the other, and in fact, I like the order that the
+>files currently have :)
 >
-> Em Fri, May 15, 2020 at 11:17:07AM +0200, Jiri Olsa escreveu:
-> > On Thu, May 14, 2020 at 11:56:20PM -0700, Ian Rogers wrote:
-> > > Localize the hashmap__* symbols in libbpf.a. To allow for a version in
-> > > libapi.
-> > >
-> > > Before:
-> > > $ nm libbpf.a
-> > > ...
-> > > 000000000002088a t hashmap_add_entry
-> > > 000000000001712a t hashmap__append
-> > > 0000000000020aa3 T hashmap__capacity
-> > > 000000000002099c T hashmap__clear
-> > > 00000000000208b3 t hashmap_del_entry
-> > > 0000000000020fc1 T hashmap__delete
-> > > 0000000000020f29 T hashmap__find
-> > > 0000000000020c6c t hashmap_find_entry
-> > > 0000000000020a61 T hashmap__free
-> > > 0000000000020b08 t hashmap_grow
-> > > 00000000000208dd T hashmap__init
-> > > 0000000000020d35 T hashmap__insert
-> > > 0000000000020ab5 t hashmap_needs_to_grow
-> > > 0000000000020947 T hashmap__new
-> > > 0000000000000775 t hashmap__set
-> > > 00000000000212f8 t hashmap__set
-> > > 0000000000020a91 T hashmap__size
-> > > ...
-> > >
-> > > After:
-> > > $ nm libbpf.a
-> > > ...
-> > > 000000000002088a t hashmap_add_entry
-> > > 000000000001712a t hashmap__append
-> > > 0000000000020aa3 t hashmap__capacity
-> > > 000000000002099c t hashmap__clear
-> > > 00000000000208b3 t hashmap_del_entry
-> > > 0000000000020fc1 t hashmap__delete
-> > > 0000000000020f29 t hashmap__find
-> > > 0000000000020c6c t hashmap_find_entry
-> > > 0000000000020a61 t hashmap__free
-> > > 0000000000020b08 t hashmap_grow
-> > > 00000000000208dd t hashmap__init
-> > > 0000000000020d35 t hashmap__insert
-> > > 0000000000020ab5 t hashmap_needs_to_grow
-> > > 0000000000020947 t hashmap__new
-> > > 0000000000000775 t hashmap__set
-> > > 00000000000212f8 t hashmap__set
-> > > 0000000000020a91 t hashmap__size
-> > > ...
-> >
-> > I think this will break bpf selftests which use hashmap,
-> > we need to find some other way to include this
-> >
-> > either to use it from libbpf directly, or use the api version
-> > only if the libbpf is not compiled in perf, we could use
-> > following to detect that:
-> >
-> >       CFLAGS += -DHAVE_LIBBPF_SUPPORT
-> >       $(call detected,CONFIG_LIBBPF)
+>thanks,
 >
-> And have it in tools/perf/util/ instead?
->
->
-> - Arnaldo
+>greg k-h
 
-*sigh*
+Most of makefiles has pattern that `obj-${}` is before `driver-y` lines.
+If this is not something that was intentional, then this patch is not
+adding any value indeed.
 
-$ make -C tools/testing/selftests/bpf test_hashmap
-make: Entering directory
-'/usr/local/google/home/irogers/kernel-trees/kernel.org/tip/tools/testing/s
-elftests/bpf'
- BINARY   test_hashmap
-/usr/bin/ld: /tmp/ccEGGNw5.o: in function `test_hashmap_generic':
-/usr/local/google/home/irogers/kernel-trees/kernel.org/tip/tools/testing/selftests/bpf/test_hashmap.
-c:61: undefined reference to `hashmap__new'
-...
+Few examples that give me that impression:
 
-My preference was to make hashmap a sharable API in tools, to benefit
-not just perf but say things like libsymbol, libperf, etc. Moving it
-into perf and using conditional compilation is kinda gross but having
-libbpf tests depend on libapi also isn't ideal I guess. It is tempting
-to just cut a hashmap from fresh cloth to avoid this and to share
-among tools/. I don't know if the bpf folks have opinions?
+./gnss/Makefile-# SPDX-License-Identifier: GPL-2.0
+./gnss/Makefile-#
+./gnss/Makefile-# Makefile for the GNSS subsystem.
+./gnss/Makefile-#
+./gnss/Makefile-
+./gnss/Makefile:obj-$(CONFIG_GNSS)          += gnss.o
+./gnss/Makefile-gnss-y := core.o
+./gnss/Makefile-
+./gnss/Makefile:obj-$(CONFIG_GNSS_SERIAL)       += gnss-serial.o
+./gnss/Makefile-gnss-serial-y := serial.o
+--snip end--
 
-I'll do a v2 using conditional compilation to see how bad it looks.
+./.../go7007/Makefile-# SPDX-License-Identifier: GPL-2.0
+./.../go7007/Makefile:obj-$(CONFIG_VIDEO_GO7007) += go7007.o
+./.../go7007/Makefile:obj-$(CONFIG_VIDEO_GO7007_USB) += go7007-usb.o
+./.../go7007/Makefile:obj-$(CONFIG_VIDEO_GO7007_LOADER) += go7007-loader.o
+./.../go7007/Makefile:obj-$(CONFIG_VIDEO_GO7007_USB_S2250_BOARD) += s2250.o
+./.../go7007/Makefile-
+./.../go7007/Makefile-go7007-y := go7007-v4l2.o go7007-driver.o go7007-i2c.
+./.../go7007/Makefile-        snd-go7007.o
+./.../go7007/Makefile-
+./.../go7007/Makefile-s2250-y := s2250-board.o
+--snip end--
 
 Thanks,
-Ian
+Matej
