@@ -2,143 +2,121 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29701207C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3966B2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 11:40:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WPgjtmvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgEOLjs (ORCPT
+        id S1726217AbgEOLk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 07:39:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:54454 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgEOLjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 07:39:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15873D6E;
-        Fri, 15 May 2020 04:39:47 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.24.119])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EFB3B3F305;
-        Fri, 15 May 2020 04:39:44 -0700 (PDT)
-Date:   Fri, 15 May 2020 12:39:42 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        harb@amperecomputing.com
-Subject: Re: [PATCH v3 4/7] firmware: smccc: Drop smccc_version enum and use
- ARM_SMCCC_VERSION_1_x instead
-Message-ID: <20200515113942.GD67718@C02TD0UTHF1T.local>
-References: <20200506164411.3284-1-sudeep.holla@arm.com>
- <20200506164411.3284-5-sudeep.holla@arm.com>
+        Fri, 15 May 2020 07:40:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbgEOLk1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 07:40:27 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A090DC061A0C;
+        Fri, 15 May 2020 04:40:26 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id d7so1379809eja.7;
+        Fri, 15 May 2020 04:40:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=vx+rjdJtrqWDo1iVdx81WH5syu+StElM96JO8y30OpU=;
+        b=WPgjtmvuU+9RwoLj/n0H1YhScjg1h4Hgu330I4kqOUDcfeSuQOZKl+5ux8rbb0A1+r
+         7ELm48Nk8g4Iq8itsNp7nRoCsTlAKAoHnK2ah+xePeZp2pK0stb6n4zW7y9MitNbYdDS
+         bNg0TemLo6X1Wgm4LbjMS91beAkfCoPyvVNVG0xkHsjsU38LIBSiNPr88k5yhaJMl2mH
+         5eqEVtZV3131W/HDvA1aAfjmoreTAFOE/V6gi/szPbw3TsONPhAJeXwsxwdtqP1sG/pY
+         Ej20wI+N6z6ZiALRxth0w2i3BmnjBrdrQ0f5/Jd0EBrHTFEvOrXEbpUpoKxv8TREGGdn
+         cagQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=vx+rjdJtrqWDo1iVdx81WH5syu+StElM96JO8y30OpU=;
+        b=HZGYHONT4WO708GtyeZN6eKcpcXCGLpq6LXJk/r5n0iKT14Quw1CzxtpW9ElCZ4/95
+         IBS7ZMKrLSPYjFOJPRsAk/M7EAmhe+L8tZdELGkjDLQLFN1w0VoQCnBM+oKFeUAWpV7L
+         9YLUqQ4VB8IVq4puPqIXIppH2SPAPTMIlIWNnw7fA4AkQwUBDm2SsnzOBJ4N4IcQoWMI
+         CwTisAzrKa3B8c+vv6LYPrBS5t9fkB+r9DU8pZnEnwtkqCUfhA7/Ah340bfHlMQb3lpT
+         hdh7+5Dg3Ht6wc8PqxNTMiszU5SkWwlSqTWCYL6rox8ZF4qN6TUe1ujis7dbz+0T8PL+
+         rx9Q==
+X-Gm-Message-State: AOAM531nfBhkprFPJojQTX+spcT+vp+o+jJJmf5VO7UBQOld7Q56Hbsd
+        Dd8u/0sgSIXINyysxgs17Wh0U8H/z5Q/A/phfPA=
+X-Google-Smtp-Source: ABdhPJx0AgOk2Zn12eGSfHnaAvM6elutzBoNttSm5PyZ1UJxJxfvsS0M4rtJbN9T/Be3JEHKy9yQwj/NrvyofhO0SFM=
+X-Received: by 2002:a17:906:add7:: with SMTP id lb23mr2366474ejb.6.1589542825282;
+ Fri, 15 May 2020 04:40:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506164411.3284-5-sudeep.holla@arm.com>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Fri, 15 May 2020 13:40:14 +0200
+Message-ID: <CAKgNAkioH1z-pVimHziWP=ZtyBgCOwoC7ekWGFwzaZ1FPYg-tA@mail.gmail.com>
+Subject: Setting mount propagation type in new mount API
+To:     David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Petr Vorel <pvorel@suse.cz>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        linux-man <linux-man@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 05:44:08PM +0100, Sudeep Holla wrote:
-> Instead of maintaining 2 sets of enums/macros for tracking SMCCC version,
-> let us drop smccc_version enum and use ARM_SMCCC_VERSION_1_x directly
-> instead.
-> 
-> This is in preparation to drop smccc_version here and move it separately
-> under drivers/firmware/smccc.
-> 
-> Reviewed-by: Steven Price <steven.price@arm.com>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Hello David, Miklos,
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+I've been looking at the new mount API (fsopen(), fsconfig(),
+fsmount(), move_mount(), etc.) and among the details that remain
+mysterious to me is this: how does one set the propagation type
+(private/shared/slave/unbindable) of a new mount and change the
+propagation type of an existing mount?
+
+I've looked at the kernel source for a bit, and did not see how this
+is possible.
+
+The draft manual pages sent out a few months ago provide little clue,
+with the only hint being in the draft fsopen(2) page, which says of
+fsmount():
+
+       fsmount()  takes the file descriptor returned by fsopen() and cre=E2=
+=80=90
+       ates a mount object for the filesystem root specified there.   The
+       attributes of the mount object are set from the mount_attrs param=E2=
+=80=90
+       eter.  The attributes specify the propagation and  mount  restric=E2=
+=80=90
+       tions to be applied to accesses through this mount.
+
+However, that text appears *not* to be true. The 'mount_attrs'
+argument of fsmount() does not seem to permit specification of
+propagation type, since in the kernel there is this check:
+
+        if (attr_flags & ~(MOUNT_ATTR_RDONLY |
+                           MOUNT_ATTR_NOSUID |
+                           MOUNT_ATTR_NODEV |
+                           MOUNT_ATTR_NOEXEC |
+                           MOUNT_ATTR__ATIME |
+                           MOUNT_ATTR_NODIRATIME))
+                return -EINVAL;
 
 Thanks,
-Mark.
 
-> ---
->  arch/arm64/kernel/paravirt.c | 2 +-
->  drivers/firmware/psci/psci.c | 8 ++++----
->  include/linux/psci.h         | 7 +------
->  3 files changed, 6 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
-> index 1ef702b0be2d..295d66490584 100644
-> --- a/arch/arm64/kernel/paravirt.c
-> +++ b/arch/arm64/kernel/paravirt.c
-> @@ -120,7 +120,7 @@ static bool has_pv_steal_clock(void)
->  	struct arm_smccc_res res;
->  
->  	/* To detect the presence of PV time support we require SMCCC 1.1+ */
-> -	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
-> +	if (arm_smccc_1_1_get_conduit() == SMCCC_CONDUIT_NONE)
->  		return false;
->  
->  	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
-> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-> index 2937d44b5df4..6a56d7196697 100644
-> --- a/drivers/firmware/psci/psci.c
-> +++ b/drivers/firmware/psci/psci.c
-> @@ -54,12 +54,12 @@ bool psci_tos_resident_on(int cpu)
->  
->  struct psci_operations psci_ops = {
->  	.conduit = SMCCC_CONDUIT_NONE,
-> -	.smccc_version = SMCCC_VERSION_1_0,
-> +	.smccc_version = ARM_SMCCC_VERSION_1_0,
->  };
->  
->  enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void)
->  {
-> -	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
-> +	if (psci_ops.smccc_version < ARM_SMCCC_VERSION_1_1)
->  		return SMCCC_CONDUIT_NONE;
->  
->  	return psci_ops.conduit;
-> @@ -411,8 +411,8 @@ static void __init psci_init_smccc(void)
->  	if (feature != PSCI_RET_NOT_SUPPORTED) {
->  		u32 ret;
->  		ret = invoke_psci_fn(ARM_SMCCC_VERSION_FUNC_ID, 0, 0, 0);
-> -		if (ret == ARM_SMCCC_VERSION_1_1) {
-> -			psci_ops.smccc_version = SMCCC_VERSION_1_1;
-> +		if (ret >= ARM_SMCCC_VERSION_1_1) {
-> +			psci_ops.smccc_version = ret;
->  			ver = ret;
->  		}
->  	}
-> diff --git a/include/linux/psci.h b/include/linux/psci.h
-> index a67712b73b6c..29bd0671e5bb 100644
-> --- a/include/linux/psci.h
-> +++ b/include/linux/psci.h
-> @@ -21,11 +21,6 @@ bool psci_power_state_is_valid(u32 state);
->  int psci_set_osi_mode(void);
->  bool psci_has_osi_support(void);
->  
-> -enum smccc_version {
-> -	SMCCC_VERSION_1_0,
-> -	SMCCC_VERSION_1_1,
-> -};
-> -
->  struct psci_operations {
->  	u32 (*get_version)(void);
->  	int (*cpu_suspend)(u32 state, unsigned long entry_point);
-> @@ -36,7 +31,7 @@ struct psci_operations {
->  			unsigned long lowest_affinity_level);
->  	int (*migrate_info_type)(void);
->  	enum arm_smccc_conduit conduit;
-> -	enum smccc_version smccc_version;
-> +	u32 smccc_version;
->  };
->  
->  extern struct psci_operations psci_ops;
-> -- 
-> 2.17.1
-> 
+Michael
+
+
+--=20
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
