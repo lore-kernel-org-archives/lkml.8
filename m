@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF6E2078B
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3452207CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgEPAKx (ORCPT
+        id S1727999AbgEPAK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 20:10:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41088 "EHLO
+        Fri, 15 May 2020 20:10:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727930AbgEPAKv (ORCPT
+        by vger.kernel.org with ESMTP id S1727937AbgEPAKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 May 2020 20:10:51 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1BEFC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 17:10:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61321C05BD0A
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 17:10:51 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jZkP8-00027Y-RR; Sat, 16 May 2020 02:10:14 +0200
+        id 1jZkPM-0002Ik-Cg; Sat, 16 May 2020 02:10:28 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 44D18FF834;
-        Sat, 16 May 2020 02:10:14 +0200 (CEST)
-Message-Id: <20200515235124.999721601@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id E8A1FFF834;
+        Sat, 16 May 2020 02:10:27 +0200 (CEST)
+Message-Id: <20200515235126.128592439@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sat, 16 May 2020 01:45:53 +0200
+Date:   Sat, 16 May 2020 01:46:04 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V6 06/37] genirq: Provde __irq_enter/exit_raw()
+Subject: [patch V6 17/37] x86/entry/32: Remove common_exception
 References: <20200515234547.710474468@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -72,44 +72,40 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+No more users.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-diff --git a/include/linux/hardirq.h b/include/linux/hardirq.h
-index f6f25fab34cb..adfd98b8a468 100644
---- a/include/linux/hardirq.h
-+++ b/include/linux/hardirq.h
-@@ -41,6 +41,17 @@ extern void rcu_nmi_exit(void);
- 	} while (0)
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 65fd41fe77d9..c6e146b71de5 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1394,27 +1394,6 @@ BUILD_INTERRUPT3(hv_stimer0_callback_vector, HYPERV_STIMER0_VECTOR,
  
- /*
-+ * Like __irq_enter() without time accounting for fast
-+ * interrupts, e.g. reschedule IPI where time accounting
-+ * is more expensive than the actual interrupt.
-+ */
-+#define __irq_enter_raw()				\
-+	do {						\
-+		preempt_count_add(HARDIRQ_OFFSET);	\
-+		lockdep_hardirq_enter();		\
-+	} while (0)
-+
-+/*
-  * Enter irq context (on NO_HZ, update jiffies):
-  */
- void irq_enter(void);
-@@ -60,6 +71,15 @@ void irq_enter_rcu(void);
- 	} while (0)
+ #endif /* CONFIG_HYPERV */
  
- /*
-+ * Like __irq_exit() without time accounting
-+ */
-+#define __irq_exit_raw()				\
-+	do {						\
-+		lockdep_hardirq_exit();			\
-+		preempt_count_sub(HARDIRQ_OFFSET);	\
-+	} while (0)
-+
-+/*
-  * Exit irq context and process softirqs if needed:
-  */
- void irq_exit(void);
+-SYM_CODE_START_LOCAL_NOALIGN(common_exception)
+-	/* the function address is in %gs's slot on the stack */
+-	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
+-	ENCODE_FRAME_POINTER
+-
+-	/* fixup %gs */
+-	GS_TO_REG %ecx
+-	movl	PT_GS(%esp), %edi		# get the function address
+-	REG_TO_PTGS %ecx
+-	SET_KERNEL_GS %ecx
+-
+-	/* fixup orig %eax */
+-	movl	PT_ORIG_EAX(%esp), %edx		# get the error code
+-	movl	$-1, PT_ORIG_EAX(%esp)		# no syscall to restart
+-
+-	TRACE_IRQS_OFF
+-	movl	%esp, %eax			# pt_regs pointer
+-	CALL_NOSPEC edi
+-	jmp	ret_from_exception
+-SYM_CODE_END(common_exception)
+-
+ SYM_CODE_START_LOCAL_NOALIGN(handle_exception)
+ 	/* the function address is in %gs's slot on the stack */
+ 	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
 
