@@ -2,132 +2,205 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D57BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8BE320758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:36:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Ot7oERu5"
+	by mail.kernel.org (Postfix) with ESMTP id 07F9A2076A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 15:37:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589557031;
+	bh=XmfYacoWpckw7SIZkW14MRGHswo6szBUF/OdRKOWU6Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=e2vrkApF+WqYHrx9KDo5r8L/IU4Ql3QuN1it95KVhJiM9qQc3sO9oDR6zwEOIhGps
+	 UDeeWBIQlc1ZZsz5ex33v5Io5qDutzXXpialXJQry3k/MZo9HNzAsry6CVXmVm89N2
+	 js8YVnG/m9fTlruW2vWcsQ5uqEKgy8arrKyzXoR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgEOPg5 (ORCPT
+        id S1726528AbgEOPhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 11:36:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726183AbgEOPg4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 11:36:56 -0400
-Received: from forwardcorp1j.mail.yandex.net (forwardcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::183])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A97C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 08:36:56 -0700 (PDT)
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 231D22E14BF;
-        Fri, 15 May 2020 18:36:52 +0300 (MSK)
-Received: from sas2-32987e004045.qloud-c.yandex.net (sas2-32987e004045.qloud-c.yandex.net [2a02:6b8:c08:b889:0:640:3298:7e00])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id aabq3ATbRs-ampGXsHa;
-        Fri, 15 May 2020 18:36:52 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1589557012; bh=6FY4knOleMpXky40W+HxLYfM4E1Bv3vZkreAoWAGMIg=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=Ot7oERu5ZSm7ZAxFFmwsShAPsbb4nYYg45KcoBQOtFvIJoaVOJgelxbt29bl2pKlP
-         c5+M3xibGZgBBAJT6mFZgDypjrFcNn3W4FOdGYETJYu/T1cmpS1yNPJ/yv1uNjYLQ3
-         VOjnnK6tZOIjkxuV7APba9/nTEfjGSBDTaVijeoQ=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:8::1:9])
-        by sas2-32987e004045.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id v3Wo6qoLe5-amWCAVNL;
-        Fri, 15 May 2020 18:36:48 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: [PATCH] futex: send SIGBUS if argument is not aligned on a four-byte
- boundary
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>
-Cc:     Maxim Samoylov <max7255@yandex-team.ru>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-api@vger.kernel.org
-Date:   Fri, 15 May 2020 18:36:47 +0300
-Message-ID: <158955700764.647498.18025770126733698386.stgit@buzz>
-User-Agent: StGit/0.22-39-gd257
+        Fri, 15 May 2020 11:37:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726183AbgEOPhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 11:37:10 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05DF120758;
+        Fri, 15 May 2020 15:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589557029;
+        bh=XmfYacoWpckw7SIZkW14MRGHswo6szBUF/OdRKOWU6Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oFKwC/DgLyczCZ6gBJvC7+1EHKf1XMn4dlmjjklunbn8bc46Chk7nHpj1LTRqGtEm
+         OZLl5u9+isnWLT/Zj0SACT6AFT3sLEPzXW2IQaDdIcYlFPdL9xSpnVfh7GAuAHK9F+
+         +oAYckwkn2XVbhPEIZviec2wYQNvcafFJW7MXfoA=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jZcOZ-00CcMH-DG; Fri, 15 May 2020 16:37:07 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 15 May 2020 16:37:07 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        luojiaxing <luojiaxing@huawei.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 0/2] irqchip/gic-v3-its: Balance LPI affinity across
+ CPUs
+In-Reply-To: <a22aaa72-4f5f-40d4-33e0-0aff8b65fdc2@huawei.com>
+References: <20200316115433.9017-1-maz@kernel.org>
+ <9171c554-50d2-142b-96ae-1357952fce52@huawei.com>
+ <80b673a7-1097-c5fa-82c0-1056baa5309d@huawei.com>
+ <f2971d1c-50f8-bf5a-8b16-8d84a631b0ba@huawei.com>
+ <7c05b08b-2edc-7f97-0175-898e9772673e@huawei.com>
+ <668f819c8747104814245cd6faebdd9a@kernel.org>
+ <a22aaa72-4f5f-40d4-33e0-0aff8b65fdc2@huawei.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <c37d8b15f09c6c933e39b81f39fcb827@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: john.garry@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net, chenxiang66@hisilicon.com, robin.murphy@arm.com, luojiaxing@huawei.com, ming.lei@redhat.com, wangzhou1@hisilicon.com, tglx@linutronix.de, will@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userspace implementations of mutexes (including glibc) in some cases
-retries operation without checking error code from syscall futex.
-This is good for performance because most errors are impossible when
-locking code trusts itself.
+On 2020-05-15 12:50, John Garry wrote:
+> Hi Marc,
+> 
+>> Absolutely. Life has got in the way, so let me page it back in...
+> 
+> Great
+> 
+>>> 
+>>> [PATCH 2/2] irqchip/gic-v3-its: Handle no overlap of non-managed irq
+>>>   affinity mask
+>>> 
+>>> In selecting the target CPU for a non-managed interrupt, we may 
+>>> select
+>>> a
+>>> target CPU outside the requested affinity mask.
+>>> 
+>>> This is because there may be no overlap of the ITS node mask and the
+>>> requested CPU affinity mask. The requested affinity mask may be 
+>>> coming
+>>> from userspace or some drivers which try to set irq affinity, see 
+>>> [0].
+>>> 
+>>> In this case, just ignore the ITS node cpumask. This is a deviation
+>>> from
+>>> what Thomas described. Having said that, I am not sure if the
+>>> interrupt is ever bound to a node for us.
+>>> 
+>>> [0]
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/hisilicon/hisi_uncore_pmu.c#n417
+>>> 
+>>> ---
+>>>   drivers/irqchip/irq-gic-v3-its.c | 4 ----
+>>>   1 file changed, 4 deletions(-)
+>>> 
+>>> diff --git a/drivers/irqchip/irq-gic-v3-its.c
+>>> b/drivers/irqchip/irq-gic-v3-its.c
+>>> index 2b18feb..12d5d4b4 100644
+>>> --- a/drivers/irqchip/irq-gic-v3-its.c
+>>> +++ b/drivers/irqchip/irq-gic-v3-its.c
+>>> @@ -1584,10 +1584,6 @@ static int its_select_cpu(struct irq_data *d,
+>>>   			cpumask_and(tmpmask, cpumask_of_node(node), aff_mask);
+>>>   			cpumask_and(tmpmask, tmpmask, cpu_online_mask);
+>>> 
+>>> -			/* If that doesn't work, try the nodemask itself */
+>>> -			if (cpumask_empty(tmpmask))
+>>> -				cpumask_and(tmpmask, cpumask_of_node(node), cpu_online_mask);
+>>> -
+>>>   			cpu = cpumask_pick_least_loaded(d, tmpmask);
+>>>   			if (cpu < nr_cpu_ids)
+>>>   				goto out;
+>> 
+>> I'm really not sure. Shouldn't we then drop the wider search on
+>> cpu_inline_mask, because userspace could have given us something
+>> that we cannot deal with?
+> 
+> It's not just userspace. Some drivers call irq_set_affinity{_hint}}()
+> also, with a non-overlapping affinity mask.
+> 
+> We could just error these requests, but some drivers rely on this
+> behavior. Consider the uncore driver I mentioned above, which WARNs
+> when the affinity setting fails. So it tries to set the affinity with
+> the cpumask of the cluster associated with the device, but with D06's
+> ITS config, below, there may be no overlap.
 
-Some errors which could came from outer code are handled automatically,
-for example invalid address triggers SIGSEGV on atomic fast path.
+Does this PMU use the ITS? That's a pretty odd setup.
 
-But one case turns into nasty busy-loop: when address is unaligned.
-futex(FUTEX_WAIT) returns EINVAL immediately and loop goes to retry.
+So this is a case where the device has an implicit affinity that
+isn't that of the ITS. Huhu...
 
-Example which loops inside second call rather than hung peacefully:
+>> 
+>> What you are advocating for is a strict adherence to the provided
+>> mask, and it doesn't seem to be what other architectures are 
+>> providing.
+>> I consider the userspace-provided affinity as a hint more that 
+>> anything
+>> else, as in this case the kernel does know better (routing the 
+>> interrupt
+>> to a foreign node might be costly, or even impossible, see the TX1
+>> erratum).
+> 
+> Right
+> 
+>> 
+>>   From what I remember of the earlier discussion, you saw an issue on
+>> a system with two sockets and a single ITS, with the node mask limited
+>> to the first socket. Is that correct?
+> 
+> A bit more complicated: 2 sockets, 2 NUMA nodes per socket, and ITS
+> config as follows:
+> D06ES  1x ITS with proximity node #0
+> 
+> root@(none)$ dmesg | grep ITS
+> [ 0.000000] SRAT: PXM 0 -> ITS 0 -> Node 0
+> 
+> 
+> D06CS
+> 2x ITS with proximity node #0, #2
+> 
+> estuary:/$ dmesg | grep ITS
+> [    0.000000] SRAT: PXM 0 -> ITS 0 -> Node 0
+> [    0.000000] SRAT: PXM 2 -> ITS 1 -> Node 2
+> 
+> It complicates things.
+> 
+> We could add extra intelligence to record if an node has an ITS
+> associated. In the case of that not being true, we would fallback on
+> the requested affin only (for case of no overlap). It gets a bit more
+> messy then.
 
-#include <stdlib.h>
-#include <pthread.h>
+It looks like part of the problem is that we can't reliably describe
+an ITS affine to multiple NUMA nodes... If we could describe that, then
+the above situation wouldn't occur (we'd say that ITS-0 covers both
+nodes 0 and 1). But I can't find a way to express this with SRAT and
+_PXM. Also, SRAT describes the affinity of the ITS with memory, and not
+with the CPUs... It is all a bit fsck'd. :-(
 
-int main(int argc, char **argv)
-{
-	char buf[sizeof(pthread_mutex_t) + 1];
-	pthread_mutex_t *mutex = (pthread_mutex_t *)(buf + 1);
+I guess I'll apply your change for now with a comment explaining the
+situation.
 
-	pthread_mutex_init(mutex, NULL);
-	pthread_mutex_lock(mutex);
-	pthread_mutex_lock(mutex);
-}
-
-It seems there is no practical usage for calling syscall futex for
-unaligned address. This may be only bug in user space. Let's help
-and handle this gracefully without adding extra code on fast path.
-
-This patch sends SIGBUS signal to slay task and break busy-loop.
-
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Reported-by: Maxim Samoylov <max7255@yandex-team.ru>
----
- kernel/futex.c |   13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/futex.c b/kernel/futex.c
-index b59532862bc0..8a6d35fa56bc 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -508,10 +508,21 @@ get_futex_key(u32 __user *uaddr, int fshared, union futex_key *key, enum futex_a
- 
- 	/*
- 	 * The futex address must be "naturally" aligned.
-+	 * Also send signal to break busy-loop if user-space ignore error.
-+	 * EFAULT case should trigger SIGSEGV at access from user-space.
- 	 */
- 	key->both.offset = address % PAGE_SIZE;
--	if (unlikely((address % sizeof(u32)) != 0))
-+	if (unlikely((address % sizeof(u32)) != 0)) {
-+		struct kernel_siginfo info;
-+
-+		clear_siginfo(&info);
-+		info.si_signo = SIGBUS;
-+		info.si_code  = BUS_ADRALN;
-+		info.si_addr  = uaddr;
-+		force_sig_info(&info);
-+
- 		return -EINVAL;
-+	}
- 	address -= key->both.offset;
- 
- 	if (unlikely(!access_ok(uaddr, sizeof(u32))))
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
