@@ -2,76 +2,117 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9937BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3802C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A53920734
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91FA02065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:36:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZH27tzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgEOBf1 (ORCPT
+        id S1728149AbgEOBgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 21:35:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgEOBf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 21:35:27 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 758AC2065F;
-        Fri, 15 May 2020 01:35:24 +0000 (UTC)
-Date:   Thu, 14 May 2020 21:35:22 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch V5 03/38] nmi, tracing: Provide nmi_enter/exit_notrace()
-Message-ID: <20200514213522.59f8de4d@oasis.local.home>
-In-Reply-To: <20200514213230.02c13bd2@oasis.local.home>
-References: <20200512210059.056244513@linutronix.de>
-        <20200512213809.678944067@linutronix.de>
-        <20200514213230.02c13bd2@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 14 May 2020 21:36:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgEOBgM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 21:36:12 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC30CC061A0C;
+        Thu, 14 May 2020 18:36:11 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id p21so213490pgm.13;
+        Thu, 14 May 2020 18:36:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0VjQ+Ma3qI88glsLS8F0bIG67DtfNMG5fSLchrZlPkw=;
+        b=BZH27tzHemzdhmeAt5qyR6/wV3Rep0NuG5yApKqgOQnaClXU3DcmTpxeToHmrIa15l
+         e/VU6aF7VhSU4G6nrw4DsMvQvfQn5gePKL/mL5Ip1KjkVJequxf52sqv4NWsvQrlyzIl
+         VQ8GsWnQ2KmNG4nUelqamCKaGM4nwe7OEROb4Mv33JGjGkhx/Ed70ZHgjJ2UAt3HbgWe
+         gLdBaa0JYh2H8FCFSy8Q3WEBJ7mcUCNK81II+EB30V2TJ8KFGzjS98HFmUz0+cNkAmBM
+         cuxIoNM2qoSTz/bTGviWjKAFqNQXMd2af7Xrp6THTo6nXJN9TexjHiE7l9BAYNLlpGpL
+         0dkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0VjQ+Ma3qI88glsLS8F0bIG67DtfNMG5fSLchrZlPkw=;
+        b=cJQx1RAZoznZUE6ejbNl7fo1/0PsBR730EKUdkZNhAqhl81rwqaXhO0yT2uZrdruz6
+         zqL93cxbEYpuwyAZgb2Xo7JuqetynVLHk4GE1bHPN+t8hHPH8rLq6xl8Va51DNP5IqhQ
+         9/vqXeltauQ1iMjBbF5jmQKRvFBb9Pq/UnMhmhuf8jurpppqosluFbV3e0cq00mU3jFC
+         mrKDm2u9W3XPKFpaujCT1NprReQz7jEi+lPbXPja+n+BObTim5z9IJeflkEKM3iR5Qtx
+         tQs5iGLZehvqkGZ9yDJ4VJhg9rVgTzJxUyTpHxMKfIvhyhMHO8G9KKNc6THE2uUNAkkb
+         RXJQ==
+X-Gm-Message-State: AOAM531oQopCifUVCbdgJeXsj/oS1mkG9bF0YLr3zdXrEe7PV3JCHpx+
+        AhaqKLAI14yCP1boDLYl10vF/ZHnAwF4NQ==
+X-Google-Smtp-Source: ABdhPJwCVmlezSMh86iw6O5zaChvYnG2ARTIL31CVxt25Oq99Z82FRfutcz2tDRog+5lMGN4YEQxKQ==
+X-Received: by 2002:a63:482:: with SMTP id 124mr880335pge.169.1589506571419;
+        Thu, 14 May 2020 18:36:11 -0700 (PDT)
+Received: from T480s.vmware.com (toroon0411w-lp130-03-174-95-146-183.dsl.bell.ca. [174.95.146.183])
+        by smtp.googlemail.com with ESMTPSA id e12sm364701pgi.40.2020.05.14.18.36.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 18:36:10 -0700 (PDT)
+From:   Andrew Sy Kim <kim.andrewsy@gmail.com>
+Cc:     kim.andrewsy@gmail.com, Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Julian Anastasov <ja@ssi.bg>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev@vger.kernel.org (open list:IPVS),
+        lvs-devel@vger.kernel.org (open list:IPVS),
+        netfilter-devel@vger.kernel.org (open list:NETFILTER),
+        coreteam@netfilter.org (open list:NETFILTER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] netfilter/ipvs: expire no destination UDP connections when expire_nodest_conn=1
+Date:   Thu, 14 May 2020 21:35:56 -0400
+Message-Id: <20200515013556.5582-1-kim.andrewsy@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020 21:32:30 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+When expire_nodest_conn=1 and an IPVS destination is deleted, IPVS
+doesn't expire connections with the IP_VS_CONN_F_ONE_PACKET flag set (any
+UDP connection). If there are many UDP packets to a virtual server from a
+single client and a destination is deleted, many packets are silently
+dropped whenever an existing connection entry with the same source port
+exists. This patch ensures IPVS also expires UDP connections when a
+packet matches an existing connection with no destinations.
 
-> It's accounting only. Now it does use a per-cpu variable (which I see
-> in other patches can be an issue) and calls time_get().
+Signed-off-by: Andrew Sy Kim <kim.andrewsy@gmail.com>
+---
+ net/netfilter/ipvs/ip_vs_core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-time_get() being defined as trace_clock_local(). And this in only
-called if CONFIG_GENERIC_SCHED_CLOCK is not true, as that isn't NMI
-safe.
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index aa6a603a2425..f0535586fe75 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -2116,8 +2116,7 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
+ 		else
+ 			ip_vs_conn_put(cp);
+ 
+-		if (sysctl_expire_nodest_conn(ipvs) &&
+-		    !(flags & IP_VS_CONN_F_ONE_PACKET)) {
++		if (sysctl_expire_nodest_conn(ipvs)) {
+ 			/* try to expire the connection immediately */
+ 			ip_vs_conn_expire_now(cp);
+ 		}
+-- 
+2.20.1
 
--- Steve
