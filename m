@@ -2,235 +2,164 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B55FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 640662065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589528495;
-	bh=2hj9COhXxsNvy56RptVnR/klSCKzzb/kwexjWG1g73s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E9SaN1dIjxYuShlTHYsBOnf67Ik9Sc+ALzuKRrajc7qljlPFLhENeVqr0htWKYnSt
-	 /kAElvzbeLmLmmkduU26qVfuY7LzynnlTy8X4bF1/2UGZ5awetmYLyBocu6OHxr8Yc
-	 TwMVR+7P2XJlBA5+R94hQvp+TIfnnptGrXDBoqOU=
+	by mail.kernel.org (Postfix) with ESMTP id ECAEB2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="enCxyWRR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgEOHle (ORCPT
+        id S1727083AbgEOHlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 03:41:34 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40184 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbgEOHlc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 03:41:32 -0400
-Received: by mail-wr1-f68.google.com with SMTP id e16so2312633wra.7
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 00:41:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kns14HbaP0c1lE2MwJ7v5s2pJzjyzLnxLUIpMzdDsM4=;
-        b=fC6wVFvEsxOJS+LJE8U57D9zk5rh/IoaIX8cIe39i7R4J9E1OdiNpIHbHm282qwFzX
-         cmnIu/0S1Gogmsova4eUP71ABqXgxpt+Vi+lRp6lIY5/LUtJt7n9Mhfoi1bGxVDsbk9y
-         fKTC2qJ0BOWKWIZJNMgLdb6bfl/aDtAA28iLUQdvfI7vJkX82J6Xnand1oyb3sXXP+Ec
-         eb2Hzvxmr6o7DBmlyxXJPtt9pkKHDMWYZ4W3UBtI1EccdHa+R3Ger7MZz3bDAnfiu9YZ
-         hzNzCVeUtJVBdOdwgULe4Y49bsDeKYdkexsyFfC/KRQPHyQrn014hSME3hiZL03hRovS
-         ozdg==
-X-Gm-Message-State: AOAM530Ke6ijUqs+3iBtn8B2ACL1RqYfKDJvl1ZlwjVt/UHdWQYZEyO3
-        TR3Lcq8agY7MIxtqdnA/LMc=
-X-Google-Smtp-Source: ABdhPJxkQm4wcb2otWahvuSXI6T8PGegoI+XGijl8LbVKi7oXi9T6Mpv1K0OLZpEZXlo126o5SxfeA==
-X-Received: by 2002:adf:fa92:: with SMTP id h18mr2800656wrr.260.1589528487966;
-        Fri, 15 May 2020 00:41:27 -0700 (PDT)
-Received: from localhost (ip-37-188-249-36.eurotel.cz. [37.188.249.36])
-        by smtp.gmail.com with ESMTPSA id t22sm2216596wmj.37.2020.05.15.00.41.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 00:41:27 -0700 (PDT)
-Date:   Fri, 15 May 2020 09:41:25 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>, andi.kleen@intel.com,
-        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] mm: adjust vm_committed_as_batch according to vm
- overcommit policy
-Message-ID: <20200515074125.GH29153@dhcp22.suse.cz>
-References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
- <1588922717-63697-4-git-send-email-feng.tang@intel.com>
+        Fri, 15 May 2020 03:41:47 -0400
+Received: from mail-mw2nam12on2060.outbound.protection.outlook.com ([40.107.244.60]:29120
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726624AbgEOHlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 03:41:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gdUY6jlTJ5KaKp9qGZh6cQ66GbxQxACNN2ZvqIfZLkqNSmmyyBjm5EwnhNCfsarHZiausOVaqZUq27vBwQRD3doX0zyi/gPbECyM9tP4GMainKAPNOmr6y3TpT7uNdkDBw8m1mHNGZMRac5nOFTvLBZftNcwmDoj9UMj6kxNS2eo4ayaIx6RYJOSLpUrlU9Ufpxt5/OUze08GEBXsgxXlP8DBWveJUFaBbQezqI34XC0mrSpNLXP8xOzOVKINato4RsJwRtG0ulzFbo1iFZJ3EVHvxHobfhcHwNR3BXFRx7WW/WGF2eZQ7/ByRE3IBgmzQi2EHeYObnqq1Kj2j0fjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7LzCY4Vt9EbsDcEH/Uyvj0lC5IOIjlQuD/6fkFpBqis=;
+ b=fCtfRZSID+XVJ6kQqILuX+jH9qOATgcIH4T8iqdZ8X4CSNDj+NtMfCvi8ml5MGypCdrc2+xhHLOOdiolM5eX1MIq7pqUNkflcnp7qptyGzWb/WjRMgkTIom8oIq1TokV+zKkbiUl4fVHKRFMKStGq74gJUhu3vG4FU1c7089czUy8oFH1oR85NjCZUpVEvMvQNOFsr5LIYIBfECGUUKBSv0/ZZTLKG8pmN6WjdSuNQFfehyg3sIbirax3f6d8MKgmDY01DmHTpKXxndRbQNEkXJ0f8kW08ffs6xHmyNRdpXnRc3eNYt5OEq+E4MSS6iPezUbuEOlEqruo87Zjtzuiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7LzCY4Vt9EbsDcEH/Uyvj0lC5IOIjlQuD/6fkFpBqis=;
+ b=enCxyWRRuznnjvsFmdDKm+MaVM4v7sDbUEvqgd4wJXAULGNiWqZodxAljmg2SG/P1ElGpKi762lZRawo76rec7zQe1HLQgxfgysulTpqyRADTiB0HtIyW79ObCwJUiKpIZ3pzyYBX3wym6KvewXUpX/V4PpDUOpDoGkwxIuIZyk=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=synaptics.com;
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
+ by BYAPR03MB3557.namprd03.prod.outlook.com (2603:10b6:a02:b0::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.34; Fri, 15 May
+ 2020 07:41:38 +0000
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d1ae:8ea7:ea:8998]) by BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d1ae:8ea7:ea:8998%7]) with mapi id 15.20.3000.016; Fri, 15 May 2020
+ 07:41:38 +0000
+Date:   Fri, 15 May 2020 15:41:28 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: phy: realtek: clear interrupt during init for
+ rtl8211f
+Message-ID: <20200515154128.41ee2afa@xhacker.debian>
+In-Reply-To: <bbb70281-d477-d227-d1d2-aeecffdb6299@gmail.com>
+References: <20200512184601.40b1758a@xhacker.debian>
+        <7735a257-21ff-e6c0-acdc-f5ee187b1f57@gmail.com>
+        <20200513145151.04a6ee46@xhacker.debian>
+        <a0aac85d-064f-2672-370b-404fd83e83f3@gmail.com>
+        <20200514142537.63b478fd@xhacker.debian>
+        <bbb70281-d477-d227-d1d2-aeecffdb6299@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYAPR01CA0123.jpnprd01.prod.outlook.com
+ (2603:1096:404:2d::15) To BYAPR03MB3573.namprd03.prod.outlook.com
+ (2603:10b6:a02:ae::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588922717-63697-4-git-send-email-feng.tang@intel.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0123.jpnprd01.prod.outlook.com (2603:1096:404:2d::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend Transport; Fri, 15 May 2020 07:41:36 +0000
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 34aaf94a-fe4c-428a-0bdf-08d7f8a36683
+X-MS-TrafficTypeDiagnostic: BYAPR03MB3557:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB3557C306158D60EB7EF9BD64EDBD0@BYAPR03MB3557.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 04041A2886
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: D9lcGHNR2at01wrX5bHU4IhKUSlb0BAzCid90qKFoZ9Xe76a5xR5NbMHOyV06V4ov6TnYXPG0Ttc7nuDKkkVjweW47J4/4J7J1m/lHkoslj78Cqbqmp5tzqBBym+g/vIUlgsUYjodxcP+6iEK3294yybM2Z7vUeVoMvXHV0nu/QIekdHnMiVT4nTH4AFk1f9PDlfcJg5nG5kAztRF0KT3E1LsqmQm3ydzK4qCe9cSEyUW1d5FB9ofkzS3JMG8K7RxBCz/4y7lp2qQKa4sguN7dWWUY/J0Ew/jTeVFTteicmJlbFeCs2yIn0bWVEWOFLkTlee1cphocnpYQ9fNEI3uKF1M5FLeg9jIbOg6xKoawGbkZBTvHP7qjPZerLbMEieLfG6pPSEmaZu6SB352LVqO0vnaUCnezgi9NJUdRP9+WVRDh493CbP1jZL/4xCx2Y
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(376002)(346002)(396003)(366004)(55016002)(66556008)(52116002)(7696005)(86362001)(53546011)(2906002)(66946007)(6506007)(6666004)(186003)(16526019)(66476007)(8676002)(8936002)(4326008)(26005)(6916009)(1076003)(9686003)(54906003)(478600001)(956004)(5660300002)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: XB/UZ07WXCMfMzhrg5J4TMcM19E5znJrq5UndsG3K0JwR56iDMPiPT1/y/9JlkoZsV+FBDiYRekswnbB1oKCBGH+qA7ZgEe5TSf5FU+naZ3l3+TwoNPlLij1NRD8sxu4+6xqqml/SE3e3+ocfwMAPUt/0bX1I3ZIPecdqWufUz865OKhRGFMJGvmqQ2LFklVul5tR9xQIJvzE+o8nDJl7n95ju44ib3AhmQwR/LLJriiyE2tC0qsmLzoVxM4b5gltfTAQqsK16ADu4oTZ96hlEBDFDuxQ73GjUY+IuD7SMO1xvemfrsilztI+zkun5oMOgLhECvLajhar3YubVFGTOp92oSjlgxG6OM7cWpRfW19qe5UPbGk7x6XWVKXdCOkay6fKAT9AXIgPOZSNu6tpTMACKVtlJlZV7qqNRI2F98Q663Lvbwt8x9Bh/nq2/mIiklV0kSVNJ14N7Y7PUqDDVuPCfDsVe7purZ674xMNyFxbo0qjMae1QeepKlVHqoE
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34aaf94a-fe4c-428a-0bdf-08d7f8a36683
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2020 07:41:38.1225
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LhxAUPtNV2qZ4IbdB224kqS3hztAlw19bmLuoAR5CzjRwx7kIgbZ7wYGaWCB/flX0brozqIWpgRPg+TTxosjIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3557
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 08-05-20 15:25:17, Feng Tang wrote:
-> When checking a performance change for will-it-scale scalability
-> mmap test [1], we found very high lock contention for spinlock of
-> percpu counter 'vm_committed_as':
-> 
->     94.14%     0.35%  [kernel.kallsyms]         [k] _raw_spin_lock_irqsave
->     48.21% _raw_spin_lock_irqsave;percpu_counter_add_batch;__vm_enough_memory;mmap_region;do_mmap;
->     45.91% _raw_spin_lock_irqsave;percpu_counter_add_batch;__do_munmap;
-> 
-> Actually this heavy lock contention is not always necessary. The
-> 'vm_committed_as' needs to be very precise when the strict
-> OVERCOMMIT_NEVER policy is set, which requires a rather small batch
-> number for the percpu counter.
-> 
-> So lift the batch number to 16X for OVERCOMMIT_ALWAYS and
-> OVERCOMMIT_GUESS policies, and add a sysctl handler to adjust it
-> when the policy is reconfigured.
+On Thu, 14 May 2020 21:50:53 +0200 Heiner Kallweit wrote:
 
-Increasing the batch size for weaker overcommit modes makes sense. But
-your patch is also tuning OVERCOMMIT_NEVER without any explanation why
-that is still "small enough to be precise".
-
-> Benchmark with the same testcase in [1] shows 53% improvement on a
-> 8C/16T desktop, and 2097%(20X) on a 4S/72C/144T server. And no change
-> for some platforms, due to the test mmap size of the case is bigger
-> than the batch number computed, though the patch will help mmap/munmap
-> generally.
 > 
-> [1] https://lkml.org/lkml/2020/3/5/57
-
-Please do not use lkml.org links in the changelog. Use
-http://lkml.kernel.org/r/$msg instead.
-
-> Signed-off-by: Feng Tang <feng.tang@intel.com>
-> ---
->  include/linux/mm.h   |  2 ++
->  include/linux/mman.h |  4 ++++
->  kernel/sysctl.c      |  2 +-
->  mm/mm_init.c         | 19 +++++++++++++++----
->  mm/util.c            | 13 +++++++++++++
->  5 files changed, 35 insertions(+), 5 deletions(-)
 > 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 5a32342..bc3722f 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -205,6 +205,8 @@ extern int overcommit_ratio_handler(struct ctl_table *, int, void __user *,
->  				    size_t *, loff_t *);
->  extern int overcommit_kbytes_handler(struct ctl_table *, int, void __user *,
->  				    size_t *, loff_t *);
-> +extern int overcommit_policy_handler(struct ctl_table *, int, void __user *,
-> +				    size_t *, loff_t *);
->  
->  #define nth_page(page,n) pfn_to_page(page_to_pfn((page)) + (n))
->  
-> diff --git a/include/linux/mman.h b/include/linux/mman.h
-> index 4b08e9c..91c93c1 100644
-> --- a/include/linux/mman.h
-> +++ b/include/linux/mman.h
-> @@ -57,8 +57,12 @@ extern struct percpu_counter vm_committed_as;
->  
->  #ifdef CONFIG_SMP
->  extern s32 vm_committed_as_batch;
-> +extern void mm_compute_batch(void);
->  #else
->  #define vm_committed_as_batch 0
-> +static inline void mm_compute_batch(void)
-> +{
-> +}
->  #endif
->  
->  unsigned long vm_memory_committed(void);
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 8a176d8..6fa552d 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -1278,7 +1278,7 @@ static struct ctl_table vm_table[] = {
->  		.data		= &sysctl_overcommit_memory,
->  		.maxlen		= sizeof(sysctl_overcommit_memory),
->  		.mode		= 0644,
-> -		.proc_handler	= proc_dointvec_minmax,
-> +		.proc_handler	= overcommit_policy_handler,
->  		.extra1		= SYSCTL_ZERO,
->  		.extra2		= &two,
->  	},
-> diff --git a/mm/mm_init.c b/mm/mm_init.c
-> index 7da6991..1654358 100644
-> --- a/mm/mm_init.c
-> +++ b/mm/mm_init.c
-> @@ -13,6 +13,7 @@
->  #include <linux/memory.h>
->  #include <linux/notifier.h>
->  #include <linux/sched.h>
-> +#include <linux/mman.h>
->  #include "internal.h"
->  
->  #ifdef CONFIG_DEBUG_MEMORY_INIT
-> @@ -140,16 +141,26 @@ EXPORT_SYMBOL_GPL(mm_kobj);
->  #ifdef CONFIG_SMP
->  s32 vm_committed_as_batch = 32;
->  
-> -static void __meminit mm_compute_batch(void)
-> +void mm_compute_batch(void)
->  {
->  	u64 memsized_batch;
->  	s32 nr = num_present_cpus();
->  	s32 batch = max_t(s32, nr*2, 32);
-> -
-> -	/* batch size set to 0.4% of (total memory/#cpus), or max int32 */
-> -	memsized_batch = min_t(u64, (totalram_pages()/nr)/256, 0x7fffffff);
-> +	unsigned long ram_pages = totalram_pages();
-> +
-> +	/*
-> +	 * For policy of OVERCOMMIT_NEVER, set batch size to 0.4%
-> +	 * of (total memory/#cpus), and lift it to 6.25% for other
-> +	 * policies to easy the possible lock contention for percpu_counter
-> +	 * vm_committed_as, while the max limit is INT_MAX
-> +	 */
-> +	if (sysctl_overcommit_memory == OVERCOMMIT_NEVER)
-> +		memsized_batch = min_t(u64, ram_pages/nr/256, INT_MAX);
-> +	else
-> +		memsized_batch = min_t(u64, ram_pages/nr/16, INT_MAX);
->  
->  	vm_committed_as_batch = max_t(s32, memsized_batch, batch);
-> +	printk("vm_committed_as_batch = %d\n", vm_committed_as_batch);
->  }
->  
->  static int __meminit mm_compute_batch_notifier(struct notifier_block *self,
-> diff --git a/mm/util.c b/mm/util.c
-> index 3de78e9..99936d3 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -729,6 +729,19 @@ int overcommit_ratio_handler(struct ctl_table *table, int write,
->  	return ret;
->  }
->  
-> +int overcommit_policy_handler(struct ctl_table *table, int write,
-> +			     void __user *buffer, size_t *lenp,
-> +			     loff_t *ppos)
-> +{
-> +	int ret;
-> +
-> +	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-> +	if (ret == 0 && write)
-> +		mm_compute_batch();
-> +
-> +	return ret;
-> +}
-> +
->  int overcommit_kbytes_handler(struct ctl_table *table, int write,
->  			     void __user *buffer, size_t *lenp,
->  			     loff_t *ppos)
-> -- 
-> 2.7.4
+> On 14.05.2020 08:25, Jisheng Zhang wrote:
+> > On Wed, 13 May 2020 20:45:13 +0200 Heiner Kallweit wrote:
+> >  
+> >>
+> >> On 13.05.2020 08:51, Jisheng Zhang wrote:  
+> >>> Hi,
+> >>>
+> >>> On Tue, 12 May 2020 20:43:40 +0200 Heiner Kallweit wrote:
+> >>>  
+> >>>>
+> >>>>
+> >>>> On 12.05.2020 12:46, Jisheng Zhang wrote:  
+> >>>>> The PHY Register Accessible Interrupt is enabled by default, so
+> >>>>> there's such an interrupt during init. In PHY POLL mode case, the
+> >>>>> INTB/PMEB pin is alway active, it is not good. Clear the interrupt by
+> >>>>> calling rtl8211f_ack_interrupt().  
+> >>>>
+> >>>> As you say "it's not good" w/o elaborating a little bit more on it:
+> >>>> Do you face any actual issue? Or do you just think that it's not nice?  
+> >>>
+> >>>
+> >>> The INTB/PMEB pin can be used in two different modes:
+> >>> INTB: used for interrupt
+> >>> PMEB: special mode for Wake-on-LAN
+> >>>
+> >>> The PHY Register Accessible Interrupt is enabled by
+> >>> default, there's always such an interrupt during the init. In PHY POLL mode
+> >>> case, the pin is always active. If platforms plans to use the INTB/PMEB pin
+> >>> as WOL, then the platform will see WOL active. It's not good.
+> >>>  
+> >> The platform should listen to this pin only once WOL has been configured and
+> >> the pin has been switched to PMEB function. For the latter you first would
+> >> have to implement the set_wol callback in the PHY driver.
+> >> Or where in which code do you plan to switch the pin function to PMEB?  
+> >
+> > I think it's better to switch the pin function in set_wol callback. But this
+> > is another story. No matter WOL has been configured or not, keeping the
+> > INTB/PMEB pin active is not good. what do you think?
+> >  
+> 
+> It shouldn't hurt (at least it didn't hurt for the last years), because no
+> listener should listen to the pin w/o having it configured before.
+> So better extend the PHY driver first (set_wol, ..), and then do the follow-up
+> platform changes (e.g. DT config of a connected GPIO).
 
--- 
-Michal Hocko
-SUSE Labs
+There are two sides involved here: the listener, it should not listen to the pin
+as you pointed out; the phy side, this patch tries to make the phy side
+behave normally -- not keep the INTB/PMEB pin always active. The listener
+side behaves correctly doesn't mean the phy side could keep the pin active.
+
+When .set_wol isn't implemented, this patch could make the system suspend/resume
+work properly.
+
+PS: even with set_wol implemented as configure the pin mode, I think we
+still need to clear the interrupt for phy poll mode either in set_wol
+or as this patch does.
