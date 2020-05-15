@@ -2,129 +2,229 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E301C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF7920849
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012F8207F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 16:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="boXYK+gw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QECgooPW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgEOQng (ORCPT
+        id S1726246AbgEOQpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 12:43:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726144AbgEOQnf (ORCPT
+        Fri, 15 May 2020 12:45:35 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46152 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726185AbgEOQpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 12:43:35 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7969BC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:43:34 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id l1so2482473qtp.6
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 09:43:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=O2iqJ8KQcZDCTc9y6KB4+QJ4upFjWYXxi/TwEeRaUVo=;
-        b=boXYK+gwglwO9n0Wi0Vh9KYiXI/hyUq7NVa8NqLzdNyA4/HucC05wZQJu3ZG5TwRKM
-         m68w9gsFgwLrLA3rjbEnFEPeo+fKoiezd/rd8D1s2euwBB1hgVH0Ma8tMviuiTTpkD4W
-         Tk2dp8qewFd3z5vd2dKw3bVeD6XMSqklEZmyPIWT50+IeaRQhmaISX7KV8bRPEv/hqwF
-         fmMVONMdSalRkLw9Z3P4Atp6ddIBJ7lgF2XTs283vTtsx70PoKAak73QaCwKLNNNJvzD
-         UXW2+9lWDM1EyLT2Xf/31G5wLybv0snRX7p/WAEqOXGg1jAWptiHYs7K9rM0W739bXCG
-         V7KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=O2iqJ8KQcZDCTc9y6KB4+QJ4upFjWYXxi/TwEeRaUVo=;
-        b=n6cK05Ym0TZKk/2NePCEmzaxi9O5QS09lewkl9LB22lDAWMtjEOCXO8shhHgRhjByA
-         Yba2KIKHICrZz2RS35VcurofQwi9keBAocOQnIQA1toOPJj8db7wMzxq7aTFahJr+eZo
-         ateH8+gtOzVc1NaghabvT5EEh8g2st+JYwMKoAiWp+vx9nagDYRmKTLrnllNF9RgfnjT
-         ZxfsYk7lf4/i5tPtNBzouMngAsRB36Fj82vUbqbem08npwhZmvDQUwcEMF8L8xF+ANFI
-         ac3ZQR2qWgGMHVVuhtSmtle9ztMbfzVVytu0ZkKpIalyjhN077dmDctBraQBjxXQP0GI
-         L08A==
-X-Gm-Message-State: AOAM5310ghV6tWBMtfZG1FxGGJr+VuEm6YvnHw5H94sA3thXwbvGfUYU
-        ZHWg80zFdweemKcEoFq6AyE=
-X-Google-Smtp-Source: ABdhPJxjvVPL/hbo4sp5d8UNeHn7+/aj+pTxfFp3wyHR1MXqIFSw3iOzCKsi17s6o/H5cwzj3qPuTg==
-X-Received: by 2002:ac8:c0d:: with SMTP id k13mr4538302qti.136.1589561013697;
-        Fri, 15 May 2020 09:43:33 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id y140sm1951030qkb.127.2020.05.15.09.43.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 09:43:33 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 36B1540AFD; Fri, 15 May 2020 13:43:31 -0300 (-03)
-Date:   Fri, 15 May 2020 13:43:31 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH perf/core] perf intel-pt: Fix clang build failure in
- intel_pt_synth_pebs_sample
-Message-ID: <20200515164331.GE9335@kernel.org>
-References: <20200513234738.GA21211@embeddedor>
- <20200514131030.GL5583@kernel.org>
- <20200514150601.GS4897@embeddedor>
- <CAP-5=fWTCFx80Hd_97_4AxFV4KsRyYptLbQfw=XVw_j8i-EAyg@mail.gmail.com>
- <20200514220934.GT4897@embeddedor>
- <CAP-5=fV5URsHn+SpW8N4XjkKT1vt2T1Us5FsqaJsoOW0zn=OxQ@mail.gmail.com>
- <20200515001025.GU4897@embeddedor>
- <20200515164153.GD9335@kernel.org>
+        Fri, 15 May 2020 12:45:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589561133;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+IBvKYnMRct6wIVYk1OHcT0bp5/WnDeiDsV8CVPaV/4=;
+        b=QECgooPWYpPmKqiqQ9PAiKUs/Go7y+kcTQ5C5+KV/hSt/WlVczLsGAislwSOYX1NxquHav
+        uvQGPMLs3XTBJI0pgLSDDMqCrzHnRRLdVgEli6IlBR5YkNAFxWApBHYV15i5LX8+H0rqCa
+        UJMWE6KTun7QeC+B8E1l7bZkUgnXn+g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-00j2DJWnOzuUdvc1IhJFqw-1; Fri, 15 May 2020 12:45:29 -0400
+X-MC-Unique: 00j2DJWnOzuUdvc1IhJFqw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9AF0218B6450;
+        Fri, 15 May 2020 16:45:12 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 94C9C579A0;
+        Fri, 15 May 2020 16:45:10 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAEjxPJ5wW2qHYDsqKr5rjnRJ++4f2LXobCQkKZvWCSb_j0WN6w@mail.gmail.com>
+References: <CAEjxPJ5wW2qHYDsqKr5rjnRJ++4f2LXobCQkKZvWCSb_j0WN6w@mail.gmail.com> <CAEjxPJ6pFdDfm55pv9bT3CV5DTFF9VqzRmG_Xi5bKNxPaGuOLg@mail.gmail.com> <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk> <CAEjxPJ4=ZN_jKP2nX5mrMA3OxC8XLsYEmCPCD-78H4XQw=_hCA@mail.gmail.com> <3999877.1589475539@warthog.procyon.org.uk>
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     dhowells@redhat.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        keyrings@vger.kernel.org, SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] keys: Move permissions checking decisions into the checking code
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515164153.GD9335@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <196729.1589561109.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Fri, 15 May 2020 17:45:09 +0100
+Message-ID: <196730.1589561109@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, May 15, 2020 at 01:41:53PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, May 14, 2020 at 07:10:25PM -0500, Gustavo A. R. Silva escreveu:
-> > On Thu, May 14, 2020 at 03:46:05PM -0700, Ian Rogers wrote:
-> > > On Thu, May 14, 2020 at 3:04 PM Gustavo A. R. Silva
-> > > <gustavoars@kernel.org> wrote:
-> > 
-> > Yep. I just built linux-next --which contains all the flexible-array
-> > conversions-- with Clang --GCC doesn't catch this issue, not even GCC
-> > 10-- and I don't see any other issue like this.
-> > 
-> > I mean, I have run into these other two:
-> > 
-> > https://lore.kernel.org/lkml/20200505235205.GA18539@embeddedor/
-> > https://lore.kernel.org/lkml/20200508163826.GA768@embeddedor/
-> > 
-> > but those are due to the erroneous application of the sizeof operator
-> > to zero-length arrays.
-> > 
-> > > complicated stack allocation I suggested. It may be nice to save
-> > > cycles if code this pattern is widespread and the code hot.
-> > > 
-> > 
-> > Apparently, this is the only instace of this sort of issue in the whole
-> > codebase.
-> 
-> Adrian Hunter was not CCed, Adrian?
+Stephen Smalley <stephen.smalley.work@gmail.com> wrote:
 
-Gustavo, I've removed this from my tree from now till this gets
-resolved.
+> >      (1) KEY_FLAG_KEEP in key->flags - The key may not be deleted and/=
+or things
+> >          may not be removed from the keyring.
+> =
 
-- Arnaldo
+> Why can't they be deleted / removed?  They can't ever be deleted or
+> removed or for some period of time?
+
+This is only settable internally to keep special keys, such as the blackli=
+st
+loaded from the EFI BIOS, from being removed.
+
+> >      (2) KEY_FLAG_ROOT_CAN_CLEAR in key->flags - The keyring can be cl=
+eared by
+> >          CAP_SYS_ADMIN.
+> =
+
+> Why do some keyrings get this flag and others do not?  Under what
+> conditions?  Why is CAP_SYS_ADMIN the right capability for this?
+> =
+
+> >      (3) KEY_FLAG_ROOT_CAN_INVAL in key->flags - The key can be invali=
+dated by
+> >          CAP_SYS_ADMIN.
+> =
+
+> Ditto.
+
+So that the sysadmin can clear, say, the NFS idmapper keyring or invalidat=
+e
+DNS lookup keys.
+
+> >      (4) An appropriate auth token being set in cred->request_key_auth=
+ that
+> >          gives a process transient permission to view and instantiate =
+a key.
+> >          This is used by the kernel to delegate instantiation to users=
+pace.
+> =
+
+> Is this ever allowed across different credentials?
+
+The kernel upcalls by spawning a daemon.  I want to change this as it's no=
+t
+compatible with containers since namespaces make this problematic.
+
+> When?
+
+The request_key() system call will do this.  The normal use case is someth=
+ing
+like the AFS filesystem asking for a key so that it can do an operation.  =
+The
+possibility exists for the kernel to upcall, say, to something that does a=
+klog
+on behalf of the user - but aklog in turn needs to get the TGT out of the
+keyrings.
+
+> Why?  Is there a check between the different credentials before the
+> auth token is created?
+
+No.  I don't even know what the target creds will necessarily be at this
+point.
+
+> >     Note that this requires some tweaks to the testsuite as some of th=
+e
+> >     error codes change.
+> =
+
+> Which testsuite?  keyring or selinux or both?
+
+The keyring testsuite.  No idea about the SELinux one.
+
+> What error codes change (from what to what)?  Does this constitute an AB=
+I
+> change?
+
+The following:
+
+ (1) Passing the wrong type of key to KEYCTL_DH_COMPUTE now gets you
+     EOPNOTSUPP rather than ENOKEY.  This is now as documented in the manu=
+al
+     page.
+
+ (2) Passing key ID 0 or an invalid negative key ID to KEYCTL_DH_COMPUTE n=
+ow
+     gets you EINVAL rather than ENOKEY.
+
+ (3) Passing key ID 0 or an invalid negative key ID to KEYCTL_READ now get=
+s
+     you EINVAL rather than ENOKEY.
+
+Technically, it consistutes an ABI change, I suppose, but I think it is
+probably sufficiently minor.
+
+Or maybe on (2) and (3) I should go the other way.  You get ENOKEY for inv=
+alid
+key IDs (such as 0 or unsupported negative ones) across all callers of
+lookup_user_key().  This would at least by consistent with the manual page=
+s.
+
+> I like moving more of the permission checking logic into the security
+> modules and giving them greater visibility and control.  That said, I
+> am somewhat concerned by the scale of this change, by the extent to
+> which you are exposing keyring internals inside the security modules,
+> and by the extent to which logic is getting duplicated in each
+> security module.
+
+It's what you asked for.
+
+Now, I don't know if the LSM needs to know that the main keyutils permissi=
+ons
+checker invoked an override.  At least one of the overrides will have gone
+through the LSM anyway when capable() was called.
+
+> I'd suggest a more incremental approach, e.g. start with just the enum
+> patch, then migrate the easy cases, then consider the more complicated
+> cases.  And possibly we need multiple different security hooks for the
+> keyring subsystem that are more specialized for the complicated cases.  =
+If
+> we authorize the delegation up front, we don't need to check it later.
+
+I'll consider it.  But I really need to get what I'm going to include in t=
+he
+middle of the notifications patchset sorted now - or risk the notification=
+s
+and fsinfo patchsets getting bumped again.
+
+Maybe what's needed is a pair of hooks whereby the call to capable() is
+replaced with LSM hook specifically to ask about the overrides:
+
+	security_key_use_sysadmin_override(key, cred);
+	security_key_use_construction_override(key, cred);
+
+And/or a hook to ask whether the process is allowed to do the request_key(=
+)
+call that they want:
+
+	security_request_key(struct key_type *type,
+			     const char *description,
+			     struct key_tag *domain_tag,
+			     const void *callout_info,
+			     size_t callout_len,
+			     void *aux);
+
+I don't really want to do a "can the kernel delegate to process X?" hook j=
+ust
+at the moment, since I want to change/extend that code and I don't want to
+commit to any particular security information being present yet.
+
+I can go back to the enum patch for the moment if you and Casey can put up
+with that for the moment?
+
+David
+
