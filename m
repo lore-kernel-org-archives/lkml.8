@@ -2,66 +2,72 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AF2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5800C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42C71206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757CC206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 17:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1uM3E8Lg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgEOR4U (ORCPT
+        id S1726642AbgEOR4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 13:56:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726219AbgEOR4U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 13:56:20 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94A2BC061A0C;
-        Fri, 15 May 2020 10:56:20 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 16FB77DE;
-        Fri, 15 May 2020 17:56:20 +0000 (UTC)
-Date:   Fri, 15 May 2020 11:56:19 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Corey Minyard <minyard@acm.org>,
-        Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>,
-        Pragat Pandya <pragat.pandya@gmail.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Harald Seiler <hws@denx.de>,
-        openipmi-developer@lists.sourceforge.net
-Subject: Re: [PATCH 04/14] docs: move IPMI.txt to the driver API book
-Message-ID: <20200515115619.6e9b9ea1@lwn.net>
-In-Reply-To: <ae4edbc6753dc522cb93de36800978e3b58e0cfb.1588345503.git.mchehab+huawei@kernel.org>
-References: <cover.1588345503.git.mchehab+huawei@kernel.org>
-        <ae4edbc6753dc522cb93de36800978e3b58e0cfb.1588345503.git.mchehab+huawei@kernel.org>
-Organization: LWN.net
+        Fri, 15 May 2020 13:56:41 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34702 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726023AbgEOR4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 13:56:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=zxUINokAPC9kPIuOzHoB7i/SEfEe9IJzDuYWwRlt5Ws=; b=1uM3E8Lg6agXBeUW7lPRKwOqaa
+        W2mji2V18Z60ESitLVZxywwZOaZ/pquVQRA1Rl06WJf7m4GMujapAtiRZpvrIlj0ZjqKIBlvO6kuv
+        RKaoL75Pft1Mu+J1SZCNqVZ6qTV2Drb8Tpk7ikn5VPyVmaxQvT7CTygpPoP5BvRaaQaY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jZeZW-002PKQ-SV; Fri, 15 May 2020 19:56:34 +0200
+Date:   Fri, 15 May 2020 19:56:34 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>
+Subject: Re: [PATCH net-next v1] net: phy: tja11xx: execute cable test on
+ link up
+Message-ID: <20200515175634.GD499265@lunn.ch>
+References: <20200514194218.22011-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514194218.22011-1-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  1 May 2020 17:37:48 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-
-> The IPMI is under drivers/char. This doc describes the kAPI
-> part of the IPMI (mainly).
+On Thu, May 14, 2020 at 09:42:18PM +0200, Oleksij Rempel wrote:
+> A typical 100Base-T1 link should be always connected. If the link is in
+> a shot or open state, it is a failure. In most cases, we won't be able
+> to automatically handle this issue, but we need to log it or notify user
+> (if possible).
 > 
-> So, move it to the driver-api directory and add it to the
-> corresponding index.rst file.
+> With this patch, the cable will be tested on "ip l s dev .. up" attempt
+> and send ethnl notification to the user space.
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> This patch was tested with TJA1102 PHY and "ethtool --monitor" command.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-Applied this one (and the fixups in patch 5), thanks.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-jon
+    Andrew
