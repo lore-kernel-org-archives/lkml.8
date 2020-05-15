@@ -2,323 +2,128 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72941C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3779C2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589527846;
-	bh=bo3SV/DRboM6sAdeWzwHkYDe64HFbrSpWpwe/V8CLqY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xJEijpqmwm+GDZS5CFekMxBs7kgvXsUy7uqscOlntg0n/J4Q/qwopCsCB4fcUlvrR
-	 TyPXzvoO8TTrWdKxWx4SDOPp3EsUbxD83SgLSrF2eAqhn5zeCJEI5aFg3s7CZSpMUK
-	 vjO4wsfyZkdlNTWrNVpcxDvL+RjLEwchIIW5iPd4=
+	by mail.kernel.org (Postfix) with ESMTP id 10D4E2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 07:33:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgEOHap (ORCPT
+        id S1726659AbgEOHdi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 03:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726727AbgEOHap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 03:30:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B74F720657;
-        Fri, 15 May 2020 07:30:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589527843;
-        bh=bo3SV/DRboM6sAdeWzwHkYDe64HFbrSpWpwe/V8CLqY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=taSYDwaCzNvNih4cdkjhzBjo52huDb4klZ1kTXDNMrwDNDLH/0NcP73X85CP8MzJ9
-         PGGbEtVNCzGHebVmw/no88rbcUEVyY6GEVF4OsyRBuHMIVtza0KHWSziwPLtJe36ka
-         iqT5DMno47qSOaLT4DyNzCnxBdyh07Yu9MFKzlqI=
-Date:   Fri, 15 May 2020 09:30:41 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     rananta@codeaurora.org
-Cc:     Jiri Slaby <jslaby@suse.cz>, andrew@daynix.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tty: hvc: Fix data abort due to race in hvc_open
-Message-ID: <20200515073041.GB1361563@kroah.com>
-References: <20200506094851.GA2787548@kroah.com>
- <98bbe7afabf48d8e8fe839fdc9e836a5@codeaurora.org>
- <20200510064819.GB3400311@kroah.com>
- <77d889be4e0cb0e6e30f96199e2d843d@codeaurora.org>
- <20200511073913.GA1347819@kroah.com>
- <0f7791f5-0a53-59f6-7277-247a789f30c2@suse.cz>
- <20200512082551.GA3526567@kroah.com>
- <417b1d320bda37410788430979dd708d@codeaurora.org>
- <20200513070403.GB764901@kroah.com>
- <0ab0b49f19b824ac1c4db4c4937ed388@codeaurora.org>
+        Fri, 15 May 2020 03:33:38 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:44961 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbgEOHdi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 03:33:38 -0400
+Received: from xps13 (126.249.23.93.rev.sfr.net [93.23.249.126])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 7CA4C100006;
+        Fri, 15 May 2020 07:33:32 +0000 (UTC)
+Date:   Fri, 15 May 2020 09:33:30 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Poonam Aggrwal <poonam.aggrwal@nxp.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "shiva.linuxworks@gmail.com" <shiva.linuxworks@gmail.com>,
+        Shivamurthy Shastri <sshivamurthy@micron.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Suram Suram <suram@nxp.com>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>
+Subject: Re: [PATCH v7 0/6] Add new series Micron SPI NAND devices
+Message-ID: <20200515093330.7e3b2911@xps13>
+In-Reply-To: <VI1PR04MB70232F2A753142DE7E0D3A6986BD0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <20200311175735.2007-1-sshivamurthy@micron.com>
+        <CA+G9fYuavikY4yjc+bjnvDGHGwQRs6bf31gUa3gyFzd=0zLR7Q@mail.gmail.com>
+        <VI1PR04MB70232F2A753142DE7E0D3A6986BD0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0ab0b49f19b824ac1c4db4c4937ed388@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 04:22:10PM -0700, rananta@codeaurora.org wrote:
-> On 2020-05-13 00:04, Greg KH wrote:
-> > On Tue, May 12, 2020 at 02:39:50PM -0700, rananta@codeaurora.org wrote:
-> > > On 2020-05-12 01:25, Greg KH wrote:
-> > > > On Tue, May 12, 2020 at 09:22:15AM +0200, Jiri Slaby wrote:
-> > > > > On 11. 05. 20, 9:39, Greg KH wrote:
-> > > > > > On Mon, May 11, 2020 at 12:23:58AM -0700, rananta@codeaurora.org wrote:
-> > > > > >> On 2020-05-09 23:48, Greg KH wrote:
-> > > > > >>> On Sat, May 09, 2020 at 06:30:56PM -0700, rananta@codeaurora.org wrote:
-> > > > > >>>> On 2020-05-06 02:48, Greg KH wrote:
-> > > > > >>>>> On Mon, Apr 27, 2020 at 08:26:01PM -0700, Raghavendra Rao Ananta wrote:
-> > > > > >>>>>> Potentially, hvc_open() can be called in parallel when two tasks calls
-> > > > > >>>>>> open() on /dev/hvcX. In such a scenario, if the
-> > > > > >>>>>> hp->ops->notifier_add()
-> > > > > >>>>>> callback in the function fails, where it sets the tty->driver_data to
-> > > > > >>>>>> NULL, the parallel hvc_open() can see this NULL and cause a memory
-> > > > > >>>>>> abort.
-> > > > > >>>>>> Hence, serialize hvc_open and check if tty->private_data is NULL
-> > > > > >>>>>> before
-> > > > > >>>>>> proceeding ahead.
-> > > > > >>>>>>
-> > > > > >>>>>> The issue can be easily reproduced by launching two tasks
-> > > > > >>>>>> simultaneously
-> > > > > >>>>>> that does nothing but open() and close() on /dev/hvcX.
-> > > > > >>>>>> For example:
-> > > > > >>>>>> $ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
-> > > > > >>>>>>
-> > > > > >>>>>> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
-> > > > > >>>>>> ---
-> > > > > >>>>>>  drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
-> > > > > >>>>>>  1 file changed, 14 insertions(+), 2 deletions(-)
-> > > > > >>>>>>
-> > > > > >>>>>> diff --git a/drivers/tty/hvc/hvc_console.c
-> > > > > >>>>>> b/drivers/tty/hvc/hvc_console.c
-> > > > > >>>>>> index 436cc51c92c3..ebe26fe5ac09 100644
-> > > > > >>>>>> --- a/drivers/tty/hvc/hvc_console.c
-> > > > > >>>>>> +++ b/drivers/tty/hvc/hvc_console.c
-> > > > > >>>>>> @@ -75,6 +75,8 @@ static LIST_HEAD(hvc_structs);
-> > > > > >>>>>>   */
-> > > > > >>>>>>  static DEFINE_MUTEX(hvc_structs_mutex);
-> > > > > >>>>>>
-> > > > > >>>>>> +/* Mutex to serialize hvc_open */
-> > > > > >>>>>> +static DEFINE_MUTEX(hvc_open_mutex);
-> > > > > >>>>>>  /*
-> > > > > >>>>>>   * This value is used to assign a tty->index value to a hvc_struct
-> > > > > >>>>>> based
-> > > > > >>>>>>   * upon order of exposure via hvc_probe(), when we can not match it
-> > > > > >>>>>> to
-> > > > > >>>>>> @@ -346,16 +348,24 @@ static int hvc_install(struct tty_driver
-> > > > > >>>>>> *driver, struct tty_struct *tty)
-> > > > > >>>>>>   */
-> > > > > >>>>>>  static int hvc_open(struct tty_struct *tty, struct file * filp)
-> > > > > >>>>>>  {
-> > > > > >>>>>> -	struct hvc_struct *hp = tty->driver_data;
-> > > > > >>>>>> +	struct hvc_struct *hp;
-> > > > > >>>>>>  	unsigned long flags;
-> > > > > >>>>>>  	int rc = 0;
-> > > > > >>>>>>
-> > > > > >>>>>> +	mutex_lock(&hvc_open_mutex);
-> > > > > >>>>>> +
-> > > > > >>>>>> +	hp = tty->driver_data;
-> > > > > >>>>>> +	if (!hp) {
-> > > > > >>>>>> +		rc = -EIO;
-> > > > > >>>>>> +		goto out;
-> > > > > >>>>>> +	}
-> > > > > >>>>>> +
-> > > > > >>>>>>  	spin_lock_irqsave(&hp->port.lock, flags);
-> > > > > >>>>>>  	/* Check and then increment for fast path open. */
-> > > > > >>>>>>  	if (hp->port.count++ > 0) {
-> > > > > >>>>>>  		spin_unlock_irqrestore(&hp->port.lock, flags);
-> > > > > >>>>>>  		hvc_kick();
-> > > > > >>>>>> -		return 0;
-> > > > > >>>>>> +		goto out;
-> > > > > >>>>>>  	} /* else count == 0 */
-> > > > > >>>>>>  	spin_unlock_irqrestore(&hp->port.lock, flags);
-> > > > > >>>>>
-> > > > > >>>>> Wait, why isn't this driver just calling tty_port_open() instead of
-> > > > > >>>>> trying to open-code all of this?
-> > > > > >>>>>
-> > > > > >>>>> Keeping a single mutext for open will not protect it from close, it will
-> > > > > >>>>> just slow things down a bit.  There should already be a tty lock held by
-> > > > > >>>>> the tty core for open() to keep it from racing things, right?
-> > > > > >>>> The tty lock should have been held, but not likely across
-> > > > > >>>> ->install() and
-> > > > > >>>> ->open() callbacks, thus resulting in a race between hvc_install() and
-> > > > > >>>> hvc_open(),
-> > > > > >>>
-> > > > > >>> How?  The tty lock is held in install, and should not conflict with
-> > > > > >>> open(), otherwise, we would be seeing this happen in all tty drivers,
-> > > > > >>> right?
-> > > > > >>>
-> > > > > >> Well, I was expecting the same, but IIRC, I see that the open() was being
-> > > > > >> called in parallel for the same device node.
-> > > > > >
-> > > > > > So open and install are happening at the same time?  And the tty_lock()
-> > > > > > does not protect the needed fields from being protected properly?  If
-> > > > > > not, what fields are being touched without the lock?
-> > > > > >
-> > > > > >> Is it expected that the tty core would allow only one thread to
-> > > > > >> access the dev-node, while blocking the other, or is it the client
-> > > > > >> driver's responsibility to handle the exclusiveness?
-> > > > > >
-> > > > > > The tty core should handle this correctly, for things that can mess
-> > > > > > stuff up (like install and open at the same time).  A driver should not
-> > > > > > have to worry about that.
-> > > > > >
-> > > > > >>>> where hvc_install() sets a data and the hvc_open() clears it.
-> > > > > >>>> hvc_open()
-> > > > > >>>> doesn't
-> > > > > >>>> check if the data was set to NULL and proceeds.
-> > > > > >>>
-> > > > > >>> What data is being set that hvc_open is checking?
-> > > > > >> hvc_install sets tty->private_data to hp, while hvc_open sets it to NULL (in
-> > > > > >> one of the paths).
-> > > > > >
-> > > > > > I see no use of private_data in drivers/tty/hvc/ so what exactly are you
-> > > > > > referring to?
-> > > > >
-> > > > > He likely means tty->driver_data. And there exactly lays the issue.
-> > > > >
-> > > > > commit bdb498c20040616e94b05c31a0ceb3e134b7e829
-> > > > > Author: Jiri Slaby <jslaby@suse.cz>
-> > > > > Date:   Tue Aug 7 21:48:04 2012 +0200
-> > > > >
-> > > > >     TTY: hvc_console, add tty install
-> > > > >
-> > > > > added hvc_install but did not move 'tty->driver_data = NULL;' from
-> > > > > hvc_open's fail path to hvc_cleanup.
-> > > > >
-> > > > > IOW hvc_open now NULLs tty->driver_data even for another task which
-> > > > > opened the tty earlier. The same holds for
-> > > > > "tty_port_tty_set(&hp->port,
-> > > > > NULL);" there. And actually "tty_port_put(&hp->port);" is also
-> > > > > incorrect
-> > > > > for the 2nd task opening the tty.
-> > > > >
-> > > > > So, a mutex with tty->driver_data check in open is not definitely the
-> > > > > way to go. This mess needs to be sorted out properly. Sure, a good
-> > > > > start
-> > > > > would be a conversion to tty_port_open. Right after dropping "tty:
-> > > > > hvc:
-> > > > > Fix data abort due to race in hvc_open" from tty/tty-next :).
-> > > >
-> > > > I've now reverted this commit so we can start from a "clean" place.
-> > > >
-> > > > > What I *don't* understand is why hp->ops->notifier_add fails, given
-> > > > > the
-> > > > > open does not allow multiple opens anyway?
-> > > >
-> > > > I don't understand that either.  Raghavendra, can you show a real trace
-> > > > for this issue that shows this?
-> > > >
-> > > Let me know if this helps:
-> > > 
-> > > [  265.332900] Unable to handle kernel NULL pointer dereference at
-> > > virtual
-> > > address 00000000000000a8
-> > > [  265.332920] Mem abort info:
-> > > [  265.332934]   ESR = 0x96000006
-> > > [  265.332950]   EC = 0x25: DABT (current EL), IL = 32 bits
-> > > [  265.332963]   SET = 0, FnV = 0
-> > > [  265.332975]   EA = 0, S1PTW = 0
-> > > [  265.332985] Data abort info:
-> > > [  265.332997]   ISV = 0, ISS = 0x00000006
-> > > [  265.333008]   CM = 0, WnR = 0
-> > > [  265.333025] user pgtable: 4k pages, 39-bit VAs,
-> > > pgdp=00000001620f3000
-> > > [  265.333038] [00000000000000a8] pgd=00000001620f2003,
-> > > pud=00000001620f2003, pmd=0000000000000000
-> > > [  265.333071] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-> > > [  265.333424] CPU: 1 PID: 5653 Comm: stress-ng-dev Tainted: G S
-> > > W  O
-> > > 5.4.12-g04866e0 #1
-> > > [  265.333458] pstate: 80400085 (Nzcv daIf +PAN -UAO)
-> > > [  265.333499] pc : _raw_spin_lock_irqsave+0x40/0x7c
-> > > [  265.333517] lr : _raw_spin_lock_irqsave+0x38/0x7c
-> > > [  265.333530] sp : ffffffc02436ba40
-> > > [  265.333542] x29: ffffffc02436ba40 x28: 0000000000020800
-> > > [  265.333562] x27: ffffffdfb4046490 x26: ffffff8101b83400
-> > > [  265.333580] x25: ffffff80e163ad00 x24: ffffffdfb45c7798
-> > > [  265.333598] x23: ffffff8101b83668 x22: ffffffdfb4974000
-> > > [  265.333617] x21: 0000000000000001 x20: 00000000000000a8
-> > > [  265.333634] x19: 0000000000000000 x18: ffffff80e0b0d460
-> > > [  265.333652] x17: 0000000000000000 x16: 0000000001000000
-> > > [  265.333670] x15: 0000000001000000 x14: 00000000f8000000
-> > > [  265.333688] x13: 0000000000000000 x12: 0000000000000001
-> > > [  265.333706] x11: 17f5f16765f64600 x10: 17f5f16765f64600
-> > > [  265.333724] x9 : ffffffdfb3444244 x8 : 0000000000000000
-> > > [  265.333741] x7 : 0000000000000000 x6 : 0000000000000000
-> > > [  265.333759] x5 : 0000000000000000 x4 : 0000000000000002
-> > > [  265.333776] x3 : ffffffc02436b9c0 x2 : ffffffdfb40456e0
-> > > [  265.333794] x1 : ffffffc02436b9c0 x0 : ffffffdfb3444244
-> > > [  265.333812] Call trace:
-> > > [  265.333831]  _raw_spin_lock_irqsave+0x40/0x7c
-> > > [  265.333859]  28$61deaf328f140fd7df47c115ec866fa5+0x28/0x174
-> > > [  265.333882]  tty_open$86bd494905ebe22944bf63b711173de3+0x3d0/0x584
-> > > [  265.333921]
-> > > chrdev_open$4083aaa799bca8e0e1e0c8dc1947aa96+0x1c4/0x248
-> > > [  265.333940]  do_dentry_open+0x258/0x3b0
-> > > [  265.333956]  vfs_open+0x2c/0x38
-> > > [  265.333975]  path_openat+0x898/0xedc
-> > > [  265.333991]  do_filp_open+0x78/0x124
-> > > [  265.334006]  do_sys_open+0x13c/0x298
-> > > [  265.334022]  __arm64_sys_openat+0x28/0x34
-> > > [  265.334044]  el0_svc_common+0xb8/0x1b4
-> > > [  265.334059]  el0_svc_handler+0x6c/0x88
-> > > [  265.334079]  el0_svc+0x8/0xc
-> > > [  265.334110] Code: 52800035 97b9fec7 aa1f03e8 f9800291 (885ffe81)
-> > > [  265.334130] ---[ end trace ac90e3099a98e99f ]---
-> > > [  265.334146] Kernel panic - not syncing: Fatal exception
+Hi Poonam,
+
+Poonam Aggrwal <poonam.aggrwal@nxp.com> wrote on Fri, 15 May 2020
+05:29:07 +0000:
+
+> Adding Ashish.
+> 
+> Regards
+> Poonam
+> 
+> > -----Original Message-----
+> > From: Naresh Kamboju <naresh.kamboju@linaro.org>
+> > Sent: Friday, May 15, 2020 10:57 AM
+> > To: shiva.linuxworks@gmail.com; Miquel Raynal <miquel.raynal@bootlin.com>;
+> > Shivamurthy Shastri <sshivamurthy@micron.com>
+> > Cc: Richard Weinberger <richard@nod.at>; Vignesh Raghavendra
+> > <vigneshr@ti.com>; Boris Brezillon <boris.brezillon@collabora.com>;
+> > Chuanhong Guo <gch981213@gmail.com>; Frieder Schrempf
+> > <frieder.schrempf@kontron.de>; linux-mtd@lists.infradead.org; open list <linux-  
+> > kernel@vger.kernel.org>; Poonam Aggrwal <poonam.aggrwal@nxp.com>;  
+> > Suram Suram <suram@nxp.com>; lkft-triage@lists.linaro.org
+> > Subject: Re: [PATCH v7 0/6] Add new series Micron SPI NAND devices
 > > 
-> > Hm, do you have a strace showing the close happening at the same time?
-> > What about install()?
-> 
-> Yes, I do see the close happening, at which point the issue is not seen.
-> It's only seen if the second task came in before this close was called. For
-> this task, as the file was already opened, it doesn't go through
-> hvc_install.
-> 
-> (I figured adding some logs in the drivers would be helpful than straces to
-> also include hvc_install)
-> 
-> These are the traces you get when the issue happens:
-> [  154.212291] hvc_install called for pid: 666
-> [  154.216705] hvc_open called for pid: 666
-> [  154.233657] hvc_open: request_irq failed with rc -22.
-> [  154.238934] hvc_open called for pid: 678
-> [  154.243012] Unable to handle kernel NULL pointer dereference at virtual
-> address 00000000000000c4
-> # hvc_install isn't called for pid: 678 as the file wasn't closed yet.
-> 
-> And these are the traces we get when things are normal:
-> [   76.318861] hvc_install called for pid: 537
-> [   76.323240] hvc_open called for pid: 537
-> [   76.340177] hvc_open: request_irq failed with rc -22.
-> [   76.345384] hvc_close called for pid: 537
-> [   76.349555] hvc_install called for pid: 538
-> [   76.353921] hvc_open called for pid: 538
-> # hvc_open for the second task (pid: 538) seems to be fine here as the file
-> was closed prior to the second task tried to open the file.
-> 
+> > On Wed, 11 Mar 2020 at 23:28, <shiva.linuxworks@gmail.com> wrote:  
+> > >
+> > > From: Shivamurthy Shastri <sshivamurthy@micron.com>
+> > >
+> > > This patchset is for the new series of Micron SPI NAND devices, and
+> > > the following links are their datasheets.  
 > > 
-> > And what line in hvc_open() does that offset correspond to?
-> It's the point where it tries to acquire the spinlock for the first time:
-> spin_lock_irqsave(&hp->port.lock, flags);
+> > While boot NXP ls2088 device with mainline kernel the following nand warning
+> > noticed. How critical this warning ?
 
-Ah, is this a console?  Maybe this is the same issue that other console
-drivers have been having recently, look at:
-	https://lore.kernel.org/r/20200428184050.6501-1-john.stultz@linaro.org
-and
-	https://lore.kernel.org/r/1589019852-21505-2-git-send-email-sagar.kadam@sifive.com
+Are you sure this is the right thread? Shivamurthy added SPI-NAND
+support, you are talking about a raw NAND device.
+> > 
+> > [    1.357722] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0x48
+> > [    1.364085] nand: Micron MT29F16G08ABACAWP
+> > [    1.368181] nand: 2048 MiB, SLC, erase size: 512 KiB, page size:
+> > 4096, OOB size: 224
+> > [    1.375932] nand: WARNING: 530000000.flash: the ECC used on your
+> > system is too weak compared to the one required by the NAND chip
 
-Is that what you need here too?
+If you are talking about this one, it is pretty self explanatory: the
+NAND chip requires a minimum correction which is not achieved here.
+Either because the ECC engine cannot reach the requested amount (you
+cannot do anything) or because you requested a too low correction with
+DT properties.
 
-thanks,
+> > 
+> > [    1.388767] Bad block table found at page 524160, version 0x01
+> > [    1.396833] Bad block table found at page 524032, version 0x01
+> > [    1.403781] nand_read_bbt: bad block at 0x000002d00000
+> > [    1.408921] nand_read_bbt: bad block at 0x000002d80000
+> > [    1.414750] fsl,ifc-nand 530000000.nand: IFC NAND device at
+> > 0x530000000, bank 2
+> > 
+> > 
+> > Full test log,
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fqa-
+> > reports.linaro.org%2Flkft%2Flinux-mainline-oe%2Fbuild%2Fv5.7-rc5-55-
+> > g1ae7efb38854%2Ftestrun%2F18254%2Flog&amp;data=02%7C01%7Cpoonam.
+> > aggrwal%40nxp.com%7C146f634c869f4c70baa108d7f8909ffb%7C686ea1d3bc2
+> > b4c6fa92cd99c5c301635%7C0%7C0%7C637251172354638298&amp;sdata=%2B
+> > Jhs%2Fb92%2BA56WzYdHe%2BBhXWfjk8feCGAFv%2BRzFKC9PM%3D&amp;rese
+> > rved=0
+> > 
+> > - Naresh  
 
-greg k-h
+Thanks,
+Miquèl
