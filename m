@@ -2,229 +2,166 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44886C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B75320758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251E120759
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbgEOMEw convert rfc822-to-8bit (ORCPT
+        id S1726238AbgEOMFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:04:52 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:47225 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbgEOMEv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:04:51 -0400
-Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MAOa3-1jOKnj2QzD-00Bt7y; Fri, 15 May 2020 14:04:48 +0200
-Received: by mail-qk1-f169.google.com with SMTP id b6so2163657qkh.11;
-        Fri, 15 May 2020 05:04:48 -0700 (PDT)
-X-Gm-Message-State: AOAM533xfTHdp4vJAZ7ctjyPmKPkiJ0pTHbIsha+cHXFBUt3tiBTvUzQ
-        A7XxpdUqbBpM5srsRItE50nMCZ024ozWxfI82so=
-X-Google-Smtp-Source: ABdhPJy/QisBXP8EQRdO9MZV12WEoweyNWMuyrh9ANXT/Y3Ielto24GQxnJVmqWTbMQYGO0VBAlJTfiYoaSJo5kMMAg=
-X-Received: by 2002:ae9:ed95:: with SMTP id c143mr2964142qkg.394.1589544287159;
- Fri, 15 May 2020 05:04:47 -0700 (PDT)
+        Fri, 15 May 2020 08:05:25 -0400
+Received: from mga07.intel.com ([134.134.136.100]:1322 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726168AbgEOMFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 08:05:24 -0400
+IronPort-SDR: Ugf58e9f/6IPi/RDFs/Mb64SEO1EI8c/y3qJ+SFQSq6faO1m1YqCX10uSDKgk3N0s2Hs2pIFzh
+ 5Tednkmq6FMA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 05:05:17 -0700
+IronPort-SDR: I6Wn7AwZIvcUrD++sALforAjGf8WE4z/6KSboxCDBePEIuvcpJ7kd2ah2WcEj3fHXBSB/+5QhO
+ K7rFjQh8eXBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="253779837"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 15 May 2020 05:05:12 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZZ5W-006quz-9s; Fri, 15 May 2020 15:05:14 +0300
+Date:   Fri, 15 May 2020 15:05:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Clement Leger <cleger@kalray.eu>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 04/19] spi: dw: Fix native CS being unset
+Message-ID: <20200515120514.GX185537@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-5-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <20200514075942.10136-1-brgl@bgdev.pl> <20200514075942.10136-11-brgl@bgdev.pl>
- <CAK8P3a3=xgbvqrSpCK5h96eRH32AA7xnoK2ossvT0-cLFLzmXA@mail.gmail.com> <CAMRc=MeypzZBHo6dJGKm4JujYyejqHxtdo7Ts95DXuL0VuMYCw@mail.gmail.com>
-In-Reply-To: <CAMRc=MeypzZBHo6dJGKm4JujYyejqHxtdo7Ts95DXuL0VuMYCw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 15 May 2020 14:04:30 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0u53rHSW=72CnnbhrY28Z+9f=Yv2K-bbj5OD+2Ds4unA@mail.gmail.com>
-Message-ID: <CAK8P3a0u53rHSW=72CnnbhrY28Z+9f=Yv2K-bbj5OD+2Ds4unA@mail.gmail.com>
-Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:bFwAW4lak4mD0kDQMgoEKoUiWJv0wCONItp+75//CaP6A8tUD63
- DnXhOsgXgQIDJwekGdtbeM3sj8A/1T+52SeeHEBvPu0LehWCddJAgrUoY2OIN7ntJ7RMXl5
- LpnyNH9y0X3MWjlr8k0VDycun4U+bx0JGSExDZRNUwTsrOWh4fq7ciPxa99s7iZKjaqqRyM
- gVnA4JA0GICqWd+CR2nlA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vIQmMKS1hgM=:r3ZD6GCxpeET4mrSFmPEY6
- wpY3pu7iMJfHRzdVvSM2HoBAxG80HcO74ukslsV9PcwZ8gIkJd5ENdZVja/Bi9fup9QTKLE/P
- xuGzm0pm0wjGVqHhRvxkK9jyLY0QYjUIJvsBYyYNLpv022UFVe3JHUCiyb6HDIWHn7s2z6fgg
- ERaYd5gRWMqM23si+0Q8fUaHZTG/ipqgYgyL25RS2aoMPT+LVcsc8/7zfyDaG5ShgOlu0WIDx
- 67PHKdgfI2dfulClZduu5cUsToEUU1CT3HjbpLo9CE+iQEnccCmd3t2JswEpLv2orQBf76pGT
- e6wdm3Bve1EOcp0+4GUuCnIGz6V+OEKSU9oTIZOI7bEG/nLp/YVxsNFJ+Sx4xfvD9mFJGQqbi
- LSfBp6nCpRjdVA1snEOE9O3l4kPKHm5MWR9wZG4TaJJGmYWpzAkllQrUKlXnV9GPE42Por2iC
- 5gNQ9f2CHfjFPO6BSKPn/oMFlLY9ns62kYDP+JAKYaK7dprsehsd6WypIjmv3idPyr2ro9+Pf
- pdkIqgiwogUlrHDoti9eGVv/Guw9kF0JrOkPoB4VlkyNrweZtjH+rTXsvmnJjxtV81rcT3/7Z
- tcIM5rIxwJADiioky6lYqMks3TA14xat59uoBsT0oXcJU6ZSnGe9/jdxdOkbF+Zohuj48JIZI
- jUWcA/3jOhn6jvBqusGRJCm6pgzBe7PGjwwIHQHFBk6i7zY8De8EHiciII5eqELhoN+cyED+b
- vMQmbSenDJRgSdKdQy7i7wHlP+gfi8ou19gjWpfM/dwp1zqkoOg8CO8phY0JRrVtTjk+7XrDE
- 4F1qFO4dImOaaRyMfQqqNHHHqa5S+tW2z6g3FL2xixojedm3MA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515104758.6934-5-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 9:11 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> czw., 14 maj 2020 o 18:19 Arnd Bergmann <arnd@arndb.de> napisał(a):
-> >
-> > On Thu, May 14, 2020 at 10:00 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > +static unsigned int mtk_mac_intr_read_and_clear(struct mtk_mac_priv *priv)
-> > > +{
-> > > +       unsigned int val;
-> > > +
-> > > +       regmap_read(priv->regs, MTK_MAC_REG_INT_STS, &val);
-> > > +       regmap_write(priv->regs, MTK_MAC_REG_INT_STS, val);
-> > > +
-> > > +       return val;
-> > > +}
-> >
-> > Do you actually need to read the register? That is usually a relatively
-> > expensive operation, so if possible try to use clear the bits when
-> > you don't care which bits were set.
-> >
->
-> I do care, I'm afraid. The returned value is being used in the napi
-> poll callback to see which ring to process.
+On Fri, May 15, 2020 at 01:47:43PM +0300, Serge Semin wrote:
+> Commit 6e0a32d6f376 ("spi: dw: Fix default polarity of native
+> chipselect") attempted to fix the problem when GPIO active-high
+> chip-select is utilized to communicate with some SPI slave. It fixed
+> the problem, but broke the normal native CS support. At the same time
+> the reversion commit ada9e3fcc175 ("spi: dw: Correct handling of native
+> chipselect") didn't solve the problem either, since it just inverted
+> the set_cs() polarity perception without taking into account that
+> CS-high might be applicable. Here is what is done to finally fix the
+> problem.
+> 
+> DW SPI controller demands any native CS being set in order to proceed
+> with data transfer. So in order to activate the SPI communications we
+> must set any bit in the Slave Select DW SPI controller register no
+> matter whether the platform requests the GPIO- or native CS. Preferably
+> it should be the bit corresponding to the SPI slave CS number. But
+> currently the dw_spi_set_cs() method activates the chip-select
+> only if the second argument is false. Since the second argument of the
+> set_cs callback is expected to be a boolean with "is-high" semantics
+> (actual chip-select pin state value), the bit in the DW SPI Slave
+> Select register will be set only if SPI core requests the driver
+> to set the CS in the low state. So this will work for active-low
+> GPIO-based CS case, and won't work for active-high CS setting
+> the bit when SPI core actually needs to deactivate the CS.
+> 
+> This commit fixes the problem for all described cases. So no matter
+> whether an SPI slave needs GPIO- or native-based CS with active-high
+> or low signal the corresponding bit will be set in SER.
 
-I suppose the other callers are not performance critical.
+Nice catch!
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-For the rx and tx processing, it should be better to just always look at
-the queue directly and ignore the irq status, in particular when you
-are already in polling mode: suppose you receive ten frames at once
-and only process five but clear the irq flag.
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Fixes: ada9e3fcc175 ("spi: dw: Correct handling of native chipselect")
+> Fixes: 6e0a32d6f376 ("spi: dw: Fix default polarity of native chipselect")
+> Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> 
+> ---
+> 
+> Changelog v2:
+> - Add a comment about SER register, that it must be set to activate the
+>   SPI communications.
+> ---
+>  drivers/spi/spi-dw.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+> index 6de196df9c96..450c8218caeb 100644
+> --- a/drivers/spi/spi-dw.c
+> +++ b/drivers/spi/spi-dw.c
+> @@ -124,8 +124,16 @@ static inline void dw_spi_debugfs_remove(struct dw_spi *dws)
+>  void dw_spi_set_cs(struct spi_device *spi, bool enable)
+>  {
+>  	struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
+> +	bool cs_high = !!(spi->mode & SPI_CS_HIGH);
+>  
+> -	if (!enable)
+> +	/*
+> +	 * DW SPI controller demands any native CS being set in order to
+> +	 * proceed with data transfer. So in order to activate the SPI
+> +	 * communications we must set a corresponding bit in the Slave
+> +	 * Enable register no matter whether the SPI core is configured to
+> +	 * support active-high or active-low CS level.
+> +	 */
+> +	if (cs_high == enable)
+>  		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
+>  	else if (dws->cs_override)
+>  		dw_writel(dws, DW_SPI_SER, 0);
+> -- 
+> 2.25.1
+> 
 
-When the poll function is called again, you still need to process the
-others, but I would assume that the status tells you that nothing
-new has arrived so you don't process them until the next interrupt.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-For the statistics, I assume you do need to look at the irq status,
-but this doesn't have to be done in the poll function. How about
-something like:
 
-- in hardirq context, read the irq status word
-- irq rx or tx irq pending, call napi_schedule
-- if stats irq pending, schedule a work function
-- in napi poll, process both queues until empty or
-  budget exhausted
-- if packet processing completed in poll function
-  ack the irq and check again, call napi_complete
-- in work function, handle stats irq, then ack it
-
-> > > +static void mtk_mac_tx_complete_all(struct mtk_mac_priv *priv)
-> > > +{
-> > > +       struct mtk_mac_ring *ring = &priv->tx_ring;
-> > > +       struct net_device *ndev = priv->ndev;
-> > > +       int ret;
-> > > +
-> > > +       for (;;) {
-> > > +               mtk_mac_lock(priv);
-> > > +
-> > > +               if (!mtk_mac_ring_descs_available(ring)) {
-> > > +                       mtk_mac_unlock(priv);
-> > > +                       break;
-> > > +               }
-> > > +
-> > > +               ret = mtk_mac_tx_complete_one(priv);
-> > > +               if (ret) {
-> > > +                       mtk_mac_unlock(priv);
-> > > +                       break;
-> > > +               }
-> > > +
-> > > +               if (netif_queue_stopped(ndev))
-> > > +                       netif_wake_queue(ndev);
-> > > +
-> > > +               mtk_mac_unlock(priv);
-> > > +       }
-> > > +}
-> >
-> > It looks like most of the stuff inside of the loop can be pulled out
-> > and only done once here.
-> >
->
-> I did that in one of the previous submissions but it was pointed out
-> to me that a parallel TX path may fill up the queue before I wake it.
-
-Right, I see you plugged that hole, however the way you hold the
-spinlock across the expensive DMA management but then give it
-up in each loop iteration feels like this is not the most efficient
-way.
-
-The easy way would be to just hold the lock across the entire
-loop and then be sure you do it right. Alternatively you could
-minimize the locking and only do the wakeup after up do the final
-update to the tail pointer, at which point you know the queue is not
-full because you have just freed up at least one entry.
-
-> > > +static int mtk_mac_poll(struct napi_struct *napi, int budget)
-> > > +{
-> > > +       struct mtk_mac_priv *priv;
-> > > +       unsigned int status;
-> > > +       int received = 0;
-> > > +
-> > > +       priv = container_of(napi, struct mtk_mac_priv, napi);
-> > > +
-> > > +       status = mtk_mac_intr_read_and_clear(priv);
-> > > +
-> > > +       /* Clean up TX */
-> > > +       if (status & MTK_MAC_BIT_INT_STS_TNTC)
-> > > +               mtk_mac_tx_complete_all(priv);
-> > > +
-> > > +       /* Receive up to $budget packets */
-> > > +       if (status & MTK_MAC_BIT_INT_STS_FNRC)
-> > > +               received = mtk_mac_process_rx(priv, budget);
-> > > +
-> > > +       /* One of the counter reached 0x8000000 - update stats and reset all
-> > > +        * counters.
-> > > +        */
-> > > +       if (status & MTK_MAC_REG_INT_STS_MIB_CNT_TH) {
-> > > +               mtk_mac_update_stats(priv);
-> > > +               mtk_mac_reset_counters(priv);
-> > > +       }
-> > > +
-> > > +       if (received < budget)
-> > > +               napi_complete_done(napi, received);
-> > > +
-> > > +       mtk_mac_intr_unmask_all(priv);
-> > > +
-> > > +       return received;
-> > > +}
-> >
-> > I think you want to leave (at least some of) the interrupts masked
-> > if your budget is exhausted, to avoid generating unnecessary
-> > irqs.
-> >
->
-> The networking stack shouldn't queue any new TX packets if the queue
-> is stopped - is this really worth complicating the code? Looks like
-> premature optimization IMO.
-
-Avoiding IRQs is one of the central aspects of using NAPI -- the idea
-is that either you know there is more work to do and you will be called
-again in the near future with additional budget, or you enable interrupts
-and the irq handler calls napi_schedule, but not both.
-
-This is mostly about RX processing, which is limited by the budget,
-for TX you already free all descriptors regardless of the budget.
-
-     Arnd
