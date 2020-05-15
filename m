@@ -2,160 +2,134 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF65C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24978206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFBA206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 12:02:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="H1CM5bvn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbgEOMCB (ORCPT
+        id S1726245AbgEOMCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 08:02:01 -0400
-Received: from mga07.intel.com ([134.134.136.100]:1080 "EHLO mga07.intel.com"
+        Fri, 15 May 2020 08:02:11 -0400
+Received: from mail1.perex.cz ([77.48.224.245]:45048 "EHLO mail1.perex.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgEOMCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 08:02:00 -0400
-IronPort-SDR: a2wK/qvcDhR7KL58VM+JL9Ij2JG7HTLPdRVaivCYqd9BT4JQ1H050sJ1T40dP1RgMWFz/7Sd83
- dcPwPAIOEn8A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 05:02:00 -0700
-IronPort-SDR: 52x/eYphv0+GwAeDB0GS795An+D42Z3563Tzv/uOBkJeCgUWsewkLO9fHSsB1zzLsK1rq8/CJK
- do3WYzhWBQOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
-   d="scan'208";a="341961003"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 15 May 2020 05:01:55 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jZZ2M-006qsy-38; Fri, 15 May 2020 15:01:58 +0300
-Date:   Fri, 15 May 2020 15:01:58 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
+        id S1726118AbgEOMCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 08:02:11 -0400
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 17599A004B;
+        Fri, 15 May 2020 14:02:09 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 17599A004B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+        t=1589544129; bh=BSPQw7ZsQTM9qcuNnNNGa3TUk61bcBxmr+5Zb7SXb3k=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=H1CM5bvnktpNfAz3IAga9bNh/b2OcwZBtSlsVek+Ha8mJPsdnpDNGE801xj1Pdu+g
+         IIFKpDBjbeD8swsnCxKfR7+K++XN9kzm18xEUl/OtM9U4rM03tPINQBhjvFPCNHzwO
+         17LkqcYiTTVRKQWLO+74MYTVT/6QMdTSUP5JXt0U=
+Received: from p50.perex-int.cz (unknown [192.168.100.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: perex)
+        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+        Fri, 15 May 2020 14:01:57 +0200 (CEST)
+Subject: Re: [PATCH] ALSA: pcm: fix incorrect hw_base increase
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     "Lu, Brent" <brent.lu@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/19] spi: dw: Clear DMAC register when done or
- stopped
-Message-ID: <20200515120158.GW185537@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-4-Sergey.Semin@baikalelectronics.ru>
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulhsia <paulhsia@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1589515779-20987-1-git-send-email-brent.lu@intel.com>
+ <20200515070446.GA1226131@kroah.com>
+ <BN6PR1101MB21327687327440F1DB7CB75F97BD0@BN6PR1101MB2132.namprd11.prod.outlook.com>
+ <ce215f76-89c3-3543-c6ed-bc9b81af50a0@perex.cz>
+ <s5hk11dmqhn.wl-tiwai@suse.de>
+From:   Jaroslav Kysela <perex@perex.cz>
+Message-ID: <6f98358d-99f1-3b54-ae1a-5e938d383c32@perex.cz>
+Date:   Fri, 15 May 2020 14:01:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515104758.6934-4-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <s5hk11dmqhn.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 01:47:42PM +0300, Serge Semin wrote:
-> If DMAC register is left uncleared any further DMAless transfers
-> may cause the DMAC hardware handshaking interface getting activated.
-> So the next DMA-based Rx/Tx transaction will be started right
-> after the dma_async_issue_pending() method is invoked even if no
-> DMATDLR/DMARDLR conditions are met. This at the same time may cause
-> the Tx/Rx FIFO buffers underrun/overrun. In order to fix this we
-> must clear DMAC register after a current DMA-based transaction is
-> finished.
+Dne 15. 05. 20 v 12:39 Takashi Iwai napsal(a):
+> On Fri, 15 May 2020 11:30:54 +0200,
+> Jaroslav Kysela wrote:
+>>
+>> Dne 15. 05. 20 v 11:04 Lu, Brent napsal(a):
+>>>>
+>>>> Is this a bugfix needed for older kernels as well?  When did this issue show
+>>>> up?
+>>>>
+>>>> thanks,
+>>>>
+>>>> greg k-h
+>>>
+>>> It happens when DMA stop moving data from host to DSP/DAI for a long time
+>>> (> half of buffer time). I know host driver should do something about it. But if
+>>> not, the HWSYNC will keep increasing the hw_base and hw_ptr and confuses
+>>> user space program.
+>>
+>> I'm afraid, but with this code, you turn off the hw_ptr jiffies
+>> code. It would be better to fix the driver in this case (return the
+>> updated / estimated DMA pointer, increase DMA buffer size etc.). This
+>> "lag" is unacceptable.
+> 
+> The problem is obviously in the driver's side and it's best to be
+> addressed there.  But, I think it's still worth to apply this change.
+> 
+> The hw_ptr jiffies check is performed basically in two places: one is
+> snd_pcm_period_elapsed() call from ISR, and another is with the
+> no_period_wakeup flag.  In both cases, it calculates the diff of
+> jiffies from the previous update, and corrects the hw_ptr_base if that
+> exceeds the threshold.
+> 
+> And the bug here is that the "previous" jiffies is kept as long as the
+> hwptr itself is updated.  What we need is the correction of the base
+> when it really has processed the period size; i.e. hwptr got the same
+> value (with no_period_wakeup) and yet the jiffies diff is big.  For
+> this check, it's correct to update hw_ptr_jiffies at each call no
+> matter whether hwptr moved or not; we need to evaluate from the
+> previous update, after all.
+> 
+> But I might overlook something.  Jaroslav, could you check it again?
+> The jiffies check code is your black magic :)
 
-After adding a Fixes tag,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+I tried to imagine a negative impact for this hw_ptr_jiffies update when the 
+DMA position is not updated from the driver and I haven't found any so far.
+
+Let's apply this and we'll see in future :-)
+
+And yes, the patch description should be improved (DMA ptr is not updated / 
+streaming is inactive).
+
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
 
 > 
-> Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
 > 
-> ---
+> thanks,
 > 
-> Changelog v2:
-> - Move the patch to the head of the series so one could be picked up to
->   the stable kernels as a fix.
-> - Clear the DMACR in the DMA exit callback too.
-> ---
->  drivers/spi/spi-dw-mid.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> Takashi
 > 
-> diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-> index 7a5ae1506365..0c597b6bb154 100644
-> --- a/drivers/spi/spi-dw-mid.c
-> +++ b/drivers/spi/spi-dw-mid.c
-> @@ -108,6 +108,8 @@ static void mid_spi_dma_exit(struct dw_spi *dws)
->  		dmaengine_terminate_sync(dws->rxchan);
->  		dma_release_channel(dws->rxchan);
->  	}
-> +
-> +	dw_writel(dws, DW_SPI_DMACR, 0);
->  }
->  
->  static irqreturn_t dma_transfer(struct dw_spi *dws)
-> @@ -178,6 +180,8 @@ static void dw_spi_dma_tx_done(void *arg)
->  	clear_bit(TX_BUSY, &dws->dma_chan_busy);
->  	if (test_bit(RX_BUSY, &dws->dma_chan_busy))
->  		return;
-> +
-> +	dw_writel(dws, DW_SPI_DMACR, 0);
->  	spi_finalize_current_transfer(dws->master);
->  }
->  
-> @@ -249,6 +253,8 @@ static void dw_spi_dma_rx_done(void *arg)
->  	clear_bit(RX_BUSY, &dws->dma_chan_busy);
->  	if (test_bit(TX_BUSY, &dws->dma_chan_busy))
->  		return;
-> +
-> +	dw_writel(dws, DW_SPI_DMACR, 0);
->  	spi_finalize_current_transfer(dws->master);
->  }
->  
-> @@ -342,6 +348,8 @@ static void mid_spi_dma_stop(struct dw_spi *dws)
->  		dmaengine_terminate_sync(dws->rxchan);
->  		clear_bit(RX_BUSY, &dws->dma_chan_busy);
->  	}
-> +
-> +	dw_writel(dws, DW_SPI_DMACR, 0);
->  }
->  
->  static const struct dw_spi_dma_ops mfld_dma_ops = {
-> -- 
-> 2.25.1
-> 
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
