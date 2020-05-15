@@ -2,171 +2,96 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB63C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC636C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62BD52065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:43:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RawQUcqC"
+	by mail.kernel.org (Postfix) with ESMTP id AA64820671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgEOBnM (ORCPT
+        id S1728093AbgEOBnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 21:43:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728372AbgEOBmy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 21:42:54 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E371EC05BD43;
-        Thu, 14 May 2020 18:42:53 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id l19so453266lje.10;
-        Thu, 14 May 2020 18:42:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EXpSXkZ/8Hfb2Ijnh+LYOs0qAyDxWCL/20mt+D8uMOs=;
-        b=RawQUcqCrY6FrUwunWV9jJ1fcJHOQgZ2Fi5I+37lY73PGpBBngX9TN+0xsN9yNRVrJ
-         xRTrcz4FbAKvanXkCqlN1GPcpSWu+S6X1GtYDW1cyinoDTqCR3Gk/BM9M35lssG7ZA28
-         6E0F1Y1RUIwT0rVyx/dcChZw3NAj6i482cIRqFp+hlXqDxIwUy2U2GyhKq4eKCKt+WQl
-         LRrwhpm8ZG8yZEREeH2jtfYQVtwcNybyMpm5Df+VdcufYCmVBLUXyFM3d1ldXKFVhXsn
-         pN0ZNKpv0l+SsaaoT62qYoq63Slleb4z3T4BP0Xb4Q3WgdJcJi8TuBm48rKs5KCus1vD
-         WsoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EXpSXkZ/8Hfb2Ijnh+LYOs0qAyDxWCL/20mt+D8uMOs=;
-        b=iPGGPnqrbbeP2gXF9dfRo8sGVOzfanVky8jGCqQ/XKL+Y6VQdovJoQw9QLV7526tR8
-         MQNfJn+uG65T8BTQrf2MFnSy5X3g1y3eP6TDvZmNkpyQd+8vf//VaaDw1BI4j7gk9oU8
-         dMCUHGblb+0/I+QDce4HqXBA2Hs191hix8R7pxLAeyh3TC1v2vJ7pDUjfemAaPyGkoEA
-         6DESPP69zQ4ggGV6m6LRsvLl+QjBnlU4JrwCx0RQppXeebwQaq+K4JFthKy0Oxeq0eov
-         dLQoD13dM01waUugZQewUajd4qTnOHsN9ZqfLjU+L4YPkYCrrM7Wtb6HKw2VqIgwY0nz
-         g+xw==
-X-Gm-Message-State: AOAM531aeK/htkcLzL4MIItGOZv2a7jXmzYGbErp+ox7ipIA+qUosz2E
-        dcawe32QuAzXmnksHEq52R8=
-X-Google-Smtp-Source: ABdhPJwr2EMETnVN2svJMlP8kCCTDQFS2h557wuuZzhTHrIFzk1EcO74ZC4ircAssigCeiAO03nwFA==
-X-Received: by 2002:a2e:98c1:: with SMTP id s1mr704285ljj.9.1589506972397;
-        Thu, 14 May 2020 18:42:52 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id i1sm309669lja.3.2020.05.14.18.42.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 18:42:51 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>,
-        =?UTF-8?q?Nils=20=C3=96stlund?= <nils@naltan.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
-        Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>
-Subject: [PATCH v4 4/6] partitions/efi: Support GPT entry lookup at a non-standard location
-Date:   Fri, 15 May 2020 04:41:41 +0300
-Message-Id: <20200515014143.12984-5-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200515014143.12984-1-digetx@gmail.com>
-References: <20200515014143.12984-1-digetx@gmail.com>
+        Thu, 14 May 2020 21:43:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727084AbgEOBnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 21:43:53 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 224802065F;
+        Fri, 15 May 2020 01:43:51 +0000 (UTC)
+Date:   Thu, 14 May 2020 21:43:49 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch V5 04/38] x86: Make hardware latency tracing explicit
+Message-ID: <20200514214349.24642172@oasis.local.home>
+In-Reply-To: <20200512213809.784331304@linutronix.de>
+References: <20200512210059.056244513@linutronix.de>
+        <20200512213809.784331304@linutronix.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most of consumer-grade NVIDIA Tegra devices use a proprietary bootloader
-that can't be easily replaced because it's locked down using Secure Boot
-cryptography singing and the crypto keys aren't given to a device owner.
-These devices usually have eMMC storage that is partitioned using a custom
-NVIDIA Tegra partition table format.  Of course bootloader and other
-"special things" are stored on the eMMC storage, and thus, the partition
-format can't be changed.
+On Tue, 12 May 2020 23:01:03 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-The Tegra partition format has been reverse-engineered, but NVIDIA did
-another odd thing by merging "boot" and "main" eMMC HW partitions into a
-single virtual partition in theirs bootloader.  This is not supported by
-Linux kernel and can't be easily implemented.  Hence partition table entry
-isn't accessible by kernel if it's located at the "boot" eMMC partition.
-Luckily this is a rare case in practice and even if it's the case, likely
-that the proprietary bootloader will supply kernel with a non-standard
-gpt_sector= cmdline option.  This gpt_sector= argument points at a GPT
-entry that is placed at a non-standard location on the eMMC storage.
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -1916,7 +1916,7 @@ static __always_inline void exc_machine_
+>  	    mce_check_crashing_cpu())
+>  		return;
+>  
+> -	nmi_enter();
+> +	nmi_enter_notrace();
 
-This patch allows to support the non-standard cmdline option for NVIDIA
-Tegra devices without bothering any other platforms.  The force_gpt_sector
-variable should be set before invoking efi_partition() and be unset after
-the invocation completion.  This variable, if set, instructs GPT parser
-to look up GPT entry at the given sector in addition to the standard GPT
-locations.
+Now a machine check exception could happen and be a cause of latency
+(although there may be more issues if it does). The "nmi_enter trace"
+version does two things. One is for time measurements (if available),
+and the other is just letting the hardware latency know it happen (a
+simple increment).
 
-This patch is based on the original work done by Colin Cross for the
-downstream Android kernel.
+The only thing that is checked is "smp_processor_id()" (I just
+remembered it doesn't need per cpu, as it only runs on a single CPU at
+a time).
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- block/partitions/efi.c | 10 ++++++++++
- block/partitions/efi.h |  2 ++
- 2 files changed, 12 insertions(+)
+Could the notrace version supply the increment, and leave the
+trace_clock() in the trace version?
 
-diff --git a/block/partitions/efi.c b/block/partitions/efi.c
-index b64bfdd4326c..48e4c2aeeded 100644
---- a/block/partitions/efi.c
-+++ b/block/partitions/efi.c
-@@ -103,6 +103,12 @@ force_gpt_fn(char *str)
- }
- __setup("gpt", force_gpt_fn);
- 
-+/* Used by NVIDIA Tegra partition parser in order to convey a non-standard
-+ * location of the GPT entry for lookup. This variable should be set before
-+ * efi_partition() invocation for instructing parser to look up GPT entry at
-+ * the given sector, and it should be unset after completion of the invocation.
-+ */
-+sector_t force_gpt_sector;
- 
- /**
-  * efi_crc32() - EFI version of crc32 function
-@@ -621,6 +627,10 @@ static int find_valid_gpt(struct parsed_partitions *state, gpt_header **gpt,
-         if (!good_agpt && force_gpt)
-                 good_agpt = is_gpt_valid(state, lastlba, &agpt, &aptes);
- 
-+	if (!good_agpt && force_gpt && force_gpt_sector)
-+		good_agpt = is_gpt_valid(state, force_gpt_sector,
-+					 &agpt, &aptes);
-+
-         /* The obviously unsuccessful case */
-         if (!good_pgpt && !good_agpt)
-                 goto fail;
-diff --git a/block/partitions/efi.h b/block/partitions/efi.h
-index 8cc2b88d0aa8..630cf21439af 100644
---- a/block/partitions/efi.h
-+++ b/block/partitions/efi.h
-@@ -113,4 +113,6 @@ typedef struct _legacy_mbr {
- 	__le16 signature;
- } __packed legacy_mbr;
- 
-+extern sector_t force_gpt_sector;
-+
- #endif
--- 
-2.26.0
+-- Steve
 
+
+>  	/*
+>  	 * The call targets are marked noinstr, but objtool can't figure
+>  	 * that out because it's an indirect call. Annotate it.
+> 
