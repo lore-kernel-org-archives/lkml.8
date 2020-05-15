@@ -2,198 +2,124 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07826C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB02C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF76920759
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4280A206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:13:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yJJR0pMt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbgEONMt (ORCPT
+        id S1726438AbgEONNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:12:49 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:53528 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726246AbgEONM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:12:26 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 0CC7DFB05;
-        Fri, 15 May 2020 15:12:24 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id brG_Y9P4LUL8; Fri, 15 May 2020 15:12:20 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 86BB7445AB; Fri, 15 May 2020 15:12:15 +0200 (CEST)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Peng Fan <peng.fan@nxp.com>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [RFC PATCH 4/6] drm/bridge/nwl-dsi: Drop mux handling
-Date:   Fri, 15 May 2020 15:12:13 +0200
-Message-Id: <951688795f969ebcbf9fb3c38065ccce6f488235.1589548223.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <cover.1589548223.git.agx@sigxcpu.org>
-References: <cover.1589548223.git.agx@sigxcpu.org>
+        Fri, 15 May 2020 09:13:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgEONNb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 09:13:31 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3A07C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:13:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=yfKPxko55jufmY0xy3S8W87THENHzmg1dUd7YFjxF4E=; b=yJJR0pMtsCZqYTPsfQocCBO78z
+        EhpRZyVKSf5IlEaU4swzxO4zwPkmOdXycBPpfOHsqsdTUWu2RywnuI4lDiZCOhJ1Sgk5qwKVYhjGJ
+        sHkHMoUn1+J6X3/hQX8ARJfMhU45IzBJbldCMQ9wKxnfa01WvOagEsp0Ge1D5xV0D5UBN1aHH8Xs2
+        R4/2FrVT/wYlU13jajtTK2pYHYEVywe2Z3ADy8KVcUHvkZAAVex8aZAWII5YUI1nTC5aWBs36b3Dw
+        NM1JTH9gOiMWzeYRHG1tnxv4l4xiH4itsz8XKoe/i7EJZOHZnh9rhNU2ARJcanB7sAxsMQc/wwU+t
+        cJnNgFBw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZa8n-0000ad-1i; Fri, 15 May 2020 13:12:41 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 39315302753;
+        Fri, 15 May 2020 15:12:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1C2A320267E67; Fri, 15 May 2020 15:12:39 +0200 (CEST)
+Date:   Fri, 15 May 2020 15:12:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Jirka Hladky <jhladky@redhat.com>, Phil Auld <pauld@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Douglas Shakshober <dshaks@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+Message-ID: <20200515131239.GX2957@hirez.programming.kicks-ass.net>
+References: <20200507155422.GD3758@techsingularity.net>
+ <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
+ <20200508092212.GE3758@techsingularity.net>
+ <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
+ <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
+ <20200513153023.GF3758@techsingularity.net>
+ <20200514153122.GE2978@hirez.programming.kicks-ass.net>
+ <20200515084740.GJ3758@techsingularity.net>
+ <20200515111732.GS2957@hirez.programming.kicks-ass.net>
+ <20200515130346.GM3758@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515130346.GM3758@techsingularity.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This will be handled via the mux-input-bridge.
+On Fri, May 15, 2020 at 02:03:46PM +0100, Mel Gorman wrote:
+> On Fri, May 15, 2020 at 01:17:32PM +0200, Peter Zijlstra wrote:
+> > On Fri, May 15, 2020 at 09:47:40AM +0100, Mel Gorman wrote:
+> > +static bool ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
+> > +{
+> > +	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
+> > +		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
+> > +		__ttwu_queue_remote(p, cpu, wake_flags);
+> > +		return true;
+> > +	}
+> > +
+> > +	return false;
+> > +}
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- drivers/gpu/drm/bridge/Kconfig   |  1 -
- drivers/gpu/drm/bridge/nwl-dsi.c | 61 --------------------------------
- 2 files changed, 62 deletions(-)
+> > +	if (READ_ONCE(p->on_cpu) && __ttwu_queue_remote(p, cpu, wake_flags))
+> > +		goto unlock;
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index 3886c0f41bdd..11444f841e35 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -78,7 +78,6 @@ config DRM_NWL_MIPI_DSI
- 	select DRM_PANEL_BRIDGE
- 	select GENERIC_PHY_MIPI_DPHY
- 	select MFD_SYSCON
--	select MULTIPLEXER
- 	select REGMAP_MMIO
- 	help
- 	  This enables the Northwest Logic MIPI DSI Host controller as
-diff --git a/drivers/gpu/drm/bridge/nwl-dsi.c b/drivers/gpu/drm/bridge/nwl-dsi.c
-index b14d725bf609..8839f333f39c 100644
---- a/drivers/gpu/drm/bridge/nwl-dsi.c
-+++ b/drivers/gpu/drm/bridge/nwl-dsi.c
-@@ -12,7 +12,6 @@
- #include <linux/math64.h>
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
--#include <linux/mux/consumer.h>
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/phy/phy.h>
-@@ -44,9 +43,6 @@ enum transfer_direction {
- 	DSI_PACKET_RECEIVE,
- };
- 
--#define NWL_DSI_ENDPOINT_LCDIF 0
--#define NWL_DSI_ENDPOINT_DCSS 1
--
- struct nwl_dsi_plat_clk_config {
- 	const char *id;
- 	struct clk *clk;
-@@ -94,7 +90,6 @@ struct nwl_dsi {
- 	struct reset_control *rst_esc;
- 	struct reset_control *rst_dpi;
- 	struct reset_control *rst_pclk;
--	struct mux_control *mux;
- 
- 	/* DSI clocks */
- 	struct clk *phy_ref_clk;
-@@ -1018,14 +1013,6 @@ static int nwl_dsi_parse_dt(struct nwl_dsi *dsi)
- 	}
- 	dsi->tx_esc_clk = clk;
- 
--	dsi->mux = devm_mux_control_get(dsi->dev, NULL);
--	if (IS_ERR(dsi->mux)) {
--		ret = PTR_ERR(dsi->mux);
--		if (ret != -EPROBE_DEFER)
--			DRM_DEV_ERROR(dsi->dev, "Failed to get mux: %d\n", ret);
--		return ret;
--	}
--
- 	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
-@@ -1073,47 +1060,6 @@ static int nwl_dsi_parse_dt(struct nwl_dsi *dsi)
- 	return 0;
- }
- 
--static int nwl_dsi_select_input(struct nwl_dsi *dsi)
--{
--	struct device_node *remote;
--	u32 use_dcss = 1;
--	int ret;
--
--	remote = of_graph_get_remote_node(dsi->dev->of_node, 0,
--					  NWL_DSI_ENDPOINT_LCDIF);
--	if (remote) {
--		use_dcss = 0;
--	} else {
--		remote = of_graph_get_remote_node(dsi->dev->of_node, 0,
--						  NWL_DSI_ENDPOINT_DCSS);
--		if (!remote) {
--			DRM_DEV_ERROR(dsi->dev,
--				      "No valid input endpoint found\n");
--			return -EINVAL;
--		}
--	}
--
--	DRM_DEV_INFO(dsi->dev, "Using %s as input source\n",
--		     (use_dcss) ? "DCSS" : "LCDIF");
--	ret = mux_control_try_select(dsi->mux, use_dcss);
--	if (ret < 0)
--		DRM_DEV_ERROR(dsi->dev, "Failed to select input: %d\n", ret);
--
--	of_node_put(remote);
--	return ret;
--}
--
--static int nwl_dsi_deselect_input(struct nwl_dsi *dsi)
--{
--	int ret;
--
--	ret = mux_control_deselect(dsi->mux);
--	if (ret < 0)
--		DRM_DEV_ERROR(dsi->dev, "Failed to deselect input: %d\n", ret);
--
--	return ret;
--}
--
- static const struct drm_bridge_timings nwl_dsi_timings = {
- 	.input_bus_flags = DRM_BUS_FLAG_DE_LOW,
- };
-@@ -1175,12 +1121,6 @@ static int nwl_dsi_probe(struct platform_device *pdev)
- 	dev_set_drvdata(dev, dsi);
- 	pm_runtime_enable(dev);
- 
--	ret = nwl_dsi_select_input(dsi);
--	if (ret < 0) {
--		mipi_dsi_host_unregister(&dsi->dsi_host);
--		return ret;
--	}
--
- 	drm_bridge_add(&dsi->bridge);
- 	return 0;
- }
-@@ -1189,7 +1129,6 @@ static int nwl_dsi_remove(struct platform_device *pdev)
- {
- 	struct nwl_dsi *dsi = platform_get_drvdata(pdev);
- 
--	nwl_dsi_deselect_input(dsi);
- 	mipi_dsi_host_unregister(&dsi->dsi_host);
- 	drm_bridge_remove(&dsi->bridge);
- 	pm_runtime_disable(&pdev->dev);
--- 
-2.26.1
+> I don't see a problem with moving the updating of p->state to the other
+> side of the barrier but I'm relying on the comment that the barrier is
+> only related to on_rq and on_cpu.
+
+Yeah, I went with that too, like I said, didn't think too hard.
+
+> However, I'm less sure about what exactly you intended to do.
+> __ttwu_queue_remote is void so maybe you meant to use ttwu_queue_remote.
+
+That!
+
+> In that case, we potentially avoid spinning on on_rq for wakeups between
+> tasks that do not share CPU but it's not clear why it would be specific to
+> remote tasks.
+
+The thinking was that we can avoid spinning on ->on_cpu, and let the CPU
+get on with things. Rik had a workload where that spinning was
+significant, and I thought to have understood you saw the same.
+
+By sticking the task on the wake_list of the CPU that's in charge of
+clearing ->on_cpu we ensure ->on_cpu is 0 by the time we get to doing
+the actual enqueue.
 
