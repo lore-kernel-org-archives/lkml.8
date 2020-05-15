@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68347C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4880FC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E73820759
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3184A206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgEONMf (ORCPT
+        id S1726497AbgEONMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:12:35 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:53450 "EHLO honk.sigxcpu.org"
+        Fri, 15 May 2020 09:12:38 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:53568 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbgEONMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:12:23 -0400
+        id S1726296AbgEONMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 09:12:30 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 52834FB02;
-        Fri, 15 May 2020 15:12:19 +0200 (CEST)
+        by honk.sigxcpu.org (Postfix) with ESMTP id BA145FB03;
+        Fri, 15 May 2020 15:12:28 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id f2J9qBn8ahqL; Fri, 15 May 2020 15:12:16 +0200 (CEST)
+        with ESMTP id 7VPSUBShava6; Fri, 15 May 2020 15:12:26 +0200 (CEST)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 686394458A; Fri, 15 May 2020 15:12:15 +0200 (CEST)
+        id 98055445AC; Fri, 15 May 2020 15:12:15 +0200 (CEST)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
         David Airlie <airlied@linux.ie>,
@@ -46,9 +46,9 @@ To:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
         Robert Chiras <robert.chiras@nxp.com>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [RFC PATCH 1/6] dt-bindings: display/bridge: Add binding for input mux bridge
-Date:   Fri, 15 May 2020 15:12:10 +0200
-Message-Id: <14a44a664f40584ffa25c1764aab5ebf97809c71.1589548223.git.agx@sigxcpu.org>
+Subject: [RFC PATCH 6/6] arm64: dts: imx8mq-librem5-devkit: Enable MIPI DSI panel
+Date:   Fri, 15 May 2020 15:12:15 +0200
+Message-Id: <7f91beb1ce51a88dbe43e69c8af35b8684c0ac4c.1589548223.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <cover.1589548223.git.agx@sigxcpu.org>
 References: <cover.1589548223.git.agx@sigxcpu.org>
@@ -60,143 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bridge allows to select the input source via a mux controller.
+Enable MIPI LCD panel output by adding nodes for the NWL DSI host
+controller, the mux-input-bridge, the Rocktech panel and the eLCDIF
+display controller.
 
 Signed-off-by: Guido Günther <agx@sigxcpu.org>
 ---
- .../display/bridge/mux-input-bridge.yaml      | 123 ++++++++++++++++++
- 1 file changed, 123 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 81 +++++++++++++++++++
+ 1 file changed, 81 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml b/Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml
-new file mode 100644
-index 000000000000..4029cf63ee5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml
-@@ -0,0 +1,123 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/mux-input-bridge.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+index 7fc31c71a626..d98f9b8dede8 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+@@ -841,6 +841,87 @@ MX8MQ_IOMUXC_NAND_DATA03_GPIO3_IO9	0x19 /* WWAN_RESET */
+ 	};
+ };
+ 
++&lcdif {
++	status = "okay";
 +
-+title: DRM input source selection via multiplexer
++	port@0 {
++		lcdif_dpi_out: endpoint {
++			remote-endpoint = <&dpi_mux_from_lcdif>;
++		};
++	};
++};
 +
-+maintainers:
-+  - Guido Gúnther <agx@sigxcpu.org>
++&iomuxc_gpr {
++	mipi_mux: mipi-mux {
++		compatible = "mux-input-bridge";
++		mux-controls = <&mux 0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "okay";
++		default-input = <0>;
 +
-+description: |
-+  The input multiplexer bridge allows to select an input source
-+  via an associated mux controller.
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+properties:
-+  compatible:
-+    const: mux-input-bridge
++			port@0 {
++				reg = <0>;
 +
-+  '#address-cells':
-+    const: 1
++				dpi_mux_from_lcdif: endpoint {
++					remote-endpoint = <&lcdif_dpi_out>;
++				};
++			};
 +
-+  '#size-cells':
-+    const: 0
++			port@1 { /* dcss */
++				reg = <1>;
++			};
 +
-+  default-input:
-+    description: The default input to use
++			port@2 {
++				reg = <2>;
++				dpi_mux_out: endpoint {
++					remote-endpoint = <&nwl_dpi_in>;
++				};
 +
-+  mux-controls:
-+    description:
-+      mux controller node to use for operating the input mux
++			};
++		};
++	};
++};
 +
-+  ports:
-+    type: object
-+    properties:
-+      '#address-cells':
-+        const: 1
-+      '#size-cells':
-+        const: 0
++&mipi_dsi {
++	status = "okay";
++	panel@0 {
++		compatible = "rocktech,jh057n00900";
++		reg = <0>;
++		backlight = <&backlight_dsi>;
++		reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
++		vcc-supply = <&reg_2v8_p>;
++		iovcc-supply = <&reg_1v8_p>;
++		port@0 {
++			panel_in: endpoint {
++				remote-endpoint = <&nwl_dsi_out>;
++			};
++		};
++	};
 +
-+    patternProperties:
-+      "^port@[0-9]+":
-+        type: object
-+        description:
-+          At least three nodes containing endpoints connecting to the
-+          pixel data inputs and outputs. The last port is always the
-+          output port.
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+        properties:
-+          reg:
-+            maxItems: 1
++		port@0 {
++			reg = <0>;
++			nwl_dpi_in: endpoint {
++				remote-endpoint = <&dpi_mux_out>;
++			};
++		};
++		port@1 {
++			reg = <1>;
++			nwl_dsi_out: endpoint {
++				remote-endpoint = <&panel_in>;
++			};
++		};
++	};
++};
 +
-+          endpoint:
-+            description: sub-node describing the input
-+            type: object
-+
-+        required:
-+          - reg
-+
-+        additionalProperties: false
-+
-+    required:
-+      - port@0
-+      - port@1
-+      - port@2
-+
-+    additionalProperties: false
-+
-+required:
-+  - '#address-cells'
-+  - '#size-cells'
-+  - mux-controls
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+ - |
-+   #include <dt-bindings/gpio/gpio.h>
-+
-+   mux: mux-controller {
-+           compatible = "gpio-mux";
-+           #mux-control-cells = <0>;
-+
-+           mux-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
-+   };
-+
-+   mipi-mux {
-+           compatible = "mux-input-bridge";
-+           default-input = <0>;
-+           mux-controls = <&mux 0>;
-+           #address-cells = <1>;
-+           #size-cells = <0>;
-+
-+           ports {
-+                   #address-cells = <1>;
-+                   #size-cells = <0>;
-+
-+                   port@0 {
-+                           reg = <0>;
-+
-+                           dpi_mux_from_lcdif: endpoint {
-+                                   remote-endpoint = <&lcdif_dpi_out>;
-+                           };
-+                   };
-+
-+                   port@1 {
-+                           reg = <1>;
-+
-+                           dpi_mux_from_dccss: endpoint {
-+                                   remote-endpoint = <&dcss_dpi_out>;
-+                           };
-+                   };
-+
-+                   port@2 {
-+                           reg = <2>;
-+
-+                           dpi_mux_out: endpoint {
-+                                   remote-endpoint = <&nwl_dpi_in>;
-+                           };
-+                   };
-+           };
-+   };
+ &pgc_gpu {
+ 	power-supply = <&buck3_reg>;
+ };
 -- 
 2.26.1
 
