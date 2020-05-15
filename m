@@ -4,66 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE28FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 22:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE19C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 22:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AACEB20758
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 22:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDFEE20758
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 22:18:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rrfoKJQ6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="khy2QACt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgEOWSM (ORCPT
+        id S1727817AbgEOWRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 18:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51790 "EHLO
+        Fri, 15 May 2020 18:17:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727867AbgEOWRt (ORCPT
+        with ESMTP id S1726226AbgEOWRl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 18:17:49 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C983C05BD0B
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 15:17:48 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id t11so2849143qvv.11
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 15:17:48 -0700 (PDT)
+        Fri, 15 May 2020 18:17:41 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AAA3C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 15:17:40 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id d7so4297501ybp.12
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 15:17:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=HRcsgixZKIGHXE809MZwKkXe7/yWNFRQw3Pqfn6iPQ4=;
-        b=rrfoKJQ6uEbNM5QNyXWM5Tafq0oFhV0It35ydDtbQPivuXG2yFkKJc6zSoeAzeseBo
-         cHWPQ3AhzwULnPMY+tmC/auw950PDXqItWbcSI5an1uWDXP+aWogJ4vio0giVLPizuRT
-         /3l5KcgSrsAlSJ8bcHdjp77uVJp0NMq+0rQys1Wsdgrf4YFEYLrGDCL8aWJLAYwLkolT
-         VYoZUA2NJssZpk+hWLIy3NZaKibqmsrceocYy72OB5aw9db3fZ7HOYDB2BhXSRP19LrU
-         Nu9bBLmasQRkNViuCvlfWwuCyzsK8jLtlWHCeDSq+5mQgVuximLTnndg0xfFU71vAFiA
-         wn0Q==
+        bh=tvl7gLFsS/dAedcEqfrKtncclZsMityBUyr8g2OugcQ=;
+        b=khy2QACtaVinG3BdhesOMwGEVHZD5fXUFL+zMVH9b6ElIEU80EBdBN84tv5aCDv6Gc
+         AgBq6MO97+V442M3Aau9ckM0dpGxubrAcQpZVaF8eE5GWIAZHMuqcH7H95bZU6H+F5XZ
+         eN9aRT/gOPQeYniiMOoiKMw+1Aq8wtpEDgGQrmKVze/WozLXDNyxENP41dKV3P19yYMA
+         GS84iFzfMp7PQj5wDK8D95IcVRC9k+YQc7SetRDH0rz0MrdbYQ//2ySHkAyV9OVoclPG
+         23Oxq661bQxntYB12xI9/yOI3ytZXjRi4GYPLZMSONZ8eyNn9FnrW6Jbt/xQ7j3jS0fB
+         41GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=HRcsgixZKIGHXE809MZwKkXe7/yWNFRQw3Pqfn6iPQ4=;
-        b=bdmLjcs9bs187Ck1+GsatRqR0JEi4egz80iNz9Z5DrnibN7GohG5P0nWgMQUYzEETk
-         psUjqpg3UOBcyQo+hHmbcM3fLb7lGansgR32bUdX5LBhkIVEWDo8eVDz6s7KNL0u3SsE
-         RIXWtCCsLEg2nDt46CDz55q90BN3sDZRy9jpGjV0ELa1lEMrPPy+Qc79yjEdY09jX9eD
-         z1ATjgg5lzJooRSmbSzM6WIe76WDEwn3rKMI8kTodcoKk82hen7uI/cTTWgpr7BTWevu
-         ls6USLhIDAzIFr1py2qkQU3EkPekRFAoU4WYKN8Gg4NI+Of7Zck4uZ3e7z8reHnW6Os8
-         1CLA==
-X-Gm-Message-State: AOAM530Z8Nl2sUtuRzimfruMrI9IHhGkL64q75jqh6gSVKYqw4ODMuRj
-        m3YzOr1C8WucORDbOUC4rVSWSTDY084L
-X-Google-Smtp-Source: ABdhPJyoHkule5YldEKk5Xf0cZyLw1nWJ+TgirnVpw8RyE2ULnRL+yfx9jagb0wVOKxXIt808HBDjF1N8fx3
-X-Received: by 2002:a0c:b60c:: with SMTP id f12mr5663702qve.244.1589581067194;
- Fri, 15 May 2020 15:17:47 -0700 (PDT)
-Date:   Fri, 15 May 2020 15:17:30 -0700
+        bh=tvl7gLFsS/dAedcEqfrKtncclZsMityBUyr8g2OugcQ=;
+        b=tJ+gVDpzpgBXaq4H0vV3x0C7/+B22NyWVmU55HoQt4pKehJmA7hsdj8CQU/Dm8xtJr
+         Hlgw6vqXUcn8F/hqyg1OxOWY9C1mV1BkB/0j8zh3vpn0AG4A4Ocg1SooBu8N+HJQmdR/
+         +g0MO0fFS4U7G/n9mJEIReCskqf4++ouqmEkqjrYNGJDgIX0+0Rs6vQBSytPDeFqGHx0
+         Qj/gAjvtKzbG7bYewsIPDOcn8J0Kr2b87glhNaq5k5y60LhA+TocBGPyXaPA22PH1iNv
+         KnfS35j6vfWOxi2ZOg2nG4YEjSVmKBdc+I8f6hVLJf0vS5NERYnv4cDtDmTOmFFlrlBx
+         m72g==
+X-Gm-Message-State: AOAM532BvUvTTue/R5FcJxDrzKETM7AYpb29qv+opAaW+87CxkZ/UEGa
+        Qt1rs8E0SvY1fntDEQXjWUCI67fZYKnD
+X-Google-Smtp-Source: ABdhPJyH6TcQkNDu//jdJAWoFOmMjTiSO5lvLDKJlvfVqXDU6eIwN1SwheXG/VI8XXlaqXykh7TONnMaUXeR
+X-Received: by 2002:a25:bc4b:: with SMTP id d11mr9847249ybk.71.1589581059496;
+ Fri, 15 May 2020 15:17:39 -0700 (PDT)
+Date:   Fri, 15 May 2020 15:17:26 -0700
 In-Reply-To: <20200515221732.44078-1-irogers@google.com>
-Message-Id: <20200515221732.44078-6-irogers@google.com>
+Message-Id: <20200515221732.44078-2-irogers@google.com>
 Mime-Version: 1.0
 References: <20200515221732.44078-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH v3 5/7] perf test: Provide a subtest callback to ask for the
- reason for skipping a subtest
+Subject: [PATCH v3 1/7] libbpf: Fix memory leak and possible double-free in hashmap__clear
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -90,74 +88,49 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org
 Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>, Paul Clarke <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Alston Tang <alston64@fb.com>, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now subtests can inform why a test was skipped. The upcoming patch
-improvint PMU event metric testing will use it.
+From: Andrii Nakryiko <andriin@fb.com>
 
+Fix memory leak in hashmap_clear() not freeing hashmap_entry structs for each
+of the remaining entries. Also NULL-out bucket list to prevent possible
+double-free between hashmap__clear() and hashmap__free().
+
+Running test_progs-asan flavor clearly showed this problem.
+
+Reported-by: Alston Tang <alston64@fb.com>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200429012111.277390-5-andriin@fb.com
 Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kajol Jain <kjain@linux.ibm.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paul Clarke <pc@us.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20200513212933.41273-1-irogers@google.com
-[ split from a larger patch ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c | 11 +++++++++--
- tools/perf/tests/tests.h        |  1 +
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ tools/lib/bpf/hashmap.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 3471ec52ea11..baee735e6aa5 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -429,8 +429,15 @@ static int test_and_print(struct test *t, bool force_skip, int subtest)
- 	case TEST_OK:
- 		pr_info(" Ok\n");
- 		break;
--	case TEST_SKIP:
--		color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip\n");
-+	case TEST_SKIP: {
-+		const char *skip_reason = NULL;
-+		if (t->subtest.skip_reason)
-+			skip_reason = t->subtest.skip_reason(subtest);
-+		if (skip_reason)
-+			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (%s)\n", skip_reason);
-+		else
-+			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip\n");
+diff --git a/tools/lib/bpf/hashmap.c b/tools/lib/bpf/hashmap.c
+index 54c30c802070..cffb96202e0d 100644
+--- a/tools/lib/bpf/hashmap.c
++++ b/tools/lib/bpf/hashmap.c
+@@ -59,7 +59,14 @@ struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
+ 
+ void hashmap__clear(struct hashmap *map)
+ {
++	struct hashmap_entry *cur, *tmp;
++	int bkt;
++
++	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
++		free(cur);
 +	}
- 		break;
- 	case TEST_FAIL:
- 	default:
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index d6d4ac34eeb7..88e45aeab94f 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -34,6 +34,7 @@ struct test {
- 		bool skip_if_fail;
- 		int (*get_nr)(void);
- 		const char *(*get_desc)(int subtest);
-+		const char *(*skip_reason)(int subtest);
- 	} subtest;
- 	bool (*is_supported)(void);
- 	void *priv;
+ 	free(map->buckets);
++	map->buckets = NULL;
+ 	map->cap = map->cap_bits = map->sz = 0;
+ }
+ 
 -- 
 2.26.2.761.g0e0b3e54be-goog
 
