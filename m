@@ -2,93 +2,200 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664E2C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DF1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41C1F20657
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 607C8207C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 13:29:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XDpFiU17"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rliA1o1K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgEON06 (ORCPT
+        id S1726188AbgEON33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 09:26:58 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34018 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgEON0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 09:26:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=2lkBHPmlDRseinSfpjV+W/RFt5TcCXmxGmuOEC27plc=; b=XDpFiU172k5RrAaLBNhmTQlUrc
-        jR2OibS4ZxAABJMhFVQlN9XNegRrmH9VQwX4fxx4PIMi8BnrqEwj9NpagBYhS27I/Jyw/drf1nECQ
-        osgRt5q2QnDdGsfK64NrmFvt+ObES17pyWEhNWTDyuFsq8ISQzqmB8xp8pzdhSOhgFts=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jZaMP-002Nfr-PO; Fri, 15 May 2020 15:26:45 +0200
-Date:   Fri, 15 May 2020 15:26:45 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Xulin Sun <xulin.sun@windriver.com>
-Cc:     alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xulinsun@gmail.com
-Subject: Re: [PATCH] net: mscc: ocelot: replace readx_poll_timeout with
- readx_poll_timeout_atomic
-Message-ID: <20200515132645.GR527401@lunn.ch>
-References: <20200515031813.30283-1-xulin.sun@windriver.com>
+        Fri, 15 May 2020 09:29:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgEON32 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 09:29:28 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D71C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 06:29:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Description:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-Transfer-Encoding:Content-ID;
+        bh=zMkrJPKXMB6e/Bn6ZYQsagi92Arvi0SWP2vKAyCcSeg=; b=rliA1o1KTyDbCl5zFi7f/GxenD
+        4hm2pN2YDsEpcoSnl9qIrP05m8T627uFCXYopr2yMRNAgWHCGGrClkFD4zlyyvXEC324LOh4X23RR
+        uDGMBj+XuQ/82Wt5niXJ7d6WK69OYuU43wuqjaxFiPiZLYJvV+kovFELD/qEd7h86TTxy5HaY76vk
+        5ZU/xtTvbBY6OiHAnwO8Ggu0LrN5zpnPtYcI1mQwearsxoprEuVuM7hnYqnpnUtTS5eKelmiUPWbc
+        oD3vvK6K/PEtDmt8zMkDMFJZ9ipupAc38g4niKxVYmifVSeBd4HhbYKnrT5QdGsrKWXOfm8KNXfv3
+        lO/wFHhA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZaOY-0005U8-T7; Fri, 15 May 2020 13:28:59 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CA171300455;
+        Fri, 15 May 2020 15:28:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B059D20267E65; Fri, 15 May 2020 15:28:50 +0200 (CEST)
+Date:   Fri, 15 May 2020 15:28:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Jirka Hladky <jhladky@redhat.com>, Phil Auld <pauld@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Douglas Shakshober <dshaks@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>,
+        riel@surriel.com
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+Message-ID: <20200515132850.GJ3001@hirez.programming.kicks-ass.net>
+References: <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
+ <20200508092212.GE3758@techsingularity.net>
+ <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
+ <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
+ <20200513153023.GF3758@techsingularity.net>
+ <20200514153122.GE2978@hirez.programming.kicks-ass.net>
+ <20200515084740.GJ3758@techsingularity.net>
+ <20200515111732.GS2957@hirez.programming.kicks-ass.net>
+ <20200515130346.GM3758@techsingularity.net>
+ <20200515131239.GX2957@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Description: _acquire(&p->on_cpu, !VAL);
 Content-Disposition: inline
-In-Reply-To: <20200515031813.30283-1-xulin.sun@windriver.com>
+In-Reply-To: <20200515131239.GX2957@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 11:18:13AM +0800, Xulin Sun wrote:
-> This fixes call trace like below to use atomic safe API:
-> 
-> BUG: sleeping function called from invalid context at drivers/net/ethernet/mscc/ocelot.c:59
-> in_atomic(): 1, irqs_disabled(): 0, pid: 3778, name: ifconfig
-> INFO: lockdep is turned off.
-> Preemption disabled at:
-> [<ffff2b163c83b78c>] dev_set_rx_mode+0x24/0x40
-> Hardware name: LS1028A RDB Board (DT)
-> Call trace:
-> dump_backtrace+0x0/0x140
-> show_stack+0x24/0x30
-> dump_stack+0xc4/0x10c
-> ___might_sleep+0x194/0x230
-> __might_sleep+0x58/0x90
-> ocelot_mact_forget+0x74/0xf8
-> ocelot_mc_unsync+0x2c/0x38
-> __hw_addr_sync_dev+0x6c/0x130
-> ocelot_set_rx_mode+0x8c/0xa0
-> __dev_set_rx_mode+0x58/0xa0
-> dev_set_rx_mode+0x2c/0x40
-> __dev_open+0x120/0x190
-> __dev_change_flags+0x168/0x1c0
-> dev_change_flags+0x3c/0x78
-> devinet_ioctl+0x6c4/0x7c8
-> inet_ioctl+0x2b8/0x2f8
-> sock_do_ioctl+0x54/0x260
-> sock_ioctl+0x21c/0x4d0
-> do_vfs_ioctl+0x6d4/0x968
-> ksys_ioctl+0x84/0xb8
-> __arm64_sys_ioctl+0x28/0x38
-> el0_svc_common.constprop.0+0x78/0x190
-> el0_svc_handler+0x70/0x90
-> el0_svc+0x8/0xc
-> 
-> Signed-off-by: Xulin Sun <xulin.sun@windriver.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> > In that case, we potentially avoid spinning on on_rq for wakeups between
+> > tasks that do not share CPU but it's not clear why it would be specific to
+> > remote tasks.
+> 
+> The thinking was that we can avoid spinning on ->on_cpu, and let the CPU
+> get on with things. Rik had a workload where that spinning was
+> significant, and I thought to have understood you saw the same.
+> 
+> By sticking the task on the wake_list of the CPU that's in charge of
+> clearing ->on_cpu we ensure ->on_cpu is 0 by the time we get to doing
+> the actual enqueue.
+> 
 
-    Andrew
+Of course, aside from sending an obviously broken patch, I also forgot
+to Cc Rik.
+
+This one compiled, booted and built a kernel, so it must be perfect :-)
+
+---
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 3b64ffd6c728..df588ac75bf0 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2330,7 +2330,7 @@ void scheduler_ipi(void)
+ 	irq_exit();
+ }
+ 
+-static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
++static void __ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
+ {
+ 	struct emote(p, cpu, wake_flags)) *rq = cpu_eturn;(cpu);
+ 
+@@ -2372,6 +2372,17 @@ bool cpus_share_cache(int this_cpu, int that_cpu)
+ {
+ 	return per_cpu(sd_q_lock(rq, &rf);_id, this_cpu) == per_cpu(sd_y_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)_id, that_cpu);
+ }
++
++static bool ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
++{
++	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
++		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
++		__ttwu_queue_remote(p, cpu, wake_flags);
++		return true;
++	}
++
++	return false;
++}
+ #endif /* q && ttwu_remote(p, wake_flags))_SMP */
+ 
+ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
+@@ -2380,11 +2391,8 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
+ 	struct rq_flags rf;
+ 
+ #if defined(CONFIG_SMP)
+-	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
+-		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
+-		ttwu_queue_remote(p, cpu, wake_flags);
++	if (ttwu_queue_remote(p, cpu, wake_flags))
+ 		return;
+-	}
+ #endif
+ 
+ 	rq_lock(rq, &rf);
+@@ -2568,7 +2576,15 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 	if (p->on_rq && ttwu_remote(p, wake_flags))
+ 		goto unlock;
+ 
++	if (p->in_iowait) {
++		delayacct_blkio_end(p);
++		atomic_dec(&task_rq(p)->nr_iowait);
++	}
++
+ #ifdef CONFIG_SMP
++	p->sched_contributes_to_load = !!task_contributes_to_load(p);
++	p->state = TASK_WAKING;
++
+ 	/*
+ 	 * Ensure we load p->on_cpu _after_ p->on_rq, otherwise it would be
+ 	 * possible to, falsely, observe p->on_cpu == 0.
+@@ -2599,15 +2615,10 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 	 * This ensures that tasks getting woken will be fully ordered against
+ 	 * their previous state and preserve Program Order.
+ 	 */
+-	smp_ibutes_to_load = !!task_contributes_to_load(p);_load_acquire(&p->on_cpu, !VAL);
+-
+-	p->sched_contributes_to_load = !!task_contributes_to_load(p);
+-	p->state = TASK_WAKING;
++	if (READ_ONCE(p->on_cpu) && ttwu_queue_remote(p, cpu, wake_flags))
++		goto unlock;
+ 
+-	if (p->in_iowait) {
+-		delayacct_blkio_end(p);
+-		atomic_dec(&task_rq(p)->nr_iowait);
+-	}
++	smp_cond_load_acquire(&p->on_cpu, !VAL);
+ 
+ 	cpu = select_task_rq(p, p->wake_cpu, SD_BALANCE_WAKE, wake_flags);
+ 	if (task_cpu(p) != cpu) {
+@@ -2615,14 +2626,6 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 		psi_ttwu_dequeue(p);
+ 		set_task_cpu(p, cpu);
+ 	}
+-
+-#else /* CONFIG_SMP */
+-
+-	if (p->in_iowait) {
+-		delayacct_blkio_end(p);
+-		atomic_dec(&task_rq(p)->nr_iowait);
+-	}
+-
+ #endif /* CONFIG_SMP */
+ 
+ 	ttwu_queue(p, cpu, wake_flags);
