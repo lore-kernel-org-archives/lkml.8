@@ -2,158 +2,195 @@ Return-Path: <SRS0=BsgQ=65=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D36C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E07C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D75C206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D007720671
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 May 2020 01:23:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgEOBQh (ORCPT
+        id S1728119AbgEOBXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 21:16:37 -0400
-Received: from smtp.h3c.com ([221.12.31.56]:33062 "EHLO h3cspam02-ex.h3c.com"
+        Thu, 14 May 2020 21:23:34 -0400
+Received: from mga03.intel.com ([134.134.136.65]:18213 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbgEOBQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 21:16:37 -0400
-Received: from DAG2EX04-BASE.srv.huawei-3com.com ([10.8.0.67])
-        by h3cspam02-ex.h3c.com with ESMTPS id 04F1FmFo031401
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 15 May 2020 09:15:48 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) by
- DAG2EX04-BASE.srv.huawei-3com.com (10.8.0.67) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 15 May 2020 09:15:49 +0800
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074])
- by DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074%6]) with
- mapi id 15.01.1713.004; Fri, 15 May 2020 09:15:49 +0800
-From:   Tianxianting <tian.xianting@h3c.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIHRpbWVyczogdXNlIHNldF9jdXJyZW50X3N0YXRl?=
- =?utf-8?Q?_macro?=
-Thread-Topic: [PATCH] timers: use set_current_state macro
-Thread-Index: AQHWJN1i8nvFEDn09kuOWWA9opf9/6imCT8AgADM2eCAAYyy8A==
-Date:   Fri, 15 May 2020 01:15:48 +0000
-Message-ID: <d0f48048300d4cd0a2c23d5918eb0fe5@h3c.com>
-References: <20200508020222.15791-1-tian.xianting@h3c.com>
- <875zcz1qf9.fsf@nanos.tec.linutronix.de> 
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.99.141.128]
-x-sender-location: DAG2
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726168AbgEOBXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 21:23:34 -0400
+IronPort-SDR: NxY1u+COr2AJ2HFqZddeUjER97cqfJMVqpA9OQi5sLWu0Y/aEDOYlSawJPwP8KxQj0l/yqz0lL
+ 4ujfPKdKxVlw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 18:23:33 -0700
+IronPort-SDR: 716VIDaeK6cKbyNcXE8WXDg0uk9xoEckrljiXWaLbUMpyrJYx6AII5OT0hFZj1rVusWKDFpfjU
+ LMRDjM1ZYwow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,393,1583222400"; 
+   d="scan'208";a="438127658"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 14 May 2020 18:23:31 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jZP4V-000Fj6-9E; Fri, 15 May 2020 09:23:31 +0800
+Date:   Fri, 15 May 2020 09:22:39 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:lkmm-dev] BUILD SUCCESS
+ 67e6bf52edb83db3258a655a19b843ce6760a86d
+Message-ID: <5ebdeedf.OYQX5t/GwNvGJvWe%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-DNSRBL: 
-X-MAIL: h3cspam02-ex.h3c.com 04F1FmFo031401
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UGxlYXNlIHJldmlldyB0aGlzIG9uZSwgdGhhbmtzLg0KaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIw
-MjAvNS8xNC83OTYNCg0KLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0K5Y+R5Lu25Lq6OiB0aWFueGlh
-bnRpbmcgKFJEKQ0K5Y+R6YCB5pe26Ze0OiAyMDIw5bm0NeaciDE05pelIDk6NDYNCuaUtuS7tuS6
-ujogJ1Rob21hcyBHbGVpeG5lcicgPHRnbHhAbGludXRyb25peC5kZT47IGpvaG4uc3R1bHR6QGxp
-bmFyby5vcmc7IHNib3lkQGtlcm5lbC5vcmcNCuaKhOmAgTogbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZw0K5Li76aKYOiDnrZTlpI06IFtQQVRDSF0gdGltZXJzOiB1c2Ugc2V0X2N1cnJlbnRf
-c3RhdGUgbWFjcm8NCg0KSGkgVGhvbWFzDQpUaGFua3MgZm9yIHlvdXIgcmVwbHkgOikNCkkgYW0g
-c29ycnkgZm9yIGluY29udmVuaWVuY2luZyB5b3UgYWJvdXQgdGhpcy4NCnRpYW4ueGlhbnRpbmdA
-aDNjLmNvbSBpcyB0aGUgbWFpbCB3aGljaCBpcyBwcm92aWRlZCBieSBteSBjb21wYW55LCBNeSBj
-b21wYW55IG1heSBhZGRlZCBzb21lIGxpbWl0JnNpZ25hdHVyZSB3aGVuIEkgc2VuZCB0aGUgbWFp
-bCBvdXQgb2YgaXQsIEkgd2lsbCByZS1zZW5kIHRoZSBwYXRjaCB2aWEgbXkgcGVyc29uYWwgbWFp
-bCwgSSB1c2VkIGl0IHRvIHNlbmQgc2V2ZXJhbCBwYXRjaGVzIGJlZm9yZSwgYW5kIHBhdGNoZXMg
-d2VyZSBhY2NlcHRlZC4NCg0KLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0K5Y+R5Lu25Lq6OiBUaG9t
-YXMgR2xlaXhuZXIgW21haWx0bzp0Z2x4QGxpbnV0cm9uaXguZGVdDQrlj5HpgIHml7bpl7Q6IDIw
-MjDlubQ15pyIMTTml6UgNToyMg0K5pS25Lu25Lq6OiB0aWFueGlhbnRpbmcgKFJEKSA8dGlhbi54
-aWFudGluZ0BoM2MuY29tPjsgam9obi5zdHVsdHpAbGluYXJvLm9yZzsgc2JveWRAa2VybmVsLm9y
-Zw0K5oqE6YCBOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyB0aWFueGlhbnRpbmcgKFJE
-KSA8dGlhbi54aWFudGluZ0BoM2MuY29tPg0K5Li76aKYOiBSZTogW1BBVENIXSB0aW1lcnM6IHVz
-ZSBzZXRfY3VycmVudF9zdGF0ZSBtYWNybw0KDQpYaWFudGluZywNCg0KWGlhbnRpbmcgVGlhbiA8
-dGlhbi54aWFudGluZ0BoM2MuY29tPiB3cml0ZXM6DQoNCnRoYW5rcyBmb3IgeW91ciBwYXRjaC4N
-Cg0KQ2FuIHlvdSBwbGVhc2UgZml4IHlvdXIgbWFpbCBjbGllbnQgdG8gaGF2ZSBwcm9wZXIgbWFp
-bCBoZWFkZXJzPyBJdA0KcHJvdmlkZXM6DQoNCiAgQ29udGVudC1UeXBlOiB0ZXh0L3BsYWluDQog
-IENvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IHF1b3RlZC1wcmludGFibGUNCg0KYnV0IGl0IGZh
-aWxzIHRvIHByb3ZpZGUgdGhlIGNoYXJzZXQgaW5mb3JtYXRpb24uIFRoYXQgY2F1c2VzIHRoZSBm
-b290ZXIgdG8gYmVjb21lIHVucmVhZGFibGUgZ2FyYmFnZSBub3Qgb25seSBpbiBteSBtYWlsIHJl
-YWRlci4gU2VlOg0KDQogIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAyMDA1MDgwMjAy
-MjIuMTU3OTEtMS10aWFuLnhpYW50aW5nQGgzYy5jb20vDQoNCldoYXQncyB3b3JzZSBpcyB0aGF0
-IGlzIGNhdXNlcyBteSBwYXRjaCBoYW5kbGluZyBzY3JpcHRzIHRvIGRlY29kZSB0aGUgbWFpbCBi
-b2R5IGNvcnJlY3RseS4gQW5kIEknbSBub3QgcmVhbGx5IGluY2xpbmVkIHRvIGZpZ3VyZSBvdXQg
-aG93IHRvIGhhbmRsZSB0aGlzIGNhc2UuDQoNCj4gLS0tIGEva2VybmVsL3RpbWUvdGltZXIuYw0K
-PiArKysgYi9rZXJuZWwvdGltZS90aW1lci5jDQo+IEBAIC0xODg1LDcgKzE4ODUsNyBAQCBzaWdu
-ZWQgbG9uZyBfX3NjaGVkIHNjaGVkdWxlX3RpbWVvdXQoc2lnbmVkIGxvbmcgdGltZW91dCkNCj4g
-ICAgICAgICAgICAgICAgICAgICAgICAgcHJpbnRrKEtFUk5fRVJSICJzY2hlZHVsZV90aW1lb3V0
-OiB3cm9uZyB0aW1lb3V0ICINCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAidmFs
-dWUgJWx4XG4iLCB0aW1lb3V0KTsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgZHVtcF9zdGFj
-aygpOw0KPiAtICAgICAgICAgICAgICAgICAgICAgICBjdXJyZW50LT5zdGF0ZSA9IFRBU0tfUlVO
-TklORzsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgc2V0X2N1cnJlbnRfc3RhdGUoVEFTS19S
-VU5OSU5HKTsNCg0KVGhhdCdzIG5vdCB0aGUgc2FtZSBhbmQgYWRkcyBhIGJhcnJpZXIgd2hpY2gg
-aXMgbm90IG5lZWRlZC4NCg0KTm90IGEgYmlnIHByb2JsZW0gaW4gdGhhdCBwYXJ0aWN1bGFyIGVy
-cm9yIGhhbmRsaW5nIGNvZGUgcGF0aCwgYnV0IGluIGdlbmVyYWwgeW91IHJlYWxseSBoYXZlIHRv
-IGxvb2sgd2hldGhlciB5b3VyIHJlcGxhY2VtZW50IGlzIHJlc3VsdGluZyBpbiB0aGUgc2FtZSBj
-b2RlLg0KDQpJZiBub3QgdGhlbiB5b3UgbmVlZCB0byBtYWtlIGFuIGFyZ3VtZW50IGluIHRoZSBj
-aGFuZ2Vsb2cgd2h5IHlvdSBhcmUgcmVwbGFjaW5nIGV4aXN0aW5nIGNvZGUgd2l0aCBzb21ldGhp
-bmcgd2hpY2ggaXMgbm90IGZ1bGx5IGVxdWl2YWxlbnQuDQoNCkZvciB0aGlzIHBhcnRpY3VsYXIg
-Y2FzZSwgcGxlYXNlIGNoZWNrIHRoZSBpbXBsZW1lbnRhdGlvbiBhbmQgcmVhZCB0aGUgZG9jdW1l
-bnRhdGlvbiBvZiBzZXRfY3VycmVudF9zdGF0ZSgpIGluIGluY2x1ZGUvbGludXgvc2NoZWQuaC4N
-Cg0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiDCscK+w5PDisK8w77CvMKww4bDpMK4wr3C
-vMO+wrrCrMOTw5DDkMOCwrvCqsOIw73CvMKvw43DhcK1w4TCscKjw4PDnMOQw4XDj8KiwqPCrMK9
-w7bDj8Oew5PDmsK3wqLDi8ONwrjDuMOJw4/Dg8OmwrXDmMOWwrfDlsOQw4HDkMKzw7YNCj4gwrXD
-hMK4w7bDiMOLwrvDssOIwrrDl8OpwqHCo8K9w7vDlsK5w4jDjsK6w47DhsOkw4vDu8OIw4vDksOU
-w4jDjsK6w47DkMOOw4rCvcOKwrnDk8ODwqPCqMKww7zDgMKowrXCq8KywrvDj8Oew5PDmsOIwqvC
-ssK/wrvDssKywr/Ct8OWwrXDmMOQwrkNCj4gw4LCtsKhwqLCuMK0w5bDhsKhwqINCj4gwrvDssOJ
-wqLCt8KiwqPCqcKxwr7Dk8OKwrzDvsOWw5DCtcOEw5DDhcOPwqLCocKjw4jDp8K5w7vDhMO6wrTD
-rcOKw5XDgcOLwrHCvsOTw4rCvMO+wqPCrMOHw6vDhMO6w4HCosK8wrTCtcOnwrvCsMK7w7LDk8OK
-wrzDvsONwqjDlsKqwrfCosK8w74NCj4gw4jDi8KywqLDicK+wrPDvcKxwr4NCj4gw5PDisK8w77C
-o8KhDQoNClRoaXMgaXMgdGhlIHJlc3VsdGluZyBnYXJiYWdlLiBOb3QgdGhhdCBJIGNvdWxkIGRl
-Y2lwaGVyIHRoZSBjaGluZXNlIGNoYXJhY3RlcnMgd2hpY2ggc2hvdWxkIGJlIGhlcmUgaW5zdGVh
-ZCwgYnV0IGF0IGxlYXN0IHRoZXkgd291bGQgbG9vayB3YXkgbmljZXIuIEJ1dCBzZWUgYmVsb3c6
-DQoNCj4gVGhpcyBlLW1haWwgYW5kIGl0cyBhdHRhY2htZW50cyBjb250YWluIGNvbmZpZGVudGlh
-bCBpbmZvcm1hdGlvbiBmcm9tDQo+IE5ldyBIM0MsIHdoaWNoIGlzIGludGVuZGVkIG9ubHkgZm9y
-IHRoZSBwZXJzb24gb3IgZW50aXR5IHdob3NlIGFkZHJlc3MNCj4gaXMgbGlzdGVkIGFib3ZlLiBB
-bnkgdXNlIG9mIHRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaGVyZWluIGluIGFueQ0KPiB3YXkg
-KGluY2x1ZGluZywgYnV0IG5vdCBsaW1pdGVkIHRvLCB0b3RhbCBvciBwYXJ0aWFsIGRpc2Nsb3N1
-cmUsDQo+IHJlcHJvZHVjdGlvbiwgb3IgZGlzc2VtaW5hdGlvbikgYnkgcGVyc29ucyBvdGhlciB0
-aGFuIHRoZSBpbnRlbmRlZA0KPiByZWNpcGllbnQocykgaXMgcHJvaGliaXRlZC4gSWYgeW91IHJl
-Y2VpdmUgdGhpcyBlLW1haWwgaW4gZXJyb3IsDQo+IHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBi
-eSBwaG9uZSBvciBlbWFpbCBpbW1lZGlhdGVseSBhbmQgZGVsZXRlIGl0IQ0KDQpDYW4geW91IHBs
-ZWFzZSByZW1vdmUgdGhpcyBkaXNjbGFpbWVyIGNvbXBsZXRlbHkgKHdoaWNoIGF2b2lkcyB0aGUg
-Z2FyYmFnZSBpc3N1ZSBhcyB3ZWxsKSA/DQoNCkl0IGRvZXMgbm90IG1ha2UgYW55IHNlbnNlIGlm
-IHlvdSBzZW5kIG1haWwgdG8gYSBwdWJsaWMgbWFpbGluZyBsaXN0Og0KDQogMSkgSWYgeW91IHNl
-bmQgbWFpbCB0byBhIHB1YmxpYyBsaXN0IHdoaWNoIGlzIGFyY2hpdmVkIGluIHB1YmxpYyB0aGVu
-DQogICAgdGhlIGluZm9ybWF0aW9uIGNhbid0IGJlIGNvbmZpZGVudGlhbCBhbmQgcmVzdHJpY3Rl
-ZCB0byBhIHBhcnRpY3VsYXINCiAgICBhdWRpZW5jZS4gSXQgY2FuIGJlIGFjY2Vzc2VkIGJ5IGV2
-ZXJ5b25lIG9uIHRoaXMgcGxhbmV0IHdobyBoYXMNCiAgICBhY2Nlc3MgdG8gdGhlIGludGVybmV0
-Lg0KDQogMikgSWYgeW91IHJlYWxseSBzZW5kIGNvbmZpZGVudGFsIGluZm9ybWF0aW9uIGFjY2lk
-ZW50YWxseSB0aGVuIHRoZXJlDQogICAgaXMgbm8gd2F5IHRvIGRlbGV0ZSBpdC4gSXQncyBvdXQg
-dGhlcmUgaW4gdGhlIHB1YmxpYyBhbmQgaW4gYXJjaGl2ZXMNCiAgICBhbmQgeW91IGNhbid0IGNh
-bGwgaXQgYmFjay4NCg0KVGhhbmtzLA0KDQogICAgICAgIHRnbHgNCg0KDQotLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tDQrmnKzpgq7ku7blj4rlhbbpmYTku7blkKvmnInmlrDljY7kuInpm4blm6LnmoTkv53l
-r4bkv6Hmga/vvIzku4XpmZDkuo7lj5HpgIHnu5nkuIrpnaLlnLDlnYDkuK3liJflh7oNCueahOS4
-quS6uuaIlue+pOe7hOOAguemgeatouS7u+S9leWFtuS7luS6uuS7peS7u+S9leW9ouW8j+S9v+eU
-qO+8iOWMheaLrOS9huS4jemZkOS6juWFqOmDqOaIlumDqOWIhuWcsOazhOmcsuOAgeWkjeWItuOA
-gQ0K5oiW5pWj5Y+R77yJ5pys6YKu5Lu25Lit55qE5L+h5oGv44CC5aaC5p6c5oKo6ZSZ5pS25LqG
-5pys6YKu5Lu277yM6K+35oKo56uL5Y2z55S16K+d5oiW6YKu5Lu26YCa55+l5Y+R5Lu25Lq65bm2
-5Yig6Zmk5pysDQrpgq7ku7bvvIENClRoaXMgZS1tYWlsIGFuZCBpdHMgYXR0YWNobWVudHMgY29u
-dGFpbiBjb25maWRlbnRpYWwgaW5mb3JtYXRpb24gZnJvbSBOZXcgSDNDLCB3aGljaCBpcw0KaW50
-ZW5kZWQgb25seSBmb3IgdGhlIHBlcnNvbiBvciBlbnRpdHkgd2hvc2UgYWRkcmVzcyBpcyBsaXN0
-ZWQgYWJvdmUuIEFueSB1c2Ugb2YgdGhlDQppbmZvcm1hdGlvbiBjb250YWluZWQgaGVyZWluIGlu
-IGFueSB3YXkgKGluY2x1ZGluZywgYnV0IG5vdCBsaW1pdGVkIHRvLCB0b3RhbCBvciBwYXJ0aWFs
-DQpkaXNjbG9zdXJlLCByZXByb2R1Y3Rpb24sIG9yIGRpc3NlbWluYXRpb24pIGJ5IHBlcnNvbnMg
-b3RoZXIgdGhhbiB0aGUgaW50ZW5kZWQNCnJlY2lwaWVudChzKSBpcyBwcm9oaWJpdGVkLiBJZiB5
-b3UgcmVjZWl2ZSB0aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVy
-DQpieSBwaG9uZSBvciBlbWFpbCBpbW1lZGlhdGVseSBhbmQgZGVsZXRlIGl0IQ0K
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  lkmm-dev
+branch HEAD: 67e6bf52edb83db3258a655a19b843ce6760a86d  tools/memory-model: Use "-unroll 0" to keep --hw runs finite
+
+elapsed time: 484m
+
+configs tested: 128
+configs skipped: 46
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+m68k                             allyesconfig
+arc                 nsimosci_hs_smp_defconfig
+mips                          malta_defconfig
+arm                          exynos_defconfig
+powerpc                      pmac32_defconfig
+mips                         rt305x_defconfig
+arm                           corgi_defconfig
+m68k                       m5208evb_defconfig
+powerpc                       holly_defconfig
+arm                        oxnas_v6_defconfig
+powerpc                           allnoconfig
+mips                           ip27_defconfig
+sparc                            alldefconfig
+mips                  decstation_64_defconfig
+mips                            e55_defconfig
+m68k                          multi_defconfig
+arm                       cns3420vb_defconfig
+mips                     loongson1c_defconfig
+arm                             rpc_defconfig
+mips                      loongson3_defconfig
+s390                       zfcpdump_defconfig
+powerpc                       maple_defconfig
+sh                           se7722_defconfig
+sh                          r7785rp_defconfig
+h8300                            alldefconfig
+s390                                defconfig
+arc                      axs103_smp_defconfig
+arm                         cm_x2xx_defconfig
+arm                         palmz72_defconfig
+ia64                             allmodconfig
+sh                 kfr2r09-romimage_defconfig
+c6x                        evmc6678_defconfig
+sh                            shmin_defconfig
+arm                        neponset_defconfig
+powerpc                          g5_defconfig
+arm                          iop32x_defconfig
+arm                         vf610m4_defconfig
+mips                        nlm_xlr_defconfig
+mips                        nlm_xlp_defconfig
+arm                      jornada720_defconfig
+i386                              allnoconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                             allyesconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+i386                 randconfig-a006-20200514
+i386                 randconfig-a005-20200514
+i386                 randconfig-a003-20200514
+i386                 randconfig-a001-20200514
+i386                 randconfig-a004-20200514
+i386                 randconfig-a002-20200514
+i386                 randconfig-a012-20200514
+i386                 randconfig-a016-20200514
+i386                 randconfig-a014-20200514
+i386                 randconfig-a011-20200514
+i386                 randconfig-a013-20200514
+i386                 randconfig-a015-20200514
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+x86_64                              defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
