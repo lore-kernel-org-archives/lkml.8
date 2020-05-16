@@ -2,195 +2,121 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B52C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D22BD206D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B357A206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:04:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vNzIqMmF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgEPKCH (ORCPT
+        id S1726233AbgEPKEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 06:02:07 -0400
-Received: from mga12.intel.com ([192.55.52.136]:36268 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725792AbgEPKCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 06:02:07 -0400
-IronPort-SDR: ERotp1gVspRSrjJlv9QVeV9p5SHTOtKw/c0+V2z//7IHBCTsm4lI40+25KpJstjySd7tZYQS8n
- 0MaGOducHFMQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 03:02:06 -0700
-IronPort-SDR: ep33wEg6nsKhZmrqIisLotuj0ACtuGpixsObXIXGzrgdZ2YL8INdggFwmaylPQb8fweMTdq4jo
- 95Ozm9QBtkgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,398,1583222400"; 
-   d="scan'208";a="263447376"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 16 May 2020 03:02:05 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jZtds-000Adb-Mz; Sat, 16 May 2020 18:02:04 +0800
-Date:   Sat, 16 May 2020 18:01:40 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- 53281c92e73ab42f7dec96595dec2476fa8d0a34
-Message-ID: <5ebfba04.PkzAp5ujGhkEWlE/%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 16 May 2020 06:04:51 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:33324 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725917AbgEPKEv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 06:04:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589623491; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=WDd/TmjSkDxWpcbv2qlPjBzNCM6Ov+9OH5uMf7CoPEk=;
+ b=vNzIqMmFh7OrV/Koj41C2V/ftktKXWhiAiviL5W2m6hrIL/6B+oHlfT8lKHXEmtIge6QM5Gt
+ OCkcl4Zwwwc06EV3sUNw3ow+iH5puNgNNB4ageayrB2wC1bnr3fFWIK0hv8DM9O4viUKmB0s
+ J9N56lDSk1bkzmBpKgHwibZ1r04=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebfbac1.7f2e20e82e68-smtp-out-n05;
+ Sat, 16 May 2020 10:04:49 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1FF73C43636; Sat, 16 May 2020 10:04:49 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A58C3C433D2;
+        Sat, 16 May 2020 10:04:48 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Sat, 16 May 2020 15:34:48 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
+ connections
+In-Reply-To: <5a76926a6532d3f91cca169d474ba98e@codeaurora.org>
+References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
+ <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
+ <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
+ <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
+ <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
+ <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org>
+ <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
+ <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org>
+ <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
+ <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org>
+ <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
+ <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org>
+ <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org>
+ <eee1b9a90266eed9a9c75401f0679777@codeaurora.org>
+ <CAJ9a7Vjd0XG+rAvHptAAjGtE6xRhYsPaOSC_Bf9B-w-FZFu_Qw@mail.gmail.com>
+ <47f6d51bfad0a0bf1553e101e6a2c8c9@codeaurora.org>
+ <37b3749e-2363-0877-c318-9c334a5d1881@arm.com>
+ <d47271ee6a2a6f0f30da7e140b6f196c@codeaurora.org>
+ <CAJ9a7Vg95tcgMXgQKLAZc=TpV6FnPZ7wdF=Kwbuy7d2kRCjYQw@mail.gmail.com>
+ <364049a30dc9d242ec611bf27a16a6c9@codeaurora.org>
+ <CAJ9a7VjAoUmMG9pLEzE_rMSpOjwVOi-ZCinF87n9H0JgfMDsiQ@mail.gmail.com>
+ <5a76926a6532d3f91cca169d474ba98e@codeaurora.org>
+Message-ID: <4bd741e342f8e2743197ed6105dacffa@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: 53281c92e73ab42f7dec96595dec2476fa8d0a34  tick/nohz: Narrow down noise while setting current task's tick dependency
+Hi Mike, Suzuki
 
-elapsed time: 480m
+[...]
 
-configs tested: 128
-configs skipped: 7
+>> 
+>> Please look at the CoreSight components specification 3.0 (ARM IHI
+>> 0029E) Section B2.1.2 which describes the Unique Component Identifier
+>> (UCI).
+>> As mentioned above this consists of a combination of bits from
+>> multiple registers, including PIDR4.
+>> 
+> 
+> Ok got it now, thanks for clearing the doubt. I will go ahead with
+> this method to identify QCOM impl and post a patch.
+> 
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Looking some more into this, since we have this limitation only on
+specific replicator on very few QCOM SoCs, rather than having a blanket
+workaround for all QCOM, we were thinking it would be better to have
+this workaround based on a firmware property something like
+"qcom,replicator-loses-context" for those replicators with this
+limitation and then set the drvdata->check_idfilter_val based on
+this property.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-sparc                            allyesconfig
-mips                             allyesconfig
-m68k                             allyesconfig
-arm                         at91_dt_defconfig
-sh                          sdk7786_defconfig
-powerpc                    gamecube_defconfig
-ia64                         bigsur_defconfig
-sh                        sh7757lcr_defconfig
-m68k                             alldefconfig
-arm                          gemini_defconfig
-ia64                          tiger_defconfig
-arm                         lpc32xx_defconfig
-sh                 kfr2r09-romimage_defconfig
-mips                      fuloong2e_defconfig
-arm                         s3c6400_defconfig
-powerpc                     skiroot_defconfig
-i386                             allyesconfig
-arm                           omap1_defconfig
-arm                         lubbock_defconfig
-arm                          badge4_defconfig
-powerpc                         ps3_defconfig
-arm                         bcm2835_defconfig
-c6x                        evmc6678_defconfig
-arm                           sama5_defconfig
-arm                           spitz_defconfig
-arm                           tegra_defconfig
-nds32                            alldefconfig
-arm                          ep93xx_defconfig
-mips                       rbtx49xx_defconfig
-arc                          axs103_defconfig
-arm                              zx_defconfig
-i386                              allnoconfig
-arm                  colibri_pxa300_defconfig
-arc                                 defconfig
-s390                                defconfig
-arm                         lpc18xx_defconfig
-arm                       cns3420vb_defconfig
-riscv                    nommu_virt_defconfig
-microblaze                    nommu_defconfig
-um                                allnoconfig
-arm                       mainstone_defconfig
-mips                  maltasmvp_eva_defconfig
-mips                          malta_defconfig
-sh                                allnoconfig
-sh                          rsk7201_defconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-microblaze                        allnoconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a012-20200515
-i386                 randconfig-a016-20200515
-i386                 randconfig-a014-20200515
-i386                 randconfig-a011-20200515
-i386                 randconfig-a013-20200515
-i386                 randconfig-a015-20200515
-x86_64               randconfig-a005-20200515
-x86_64               randconfig-a003-20200515
-x86_64               randconfig-a006-20200515
-x86_64               randconfig-a004-20200515
-x86_64               randconfig-a001-20200515
-x86_64               randconfig-a002-20200515
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-x86_64                              defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+Thanks,
+Sai
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
