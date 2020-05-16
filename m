@@ -2,77 +2,73 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCA5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC93CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14EBD20671
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39B32074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgEPHTg (ORCPT
+        id S1726916AbgEPHWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 03:19:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4797 "EHLO huawei.com"
+        Sat, 16 May 2020 03:22:04 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4850 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725807AbgEPHTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 03:19:35 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B580D942583F32C4960F;
-        Sat, 16 May 2020 15:19:33 +0800 (CST)
-Received: from [10.166.215.145] (10.166.215.145) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 16 May 2020 15:19:29 +0800
-Subject: Re: [PATCH] kdb: Make the internal env 'KDBFLAGS' undefinable
-To:     Doug Anderson <dianders@chromium.org>
-CC:     Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        <kgdb-bugreport@lists.sourceforge.net>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200511021637.37029-1-liwei391@huawei.com>
- <CAD=FV=VNTkRW9LbNjY_0Ljj57m19gFUEHAuYKd-i6jpu_QpMgg@mail.gmail.com>
-From:   "liwei (GF)" <liwei391@huawei.com>
-Message-ID: <1672625a-5f2b-33db-c516-42abb070a26e@huawei.com>
-Date:   Sat, 16 May 2020 15:19:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1725807AbgEPHWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 03:22:04 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B6D372E8431338979092;
+        Sat, 16 May 2020 15:22:01 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.237) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Sat, 16 May 2020
+ 15:21:51 +0800
+To:     <haren@us.ibm.com>, <linux-kernel@vger.kernel.org>,
+        Shiyuan Hu <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH 1/2] lib: 842 - Remove useless checking in add_template()
+Message-ID: <e46137c5-6bdd-59bd-1a20-59752f2bb8c2@huawei.com>
+Date:   Sat, 16 May 2020 15:21:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=VNTkRW9LbNjY_0Ljj57m19gFUEHAuYKd-i6jpu_QpMgg@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.145]
+X-Originating-IP: [10.166.215.237]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Douglas,
+A warning was found by smatch tool:
+  "add_template() error: testing array offset 'c' after use."
 
-On 2020/5/14 7:41, Doug Anderson wrote:
+Fix it by removing the useless checking in add_template().
 
->> -       }
->> +       } else if (strcmp(argv[1], "KDBFLAGS") == 0)
->> +               return KDB_NOPERM;
-> 
-> One slight nit is that my personal preference is that if one half of
-> an "if/else" needs braces then both halves should have braces.  I
-Thanks for spotting it. Refer to Documentation/process/coding-style.rst, i
-will fix it in the v2.
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+ lib/842/842_compress.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-> don't know what Daniel and Jason's policies are, though.  In any case,
-> not that I've ever used the KDBDEBUG functionality, but your change
-> seems sane.  Without it if I set "KDBDEBUG" and "KDBFLAGS" and then
-> type "env" I see the flags listed twice, but one is real and one is
-> fake.
-> 
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> 
-> -Doug
-> 
+diff --git a/lib/842/842_compress.c b/lib/842/842_compress.c
+index c02baa4168e1..18255d25781b 100644
+--- a/lib/842/842_compress.c
++++ b/lib/842/842_compress.c
+@@ -225,9 +225,6 @@ static int add_template(struct sw842_param *p, u8 c)
+ 	u8 *t = comp_ops[c];
+ 	bool inv = false;
 
-Thanks,
-Wei
+-	if (c >= OPS_MAX)
+-		return -EINVAL;
+-
+ 	pr_debug("template %x\n", t[4]);
+
+ 	ret = add_bits(p, t[4], OP_BITS);
+-- 
+1.8.3.1
+
