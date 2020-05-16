@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D24C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88C92206D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B4B7206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:06:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gWYDT0nS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aV4t4ZW8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgEPEFz (ORCPT
+        id S1726946AbgEPEGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 00:05:55 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42478 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725275AbgEPEFz (ORCPT
+        Sat, 16 May 2020 00:06:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58915 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726328AbgEPEGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 00:05:55 -0400
+        Sat, 16 May 2020 00:06:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589601954;
+        s=mimecast20190719; t=1589602001;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=3GThcFJi6mjPq3yR/OkVZogFkUGUPuA1kG+DkwzxNmo=;
-        b=gWYDT0nShZKyCnp6UeC3PacpmrHz5AFYwRW0yqr08BUpFtz6QmB8ODzShYVUQXL5NXWOO1
-        CMEtnKlGxVEU0xlWsgHoevNbU0DWmythWSZNP+bsh/RE2yzNHaV8iJi1X4SYWHoByfpuMg
-        ZRAkmy97lKaHh0zWI6TTOPXlCX3ofHc=
+        bh=X9enCBr7tW7yfSw0U2tAzbrHP1z4E5Xt7K+b3QrVp9c=;
+        b=aV4t4ZW83ghCXvq+sNda0grUt2gvbv2bHdmzncwWJMyK2nrAZmK2eUqhaIF6q29KtYbcSz
+        RydPbw2gDndvxfMkS6FcMU+QAylS3xj00XNULPosDRkDXI9tSc0TiTkvC3Te39zuJiNXB/
+        Mo+fxtL8QXfYu5L+5kYCCYYmWk4hra4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-393-tFkabqqYO_OyUY77sZkaIg-1; Sat, 16 May 2020 00:05:46 -0400
-X-MC-Unique: tFkabqqYO_OyUY77sZkaIg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-509-hRwK9iiHPoSApB9NyATYoQ-1; Sat, 16 May 2020 00:06:33 -0400
+X-MC-Unique: hRwK9iiHPoSApB9NyATYoQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 670018005AD;
-        Sat, 16 May 2020 04:05:43 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 745B48018A2;
+        Sat, 16 May 2020 04:06:30 +0000 (UTC)
 Received: from x1-fbsd (unknown [10.3.128.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2E58812A4D;
-        Sat, 16 May 2020 04:05:29 +0000 (UTC)
-Date:   Sat, 16 May 2020 00:05:26 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 326FB5C1B0;
+        Sat, 16 May 2020 04:06:19 +0000 (UTC)
+Date:   Sat, 16 May 2020 00:06:16 -0400
 From:   Rafael Aquini <aquini@redhat.com>
 To:     Luis Chamberlain <mcgrof@kernel.org>
 Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
@@ -55,24 +55,23 @@ Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
         keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
         mchehab+samsung@kernel.org, kvalo@codeaurora.org,
         davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ariel Elior <aelior@marvell.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        GR-everest-linux-l2@marvell.com
-Subject: Re: [PATCH v2 03/15] bnx2x: use new module_firmware_crashed()
-Message-ID: <20200516040526.GC3182@x1-fbsd>
+        linux-kernel@vger.kernel.org,
+        Michael Chan <michael.chan@broadcom.com>
+Subject: Re: [PATCH v2 04/15] bnxt: use new module_firmware_crashed()
+Message-ID: <20200516040616.GD3182@x1-fbsd>
 References: <20200515212846.1347-1-mcgrof@kernel.org>
- <20200515212846.1347-4-mcgrof@kernel.org>
+ <20200515212846.1347-5-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515212846.1347-4-mcgrof@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200515212846.1347-5-mcgrof@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 09:28:34PM +0000, Luis Chamberlain wrote:
+On Fri, May 15, 2020 at 09:28:35PM +0000, Luis Chamberlain wrote:
 > This makes use of the new module_firmware_crashed() to help
 > annotate when firmware for device drivers crash. When firmware
 > crashes devices can sometimes become unresponsive, and recovery
@@ -81,26 +80,24 @@ On Fri, May 15, 2020 at 09:28:34PM +0000, Luis Chamberlain wrote:
 > 
 > Using a taint flag allows us to annotate when this happens clearly.
 > 
-> Cc: Ariel Elior <aelior@marvell.com>
-> Cc: Sudarsana Kalluru <skalluru@marvell.com>
-> CC: GR-everest-linux-l2@marvell.com
+> Cc: Michael Chan <michael.chan@broadcom.com>
 > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 > ---
->  drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c | 1 +
+>  drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 1 +
 >  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-> index db5107e7937c..c38b8c9c8af0 100644
-> --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-> +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-> @@ -909,6 +909,7 @@ void bnx2x_panic_dump(struct bnx2x *bp, bool disable_int)
->  	bp->eth_stats.unrecoverable_error++;
->  	DP(BNX2X_MSG_STATS, "stats_state - DISABLED\n");
+> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+> index dd0c3f227009..5ba1bd0734e9 100644
+> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+> @@ -3503,6 +3503,7 @@ static int bnxt_get_dump_data(struct net_device *dev, struct ethtool_dump *dump,
 >  
-> +	module_firmware_crashed();
->  	BNX2X_ERR("begin crash dump -----------------\n");
->  
->  	/* Indices */
+>  	dump->flag = bp->dump_flag;
+>  	if (dump->flag == BNXT_DUMP_CRASH) {
+> +		module_firmware_crashed();
+>  #ifdef CONFIG_TEE_BNXT_FW
+>  		return tee_bnxt_copy_coredump(buf, 0, dump->len);
+>  #endif
 > -- 
 > 2.26.2
 > 
