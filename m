@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE274C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCECC433E0
 	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A04172065C
+	by mail.kernel.org (Postfix) with ESMTP id B5262207D4
 	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgEPIzg (ORCPT
+        id S1727011AbgEPIzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 04:55:36 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50420 "EHLO huawei.com"
+        Sat, 16 May 2020 04:55:39 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50398 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726899AbgEPIze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 04:55:34 -0400
+        id S1726414AbgEPIzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 04:55:35 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 702BF66F73B25B48AE89;
+        by Forcepoint Email with ESMTP id 66C2482B441B830347B6;
         Sat, 16 May 2020 16:55:25 +0800 (CST)
 Received: from use12-sp2.huawei.com (10.67.189.174) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 16 May 2020 16:55:18 +0800
+ 14.3.487.0; Sat, 16 May 2020 16:55:19 +0800
 From:   Xiaoming Ni <nixiaoming@huawei.com>
 To:     <mcgrof@kernel.org>, <keescook@chromium.org>, <yzaikin@google.com>,
         <adobriyan@gmail.com>, <peterz@infradead.org>, <mingo@kernel.org>,
@@ -34,9 +34,9 @@ To:     <mcgrof@kernel.org>, <keescook@chromium.org>, <yzaikin@google.com>,
         <ebiederm@xmission.com>
 CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
         <nixiaoming@huawei.com>, <wangle6@huawei.com>
-Subject: [PATCH v2 1/4] sysctl: Add register_sysctl_init() interface
-Date:   Sat, 16 May 2020 16:55:12 +0800
-Message-ID: <1589619315-65827-2-git-send-email-nixiaoming@huawei.com>
+Subject: [PATCH v2 4/4] watchdog: move watchdog sysctl interface to watchdog.c
+Date:   Sat, 16 May 2020 16:55:15 +0800
+Message-ID: <1589619315-65827-5-git-send-email-nixiaoming@huawei.com>
 X-Mailer: git-send-email 1.8.5.6
 In-Reply-To: <1589619315-65827-1-git-send-email-nixiaoming@huawei.com>
 References: <1589619315-65827-1-git-send-email-nixiaoming@huawei.com>
@@ -49,59 +49,254 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to eliminate the duplicate code for registering the sysctl
-interface during the initialization of each feature, add the
-register_sysctl_init() interface
+Move watchdog syscl interface to watchdog.c.
+Use register_sysctl() to register the sysctl interface to avoid
+merge conflicts when different features modify sysctl.c at the same time.
 
 Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
 ---
- include/linux/sysctl.h |  2 ++
- kernel/sysctl.c        | 19 +++++++++++++++++++
- 2 files changed, 21 insertions(+)
+ kernel/sysctl.c   |  96 ---------------------------------------------------
+ kernel/watchdog.c | 101 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 101 insertions(+), 96 deletions(-)
 
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index 02fa844..43f8ef9 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -206,6 +206,8 @@ struct ctl_table_header *register_sysctl_paths(const struct ctl_path *path,
- void unregister_sysctl_table(struct ctl_table_header * table);
- 
- extern int sysctl_init(void);
-+extern void register_sysctl_init(const char *path, struct ctl_table *table,
-+				 const char *table_name);
- 
- extern struct ctl_table sysctl_mount_point[];
- 
 diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index b9ff323..20c31f5 100644
+index 49e9541..efe6172 100644
 --- a/kernel/sysctl.c
 +++ b/kernel/sysctl.c
-@@ -1970,6 +1970,25 @@ int __init sysctl_init(void)
- 	return 0;
- }
+@@ -97,9 +97,6 @@
+ #ifdef CONFIG_STACKLEAK_RUNTIME_DISABLE
+ #include <linux/stackleak.h>
+ #endif
+-#ifdef CONFIG_LOCKUP_DETECTOR
+-#include <linux/nmi.h>
+-#endif
  
-+/*
-+ * The sysctl interface is used to modify the interface value,
-+ * but the feature interface has default values. Even if register_sysctl fails,
-+ * the feature body function can also run. At the same time, malloc small
-+ * fragment of memory during the system initialization phase, almost does
-+ * not fail. Therefore, the function return is designed as void
-+ */
-+void __init register_sysctl_init(const char *path, struct ctl_table *table,
-+				 const char *table_name)
+ #if defined(CONFIG_SYSCTL)
+ 
+@@ -120,9 +117,6 @@
+ #endif
+ 
+ /* Constants used for minimum and  maximum */
+-#ifdef CONFIG_LOCKUP_DETECTOR
+-static int sixty = 60;
+-#endif
+ 
+ static unsigned long zero_ul;
+ static unsigned long one_ul = 1;
+@@ -883,96 +877,6 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
+ 		.mode		= 0444,
+ 		.proc_handler	= proc_dointvec,
+ 	},
+-#if defined(CONFIG_LOCKUP_DETECTOR)
+-	{
+-		.procname       = "watchdog",
+-		.data		= &watchdog_user_enabled,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler   = proc_watchdog,
+-		.extra1		= SYSCTL_ZERO,
+-		.extra2		= SYSCTL_ONE,
+-	},
+-	{
+-		.procname	= "watchdog_thresh",
+-		.data		= &watchdog_thresh,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_watchdog_thresh,
+-		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &sixty,
+-	},
+-	{
+-		.procname       = "nmi_watchdog",
+-		.data		= &nmi_watchdog_user_enabled,
+-		.maxlen		= sizeof(int),
+-		.mode		= NMI_WATCHDOG_SYSCTL_PERM,
+-		.proc_handler   = proc_nmi_watchdog,
+-		.extra1		= SYSCTL_ZERO,
+-		.extra2		= SYSCTL_ONE,
+-	},
+-	{
+-		.procname	= "watchdog_cpumask",
+-		.data		= &watchdog_cpumask_bits,
+-		.maxlen		= NR_CPUS,
+-		.mode		= 0644,
+-		.proc_handler	= proc_watchdog_cpumask,
+-	},
+-#ifdef CONFIG_SOFTLOCKUP_DETECTOR
+-	{
+-		.procname       = "soft_watchdog",
+-		.data		= &soft_watchdog_user_enabled,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler   = proc_soft_watchdog,
+-		.extra1		= SYSCTL_ZERO,
+-		.extra2		= SYSCTL_ONE,
+-	},
+-	{
+-		.procname	= "softlockup_panic",
+-		.data		= &softlockup_panic,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= SYSCTL_ZERO,
+-		.extra2		= SYSCTL_ONE,
+-	},
+-#ifdef CONFIG_SMP
+-	{
+-		.procname	= "softlockup_all_cpu_backtrace",
+-		.data		= &sysctl_softlockup_all_cpu_backtrace,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= SYSCTL_ZERO,
+-		.extra2		= SYSCTL_ONE,
+-	},
+-#endif /* CONFIG_SMP */
+-#endif
+-#ifdef CONFIG_HARDLOCKUP_DETECTOR
+-	{
+-		.procname	= "hardlockup_panic",
+-		.data		= &hardlockup_panic,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= SYSCTL_ZERO,
+-		.extra2		= SYSCTL_ONE,
+-	},
+-#ifdef CONFIG_SMP
+-	{
+-		.procname	= "hardlockup_all_cpu_backtrace",
+-		.data		= &sysctl_hardlockup_all_cpu_backtrace,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= SYSCTL_ZERO,
+-		.extra2		= SYSCTL_ONE,
+-	},
+-#endif /* CONFIG_SMP */
+-#endif
+-#endif
+-
+ #if defined(CONFIG_X86_LOCAL_APIC) && defined(CONFIG_X86)
+ 	{
+ 		.procname       = "unknown_nmi_panic",
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index b6b1f54..f5d19be 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -756,6 +756,106 @@ int proc_watchdog_cpumask(struct ctl_table *table, int write,
+ 	mutex_unlock(&watchdog_mutex);
+ 	return err;
+ }
++
++static const int sixty = 60;
++
++static struct ctl_table watchdog_sysctls[] = {
++	{
++		.procname       = "watchdog",
++		.data		= &watchdog_user_enabled,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler   = proc_watchdog,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
++	{
++		.procname	= "watchdog_thresh",
++		.data		= &watchdog_thresh,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_watchdog_thresh,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= &sixty,
++	},
++	{
++		.procname       = "nmi_watchdog",
++		.data		= &nmi_watchdog_user_enabled,
++		.maxlen		= sizeof(int),
++		.mode		= NMI_WATCHDOG_SYSCTL_PERM,
++		.proc_handler   = proc_nmi_watchdog,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
++	{
++		.procname	= "watchdog_cpumask",
++		.data		= &watchdog_cpumask_bits,
++		.maxlen		= NR_CPUS,
++		.mode		= 0644,
++		.proc_handler	= proc_watchdog_cpumask,
++	},
++#ifdef CONFIG_SOFTLOCKUP_DETECTOR
++	{
++		.procname       = "soft_watchdog",
++		.data		= &soft_watchdog_user_enabled,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler   = proc_soft_watchdog,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
++	{
++		.procname	= "softlockup_panic",
++		.data		= &softlockup_panic,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
++#ifdef CONFIG_SMP
++	{
++		.procname	= "softlockup_all_cpu_backtrace",
++		.data		= &sysctl_softlockup_all_cpu_backtrace,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
++#endif /* CONFIG_SMP */
++#endif
++#ifdef CONFIG_HARDLOCKUP_DETECTOR
++	{
++		.procname	= "hardlockup_panic",
++		.data		= &hardlockup_panic,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
++#ifdef CONFIG_SMP
++	{
++		.procname	= "hardlockup_all_cpu_backtrace",
++		.data		= &sysctl_hardlockup_all_cpu_backtrace,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
++#endif /* CONFIG_SMP */
++#endif
++	{}
++};
++
++static void __init watchdog_sysctl_init(void)
 +{
-+	struct ctl_table_header *hdr = register_sysctl(path, table);
-+
-+	if (unlikely(!hdr)) {
-+		pr_err("failed when register_sysctl %s to %s\n", table_name, path);
-+		return;
-+	}
-+	kmemleak_not_leak(hdr);
++	register_sysctl_init("kernel", watchdog_sysctls, "watchdog_sysctls");
 +}
-+
++#else
++#define watchdog_sysctl_init() do { } while (0)
  #endif /* CONFIG_SYSCTL */
  
- /*
+ void __init lockup_detector_init(void)
+@@ -769,4 +869,5 @@ void __init lockup_detector_init(void)
+ 	if (!watchdog_nmi_probe())
+ 		nmi_watchdog_available = true;
+ 	lockup_detector_setup();
++	watchdog_sysctl_init();
+ }
 -- 
 1.8.5.6
 
