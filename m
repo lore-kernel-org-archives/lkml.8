@@ -2,134 +2,65 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB34C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E2BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD102075F
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:29:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAxm0r3b"
+	by mail.kernel.org (Postfix) with ESMTP id 4064D206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:39:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgEPX3s (ORCPT
+        id S1726876AbgEPXjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 19:29:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33788 "EHLO
+        Sat, 16 May 2020 19:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726660AbgEPX3s (ORCPT
+        by vger.kernel.org with ESMTP id S1726729AbgEPXjc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 19:29:48 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69DCAC061A0C;
-        Sat, 16 May 2020 16:29:46 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id d21so6001076ljg.9;
-        Sat, 16 May 2020 16:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VsIGqmQYU9B1hFiVmj/6ksJDLb/9MQhxyITf5iqCEAU=;
-        b=CAxm0r3bkWmXjkeiCzLPuKYnFKjmYcTMlB211VAPCdb2e0rDkYvjgKujtHQo5YnQtR
-         WYhrUreg7ADZxvFKkuBOju+THp+1gYsGi9JRt/ejoHugqQ4Lt4ZAXR+GRw0L0A+66/UM
-         aT52BE/bEQrnitmXPtcIktSrpJmQpc7TJEMrOI75rNNhQB37g9VgqnacNxAKPZzWKTyC
-         t5lEVHc9351QfxtHaytLZpm6wG6w9yCKQ6BfTZJuXdw3BjiOXq0PASbRavhsXMe4v5m7
-         e6iGVuXlEwtLZbH1wQsJO1JSDfci6337NAg2ZQm4a6IpeQIYHn+TtN7fx0LsK8LP8LjF
-         lWxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VsIGqmQYU9B1hFiVmj/6ksJDLb/9MQhxyITf5iqCEAU=;
-        b=MAg9pFOhYzriAxZ871VKtOgkLjY5lbZ+AWH01z4/vDbK1PAq8EKlZvBiBgJH0jjULr
-         fbjEtKp6TmKp95hBSP5RRzMjhwDgKtonkKsUKTD+p4rdHYPyn5lHX9eJJsOYP2gD55tn
-         +ff1EEMghmloDuJqNNuS5ajbzuq4okQqwv5GHN89TfOn3jXAK5onOwzklHc5XiDBervm
-         F54BoSETgF56gbC2bXgMkQuD3NPwi5aqnbJVhuu5wQAI4Gkc48DLQcL+O850R8Y+nEC+
-         TDo8VNcDztOC2zgjVq4nOsLR4I5FVP7L3+GHwdTwrko/8hpnW86aT3DErCmpqmUefGNn
-         DltA==
-X-Gm-Message-State: AOAM533avlE1crr8Mc++AtLc6QULDDBy4TbR7XJBNukXxJKAPOcSqq+L
-        RxFRGlKgNA8O99mNNI2VZtiAnovjpuBN4gG0HtE=
-X-Google-Smtp-Source: ABdhPJwMEerA6PY5MC+s0R6rodZvVntL+CV0Pe2OuKYU6/n9FN6gEnBajSh8QBi/2P6CtuqIJdRTr7gER99hj/E+DNQ=
-X-Received: by 2002:a2e:a545:: with SMTP id e5mr6015544ljn.271.1589671784750;
- Sat, 16 May 2020 16:29:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <cd119ce943d9ec62ef1bff237ebb49e35a337c3b.1589407872.git.lance.digby@gmail.com>
- <93c437ce-f881-9f54-5e39-afa8afd96141@redhat.com>
-In-Reply-To: <93c437ce-f881-9f54-5e39-afa8afd96141@redhat.com>
-From:   Lance Digby <lance.digby@gmail.com>
-Date:   Sun, 17 May 2020 09:29:38 +1000
-Message-ID: <CAHh6B+poeCFeZjCt04QT2c12bgvCf9UN+5vdx5EeK6PcgD2y3g@mail.gmail.com>
-Subject: Re: [PATCH target] target: Add initiatorname to NON_EXISTENT_LUN error
-To:     Mike Christie <mchristi@redhat.com>
-Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 16 May 2020 19:39:32 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0042C061A0C;
+        Sat, 16 May 2020 16:39:31 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0E03E126390CD;
+        Sat, 16 May 2020 16:39:30 -0700 (PDT)
+Date:   Sat, 16 May 2020 16:39:27 -0700 (PDT)
+Message-Id: <20200516.163927.1112911965183377217.davem@davemloft.net>
+To:     shakeelb@google.com
+Cc:     edumazet@google.com, willemb@google.com, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/packet: simply allocations in alloc_one_pg_vec_page
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <CALvZod7euq10j6k9Z_dej4BvGXDjqbND05oM-u6tQrLjosX31A@mail.gmail.com>
+References: <20200516021736.226222-1-shakeelb@google.com>
+        <20200516.134018.1760282800329273820.davem@davemloft.net>
+        <CALvZod7euq10j6k9Z_dej4BvGXDjqbND05oM-u6tQrLjosX31A@mail.gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 16 May 2020 16:39:30 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mike,  Thanks for the review!
-  The pr_err  Detected NON_EXISTENT_LUN is the error messages issued
-for the TCM_NON_EXISTENT_LUN retcode so I believe they are the same.
-  Simply scanning for the wrong lun on an initiator will generate this
-error on the target but not generate an error on the initiator. And I
-have seen installs, with a lot of initiators, automate the scanning of
-such luns incorrectly deemed missing.
-  While this looks like a simple problem it can take days to get
-access or the tcp traces to sort it out.
+From: Shakeel Butt <shakeelb@google.com>
+Date: Sat, 16 May 2020 15:35:46 -0700
 
-   Within the same routine there is another pr_err for
-TCM_WRITE_PROTECTED that I did not add the initiatorname to as I
-thought this would leave a heavy footprint on the initiator. If you
-believe this should be changed for consistency please let me know and
-I will add this and change to nacl->initiatorname.
+> So, my argument is if non-zero order vzalloc has failed (allocations
+> internal to vzalloc, including virtual mapping allocation and page
+> table allocations, are order 0 and use GFP_KERNEL i.e. triggering
+> reclaim and oom-killer) then the next non-zero order page allocation
+> has very low chance of succeeding.
 
+Also not true.
 
-
-
-
-
-
-
-
-On Sat, May 16, 2020 at 9:50 AM Mike Christie <mchristi@redhat.com> wrote:
->
-> On 5/13/20 11:01 PM, Lance Digby wrote:
-> > The NON_EXISTENT_LUN error can be written without an error condition
-> >  on the initiator responsible. Adding the initiatorname to this message
-> >  will reduce the effort required to fix this when many initiators are
-> > supported by a target.
-> >
-> > Signed-off-by: Lance Digby <lance.digby@gmail.com>
-> > ---
-> >  drivers/target/target_core_device.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
-> > index 4cee113..604dea0 100644
-> > --- a/drivers/target/target_core_device.c
-> > +++ b/drivers/target/target_core_device.c
-> > @@ -100,9 +100,10 @@
-> >                */
-> >               if (unpacked_lun != 0) {
-> >                       pr_err("TARGET_CORE[%s]: Detected NON_EXISTENT_LUN"
-> > -                             " Access for 0x%08llx\n",
-> > +                             " Access for 0x%08llx from %s\n",
-> >                               se_cmd->se_tfo->fabric_name,
-> > -                             unpacked_lun);
-> > +                             unpacked_lun,
-> > +                             se_sess->se_node_acl->initiatorname);
->
-> You can do nacl->initiatorname.
->
-> Do you also want add the name to the tmr case? It's probably not common,
-> but the error message would be consistent.
->
-> >                       return TCM_NON_EXISTENT_LUN;
-> >               }
-> >
->
+Page table allocation strategies and limits vary by architecture, they
+may even need virtual mappings themselves.  So they can fail in situations
+where a non-zero GFP_KERNEL page allocator allocation would succeed.
