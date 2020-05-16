@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E73C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C2BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A1C3206D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D02E2074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gjaL0T9m"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZfZU+bDo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgEPEH1 (ORCPT
+        id S1726964AbgEPEIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 00:07:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21462 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725917AbgEPEH1 (ORCPT
+        Sat, 16 May 2020 00:08:14 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49930 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725803AbgEPEIO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 00:07:27 -0400
+        Sat, 16 May 2020 00:08:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589602046;
+        s=mimecast20190719; t=1589602093;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=ZKhAzAY/Ms4yM0fdVfvs34Q0bnqFpJ/yjv/lIPKQ6rM=;
-        b=gjaL0T9mhjd6bboIQxCFGaaXBTps9Yfj5QL8jA/7D9UbGuqLcMpHI8dlyF+SH08to9/XIb
-        F/xneL7jWjYHIJLmo+rEi1hmYvVmGk0IOwa8IwIVuc/qQx5Gh+NUR1LtEwumD1EoMUHllH
-        CD0fdO96kj1bfClGuo8kYuZGOIIFYYs=
+        bh=pzKGrP1dcY39C40zoZZuybJrD8WuaSa1VZ90S7jsI/c=;
+        b=ZfZU+bDoVi25nxnueq90LhzYJL/q22JR5IShWx7MNiAKJLJmMWqkOjAvcDRbb65bmPdcDh
+        sEXKmlYC6zbzFEhHjEOp7YjKTD3oGCuT8XQAGQd/wqx8RR9RTxKlzBZsxX2tVliCURqYHh
+        vRtHcsZ/b4S5040YubyAGVkyQAcZmd0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-rOcQ92s7NWWX88hKbyuuCw-1; Sat, 16 May 2020 00:07:20 -0400
-X-MC-Unique: rOcQ92s7NWWX88hKbyuuCw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-90-7693THB7NYWd8sy1S5ZWpw-1; Sat, 16 May 2020 00:08:06 -0400
+X-MC-Unique: 7693THB7NYWd8sy1S5ZWpw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D60BC80B713;
-        Sat, 16 May 2020 04:07:16 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9132D80B713;
+        Sat, 16 May 2020 04:08:03 +0000 (UTC)
 Received: from x1-fbsd (unknown [10.3.128.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CE1065C1B0;
-        Sat, 16 May 2020 04:07:05 +0000 (UTC)
-Date:   Sat, 16 May 2020 00:07:02 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C51F199D8;
+        Sat, 16 May 2020 04:07:52 +0000 (UTC)
+Date:   Sat, 16 May 2020 00:07:49 -0400
 From:   Rafael Aquini <aquini@redhat.com>
 To:     Luis Chamberlain <mcgrof@kernel.org>
 Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
@@ -55,24 +55,25 @@ Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
         keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
         mchehab+samsung@kernel.org, kvalo@codeaurora.org,
         davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rasesh Mody <rmody@marvell.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com
-Subject: Re: [PATCH v2 05/15] bna: use new module_firmware_crashed()
-Message-ID: <20200516040702.GE3182@x1-fbsd>
+        linux-kernel@vger.kernel.org,
+        Derek Chickles <dchickles@marvell.com>,
+        Satanand Burla <sburla@marvell.com>,
+        Felix Manlunas <fmanlunas@marvell.com>
+Subject: Re: [PATCH v2 06/15] liquidio: use new module_firmware_crashed()
+Message-ID: <20200516040749.GF3182@x1-fbsd>
 References: <20200515212846.1347-1-mcgrof@kernel.org>
- <20200515212846.1347-6-mcgrof@kernel.org>
+ <20200515212846.1347-7-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515212846.1347-6-mcgrof@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200515212846.1347-7-mcgrof@kernel.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 09:28:36PM +0000, Luis Chamberlain wrote:
+On Fri, May 15, 2020 at 09:28:37PM +0000, Luis Chamberlain wrote:
 > This makes use of the new module_firmware_crashed() to help
 > annotate when firmware for device drivers crash. When firmware
 > crashes devices can sometimes become unresponsive, and recovery
@@ -81,26 +82,27 @@ On Fri, May 15, 2020 at 09:28:36PM +0000, Luis Chamberlain wrote:
 > 
 > Using a taint flag allows us to annotate when this happens clearly.
 > 
-> Cc: Rasesh Mody <rmody@marvell.com>
-> Cc: Sudarsana Kalluru <skalluru@marvell.com>
-> Cc: GR-Linux-NIC-Dev@marvell.com
+> Cc: Derek Chickles <dchickles@marvell.com>
+> Cc: Satanand Burla <sburla@marvell.com>
+> Cc: Felix Manlunas <fmanlunas@marvell.com>
+> Reviewed-by: Derek Chickles <dchickles@marvell.com>
 > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 > ---
->  drivers/net/ethernet/brocade/bna/bfa_ioc.c | 1 +
+>  drivers/net/ethernet/cavium/liquidio/lio_main.c | 1 +
 >  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/net/ethernet/brocade/bna/bfa_ioc.c b/drivers/net/ethernet/brocade/bna/bfa_ioc.c
-> index e17bfc87da90..b3f44a912574 100644
-> --- a/drivers/net/ethernet/brocade/bna/bfa_ioc.c
-> +++ b/drivers/net/ethernet/brocade/bna/bfa_ioc.c
-> @@ -927,6 +927,7 @@ bfa_iocpf_sm_disabled(struct bfa_iocpf *iocpf, enum iocpf_event event)
->  static void
->  bfa_iocpf_sm_initfail_sync_entry(struct bfa_iocpf *iocpf)
->  {
-> +	module_firmware_crashed();
->  	bfa_nw_ioc_debug_save_ftrc(iocpf->ioc);
->  	bfa_ioc_hw_sem_get(iocpf->ioc);
->  }
+> diff --git a/drivers/net/ethernet/cavium/liquidio/lio_main.c b/drivers/net/ethernet/cavium/liquidio/lio_main.c
+> index 66d31c018c7e..f18085262982 100644
+> --- a/drivers/net/ethernet/cavium/liquidio/lio_main.c
+> +++ b/drivers/net/ethernet/cavium/liquidio/lio_main.c
+> @@ -801,6 +801,7 @@ static int liquidio_watchdog(void *param)
+>  			continue;
+>  
+>  		WRITE_ONCE(oct->cores_crashed, true);
+> +		module_firmware_crashed();
+>  		other_oct = get_other_octeon_device(oct);
+>  		if (other_oct)
+>  			WRITE_ONCE(other_oct->cores_crashed, true);
 > -- 
 > 2.26.2
 > 
