@@ -2,91 +2,228 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A912FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 866F3206F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF348206F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:36:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DuPPJcWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgEPHgQ (ORCPT
+        id S1726801AbgEPHgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 03:36:16 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:51043 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgEPHgQ (ORCPT
+        Sat, 16 May 2020 03:36:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725867AbgEPHgk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 03:36:16 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MJVY8-1jpKsg1ku8-00JttS for <linux-kernel@vger.kernel.org>; Sat, 16 May
- 2020 09:36:14 +0200
-Received: by mail-qk1-f175.google.com with SMTP id n14so5054516qke.8
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 00:36:14 -0700 (PDT)
-X-Gm-Message-State: AOAM530d9paL23/U6YFiTrRYEYGsmWW7RCVxlZPul77LC65bgO6TV4ut
-        vdi6q517DzsVNkBHh8k3y9bITj1iJG8bXrWmOzE=
-X-Google-Smtp-Source: ABdhPJyMrjMOuEc9sNvAXnl1ziOiZoU4A71ucLrpRtJfpiM8Jgu2Ps5nTqWutNIrq0xkjgxG54pyT9byzsyIwkSCUJE=
-X-Received: by 2002:a37:c96:: with SMTP id 144mr7046057qkm.138.1589614573331;
- Sat, 16 May 2020 00:36:13 -0700 (PDT)
+        Sat, 16 May 2020 03:36:40 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65B94C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 00:36:40 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ms17so2081277pjb.0
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 00:36:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=a9I7yRiqq2YjmcjOT4auUHd44ncIAoOgvFdRgFa+edA=;
+        b=DuPPJcWVsJhXS2lemdDvfdc6suYxZ9xvfX2nRyRxxju0deHqV4clNQUNpZ6MStZzU3
+         l/zga/yclRO7BgaZsZWlQKrDu0QJcAbSahjzTFggKxfs0WxLTUmTyahSH1KMTTmMHBtf
+         ufIxrE/P2HGT9l94YZMhH9efp/98L7UrqC2ggsgNV1/rZC0m/ge1F7WWFZUAqHJAipOV
+         ByzqfCoVXhEpxNwlbGcw/t0NDcH1PfXVG5IozZgp7Il3fhsPcFZWdExGgIyImQ0eXbzP
+         6AfoUMBgbYmSv6xCNXK2AUXJX1c0bwudejNX9CgIOwu/3zDukQSIUXh7u9z+SF+tYb39
+         tGQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=a9I7yRiqq2YjmcjOT4auUHd44ncIAoOgvFdRgFa+edA=;
+        b=OfS2eey15z/WuGn5SgDx1aO8kLYhC+/gQ5XTvabyI65dqJuumraSjoLOsBXvShz0n1
+         FLTtNRo53uRjSLZ8gPGoxpECDf72t8J63ekjp2w2dJWW97pX7A1J29FPrTtbmxNlIi8t
+         db/kwW+Vf8H7M/adRCtCWJdaQ3GlVOtZQLVfikMP+pcGFJl5z3s5mfkZLFQkTuukWgMn
+         haLi2CaJBjNIFBNrnGnxXiucJfOlAl/n4iVEXDIjkzq/dQ8nOxc3AbVrKZIikAHCz2VF
+         1WOrK+1CwKUtDQ5asbfqigno+LmDHm09NlGZzLNadQw1t1JpgfDOAtpsZGLxXfec/gwd
+         wXsg==
+X-Gm-Message-State: AOAM530ZpwNIgZQ0Yqe5xGKCEI5iBN+q3W/o2EshMlFke7lO74WZasKE
+        y6ts58g+pOkuBLKJhJBmyZ8=
+X-Google-Smtp-Source: ABdhPJxaz28PYQ35Wfmym28CU2K+2NUsw0eru7iNFYFgvSreRZB/Bh/RywuhliZ94EGhT1iapAfnXA==
+X-Received: by 2002:a17:90b:1016:: with SMTP id gm22mr7628862pjb.60.1589614599904;
+        Sat, 16 May 2020 00:36:39 -0700 (PDT)
+Received: from localhost ([61.68.67.54])
+        by smtp.gmail.com with ESMTPSA id 192sm3553340pfu.182.2020.05.16.00.36.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 May 2020 00:36:39 -0700 (PDT)
+Date:   Sat, 16 May 2020 17:36:33 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v5 2/2] powerpc/rtas: Implement reentrant rtas call
+To:     Allison Randal <allison@lohutok.net>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Daniel Axtens <dja@axtens.net>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nadav Amit <namit@vmware.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20200516052137.175881-1-leobras.c@gmail.com>
+        <20200516052137.175881-3-leobras.c@gmail.com>
+In-Reply-To: <20200516052137.175881-3-leobras.c@gmail.com>
 MIME-Version: 1.0
-References: <20200504091018.GA24897@afzalpc> <CAK8P3a25sZ9B+AE=EJyJZSU91CkBLLR6p2nixw_=UAbczg3RiQ@mail.gmail.com>
- <20200511142113.GA31707@afzalpc> <CAK8P3a0=+aBJLTvHOskTv=tba_s5b5MzWrYG8mxH3iLNy4hfBw@mail.gmail.com>
- <20200512104758.GA12980@afzalpc> <CAK8P3a1DQWG1+ab2+vQ2XCAKYxPUjJk5g3W3094j-adDXSQfzQ@mail.gmail.com>
- <20200514111755.GA4997@afzalpc> <CAK8P3a2PNZY-9L9+SFDLtrp731ZGo6Nbs-7jY6E2PwWXa0kfKw@mail.gmail.com>
- <20200514133545.GA5020@afzalpc> <CAK8P3a1PVwkAi8ycUAB-7EMk4nQ_qOu0rC5vJAQk_q9j5xvOJw@mail.gmail.com>
- <20200516060624.GA6371@afzalpc>
-In-Reply-To: <20200516060624.GA6371@afzalpc>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 16 May 2020 09:35:57 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a01FYoWY9sZKU1q=UQ3ut4srwXXUeGRzW6APi+GpoKo1w@mail.gmail.com>
-Message-ID: <CAK8P3a01FYoWY9sZKU1q=UQ3ut4srwXXUeGRzW6APi+GpoKo1w@mail.gmail.com>
-Subject: Re: ARM: static kernel in vmalloc space
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:2X1VkGr2casfH9eFrkDJOEKVUQIetUtHPneBsZW5AB0JisxpcKO
- a5EQ8yURrBz+hSzpMyqfpUHHv5qxYjmb6nFHFoCJFuH8ecRkYdHa+QuXs2TNjzC0J/G0SlN
- JEzjBVx3l6OQrD4yBak4RpwiDjhR6KMaHc4aKJeorWMQ+G4DWxYfiFlsID5DlsTc/txIfbR
- H+aUymcAtNx3Zpldhr1ow==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6EtpMMkLAC8=:ms5w/fstygfKC/0qOaycWc
- I6mu7n2TEJgwtNMS0yhUFRAap0DLCBPDMtUj+St/T51ENOi8AAa3y2dygiIax8jhqOjOAWz0l
- c17sMFH/nkTa/KKJkz3CdaR4GY+lWLpWN28IH9kpVzOVA7Rer5NW8QaJMYREfo0Mj2croZJAz
- t0afSCOMIsyxvubWucW4GGqFLhcZw/hjOqEdDIkL6/XGRHTTUpgsp1j4go4snqDvJsRij2UJO
- iSKJA+8bM6AGMIUZ8+YQ1Dqod0bYBiFXNLz7BE6UdfN4ntZYzuIwst9ftF6Vy20oWoWBBUjUU
- bWZp1LhrKhjTaCqiwzDTkKBV0alaBjsGz5Vm6mlPDMsnQCQYZI1izXV0nKFnvgLHTi+TJLjAY
- 2BIdCM7InEA4oC+KbMaGRgeDcnCWA1Ta0K1mB/uSVZBoYGTe2d5pmVukjJeAhzUk+ASNTO58R
- 0guWN+6xzM5H5XMJL90IErQCl2lD3SKnLAaHgBSB10QuCwIMdAmIngruDUmbIFTLgSQIhETWT
- 8ubE8D16UVS3QvZuPQcDRYh1+Dwh2FL3iOyg4hq1eGaAE3x+ow67SHivRhhqVDqHio88Q3al/
- JugxhftgFX+FCsG+AtSvHPYJu8V7QlBxKuup3nZblrPMCdZyzDZlfOFxtT6qKMir0UpSt1VZm
- AWq6RVRGPYxvwag2sgNcv9v81dZuxGk2Uku8r1W0qHspjSLjDHE7E9PLTuHCx9CAvAfOkExta
- DYwtBbq1mcEIpCxzdJE0gF8Va8ZzDPhN6Ajq+Qy4885Ye+GMr2zwkNIx1fjh4vgD82haT2qSx
- bdaLZKpwkNuKdEvpmJcaIbq29lhwf1bT8XVFtrJVnGQvwRxUVY=
+Message-Id: <1589614523.yfijifo1n6.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 8:06 AM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
->
-> On Thu, May 14, 2020 at 05:32:41PM +0200, Arnd Bergmann wrote:
->
-> > Typical distros currently offer two kernels, with and without LPAE,
-> > and they probably don't want to add a third one for LPAE with
-> > either highmem or vmsplit-4g-4g. Having extra user address
-> > space and more lowmem is both going to help users that
-> > still have 8GB configurations.
->
-> Okay, so the conclusion i take is,
->
-> 1. VMSPLIT 4G/4G have to live alongside highmem
-> 2. For user space copy, do pinning followed by kmap
+Excerpts from Leonardo Bras's message of May 16, 2020 3:21 pm:
+> Implement rtas_call_reentrant() for reentrant rtas-calls:
+> "ibm,int-on", "ibm,int-off",ibm,get-xive" and  "ibm,set-xive".
+>=20
+> On LoPAPR Version 1.1 (March 24, 2016), from 7.3.10.1 to 7.3.10.4,
+> items 2 and 3 say:
+>=20
+> 2 - For the PowerPC External Interrupt option: The * call must be
+> reentrant to the number of processors on the platform.
+> 3 - For the PowerPC External Interrupt option: The * argument call
+> buffer for each simultaneous call must be physically unique.
+>=20
+> So, these rtas-calls can be called in a lockless way, if using
+> a different buffer for each cpu doing such rtas call.
+>=20
+> For this, it was suggested to add the buffer (struct rtas_args)
+> in the PACA struct, so each cpu can have it's own buffer.
+> The PACA struct received a pointer to rtas buffer, which is
+> allocated in the memory range available to rtas 32-bit.
+>=20
+> Reentrant rtas calls are useful to avoid deadlocks in crashing,
+> where rtas-calls are needed, but some other thread crashed holding
+> the rtas.lock.
+>=20
+> This is a backtrace of a deadlock from a kdump testing environment:
+>=20
+>   #0 arch_spin_lock
+>   #1  lock_rtas ()
+>   #2  rtas_call (token=3D8204, nargs=3D1, nret=3D1, outputs=3D0x0)
+>   #3  ics_rtas_mask_real_irq (hw_irq=3D4100)
+>   #4  machine_kexec_mask_interrupts
+>   #5  default_machine_crash_shutdown
+>   #6  machine_crash_shutdown
+>   #7  __crash_kexec
+>   #8  crash_kexec
+>   #9  oops_end
+>=20
+> Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+> ---
+>  arch/powerpc/include/asm/paca.h     |  2 ++
+>  arch/powerpc/include/asm/rtas.h     |  1 +
+>  arch/powerpc/kernel/paca.c          | 20 +++++++++++
+>  arch/powerpc/kernel/rtas.c          | 52 +++++++++++++++++++++++++++++
+>  arch/powerpc/sysdev/xics/ics-rtas.c | 22 ++++++------
+>  5 files changed, 86 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/arch/powerpc/include/asm/paca.h b/arch/powerpc/include/asm/p=
+aca.h
+> index e3cc9eb9204d..87cd9c2220cc 100644
+> --- a/arch/powerpc/include/asm/paca.h
+> +++ b/arch/powerpc/include/asm/paca.h
+> @@ -29,6 +29,7 @@
+>  #include <asm/hmi.h>
+>  #include <asm/cpuidle.h>
+>  #include <asm/atomic.h>
+> +#include <asm/rtas-types.h>
+> =20
+>  #include <asm-generic/mmiowb_types.h>
+> =20
+> @@ -270,6 +271,7 @@ struct paca_struct {
+>  #ifdef CONFIG_MMIOWB
+>  	struct mmiowb_state mmiowb_state;
+>  #endif
+> +	struct rtas_args *reentrant_args;
+>  } ____cacheline_aligned;
+> =20
+>  extern void copy_mm_to_paca(struct mm_struct *mm);
+> diff --git a/arch/powerpc/include/asm/rtas.h b/arch/powerpc/include/asm/r=
+tas.h
+> index c35c5350b7e4..fa7509c85881 100644
+> --- a/arch/powerpc/include/asm/rtas.h
+> +++ b/arch/powerpc/include/asm/rtas.h
+> @@ -236,6 +236,7 @@ extern struct rtas_t rtas;
+>  extern int rtas_token(const char *service);
+>  extern int rtas_service_present(const char *service);
+>  extern int rtas_call(int token, int, int, int *, ...);
+> +int rtas_call_reentrant(int token, int nargs, int nret, int *outputs, ..=
+.);
+>  void rtas_call_unlocked(struct rtas_args *args, int token, int nargs,
+>  			int nret, ...);
+>  extern void __noreturn rtas_restart(char *cmd);
+> diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
+> index 3f91ccaa9c74..88c9b61489fc 100644
+> --- a/arch/powerpc/kernel/paca.c
+> +++ b/arch/powerpc/kernel/paca.c
+> @@ -16,6 +16,7 @@
+>  #include <asm/kexec.h>
+>  #include <asm/svm.h>
+>  #include <asm/ultravisor.h>
+> +#include <asm/rtas.h>
+> =20
+>  #include "setup.h"
+> =20
+> @@ -164,6 +165,23 @@ static struct slb_shadow * __init new_slb_shadow(int=
+ cpu, unsigned long limit)
+> =20
+>  #endif /* CONFIG_PPC_BOOK3S_64 */
+> =20
+> +/**
+> + * new_rtas_args() - Allocates rtas args
+> + * @cpu:	CPU number
+> + * @limit:	Memory limit for this allocation
+> + *
+> + * Allocates a struct rtas_args and return it's pointer.
+> + *
+> + * Return:	Pointer to allocated rtas_args
+> + */
+> +static struct rtas_args * __init new_rtas_args(int cpu, unsigned long li=
+mit)
+> +{
+> +	limit =3D min_t(unsigned long, limit, RTAS_INSTANTIATE_MAX);
+> +
+> +	return alloc_paca_data(sizeof(struct rtas_args), L1_CACHE_BYTES,
+> +			       limit, cpu);
+> +}
+> +
+>  /* The Paca is an array with one entry per processor.  Each contains an
+>   * lppaca, which contains the information shared between the
+>   * hypervisor and Linux.
+> @@ -202,6 +220,7 @@ void __init __nostackprotector initialise_paca(struct=
+ paca_struct *new_paca, int
+>  	/* For now -- if we have threads this will be adjusted later */
+>  	new_paca->tcd_ptr =3D &new_paca->tcd;
+>  #endif
+> +	new_paca->reentrant_args =3D NULL;
+>  }
+> =20
+>  /* Put the paca pointer into r13 and SPRG_PACA */
+> @@ -274,6 +293,7 @@ void __init allocate_paca(int cpu)
+>  #ifdef CONFIG_PPC_BOOK3S_64
+>  	paca->slb_shadow_ptr =3D new_slb_shadow(cpu, limit);
+>  #endif
+> +	paca->reentrant_args =3D new_rtas_args(cpu, limit);
 
-Right, though kmap_atomic() should be sufficient here
-because it is always a short-lived mapping.
+Good, I think tihs should work as you want now. Can you allocate it like=20
+lppacas? Put it under PSERIES (and in the paca) and check for !HV?
 
-      Arnd
+Thanks,
+Nick
