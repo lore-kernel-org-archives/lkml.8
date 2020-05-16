@@ -2,183 +2,133 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF36C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7D5520756
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589642480;
-	bh=LVxp+/ayanEJJ26cFKX6UdrnhoIwfCg61e8m+b2QBFI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=B71cRCt8qyJ1vVtXXjY0QX7GDvB1Gbj8Ggzv8quxYYHBSB2ufT66RPdv31pL34hZ+
-	 /oV+WFNlgUnj6fqj6fd3JMIAF0MYuJ1upOB+Stdg9Mzsc4syf+HPpMDASIMi6LDpF/
-	 GDC8+sqYoVRRRbRwZheCFLasEedvFhl4tkeehu1c=
+	by mail.kernel.org (Postfix) with ESMTP id 540FE207C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:21:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgEPPVU (ORCPT
+        id S1726956AbgEPPVW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sat, 16 May 2020 11:21:22 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:54309 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726527AbgEPPVU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 16 May 2020 11:21:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726720AbgEPPVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 11:21:20 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA93B2065C;
-        Sat, 16 May 2020 15:21:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589642479;
-        bh=LVxp+/ayanEJJ26cFKX6UdrnhoIwfCg61e8m+b2QBFI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UdOsYxyCTzVjGieGd/j8mjWZMUWoPR2ObHRMm1/YwRDVbiC17LoA65OVNqmF7I4LL
-         n8AGFNzVJK99B1pEpIwz6VF2eG4DsF3vZoKDNUZ+QUMB12YxIwj9MSaPBrGc2nsIyp
-         SA3PZAGm/jSaWjRPDRVu3yzAnjSzWFm8dCzQG2SU=
-Date:   Sat, 16 May 2020 16:21:14 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH] iio: dac: ad5755: Replace indio_dev->mlock with own
- device lock
-Message-ID: <20200516162114.1d58ddea@archlinux>
-In-Reply-To: <20200514090608.80521-1-sergiu.cuciurean@analog.com>
-References: <20200514090608.80521-1-sergiu.cuciurean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id uk-mta-2-M-or8IPqO3ut6gEkeJwgCw-1;
+ Sat, 16 May 2020 16:21:16 +0100
+X-MC-Unique: M-or8IPqO3ut6gEkeJwgCw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sat, 16 May 2020 16:21:15 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sat, 16 May 2020 16:21:15 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        David Howells <dhowells@redhat.com>
+CC:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
+        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>
+Subject: RE: [PATCH 27/33] sctp: export sctp_setsockopt_bindx
+Thread-Topic: [PATCH 27/33] sctp: export sctp_setsockopt_bindx
+Thread-Index: AQHWKsz+yiOODFVfBEqdWGEpseVc56iq0wgA
+Date:   Sat, 16 May 2020 15:21:15 +0000
+Message-ID: <c23030de384747ae83c6c0813bd4f1c0@AcuMS.aculab.com>
+References: <20200514062820.GC8564@lst.de>
+ <20200513062649.2100053-1-hch@lst.de> <20200513062649.2100053-28-hch@lst.de>
+ <20200513180058.GB2491@localhost.localdomain>
+ <129070.1589556002@warthog.procyon.org.uk> <20200515152459.GA28995@lst.de>
+In-Reply-To: <20200515152459.GA28995@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020 12:06:05 +0300
-Sergiu Cuciurean <sergiu.cuciurean@analog.com> wrote:
-
-> As part of the general cleanup of indio_dev->mlock, this change replaces
-> it with a local lock on the device's state structure.
-> This also changes some internal functions to pass the pointer to the
-> state-struct vs a ref to indio_dev just to access the state-struct again.
+From: Christoph Hellwig
+> Sent: 15 May 2020 16:25
+> On Fri, May 15, 2020 at 04:20:02PM +0100, David Howells wrote:
+> > Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > > > The advantage on using kernel_setsockopt here is that sctp module will
+> > > > only be loaded if dlm actually creates a SCTP socket.  With this
+> > > > change, sctp will be loaded on setups that may not be actually using
+> > > > it. It's a quite big module and might expose the system.
+> > >
+> > > True.  Not that the intent is to kill kernel space callers of setsockopt,
+> > > as I plan to remove the set_fs address space override used for it.
+> >
+> > For getsockopt, does it make sense to have the core kernel load optval/optlen
+> > into a buffer before calling the protocol driver?  Then the driver need not
+> > see the userspace pointer at all.
+> >
+> > Similar could be done for setsockopt - allocate a buffer of the size requested
+> > by the user inside the kernel and pass it into the driver, then copy the data
+> > back afterwards.
 > 
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Applied to the togreg branch of iio.git.
+> I did look into that initially.  The problem is that tons of sockopts
+> entirely ignore optlen and just use a fixed size.  So I fear that there
+> could be tons of breakage if we suddently respect it.  Otherwise that
+> would be a pretty nice way to handle the situation.
 
-An observation on this one is that, with the local lock we always
-have the iio_priv() structure where we are calling the various
-write functions.  Those take the indio_dev and use it just to get
-the iio_priv().  May be worth a follow up to tidy that up and just
-pass the private state structure directly into the various write
-functions.
+I'd guess that most application use the correct size for setsockopt().
+(Well, apart from using 4 instead of 1.)
 
-Jonathan
+It is certainly possible to always try to read in 64 bytes
+regardless of the supplied length, but handle the EFAULT case
+by shortening the buffer.
 
-> ---
->  drivers/iio/dac/ad5755.c | 22 ++++++++++++++--------
->  1 file changed, 14 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
-> index 388ddd14bfd0..7723bd313fc6 100644
-> --- a/drivers/iio/dac/ad5755.c
-> +++ b/drivers/iio/dac/ad5755.c
-> @@ -82,6 +82,7 @@ struct ad5755_chip_info {
->   * @pwr_down:	bitmask which contains  hether a channel is powered down or not
->   * @ctrl:	software shadow of the channel ctrl registers
->   * @channels:	iio channel spec for the device
-> + * @lock	lock to protect the data buffer during SPI ops
->   * @data:	spi transfer buffers
->   */
->  struct ad5755_state {
-> @@ -90,6 +91,7 @@ struct ad5755_state {
->  	unsigned int			pwr_down;
->  	unsigned int			ctrl[AD5755_NUM_CHANNELS];
->  	struct iio_chan_spec		channels[AD5755_NUM_CHANNELS];
-> +	struct mutex			lock;
->  
->  	/*
->  	 * DMA (thus cache coherency maintenance) requires the
-> @@ -174,11 +176,12 @@ static int ad5755_write_ctrl_unlocked(struct iio_dev *indio_dev,
->  static int ad5755_write(struct iio_dev *indio_dev, unsigned int reg,
->  	unsigned int val)
->  {
-> +	struct ad5755_state *st = iio_priv(indio_dev);
->  	int ret;
->  
-> -	mutex_lock(&indio_dev->mlock);
-> +	mutex_lock(&st->lock);
->  	ret = ad5755_write_unlocked(indio_dev, reg, val);
-> -	mutex_unlock(&indio_dev->mlock);
-> +	mutex_unlock(&st->lock);
->  
->  	return ret;
->  }
-> @@ -186,11 +189,12 @@ static int ad5755_write(struct iio_dev *indio_dev, unsigned int reg,
->  static int ad5755_write_ctrl(struct iio_dev *indio_dev, unsigned int channel,
->  	unsigned int reg, unsigned int val)
->  {
-> +	struct ad5755_state *st = iio_priv(indio_dev);
->  	int ret;
->  
-> -	mutex_lock(&indio_dev->mlock);
-> +	mutex_lock(&st->lock);
->  	ret = ad5755_write_ctrl_unlocked(indio_dev, channel, reg, val);
-> -	mutex_unlock(&indio_dev->mlock);
-> +	mutex_unlock(&st->lock);
->  
->  	return ret;
->  }
-> @@ -211,7 +215,7 @@ static int ad5755_read(struct iio_dev *indio_dev, unsigned int addr)
->  		},
->  	};
->  
-> -	mutex_lock(&indio_dev->mlock);
-> +	mutex_lock(&st->lock);
->  
->  	st->data[0].d32 = cpu_to_be32(AD5755_READ_FLAG | (addr << 16));
->  	st->data[1].d32 = cpu_to_be32(AD5755_NOOP);
-> @@ -220,7 +224,7 @@ static int ad5755_read(struct iio_dev *indio_dev, unsigned int addr)
->  	if (ret >= 0)
->  		ret = be32_to_cpu(st->data[1].d32) & 0xffff;
->  
-> -	mutex_unlock(&indio_dev->mlock);
-> +	mutex_unlock(&st->lock);
->  
->  	return ret;
->  }
-> @@ -246,7 +250,7 @@ static int ad5755_set_channel_pwr_down(struct iio_dev *indio_dev,
->  	struct ad5755_state *st = iio_priv(indio_dev);
->  	unsigned int mask = BIT(channel);
->  
-> -	mutex_lock(&indio_dev->mlock);
-> +	mutex_lock(&st->lock);
->  
->  	if ((bool)(st->pwr_down & mask) == pwr_down)
->  		goto out_unlock;
-> @@ -266,7 +270,7 @@ static int ad5755_set_channel_pwr_down(struct iio_dev *indio_dev,
->  	}
->  
->  out_unlock:
-> -	mutex_unlock(&indio_dev->mlock);
-> +	mutex_unlock(&st->lock);
->  
->  	return 0;
->  }
-> @@ -746,6 +750,8 @@ static int ad5755_probe(struct spi_device *spi)
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  	indio_dev->num_channels = AD5755_NUM_CHANNELS;
->  
-> +	mutex_init(&st->lock);
-> +
->  	if (spi->dev.of_node)
->  		pdata = ad5755_parse_dt(&spi->dev);
->  	else
+Historically getsockopt() only wrote the length back.
+Treating 0 and garbage as (say) 4k and letting the protocol
+code set a shorten the copy to user might work.
+All short transfers would want to use an on-stack buffer,
+so slight oversizes could also be allowed for.
+
+OTOH if i did a getsockopt() with too short a length I wouldn't
+want the kernel to trash my program memory.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
