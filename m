@@ -2,117 +2,127 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A28D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F10C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76C62207C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376DC2076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 00:56:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benboeckel.net header.i=@benboeckel.net header.b="iA+GrvBH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m+P3RCZ2"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qTQeteg5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgEPAj2 (ORCPT
+        id S1727123AbgEPA4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 20:39:28 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:60631 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726550AbgEPAj0 (ORCPT
+        Fri, 15 May 2020 20:56:13 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15066 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbgEPA4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 20:39:26 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id C8291850;
-        Fri, 15 May 2020 20:39:25 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Fri, 15 May 2020 20:39:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=benboeckel.net;
-         h=from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=ke8aQ0QSzOho9
-        AR5F2u+q+Ff9wFD7APCaAFa5HdpwcU=; b=iA+GrvBH1rYWW0KQItwFimEeC5XMX
-        B8XUs3gBbdF1o2blCJzI3lGx3M6ziM5uEBnNEZd3VXNff5ghsdqpymGZeY3to2D7
-        OOV9H2VQWrs7p4C20qzei/ajT5h90KHs3QgnWPi0mQGRn6Qvus5+pz4bVW2pdJtz
-        Z2CCG+RjeYk4rAway6rIfFjVw79nChjS54Jg1wyFmipaJZP1ANW4InPCGQ6iAFhI
-        36kBpOdm+wtGxy5DqXvJi+H3X/DisPdAuuLCqi0uSZhr9+ex1pexa3oytmNBskEd
-        CEJVTg3XgWl1Xmc7FdLUTIFkZw7OadjI0D7/yoJCVY4Lbe/Jf+jBkTdPQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=ke8aQ0QSzOho9AR5F2u+q+Ff9wFD7APCaAFa5HdpwcU=; b=m+P3RCZ2
-        M13zdsGb6BraJTeACCcD9DmrJZAGqXbibh5kwAQi86i8LLU0PTWmPOTsZCPrJD3o
-        6M3Od6M5fJwOjebP8hCAT0e4WGe9T9k1p5B3394BwuqVp9mlpqgVKv5i1fgLitGW
-        rpc20Cn9diFjlGbD7x4Jl0HBhS/ZlUKsbxx4KmoALpHmOfrad9/2KeQgclp6nCd6
-        Aarb//p+4qvJ00bCFlkCvieRRdlBJWhE2kpjDo9rwgBpv3jK6pNo2cUCG0NMKMDh
-        zEb0zKG1S/OPzUVJWuKNJrRnJkq5NB1037SlzdxoAgo7y0EM+eMe1+5FTPyHkUqB
-        lqgX2OKJbxBotw==
-X-ME-Sender: <xms:PTa_XlFZ12-NbwdBe9zoBkkflesQhNp28Hb2uv1JJF5dN37K7EO7ag>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrleelgdefvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
-    ertddtnecuhfhrohhmpeeuvghnuceuohgvtghkvghluceomhgvsegsvghnsghovggtkhgv
-    lhdrnhgvtheqnecuggftrfgrthhtvghrnhepffekheelgfetleeghfehkeefieegffeltd
-    ekhfevieefheeltdffheekueehkeehnecukfhppeeiledrvddtgedrudeikedrvdeffeen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgessg
-    gvnhgsohgvtghkvghlrdhnvght
-X-ME-Proxy: <xmx:PTa_XqXpkfWYVaAoUv5HwVMZNT6sBYTxyL8pADLm7YElrF_GPCS7-w>
-    <xmx:PTa_XnIRhxjtbRaCOYmOfaam-LmBAPpA9PppzIDHfaiCjnd-IaHaHQ>
-    <xmx:PTa_XrFFKgF_iR0o_r_9en74lhdQLZJYYhfGLrmoW5_jqenAvYnI4Q>
-    <xmx:PTa_XmRUQLlm32ktxPjzRE6MhoCGKY1oK70b6mF3LJBq4wuivBgjyQ>
-Received: from localhost (cpe-69-204-168-233.nycap.res.rr.com [69.204.168.233])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0E3523280059;
-        Fri, 15 May 2020 20:39:25 -0400 (EDT)
-From:   Ben Boeckel <me@benboeckel.net>
-To:     keyrings@vger.kernel.org
-Cc:     Ben Boeckel <mathstuf@gmail.com>, dhowells@redhat.com,
-        jarkko.sakkinen@linux.intel.com, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] Documentation: security: core.rst: add missing argument
-Date:   Fri, 15 May 2020 20:39:17 -0400
-Message-Id: <20200516003917.2035545-2-list.lkml.keyrings@me.benboeckel.net>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200516003917.2035545-1-list.lkml.keyrings@me.benboeckel.net>
-References: <20200516003917.2035545-1-list.lkml.keyrings@me.benboeckel.net>
+        Fri, 15 May 2020 20:56:13 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ebf3a200000>; Fri, 15 May 2020 17:56:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 15 May 2020 17:56:12 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 15 May 2020 17:56:12 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 16 May
+ 2020 00:56:10 +0000
+Subject: Re: [PATCH] mm/hmm/test: destroy xa_array instead of looping
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Jerome Glisse" <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Christoph Hellwig" <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+References: <20200513214507.30592-1-rcampbell@nvidia.com>
+ <20200515231538.GD24561@mellanox.com>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <ad8dfe8f-7c4c-12e8-9251-89e3d7fb242d@nvidia.com>
+Date:   Fri, 15 May 2020 17:56:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200515231538.GD24561@mellanox.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589590560; bh=NhBCoaCRWwssiHRuS3xyxevAb+KCgQoaTCdzXg1ITHY=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=qTQeteg5qrAId4asjZOdDSQniDmaYrOBSh/LU1Do4auOQVVwJbiU1xRCGXl1jK6ct
+         aVjUR04LI8BA0CxVpvIdj2oyaJrKSjcgCYbXVrkOjMWpyFL0whmXJ1SSKX7PiLhKq5
+         MT+FL57PzrZwzQo9lTfUjVdwXqGyF5AzlZF3xzrqmR6d8J3omRLXE5ai+C6+ftyORg
+         IDqEYISElmzyt+Y6S+bUi1zbrcFIAZC1MZD7CnKIAUSdCq2VMPP6zOi2mMngOoIitS
+         mGvD6YUI8EZhmAOx/z/SSfrwD/SuY59oEESVjx5sSwg8zdHXlOgc7neLQ6wbbQHLhW
+         9Vjg/rHgCT9Cw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Boeckel <mathstuf@gmail.com>
 
-This argument was just never documented in the first place.
+On 5/15/20 4:15 PM, Jason Gunthorpe wrote:
+> On Wed, May 13, 2020 at 02:45:07PM -0700, Ralph Campbell wrote:
+>> The test driver uses an xa_array to store virtual to physical address
+>> translations for a simulated hardware device. The MMU notifier
+>> invalidation callback is used to keep the table consistent with the CPU
+>> page table and is frequently called only for a page or two. However, if
+>> the test process exits unexpectedly or is killed, the range can be
+>> [0..ULONG_MAX] in which case calling xa_erase() for every possible PFN
+>> results in CPU timeouts. Munmap() can result in a large range being
+>> invalidated but in that case, the xa_array is likely to contain entries
+>> that need to be invalidated.
+>> Check for [0..ULONG_MAX] explicitly and just destroy the whole table.
+>>
+>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>>
+>> This patch is based on Jason Gunthorpe's hmm tree and should be folded
+>> into the ("mm/hmm/test: add selftest driver for HMM") patch once this
+>> patch is reviewed, etc.
+>>
+>>   lib/test_hmm.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/lib/test_hmm.c b/lib/test_hmm.c
+>> index 8b36c26b717b..b89852ec3c29 100644
+>> +++ b/lib/test_hmm.c
+>> @@ -201,7 +201,13 @@ static void dmirror_do_update(struct dmirror *dmirror, unsigned long start,
+>>   	 * The XArray doesn't hold references to pages since it relies on
+>>   	 * the mmu notifier to clear page pointers when they become stale.
+>>   	 * Therefore, it is OK to just clear the entry.
+>> +	 * However, if the entire address space is being invalidated, it
+>> +	 * takes too long to clear them one at a time so destroy the array.
+>>   	 */
+>> +	if (start == 0 && end == ULONG_MAX) {
+>> +		xa_destroy(&dmirror->pt);
+>> +		return;
+>> +	}
+>>   	for (pfn = start >> PAGE_SHIFT; pfn < (end >> PAGE_SHIFT); pfn++)
+>>   		xa_erase(&dmirror->pt, pfn);
+>>   }
+> 
+> Just use xa_for_each_range() instead of the naive loop, it already
+> optimizes against membership and avoids the need for the xa_destroy
+> hack
+> 
+> Jason
+> 
 
-Signed-off-by: Ben Boeckel <mathstuf@gmail.com>
----
- Documentation/security/keys/core.rst | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/security/keys/core.rst b/Documentation/security/keys/core.rst
-index d9b0b859018b..c26b9e7d47c2 100644
---- a/Documentation/security/keys/core.rst
-+++ b/Documentation/security/keys/core.rst
-@@ -920,10 +920,14 @@ The keyctl syscall functions are:
- 
- 	long keyctl(KEYCTL_PKEY_QUERY,
- 		    key_serial_t key_id, unsigned long reserved,
-+		    const char* params,
- 		    struct keyctl_pkey_query *info);
- 
--     Get information about an asymmetric key.  The information is returned in
--     the keyctl_pkey_query struct::
-+     Get information about an asymmetric key.  Specific algorithms and
-+     encodings may be queried by using the ``params`` argument.  This is a
-+     string containing a space- or tab-separated string of key-value pairs.
-+     Currently supported keys include ``enc`` and ``hash``.  The information
-+     is returned in the keyctl_pkey_query struct::
- 
- 	__u32	supported_ops;
- 	__u32	key_size;
--- 
-2.25.4
-
+For some reason I had looked at that and rejected it but of course, it works
+fine. :-)
+Thanks!
