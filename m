@@ -2,74 +2,113 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD94C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF14C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDE0207F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E32F206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:24:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KS7dCiI1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbgEPMVM (ORCPT
+        id S1726254AbgEPMYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 08:21:12 -0400
-Received: from mga02.intel.com ([134.134.136.20]:40967 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbgEPMVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 08:21:11 -0400
-IronPort-SDR: D7ST/xiMIg6iJLqYuhWeDdH92Yd6ichsYCVNsx51lKJPznBNn5QRNjqfeFKl0KyO83dwaI+Fdr
- o2XKGygB5GAw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 05:21:11 -0700
-IronPort-SDR: sqNFnfn6/3GsBFxZeUWVfwbPj2OofvafDAdeZ11Ok8vxej578NFxZvq23Fd0gA1Tzxr1IaqKgT
- iAlyWhPbOyxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,398,1583222400"; 
-   d="scan'208";a="465047818"
-Received: from ebutchex-mobl1.ger.corp.intel.com ([10.249.40.79])
-  by fmsmga005.fm.intel.com with ESMTP; 16 May 2020 05:21:07 -0700
-Message-ID: <ac7edbf7ad681ab762998e3aa1ed118b2cbdf47a.camel@linux.intel.com>
-Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Andi Kleen <ak@linux.intel.com>, Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        luto@kernel.org, hpa@zytor.com, dave.hansen@intel.com,
-        tony.luck@intel.com, ravi.v.shankar@intel.com,
-        chang.seok.bae@intel.com
-Date:   Sat, 16 May 2020 15:21:06 +0300
-In-Reply-To: <20200515175550.GP3538@tassilo.jf.intel.com>
-References: <20200511045311.4785-1-sashal@kernel.org>
-         <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com>
-         <20200515164013.GF29995@sasha-vm>
-         <20200515175550.GP3538@tassilo.jf.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 16 May 2020 08:24:20 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32490 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726219AbgEPMYU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 08:24:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589631859;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=8mmEst/G2NAr0kipPJrp+ihzAeJTb8tA3U7VWWeYgP4=;
+        b=KS7dCiI16oI1IV9g7Cw3gR1ccMUHuqcE/rPrh3KFsEYtfy7U/h03+OR88/oq7TIFvvgBKh
+        P8DR2scweDxWqIfGx+DUhp3yxB7t+97BdBKBga3XwbqHJKBtRRzQs7FprurXz5mo1MsvgE
+        uiF1AEyr47yTX05Sw4Lp+lEbCCO4ZbE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-222-5Sf6BMQYMyelcSRVZ_uPWg-1; Sat, 16 May 2020 08:24:15 -0400
+X-MC-Unique: 5Sf6BMQYMyelcSRVZ_uPWg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6BE5F1005510;
+        Sat, 16 May 2020 12:24:14 +0000 (UTC)
+Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F02032657D;
+        Sat, 16 May 2020 12:24:13 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [GIT PULL] KVM changes for Linux 5.7-rc6
+Date:   Sat, 16 May 2020 08:24:13 -0400
+Message-Id: <20200516122413.693424-1-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-15 at 10:55 -0700, Andi Kleen wrote:
-> > Indeed, we've seen a few hacks that basically just enable FSGSBASE:
-> > 
-> > - https://github.com/oscarlab/graphene-sgx-driver
-> > - https://github.com/occlum/enable_rdfsbase
-> > 
-> > And would very much like to get rid of them...
-> 
-> These are insecure and open root holes without the patches
-> used here.
-> 
-> -Andi
+Linus,
 
-Yup, totally. 
+The following changes since commit 2673cb6849722a4ffd74c27a9200a9ec43f64be3:
 
-/Jarkko
+  Merge tag 'kvm-s390-master-5.7-3' of git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into HEAD (2020-05-06 08:09:17 -0400)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to c4e0e4ab4cf3ec2b3f0b628ead108d677644ebd9:
+
+  KVM: x86: Fix off-by-one error in kvm_vcpu_ioctl_x86_setup_mce (2020-05-15 13:48:56 -0400)
+
+----------------------------------------------------------------
+A new testcase for guest debugging (gdbstub) that exposed a bunch of
+bugs, mostly for AMD processors.  And a few other x86 fixes.
+
+----------------------------------------------------------------
+Babu Moger (1):
+      KVM: x86: Fix pkru save/restore when guest CR4.PKE=0, move it to x86.c
+
+Jim Mattson (1):
+      KVM: x86: Fix off-by-one error in kvm_vcpu_ioctl_x86_setup_mce
+
+Paolo Bonzini (6):
+      KVM: x86: fix DR6 delivery for various cases of #DB injection
+      KVM: nSVM: trap #DB and #BP to userspace if guest debugging is on
+      KVM: SVM: keep DR6 synchronized with vcpu->arch.dr6
+      KVM: x86, SVM: isolate vcpu->arch.dr6 from vmcb->save.dr6
+      KVM: VMX: pass correct DR6 for GD userspace exit
+      Merge branch 'kvm-amd-fixes' into HEAD
+
+Peter Xu (4):
+      KVM: X86: Declare KVM_CAP_SET_GUEST_DEBUG properly
+      KVM: X86: Set RTM for DB_VECTOR too for KVM_EXIT_DEBUG
+      KVM: X86: Fix single-step with KVM_SET_GUEST_DEBUG
+      KVM: selftests: Add KVM_SET_GUEST_DEBUG test
+
+Suravee Suthikulpanit (2):
+      KVM: Introduce kvm_make_all_cpus_request_except()
+      KVM: SVM: Disable AVIC before setting V_IRQ
+
+ arch/x86/include/asm/kvm_host.h                 |   4 +-
+ arch/x86/kvm/hyperv.c                           |   2 +-
+ arch/x86/kvm/svm/nested.c                       |  39 ++++-
+ arch/x86/kvm/svm/svm.c                          |  36 +++--
+ arch/x86/kvm/vmx/vmx.c                          |  41 +----
+ arch/x86/kvm/x86.c                              |  60 ++++---
+ include/linux/kvm_host.h                        |   3 +
+ tools/testing/selftests/kvm/Makefile            |   1 +
+ tools/testing/selftests/kvm/include/kvm_util.h  |   2 +
+ tools/testing/selftests/kvm/lib/kvm_util.c      |   9 ++
+ tools/testing/selftests/kvm/x86_64/debug_regs.c | 202 ++++++++++++++++++++++++
+ virt/kvm/kvm_main.c                             |  14 +-
+ 12 files changed, 325 insertions(+), 88 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/debug_regs.c
 
