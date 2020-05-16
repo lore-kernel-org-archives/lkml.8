@@ -2,133 +2,131 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF36C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E52C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 540FE207C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50792207C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589642619;
+	bh=5+Zfs6hpFVkDklYLEV8HU1cCRNSqPjDrqAYAj/UgYYI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nV4Mfsnq1W0caG935PCagKhyWznAjbLf7eTBfOFz+C6qtugKqZfEEPtUJAQCP4AUW
+	 I0E75rVz+qZKHTu8DThQkjvrDBRnz7FRYUNu31XqjL5Eiso13UVdnzWMw6CtAMpM6K
+	 MssNQwPAUIjR2sz0WBkReboNylvN75g3CGA3KLvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgEPPVW convert rfc822-to-8bit (ORCPT
+        id S1726945AbgEPPXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 11:21:22 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:54309 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726527AbgEPPVU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 11:21:20 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id uk-mta-2-M-or8IPqO3ut6gEkeJwgCw-1;
- Sat, 16 May 2020 16:21:16 +0100
-X-MC-Unique: M-or8IPqO3ut6gEkeJwgCw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sat, 16 May 2020 16:21:15 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sat, 16 May 2020 16:21:15 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christoph Hellwig' <hch@lst.de>,
-        David Howells <dhowells@redhat.com>
-CC:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>
-Subject: RE: [PATCH 27/33] sctp: export sctp_setsockopt_bindx
-Thread-Topic: [PATCH 27/33] sctp: export sctp_setsockopt_bindx
-Thread-Index: AQHWKsz+yiOODFVfBEqdWGEpseVc56iq0wgA
-Date:   Sat, 16 May 2020 15:21:15 +0000
-Message-ID: <c23030de384747ae83c6c0813bd4f1c0@AcuMS.aculab.com>
-References: <20200514062820.GC8564@lst.de>
- <20200513062649.2100053-1-hch@lst.de> <20200513062649.2100053-28-hch@lst.de>
- <20200513180058.GB2491@localhost.localdomain>
- <129070.1589556002@warthog.procyon.org.uk> <20200515152459.GA28995@lst.de>
-In-Reply-To: <20200515152459.GA28995@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sat, 16 May 2020 11:23:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbgEPPXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 11:23:38 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9BE32065C;
+        Sat, 16 May 2020 15:23:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589642618;
+        bh=5+Zfs6hpFVkDklYLEV8HU1cCRNSqPjDrqAYAj/UgYYI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=z9Yq8eTGA0OEJVQ1KLm89KSgdrdazl9Dog3pch0X3Jiq3Cm97iwfSZ360Opg0U0cA
+         wglZ82WExXDCRRuQE1RIJwqudXgVlbkKRuvW1U1qNKVUSgly+tR0j03BvjINTxRYSS
+         ORB0cMGchKSHCosgi2n/+Idr/7kHJyVWI9TSqTvw=
+Date:   Sat, 16 May 2020 16:23:33 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        "Stefan Popa" <stefan.popa@analog.com>,
+        "Hartmut Knaack" <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH] iio: dac: ad5761: Replace indio_dev->mlock with own
+ device lock
+Message-ID: <20200516162333.647979d5@archlinux>
+In-Reply-To: <20200514091032.80883-1-sergiu.cuciurean@analog.com>
+References: <20200514091032.80883-1-sergiu.cuciurean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig
-> Sent: 15 May 2020 16:25
-> On Fri, May 15, 2020 at 04:20:02PM +0100, David Howells wrote:
-> > Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > > > The advantage on using kernel_setsockopt here is that sctp module will
-> > > > only be loaded if dlm actually creates a SCTP socket.  With this
-> > > > change, sctp will be loaded on setups that may not be actually using
-> > > > it. It's a quite big module and might expose the system.
-> > >
-> > > True.  Not that the intent is to kill kernel space callers of setsockopt,
-> > > as I plan to remove the set_fs address space override used for it.
-> >
-> > For getsockopt, does it make sense to have the core kernel load optval/optlen
-> > into a buffer before calling the protocol driver?  Then the driver need not
-> > see the userspace pointer at all.
-> >
-> > Similar could be done for setsockopt - allocate a buffer of the size requested
-> > by the user inside the kernel and pass it into the driver, then copy the data
-> > back afterwards.
+On Thu, 14 May 2020 12:10:28 +0300
+Sergiu Cuciurean <sergiu.cuciurean@analog.com> wrote:
+
+> As part of the general cleanup of indio_dev->mlock, this change replaces
+> it with a local lock on the device's state structure.
 > 
-> I did look into that initially.  The problem is that tons of sockopts
-> entirely ignore optlen and just use a fixed size.  So I fear that there
-> could be tons of breakage if we suddently respect it.  Otherwise that
-> would be a pretty nice way to handle the situation.
+> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Applied to the togreg branch of iio.git.
 
-I'd guess that most application use the correct size for setsockopt().
-(Well, apart from using 4 instead of 1.)
+Thanks,
 
-It is certainly possible to always try to read in 64 bytes
-regardless of the supplied length, but handle the EFAULT case
-by shortening the buffer.
-
-Historically getsockopt() only wrote the length back.
-Treating 0 and garbage as (say) 4k and letting the protocol
-code set a shorten the copy to user might work.
-All short transfers would want to use an on-stack buffer,
-so slight oversizes could also be allowed for.
-
-OTOH if i did a getsockopt() with too short a length I wouldn't
-want the kernel to trash my program memory.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+J
+> ---
+>  drivers/iio/dac/ad5761.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/dac/ad5761.c b/drivers/iio/dac/ad5761.c
+> index 4fb42b743f0f..67179944e5c5 100644
+> --- a/drivers/iio/dac/ad5761.c
+> +++ b/drivers/iio/dac/ad5761.c
+> @@ -57,11 +57,13 @@ enum ad5761_supported_device_ids {
+>   * @use_intref:		true when the internal voltage reference is used
+>   * @vref:		actual voltage reference in mVolts
+>   * @range:		output range mode used
+> + * @lock		lock to protect the data buffer during SPI ops
+>   * @data:		cache aligned spi buffer
+>   */
+>  struct ad5761_state {
+>  	struct spi_device		*spi;
+>  	struct regulator		*vref_reg;
+> +	struct mutex			lock;
+>  
+>  	bool use_intref;
+>  	int vref;
+> @@ -124,9 +126,9 @@ static int ad5761_spi_write(struct iio_dev *indio_dev, u8 addr, u16 val)
+>  	struct ad5761_state *st = iio_priv(indio_dev);
+>  	int ret;
+>  
+> -	mutex_lock(&indio_dev->mlock);
+> +	mutex_lock(&st->lock);
+>  	ret = _ad5761_spi_write(st, addr, val);
+> -	mutex_unlock(&indio_dev->mlock);
+> +	mutex_unlock(&st->lock);
+>  
+>  	return ret;
+>  }
+> @@ -163,9 +165,9 @@ static int ad5761_spi_read(struct iio_dev *indio_dev, u8 addr, u16 *val)
+>  	struct ad5761_state *st = iio_priv(indio_dev);
+>  	int ret;
+>  
+> -	mutex_lock(&indio_dev->mlock);
+> +	mutex_lock(&st->lock);
+>  	ret = _ad5761_spi_read(st, addr, val);
+> -	mutex_unlock(&indio_dev->mlock);
+> +	mutex_unlock(&st->lock);
+>  
+>  	return ret;
+>  }
+> @@ -368,6 +370,8 @@ static int ad5761_probe(struct spi_device *spi)
+>  	if (pdata)
+>  		voltage_range = pdata->voltage_range;
+>  
+> +	mutex_init(&st->lock);
+> +
+>  	ret = ad5761_spi_set_range(st, voltage_range);
+>  	if (ret)
+>  		goto disable_regulator_err;
 
