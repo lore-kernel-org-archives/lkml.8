@@ -2,91 +2,87 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1780CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 01:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99504C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 01:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9C212076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 01:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7CC207C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 01:40:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589592912;
-	bh=A/YvaDksaFu99ghPmbMTUGhjLsi3EZ2qYC3LCwM1LwA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hg9qBVEXzyjExCj3Rgt3zq+WhoxGQahPi9pr6iF0yO3KSfD5Q2rDA3jhHeiUINoUb
-	 XyX9B2WRkend4lkHRFIL0ezqoSAlv/SBCanTPD83XtWEPH88VAhCt4RDzZoLwApYwQ
-	 bMG6EMhZn/S1B1MxP9quF2qau7ygeAHaqfqE1ZFk=
+	s=default; t=1589593208;
+	bh=CrQSqVcXyXcpUeO9jqEtUIojA+IlBVFSMmxcqh7aAeU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lUymFJVWwsuLDS3S13/fEeu7XMKAXkIrhbLdJ5MnIe6kvhfPANk/2r/waR7Q9jrO8
+	 H08a/Ms42fhEfvejrvErsbXiaAHoY7l7o5OSVxmMVl/0JMd+WRQPBNVvaOPs4IAOme
+	 P78wJ1zcbjSYZd0VuLFF0KzkJZ7/AIQCl7Bjn44w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgEPBfL (ORCPT
+        id S1727801AbgEPBkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 21:35:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57576 "EHLO mail.kernel.org"
+        Fri, 15 May 2020 21:40:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbgEPBfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 21:35:11 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726204AbgEPBkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 21:40:07 -0400
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DC8520671;
-        Sat, 16 May 2020 01:35:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86901207C4;
+        Sat, 16 May 2020 01:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589592910;
-        bh=A/YvaDksaFu99ghPmbMTUGhjLsi3EZ2qYC3LCwM1LwA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FCMPtDYJZcw2/loDgsY3buAEdq4MaFDRI7UZDPxP5gepuaSB8WfcULS3g2o24Y1TS
-         9mdJZvt0luVlxpROTQO7XI0TaX07kifa9ZQhWc3EaWqTS08KEjCd1DFoj1uEOcRoUA
-         yhKwDQLo3fV9GeVMpsSciRYU3i9zSMLQQDvVPm+0=
-Date:   Fri, 15 May 2020 18:35:09 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.14 39/39] crypto: xts - simplify error handling
- in ->create()
-Message-ID: <20200516013509.GA118329@gmail.com>
-References: <20200514185456.21060-1-sashal@kernel.org>
- <20200514185456.21060-39-sashal@kernel.org>
- <20200514190843.GA187179@gmail.com>
- <20200515005530.GD29995@sasha-vm>
+        s=default; t=1589593206;
+        bh=CrQSqVcXyXcpUeO9jqEtUIojA+IlBVFSMmxcqh7aAeU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cSlJChEPn9tokMbDKlEqAW4wizlqdgD60I2U+gwh8F1H4v0hqa40A2VCxiyroFduX
+         vIiNzPhX9XpQuo3Dnps88ojyTUqASpZUaZ9i0621+yQdD0k7jhksZQCkssn8l/KE5M
+         GXaZK7GC0nV2B0/x38EC954SB3oVy2KNMCCUxIfs=
+Received: by mail-vk1-f171.google.com with SMTP id p7so1085558vkf.5;
+        Fri, 15 May 2020 18:40:06 -0700 (PDT)
+X-Gm-Message-State: AOAM532S6QNuCXZJypsR6s09TSgWlQOg3OgFgMvp6zl80W0qB7gqSUZJ
+        BzyN8A8tEvfCu+MFvV0OMziyCRRcHjowvhgYL28=
+X-Google-Smtp-Source: ABdhPJy/TNRRchVgh7/X0CJvCfGZI0vrN5WLUnFbW6V2DhjJpoH3YEqbC2Z6LQXWvVKiVLin1pfQ2PwKRAH9VrOZ1x8=
+X-Received: by 2002:a1f:5fc5:: with SMTP id t188mr4836002vkb.34.1589593205572;
+ Fri, 15 May 2020 18:40:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515005530.GD29995@sasha-vm>
+References: <20200509031058.8239-1-mcgrof@kernel.org> <20200509031058.8239-5-mcgrof@kernel.org>
+ <e728acea-61c1-fcb5-489b-9be8cafe61ea@acm.org> <20200511133900.GL11244@42.do-not-panic.com>
+In-Reply-To: <20200511133900.GL11244@42.do-not-panic.com>
+From:   Luis Chamberlain <mcgrof@kernel.org>
+Date:   Fri, 15 May 2020 19:39:53 -0600
+X-Gmail-Original-Message-ID: <CAB=NE6X-RaP2Qbfi5J23EdsVDTUys6AuYT7g6QDtCt=d5-GZ9w@mail.gmail.com>
+Message-ID: <CAB=NE6X-RaP2Qbfi5J23EdsVDTUys6AuYT7g6QDtCt=d5-GZ9w@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] blktrace: break out of blktrace setup on
+ concurrent calls
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Jan Kara <jack@suse.cz>,
+        Ming Lei <ming.lei@redhat.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, yu kuai <yukuai3@huawei.com>,
+        linux-block@vger.kernel.org,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 08:55:30PM -0400, Sasha Levin wrote:
-> On Thu, May 14, 2020 at 12:08:43PM -0700, Eric Biggers wrote:
-> > On Thu, May 14, 2020 at 02:54:56PM -0400, Sasha Levin wrote:
-> > > From: Eric Biggers <ebiggers@google.com>
-> > > 
-> > > [ Upstream commit 732e540953477083082e999ff553622c59cffd5f ]
-> > > 
-> > > Simplify the error handling in the XTS template's ->create() function by
-> > > taking advantage of crypto_drop_skcipher() now accepting (as a no-op) a
-> > > spawn that hasn't been grabbed yet.
-> > > 
-> > > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > > Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > 
-> > Please don't backport this patch.  It's a cleanup (not a fix) that depends on
-> > patches in 5.6, which you don't seem to be backporting.
-> 
-> For 5.6-4.19 I grabbed these to take:
-> 
-> 	1a263ae60b04 ("gcc-10: avoid shadowing standard library 'free()' in crypto")
-> 
-> cleanly. I'll drop it as it's mostly to avoid silly gcc10 warnings, but
-> I just wanted to let you know the reason they ended up here.
-> 
+On Mon, May 11, 2020 at 7:39 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Sat, May 09, 2020 at 06:09:38PM -0700, Bart Van Assche wrote:
+> > How about using the block device name instead of the partition name in
+> > the error message since the concurrency context is the block device and
+> > not the partition?
+>
+> blk device argument can be NULL here. sg-generic is one case.
 
-If the gcc 10 warning fix is needed, then you should just backport it on its
-own.  It just renames a function, so it seems it's trivial to fix the conflict?
+I'm going to add a comment about this, as it is easily forgotten.
 
-- Eric
+  Luis
