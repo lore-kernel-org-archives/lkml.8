@@ -2,95 +2,126 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 14:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0463C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 900D82065C
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 14:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4174207C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgEPOrp (ORCPT
+        id S1726674AbgEPPBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 10:47:45 -0400
-Received: from mga02.intel.com ([134.134.136.20]:30525 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726416AbgEPOro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 10:47:44 -0400
-IronPort-SDR: 31F+ocGR0+ZvC8+wJBOXiGht+TKxMk9Nz02gmffTSGqepy9Uw2E+UjXAIBxkK+YUAzolwaCf0J
- vkEqM6rgRg4g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 07:47:44 -0700
-IronPort-SDR: rqwkQ6MFAbHlJLc5tUrGJ0anEOwZmDNYpGm8atU4HKFqjbNTQRoqanzY2doi7gOqg5BubK6nnN
- o48Fj2d1/Kcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,398,1583222400"; 
-   d="scan'208";a="372965421"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by fmsmga001.fm.intel.com with ESMTP; 16 May 2020 07:47:43 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.83]) by
- ORSMSX110.amr.corp.intel.com ([169.254.10.248]) with mapi id 14.03.0439.000;
- Sat, 16 May 2020 07:47:43 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Jue Wang <juew@google.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/mm: Don't try to change poison pages to uncacheable
- in a guest
-Thread-Topic: [PATCH] x86/mm: Don't try to change poison pages to
- uncacheable in a guest
-Thread-Index: AQHWIw2S9gwrq1Tja0uhU2CYrRqdxaiqzPCAgAAO3DI=
-Date:   Sat, 16 May 2020 14:47:42 +0000
-Message-ID: <1138B55F-89DD-4ABA-98C2-61D2ED961764@intel.com>
-References: <20200505184648.2264-1-tony.luck@intel.com>,<20200516065431.GB25771@zn.tnic>
-In-Reply-To: <20200516065431.GB25771@zn.tnic>
-Accept-Language: en-US
+        Sat, 16 May 2020 11:01:22 -0400
+Received: from mail-co1nam11olkn2053.outbound.protection.outlook.com ([40.92.18.53]:18898
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726414AbgEPPBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 11:01:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B4YpEP/sw3JzB45djXpuP06B6Dh1FRD0RE/7PSVCCkW/nlNKLpO2Cr4GehOHllRdZjr504laLrFlm9+rHneeytwOj5h+BW1QdgfaCr2BSIkJgj3X3LVlnBeryRHRnLaQ7UuSugXVWXV3suoy4tCT7IONA6Ov2kpJLciKCfvbM2a1vELSzuCxpJtPDHPbSS9RnOFX2QLszYEmXOEHFbDsZhu8l06mfi/6MOOH1OHSEsgqG/NonswbZaR/3vN8z4tvuPu6AHnFQ7+IhRq2YJMW3LWhbXXFOefJcwcegD+vi4pssTqwNm5PEpPa359pGbshi6xkIeeZ6+/iunIGaNqHGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HKYPrbLLH0zey5RDCnODvwFhAbbAAMcADgkAeug7UmY=;
+ b=QdWB8SufXGblKJ1Av/jKr6E0+A30+ibw7tqw0KMieZ/kruSkyzZIOmdvvZ5WdQ9vdWgTrd7eknFBv+G1/7WvSRpzGvZIoDQRNedN50ziI+Ki3WXvwQqSD+JmP3ClooPdwKbZ9UysSE4Biy2R/yg73+EF/dAGTs93n/ioPygIHHLnWLi+FC+cGWU9GjNJwYVRRKlyQDeMcIpA1J9+ZJ+X3SGOA4QrDubcw5A/B9aBx7iW5F4bfHIg42Qi2hwqnVuVwo6y1uMEeqfHlQjKgrsux2KnP0M6un/uQcbtysn+b0NFFkBdJ2mJz5janHlfw4Z63ZOEQqTtCKq3VDSBoc8xsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from BN8NAM11FT067.eop-nam11.prod.protection.outlook.com
+ (2a01:111:e400:fc4b::47) by
+ BN8NAM11HT176.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4b::459)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.19; Sat, 16 May
+ 2020 15:01:18 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:fc4b::4c) by BN8NAM11FT067.mail.protection.outlook.com
+ (2a01:111:e400:fc4b::415) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.19 via Frontend
+ Transport; Sat, 16 May 2020 15:01:18 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:6FC5C8971829A278AEA81B4B6594B0212808137AFEEE10917CCB04C0F3FF419F;UpperCasedChecksum:FB07F5EB6FB9E3D045476D9317AD197A4EAA3FA0E4187E7F3AF833840A7A0573;SizeAsReceived:9152;Count:50
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.3000.022; Sat, 16 May 2020
+ 15:01:18 +0000
+Subject: Re: [PATCH 0/2] iio: adc: Add a current from voltage driver
+To:     Lars-Peter Clausen <lars@metafoo.de>, jic23@kernel.org,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linus.walleij@linaro.org
+References: <BN6PR04MB066014AF936EF8ADCBF011A1A3BA0@BN6PR04MB0660.namprd04.prod.outlook.com>
+ <d5f785bf-15f5-9ca5-f7f8-863c74447010@metafoo.de>
+From:   Jonathan Bakker <xc-racer2@live.ca>
+Message-ID: <BN6PR04MB0660FED60AD7BE9AD09B56A8A3BA0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Date:   Sat, 16 May 2020 08:01:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+In-Reply-To: <d5f785bf-15f5-9ca5-f7f8-863c74447010@metafoo.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MWHPR11CA0006.namprd11.prod.outlook.com
+ (2603:10b6:301:1::16) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <533ffd2c-cef7-5501-61ab-30b4b25a179b@live.ca>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR11CA0006.namprd11.prod.outlook.com (2603:10b6:301:1::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend Transport; Sat, 16 May 2020 15:01:14 +0000
+X-Microsoft-Original-Message-ID: <533ffd2c-cef7-5501-61ab-30b4b25a179b@live.ca>
+X-TMN:  [9i5ediAuayKoDwRGk8m8xY4uc84Q82mwxuMPR3dj2IkVKopRcM7zWVvyfUtK5mVX]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 50
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: e5bf508e-876e-471f-397c-08d7f9a9fb0e
+X-MS-TrafficTypeDiagnostic: BN8NAM11HT176:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: queiJcYZiEeem0Ac/hfKKPiDK0VOFH5EYVjZvmftttsoMn7tYfL4OA9gXXZqvKJeuvvc1bxrdSv/SaGfYHjE3zYh940yhi3kS96mVlitqUf2sQjYSOySlDNfkFtHcUZ9nV+e0U9nh4bYoL7sTpeamMlI23MoVPNssXFGHrRO4HUO77w+dcNrbvWjbyX8RUnvPKzTRn8/VNedMjIwKRpSkavRoQTRQjZzaEzgiYYKcCqaJZTwHD5liR0oQwYU2kUd
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: WE4ZWEN7WzIv+U816R5JLPG0EVfTc+DgaRx0SS1B3kqzPhT2DNIR/mGgRIidEH0phZ3aPvP70m3/bqpTjbvDngRyloudJXEwb2Eo0e+1pxFAIjAt4mVbMtn40I/+fP6Jt3S91G+q/PgiZy4fvSWgGishwHeWsn8knVY/W1bzYDNolWl6s73o5GoMar04RWQQQ9VuwInxiF1TxcG9ZIAJgg==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5bf508e-876e-471f-397c-08d7f9a9fb0e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2020 15:01:18.7932
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM11HT176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlcmUgaXMgb25seSBvbmUgYWN0dWFsIG1hY2hpbmUgY2hlY2suIEJ1dCB0aGUgVk1NIHNpbXVs
-YXRlcyBhIHNlY29uZCBtYWNoaW5lIGNoZWNrIHRvIHRoZSBndWVzdCB3aGVuIHRoZSBndWVzdCB0
-cmllcyB0byBhY2Nlc3MgdGhlIHBvaXNvbmVkIHBhZ2UuDQoNClRoZSBzdGFjayB0cmFjZSB3YXMg
-ZnJvbSBKdWUuIEkgZGlkbuKAmXQgdHJ5IHRvIGNoZWNrIGl0LiBCdXQgaXQgbG9va2VkIHJlYXNv
-bmFibGUgdGhhdCBMaW51eCB3b3VsZCBmbHVzaCB0aGUgY2FjaGUgZm9yIGEgcGFnZSB0aGF0IGlz
-IHRyYW5zaXRpb25pbmcgZnJvbSBjYWNoZWFibGUgdG8gdW5jYWNoZWFibGUuDQoNClNlbnQgZnJv
-bSBteSBpUGhvbmUNCg0KPiBPbiBNYXkgMTUsIDIwMjAsIGF0IDIzOjU0LCBCb3Jpc2xhdiBQZXRr
-b3YgPGJwQGFsaWVuOC5kZT4gd3JvdGU6DQo+IA0KPiDvu79PbiBUdWUsIE1heSAwNSwgMjAyMCBh
-dCAxMTo0Njo0OEFNIC0wNzAwLCBUb255IEx1Y2sgd3JvdGU6DQo+PiBBbiBpbnRlcmVzdGluZyB0
-aGluZyBoYXBwZW5lZCB3aGVuIGEgZ3Vlc3QgTGludXggaW5zdGFuY2UgdG9vaw0KPj4gYSBtYWNo
-aW5lIGNoZWNrLiBUaGUgVk1NIHVubWFwcGVkIHRoZSBiYWQgcGFnZSBmcm9tIGd1ZXN0IHBoeXNp
-Y2FsDQo+PiBzcGFjZSBhbmQgcGFzc2VkIHRoZSBtYWNoaW5lIGNoZWNrIHRvIHRoZSBndWVzdC4N
-Cj4+IA0KPj4gTGludXggdG9vayBhbGwgdGhlIG5vcm1hbCBhY3Rpb25zIHRvIG9mZmxpbmUgdGhl
-IHBhZ2UgZnJvbSB0aGUgcHJvY2Vzcw0KPj4gdGhhdCB3YXMgdXNpbmcgaXQuIEJ1dCB0aGVuIGd1
-ZXN0IExpbnV4IGNyYXNoZWQgYmVjYXVzZSBpdCBzYWlkIHRoZXJlDQo+PiB3YXMgYSBzZWNvbmQg
-bWFjaGluZSBjaGVjayBpbnNpZGUgdGhlIGtlcm5lbCB3aXRoIHRoaXMgc3RhY2sgdHJhY2U6DQo+
-PiANCj4+IGRvX21lbW9yeV9mYWlsdXJlDQo+PiAgICBzZXRfbWNlX25vc3BlYw0KPj4gICAgICAg
-ICBzZXRfbWVtb3J5X3VjDQo+PiAgICAgICAgICAgICAgX3NldF9tZW1vcnlfdWMNCj4+ICAgICAg
-ICAgICAgICAgICAgIGNoYW5nZV9wYWdlX2F0dHJfc2V0X2Nscg0KPj4gICAgICAgICAgICAgICAg
-ICAgICAgICBjcGFfZmx1c2gNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGZsdXNo
-X2NhY2hlX3JhbmdlX29wdA0KPiANCj4gTWF5YmUgSSBkb24ndCBzZWUgaXQgYnV0IGhvdyBjYW4g
-Y2xmbHVzaF9jYWNoZV9yYW5nZV9vcHQoKSBjYWxsDQo+IGNwYV9mbHVzaCgpID8NCj4gDQo+PiBU
-aGlzIHdhcyBvZGQsIGJlY2F1c2UgYSBDTEZMVVNIIGluc3RydWN0aW9uIHNob3VsZG4ndCByYWlz
-ZSBhIG1hY2hpbmUNCj4+IGNoZWNrIChpdCBpc24ndCBjb25zdW1pbmcgdGhlIGRhdGEpLiBGdXJ0
-aGVyIGludmVzdGlnYXRpb24gc2hvd2VkIHRoYXQNCj4+IHRoZSBWTU0gaGFkIHBhc3NlZCBpbiBh
-bm90aGVyIG1hY2hpbmUgY2hlY2sgYmVjYXVzZSBpcyBhcHBlYXJlZCB0aGF0IHRoZQ0KPj4gZ3Vl
-c3Qgd2FzIGFjY2Vzc2luZyB0aGUgYmFkIHBhZ2UuDQo+IA0KPiBUaGlzIGlzIHdoZXJlIHlvdSBs
-b3N0IG1lIC0gaWYgdGhlIFZNTSB1bm1hcHMgdGhlIHBhZ2UgZHVyaW5nIHRoZSBmaXJzdA0KPiBN
-Q0UsIGhvdyBjYW4gdGhlIGd1ZXN0IGV2ZW4gYXR0ZW1wdCB0byB0b3VjaCBpdCBhbmQgZG8gdGhp
-cyBzdGFjayB0cmFjZQ0KPiBhYm92ZT8NCj4gDQo+IC9tZSBpcyBjb25mdXNlZC4NCj4gDQo+IC0t
-IA0KPiBSZWdhcmRzL0dydXNzLA0KPiAgICBCb3Jpcy4NCj4gDQo+IGh0dHBzOi8vcGVvcGxlLmtl
-cm5lbC5vcmcvdGdseC9ub3Rlcy1hYm91dC1uZXRpcXVldHRlDQo=
+Oops, sorry about that, you're absolutely right.  The current-sense-shunt part
+of iio-rescale is exactly what I was looking for.
+
+Thanks,
+Jonathan
+
+On 2020-05-15 11:28 p.m., Lars-Peter Clausen wrote:
+> On 5/16/20 4:26 AM, Jonathan Bakker wrote:
+>> In the discussion around adding the GP2A002 light driver, there came
+>> up the question of what to do when a system emulates a current ADC
+>> by using a voltage ADC and a resistor.  Rather than adding it on
+>> a per-driver basis, it was suggested(1) to add a minimal IIO driver
+>> to support this situation.
+>>
+>> The new driver is fairly simple - it simply takes a voltage ADC and
+>> a resistor value in ohms exposed as the scale and outputs a current.
+>>
+>> It has been tested on a first-gen Galaxy S device which has the above
+>> mentioned GP2A002 chip connected to the voltage ADC resistor complex.
+>>
+>> 1) https://lore.kernel.org/linux-iio/20200202150843.762c6897@archlinux/
+> 
+> Hi,
+> 
+> There is afe/iio-rescale.c, which I think already implements this functionality.
+> 
+> - Lars
+> 
+> 
