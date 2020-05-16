@@ -2,106 +2,106 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44591C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E82D20728
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:59:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tSZQ862Q"
+	by mail.kernel.org (Postfix) with ESMTP id 89E722073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgEPC7H (ORCPT
+        id S1727956AbgEPDGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 22:59:07 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:61964 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726247AbgEPC7G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 22:59:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589597946; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=vAHRZO2aoumgoKX5GjqHJFJCsrd29AsXO2S+dqIqaKk=;
- b=tSZQ862Qz8L83QMflslATfkssGOTMYhFA+iSEf9HEhHTXeQBoYbPLINEgQ7hbF89AkJLfgDr
- 00aGyyTTb9BkSWqiITbhZbDSCMc/+t8I6rlylNvHz37KnuYkyJCvDTpvdj4DGarUOm7mSBnF
- fTaO/hw/R1AjQRoggIx2TZ2gl6E=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ebf56e1aefa5a01cc046e39 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 16 May 2020 02:58:41
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 822EBC432C2; Sat, 16 May 2020 02:58:40 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F1ED0C433D2;
-        Sat, 16 May 2020 02:58:39 +0000 (UTC)
+        Fri, 15 May 2020 23:06:06 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4796 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726247AbgEPDGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 23:06:06 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6C817AA0CD6132F8330D;
+        Sat, 16 May 2020 11:06:04 +0800 (CST)
+Received: from [127.0.0.1] (10.67.102.197) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Sat, 16 May 2020
+ 11:05:54 +0800
+Subject: Re: [PATCH 2/4] proc/sysctl: add shared variables -1
+To:     Kees Cook <keescook@chromium.org>
+CC:     <mcgrof@kernel.org>, <yzaikin@google.com>, <adobriyan@gmail.com>,
+        <mingo@kernel.org>, <peterz@infradead.org>,
+        <akpm@linux-foundation.org>, <yamada.masahiro@socionext.com>,
+        <bauerman@linux.ibm.com>, <gregkh@linuxfoundation.org>,
+        <skhan@linuxfoundation.org>, <dvyukov@google.com>,
+        <svens@stackframe.org>, <joel@joelfernandes.org>,
+        <tglx@linutronix.de>, <Jisheng.Zhang@synaptics.com>,
+        <pmladek@suse.com>, <bigeasy@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <wangle6@huawei.com>
+References: <1589517224-123928-1-git-send-email-nixiaoming@huawei.com>
+ <1589517224-123928-3-git-send-email-nixiaoming@huawei.com>
+ <202005150105.33CAEEA6C5@keescook>
+ <88f3078b-9419-b9c6-e789-7d6e50ca2cef@huawei.com>
+ <202005150904.743BB3E52@keescook>
+ <ab5f75d4-4d69-7b95-e6bd-ba8fd9792d94@huawei.com>
+ <202005151946.C6335E92@keescook>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <2656ae51-5348-0b37-d76d-1460b8eb3f10@huawei.com>
+Date:   Sat, 16 May 2020 11:05:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <202005151946.C6335E92@keescook>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 15 May 2020 19:58:39 -0700
-From:   bbhatt@codeaurora.org
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     manivannan.sadhasivam@linaro.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH] bus: mhi: core: Use current ee in intvec handler
-In-Reply-To: <1589509049-14532-1-git-send-email-jhugo@codeaurora.org>
-References: <1589509049-14532-1-git-send-email-jhugo@codeaurora.org>
-Message-ID: <aab020af0372b11ff63ba4526aab0fdc@codeaurora.org>
-X-Sender: bbhatt@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Originating-IP: [10.67.102.197]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-14 19:17, Jeffrey Hugo wrote:
-> The intvec handler stores the caches ee in a local variable for use in
-> processing the intvec.  It should instead use the current ee which is
-> read at the beginning of the intvec incase that the intvec is related 
-> to
-> an ee change.  Otherwise, the handler might make the wrong decision
-> based on an incorrect ee.
+On 2020/5/16 10:47, Kees Cook wrote:
+> On Sat, May 16, 2020 at 10:32:19AM +0800, Xiaoming Ni wrote:
+>> On 2020/5/16 0:05, Kees Cook wrote:
+>>> On Fri, May 15, 2020 at 05:06:28PM +0800, Xiaoming Ni wrote:
+>>>> On 2020/5/15 16:06, Kees Cook wrote:
+>>>>> On Fri, May 15, 2020 at 12:33:42PM +0800, Xiaoming Ni wrote:
+>>>>>> Add the shared variable SYSCTL_NEG_ONE to replace the variable neg_one
+>>>>>> used in both sysctl_writes_strict and hung_task_warnings.
+>>>>>>
+>>>>>> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+>>>>>> ---
+>>>>>>     fs/proc/proc_sysctl.c     | 2 +-
+>>>>>>     include/linux/sysctl.h    | 1 +
+>>>>>>     kernel/hung_task_sysctl.c | 3 +--
+>>>>>>     kernel/sysctl.c           | 3 +--
+>>>>>
+>>>>> How about doing this refactoring in advance of the extraction patch?
+>>>> Before  advance of the extraction patch, neg_one is only used in one file,
+>>>> does it seem to have no value for refactoring?
+>>>
+>>> I guess it doesn't matter much, but I think it's easier to review in the
+>>> sense that neg_one is first extracted and then later everything else is
+>>> moved.
+>>>
+>> Later, when more features sysctl interface is moved to the code file, there
+>> will be more variables that need to be extracted.
+>> So should I only extract the neg_one variable here, or should I extract all
+>> the variables used by multiple features?
 > 
-> Fixes: 3000f85b8f47 (bus: mhi: core: Add support for basic PM 
-> operations)
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
->  drivers/bus/mhi/core/main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Hmm -- if you're going to do a consolidation pass, then nevermind, I
+> don't think order will matter then.
 > 
-> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-> index 7272a5a..0a41fe5 100644
-> --- a/drivers/bus/mhi/core/main.c
-> +++ b/drivers/bus/mhi/core/main.c
-> @@ -386,8 +386,8 @@ irqreturn_t mhi_intvec_threaded_handler(int
-> irq_number, void *dev)
->  	write_lock_irq(&mhi_cntrl->pm_lock);
->  	if (MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
->  		state = mhi_get_mhi_state(mhi_cntrl);
-> -		ee = mhi_cntrl->ee;
->  		mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
-> +		ee = mhi_cntrl->ee;
->  	}
+> Thank you for the cleanup! Sorry we're giving you back-and-forth advice!
 > 
->  	if (state == MHI_STATE_SYS_ERR) {
-Hi Jeff,
+> -Kees
+> 
 
-Let's hold off on this change for now please as we have some good set of
-bug fixes and improvements coming in very soon. They're only pending 
-post
-to LKML.
+Sorry, I don't fully understand.
+Does this mean that there is no need to adjust the patch order or the 
+order of variables in sysctl_vals?
+Should I extract only SYSCTL_NEG_ONE or should I extract all variables?
 
 Thanks
+Xiaoming Ni
+
