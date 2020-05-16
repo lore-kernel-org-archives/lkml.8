@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B780C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E757720709
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA79C206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589649651;
-	bh=aTUSYRNg1AIN3df6ElQSFIwBjTcgJ60HMWA94BnEMIk=;
+	s=default; t=1589649698;
+	bh=E7aJfRYTPqnzUYF0jUB/Z7E0AkaqB7I5mvXPP1NvKLU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=oYLDigSAc7OzkwNhEt0hZerLQnYbwpZe2QUTICx/vMzk/ZPI6Fe5bDdmHEy0QFTjk
-	 qhpIokcoUDsYSMFFRk7EudfujGbrq/omUVTwrNGBWP2/PbNkSxJk4jD3u7L3rDCrKQ
-	 QQbUky+6BBZfSGZww12OGKJqGiPha22V1+AgyRIA=
+	b=qxG5DcQ5zpmNi+vcUTQzoXjjsT46M/DY07u8X/jwqew7LdfWtVGCddSQyKohDw4aw
+	 H+u6BYY/N+D0M/5Rws26SwNWY+Y41SkvCD2TQS0kaQUjdkG03iRF2sfJZ77jLdD32e
+	 uj3O2JVec3Vu2qRqn6Pk+ot16ZSpD57xZyILPrcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgEPRUu (ORCPT
+        id S1726528AbgEPRVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 13:20:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48218 "EHLO mail.kernel.org"
+        Sat, 16 May 2020 13:21:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgEPRUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 13:20:50 -0400
+        id S1726257AbgEPRVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 13:21:38 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DD06207D4;
-        Sat, 16 May 2020 17:20:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 872FF2065C;
+        Sat, 16 May 2020 17:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589649649;
-        bh=aTUSYRNg1AIN3df6ElQSFIwBjTcgJ60HMWA94BnEMIk=;
+        s=default; t=1589649697;
+        bh=E7aJfRYTPqnzUYF0jUB/Z7E0AkaqB7I5mvXPP1NvKLU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=slPnHaD4n6jUrADNzVFJyfZeQgAXJHcT2NZQmV9SyUP+6SJmZdWy3lUIKwsuFlXMe
-         8pE+MnMxuBhUgxWjnjnrD7qgo+z4fZQwlvvADD69hmeHPEPue69NFQB1gap3n0EHEY
-         0yfZgAhdfekHmT8/Mx+PIIF4bfxLa3eCmxO9TVlk=
-Date:   Sat, 16 May 2020 18:20:44 +0100
+        b=NIjlWLwcVz+dtLu9dYyJRabC3U+b6Wao6I6WeWZ4h6B19HoMmDOEfPhW/Q8Oka7Z1
+         H4rKdHytyXZS4p2Eui+gZA1Acost9MUGJcPYelrKABTJN6ZEQUxJMnnujhSJR9ccA7
+         RO20EpEY2+gqaDMVnDsEn4bx+zLiU4TG9Yfb61aE=
+Date:   Sat, 16 May 2020 18:21:32 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
 Cc:     <linux-iio@vger.kernel.org>,
@@ -49,12 +49,12 @@ Cc:     <linux-iio@vger.kernel.org>,
         <eugen.hristev@microchip.com>, <nicolas.ferre@microchip.com>,
         <alexandre.belloni@bootlin.com>, <alexandre.torgue@st.com>,
         <mcoquelin.stm32@gmail.com>, <ak@it-klinger.de>
-Subject: Re: [PATCH v2 4/8] iio: stm32-dfsdm-adc: pass iio device as arg for
- the interrupt handler
-Message-ID: <20200516182044.373adf4b@archlinux>
-In-Reply-To: <20200514131710.84201-5-alexandru.ardelean@analog.com>
+Subject: Re: [PATCH v2 5/8] iio: stm32-adc: pass iio device as arg for the
+ interrupt handler
+Message-ID: <20200516182132.0d8ed09b@archlinux>
+In-Reply-To: <20200514131710.84201-6-alexandru.ardelean@analog.com>
 References: <20200514131710.84201-1-alexandru.ardelean@analog.com>
-        <20200514131710.84201-5-alexandru.ardelean@analog.com>
+        <20200514131710.84201-6-alexandru.ardelean@analog.com>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -64,7 +64,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020 16:17:06 +0300
+On Thu, 14 May 2020 16:17:07 +0300
 Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
 > This changes the argument for the interrupt handler to be the IIO device
@@ -78,35 +78,50 @@ Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 > order.
 > 
 > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Whilst this one looks fine to me. I'd definitely like an Ack from
-one of the stm people in case I'm missing something.
+As with previous patch - looks good to me, but I'd like an stm32
+Ack / review.
+
+thanks,
+
+Jonathan
 
 > ---
->  drivers/iio/adc/stm32-dfsdm-adc.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/iio/adc/stm32-adc.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-> index 76a60d93fe23..28ef02887bd3 100644
-> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> @@ -1313,8 +1313,8 @@ static const struct iio_info stm32_dfsdm_info_adc = {
+> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+> index 80c3f963527b..34885387fbdb 100644
+> --- a/drivers/iio/adc/stm32-adc.c
+> +++ b/drivers/iio/adc/stm32-adc.c
+> @@ -1227,8 +1227,8 @@ static int stm32_adc_read_raw(struct iio_dev *indio_dev,
 >  
->  static irqreturn_t stm32_dfsdm_irq(int irq, void *arg)
+>  static irqreturn_t stm32_adc_threaded_isr(int irq, void *data)
 >  {
-> -	struct stm32_dfsdm_adc *adc = arg;
+> -	struct stm32_adc *adc = data;
 > -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-> +	struct iio_dev *indio_dev = arg;
-> +	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
->  	struct regmap *regmap = adc->dfsdm->regmap;
->  	unsigned int status, int_en;
+> +	struct iio_dev *indio_dev = data;
+> +	struct stm32_adc *adc = iio_priv(indio_dev);
+>  	const struct stm32_adc_regspec *regs = adc->cfg->regs;
+>  	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
 >  
-> @@ -1603,7 +1603,7 @@ static int stm32_dfsdm_adc_probe(struct platform_device *pdev)
->  		return irq;
+> @@ -1240,8 +1240,8 @@ static irqreturn_t stm32_adc_threaded_isr(int irq, void *data)
 >  
->  	ret = devm_request_irq(dev, irq, stm32_dfsdm_irq,
-> -			       0, pdev->name, adc);
-> +			       0, pdev->name, iio);
->  	if (ret < 0) {
->  		dev_err(dev, "Failed to request IRQ\n");
+>  static irqreturn_t stm32_adc_isr(int irq, void *data)
+>  {
+> -	struct stm32_adc *adc = data;
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct iio_dev *indio_dev = data;
+> +	struct stm32_adc *adc = iio_priv(indio_dev);
+>  	const struct stm32_adc_regspec *regs = adc->cfg->regs;
+>  	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
+>  
+> @@ -1882,7 +1882,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+>  
+>  	ret = devm_request_threaded_irq(&pdev->dev, adc->irq, stm32_adc_isr,
+>  					stm32_adc_threaded_isr,
+> -					0, pdev->name, adc);
+> +					0, pdev->name, indio_dev);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "failed to request IRQ\n");
 >  		return ret;
 
