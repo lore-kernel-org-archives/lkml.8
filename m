@@ -2,127 +2,188 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 460A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09DB22065C
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:58:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XWB8nVVv"
+	by mail.kernel.org (Postfix) with ESMTP id 2104320756
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:01:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589648508;
+	bh=7QsFKj7aDiV0u0TfxeKG4ZEc/hLCVajx0FV8HvcbpUs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HP8npR9FTVIosqQfNBfw1uvrTkcun/UYuJzEPSgIQOwns3ttuXx9esUBjupcaXQty
+	 GIolSZEg1fuvsr0Ph3fG6i50NT2KGXA29w8U3s+LujYjJ2Hj+2th525RUjLlxxo1Wr
+	 7LtH6TPX3hG/g2QJVUJ/75+3X8nYYnGg/oUNHwoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgEPQ6e (ORCPT
+        id S1726425AbgEPRBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 12:58:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbgEPQ6d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 12:58:33 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C456EC061A0C;
-        Sat, 16 May 2020 09:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=bbQ33WbtSFvsxRCkDIlragiDXl1OWmfa4TTs5FuIACg=; b=XWB8nVVv662/mphg0Jh2HbkVI+
-        +K5uoI5x7pxHZR76NkYSBI5gzEj2Zwa1IV/7ZkvRsnmauxN/dRNYpaJr40OFlQBhW61V1j3c8QMFK
-        zvc6etJpZg/M2ku2vVX58KgeKmuBHf6RVz7QZ2d0zk5RG5nvc60bkWFCpMut9jBBy32LqwzvTrcy3
-        m+bJBewURE5kzUIfnAv+oXPVDyGbd9UYJHpwHKvaPDQCcfttDazQZlkoMffKKMgi0oAbKgnsKwb6g
-        Sx0FD4KB8/LZ8CcJVOxjgeU0xP/mo+5gj7umJlBIWIJbmOlUp63EoySQb5DodLN6FREfTLW65BFSa
-        WzFHKO1Q==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ja08p-0000oq-An; Sat, 16 May 2020 16:58:27 +0000
-Subject: Re: [PATCH v5 4/6] partitions/efi: Support GPT entry lookup at a
- non-standard location
-To:     Dmitry Osipenko <digetx@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>,
-        =?UTF-8?Q?Nils_=c3=96stlund?= <nils@naltan.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
-        Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Steve McIntyre <steve@einval.com>,
-        linux-efi <linux-efi@vger.kernel.org>
-References: <20200516153644.13748-1-digetx@gmail.com>
- <20200516153644.13748-5-digetx@gmail.com>
- <2ae298ca-016a-8867-52dd-86d99b9e0f3b@infradead.org>
- <595392b8-d950-4be6-f6cf-e274b4760b94@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4a0f6a9c-b652-598a-c8a0-580a3e98171b@infradead.org>
-Date:   Sat, 16 May 2020 09:58:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 16 May 2020 13:01:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726297AbgEPRBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 13:01:47 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51EF92065C;
+        Sat, 16 May 2020 17:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589648506;
+        bh=7QsFKj7aDiV0u0TfxeKG4ZEc/hLCVajx0FV8HvcbpUs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=o6QAiMzJhMKNwW7prZLLng13R3+ZGftsXinmPSrLyGjXCIC3sAZFRwQ/kZsUdSiAm
+         s8tZrgq0RgWgIpmgiXuXeajgbFAgHUohQsB5/UDAUOfxa9wGyIgmIa6So8GOeuVwMV
+         NO72LkUozyh+2eb0udsHr11RPE36ToA96bGIWeH4=
+Date:   Sat, 16 May 2020 18:01:42 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <olivier.moysan@st.com>,
+        <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH] iio: adc: stm32-adc: fix a wrong error message when
+ probing interrupts
+Message-ID: <20200516180142.5ed10edc@archlinux>
+In-Reply-To: <1589290025-23857-1-git-send-email-fabrice.gasnier@st.com>
+References: <1589290025-23857-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <595392b8-d950-4be6-f6cf-e274b4760b94@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/20 9:50 AM, Dmitry Osipenko wrote:
-> 16.05.2020 18:51, Randy Dunlap пишет:
->> On 5/16/20 8:36 AM, Dmitry Osipenko wrote:
->>> diff --git a/block/partitions/efi.c b/block/partitions/efi.c
->>> index b64bfdd4326c..3af4660bc11f 100644
->>> --- a/block/partitions/efi.c
->>> +++ b/block/partitions/efi.c
->>> @@ -621,6 +621,14 @@ static int find_valid_gpt(struct parsed_partitions *state, gpt_header **gpt,
->>>          if (!good_agpt && force_gpt)
->>>                  good_agpt = is_gpt_valid(state, lastlba, &agpt, &aptes);
->>>  
->>> +	/* The force_gpt_sector is used by NVIDIA Tegra partition parser in
->>> +	 * order to convey a non-standard location of the GPT entry for lookup.
->>> +	 * By default force_gpt_sector is set to 0 and has no effect.
->>> +	 */
->>
->> Please fix the multi-line comment format as described in
->> Documentation/process/coding-style.rst.
->>
->>> +	if (!good_agpt && force_gpt && state->force_gpt_sector)
->>> +		good_agpt = is_gpt_valid(state, state->force_gpt_sector,
->>> +					 &agpt, &aptes);
->>> +
->>>          /* The obviously unsuccessful case */
->>>          if (!good_pgpt && !good_agpt)
->>>                  goto fail;
->>
->> thanks.
->>
-> 
-> Hello Randy,
-> 
-> I know that it's not a proper kernel-style formatting, but that's the
-> style used by the whole efi.c source code and I wanted to maintain the
-> same style, for consistency. Of course I can change to a proper style if
-> it's more desirable than the consistency. Thank you for the comment!
-> 
+On Tue, 12 May 2020 15:27:05 +0200
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-too bad. Sorry to hear that.
-It should have been "fixed" much earlier.
-It's probably too late now.
+> A wrong error message is printed out currently, like on STM32MP15:
+> - stm32-adc-core 48003000.adc: IRQ index 2 not found.
+> 
+> This is seen since commit 7723f4c5ecdb ("driver core: platform: Add an
+> error message to platform_get_irq*()").
+> The STM32 ADC core driver wrongly requests up to 3 interrupt lines. It
+> should request only the necessary IRQs, based on the compatible:
+> - stm32f4/h7 ADCs share a common interrupt
+> - stm32mp1, has one interrupt line per ADC.
+> So add the number of required interrupts to the compatible data.
+> 
+> Fixes: d58c67d1d851 ("iio: adc: stm32-adc: add support for STM32MP1")
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Applied to the fixes-togreg branch of iio.git and marked for stable.
+Whilst it's only an incorrect error message it is likely to make
+people think something is broken, hence the stable marking.
 
--- 
-~Randy
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/stm32-adc-core.c | 34 ++++++++++++++--------------------
+>  1 file changed, 14 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+> index ebe5dbc..3586369 100644
+> --- a/drivers/iio/adc/stm32-adc-core.c
+> +++ b/drivers/iio/adc/stm32-adc-core.c
+> @@ -65,12 +65,14 @@ struct stm32_adc_priv;
+>   * @clk_sel:	clock selection routine
+>   * @max_clk_rate_hz: maximum analog clock rate (Hz, from datasheet)
+>   * @has_syscfg: SYSCFG capability flags
+> + * @num_irqs:	number of interrupt lines
+>   */
+>  struct stm32_adc_priv_cfg {
+>  	const struct stm32_adc_common_regs *regs;
+>  	int (*clk_sel)(struct platform_device *, struct stm32_adc_priv *);
+>  	u32 max_clk_rate_hz;
+>  	unsigned int has_syscfg;
+> +	unsigned int num_irqs;
+>  };
+>  
+>  /**
+> @@ -375,21 +377,15 @@ static int stm32_adc_irq_probe(struct platform_device *pdev,
+>  	struct device_node *np = pdev->dev.of_node;
+>  	unsigned int i;
+>  
+> -	for (i = 0; i < STM32_ADC_MAX_ADCS; i++) {
+> +	/*
+> +	 * Interrupt(s) must be provided, depending on the compatible:
+> +	 * - stm32f4/h7 shares a common interrupt line.
+> +	 * - stm32mp1, has one line per ADC
+> +	 */
+> +	for (i = 0; i < priv->cfg->num_irqs; i++) {
+>  		priv->irq[i] = platform_get_irq(pdev, i);
+> -		if (priv->irq[i] < 0) {
+> -			/*
+> -			 * At least one interrupt must be provided, make others
+> -			 * optional:
+> -			 * - stm32f4/h7 shares a common interrupt.
+> -			 * - stm32mp1, has one line per ADC (either for ADC1,
+> -			 *   ADC2 or both).
+> -			 */
+> -			if (i && priv->irq[i] == -ENXIO)
+> -				continue;
+> -
+> +		if (priv->irq[i] < 0)
+>  			return priv->irq[i];
+> -		}
+>  	}
+>  
+>  	priv->domain = irq_domain_add_simple(np, STM32_ADC_MAX_ADCS, 0,
+> @@ -400,9 +396,7 @@ static int stm32_adc_irq_probe(struct platform_device *pdev,
+>  		return -ENOMEM;
+>  	}
+>  
+> -	for (i = 0; i < STM32_ADC_MAX_ADCS; i++) {
+> -		if (priv->irq[i] < 0)
+> -			continue;
+> +	for (i = 0; i < priv->cfg->num_irqs; i++) {
+>  		irq_set_chained_handler(priv->irq[i], stm32_adc_irq_handler);
+>  		irq_set_handler_data(priv->irq[i], priv);
+>  	}
+> @@ -420,11 +414,8 @@ static void stm32_adc_irq_remove(struct platform_device *pdev,
+>  		irq_dispose_mapping(irq_find_mapping(priv->domain, hwirq));
+>  	irq_domain_remove(priv->domain);
+>  
+> -	for (i = 0; i < STM32_ADC_MAX_ADCS; i++) {
+> -		if (priv->irq[i] < 0)
+> -			continue;
+> +	for (i = 0; i < priv->cfg->num_irqs; i++)
+>  		irq_set_chained_handler(priv->irq[i], NULL);
+> -	}
+>  }
+>  
+>  static int stm32_adc_core_switches_supply_en(struct stm32_adc_priv *priv,
+> @@ -824,6 +815,7 @@ static const struct stm32_adc_priv_cfg stm32f4_adc_priv_cfg = {
+>  	.regs = &stm32f4_adc_common_regs,
+>  	.clk_sel = stm32f4_adc_clk_sel,
+>  	.max_clk_rate_hz = 36000000,
+> +	.num_irqs = 1,
+>  };
+>  
+>  static const struct stm32_adc_priv_cfg stm32h7_adc_priv_cfg = {
+> @@ -831,6 +823,7 @@ static const struct stm32_adc_priv_cfg stm32h7_adc_priv_cfg = {
+>  	.clk_sel = stm32h7_adc_clk_sel,
+>  	.max_clk_rate_hz = 36000000,
+>  	.has_syscfg = HAS_VBOOSTER,
+> +	.num_irqs = 1,
+>  };
+>  
+>  static const struct stm32_adc_priv_cfg stm32mp1_adc_priv_cfg = {
+> @@ -838,6 +831,7 @@ static const struct stm32_adc_priv_cfg stm32mp1_adc_priv_cfg = {
+>  	.clk_sel = stm32h7_adc_clk_sel,
+>  	.max_clk_rate_hz = 40000000,
+>  	.has_syscfg = HAS_VBOOSTER | HAS_ANASWVDD,
+> +	.num_irqs = 2,
+>  };
+>  
+>  static const struct of_device_id stm32_adc_of_match[] = {
 
