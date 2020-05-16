@@ -2,122 +2,134 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 01:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 01:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C038207C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 01:42:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="AH0puOca"
+	by mail.kernel.org (Postfix) with ESMTP id 0DF5C2076A
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 01:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgEPBmv (ORCPT
+        id S1727825AbgEPBqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 21:42:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgEPBmv (ORCPT
+        Fri, 15 May 2020 21:46:18 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37719 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbgEPBqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 21:42:51 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14A3C05BD09
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 18:42:49 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y3so5534810wrt.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 18:42:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kS8OYMG072jDcI6wkY/z+PD46Du/tMZhKnhnXKRsoeo=;
-        b=AH0puOca79INHP4Gyjk8o8AyxnmdUlm/s7CIZkXpa4xvSasJLmdH8L2vWT0y+OPoA2
-         I0dBbUpqu90pgUFRkEbf4DKo2KVJwQ7QIFWnpt9s6w4TNSbgkI5skacNqeGVjFYdGK2v
-         XfuM/QsPsOjBfWclFvjZVsVcN2YdvdcuqqfPA=
+        Fri, 15 May 2020 21:46:17 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f23so1849791pgj.4;
+        Fri, 15 May 2020 18:46:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kS8OYMG072jDcI6wkY/z+PD46Du/tMZhKnhnXKRsoeo=;
-        b=kwzN2ucMogYCs8d/uPf/Lv66Wnuz+VhIsJz2xVEDP8YNY+hcbv1Snp0NFVU85yGPr8
-         950PonkFBqSgU1CUanKCT+h+pGqDMMzoxxxC1C7gGqb8MgZiqm3b4UhlcSaXJjO7tcsj
-         UR7diSNyd6qayx9VEAeEbAa2wDKFrZeBkpWHeCLPbkXRq+sUR+MUk44hnY6tmBo2goHU
-         Ac3Zua9vmY4uerIMDXcZ7aO9PcdryUHaK0PV/AtedexJFFlsBebHcx7qfwjMD7EXAVXI
-         d2ud5GJRWAqXW1i1sC+cBwqaSbhruMh4G1uNG0yarL8HFxcoNTDMujvIvQ5UGzJ/V10o
-         PjXA==
-X-Gm-Message-State: AOAM531tfjubSjy98XZKrGrSUq4dJqXuZT+FCZa09RGFAgx8Sp/xCC1D
-        4hB0fMB24fHE8UIl70Wibk9SbQ==
-X-Google-Smtp-Source: ABdhPJygr4YRwvdn5bQj/+FRk7Jk9MpKoXCmkZ5L4Hgg+hvUMxR3NbMw1h1nDwgPO85GahUNXx18VA==
-X-Received: by 2002:adf:9b91:: with SMTP id d17mr6892266wrc.183.1589593368152;
-        Fri, 15 May 2020 18:42:48 -0700 (PDT)
-Received: from localhost ([2a01:4b00:8432:8a00:56e1:adff:fe3f:49ed])
-        by smtp.gmail.com with ESMTPSA id x5sm6315441wro.12.2020.05.15.18.42.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 18:42:47 -0700 (PDT)
-Date:   Sat, 16 May 2020 02:42:47 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Mel Gorman <mgorman@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] memcg: expose root cgroup's memory.stat
-Message-ID: <20200516014247.GA8578@chrisdown.name>
-References: <20200508170630.94406-1-shakeelb@google.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ozaQPfbwUuNVUGa/T9+ig8Jwi6csJDZ7UY/cyZqf/Zk=;
+        b=ZoRZEvRuqExrNalOGEy/C7u7/CWDs8/fKqudD2SiEQK0uQoeQJUenSkF2upp+dyJXY
+         vSAAj/s2xpIyXmNj0di0RX2wkiQNCfKpd4g+8BcRNRMIxHXNtQifvvNwQqfv2dVZSwbV
+         jTnsjOQc6OaeU5YkzM5FqkpL8WWgs4cm7jt9qIocqriDWTG4X7tARTJ4WGSVOIHQVtcg
+         ClQV/JViDKhGat5ykR40isz40xKtefI6tpoTxcOPbmvjTtwX5u37gyIhpYhEC9JPJE++
+         PeXnoU84Xo3ekB2EAdN04EkOUaGH+Dt3AOfrYIGrrVwYqG/GG/RUXFNR278UXXoX0rdO
+         /wkA==
+X-Gm-Message-State: AOAM5323OntGFKhjoufxusA1ydsh+v1cT7FZqC2nJOg7T6CSguBVpW0u
+        iX2rH9JTRJCP44k0qL8jdm0=
+X-Google-Smtp-Source: ABdhPJxjiqpibobSqV5W7xM1pKavxEjCXdRAST5Y1tkkF8km7GRnO8/rMGGyVxOtjJ3WrDqt0Xy0bA==
+X-Received: by 2002:a65:6703:: with SMTP id u3mr5635547pgf.179.1589593575577;
+        Fri, 15 May 2020 18:46:15 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:f99a:ee92:9332:42a? ([2601:647:4000:d7:f99a:ee92:9332:42a])
+        by smtp.gmail.com with ESMTPSA id r21sm2431204pjo.2.2020.05.15.18.46.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2020 18:46:14 -0700 (PDT)
+Subject: Re: [RFC PATCH 02/13] scsi: ufshpb: Init part I - Read HPB config
+To:     Avri Altman <avri.altman@wdc.com>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     alim.akhtar@samsung.com, asutoshd@codeaurora.org,
+        Zang Leigang <zangleigang@hisilicon.com>,
+        Avi Shchislowski <avi.shchislowski@wdc.com>,
+        Bean Huo <beanhuo@micron.com>, cang@codeaurora.org,
+        stanley.chu@mediatek.com,
+        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>
+References: <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
+ <1589538614-24048-3-git-send-email-avri.altman@wdc.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <6aaf9bd5-44f5-f523-5aaf-23e3fe784055@acm.org>
+Date:   Fri, 15 May 2020 18:46:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200508170630.94406-1-shakeelb@google.com>
+In-Reply-To: <1589538614-24048-3-git-send-email-avri.altman@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Shakeel,
+On 2020-05-15 03:30, Avri Altman wrote:
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 426073a..bffe699 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -50,6 +50,7 @@
+>  #include "ufs_bsg.h"
+>  #include <asm/unaligned.h>
+>  #include <linux/blkdev.h>
+> +#include "ufshpb.h"
+>  
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/ufs.h>
+> @@ -7341,6 +7342,9 @@ static int ufshcd_add_lus(struct ufs_hba *hba)
+>  		hba->clk_scaling.is_allowed = true;
+>  	}
+>  
+> +	if (ufshcd_is_hpb_supported(hba))
+> +		ufshpb_probe(hba);
+> +
+>  	ufs_bsg_probe(hba);
+>  	scsi_scan_host(hba->host);
+>  	pm_runtime_put_sync(hba->dev);
 
-Shakeel Butt writes:
->One way to measure the efficiency of memory reclaim is to look at the
->ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
->not updated consistently at the system level and the ratio of these are
->not very meaningful. The pgsteal and pgscan are updated for only global
->reclaim while pgrefill gets updated for global as well as cgroup
->reclaim.
->
->Please note that this difference is only for system level vmstats. The
->cgroup stats returned by memory.stat are actually consistent. The
->cgroup's pgsteal contains number of reclaimed pages for global as well
->as cgroup reclaim. So, one way to get the system level stats is to get
->these stats from root's memory.stat, so, expose memory.stat for the root
->cgroup.
->
->	from Johannes Weiner:
->	There are subtle differences between /proc/vmstat and
->	memory.stat, and cgroup-aware code that wants to watch the full
->	hierarchy currently has to know about these intricacies and
->	translate semantics back and forth.
->
->	Generally having the fully recursive memory.stat at the root
->	level could help a broader range of usecases.
->
->Signed-off-by: Shakeel Butt <shakeelb@google.com>
->Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+This looks weird to me because of the following reasons:
+- If there are direct calls from the ufshcd module into the ufshpb
+  module and if there are direct calls from the ufshpb module into the
+  ufshcd module, why has ufshpb been implemented as a kernel module? Or
+  in other words, will it ever be possible to load the ufshcd module
+  without loading the ufshpb module?
+- Patch 3/13 makes ufshpb a device handler. There are no direct calls
+  from any upstream SCSI LLD to any upstream device handler. However,
+  this patch adds a direct call from the ufshcd module to the ufshpb
+  module which is a device handler.
 
-The patch looks great, thanks. To that extent you can add my ack:
-
-Acked-by: Chris Down <chris@chrisdown.name>
-
-One concern about the API now exposed, though: to a new cgroup v2 user this 
-looks fairly dodgy as a sole stat file (except for cgroup.stat) at the root. If 
-I used cgroup v2 for the first time and only saw memory.stat and cgroup.stat 
-there, but for some reason io.stat and cpu.stat are not available at the root 
-but are available everywhere else, I think my first thought would be that the 
-cgroup v2 developers must have been on some strong stuff when they came up with 
-this ;-)
-
-Even if they're only really duplicating information available elsewhere right 
-now, have you considered exposing the rest of the stat files as well so that 
-the API maintains a bit more consistency? As a bonus, that also means userspace 
-applications can parse in the same way from the root down.
+Bart.
