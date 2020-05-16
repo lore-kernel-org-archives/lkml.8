@@ -2,266 +2,140 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB99C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E52BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E91512074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A6120728
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:58:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgEPCxA (ORCPT
+        id S1727943AbgEPC6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 22:53:00 -0400
-Received: from mga07.intel.com ([134.134.136.100]:55739 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726247AbgEPCw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 22:52:59 -0400
-IronPort-SDR: YeiR2Cr4J9OpIq20Ta9LO7obn55BihhIVXXh82bqsR02Qo/sMgW6wOPnwGArZqHsuMRRIwh7OW
- qT5yave6moPg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 19:52:57 -0700
-IronPort-SDR: YnrVORV/knOGlbeNU6BZCBYP5GcHlHUGGnSF7o0Gi7lQdW0ekaqXVlowPOSm6YwAS/gZbnt+RM
- DNBWxrSeV5tQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,397,1583222400"; 
-   d="scan'208";a="438530935"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga005.jf.intel.com with ESMTP; 15 May 2020 19:52:56 -0700
-Message-ID: <0f751be6d25364c25ee4bddc425b61e626dcd942.camel@intel.com>
-Subject: Re: [PATCH v10 01/26] Documentation/x86: Add CET description
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Date:   Fri, 15 May 2020 19:53:01 -0700
-In-Reply-To: <631f071c-c755-a818-6a97-b333eb1fe21c@intel.com>
-References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
-         <20200429220732.31602-2-yu-cheng.yu@intel.com>
-         <b5197a8d-5d8b-e1f7-68d4-58d80261904c@intel.com>
-         <dd5b9bab31ecf247a0b4890e22bfbb486ff52001.camel@intel.com>
-         <5cc163ff9058d1b27778e5f0a016c88a3b1a1598.camel@intel.com>
-         <b0581ddc-0d99-cbcf-278e-0be55ba939a0@intel.com>
-         <44c055342bda4fb4730703f987ae35195d1d0c38.camel@intel.com>
-         <32235ffc-6e6c-fb3d-80c4-a0478e2d0e0f@intel.com>
-         <b09658f92eb66c1d1be509813939b9ed827f9cf0.camel@intel.com>
-         <631f071c-c755-a818-6a97-b333eb1fe21c@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Fri, 15 May 2020 22:58:32 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2077 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726247AbgEPC6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 22:58:32 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id D8266FC0081E0A754E42;
+        Sat, 16 May 2020 10:58:28 +0800 (CST)
+Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Sat, 16 May 2020 10:58:28 +0800
+Received: from [10.173.219.71] (10.173.219.71) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Sat, 16 May 2020 10:58:28 +0800
+Subject: Re: [PATCH net-next] hinic: add set_channels ethtool_ops support
+To:     Michal Kubecek <mkubecek@suse.cz>, <netdev@vger.kernel.org>
+CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
+        <cloud.wangxiaoyun@huawei.com>
+References: <20200515003547.27359-1-luobin9@huawei.com>
+ <20200515181330.GC21714@lion.mk-sys.cz>
+From:   "luobin (L)" <luobin9@huawei.com>
+Message-ID: <595eb127-53ce-dea7-7289-78f53fd8d6bc@huawei.com>
+Date:   Sat, 16 May 2020 10:58:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20200515181330.GC21714@lion.mk-sys.cz>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.173.219.71]
+X-ClientProxiedBy: dggeme711-chm.china.huawei.com (10.1.199.107) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-15 at 16:56 -0700, Dave Hansen wrote:
-> On 5/15/20 4:29 PM, Yu-cheng Yu wrote:
-> > On Fri, 2020-05-15 at 15:43 -0700, Dave Hansen wrote:
-> > > Basically, if there ends up being a bug in an app that violates the
-> > > shadow stack rules, the app is broken, period.  The only recourse is to
-> > > have the kernel disable CET and reboot.
-> > > 
-> > > Is that right?
-> > 
-> > You must be talking about init or any of the system daemons, right?
-> > Assuming we let the app itself start CET with an arch_prctl(), why would that be
-> > different from the current approach?
-> 
-> You're getting ahead of me a bit here.
-> 
-> I'm actually not asking directly about the prctls() or advocating for a
-> different approach.  The MPX approach of _requiring the app to make a
-> prctl() was actually pretty nasty because sometimes threads got created
-> before the prctl() could get called.  Apps ended up inadvertently
-> half-MPX-enabled.  Not fun.
-> 
-> Let's say we have an app doing silly things like retpolines.  (Lots of
-> app do lots of silly things).  It gets compiled in a distro but never
-> runs on a system with CET.  The app gets run for the first time on a
-> system with CET.  App goes boom.  Not init, just some random app, say
-> /usr/bin/ldapsearch.
-> 
-> What's my recourse as an end user?  I want to run my app and turn off
-> CET for that app.  How can I do that?
 
-GLIBC_TUNABLES=glibc.tune.hwcaps=-SHSTK,-IBT
-
-> > > > > Can a binary compiled without CET run CET-enabled code?
-> > > > 
-> > > > Partially yes, but in reality somewhat difficult.
-> > > ...
-> > > > - If a not-CET application does fork(), and the child wants to turn on CET, it
-> > > > would be difficult to manage the stack frames, unless the child knows what is is
-> > > > doing.  
-> > > 
-> > > It might be hard to do, but it is possible with the patches you posted?
-> > 
-> > It is possible to add an arch_prctl() to turn on CET.  That is simple from the
-> > kernel's perspective, but difficult for the application.  Once the app enables
-> > shadow stack, it has to take care not to return beyond the function call layers
-> > before that point.  It can no longer do longjmp or ucontext swaps to anything
-> > before that point.  It will also be complicated if the app enables shadow stack
-> > in a signal handler.
-> 
-> Yu-cheng, I'm having a very hard time getting direct answers to my
-> questions.  Could you endeavor to give succinct, direct answers?  If you
-> want to give a longer, conditioned answer, that's great.  But, I'd
-> appreciate if you could please focus first on clearly answering the
-> questions that I'm asking.
-> 
-> Let me try again:
-> 
-> 	Is it possible with the patches in this series to run a single-
-> 	threaded binary which was has GNU_PROPERTY_X86_FEATURE_1_SHSTK
-> 	unset to run with shadow stack protection?
-> 
-> I think the answer is an unambiguous: "No".  But I'd like to hear it
-> from you.
-
-No!
-
-> > >  I think you're saying that the CET-enabled binary would do
-> > > arch_setup_elf_property() when it was first exec()'d.  Later, it could
-> > > use the new prctl(ARCH_X86_CET_DISABLE) to disable its shadow stack,
-> > > then fork() and the child would not be using CET.  Right?
-> > > 
-> > > What is ARCH_X86_CET_DISABLE used for, anyway?
-> > 
-> > Both the parent and the child can do ARCH_X86_CET_DISABLE, if CET is
-> > not locked.
-> 
-> Could you please describe a real-world example of why
-> ARCH_X86_CET_DISABLE exists?  What kinds of apps will use it, or *are*
-> using it?  Why was it created in the first place?
-
-Currently, ld-linux turns off CET if the binary being loaded does not support
-CET.
-
-> > > > The JIT examples I mentioned previously run with CET enabled from the
-> > > > beginning.  Do you have a reason to do this?  In other words, if the JIT code
-> > > > needs CET, the app could have started with CET in the first place.
-> > > 
-> > > Let's say I have a JIT'd sandbox.  I want the sandbox to be
-> > > CET-protected, but the JIT engine itself not to be.
-> > 
-> > I do not have any objections to this use case, but it needs some cautions as
-> > stated above.  It will be much easier and cleaner if the sandbox is in a
-> > separate exec'ed task with CET on.
-> 
-> OK, great suggestion!  Could you do some research and look at the
-> various sandboxing techniques?  Is imposing this requirement for a
-> separate exec'd task reasonable?  Does it fit nicely with their existing
-> models?  How about the Chrome browser and Firefox sandboxs?
-
-I will check.
-
-> > > > > Does this *code* work?  Could you please indicate which JITs have been
-> > > > > enabled to use the code in this series?  How much of the new ABI is in use?
-> > > > 
-> > > > JIT does not necessarily use all of the ABI.  The JIT changes mainly fix stack
-> > > > frames and insert ENDBRs.  I do not work on JIT.  What I found is LLVM JIT fixes
-> > > > are tested and in the master branch.  Sljit fixes are in the release.
-> > > 
-> > > Huh, so who is using the new prctl() ABIs?
-> > 
-> > Any code can use the ABI, but JIT code CET-enabling part mostly do not use these
-> > new prctl()'s, except, probably to get CET status.
-> 
-> Which applications specifically are going to use the new prctl()s which
-> this series adds?  How are they going to use them?
-> 
-> "Any code can use them" is not a specific enough answer.
-
-We have four arch_ptctl() calls.  ARCH_X86_CET_DISABLE and ARCH_X86_CET_LOCK are
-used by ld-linux.  ARCH_X86_CET_STATUS are used in many places to determine if
-CET is on.  ARCH_X86_CET_ALLOC_SHSTK is used in ucontext related handling, but
-it can be use by any application to switch shadow stacks.
-
-> > > > > Where are the selftests/ for this new ABI?  Were you planning on
-> > > > > submitting any with this series?
-> > > > 
-> > > > The ABI is more related to the application side, and therefore most suitable for
-> > > > GLIBC unit tests.
-> > > 
-> > > I was mostly concerned with the kernel selftests.  The things in
-> > > tools/testing/selftests/x86 in the kernel tree.
-> > 
-> > I have run them with CET enabled.  All of them pass, except for the following:
-> > Sigreturn from 64-bit to 32-bit fails, because shadow stack is at a 64-bit
-> > address.  This is understandable.
-> 
-> That is not what I meant.  I'm going to be as explicit:
-> 
-> I expect you to create a test case which you will submit with these
-> patches and the test case will go into the tools/testing/selftests/x86
-> directory in the kernel tree.  This test case will exercise the kernel
-> functionality added in this series, especially the new prctl()s.
-
-I will submit the test case as a separate patch in response to this discussion,
-and combine with the series when the discussion concludes.
-
-> One a separate topic: You ran the selftests and one failed.  This is a
-> *MASSIVE* warning sign.  It should minimally be described in your cover
-> letter, and accompanied by a fix to the test case.  It is absolutely
-> unacceptable to introduce a kernel feature that causes a test to fail.
-> You must either fix your kernel feature or you fix the test.
-> 
-> This code can not be accepted until this selftests issue is rectified.
-
-Sure, I will do that.
-
-> 
-> > > > The more complicated areas such as pthreads, signals, ucontext,
-> > > > fork() are all included there.  I have been constantly running these 
-> > > > tests without any problems.  I can provide more details if testing is
-> > > > the concern.
-> > > 
-> > > For something this complicated, with new kernel ABIs, we need an
-> > > in-kernel sefltest.
-> > > 
-> > > MPX was not that much different from this feature.  It required a
-> > > boatload of compiler and linker changes to function.  Yet, there was a
-> > > simple in-kernel test for it that didn't require *any* of that big pile
-> > > of toolchain bits.
-> > > 
-> > > Is there a reason we don't have one of those for CET?
-> > 
-> > I have a quick test that checks shadow stack and ibt in both main program and in
-> > signals.  Currently it is public on Github.  If that is desired, I can submit it
-> > to the mailing list.
-> 
-> Yes, that is desired.  It must accompany this submission.  It must also
-> exercise all of the new ABIs.
-
-Ok.
-
-Yu-cheng
-
+On 2020/5/16 2:13, Michal Kubecek wrote:
+> On Fri, May 15, 2020 at 12:35:47AM +0000, Luo bin wrote:
+>> add support to change TX/RX queue number with ethtool -L
+>>
+>> Signed-off-by: Luo bin <luobin9@huawei.com>
+>> ---
+>>   .../net/ethernet/huawei/hinic/hinic_ethtool.c | 67 +++++++++++++++++--
+>>   .../net/ethernet/huawei/hinic/hinic_hw_dev.c  |  7 ++
+>>   .../net/ethernet/huawei/hinic/hinic_hw_dev.h  |  2 +
+>>   .../net/ethernet/huawei/hinic/hinic_main.c    |  5 +-
+>>   drivers/net/ethernet/huawei/hinic/hinic_tx.c  |  5 ++
+>>   5 files changed, 79 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+>> index ace18d258049..92a0e3bd19c3 100644
+>> --- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+>> +++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+>> @@ -619,14 +619,68 @@ static void hinic_get_channels(struct net_device *netdev,
+>>   	struct hinic_dev *nic_dev = netdev_priv(netdev);
+>>   	struct hinic_hwdev *hwdev = nic_dev->hwdev;
+>>   
+>> -	channels->max_rx = hwdev->nic_cap.max_qps;
+>> -	channels->max_tx = hwdev->nic_cap.max_qps;
+>> +	channels->max_rx = 0;
+>> +	channels->max_tx = 0;
+>>   	channels->max_other = 0;
+>> -	channels->max_combined = 0;
+>> -	channels->rx_count = hinic_hwdev_num_qps(hwdev);
+>> -	channels->tx_count = hinic_hwdev_num_qps(hwdev);
+>> +	channels->max_combined = nic_dev->max_qps;
+>> +	channels->rx_count = 0;
+>> +	channels->tx_count = 0;
+>>   	channels->other_count = 0;
+>> -	channels->combined_count = 0;
+>> +	channels->combined_count = hinic_hwdev_num_qps(hwdev);
+>> +}
+>> +
+>> +int hinic_set_channels(struct net_device *netdev,
+>> +		       struct ethtool_channels *channels)
+>> +{
+>> +	struct hinic_dev *nic_dev = netdev_priv(netdev);
+>> +	unsigned int count = channels->combined_count;
+>> +	int err;
+>> +
+>> +	if (!count) {
+>> +		netif_err(nic_dev, drv, netdev,
+>> +			  "Unsupported combined_count: 0\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (channels->tx_count || channels->rx_count || channels->other_count) {
+>> +		netif_err(nic_dev, drv, netdev,
+>> +			  "Setting rx/tx/other count not supported\n");
+>> +		return -EINVAL;
+>> +	}
+> With max_* reported as 0, these will be caught in ethnl_set_channels()
+> or ethtool_set_channels().
+> ---Will fix. Thanks
+>> +	if (!(nic_dev->flags & HINIC_RSS_ENABLE)) {
+>> +		netif_err(nic_dev, drv, netdev,
+>> +			  "This function doesn't support RSS, only support 1 queue pair\n");
+>> +		return -EOPNOTSUPP;
+>> +	}
+> I'm not sure if the request should fail even if requested count is
+> actually 1.
+>
+>> +	if (count > nic_dev->max_qps) {
+>> +		netif_err(nic_dev, drv, netdev,
+>> +			  "Combined count %d exceeds limit %d\n",
+>> +			  count, nic_dev->max_qps);
+>> +		return -EINVAL;
+>> +	}
+> As above, this check has been already performed in ethnl_set_channels()
+> or ethtool_set_channels().
+> ---Will fix. Thanks
+>> +	netif_info(nic_dev, drv, netdev, "Set max combined queue number from %d to %d\n",
+>> +		   hinic_hwdev_num_qps(nic_dev->hwdev), count);
+> We have netlink notifications now, is it necessary to log successful
+> changes?
+> ---I think it contributes to locating defects for developers.
+>
+> Michal
+> .
