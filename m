@@ -2,112 +2,116 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78903C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F0CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA562074A
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56791206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:23:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eSX2O0XY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQwc7OQZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgEPEOH (ORCPT
+        id S1726208AbgEPEXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 00:14:07 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52300 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725803AbgEPEOH (ORCPT
+        Sat, 16 May 2020 00:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725275AbgEPEXN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 00:14:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589602446;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=EuAgvOaqRInTUNhLQNW9x4ROuhA10g3Sfi1G9i+YTz0=;
-        b=eSX2O0XYNpZGJbwc9ApbVPA33Qnc3yFBC51kCcWTNx6n6h3Xkwa2GE99CYtrNdf/kxm/zZ
-        L78lLYHFR2oEebz4P0KHifIjpdkeDFPA2DalMiAchLf73fBjA0J0TlBKSHOjS+xpanbThB
-        oDzQFdX7G1j0G+NsIJELl683Dqdsp2g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-248-iKzLjf_JMVikURnUgz8A6w-1; Sat, 16 May 2020 00:14:02 -0400
-X-MC-Unique: iKzLjf_JMVikURnUgz8A6w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97882835B43;
-        Sat, 16 May 2020 04:13:59 +0000 (UTC)
-Received: from x1-fbsd (unknown [10.3.128.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1199C3A2;
-        Sat, 16 May 2020 04:13:47 +0000 (UTC)
-Date:   Sat, 16 May 2020 00:13:44 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
-        rostedt@goodmis.org, mingo@redhat.com, cai@lca.pw,
-        dyoung@redhat.com, bhe@redhat.com, peterz@infradead.org,
-        tglx@linutronix.de, gpiccoli@canonical.com, pmladek@suse.com,
-        tiwai@suse.de, schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Lennert Buytenhek <buytenh@wantstofly.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Subject: Re: [PATCH v2 15/15] mwl8k: use new module_firmware_crashed()
-Message-ID: <20200516041344.GO3182@x1-fbsd>
-References: <20200515212846.1347-1-mcgrof@kernel.org>
- <20200515212846.1347-16-mcgrof@kernel.org>
+        Sat, 16 May 2020 00:23:13 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9A0C061A0C;
+        Fri, 15 May 2020 21:23:12 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t16so1752047plo.7;
+        Fri, 15 May 2020 21:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OEbwsoaIcCQ4y8nX9CNRFLXSvzUNmbajCyzAAZz+JCQ=;
+        b=pQwc7OQZ3rtpfftGLFLVGY4y3q033b7NvjPTHqTWGp38v5/q+pSlYTxQ+94qxbdP5b
+         Zd70wtp902/pB3pzBoWRiPty2nvL7PCf8tiLh4pUhdav2+ELgKksaRc5v3dr8GggRrsj
+         1RF3XFvOhQfAiCvyydbYIbqv+gJBwpL7YspXlUirnbR3gQ/qSA801ZBE78iXr6MDqMqY
+         6nRJSUqFJm7iVGEz7geJmTmYpZuWfpQIIUaqiH4HK9a8LLX/F4jNBb1zmbV0Ctq+Ip1D
+         zdnFxprUWamkRp/43Aof9bRkdeyiWtsb5NfjcHywsNH1diI+rt6GSwQEtIzKBsMveh0O
+         QFMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OEbwsoaIcCQ4y8nX9CNRFLXSvzUNmbajCyzAAZz+JCQ=;
+        b=ktBECvp/740AQNl+aeWKMHXU0tg7ltcWFaZ+uG4L3vVGe7bxHaIpCbPfrx56pTc3qN
+         kgOz1rzub4Bt4ELAalV4PBuugiK6aGyoMjyGdsW0sN09Jd821Asb7wX/C9FAkLTZdJ3T
+         vCT4/26jX06MBnffMpwilOS2NuowaN3HRFcDeTyTiLEKDtzyPPkF+dB0JhkA4aQ6mFM5
+         Q6wnXJZ/zra5/Ea2Bel/sFC4pNi43zJ6kGYmfN+BwB/OZhyk+2ZNLuHd0LpLPYHvS0PB
+         kkWTeKJe6YoEb3zknEQoUI+OnrnwDpcidei/R4ziFDW7l+Ss3njCk2TMwAYHpffX3Y2g
+         FXxg==
+X-Gm-Message-State: AOAM533v4wjFyEbf4Rpu8Bly8ixs6f2OGCafuL87W+5MVeWnVaSvR00N
+        xLEBa4VF8tpEddOaxsdkZblTfmA3
+X-Google-Smtp-Source: ABdhPJzPzhcBZlRBUKU1oBCmskE7TfbETcrLnUkLn/PjCMvGULNr+qVI6ZvaXshdd/gkV10B9Fp9Vw==
+X-Received: by 2002:a17:902:bd87:: with SMTP id q7mr6582092pls.92.1589602991273;
+        Fri, 15 May 2020 21:23:11 -0700 (PDT)
+Received: from squirtle.lan (c-67-165-113-11.hsd1.wa.comcast.net. [67.165.113.11])
+        by smtp.gmail.com with ESMTPSA id 196sm2862590pfx.105.2020.05.15.21.23.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 21:23:10 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-crypto@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Fabio Estevam <festevam@gmail.com>, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: caam - make soc match data optional
+Date:   Fri, 15 May 2020 21:23:03 -0700
+Message-Id: <20200516042303.6070-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515212846.1347-16-mcgrof@kernel.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 09:28:46PM +0000, Luis Chamberlain wrote:
-> This makes use of the new module_firmware_crashed() to help
-> annotate when firmware for device drivers crash. When firmware
-> crashes devices can sometimes become unresponsive, and recovery
-> sometimes requires a driver unload / reload and in the worst cases
-> a reboot.
-> 
-> Using a taint flag allows us to annotate when this happens clearly.
-> 
-> Cc: linux-wireless@vger.kernel.org
-> Cc: Lennert Buytenhek <buytenh@wantstofly.org>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->  drivers/net/wireless/marvell/mwl8k.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/wireless/marvell/mwl8k.c b/drivers/net/wireless/marvell/mwl8k.c
-> index 97f23f93f6e7..d609ef1bb879 100644
-> --- a/drivers/net/wireless/marvell/mwl8k.c
-> +++ b/drivers/net/wireless/marvell/mwl8k.c
-> @@ -1551,6 +1551,7 @@ static int mwl8k_tx_wait_empty(struct ieee80211_hw *hw)
->  	 * the firmware has crashed
->  	 */
->  	if (priv->hw_restart_in_progress) {
-> +		module_firmware_crashed();
->  		if (priv->hw_restart_owner == current)
->  			return 0;
->  		else
-> -- 
-> 2.26.2
-> 
-Acked-by: Rafael Aquini <aquini@redhat.com>
+Vyrbrid devices don't have any clock that need to be taken care of, so
+make clock data optional on i.MX.
 
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Horia Geantă <horia.geanta@nxp.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: linux-imx@nxp.com
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/crypto/caam/ctrl.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+index 4fcdd262e581..6aba430793cc 100644
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -630,12 +630,7 @@ static int caam_probe(struct platform_device *pdev)
+ 	imx_soc_match = soc_device_match(caam_imx_soc_table);
+ 	caam_imx = (bool)imx_soc_match;
+
+-	if (imx_soc_match) {
+-		if (!imx_soc_match->data) {
+-			dev_err(dev, "No clock data provided for i.MX SoC");
+-			return -EINVAL;
+-		}
+-
++	if (imx_soc_match && imx_soc_match->data) {
+ 		ret = init_clocks(dev, imx_soc_match->data);
+ 		if (ret)
+ 			return ret;
+--
+2.21.3
