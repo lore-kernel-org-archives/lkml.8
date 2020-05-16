@@ -2,135 +2,75 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9526FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D91AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6A9206F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:22:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSHTwd5e"
+	by mail.kernel.org (Postfix) with ESMTP id 7882520728
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:23:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589617396;
+	bh=POWNJDuIU59kAO0d0Yb2/1xXBCdN+4we4QtCfOpiVNA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r95nozAoQIgZLDD2rFTxpkDorDMoCSZLP/DBBWXzsvsQIsC/sYIfAEZsOICsCS7nO
+	 zDPZ4gp1e3BXSN3wGdhkv5wz9j+JrVirIwRvf2cogBJ12oZuDyDqPQsQXOks33vLO/
+	 rhAl1LxnM7v/H9vbmL2bodif11vTgPoHCRjWXIPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgEPIWk (ORCPT
+        id S1726984AbgEPIXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 04:22:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgEPIWj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 04:22:39 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1F44C061A0C;
-        Sat, 16 May 2020 01:22:39 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id fu13so2110384pjb.5;
-        Sat, 16 May 2020 01:22:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=n8zeuSyWYmnUTCcGG4KcbVscwA04lg+t/YXhdGOdoRk=;
-        b=kSHTwd5eDGUl/K2MsusgZkFTMR3AophuUBe1kXDJlVfE5ua9O9OGjGOTYBUA3y5LCn
-         8hfYpuOH9CiRvEIBKKz0DdncM80p7x2LCzSJsHtx9GOPiVNuYor8fBKkYpooLG+K18tI
-         8c2l3vKaAQh3GcMZwwMvWipE1/aFXrVcw2aOz/ihBV690LmRmrcCqn4JXXF9u7tpAnRQ
-         ymfsLBjAXaAY2/IYj7vPtMnKY5CNAK5wHgJ846IwYx/qZmLwhq4NKXE0mqvPU0LgGQxw
-         YgOazcAPN8DRZkJWwS5Ds8FcdLH04a4/lCqZhFVRLctKTXmMN+hM+6Jb5xlsWjDkNWYd
-         sudg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=n8zeuSyWYmnUTCcGG4KcbVscwA04lg+t/YXhdGOdoRk=;
-        b=ZB79viSLq4sH6E9R2OfAZX+sXv20vMHAhBRN1KEcHy0lqX61n3eaDaT2e8PlP586ic
-         /RQV/Y/P6UShlsgQlFN+Ia2LH05DCTt7pvhorEZEDY+dVljlq0OIni6DLi98G3l6wSFq
-         T70fLxlpnXt9R3EKU3jW0UwZ4X2gqGsMEHbcoZdFOiG9oHOab43Qc+AzlEmNzJhvbyZW
-         GtxEqU1HTEFfDPTA8AXwDK7h1wQe74FtLoJ03UwQDpFwtmeiAOihfXY26VrsX+osLhYB
-         /GgrCy2m3lWMBfdmsEr8A8+SBRGYixP2f4MhfhWqq9Daa05C1CRUezVfS9W3FY6WcbD8
-         itug==
-X-Gm-Message-State: AOAM531pT426NTHMwnz7c8aDkkVlqKw35TmUUt/HwKVZtK2KLtzLy2j3
-        7612Q/Qxo2YMMJ0h+8Vujg==
-X-Google-Smtp-Source: ABdhPJy0lauqLn17lbGE3w8KJHGHD9NuhDV2LLqXRRaRQTMDJP5PCGFyuaHLhQCh2EmHugUqCHILZg==
-X-Received: by 2002:a17:90b:1492:: with SMTP id js18mr1459691pjb.212.1589617359233;
-        Sat, 16 May 2020 01:22:39 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:13a5:a61b:b5d4:b438:1bc1:57f3])
-        by smtp.gmail.com with ESMTPSA id j7sm3695288pfi.160.2020.05.16.01.22.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 May 2020 01:22:38 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        tglx@linutronix.de, bp@alien8.de
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org, paulmck@kernel.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH v2] kvm: Fix false positive RCU usage warning
-Date:   Sat, 16 May 2020 13:52:27 +0530
-Message-Id: <20200516082227.22194-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 16 May 2020 04:23:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbgEPIXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 04:23:15 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F31A206F4;
+        Sat, 16 May 2020 08:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589617394;
+        bh=POWNJDuIU59kAO0d0Yb2/1xXBCdN+4we4QtCfOpiVNA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z6rw0H5Rl6/qXM1wXakzxQVnqRKraiJZ3M9N0eGH3wynsBL/dLPUDqp1BlvA0cLGT
+         axyZ7FH3OajDO4Q85qJmjd6jHGq+V2qfHmNsPCtQgMhmWCRUe3c3OBpC6meyMDNHIm
+         abacL+qWJIa1pzSfhXAb7AI7JFJF1EHyOo8Qc1JE=
+Received: by pali.im (Postfix)
+        id AE6C19FC; Sat, 16 May 2020 10:23:12 +0200 (CEST)
+Date:   Sat, 16 May 2020 10:23:12 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] mwifiex: Firmware name for W8997 sdio wifi chip
+Message-ID: <20200516082312.uqxyivkb2v43dqch@pali>
+References: <20200515132353.vfor7v4buzoddfmb@pali>
+ <VI1PR04MB4366625917BB57695BE454448FBA0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB4366625917BB57695BE454448FBA0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Saturday 16 May 2020 08:17:17 Ganapathi Bhat wrote:
+> Hi Pali,
+> 
+> Thanks for this notice. We will try to push the new firmware and also, fix the naming problem.
+> 
+> Regards,
+> Ganapathi
 
-Fix the following false positive warnings:
-
-[ 9403.765413][T61744] =============================
-[ 9403.786541][T61744] WARNING: suspicious RCU usage
-[ 9403.807865][T61744] 5.7.0-rc1-next-20200417 #4 Tainted: G             L
-[ 9403.838945][T61744] -----------------------------
-[ 9403.860099][T61744] arch/x86/kvm/mmu/page_track.c:257 RCU-list traversed in non-reader section!!
-
-and
-
-[ 9405.859252][T61751] =============================
-[ 9405.859258][T61751] WARNING: suspicious RCU usage
-[ 9405.880867][T61755] -----------------------------
-[ 9405.911936][T61751] 5.7.0-rc1-next-20200417 #4 Tainted: G             L
-[ 9405.911942][T61751] -----------------------------
-[ 9405.911950][T61751] arch/x86/kvm/mmu/page_track.c:232 RCU-list traversed in non-reader section!!
-
-Since srcu read lock is held, these are false positive warnings.
-Therefore, pass condition srcu_read_lock_held() to
-list_for_each_entry_rcu().
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
-v2:
--Rebase v5.7-rc5
-
- arch/x86/kvm/mmu/page_track.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
-index ddc1ec3bdacd..1ad79c7aa05b 100644
---- a/arch/x86/kvm/mmu/page_track.c
-+++ b/arch/x86/kvm/mmu/page_track.c
-@@ -229,7 +229,8 @@ void kvm_page_track_write(struct kvm_vcpu *vcpu, gpa_t gpa, const u8 *new,
- 		return;
- 
- 	idx = srcu_read_lock(&head->track_srcu);
--	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
-+	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node,
-+				srcu_read_lock_held(&head->track_srcu))
- 		if (n->track_write)
- 			n->track_write(vcpu, gpa, new, bytes, n);
- 	srcu_read_unlock(&head->track_srcu, idx);
-@@ -254,7 +255,8 @@ void kvm_page_track_flush_slot(struct kvm *kvm, struct kvm_memory_slot *slot)
- 		return;
- 
- 	idx = srcu_read_lock(&head->track_srcu);
--	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
-+	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node,
-+				srcu_read_lock_held(&head->track_srcu))
- 		if (n->track_flush_slot)
- 			n->track_flush_slot(kvm, slot, n);
- 	srcu_read_unlock(&head->track_srcu, idx);
--- 
-2.17.1
-
+Thank you! Please consider extending kernel driver to load firmware
+from filename sdsd8997_combo_v4.bin which is already stored in
+linux-firmware repository. Also this is name which is used by marvell
+(out-of-tree) kernel driver mlan.ko/sd8997.ko.
