@@ -2,314 +2,157 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F89C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05518C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B48A3207D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:38:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oJiFmaO9"
+	by mail.kernel.org (Postfix) with ESMTP id DAAEA206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgEPIih (ORCPT
+        id S1726957AbgEPIrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 04:38:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgEPIig (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 04:38:36 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAAC5C061A0C;
-        Sat, 16 May 2020 01:38:35 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id s21so4318037ejd.2;
-        Sat, 16 May 2020 01:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T9ORqMPvwiPeuaiySbbL/RSXPYuFp2sjZBmBACSvVb4=;
-        b=oJiFmaO9gqb7DS1dlpAacukIBF598UJA4Nt5ZUhceGhBnOdLi4ljWtFz8Fxiof/69A
-         Fkr/ViVuvP/a+Vn13nKPzNjcsKwLxXlHyfZdBm7NVj4zxZPLN/Aiu4B2qY6zqVraUpfG
-         WN/eiYpLK/Q6gnuKTtrtwbJ6ZHfIyYUvJLvR9ul233drEZqDJMograz/Bc5AgibvRNgJ
-         +Txc9cvSHdp2JrTMQN5JNUdaM39aIcFHMWfky5Ex1FqaptXNqvPxuULv9bNZnL7s6JUH
-         UtwvP+ch5XWhL52oNiU6yHzmmD6WtiCwCyn8xNJJOSnvcz4vySq2mYRqGWaAbL+7CwCu
-         b81w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T9ORqMPvwiPeuaiySbbL/RSXPYuFp2sjZBmBACSvVb4=;
-        b=huwgeJsC67Ahdm/sAdSimSaEbFxJwUXMJMr0RCl2dt8TgpZT2KEM/hMlv8for3I5nV
-         CTw4ZywLvxbxifAPokf5oqIExCqNywoGDaP1F5EoE7dTeGkLRi92UJ3rQVKZbJHf2p90
-         Soo2ZCqrqyGOTJZSKfBh0lBPcDkGjiD0c5lYVklGAmyPJxSvsD4/uslkrT3fmGhDZPQL
-         13rIbuz64GQKYtJdD/joEpsMdxCyh8ZZ8gfnPeWot7Wqkknrhzpn8vR1inZefC+/CYCU
-         pXFFfHtdDun+c522BdG9F2d2KfW0Ln0nmDQjA8soIvHumvWygdw5oUvPGvn+wzDp96Ps
-         iKUA==
-X-Gm-Message-State: AOAM531czYWORRbHIk2k5d6+zx7buIEdO7WuZFlLQtCQRev2Gn7OQuTy
-        ZbBKKGt0TSH9T9txH6fFjSJmeiAzoRv6FA526f7GwbXRBIH6Zg==
-X-Google-Smtp-Source: ABdhPJwgyqfhQZmST+qUmMJfbQH9nNG9wMTERbqLfZfDLKc6LtGT6612db5GWSq0gSN6itAjdhp4IWRS8xTO5tkXAQs=
-X-Received: by 2002:a17:906:90c1:: with SMTP id v1mr6187140ejw.322.1589618314221;
- Sat, 16 May 2020 01:38:34 -0700 (PDT)
+        Sat, 16 May 2020 04:47:13 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4799 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725997AbgEPIrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 04:47:12 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7880A39151B447A1EF14;
+        Sat, 16 May 2020 16:47:11 +0800 (CST)
+Received: from [10.166.215.145] (10.166.215.145) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 16 May 2020 16:47:08 +0800
+Subject: Re: [PATCH 2/4] arm64: Extract kprobes_save_local_irqflag() and
+ kprobes_restore_local_irqflag()
+To:     Doug Anderson <dianders@chromium.org>
+CC:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, <liwei1412@163.com>
+References: <20200509214159.19680-1-liwei391@huawei.com>
+ <20200509214159.19680-3-liwei391@huawei.com>
+ <CAD=FV=VVz4QnQ6AWAsCMxw6Zne6es0omvJ--Gnag=PXkMPt42g@mail.gmail.com>
+From:   "liwei (GF)" <liwei391@huawei.com>
+Message-ID: <d5bb9ccf-6047-13d9-45b3-18421629e83f@huawei.com>
+Date:   Sat, 16 May 2020 16:47:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20200424182139.32190-1-pop.adrian61@gmail.com>
- <3efb57a1-283b-f2f0-66a4-97e88c6c02d6@st.com> <CAP-HsdS0rq4iCq1oqpTU=EXF8UWbfPivCJVZG-4b7jyvdHHXUw@mail.gmail.com>
- <39c59632-e395-f7ec-12b9-ca1d667651a6@st.com>
-In-Reply-To: <39c59632-e395-f7ec-12b9-ca1d667651a6@st.com>
-From:   Adrian Pop <pop.adrian61@gmail.com>
-Date:   Sat, 16 May 2020 11:39:03 +0300
-Message-ID: <CAP-HsdQLnu=_dZDHfHBmWfE3TBYt3MAB6=nkier-bpe9Jc7dVw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm: dts: stm32f769-disco: Enable MIPI DSI display support
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAD=FV=VVz4QnQ6AWAsCMxw6Zne6es0omvJ--Gnag=PXkMPt42g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.145]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- Hello all,
+Hi Douglas,
 
-a bit of a delayed response here, but:
+On 2020/5/14 8:21, Doug Anderson wrote:
+(SNIP)
+>> +/*
+>> + * Interrupts need to be disabled before single-step mode is set, and not
+>> + * reenabled until after single-step mode ends.
+>> + * Without disabling interrupt on local CPU, there is a chance of
+>> + * interrupt occurrence in the period of exception return and  start of
+>> + * out-of-line single-step, that result in wrongly single stepping
+>> + * into the interrupt handler.
+>> + */
+>> +void kernel_prepare_single_step(unsigned long *flags,
+>> +                                               struct pt_regs *regs)
+>> +{
+>> +       *flags = regs->pstate & DAIF_MASK;
+>> +       regs->pstate |= PSR_I_BIT;
+>> +       /* Unmask PSTATE.D for enabling software step exceptions. */
+>> +       regs->pstate &= ~PSR_D_BIT;
+>> +}
+>> +NOKPROBE_SYMBOL(kernel_prepare_single_step);
+> 
+> nit: why not just return unsigned long rather than passing by reference?
+Because i just extract this function from kprobes_save_local_irqflag(), i think
+return unsigned long is fine.
 
-On Tue, Apr 28, 2020 at 11:39 AM Alexandre Torgue
-<alexandre.torgue@st.com> wrote:
->
-> Hi Adrian
->
-> On 4/27/20 10:05 PM, Adrian Pop wrote:
-> > Added lee.jones@linaro.org.
-> >
-> > First, thank you all for taking a look at my changes!
->
-> no pb.
->
-> >
-> > Hello Alex,
-> >
-> > On Mon, Apr 27, 2020 at 11:28 AM Alexandre Torgue
-> > <alexandre.torgue@st.com> wrote:
-> >>
-> >> Hi Adrian
-> >>
-> >> On 4/24/20 8:21 PM, Adrian Pop wrote:
-> >>> STM32f769-disco features a 4" MIPI DSI display: add support for it.
-> >>>
-> >>> Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
-> >>> ---
-> >>
-> >> Commit title should be ARM: dts: stm32: ...
-> >
-> > Will fix in next version if that's ok.
-> >
-> >>
-> >> Can you explain a bit more in your commit message why do you use a
-> >> reserved memory pool for DMA and where this pool is located. (I assume
-> >> it's linked to a story of DMA and cache memory attribute on cortexM7...)
-> >
-> > Need to look more into this, but if I remove it, /dev/fb0 is not
-> > available anymore and I get a warning stating:
-> > ...
-> > [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-> > [drm] Initialized stm 1.0.0 20170330 for 40016800.display-controller on minor 0
-> > ------------[ cut here ]------------
-> > WARNING: CPU: 0 PID: 13 at arch/arm/mm/dma-mapping-nommu.c:50 0xc000b8ed
-> > CPU: 0 PID: 13 Comm: kworker/0:1 Not tainted 5.6.0-next-20200412 #23
-> > Hardware name: STM32 (Device Tree Support)
-> > Workqueue: events 0xc014fa35
-> > Function entered at [<c000b325>] from [<c000a487>]
-> > ...
-> >
-> > When I looked in arch/arm/mm/dma-mapping-nommu.c:50, there is a comment stating:
-> >
-> >      /*
-> >       * dma_alloc_from_global_coherent() may fail because:
-> >       *
-> >       * - no consistent DMA region has been defined, so we can't
-> >       *   continue.
-> >       * - there is no space left in consistent DMA region, so we
-> >       *   only can fallback to generic allocator if we are
-> >       *   advertised that consistency is not required.
-> >       */
-> >
-> > This is the reason I added the reserved-memory.
->
-> Note that on cortexM7 DMA can't use cached memory. For this reason you
-> have to declare a dedicated memory area for DMA with no-cache attribute.
-> It is done thanks to a "linux,dma" node plus a kernel config:
-> CONFIG_ARM_MPU. I planed to declare this dedicated memeory region in
-> sram. Can you check if add it for the same reason I explain and check if
-> it works using sram ?
->
+> 
+>> +
+>> +void kernel_cleanup_single_step(unsigned long flags,
+>> +                                               struct pt_regs *regs)
+>> +{
+>> +       regs->pstate &= ~DAIF_MASK;
+>> +       regs->pstate |= flags;
+>> +}
+>> +NOKPROBE_SYMBOL(kernel_cleanup_single_step);
+>> +
+>>  /* ptrace API */
+>>  void user_enable_single_step(struct task_struct *task)
+>>  {
+>> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+>> index d1c95dcf1d78..c655b6b543e3 100644
+>> --- a/arch/arm64/kernel/probes/kprobes.c
+>> +++ b/arch/arm64/kernel/probes/kprobes.c
+>> @@ -168,30 +168,6 @@ static void __kprobes set_current_kprobe(struct kprobe *p)
+>>         __this_cpu_write(current_kprobe, p);
+>>  }
+>>
+>> -/*
+>> - * Interrupts need to be disabled before single-step mode is set, and not
+>> - * reenabled until after single-step mode ends.
+>> - * Without disabling interrupt on local CPU, there is a chance of
+>> - * interrupt occurrence in the period of exception return and  start of
+>> - * out-of-line single-step, that result in wrongly single stepping
+>> - * into the interrupt handler.
+>> - */
+>> -static void __kprobes kprobes_save_local_irqflag(struct kprobe_ctlblk *kcb,
+>> -                                               struct pt_regs *regs)
+>> -{
+>> -       kcb->saved_irqflag = regs->pstate & DAIF_MASK;
+>> -       regs->pstate |= PSR_I_BIT;
+>> -       /* Unmask PSTATE.D for enabling software step exceptions. */
+>> -       regs->pstate &= ~PSR_D_BIT;
+>> -}
+>> -
+>> -static void __kprobes kprobes_restore_local_irqflag(struct kprobe_ctlblk *kcb,
+>> -                                               struct pt_regs *regs)
+>> -{
+>> -       regs->pstate &= ~DAIF_MASK;
+>> -       regs->pstate |= kcb->saved_irqflag;
+>> -}
+>> -
+>>  static void __kprobes
+>>  set_ss_context(struct kprobe_ctlblk *kcb, unsigned long addr)
+>>  {
+>> @@ -227,7 +203,7 @@ static void __kprobes setup_singlestep(struct kprobe *p,
+>>                 set_ss_context(kcb, slot);      /* mark pending ss */
+>>
+>>                 /* IRQs and single stepping do not mix well. */
+>> -               kprobes_save_local_irqflag(kcb, regs);
+>> +               kernel_prepare_single_step(&kcb->saved_irqflag, regs);
+> 
+> Is there some reason to have two functions?  It seems like every time
+> you call kernel_enable_single_step() you'd want to call
+> kernel_prepare_single_step().  ...and every time you call
+> kernel_disable_single_step() you'd want to call
+> kernel_cleanup_single_step().
+> 
+> Maybe you can just add the flags parameter to
+> kernel_enable_single_step() / kernel_disable_single_step() and put the
+> code in there?
+> 
 
-I did not have CONFIG_ARM_MPU enabled, enabled it now.
+As kernel_enable_single_step() / kernel_disable_single_step() are also called in
+breakpoint_handler() and watchpoint_handler(), i am not sure it's a right thing
+to put the daif flag prepare/cleanup into them, especially we don't have a context
+to save the flags.
 
-Just tried with SRAM:
-reg = <0x20020000 0x60000>; /* SRAM1 368KB + SRAM2 16KB*/
-
-but `arm_nommu_dma_alloc()` size parameter is 819200 (which is bigger
-than the SRAM reserved memory), so the
-`dma_alloc_from_global_coherent()` fails, so again I get the warning
-stated above.
-
->
->
-> >
-> > About the location, does it need to be hardcoded? On my board
-> > (STM32F769I-Disco, tftp boot) in boot log I get:
-> > ...
-> > Reserved memory: created DMA memory pool at 0xc0ef1000, size 1 MiB
-> > OF: reserved mem: initialized node linux,dma, compatible id shared-dma-pool
-> > ...
-> >
-> >>
-> >> Did you try this configuration with XIP boot ?
-> >
-> > I did not try with XIP. Currently loading zImage from tftp to memory.
-> > Will try with XIP as well, and get back with feedback.
-
-Still trying to figure how to XIP :).
-
->
-> Ok thanks.
->
-> >
-> >>
-> >> regards
-> >> alex
-> >>
-> >>>    arch/arm/boot/dts/stm32f746.dtsi      | 34 ++++++++++++++++++
-> >>>    arch/arm/boot/dts/stm32f769-disco.dts | 50 +++++++++++++++++++++++++++
-> >>>    2 files changed, 84 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-> >>> index 93c063796780..202bb6edc9f1 100644
-> >>> --- a/arch/arm/boot/dts/stm32f746.dtsi
-> >>> +++ b/arch/arm/boot/dts/stm32f746.dtsi
-> >>> @@ -48,6 +48,19 @@ / {
-> >>>        #address-cells = <1>;
-> >>>        #size-cells = <1>;
-> >>>
-> >>> +     reserved-memory {
-> >>> +             #address-cells = <1>;
-> >>> +             #size-cells = <1>;
-> >>> +             ranges;
-> >>> +
-> >>> +             linux,dma {
-> >>> +                     compatible = "shared-dma-pool";
-> >>> +                     linux,dma-default;
-> >>> +                     no-map;
-> >>> +                     size = <0x10F000>;
-> >>> +             };
-> >>> +     };
-> >>> +
-> >>>        clocks {
-> >>>                clk_hse: clk-hse {
-> >>>                        #clock-cells = <0>;
-> >>> @@ -75,6 +88,27 @@ clk_i2s_ckin: clk-i2s-ckin {
-> >>>        };
-> >>>
-> >>>        soc {
-> >>> +             ltdc: display-controller@40016800 {
-> >>> +                     compatible = "st,stm32-ltdc";
-> >>> +                     reg = <0x40016800 0x200>;
-> >>> +                     interrupts = <88>, <89>;
-> >>> +                     resets = <&rcc STM32F7_APB2_RESET(LTDC)>;
-> >>> +                     clocks = <&rcc 1 CLK_LCD>;
-> >>> +                     clock-names = "lcd";
-> >>> +                     status = "disabled";
-> >>> +             };
-> >>> +
-> >>> +             dsi: dsi@40016c00 {
-> >>> +                     compatible = "st,stm32-dsi";
-> >>> +                     reg = <0x40016c00 0x800>;
-> >>> +                     interrupts = <98>;
-> >>> +                     clocks = <&rcc 1 CLK_F769_DSI>, <&clk_hse>;
-> >>> +                     clock-names = "pclk", "ref";
-> >>> +                     resets = <&rcc STM32F7_APB2_RESET(DSI)>;
-> >>> +                     reset-names = "apb";
-> >>> +                     status = "disabled";
-> >>> +             };
-> >>> +
-> >>>                timer2: timer@40000000 {
-> >>>                        compatible = "st,stm32-timer";
-> >>>                        reg = <0x40000000 0x400>;
-> >>> diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
-> >>> index 1626e00bb2cb..30ebbc193e82 100644
-> >>> --- a/arch/arm/boot/dts/stm32f769-disco.dts
-> >>> +++ b/arch/arm/boot/dts/stm32f769-disco.dts
-> >>> @@ -153,3 +153,53 @@ &usbotg_hs {
-> >>>        pinctrl-names = "default";
-> >>>        status = "okay";
-> >>>    };
-> >>> +
-> >>> +&dsi {
-> >>> +     #address-cells = <1>;
-> >>> +     #size-cells = <0>;
-> >>> +     status = "okay";
-> >>> +
-> >>> +     ports {
-> >>> +             #address-cells = <1>;
-> >>> +             #size-cells = <0>;
-> >>> +
-> >>> +             port@0 {
-> >>> +                     reg = <0>;
-> >>> +                     dsi_in: endpoint {
-> >>> +                             remote-endpoint = <&ltdc_out_dsi>;
-> >>> +                     };
-> >>> +             };
-> >>> +
-> >>> +             port@1 {
-> >>> +                     reg = <1>;
-> >>> +                     dsi_out: endpoint {
-> >>> +                             remote-endpoint = <&dsi_in_panel>;
-> >>> +                     };
-> >>> +             };
-> >>> +
-> >>> +     };
-> >>> +
-> >>> +     panel: panel {
-> >>> +             compatible = "orisetech,otm8009a";
-> >>> +             reg = <0>; /* dsi virtual channel (0..3) */
-> >>> +             reset-gpios = <&gpioj 15 GPIO_ACTIVE_LOW>;
-> >>> +             status = "okay";
-> >>> +
-> >>> +             port {
-> >>> +                     dsi_in_panel: endpoint {
-> >>> +                             remote-endpoint = <&dsi_out>;
-> >>> +                     };
-> >>> +             };
-> >>> +     };
-> >>> +};
-> >>> +
-> >>> +&ltdc {
-> >>> +     dma-ranges;
-> >
-> > Need to remove this, not needed and causes a warning.
-> >
-> >>> +     status = "okay";
-> >>> +
-> >>> +     port {
-> >>> +             ltdc_out_dsi: endpoint {
-> >>> +                     remote-endpoint = <&dsi_in>;
-> >>> +             };
-> >>> +     };
-> >>> +};
-> >>>
-> >
-> > Regards,
-> > Adrian
-> >
-
-Regards,
-Adrian
+Thanks,
+Wei
