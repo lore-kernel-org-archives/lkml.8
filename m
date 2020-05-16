@@ -2,134 +2,283 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D73BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 19:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD9FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 19:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5490220709
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 19:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E02DA207BB
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 19:20:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="QZGtrnC0";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="QZGtrnC0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gtJrwqrk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgEPTHN (ORCPT
+        id S1726632AbgEPTUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 15:07:13 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:56176 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726298AbgEPTHN (ORCPT
+        Sat, 16 May 2020 15:20:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726360AbgEPTUi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 15:07:13 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 918E88EE19F;
-        Sat, 16 May 2020 12:07:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1589656032;
-        bh=D8G+NdjnQDRxlqYxDKGcemEgX/kXVlKUwQ2n9K0wbU0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=QZGtrnC0nkisDPiq5z/4wpE2unys4l8Z+NJySN4pHZbyl48d1+wy8Gv24YTUsG1X3
-         XpxXQ1s++yw509gQTJCIqhcpg9MrEnuD50xxjK5k3JZ7JTPBMTpLTbBkAgbEr0OOdM
-         7JI48ehZPPMJdFYLcB13SDXTkzRW2l6aJykiCNcI=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id A1rl-KAx3JQT; Sat, 16 May 2020 12:07:12 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id D801D8EE173;
-        Sat, 16 May 2020 12:07:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1589656032;
-        bh=D8G+NdjnQDRxlqYxDKGcemEgX/kXVlKUwQ2n9K0wbU0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=QZGtrnC0nkisDPiq5z/4wpE2unys4l8Z+NJySN4pHZbyl48d1+wy8Gv24YTUsG1X3
-         XpxXQ1s++yw509gQTJCIqhcpg9MrEnuD50xxjK5k3JZ7JTPBMTpLTbBkAgbEr0OOdM
-         7JI48ehZPPMJdFYLcB13SDXTkzRW2l6aJykiCNcI=
-Message-ID: <1589656023.8524.1.camel@HansenPartnership.com>
-Subject: Re: [dm-devel] next-20200514 - build issue in
- drivers/md/dm-zoned-target.c
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Valdis =?UTF-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Hannes Reinecke <hare@suse.de>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org
-Date:   Sat, 16 May 2020 12:07:03 -0700
-In-Reply-To: <367320.1589627953@turing-police>
-References: <367320.1589627953@turing-police>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Mp2dUCEd7FWpRS+D3bdZ"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Sat, 16 May 2020 15:20:38 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C561C061A0C;
+        Sat, 16 May 2020 12:20:38 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id v4so4900016qte.3;
+        Sat, 16 May 2020 12:20:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A+aLXLfOYBWa1/HiefX3BKCNHYEqJEEFJy3sI8Yp4bg=;
+        b=gtJrwqrkIiMt1lIBICE5TKChEkcoX4uRghpXgVp0gcUVaHoEKEAn5BVmUG5DuqTqDn
+         ddTxrD8pHjfRhgvusaEnLvz4PfqkoGJeXQKsQN4oa1nBZr8diMUvrUUeuZcaO5XdcCXu
+         voxZV1QlM5dkgMbQJb7xhWVkdo9LOgI+KAYvS6bUmecGHFWSo6rnPj3gIEy+tw0K9yGW
+         4xT+NHutuiFVbv+iQ4KQWwI7I4+vazq/8zc0JSztir5P6QAAeXhJ6VrB2Ryq2fmVlCxt
+         OVJjUMeZQ0KzsjcIkjhwcFQcWLQwNAI3AXdKw0CUcVA4ICj8AXjBgpbUp7zObuz3hF+f
+         tSiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A+aLXLfOYBWa1/HiefX3BKCNHYEqJEEFJy3sI8Yp4bg=;
+        b=iSCsntgHHJ0Ox9Xb0tCB9Vmxd47VjBHS+sDvf7MK1PFhXoNT/Drh/aF9ksTvTuTE4l
+         H1199EykZkP8E1PjfLPL816Sf9AvjJe9rXoXVudeAHNxhnVYoEWo9ZeL01nwOVTo2+cF
+         zIHdJxlAj98LnhP2AayLQ1osB3LfTS/0zWJrimC6uEzJO2tgj6sYkoHrCO6Vccch+PVU
+         muk1qbZ+ws2Wmq83oHkQgrUla8eoQegWqDToT44lvexat/OfU3s65fa/jZ0d4J6cauZN
+         1VEx6QlWeAIuJKOeS6fmmReHBeGsSTLt5VlVu6BYNPiPt619GFU4+bg5v3XZ0PuEEX/9
+         iUEg==
+X-Gm-Message-State: AOAM533UUWI0DBfZTvycIX6AdWYHMQNUV3iBB/KJ1ZRmzaW2hri8eClZ
+        zYz0HXdO+tVSZDDWif4C92Sv8fHBEnihjQ==
+X-Google-Smtp-Source: ABdhPJwy3Hp+RUbGKSSIfrwp9LYEzn56fOCcU0k1xw7kcgwNZKmf9EhmtGs70IUxQsaMI/xLI/AzEQ==
+X-Received: by 2002:aed:2496:: with SMTP id t22mr9502815qtc.2.1589656837437;
+        Sat, 16 May 2020 12:20:37 -0700 (PDT)
+Received: from localhost.localdomain (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id g19sm3160409qke.32.2020.05.16.12.20.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 May 2020 12:20:36 -0700 (PDT)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     jic23@kernel.org
+Cc:     kamel.bouhara@bootlin.com, gwendal@chromium.org,
+        alexandre.belloni@bootlin.com, david@lechnology.com,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v2 0/4] Introduce the Counter character device interface
+Date:   Sat, 16 May 2020 15:19:58 -0400
+Message-Id: <cover.1589654470.git.vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Changes in v2:
+ - Use fixed-width data types to represent Counter data types
+ - Use union of function prototypes to store read/write callbacks
+ - Eliminate the counter-strings and counter-sysfs-callback files by
+   inlining relevant code
+ - Reimplement chrdev code to handle read/write calls instead of ioctl
+ - Remove struct counter_enum (I'm postponing this development until I
+   get the core functionality solid)
+ - Remove devm_counter_unregister as unnecessary
 
---=-Mp2dUCEd7FWpRS+D3bdZ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Over the past couple years we have noticed some shortcomings with the
+Counter sysfs interface. Although useful in the majority of situations,
+there are certain use-cases where interacting through sysfs attributes
+can become cumbersome and inefficient. A desire to support more advanced
+functionality such as timestamps, multi-axis positioning tables, and
+other such latency-sensitive applications, has motivated a reevaluation
+of the Counter subsystem. I believe a character device interface will be
+helpful for this more niche area of counter device use.
 
-On Sat, 2020-05-16 at 07:19 -0400, Valdis Kl=C4=93tnieks wrote:
-> Am seeing a build error in next-0514.  -0420 built OK.
-> building a 'make allmodconfig' on a RPi4 in 32-bit mode.
->=20
->   MODPOST 7575 modules
-> ERROR: modpost: "__aeabi_uldivmod" [drivers/md/dm-zoned.ko]
-> undefined!
->=20
-> objdump and 'make drivers/md/dm-zoned-target.s' tells
-> me that the problem is in function dmz_fixup_devices(), near here:
->=20
-> @ drivers/md/dm-zoned-target.c:806:             reg_dev->nr_zones =3D
-> DIV_ROUND_UP(reg_dev->capacity,
->         ldr     r0, [r6, #56]   @ reg_dev_166->capacity, reg_dev_166-
-> >capacity
->         adds    r1, r3, r1      @ tmp316, _227, reg_dev_166->capacity
->         adc     r0, r2, r0      @ tmp315, _227, reg_dev_166->capacity
->         subs    r1, r1, #1      @, tmp316,
-> @ drivers/md/dm-zoned-target.c:805:             reg_dev-
-> >zone_nr_sectors =3D zoned_dev->zone_nr_sectors;
->         strd    r2, [r6, #80]   @, reg_dev,
-> @ drivers/md/dm-zoned-target.c:806:             reg_dev->nr_zones =3D
-> DIV_ROUND_UP(reg_dev->capacity,
->         sbc     r0, r0, #0      @, tmp315,
->         bl      __aeabi_uldivmod                @
-> @ drivers/md/dm-zoned-target.c:806:             reg_dev->nr_zones =3D
-> DIV_ROUND_UP(reg_dev->capacity,
->         str     r1, [r6, #64]   @ tmp306, reg_dev_166->nr_zones
->=20
-> git blame points at this commit:
->=20
-> commit 70978208ec91d798066f4c291bc98ff914bea222
-> Author: Hannes Reinecke <hare@suse.de>
-> Date:   Mon May 11 10:24:30 2020 +0200
->=20
->     dm zoned: metadata version 2
->=20
-> Reverting that commit lets the build complete.
+To quell any concerns from the offset: this patchset makes no changes to
+the existing Counter sysfs userspace interface -- existing userspace
+applications will continue to work with no modifications necessary. I
+request that driver maintainers please test their applications to verify
+that this is true, and report any discrepancies if they arise.
 
-That's because the DIV_ROUND_UP in the patch should actually be
-DIV_ROUND_UP_SECTOR_T I think.
+However, this patchset does contain a major reimplementation of the
+Counter subsystem core and driver API. A reimplementation was necessary
+in order to separate the sysfs code from the counter device drivers and
+internalize it as a dedicated component of the core Counter subsystem
+module. A minor benefit from all of this is that the sysfs interface is
+now ensured a certain amount of consistency because the translation is
+performed outside of individual counter device drivers.
 
-James
+Essentially, the reimplementation has enabled counter device drivers to
+pass and handle data as native C datatypes now rather than the sysfs
+strings from before. A high-level view of how a count value is passed
+down from a counter device driver can be exemplified by the following:
 
---=-Mp2dUCEd7FWpRS+D3bdZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+                 ----------------------
+                / Counter device       \
+                +----------------------+
+                | Count register: 0x28 |
+                +----------------------+
+                        |
+                 -----------------
+                / raw count data /
+                -----------------
+                        |
+                        V
+                +----------------------------+
+                | Counter device driver      |----------+
+                +----------------------------+          |
+                | Processes data from device |   -------------------
+                |----------------------------|  / driver callbacks /
+                | Type: u64                  |  -------------------
+                | Value: 42                  |          |
+                +----------------------------+          |
+                        |                               |
+                 ----------                             |
+                / u64     /                             |
+                ----------                              |
+                        |                               |
+                        |                               V
+                        |               +----------------------+
+                        |               | Counter core         |
+                        |               +----------------------+
+                        |               | Routes device driver |
+                        |               | callbacks to the     |
+                        |               | userspace interfaces |
+                        |               +----------------------+
+                        |                       |
+                        |                -------------------
+                        |               / driver callbacks /
+                        |               -------------------
+                        |                       |
+                +-------+---------------+       |
+                |                       |       |
+                |               +-------|-------+
+                |               |       |
+                V               |       V
+        +--------------------+  |  +---------------------+
+        | Counter sysfs      |<-+->| Counter chrdev      |
+        +--------------------+     +---------------------+
+        | Translates to the  |     | Translates to the   |
+        | standard Counter   |     | standard Counter    |
+        | sysfs output       |     | character device    |
+        |--------------------|     |---------------------+
+        | Type: const char * |     | Type: u64           |
+        | Value: "42"        |     | Value: 42           |
+        +--------------------+     +---------------------+
+                |                               |
+         ---------------                 ----------
+        / const char * /                / u64     /
+        ---------------                 ----------
+                |                               |
+                |                               V
+                |                       +-----------+
+                |                       | read      |
+                |                       +-----------+
+                |                       \ Count: 42 /
+                |                        -----------
+                |
+                V
+        +--------------------------------------------------+
+        | `/sys/bus/counter/devices/counterX/countY/count` |
+        +--------------------------------------------------+
+        \ Count: "42"                                      /
+         --------------------------------------------------
 
------BEGIN PGP SIGNATURE-----
+I am aware that an in-kernel API can simplify the data transfer between
+counter device drivers and the userspace interfaces, but I want to
+postpone that development until after the new Counter character device
+interface is solidified. A userspace ABI is effectively immutable so I
+want to make sure we get that right before working on an in-kernel API
+that is more flexible to change. However, when we do develop an
+in-kernel API, it will likely be housed as part of the Counter core
+component, through which the userspace interfaces will then communicate.
 
-iHUEABMIAB0WIQTnYEDbdso9F2cI+arnQslM7pishQUCXsA51wAKCRDnQslM7pis
-hZePAP9k+4pgr+O3cOw3dKCULg5dyXP0H/ovz0PjY3NwyCgqYAEA1ghh0wkxUfz4
-GB4Svstsox0oy29X7rGUd/p1slLLNZM=
-=2NcN
------END PGP SIGNATURE-----
+Interaction with Counter character devices occurs via standard character
+device read/write operations. This allows userspace applications to
+access and set counter data using native C datatypes rather than working
+through string translations.
 
---=-Mp2dUCEd7FWpRS+D3bdZ--
+The following are some questions I have about this patchset:
+
+1. Should the data format of the character device be configured via a
+   sysfs attribute?
+
+   In this patchset, the first 196095 bytes of the character device are
+   dedicated as a selection area to choose which Counter components or
+   extensions should be exposed; the subsequent bytes are the actual
+   data for the Counter components and extensions that were selected.
+
+   Moving this selection to a sysfs attribute and dedicating the
+   character device to just data transfer might be a better design. If
+   such a design is chosen, should the selection attribute be
+   human-readable or binary?
+
+2. How much space should allotted for strings?
+
+   Each Counter component and extension has a respective size allotted
+   for its data (u8 data is allotted 1 byte, u64 data is allotted 8
+   bytes, etc.); I have arbitrarily chosen to allot 64 bytes for
+   strings. Is this an apt size, or should string data be allotted more
+   or less space?
+
+3. Should the owning component of an extension be handled by the device
+   driver or Counter subsystem?
+
+   The Counter subsystem figures out the owner (enum counter_owner_type)
+   for each component/extension in the counter-sysfs and counter-chrdev
+   code. When a callback must be executed, there are various switch
+   statements throughout the code to check whether the respective
+   Device, Signal, or Count version of the callback should be executed;
+   similarly, the appropriate owner type must match for the struct
+   counter_data macros such as COUNTER_DATA_DEVICE_U64,
+   COUNTER_DATA_SIGNAL_U64, COUNTER_DATA_COUNT_U64, etc.
+
+   All this complexity in the Counter subsystem code can be eliminated
+   if a single callback type with a `void *owner` parameter is defined
+   for use with all three owner types (Device, Signal, and Count). The
+   device driver would then be responsible for casting the callback
+   argument to the appropriate owner type; but in theory, this should
+   not be much of a problem since the device driver is responsible for
+   assigning the callbacks to the owning component anyway.
+
+William Breathitt Gray (4):
+  counter: Internalize sysfs interface code
+  docs: counter: Update to reflect sysfs internalization
+  counter: Add character device interface
+  docs: counter: Document character device interface
+
+ Documentation/driver-api/generic-counter.rst |  275 +++-
+ MAINTAINERS                                  |    3 +-
+ drivers/counter/104-quad-8.c                 |  547 +++----
+ drivers/counter/Makefile                     |    1 +
+ drivers/counter/counter-chrdev.c             |  656 ++++++++
+ drivers/counter/counter-chrdev.h             |   16 +
+ drivers/counter/counter-core.c               |  187 +++
+ drivers/counter/counter-sysfs.c              |  881 +++++++++++
+ drivers/counter/counter-sysfs.h              |   14 +
+ drivers/counter/counter.c                    | 1496 ------------------
+ drivers/counter/ftm-quaddec.c                |   89 +-
+ drivers/counter/stm32-lptimer-cnt.c          |  161 +-
+ drivers/counter/stm32-timer-cnt.c            |  139 +-
+ drivers/counter/ti-eqep.c                    |  211 +--
+ include/linux/counter.h                      |  626 ++++----
+ include/linux/counter_enum.h                 |   45 -
+ include/uapi/linux/counter-types.h           |   45 +
+ 17 files changed, 2826 insertions(+), 2566 deletions(-)
+ create mode 100644 drivers/counter/counter-chrdev.c
+ create mode 100644 drivers/counter/counter-chrdev.h
+ create mode 100644 drivers/counter/counter-core.c
+ create mode 100644 drivers/counter/counter-sysfs.c
+ create mode 100644 drivers/counter/counter-sysfs.h
+ delete mode 100644 drivers/counter/counter.c
+ delete mode 100644 include/linux/counter_enum.h
+ create mode 100644 include/uapi/linux/counter-types.h
+
+-- 
+2.26.2
 
