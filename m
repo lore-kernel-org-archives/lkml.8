@@ -2,249 +2,149 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6294C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8451E207C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589645439;
-	bh=Qx3DPnLp4Vlp4WJ3u6wX1iOXw5Nit6PjtbPUDtvgjSc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PjwEz42Gz1vs2sZwncaK8qXElca3iR4x4Dp201Vc/AnYfotP+TwTf64q1JDM9lv+i
-	 VDcSp4DPKwStJMvExcNiXYIOs/VfQOjrB6bHzVxQc3h875+FOYGASpFXTG36lxjFvW
-	 TfbfOb6KYc3cdSb3XlaQSkqQblSNIG9aUq0BxGrU=
+	by mail.kernel.org (Postfix) with ESMTP id 42CD62065C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:15:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DuqEyAzU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgEPQKi (ORCPT
+        id S1726271AbgEPQP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 12:10:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726297AbgEPQKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 12:10:37 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFE882065C;
-        Sat, 16 May 2020 16:10:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589645436;
-        bh=Qx3DPnLp4Vlp4WJ3u6wX1iOXw5Nit6PjtbPUDtvgjSc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=k6/tivZNjd8R8swJwDe/I/LbARHwE//1VTw75YxDTQnU4kjsOr8uOUUUIE4kHPLck
-         CcB7TEgVRbq+/1fFcOY8zHrtiPSDL/UewC/ncQrkAGtIkOpT9iRmJ51XotBV4MBRJ3
-         5Vh8E8jbb1joMTVcVXPQNABRc+WUhbUdeoCOJq/k=
-Date:   Sat, 16 May 2020 17:10:32 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     <Eugen.Hristev@microchip.com>
-Cc:     <alexandru.ardelean@analog.com>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lars@metafoo.de>,
-        <Ludovic.Desroches@microchip.com>
-Subject: Re: [RFC PATCH] iio: __iio_update_buffers: Update mode before
- preenable/after postdisable
-Message-ID: <20200516171032.29fa8e08@archlinux>
-In-Reply-To: <8551295e-c166-674e-c449-61ccb5bbef76@microchip.com>
-References: <20200430082455.1628-1-alexandru.ardelean@analog.com>
-        <0096231b-eda4-7685-3411-3de467618c25@microchip.com>
-        <dbd7fba9-ad26-fb8f-7a71-55b75951409f@microchip.com>
-        <8551295e-c166-674e-c449-61ccb5bbef76@microchip.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 16 May 2020 12:15:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbgEPQP2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 12:15:28 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6ADEC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 09:15:28 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id d26so4477362otc.7
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 09:15:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HzirPJr8B+We0KXUcmx0Ppg1bldadwDRdOYhZA/qcOA=;
+        b=DuqEyAzUBs810YvqTHyDEW9Z9XIitPau58ZVpkfnYlvUDgiNYP2M3OEIj+GO2f2jXS
+         c2nFr3O2HJBItokgtKl7+YE9S2rIlralZUMPb6TfHf08TFJADXewsUr4M/sm4PNtTtDh
+         yvKsfbV8ra0huKouVxR5W0jmix7qaPLUklJ5kaG81Jh87VD2sv0LSDo58M2ZdunI+nIo
+         x2y+NOM9+fGEIsW9rZ4w5U28VBKvAeUfV/YLHNl4rhdFTKul9a77G5qcGFUAzoPOXFpl
+         HdKfDcdDHf3AR9VnERd6FrCAhgW8VEgVPNsuduT+M2HgpnC6o0SWXFRFzHjbbwpSSW8I
+         +P7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HzirPJr8B+We0KXUcmx0Ppg1bldadwDRdOYhZA/qcOA=;
+        b=eTrZaGQUkDgvbua6XY/RtfMa/pMocxIq3Z9P3ngjDvSfVbyy1AcETDqzO9ZUdgwSIR
+         STq0GKNHimVhRiyXRlncq8yLwXMd+Of9Sz+yW5UvYZ88S690X2gCvF9lN2TymhafEnkA
+         byHlCo7/AXLIalRiLI39E1e+/22c/gOD1C1DOGIShXB5K0GfRO7ZqIdVIQZlifSod4/o
+         BLBuGkuAh7rH7BvssQF80WBcf5jhKoAHsU6S/qNVzkkcwZwQx5sG9lPVYLC+HebGfRau
+         QPWaq+Y8CyLGg2sxH2k4rWGar1qsPGgB0OEVAsuLyKLzWdyB9J35ahg95hFxJER4BcfJ
+         Gm+g==
+X-Gm-Message-State: AOAM5313jyp7X/Q5+bRT+suBB6dZxEoabJgOku4ZukN8gfVdBCefeHTI
+        xjDPZcYxeqqBsvdKkbST9u2t37dm5cMaP9SHSAbPxXMe
+X-Google-Smtp-Source: ABdhPJy+iD2PmhBxeiC4UCrNwCEX8hrZcrVdc6SErVCJEz8oZjqkmCtwcAeKHXMuRabO5ADb21p84pLOCRTL0Uyg860=
+X-Received: by 2002:a9d:7d8a:: with SMTP id j10mr5623386otn.266.1589645727993;
+ Sat, 16 May 2020 09:15:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAPY=qRQ6gzN1BWh=ianVDBQ1C9kibWHwxs5Z0+QSwGxKymLDTQ@mail.gmail.com>
+ <374485.1589637193@turing-police> <af03bee5-27b2-4e92-359a-b1cc8f500d6d@infradead.org>
+In-Reply-To: <af03bee5-27b2-4e92-359a-b1cc8f500d6d@infradead.org>
+From:   Subhashini Rao Beerisetty <subhashbeerisetty@gmail.com>
+Date:   Sat, 16 May 2020 21:45:15 +0530
+Message-ID: <CAPY=qRRJ6aZbbRnWfvjqojs08Z7H-+-6nzLAcpzjDcQOJ40fOQ@mail.gmail.com>
+Subject: Re: general protection fault vs Oops
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020 10:56:16 +0000
-<Eugen.Hristev@microchip.com> wrote:
+On Sat, May 16, 2020 at 9:29 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 5/16/20 6:53 AM, Valdis Kl=C4=93tnieks wrote:
+> > On Sat, 16 May 2020 18:05:07 +0530, Subhashini Rao Beerisetty said:
+> >
+> >> In the first attempt when I run that test case I landed into =C3=A2=E2=
+=82=AC=C5=93general
+> >> protection fault: 0000 [#1] SMP" .. Next I rebooted and ran the same
+> >> test , but now it resulted the =C3=A2=E2=82=AC=C5=93Oops: 0002 [#1] SM=
+P".
+> >
+> > And the 0002 is telling you that there's been 2 previous bug/oops since=
+ the
+> > reboot, so you need to go back through your dmesg and find the *first* =
+one.
+> >
+> >> In both cases the call trace looks exactly same and RIP points to
+> >> =C3=A2=E2=82=AC=C5=93native_queued_spin_lock_slowpath+0xfe/0x170"..
+> >
+> > The first few entries in the call trace are the oops handler itself. So=
+...
+> >
+> >
+> >> May 16 12:06:17 test-pc kernel: [96934.567347] Call Trace:
+> >> May 16 12:06:17 test-pc kernel: [96934.569475]  [<ffffffff8183c427>]__=
+raw_spin_lock_irqsave+0x37/0x40
+> >> May 16 12:06:17 test-pc kernel: [96934.571686]  [<ffffffffc0606812>] e=
+vent_raise+0x22/0x60 [osa]
+> >> May 16 12:06:17 test-pc kernel: [96934.573935]  [<ffffffffc06aa2a4>] m=
+ulti_q_completed_one_buffer+0x34/0x40 [mcore]
+> >
+> > The above line is the one where you hit the wall.
+> >
+> >> May 16 12:59:22 test-pc kernel: [ 3011.405602] Call Trace:
+> >> May 16 12:59:22 test-pc kernel: [ 3011.407892]  [<ffffffff8183c427>] _=
+raw_spin_lock_irqsave+0x37/0x40
+> >> May 16 12:59:22 test-pc kernel: [ 3011.410256]  [<ffffffffc0604812>] e=
+vent_raise+0x22/0x60 [osa]
+> >> May 16 12:59:22 test-pc kernel: [ 3011.412652]  [<ffffffffc06b72a4>] m=
+ulti_q_completed_one_buffer+0x34/0x40 [mcore]
+> >
+> > And again.
+> >
+> > However,  given that it's a 4.4 kernel from 4 years ago, it's going to =
+be
+> > hard to find anybody who really cares.
+>
+> Right.
+>
+> > In fact. I'm wondering if this is from some out-of-tree or vendor patch=
+,
+> > because I'm not finding any sign of that function in either the 5.7 or =
+4.4
+> > tree.  Not even a sign of ## catenation abuse - no relevant hits for
+> > "completed_one_buffer" or "multi_q" either
+>
+> Modules linked in:
+> dbg(OE) mcore(OE) osa(OE)
+>
+> Out-of-tree, unsigned modules loaded.
+Yes, those are out-of-tree modules. Basically, my question is, in
+general what is the difference between 'general protection fault' and
+'Oops' failure in kernel mode.
 
-> On 04.05.2020 15:27, Eugen Hristev - M18282 wrote:
-> > On 30.04.2020 11:42, Eugen Hristev - M18282 wrote:  
-> >> On 30.04.2020 11:24, Alexandru Ardelean wrote:  
-> >>> From: Lars-Peter Clausen <lars@metafoo.de>
-> >>>
-> >>> It is clear that we transition to INDIO_DIRECT_MODE when disabling the
-> >>> buffer(s) and it is also clear that we transition from INDIO_DIRECT_MODE
-> >>> when enabling the buffer(s). So leaving the currentmode field
-> >>> INDIO_DIRECT_MODE until after the preenable() callback and updating it to
-> >>> INDIO_DIRECT_MODE before the postdisable() callback doesn't add additional
-> >>> value. On the other hand some drivers will need to perform different
-> >>> actions depending on which mode the device is going to operate in/was
-> >>> operating in.
-> >>>
-> >>> Moving the update of currentmode before preenable() and after postdisable()
-> >>> enables us to have drivers which perform mode dependent actions in those
-> >>> callbacks.
-> >>>
-> >>> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-> >>> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> >>> ---
-> >>>
-> >>> This patch is also a V2 of this older patch from a while ago:
-> >>>     https://lore.kernel.org/linux-iio/1431525891-19285-5-git-send-email-lars@metafoo.de/
-> >>>
-> >>> However, in this recent context, it comes to fix this:
-> >>>     https://lore.kernel.org/linux-iio/b9ab676489de3575984dac5610fcf05fd8742a38.camel@analog.com/T/#mc09284c8f79250b92a52fd5b8d1f541d1c02c0c0
-> >>>
-> >>> At this point, I don't have a clear idea if this approach is good or
-> >>> not; since the motivation is to fix the at91 adc.
-> >>> Hence the RFC.
-> >>>
-> >>> Some excerpt from the AT91 discussion:
-> >>> -------------------------------------------------------------------
-> >>> I decided to do a bit of shell magic for this:
-> >>>
-> >>> get_files() {
-> >>> git grep -w iio_buffer_setup_ops  | grep drivers | cut -d: -f1 | sort | uniq
-> >>> }
-> >>>
-> >>> for file in $(get_files) ; do
-> >>>        if grep -q currentmode $file ; then
-> >>>            echo $file
-> >>>        fi
-> >>> done
-> >>>
-> >>> It finds 4 drivers.
-> >>> Though, `get_files()` will return 56 files.
-> >>>
-> >>> drivers/iio/accel/bmc150-accel-core.c
-> >>> drivers/iio/adc/at91-sama5d2_adc.c
-> >>> drivers/iio/adc/stm32-dfsdm-adc.c
-> >>> drivers/iio/magnetometer/rm3100-core.c
-> >>>
-> >>> The rm3100 driver doesn't do any checks in the setup_ops for 'currentmode' as
-> >>> far as I could see.
-> >>>
-> >>> So, Lars' patch could work nicely to fix this current case and not break others.
-> >>>
-> >>> Semantically though, it would sound nicer to have a 'nextmode' parameter
-> >>> somewhere; maybe on the setup_ops(indio_dev, nextmode)?
-> >>> Though, only those 3 drivers would really ever use it; so doing it like that
-> >>> sounds like overkill.
-> >>>
-> >>> So, we're left with Lars' patch or we could add an 'indio_dev->nextmode' field,
-> >>> that may be used in just these 3 drivers [which again: sounds overkill at this
-> >>> point in time].
-> >>>
-> >>> Alternatively, this 'indio_dev->currentmode' could be removed from all these 3
-> >>> drivers somehow. But that needs testing and a thorough understanding of all 3
-> >>> drivers and what they're doing, to do properly.
-> >>> -------------------------------------------------------------------  
-> >>
-> >> Hi Alex,
-> >>
-> >> Thanks for finding this. I will test this with the at91-sama5d2_adc
-> >> driver on Jonathan's testing branch. I will let you know of the results.
-> >>
-> >> Eugen  
-> > 
-> > Hi,
-> > 
-> > For sama5d2-xplained, hw trigger testing, at91-sama5d2_adc driver,
-> > Tested-by: Eugen Hristev <eugen.hristev@microchip.com>
-> > 
-> > I did not get my hands on the touchscreen yet, but hopefully soon.
-> > 
-> > Thanks again,
-> > Eugen  
-> 
-> Hello Jonathan,
-> 
-> Without this patch, your current testing branch is broken for hardware 
-> trigger for at91-sama5d2_adc (including for-5.8b tag)
-> 
-> You want me to create a patch that fixes that in the driver, or you will 
-> take this patch maybe ?
-
-Hmmm. Semantically I wasn't overly keen on this patch, but it does appear
-harmless and will kind of make more sense once the big rework Alex
-is doing is finished..  My concern was that preenable should see the
-currentmode as the one before enabling - so not a buffered mode, 
-and with this it doesn't.
-
-I sanity checked the cases identified and they all seem fine so
-let's go with it.
-
-We are a bit near the merge window for me to be absolutely sure I'll get
-another pull request out, so this might get shifted to the fixes branch
-if I miss that.
-
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> 
-> Thanks !
-> Eugen
-> >>  
-> >>>
-> >>>     drivers/iio/industrialio-buffer.c | 8 +++-----
-> >>>     1 file changed, 3 insertions(+), 5 deletions(-)
-> >>>
-> >>> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-> >>> index 30af8af8f312..efcc44b62946 100644
-> >>> --- a/drivers/iio/industrialio-buffer.c
-> >>> +++ b/drivers/iio/industrialio-buffer.c
-> >>> @@ -989,6 +989,7 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
-> >>>            indio_dev->active_scan_mask = config->scan_mask;
-> >>>            indio_dev->scan_timestamp = config->scan_timestamp;
-> >>>            indio_dev->scan_bytes = config->scan_bytes;
-> >>> +       indio_dev->currentmode = config->mode;
-> >>>
-> >>>            iio_update_demux(indio_dev);
-> >>>
-> >>> @@ -1024,8 +1025,6 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
-> >>>                            goto err_disable_buffers;
-> >>>            }
-> >>>
-> >>> -       indio_dev->currentmode = config->mode;
-> >>> -
-> >>>            if (indio_dev->setup_ops->postenable) {
-> >>>                    ret = indio_dev->setup_ops->postenable(indio_dev);
-> >>>                    if (ret) {
-> >>> @@ -1042,10 +1041,10 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
-> >>>                                                 buffer_list)
-> >>>                    iio_buffer_disable(buffer, indio_dev);
-> >>>     err_run_postdisable:
-> >>> -       indio_dev->currentmode = INDIO_DIRECT_MODE;
-> >>>            if (indio_dev->setup_ops->postdisable)
-> >>>                    indio_dev->setup_ops->postdisable(indio_dev);
-> >>>     err_undo_config:
-> >>> +       indio_dev->currentmode = INDIO_DIRECT_MODE;
-> >>>            indio_dev->active_scan_mask = NULL;
-> >>>
-> >>>            return ret;
-> >>> @@ -1080,8 +1079,6 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
-> >>>                            ret = ret2;
-> >>>            }
-> >>>
-> >>> -       indio_dev->currentmode = INDIO_DIRECT_MODE;
-> >>> -
-> >>>            if (indio_dev->setup_ops->postdisable) {
-> >>>                    ret2 = indio_dev->setup_ops->postdisable(indio_dev);
-> >>>                    if (ret2 && !ret)
-> >>> @@ -1090,6 +1087,7 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
-> >>>
-> >>>            iio_free_scan_mask(indio_dev, indio_dev->active_scan_mask);
-> >>>            indio_dev->active_scan_mask = NULL;
-> >>> +       indio_dev->currentmode = INDIO_DIRECT_MODE;
-> >>>
-> >>>            return ret;
-> >>>     }
-> >>> --
-> >>> 2.17.1
-> >>>  
-> >>  
-> >   
-> 
-
+> We don't know what those are or how to debug them.
+>
+> > I don't think anybody's going to be able to help unless somebody first
+> > identifies where that function is....
+> >
+>
+>
+> --
+> ~Randy
+>
