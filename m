@@ -2,115 +2,119 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A37C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E519C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07BFB2053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE192065C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TsPEwLEL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8uZE+WX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgEPP74 (ORCPT
+        id S1726252AbgEPQKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 11:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48758 "EHLO
+        Sat, 16 May 2020 12:10:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgEPP7z (ORCPT
+        with ESMTP id S1726206AbgEPQKH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 11:59:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9249C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 08:59:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=hTjKFbKjAPRBSfEP6JDKZO4Ccm6OlreCSUNy5KNK3gY=; b=TsPEwLELXKbMhOT38tckuR02be
-        ER6h3IsJ0f8/GOmtLh3t/fLqHcam3B6OxZRABtHn5AjjV+/fsvU6uUvQ5w8rMY911DC4CR+UyCR8/
-        be6hzS4EETC3b0HLE7aswfpnWUHI9Fz5PGI9OX3NWuiRKOUAAWFmoInn5OMs3Y8du4oywFBQYtXna
-        HGLrikW+keM+engUTPxglHUzTjVeVDw4JqO7yPn/d5NqY39Z8u7xEa3AlSl9S8RZOkHSJA+bPXJbM
-        sYmAK902dNCM5D/DWOOm9olWe+6t/eo4Y95UZxJAXEbdZdBSPNAx136ekQZNaT1Mm3YnTjEDoxHU5
-        VbrqZ9Kw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZzEA-0004kC-AJ; Sat, 16 May 2020 15:59:54 +0000
-Subject: Re: general protection fault vs Oops
-To:     =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Subhashini Rao Beerisetty <subhashbeerisetty@gmail.com>
-Cc:     kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        linux-kernel@vger.kernel.org
-References: <CAPY=qRQ6gzN1BWh=ianVDBQ1C9kibWHwxs5Z0+QSwGxKymLDTQ@mail.gmail.com>
- <374485.1589637193@turing-police>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <af03bee5-27b2-4e92-359a-b1cc8f500d6d@infradead.org>
-Date:   Sat, 16 May 2020 08:59:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 16 May 2020 12:10:07 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC85C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 09:10:07 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id s20so2217430plp.6
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 09:10:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=27vU4ld4hW7yyM1NYFKR33va5wB7Q0CEcPGmC8FA414=;
+        b=N8uZE+WX87GWeminnJLGxp2z3xuE4PIY2jZgW1O5lOWNHfKJyUgtL2o0agDtDhsjo4
+         JuVk8d0K2sgBGcc4vOx43Mc4LeyXyfZcWpi7PuQRuLV1Pc3Eh528kJGHD/mWkSvhox/y
+         nf62lgl2lPJe4LscsaXaSe7RnNQkJHMQQXd9Pns0ecLvohsag0gE7Ml1pAQRvm3z+vcV
+         Lu84HtQdoVGTMmVxLbTr/wZXghEGfHgH3upR6ymOx3znogeJpYVGiwnShhjyvZvWKFVA
+         BXfabFTgLEGdLGCWTTn5LBiTWa5toj+VFhffm8677Ye7EWlrbk6pllwn55IhzoguMuWd
+         xoyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=27vU4ld4hW7yyM1NYFKR33va5wB7Q0CEcPGmC8FA414=;
+        b=MVcXB77uW2g3zkB5lvymzdU+7CeVan4y2HcS+zfEvbOfUuJFglCZ9Vw7tOl8tUhsm4
+         zEzmgwjDTROZbcPXoLpQWUWcyyWMcTA2oocZfqK5ecTvyMEhiPZpnvugGKIjz65djN96
+         Tdt5rd4Bce0u7lH0NIX2uX7F+jY7koky2GuAIfEGEjStWNGCzThm53j6HGOcvbQ+dDbb
+         XR0CVsQ70wy2a5Ku8TvVi4qQUbcozQd3G6LigMir070bZOCVGC1IFn2G3bPAW3neb8t4
+         d4e/A4PJ5Zuqj8dHI/xDQu6S6GFCqwtMTu+ZKyPlNTwsWFjQlVRX7x7WN6aU/uLJOCKj
+         52dw==
+X-Gm-Message-State: AOAM531GbAIcDO4u56BQ2mBZrhXdbMPSK2XrO3iUm3LAIBSRniE3D1u5
+        cApxVhIqOAYLks6sfIXULB+K0aBHxRA=
+X-Google-Smtp-Source: ABdhPJwgfyaO3Cw+ex/vc3B+hA7FpcoTX2H2tcoSNcpwbQAHS9SWUtiuK/pHuhLTQ7tK01l7jEzibw==
+X-Received: by 2002:a17:90a:ead6:: with SMTP id ev22mr9602466pjb.94.1589645406752;
+        Sat, 16 May 2020 09:10:06 -0700 (PDT)
+Received: from vultr.guest ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id a2sm4103558pgh.57.2020.05.16.09.10.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 May 2020 09:10:05 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH] function_graph: apply tracing option 'irq-info'
+Date:   Sun, 17 May 2020 00:09:53 +0800
+Message-Id: <20200516160953.155630-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <374485.1589637193@turing-police>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/20 6:53 AM, Valdis Klētnieks wrote:
-> On Sat, 16 May 2020 18:05:07 +0530, Subhashini Rao Beerisetty said:
-> 
->> In the first attempt when I run that test case I landed into â€œgeneral
->> protection fault: 0000 [#1] SMP" .. Next I rebooted and ran the same
->> test , but now it resulted the â€œOops: 0002 [#1] SMP".
-> 
-> And the 0002 is telling you that there's been 2 previous bug/oops since the
-> reboot, so you need to go back through your dmesg and find the *first* one.
-> 
->> In both cases the call trace looks exactly same and RIP points to
->> â€œnative_queued_spin_lock_slowpath+0xfe/0x170"..
-> 
-> The first few entries in the call trace are the oops handler itself. So...
-> 
-> 
->> May 16 12:06:17 test-pc kernel: [96934.567347] Call Trace:
->> May 16 12:06:17 test-pc kernel: [96934.569475]  [<ffffffff8183c427>]__raw_spin_lock_irqsave+0x37/0x40
->> May 16 12:06:17 test-pc kernel: [96934.571686]  [<ffffffffc0606812>] event_raise+0x22/0x60 [osa]
->> May 16 12:06:17 test-pc kernel: [96934.573935]  [<ffffffffc06aa2a4>] multi_q_completed_one_buffer+0x34/0x40 [mcore]
-> 
-> The above line is the one where you hit the wall.
-> 
->> May 16 12:59:22 test-pc kernel: [ 3011.405602] Call Trace:
->> May 16 12:59:22 test-pc kernel: [ 3011.407892]  [<ffffffff8183c427>] _raw_spin_lock_irqsave+0x37/0x40
->> May 16 12:59:22 test-pc kernel: [ 3011.410256]  [<ffffffffc0604812>] event_raise+0x22/0x60 [osa]
->> May 16 12:59:22 test-pc kernel: [ 3011.412652]  [<ffffffffc06b72a4>] multi_q_completed_one_buffer+0x34/0x40 [mcore]
-> 
-> And again.
-> 
-> However,  given that it's a 4.4 kernel from 4 years ago, it's going to be
-> hard to find anybody who really cares.
+The tracing option 'irq-info' is only used by function tracer by far. This
+patch makes it also against function graph tracer. Then the two tracers
+have consistent behavior of this option.
 
-Right.
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+---
+ kernel/trace/trace_functions_graph.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> In fact. I'm wondering if this is from some out-of-tree or vendor patch,
-> because I'm not finding any sign of that function in either the 5.7 or 4.4
-> tree.  Not even a sign of ## catenation abuse - no relevant hits for
-> "completed_one_buffer" or "multi_q" either
-
-Modules linked in:
-dbg(OE) mcore(OE) osa(OE)
-
-Out-of-tree, unsigned modules loaded.
-We don't know what those are or how to debug them.
-
-> I don't think anybody's going to be able to help unless somebody first
-> identifies where that function is....
-> 
-
-
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 4a9c49c08ec9..86e410907649 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -541,7 +541,7 @@ print_graph_irq(struct trace_iterator *iter, unsigned long addr,
+ 		}
+ 
+ 		/* Latency format */
+-		if (tr->trace_flags & TRACE_ITER_LATENCY_FMT)
++		if (tr->trace_flags & (TRACE_ITER_LATENCY_FMT | TRACE_ITER_IRQ_INFO))
+ 			print_graph_lat_fmt(s, ent);
+ 	}
+ 
+@@ -753,7 +753,7 @@ print_graph_prologue(struct trace_iterator *iter, struct trace_seq *s,
+ 	}
+ 
+ 	/* Latency format */
+-	if (tr->trace_flags & TRACE_ITER_LATENCY_FMT)
++	if (tr->trace_flags & (TRACE_ITER_LATENCY_FMT | TRACE_ITER_IRQ_INFO))
+ 		print_graph_lat_fmt(s, ent);
+ 
+ 	return;
+@@ -1135,7 +1135,7 @@ static void print_lat_header(struct seq_file *s, u32 flags)
+ static void __print_graph_headers_flags(struct trace_array *tr,
+ 					struct seq_file *s, u32 flags)
+ {
+-	int lat = tr->trace_flags & TRACE_ITER_LATENCY_FMT;
++	int lat = tr->trace_flags & (TRACE_ITER_LATENCY_FMT | TRACE_ITER_IRQ_INFO);
+ 
+ 	if (lat)
+ 		print_lat_header(s, flags);
 -- 
-~Randy
+2.25.1
 
