@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB2FB20728
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429CE2074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IAyweHYv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b8UxdUyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgEPEJl (ORCPT
+        id S1726958AbgEPEKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 00:09:41 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:22092 "EHLO
+        Sat, 16 May 2020 00:10:10 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33137 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725797AbgEPEJk (ORCPT
+        by vger.kernel.org with ESMTP id S1725275AbgEPEKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 00:09:40 -0400
+        Sat, 16 May 2020 00:10:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589602178;
+        s=mimecast20190719; t=1589602208;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=fN+VEqkILVlswcikE6MPnPo3xVym+4MtfDbcORo4dOM=;
-        b=IAyweHYvaAxWvxrZapdics/6Am2OKkoicYVCOaeppeXCc/15bGFxG71U98j9mOuHeYT+EW
-        vFvnaAntdIi8wQYJYVZ/+fXSsN37narMcuS834KLSzBa+Y+OBONdgmxhuLQs3k0SN3tp4R
-        1WTk9lGVWJm7Bua23C+0cGv/ookOqmA=
+        bh=vIxHfO81N+03vuMfHp47HPc/YBphFIdNIRkmQNFD2rA=;
+        b=b8UxdUyihUpiZ66oI9CFvhI2L1OR6NMSR6iMd0Tn5SlOZY67uUFrCuzvrOESwBHpSgwWau
+        cd/7Q+z0Dlk+V70ePbnX1dSrtV+/MoIQnQECixU7K/3almmDJgkQWOS6OzGLAeLveb8rYZ
+        Ljz6W9O7QO76d1XrLwKaYXEB/Hf4gVU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-235-gIH87jxqOdu-0c4EJgalcA-1; Sat, 16 May 2020 00:09:35 -0400
-X-MC-Unique: gIH87jxqOdu-0c4EJgalcA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-395-6heSXt0zPhOn6WGvQjSr9Q-1; Sat, 16 May 2020 00:10:06 -0400
+X-MC-Unique: 6heSXt0zPhOn6WGvQjSr9Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE87F80B713;
-        Sat, 16 May 2020 04:09:32 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 64035460;
+        Sat, 16 May 2020 04:10:03 +0000 (UTC)
 Received: from x1-fbsd (unknown [10.3.128.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B8B3878B37;
-        Sat, 16 May 2020 04:09:22 +0000 (UTC)
-Date:   Sat, 16 May 2020 00:09:19 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D6EA05C1B0;
+        Sat, 16 May 2020 04:09:52 +0000 (UTC)
+Date:   Sat, 16 May 2020 00:09:49 -0400
 From:   Rafael Aquini <aquini@redhat.com>
 To:     Luis Chamberlain <mcgrof@kernel.org>
 Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
@@ -55,22 +55,23 @@ Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
         keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
         mchehab+samsung@kernel.org, kvalo@codeaurora.org,
         davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Vishal Kulkarni <vishal@chelsio.com>
-Subject: Re: [PATCH v2 07/15] cxgb4: use new module_firmware_crashed()
-Message-ID: <20200516040919.GG3182@x1-fbsd>
+        linux-kernel@vger.kernel.org,
+        Douglas Miller <dougmill@linux.ibm.com>
+Subject: Re: [PATCH v2 08/15] ehea: use new module_firmware_crashed()
+Message-ID: <20200516040949.GH3182@x1-fbsd>
 References: <20200515212846.1347-1-mcgrof@kernel.org>
- <20200515212846.1347-8-mcgrof@kernel.org>
+ <20200515212846.1347-9-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515212846.1347-8-mcgrof@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200515212846.1347-9-mcgrof@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 09:28:38PM +0000, Luis Chamberlain wrote:
+On Fri, May 15, 2020 at 09:28:39PM +0000, Luis Chamberlain wrote:
 > This makes use of the new module_firmware_crashed() to help
 > annotate when firmware for device drivers crash. When firmware
 > crashes devices can sometimes become unresponsive, and recovery
@@ -79,24 +80,25 @@ On Fri, May 15, 2020 at 09:28:38PM +0000, Luis Chamberlain wrote:
 > 
 > Using a taint flag allows us to annotate when this happens clearly.
 > 
-> Cc: Vishal Kulkarni <vishal@chelsio.com>
+> Cc: Douglas Miller <dougmill@linux.ibm.com>
 > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 > ---
->  drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/net/ethernet/ibm/ehea/ehea_main.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-> index a70018f067aa..c67fc86c0e42 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-> @@ -3646,6 +3646,7 @@ void t4_fatal_err(struct adapter *adap)
->  	 * could be exposed to the adapter.  RDMA MWs for example...
->  	 */
->  	t4_shutdown_adapter(adap);
-> +	module_firmware_crashed();
->  	for_each_port(adap, port) {
->  		struct net_device *dev = adap->port[port];
+> diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+> index 0273fb7a9d01..6ae35067003f 100644
+> --- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
+> +++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+> @@ -3285,6 +3285,8 @@ static void ehea_crash_handler(void)
+>  {
+>  	int i;
 >  
+> +	module_firmware_crashed();
+> +
+>  	if (ehea_fw_handles.arr)
+>  		for (i = 0; i < ehea_fw_handles.num_entries; i++)
+>  			ehea_h_free_resource(ehea_fw_handles.arr[i].adh,
 > -- 
 > 2.26.2
 > 
