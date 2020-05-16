@@ -2,121 +2,91 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60DFC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 446F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B357A206D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:04:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vNzIqMmF"
+	by mail.kernel.org (Postfix) with ESMTP id 29D812074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:11:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgEPKEv (ORCPT
+        id S1726226AbgEPKKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 06:04:51 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:33324 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725917AbgEPKEv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 06:04:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589623491; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=WDd/TmjSkDxWpcbv2qlPjBzNCM6Ov+9OH5uMf7CoPEk=;
- b=vNzIqMmFh7OrV/Koj41C2V/ftktKXWhiAiviL5W2m6hrIL/6B+oHlfT8lKHXEmtIge6QM5Gt
- OCkcl4Zwwwc06EV3sUNw3ow+iH5puNgNNB4ageayrB2wC1bnr3fFWIK0hv8DM9O4viUKmB0s
- J9N56lDSk1bkzmBpKgHwibZ1r04=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebfbac1.7f2e20e82e68-smtp-out-n05;
- Sat, 16 May 2020 10:04:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1FF73C43636; Sat, 16 May 2020 10:04:49 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A58C3C433D2;
-        Sat, 16 May 2020 10:04:48 +0000 (UTC)
+        Sat, 16 May 2020 06:10:00 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4852 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725792AbgEPKKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 06:10:00 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7DC1A5D1BEDB315367B0;
+        Sat, 16 May 2020 18:09:49 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.237) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Sat, 16 May 2020
+ 18:09:38 +0800
+To:     Christoph Hellwig <hch@lst.de>, <m.szyprowski@samsung.com>,
+        <robin.murphy@arm.com>, <iommu@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Shiyuan Hu <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH] dma-coherent: switch to bitmap_zalloc() in
+ dma_init_coherent_memory()
+Message-ID: <1b02b07b-617e-bc5c-8619-7a46fba5a512@huawei.com>
+Date:   Sat, 16 May 2020 18:09:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Sat, 16 May 2020 15:34:48 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
- connections
-In-Reply-To: <5a76926a6532d3f91cca169d474ba98e@codeaurora.org>
-References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
- <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
- <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
- <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
- <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
- <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org>
- <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
- <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org>
- <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
- <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org>
- <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
- <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org>
- <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org>
- <eee1b9a90266eed9a9c75401f0679777@codeaurora.org>
- <CAJ9a7Vjd0XG+rAvHptAAjGtE6xRhYsPaOSC_Bf9B-w-FZFu_Qw@mail.gmail.com>
- <47f6d51bfad0a0bf1553e101e6a2c8c9@codeaurora.org>
- <37b3749e-2363-0877-c318-9c334a5d1881@arm.com>
- <d47271ee6a2a6f0f30da7e140b6f196c@codeaurora.org>
- <CAJ9a7Vg95tcgMXgQKLAZc=TpV6FnPZ7wdF=Kwbuy7d2kRCjYQw@mail.gmail.com>
- <364049a30dc9d242ec611bf27a16a6c9@codeaurora.org>
- <CAJ9a7VjAoUmMG9pLEzE_rMSpOjwVOi-ZCinF87n9H0JgfMDsiQ@mail.gmail.com>
- <5a76926a6532d3f91cca169d474ba98e@codeaurora.org>
-Message-ID: <4bd741e342f8e2743197ed6105dacffa@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Originating-IP: [10.166.215.237]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike, Suzuki
+Switch to bitmap_zalloc() to show clearly in dma_init_coherent_memory().
 
-[...]
+No functional change.
 
->> 
->> Please look at the CoreSight components specification 3.0 (ARM IHI
->> 0029E) Section B2.1.2 which describes the Unique Component Identifier
->> (UCI).
->> As mentioned above this consists of a combination of bits from
->> multiple registers, including PIDR4.
->> 
-> 
-> Ok got it now, thanks for clearing the doubt. I will go ahead with
-> this method to identify QCOM impl and post a patch.
-> 
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+ kernel/dma/coherent.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Looking some more into this, since we have this limitation only on
-specific replicator on very few QCOM SoCs, rather than having a blanket
-workaround for all QCOM, we were thinking it would be better to have
-this workaround based on a firmware property something like
-"qcom,replicator-loses-context" for those replicators with this
-limitation and then set the drvdata->check_idfilter_val based on
-this property.
+diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
+index 2a0c4985f38e..794b31e61ca0 100644
+--- a/kernel/dma/coherent.c
++++ b/kernel/dma/coherent.c
+@@ -44,7 +44,6 @@ static int dma_init_coherent_memory(phys_addr_t phys_addr,
+ 	struct dma_coherent_mem *dma_mem = NULL;
+ 	void *mem_base = NULL;
+ 	int pages = size >> PAGE_SHIFT;
+-	int bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+ 	int ret;
 
-Thanks,
-Sai
+ 	if (!size) {
+@@ -62,7 +61,7 @@ static int dma_init_coherent_memory(phys_addr_t phys_addr,
+ 		ret = -ENOMEM;
+ 		goto out;
+ 	}
+-	dma_mem->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
++	dma_mem->bitmap = bitmap_zalloc(pages, GFP_KERNEL);
+ 	if (!dma_mem->bitmap) {
+ 		ret = -ENOMEM;
+ 		goto out;
+@@ -90,7 +89,7 @@ static void dma_release_coherent_memory(struct dma_coherent_mem *mem)
+ 		return;
+
+ 	memunmap(mem->virt_base);
+-	kfree(mem->bitmap);
++	bitmap_free(mem->bitmap);
+ 	kfree(mem);
+ }
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+1.8.3.1
+
