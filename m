@@ -2,75 +2,91 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26927C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A912FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2F82074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866F3206F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgEPHWw (ORCPT
+        id S1726425AbgEPHgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 03:22:52 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44510 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725807AbgEPHWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 03:22:51 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A2557B10F7855F44BA83;
-        Sat, 16 May 2020 15:22:49 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.237) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Sat, 16 May 2020
- 15:22:42 +0800
-Subject: [PATCH 2/2] lib: 842 - Remove useless checking in check_template()
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-To:     <haren@us.ibm.com>, <linux-kernel@vger.kernel.org>,
-        Shiyuan Hu <hushiyuan@huawei.com>,
-        Hewenliang <hewenliang4@huawei.com>
-References: <e46137c5-6bdd-59bd-1a20-59752f2bb8c2@huawei.com>
-Message-ID: <74705394-8f7c-9635-12c0-10fed1fe8f8f@huawei.com>
-Date:   Sat, 16 May 2020 15:22:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 16 May 2020 03:36:16 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:51043 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgEPHgQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 03:36:16 -0400
+Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MJVY8-1jpKsg1ku8-00JttS for <linux-kernel@vger.kernel.org>; Sat, 16 May
+ 2020 09:36:14 +0200
+Received: by mail-qk1-f175.google.com with SMTP id n14so5054516qke.8
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 00:36:14 -0700 (PDT)
+X-Gm-Message-State: AOAM530d9paL23/U6YFiTrRYEYGsmWW7RCVxlZPul77LC65bgO6TV4ut
+        vdi6q517DzsVNkBHh8k3y9bITj1iJG8bXrWmOzE=
+X-Google-Smtp-Source: ABdhPJyMrjMOuEc9sNvAXnl1ziOiZoU4A71ucLrpRtJfpiM8Jgu2Ps5nTqWutNIrq0xkjgxG54pyT9byzsyIwkSCUJE=
+X-Received: by 2002:a37:c96:: with SMTP id 144mr7046057qkm.138.1589614573331;
+ Sat, 16 May 2020 00:36:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e46137c5-6bdd-59bd-1a20-59752f2bb8c2@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.237]
-X-CFilter-Loop: Reflected
+References: <20200504091018.GA24897@afzalpc> <CAK8P3a25sZ9B+AE=EJyJZSU91CkBLLR6p2nixw_=UAbczg3RiQ@mail.gmail.com>
+ <20200511142113.GA31707@afzalpc> <CAK8P3a0=+aBJLTvHOskTv=tba_s5b5MzWrYG8mxH3iLNy4hfBw@mail.gmail.com>
+ <20200512104758.GA12980@afzalpc> <CAK8P3a1DQWG1+ab2+vQ2XCAKYxPUjJk5g3W3094j-adDXSQfzQ@mail.gmail.com>
+ <20200514111755.GA4997@afzalpc> <CAK8P3a2PNZY-9L9+SFDLtrp731ZGo6Nbs-7jY6E2PwWXa0kfKw@mail.gmail.com>
+ <20200514133545.GA5020@afzalpc> <CAK8P3a1PVwkAi8ycUAB-7EMk4nQ_qOu0rC5vJAQk_q9j5xvOJw@mail.gmail.com>
+ <20200516060624.GA6371@afzalpc>
+In-Reply-To: <20200516060624.GA6371@afzalpc>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 16 May 2020 09:35:57 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a01FYoWY9sZKU1q=UQ3ut4srwXXUeGRzW6APi+GpoKo1w@mail.gmail.com>
+Message-ID: <CAK8P3a01FYoWY9sZKU1q=UQ3ut4srwXXUeGRzW6APi+GpoKo1w@mail.gmail.com>
+Subject: Re: ARM: static kernel in vmalloc space
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:2X1VkGr2casfH9eFrkDJOEKVUQIetUtHPneBsZW5AB0JisxpcKO
+ a5EQ8yURrBz+hSzpMyqfpUHHv5qxYjmb6nFHFoCJFuH8ecRkYdHa+QuXs2TNjzC0J/G0SlN
+ JEzjBVx3l6OQrD4yBak4RpwiDjhR6KMaHc4aKJeorWMQ+G4DWxYfiFlsID5DlsTc/txIfbR
+ H+aUymcAtNx3Zpldhr1ow==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6EtpMMkLAC8=:ms5w/fstygfKC/0qOaycWc
+ I6mu7n2TEJgwtNMS0yhUFRAap0DLCBPDMtUj+St/T51ENOi8AAa3y2dygiIax8jhqOjOAWz0l
+ c17sMFH/nkTa/KKJkz3CdaR4GY+lWLpWN28IH9kpVzOVA7Rer5NW8QaJMYREfo0Mj2croZJAz
+ t0afSCOMIsyxvubWucW4GGqFLhcZw/hjOqEdDIkL6/XGRHTTUpgsp1j4go4snqDvJsRij2UJO
+ iSKJA+8bM6AGMIUZ8+YQ1Dqod0bYBiFXNLz7BE6UdfN4ntZYzuIwst9ftF6Vy20oWoWBBUjUU
+ bWZp1LhrKhjTaCqiwzDTkKBV0alaBjsGz5Vm6mlPDMsnQCQYZI1izXV0nKFnvgLHTi+TJLjAY
+ 2BIdCM7InEA4oC+KbMaGRgeDcnCWA1Ta0K1mB/uSVZBoYGTe2d5pmVukjJeAhzUk+ASNTO58R
+ 0guWN+6xzM5H5XMJL90IErQCl2lD3SKnLAaHgBSB10QuCwIMdAmIngruDUmbIFTLgSQIhETWT
+ 8ubE8D16UVS3QvZuPQcDRYh1+Dwh2FL3iOyg4hq1eGaAE3x+ow67SHivRhhqVDqHio88Q3al/
+ JugxhftgFX+FCsG+AtSvHPYJu8V7QlBxKuup3nZblrPMCdZyzDZlfOFxtT6qKMir0UpSt1VZm
+ AWq6RVRGPYxvwag2sgNcv9v81dZuxGk2Uku8r1W0qHspjSLjDHE7E9PLTuHCx9CAvAfOkExta
+ DYwtBbq1mcEIpCxzdJE0gF8Va8ZzDPhN6Ajq+Qy4885Ye+GMr2zwkNIx1fjh4vgD82haT2qSx
+ bdaLZKpwkNuKdEvpmJcaIbq29lhwf1bT8XVFtrJVnGQvwRxUVY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A warning was found by smatch tool:
-  "check_template() error: testing array offset 'c' after use."
+On Sat, May 16, 2020 at 8:06 AM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
+>
+> On Thu, May 14, 2020 at 05:32:41PM +0200, Arnd Bergmann wrote:
+>
+> > Typical distros currently offer two kernels, with and without LPAE,
+> > and they probably don't want to add a third one for LPAE with
+> > either highmem or vmsplit-4g-4g. Having extra user address
+> > space and more lowmem is both going to help users that
+> > still have 8GB configurations.
+>
+> Okay, so the conclusion i take is,
+>
+> 1. VMSPLIT 4G/4G have to live alongside highmem
+> 2. For user space copy, do pinning followed by kmap
 
-Fix it by removing the useless checking in check_template().
+Right, though kmap_atomic() should be sufficient here
+because it is always a short-lived mapping.
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
----
- lib/842/842_compress.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/lib/842/842_compress.c b/lib/842/842_compress.c
-index 18255d25781b..8d25345b4b49 100644
---- a/lib/842/842_compress.c
-+++ b/lib/842/842_compress.c
-@@ -379,9 +379,6 @@ static bool check_template(struct sw842_param *p, u8 c)
- 	u8 *t = comp_ops[c];
- 	int i, match, b = 0;
-
--	if (c >= OPS_MAX)
--		return false;
--
- 	for (i = 0; i < 4; i++) {
- 		if (t[i] & OP_ACTION_INDEX) {
- 			if (t[i] & OP_AMOUNT_2)
--- 
-1.8.3.1
-
+      Arnd
