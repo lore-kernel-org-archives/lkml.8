@@ -2,98 +2,79 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80878C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02E8C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38AE120657
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:26:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="Ie7Y5iL7"
+	by mail.kernel.org (Postfix) with ESMTP id CC4B7206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:29:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgEPN0x (ORCPT
+        id S1726718AbgEPN3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 09:26:53 -0400
-Received: from mout02.posteo.de ([185.67.36.66]:38367 "EHLO mout02.posteo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbgEPN0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 09:26:52 -0400
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout02.posteo.de (Postfix) with ESMTPS id 2B7112400FD
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 15:26:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-        t=1589635611; bh=7FoIUPqDi5c7vN5iYSzxU0lEaqMlu5poIBIzZs9kdns=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ie7Y5iL7lih9M7oKNUt1mWFU9uGspwt7i7n3cigqUBecNbAgzE+w4bBsUQTER+YsQ
-         1rRyhPW0+IcoZ2G8p/x+buEllzEdacyCUU2EKejs13DcM16I1FNGDzcCBWz00iWezF
-         g/XXoQhrDkeAl7Cq1xjZ4bs4uD04msMeS+jMhMQVMzjwxJXe9Of8kfzXZzFqj4v5WN
-         94Ox3gKNJSJ+H8emLlHLn/cPqX0Kf2SKcM9GanJ41+agfxrAed8WyppREF0cxGE+88
-         mtVk3ilzXAyE133Nj7gLpoWI0YFOjjXqa5kp1tU11kv6yRgV1Srh53INPlRmHypfCm
-         08Ew9X8DFx6EQ==
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 49PQzZ4crMz9rxc;
-        Sat, 16 May 2020 15:26:50 +0200 (CEST)
-From:   Benjamin Thiel <b.thiel@posteo.de>
-To:     linux-efi@vger.kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Benjamin Thiel <b.thiel@posteo.de>
-Subject: [PATCH v2] efi: Pull up arch-specific prototype efi_systab_show_arch()
-Date:   Sat, 16 May 2020 15:26:47 +0200
-Message-Id: <20200516132647.14568-1-b.thiel@posteo.de>
-X-Mailer: git-send-email 2.20.1
+        Sat, 16 May 2020 09:29:52 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34046 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgEPN3v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 09:29:51 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jZwsS-0004mh-36; Sat, 16 May 2020 13:29:20 +0000
+Date:   Sat, 16 May 2020 15:29:18 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Nate Karstens <nate.karstens@garmin.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        David Laight <David.Laight@aculab.com>,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-parisc@vger.kernel.org,
+        sparclinux@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Changli Gao <xiaosuo@gmail.com>,
+        a.josey@opengroup.org
+Subject: Re: [PATCH v2] Implement close-on-fork
+Message-ID: <20200516132918.edq7p2tyh6elorjm@wittgenstein>
+References: <20200515152321.9280-1-nate.karstens@garmin.com>
+ <20200515155730.GF16070@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200515155730.GF16070@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-... in order to fix a -Wmissing-prototypes warning:
+On Fri, May 15, 2020 at 08:57:30AM -0700, Matthew Wilcox wrote:
+> On Fri, May 15, 2020 at 10:23:17AM -0500, Nate Karstens wrote:
+> > Series of 4 patches to implement close-on-fork. Tests have been
+> > published to https://github.com/nkarstens/ltp/tree/close-on-fork
+> > and cover close-on-fork functionality in the following syscalls:
+> 
+> [...]
+> 
+> > This functionality was approved by the Austin Common Standards
+> > Revision Group for inclusion in the next revision of the POSIX
+> > standard (see issue 1318 in the Austin Group Defect Tracker).
+> 
+> NAK to this patch series, and the entire concept.
 
-arch/x86/platform/efi/efi.c:957:7: warning: no previous prototype for
-‘efi_systab_show_arch’ [-Wmissing-prototypes]
-char *efi_systab_show_arch(char *str)
+Yeah.
+But also, stuff like this should really be on linux-api.
 
-Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
----
- drivers/firmware/efi/efi.c | 5 +----
- include/linux/efi.h        | 2 ++
- 2 files changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 911a2bd0f6b7..4e3055238f31 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -130,11 +130,8 @@ static ssize_t systab_show(struct kobject *kobj,
- 	if (efi.smbios != EFI_INVALID_TABLE_ADDR)
- 		str += sprintf(str, "SMBIOS=0x%lx\n", efi.smbios);
- 
--	if (IS_ENABLED(CONFIG_IA64) || IS_ENABLED(CONFIG_X86)) {
--		extern char *efi_systab_show_arch(char *str);
--
-+	if (IS_ENABLED(CONFIG_IA64) || IS_ENABLED(CONFIG_X86))
- 		str = efi_systab_show_arch(str);
--	}
- 
- 	return str - buf;
- }
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 251f1f783cdf..9430d01c0c3d 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1245,4 +1245,6 @@ struct linux_efi_memreserve {
- 
- void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size);
- 
-+char *efi_systab_show_arch(char *str);
-+
- #endif /* _LINUX_EFI_H */
--- 
-2.20.1
-
+Christian
