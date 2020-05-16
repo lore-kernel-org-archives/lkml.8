@@ -2,84 +2,87 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D376CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704B5C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5D6C2065C
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:38:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iMspuoAi"
+	by mail.kernel.org (Postfix) with ESMTP id 5030C20735
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:51:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgEPNiE (ORCPT
+        id S1726615AbgEPNvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 09:38:04 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:53278 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbgEPNiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 09:38:04 -0400
-Received: from zn.tnic (p200300ec2f1da5006c2171768245b3fc.dip0.t-ipconnect.de [IPv6:2003:ec:2f1d:a500:6c21:7176:8245:b3fc])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C0BBE1EC0345;
-        Sat, 16 May 2020 15:38:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589636282;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YnC5M8+45coK6blTjpWVSwTrK5ZsOZRTdrUKNcF4tRM=;
-        b=iMspuoAiJP+ZjHVfa1VXtwQZfdYwGvj4OEXN+b5iLwb3EwSMy8iO6brhm+SMl47AHwmI/n
-        +Zs7ULwEVUtL+KDr3Uhf9/lL4aafdWXOWAUfG5FVYFJJ+UhDDmOxWnidaCG9JdEQ2soZ7J
-        TFYOFXr2Fp8CpGDzNvWeSHOlEZ+vYkE=
-Date:   Sat, 16 May 2020 15:37:58 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Benjamin Thiel <b.thiel@posteo.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] efi: Pull up arch-specific prototype
- efi_systab_show_arch()
-Message-ID: <20200516133758.GA19372@zn.tnic>
-References: <20200516132647.14568-1-b.thiel@posteo.de>
- <CAMj1kXE92_hmbaNURjW9FuRo02B9my1UBBUhPZi_CS+FRr8-aw@mail.gmail.com>
+        Sat, 16 May 2020 09:51:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726266AbgEPNvj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 09:51:39 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AF98C061A0C;
+        Sat, 16 May 2020 06:51:39 -0700 (PDT)
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1jZxDN-00ECfk-5c; Sat, 16 May 2020 15:50:57 +0200
+Message-ID: <7306323c35e6f44d7c569e689b48f380f80da5e5.camel@sipsolutions.net>
+Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Luis Chamberlain <mcgrof@kernel.org>, jeyu@kernel.org
+Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
+        schlad@suse.de, andriy.shevchenko@linux.intel.com,
+        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        ath10k@lists.infradead.org
+Date:   Sat, 16 May 2020 15:50:55 +0200
+In-Reply-To: <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net> (sfid-20200516_152518_154267_1B9A55D6)
+References: <20200515212846.1347-1-mcgrof@kernel.org>
+         <20200515212846.1347-13-mcgrof@kernel.org>
+         (sfid-20200515_233205_994687_1F26BDAB) <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
+         (sfid-20200516_152518_154267_1B9A55D6)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMj1kXE92_hmbaNURjW9FuRo02B9my1UBBUhPZi_CS+FRr8-aw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 03:32:25PM +0200, Ard Biesheuvel wrote:
-> On Sat, 16 May 2020 at 15:26, Benjamin Thiel <b.thiel@posteo.de> wrote:
-> >
-> > ... in order to fix a -Wmissing-prototypes warning:
-> >
-> > arch/x86/platform/efi/efi.c:957:7: warning: no previous prototype for
-> > ‘efi_systab_show_arch’ [-Wmissing-prototypes]
-> > char *efi_systab_show_arch(char *str)
-> >
-> > Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
-> 
-> Thanks, I'll queue this as a fix.
-> 
-> Nit: please don't treat the subject line as the first N words of the
-> commit log, but start with a full sentence. Not all mail readers show
-> the subject line and the body together. I've fixed it up for now.
+On Sat, 2020-05-16 at 15:24 +0200, Johannes Berg wrote:
 
-That was my suggestion as I do that a lot. :)
+> Instead of the kernel taint, IMHO you should provide an annotation in
+> sysfs (or somewhere else) for the *struct device* that had its firmware
+> crash. Or maybe, if it's too complex to walk the entire hierarchy
+> checking for that, have a uevent, or add the ability for the kernel to
+> print out elsewhere in debugfs the list of devices that crashed at some
 
--- 
-Regards/Gruss,
-    Boris.
+I mean sysfs, oops.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+In addition, look what we have in iwl_trans_pcie_removal_wk(). If we
+detect that the device is really wedged enough that the only way we can
+still try to recover is by completely unbinding the driver from it, then
+we give userspace a uevent for that. I don't remember exactly how and
+where that gets used (ChromeOS) though, but it'd be nice to have that
+sort of thing as part of the infrastructure, in a sort of two-level
+notification?
+
+Level 1: firmware crashed, but we're recovering, at least mostly, and
+it's more informational
+
+Level 2: device is wedged, going to try to recover by some more forceful
+means (perhaps some devices can be power-cycled? etc.) but (more) state
+would be lost in these cases?
+
+Still don't think a kernel taint is appropriate for either of these.
+
+johannes
+
