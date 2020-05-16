@@ -2,131 +2,207 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00EF620671
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 909CD206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:37:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGmFPqdu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlSSCiFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgEPCgF (ORCPT
+        id S1727972AbgEPChi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 22:36:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36436 "EHLO
+        Fri, 15 May 2020 22:37:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726247AbgEPCgE (ORCPT
+        by vger.kernel.org with ESMTP id S1726247AbgEPChh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 22:36:04 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 975B3C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 19:36:04 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id i13so4055924oie.9
-        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 19:36:04 -0700 (PDT)
+        Fri, 15 May 2020 22:37:37 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73229C061A0C;
+        Fri, 15 May 2020 19:37:37 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id 17so4506660ilj.3;
+        Fri, 15 May 2020 19:37:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KPeuzuHEDvzwNnkRCqowgBAU6EUQ7TCPeetBb+t1Bdo=;
-        b=aGmFPqdutHEPouBg3Si9ID8mt8l+QV684XJPaZrlFTWA7mam49jOuR0mXI2jOavU8z
-         lrkl20RBQ0BVaopc7Yb3YJqEUcJnp3ShFPF6HjwKi31C1ZqciisHIWuGF6Nu0c+75mKx
-         nMNYULyB0bTOEw/EAx5Pn3EMUZcEUwXjbJ0GomitQYbc73J0qApYBwf+gQz8ygkF3Au8
-         n2/uk/gL2wQJ0KDNbbGonwu02NtWBXva+NKSKSZG5MBrVFEV+AwhLGzJc3/DfDWTkYCQ
-         eCPhu6V+nHt37Ub/Yy+Zpwcoki+EAfgTtg8e23OWIlxwNPpAUjWZlInl31PJ1r8H/tuU
-         Ch6Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e+Om/GsyDrpyV1h+nZkU0dBuPGFU3TkzcVyywQUT9C8=;
+        b=YlSSCiFz7D2P0SHo/hB1dOKbVDBgwqB3bbFXiseSa4VR0BMjp+xU3hiKpTRCWg4Duc
+         rGklV2WRDYVYENVj9vnH8RDWSgOIT1CP4nshdYJLzGA8vZiFvKDToDDux9xoEVtGYSRS
+         Hzz6+zJxYI7P8tgWP5eJte4FmLpUssj/zf56zH4/DHKqC9dnssp3LvPczqvzzgMrIi8k
+         B/PWF5fN6n4FhTIvD+xq7OcclfTByKkkPRozO05tJM2Mty0z7vscexgQNIYk69lFIwF8
+         6TQYYLwb+KuF0bsj7FviLEwcDz/gonYP1l05OhpE/zjvwGFiA0cWYC6UhdFgibA9pUo6
+         dwog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KPeuzuHEDvzwNnkRCqowgBAU6EUQ7TCPeetBb+t1Bdo=;
-        b=UlxnDqm2N/juHZo55BfuN6rHj16CZQA9jl8gbYuuWQKGoOw94iyOr14Aj5X52uo4EC
-         K7gCbW0AuR0eHw/6Tc9OV+L6ja+oAQqsly8aEI/BVwqkshzKH4G+OJM9GxfEHj8RMan/
-         2u3HNUa6v0mJexEjBqvvVZUsJuiGjo0O3nIbZ2Z/ZnbBMkqnwUYtuvwoW6eObK1BBEdq
-         vlYv8aZeZ8IDLKo6UzsjVwNlLT9eAcScooXnifvtGYKK//FPohKB2uUksNI7QVrxI1rf
-         iD8Bz5ipCagTf0L8V4xi7+zHXFlEOkN7Ky0i7iQzvOmitKZvoZa49B5BtdS8Q3v4ehYN
-         9H0w==
-X-Gm-Message-State: AOAM532vcC/SHgDVvT74V6XwSjzRqriS26q/4nwFZjZb4G2rR7lR7oX+
-        5EShhkld0VFnunOmTdQ0A924z2is
-X-Google-Smtp-Source: ABdhPJy47Nsv2i4H/OPmjeTG+IFTltW99Dl2+E64qa4UnzF9iYY27a+pUPAga7zdZ/0Ztw3+0h5YWA==
-X-Received: by 2002:aca:908:: with SMTP id 8mr4438837oij.170.1589596563884;
-        Fri, 15 May 2020 19:36:03 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id t15sm1112821oov.32.2020.05.15.19.36.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 19:36:03 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] drm/i915: Mark check_shadow_context_ppgtt as maybe unused
-Date:   Fri, 15 May 2020 19:35:45 -0700
-Message-Id: <20200516023545.3332334-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e+Om/GsyDrpyV1h+nZkU0dBuPGFU3TkzcVyywQUT9C8=;
+        b=ErwlvQ0apG3ol+IS5FfBA1WJjDpN7N6p+KKPFqGVbkgoTMPTHJrPp9+RQKhDw7szQ/
+         UDu7cIEbM8Ndo94Xu1u+rGBaJNV5RdRefnmyvTz46LYjIVUW/WvxARsYHr51VKVYf2+Q
+         sJPdbVn9BGHNRttT+iabuAaMfWnnBwPIK9daFMjDO3TcTitEDWPwfvGOTX9kHZy2zR60
+         7/HdzvADeIHMHUi6wLLWOuVaOvbwO84VjkX2WZsOwrH0vm78wGxHUS44m3jExH2W3XYD
+         RiOh0dusXh6TxDjR8kv7VNez0RXGDWOOnueQsT7Yu9yIMETiDmvTHFbdtuqNs8a1p3hk
+         br/A==
+X-Gm-Message-State: AOAM532sM5pmo68AjkHtlorWdUDZKhhbSFpmBTEMZ5KHYGIVFWp1pDyi
+        FUSUjawQ3RfWLJY0dcAc3RvCGx1SjaTYVAR+GfY=
+X-Google-Smtp-Source: ABdhPJyKYz5daI9cmrjW68tb2H0AL4TkpkC9K+/kUc+NPMYXsmvpI501KTEnTEZ8WuCkY1yzNxl3lsEo40cmEDc1z5Y=
+X-Received: by 2002:a92:9f4b:: with SMTP id u72mr4727883ili.273.1589596656775;
+ Fri, 15 May 2020 19:37:36 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <20200429220732.31602-1-yu-cheng.yu@intel.com> <20200429220732.31602-2-yu-cheng.yu@intel.com>
+ <b5197a8d-5d8b-e1f7-68d4-58d80261904c@intel.com> <dd5b9bab31ecf247a0b4890e22bfbb486ff52001.camel@intel.com>
+ <5cc163ff9058d1b27778e5f0a016c88a3b1a1598.camel@intel.com>
+ <b0581ddc-0d99-cbcf-278e-0be55ba939a0@intel.com> <44c055342bda4fb4730703f987ae35195d1d0c38.camel@intel.com>
+ <32235ffc-6e6c-fb3d-80c4-a0478e2d0e0f@intel.com> <6272c481-af90-05c5-7231-3ba44ff9bd02@citrix.com>
+In-Reply-To: <6272c481-af90-05c5-7231-3ba44ff9bd02@citrix.com>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Fri, 15 May 2020 19:37:00 -0700
+Message-ID: <CAMe9rOqwbxis1xEWbOsftMB9Roxdb3=dp=_MgK8z2pwPP36uRw@mail.gmail.com>
+Subject: Re: [PATCH v10 01/26] Documentation/x86: Add CET description
+To:     Andrew Cooper <andrew.cooper3@citrix.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_DRM_I915_DEBUG_GEM is not set, clang warns:
+On Fri, May 15, 2020 at 5:13 PM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+>
+> On 15/05/2020 23:43, Dave Hansen wrote:
+> > On 5/15/20 2:33 PM, Yu-cheng Yu wrote:
+> >> On Fri, 2020-05-15 at 11:39 -0700, Dave Hansen wrote:
+> >>> On 5/12/20 4:20 PM, Yu-cheng Yu wrote:
+> >>> Can a binary compiled with CET run without CET?
+> >> Yes, but a few details:
+> >>
+> >> - The shadow stack is transparent to the application.  A CET application does
+> >> not have anything different from a non-CET application.  However, if a CET
+> >> application uses any CET instructions (e.g. INCSSP), it must first check if CET
+> >> is turned on.
+> >> - If an application is compiled for IBT, the compiler inserts ENDBRs at branch
+> >> targets.  These are nops if IBT is not on.
+> > I appreciate the detailed response, but it wasn't quite what I was
+> > asking.  Let's ignore IBT for now and just talk about shadow stacks.
+> >
+> > An app compiled with the new ELF flags and running on a CET-enabled
+> > kernel and CPU will start off with shadow stacks allocated and enabled,
+> > right?  It can turn its shadow stack off per-thread with the new prctl.
+> >  But, otherwise, it's stuck, the only way to turn shadow stacks off at
+> > startup would be editing the binary.
+> >
+> > Basically, if there ends up being a bug in an app that violates the
+> > shadow stack rules, the app is broken, period.  The only recourse is to
+> > have the kernel disable CET and reboot.
+> >
+> > Is that right?
+>
+> If I may interject with the experience of having got supervisor shadow
+> stacks working for Xen.
+>
+> Turning shadow stacks off is quite easy - clear MSR_U_CET.SHSTK_EN and
+> the shadow stack will stay in whatever state it was in, and you can
+> largely forget about it.  (Of course, in a sandbox scenario, it would be
+> prudent to prevent the ability to disable shadow stacks.)
+>
+> Turning shadow stacks on is much more tricky.  You cannot enable it in
+> any function you intend to return from, as the divergence between the
+> stack and shadow stack will constitute a control flow violation.
+>
+>
+> When it comes to binaries,  you can reasonably arrange for clone() to
+> start a thread on a new stack/shstk, as you can prepare both stacks
+> suitably before execution starts.
+>
+> You cannot reasonably implement a system call for "turn shadow stacks on
+> for me", because you'll crash on the ret out of the VDSO from the system
+> call.  It would be possible to conceive of an exec()-like system call
+> which is "discard my current stack, turn on shstk, and start me on this
+> new stack/shstk".
+>
+> In principle, with a pair of system calls to atomically manage the ststk
+> settings and stack switching, it might possible to construct a
+> `run_with_shstk_enabled(func, stack, shstk)` API which executes in the
+> current threads context and doesn't explode.
+>
+> Fork() is a problem when shadow stacks are disabled in the parent.  The
+> moment shadow stacks are disabled, the regular stack diverges from the
+> shadow stack.  A CET-enabled app which turns off shstk and then fork()'s
+> must have the child inherit the shstk-off property.  If the child were
+> to start with shstk enabled, it would explode almost immediately due to
+> the parent's stack divergence which it inherited.
+>
+>
+> Finally seeing as the question was asked but not answered, it is
+> actually quite easy to figure out whether shadow stacks are enabled in
+> the current thread.
+>
+>     mov     $1, %eax
+>     rdsspd  %eax
 
-drivers/gpu/drm/i915/gvt/scheduler.c:884:1: warning: function
-'check_shadow_context_ppgtt' is not needed and will not be emitted
-[-Wunneeded-internal-declaration]
-check_shadow_context_ppgtt(struct execlist_ring_context *c, struct
-intel_vgpu_mm *m)
-^
-1 warning generated.
+This is for 32-bit mode.  I use
 
-This warning is similar to -Wunused-function but rather than warning
-that the function is completely unused, it warns that it is used in some
-expression within the file but that expression will be evaluated to a
-constant or be optimized away in the final assembly, essentially making
-it appeared used but really isn't. Usually, this happens when a function
-or variable is only used in sizeof, where it will appear to be used but
-will be evaluated at compile time and not be required to be emitted.
+        /* Check if shadow stack is in use.  */
+        xorl    %esi, %esi
+        rdsspq  %rsi
+        testq   %rsi, %rsi
+        /* Normal return if shadow stack isn't in use.  */
+        je      L(no_shstk)
 
-In this case, the function is only used in GEM_BUG_ON, which is defined
-as BUILD_BUG_ON_INVALID, which intentionally follows this pattern. To
-fix this warning, add __maybe_unused to make it clear that this is
-intentional depending on the configuration.
+>     cmp     $1, %eax
+>     je      no_shstk
+>             ...
+> no_shsk:
+>
+> rdssp is allocated from the hint nop encoding space, and the minimum
+> alignment of the shadow stack pointer is 4.  On older parts, or with
+> shstk disabled (either at the system level, or for the thread), the $1
+> will be preserved in %eax, while if CET is active, it will be clobbered
+> with something that has the bottom two bits clear.
+>
+> It turns out this is a lifesaver for codepaths (e.g. the NMI handler)
+> which need to use other CET instructions which aren't from the hint nop
+> space, and run before the BSP can set everything up.
+>
+> ~Andrew
 
-Fixes: bec3df930fbd ("drm/i915/gvt: Support PPGTT table load command")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1027
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/gpu/drm/i915/gvt/scheduler.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/gvt/scheduler.c b/drivers/gpu/drm/i915/gvt/scheduler.c
-index f776c92de8d7..0fb1df71c637 100644
---- a/drivers/gpu/drm/i915/gvt/scheduler.c
-+++ b/drivers/gpu/drm/i915/gvt/scheduler.c
-@@ -880,7 +880,7 @@ static void update_guest_pdps(struct intel_vgpu *vgpu,
- 				gpa + i * 8, &pdp[7 - i], 4);
- }
- 
--static bool
-+static __maybe_unused bool
- check_shadow_context_ppgtt(struct execlist_ring_context *c, struct intel_vgpu_mm *m)
- {
- 	if (m->ppgtt_mm.root_entry_type == GTT_TYPE_PPGTT_ROOT_L4_ENTRY) {
 
-base-commit: bdecf38f228bcca73b31ada98b5b7ba1215eb9c9
 -- 
-2.26.2
-
+H.J.
