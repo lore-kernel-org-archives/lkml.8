@@ -2,164 +2,164 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55981C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0565207CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3055B20727
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:55:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNVh2skF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgEPDvB (ORCPT
+        id S1728003AbgEPDzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 23:51:01 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38280 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgEPDvB (ORCPT
+        Fri, 15 May 2020 23:55:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726615AbgEPDzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 23:51:01 -0400
-Received: by mail-pj1-f67.google.com with SMTP id t40so1910965pjb.3;
-        Fri, 15 May 2020 20:51:00 -0700 (PDT)
+        Fri, 15 May 2020 23:55:19 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A08AAC061A0C;
+        Fri, 15 May 2020 20:55:18 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id u15so4331348ljd.3;
+        Fri, 15 May 2020 20:55:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r3DXHhYEfZ5XzGr6H4vE2RcXrCw+ttKCWZ1sjv6FRCQ=;
+        b=gNVh2skFKX/3K5VcJAPK6a1yLtTIAVJfXJuo3OCHJA7vdofoB0idsjK8Aqat9ufZg9
+         8Ww4NWrP00mhdhkfIKK9UJRhCRtZ5UgfUAKOe3AVA4N23o9hw0PrPLlxXQWpzMqqaksJ
+         DiCRZ+YthHQSfwEcXq4h0/ujfBPAFoj1CGiU5LEoiD/Xs5FY/GW3j2ZlTla6MFARUD67
+         mqzANd5idIUC7UPHy6TCSXQJB7ouixBercj0ofPiNWNDsNKMi3qQZlhxoqa6suITs1aM
+         DxFjc1mATIaVzDf5pc2GVp7Hfwp/seBYs6tP9mraKLmrhWVFxKLwzX1wdmjFwEKmX6rd
+         CaEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Q+vxzCyXrz5qeW3ovRsPKQt/8P97ZITgNdo4auHh/lA=;
-        b=JDDvMylWAkZ7wcP+qo0Ikifl8Fx9LGe/7zeRV2tyBsZNyTeoRNgPKwkb/buZbuDXGS
-         tyXWBcnOQ5jyjI584JINUn8ZENqX5t3hbiohJyJjWkN8Lygqsm+e9aQEiK11EC3lRavN
-         bwslv12qAxSDaxMYaZvjWopsx1xc8fIGVKTgnv/reMS4IJiYqWnLdIutuGMKXKDPP6c9
-         DHMW+40kskIbNi5SSkTaEnFwyxkQfcc42dVVoAy7DhTG/JFAtzveY+2Tcv/6CGu3fC3+
-         3TaaO89qdgGz5Yvxhl1YoN97vR3DuvXuUXJtLKqjLrlSQxl4Hq3XqulfxSxqsAwlbktu
-         NHvA==
-X-Gm-Message-State: AOAM530ytNV3zFfxEso0wrIKr5UnlJTnu9EiJLxVh0T7wrqpFkMaUA+6
-        eXTxNjIDpeMh6ivv7rZ5wes=
-X-Google-Smtp-Source: ABdhPJzvFLNv1oe7qZ0uS1ZuSzwKLa7ut8pFY9gp0BfsTBaw4x3tm5rR0VnKA5Yv0oMVp/OrrxaBGg==
-X-Received: by 2002:a17:90a:3ea5:: with SMTP id k34mr368625pjc.7.1589601060026;
-        Fri, 15 May 2020 20:51:00 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:f99a:ee92:9332:42a? ([2601:647:4000:d7:f99a:ee92:9332:42a])
-        by smtp.gmail.com with ESMTPSA id d195sm3127267pfd.52.2020.05.15.20.50.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 20:50:59 -0700 (PDT)
-Subject: Re: [RFC PATCH 00/13] scsi: ufs: Add HPB Support
-To:     Avri Altman <avri.altman@wdc.com>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     alim.akhtar@samsung.com, asutoshd@codeaurora.org,
-        Zang Leigang <zangleigang@hisilicon.com>,
-        Avi Shchislowski <avi.shchislowski@wdc.com>,
-        Bean Huo <beanhuo@micron.com>, cang@codeaurora.org,
-        stanley.chu@mediatek.com,
-        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>
-References: <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <d10b27f1-49ec-d092-b252-2bb8cdc4c66e@acm.org>
-Date:   Fri, 15 May 2020 20:50:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r3DXHhYEfZ5XzGr6H4vE2RcXrCw+ttKCWZ1sjv6FRCQ=;
+        b=Tew8uH7OSqpLTopxQniPnmGmJ+4NE6lCu3Dx7dNiUhRUBSl0l3q3bMVUbuhA+Z42Oo
+         pSLK2uctw1hESHK2lxLxn8TIERl7hmNvobZ3NXuHWt4AXH8ff7ioEZSmdJnyuwQueCBp
+         kMD/9oBTFwRyYAl6U5JiiLstF7T60FPL4Jnt8Uy5Gfqh2AjzSaOGDYCUwGHUA4wmhY3k
+         UTwD0m+yz3vsNUMAVI+sdaQuUoOb4xtLKlT9358rC8SKaAixr+/ubBva/zAO+NsewcJ8
+         +UCEXlECNoEf22bC2Ewb4lTlzfDNHsW6jS68KuT23WycDLx9Red0Zl3r1JXulpqUKqB8
+         piCQ==
+X-Gm-Message-State: AOAM5305ycZw3IQGY0rQtjwRlmGWYbJu8zZ2ki5nKX/q7Xy67cj/ajB4
+        ag1vjSq8Q+0aFEKeP1Bqg0Pi9paRAHunLOMY8F4=
+X-Google-Smtp-Source: ABdhPJypqCJcVcTHipqdL5mEtN8qKKvl0ixtR0T5MyKJXkK503co63su15SwPCqlwpNfYSAkPMiFBHf0cKxDDUqT6OE=
+X-Received: by 2002:a05:651c:c8:: with SMTP id 8mr3852678ljr.182.1589601316830;
+ Fri, 15 May 2020 20:55:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1587408228-10861-1-git-send-email-orson.unisoc@gmail.com>
+ <20200420191014.GE121146@unreal> <CA+H2tpGgGtW_8Z8fV9to39JwA_KrcfAeBC+KN87v0xKnZHt2_w@mail.gmail.com>
+ <20200422142552.GA492196@unreal> <CA+H2tpGR7tywhkexa31AD_FkhyxQgVq_L+b0DbvXzwr6yT8j9Q@mail.gmail.com>
+ <20200515095501.GU17734@linux-b0ei>
+In-Reply-To: <20200515095501.GU17734@linux-b0ei>
+From:   Orson Zhai <orsonzhai@gmail.com>
+Date:   Sat, 16 May 2020 11:55:04 +0800
+Message-ID: <CA+H2tpFyAx9d-mvp=ZoS0NXm6YYC6DDV1Fu-RHLY=v82MP52Bg@mail.gmail.com>
+Subject: Re: [PATCH V2] dynamic_debug: Add an option to enable dynamic debug
+ for modules only
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Orson Zhai <orson.unisoc@gmail.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Orson Zhai <orson.zhai@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-15 03:30, Avri Altman wrote:
-> NAND flash-based storage devices, needs to translate the logical
-> addresses of the IO requests to its corresponding physical addresses of
-> the flash storage.  As the internal SRAM of the storage device cannot
-> accommodate the entire L2P mapping table, the device can only partially
-> load the L2P data it needs based on the incoming LBAs. As a result,
-> cache misses - which are more frequent in random read access, can result
-> in serious performance degradation.  To remedy the above, UFS3.1 offers
-> the Host Performance Booster (HPB) feature, which uses the host’s system
-> memory as a cache for L2P map data. The basic concept of HPB is to
-> cache L2P mapping entries in host system memory so that both physical
-> block address (PBA) and logical block address (LBA) can be delivered in
-> HPB read command.  Not to be confused with host-managed-FTL, HPB is
-> merely about NAND flash cost reduction.
-> 
-> HPB, by its nature, imposes an interesting question regarding the proper
-> location of its components across the storage stack. On Init it requires
-> to detect the HPB capabilities and parameters, which can be only done
-> from the LLD level.  On the other hand, it requires to send scsi
-> commands as part of its cache management, which preferably should be
-> done from scsi mid-layer,  and compose the "HPB_READ" command, which
-> should be done as part of scsi command setup path.
-> Therefore, we came up with a 2 module layout: ufshpb in the ufs driver,
-> and scsi_dh_ufshpb under scsi device handler.
-> 
-> The ufshpb module bear 2 main duties. During initialization, it reads
-> the hpb configuration from the device. Later on, during the scan host
-> phase, it attaches the scsi device and activates the scsi hpb device
-> handler.  The second duty mainly concern supporting the HPB cache
-> management. The scsi hpb device handler will perform the cache
-> management and send the HPB_READ command. The modules will communicate
-> via the standard device handler API: the handler_data opaque pointer,
-> and the set_params op-mode.
-> 
-> This series has borrowed heavily from a HPB implementation that was
-> published as part of the pixel3 code, authored by:
-> Yongmyung Lee <ymhungry.lee@samsung.com> and
-> Jinyoung Choi <j-young.choi@samsung.com>.
-> 
-> We kept some of its design and implementation details. We made some
-> minor modifications to adopt the latest spec changes (HPB1.0 was not
-> close when the driver initially published), and also divide the
-> implementation between the scsi handler and the ufs modules, instead of
-> a single module in the original driver, which simplified the
-> implementation to a great deal and resulted in far less code. One more
-> big difference is that the Pixel3 driver support device managed mode,
-> while we are supporting host managed mode, which reflect heavily on the
-> cache management decision process.
+On Fri, May 15, 2020 at 5:55 PM Petr Mladek <pmladek@suse.com> wrote:
+>
+> On Thu 2020-04-23 00:02:48, Orson Zhai wrote:
+> > On Wed, Apr 22, 2020 at 10:25 PM Leon Romanovsky <leon@kernel.org> wrote:
+> > >
+> > > On Wed, Apr 22, 2020 at 09:06:08PM +0800, Orson Zhai wrote:
+> > > > On Tue, Apr 21, 2020 at 3:10 AM Leon Romanovsky <leon@kernel.org> wrote:
+> > > > My motivation came from the concept of GKI (Generic Kernel Image) in Android.
+> > > > Google will release a common kernel image (binary) to all of the Android system
+> > > > vendors in the world instead of letting them to build their owns as before.
+> > > > Every SoC vendor's device drivers will be provided in kernel modules only.
+> > > > By my patch, the driver owners could debug their modules in field (say
+> > > > production releases)
+> > > > without having to enable dynamic debug for the whole GKI.
+> > >
+> > > Will Google release that binary with CONFIG_DYNAMIC_DEBUG_CORE disabled?
+> > >
+> > In Google's plan, there will be only one GKI (no debug version) for
+> > one Android version per kernel version per year.
+>
+> Are there plans to use modules with debug messages enabled on production
+> systems?
 
-Hi Avri,
+Yes, but in a managed way. They are not being enabled directly to log buffer.
+Users / FAEs (Field Application Engineer) might control to open or
+close every single one on-the-fly.
 
-Thank you for having taken the time to publish your work. The way this
-series has been split into individual patches makes reviewing easy.
-Additionally, the cover letter and patch descriptions are very
-informative, insightful and well written. However, I'm concerned about a
-key aspect of the implementation, namely relying on a device handler to
-alter the meaning of a block layer request. My concern about this
-approach is that at most one device handler can be associated with a
-SCSI LLD. If in the future more functionality would be added to the UFS
-spec and if it would be desirable to implement that functionality as a
-new kernel module, it won't be possible to implement that functionality
-as a new device handler. So I think that not relying on the device
-handler infrastructure is more future proof because that removes the
-restrictions we have to deal with when using the device handler framework.
- Thanks,
+>
+> IMHO, the debug messages are primary needed during development and
+> when fixing bugs. I am sure that developers will want to enable many
+> more features that will help with debugging and which will be disabled
+> on production systems.
 
-Bart.
+I agree with you in general speaking.
+For real production build we usually keep a few critical debugging
+methods in case of some
+potential bugs which are extremely hard to be found in production test.
+Dynamic debug is one of these methods.
+I assume it is widely used for maintenance to PC or server because I
+can find it is enabled in some
+popular Linux distribution configs.
+
+Here is the search result from my PC with Ubuntu default installation.
+zhai@ThinkPad:/boot$ cat config-4.15.0-99-generic | grep DYNAMIC_DEBUG
+CONFIG_DYNAMIC_DEBUG=y
+
+>
+> I expect that Google will not release only the single binary. They
+> should release also the sources and build configuration. Then
+
+Yes, they have released the source and configuration which could be freely
+downloaded from Google's website.
+
+> developers might build their own versions with the needed debugging
+> features enabled.
+
+Yes, we do have the debug build for this.
+But as I mentioned above, it is a little bit different for my requirement.
+Actually my patch is to address the problem for embedded system where
+image size is needed to be
+considered when CONFIG_DYNAMIC_DEBUG is being enable globally.
+
+For a "make allyesconfig" build, 2,335,704 bytes will be increased by
+enabling CONFIG_DYNAMIC_DEBUG.
+It is trivial for PC or server but might matter for embedded product.
+So my patch is to give user an option to
+only enable dynamic debug for modules especially in this GKI case.
+
+Thanks
+Orson
+>
+> Best Regards,
+> Petr
