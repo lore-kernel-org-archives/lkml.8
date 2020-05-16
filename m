@@ -2,207 +2,117 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298A0C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 909CD206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08AAF206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:43:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlSSCiFz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KMWk+NQS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgEPChi (ORCPT
+        id S1727885AbgEPCna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 22:37:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36670 "EHLO
+        Fri, 15 May 2020 22:43:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726247AbgEPChh (ORCPT
+        by vger.kernel.org with ESMTP id S1726550AbgEPCn3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 22:37:37 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73229C061A0C;
-        Fri, 15 May 2020 19:37:37 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id 17so4506660ilj.3;
-        Fri, 15 May 2020 19:37:37 -0700 (PDT)
+        Fri, 15 May 2020 22:43:29 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DC48C05BD0A
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 19:43:29 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t40so1833144pjb.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 19:43:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e+Om/GsyDrpyV1h+nZkU0dBuPGFU3TkzcVyywQUT9C8=;
-        b=YlSSCiFz7D2P0SHo/hB1dOKbVDBgwqB3bbFXiseSa4VR0BMjp+xU3hiKpTRCWg4Duc
-         rGklV2WRDYVYENVj9vnH8RDWSgOIT1CP4nshdYJLzGA8vZiFvKDToDDux9xoEVtGYSRS
-         Hzz6+zJxYI7P8tgWP5eJte4FmLpUssj/zf56zH4/DHKqC9dnssp3LvPczqvzzgMrIi8k
-         B/PWF5fN6n4FhTIvD+xq7OcclfTByKkkPRozO05tJM2Mty0z7vscexgQNIYk69lFIwF8
-         6TQYYLwb+KuF0bsj7FviLEwcDz/gonYP1l05OhpE/zjvwGFiA0cWYC6UhdFgibA9pUo6
-         dwog==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cglgAeogEsYtyEtsWWA7EKVu4oJhwNRDGYnJtkMLvSQ=;
+        b=KMWk+NQSpb/1CpN3DQS0NjXCMJ3eK4oWJD3mIbC84O3JQ9n96BQD6KOyhnPvS5ni1S
+         +LW+Dgeew7NVywcQinZhWtU6ACEpt6oc6Fjk7HDeg16n1/ogtorphBRVCGPnaJ1vZtlw
+         TbKbeHURR9Q1QRxtyEOEjpW0BGcjNbmBJhkKs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e+Om/GsyDrpyV1h+nZkU0dBuPGFU3TkzcVyywQUT9C8=;
-        b=ErwlvQ0apG3ol+IS5FfBA1WJjDpN7N6p+KKPFqGVbkgoTMPTHJrPp9+RQKhDw7szQ/
-         UDu7cIEbM8Ndo94Xu1u+rGBaJNV5RdRefnmyvTz46LYjIVUW/WvxARsYHr51VKVYf2+Q
-         sJPdbVn9BGHNRttT+iabuAaMfWnnBwPIK9daFMjDO3TcTitEDWPwfvGOTX9kHZy2zR60
-         7/HdzvADeIHMHUi6wLLWOuVaOvbwO84VjkX2WZsOwrH0vm78wGxHUS44m3jExH2W3XYD
-         RiOh0dusXh6TxDjR8kv7VNez0RXGDWOOnueQsT7Yu9yIMETiDmvTHFbdtuqNs8a1p3hk
-         br/A==
-X-Gm-Message-State: AOAM532sM5pmo68AjkHtlorWdUDZKhhbSFpmBTEMZ5KHYGIVFWp1pDyi
-        FUSUjawQ3RfWLJY0dcAc3RvCGx1SjaTYVAR+GfY=
-X-Google-Smtp-Source: ABdhPJyKYz5daI9cmrjW68tb2H0AL4TkpkC9K+/kUc+NPMYXsmvpI501KTEnTEZ8WuCkY1yzNxl3lsEo40cmEDc1z5Y=
-X-Received: by 2002:a92:9f4b:: with SMTP id u72mr4727883ili.273.1589596656775;
- Fri, 15 May 2020 19:37:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cglgAeogEsYtyEtsWWA7EKVu4oJhwNRDGYnJtkMLvSQ=;
+        b=EBuDbUTGVI9qsxvGWrSsKpMAi5cO9CrDgsJyO+C/7RDbQHLhCmtdOLMkBLRvlPcu4s
+         /3QeIT4UHUzEWxadkdC9HtGM5mPLu7x36ppcFZySVTu0+5x8z+ISItyQv9sQ0CVh3T7b
+         7U6O83L1BA+JTglY8z/cXJmeKYCl4tYrS51mFtBbRn+ZgGedCS3TptMuVZkJ1uttwzuH
+         9pXRjj1zmehvbtqBgQG0WznW/FRkbht3FJigPOP5MmAykrPPr0hVeVZYCXDcqszCslQ0
+         d3CudsZUCsXLYMICP54zQRvcKSJOLECYld9qOGof8AGLybJbLtl9rjfL1aKHUFfcPjcL
+         nHdQ==
+X-Gm-Message-State: AOAM532greal1mPVgVvWYWizXhXsvvRH4SYSW/JxNI3Weh6wXlBkrC50
+        XsbEPscuY++TUCtQX9i5NpnonA==
+X-Google-Smtp-Source: ABdhPJw04lvscjiz+8sKkgyXLJk/uIS3zfg+tcq/GyQDDZrE3MBeGrWUumnrOWcU9/ZqO+7Dv5MOoQ==
+X-Received: by 2002:a17:90a:30ef:: with SMTP id h102mr6727633pjb.110.1589597008980;
+        Fri, 15 May 2020 19:43:28 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a30sm2731879pgm.44.2020.05.15.19.43.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 19:43:27 -0700 (PDT)
+Date:   Fri, 15 May 2020 19:43:26 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
+        sashal@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 4/6] pstore/ram: Introduce max_reason and convert
+ dump_oops
+Message-ID: <202005151942.830CDF8E@keescook>
+References: <20200506211523.15077-1-keescook@chromium.org>
+ <20200506211523.15077-5-keescook@chromium.org>
+ <20200512233504.GA118720@sequoia>
 MIME-Version: 1.0
-References: <20200429220732.31602-1-yu-cheng.yu@intel.com> <20200429220732.31602-2-yu-cheng.yu@intel.com>
- <b5197a8d-5d8b-e1f7-68d4-58d80261904c@intel.com> <dd5b9bab31ecf247a0b4890e22bfbb486ff52001.camel@intel.com>
- <5cc163ff9058d1b27778e5f0a016c88a3b1a1598.camel@intel.com>
- <b0581ddc-0d99-cbcf-278e-0be55ba939a0@intel.com> <44c055342bda4fb4730703f987ae35195d1d0c38.camel@intel.com>
- <32235ffc-6e6c-fb3d-80c4-a0478e2d0e0f@intel.com> <6272c481-af90-05c5-7231-3ba44ff9bd02@citrix.com>
-In-Reply-To: <6272c481-af90-05c5-7231-3ba44ff9bd02@citrix.com>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Fri, 15 May 2020 19:37:00 -0700
-Message-ID: <CAMe9rOqwbxis1xEWbOsftMB9Roxdb3=dp=_MgK8z2pwPP36uRw@mail.gmail.com>
-Subject: Re: [PATCH v10 01/26] Documentation/x86: Add CET description
-To:     Andrew Cooper <andrew.cooper3@citrix.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512233504.GA118720@sequoia>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 5:13 PM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
->
-> On 15/05/2020 23:43, Dave Hansen wrote:
-> > On 5/15/20 2:33 PM, Yu-cheng Yu wrote:
-> >> On Fri, 2020-05-15 at 11:39 -0700, Dave Hansen wrote:
-> >>> On 5/12/20 4:20 PM, Yu-cheng Yu wrote:
-> >>> Can a binary compiled with CET run without CET?
-> >> Yes, but a few details:
-> >>
-> >> - The shadow stack is transparent to the application.  A CET application does
-> >> not have anything different from a non-CET application.  However, if a CET
-> >> application uses any CET instructions (e.g. INCSSP), it must first check if CET
-> >> is turned on.
-> >> - If an application is compiled for IBT, the compiler inserts ENDBRs at branch
-> >> targets.  These are nops if IBT is not on.
-> > I appreciate the detailed response, but it wasn't quite what I was
-> > asking.  Let's ignore IBT for now and just talk about shadow stacks.
-> >
-> > An app compiled with the new ELF flags and running on a CET-enabled
-> > kernel and CPU will start off with shadow stacks allocated and enabled,
-> > right?  It can turn its shadow stack off per-thread with the new prctl.
-> >  But, otherwise, it's stuck, the only way to turn shadow stacks off at
-> > startup would be editing the binary.
-> >
-> > Basically, if there ends up being a bug in an app that violates the
-> > shadow stack rules, the app is broken, period.  The only recourse is to
-> > have the kernel disable CET and reboot.
-> >
-> > Is that right?
->
-> If I may interject with the experience of having got supervisor shadow
-> stacks working for Xen.
->
-> Turning shadow stacks off is quite easy - clear MSR_U_CET.SHSTK_EN and
-> the shadow stack will stay in whatever state it was in, and you can
-> largely forget about it.  (Of course, in a sandbox scenario, it would be
-> prudent to prevent the ability to disable shadow stacks.)
->
-> Turning shadow stacks on is much more tricky.  You cannot enable it in
-> any function you intend to return from, as the divergence between the
-> stack and shadow stack will constitute a control flow violation.
->
->
-> When it comes to binaries,  you can reasonably arrange for clone() to
-> start a thread on a new stack/shstk, as you can prepare both stacks
-> suitably before execution starts.
->
-> You cannot reasonably implement a system call for "turn shadow stacks on
-> for me", because you'll crash on the ret out of the VDSO from the system
-> call.  It would be possible to conceive of an exec()-like system call
-> which is "discard my current stack, turn on shstk, and start me on this
-> new stack/shstk".
->
-> In principle, with a pair of system calls to atomically manage the ststk
-> settings and stack switching, it might possible to construct a
-> `run_with_shstk_enabled(func, stack, shstk)` API which executes in the
-> current threads context and doesn't explode.
->
-> Fork() is a problem when shadow stacks are disabled in the parent.  The
-> moment shadow stacks are disabled, the regular stack diverges from the
-> shadow stack.  A CET-enabled app which turns off shstk and then fork()'s
-> must have the child inherit the shstk-off property.  If the child were
-> to start with shstk enabled, it would explode almost immediately due to
-> the parent's stack divergence which it inherited.
->
->
-> Finally seeing as the question was asked but not answered, it is
-> actually quite easy to figure out whether shadow stacks are enabled in
-> the current thread.
->
->     mov     $1, %eax
->     rdsspd  %eax
+On Tue, May 12, 2020 at 06:35:04PM -0500, Tyler Hicks wrote:
+> On 2020-05-06 14:15:21, Kees Cook wrote:
+> > @@ -954,7 +965,11 @@ static void __init ramoops_register_dummy(void)
+> >  	pdata.console_size = ramoops_console_size;
+> >  	pdata.ftrace_size = ramoops_ftrace_size;
+> >  	pdata.pmsg_size = ramoops_pmsg_size;
+> > -	pdata.dump_oops = dump_oops;
+> > +	/* Parse deprecated module param "dump_oops" into "max_reason". */
+> > +	if (ramoops_dump_oops != -1)
+> > +		pdata.max_reason = ramoops_dump_oops ? KMSG_DUMP_OOPS
+> > +						     : KMSG_DUMP_PANIC;
+> > +	pdata.max_reason = ramoops_max_reason;
+> 
+> This isn't quite right. We're conditionally assigning pdata.max_reason
+> and then immediately re-assigning it.
+> 
+> IIUC, we're just missing an else block and it should look like this:
+> 
+> 	/* Parse deprecated module param "dump_oops" into "max_reason". */
+> 	if (ramoops_dump_oops != -1)
+> 		pdata.max_reason = ramoops_dump_oops ? KMSG_DUMP_OOPS
+> 						     : KMSG_DUMP_PANIC;
+> 	else
+> 		pdata.max_reason = ramoops_max_reason;
 
-This is for 32-bit mode.  I use
-
-        /* Check if shadow stack is in use.  */
-        xorl    %esi, %esi
-        rdsspq  %rsi
-        testq   %rsi, %rsi
-        /* Normal return if shadow stack isn't in use.  */
-        je      L(no_shstk)
-
->     cmp     $1, %eax
->     je      no_shstk
->             ...
-> no_shsk:
->
-> rdssp is allocated from the hint nop encoding space, and the minimum
-> alignment of the shadow stack pointer is 4.  On older parts, or with
-> shstk disabled (either at the system level, or for the thread), the $1
-> will be preserved in %eax, while if CET is active, it will be clobbered
-> with something that has the bottom two bits clear.
->
-> It turns out this is a lifesaver for codepaths (e.g. the NMI handler)
-> which need to use other CET instructions which aren't from the hint nop
-> space, and run before the BSP can set everything up.
->
-> ~Andrew
-
-
+Whoops, I forgot to CC you Tyler! This should be fixed now here:
+https://lore.kernel.org/lkml/20200515184434.8470-6-keescook@chromium.org/
 
 -- 
-H.J.
+Kees Cook
