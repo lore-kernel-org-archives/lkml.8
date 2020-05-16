@@ -2,133 +2,249 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC2AC433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6294C433DF
 	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6621120727
+	by mail.kernel.org (Postfix) with ESMTP id 8451E207C3
 	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:10:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQaIJhvP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589645439;
+	bh=Qx3DPnLp4Vlp4WJ3u6wX1iOXw5Nit6PjtbPUDtvgjSc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PjwEz42Gz1vs2sZwncaK8qXElca3iR4x4Dp201Vc/AnYfotP+TwTf64q1JDM9lv+i
+	 VDcSp4DPKwStJMvExcNiXYIOs/VfQOjrB6bHzVxQc3h875+FOYGASpFXTG36lxjFvW
+	 TfbfOb6KYc3cdSb3XlaQSkqQblSNIG9aUq0BxGrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgEPQKi (ORCPT
+        id S1726374AbgEPQKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 16 May 2020 12:10:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgEPQKh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail.kernel.org ([198.145.29.99]:50276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726297AbgEPQKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 16 May 2020 12:10:37 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DA85C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 09:10:37 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id b12so2201976plz.13
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 09:10:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XuUYo7fAaVl+pkn+HcNF5Gmy3Q32Dhaljcuilvq1vqc=;
-        b=UQaIJhvP38huoji8qyDdm+QN6Pzawt8SQld35xCVbOG2AXuh0LxJNmP2HQwo1mOl5h
-         Sx13wCzxgnwH2Iik2qOvaVvg8PDfUUziWC3T16yoS9nSoSJ1pEGJD73xJJfc2lcE33lR
-         0J156v56G3s2w9xEktTWBNgMxcEn8k6TaMi9OZdhQQKr4RfH287rj5Gxgi+MSu9dDQld
-         HzRpOzlNLpe1kB4RXWykkhz7ub3W/pQlTWDWLS9lSRm44NyjEnGs2/jDpTsdxdUcOZZH
-         Z+D0b43ZSN5EsTegjtvlHCZRB+ydgUivbFjbySihii1I669d3dx3zao4k+sOPp0Z3fmZ
-         ozEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XuUYo7fAaVl+pkn+HcNF5Gmy3Q32Dhaljcuilvq1vqc=;
-        b=Gc9cJ1JzBauRP1gFNKcogqLGueX6/zrXKUu3oel2372z3O6/JO++t91QquPcq8t/Hb
-         jBpMw1xv/cjM/r/GOSZcmrajHSIxna1gVoHsAvMos6ZeV/2cgMkvE8d6LeBKDnOtJQyc
-         vCWgQYdxNDVcYtrWKN4LZdGE0r4TzrNk3DQUafUiz8kMOzUyBcGw86+wBXyuqI7Vt6YG
-         eTk7c1rHJK3iRhCkUhjJMz3MCIl7E1nnTQjWI6pagIxiGtgKKIoez0Q4uKuk4WP49yCU
-         7JiRf46zUId3XhnmbNLGXZlt1UUJChr9KRaLkodzCq6tvPNhHeuRB7TPUYx9c0fJcaoe
-         RB0g==
-X-Gm-Message-State: AOAM533FwU394bifPF1hT0VGxlOlJDoBBminT/QAWtaoJwyRLRbhzfd6
-        7WIZEHQyt2mQz2hWOx37zFI=
-X-Google-Smtp-Source: ABdhPJxtQN9S1Kx2J7tkycj95PdZ4wjpzmDbPAw+GGAnSPTUIMFSyzjndcB5W1GouVD+DoArC+AEJA==
-X-Received: by 2002:a17:90a:ae0d:: with SMTP id t13mr9338022pjq.1.1589645436847;
-        Sat, 16 May 2020 09:10:36 -0700 (PDT)
-Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id y13sm4003132pfq.107.2020.05.16.09.10.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 May 2020 09:10:35 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH] tracing: do not create option file latency-format
-Date:   Sun, 17 May 2020 00:10:17 +0800
-Message-Id: <20200516161017.155791-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.25.1
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFE882065C;
+        Sat, 16 May 2020 16:10:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589645436;
+        bh=Qx3DPnLp4Vlp4WJ3u6wX1iOXw5Nit6PjtbPUDtvgjSc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=k6/tivZNjd8R8swJwDe/I/LbARHwE//1VTw75YxDTQnU4kjsOr8uOUUUIE4kHPLck
+         CcB7TEgVRbq+/1fFcOY8zHrtiPSDL/UewC/ncQrkAGtIkOpT9iRmJ51XotBV4MBRJ3
+         5Vh8E8jbb1joMTVcVXPQNABRc+WUhbUdeoCOJq/k=
+Date:   Sat, 16 May 2020 17:10:32 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     <Eugen.Hristev@microchip.com>
+Cc:     <alexandru.ardelean@analog.com>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lars@metafoo.de>,
+        <Ludovic.Desroches@microchip.com>
+Subject: Re: [RFC PATCH] iio: __iio_update_buffers: Update mode before
+ preenable/after postdisable
+Message-ID: <20200516171032.29fa8e08@archlinux>
+In-Reply-To: <8551295e-c166-674e-c449-61ccb5bbef76@microchip.com>
+References: <20200430082455.1628-1-alexandru.ardelean@analog.com>
+        <0096231b-eda4-7685-3411-3de467618c25@microchip.com>
+        <dbd7fba9-ad26-fb8f-7a71-55b75951409f@microchip.com>
+        <8551295e-c166-674e-c449-61ccb5bbef76@microchip.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The flag LATENCY_FMT actually is usually set by latency tracers internally.
-So I think we should not export it to userspace. This patch removes the
-option file 'latency-format' but keep the flag defined as usual.
+On Thu, 14 May 2020 10:56:16 +0000
+<Eugen.Hristev@microchip.com> wrote:
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- kernel/trace/trace.c | 4 ++++
- kernel/trace/trace.h | 4 +++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+> On 04.05.2020 15:27, Eugen Hristev - M18282 wrote:
+> > On 30.04.2020 11:42, Eugen Hristev - M18282 wrote:  
+> >> On 30.04.2020 11:24, Alexandru Ardelean wrote:  
+> >>> From: Lars-Peter Clausen <lars@metafoo.de>
+> >>>
+> >>> It is clear that we transition to INDIO_DIRECT_MODE when disabling the
+> >>> buffer(s) and it is also clear that we transition from INDIO_DIRECT_MODE
+> >>> when enabling the buffer(s). So leaving the currentmode field
+> >>> INDIO_DIRECT_MODE until after the preenable() callback and updating it to
+> >>> INDIO_DIRECT_MODE before the postdisable() callback doesn't add additional
+> >>> value. On the other hand some drivers will need to perform different
+> >>> actions depending on which mode the device is going to operate in/was
+> >>> operating in.
+> >>>
+> >>> Moving the update of currentmode before preenable() and after postdisable()
+> >>> enables us to have drivers which perform mode dependent actions in those
+> >>> callbacks.
+> >>>
+> >>> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+> >>> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> >>> ---
+> >>>
+> >>> This patch is also a V2 of this older patch from a while ago:
+> >>>     https://lore.kernel.org/linux-iio/1431525891-19285-5-git-send-email-lars@metafoo.de/
+> >>>
+> >>> However, in this recent context, it comes to fix this:
+> >>>     https://lore.kernel.org/linux-iio/b9ab676489de3575984dac5610fcf05fd8742a38.camel@analog.com/T/#mc09284c8f79250b92a52fd5b8d1f541d1c02c0c0
+> >>>
+> >>> At this point, I don't have a clear idea if this approach is good or
+> >>> not; since the motivation is to fix the at91 adc.
+> >>> Hence the RFC.
+> >>>
+> >>> Some excerpt from the AT91 discussion:
+> >>> -------------------------------------------------------------------
+> >>> I decided to do a bit of shell magic for this:
+> >>>
+> >>> get_files() {
+> >>> git grep -w iio_buffer_setup_ops  | grep drivers | cut -d: -f1 | sort | uniq
+> >>> }
+> >>>
+> >>> for file in $(get_files) ; do
+> >>>        if grep -q currentmode $file ; then
+> >>>            echo $file
+> >>>        fi
+> >>> done
+> >>>
+> >>> It finds 4 drivers.
+> >>> Though, `get_files()` will return 56 files.
+> >>>
+> >>> drivers/iio/accel/bmc150-accel-core.c
+> >>> drivers/iio/adc/at91-sama5d2_adc.c
+> >>> drivers/iio/adc/stm32-dfsdm-adc.c
+> >>> drivers/iio/magnetometer/rm3100-core.c
+> >>>
+> >>> The rm3100 driver doesn't do any checks in the setup_ops for 'currentmode' as
+> >>> far as I could see.
+> >>>
+> >>> So, Lars' patch could work nicely to fix this current case and not break others.
+> >>>
+> >>> Semantically though, it would sound nicer to have a 'nextmode' parameter
+> >>> somewhere; maybe on the setup_ops(indio_dev, nextmode)?
+> >>> Though, only those 3 drivers would really ever use it; so doing it like that
+> >>> sounds like overkill.
+> >>>
+> >>> So, we're left with Lars' patch or we could add an 'indio_dev->nextmode' field,
+> >>> that may be used in just these 3 drivers [which again: sounds overkill at this
+> >>> point in time].
+> >>>
+> >>> Alternatively, this 'indio_dev->currentmode' could be removed from all these 3
+> >>> drivers somehow. But that needs testing and a thorough understanding of all 3
+> >>> drivers and what they're doing, to do properly.
+> >>> -------------------------------------------------------------------  
+> >>
+> >> Hi Alex,
+> >>
+> >> Thanks for finding this. I will test this with the at91-sama5d2_adc
+> >> driver on Jonathan's testing branch. I will let you know of the results.
+> >>
+> >> Eugen  
+> > 
+> > Hi,
+> > 
+> > For sama5d2-xplained, hw trigger testing, at91-sama5d2_adc driver,
+> > Tested-by: Eugen Hristev <eugen.hristev@microchip.com>
+> > 
+> > I did not get my hands on the touchscreen yet, but hopefully soon.
+> > 
+> > Thanks again,
+> > Eugen  
+> 
+> Hello Jonathan,
+> 
+> Without this patch, your current testing branch is broken for hardware 
+> trigger for at91-sama5d2_adc (including for-5.8b tag)
+> 
+> You want me to create a patch that fixes that in the driver, or you will 
+> take this patch maybe ?
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 29615f15a820..0d190e0021d5 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4733,6 +4733,8 @@ static int tracing_trace_options_show(struct seq_file *m, void *v)
- 	trace_opts = tr->current_trace->flags->opts;
- 
- 	for (i = 0; trace_options[i]; i++) {
-+		if (strlen(trace_options[i]) == 0)
-+			continue;
- 		if (tr->trace_flags & (1 << i))
- 			seq_printf(m, "%s\n", trace_options[i]);
- 		else
-@@ -8359,6 +8361,8 @@ static void create_trace_options_dir(struct trace_array *tr)
- 		return;
- 
- 	for (i = 0; trace_options[i]; i++) {
-+		if (strlen(trace_options[i]) == 0)
-+			continue;
- 		if (top_level ||
- 		    !((1 << i) & TOP_LEVEL_TRACE_FLAGS))
- 			create_trace_option_core_file(tr, trace_options[i], i);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 4eb1d004d5f2..6d9f0bba09c3 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1264,6 +1264,8 @@ extern void trace_parser_put(struct trace_parser *parser);
- extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 	size_t cnt, loff_t *ppos);
- 
-+#define TRACE_OPTION_HIDE_NAME	""
-+
- /*
-  * Only create function graph options if function graph is configured.
-  */
-@@ -1321,7 +1323,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		C(SYM_USEROBJ,		"sym-userobj"),		\
- 		C(PRINTK_MSGONLY,	"printk-msg-only"),	\
- 		C(CONTEXT_INFO,		"context-info"),   /* Print pid/cpu/time */ \
--		C(LATENCY_FMT,		"latency-format"),	\
-+		C(LATENCY_FMT,		TRACE_OPTION_HIDE_NAME),\
- 		C(RECORD_CMD,		"record-cmd"),		\
- 		C(RECORD_TGID,		"record-tgid"),		\
- 		C(OVERWRITE,		"overwrite"),		\
--- 
-2.25.1
+Hmmm. Semantically I wasn't overly keen on this patch, but it does appear
+harmless and will kind of make more sense once the big rework Alex
+is doing is finished..  My concern was that preenable should see the
+currentmode as the one before enabling - so not a buffered mode, 
+and with this it doesn't.
+
+I sanity checked the cases identified and they all seem fine so
+let's go with it.
+
+We are a bit near the merge window for me to be absolutely sure I'll get
+another pull request out, so this might get shifted to the fixes branch
+if I miss that.
+
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+> 
+> Thanks !
+> Eugen
+> >>  
+> >>>
+> >>>     drivers/iio/industrialio-buffer.c | 8 +++-----
+> >>>     1 file changed, 3 insertions(+), 5 deletions(-)
+> >>>
+> >>> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+> >>> index 30af8af8f312..efcc44b62946 100644
+> >>> --- a/drivers/iio/industrialio-buffer.c
+> >>> +++ b/drivers/iio/industrialio-buffer.c
+> >>> @@ -989,6 +989,7 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
+> >>>            indio_dev->active_scan_mask = config->scan_mask;
+> >>>            indio_dev->scan_timestamp = config->scan_timestamp;
+> >>>            indio_dev->scan_bytes = config->scan_bytes;
+> >>> +       indio_dev->currentmode = config->mode;
+> >>>
+> >>>            iio_update_demux(indio_dev);
+> >>>
+> >>> @@ -1024,8 +1025,6 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
+> >>>                            goto err_disable_buffers;
+> >>>            }
+> >>>
+> >>> -       indio_dev->currentmode = config->mode;
+> >>> -
+> >>>            if (indio_dev->setup_ops->postenable) {
+> >>>                    ret = indio_dev->setup_ops->postenable(indio_dev);
+> >>>                    if (ret) {
+> >>> @@ -1042,10 +1041,10 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
+> >>>                                                 buffer_list)
+> >>>                    iio_buffer_disable(buffer, indio_dev);
+> >>>     err_run_postdisable:
+> >>> -       indio_dev->currentmode = INDIO_DIRECT_MODE;
+> >>>            if (indio_dev->setup_ops->postdisable)
+> >>>                    indio_dev->setup_ops->postdisable(indio_dev);
+> >>>     err_undo_config:
+> >>> +       indio_dev->currentmode = INDIO_DIRECT_MODE;
+> >>>            indio_dev->active_scan_mask = NULL;
+> >>>
+> >>>            return ret;
+> >>> @@ -1080,8 +1079,6 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
+> >>>                            ret = ret2;
+> >>>            }
+> >>>
+> >>> -       indio_dev->currentmode = INDIO_DIRECT_MODE;
+> >>> -
+> >>>            if (indio_dev->setup_ops->postdisable) {
+> >>>                    ret2 = indio_dev->setup_ops->postdisable(indio_dev);
+> >>>                    if (ret2 && !ret)
+> >>> @@ -1090,6 +1087,7 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
+> >>>
+> >>>            iio_free_scan_mask(indio_dev, indio_dev->active_scan_mask);
+> >>>            indio_dev->active_scan_mask = NULL;
+> >>> +       indio_dev->currentmode = INDIO_DIRECT_MODE;
+> >>>
+> >>>            return ret;
+> >>>     }
+> >>> --
+> >>> 2.17.1
+> >>>  
+> >>  
+> >   
+> 
 
