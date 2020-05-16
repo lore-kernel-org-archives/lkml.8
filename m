@@ -2,103 +2,143 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C65AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3BB5206F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:14:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4wnM1PFr"
+	by mail.kernel.org (Postfix) with ESMTP id 69CAD20709
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589642108;
+	bh=1wnDYawOrwvFaHHFJo8KFJj2DbpUF3y3YoF9gS4jVeg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RPPwEz20Ivj9ilpY9LXUgoauzH4xjbuQjatdpXokYmjDx0cns43fKR6GsHVg4zKHK
+	 UVB2c38rhPRV79NAi6h+Y3RHsHEXl029aGQQ303l0WFGUe9VpzeaOAoCPi1nn5gsCe
+	 dbRbSAMcILe+X4mi2xvRaVPOwmoBbNcz9j9G7FLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgEPPOQ (ORCPT
+        id S1726959AbgEPPPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 11:14:16 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:35406 "EHLO vps0.lunn.ch"
+        Sat, 16 May 2020 11:15:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbgEPPOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 11:14:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=+N3ofBZjdn7SbrBi6qDil1VdNsI2nuXn3YK00wVe5Ok=; b=4wnM1PFrcCkyn1aKfVTrKd42Nx
-        8O2rbuQkVuCf8PLDUJGuYGEiXfffXLHNee/lKic5dFMIKOOTOlBx8Ikt1naE7jbldmi2Li89cgTFY
-        u43pIYAEs7vph39Zrn9MVl+7FA5alJC08GWoyL6QnN14oD1tw2osQixyv+FbNHkgLMGU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jZyVv-002TcQ-B4; Sat, 16 May 2020 17:14:11 +0200
-Date:   Sat, 16 May 2020 17:14:11 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Luo bin <luobin9@huawei.com>
-Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, luoxianjun@huawei.com,
-        yin.yinshi@huawei.com, cloud.wangxiaoyun@huawei.com
-Subject: Re: [PATCH net-next] hinic: add support to set and get pause param
-Message-ID: <20200516151411.GT527401@lunn.ch>
-References: <20200516020030.23017-1-luobin9@huawei.com>
+        id S1726416AbgEPPPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 11:15:07 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 728ED206F4;
+        Sat, 16 May 2020 15:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589642106;
+        bh=1wnDYawOrwvFaHHFJo8KFJj2DbpUF3y3YoF9gS4jVeg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QMotZ5njogEH7T0uezDzexY35QIwhVqQHMjHAuQgoEZy2vK03Nb1fRRG5RQVuxlZ8
+         vr9a8OHYVrKXEpxdHSLIzzpbuClYpNBESWOnBLgmFdaoO74n57998+2ac+6wl1GqTb
+         It/mPJLdq/j4tuOZYbBh+Kr0KXD4Nv222Sjkd+xQ=
+Date:   Sat, 16 May 2020 16:15:02 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        "Stefan Popa" <stefan.popa@analog.com>,
+        "Hartmut Knaack" <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH] iio: dac: ad5446: Replace indio_dev->mlock with own
+ device lock
+Message-ID: <20200516161502.48a2a181@archlinux>
+In-Reply-To: <20200514090048.80359-1-sergiu.cuciurean@analog.com>
+References: <20200514090048.80359-1-sergiu.cuciurean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200516020030.23017-1-luobin9@huawei.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 02:00:30AM +0000, Luo bin wrote:
-> +static int hinic_set_pauseparam(struct net_device *netdev,
-> +				struct ethtool_pauseparam *pause)
-> +{
-> +	struct hinic_dev *nic_dev = netdev_priv(netdev);
-> +	struct hinic_pause_config pause_info = {0};
-> +	struct hinic_port_cap port_cap = {0};
-> +	int err;
-> +
-> +	err = hinic_port_get_cap(nic_dev, &port_cap);
-> +	if (err) {
-> +		netif_err(nic_dev, drv, netdev,
-> +			  "Failed to get port capability\n");
-> +		return -EIO;
-> +	}
-> +
-> +	if (pause->autoneg != port_cap.autoneg_state) {
-> +		netif_err(nic_dev, drv, netdev,
-> +			  "To change autoneg please use: ethtool -s <dev> autoneg <on|off>\n");
-> +		return -EOPNOTSUPP;
-> +	}
+On Thu, 14 May 2020 12:00:42 +0300
+Sergiu Cuciurean <sergiu.cuciurean@analog.com> wrote:
 
-It is unclear at the moment if this is the correct thing to do. There
-was a discussion this week involving Russell King and Doug Berger you
-might want to read.
+> As part of the general cleanup of indio_dev->mlock, this change replaces
+> it with a local lock on the device's state structure.
+> 
+> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-> +
-> +	pause_info.auto_neg = pause->autoneg;
-> +	pause_info.rx_pause = pause->rx_pause;
-> +	pause_info.tx_pause = pause->tx_pause;
-> +
-> +	down(&nic_dev->hwdev->func_to_io.nic_cfg.cfg_lock);
-> +	err = hinic_set_hw_pause_info(nic_dev->hwdev, &pause_info);
-> +	if (err) {
-> +		netif_err(nic_dev, drv, netdev, "Failed to set pauseparam\n");
-> +		up(&nic_dev->hwdev->func_to_io.nic_cfg.cfg_lock);
-> +		return err;
-> +	}
-> +	nic_dev->hwdev->func_to_io.nic_cfg.pause_set = true;
-> +	nic_dev->hwdev->func_to_io.nic_cfg.auto_neg = pause->autoneg;
-> +	nic_dev->hwdev->func_to_io.nic_cfg.rx_pause = pause->rx_pause;
-> +	nic_dev->hwdev->func_to_io.nic_cfg.tx_pause = pause->tx_pause;
-> +	up(&nic_dev->hwdev->func_to_io.nic_cfg.cfg_lock);
-> +
-> +	netif_info(nic_dev, drv, netdev, "Set pause options, tx: %s, rx: %s\n",
-> +		   pause->tx_pause ? "on" : "off",
-> +		   pause->rx_pause ? "on" : "off");
+Thanks,
 
-netif_dbg()
+Jonathan
 
-	Andrew
+> ---
+>  drivers/iio/dac/ad5446.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/dac/ad5446.c b/drivers/iio/dac/ad5446.c
+> index 9884e29b19b7..8f8afc8999bc 100644
+> --- a/drivers/iio/dac/ad5446.c
+> +++ b/drivers/iio/dac/ad5446.c
+> @@ -33,6 +33,7 @@
+>   * @chip_info:		chip model specific constants, available modes etc
+>   * @reg:		supply regulator
+>   * @vref_mv:		actual reference voltage used
+> + * @lock		lock to protect the data buffer during write ops
+>   */
+>  
+>  struct ad5446_state {
+> @@ -43,6 +44,7 @@ struct ad5446_state {
+>  	unsigned			cached_val;
+>  	unsigned			pwr_down_mode;
+>  	unsigned			pwr_down;
+> +	struct mutex			lock;
+>  };
+>  
+>  /**
+> @@ -112,7 +114,7 @@ static ssize_t ad5446_write_dac_powerdown(struct iio_dev *indio_dev,
+>  	if (ret)
+>  		return ret;
+>  
+> -	mutex_lock(&indio_dev->mlock);
+> +	mutex_lock(&st->lock);
+>  	st->pwr_down = powerdown;
+>  
+>  	if (st->pwr_down) {
+> @@ -123,7 +125,7 @@ static ssize_t ad5446_write_dac_powerdown(struct iio_dev *indio_dev,
+>  	}
+>  
+>  	ret = st->chip_info->write(st, val);
+> -	mutex_unlock(&indio_dev->mlock);
+> +	mutex_unlock(&st->lock);
+>  
+>  	return ret ? ret : len;
+>  }
+> @@ -197,11 +199,11 @@ static int ad5446_write_raw(struct iio_dev *indio_dev,
+>  			return -EINVAL;
+>  
+>  		val <<= chan->scan_type.shift;
+> -		mutex_lock(&indio_dev->mlock);
+> +		mutex_lock(&st->lock);
+>  		st->cached_val = val;
+>  		if (!st->pwr_down)
+>  			ret = st->chip_info->write(st, val);
+> -		mutex_unlock(&indio_dev->mlock);
+> +		mutex_unlock(&st->lock);
+>  		break;
+>  	default:
+>  		ret = -EINVAL;
+> @@ -256,6 +258,8 @@ static int ad5446_probe(struct device *dev, const char *name,
+>  	indio_dev->channels = &st->chip_info->channel;
+>  	indio_dev->num_channels = 1;
+>  
+> +	mutex_init(&st->lock);
+> +
+>  	st->pwr_down_mode = MODE_PWRDWN_1k;
+>  
+>  	if (st->chip_info->int_vref_mv)
+
