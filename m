@@ -2,156 +2,153 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC608C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6289F20728
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:10:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589631032;
-	bh=04AbjCXytLCX9HGH+nxYI/rMKrxzV75ANLTUs/yDM/U=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=s+BvZHF+Ymb9TLJgHDbPPoKvZMrRsdQ0tylYePBqaI5KO8fzJvVg8nno1S0aZkwT7
-	 /MAJXHthbgvbgdCGxRQr6M07H11fc+PtZSSKuzVYZNd+j+xGK8BC2qPWvZNEXRSAcA
-	 6dJ9qamVBdQvtI7Ve+QnKE0UBDgN+1ufyubhJIis=
+	by mail.kernel.org (Postfix) with ESMTP id 8531620657
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:11:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="SWk1cfAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbgEPMKb (ORCPT
+        id S1726280AbgEPMLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 08:10:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726206AbgEPMKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 08:10:31 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 16 May 2020 08:11:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726206AbgEPMLa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 08:11:30 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018B5C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 05:11:29 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CDF020657;
-        Sat, 16 May 2020 12:10:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589631030;
-        bh=04AbjCXytLCX9HGH+nxYI/rMKrxzV75ANLTUs/yDM/U=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SMTPQgb5Hvr3EbSz8749/ImgGuqyITyV1BhWKkpIsG4uZvS3A8v4N4yBOg2pUraBL
-         1hgcVaRxrBMQYG0UP2evthJttAR0wLXuH+VM4zJiTFU+ORtBk0A7FzFIHVT2ZxNYiw
-         WMKg2+5Mt3WfubCC5gI9laL/Q1s/JC3gYvsbGOt8=
-Message-ID: <61e877867de7e683d88e2cc5d0945b0aecce1d2a.camel@kernel.org>
-Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Luis Henriques <lhenriques@suse.com>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        fstests <fstests@vger.kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Sat, 16 May 2020 08:10:27 -0400
-In-Reply-To: <CAOQ4uxhPzcX6Ti8UX4WOg9gJJn+YTuk9OgU80d9imoJ2QdXaWQ@mail.gmail.com>
-References: <20200514111453.GA99187@suse.com>
-         <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
-         <20200514124845.GA12559@suse.com>
-         <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
-         <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
-         <20200515111548.GA54598@suse.com>
-         <61b1f19edcc349641b5383c2ac70cbf9a15ba4bd.camel@kernel.org>
-         <CAOQ4uxiWZoSj3Pjwskd_hu-ErV9096hLt13CDcW6nEEvcwDNVA@mail.gmail.com>
-         <e227d42fdc91587e34bc64ac252970d39d9b4eee.camel@kernel.org>
-         <CAOQ4uxhPzcX6Ti8UX4WOg9gJJn+YTuk9OgU80d9imoJ2QdXaWQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49PPJb0pgSz9sTC;
+        Sat, 16 May 2020 22:11:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1589631087;
+        bh=0qptuvL/ogERi8QFjBlKHJwx/qBuiWd+7r1LimEKccU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SWk1cfAIwhbOy8POEPE+YefX6aiXtHektYCJm69+vhEReb0AEm0LtH/4atV115U0R
+         NusnDfQxbcvj/HR1K3KqYbRu3R7lYCdS/r9iCKOB8ywxvK2EMQToEV3+VBn27TIOje
+         nGQJTPToF195WQ7sw1qUXsuk9WczLlOFliS3JumRAWfFcpPUEcnvfB88caNU8kROM3
+         AANE6hkJZ5vfO7vl+zLnv1Lq2TbdA7A6UeVRucnLuoolOQvOVMrgfWVcSOmN4vrNOu
+         rOm7Q1GAUk1NDsOqvsWSsVD4ZZSOzX3p40CgHMGCT+zo2uCzY0F6YJedG+Gbjkm9ps
+         akhRDle8oXErw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     christophe.leroy@c-s.fr, christophe.leroy@csgroup.eu,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        nayna@linux.ibm.com, npiggin@gmail.com
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.7-4 tag
+Date:   Sat, 16 May 2020 22:11:47 +1000
+Message-ID: <87pnb49j0c.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-05-16 at 09:58 +0300, Amir Goldstein wrote:
-> [pulling in nfs guys]
-> 
-> > > Questions:
-> > > 1. Does sync() result in fully purging inodes on MDS?
-> > 
-> > I don't think so, but again, that code is not trivial to follow. I do
-> > know that the MDS keeps around a "strays directory" which contains
-> > unlinked inodes that are lazily cleaned up. My suspicion is that it's
-> > satisfying lookups out of this cache as well.
-> > 
-> > Which may be fine...the MDS is not required to be POSIX compliant after
-> > all. Only the fs drivers are.
-> > 
-> > > 2. Is i_nlink synchronized among nodes on deferred delete?
-> > > IWO, can inode come back from the dead on client if another node
-> > > has linked it before i_nlink 0 was observed?
-> > 
-> > No, that shouldn't happen. The caps mechanism should ensure that it
-> > can't be observed by other clients until after the change.
-> > 
-> > That said, Luis' current patch doesn't ensure we have the correct caps
-> > to check the i_nlink. We may need to add that in before we can roll with
-> > this.
-> > 
-> > > 3. Can an NFS client be "migrated" from one ceph node to another
-> > > with an open but unlinked file?
-> > > 
-> > 
-> > No. Open files in ceph are generally per-client. You can't pass around a
-> > fd (or equivalent).
-> 
-> Not sure we are talking about the same thing.
-> It's not ceph fd that is being passed around, it's the NFS client's fd.
-> If there is no case where NFS client would access ceph client2
-> with a handle it got from ceph client1, then there is no reason to satisfy
-> an open_by_handle() call for an unlinked file on client2.
-> If file was opened on client1, it may be "legal" to satisfy open_by_handle()
-> on client2, but I don't see how stopping to satisfy that can break anything.
-> 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-Not currently, but eventually we may need to allow for that...which is
-another good reason to handle this on the (Ceph) client instead, as the
-client can then decide whether treat an unlinked file as an ESTALE
-return based on its needs.
+Hi Linus,
 
-> > > I think what the test is trying to verify is that a "fully purged" inodes
-> > > cannot be opened db handle, but there is no standard way to verify
-> > > "fully purged", so the test resorts to sync() + another sync() + drop_caches.
-> > > 
-> > 
-> > Got it. That makes sense.
-> > 
-> > > Is there anything else that needs to be done on ceph in order to flush
-> > > all deferred operations from this client to MDS?
-> > 
-> > I'm leaning toward something like what Luis has proposed, but adding in
-> > appropriate cap handling.
-> 
-> That sounds fine.
-> 
-> > Basically, we have to consider the situation where one client has the
-> > file open and another client unlinks it, and then does an
-> > open_by_handle_at. Should it succeed in that case?
-> > 
-> > I can see arguments for either way.
-> 
-> IMO, the behavior should be defined for a client that has the file open.
-> For the rest it does not really matter.
-> 
-> My argument is that is it easy to satisfy the test's expectation and conform
-> to behavior of other filesystems without breaking any real workload.
-> 
-> To satisfy the test's expectation, you only need to change behavior of ceph
-> client in i_count 1 use case. If i_count is 1 need to take all relevant caps
-> to check that i_nlink is "globally" 0, before returning ESTALE.
-> But if i_count > 1, no need to bother.
+Please pull some more powerpc fixes for 5.7.
 
-Makes sense. Thanks.
+This is actually three weeks worth of fixes, I was going to send most of them
+last week but my build box had a hiccup so I didn't. ie. we haven't just found
+all these just before rc6.
 
--- 
-Jeff Layton <jlayton@kernel.org>
+cheers
 
+
+The following changes since commit 5990cdee689c6885b27c6d969a3d58b09002b0bc:
+
+  lib/mpi: Fix building for powerpc with clang (2020-04-24 13:14:59 +1000)
+
+are available in the git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.7-4
+
+for you to fetch changes up to 249c9b0cd193d983c3a0b00f3fd3b92333bfeebe:
+
+  powerpc/40x: Make more space for system call exception (2020-05-12 21:22:11 +1000)
+
+- ------------------------------------------------------------------
+powerpc fixes for 5.7 #4
+
+A fix for unrecoverable SLB faults in the interrupt exit path, introduced by the
+recent rewrite of interrupt exit in C.
+
+Four fixes for our KUAP (Kernel Userspace Access Prevention) support on 64-bit.
+These are all fairly minor with the exception of the change to evaluate the
+get/put_user() arguments before we enable user access, which reduces the amount
+of code we run with user access enabled.
+
+A fix for our secure boot IMA rules, if enforcement of module signatures is
+enabled at runtime rather than build time.
+
+A fix to our 32-bit VDSO clock_getres() which wasn't falling back to the syscall
+for unknown clocks.
+
+A build fix for CONFIG_PPC_KUAP_DEBUG on 32-bit BookS, and another for 40x.
+
+Thanks to:
+  Christophe Leroy, Hugh Dickins, Nicholas Piggin, Aurelien Jarno, Mimi Zohar,
+  Nayna Jain.
+
+- ------------------------------------------------------------------
+Christophe Leroy (3):
+      powerpc/32s: Fix build failure with CONFIG_PPC_KUAP_DEBUG
+      powerpc/vdso32: Fallback on getres syscall when clock is unknown
+      powerpc/40x: Make more space for system call exception
+
+Michael Ellerman (2):
+      Merge KUAP fix from topic/uaccess-ppc into fixes
+      powerpc/64s: Fix unrecoverable SLB crashes due to preemption check
+
+Nayna Jain (1):
+      powerpc/ima: Fix secure boot rules in ima arch policy
+
+Nicholas Piggin (4):
+      powerpc/uaccess: Evaluate macro arguments once, before user access is allowed
+      powerpc/64/kuap: Move kuap checks out of MSR[RI]=0 regions of exit code
+      powerpc/64s/kuap: Restore AMR in system reset exception
+      powerpc/64s/kuap: Restore AMR in fast_interrupt_return
+
+
+ arch/powerpc/include/asm/book3s/32/kup.h  |  2 +-
+ arch/powerpc/include/asm/hw_irq.h         | 20 +++++++-
+ arch/powerpc/include/asm/uaccess.h        | 49 ++++++++++++++------
+ arch/powerpc/kernel/entry_64.S            |  4 +-
+ arch/powerpc/kernel/exceptions-64s.S      |  1 +
+ arch/powerpc/kernel/head_40x.S            |  3 +-
+ arch/powerpc/kernel/ima_arch.c            |  6 +--
+ arch/powerpc/kernel/syscall_64.c          | 20 ++++----
+ arch/powerpc/kernel/vdso32/gettimeofday.S |  6 +--
+ 9 files changed, 78 insertions(+), 33 deletions(-)
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl6/2FcACgkQUevqPMjh
+pYAKFQ/9EnGGclynmL6LtPGZwUx85SjGDlWSLTL3edJFQZ4x66QkSBT2R6HF9PYA
+HMNC8ei5gTUBOSM9SBtapbYPfVrPO0PtjLzCIKASXpr/vmh7wPN9Fs0kcofKcRoi
+p0fnxabTxFMRjOljAsywhbNBMzT5YFN91E0Ab20x/TKsh4PbXm1NfOvHy5R1J/Hw
+EcomxGwp6yLEGGMl6hshEmPI49C2+BchO5rUxEYziGQmnfoG3QtPMLg3f9Spe764
+MdkPd9lLgP/jLSBdIIG/qGg8OT3O3tN6l/cXZE6nHri7qHAe/1UubXQ4R5zzCmut
+4hKwmDIugRdaX0MX55NKq1DRAvw6txK596Gfcas4ooO+4CXYD+0kmIcMTQsQyWxg
+SY5ZpHyrU6GTvvcvAR7NVKZVDrw/xrnlpxE5L2lqRE41BUWj1dRmU3NCRpny/otp
+WuXqi9rKeFJrPIO2ziBbj3a/205BbkYmVz+kDhemWQ7nh137ryUlaXGTbUfqgE3z
+sTNyw84Sc1NTbd5QfFABJDDIMT3kotyDgWeLiMuTw0u6FPcaixpYCSO/DcoxxrZr
+2Q6G/4QEgm6lT1tDZ0Te3dStT6PKCg6YjiC7mefMeo3OnnWJGIE3iVJJTwtDDv3a
+kuzhIMynKpNZ/26kAmydpEYjFHxmyX0nwzb8704aL6WxgGhVyTw=
+=LCRY
+-----END PGP SIGNATURE-----
