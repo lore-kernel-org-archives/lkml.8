@@ -2,100 +2,126 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD8EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B4AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 983782076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:30:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m691b3tx"
+	by mail.kernel.org (Postfix) with ESMTP id D047A207D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:33:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589621633;
+	bh=Xa5DKDmR3i44QerUh5QmkifSI8kySf4Dm8ZehLjC7kg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=wkipVj3dyjs44l1RaUcw1PzKZA0G1/XMYBtq+YbgTYKdaoTd4+XQq2eR3rXC3nSLE
+	 oDf22EkdZUs5n0Nd4mBRLQWpG1OAgYzJMh3mapNWSMNfiGnzaeSS2X0uydRLA5n4Tt
+	 Z+5qMgC1iRo7/BMixNaGpxHJ1pytild9WLk2S+tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgEPJat (ORCPT
+        id S1727002AbgEPJdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 05:30:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726271AbgEPJat (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 05:30:49 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA21DC05BD09
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 02:30:48 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a21so4743777ljj.11
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 02:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X5T9hQMIe1D/f51iIfhrDEL/PLl5vY2+2w0v+LSamN4=;
-        b=m691b3txDQl92upzOLE5lEnAeh4PYLToC1WZu/Q634s005NwQPzSoRWsyERlxc985m
-         5PgFGMyBLl1zI+KK35wTSO0kJMTfqCJ8A3MsMCC02ynymU8xYwE7Vr54aw0e3jJ1A9AV
-         GCgjEb7pZgsXTBc1YMgWLSia2SVHDu/gRX3RziqDZpGgc7zkZetAwoOY9cK1UYuaSHsP
-         MBH60IcnXnza4nQuwLMK7nOuoRn4QZdJRCE7uT8Lh+uH43AtNwNZ/A+Z4p36cd+AnnHu
-         68TVjCZdzFpYZnhzmfeEpgpnqq/YrBdl8ZfdAm2pGBWybxOlNUODAAMX0FyDuCMZO8NU
-         hgUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X5T9hQMIe1D/f51iIfhrDEL/PLl5vY2+2w0v+LSamN4=;
-        b=OmL7fyWAbLYiXkqrem3MbR75nE1+UYVvne5HPxmMfkcoQ5MVAtl59P+a7pDfOzmx+s
-         t6Q6o3xlBNidM7mRiT4NML37lmCC3feEXf6iUmfsJiNsZ4fCbS9bbYorVH+S4LkGWbgz
-         ZuYUwobAERjDySt+ghHOUlmRO0u8yivBesV1VJReh2pMdqyT9T8eAaajMfo0R9GmOtji
-         q3b/fC6XmeIqMHUHIMpybzHkUQbMZtKWEnn57y/W52HSMlMr2yZOUS6QdSacG+Vwjl80
-         PgOiujQfBLKyicCH8/7qcBipNsDXW0Lbq6QFZR3BgPyNhgJ71ti2m6g5DHrHv/lRy7eR
-         ihXA==
-X-Gm-Message-State: AOAM53030b+A73xcexq3gzdZyLSUxNsi2O93C37whtpawyed0cYz1O1b
-        xSiwDdTNC2HBVh5g05PInqDjw0/g7bAJSkAjtMWfnLGX
-X-Google-Smtp-Source: ABdhPJwhNNHCnYEN5PX+Rf8+hr4dw2XtQ7VKh1pmMRbupDUV3DJpSTVJkZZmN9FsC0GxfweAWevclSfnBL/rZ0Vm6zw=
-X-Received: by 2002:a2e:8805:: with SMTP id x5mr4987823ljh.223.1589621447199;
- Sat, 16 May 2020 02:30:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200509141507.19531-1-brgl@bgdev.pl>
-In-Reply-To: <20200509141507.19531-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 16 May 2020 11:30:36 +0200
-Message-ID: <CACRpkdZ2WGs=aWjwS=vk6-PDMvXMLppfBBF-8rs42F=ko3biNg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: notify user-space about line status changes
- after flags are set
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 16 May 2020 05:33:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726888AbgEPJdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 05:33:53 -0400
+Received: from localhost.localdomain (unknown [89.208.247.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82B7A2074D;
+        Sat, 16 May 2020 09:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589621632;
+        bh=Xa5DKDmR3i44QerUh5QmkifSI8kySf4Dm8ZehLjC7kg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UgWaIJtsMT9RXBaxIuYN2/pFxNE2pQtFlkVoRc1I3Y+bsP4omz5+EOKEJvz5wvvkz
+         B0G7do+dn2gBOQU/OTBsklthBa6vvXyiUVzHXkOWVtFHSUSPufE69h9/ZXcbcO3spw
+         v4gxzEv0NgTmYq5N7B7tJkYZSGtgdwyLb99LqTl8=
+From:   guoren@kernel.org
+To:     torvalds@linux-foundation.org
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-csky@vger.kernel.org,
+        guoren@kernel.org
+Subject: [GIT PULL] csky updates for v5.7-rc6
+Date:   Sat, 16 May 2020 17:33:36 +0800
+Message-Id: <20200516093336.13886-1-guoren@kernel.org>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 4:15 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+Hi Linus,
 
-> Since the flags can be configured in different ways depending on how the
-> line is being requested - we need to call the notifier chain in different
-> places separately.
+Please pull the changes (10 fixups) for v5.7-rc6.
 
-Ooops.
+Best Regards
+ Guo Ren
 
-> This comes late in the release cycle but I only recently got down to
-> writing libgpiod support for this new ioctl(). When writing test cases
-> I noticed this doesn't really work as expected.
+The following changes since commit 2ef96a5bb12be62ef75b5828c0aab838ebb29cb8:
 
-This is why I am so grateful about the tests you are doing with
-libgpiod! We actually find these problems quickly and not after
-years. Thanks!
+  Linux 5.7-rc5 (2020-05-10 15:16:58 -0700)
 
-> This patch fixes the
-> issue I identified this week. There may be more coming the following
-> week though...
+are available in the Git repository at:
 
-I will pull in your pull request once the next -rc is out as I had already
-sent my first pull request, but do not hesitate to bug me about this.
+  https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.7-rc6
 
-Yours,
-Linus Walleij
+for you to fetch changes up to 51bb38cb78363fdad1f89e87357b7bc73e39ba88:
+
+  csky: Fixup raw_copy_from_user() (2020-05-15 00:16:30 +0800)
+
+----------------------------------------------------------------
+csky updates for 5.7-rc6
+
+10 Fixups for this updates :P
+
+ - 1 fixup for copy_from/to_user (a hard-to-find bug, thx Viro)
+ - 1 fixup for calltrace panic without FRAME_POINT
+ - 2 fixups for perf
+ - 2 fixups for compile error
+ - 4 fixups for non-fatal bugs:
+   (msa, rm dis_irq, cleanup psr, gdbmacros.txt)
+
+----------------------------------------------------------------
+Al Viro (1):
+      csky: Fixup raw_copy_from_user()
+
+Guo Ren (6):
+      csky/ftrace: Fixup error when disable CONFIG_DYNAMIC_FTRACE
+      csky: Fixup compile error for abiv1 entry.S
+      csky: Fixup perf probe -x hungup
+      csky: Fixup calltrace panic
+      csky: Fixup remove unnecessary save/restore PSR code
+      csky: Fixup gdbmacros.txt with name sp in thread_struct
+
+Liu Yibin (2):
+      csky: Fixup msa highest 3 bits mask
+      csky: Fixup remove duplicate irq_disable
+
+Mao Han (1):
+      csky: Fixup perf callchain unwind
+
+ arch/csky/Kconfig                   |   2 +
+ arch/csky/Makefile                  |   2 +-
+ arch/csky/abiv1/inc/abi/entry.h     |   4 +-
+ arch/csky/abiv2/inc/abi/entry.h     |   4 +-
+ arch/csky/abiv2/mcount.S            |   2 +
+ arch/csky/include/asm/processor.h   |   6 +-
+ arch/csky/include/asm/ptrace.h      |  10 ++
+ arch/csky/include/asm/thread_info.h |  16 +++-
+ arch/csky/include/asm/uaccess.h     |  49 +++++-----
+ arch/csky/kernel/Makefile           |   2 +-
+ arch/csky/kernel/asm-offsets.c      |   3 +-
+ arch/csky/kernel/dumpstack.c        |  49 ----------
+ arch/csky/kernel/entry.S            |  12 +--
+ arch/csky/kernel/ftrace.c           |   2 +
+ arch/csky/kernel/perf_callchain.c   |   9 +-
+ arch/csky/kernel/probes/uprobes.c   |   5 +
+ arch/csky/kernel/process.c          |  37 +-------
+ arch/csky/kernel/ptrace.c           |   6 ++
+ arch/csky/kernel/stacktrace.c       | 176 ++++++++++++++++++++++++++++--------
+ arch/csky/lib/usercopy.c            |   8 +-
+ 20 files changed, 226 insertions(+), 178 deletions(-)
+ delete mode 100644 arch/csky/kernel/dumpstack.c
