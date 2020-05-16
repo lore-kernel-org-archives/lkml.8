@@ -2,188 +2,152 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4405C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2104320756
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90CF920756
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589648508;
-	bh=7QsFKj7aDiV0u0TfxeKG4ZEc/hLCVajx0FV8HvcbpUs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HP8npR9FTVIosqQfNBfw1uvrTkcun/UYuJzEPSgIQOwns3ttuXx9esUBjupcaXQty
-	 GIolSZEg1fuvsr0Ph3fG6i50NT2KGXA29w8U3s+LujYjJ2Hj+2th525RUjLlxxo1Wr
-	 7LtH6TPX3hG/g2QJVUJ/75+3X8nYYnGg/oUNHwoA=
+	s=default; t=1589648579;
+	bh=xZm7SPScu0iT7/Cap3mdxG8rP6DsmX787bsWocbqih4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=YsVjXhMmD7ElLycOmp1JwlzZd2BkYUphDO69ado836oHNv7EUIdp7gJVp5LWHkG1c
+	 bLqdoigQo6PgAW00yuzCnYtDRprfxjsWxFBZd2gGQtyv2awmQSVk8eQJjgOWBFvKFf
+	 NeBb+AXoBCFk3Df0vAUue0l+5bsbISh7jFX7f07U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgEPRBr (ORCPT
+        id S1726448AbgEPRC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 13:01:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41300 "EHLO mail.kernel.org"
+        Sat, 16 May 2020 13:02:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726297AbgEPRBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 13:01:47 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1726280AbgEPRC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 13:02:58 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51EF92065C;
-        Sat, 16 May 2020 17:01:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED27D2065C;
+        Sat, 16 May 2020 17:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589648506;
-        bh=7QsFKj7aDiV0u0TfxeKG4ZEc/hLCVajx0FV8HvcbpUs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=o6QAiMzJhMKNwW7prZLLng13R3+ZGftsXinmPSrLyGjXCIC3sAZFRwQ/kZsUdSiAm
-         s8tZrgq0RgWgIpmgiXuXeajgbFAgHUohQsB5/UDAUOfxa9wGyIgmIa6So8GOeuVwMV
-         NO72LkUozyh+2eb0udsHr11RPE36ToA96bGIWeH4=
-Date:   Sat, 16 May 2020 18:01:42 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <olivier.moysan@st.com>,
-        <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH] iio: adc: stm32-adc: fix a wrong error message when
- probing interrupts
-Message-ID: <20200516180142.5ed10edc@archlinux>
-In-Reply-To: <1589290025-23857-1-git-send-email-fabrice.gasnier@st.com>
-References: <1589290025-23857-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1589648578;
+        bh=xZm7SPScu0iT7/Cap3mdxG8rP6DsmX787bsWocbqih4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=e0xPncZvFrWRMb/0Cqty50usN0twn62boJeud92ye32kBTeeir+IPtCdypvv+kC5x
+         ZD7xIewwPKI4xjYl42ObQYazrNtbR5qh1BcNOLZbbJn68E4/eMR2Dcs+NI63kwSN3+
+         p56Z78i+0SimwruO90LrEkAVa2o4eznWDQvWopN4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id CB8EA3522CED; Sat, 16 May 2020 10:02:57 -0700 (PDT)
+Date:   Sat, 16 May 2020 10:02:57 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Akira Yokosawa <akiyks@gmail.com>
+Cc:     Boqun Feng <boqun.feng@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH RESEND 3/4] Documentation/litmus-tests: Merge atomic's
+ README into top-level one
+Message-ID: <20200516170257.GA2639@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <CAEXW_YSjo2hgvg-FN_MR7FVEcp-7gH17jb0-262k+ydSuuDjuQ@mail.gmail.com>
+ <20200512163022.GI2869@paulmck-ThinkPad-P72>
+ <09a8f418-0a46-87ea-dbdb-a43efc66476c@gmail.com>
+ <6d162e69-5d2f-1fbf-1588-ab19c30e7311@gmail.com>
+ <20200514004618.GA94665@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <20200514171656.GR2869@paulmck-ThinkPad-P72>
+ <0ded5099-fe59-914a-d0dd-999cc334ff0a@gmail.com>
+ <20200514224558.GZ2869@paulmck-ThinkPad-P72>
+ <ed5b16b9-b522-8f9b-847b-e18d6387017e@gmail.com>
+ <20200515150530.GG2869@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515150530.GG2869@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 15:27:05 +0200
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
-
-> A wrong error message is printed out currently, like on STM32MP15:
-> - stm32-adc-core 48003000.adc: IRQ index 2 not found.
+On Fri, May 15, 2020 at 08:05:30AM -0700, Paul E. McKenney wrote:
+> On Sat, May 16, 2020 at 12:01:41AM +0900, Akira Yokosawa wrote:
+> > On Thu, 14 May 2020 15:45:58 -0700, Paul E. McKenney wrote:
+> > > On Fri, May 15, 2020 at 07:03:33AM +0900, Akira Yokosawa wrote:
+> > >> On Thu, 14 May 2020 10:16:56 -0700, Paul E. McKenney wrote:
+> > >>> On Thu, May 14, 2020 at 08:46:18AM +0800, Boqun Feng wrote:
+> > >>>> On Wed, May 13, 2020 at 06:39:03AM +0900, Akira Yokosawa wrote:
+> > >>>>> From 96fa6680e3b990633ecbb6d11acf03a161b790bd Mon Sep 17 00:00:00 2001
+> > >>>>> From: Akira Yokosawa <akiyks@gmail.com>
+> > >>>>> Date: Sun, 10 May 2020 15:12:57 +0900
+> > >>>>> Subject: [PATCH RESEND 3/4] Documentation/litmus-tests: Merge atomic's README into top-level one
+> > >>>>>
+> > >>>>> Where Documentation/litmus-tests/README lists RCU litmus tests,
+> > >>>>> Documentation/litmus-tests/atomic/README lists atomic litmus tests.
+> > >>>>> For symmetry, merge the latter into former, with some context
+> > >>>>> adjustment in the introduction.
+> > >>>>>
+> > >>>>> Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
+> > >>>>> Acked-by: Andrea Parri <parri.andrea@gmail.com>
+> > >>>>> Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > >>>>
+> > >>>> Acked-by: Boqun Feng <boqun.feng@gmail.com>
+> > >>>>
+> > >>>> Thanks!
+> > >>>
+> > >>> Applied, and thank you all!
+> > >>>
+> > >>> I rebased, cancelling the revert with the original, resulting in an
+> > >>> updated lkmm branch on -rcu.  There was one minor conflict, so could
+> > >>> one of you please check to make sure that I resolved things appropriately?
+> > >>
+> > >> One thing I noticed.
+> > >>
+> > >> Commit b2998782ded4 ("Documentation/litmus-tests: Clarify about the RCU
+> > >> pre-initialization test")'s change log says:
+> > >>
+> > >>     Since this test returned to tools/memory-model/, make sure that it is
+> > >>                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > >>     at least referenced from Documentation/litmus-tests/'s README.
+> > >>
+> > >> Because of the rebase, this needs amendment as well as the title.
+> > >>
+> > >> Something like
+> > >>
+> > >>     Documentation/litumus-tests: Cite a relevant litmus test in tools/memory-model
+> > >>
+> > >>     For ease of finding the RCU related litmus test under
+> > >>     tools/memory-model/, add an entry in README.
+> > >>
+> > >> ?
+> > > 
+> > > Good catch, and yes, I will update that on the next rebase.
+> > > 
+> > > Any other things in need of adjustment?
+> > 
+> > Aside from the missing Signed-off-by tags Stephen pointed out, I don't
+> > see anything.
 > 
-> This is seen since commit 7723f4c5ecdb ("driver core: platform: Add an
-> error message to platform_get_irq*()").
-> The STM32 ADC core driver wrongly requests up to 3 interrupt lines. It
-> should request only the necessary IRQs, based on the compatible:
-> - stm32f4/h7 ADCs share a common interrupt
-> - stm32mp1, has one interrupt line per ADC.
-> So add the number of required interrupts to the compatible data.
+> Yeah, I did mess that up!  ;-)
 > 
-> Fixes: d58c67d1d851 ("iio: adc: stm32-adc: add support for STM32MP1")
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Applied to the fixes-togreg branch of iio.git and marked for stable.
-Whilst it's only an incorrect error message it is likely to make
-people think something is broken, hence the stable marking.
+> Thank you for checking!!!
 
-Thanks,
+And I have fixed these during the merge with Thomas's and Peter's series
+(or at least the noinstr-rcu-nmi-2020-05-15 portion of it), again,
+thank you!
 
-Jonathan
-
-> ---
->  drivers/iio/adc/stm32-adc-core.c | 34 ++++++++++++++--------------------
->  1 file changed, 14 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-> index ebe5dbc..3586369 100644
-> --- a/drivers/iio/adc/stm32-adc-core.c
-> +++ b/drivers/iio/adc/stm32-adc-core.c
-> @@ -65,12 +65,14 @@ struct stm32_adc_priv;
->   * @clk_sel:	clock selection routine
->   * @max_clk_rate_hz: maximum analog clock rate (Hz, from datasheet)
->   * @has_syscfg: SYSCFG capability flags
-> + * @num_irqs:	number of interrupt lines
->   */
->  struct stm32_adc_priv_cfg {
->  	const struct stm32_adc_common_regs *regs;
->  	int (*clk_sel)(struct platform_device *, struct stm32_adc_priv *);
->  	u32 max_clk_rate_hz;
->  	unsigned int has_syscfg;
-> +	unsigned int num_irqs;
->  };
->  
->  /**
-> @@ -375,21 +377,15 @@ static int stm32_adc_irq_probe(struct platform_device *pdev,
->  	struct device_node *np = pdev->dev.of_node;
->  	unsigned int i;
->  
-> -	for (i = 0; i < STM32_ADC_MAX_ADCS; i++) {
-> +	/*
-> +	 * Interrupt(s) must be provided, depending on the compatible:
-> +	 * - stm32f4/h7 shares a common interrupt line.
-> +	 * - stm32mp1, has one line per ADC
-> +	 */
-> +	for (i = 0; i < priv->cfg->num_irqs; i++) {
->  		priv->irq[i] = platform_get_irq(pdev, i);
-> -		if (priv->irq[i] < 0) {
-> -			/*
-> -			 * At least one interrupt must be provided, make others
-> -			 * optional:
-> -			 * - stm32f4/h7 shares a common interrupt.
-> -			 * - stm32mp1, has one line per ADC (either for ADC1,
-> -			 *   ADC2 or both).
-> -			 */
-> -			if (i && priv->irq[i] == -ENXIO)
-> -				continue;
-> -
-> +		if (priv->irq[i] < 0)
->  			return priv->irq[i];
-> -		}
->  	}
->  
->  	priv->domain = irq_domain_add_simple(np, STM32_ADC_MAX_ADCS, 0,
-> @@ -400,9 +396,7 @@ static int stm32_adc_irq_probe(struct platform_device *pdev,
->  		return -ENOMEM;
->  	}
->  
-> -	for (i = 0; i < STM32_ADC_MAX_ADCS; i++) {
-> -		if (priv->irq[i] < 0)
-> -			continue;
-> +	for (i = 0; i < priv->cfg->num_irqs; i++) {
->  		irq_set_chained_handler(priv->irq[i], stm32_adc_irq_handler);
->  		irq_set_handler_data(priv->irq[i], priv);
->  	}
-> @@ -420,11 +414,8 @@ static void stm32_adc_irq_remove(struct platform_device *pdev,
->  		irq_dispose_mapping(irq_find_mapping(priv->domain, hwirq));
->  	irq_domain_remove(priv->domain);
->  
-> -	for (i = 0; i < STM32_ADC_MAX_ADCS; i++) {
-> -		if (priv->irq[i] < 0)
-> -			continue;
-> +	for (i = 0; i < priv->cfg->num_irqs; i++)
->  		irq_set_chained_handler(priv->irq[i], NULL);
-> -	}
->  }
->  
->  static int stm32_adc_core_switches_supply_en(struct stm32_adc_priv *priv,
-> @@ -824,6 +815,7 @@ static const struct stm32_adc_priv_cfg stm32f4_adc_priv_cfg = {
->  	.regs = &stm32f4_adc_common_regs,
->  	.clk_sel = stm32f4_adc_clk_sel,
->  	.max_clk_rate_hz = 36000000,
-> +	.num_irqs = 1,
->  };
->  
->  static const struct stm32_adc_priv_cfg stm32h7_adc_priv_cfg = {
-> @@ -831,6 +823,7 @@ static const struct stm32_adc_priv_cfg stm32h7_adc_priv_cfg = {
->  	.clk_sel = stm32h7_adc_clk_sel,
->  	.max_clk_rate_hz = 36000000,
->  	.has_syscfg = HAS_VBOOSTER,
-> +	.num_irqs = 1,
->  };
->  
->  static const struct stm32_adc_priv_cfg stm32mp1_adc_priv_cfg = {
-> @@ -838,6 +831,7 @@ static const struct stm32_adc_priv_cfg stm32mp1_adc_priv_cfg = {
->  	.clk_sel = stm32h7_adc_clk_sel,
->  	.max_clk_rate_hz = 40000000,
->  	.has_syscfg = HAS_VBOOSTER | HAS_ANASWVDD,
-> +	.num_irqs = 2,
->  };
->  
->  static const struct of_device_id stm32_adc_of_match[] = {
-
+							Thanx, Paul
