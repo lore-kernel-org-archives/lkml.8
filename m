@@ -4,24 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CD1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE274C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0CED2075F
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A04172065C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgEPIzb (ORCPT
+        id S1726999AbgEPIzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 04:55:31 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50514 "EHLO huawei.com"
+        Sat, 16 May 2020 04:55:36 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50420 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726462AbgEPIza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 04:55:30 -0400
+        id S1726899AbgEPIze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 04:55:34 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7FA898217AD6E0083609;
+        by Forcepoint Email with ESMTP id 702BF66F73B25B48AE89;
         Sat, 16 May 2020 16:55:25 +0800 (CST)
 Received: from use12-sp2.huawei.com (10.67.189.174) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
@@ -35,9 +34,9 @@ To:     <mcgrof@kernel.org>, <keescook@chromium.org>, <yzaikin@google.com>,
         <ebiederm@xmission.com>
 CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
         <nixiaoming@huawei.com>, <wangle6@huawei.com>
-Subject: [PATCH v2 3/4] hung_task: Move hung_task sysctl interface to hung_task.c
-Date:   Sat, 16 May 2020 16:55:14 +0800
-Message-ID: <1589619315-65827-4-git-send-email-nixiaoming@huawei.com>
+Subject: [PATCH v2 1/4] sysctl: Add register_sysctl_init() interface
+Date:   Sat, 16 May 2020 16:55:12 +0800
+Message-ID: <1589619315-65827-2-git-send-email-nixiaoming@huawei.com>
 X-Mailer: git-send-email 1.8.5.6
 In-Reply-To: <1589619315-65827-1-git-send-email-nixiaoming@huawei.com>
 References: <1589619315-65827-1-git-send-email-nixiaoming@huawei.com>
@@ -50,196 +49,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move hung_task sysctl interface to hung_task.c.
-Use register_sysctl() to register the sysctl interface to avoid
-merge conflicts when different features modify sysctl.c at the same time.
+In order to eliminate the duplicate code for registering the sysctl
+interface during the initialization of each feature, add the
+register_sysctl_init() interface
 
 Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
 ---
- include/linux/sched/sysctl.h |  8 +-----
- kernel/hung_task.c           | 63 +++++++++++++++++++++++++++++++++++++++++++-
- kernel/sysctl.c              | 50 -----------------------------------
- 3 files changed, 63 insertions(+), 58 deletions(-)
+ include/linux/sysctl.h |  2 ++
+ kernel/sysctl.c        | 19 +++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-index d4f6215..c075e09 100644
---- a/include/linux/sched/sysctl.h
-+++ b/include/linux/sched/sysctl.h
-@@ -7,14 +7,8 @@
- struct ctl_table;
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index 02fa844..43f8ef9 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -206,6 +206,8 @@ struct ctl_table_header *register_sysctl_paths(const struct ctl_path *path,
+ void unregister_sysctl_table(struct ctl_table_header * table);
  
- #ifdef CONFIG_DETECT_HUNG_TASK
--extern int	     sysctl_hung_task_check_count;
--extern unsigned int  sysctl_hung_task_panic;
-+/* used for hung_task and block/ */
- extern unsigned long sysctl_hung_task_timeout_secs;
--extern unsigned long sysctl_hung_task_check_interval_secs;
--extern int sysctl_hung_task_warnings;
--extern int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
--					 void __user *buffer,
--					 size_t *lenp, loff_t *ppos);
- #else
- /* Avoid need for ifdefs elsewhere in the code */
- enum { sysctl_hung_task_timeout_secs = 0 };
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index 14a625c..76ea496 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -215,10 +215,11 @@ static long hung_timeout_jiffies(unsigned long last_checked,
- 		MAX_SCHEDULE_TIMEOUT;
- }
+ extern int sysctl_init(void);
++extern void register_sysctl_init(const char *path, struct ctl_table *table,
++				 const char *table_name);
  
-+#ifdef CONFIG_SYSCTL
- /*
-  * Process updating of timeout sysctl
-  */
--int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
-+static int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
- 				  void __user *buffer,
- 				  size_t *lenp, loff_t *ppos)
- {
-@@ -235,6 +236,65 @@ int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
- 	return ret;
+ extern struct ctl_table sysctl_mount_point[];
+ 
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index b9ff323..20c31f5 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1970,6 +1970,25 @@ int __init sysctl_init(void)
+ 	return 0;
  }
  
 +/*
-+ * This is needed for proc_doulongvec_minmax of sysctl_hung_task_timeout_secs
-+ * and hung_task_check_interval_secs
++ * The sysctl interface is used to modify the interface value,
++ * but the feature interface has default values. Even if register_sysctl fails,
++ * the feature body function can also run. At the same time, malloc small
++ * fragment of memory during the system initialization phase, almost does
++ * not fail. Therefore, the function return is designed as void
 + */
-+static unsigned long hung_task_timeout_max = (LONG_MAX / HZ);
-+static struct ctl_table hung_task_sysctls[] = {
-+	{
-+		.procname	= "hung_task_panic",
-+		.data		= &sysctl_hung_task_panic,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+	{
-+		.procname	= "hung_task_check_count",
-+		.data		= &sysctl_hung_task_check_count,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+	},
-+	{
-+		.procname	= "hung_task_timeout_secs",
-+		.data		= &sysctl_hung_task_timeout_secs,
-+		.maxlen		= sizeof(unsigned long),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dohung_task_timeout_secs,
-+		.extra2		= &hung_task_timeout_max,
-+	},
-+	{
-+		.procname	= "hung_task_check_interval_secs",
-+		.data		= &sysctl_hung_task_check_interval_secs,
-+		.maxlen		= sizeof(unsigned long),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dohung_task_timeout_secs,
-+		.extra2		= &hung_task_timeout_max,
-+	},
-+	{
-+		.procname	= "hung_task_warnings",
-+		.data		= &sysctl_hung_task_warnings,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_NEG_ONE,
-+	},
-+	{}
-+};
-+
-+static void __init hung_task_sysctl_init(void)
++void __init register_sysctl_init(const char *path, struct ctl_table *table,
++				 const char *table_name)
 +{
-+	register_sysctl_init("kernel", hung_task_sysctls, "hung_task_sysctls");
++	struct ctl_table_header *hdr = register_sysctl(path, table);
++
++	if (unlikely(!hdr)) {
++		pr_err("failed when register_sysctl %s to %s\n", table_name, path);
++		return;
++	}
++	kmemleak_not_leak(hdr);
 +}
-+#else
-+#define hung_task_sysctl_init() do { } while (0)
-+#endif
 +
-+
- static atomic_t reset_hung_task = ATOMIC_INIT(0);
+ #endif /* CONFIG_SYSCTL */
  
- void reset_hung_task_detector(void)
-@@ -304,6 +364,7 @@ static int __init hung_task_init(void)
- 	pm_notifier(hungtask_pm_notify, 0);
- 
- 	watchdog_task = kthread_run(watchdog, NULL, "khungtaskd");
-+	hung_task_sysctl_init();
- 
- 	return 0;
- }
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 5f08cc2..49e9541 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -144,13 +144,6 @@
- static int ngroups_max = NGROUPS_MAX;
- static const int cap_last_cap = CAP_LAST_CAP;
- 
--/*
-- * This is needed for proc_doulongvec_minmax of sysctl_hung_task_timeout_secs
-- * and hung_task_check_interval_secs
-- */
--#ifdef CONFIG_DETECT_HUNG_TASK
--static unsigned long hung_task_timeout_max = (LONG_MAX/HZ);
--#endif
- 
- #ifdef CONFIG_INOTIFY_USER
- #include <linux/inotify.h>
-@@ -1082,49 +1075,6 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.proc_handler	= proc_dointvec,
- 	},
- #endif
--#ifdef CONFIG_DETECT_HUNG_TASK
--	{
--		.procname	= "hung_task_panic",
--		.data		= &sysctl_hung_task_panic,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE,
--	},
--	{
--		.procname	= "hung_task_check_count",
--		.data		= &sysctl_hung_task_check_count,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= SYSCTL_ZERO,
--	},
--	{
--		.procname	= "hung_task_timeout_secs",
--		.data		= &sysctl_hung_task_timeout_secs,
--		.maxlen		= sizeof(unsigned long),
--		.mode		= 0644,
--		.proc_handler	= proc_dohung_task_timeout_secs,
--		.extra2		= &hung_task_timeout_max,
--	},
--	{
--		.procname	= "hung_task_check_interval_secs",
--		.data		= &sysctl_hung_task_check_interval_secs,
--		.maxlen		= sizeof(unsigned long),
--		.mode		= 0644,
--		.proc_handler	= proc_dohung_task_timeout_secs,
--		.extra2		= &hung_task_timeout_max,
--	},
--	{
--		.procname	= "hung_task_warnings",
--		.data		= &sysctl_hung_task_warnings,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &neg_one,
--	},
--#endif
- #ifdef CONFIG_RT_MUTEXES
- 	{
- 		.procname	= "max_lock_depth",
+ /*
 -- 
 1.8.5.6
 
