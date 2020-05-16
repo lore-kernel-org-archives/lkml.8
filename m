@@ -2,132 +2,134 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 18:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D73BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 19:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69F0B2065C
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 18:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5490220709
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 19:07:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="QZGtrnC0";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="QZGtrnC0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgEPSxh (ORCPT
+        id S1726532AbgEPTHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 14:53:37 -0400
-Received: from mail.monom.org ([188.138.9.77]:59972 "EHLO mail.monom.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726532AbgEPSxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 14:53:37 -0400
-Received: from mail.monom.org (localhost [127.0.0.1])
-        by filter.mynetwork.local (Postfix) with ESMTP id A8D49500402;
-        Sat, 16 May 2020 20:53:34 +0200 (CEST)
-Received: from localhost (b9168f17.cgn.dg-w.de [185.22.143.23])
-        by mail.monom.org (Postfix) with ESMTPSA id 24730500190;
-        Sat, 16 May 2020 20:53:34 +0200 (CEST)
-From:   Daniel Wagner <dwagner@suse.de>
-Subject: [ANNOUNCE] 4.4.220-rt197
-Date:   Sat, 16 May 2020 18:52:44 -0000
-Message-ID: <158965516435.9929.783847792525662706@beryllium>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>,
-        Pavel Machek <pavel@denx.de>
+        Sat, 16 May 2020 15:07:13 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:56176 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726298AbgEPTHN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 15:07:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 918E88EE19F;
+        Sat, 16 May 2020 12:07:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1589656032;
+        bh=D8G+NdjnQDRxlqYxDKGcemEgX/kXVlKUwQ2n9K0wbU0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=QZGtrnC0nkisDPiq5z/4wpE2unys4l8Z+NJySN4pHZbyl48d1+wy8Gv24YTUsG1X3
+         XpxXQ1s++yw509gQTJCIqhcpg9MrEnuD50xxjK5k3JZ7JTPBMTpLTbBkAgbEr0OOdM
+         7JI48ehZPPMJdFYLcB13SDXTkzRW2l6aJykiCNcI=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id A1rl-KAx3JQT; Sat, 16 May 2020 12:07:12 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id D801D8EE173;
+        Sat, 16 May 2020 12:07:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1589656032;
+        bh=D8G+NdjnQDRxlqYxDKGcemEgX/kXVlKUwQ2n9K0wbU0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=QZGtrnC0nkisDPiq5z/4wpE2unys4l8Z+NJySN4pHZbyl48d1+wy8Gv24YTUsG1X3
+         XpxXQ1s++yw509gQTJCIqhcpg9MrEnuD50xxjK5k3JZ7JTPBMTpLTbBkAgbEr0OOdM
+         7JI48ehZPPMJdFYLcB13SDXTkzRW2l6aJykiCNcI=
+Message-ID: <1589656023.8524.1.camel@HansenPartnership.com>
+Subject: Re: [dm-devel] next-20200514 - build issue in
+ drivers/md/dm-zoned-target.c
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Valdis =?UTF-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Hannes Reinecke <hare@suse.de>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org
+Date:   Sat, 16 May 2020 12:07:03 -0700
+In-Reply-To: <367320.1589627953@turing-police>
+References: <367320.1589627953@turing-police>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-Mp2dUCEd7FWpRS+D3bdZ"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello RT-list!
 
-I'm pleased to announce the 4.4.220-rt197 stable release.
+--=-Mp2dUCEd7FWpRS+D3bdZ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-You can get this release via the git tree at:
+On Sat, 2020-05-16 at 07:19 -0400, Valdis Kl=C4=93tnieks wrote:
+> Am seeing a build error in next-0514.  -0420 built OK.
+> building a 'make allmodconfig' on a RPi4 in 32-bit mode.
+>=20
+>   MODPOST 7575 modules
+> ERROR: modpost: "__aeabi_uldivmod" [drivers/md/dm-zoned.ko]
+> undefined!
+>=20
+> objdump and 'make drivers/md/dm-zoned-target.s' tells
+> me that the problem is in function dmz_fixup_devices(), near here:
+>=20
+> @ drivers/md/dm-zoned-target.c:806:             reg_dev->nr_zones =3D
+> DIV_ROUND_UP(reg_dev->capacity,
+>         ldr     r0, [r6, #56]   @ reg_dev_166->capacity, reg_dev_166-
+> >capacity
+>         adds    r1, r3, r1      @ tmp316, _227, reg_dev_166->capacity
+>         adc     r0, r2, r0      @ tmp315, _227, reg_dev_166->capacity
+>         subs    r1, r1, #1      @, tmp316,
+> @ drivers/md/dm-zoned-target.c:805:             reg_dev-
+> >zone_nr_sectors =3D zoned_dev->zone_nr_sectors;
+>         strd    r2, [r6, #80]   @, reg_dev,
+> @ drivers/md/dm-zoned-target.c:806:             reg_dev->nr_zones =3D
+> DIV_ROUND_UP(reg_dev->capacity,
+>         sbc     r0, r0, #0      @, tmp315,
+>         bl      __aeabi_uldivmod                @
+> @ drivers/md/dm-zoned-target.c:806:             reg_dev->nr_zones =3D
+> DIV_ROUND_UP(reg_dev->capacity,
+>         str     r1, [r6, #64]   @ tmp306, reg_dev_166->nr_zones
+>=20
+> git blame points at this commit:
+>=20
+> commit 70978208ec91d798066f4c291bc98ff914bea222
+> Author: Hannes Reinecke <hare@suse.de>
+> Date:   Mon May 11 10:24:30 2020 +0200
+>=20
+>     dm zoned: metadata version 2
+>=20
+> Reverting that commit lets the build complete.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+That's because the DIV_ROUND_UP in the patch should actually be
+DIV_ROUND_UP_SECTOR_T I think.
 
-  branch: v4.4-rt
-  Head SHA1: 375a1effc06c4f59c65c6fa8657e44539d997680
+James
 
-Or to build 4.4.220-rt197 directly, the following patches should be applied:
+--=-Mp2dUCEd7FWpRS+D3bdZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.4.tar.xz
+-----BEGIN PGP SIGNATURE-----
 
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.4.220.xz
+iHUEABMIAB0WIQTnYEDbdso9F2cI+arnQslM7pishQUCXsA51wAKCRDnQslM7pis
+hZePAP9k+4pgr+O3cOw3dKCULg5dyXP0H/ovz0PjY3NwyCgqYAEA1ghh0wkxUfz4
+GB4Svstsox0oy29X7rGUd/p1slLLNZM=
+=2NcN
+-----END PGP SIGNATURE-----
 
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.4/patch-4.4.220-rt197.patch.xz
+--=-Mp2dUCEd7FWpRS+D3bdZ--
 
-
-Enjoy!
-Daniel
-
-Changes from v4.4.220-rt196:
----
-
-Daniel Wagner (1):
-      Linux 4.4.220-rt197
-
-Steven Rostedt (VMware) (1):
-      irq_work: Fix checking of IRQ_WORK_LAZY flag set on non PREEMPT_RT
----
-kernel/irq_work.c | 12 +++++++++---
- localversion-rt   |  2 +-
- 2 files changed, 10 insertions(+), 4 deletions(-)
----
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 2899ba0d23d1..abc65de5d793 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -57,6 +57,12 @@ void __weak arch_irq_work_raise(void)
- 	 */
- }
- 
-+static inline bool use_lazy_list(struct irq_work *work)
-+{
-+	return (IS_ENABLED(CONFIG_PREEMPT_RT_FULL) && !(work->flags & IRQ_WORK_HARD_IRQ))
-+		|| (work->flags & IRQ_WORK_LAZY);
-+}
-+
- #ifdef CONFIG_SMP
- /*
-  * Enqueue the irq_work @work on @cpu unless it's already pending
-@@ -78,7 +84,7 @@ bool irq_work_queue_on(struct irq_work *work, int cpu)
- 	if (!irq_work_claim(work))
- 		return false;
- 
--	if (IS_ENABLED(CONFIG_PREEMPT_RT_FULL) && !(work->flags & IRQ_WORK_HARD_IRQ))
-+	if (use_lazy_list(work))
- 		list = &per_cpu(lazy_list, cpu);
- 	else
- 		list = &per_cpu(raised_list, cpu);
-@@ -95,7 +101,7 @@ EXPORT_SYMBOL_GPL(irq_work_queue_on);
- bool irq_work_queue(struct irq_work *work)
- {
- 	struct llist_head *list;
--	bool lazy_work, realtime = IS_ENABLED(CONFIG_PREEMPT_RT_FULL);
-+	int lazy_work;
- 
- 	/* Only queue if not already pending */
- 	if (!irq_work_claim(work))
-@@ -106,7 +112,7 @@ bool irq_work_queue(struct irq_work *work)
- 
- 	lazy_work = work->flags & IRQ_WORK_LAZY;
- 
--	if (lazy_work || (realtime && !(work->flags & IRQ_WORK_HARD_IRQ)))
-+	if (use_lazy_list(work))
- 		list = this_cpu_ptr(&lazy_list);
- 	else
- 		list = this_cpu_ptr(&raised_list);
-diff --git a/localversion-rt b/localversion-rt
-index 9bc39cfc747c..7cbd4fa29217 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt196
-+-rt197
