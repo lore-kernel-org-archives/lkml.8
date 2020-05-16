@@ -2,104 +2,312 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD528C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89456C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 862D520728
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:41:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hbdzU3b1"
+	by mail.kernel.org (Postfix) with ESMTP id 6165620728
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:43:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgEPJlq (ORCPT
+        id S1727005AbgEPJnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 05:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725997AbgEPJlq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 05:41:46 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFC96C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 02:41:44 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id f18so4754051lja.13
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 02:41:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ETnQEurEj2D9S0skz5vWgXCGMnqttYf8X7vq+AyGws4=;
-        b=hbdzU3b1sUtVTpY94DKNXrGnHP3CM6+4lLyAdYNx6YAjjHqouc3xqKHTr1Kora27l8
-         s+PGJ/ZkScqc5OhvSCPkV40a/pB2zVYyJ4k7SlmIs1O71UYd27JLlmN0EVhourGSv2kJ
-         GR7Jd+MZqulDetVv923CZqSAmratk3mzrAawCcTdNNNPtcXOjL8ro4Z9S4scL0CHunwv
-         aiK6LXOUXNNdlWwbNsQkqm4RMrRR10z/NKwzL0wPK2vJ06ACPNFoVi6OirpuEnOCrwoH
-         WhTQKduxvKAkMo4jyO7pDUZFCth2yvlIGaD3Igog/6fpitpBsqJjNvQ3vn8OGGdRhmrj
-         /r2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ETnQEurEj2D9S0skz5vWgXCGMnqttYf8X7vq+AyGws4=;
-        b=GEWi8tcXgsGsYy8Org0OOJ99FTu64IXFvpnDkvjaD/p6GQwAPLPDdlSHOOwpZ87khs
-         beJ3nJPI4Qa2E5XUX7kDyi/uHY2vKigrWujwoIfibLoocZ3YxUGUog7dQ4bJ56KrRnpv
-         +BtJHuAsoyqjRULJWy2N74z4TZMxE5Q7AermWmEfRRnxkDkVxNKETR6mPrLKC0L6vLId
-         m9VcPsbkMsb4OukPhaJtxVnO5ymaMD2/i8WwSjNTjr8vJTB/jMH9Dr8G/ReM8wGEI1fp
-         AImPBBspdJOPBRGYmmWQN8fMhqEenDhxOW82teF3hlhnYhgXKMw4duD2ulT0vj3NuHK2
-         Cn9A==
-X-Gm-Message-State: AOAM532/wzdGdVJI40cy4p2JWCkAXIqrlPq6vIZyDiVgzDUt45CONBkN
-        fwRqjF5ZfSjolWQzPBgUKHKfqN8XJysNlO+YtzRzGQ==
-X-Google-Smtp-Source: ABdhPJxDkwfUTvewS4ROJo+TNf5A2Ro2WwL7rcwxC/8KOUEXpWDdaTekM+CoT//aGEX0bP7RFp6SZcRNMEiVw0qQ2+Y=
-X-Received: by 2002:a2e:8805:: with SMTP id x5mr5010874ljh.223.1589622100904;
- Sat, 16 May 2020 02:41:40 -0700 (PDT)
+        Sat, 16 May 2020 05:43:04 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34708 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725997AbgEPJnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 05:43:04 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DD50BD1E35E2BA3F453C;
+        Sat, 16 May 2020 17:43:00 +0800 (CST)
+Received: from localhost.localdomain (10.175.118.36) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 16 May 2020 17:42:54 +0800
+From:   Luo bin <luobin9@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <luobin9@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
+Subject: [PATCH net-next] hinic: add support to set and get pause param
+Date:   Sat, 16 May 2020 02:00:30 +0000
+Message-ID: <20200516020030.23017-1-luobin9@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200511101828.30046-1-geert+renesas@glider.be> <CAMpxmJXD9WgrFnKvS2a=iOCVuYiqdTGwp+r2BjOv2RJH2R=s1Q@mail.gmail.com>
-In-Reply-To: <CAMpxmJXD9WgrFnKvS2a=iOCVuYiqdTGwp+r2BjOv2RJH2R=s1Q@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 16 May 2020 11:41:30 +0200
-Message-ID: <CACRpkdaJk2G8MF6UMVSc2LdFPdpm9L2hox3c-rxD6RhyMg_25Q@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Document that GPIO line names are not globally unique
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.175.118.36]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 12:43 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> pon., 11 maj 2020 o 12:18 Geert Uytterhoeven <geert+renesas@glider.be>
-> napisa=C5=82(a):
-> >
-> > gpiochip_set_desc_names() no longer rejects GPIO line name collisions.
-> > Hence GPIO line names are not guaranteed to be globally unique.
-> > In case of multiple GPIO lines with the same name, gpio_name_to_desc()
-> > will return the first match found.
-(...)
-> This makes me wonder whether I should do something about this in
-> libgpiod? Looks to me like gpiod_chip_find_line() and the global
-> gpiod_line_find() are no longer reliable and should probably return
-> all lines whose names match.
+add support to set pause param with ethtool -A and get pause
+param with ethtool -a. Also remove set_link_ksettings ops for VF.
 
-Hm. You probably know how consumers of libgpiod work better than me.
+Signed-off-by: Luo bin <luobin9@huawei.com>
+---
+ .../net/ethernet/huawei/hinic/hinic_ethtool.c | 100 +++++++++++++++++-
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.c  |   2 +
+ .../net/ethernet/huawei/hinic/hinic_hw_io.h   |   9 ++
+ .../net/ethernet/huawei/hinic/hinic_main.c    |  27 ++++-
+ .../net/ethernet/huawei/hinic/hinic_port.c    |   5 +
+ 5 files changed, 140 insertions(+), 3 deletions(-)
 
-The background is historical and this happens because gpiolib had a
-mechanism to name lines before I even took over maintenance, and
-that did not require line names to be unique. So
-when I created the character device I had to face the fact.
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+index 9796c1fbe132..3a5b846c190b 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+@@ -613,6 +613,78 @@ static int hinic_set_ringparam(struct net_device *netdev,
+ 
+ 	return 0;
+ }
++
++static void hinic_get_pauseparam(struct net_device *netdev,
++				 struct ethtool_pauseparam *pause)
++{
++	struct hinic_dev *nic_dev = netdev_priv(netdev);
++	struct hinic_pause_config pause_info = {0};
++	struct hinic_nic_cfg *nic_cfg;
++	int err;
++
++	nic_cfg = &nic_dev->hwdev->func_to_io.nic_cfg;
++
++	err = hinic_get_hw_pause_info(nic_dev->hwdev, &pause_info);
++	if (err) {
++		netif_err(nic_dev, drv, netdev,
++			  "Failed to get pauseparam from hw\n");
++	} else {
++		pause->autoneg = pause_info.auto_neg;
++		if (nic_cfg->pause_set) {
++			pause->rx_pause = nic_cfg->rx_pause;
++			pause->tx_pause = nic_cfg->tx_pause;
++		} else {
++			pause->rx_pause = pause_info.rx_pause;
++			pause->tx_pause = pause_info.tx_pause;
++		}
++	}
++}
++
++static int hinic_set_pauseparam(struct net_device *netdev,
++				struct ethtool_pauseparam *pause)
++{
++	struct hinic_dev *nic_dev = netdev_priv(netdev);
++	struct hinic_pause_config pause_info = {0};
++	struct hinic_port_cap port_cap = {0};
++	int err;
++
++	err = hinic_port_get_cap(nic_dev, &port_cap);
++	if (err) {
++		netif_err(nic_dev, drv, netdev,
++			  "Failed to get port capability\n");
++		return -EIO;
++	}
++
++	if (pause->autoneg != port_cap.autoneg_state) {
++		netif_err(nic_dev, drv, netdev,
++			  "To change autoneg please use: ethtool -s <dev> autoneg <on|off>\n");
++		return -EOPNOTSUPP;
++	}
++
++	pause_info.auto_neg = pause->autoneg;
++	pause_info.rx_pause = pause->rx_pause;
++	pause_info.tx_pause = pause->tx_pause;
++
++	down(&nic_dev->hwdev->func_to_io.nic_cfg.cfg_lock);
++	err = hinic_set_hw_pause_info(nic_dev->hwdev, &pause_info);
++	if (err) {
++		netif_err(nic_dev, drv, netdev, "Failed to set pauseparam\n");
++		up(&nic_dev->hwdev->func_to_io.nic_cfg.cfg_lock);
++		return err;
++	}
++	nic_dev->hwdev->func_to_io.nic_cfg.pause_set = true;
++	nic_dev->hwdev->func_to_io.nic_cfg.auto_neg = pause->autoneg;
++	nic_dev->hwdev->func_to_io.nic_cfg.rx_pause = pause->rx_pause;
++	nic_dev->hwdev->func_to_io.nic_cfg.tx_pause = pause->tx_pause;
++	up(&nic_dev->hwdev->func_to_io.nic_cfg.cfg_lock);
++
++	netif_info(nic_dev, drv, netdev, "Set pause options, tx: %s, rx: %s\n",
++		   pause->tx_pause ? "on" : "off",
++		   pause->rx_pause ? "on" : "off");
++
++	return 0;
++}
++
+ static void hinic_get_channels(struct net_device *netdev,
+ 			       struct ethtool_channels *channels)
+ {
+@@ -1247,6 +1319,27 @@ static const struct ethtool_ops hinic_ethtool_ops = {
+ 	.get_link = ethtool_op_get_link,
+ 	.get_ringparam = hinic_get_ringparam,
+ 	.set_ringparam = hinic_set_ringparam,
++	.get_pauseparam = hinic_get_pauseparam,
++	.set_pauseparam = hinic_set_pauseparam,
++	.get_channels = hinic_get_channels,
++	.set_channels = hinic_set_channels,
++	.get_rxnfc = hinic_get_rxnfc,
++	.set_rxnfc = hinic_set_rxnfc,
++	.get_rxfh_key_size = hinic_get_rxfh_key_size,
++	.get_rxfh_indir_size = hinic_get_rxfh_indir_size,
++	.get_rxfh = hinic_get_rxfh,
++	.set_rxfh = hinic_set_rxfh,
++	.get_sset_count = hinic_get_sset_count,
++	.get_ethtool_stats = hinic_get_ethtool_stats,
++	.get_strings = hinic_get_strings,
++};
++
++static const struct ethtool_ops hinicvf_ethtool_ops = {
++	.get_link_ksettings = hinic_get_link_ksettings,
++	.get_drvinfo = hinic_get_drvinfo,
++	.get_link = ethtool_op_get_link,
++	.get_ringparam = hinic_get_ringparam,
++	.set_ringparam = hinic_set_ringparam,
+ 	.get_channels = hinic_get_channels,
+ 	.set_channels = hinic_set_channels,
+ 	.get_rxnfc = hinic_get_rxnfc,
+@@ -1262,5 +1355,10 @@ static const struct ethtool_ops hinic_ethtool_ops = {
+ 
+ void hinic_set_ethtool_ops(struct net_device *netdev)
+ {
+-	netdev->ethtool_ops = &hinic_ethtool_ops;
++	struct hinic_dev *nic_dev = netdev_priv(netdev);
++
++	if (!HINIC_IS_VF(nic_dev->hwdev->hwif))
++		netdev->ethtool_ops = &hinic_ethtool_ops;
++	else
++		netdev->ethtool_ops = &hinicvf_ethtool_ops;
+ }
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+index 0245da02efbb..c5b296ed0556 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+@@ -777,6 +777,8 @@ struct hinic_hwdev *hinic_init_hwdev(struct pci_dev *pdev)
+ 		goto err_dev_cap;
+ 	}
+ 
++	sema_init(&hwdev->func_to_io.nic_cfg.cfg_lock, 1);
++
+ 	err = hinic_vf_func_init(hwdev);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "Failed to init nic mbox\n");
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_io.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_io.h
+index 214f162f7579..8cd0613b3e57 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_io.h
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_io.h
+@@ -47,6 +47,14 @@ struct hinic_free_db_area {
+ 	struct semaphore        idx_lock;
+ };
+ 
++struct hinic_nic_cfg {
++	struct semaphore	cfg_lock;
++	bool			pause_set;
++	u32			auto_neg;
++	u32			rx_pause;
++	u32			tx_pause;
++};
++
+ struct hinic_func_to_io {
+ 	struct hinic_hwif       *hwif;
+ 	struct hinic_hwdev      *hwdev;
+@@ -78,6 +86,7 @@ struct hinic_func_to_io {
+ 	u16			max_vfs;
+ 	struct vf_data_storage	*vf_infos;
+ 	u8			link_status;
++	struct hinic_nic_cfg	nic_cfg;
+ };
+ 
+ struct hinic_wq_page_size {
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+index 2c07b03bf6e5..d24c5af89bad 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+@@ -899,6 +899,26 @@ static void netdev_features_init(struct net_device *netdev)
+ 	netdev->features = netdev->hw_features | NETIF_F_HW_VLAN_CTAG_FILTER;
+ }
+ 
++static void hinic_refresh_nic_cfg(struct hinic_dev *nic_dev)
++{
++	struct hinic_nic_cfg *nic_cfg = &nic_dev->hwdev->func_to_io.nic_cfg;
++	struct hinic_pause_config pause_info = {0};
++	struct hinic_port_cap port_cap = {0};
++
++	if (hinic_port_get_cap(nic_dev, &port_cap))
++		return;
++
++	down(&nic_cfg->cfg_lock);
++	if (nic_cfg->pause_set) {
++		nic_cfg->auto_neg = port_cap.autoneg_state;
++		pause_info.auto_neg = nic_cfg->auto_neg;
++		pause_info.rx_pause = nic_cfg->rx_pause;
++		pause_info.tx_pause = nic_cfg->tx_pause;
++		hinic_set_hw_pause_info(nic_dev->hwdev, &pause_info);
++	}
++	up(&nic_cfg->cfg_lock);
++}
++
+ /**
+  * link_status_event_handler - link event handler
+  * @handle: nic device for the handler
+@@ -930,6 +950,9 @@ static void link_status_event_handler(void *handle, void *buf_in, u16 in_size,
+ 
+ 		up(&nic_dev->mgmt_lock);
+ 
++		if (!HINIC_IS_VF(nic_dev->hwdev->hwif))
++			hinic_refresh_nic_cfg(nic_dev);
++
+ 		netif_info(nic_dev, drv, nic_dev->netdev, "HINIC_Link is UP\n");
+ 	} else {
+ 		down(&nic_dev->mgmt_lock);
+@@ -1020,8 +1043,6 @@ static int nic_dev_init(struct pci_dev *pdev)
+ 		goto err_alloc_etherdev;
+ 	}
+ 
+-	hinic_set_ethtool_ops(netdev);
+-
+ 	if (!HINIC_IS_VF(hwdev->hwif))
+ 		netdev->netdev_ops = &hinic_netdev_ops;
+ 	else
+@@ -1044,6 +1065,8 @@ static int nic_dev_init(struct pci_dev *pdev)
+ 	nic_dev->sriov_info.pdev = pdev;
+ 	nic_dev->max_qps = num_qps;
+ 
++	hinic_set_ethtool_ops(netdev);
++
+ 	sema_init(&nic_dev->mgmt_lock, 1);
+ 
+ 	tx_stats = &nic_dev->tx_stats;
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.c b/drivers/net/ethernet/huawei/hinic/hinic_port.c
+index 175c0ee00038..4b51121b3021 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_port.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_port.c
+@@ -1082,6 +1082,7 @@ int hinic_get_link_mode(struct hinic_hwdev *hwdev,
+ 	if (!hwdev || !link_mode)
+ 		return -EINVAL;
+ 
++	link_mode->func_id = HINIC_HWIF_FUNC_IDX(hwdev->hwif);
+ 	out_size = sizeof(*link_mode);
+ 
+ 	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_GET_LINK_MODE,
+@@ -1172,6 +1173,8 @@ int hinic_get_hw_pause_info(struct hinic_hwdev *hwdev,
+ 	u16 out_size = sizeof(*pause_info);
+ 	int err;
+ 
++	pause_info->func_id = HINIC_HWIF_FUNC_IDX(hwdev->hwif);
++
+ 	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_GET_PAUSE_INFO,
+ 				 pause_info, sizeof(*pause_info),
+ 				 pause_info, &out_size);
+@@ -1190,6 +1193,8 @@ int hinic_set_hw_pause_info(struct hinic_hwdev *hwdev,
+ 	u16 out_size = sizeof(*pause_info);
+ 	int err;
+ 
++	pause_info->func_id = HINIC_HWIF_FUNC_IDX(hwdev->hwif);
++
+ 	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_SET_PAUSE_INFO,
+ 				 pause_info, sizeof(*pause_info),
+ 				 pause_info, &out_size);
+-- 
+2.17.1
 
-We also had to deal with the fact that when naming lines, the
-"NULL alternative" (no name on the line at all) is always a valid
-fallback.
-
-And all lines named NULL are still valid and all have the same name
-so...
-
-Yours,
-Linus Walleij
