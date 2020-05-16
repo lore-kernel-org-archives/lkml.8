@@ -2,135 +2,174 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED53C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E48320756
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:07:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589598440;
-	bh=1b8MmOMwKzarMS/FSgx6QArmP+E1/8A+fav5brKGy24=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=NoYrPsJNWCPBg0ZDjZkhl8ccyHiGaYHrAwgw9h/igLfzdGqQ8u0O7/4Luz8U7vUP+
-	 /QHUrvhH+o4ORH4aLnCeNFoLP/L/9Fqips8ou/yt4xoefTKpF41PoZbO3hDNYQmLvn
-	 L0KD1+KS6OqhravLj9ycCWJgovZb6Zy9A8xnWF2E=
+	by mail.kernel.org (Postfix) with ESMTP id A2F442074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgEPDHT (ORCPT
+        id S1727827AbgEPDTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 23:07:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726247AbgEPDHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 23:07:19 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FD632073E;
-        Sat, 16 May 2020 03:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589598438;
-        bh=1b8MmOMwKzarMS/FSgx6QArmP+E1/8A+fav5brKGy24=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Oka86VCgwy4gmpIZrFRQ00zq4FJ9fIOpRLz2hNAfTHkU8bY0HUzWiRT1xeDmTpFQU
-         38yshK11+mj44NHIYZdE+UmdN1viinT3Vp0PfA0/9AG5UDw1mFNRtFiQWtA1RoGFit
-         AiBV7hFJBOoj4XWggryGu7Qjch+psVFfsXEpOTH8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 1A9BF35234B4; Fri, 15 May 2020 20:07:18 -0700 (PDT)
-Date:   Fri, 15 May 2020 20:07:18 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>, stable@kernel.org
-Subject: Re: [PATCH] tick/nohz: Narrow down noise while setting current
- task's tick dependency
-Message-ID: <20200516030718.GL2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200515003429.4317-1-frederic@kernel.org>
+        Fri, 15 May 2020 23:19:16 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33011 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgEPDTP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 23:19:15 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x77so1942079pfc.0;
+        Fri, 15 May 2020 20:19:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=UU737tti4EbQvKMajSwO055w1IJCKfj238CPnutQI7Q=;
+        b=BolxFMwxR4Xav+W5QgAC9pbEQIZa4mWK2J0Phufs0S3tiWVDWrBu2mnNovzfIiwg0Q
+         Ii/4t3c4fI/or4/312Hp9SaDwzkAX9rul6QV/SJY+ZMZbOmTvywMxt0UhBvBywMpjUh4
+         LcvqfOMVFDUkmzqWQtWMTvs3dueCHysLY4bLUkYtWeYXbPFXkk+vBhO2JIsz3aHawykW
+         pEPgdVKrz6q0e1oc9i5nieAgzowyle2zccV4Q9sOwnQ6l15gu8xZ+mccISN0LpioBGuD
+         do6xwAz8qgCg3tLDBObAcmSaZlZJc8miOT2G6xhe/7KOb8fpJyY9jtiONK65/CqHaipe
+         zjOQ==
+X-Gm-Message-State: AOAM531IPyg713jVZycIa8Q8g5pPhv5B4rRr1YXYkelH0wii3rs/8Iz+
+        3m7O/KkV4skP/dV4CZ/Y3Xg=
+X-Google-Smtp-Source: ABdhPJy/78dbgo4QJABJnk4W5JjkLPIs6B/kePfxQCli3CYhY7n73+bBCR7goHhotIV/u99lsIlw8g==
+X-Received: by 2002:a62:ed14:: with SMTP id u20mr7181610pfh.69.1589599154295;
+        Fri, 15 May 2020 20:19:14 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:f99a:ee92:9332:42a? ([2601:647:4000:d7:f99a:ee92:9332:42a])
+        by smtp.gmail.com with ESMTPSA id z6sm2755577pgu.85.2020.05.15.20.19.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2020 20:19:13 -0700 (PDT)
+Subject: Re: [RFC PATCH 11/13] scsi: Allow device handler set their own CDB
+To:     Avri Altman <avri.altman@wdc.com>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     alim.akhtar@samsung.com, asutoshd@codeaurora.org,
+        Zang Leigang <zangleigang@hisilicon.com>,
+        Avi Shchislowski <avi.shchislowski@wdc.com>,
+        Bean Huo <beanhuo@micron.com>, cang@codeaurora.org,
+        stanley.chu@mediatek.com,
+        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>
+References: <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
+ <1589538614-24048-12-git-send-email-avri.altman@wdc.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <80a69f59-08b6-73c2-5ee6-848149005701@acm.org>
+Date:   Fri, 15 May 2020 20:19:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515003429.4317-1-frederic@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1589538614-24048-12-git-send-email-avri.altman@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 02:34:29AM +0200, Frederic Weisbecker wrote:
-> So far setting a tick dependency on any task, including current, used to
-> trigger an IPI to all CPUs. That's of course suboptimal but it wasn't
-> an issue as long as it was only used by posix-cpu-timers on nohz_full,
-> a combo that nobody seemed to use in real life.
+On 2020-05-15 03:30, Avri Altman wrote:
+> Allow scsi device handler handle their own CDB and ship it down the
+> stream of scsi passthrough command setup flow, without any further
+> interventions.
 > 
-> But RCU started to use task tick dependency on current task to fix
-> stall issues on callbacks processing. These trigger regular and
-> undesired system wide IPIs on nohz_full.
+> This is useful for setting DRV-OP that implements vendor commands via
+> the scsi device handlers framework.
 > 
-> The fix is very easy while setting a tick dependency on the current
-> task, only its CPU needs an IPI.
-
-This passes moderate rcutorture testing.  If you want me to take it, please
-let me know, and otherwise:
-
-Tested-by: Paul E. McKenney <paulmck@kernel.org>
-
-> Fixes: 6a949b7af82d (rcu: Force on tick when invoking lots of callbacks)
-> Reported-by: Matt Fleming <matt@codeblueprint.co.uk>
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> Cc: stable@kernel.org
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@kernel.org>
+> Signed-off-by: Avri Altman <avri.altman@wdc.com>
 > ---
->  kernel/time/tick-sched.c | 22 +++++++++++++++-------
->  1 file changed, 15 insertions(+), 7 deletions(-)
+>  drivers/scsi/scsi_lib.c | 5 +++--
+>  drivers/scsi/sd.c       | 9 +++++++++
+>  2 files changed, 12 insertions(+), 2 deletions(-)
 > 
-> diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-> index 3e2dc9b8858c..f0199a4ba1ad 100644
-> --- a/kernel/time/tick-sched.c
-> +++ b/kernel/time/tick-sched.c
-> @@ -351,16 +351,24 @@ void tick_nohz_dep_clear_cpu(int cpu, enum tick_dep_bits bit)
->  EXPORT_SYMBOL_GPL(tick_nohz_dep_clear_cpu);
->  
->  /*
-> - * Set a per-task tick dependency. Posix CPU timers need this in order to elapse
-> - * per task timers.
-> + * Set a per-task tick dependency. RCU need this. Also posix CPU timers
-> + * in order to elapse per task timers.
->   */
->  void tick_nohz_dep_set_task(struct task_struct *tsk, enum tick_dep_bits bit)
+> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+> index 6b6dd40..4e98714 100644
+> --- a/drivers/scsi/scsi_lib.c
+> +++ b/drivers/scsi/scsi_lib.c
+> @@ -1148,14 +1148,15 @@ static blk_status_t scsi_setup_fs_cmnd(struct scsi_device *sdev,
 >  {
-> -	/*
-> -	 * We could optimize this with just kicking the target running the task
-> -	 * if that noise matters for nohz full users.
-> -	 */
-> -	tick_nohz_dep_set_all(&tsk->tick_dep_mask, bit);
-> +	if (!atomic_fetch_or(BIT(bit), &tsk->tick_dep_mask)) {
-> +		if (tsk == current) {
-> +			preempt_disable();
-> +			tick_nohz_full_kick();
-> +			preempt_enable();
-> +		} else {
-> +			/*
-> +			 * Some future tick_nohz_full_kick_task()
-> +			 * should optimize this.
-> +			 */
-> +			tick_nohz_full_kick_all();
-> +		}
-> +	}
->  }
->  EXPORT_SYMBOL_GPL(tick_nohz_dep_set_task);
+>  	struct scsi_cmnd *cmd = blk_mq_rq_to_pdu(req);
 >  
-> -- 
-> 2.26.2
-> 
+> +	cmd->cmnd = scsi_req(req)->cmd = scsi_req(req)->__cmd;
+> +	memset(cmd->cmnd, 0, BLK_MAX_CDB);
+> +
+>  	if (unlikely(sdev->handler && sdev->handler->prep_fn)) {
+>  		blk_status_t ret = sdev->handler->prep_fn(sdev, req);
+>  		if (ret != BLK_STS_OK)
+>  			return ret;
+>  	}
+>  
+> -	cmd->cmnd = scsi_req(req)->cmd = scsi_req(req)->__cmd;
+> -	memset(cmd->cmnd, 0, BLK_MAX_CDB);
+>  	return scsi_cmd_to_driver(cmd)->init_command(cmd);
+>  }
+>  
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> index a793cb0..246bef8 100644
+> --- a/drivers/scsi/sd.c
+> +++ b/drivers/scsi/sd.c
+> @@ -1221,6 +1221,14 @@ static blk_status_t sd_setup_read_write_cmnd(struct scsi_cmnd *cmd)
+>  	} else if (sdp->use_16_for_rw || (nr_blocks > 0xffff)) {
+>  		ret = sd_setup_rw16_cmnd(cmd, write, lba, nr_blocks,
+>  					 protect | fua);
+> +	} else if (unlikely(sdp->handler && blk_rq_is_private(rq))) {
+> +		/*
+> +		 * scsi device handler that implements vendor commands -
+> +		 * the command was already constructed in the device handler's
+> +		 * prep_fn, so no need to do anything here
+> +		 */
+> +		rq->cmd_flags = REQ_OP_READ;
+> +		ret = BLK_STS_OK;
+>  	} else if ((nr_blocks > 0xff) || (lba > 0x1fffff) ||
+>  		   sdp->use_10_for_rw || protect) {
+>  		ret = sd_setup_rw10_cmnd(cmd, write, lba, nr_blocks,
+> @@ -1285,6 +1293,7 @@ static blk_status_t sd_init_command(struct scsi_cmnd *cmd)
+>  		return sd_setup_write_same_cmnd(cmd);
+>  	case REQ_OP_FLUSH:
+>  		return sd_setup_flush_cmnd(cmd);
+> +	case REQ_OP_DRV_IN:
+>  	case REQ_OP_READ:
+>  	case REQ_OP_WRITE:
+>  		return sd_setup_read_write_cmnd(cmd);
+
+The above looks weird to me. My understanding is that
+scsi_setup_fs_cmnd() is intended for operations like REQ_OP_READ,
+REQ_OP_WRITE and REQ_OP_DISCARD. I don't think that it is appropriate to
+pass REQ_OP_DRV_IN requests to scsi_setup_fs_cmnd() and/or
+sd_init_command().
+
+Thanks,
+
+Bart.
+
+
