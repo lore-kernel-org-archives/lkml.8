@@ -2,116 +2,91 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30177C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 11:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8896C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 11:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07B25206D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 11:09:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="c4WrpXhn"
+	by mail.kernel.org (Postfix) with ESMTP id 822C3206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 11:16:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgEPLJT (ORCPT
+        id S1726254AbgEPLQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 07:09:19 -0400
-Received: from [115.28.160.31] ([115.28.160.31]:54554 "EHLO
-        mailbox.box.xen0n.name" rhost-flags-FAIL-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1726191AbgEPLJS (ORCPT
+        Sat, 16 May 2020 07:16:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726202AbgEPLQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 07:09:18 -0400
-Received: from [192.168.9.172] (unknown [220.196.60.58])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 982B16012C;
-        Sat, 16 May 2020 19:09:15 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=xen0n.name; s=mail;
-        t=1589627355; bh=4gI8QTkfc0FypidOlx2nl9vtLB55CUSTqHLnKI7O0BI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=c4WrpXhn0qomU+aO//sTSR5tEdSRCqhWqzkdz6EliV8P8+CTm71FAaU347s07W91k
-         pQMm9IOQ4CFz9pyahA5ezOyWFwKYuiAfhnEaWbj5NidCAhJ/AweKNKZPidbg55Qnel
-         YnmzcsDvGHqLUPCMHo/UjpeVGsJR6qJvR1a5zsao=
-Subject: Re: [PATCH] MIPS: Loongson: Add support for serial console
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-References: <1589612588-29196-1-git-send-email-yangtiezhu@loongson.cn>
-From:   WANG Xuerui <kernel@xen0n.name>
-Message-ID: <5aadf1a7-51c7-453e-beaa-3df6ceca5354@xen0n.name>
-Date:   Sat, 16 May 2020 19:09:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.0a1
-MIME-Version: 1.0
-In-Reply-To: <1589612588-29196-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Sat, 16 May 2020 07:16:05 -0400
+Received: from omr2.cc.vt.edu (omr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:33:fb76:806e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED2BCC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 04:16:04 -0700 (PDT)
+Received: from mr4.cc.vt.edu (mr4.cc.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 04GBG3UT011525
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 07:16:03 -0400
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 04GBFw31032456
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 07:16:03 -0400
+Received: by mail-qt1-f200.google.com with SMTP id b22so5492701qto.17
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 04:16:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
+         :message-id;
+        bh=k9/obJBd4+HStBtbM+iJUkENP4sXP9nPWm+3p30o3YE=;
+        b=ZhKSkIBxlzWdcBEq+U+eAjy4bEPM9e8FRmQIl0xppxDRb/KPQPosmkfkT7D8+gPaIX
+         7eZoOyJMlz8+1EuWOup8AdPVXH7NUY1QjMOOYj3/7oOJoOSAQxQ3/gcJTFfIQ9ku8gBv
+         Xz7ZWI50H6AFDkw5BsBVsPLssQjYu75GcQDT8My4oi0Cf09bC34lk1NXRAh4rvtQt2sS
+         ONFiCaa+hAqn3zUYlDKOSRtXKMmRhRkzZqMLJZ4EfmVYK5ATzP7nXZ0zdgZyVq9pHKpH
+         07jkcA9BXN1xjK8t7hSehFSBoIocHop7WbAY35vFr7lDXMZuVGnUxBS1r5qFYVlnjOfY
+         5qEQ==
+X-Gm-Message-State: AOAM533Op91EMzHKUIfuPSznff8bCjqgHk49O+3kw4Bt+m5so8nApzmO
+        W5Q21W5e3xegr39rHiDcQiPW8JVU8l7kmkgnes9EK7Ts31K+0l0kkLPuHfxt52XgY1e0HqubSnx
+        HjEKd1Rk/sE1lB/Pw+k4jCd7sUNojJ8hoTak=
+X-Received: by 2002:a37:ba86:: with SMTP id k128mr7641081qkf.64.1589627758675;
+        Sat, 16 May 2020 04:15:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzFTWatd4wMNkz5rY9TLgOZzvFBfELb+KWWmmYd0tmx3z31koM938Hgb1b2AkL91HCSatfSEg==
+X-Received: by 2002:a37:ba86:: with SMTP id k128mr7641062qkf.64.1589627758346;
+        Sat, 16 May 2020 04:15:58 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id c68sm3601815qke.129.2020.05.16.04.15.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 May 2020 04:15:57 -0700 (PDT)
+From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     David Howells <dhowells@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] watch_queue: sample: Update makefile to fix deprecated variables
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Date:   Sat, 16 May 2020 07:15:56 -0400
+Message-ID: <367178.1589627756@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/20 3:03 PM, Tiezhu Yang wrote:
+A recent commit started warning for deprecated makefile variables.
+Turns out there was an in-tree user, so update it.
 
-> After commit 87fcfa7b7fe6 ("MIPS: Loongson64: Add generic dts"),
-> there already exists the node and property of Loongson CPU UART0
-> in loongson3-package.dtsi:
->
-> cpu_uart0: serial@1fe001e0 {
->          compatible = "ns16550a";
->          reg = <0 0x1fe001e0 0x8>;
->          clock-frequency = <33000000>;
->          interrupt-parent = <&liointc>;
->          interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
->          no-loopback-test;
-> };
->
-> In order to support for serial console on the Loongson platform,
-> add CONFIG_SERIAL_OF_PLATFORM=y to loongson3_defconfig.
->
-> With this patch, we can see the following boot message:
->
-> [    1.877745] printk: console [ttyS0] disabled
-> [    1.881979] 1fe001e0.serial: ttyS0 at MMIO 0x1fe001e0 (irq = 16, base_baud = 2062500) is a 16550A
-> [    1.890838] printk: console [ttyS0] enabled
->
-> And also, we can login normally from the serial console.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->
-> Hi Jiaxun,
->
-> Thank you very much for your suggestion.
->
->   arch/mips/configs/loongson3_defconfig | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
-> index 6768c16..cd95f08 100644
-> --- a/arch/mips/configs/loongson3_defconfig
-> +++ b/arch/mips/configs/loongson3_defconfig
-> @@ -217,6 +217,7 @@ CONFIG_SERIAL_8250_EXTENDED=y
->   CONFIG_SERIAL_8250_MANY_PORTS=y
->   CONFIG_SERIAL_8250_SHARE_IRQ=y
->   CONFIG_SERIAL_8250_RSA=y
-> +CONFIG_SERIAL_OF_PLATFORM=y
->   CONFIG_HW_RANDOM=y
->   CONFIG_RAW_DRIVER=m
->   CONFIG_I2C_CHARDEV=y
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 
-Hi,
-
-The patch title is again exaggerating things. This is a defconfig 
-change, so please refer to `git log` output of `arch/mips/configs` and 
-use something like "MIPS: Loongson: loongson3_defconfig: enable serial 
-console" or "MIPS: Loongson: enable serial console in defconfig". The 
-current title reads as if Loongson kernels never were able to use a 
-serial console in the past.
+diff --git a/samples/watch_queue/Makefile b/samples/watch_queue/Makefile
+index eec00dd0a8df..8511fb6c53d2 100644
+--- a/samples/watch_queue/Makefile
++++ b/samples/watch_queue/Makefile
+@@ -1,7 +1,7 @@
+ # List of programs to build
+-hostprogs-y := watch_test
++hostprogs := watch_test
+ 
+ # Tell kbuild to always build the programs
+-always := $(hostprogs-y)
++always-y := $(hostprogs)
+ 
+ HOSTCFLAGS_watch_test.o += -I$(objtree)/usr/include
 
