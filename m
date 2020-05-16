@@ -2,253 +2,155 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D38C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 06:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE22C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 06:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81BBE20709
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 06:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFE720767
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 06:39:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="i+igG9fN";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="X0h703nw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgEPGbs (ORCPT
+        id S1726422AbgEPGjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 02:31:48 -0400
-Received: from mga02.intel.com ([134.134.136.20]:31268 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725803AbgEPGbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 02:31:48 -0400
-IronPort-SDR: gbPosd8ZJ6vqJFbPO/iTgX0MO0eeOiFU2teM551aeeejH8fLqoQlBG9pMsXZ7OQt/Cbtyzw0DF
- 81Xqc4/u5+mw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 23:31:47 -0700
-IronPort-SDR: EAJO+WY60p3FIgINGRTVxgIKNOXlgRmrYYGcHEh1j4tN0pPjq1f3VFrkvIkGHmVJzvcsc+nUYG
- AoMwEdIlQMlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,398,1583222400"; 
-   d="scan'208";a="372897045"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.249.172.124]) ([10.249.172.124])
-  by fmsmga001.fm.intel.com with ESMTP; 15 May 2020 23:31:43 -0700
-Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v13 0/8] Nested Shared Virtual Address (SVA) VT-d support
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>
-References: <1589410909-38925-1-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <eb8a7762-8a01-1695-370a-3be6a38abba7@linux.intel.com>
-Date:   Sat, 16 May 2020 14:31:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 16 May 2020 02:39:31 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:50631 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgEPGja (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 02:39:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1589611175; x=1621147175;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=Wt3azPXfUVl0RMdCuK//fKY9HSzhZ/q+8Z8VdRFT6Wo=;
+  b=i+igG9fNLNuMBxssqxhro2W9Nh+EyYgEXXGsp7MDJv15nAkTAEgtsy7K
+   T5ofI5X0ldAOWu3o0Hb0ujM5D3Cazs88mV7BnBp+kxxN+K2CyZLJ7TJRB
+   oHQFahsUDbkCLffFUoTlCrBs/IenOLI0xZh36KesczpRSoKunEekRmj4I
+   pBUrN9/TOiq8MRZddPnGwcFvtiqwnPmQdTjXf+REvsJawxtPMFBgSe7La
+   l7IdSNgU+mb7SbSpHTOtNGqhXJ/HYOT1ATKQ3HD7QecpdK+GOiA8tcmXQ
+   hGNdsY4pGlHCh1n9VfymypqbVlHG2cabaGIlLIYicJpkB90myIhK7Ugkg
+   w==;
+IronPort-SDR: cVkn3kmiDrS9jcP5gltEoq10nvjZFIrVZ/jDybMFbiuUmEcL4Bie7v6Oa4Nxabiioh8epinPJ8
+ 3PVZzporKQaJqi4ZE4r/sm2dnLDkWlwhnFc54sAI8gtsing6J+XHK6CzlHMMhmhCFF2BdhjMaO
+ Oy39fjJttsHZBOVcWznIQIdQGqQ8/oOiN0JDw7Xa49cmtGzyUvJVdzaEk0FUXOQE0gyHZlF9ZB
+ OzBoPR5M2nrbpNKNZV8XYdALyCIdMYP/ftmE3O4iElzN1KFvIeL4TGrIjcvqiJJjAc9vn6w5ZW
+ rHc=
+X-IronPort-AV: E=Sophos;i="5.73,398,1583164800"; 
+   d="scan'208";a="240555224"
+Received: from mail-sn1nam04lp2059.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.59])
+  by ob1.hgst.iphmx.com with ESMTP; 16 May 2020 14:39:33 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BnMleQNWmK0TH/8xuKDsIzw8iE1MXXYsIZLNcvHrfECPdqK8ctZV0tE+o0m1d0g6d6APJtEpuZ0d37cCkOBDc55HOD8SBZ517w0ogBfN+tQ4IKvwliDqw2j3zMnR7jlBN9Sj5LaMBU2iVSDKIj18k/Z41wd3IZtLB9CLKiw2PYkOAn9xmSNPGM7jkPqvmZAUrxY8hUXhcW1NlDhn2aFFyTLTGRKJIbDq2k9FCkaImp5igd6iaYuRbpMZeEEzx+w/L/6mwlHQ+E1Hxvwg71DcRECm87So/BB7RwxrfiOPv1lJ1ZJb/0w+WWU5FWiUASbSMRMk1DQEmyafUWd9cjMOaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b+pxkYWY89LjURYHXKn7eE5s0eh6YNR6wXbSTl1Oe7w=;
+ b=D14iPgZSKwYV8lctswQYv1uqBFevw1rO2T7WC5jVRYZARWF0mshLm0MedmHmgH7rzZTRCpX5fdyoqOcDimOxql1vSZ09fjuNroCvLGfMWtTPhuvpz1Yx4g3pzPD1MS/jBW1qImu5W4TEGsQfpaNzgDRixNPnUALcaU+V8RjTgCzKo9ZdsHnHHV9n8Ad6nHQ6evBOZNv1IqyZPt1mM27xcZawz8U43CYQWdrC6RT8vVIi2hjy1/z8xLfU3GujwBOWYhed0ygyZgt+E+sItkZy+xeF5D6W2B6/3Axl/837tzUpTrDnaty/fvp8e+uTMsUdXEbRoyxs3ZPARjIv/Z6NXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b+pxkYWY89LjURYHXKn7eE5s0eh6YNR6wXbSTl1Oe7w=;
+ b=X0h703nwHnMoM0eBryuyo3/4eza/bx5LqJa4y7KyBpC2Z98XnHF1vKuZ2Y/Bwp5W6lU8qcdUV8JCioa8gjoqSoxRMXL3oy4+CT7XOo1+FeY8j2XszuFITAoXp4nNBFGT53o+La8n9N04sBEfPeWG+b7iuflwDFMeSsncRCb5MX0=
+Authentication-Results: dabbelt.com; dkim=none (message not signed)
+ header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
+ by DM6PR04MB4539.namprd04.prod.outlook.com (2603:10b6:5:2c::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Sat, 16 May
+ 2020 06:39:27 +0000
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::f8b3:c124:482b:52e0]) by DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::f8b3:c124:482b:52e0%5]) with mapi id 15.20.2979.033; Sat, 16 May 2020
+ 06:39:27 +0000
+From:   Anup Patel <anup.patel@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anup Patel <anup.patel@wdc.com>
+Subject: [PATCH 0/4] More improvements for multiple PLICs
+Date:   Sat, 16 May 2020 12:08:57 +0530
+Message-Id: <20200516063901.18365-1-anup.patel@wdc.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MAXPR0101CA0002.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:c::12) To DM6PR04MB6201.namprd04.prod.outlook.com
+ (2603:10b6:5:127::32)
 MIME-Version: 1.0
-In-Reply-To: <1589410909-38925-1-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from wdc.com (49.207.60.36) by MAXPR0101CA0002.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:c::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend Transport; Sat, 16 May 2020 06:39:23 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [49.207.60.36]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3dac512a-f01b-4207-1b86-08d7f963e137
+X-MS-TrafficTypeDiagnostic: DM6PR04MB4539:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR04MB4539BB41E81B381134F1548B8DBA0@DM6PR04MB4539.namprd04.prod.outlook.com>
+WDCIPOUTBOUND: EOP-TRUE
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 040513D301
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: n41V8tiewqW/quOjYp3pBOz+PVxdefTaHpHfl9+JPPCMm4qTyHhwxNOYvAWhzcgTCIrmCopjxwcozKpaWyxmfRMgiIfFTYgVHnzglACAEf6k1DwXFQOfGmNoRQjL0TAfXF1ogoJmnLCXUFdxVfJVQFucKFw8jUklfjquMhECuwJo9zJFPbVsNL4NNkkAycpze/P8jTdcA8RbNr9O2gKZVgZXTeLB/g+Qm3M5Q8FH/cB7iy6PAWzT09pXiyoA+tkKzNndw/WuZsAGFBoDvo/JGfwlMXeE+NuUYmRCEsn66xSwqrZsyiabY/dQaJdy3N3y1imqdsnRvSw/BuBUcJFBfsUS+xk6dg0+C6Y+4Qnfa2xTnfSyhRQ4fSCGQFd+h607tbeKDVzqUtsHv6dGB0Br9VWZlEdr11tU3FZRKX+JljObSYWtF1kMLiFqeoFbqeqVnEPKzDLKxfDjFgJsrej077XtK2P/TOEc6zdpSCJ02wg5K+ZWv8Kxy0PWFRzb8Srs5Bfs3vHVm/dsuU8jHoJLMg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(376002)(366004)(39860400002)(136003)(6666004)(1006002)(2906002)(8676002)(36756003)(8936002)(966005)(44832011)(26005)(54906003)(86362001)(7696005)(52116002)(55236004)(110136005)(1076003)(16526019)(186003)(316002)(5660300002)(66946007)(8886007)(55016002)(66476007)(66556008)(478600001)(956004)(4326008)(2616005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: oddKB7A2/h2WujbuMlBfBWsVWEcEluL94Zo+UNO8Vqu4W6j9G7SS7xlxYXizNw9N9pZptEUvNAsClGD0gFNd1mhLDDEg7SLEQkHWqAslWGyGoOXyJETR1vbMQn/+a1UCjbS62gEMvi5ND9v6XIN4wwM+fZzf4AzMsKyon+U+MtYEGuLR3uMI6fBuv/WHRtgaQG21YYviKO2F8JBO+gTriOgAfW7oHrVM6vHPHUvmHfJUubdfg/50OluM0XDI3BFQA4judtkoITecxLa9kGE4UBJa6AWtvnviNuecbfBje4xLC6H+C8H7Zg9j8s1Ro31hPbi8t846r57du4M4NHAEli8sDwZtKkO3stA+6QBDL04pBNgVZMH9wKHfx/VFNDYB7n22mdNCZYiqJUpehPC1AJPJGwWXvW3xCLwDL5yrav/1sJUd3w8+OG810sAZbyslCfzIdrkS0a6gPBFx51Y6d6BH9G0NlneKhRA82cQ//Ak=
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3dac512a-f01b-4207-1b86-08d7f963e137
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2020 06:39:27.6555
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aZg1UrKtgAKassh9ZwB/zNdkjYTeArHNW4vHfEvcDaugG0Kw1OqCPP/dXsyO3gBBrFnhon+c+XVKBrcbjdjQvA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB4539
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/14 7:01, Jacob Pan wrote:
-> Shared virtual address (SVA), a.k.a, Shared virtual memory (SVM) on Intel
-> platforms allow address space sharing between device DMA and applications.
-> SVA can reduce programming complexity and enhance security.
-> This series is intended to enable SVA virtualization, i.e. enable use of SVA
-> within a guest user application.
-> 
-> This is the remaining portion of the original patchset that is based on
-> Joerg's x86/vt-d branch. The preparatory and cleanup patches are merged here.
-> (git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git)
-> 
-> Only IOMMU portion of the changes are included in this series. Additional
-> support is needed in VFIO and QEMU (will be submitted separately) to complete
-> this functionality.
-> 
-> To make incremental changes and reduce the size of each patchset. This series
-> does not inlcude support for page request services.
-> 
-> In VT-d implementation, PASID table is per device and maintained in the host.
-> Guest PASID table is shadowed in VMM where virtual IOMMU is emulated.
-> 
->      .-------------.  .---------------------------.
->      |   vIOMMU    |  | Guest process CR3, FL only|
->      |             |  '---------------------------'
->      .----------------/
->      | PASID Entry |--- PASID cache flush -
->      '-------------'                       |
->      |             |                       V
->      |             |                CR3 in GPA
->      '-------------'
-> Guest
-> ------| Shadow |--------------------------|--------
->        v        v                          v
-> Host
->      .-------------.  .----------------------.
->      |   pIOMMU    |  | Bind FL for GVA-GPA  |
->      |             |  '----------------------'
->      .----------------/  |
->      | PASID Entry |     V (Nested xlate)
->      '----------------\.------------------------------.
->      |             |   |SL for GPA-HPA, default domain|
->      |             |   '------------------------------'
->      '-------------'
-> Where:
->   - FL = First level/stage one page tables
->   - SL = Second level/stage two page tables
-> 
-> This is the remaining VT-d only portion of V5 since the uAPIs and IOASID common
-> code have been applied to Joerg's IOMMU core branch.
-> (https://lkml.org/lkml/2019/10/2/833)
-> 
-> The complete set with VFIO patches are here:
-> https://github.com/jacobpan/linux.git:siov_sva
-> 
-> The complete nested SVA upstream patches are divided into three phases:
->      1. Common APIs and PCI device direct assignment
->      2. Page Request Services (PRS) support
->      3. Mediated device assignment
-> 
-> With this set and the accompanied VFIO code, we will achieve phase #1.
+This series does more improvements for supporting multiple PLIC
+instances.
 
-With Christoph's comments covered, this patch set has been queued for
-v5.8. Thank you, Jacob!
+PATCH1 and PATCH4 are fixes whereas PATCH2 and PATCH3 help users
+distinguish between multiple PLIC instances.
 
-Best regards,
-baolu
+These patches are based up Linux-5.7-rc5 and can be found at
+plic_imp_v1 branch at: https://github.com/avpatel/linux.git
 
-> 
-> Thanks,
-> 
-> Jacob
-> 
-> ChangeLog:
-> 	- v13
-> 	  - Dropped memory type support (MTS) in guest PASID bind
-> 	  - Do not support multiple bind gpasid if device has no aux domain
-> 	  - Removed extra error msgs in pasid_setup_bind_data()
-> 	  - Replaced SVM device list free function with combined out label
-> 
-> 	- v12
-> 	  - Fixed IA64 cross compile error
-> 	  - Squashed two patches that add macros with its users
-> 	  - Use ratelimited prints for all user called APIs
-> 	  - Check domain nesting attr for vSVA APIs.
-> 	  - Misc style improvements
-> 
-> 	- v11 Misc fixes and improvements based on review by Kevin & Eric
-> 	  - Fixed devTLB granularity conversion
-> 	  - Simplified VT-d granulairy lookup by replacing 2D map array
-> 	    with invalid entries.
-> 	  - Fixed locking in bind guest PASID
-> 	  - Added nesting domain attr check
-> 	  - Squashed agaw checking patch with user
-> 	  - Use rate limitted error message for all user originated calls
->   
-> 	- v10
-> 	  - Addressed Eric's review in v7 and v9. Most fixes are in 3/10 and
-> 	    6/10. Extra condition checks and consolidation of duplicated codes.
-> 
-> 	- v9
-> 	  - Addressed Baolu's comments for v8 for IOTLB flush consolidation,
-> 	    bug fixes
-> 	  - Removed IOASID notifier code which will be submitted separately
-> 	    to address PASID life cycle management with multiple users.
-> 
-> 	- v8
-> 	  - Extracted cleanup patches from V7 and accepted into maintainer's
-> 	    tree (https://lkml.org/lkml/2019/12/2/514).
-> 	  - Added IOASID notifier and VT-d handler for termination of PASID
-> 	    IOMMU context upon free. This will ensure success of VFIO IOASID
-> 	    free API regardless PASID is in use.
-> 	    (https://lore.kernel.org/linux-iommu/1571919983-3231-1-git-send-email-yi.l.liu@intel.com/)
-> 
-> 	- V7
-> 	  - Respect vIOMMU PASID range in virtual command PASID/IOASID allocator
-> 	  - Caching virtual command capabilities to avoid runtime checks that
-> 	    could cause vmexits.
-> 
-> 	- V6
-> 	  - Rebased on top of Joerg's core branch
-> 	  (git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git core)
-> 	  - Adapt to new uAPIs and IOASID allocators
-> 
-> 	- V5
-> 	  Rebased on v5.3-rc4 which has some of the IOMMU fault APIs merged.
->   	  Addressed v4 review comments from Eric Auger, Baolu Lu, and
-> 	    Jonathan Cameron. Specific changes are as follows:
-> 	  - Refined custom IOASID allocator to support multiple vIOMMU, hotplug
-> 	    cases.
-> 	  - Extracted vendor data from IOMMU guest PASID bind data, for VT-d
-> 	    will support all necessary guest PASID entry fields for PASID
-> 	    bind.
-> 	  - Support non-identity host-guest PASID mapping
-> 	  - Exception handling in various cases
-> 
-> 	- V4
-> 	  - Redesigned IOASID allocator such that it can support custom
-> 	  allocators with shared helper functions. Use separate XArray
-> 	  to store IOASIDs per allocator. Took advice from Eric Auger to
-> 	  have default allocator use the generic allocator structure.
-> 	  Combined into one patch in that the default allocator is just
-> 	  "another" allocator now. Can be built as a module in case of
-> 	  driver use without IOMMU.
-> 	  - Extended bind guest PASID data to support SMMU and non-identity
-> 	  guest to host PASID mapping https://lkml.org/lkml/2019/5/21/802
-> 	  - Rebased on Jean's sva/api common tree, new patches starts with
-> 	   [PATCH v4 10/22]
-> 
-> 	- V3
-> 	  - Addressed thorough review comments from Eric Auger (Thank you!)
-> 	  - Moved IOASID allocator from driver core to IOMMU code per
-> 	    suggestion by Christoph Hellwig
-> 	    (https://lkml.org/lkml/2019/4/26/462)
-> 	  - Rebased on top of Jean's SVA API branch and Eric's v7[1]
-> 	    (git://linux-arm.org/linux-jpb.git sva/api)
-> 	  - All IOMMU APIs are unmodified (except the new bind guest PASID
-> 	    call in patch 9/16)
-> 
-> 	- V2
-> 	  - Rebased on Joerg's IOMMU x86/vt-d branch v5.1-rc4
-> 	  - Integrated with Eric Auger's new v7 series for common APIs
-> 	  (https://github.com/eauger/linux/tree/v5.1-rc3-2stage-v7)
-> 	  - Addressed review comments from Andy Shevchenko and Alex Williamson on
-> 	    IOASID custom allocator.
-> 	  - Support multiple custom IOASID allocators (vIOMMUs) and dynamic
-> 	    registration.
-> 
-> 
-> Jacob Pan (7):
->    iommu/vt-d: Move domain helper to header
->    iommu/vt-d: Use a helper function to skip agaw for SL
->    iommu/vt-d: Add nested translation helper function
->    iommu/vt-d: Add bind guest PASID support
->    iommu/vt-d: Support flushing more translation cache types
->    iommu/vt-d: Add svm/sva invalidate function
->    iommu/vt-d: Add custom allocator for IOASID
-> 
-> Lu Baolu (1):
->    iommu/vt-d: Enlightened PASID allocation
-> 
->   drivers/iommu/dmar.c        |  40 ++++++
->   drivers/iommu/intel-iommu.c | 291 +++++++++++++++++++++++++++++++++++++++-----
->   drivers/iommu/intel-pasid.c | 266 +++++++++++++++++++++++++++++++++++++---
->   drivers/iommu/intel-pasid.h |  23 +++-
->   drivers/iommu/intel-svm.c   | 203 ++++++++++++++++++++++++++++++
->   include/linux/intel-iommu.h |  69 ++++++++++-
->   include/linux/intel-svm.h   |  12 ++
->   include/uapi/linux/iommu.h  |   5 +
->   8 files changed, 858 insertions(+), 51 deletions(-)
-> 
+To try this patches, we will need:
+1. OpenSBI multi-PLIC and multi-CLINT support which can be found in
+   multi_plic_clint_v1 branch at:
+   https://github.com/avpatel/opensbi.git
+2. QEMU RISC-V multi-socket support which can be found in
+   riscv_multi_socket_v1 branch at:
+   https://github.com/avpatel/qemu.git
+
+Anup Patel (4):
+  irqchip/sifive-plic: Setup cpuhp once after current handler is present
+  irqchip/sifive-plic: Improve boot prints for multiple PLIC instances
+  irqchip/sifive-plic: Separate irq_chip for muiltiple PLIC instances
+  irqchip/sifive-plic: Set default irq affinity in plic_irqdomain_map()
+
+ drivers/irqchip/irq-sifive-plic.c | 50 +++++++++++++++++++++----------
+ 1 file changed, 35 insertions(+), 15 deletions(-)
+
+-- 
+2.25.1
+
