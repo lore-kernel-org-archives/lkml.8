@@ -2,176 +2,156 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C454C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 805C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5744520756
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:04:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDNxMUxH"
+	by mail.kernel.org (Postfix) with ESMTP id 6289F20728
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589631032;
+	bh=04AbjCXytLCX9HGH+nxYI/rMKrxzV75ANLTUs/yDM/U=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=s+BvZHF+Ymb9TLJgHDbPPoKvZMrRsdQ0tylYePBqaI5KO8fzJvVg8nno1S0aZkwT7
+	 /MAJXHthbgvbgdCGxRQr6M07H11fc+PtZSSKuzVYZNd+j+xGK8BC2qPWvZNEXRSAcA
+	 6dJ9qamVBdQvtI7Ve+QnKE0UBDgN+1ufyubhJIis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgEPME5 (ORCPT
+        id S1726252AbgEPMKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 08:04:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726252AbgEPMEw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 08:04:52 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60022C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 05:04:52 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id d21so4972106ljg.9
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 05:04:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GFdlLRF+QWHVp0kmWtaOpTTeJ1VX1CvltfufxnJoxmc=;
-        b=kDNxMUxHD0tw6qdcHfGMSbWfVV/pXv9ohp4lk4uazf1X2JeJYVRbJUaSeDxz3vxvS8
-         CRPEtRxG7txVO22AQYpEVlr3/FgsEmU0YuzU7uWnXOpJT+JAoFp5svMKAFjTsd+CX3qG
-         KTxVAC4z4FEhQ3e2zLiANHVhwRKIDvtidzwwRBFBhnpl75MZFEIToa2AYLfZzLGvAvMj
-         fmjqSphqmf9g2h03EHppZaZ90R3hrPTgshVaSdBxmS3R8PKx39bB120ST+kLfhLVsZnP
-         fe60qR85bJlQg63m9PiimEt22qRDdwFR5vxpZBn8Xr2lymlwYgfhqcJHwGtKuYrfwvLZ
-         2T+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GFdlLRF+QWHVp0kmWtaOpTTeJ1VX1CvltfufxnJoxmc=;
-        b=qwMyEZn/m8LHTF00wlKqeD3dzmtexQi2IJ6WruAaexJjrLXnFmE6vjWzpzekNFaXbf
-         32N+SHlf+7obkENxO//t1xd0uTSg8mrOTQ082k/zFxJ1n22PWeAEFgzwena+FjP2Ky5o
-         9q+8H3DgnonPMUoY11ozRBVhKpQK3wsbttYkEU4cnyITMFSnqxMELURUIQxjr7JQ+OO5
-         OoHd9L1+7DvKtJbKZQeA4gX0FKrcDZxpIsYMjhIVYG0mV1+NEz2vfGgWB44DAxB+ua8K
-         Po44s42CuZtROzYtt6y1wzLRhypHkz+vJ+7EwiwcyvE4qZHesobSFOtM1+QJR/Pel08g
-         bx7g==
-X-Gm-Message-State: AOAM531sw85RC63sxAwkLcT5gKpIC/zXRQqGByoQhh41aAOCCCYV7X+r
-        4Q/s3yGPb5ef7HexucLxyU0=
-X-Google-Smtp-Source: ABdhPJx8EwzyH1qoZJ9kcNxt/OML62+QNqsVcPSktO5p3bVn/XqIzc4UkppQjcb89cOYAzyxJ4rFPg==
-X-Received: by 2002:a2e:2c11:: with SMTP id s17mr3406765ljs.225.1589630690761;
-        Sat, 16 May 2020 05:04:50 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-22.NA.cust.bahnhof.se. [158.174.22.22])
-        by smtp.gmail.com with ESMTPSA id r20sm2581538ljj.44.2020.05.16.05.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 May 2020 05:04:50 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     kishon@ti.com, vkoul@kernel.org, alcooperx@gmail.com
-Cc:     linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH 3/3] phy: phy-brcm-usb: Constify static structs
-Date:   Sat, 16 May 2020 14:04:41 +0200
-Message-Id: <20200516120441.7627-4-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200516120441.7627-1-rikard.falkeborn@gmail.com>
-References: <20200516120441.7627-1-rikard.falkeborn@gmail.com>
+        Sat, 16 May 2020 08:10:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726206AbgEPMKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 08:10:31 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CDF020657;
+        Sat, 16 May 2020 12:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589631030;
+        bh=04AbjCXytLCX9HGH+nxYI/rMKrxzV75ANLTUs/yDM/U=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=SMTPQgb5Hvr3EbSz8749/ImgGuqyITyV1BhWKkpIsG4uZvS3A8v4N4yBOg2pUraBL
+         1hgcVaRxrBMQYG0UP2evthJttAR0wLXuH+VM4zJiTFU+ORtBk0A7FzFIHVT2ZxNYiw
+         WMKg2+5Mt3WfubCC5gI9laL/Q1s/JC3gYvsbGOt8=
+Message-ID: <61e877867de7e683d88e2cc5d0945b0aecce1d2a.camel@kernel.org>
+Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Luis Henriques <lhenriques@suse.com>,
+        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        fstests <fstests@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Sat, 16 May 2020 08:10:27 -0400
+In-Reply-To: <CAOQ4uxhPzcX6Ti8UX4WOg9gJJn+YTuk9OgU80d9imoJ2QdXaWQ@mail.gmail.com>
+References: <20200514111453.GA99187@suse.com>
+         <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
+         <20200514124845.GA12559@suse.com>
+         <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
+         <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
+         <20200515111548.GA54598@suse.com>
+         <61b1f19edcc349641b5383c2ac70cbf9a15ba4bd.camel@kernel.org>
+         <CAOQ4uxiWZoSj3Pjwskd_hu-ErV9096hLt13CDcW6nEEvcwDNVA@mail.gmail.com>
+         <e227d42fdc91587e34bc64ac252970d39d9b4eee.camel@kernel.org>
+         <CAOQ4uxhPzcX6Ti8UX4WOg9gJJn+YTuk9OgU80d9imoJ2QdXaWQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A number of structs were not modified and can therefore be made const
-to allow the compiler to put them in read-only memory.
+On Sat, 2020-05-16 at 09:58 +0300, Amir Goldstein wrote:
+> [pulling in nfs guys]
+> 
+> > > Questions:
+> > > 1. Does sync() result in fully purging inodes on MDS?
+> > 
+> > I don't think so, but again, that code is not trivial to follow. I do
+> > know that the MDS keeps around a "strays directory" which contains
+> > unlinked inodes that are lazily cleaned up. My suspicion is that it's
+> > satisfying lookups out of this cache as well.
+> > 
+> > Which may be fine...the MDS is not required to be POSIX compliant after
+> > all. Only the fs drivers are.
+> > 
+> > > 2. Is i_nlink synchronized among nodes on deferred delete?
+> > > IWO, can inode come back from the dead on client if another node
+> > > has linked it before i_nlink 0 was observed?
+> > 
+> > No, that shouldn't happen. The caps mechanism should ensure that it
+> > can't be observed by other clients until after the change.
+> > 
+> > That said, Luis' current patch doesn't ensure we have the correct caps
+> > to check the i_nlink. We may need to add that in before we can roll with
+> > this.
+> > 
+> > > 3. Can an NFS client be "migrated" from one ceph node to another
+> > > with an open but unlinked file?
+> > > 
+> > 
+> > No. Open files in ceph are generally per-client. You can't pass around a
+> > fd (or equivalent).
+> 
+> Not sure we are talking about the same thing.
+> It's not ceph fd that is being passed around, it's the NFS client's fd.
+> If there is no case where NFS client would access ceph client2
+> with a handle it got from ceph client1, then there is no reason to satisfy
+> an open_by_handle() call for an unlinked file on client2.
+> If file was opened on client1, it may be "legal" to satisfy open_by_handle()
+> on client2, but I don't see how stopping to satisfy that can break anything.
+> 
 
-In order to do so, update a few functions that don't modify there input
-to take pointers to const.
+Not currently, but eventually we may need to allow for that...which is
+another good reason to handle this on the (Ceph) client instead, as the
+client can then decide whether treat an unlinked file as an ESTALE
+return based on its needs.
 
-Before:
-   text    data     bss     dec     hex filename
-  15511    6448      64   22023    5607 drivers/phy/broadcom/phy-brcm-usb.o
+> > > I think what the test is trying to verify is that a "fully purged" inodes
+> > > cannot be opened db handle, but there is no standard way to verify
+> > > "fully purged", so the test resorts to sync() + another sync() + drop_caches.
+> > > 
+> > 
+> > Got it. That makes sense.
+> > 
+> > > Is there anything else that needs to be done on ceph in order to flush
+> > > all deferred operations from this client to MDS?
+> > 
+> > I'm leaning toward something like what Luis has proposed, but adding in
+> > appropriate cap handling.
+> 
+> That sounds fine.
+> 
+> > Basically, we have to consider the situation where one client has the
+> > file open and another client unlinks it, and then does an
+> > open_by_handle_at. Should it succeed in that case?
+> > 
+> > I can see arguments for either way.
+> 
+> IMO, the behavior should be defined for a client that has the file open.
+> For the rest it does not really matter.
+> 
+> My argument is that is it easy to satisfy the test's expectation and conform
+> to behavior of other filesystems without breaking any real workload.
+> 
+> To satisfy the test's expectation, you only need to change behavior of ceph
+> client in i_count 1 use case. If i_count is 1 need to take all relevant caps
+> to check that i_nlink is "globally" 0, before returning ESTALE.
+> But if i_count > 1, no need to bother.
 
-After:
-   text    data     bss     dec     hex filename
-  16058    5936      64   22058    562a drivers/phy/broadcom/phy-brcm-usb.o
+Makes sense. Thanks.
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
----
- drivers/phy/broadcom/phy-brcm-usb.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
-index 491bbd46c5b3..99fbc7e4138b 100644
---- a/drivers/phy/broadcom/phy-brcm-usb.c
-+++ b/drivers/phy/broadcom/phy-brcm-usb.c
-@@ -39,14 +39,14 @@ struct match_chip_info {
- 	u8 optional_reg;
- };
- 
--static struct value_to_name_map brcm_dr_mode_to_name[] = {
-+static const struct value_to_name_map brcm_dr_mode_to_name[] = {
- 	{ USB_CTLR_MODE_HOST, "host" },
- 	{ USB_CTLR_MODE_DEVICE, "peripheral" },
- 	{ USB_CTLR_MODE_DRD, "drd" },
- 	{ USB_CTLR_MODE_TYPEC_PD, "typec-pd" }
- };
- 
--static struct value_to_name_map brcm_dual_mode_to_name[] = {
-+static const struct value_to_name_map brcm_dual_mode_to_name[] = {
- 	{ 0, "host" },
- 	{ 1, "device" },
- 	{ 2, "auto" },
-@@ -138,7 +138,7 @@ static int brcm_usb_phy_exit(struct phy *gphy)
- 	return 0;
- }
- 
--static struct phy_ops brcm_usb_phy_ops = {
-+static const struct phy_ops brcm_usb_phy_ops = {
- 	.init		= brcm_usb_phy_init,
- 	.exit		= brcm_usb_phy_exit,
- 	.owner		= THIS_MODULE,
-@@ -170,7 +170,7 @@ static struct phy *brcm_usb_phy_xlate(struct device *dev,
- 	return ERR_PTR(-ENODEV);
- }
- 
--static int name_to_value(struct value_to_name_map *table, int count,
-+static int name_to_value(const struct value_to_name_map *table, int count,
- 			 const char *name, int *value)
- {
- 	int x;
-@@ -185,7 +185,7 @@ static int name_to_value(struct value_to_name_map *table, int count,
- 	return -EINVAL;
- }
- 
--static const char *value_to_name(struct value_to_name_map *table, int count,
-+static const char *value_to_name(const struct value_to_name_map *table, int count,
- 				 int value)
- {
- 	if (value >= count)
-@@ -252,7 +252,7 @@ static const struct attribute_group brcm_usb_phy_group = {
- 	.attrs = brcm_usb_phy_attrs,
- };
- 
--static struct match_chip_info chip_info_7216 = {
-+static const struct match_chip_info chip_info_7216 = {
- 	.init_func = &brcm_usb_dvr_init_7216,
- 	.required_regs = {
- 		BRCM_REGS_CTRL,
-@@ -262,7 +262,7 @@ static struct match_chip_info chip_info_7216 = {
- 	},
- };
- 
--static struct match_chip_info chip_info_7211b0 = {
-+static const struct match_chip_info chip_info_7211b0 = {
- 	.init_func = &brcm_usb_dvr_init_7211b0,
- 	.required_regs = {
- 		BRCM_REGS_CTRL,
-@@ -275,7 +275,7 @@ static struct match_chip_info chip_info_7211b0 = {
- 	.optional_reg = BRCM_REGS_BDC_EC,
- };
- 
--static struct match_chip_info chip_info_7445 = {
-+static const struct match_chip_info chip_info_7445 = {
- 	.init_func = &brcm_usb_dvr_init_7445,
- 	.required_regs = {
- 		BRCM_REGS_CTRL,
 -- 
-2.26.2
+Jeff Layton <jlayton@kernel.org>
 
