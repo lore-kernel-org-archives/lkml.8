@@ -2,129 +2,135 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 477A92074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 461E52074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:08:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OUZpHqIa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjZJlPba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgEPIH1 (ORCPT
+        id S1726984AbgEPIIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 04:07:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60256 "EHLO
+        Sat, 16 May 2020 04:08:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726958AbgEPIHZ (ORCPT
+        by vger.kernel.org with ESMTP id S1726264AbgEPIIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 04:07:25 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0CD6C05BD09
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 01:07:23 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id n33so5146343qtd.10
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 01:07:23 -0700 (PDT)
+        Sat, 16 May 2020 04:08:19 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB616C061A0C;
+        Sat, 16 May 2020 01:08:19 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id t3so3908066otp.3;
+        Sat, 16 May 2020 01:08:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=m6FXJWTVjdVibVnBuvWq7S2FSfO+tv4HQu2DRpDNQEM=;
-        b=OUZpHqIacF0EjlyoeZty3BJIuBBUFJITwSRluRMVLb36uvGl11S9Y2e+3NLT9N4SJ+
-         eA7xLL8KvYBTlr+5i5yPmxHUCnXLou+MI812JH79Mm2DM/sAKxRP/bwbNR3QrQ6PkKhi
-         fXyFzc9WmhI9vf06/kp3aKMBSHqJvuI5DQ+h0FE/BwJCCdDqFtnAO+qwVtBSA2cWpRM4
-         qiE/+7bjH3b8esojgR5uxeFGKPSsceuAiadaD1IlWnl6l4jgel2i1iF3EwtHLmrfiedw
-         MAfOi2X7djt+HafR/evWSM01IWDwEiXtpoaFGCPu/iFJ/rtD03fC6iyCHZcniGwB3VRc
-         hBnA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O65I1zmNTEDkuvl7Blq3pU8Ri7LhEzDZZNS97q+Lxi8=;
+        b=FjZJlPbawLMM/ZnJkShIEUeOrq3GKC79i+Ha8DSCMNL0//k9tBNOU0sR3lhju/fJOO
+         2DKQdMRwRr0WiTvH1iR2xKZtgbduQ8dQxIYrOhDDnnblzp2hyrH1OXugdle89NgYRb86
+         2INYSLAME7HtuuW6QzdgeaFytIS7WGh4LAVTG2xtoSsmSPVm6p/TE2vPh4b6bmvb4/Ro
+         O7aDpCAdhhTucTt4ayjJBqenIEOpqTmeYCbBxKkQEMMebFyfWsQQ2Q5jxIw4Pj/JsiKD
+         IU143p2NZxRlWYkVx+tYqHDerYpGkNOaRNs312EOsk2KRgMVRew7ZXsyk8c4EbB6Xvbk
+         DkjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=m6FXJWTVjdVibVnBuvWq7S2FSfO+tv4HQu2DRpDNQEM=;
-        b=GrO3Mis3f8WIxqFVY4TbUKdRd3YUweWF0wDDMdbSe26mApR53TjCf/c2tOE8c9FC1d
-         kcqQ/18HnSwDPpRnO6VnqY57M1z+iJ7dkQCaCXBGk67WeIhGciuEbS+Oqko+wQp23m1J
-         EcWSoTk/iZr0X5hzYp491IY6z/CscK61/WS17JCYWFd3nmYdpL7gj+5NXL5wvkkGj+Bh
-         7RzLw2xkYZtsWqIxmb9iIneJ/yF/u8CcZGyv5FwQ5dfF1X9UEz8qw87IQe9tnGsduViD
-         HGxLTO2jQ0tb/qqZyRAnbKUKdehFYMqDu/jVNNIeB/TpaQpLSROQxCau7DwbmuoTVrD6
-         1eag==
-X-Gm-Message-State: AOAM530KZtFn+WM3hutKumvFhJ2DcrIZEiMNMWbER2pIrPgnVWY8M3mq
-        HDL0ciPkJQy3f0LmbLPQTk4jiHjW9A+ug8E=
-X-Google-Smtp-Source: ABdhPJx18LwhURFMw6en0MLHSwDPcau1vDqd0MZzLikef5cQQL1JC0nc7/3sNdzSBXAFw67BkXXw3p6jshvPIp4=
-X-Received: by 2002:a0c:a619:: with SMTP id s25mr7145926qva.21.1589616442680;
- Sat, 16 May 2020 01:07:22 -0700 (PDT)
-Date:   Sat, 16 May 2020 01:07:18 -0700
-Message-Id: <20200516080718.166676-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH v1] driver core: Fix memory leak when adding SYNC_STATE_ONLY
- device links
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     stable@vger.kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O65I1zmNTEDkuvl7Blq3pU8Ri7LhEzDZZNS97q+Lxi8=;
+        b=p+O6Bv+vmMKEoANiQlA0pMC6yApUgBFfDLSnaV7e0RT0C6xCIgmZiRUcPMuVoYo6k+
+         3/jqdrCyCArZmpdx9jN/ZOYMG4zEKXjSl5oO/XlYn749d2L5nECf4shtxCIIIZn6v3Nb
+         9hU2hvjUzKkw9RlqUWELDFLg8mlTy3GaNnBynskXh1YK8XpNT695YfAnPTmPmFd7cWL5
+         +64NOCSg9bzjAZeVqFr1r5hLowPZkZp1g6Jo2/7u5gEM/Le+aQlrGa+Kb6wDDDrMlOdb
+         tbpiwAh5KgA7+lDJSHdLZPzfVTC8jLU05fAHAufpOcYxc8HK+OxjvjaWeAZ3LR2hd4QS
+         swrw==
+X-Gm-Message-State: AOAM532uItwfKvdBYViYWi+Nsn/kLZtsu1c+r1uMU9wte/eOXCTo7OBS
+        Dek5Lv7QxQuC4hGW2Ku7PfQ=
+X-Google-Smtp-Source: ABdhPJy9xrUAJUSrZGHz4rjNK3oxki+IlpWEmBm4DbMT7HduARzjVorHFCT1Vym5JNh1k3gyGNDlJQ==
+X-Received: by 2002:a9d:7dd9:: with SMTP id k25mr5079985otn.328.1589616499102;
+        Sat, 16 May 2020 01:08:19 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id n11sm1321064oij.21.2020.05.16.01.08.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 May 2020 01:08:18 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH 1/2] clk: bcm2835: Fix return type of bcm2835_register_gate
+Date:   Sat, 16 May 2020 01:08:06 -0700
+Message-Id: <20200516080806.1459784-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
-core: Add device link support for SYNC_STATE_ONLY flag"),
-device_link_add() incorrectly skipped adding the new SYNC_STATE_ONLY
-device link to the supplier's and consumer's "device link" list. So the
-"device link" is lost forever from driver core if the caller didn't keep
-track of it (typically isn't expected to).
+bcm2835_register_gate is used as a callback for the clk_register member
+of bcm2835_clk_desc, which expects a struct clk_hw * return type but
+bcm2835_register_gate returns a struct clk *.
 
-If the same SYNC_STATE_ONLY device link is created again using
-device_link_add(), instead of returning the pointer to the previously
-created device link, a new device link is created and returned. This can
-cause memory leaks in conjunction with fw_devlinks.
+This discrepancy is hidden by the fact that bcm2835_register_gate is
+cast to the typedef bcm2835_clk_register by the _REGISTER macro. This
+turns out to be a control flow integrity violation, which is how this
+was noticed.
 
-Cc: stable@vger.kernel.org
-Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+Change the return type of bcm2835_register_gate to be struct clk_hw *
+and use clk_hw_register_gate to do so. This should be a non-functional
+change as clk_register_gate calls clk_hw_register_gate anyways but this
+is needed to avoid issues with further changes.
+
+Fixes: b19f009d4510 ("clk: bcm2835: Migrate to clk_hw based registration and OF APIs")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1028
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- drivers/base/core.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/clk/bcm/clk-bcm2835.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 84c569726d75..d36e9289b2df 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -436,12 +436,16 @@ struct device_link *device_link_add(struct device *consumer,
- 	    flags & DL_FLAG_PM_RUNTIME)
- 		pm_runtime_resume(supplier);
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index ded13ccf768e..7c845c293af0 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -1448,13 +1448,13 @@ static struct clk_hw *bcm2835_register_clock(struct bcm2835_cprman *cprman,
+ 	return &clock->hw;
+ }
  
-+	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
-+	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
-+
- 	if (flags & DL_FLAG_SYNC_STATE_ONLY) {
- 		dev_dbg(consumer,
- 			"Linked as a sync state only consumer to %s\n",
- 			dev_name(supplier));
- 		goto out;
- 	}
-+
- reorder:
- 	/*
- 	 * Move the consumer and all of the devices depending on it to the end
-@@ -452,12 +456,9 @@ struct device_link *device_link_add(struct device *consumer,
- 	 */
- 	device_reorder_to_tail(consumer, NULL);
+-static struct clk *bcm2835_register_gate(struct bcm2835_cprman *cprman,
++static struct clk_hw *bcm2835_register_gate(struct bcm2835_cprman *cprman,
+ 					 const struct bcm2835_gate_data *data)
+ {
+-	return clk_register_gate(cprman->dev, data->name, data->parent,
+-				 CLK_IGNORE_UNUSED | CLK_SET_RATE_GATE,
+-				 cprman->regs + data->ctl_reg,
+-				 CM_GATE_BIT, 0, &cprman->regs_lock);
++	return clk_hw_register_gate(cprman->dev, data->name, data->parent,
++				    CLK_IGNORE_UNUSED | CLK_SET_RATE_GATE,
++				    cprman->regs + data->ctl_reg,
++				    CM_GATE_BIT, 0, &cprman->regs_lock);
+ }
  
--	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
--	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
--
- 	dev_dbg(consumer, "Linked as a consumer to %s\n", dev_name(supplier));
- 
-- out:
-+out:
- 	device_pm_unlock();
- 	device_links_write_unlock();
- 
+ typedef struct clk_hw *(*bcm2835_clk_register)(struct bcm2835_cprman *cprman,
+
+base-commit: bdecf38f228bcca73b31ada98b5b7ba1215eb9c9
 -- 
-2.26.2.761.g0e0b3e54be-goog
+2.26.2
 
