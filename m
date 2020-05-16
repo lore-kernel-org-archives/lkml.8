@@ -2,106 +2,164 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2561BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89E722073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2B152073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgEPDGG (ORCPT
+        id S1728017AbgEPDGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 23:06:06 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4796 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726247AbgEPDGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 23:06:06 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6C817AA0CD6132F8330D;
-        Sat, 16 May 2020 11:06:04 +0800 (CST)
-Received: from [127.0.0.1] (10.67.102.197) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Sat, 16 May 2020
- 11:05:54 +0800
-Subject: Re: [PATCH 2/4] proc/sysctl: add shared variables -1
-To:     Kees Cook <keescook@chromium.org>
-CC:     <mcgrof@kernel.org>, <yzaikin@google.com>, <adobriyan@gmail.com>,
-        <mingo@kernel.org>, <peterz@infradead.org>,
-        <akpm@linux-foundation.org>, <yamada.masahiro@socionext.com>,
-        <bauerman@linux.ibm.com>, <gregkh@linuxfoundation.org>,
-        <skhan@linuxfoundation.org>, <dvyukov@google.com>,
-        <svens@stackframe.org>, <joel@joelfernandes.org>,
-        <tglx@linutronix.de>, <Jisheng.Zhang@synaptics.com>,
-        <pmladek@suse.com>, <bigeasy@linutronix.de>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <wangle6@huawei.com>
-References: <1589517224-123928-1-git-send-email-nixiaoming@huawei.com>
- <1589517224-123928-3-git-send-email-nixiaoming@huawei.com>
- <202005150105.33CAEEA6C5@keescook>
- <88f3078b-9419-b9c6-e789-7d6e50ca2cef@huawei.com>
- <202005150904.743BB3E52@keescook>
- <ab5f75d4-4d69-7b95-e6bd-ba8fd9792d94@huawei.com>
- <202005151946.C6335E92@keescook>
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-Message-ID: <2656ae51-5348-0b37-d76d-1460b8eb3f10@huawei.com>
-Date:   Sat, 16 May 2020 11:05:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 15 May 2020 23:06:33 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:51739 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbgEPDGc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 23:06:32 -0400
+Received: by mail-pj1-f67.google.com with SMTP id mq3so1764968pjb.1;
+        Fri, 15 May 2020 20:06:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=T2GyJli/LtpjNMryaclGRF8nKqCQNV/l/DH3OGmd/9c=;
+        b=M+FeyZMM6vVp00doQX97+0OwJO+20jTuZcbX0w2EaXGSWsfql/7T+pFUCqjVCdDq6l
+         qYtFMAQ93dAdiweMOGOM9u8gqp893OmGx/XVz9e1FG6sq3J+dVBYMh7CHL+n+S57/tGz
+         H3cHmXDDYf33HGNVOIHaGi5mCaxEz1MsdfO3J2TrsmHfxIVswYeiq3vgYJZXvWKivqLR
+         o6/NqcTCRDG3Z5IzKeP2hc9gjT/ogl+xn0FPxTfmMVMVAhBNTv6VrLrXZ97leHKaHDXg
+         GR7iHRLO1nKhlrxgE2JiZRYNTLcRYilzdLUaI8Z0KjAGYzCaogDnRwsYFukHx5dTHUkr
+         ySTw==
+X-Gm-Message-State: AOAM533d6SYs9Hgxttv01cL4e4m4nBJ2OsBHf2YQ7oHMNd7bTEUyr7k2
+        YB/HwLrbJz+1vjyp9gWIwPE=
+X-Google-Smtp-Source: ABdhPJx+vns/ssIkJi4jyZILzl09L0c7z3Gfq+MJqyh+rsrNcXyD1wZtZWFUhveEu/tBDZ8XYMo7SA==
+X-Received: by 2002:a17:902:9044:: with SMTP id w4mr6607162plz.83.1589598391314;
+        Fri, 15 May 2020 20:06:31 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:f99a:ee92:9332:42a? ([2601:647:4000:d7:f99a:ee92:9332:42a])
+        by smtp.gmail.com with ESMTPSA id z7sm2968082pff.47.2020.05.15.20.06.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2020 20:06:30 -0700 (PDT)
+Subject: Re: [RFC PATCH 09/13] scsi: ufshpb: Add response API
+To:     Avri Altman <avri.altman@wdc.com>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     alim.akhtar@samsung.com, asutoshd@codeaurora.org,
+        Zang Leigang <zangleigang@hisilicon.com>,
+        Avi Shchislowski <avi.shchislowski@wdc.com>,
+        Bean Huo <beanhuo@micron.com>, cang@codeaurora.org,
+        stanley.chu@mediatek.com,
+        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>
+References: <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
+ <1589538614-24048-10-git-send-email-avri.altman@wdc.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <9619597b-3a3e-e67c-5afa-cebf03cc678b@acm.org>
+Date:   Fri, 15 May 2020 20:06:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <202005151946.C6335E92@keescook>
-Content-Type: text/plain; charset="gbk"; format=flowed
+In-Reply-To: <1589538614-24048-10-git-send-email-avri.altman@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.197]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/16 10:47, Kees Cook wrote:
-> On Sat, May 16, 2020 at 10:32:19AM +0800, Xiaoming Ni wrote:
->> On 2020/5/16 0:05, Kees Cook wrote:
->>> On Fri, May 15, 2020 at 05:06:28PM +0800, Xiaoming Ni wrote:
->>>> On 2020/5/15 16:06, Kees Cook wrote:
->>>>> On Fri, May 15, 2020 at 12:33:42PM +0800, Xiaoming Ni wrote:
->>>>>> Add the shared variable SYSCTL_NEG_ONE to replace the variable neg_one
->>>>>> used in both sysctl_writes_strict and hung_task_warnings.
->>>>>>
->>>>>> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
->>>>>> ---
->>>>>>     fs/proc/proc_sysctl.c     | 2 +-
->>>>>>     include/linux/sysctl.h    | 1 +
->>>>>>     kernel/hung_task_sysctl.c | 3 +--
->>>>>>     kernel/sysctl.c           | 3 +--
->>>>>
->>>>> How about doing this refactoring in advance of the extraction patch?
->>>> Before  advance of the extraction patch, neg_one is only used in one file,
->>>> does it seem to have no value for refactoring?
->>>
->>> I guess it doesn't matter much, but I think it's easier to review in the
->>> sense that neg_one is first extracted and then later everything else is
->>> moved.
->>>
->> Later, when more features sysctl interface is moved to the code file, there
->> will be more variables that need to be extracted.
->> So should I only extract the neg_one variable here, or should I extract all
->> the variables used by multiple features?
-> 
-> Hmm -- if you're going to do a consolidation pass, then nevermind, I
-> don't think order will matter then.
-> 
-> Thank you for the cleanup! Sorry we're giving you back-and-forth advice!
-> 
-> -Kees
-> 
+On 2020-05-15 03:30, Avri Altman wrote:
+> +#define RSP_DATA_SEG_LEN (sizeof(struct ufshpb_sense_data))
 
-Sorry, I don't fully understand.
-Does this mean that there is no need to adjust the patch order or the 
-order of variables in sysctl_vals?
-Should I extract only SYSCTL_NEG_ONE or should I extract all variables?
+The name of this macro is almost as long as the expression it replaces.
+It may make the code easier to read by dropping this macro and using the
+sizeof() expression directly.
 
-Thanks
-Xiaoming Ni
+> +	struct tasklet_struct rsp_tasklet;
 
+Why a tasklet instead of e.g. a work_struct? Tasklets can cause nasty
+problems, e.g. CPU lockup complaints if too much work is done in tasklet
+context.
+
+> +static void ufshpb_dh_notify(struct ufshpb_lun *hpb,
+> +			     struct ufshpb_sense_data *sense)
+> +{
+> +	struct ufs_hba *hba = shost_priv(hpb->sdev->host);
+> +
+> +	spin_lock(hba->host->host_lock);
+> +
+> +	if (scsi_device_get(hpb->sdev)) {
+> +		spin_unlock(hba->host->host_lock);
+> +		return;
+> +	}
+> +
+> +	scsi_dh_set_params(hpb->sdev->request_queue, (const char *)sense);
+> +
+> +	scsi_device_put(hpb->sdev);
+> +
+> +	spin_unlock(hba->host->host_lock);
+> +}
+
+To me this looks like slight abuse of the scsi_dh_set_params() function.
+The documentation of that function mentions clearly that the second
+argument is an ASCII string and not e.g. sense data.
+
+Has this driver been tested on a system with lockdep enabled? I don't
+think that it is acceptable to use spin_lock() in tasklet context.
+
+> +static void ufshpb_tasklet_fn(unsigned long priv)
+> +{
+> +	struct ufshpb_lun *hpb = (struct ufshpb_lun *)priv;
+> +	struct ufshpb_rsp_element *rsp_elem = NULL;
+> +	unsigned long flags;
+> +
+> +	while (1) {
+> +		spin_lock_irqsave(&hpb->rsp_list_lock, flags);
+> +		rsp_elem = ufshpb_get_rsp_elem(hpb, &hpb->lh_rsp);
+> +		spin_unlock_irqrestore(&hpb->rsp_list_lock, flags);
+> +
+> +		if (!rsp_elem)
+> +			return;
+> +
+> +		ufshpb_dh_notify(hpb, &rsp_elem->sense_data);
+> +
+> +		spin_lock_irqsave(&hpb->rsp_list_lock, flags);
+> +		list_add_tail(&rsp_elem->list, &hpb->lh_rsp_free);
+> +		spin_unlock_irqrestore(&hpb->rsp_list_lock, flags);
+> +	}
+> +}
+
+Please schedule work instead of using tasklet context.
+
+Thanks,
+
+Bart.
