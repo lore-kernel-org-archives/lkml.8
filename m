@@ -2,193 +2,189 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 21:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00247C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 22:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30760206D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 21:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D078720709
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 22:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="pW8KhGNg"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GFQEkSUC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgEPVwg (ORCPT
+        id S1726731AbgEPWOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 17:52:36 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:47632 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgEPVwf (ORCPT
+        Sat, 16 May 2020 18:14:20 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:35058 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726660AbgEPWOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 17:52:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1589665880; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1QAI1+lygs7RukytrBDJiA7TI+zQ9n1V3xrM8AumWXA=;
-        b=pW8KhGNg2rkDX1s29kn2kWNFzAz/EL5hkHf9wAq8EKRiTrtfWRgFlMRtqu2efZswBjpD2T
-        ybuuGoyx2mVCBaE3Ja/nPkWhpavKAcyXRTMz5Zne49El86/ZpNtEA2iSEzw0IqZUMrnRnh
-        79fDnXjNmE78d5GF0L7rj5KtG9BI/H4=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 12/12] gpu/drm: Ingenic: Support multiple panels/bridges
-Date:   Sat, 16 May 2020 23:50:57 +0200
-Message-Id: <20200516215057.392609-12-paul@crapouillou.net>
-In-Reply-To: <20200516215057.392609-1-paul@crapouillou.net>
-References: <20200516215057.392609-1-paul@crapouillou.net>
+        Sat, 16 May 2020 18:14:19 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1029)
+        id BE57820B717B; Sat, 16 May 2020 15:14:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BE57820B717B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1589667257;
+        bh=snQA8e5UPF7RYST6vOttqczg0QEhodtAgr/CG72qmDM=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=GFQEkSUChdP9ijldDnE99RaLqe60G9nu/YTSOJFYny8tH8UKXrCoY2ccZSWVc3+ed
+         pskmycAVpYpiG4WbQdPOE/yMc9QzuJ3CYkqkIhQseJzCvk4z/TsdChZcUdJdlJGtu7
+         jGvncEl7hvygYUJat3OkxsA998irsOIYxcVKTUDo=
+Received: from localhost (localhost [127.0.0.1])
+        by linux.microsoft.com (Postfix) with ESMTP id B34633070322;
+        Sat, 16 May 2020 15:14:17 -0700 (PDT)
+Date:   Sat, 16 May 2020 15:14:17 -0700 (PDT)
+From:   Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
+X-X-Sender: jaskarankhurana@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
+To:     =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+cc:     Deven Bowers <deven.desai@linux.microsoft.com>, agk@redhat.com,
+        axboe@kernel.dk, snitzer@redhat.com, jmorris@namei.org,
+        serge@hallyn.com, zohar@linux.ibm.com,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, jannh@google.com,
+        tyhicks@linux.microsoft.com, pasha.tatashin@soleen.com,
+        sashal@kernel.org, nramas@linux.microsoft.com,
+        mdsakib@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        corbet@lwn.net
+Subject: Re: [RFC PATCH v3 00/12] Integrity Policy Enforcement LSM (IPE)
+In-Reply-To: <44fb36ae-959d-4ff7-ed1f-ccfc2e292232@digikod.net>
+Message-ID: <alpine.LRH.2.21.2005161420490.8455@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+References: <20200415162550.2324-1-deven.desai@linux.microsoft.com> <b07ac7e1-7cf5-92c9-81d0-64174c3d5024@digikod.net> <0001755a-6b2a-b13b-960c-eb0b065c8e3c@linux.microsoft.com> <8ba7b15f-de91-40f7-fc95-115228345fce@linux.microsoft.com>
+ <44fb36ae-959d-4ff7-ed1f-ccfc2e292232@digikod.net>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="656392-2094691721-1589667257=:8455"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support multiple panels or bridges connected to the same DPI output of
-the SoC. This setup can be found for instance on the GCW Zero, where the
-same DPI output interfaces the internal 320x240 TFT panel, and the ITE
-IT6610 HDMI chip.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/gpu/drm/ingenic/ingenic-drm.c | 74 ++++++++++++++++-----------
- 1 file changed, 43 insertions(+), 31 deletions(-)
+--656392-2094691721-1589667257=:8455
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index ad1cec4f2a4d..091e3d3c9027 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -52,7 +52,6 @@ struct ingenic_drm {
- 	struct drm_device drm;
- 	struct drm_plane f0, f1, *ipu_plane;
- 	struct drm_crtc crtc;
--	struct drm_encoder encoder;
- 
- 	struct device *dev;
- 	struct regmap *map;
-@@ -106,12 +105,6 @@ static inline struct ingenic_drm *drm_crtc_get_priv(struct drm_crtc *crtc)
- 	return container_of(crtc, struct ingenic_drm, crtc);
- }
- 
--static inline struct ingenic_drm *
--drm_encoder_get_priv(struct drm_encoder *encoder)
--{
--	return container_of(encoder, struct ingenic_drm, encoder);
--}
--
- static void ingenic_drm_crtc_atomic_enable(struct drm_crtc *crtc,
- 					   struct drm_crtc_state *state)
- {
-@@ -456,7 +449,7 @@ static void ingenic_drm_encoder_atomic_mode_set(struct drm_encoder *encoder,
- 						struct drm_crtc_state *crtc_state,
- 						struct drm_connector_state *conn_state)
- {
--	struct ingenic_drm *priv = drm_encoder_get_priv(encoder);
-+	struct ingenic_drm *priv = drm_device_get_priv(encoder->dev);
- 	struct drm_display_mode *mode = &crtc_state->adjusted_mode;
- 	struct drm_connector *conn = conn_state->connector;
- 	struct drm_display_info *info = &conn->display_info;
-@@ -670,9 +663,11 @@ static int ingenic_drm_bind(struct device *dev)
- 	struct clk *parent_clk;
- 	struct drm_bridge *bridge;
- 	struct drm_panel *panel;
-+	struct drm_encoder *encoder;
- 	struct drm_device *drm;
- 	void __iomem *base;
- 	long parent_rate;
-+	unsigned int i, clone_mask = 0;
- 	int ret, irq;
- 
- 	soc_info = of_device_get_match_data(dev);
-@@ -744,17 +739,6 @@ static int ingenic_drm_bind(struct device *dev)
- 		return PTR_ERR(priv->pix_clk);
- 	}
- 
--	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0, &panel, &bridge);
--	if (ret) {
--		if (ret != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get panel handle");
--		return ret;
--	}
--
--	if (panel)
--		bridge = devm_drm_panel_bridge_add_typed(dev, panel,
--							 DRM_MODE_CONNECTOR_DPI);
--
- 	priv->dma_hwdesc[0] = dma_alloc_coherent(dev,
- 						 sizeof(*priv->dma_hwdesc[0]),
- 						 &priv->dma_hwdesc_phys[0],
-@@ -821,22 +805,50 @@ static int ingenic_drm_bind(struct device *dev)
- 		}
- 	}
- 
--	priv->encoder.possible_crtcs = 1;
-+	for (i = 0; ; i++) {
-+		ret = drm_of_find_panel_or_bridge(dev->of_node, 0, i,
-+						  &panel, &bridge);
-+		if (ret) {
-+			if (ret == -ENODEV)
-+				break; /* we're done */
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(dev, "Failed to get bridge handle\n");
-+			return ret;
-+		}
- 
--	drm_encoder_helper_add(&priv->encoder,
--			       &ingenic_drm_encoder_helper_funcs);
-+		if (panel)
-+			bridge = devm_drm_panel_bridge_add_typed(dev, panel,
-+								 DRM_MODE_CONNECTOR_DPI);
- 
--	ret = drm_simple_encoder_init(drm, &priv->encoder,
--				      DRM_MODE_ENCODER_DPI);
--	if (ret) {
--		dev_err(dev, "Failed to init encoder: %i", ret);
--		return ret;
-+		encoder = devm_kzalloc(dev, sizeof(*encoder), GFP_KERNEL);
-+		if (!encoder)
-+			return -ENOMEM;
-+
-+		encoder->possible_crtcs = 1;
-+
-+		drm_encoder_helper_add(encoder,
-+				       &ingenic_drm_encoder_helper_funcs);
-+
-+		ret = drm_simple_encoder_init(drm, encoder,
-+					      DRM_MODE_ENCODER_DPI);
-+		if (ret) {
-+			dev_err(dev, "Failed to init encoder: %d\n", ret);
-+			return ret;
-+		}
-+
-+		ret = drm_bridge_attach(encoder, bridge, NULL, 0);
-+		if (ret) {
-+			dev_err(dev, "Unable to attach bridge");
-+			return ret;
-+		}
- 	}
- 
--	ret = drm_bridge_attach(&priv->encoder, bridge, NULL, 0);
--	if (ret) {
--		dev_err(dev, "Unable to attach bridge");
--		return ret;
-+	drm_for_each_encoder(encoder, drm) {
-+		clone_mask |= BIT(drm_encoder_index(encoder));
-+	}
-+
-+	drm_for_each_encoder(encoder, drm) {
-+		encoder->possible_clones = clone_mask;
- 	}
- 
- 	ret = drm_irq_install(drm, irq);
--- 
-2.26.2
 
+Hello Mickael,
+
+On Thu, 14 May 2020, Mickaël Salaün wrote:
+
+>
+> On 12/05/2020 22:46, Deven Bowers wrote:
+>>
+>>
+>> On 5/11/2020 11:03 AM, Deven Bowers wrote:
+>>>
+>>>
+>>> On 5/10/2020 2:28 AM, Mickaël Salaün wrote:
+>>>
+>>> [...snip]
+>>>
+>>>>>
+>>>>> Additionally, rules are evaluated top-to-bottom. As a result, any
+>>>>> revocation rules, or denies should be placed early in the file to
+>>>>> ensure
+>>>>> that these rules are evaluated before a rule with "action=ALLOW" is
+>>>>> hit.
+>>>>>
+>>>>> IPE policy is designed to be forward compatible and backwards
+>>>>> compatible,
+>>>>> thus any failure to parse a rule will result in the line being ignored,
+>>>>> and a warning being emitted. If backwards compatibility is not
+>>>>> required,
+>>>>> the kernel commandline parameter and sysctl, ipe.strict_parse can be
+>>>>> enabled, which will cause these warnings to be fatal.
+>>>>
+>>>> Ignoring unknown command may lead to inconsistent beaviors. To achieve
+>>>> forward compatibility, I think it would be better to never ignore
+>>>> unknown rule but to give a way to userspace to known what is the current
+>>>> kernel ABI. This could be done with a securityfs file listing the
+>>>> current policy grammar.
+>>>>
+>>>
+>>> That's a fair point. From a manual perspective, I think this is fine.
+>>> A human-user can interpret a grammar successfully on their own when new
+>>> syntax is introduced.
+>>>
+>>>  From a producing API perspective, I'd have to think about it a bit
+>>> more. Ideally, the grammar would be structured in such a way that the
+>>> userland
+>>> interpreter of this grammar would not have to be updated once new syntax
+>>> is introduced, avoiding the need to update the userland binary. To do so
+>>> generically ("op=%s") is easy, but doesn't necessarily convey sufficient
+>>> information (what happens when a new "op" token is introduced?). I think
+>>> this may come down to regular expression representations of valid values
+>>> for these tokens, which worries me as regular expressions are incredibly
+>>> error-prone[1].
+>>>
+>>> I'll see what I can come up with regarding this.
+>>
+>> I have not found a way that I like to expose some kind of grammar
+>> through securityfs that can be understood by usermode to parse the
+>> policy. Here's what I propose as a compromise:
+>>
+>>     1. I remove the unknown command behavior. This address your
+>> first point about inconsistent behaviors, and effectively removes the
+>> strict_parse sysctl (as it is always enabled).
+>>
+>>     2. I introduce a versioning system for the properties
+>> themselves. The valid set of properties and their versions
+>> can be found in securityfs, under say, ipe/config in a key=value
+>> format where `key` indicates the understood token, and `value`
+>> indicates their current version. For example:
+>>
+>>     $ cat $SECURITYFS/ipe/config
+>>     op=1
+>>     action=1
+>>     policy_name=1
+>>     policy_version=1
+>>     dmverity_signature=1
+>>     dmverity_roothash=1
+>>     boot_verified=1
+>
+> The name ipe/config sounds like a file to configure IPE. Maybe something
+> like ipe/config_abi or ipe/config_grammar?
+>
+>>
+>> if new syntax is introduced, the version number is increased.
+>>
+>>     3. The format of those versions are documented as part of
+>> the admin-guide around IPE. If user-mode at that point wants to rip
+>> the documentation formats and correlate with the versioning, then
+>> it fulfills the same functionality as above, with out the complexity
+>> around exposing a parsing grammar and interpreting it on-the-fly.
+>> Many of these are unlikely to move past version 1, however.
+>>
+>> Thoughts?
+>>
+>
+> That seems reasonable.
+>
+
+There is a use case for not having strict parsing in the cloud world where 
+there are multiple versions of OS deployed across a large number of 
+systems say 100,000 nodes. An OS update can take weeks to complete 
+across all the nodes, and we end up having a heterogeneous mix of OS 
+versions.
+
+Without non-strict parsing, to fix an issue in a policy we will need to 
+update the various versions of the policy (one each for all OS versions
+which have different IPE policy schema). We will lose the agility we 
+need to fix and deploy something urgently in the policy, the nodes might 
+be failing some critical workloads meanwhile. All the various versions of 
+the policy will need to be changed and production signed then deployed 
+etc. Further some versions might introduce newer issues and we will need 
+to see what all versions of the policy have that bug.
+
+I propose keeping the non-strict option as well to cater to this use case. 
+Let me know your thoughts on this.
+
+Regards,
+JK
+--656392-2094691721-1589667257=:8455--
