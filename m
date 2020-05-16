@@ -4,261 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3080C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0B86207D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A8920728
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgEPIzp (ORCPT
+        id S1726958AbgEPI5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 04:55:45 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4851 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725997AbgEPIz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 04:55:29 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9DFCE47CD4781515226C;
-        Sat, 16 May 2020 16:55:25 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 16 May 2020 16:55:18 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <mcgrof@kernel.org>, <keescook@chromium.org>, <yzaikin@google.com>,
-        <adobriyan@gmail.com>, <peterz@infradead.org>, <mingo@kernel.org>,
-        <patrick.bellasi@arm.com>, <gregkh@linuxfoundation.org>,
-        <tglx@linutronix.de>, <Jisheng.Zhang@synaptics.com>,
-        <bigeasy@linutronix.de>, <pmladek@suse.com>,
-        <ebiederm@xmission.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <nixiaoming@huawei.com>, <wangle6@huawei.com>
-Subject: [PATCH v2 2/4] sysctl: Move some boundary constants form sysctl.c to sysctl_vals
-Date:   Sat, 16 May 2020 16:55:13 +0800
-Message-ID: <1589619315-65827-3-git-send-email-nixiaoming@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
-In-Reply-To: <1589619315-65827-1-git-send-email-nixiaoming@huawei.com>
-References: <1589619315-65827-1-git-send-email-nixiaoming@huawei.com>
+        Sat, 16 May 2020 04:57:51 -0400
+Received: from mga03.intel.com ([134.134.136.65]:28230 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725997AbgEPI5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 04:57:51 -0400
+IronPort-SDR: 1W4P9j6CfYWtrG/X+WJEjMhNtyq6Hw/h+vuSpehk3+fqTHtPS/6Th+B7QoxuWFp93zWwqmXq3w
+ AemBOkvdr+GA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 01:57:48 -0700
+IronPort-SDR: in0yoFGzJjUIkU1B28SpdR5XFmYKLgi2naD49dLDLaJ7AtWqlV/JOUmaXbA+44jObhP4JnZzpK
+ eeRKqb2bLgPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,398,1583222400"; 
+   d="scan'208";a="266860185"
+Received: from dbobocel-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.55.115])
+  by orsmga006.jf.intel.com with ESMTP; 16 May 2020 01:57:39 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: [PATCH] x86/cpu/intel: Add nosgx kernel parameter
+Date:   Sat, 16 May 2020 11:57:37 +0300
+Message-Id: <20200516085737.10838-1-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
+References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some boundary (.extra1 .extra2) constants (E.g: neg_one two) in
-sysctl.c are used in multiple features. Move these variables to
-sysctl_vals to avoid adding duplicate variables when cleaning up
-sysctls table.
+Add kernel parameter to disable Intel SGX kernel support.
 
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+Tested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- fs/proc/proc_sysctl.c  |  2 +-
- include/linux/sysctl.h | 11 ++++++++---
- kernel/sysctl.c        | 37 ++++++++++++++++---------------------
- 3 files changed, 25 insertions(+), 25 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt | 2 ++
+ arch/x86/kernel/cpu/feat_ctl.c                  | 9 +++++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index b6f5d45..3f77e64 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -23,7 +23,7 @@
- static const struct inode_operations proc_sys_dir_operations;
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 7bc83f3d9bdf..9f7202a54db6 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3268,6 +3268,8 @@
  
- /* shared constants to be used in various sysctls */
--const int sysctl_vals[] = { 0, 1, INT_MAX };
-+const int sysctl_vals[] = { -1, 0, 1, 2, 4, 100, 1000, INT_MAX };
- EXPORT_SYMBOL(sysctl_vals);
+ 	nosep		[BUGS=X86-32] Disables x86 SYSENTER/SYSEXIT support.
  
- /* Support for permanently empty directories */
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index 43f8ef9..bf97c30 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -38,9 +38,14 @@
- struct ctl_dir;
++	nosgx		[X86-64,SGX] Disables Intel SGX kernel support.
++
+ 	nosmp		[SMP] Tells an SMP kernel to act as a UP kernel,
+ 			and disable the IO APIC.  legacy for "maxcpus=0".
  
- /* Keep the same order as in fs/proc/proc_sysctl.c */
--#define SYSCTL_ZERO	((void *)&sysctl_vals[0])
--#define SYSCTL_ONE	((void *)&sysctl_vals[1])
--#define SYSCTL_INT_MAX	((void *)&sysctl_vals[2])
-+#define SYSCTL_NEG_ONE	((void *)&sysctl_vals[0])
-+#define SYSCTL_ZERO	((void *)&sysctl_vals[1])
-+#define SYSCTL_ONE	((void *)&sysctl_vals[2])
-+#define SYSCTL_TWO	((void *)&sysctl_vals[3])
-+#define SYSCTL_FOUR	((void *)&sysctl_vals[4])
-+#define SYSCTL_ONE_HUNDRED	((void *)&sysctl_vals[5])
-+#define SYSCTL_ONE_THOUSAND	((void *)&sysctl_vals[6])
-+#define SYSCTL_INT_MAX	((void *)&sysctl_vals[7])
+diff --git a/arch/x86/kernel/cpu/feat_ctl.c b/arch/x86/kernel/cpu/feat_ctl.c
+index c3afcd2e4342..1837df39527f 100644
+--- a/arch/x86/kernel/cpu/feat_ctl.c
++++ b/arch/x86/kernel/cpu/feat_ctl.c
+@@ -101,6 +101,15 @@ static void clear_sgx_caps(void)
+ 	setup_clear_cpu_cap(X86_FEATURE_SGX2);
+ }
  
- extern const int sysctl_vals[];
- 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 20c31f5..5f08cc2 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -124,14 +124,9 @@
- static int sixty = 60;
- #endif
- 
--static int __maybe_unused neg_one = -1;
--static int __maybe_unused two = 2;
--static int __maybe_unused four = 4;
- static unsigned long zero_ul;
- static unsigned long one_ul = 1;
- static unsigned long long_max = LONG_MAX;
--static int one_hundred = 100;
--static int one_thousand = 1000;
- #ifdef CONFIG_PRINTK
- static int ten_thousand = 10000;
- #endif
-@@ -547,7 +542,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &neg_one,
-+		.extra1		= SYSCTL_NEG_ONE,
- 		.extra2		= SYSCTL_ONE,
- 	},
- #endif
-@@ -878,7 +873,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax_sysadmin,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &two,
-+		.extra2		= SYSCTL_TWO,
- 	},
- #endif
- 	{
-@@ -1189,7 +1184,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= perf_cpu_time_max_percent_handler,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_hundred,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
- 	},
- 	{
- 		.procname	= "perf_event_max_stack",
-@@ -1207,7 +1202,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= perf_event_max_stack_handler,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_thousand,
-+		.extra2		= SYSCTL_ONE_THOUSAND,
- 	},
- #endif
- 	{
-@@ -1282,7 +1277,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &two,
-+		.extra2		= SYSCTL_TWO,
- 	},
- 	{
- 		.procname	= "panic_on_oom",
-@@ -1291,7 +1286,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &two,
-+		.extra2		= SYSCTL_TWO,
- 	},
- 	{
- 		.procname	= "oom_kill_allocating_task",
-@@ -1336,7 +1331,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= dirty_background_ratio_handler,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_hundred,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
- 	},
- 	{
- 		.procname	= "dirty_background_bytes",
-@@ -1353,7 +1348,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= dirty_ratio_handler,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_hundred,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
- 	},
- 	{
- 		.procname	= "dirty_bytes",
-@@ -1393,7 +1388,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_hundred,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
- 	},
- #ifdef CONFIG_HUGETLB_PAGE
- 	{
-@@ -1450,7 +1445,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0200,
- 		.proc_handler	= drop_caches_sysctl_handler,
- 		.extra1		= SYSCTL_ONE,
--		.extra2		= &four,
-+		.extra2		= SYSCTL_FOUR,
- 	},
- #ifdef CONFIG_COMPACTION
- 	{
-@@ -1503,7 +1498,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= watermark_scale_factor_sysctl_handler,
- 		.extra1		= SYSCTL_ONE,
--		.extra2		= &one_thousand,
-+		.extra2		= SYSCTL_ONE_THOUSAND,
- 	},
- 	{
- 		.procname	= "percpu_pagelist_fraction",
-@@ -1582,7 +1577,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= sysctl_min_unmapped_ratio_sysctl_handler,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_hundred,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
- 	},
- 	{
- 		.procname	= "min_slab_ratio",
-@@ -1591,7 +1586,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= sysctl_min_slab_ratio_sysctl_handler,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_hundred,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
- 	},
- #endif
- #ifdef CONFIG_SMP
-@@ -1874,7 +1869,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0600,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &two,
-+		.extra2		= SYSCTL_TWO,
- 	},
- 	{
- 		.procname	= "protected_regular",
-@@ -1883,7 +1878,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0600,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &two,
-+		.extra2		= SYSCTL_TWO,
- 	},
- 	{
- 		.procname	= "suid_dumpable",
-@@ -1892,7 +1887,7 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax_coredump,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &two,
-+		.extra2		= SYSCTL_TWO,
- 	},
- #if defined(CONFIG_BINFMT_MISC) || defined(CONFIG_BINFMT_MISC_MODULE)
- 	{
++static int __init nosgx(char *str)
++{
++	clear_sgx_caps();
++
++	return 0;
++}
++
++early_param("nosgx", nosgx);
++
+ void init_ia32_feat_ctl(struct cpuinfo_x86 *c)
+ {
+ 	bool tboot = tboot_enabled();
 -- 
-1.8.5.6
+2.25.1
 
