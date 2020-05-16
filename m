@@ -2,99 +2,94 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9221BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6405C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64A3720671
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:50:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sb2u9Onl"
+	by mail.kernel.org (Postfix) with ESMTP id B1032206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:58:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgEPJu6 (ORCPT
+        id S1726234AbgEPJ6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 05:50:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726188AbgEPJu5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 05:50:57 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7162FC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 02:50:57 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id o14so4799935ljp.4
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 02:50:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1GD9cgKsC79o9xJsFY0Rns6nb+f4FHwgFZwwSnHIkTc=;
-        b=sb2u9OnlDoL8lkNLTwelDEfXi/WEWCJjI3l+P0QcJOHgy9wSzCLwwc1VkUZa/OoGnA
-         DUue2YQa+84RNibQpALhfGWyLO8ISaZJBZ1i14d3Bhsg3yV4Xc+OFzhPNdhl4rYe2Djb
-         fBewE/WyObg4MkP3XmpHGrl8BoGlq6sLUMPkJciEZ+nkRZgpOy1xSOpdFjmRzqhveq9O
-         FHDUEd1RqoBo7lNAbzOR4vGEWR2FTJXpv70HrrPfekZeZEE6PLmHRR7P76kOM+FaQcMK
-         2FUlRXgnq+TCik3LC9RMsq2UCen8+25JIeP8m2wepXbgzJzUM6wk076iGwXin06dzd39
-         UVSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1GD9cgKsC79o9xJsFY0Rns6nb+f4FHwgFZwwSnHIkTc=;
-        b=FTtrkkN7I2kmJn062dJ/Cn2LR1VgGFgU8kASuvgWD58gAUlOE0HG6MudfiAlmVZwzg
-         wcfoANhtgGSOK+MNWl+TLJYVj0qldVQVrkem7LmJAzDZBHMPsCR/mJizEdkNWi/Ge2ra
-         PlzEk5V5A9f55pWU7u/0gAvLL6Shpir5z+hbImvXMDcgDK/7llqZ1Qf32+mJGRvlTv8Z
-         8WptQX4mULlBQ96HANsJ2fQQdvAjegvw1TWO+pzT6lCQPaXByUPPa+v+yJ1BEDSdzvJ8
-         lzqKz2PbSFTvTRIBPHepoze9fcQGVaq8MLwVznc3cRqoPZZZC6Ga99b6SuY2s6irD/0i
-         Lg7A==
-X-Gm-Message-State: AOAM532Eh0G7zV/JRrVorK1g5TdpfWPH9+a665oIyDAxfnZHDAkphGVA
-        iFJxLRgnprQqVjljzMC6ybE8HZxf+Rx7tTgl5ofnM5xFlOk=
-X-Google-Smtp-Source: ABdhPJwkRrLnDqSZW2Mpi1EcGqJXQJ6amPZbPk+Px2GETB6jrwczKWRBcTjwl8q/ztLfiuhOzxTwXKsTf9W3DppXQkU=
-X-Received: by 2002:a05:651c:154:: with SMTP id c20mr4472762ljd.99.1589622655910;
- Sat, 16 May 2020 02:50:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
- <CACRpkdZSooH+mXbimgT-hnaC2gO1nTi+rY7UmUhVg9bk1j+Eow@mail.gmail.com>
- <CAMRc=Mf2Mx+rB7du8D66WP=Js0wuK8x44aT9H2q6JhLJvrOcVQ@mail.gmail.com>
- <CACRpkdaPwfpfDJ2CjGCVFbMvXaSnCXaisvb2N-edeZO0Tbkssw@mail.gmail.com>
- <CAMRc=Mf5cYtWxAVeMQmxwyoi9oxtVSidBQsdRV9H2E52H1TqKQ@mail.gmail.com> <CAMRc=MenC3i-jQYPMdnOfpvNvs1GzCo-B5oem3osdaZZ9mULag@mail.gmail.com>
-In-Reply-To: <CAMRc=MenC3i-jQYPMdnOfpvNvs1GzCo-B5oem3osdaZZ9mULag@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 16 May 2020 11:50:45 +0200
-Message-ID: <CACRpkdaAYox65p9=Aheu5iomJRGPBc7CvnxJqPeqXdNdunAXPg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Sat, 16 May 2020 05:58:31 -0400
+Received: from mga11.intel.com ([192.55.52.93]:36071 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725917AbgEPJ6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 05:58:31 -0400
+IronPort-SDR: iPXEH6ZLRvylIXBDZmOSXGvBzqXr5tEpB1cXlrdVakCQjgrFgxNE1yhDSBQY4+6p8lpjkry9cg
+ Ow4ZDyePfzxw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 02:58:31 -0700
+IronPort-SDR: 6jHPUG3ThIOMSn2cKDvFGp+3eTCtSgVNNl6Od8zlni+TI6/ZAjaV2ZEbEAoj0UnG+736LLpoRN
+ M7Y4cR8y+t+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,398,1583222400"; 
+   d="scan'208";a="281482113"
+Received: from dbobocel-mobl1.ger.corp.intel.com ([10.252.55.115])
+  by orsmga002.jf.intel.com with ESMTP; 16 May 2020 02:58:21 -0700
+Message-ID: <315b5759b04e900a24ed1ec3d51439c49f312c06.camel@linux.intel.com>
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Nathaniel McCallum <npmccallum@redhat.com>,
+        "Dr. Greg" <greg@enjellic.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>
+Date:   Sat, 16 May 2020 12:58:20 +0300
+In-Reply-To: <CAOASepNdOqsoYvPPf7+0_qU70JBMb9GMONrGX+jdt=SQtT1X8g@mail.gmail.com>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+         <20200426165753.GA11046@wind.enjellic.com>
+         <87d07gk24l.fsf@nanos.tec.linutronix.de>
+         <20200508190226.GA31465@wind.enjellic.com>
+         <20200508195635.GR27052@linux.intel.com>
+         <20200514091637.GA25156@wind.enjellic.com>
+         <CAOASepNdOqsoYvPPf7+0_qU70JBMb9GMONrGX+jdt=SQtT1X8g@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 3:42 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Fri, 2020-05-15 at 15:54 -0400, Nathaniel McCallum wrote:
+> The (Red Hat sponsored) Enarx project will continue building an
+> unofficial, unsupported version of the Fedora kernel with the SGX
+> patches[0] until such time as the patches are upstream. Once upstream,
+> I intend to propose that the feature be enabled in the stock Fedora
+> kernel.
+> 
+> Enarx requires EDMM support as a prerequisite to being production
+> ready. Therefore, we are likely to continue building this custom
+> Fedora kernel with the latest patches until such point as EDMM support
+> lands upstream. This also implies that I have no current plan to
+> request an SGX backport to a RHEL kernel until such time as it
+> supports our full needs.
+> 
+> Disclaimer: I do not control RHEL or Fedora kernel features. None of
+> the above constitutes a commitment to deliver anything.
+> 
+> [0]: https://copr.fedorainfracloud.org/coprs/npmccallum/enarx/package/kernel/
 
-> So this "numbing down" of the chip works - in that I don't see any
-> splat in the above use-case but right now if nvmem takes an existing
-> GPIO descriptor over nvmem_config, then it will call gpiod_put() on it
-> and we'll do the same in the provider driver leading to the following
-> warning:
+SGX is somewhat self-contained feature, i.e. should be easy to backport
+for any recent kernel. Only the vDSO is outside of arch/x86/kernel/cpu/sgx.
 
-Isn't that the WARN_ON(extra_checks) in gpiod_free()?
-What part of the if() clause is causing this? I.e.:
-if (desc && desc->gdev && gpiod_free_commit(desc)) ...
+/Jarkko
 
-I suspect gpiod_free_commit() is causing it by returning nonzero.
-We could essentially ignore that if and only if the gpio_chip
-has been detached from the gpio_device.
-
-This should fix the problem if I'm right.
-
-Yours,
-Linus Walleij
