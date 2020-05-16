@@ -2,120 +2,114 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF11C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 01:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 01:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5A92076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 01:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5FA207D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 01:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589593760;
+	bh=rNgC9Av8/awoQKHVkrrrbimQ/X1+g+/VCLMQh1wNG1g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NGMm0iM2iuxtoR8HwOwBhryeq3VkBfP3uHD7lC46lO6ur3A8vY+S0MWvfIQoI/7PJ
+	 YEArnBeL5Tyxc8nWKBlZiJ9/niyQIrc7j7MH83/VKnOHAAL1b3ixTZaz3BcOMdaXfn
+	 dF2uYGvkvXQuCp8RBpbKxVS8c+jJIHkiYhniCsv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgEPBtB (ORCPT
+        id S1727856AbgEPBtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 21:49:01 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42665 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgEPBtB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 21:49:01 -0400
-Received: by mail-pl1-f193.google.com with SMTP id k19so1632337pll.9;
-        Fri, 15 May 2020 18:49:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=yrLeDS8QFWAcUfi/7i8KWUQD7BCqRDUd/m8UQW8uxws=;
-        b=qHzDkMFuFeM5dLs64+f0yop6zkhqhHyCI2nY6qFcX9lUF4DCHeQmKnw++lkc0bFfgf
-         /kVFr2wl5+KYpal6dVt1g9GruuOjsHLoHGIgumWfmYmG4KiZkoTfz0/K7zAm2xn2bOrk
-         YPOBSMERUJl0GS9qlGhQzw2KOxAx3x55vcufZFWPNLXsclWI/z30XkNeXz7EpZWLQ7xS
-         cxGJ+zT6MTPKKjNjCyC5LQ5Pe50TTvq8UzDnJfyI2hmzX8lHBNP8ZRD0f/t0OLGjOKrp
-         6N6Slis8hNgt3TDp1y9bTRlsz9j0jvauEsDdJqUQJHhjPbfTAW8t/TGwHBWuDFXDViUZ
-         2gcQ==
-X-Gm-Message-State: AOAM530li3BrRs1hJdz9DsTwqDKgzplYBVhy5DHNDegJUjj2OKoyYkos
-        U5PE4Nk7HKNowDT603VVniE=
-X-Google-Smtp-Source: ABdhPJxYBh+wCgL+cxPf1r3Ll6WSEPxZ/z37GJzLJVrR0RkqZ4lAchXCRbVgMSM7wSCts0wJYNJGvA==
-X-Received: by 2002:a17:90a:154e:: with SMTP id y14mr6765748pja.180.1589593740194;
-        Fri, 15 May 2020 18:49:00 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:f99a:ee92:9332:42a? ([2601:647:4000:d7:f99a:ee92:9332:42a])
-        by smtp.gmail.com with ESMTPSA id p6sm2640161pgl.26.2020.05.15.18.48.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 18:48:59 -0700 (PDT)
-Subject: Re: [RFC PATCH 03/13] scsi: scsi_dh: Introduce scsi_dh_ufshpb
-To:     Avri Altman <avri.altman@wdc.com>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     alim.akhtar@samsung.com, asutoshd@codeaurora.org,
-        Zang Leigang <zangleigang@hisilicon.com>,
-        Avi Shchislowski <avi.shchislowski@wdc.com>,
-        Bean Huo <beanhuo@micron.com>, cang@codeaurora.org,
-        stanley.chu@mediatek.com,
-        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>
-References: <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
- <1589538614-24048-4-git-send-email-avri.altman@wdc.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <80b0ffae-7af4-6d06-77e7-a8a97aaa9a05@acm.org>
-Date:   Fri, 15 May 2020 18:48:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 15 May 2020 21:49:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726247AbgEPBtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 21:49:19 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 605F1207BB;
+        Sat, 16 May 2020 01:49:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589593758;
+        bh=rNgC9Av8/awoQKHVkrrrbimQ/X1+g+/VCLMQh1wNG1g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hJNgi+ZomU2YTxsBjCbe2QJTpuDs9IiQb8zA0Gl04r5yBvxKjcsW9KPd4lj/e2JNh
+         b/jXMS3Wq0KxGiZmhPHKSkY3E/wlmhwfBypn6MFSdMPjo8XtmPJxI5xiHkuRJRg/CL
+         or18Dd5tcT5/fCn/9tqnYE+5LgBud0+YCF90g9qQ=
+Date:   Fri, 15 May 2020 18:49:16 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     ira.weiny@intel.com
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/9] fs/ext4: Disallow verity if inode is DAX
+Message-ID: <20200516014916.GF1009@sol.localdomain>
+References: <20200513054324.2138483-1-ira.weiny@intel.com>
+ <20200513054324.2138483-3-ira.weiny@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1589538614-24048-4-git-send-email-avri.altman@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513054324.2138483-3-ira.weiny@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-15 03:30, Avri Altman wrote:
-> +static int ufshpb_attach(struct scsi_device *sdev)
-> +{
-> +	struct ufshpb_dh_data *h;
+On Tue, May 12, 2020 at 10:43:17PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> Verity and DAX are incompatible.  Changing the DAX mode due to a verity
+> flag change is wrong without a corresponding address_space_operations
+> update.
+> 
+> Make the 2 options mutually exclusive by returning an error if DAX was
+> set first.
+> 
+> (Setting DAX is already disabled if Verity is set first.)
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes:
+> 	remove WARN_ON_ONCE
+> 	Add documentation for DAX/Verity exclusivity
+> ---
+>  Documentation/filesystems/ext4/verity.rst | 7 +++++++
+>  fs/ext4/verity.c                          | 3 +++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/filesystems/ext4/verity.rst b/Documentation/filesystems/ext4/verity.rst
+> index 3e4c0ee0e068..51ab1aa17e59 100644
+> --- a/Documentation/filesystems/ext4/verity.rst
+> +++ b/Documentation/filesystems/ext4/verity.rst
+> @@ -39,3 +39,10 @@ is encrypted as well as the data itself.
+>  
+>  Verity files cannot have blocks allocated past the end of the verity
+>  metadata.
 > +
-> +	h = kzalloc(sizeof(*h), GFP_KERNEL);
-> +	if (!h)
-> +		return SCSI_DH_NOMEM;
+> +Verity and DAX
+> +--------------
 > +
-> +	sdev_printk(KERN_INFO, sdev, "%s: attached to sdev (lun) %llu\n",
-> +		    UFSHPB_NAME, sdev->lun);
+> +Verity and DAX are not compatible and attempts to set both of these flags on a
+> +file will fail.
 > +
-> +	sdev->handler_data = h;
-> +
-> +	return SCSI_DH_OK;
-> +}
 
-I think that all other SCSI device handlers check in their .attach
-function whether the @sdev SCSI device is supported by the device
-handler. I don't see any such check in the above function?
+If you build the documentation, this shows up as its own subsection
+"2.13. Verity and DAX" alongside "2.12. Verity files", which looks odd.
+I think you should delete this new subsection header so that this paragraph goes
+in the existing "Verity files" subsection.
 
-Bart.
+Also, Documentation/filesystems/fsverity.rst already mentions DAX (similar to
+fscrypt.rst).  Is it intentional that you added this to the ext4-specific
+documentation instead?
+
+- Eric
