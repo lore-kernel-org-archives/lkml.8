@@ -2,119 +2,132 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB698C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92489C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE89920671
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:50:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SqOx1Fs0"
+	by mail.kernel.org (Postfix) with ESMTP id 7C372206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:52:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgEPMuU (ORCPT
+        id S1726425AbgEPMwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 08:50:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726364AbgEPMuQ (ORCPT
+        Sat, 16 May 2020 08:52:11 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:40058 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbgEPMwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 08:50:16 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC4FCC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 05:50:15 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k19so2076865pll.9
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 05:50:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Pj+H0XRs7BZqevflwkq03eXzGKUz5DncbQ0n+P/Er7k=;
-        b=SqOx1Fs0PYZCUFSLq4NUzY0q2y7WznWgqRu3dFYQKg0y2ottvIvnL8mVcbedHe+iup
-         bnxY4njYqa6N6zPPJJxUjYLtaWqa7xhOTdBvxy/FyZzOdJGtDaHkDB7d0XQLGpV2O0P0
-         zcCFTK/1eMWxsBJYwit6KmiGTY0+V/+UJJmdQtmngbr7sVU+GCFkYZPiiUuNEroVNlgg
-         4i1wl/TyUV0dQ9s3bRigv74/tR0siF5T+RGHAzqovmZ0Ss1iYoZML/Gcf9yYZdITEuTn
-         zOfUTo8MpdCkM3jLcevUXNLKURZY1KlpFkS+kjP3n+v8x6CN2DEV9OvFvejrRs7nJeKt
-         50nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Pj+H0XRs7BZqevflwkq03eXzGKUz5DncbQ0n+P/Er7k=;
-        b=JFchm3g9ES2ycYeHrrSANT+sf+tzRye6h9qpxAly2knooIgJGk1xjxbdwH4RITowZ/
-         fzHnVSN0UE8DhiVSUcdZ8XyAmMlL7OZujgad89PB8N08UuB8tlOdd/OX2sQX/w4SvWN2
-         CUdClq+bWWgFhIyJ3ImQ6bl28LUO17hS9LWoz6lpYmIp4OqstEcKdxrPvXAhUI0+n3Dj
-         GTHbkDkRzCiafbTO2HmG/hc5cMAyNoaTT8D/M21uT1LiOkKhtDFuw/RE1Cj42xYpMFh6
-         LDFKPtBFH1BFnvaSshH+AlI0Ck+CaPxug8nildd121HZAcdRsF1+Axv4hmTZm5WU6GvH
-         Zn9w==
-X-Gm-Message-State: AOAM531wLDCKD/OsuxYxTGqhrbw/P3V04avQoCJCjZqiLn64Q/+59Z3c
-        8Qsa2hrMNUMt7l3/dVQQICFH9ahH
-X-Google-Smtp-Source: ABdhPJyAN5qZYimmiLJsxFBo/5zvTCga+8G7/eOmKCQTEdGPpNyZdtuU/fUbzfII9WcvK1fEqIuA4Q==
-X-Received: by 2002:a17:902:bccc:: with SMTP id o12mr7435028pls.162.1589633415208;
-        Sat, 16 May 2020 05:50:15 -0700 (PDT)
-Received: from localhost.localdomain (61-228-240-171.dynamic-ip.hinet.net. [61.228.240.171])
-        by smtp.gmail.com with ESMTPSA id k27sm3768323pgb.30.2020.05.16.05.50.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 May 2020 05:50:14 -0700 (PDT)
-From:   Lecopzer Chen <lecopzer@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     lecopzer.chen@mediatek.com, linux-arm-kernel@lists.infradead.org,
-        matthias.bgg@gmail.com, catalin.marinas@arm.com, will@kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, acme@kernel.org,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-mediatek@lists.infradead.org,
-        alexander.shishkin@linux.intel.com, peterz@infradead.org,
-        yj.chiang@mediatek.com, Lecopzer Chen <lecopzer@gmail.com>
-Subject: [PATCH 3/3] arm64: Kconfig: Add support for the Perf NMI
-Date:   Sat, 16 May 2020 20:48:57 +0800
-Message-Id: <20200516124857.75004-4-lecopzer@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200516124857.75004-1-lecopzer@gmail.com>
-References: <20200516124857.75004-1-lecopzer@gmail.com>
+        Sat, 16 May 2020 08:52:10 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 43AD88030802;
+        Sat, 16 May 2020 12:52:07 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id PpvYz0io-J5L; Sat, 16 May 2020 15:52:05 +0300 (MSK)
+Date:   Sat, 16 May 2020 15:52:03 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <stable@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
+ setting
+Message-ID: <20200516125203.et5gkv6ullkerjyd@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-21-Sergey.Semin@baikalelectronics.ru>
+ <c5109483-4c14-1a0c-efa9-51edf01c12de@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <c5109483-4c14-1a0c-efa9-51edf01c12de@intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an extending function for Pseudo NMI that registering
-Perf events interrupts as NMI.
+Hello Rafael,
 
-It's helpful for sampling irq-off context when using perf.
+On Fri, May 15, 2020 at 05:58:47PM +0200, Rafael J. Wysocki wrote:
+> On 5/6/2020 7:42 PM, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > Recent commit e61a41256edf ("cpufreq: dev_pm_qos_update_request() can
+> > return 1 on success") fixed a problem when active policies traverse
+> > was falsely stopped due to invalidly treating the non-zero return value
+> > from freq_qos_update_request() method as an error. Yes, that function
+> > can return positive values if the requested update actually took place.
+> > The current problem is that the returned value is then passed to the
+> > return cell of the cpufreq_boost_set_sw() (set_boost callback) method.
+> > This value is then also analyzed for being non-zero, which is also
+> > treated as having an error. As a result during the boost activation
+> > we'll get an error returned while having the QOS frequency update
+> > successfully performed. Fix this by returning a negative value from the
+> > cpufreq_boost_set_sw() if actual error was encountered and zero
+> > otherwise treating any positive values as the successful operations
+> > completion.
+> > 
+> > Fixes: 18c49926c4bf ("cpufreq: Add QoS requests for userspace constraints")
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Cc: stable@vger.kernel.org
+> > ---
+> >   drivers/cpufreq/cpufreq.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > index 045f9fe157ce..5870cdca88cf 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -2554,7 +2554,7 @@ static int cpufreq_boost_set_sw(int state)
+> >   			break;
+> >   	}
+> > -	return ret;
+> > +	return ret < 0 ? ret : 0;
+> >   }
+> >   int cpufreq_boost_trigger_state(int state)
+> 
+> IMO it is better to update the caller of this function to handle the
+> positive value possibly returned by it correctly.
 
-Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
----
- arch/arm64/Kconfig | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Could you elaborate why? Viresh seems to be ok with this solution.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 40fb05d96c60..f89c169771a0 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1679,6 +1679,16 @@ config ARM64_PSEUDO_NMI
- 	  If unsure, say N
- 
- if ARM64_PSEUDO_NMI
-+config ARM64_PSEUDO_NMI_PERF
-+	bool "Register Perf interrupts as Pseudo NMI"
-+	depends on HW_PERF_EVENTS
-+	depends on ARM_PMU
-+	select HAVE_PERF_EVENTS_NMI
-+	help
-+	  This registers Perf interrupts to NMI when Pseudo NMI is active.
-+	  This option is helpful when you need to debug any context disabled
-+	  irq and get more inforamtion.
-+
-+	  If unsure, say N
-+
- config ARM64_DEBUG_PRIORITY_MASKING
- 	bool "Debug interrupt priority masking"
- 	help
--- 
-2.25.1
+As I see it the caller doesn't expect the positive value returned by the
+original freq_qos_update_request(). It just doesn't need to know whether the
+effective policy has been updated or not, it only needs to make sure the
+operations has been successful. Moreover the positive value is related only
+to the !last! active policy, which doesn't give the caller a full picture
+of the policy change anyway. So taking all of these into account I'd leave the
+fix as is.
 
+Regards,
+-Sergey
+
+> 
+> Thanks!
+> 
+> 
