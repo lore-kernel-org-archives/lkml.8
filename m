@@ -2,94 +2,75 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77A7A20671
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9865A20671
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbgEPMzn (ORCPT
+        id S1726465AbgEPM4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 08:55:43 -0400
-Received: from mga09.intel.com ([134.134.136.24]:44093 "EHLO mga09.intel.com"
+        Sat, 16 May 2020 08:56:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60782 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726237AbgEPMzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 08:55:42 -0400
-IronPort-SDR: 5VDLdr00A4ic7OpXSkaNZdKMh7MD0FHLH/HZXDERePDS7SbSoiCF0jXjJSw0sjyp/Z1M7IEapf
- rbirqJPnelqQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 05:55:42 -0700
-IronPort-SDR: yvN0SmOZJHqQmoYtjm5IXoaI46heARkHG7baRSf11Og0i45uTzKHgSDrNEzfOajO8f78C1Q4Kq
- YnuBNvBDDdlQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,398,1583222400"; 
-   d="scan'208";a="410756982"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 16 May 2020 05:55:39 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jZwLr-000AZ3-5p; Sat, 16 May 2020 20:55:39 +0800
-Date:   Sat, 16 May 2020 20:55:05 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com
-Cc:     kbuild-all@lists.01.org, amit.kucheria@verdurent.com,
-        srinivas.pandruvada@linux.intel.com, arnd@arndb.de,
-        rkumbako@codeaurora.org, ilina@codeaurora.org,
-        linux-pm@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH] thermal: core: thermal_genl_sampling_temp() can be static
-Message-ID: <20200516125505.GA16652@aae4cc650884>
-References: <20200515141034.19154-4-daniel.lezcano@linaro.org>
+        id S1726295AbgEPM4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 08:56:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B3754AB8F;
+        Sat, 16 May 2020 12:56:46 +0000 (UTC)
+Date:   Sat, 16 May 2020 14:56:41 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v3 2/7] mm/vmalloc: Track which page-table levels were
+ modified
+Message-ID: <20200516125641.GK8135@suse.de>
+References: <20200515140023.25469-1-joro@8bytes.org>
+ <20200515140023.25469-3-joro@8bytes.org>
+ <20200515130142.4ca90ee590e9d8ab88497676@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515141034.19154-4-daniel.lezcano@linaro.org>
-X-Patchwork-Hint: ignore
+In-Reply-To: <20200515130142.4ca90ee590e9d8ab88497676@linux-foundation.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andrew,
 
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- thermal_netlink.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Fri, May 15, 2020 at 01:01:42PM -0700, Andrew Morton wrote:
+> On Fri, 15 May 2020 16:00:18 +0200 Joerg Roedel <joro@8bytes.org> wrote:
+> Lots of collisions here with Christoph's "decruft the vmalloc API" series
+> (http://lkml.kernel.org/r/20200414131348.444715-1-hch@lst.de).
+> 
+> I attempted to fix things up.
+> 
+> unmap_kernel_range_noflush() needed to be redone.
+> 
+> map_kernel_range_noflush() might need the arch_sync_kernel_mappings() call?
 
-diff --git a/drivers/thermal/thermal_netlink.c b/drivers/thermal/thermal_netlink.c
-index a2bce846771e4..851db26e66465 100644
---- a/drivers/thermal/thermal_netlink.c
-+++ b/drivers/thermal/thermal_netlink.c
-@@ -66,7 +66,7 @@ static struct genl_family thermal_gnl_family;
- 
- /************************** Sampling encoding *******************************/
- 
--int thermal_genl_sampling_temp(int id, int temp)
-+static int thermal_genl_sampling_temp(int id, int temp)
- {
- 	struct sk_buff *skb;
- 	void *hdr;
-@@ -506,7 +506,7 @@ static cb_t cmd_cb[] = {
- 	[THERMAL_GENL_CMD_CDEV_GET]	= thermal_genl_cmd_cdev_get,
- };
- 
--int thermal_genl_cmd_dumpit(struct sk_buff *skb, struct netlink_callback *cb)
-+static int thermal_genl_cmd_dumpit(struct sk_buff *skb, struct netlink_callback *cb)
- {
- 	struct param p = { .msg = skb };
- 	const struct genl_dumpit_info *info = genl_dumpit_info(cb);
-@@ -532,7 +532,7 @@ int thermal_genl_cmd_dumpit(struct sk_buff *skb, struct netlink_callback *cb)
- 	return ret;
- }
- 
--int thermal_genl_cmd_doit(struct sk_buff *skb, struct genl_info *info)
-+static int thermal_genl_cmd_doit(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct param p = { .attrs = info->attrs };
- 	struct sk_buff *msg;
+Yes, map_kernel_range_noflush() needs the arch_sync_kernel_mappings()
+call as well.
+
+Regards,
+
+	Joerg
+
