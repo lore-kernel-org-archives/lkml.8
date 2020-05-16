@@ -2,79 +2,71 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E723C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D88C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76418206F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54629206F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 15:06:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="quOjtm1A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q3r347y/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgEPPFY (ORCPT
+        id S1726958AbgEPPGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 11:05:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40272 "EHLO
+        Sat, 16 May 2020 11:06:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgEPPFY (ORCPT
+        with ESMTP id S1726385AbgEPPGE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 11:05:24 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0EDEC061A0C;
-        Sat, 16 May 2020 08:05:23 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id s198so5049670oie.6;
-        Sat, 16 May 2020 08:05:23 -0700 (PDT)
+        Sat, 16 May 2020 11:06:04 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F03B9C061A0C;
+        Sat, 16 May 2020 08:06:03 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id x21so3668057otp.13;
+        Sat, 16 May 2020 08:06:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=swrL0qy5YTu/Pvi+LL+YkeSXyhnWJoQTQfA2Bb2I9Gk=;
-        b=quOjtm1AsIRh4fH/SveTGYdw91+G7PEiDUVMBDAzvJ7WHMCAVeZ20ytAbqoSKGHkKz
-         ZVAJgtKBKjRwysixMT9MYEiLJbEE4b3IaOGGBDXmpojEpdQRxzki0ABQMVRCNyOO6ZFT
-         Otxr0D2D10BKj9QxkxrEkZamMlX2uLoQJMWuODjxWLhGviiidy6i65g72A1Sm3YEHYip
-         hctjD0+m7JIz+ykohlm0Sh9dHRsOf/Xp8TXGl643U28zFJt41iAtq4xVVJWVzfhtTYgH
-         FcEGQiyNtee4u2LJGwt/iBrof4ztDgvWfpEpcwvVlVlgLJVqT48nBMYFi7s2YGuAlTdP
-         ZJHg==
+        bh=PE1zTfOVbmhWIZ5WEwelfXqYK+lhXNUdRZtVI9kAnGc=;
+        b=q3r347y/nnJbWTqW+uZj1JfmldosoihFPSV9aYwQznF5WMYfK2mrOVqCEUynKGPdi6
+         66uNPD8sKSbgN+RYHRfg/edLMzCQ3KwbJqbavyP+15SfxcYlbUAXKCsC7WKdUy7oDXVo
+         ecFjaz2EajpO83pzuD68RyUWHDxBJm8o8YvcI9PQjwq6kI6spuJ+xkSJYWfnSByndf5t
+         GbEGpNbZNVkMuGOMyjMBLhlkA5MLV+dSqRZ/we97p0lP4HKj6Uj7Xk3d0wexOYlyDKJ1
+         PW7oY1zkjEUufp9V1exQWoBXYg4Aj1pHJiZ5FwJEEv1ArjHA796XRgIASi2ou6vToxDp
+         /DMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=swrL0qy5YTu/Pvi+LL+YkeSXyhnWJoQTQfA2Bb2I9Gk=;
-        b=Dd6GcSrQII76c6sA8DzxfW+r5qziqLtugULBmntfzm0Kzp8QUYieCFxivIUKpgBxI8
-         yjYAHlnRLyhNTdC6psCpE7HyA6Nl0I+yv+5yOqfbiY0F/VabqMv12E+bHuktozkv1Ffx
-         QngfHdIGNlZZ32d7TPrqBmwYufdRIvXPEsSsQkyPqwSTnr0X3ngCiGxyICx3Syvq2K/0
-         Trz7JTjC2ugL59VKZWH4RyUnKcHf1akcQ+7nmZ8p1IeKswHhBTlHL6C0UOItG7LVwEvX
-         di96LmsuRe2E5+IXu5KxVetnmLyENMyainrC0QNMuVITHAhuoaZ7bjpJvTlMRVZqRbIk
-         3hqg==
-X-Gm-Message-State: AOAM530S4VKBExx0osY9dIcXsu9vzwbrzJYmamFpMTNgFq/dJg//37Ik
-        2LVwIQvYAnenr03/mMRTdjA=
-X-Google-Smtp-Source: ABdhPJySMRXj6vY38ZcSYybRnBYMOM3Lz3UCi7C2cTamcQEmjYeBG6N29Opd744N5A/zIW8cetXPSg==
-X-Received: by 2002:aca:1916:: with SMTP id l22mr5858843oii.87.1589641523146;
-        Sat, 16 May 2020 08:05:23 -0700 (PDT)
+        bh=PE1zTfOVbmhWIZ5WEwelfXqYK+lhXNUdRZtVI9kAnGc=;
+        b=UUMzAW3swW3RMV3JYh5VNu1JTu7o3EZpB4IPSYF/1+tiCMyu00OjTocgaC4KPrwXtO
+         MxtrI26QHKeg2MgWYWTV89hYcrpL4ZO7saiF4op75Uk4wuR3kqiZUZ/vzGuzBjCb2Pwz
+         a1MDX4QOII6MSXe/KGfrVC9aFV04Jt6MgYvt9JqzRNcuFzbTRRW0VXIcgKLkJ8li/6TS
+         rZl00mDwa9uTxs4fAPvgHSq4IAIVlRhhKG8FtQmW8UtJZ9ItsEbt0mW05HH69oOsjJzk
+         a6lg9RKOoUz7qD2USue165Xh4HUlSCMOk21KYbEmVF2YRWgqkQ6QnyBaXqsiL5OvX1Sq
+         QfVA==
+X-Gm-Message-State: AOAM5307g9DmVdh7uCUqDwDaJviJNyR4/eUsO56nV/jW7t5nppDYbG/J
+        dcGy3vrHWzSH/qUl8Hj1Id0=
+X-Google-Smtp-Source: ABdhPJyojyc2rrkh5JlImVwpXVQuLyETgbcVPNFAi2Y0JPOLocOnoN0du3EeD2ECiCO0wCxbAl7ejg==
+X-Received: by 2002:a05:6830:1598:: with SMTP id i24mr6257736otr.259.1589641563394;
+        Sat, 16 May 2020 08:06:03 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id h9sm1427080otb.73.2020.05.16.08.05.20
+        by smtp.gmail.com with ESMTPSA id t22sm1510951ooc.37.2020.05.16.08.06.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 May 2020 08:05:22 -0700 (PDT)
-Subject: Re: [PATCH 1/4] dt-bindings: i2c: Document I2C controller binding for
- MT6797 SoC
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Rob Herring <robh@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+        Sat, 16 May 2020 08:06:02 -0700 (PDT)
+Subject: Re: [PATCH 0/4] Add I2C controller support for MT6797 SoC
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         adamboardman@gmail.com
 References: <20200222162444.11590-1-manivannan.sadhasivam@linaro.org>
- <20200222162444.11590-2-manivannan.sadhasivam@linaro.org>
- <20200226222330.GA9392@bogus>
- <aa9ea456-dbee-229c-aea0-4860c6eb7adf@gmail.com>
- <20200515165605.GA19423@ninjato>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -150,13 +142,13 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <b1061325-2001-8d25-2791-8a968a6fd7d9@gmail.com>
-Date:   Sat, 16 May 2020 17:05:18 +0200
+Message-ID: <62630359-0365-6bc1-d49d-7b74d3d158ad@gmail.com>
+Date:   Sat, 16 May 2020 17:05:59 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200515165605.GA19423@ninjato>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200222162444.11590-1-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -166,35 +158,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 15/05/2020 18:56, Wolfram Sang wrote:
-> On Fri, May 15, 2020 at 04:48:28PM +0200, Matthias Brugger wrote:
->> Hi Wolfram,
->>
->> On 26/02/2020 23:23, Rob Herring wrote:
->>> On Sat, 22 Feb 2020 21:54:41 +0530, Manivannan Sadhasivam wrote:
->>>> I2C controller driver for MT6577 SoC is reused for MT6797 SoC.
->>>> Hence, document that in DT binding.
->>>>
->>>> Signed-off-by: Manivannan Sadhasivam
->>>> <manivannan.sadhasivam@linaro.org> ---
->>>> Documentation/devicetree/bindings/i2c/i2c-mt65xx.txt | 1 + 1 file
->>>> changed, 1 insertion(+)
->>>>
->>>
->>> Acked-by: Rob Herring <robh@kernel.org>
->>>
->>
->> Do you want to take this thorough your tree or are you OK if I take it
->> thorough mine?
->
-> The I2C list is neither in the CC field, nor is the patch in patchwork.
+On 22/02/2020 17:24, Manivannan Sadhasivam wrote:
+> Hello,
+> 
+> This patchset adds I2C controller support for Mediatek MT6797 SoC. There
+> are a total of 8 I2C controllers in this SoC (2 being shared) and they are
+> same as the controllers present in MT6577 SoC. Hence, the driver support is
+> added with DT fallback method.
+> 
+> As per the datasheet, there are controllers with _imm prefix like i2c2_imm
+> and i2c3_imm. These appears to be in different memory regions but sharing
+> the same pins with i2c2 and i2c3 respectively. Since there is no clear
+> evidence of what they really are, I've adapted the numbering/naming scheme
+> from the downstream code by Mediatek.
+> 
+> This patchset has been tested on 96Boards X20 development board.
+> 
+> Thanks,
+> Mani
+> 
+> Manivannan Sadhasivam (4):
+>   dt-bindings: i2c: Document I2C controller binding for MT6797 SoC
+>   arm64: dts: mediatek: Add I2C support for MT6797 SoC
+>   arm64: dts: mediatek: Enable I2C support for 96Boards X20 Development
+>     board
+>   arm64: dts: mediatek: Switch to SPDX license identifier for MT6797 SoC
 
-Right didn't check that.
+All four queued now in v5.7-next/dts64
 
-> I suggest you take it.
->
-> Acked-by: Wolfram Sang <wsa@kernel.org>
->
+Thanks!
 
-Thanks Wolfram.
-Now queued in v5.7-next/dts64
+> 
+>  .../devicetree/bindings/i2c/i2c-mt65xx.txt    |   1 +
+>  .../boot/dts/mediatek/mt6797-x20-dev.dts      |  49 ++++
+>  arch/arm64/boot/dts/mediatek/mt6797.dtsi      | 229 +++++++++++++++++-
+>  3 files changed, 271 insertions(+), 8 deletions(-)
+> 
