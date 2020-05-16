@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3317EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 429CE2074A
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ADE42074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:10:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b8UxdUyi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IKd6YIB9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgEPEKK (ORCPT
+        id S1726932AbgEPEKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 00:10:10 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33137 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725275AbgEPEKJ (ORCPT
+        Sat, 16 May 2020 00:10:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28704 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725917AbgEPEKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 00:10:09 -0400
+        Sat, 16 May 2020 00:10:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589602208;
+        s=mimecast20190719; t=1589602246;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=vIxHfO81N+03vuMfHp47HPc/YBphFIdNIRkmQNFD2rA=;
-        b=b8UxdUyihUpiZ66oI9CFvhI2L1OR6NMSR6iMd0Tn5SlOZY67uUFrCuzvrOESwBHpSgwWau
-        cd/7Q+z0Dlk+V70ePbnX1dSrtV+/MoIQnQECixU7K/3almmDJgkQWOS6OzGLAeLveb8rYZ
-        Ljz6W9O7QO76d1XrLwKaYXEB/Hf4gVU=
+        bh=3tmLpZ8CvWIjnKIMwWMeNMlLXGs5w+dOh2/iHoJ1qjI=;
+        b=IKd6YIB9EQ1E6t17uS7Ax2b8viDpCquek3w1k4gJVAfymWIWYP/vxLv5Q+xKJmeym2p5gR
+        j1QS97ShezcYe34RobRWg2JunZrAxGTBxb18suGL+PuERCBm+tuhCJsXeJkm29jqAg9veH
+        659AfIt4/AflAtVsZoM6U5cjRE/z9PU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-395-6heSXt0zPhOn6WGvQjSr9Q-1; Sat, 16 May 2020 00:10:06 -0400
-X-MC-Unique: 6heSXt0zPhOn6WGvQjSr9Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-347-ChYwfd3SOq-j5sDGwOCCcw-1; Sat, 16 May 2020 00:10:39 -0400
+X-MC-Unique: ChYwfd3SOq-j5sDGwOCCcw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 64035460;
-        Sat, 16 May 2020 04:10:03 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B09F1800D42;
+        Sat, 16 May 2020 04:10:36 +0000 (UTC)
 Received: from x1-fbsd (unknown [10.3.128.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D6EA05C1B0;
-        Sat, 16 May 2020 04:09:52 +0000 (UTC)
-Date:   Sat, 16 May 2020 00:09:49 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E28A100239A;
+        Sat, 16 May 2020 04:10:25 +0000 (UTC)
+Date:   Sat, 16 May 2020 00:10:21 -0400
 From:   Rafael Aquini <aquini@redhat.com>
 To:     Luis Chamberlain <mcgrof@kernel.org>
 Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
@@ -55,23 +55,24 @@ Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
         keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
         mchehab+samsung@kernel.org, kvalo@codeaurora.org,
         davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Miller <dougmill@linux.ibm.com>
-Subject: Re: [PATCH v2 08/15] ehea: use new module_firmware_crashed()
-Message-ID: <20200516040949.GH3182@x1-fbsd>
+        linux-kernel@vger.kernel.org, Ariel Elior <aelior@marvell.com>,
+        GR-everest-linux-l2@marvell.com,
+        Igor Russkikh <irusskikh@marvell.com>
+Subject: Re: [PATCH v2 09/15] qed: use new module_firmware_crashed()
+Message-ID: <20200516041021.GI3182@x1-fbsd>
 References: <20200515212846.1347-1-mcgrof@kernel.org>
- <20200515212846.1347-9-mcgrof@kernel.org>
+ <20200515212846.1347-10-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515212846.1347-9-mcgrof@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200515212846.1347-10-mcgrof@kernel.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 09:28:39PM +0000, Luis Chamberlain wrote:
+On Fri, May 15, 2020 at 09:28:40PM +0000, Luis Chamberlain wrote:
 > This makes use of the new module_firmware_crashed() to help
 > annotate when firmware for device drivers crash. When firmware
 > crashes devices can sometimes become unresponsive, and recovery
@@ -80,25 +81,26 @@ On Fri, May 15, 2020 at 09:28:39PM +0000, Luis Chamberlain wrote:
 > 
 > Using a taint flag allows us to annotate when this happens clearly.
 > 
-> Cc: Douglas Miller <dougmill@linux.ibm.com>
+> Cc: Ariel Elior <aelior@marvell.com>
+> Cc: GR-everest-linux-l2@marvell.com
+> Reviewed-by: Igor Russkikh <irusskikh@marvell.com>
 > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 > ---
->  drivers/net/ethernet/ibm/ehea/ehea_main.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/net/ethernet/qlogic/qed/qed_mcp.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
-> index 0273fb7a9d01..6ae35067003f 100644
-> --- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
-> +++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
-> @@ -3285,6 +3285,8 @@ static void ehea_crash_handler(void)
->  {
->  	int i;
+> diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.c b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
+> index 9624616806e7..aea200d465ef 100644
+> --- a/drivers/net/ethernet/qlogic/qed/qed_mcp.c
+> +++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
+> @@ -566,6 +566,7 @@ _qed_mcp_cmd_and_union(struct qed_hwfn *p_hwfn,
+>  		DP_NOTICE(p_hwfn,
+>  			  "The MFW failed to respond to command 0x%08x [param 0x%08x].\n",
+>  			  p_mb_params->cmd, p_mb_params->param);
+> +		module_firmware_crashed();
+>  		qed_mcp_print_cpu_info(p_hwfn, p_ptt);
 >  
-> +	module_firmware_crashed();
-> +
->  	if (ehea_fw_handles.arr)
->  		for (i = 0; i < ehea_fw_handles.num_entries; i++)
->  			ehea_h_free_resource(ehea_fw_handles.arr[i].adh,
+>  		spin_lock_bh(&p_hwfn->mcp_info->cmd_lock);
 > -- 
 > 2.26.2
 > 
