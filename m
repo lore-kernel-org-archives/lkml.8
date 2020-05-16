@@ -2,174 +2,138 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED53C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF867C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2F442074A
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA3AB2074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 03:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589599202;
+	bh=lDKdDoNwa9Bj/LUsigPYdO4JxEe6PbM67xKbPtkBu7M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=04inPJs8ANKjePseMC+lpzwMU5KI3FUg6YC6PzOZeMKiAYA+TrvrP2m0REiPXtsv3
+	 EyxPCoI2CWEYB8nMyQVmRLZ6QaVHrE3WlKsLX+o1AGlGY8UOputZoZvCNbFQQppv4+
+	 88ry12ujat1ppiDB9/3wB0ZITkvR1FUluMUBo5H8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgEPDTQ (ORCPT
+        id S1727917AbgEPDUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 23:19:16 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33011 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgEPDTP (ORCPT
+        Fri, 15 May 2020 23:20:02 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39209 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgEPDUB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 23:19:15 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x77so1942079pfc.0;
-        Fri, 15 May 2020 20:19:15 -0700 (PDT)
+        Fri, 15 May 2020 23:20:01 -0400
+Received: by mail-pl1-f193.google.com with SMTP id s20so1696420plp.6;
+        Fri, 15 May 2020 20:20:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=UU737tti4EbQvKMajSwO055w1IJCKfj238CPnutQI7Q=;
-        b=BolxFMwxR4Xav+W5QgAC9pbEQIZa4mWK2J0Phufs0S3tiWVDWrBu2mnNovzfIiwg0Q
-         Ii/4t3c4fI/or4/312Hp9SaDwzkAX9rul6QV/SJY+ZMZbOmTvywMxt0UhBvBywMpjUh4
-         LcvqfOMVFDUkmzqWQtWMTvs3dueCHysLY4bLUkYtWeYXbPFXkk+vBhO2JIsz3aHawykW
-         pEPgdVKrz6q0e1oc9i5nieAgzowyle2zccV4Q9sOwnQ6l15gu8xZ+mccISN0LpioBGuD
-         do6xwAz8qgCg3tLDBObAcmSaZlZJc8miOT2G6xhe/7KOb8fpJyY9jtiONK65/CqHaipe
-         zjOQ==
-X-Gm-Message-State: AOAM531IPyg713jVZycIa8Q8g5pPhv5B4rRr1YXYkelH0wii3rs/8Iz+
-        3m7O/KkV4skP/dV4CZ/Y3Xg=
-X-Google-Smtp-Source: ABdhPJy/78dbgo4QJABJnk4W5JjkLPIs6B/kePfxQCli3CYhY7n73+bBCR7goHhotIV/u99lsIlw8g==
-X-Received: by 2002:a62:ed14:: with SMTP id u20mr7181610pfh.69.1589599154295;
-        Fri, 15 May 2020 20:19:14 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:f99a:ee92:9332:42a? ([2601:647:4000:d7:f99a:ee92:9332:42a])
-        by smtp.gmail.com with ESMTPSA id z6sm2755577pgu.85.2020.05.15.20.19.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 20:19:13 -0700 (PDT)
-Subject: Re: [RFC PATCH 11/13] scsi: Allow device handler set their own CDB
-To:     Avri Altman <avri.altman@wdc.com>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     alim.akhtar@samsung.com, asutoshd@codeaurora.org,
-        Zang Leigang <zangleigang@hisilicon.com>,
-        Avi Shchislowski <avi.shchislowski@wdc.com>,
-        Bean Huo <beanhuo@micron.com>, cang@codeaurora.org,
-        stanley.chu@mediatek.com,
-        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>
-References: <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
- <1589538614-24048-12-git-send-email-avri.altman@wdc.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <80a69f59-08b6-73c2-5ee6-848149005701@acm.org>
-Date:   Fri, 15 May 2020 20:19:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YV3/UWo+QrQjEja7xqDM3mkCEeETF9cGsA9Cr+G6NWM=;
+        b=Z37A7EP+6v4s6kT6k1m145k6R++940Z/SrKirRm+f1x32VMckBJlBXIa09ppvEMRDM
+         hCVNuk2m9N28ZZuNLAnSQKG6NQq/FO8OYMC7USZge96hcgXmAq5TyN5aD6aGRg4ZVSfo
+         8t6/Ltr6JthLAJ59tEzdYeLb9PwhaUEs3zpfTzP2DQb4teQB4GX8r6e5YEwxzZtG30IV
+         ags6nD0PQOSTCEIJqAL0Iq2HUbbIXKwnS+oZVoh1RB+KFGMGRvnHZxrb1fnzpRuqwWO9
+         n9x/RkAPyj2pdRPLoi3VFGGUkZ8BFTioflAjR+gwLZ0nsOhdeBOJtWqV6c5lD7KmkJ1F
+         E9qg==
+X-Gm-Message-State: AOAM533w2hbNN9B/RhuLFdVBWyjpsnbbIqQ+JkZNAuGXaHwsgqMHoY0I
+        B8WTQEB/ETIZA3anlqDQm24=
+X-Google-Smtp-Source: ABdhPJyX70yrh/cMjp+9Dz4fChywx1PSJecwmDqWYDJSH2DMWbAhrLB6vr4UVE2r+Lo9hAtfEQDoiw==
+X-Received: by 2002:a17:902:23:: with SMTP id 32mr6510510pla.40.1589599200697;
+        Fri, 15 May 2020 20:20:00 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id m19sm2543770pjv.30.2020.05.15.20.19.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 20:19:59 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 99D78404B0; Sat, 16 May 2020 03:19:58 +0000 (UTC)
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org
+Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH v5 0/7] block: fix blktrace debugfs use after free
+Date:   Sat, 16 May 2020 03:19:49 +0000
+Message-Id: <20200516031956.2605-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <1589538614-24048-12-git-send-email-avri.altman@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-15 03:30, Avri Altman wrote:
-> Allow scsi device handler handle their own CDB and ship it down the
-> stream of scsi passthrough command setup flow, without any further
-> interventions.
-> 
-> This is useful for setting DRV-OP that implements vendor commands via
-> the scsi device handlers framework.
-> 
-> Signed-off-by: Avri Altman <avri.altman@wdc.com>
-> ---
->  drivers/scsi/scsi_lib.c | 5 +++--
->  drivers/scsi/sd.c       | 9 +++++++++
->  2 files changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-> index 6b6dd40..4e98714 100644
-> --- a/drivers/scsi/scsi_lib.c
-> +++ b/drivers/scsi/scsi_lib.c
-> @@ -1148,14 +1148,15 @@ static blk_status_t scsi_setup_fs_cmnd(struct scsi_device *sdev,
->  {
->  	struct scsi_cmnd *cmd = blk_mq_rq_to_pdu(req);
->  
-> +	cmd->cmnd = scsi_req(req)->cmd = scsi_req(req)->__cmd;
-> +	memset(cmd->cmnd, 0, BLK_MAX_CDB);
-> +
->  	if (unlikely(sdev->handler && sdev->handler->prep_fn)) {
->  		blk_status_t ret = sdev->handler->prep_fn(sdev, req);
->  		if (ret != BLK_STS_OK)
->  			return ret;
->  	}
->  
-> -	cmd->cmnd = scsi_req(req)->cmd = scsi_req(req)->__cmd;
-> -	memset(cmd->cmnd, 0, BLK_MAX_CDB);
->  	return scsi_cmd_to_driver(cmd)->init_command(cmd);
->  }
->  
-> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-> index a793cb0..246bef8 100644
-> --- a/drivers/scsi/sd.c
-> +++ b/drivers/scsi/sd.c
-> @@ -1221,6 +1221,14 @@ static blk_status_t sd_setup_read_write_cmnd(struct scsi_cmnd *cmd)
->  	} else if (sdp->use_16_for_rw || (nr_blocks > 0xffff)) {
->  		ret = sd_setup_rw16_cmnd(cmd, write, lba, nr_blocks,
->  					 protect | fua);
-> +	} else if (unlikely(sdp->handler && blk_rq_is_private(rq))) {
-> +		/*
-> +		 * scsi device handler that implements vendor commands -
-> +		 * the command was already constructed in the device handler's
-> +		 * prep_fn, so no need to do anything here
-> +		 */
-> +		rq->cmd_flags = REQ_OP_READ;
-> +		ret = BLK_STS_OK;
->  	} else if ((nr_blocks > 0xff) || (lba > 0x1fffff) ||
->  		   sdp->use_10_for_rw || protect) {
->  		ret = sd_setup_rw10_cmnd(cmd, write, lba, nr_blocks,
-> @@ -1285,6 +1293,7 @@ static blk_status_t sd_init_command(struct scsi_cmnd *cmd)
->  		return sd_setup_write_same_cmnd(cmd);
->  	case REQ_OP_FLUSH:
->  		return sd_setup_flush_cmnd(cmd);
-> +	case REQ_OP_DRV_IN:
->  	case REQ_OP_READ:
->  	case REQ_OP_WRITE:
->  		return sd_setup_read_write_cmnd(cmd);
+On this v5 I've split up the first patch into 3, one for comments,
+another for context / might_sleep() updates, and the last the big
+revert back to synchronous request_queue removal. I didn't update
+the context for the put / decrements for gendisk & request_queue
+as they would be updated in the next patch.
 
-The above looks weird to me. My understanding is that
-scsi_setup_fs_cmnd() is intended for operations like REQ_OP_READ,
-REQ_OP_WRITE and REQ_OP_DISCARD. I don't think that it is appropriate to
-pass REQ_OP_DRV_IN requests to scsi_setup_fs_cmnd() and/or
-sd_init_command().
+Since the first 3 patches are a reflection of the original one, I've
+left the Reviewed-by's collected in place.
 
-Thanks,
+I've changed the kzalloc() / snprintf() to just kasprintf() as requested
+by Bart. Since it was not clear that we don't have the bdev on
+do_blk_trace_setup() for the patch titled "blktrace: break out of
+blktrace setup on concurrent calls", I've added a comment so that
+someone doesn't later try to add a dev_printk() or the like.
 
-Bart.
+I've also addressed a compilation issue with debugfs disabled reported
+by 0-day on the patch titled "blktrace: fix debugfs use after free". It
+was missing a "static inline" on a function. I've also moved the new
+declarations underneath the "#ifdef CONFIG_BLOCK" on include/linux/genhd.h,
+I previously had them outside of this block.
 
+I've left in place the scsi-generic blktrace suppport given I didn't receive any
+feedback to kill it. This ensures this works as it used to.
+
+Since these are minor changes I've given this a spin with break-blktrace
+tests I have written and also ran blktrace with a scsi-generic media
+changer. Both sg0 (the controller) and sg1 worked as expected.
+
+These changes are based on linux-next tag next-20200515, and can also be
+found on my git tree:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20200515-blktrace-fixes
+
+Luis Chamberlain (7):
+  block: add docs for gendisk / request_queue refcount helpers
+  block: clarify context for gendisk / request_queue refcount increment
+    helpers
+  block: revert back to synchronous request_queue removal
+  block: move main block debugfs initialization to its own file
+  blktrace: fix debugfs use after free
+  blktrace: break out of blktrace setup on concurrent calls
+  loop: be paranoid on exit and prevent new additions / removals
+
+ block/Makefile               |  10 +-
+ block/blk-core.c             |  32 ++++--
+ block/blk-debugfs.c          | 197 +++++++++++++++++++++++++++++++++++
+ block/blk-mq-debugfs.c       |   5 -
+ block/blk-sysfs.c            |  46 ++++----
+ block/blk.h                  |  24 +++++
+ block/bsg.c                  |   2 +
+ block/genhd.c                |  73 ++++++++++++-
+ block/partitions/core.c      |   9 ++
+ drivers/block/loop.c         |   4 +
+ drivers/scsi/ch.c            |   1 +
+ drivers/scsi/sg.c            |  75 +++++++++++++
+ drivers/scsi/st.c            |   2 +
+ include/linux/blkdev.h       |   6 +-
+ include/linux/blktrace_api.h |   1 -
+ include/linux/genhd.h        |  69 ++++++++++++
+ kernel/trace/blktrace.c      |  37 +++++--
+ 17 files changed, 545 insertions(+), 48 deletions(-)
+ create mode 100644 block/blk-debugfs.c
+
+-- 
+2.26.2
 
