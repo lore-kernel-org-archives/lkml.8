@@ -2,82 +2,107 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 21:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE28C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 21:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E742320709
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 21:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F90620709
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 21:29:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="M0C9KPR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgEPV1G (ORCPT
+        id S1726735AbgEPV3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 17:27:06 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:54397 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbgEPV1F (ORCPT
+        Sat, 16 May 2020 17:29:39 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:16149 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726660AbgEPV3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 17:27:05 -0400
-Received: by mail-il1-f199.google.com with SMTP id j69so5840939ila.21
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 14:27:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=f3hko+0TXM3ZTxTzVXQjaXqhvt2WnzZbWWNxH4vk64g=;
-        b=BK3ToBKCxsD1T7O/Ru7OlpqOOqp7tp6eqg97d9yPbQCRLxDN7JGRd/p06AeAoEmkqb
-         fsLqFV9qpPiqimBWgkzcBcupW4xm16C14yO3INvZ7W/e96zV9UCv9xR4c/YK7cEWnvRb
-         r15tCAnofxAmw4fcc2Y9Ro9ofEWZ4KO/2IqSyy1ZdarXIUv+YZS6ygW5Y2PH0gRS1bPV
-         Gf4lQeqlp39pI2Ku6oIEYhJsb7cxgqqEdwho6RIEpCpjTDF8qddDd8SnpKc+l+GFqlN1
-         1jpC9FaUxgzYTIQihBpVxoJU1eZoOb71oocDuwGnjCcrwLgBTGke8UWgnzQmefJPpf10
-         au2A==
-X-Gm-Message-State: AOAM532MUd9ydbcPzIcfq3g7Ym5NWdzIrvOSI7p1uEZTrrV6pR6iubxX
-        EsEwQlnLtFlsH386rVrgTZr71z+M8ynGi85g/TcdFZ3c9aEx
-X-Google-Smtp-Source: ABdhPJz0cH5oPpV8Crm3N4eRME8yr4YUcg2zWCEKfV1oaXJx6vivQpTeE+zffP6GmIpSFnRS9D7COeZSShOVJTZOtPesbiPzsDog
+        Sat, 16 May 2020 17:29:39 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589664578; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=yyI11KWmcGi5NQVxIZYxF6jFoW7UiVn3lFSVRfQoiBk=; b=M0C9KPR3QJ2CX6wRQFlaEMbd4qvtwY6i4DCB2zBNWSLQFdH2QPd4BSC4Wq52eV9TittUHJOa
+ uDeKSBxLzEWFx0eRIJyT9vnUn/NGZLlLerUdahOSEr5qseWmP7jikSh8n47UEn/2IsgRUnm/
+ njOtGC0SMtyAkmXR/vuJTK0Qogc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec05b33.7f0270f4d1b8-smtp-out-n04;
+ Sat, 16 May 2020 21:29:23 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AA65AC43637; Sat, 16 May 2020 21:29:22 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60A3AC433D2;
+        Sat, 16 May 2020 21:29:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 60A3AC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [RFC PATCH 3/8] qaic: Create char dev
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     arnd@arndb.de, manivannan.sadhasivam@linaro.org,
+        bjorn.andersson@linaro.org, wufan@codeaurora.org,
+        pratanan@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
+ <1589465266-20056-4-git-send-email-jhugo@codeaurora.org>
+ <20200514141211.GA2643665@kroah.com>
+ <0421a64a-10f3-08df-9ef1-14fdb570db0d@codeaurora.org>
+ <20200514155615.GA2963499@kroah.com>
+ <4be546d3-b571-0659-0140-f34ec88f95ff@codeaurora.org>
+ <4683046a-c6b5-30a5-ef02-2f610523ae1c@codeaurora.org>
+ <20200516070131.GB3964535@kroah.com>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <8e06c718-8b8a-f09a-4685-11c0c1581a0c@codeaurora.org>
+Date:   Sat, 16 May 2020 15:29:19 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:860e:: with SMTP id e14mr1019310jai.109.1589664423356;
- Sat, 16 May 2020 14:27:03 -0700 (PDT)
-Date:   Sat, 16 May 2020 14:27:03 -0700
-In-Reply-To: <0000000000003692760578e651dd@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000044329005a5ca97eb@google.com>
-Subject: Re: KASAN: use-after-free Write in hci_sock_release
-From:   syzbot <syzbot+b364ed862aa07c74bc62@syzkaller.appspotmail.com>
-To:     bigeasy@linutronix.de, davem@davemloft.net, dvyukov@google.com,
-        jack@suse.cz, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, marcel@holtmann.org, mmarek@suse.com,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200516070131.GB3964535@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+On 5/16/2020 1:01 AM, Greg KH wrote:
+> On Fri, May 15, 2020 at 03:08:59PM -0600, Jeffrey Hugo wrote:
+>> 2. There are a limited number of dynamic minor numbers for misc devs (64),
+>> so if you are expecting more devices than that, a misc dev is not
+>> appropiate.  Also, these minors are shared with other misc dev users, so
+>> depending on the system configuration, you might have significantly less
+>> than 64 minors available for use.
+> 
+> I'm pretty sure we can have more than 64 misc devices, that limitation
+> should have been removed a while ago.  Try it and see :)
 
-commit f1e67e355c2aafeddf1eac31335709236996d2fe
-Author: Thomas Gleixner <tglx@linutronix.de>
-Date:   Mon Nov 18 13:28:24 2019 +0000
+In total, there can be more tha 64 misc devices.  However my previous 
+comment was specific to dynamic minors (ie devices which do not have an 
+assigned minor).  The limit on dynamic minors still apears to be 64. 
+Looking at the code -
 
-    fs/buffer: Make BH_Uptodate_Lock bit_spin_lock a regular spinlock_t
+DYNAMIC_MINORS is still 64
+https://elixir.bootlin.com/linux/v5.7-rc5/source/drivers/char/misc.c#L63
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1761ce06100000
-start commit:   645ff1e8 Merge branch 'for-linus' of git://git.kernel.org/..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7308e68273924137
-dashboard link: https://syzkaller.appspot.com/bug?extid=b364ed862aa07c74bc62
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=152532bb400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13f73320c00000
+I see the same in -next
 
-If the result looks correct, please mark the bug fixed by replying with:
+DYNAMIC_MINORS is used to size a bitmap - one bit for each dynamic minor 
+misc device that exists at one particular point in time.  After all 64 
+bits are consumed by misc_register() by clients requesting a dynamic 
+minor, no more dynamic minor misc devices can be registered until some 
+are unregistered.
 
-#syz fix: fs/buffer: Make BH_Uptodate_Lock bit_spin_lock a regular spinlock_t
+What am I missing?
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
