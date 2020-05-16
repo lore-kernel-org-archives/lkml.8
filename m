@@ -2,99 +2,98 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8125CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80878C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6649B20657
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38AE120657
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:26:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="Ie7Y5iL7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgEPN0M (ORCPT
+        id S1726674AbgEPN0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 09:26:12 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:40142 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgEPN0M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 09:26:12 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 33EAE8030791;
-        Sat, 16 May 2020 13:26:04 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dj6AGkqSPpUY; Sat, 16 May 2020 16:26:01 +0300 (MSK)
-Date:   Sat, 16 May 2020 16:26:00 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>, Sebastian Reichel <sre@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        <linux-mips@vger.kernel.org>, Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Paul Burton <paulburton@kernel.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Subject: Re: [PATCH v2 2/3] dt-bindings: power: reset: Unrequire regmap
- property in syscon-reboot node
-Message-ID: <20200516132600.aloxet3n4373nz6e@mobilestation>
-References: <20200306130356.6ABDD8030703@mail.baikalelectronics.ru>
- <20200507233846.11548-1-Sergey.Semin@baikalelectronics.ru>
- <20200507233846.11548-3-Sergey.Semin@baikalelectronics.ru>
- <20200515031449.GA32456@bogus>
+        Sat, 16 May 2020 09:26:53 -0400
+Received: from mout02.posteo.de ([185.67.36.66]:38367 "EHLO mout02.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726266AbgEPN0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 09:26:52 -0400
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout02.posteo.de (Postfix) with ESMTPS id 2B7112400FD
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 15:26:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1589635611; bh=7FoIUPqDi5c7vN5iYSzxU0lEaqMlu5poIBIzZs9kdns=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Ie7Y5iL7lih9M7oKNUt1mWFU9uGspwt7i7n3cigqUBecNbAgzE+w4bBsUQTER+YsQ
+         1rRyhPW0+IcoZ2G8p/x+buEllzEdacyCUU2EKejs13DcM16I1FNGDzcCBWz00iWezF
+         g/XXoQhrDkeAl7Cq1xjZ4bs4uD04msMeS+jMhMQVMzjwxJXe9Of8kfzXZzFqj4v5WN
+         94Ox3gKNJSJ+H8emLlHLn/cPqX0Kf2SKcM9GanJ41+agfxrAed8WyppREF0cxGE+88
+         mtVk3ilzXAyE133Nj7gLpoWI0YFOjjXqa5kp1tU11kv6yRgV1Srh53INPlRmHypfCm
+         08Ew9X8DFx6EQ==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 49PQzZ4crMz9rxc;
+        Sat, 16 May 2020 15:26:50 +0200 (CEST)
+From:   Benjamin Thiel <b.thiel@posteo.de>
+To:     linux-efi@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Benjamin Thiel <b.thiel@posteo.de>
+Subject: [PATCH v2] efi: Pull up arch-specific prototype efi_systab_show_arch()
+Date:   Sat, 16 May 2020 15:26:47 +0200
+Message-Id: <20200516132647.14568-1-b.thiel@posteo.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200515031449.GA32456@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 10:14:49PM -0500, Rob Herring wrote:
-> On Fri, 8 May 2020 02:38:45 +0300, Serge Semin wrote:
-> > Since normally syscon-reboot block is supposed to be a part of a system
-> > controller, lets mark the regmap property as deprecated and recommend the
-> > syscon-reboot node to be a sub-node of SYSCON.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Allison Randal <allison@lohutok.net>
-> > Cc: Richard Fontana <rfontana@redhat.com>
-> > Cc: Kate Stewart <kstewart@linuxfoundation.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: linux-mips@vger.kernel.org
-> > 
-> > ---
-> > 
-> > Changelog v2:
-> > - This is a new patch created as a result of the discussion:
-> >   https://lore.kernel.org/linux-pm/20200306130402.1F4F0803079F@mail.baikalelectronics.ru/
-> > ---
-> >  .../bindings/power/reset/syscon-reboot.yaml       | 15 ++++++++++-----
-> >  1 file changed, 10 insertions(+), 5 deletions(-)
-> > 
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+... in order to fix a -Wmissing-prototypes warning:
 
-Great. Thanks!
+arch/x86/platform/efi/efi.c:957:7: warning: no previous prototype for
+‘efi_systab_show_arch’ [-Wmissing-prototypes]
+char *efi_systab_show_arch(char *str)
 
-Sebastian, Rob is ok with the change. Could you take a look at the next patch?
+Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
+---
+ drivers/firmware/efi/efi.c | 5 +----
+ include/linux/efi.h        | 2 ++
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
--Sergey
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 911a2bd0f6b7..4e3055238f31 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -130,11 +130,8 @@ static ssize_t systab_show(struct kobject *kobj,
+ 	if (efi.smbios != EFI_INVALID_TABLE_ADDR)
+ 		str += sprintf(str, "SMBIOS=0x%lx\n", efi.smbios);
+ 
+-	if (IS_ENABLED(CONFIG_IA64) || IS_ENABLED(CONFIG_X86)) {
+-		extern char *efi_systab_show_arch(char *str);
+-
++	if (IS_ENABLED(CONFIG_IA64) || IS_ENABLED(CONFIG_X86))
+ 		str = efi_systab_show_arch(str);
+-	}
+ 
+ 	return str - buf;
+ }
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 251f1f783cdf..9430d01c0c3d 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1245,4 +1245,6 @@ struct linux_efi_memreserve {
+ 
+ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size);
+ 
++char *efi_systab_show_arch(char *str);
++
+ #endif /* _LINUX_EFI_H */
+-- 
+2.20.1
+
