@@ -2,162 +2,94 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98650C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 22:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD843C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 22:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7087A206F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 22:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D36520727
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 22:36:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZexPATSH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JAjVbcAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgEPWdJ (ORCPT
+        id S1726786AbgEPWgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 18:33:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53316 "EHLO
+        Sat, 16 May 2020 18:36:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726290AbgEPWdJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726290AbgEPWgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 18:33:09 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF864C061A0C;
-        Sat, 16 May 2020 15:33:08 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id hi11so2840447pjb.3;
-        Sat, 16 May 2020 15:33:08 -0700 (PDT)
+        Sat, 16 May 2020 18:36:00 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB95AC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 15:35:59 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h4so5940064ljg.12
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 15:35:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vj3ZKk5i0HEzrSyFnN96bWdCY5i8K/6dkf5RChzT2ig=;
-        b=ZexPATSHr7TALdW5suzyO0HE9DmxJQXNVHQ0JYd3NgIX/IZ0oCHjwnG0InSE40wRkY
-         oxyal/oLFc0JhbpQqvIrfCEeGgUpVJV+GGU3iHCGwGRQq+zFWcgiE0onR5j/uJFtYKXu
-         f0vU3LvSwcsRbyPK/k35OqSiFkk2ARLROQvkc07gSiGk9q1VqPHncuDmJC3Zz/e5NEBi
-         N2RixgwTrQI6Dpk4/oJl0LJJykwxI0dqRNcVy8OxUq388yjIWGHs0NMrVPlJiuk6UECl
-         NX9zX08qdEGrKDSrLmDEZrNnRxqqjpaHSDmsxnAMxOdv9+w3HJtGo7DYt/Q8BDDMwjlF
-         6vAw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ojEx/IuaCeSKl9dRzHTqbsmjCdnPX9Gd1n5eUMrsf6M=;
+        b=JAjVbcADzxZkX/Q9hYkJyomMRdTOJf00a9W3t+vXoqLmEMBqDEC7mhW36NzNVaCP1b
+         fOClknEqOrOMON9fxP6KqFVN6LaC0xmFLhaA/jkcXyZtggHuF3gQDyHCuOzZrkP5OHw/
+         Zf07d/YRPfmnlMdTYBcFLj1AreaT2nGSG90e942XyELtlrm57Wy1geeB+JYwT+LSi4AF
+         ktCg9U466UEeAGkcu++Yo+YcrlViEBVBRSZkoa4pplU8dag4LG3Br2IeZjDVz7Y/3Pr+
+         RauQC0Sq1+9MypuJ0ayG38Gt0/+xjXawcGnpc1PYS2tklbxy1NWEQvCE92pCofiWJDgR
+         SF/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vj3ZKk5i0HEzrSyFnN96bWdCY5i8K/6dkf5RChzT2ig=;
-        b=KA6rklDxiQD/Yo64+90ejd1xKqf9Wzt9BcCEg6x45fZyCXDOPnGiX5dnGB1A9BXb7q
-         ihWs/T39gP4ks3E0meGLQddpgBhnBe037tvZDlnc26TtOkw/7dWGJy5y17v9Iwdl1YUr
-         ULoXtzCszXnkGtye89Hh/GY0Vme5eMTqNLpvCHH41sZbbUT4gz8jx1hqnsc4CiYQeuzU
-         zuw+hh2JfsEVJJ4NdykZq7MbF5gxuumMfg+x4a39ZKYsTprma1nhkrdaAOAnxF5Gfyg9
-         HukBCd+5Y01L7PzliwTFnVshUODUexJZz2csInmFkAi7FIRHMXZblHMea/j2paqBwXYF
-         IOoA==
-X-Gm-Message-State: AOAM532W5vuncHvxNppMHEcVbMVOrKgwK0KIo0F9LuQ8vP5KdKP7zYwy
-        1xUpvfsprcs/+n4lPqM+tts=
-X-Google-Smtp-Source: ABdhPJwpG0/yP7Vs4M/H3HPMY6d7xUvEDfPCG28ANMmHTAEHrZxhJBJVmBjSecSOTX5/ONZsU65JGA==
-X-Received: by 2002:a17:902:bc86:: with SMTP id bb6mr9492182plb.243.1589668388271;
-        Sat, 16 May 2020 15:33:08 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id dw12sm4633881pjb.31.2020.05.16.15.33.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 16 May 2020 15:33:07 -0700 (PDT)
-Date:   Sat, 16 May 2020 15:33:06 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH V3 07/15] arch/kunmap_atomic: Consolidate duplicate code
-Message-ID: <20200516223306.GA161252@roeck-us.net>
-References: <20200507150004.1423069-1-ira.weiny@intel.com>
- <20200507150004.1423069-8-ira.weiny@intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ojEx/IuaCeSKl9dRzHTqbsmjCdnPX9Gd1n5eUMrsf6M=;
+        b=shxC7E9OADV4exiyYGnJBda4GaSnMmsoUBEf9S18+Lu4/53XQ6rsoG8UTiQqDmJagM
+         JcV1lqkf4HsBlyp3ihvQF8WudpU8RmJ0SSihrv64NnYJo34ZDdBFs118gDlfdVcQRpUd
+         if3hKNFvkn3w8NHKFF6hiJgqpuj9LMxhoLH+2XjQWhs6q6II3z7vPTE7by+8ycUDQQUV
+         RdHOflJXTuNGJdgF7cZsoTGgUzmxa6e6JEs4txmZbSUp+xA8poq0acrWU6jjEu0pmi5d
+         37Yj7Xi7cAG3pZmGK5lN9oW2eS1zGGNek5wbJjODhGzuKI3Z27jGUrUNfuKkLx03ikWY
+         VT3A==
+X-Gm-Message-State: AOAM531rwvXHcJfzkm7cV0IJIFGwMK87MqS95ePWYcRyUNbFkl9HHx73
+        OyxBwcs42XV8o/WPObCCTcYv+OngrgnqMfKP5rU2TzM7
+X-Google-Smtp-Source: ABdhPJyww2Ss10TFjQnw3rjcwTRh+N7rxxkevxyjMZ55BpomUMXpG4iVUjePGN7YpviRN2j8Ji6HIOVBA8z0RrSBLvE=
+X-Received: by 2002:a2e:9795:: with SMTP id y21mr6097660lji.115.1589668557959;
+ Sat, 16 May 2020 15:35:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507150004.1423069-8-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200516021736.226222-1-shakeelb@google.com> <20200516.134018.1760282800329273820.davem@davemloft.net>
+In-Reply-To: <20200516.134018.1760282800329273820.davem@davemloft.net>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Sat, 16 May 2020 15:35:46 -0700
+Message-ID: <CALvZod7euq10j6k9Z_dej4BvGXDjqbND05oM-u6tQrLjosX31A@mail.gmail.com>
+Subject: Re: [PATCH] net/packet: simply allocations in alloc_one_pg_vec_page
+To:     David Miller <davem@davemloft.net>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 07:59:55AM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Every single architecture (including !CONFIG_HIGHMEM) calls...
-> 
-> 	pagefault_enable();
-> 	preempt_enable();
-> 
-> ... before returning from __kunmap_atomic().  Lift this code into the
-> kunmap_atomic() macro.
-> 
-> While we are at it rename __kunmap_atomic() to kunmap_atomic_high() to
-> be consistent.
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+On Sat, May 16, 2020 at 1:40 PM David Miller <davem@davemloft.net> wrote:
+>
+> From: Shakeel Butt <shakeelb@google.com>
+> Date: Fri, 15 May 2020 19:17:36 -0700
+>
+> > and thus there is no need to have any fallback after vzalloc.
+>
+> This statement is false.
+>
+> The virtual mapping allocation or the page table allocations can fail.
+>
+> A fallback is therefore indeed necessary.
 
-This patch results in:
-
-Starting init: /bin/sh exists but couldn't execute it (error -14)
-
-when trying to boot microblazeel:petalogix-ml605 in qemu.
-
-Bisect log attached.
-
-Guenter
-
----
-# bad: [bdecf38f228bcca73b31ada98b5b7ba1215eb9c9] Add linux-next specific files for 20200515
-# good: [2ef96a5bb12be62ef75b5828c0aab838ebb29cb8] Linux 5.7-rc5
-git bisect start 'HEAD' 'v5.7-rc5'
-# good: [3674d7aa7a8e61d993886c2fb7c896c5ef85e988] Merge remote-tracking branch 'crypto/master'
-git bisect good 3674d7aa7a8e61d993886c2fb7c896c5ef85e988
-# good: [87f6f21783522e6d62127cf33ae5e95f50874beb] Merge remote-tracking branch 'spi/for-next'
-git bisect good 87f6f21783522e6d62127cf33ae5e95f50874beb
-# good: [5c428e8277d5d97c85126387d4e00aa5adde4400] Merge remote-tracking branch 'staging/staging-next'
-git bisect good 5c428e8277d5d97c85126387d4e00aa5adde4400
-# good: [f68de67ed934e7bdef4799fd7777c86f33f14982] Merge remote-tracking branch 'hyperv/hyperv-next'
-git bisect good f68de67ed934e7bdef4799fd7777c86f33f14982
-# bad: [54acd2dc52b069da59639eea0d0c92726f32fb01] mm/memblock: fix a typo in comment "implict"->"implicit"
-git bisect bad 54acd2dc52b069da59639eea0d0c92726f32fb01
-# good: [784a17aa58a529b84f7cc50f351ed4acf3bd11f3] mm: remove the pgprot argument to __vmalloc
-git bisect good 784a17aa58a529b84f7cc50f351ed4acf3bd11f3
-# good: [6cd8137ff37e9a37aee2d2a8889c8beb8eab192f] khugepaged: replace the usage of system(3) in the test
-git bisect good 6cd8137ff37e9a37aee2d2a8889c8beb8eab192f
-# bad: [6987da379826ed01b8a1cf046b67cc8cc10117cc] sparc: remove unnecessary includes
-git bisect bad 6987da379826ed01b8a1cf046b67cc8cc10117cc
-# good: [bc17b545388f64c09e83e367898e28f60277c584] mm/hugetlb: define a generic fallback for is_hugepage_only_range()
-git bisect good bc17b545388f64c09e83e367898e28f60277c584
-# bad: [9b5aa5b43f957f03a1f4a9aff5f7924e2ebbc011] arch-kmap_atomic-consolidate-duplicate-code-checkpatch-fixes
-git bisect bad 9b5aa5b43f957f03a1f4a9aff5f7924e2ebbc011
-# good: [0941a38ff0790c1004270f952067a5918a4ba32d] arch/kmap: remove redundant arch specific kmaps
-git bisect good 0941a38ff0790c1004270f952067a5918a4ba32d
-# good: [56e635a64c2cbfa815c851af10e0f811e809977b] arch-kunmap-remove-duplicate-kunmap-implementations-fix
-git bisect good 56e635a64c2cbfa815c851af10e0f811e809977b
-# bad: [60f96b2233c790d4f1c49317643051f1670bcb29] arch/kmap_atomic: consolidate duplicate code
-git bisect bad 60f96b2233c790d4f1c49317643051f1670bcb29
-# good: [7b3708dc3bf72a647243064fe7ddf9a76248ddfd] {x86,powerpc,microblaze}/kmap: move preempt disable
-git bisect good 7b3708dc3bf72a647243064fe7ddf9a76248ddfd
-# first bad commit: [60f96b2233c790d4f1c49317643051f1670bcb29] arch/kmap_atomic: consolidate duplicate code
+I am assuming that you at least agree that vzalloc should only be
+called for non-zero order allocations. So, my argument is if non-zero
+order vzalloc has failed (allocations internal to vzalloc, including
+virtual mapping allocation and page table allocations, are order 0 and
+use GFP_KERNEL i.e. triggering reclaim and oom-killer) then the next
+non-zero order page allocation has very low chance of succeeding.
