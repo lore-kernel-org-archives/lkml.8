@@ -2,162 +2,134 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB34C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61B4E206F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD102075F
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:29:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAxm0r3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726919AbgEPXNW (ORCPT
+        id S1726806AbgEPX3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 19:13:22 -0400
-Received: from mga18.intel.com ([134.134.136.126]:21336 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726670AbgEPXNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 19:13:22 -0400
-IronPort-SDR: H70TAAeNG0+eTTEc7sO3uwJsC3OSXNLfKPBOKVjkPutJ8g/On3Eb6J3Veb9LFK4CRobwKpdC9t
- Z7DPqR/2ud2w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 16:13:21 -0700
-IronPort-SDR: zUN/i6sVbdJ00Rjezck/JbRh0IFpVwDAQ+JM4UsNO3i9Qm8dEaeX8igRlspE8ySVSLMItu2VhG
- KkcTim0pt2DQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,400,1583222400"; 
-   d="scan'208";a="288174039"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 16 May 2020 16:13:20 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1ja5zb-0004C0-Sj; Sun, 17 May 2020 07:13:19 +0800
-Date:   Sun, 17 May 2020 07:12:45 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/fpu] BUILD SUCCESS
- 55e00fb66fd5048f4a3ee357018fd26fc527abca
-Message-ID: <5ec0736d.vN7JX1uQTwG6c1GD%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 16 May 2020 19:29:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726660AbgEPX3s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 19:29:48 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69DCAC061A0C;
+        Sat, 16 May 2020 16:29:46 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id d21so6001076ljg.9;
+        Sat, 16 May 2020 16:29:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VsIGqmQYU9B1hFiVmj/6ksJDLb/9MQhxyITf5iqCEAU=;
+        b=CAxm0r3bkWmXjkeiCzLPuKYnFKjmYcTMlB211VAPCdb2e0rDkYvjgKujtHQo5YnQtR
+         WYhrUreg7ADZxvFKkuBOju+THp+1gYsGi9JRt/ejoHugqQ4Lt4ZAXR+GRw0L0A+66/UM
+         aT52BE/bEQrnitmXPtcIktSrpJmQpc7TJEMrOI75rNNhQB37g9VgqnacNxAKPZzWKTyC
+         t5lEVHc9351QfxtHaytLZpm6wG6w9yCKQ6BfTZJuXdw3BjiOXq0PASbRavhsXMe4v5m7
+         e6iGVuXlEwtLZbH1wQsJO1JSDfci6337NAg2ZQm4a6IpeQIYHn+TtN7fx0LsK8LP8LjF
+         lWxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VsIGqmQYU9B1hFiVmj/6ksJDLb/9MQhxyITf5iqCEAU=;
+        b=MAg9pFOhYzriAxZ871VKtOgkLjY5lbZ+AWH01z4/vDbK1PAq8EKlZvBiBgJH0jjULr
+         fbjEtKp6TmKp95hBSP5RRzMjhwDgKtonkKsUKTD+p4rdHYPyn5lHX9eJJsOYP2gD55tn
+         +ff1EEMghmloDuJqNNuS5ajbzuq4okQqwv5GHN89TfOn3jXAK5onOwzklHc5XiDBervm
+         F54BoSETgF56gbC2bXgMkQuD3NPwi5aqnbJVhuu5wQAI4Gkc48DLQcL+O850R8Y+nEC+
+         TDo8VNcDztOC2zgjVq4nOsLR4I5FVP7L3+GHwdTwrko/8hpnW86aT3DErCmpqmUefGNn
+         DltA==
+X-Gm-Message-State: AOAM533avlE1crr8Mc++AtLc6QULDDBy4TbR7XJBNukXxJKAPOcSqq+L
+        RxFRGlKgNA8O99mNNI2VZtiAnovjpuBN4gG0HtE=
+X-Google-Smtp-Source: ABdhPJwMEerA6PY5MC+s0R6rodZvVntL+CV0Pe2OuKYU6/n9FN6gEnBajSh8QBi/2P6CtuqIJdRTr7gER99hj/E+DNQ=
+X-Received: by 2002:a2e:a545:: with SMTP id e5mr6015544ljn.271.1589671784750;
+ Sat, 16 May 2020 16:29:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <cd119ce943d9ec62ef1bff237ebb49e35a337c3b.1589407872.git.lance.digby@gmail.com>
+ <93c437ce-f881-9f54-5e39-afa8afd96141@redhat.com>
+In-Reply-To: <93c437ce-f881-9f54-5e39-afa8afd96141@redhat.com>
+From:   Lance Digby <lance.digby@gmail.com>
+Date:   Sun, 17 May 2020 09:29:38 +1000
+Message-ID: <CAHh6B+poeCFeZjCt04QT2c12bgvCf9UN+5vdx5EeK6PcgD2y3g@mail.gmail.com>
+Subject: Re: [PATCH target] target: Add initiatorname to NON_EXISTENT_LUN error
+To:     Mike Christie <mchristi@redhat.com>
+Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/fpu
-branch HEAD: 55e00fb66fd5048f4a3ee357018fd26fc527abca  x86/fpu/xstate: Restore supervisor states for signal return
+Mike,  Thanks for the review!
+  The pr_err  Detected NON_EXISTENT_LUN is the error messages issued
+for the TCM_NON_EXISTENT_LUN retcode so I believe they are the same.
+  Simply scanning for the wrong lun on an initiator will generate this
+error on the target but not generate an error on the initiator. And I
+have seen installs, with a lot of initiators, automate the scanning of
+such luns incorrectly deemed missing.
+  While this looks like a simple problem it can take days to get
+access or the tcp traces to sort it out.
 
-elapsed time: 481m
+   Within the same routine there is another pr_err for
+TCM_WRITE_PROTECTED that I did not add the initiatorname to as I
+thought this would leave a heavy footprint on the initiator. If you
+believe this should be changed for consistency please let me know and
+I will add this and change to nacl->initiatorname.
 
-configs tested: 95
-configs skipped: 91
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-m68k                             allyesconfig
-sparc                            allyesconfig
-mips                             allyesconfig
-mips                malta_kvm_guest_defconfig
-arc                            hsdk_defconfig
-arc                           tb10x_defconfig
-h8300                            alldefconfig
-powerpc                           allnoconfig
-xtensa                    xip_kc705_defconfig
-mips                 pnx8335_stb225_defconfig
-xtensa                              defconfig
-ia64                             allyesconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a005-20200517
-x86_64               randconfig-a003-20200517
-x86_64               randconfig-a006-20200517
-x86_64               randconfig-a004-20200517
-x86_64               randconfig-a001-20200517
-x86_64               randconfig-a002-20200517
-i386                 randconfig-a006-20200517
-i386                 randconfig-a005-20200517
-i386                 randconfig-a003-20200517
-i386                 randconfig-a001-20200517
-i386                 randconfig-a004-20200517
-i386                 randconfig-a002-20200517
-i386                 randconfig-a012-20200517
-i386                 randconfig-a016-20200517
-i386                 randconfig-a014-20200517
-i386                 randconfig-a011-20200517
-i386                 randconfig-a013-20200517
-i386                 randconfig-a015-20200517
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-x86_64                              defconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+
+
+
+
+On Sat, May 16, 2020 at 9:50 AM Mike Christie <mchristi@redhat.com> wrote:
+>
+> On 5/13/20 11:01 PM, Lance Digby wrote:
+> > The NON_EXISTENT_LUN error can be written without an error condition
+> >  on the initiator responsible. Adding the initiatorname to this message
+> >  will reduce the effort required to fix this when many initiators are
+> > supported by a target.
+> >
+> > Signed-off-by: Lance Digby <lance.digby@gmail.com>
+> > ---
+> >  drivers/target/target_core_device.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
+> > index 4cee113..604dea0 100644
+> > --- a/drivers/target/target_core_device.c
+> > +++ b/drivers/target/target_core_device.c
+> > @@ -100,9 +100,10 @@
+> >                */
+> >               if (unpacked_lun != 0) {
+> >                       pr_err("TARGET_CORE[%s]: Detected NON_EXISTENT_LUN"
+> > -                             " Access for 0x%08llx\n",
+> > +                             " Access for 0x%08llx from %s\n",
+> >                               se_cmd->se_tfo->fabric_name,
+> > -                             unpacked_lun);
+> > +                             unpacked_lun,
+> > +                             se_sess->se_node_acl->initiatorname);
+>
+> You can do nacl->initiatorname.
+>
+> Do you also want add the name to the tmr case? It's probably not common,
+> but the error message would be consistent.
+>
+> >                       return TCM_NON_EXISTENT_LUN;
+> >               }
+> >
+>
