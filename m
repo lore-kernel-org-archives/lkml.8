@@ -2,122 +2,113 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65578C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 22:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93247C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3201420709
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 22:52:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UUGwnTau"
+	by mail.kernel.org (Postfix) with ESMTP id 6AC3220767
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589670493;
+	bh=aSDJYt65gfHwTP2ldHRow9dEQtOjPVrtphZuiHCOv+o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LOSitbFAyYax9uI1W2LaeHM3KCY+4D3W5rWqHnym/PE77dAiSmZX5UA41nDyjwaKm
+	 oed3PD25eENMzVyYXIfMXGVbo5tr7Ap7bs1bva5FZKBRA71x6JEo+KR5JgIdqfUToZ
+	 BYXkRIVzESEeFmeOUkdF8E/mRQrIkYR0CkyR8s0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgEPWwH (ORCPT
+        id S1726763AbgEPXIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 18:52:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726660AbgEPWwG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 18:52:06 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54B0CC061A0C;
-        Sat, 16 May 2020 15:52:06 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id l21so5575802eji.4;
-        Sat, 16 May 2020 15:52:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9PP2WyeWBRcwUtTtauI38pvOTseYMQkKSYN0LmJyoo8=;
-        b=UUGwnTauinMgCOPONXeirGZaWszqyGsDCkkRZFlv9pk/19b4omFGbRa9f7FQZf9sHK
-         hX33VfjvwvHjTDVsOLW+RXrpt/Da+oNYhJJygZT4CFoez3W8f45H+I4aO+gRnlLlhT0D
-         VfIOMlGuEwY0BzDBF0erk4NNT/8qPgvwBZdck7b/+qmHRTfUM4rWkt59j8Ui7J/IMpKW
-         t/fjSQrL5ajHU3kuAbQVw/mNxp1h95KTVHDmhMvgq7kbR1andLkIT5ExrNR0TvvSYkUE
-         GGfJd0Kx3vBbaG7YKKUX96vWT5vZdnK65komXTA4NCx38nusndthx0A/KSyDEWhZQ4j9
-         h+Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9PP2WyeWBRcwUtTtauI38pvOTseYMQkKSYN0LmJyoo8=;
-        b=bj1rYU9jaY5veb2F7q5uH4i+4f6NNDHQMcbeqrvavvDDbDrlv1sAgRbMhPcx85eykC
-         EuYZv5WmPI+9tVpK1rI7utijItYQ+RY1aQm9nYlNeMuAFuNs6G46rAU8URygiabdAkkC
-         R95nZ7R1w2KPAzHeVnC905qohyYmDGdpMMTBywAC+6BCGxZkejAXkdqgeLTVrPKlVx8w
-         sQyctlFV+Sc0aqk5usCX9x8je9a2+xmBZS68arkKHXpgPUvBe41ogaCu5AMEyw1tuVbr
-         H3g0q4XKu25QS1ZLEuUB+A3xIG37MoviVyx3qcErQlTytN9wpHYjDCIAh6UhK0jt2IOn
-         /lRQ==
-X-Gm-Message-State: AOAM530yas24+pfaq4RFIIF+JzUQ3zru1pyydZqyuNTMzhEZqbY0+ZB6
-        MfA93MVAWuEqcJm/zRFOT5GlGsrRqg2Be6sS9PnVl0vo
-X-Google-Smtp-Source: ABdhPJwO9M9TUgguhHUlsC85u8TGTwawioIh4xacOwmfUKUXMd4Ur6V8FkO88LaQj5Ft1WG8ETDDoFjUGNwhuLjf7Uw=
-X-Received: by 2002:a17:906:660f:: with SMTP id b15mr8507711ejp.113.1589669524903;
- Sat, 16 May 2020 15:52:04 -0700 (PDT)
+        Sat, 16 May 2020 19:08:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726695AbgEPXIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 19:08:12 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A20AE206F9;
+        Sat, 16 May 2020 23:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589670491;
+        bh=aSDJYt65gfHwTP2ldHRow9dEQtOjPVrtphZuiHCOv+o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lp2MEMtfg1F7hSlTTWsT0/U06cieH89hqYRyiJX6PSkA2VCB92yBtD+eKPWMMxYuU
+         fO+rHmXGcbez1FqhKZS9cSfijfPSp/W7CEyA6MC7e1i9xgf7E/glxoiLQp24ft7SOP
+         B9FiTVUu+5i0kfjksRcPG62OaosFduiLT1l2ga9g=
+Date:   Sat, 16 May 2020 19:08:10 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Michel =?iso-8859-1?Q?D=E4nzer?= <michel@daenzer.net>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+        Marek =?utf-8?B?T2zFocOhaw==?= <marek.olsak@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Subject: Re: [PATCH AUTOSEL 5.6 33/50] drm/amdgpu: bump version for
+ invalidate L2 before SDMA IBs
+Message-ID: <20200516230810.GH29995@sasha-vm>
+References: <20200507142726.25751-1-sashal@kernel.org>
+ <20200507142726.25751-33-sashal@kernel.org>
+ <349b2cb9-71f9-a0cd-aceb-308512d7501a@daenzer.net>
 MIME-Version: 1.0
-References: <20200515031813.30283-1-xulin.sun@windriver.com> <20200516.135336.2032300090729040507.davem@davemloft.net>
-In-Reply-To: <20200516.135336.2032300090729040507.davem@davemloft.net>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Sun, 17 May 2020 01:51:53 +0300
-Message-ID: <CA+h21hqo+7UAOYkrs3O7J+WkPsQu26r_kP89j0Mr82kYfx_Z0g@mail.gmail.com>
-Subject: Re: [PATCH] net: mscc: ocelot: replace readx_poll_timeout with readx_poll_timeout_atomic
-To:     David Miller <davem@davemloft.net>
-Cc:     Xulin Sun <xulin.sun@windriver.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, xulinsun@gmail.com,
-        steen.hegelund@microchip.com,
-        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <349b2cb9-71f9-a0cd-aceb-308512d7501a@daenzer.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 16 May 2020 at 23:54, David Miller <davem@davemloft.net> wrote:
+On Thu, May 07, 2020 at 06:11:17PM +0200, Michel Dänzer wrote:
+>On 2020-05-07 4:27 p.m., Sasha Levin wrote:
+>> From: Marek Olšák <marek.olsak@amd.com>
+>>
+>> [ Upstream commit 9017a4897a20658f010bebea825262963c10afa6 ]
+>>
+>> This fixes GPU hangs due to cache coherency issues.
+>> Bump the driver version. Split out from the original patch.
+>>
+>> Signed-off-by: Marek Olšák <marek.olsak@amd.com>
+>> Reviewed-by: Christian König <christian.koenig@amd.com>
+>> Tested-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+>> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+>> index 42f4febe24c6d..8d45a2b662aeb 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+>> @@ -85,9 +85,10 @@
+>>   * - 3.34.0 - Non-DC can flip correctly between buffers with different pitches
+>>   * - 3.35.0 - Add drm_amdgpu_info_device::tcc_disabled_mask
+>>   * - 3.36.0 - Allow reading more status registers on si/cik
+>> + * - 3.37.0 - L2 is invalidated before SDMA IBs, needed for correctness
+>>   */
+>>  #define KMS_DRIVER_MAJOR	3
+>> -#define KMS_DRIVER_MINOR	36
+>> +#define KMS_DRIVER_MINOR	37
+>>  #define KMS_DRIVER_PATCHLEVEL	0
+>>
+>>  int amdgpu_vram_limit = 0;
+>>
 >
-> From: Xulin Sun <xulin.sun@windriver.com>
-> Date: Fri, 15 May 2020 11:18:13 +0800
->
-> > BUG: sleeping function called from invalid context at drivers/net/ethernet/mscc/ocelot.c:59
-> > in_atomic(): 1, irqs_disabled(): 0, pid: 3778, name: ifconfig
-> > INFO: lockdep is turned off.
-> > Preemption disabled at:
-> > [<ffff2b163c83b78c>] dev_set_rx_mode+0x24/0x40
-> > Hardware name: LS1028A RDB Board (DT)
-> > Call trace:
-> > dump_backtrace+0x0/0x140
-> > show_stack+0x24/0x30
-> > dump_stack+0xc4/0x10c
-> > ___might_sleep+0x194/0x230
-> > __might_sleep+0x58/0x90
-> > ocelot_mact_forget+0x74/0xf8
-> > ocelot_mc_unsync+0x2c/0x38
-> > __hw_addr_sync_dev+0x6c/0x130
-> > ocelot_set_rx_mode+0x8c/0xa0
->
-> Vladimir states that this call chain is not possible in mainline.
->
-> I'm not applying this.
+>This requires the parent commit fdf83646c0542ecfb9adc4db8f741a1f43dca058
+>"drm/amdgpu: invalidate L2 before SDMA IBs (v2)". KMS_DRIVER_MINOR is
+>bumped to signal to userspace the fix in that commit is present.
 
-(but the essence of the problem is legitimate though)
+I've grabbed the commit you've pointed out as well as ce73516d42c9
+("drm/amdgpu: simplify padding calculations (v2)") to make the backport
+apply cleanly, thank you!
 
-There are 2 specific things I don't like:
-- The problem is claimed to reproduce on "LS1028A RDB Board (DT)"
-which does not call ocelot_set_rx_mode. So it claims to fix a problem
-for which only Xulin has the ability to decide whether it is the right
-solution or not.
-- On ocelot, it _looks_ like it is indeed a problem which was
-introduced in 639c1b2625af ("net: mscc: ocelot: Register poll timeout
-should be wall time not attempts"). But there was no attempt to bring
-it up with the author of that patch, who very clearly expressed that
-he is working on hardware where the polling timeout is in the order of
-milliseconds, and the timeout for the driver is currently set at 100
-ms. I'm not very sure that it is desirable to spin in atomic context
-for 100 ms.
-
+-- 
 Thanks,
--Vladimir
+Sasha
