@@ -2,292 +2,308 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6303C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D19FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80DCC2073E
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A082073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgEPC1N (ORCPT
+        id S1727851AbgEPCcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 22:27:13 -0400
-Received: from mail-co1nam11olkn2077.outbound.protection.outlook.com ([40.92.18.77]:9429
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        Fri, 15 May 2020 22:32:31 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4795 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726290AbgEPC1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 22:27:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C12EWM5yQBtiAg6HlPmQHq/P/xU2fJrr8midoHkKb7MM3GKmvoQ8yilvF307I6Cy1jgZ5cA0RHQ0yKUnyf2FsCXPK+F76EGi1XiRHx0kWJh231sTj50wUUUPaJCAqjxm316u8B2wL8r9sHZNh74ychCGfYVaQuPKqzCOcNAbA9yxVSdAAUvlrsz7YzEtLkzdCbuj9fLBcy1bkOcJYaL9kXicwJGOoXfkur40vE8h+WowzvXG1QKAfJWPkElSQGNbDaezDdMeeuXdHzlpOs8Cx7GeWHZbCXM6fkFOohS1v0F6n4gFMEBwHv+iIZ0jzO8UACUr+096FZp1YrPFK+MT3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J/DhqCz7OJAOeGl0dP8pb8Z/iPINJEvxRxvDUjiE13A=;
- b=ArYII9mzF0xCxjcuFbtDMPoBgi1do0uRDTbyrqvS1K06BegtkBVJp97pn+TStf6hGaXy+80g03veu/BkeZFY7Ovrnj0xdCojmWYfTPQ/kqrYYzaTFJFLbakz6yAK+5HLV5CYpx8b5WCzJDZ1AFPb+fEoOLzvh//M2roG9sh0ehc5KY1HO2o+8aZxr19tC886WahjxKDyCCaWhkovQNwWglPu5ONpX3lfB43OsROX8wjz+1f1LDKHn2BmHCLJSdTTK+auDckX+VFo1IqEALqauM2dZG/iNG2VayrjmdP3jfAyxOIMfFOFMYiQIm4U3TK72g3PnNCFTHeE77t9j//nsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from DM6NAM11FT026.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:fc4d::43) by
- DM6NAM11HT006.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4d::175)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.19; Sat, 16 May
- 2020 02:27:08 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc4d::47) by DM6NAM11FT026.mail.protection.outlook.com
- (2a01:111:e400:fc4d::161) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.19 via Frontend
- Transport; Sat, 16 May 2020 02:27:08 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:05D9524B48186AB0039D274DA0E0EB180203019630D4285059D94B4A4535455E;UpperCasedChecksum:424F667A2B4252B46929EFA1803878868DE3366D742D42A69B430CEF62925D95;SizeAsReceived:7820;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.3000.022; Sat, 16 May 2020
- 02:27:08 +0000
-From:   Jonathan Bakker <xc-racer2@live.ca>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     linus.walleij@linaro.org, Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH 2/2] iio: adc: Add current-from-voltage driver
-Date:   Fri, 15 May 2020 19:26:19 -0700
-Message-ID: <BN6PR04MB066086A09D671ACB0287B6BAA3BA0@BN6PR04MB0660.namprd04.prod.outlook.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200516022619.30779-1-xc-racer2@live.ca>
-References: <20200516022619.30779-1-xc-racer2@live.ca>
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MWHPR15CA0057.namprd15.prod.outlook.com
- (2603:10b6:301:4c::19) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200516022619.30779-3-xc-racer2@live.ca>
+        id S1726247AbgEPCcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 22:32:31 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2FE1DED90303D5753C03;
+        Sat, 16 May 2020 10:32:27 +0800 (CST)
+Received: from [127.0.0.1] (10.67.102.197) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Sat, 16 May 2020
+ 10:32:19 +0800
+Subject: Re: [PATCH 2/4] proc/sysctl: add shared variables -1
+To:     Kees Cook <keescook@chromium.org>
+CC:     <mcgrof@kernel.org>, <yzaikin@google.com>, <adobriyan@gmail.com>,
+        <mingo@kernel.org>, <peterz@infradead.org>,
+        <akpm@linux-foundation.org>, <yamada.masahiro@socionext.com>,
+        <bauerman@linux.ibm.com>, <gregkh@linuxfoundation.org>,
+        <skhan@linuxfoundation.org>, <dvyukov@google.com>,
+        <svens@stackframe.org>, <joel@joelfernandes.org>,
+        <tglx@linutronix.de>, <Jisheng.Zhang@synaptics.com>,
+        <pmladek@suse.com>, <bigeasy@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <wangle6@huawei.com>
+References: <1589517224-123928-1-git-send-email-nixiaoming@huawei.com>
+ <1589517224-123928-3-git-send-email-nixiaoming@huawei.com>
+ <202005150105.33CAEEA6C5@keescook>
+ <88f3078b-9419-b9c6-e789-7d6e50ca2cef@huawei.com>
+ <202005150904.743BB3E52@keescook>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <ab5f75d4-4d69-7b95-e6bd-ba8fd9792d94@huawei.com>
+Date:   Sat, 16 May 2020 10:32:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR15CA0057.namprd15.prod.outlook.com (2603:10b6:301:4c::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24 via Frontend Transport; Sat, 16 May 2020 02:27:06 +0000
-X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200516022619.30779-3-xc-racer2@live.ca>
-X-TMN:  [X4nDp7Ex7Qo+lUs3wEH9RGoPPQnDOmfmSv6zlB/6fxTY0wYBFw+VlFxbmax1WwYu]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 497ce8da-f2dc-44f7-f5dc-08d7f940a15d
-X-MS-TrafficTypeDiagnostic: DM6NAM11HT006:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: r9PAz6GCbcNhoqCYx8i4nNH3J+ge4TmDpmuuHyxkc8+YiIHeL1FDfOz9Af3jSz1FpIFvC+vpYVKkK3zaqCX8nEu6JmSfrGTP4GfgMUT+nvf5SdzuJb+ILjTWWNboi6gczXR6nhzOSZydaqSuXBLgZbATRngG9WKPkV1Nz0NHc/amO3bQb9XJeAy1PoRYWP/jrqiOci+po2V+IsCR6BcUtw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: KYdyFoGMgPFTcw4Y6ymb6SRSb89gl+eZKj8E6YCdQUNbEo7LElBwT9OkWMbWScg7gDeCAPTfd1BifPbbO2avbIC2A3AKrAaHRF2rJeU+ZqvPb+lLSfsxLBVqWISW7AcS7Gv48DMbhotcI2UUzRHo2QhlHvLWbAd+gv+V/zVNHNc1HTJ0Hl62yGEgTfEZQsjng2Utxe8VrXF+jODgFfacPg==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 497ce8da-f2dc-44f7-f5dc-08d7f940a15d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2020 02:27:08.0835
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM11HT006
+In-Reply-To: <202005150904.743BB3E52@keescook>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.197]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some devices may require a current adc, but only have a voltage
-ADC onboard.  In order to read the current, they have a resistor
-connected to the ADC.
+On 2020/5/16 0:05, Kees Cook wrote:
+> On Fri, May 15, 2020 at 05:06:28PM +0800, Xiaoming Ni wrote:
+>> On 2020/5/15 16:06, Kees Cook wrote:
+>>> On Fri, May 15, 2020 at 12:33:42PM +0800, Xiaoming Ni wrote:
+>>>> Add the shared variable SYSCTL_NEG_ONE to replace the variable neg_one
+>>>> used in both sysctl_writes_strict and hung_task_warnings.
+>>>>
+>>>> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+>>>> ---
+>>>>    fs/proc/proc_sysctl.c     | 2 +-
+>>>>    include/linux/sysctl.h    | 1 +
+>>>>    kernel/hung_task_sysctl.c | 3 +--
+>>>>    kernel/sysctl.c           | 3 +--
+>>>
+>>> How about doing this refactoring in advance of the extraction patch?
+>> Before  advance of the extraction patch, neg_one is only used in one file,
+>> does it seem to have no value for refactoring?
+> 
+> I guess it doesn't matter much, but I think it's easier to review in the
+> sense that neg_one is first extracted and then later everything else is
+> moved.
+> 
+Later, when more features sysctl interface is moved to the code file, 
+there will be more variables that need to be extracted.
+So should I only extract the neg_one variable here, or should I extract 
+all the variables used by multiple features?
 
-Suggested-by: Jonathan Cameron <jic23@kernel.org>
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
----
- MAINTAINERS                            |   8 ++
- drivers/iio/adc/Kconfig                |   9 ++
- drivers/iio/adc/Makefile               |   1 +
- drivers/iio/adc/current-from-voltage.c | 123 +++++++++++++++++++++++++
- 4 files changed, 141 insertions(+)
- create mode 100644 drivers/iio/adc/current-from-voltage.c
+  fs/proc/proc_sysctl.c  |  2 +-
+  include/linux/sysctl.h | 11 ++++++++---
+  kernel/sysctl.c        | 37 ++++++++++++++++---------------------
+  3 files changed, 25 insertions(+), 25 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2926327e4976..094cf512b403 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4503,6 +4503,14 @@ T:	git git://linuxtv.org/media_tree.git
- F:	Documentation/devicetree/bindings/media/allwinner,sun6i-a31-csi.yaml
- F:	drivers/media/platform/sunxi/sun6i-csi/
- 
-+CURRENT ADC FROM VOLTAGE ADC DRIVER
-+M:	Jonathan Bakker <xc-racer2@live.ca>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
-+F:	Documentation/devicetree/bindings/iio/adc/linux,current-from-voltage.yaml
-+F:	drivers/iio/adc/current-from-voltage.c
-+
- CW1200 WLAN driver
- M:	Solomon Peachy <pizza@shaftnet.org>
- S:	Maintained
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 12bb8b7ca1ff..84e6ccb36024 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -344,6 +344,15 @@ config CPCAP_ADC
- 	  This driver can also be built as a module. If so, the module will be
- 	  called cpcap-adc.
- 
-+config CURRENT_FROM_VOLTAGE
-+	tristate "Current from voltage shim driver"
-+	help
-+	  Say yes here to build support for a shim driver converting a voltage
-+	  ADC coupled with a resistor to a current ADC.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called current-from-voltage.
-+
- config DA9150_GPADC
- 	tristate "Dialog DA9150 GPADC driver support"
- 	depends on MFD_DA9150
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 637807861112..d293184fc32a 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -35,6 +35,7 @@ obj-$(CONFIG_BCM_IPROC_ADC) += bcm_iproc_adc.o
- obj-$(CONFIG_BERLIN2_ADC) += berlin2-adc.o
- obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
- obj-$(CONFIG_CPCAP_ADC) += cpcap-adc.o
-+obj-$(CONFIG_CURRENT_FROM_VOLTAGE) += current-from-voltage.o
- obj-$(CONFIG_DA9150_GPADC) += da9150-gpadc.o
- obj-$(CONFIG_DLN2_ADC) += dln2-adc.o
- obj-$(CONFIG_ENVELOPE_DETECTOR) += envelope-detector.o
-diff --git a/drivers/iio/adc/current-from-voltage.c b/drivers/iio/adc/current-from-voltage.c
-new file mode 100644
-index 000000000000..69cb18e0995b
---- /dev/null
-+++ b/drivers/iio/adc/current-from-voltage.c
-@@ -0,0 +1,123 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for converting a resistor and a voltage ADC to a current ADC
-+ *
-+ * Copyright (C) 2020 Jonathan Bakker <xc-racer2@live.ca>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/iio/consumer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+struct shim {
-+	struct iio_channel *adc;
-+	u32 resistor_value;
-+};
-+
-+static int shim_read_raw(struct iio_dev *indio_dev,
-+				      struct iio_chan_spec const *chan,
-+				      int *val, int *val2, long mask)
-+{
-+	struct shim *shim = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = iio_read_channel_processed(shim->adc, val);
-+		if (ret < 0) {
-+			dev_err(&indio_dev->dev, "fail reading voltage ADC\n");
-+			return ret;
-+		}
-+
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		*val = 1;
-+		*val2 = shim->resistor_value;
-+
-+		return IIO_VAL_FRACTIONAL;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct iio_chan_spec shim_iio_channel = {
-+	.type = IIO_CURRENT,
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
-+		| BIT(IIO_CHAN_INFO_SCALE),
-+};
-+
-+static const struct iio_info shim_info = {
-+	.read_raw = &shim_read_raw,
-+};
-+
-+static int shim_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct iio_dev *indio_dev;
-+	struct shim *shim;
-+	enum iio_chan_type type;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*shim));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, indio_dev);
-+	shim = iio_priv(indio_dev);
-+
-+	indio_dev->name = dev_name(dev);
-+	indio_dev->dev.parent = dev;
-+	indio_dev->dev.of_node = dev->of_node;
-+	indio_dev->info = &shim_info;
-+	indio_dev->channels = &shim_iio_channel;
-+	indio_dev->num_channels = 1;
-+
-+	shim->adc = devm_iio_channel_get(dev, "adc");
-+	if (IS_ERR(shim->adc)) {
-+		if (PTR_ERR(shim->adc) != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get adc input channel\n");
-+		return PTR_ERR(shim->adc);
-+	}
-+
-+	ret = iio_get_channel_type(shim->adc, &type);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (type != IIO_VOLTAGE) {
-+		dev_err(dev, "ADC is of the wrong type\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = device_property_read_u32(dev, "linux,resistor-ohms",
-+				      &shim->resistor_value);
-+	if (ret < 0) {
-+		dev_err(dev, "no resistor value found\n");
-+		return ret;
-+	}
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+static const struct of_device_id shim_match[] = {
-+	{ .compatible = "linux,current-from-voltage", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, shim_match);
-+
-+static struct platform_driver shim_driver = {
-+	.probe = shim_probe,
-+	.driver = {
-+		.name = "current-from-voltage",
-+		.of_match_table = shim_match,
-+	},
-+};
-+module_platform_driver(shim_driver);
-+
-+MODULE_DESCRIPTION("Current ADC from voltage ADC and resistor");
-+MODULE_AUTHOR("Jonathan Bakker <xc-racer2@live.ca>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.20.1
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index b6f5d45..3f77e64 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -23,7 +23,7 @@
+  static const struct inode_operations proc_sys_dir_operations;
+
+  /* shared constants to be used in various sysctls */
+-const int sysctl_vals[] = { 0, 1, INT_MAX };
++const int sysctl_vals[] = { -1, 0, 1, 2, 4, 100, 1000, INT_MAX };
+  EXPORT_SYMBOL(sysctl_vals);
+
+  /* Support for permanently empty directories */
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index 43f8ef9..bf97c30 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -38,9 +38,14 @@
+  struct ctl_dir;
+
+  /* Keep the same order as in fs/proc/proc_sysctl.c */
+-#define SYSCTL_ZERO	((void *)&sysctl_vals[0])
+-#define SYSCTL_ONE	((void *)&sysctl_vals[1])
+-#define SYSCTL_INT_MAX	((void *)&sysctl_vals[2])
++#define SYSCTL_NEG_ONE	((void *)&sysctl_vals[0])
++#define SYSCTL_ZERO	((void *)&sysctl_vals[1])
++#define SYSCTL_ONE	((void *)&sysctl_vals[2])
++#define SYSCTL_TWO	((void *)&sysctl_vals[3])
++#define SYSCTL_FOUR	((void *)&sysctl_vals[4])
++#define SYSCTL_ONE_HUNDRED	((void *)&sysctl_vals[5])
++#define SYSCTL_ONE_THOUSAND	((void *)&sysctl_vals[6])
++#define SYSCTL_INT_MAX	((void *)&sysctl_vals[7])
+
+  extern const int sysctl_vals[];
+
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 5dd6d01..efe6172 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -118,14 +118,9 @@
+
+  /* Constants used for minimum and  maximum */
+
+-static int __maybe_unused neg_one = -1;
+-static int __maybe_unused two = 2;
+-static int __maybe_unused four = 4;
+  static unsigned long zero_ul;
+  static unsigned long one_ul = 1;
+  static unsigned long long_max = LONG_MAX;
+-static int one_hundred = 100;
+-static int one_thousand = 1000;
+  #ifdef CONFIG_PRINTK
+  static int ten_thousand = 10000;
+  #endif
+@@ -534,7 +529,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.maxlen		= sizeof(int),
+  		.mode		= 0644,
+  		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= &neg_one,
++		.extra1		= SYSCTL_NEG_ONE,
+  		.extra2		= SYSCTL_ONE,
+  	},
+  #endif
+@@ -865,7 +860,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0644,
+  		.proc_handler	= proc_dointvec_minmax_sysadmin,
+  		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &two,
++		.extra2		= SYSCTL_TWO,
+  	},
+  #endif
+  	{
+@@ -1043,7 +1038,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0644,
+  		.proc_handler	= perf_cpu_time_max_percent_handler,
+  		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &one_hundred,
++		.extra2		= SYSCTL_ONE_HUNDRED,
+  	},
+  	{
+  		.procname	= "perf_event_max_stack",
+@@ -1061,7 +1056,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0644,
+  		.proc_handler	= perf_event_max_stack_handler,
+  		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &one_thousand,
++		.extra2		= SYSCTL_ONE_THOUSAND,
+  	},
+  #endif
+  	{
+@@ -1136,7 +1131,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0644,
+  		.proc_handler	= proc_dointvec_minmax,
+  		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &two,
++		.extra2		= SYSCTL_TWO,
+  	},
+  	{
+  		.procname	= "panic_on_oom",
+@@ -1145,7 +1140,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0644,
+  		.proc_handler	= proc_dointvec_minmax,
+  		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &two,
++		.extra2		= SYSCTL_TWO,
+  	},
+  	{
+  		.procname	= "oom_kill_allocating_task",
+@@ -1190,7 +1185,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0644,
+  		.proc_handler	= dirty_background_ratio_handler,
+  		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &one_hundred,
++		.extra2		= SYSCTL_ONE_HUNDRED,
+  	},
+  	{
+  		.procname	= "dirty_background_bytes",
+@@ -1207,7 +1202,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0644,
+  		.proc_handler	= dirty_ratio_handler,
+  		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &one_hundred,
++		.extra2		= SYSCTL_ONE_HUNDRED,
+  	},
+  	{
+  		.procname	= "dirty_bytes",
+@@ -1247,7 +1242,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0644,
+  		.proc_handler	= proc_dointvec_minmax,
+  		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &one_hundred,
++		.extra2		= SYSCTL_ONE_HUNDRED,
+  	},
+  #ifdef CONFIG_HUGETLB_PAGE
+  	{
+@@ -1304,7 +1299,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0200,
+  		.proc_handler	= drop_caches_sysctl_handler,
+  		.extra1		= SYSCTL_ONE,
+-		.extra2		= &four,
++		.extra2		= SYSCTL_FOUR,
+  	},
+  #ifdef CONFIG_COMPACTION
+  	{
+@@ -1357,7 +1352,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0644,
+  		.proc_handler	= watermark_scale_factor_sysctl_handler,
+  		.extra1		= SYSCTL_ONE,
+-		.extra2		= &one_thousand,
++		.extra2		= SYSCTL_ONE_THOUSAND,
+  	},
+  	{
+  		.procname	= "percpu_pagelist_fraction",
+@@ -1436,7 +1431,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0644,
+  		.proc_handler	= sysctl_min_unmapped_ratio_sysctl_handler,
+  		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &one_hundred,
++		.extra2		= SYSCTL_ONE_HUNDRED,
+  	},
+  	{
+  		.procname	= "min_slab_ratio",
+@@ -1445,7 +1440,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0644,
+  		.proc_handler	= sysctl_min_slab_ratio_sysctl_handler,
+  		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &one_hundred,
++		.extra2		= SYSCTL_ONE_HUNDRED,
+  	},
+  #endif
+  #ifdef CONFIG_SMP
+@@ -1728,7 +1723,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0600,
+  		.proc_handler	= proc_dointvec_minmax,
+  		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &two,
++		.extra2		= SYSCTL_TWO,
+  	},
+  	{
+  		.procname	= "protected_regular",
+@@ -1737,7 +1732,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0600,
+  		.proc_handler	= proc_dointvec_minmax,
+  		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &two,
++		.extra2		= SYSCTL_TWO,
+  	},
+  	{
+  		.procname	= "suid_dumpable",
+@@ -1746,7 +1741,7 @@ static int sysrq_sysctl_handler(struct ctl_table 
+*table, int write,
+  		.mode		= 0644,
+  		.proc_handler	= proc_dointvec_minmax_coredump,
+  		.extra1		= SYSCTL_ZERO,
+-		.extra2		= &two,
++		.extra2		= SYSCTL_TWO,
+  	},
+  #if defined(CONFIG_BINFMT_MISC) || defined(CONFIG_BINFMT_MISC_MODULE)
+  	{
+
+
 
