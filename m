@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E05F5C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 619D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B80F9206D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4359920756
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 17:59:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hy2yo9hd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5b4M+Om"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgEPR4k (ORCPT
+        id S1726425AbgEPR7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 13:56:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38560 "EHLO
+        Sat, 16 May 2020 13:59:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726263AbgEPR4k (ORCPT
+        by vger.kernel.org with ESMTP id S1726263AbgEPR7K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 13:56:40 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A15BEC061A0C;
-        Sat, 16 May 2020 10:56:38 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id k12so5300505wmj.3;
-        Sat, 16 May 2020 10:56:38 -0700 (PDT)
+        Sat, 16 May 2020 13:59:10 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1DF7C061A0C;
+        Sat, 16 May 2020 10:59:09 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id 50so7049053wrc.11;
+        Sat, 16 May 2020 10:59:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Pom02/fGs5VaPt8D5UA72ZK95oq4fYr5JRTo4iyrMcM=;
-        b=hy2yo9hdSE9qQRnPsdnsTVDfTDoA0ZwHD88xB+FYxBNxJoY+HedEJ760z6n19J5FGk
-         zS9lGMPUhYmLNEKuN2ABpelK343XHDzUI4w0LiPLkLGEen0Qeve7w++gAnROb+7RG99Z
-         NvxRgZMameFddprLT+MMYzxM+oSj7/eGFI0JU56fkd476kwuyyNxot25uq3t2w0x2PeR
-         El0T1ma3K2Ve752qK9EiPniOGnqe+xiSaA87bxpZG5jF+2sASj7v7CCuGwnw/f/IBdes
-         Sp+exbhfD1bLff0Ecxwq3pxwyumkbEchetyq0OmotmAFmTfqxK8bdFPn0uDr2pKj5clh
-         M9zw==
+        bh=dlj6c6JqqLkHBCy1FwFoUYXsdQgsvmHxTexVOwWMm7E=;
+        b=K5b4M+OmK6W13LI+QDe9xewjl4wmW6ibWzSRHkhnMhaSYSlxjZY7lO295aq6JFVPdZ
+         aAsqNK+tFKNNQCjS0V8QrTWhUzRTrVx+EbF/nXhJa+PrNfEURsJjaNVAkloDlW0qi58a
+         dS4ZubVWyPP4zxf/rnQtdwsUAKlrCfl2RWO/iN7+20CzDz2fMijKfTu3x//WJ37ZqVHN
+         CXD9Hn6/1DmL7UfKbEnW4xYoNuNH12lvPQqrZt5AtnLAToGpQlHuEV56b5B5BrLv0Lsq
+         /xnQmFXM8erdeDx46feJ38CVCcaEvwrvWsdwysNt8y3iYMepKYpaZhDLXtyIXnVNyYpJ
+         b3vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=Pom02/fGs5VaPt8D5UA72ZK95oq4fYr5JRTo4iyrMcM=;
-        b=Qd1A3gh16BxV8NrcVCEc3YHGg1YDp1fY+bV2r0HEHBQhbwKvv7OArJlS16b7FT/hZd
-         4SaTCZsCox+i70IWHCCW8lzs00LuB6ecpzOioYfn6pGpm1nsp6nvxyfYJiZir4yotpa6
-         XQF6zWWFP6WAvJaGc2KjmRNmj6jbA41R5aGYIezAacn74IVXvRQoOrgP4xsohzBZ7EQR
-         0GnEYUyzq2Fca4/e6YKos6mF9yo74asbXpdY/KLPQSWFzM8waJROWVVXfTqdxTFyp6IA
-         Y8S5qzsTx/IoH4yUb8vNI3Mtah9yoDtmEIZ7wNFxlL9mE1oThQWmH6EXpA1bB0RIOcKS
-         UGWQ==
-X-Gm-Message-State: AOAM533MDaFhfh3N6VQKZO8LPS9sRu0BivQSbdhV1BG3MaoN3JQLCB8S
-        THsgwdRnpn+fTlZLpQqdWJA=
-X-Google-Smtp-Source: ABdhPJzyeP/OxS4CcvSxvVea/pgSVvWrcTtunm3Nk3uPICc4JnAi3jH/wFEa/bYJxGqfCrysE5Wnbg==
-X-Received: by 2002:a7b:c205:: with SMTP id x5mr10629124wmi.135.1589651797250;
-        Sat, 16 May 2020 10:56:37 -0700 (PDT)
+        bh=dlj6c6JqqLkHBCy1FwFoUYXsdQgsvmHxTexVOwWMm7E=;
+        b=lDlu/Guo63KSV1naQCewDmsmM3okEqYGzfm7FJlG7kX1rTD6iyTMQ4hZUYPymXlOZF
+         gkuJaYGZ9fr5+oUB1udgg9FB5CGSCJG4XgT5wLa2PCIj9MC+gYtXeDhxUhdHytysKuBv
+         nQl4EMaIcy0qocVc2xr5pYfKk8Gu4BWhmIjyVtMtL9WbSgQlz1Ico+i3LVehFWnNhSoI
+         ziBFsMoRfsNZtHwVrMOEDUmTkbIuwqc4RxsTYlQlrjhGmhPyrJykYJ7Tp6epd+iCBT2D
+         uJb9SBXZyiKpjCfIuRFKXcCzPJ/tDXe6WzdS9pqC0ykM3t6sLPuMkS78Wc1weRfMCT9h
+         i1rA==
+X-Gm-Message-State: AOAM531/A05J4N7MNY8IVc/cqxvSwVpeX4vOW12UlPnXWodpQtlF8Sho
+        ID8Wm3ThWLXqnQFjWC9XlJ0=
+X-Google-Smtp-Source: ABdhPJz4RCC+7xPENymR+kuAm6Vp4LM1OVt5aqeyXqvBVlrdhXBCyCv/TQ+ZWEUAwNBTKMOjZDfBBA==
+X-Received: by 2002:adf:face:: with SMTP id a14mr10455762wrs.397.1589651948260;
+        Sat, 16 May 2020 10:59:08 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id a184sm8918949wmh.24.2020.05.16.10.56.35
+        by smtp.gmail.com with ESMTPSA id b14sm8529704wmb.18.2020.05.16.10.59.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 May 2020 10:56:36 -0700 (PDT)
-Subject: Re: [PATCH v5 05/13] soc: mediatek: cmdq: return send msg error code
+        Sat, 16 May 2020 10:59:07 -0700 (PDT)
+Subject: Re: [PATCH v5 06/13] soc: mediatek: cmdq: add assign function
 To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -78,7 +78,7 @@ Cc:     linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org,
         HS Liao <hs.liao@mediatek.com>
 References: <1583664775-19382-1-git-send-email-dennis-yc.hsieh@mediatek.com>
- <1583664775-19382-6-git-send-email-dennis-yc.hsieh@mediatek.com>
+ <1583664775-19382-7-git-send-email-dennis-yc.hsieh@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -154,12 +154,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <a32545e3-ec65-e813-871a-7c0c6320373b@gmail.com>
-Date:   Sat, 16 May 2020 19:56:35 +0200
+Message-ID: <c671ea8a-07fa-a050-4679-c7aa15d19a9d@gmail.com>
+Date:   Sat, 16 May 2020 19:59:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1583664775-19382-6-git-send-email-dennis-yc.hsieh@mediatek.com>
+In-Reply-To: <1583664775-19382-7-git-send-email-dennis-yc.hsieh@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -171,32 +171,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 08/03/2020 11:52, Dennis YC Hsieh wrote:
-> Return error code to client if send message fail,
-> so that client has chance to error handling.
+> Add assign function in cmdq helper which assign constant value into
+> internal register by index.
 > 
 > Signed-off-by: Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-> Fixes: 576f1b4bc802 ("soc: mediatek: Add Mediatek CMDQ helper")
 > Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
-Queued for v5.7-fixes
-
 > ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 24 +++++++++++++++++++++++-
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
+>  include/linux/soc/mediatek/mtk-cmdq.h    | 14 ++++++++++++++
+>  3 files changed, 38 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 2e1bc513569b..98f23ba3ba47 100644
+> index 98f23ba3ba47..33153d17c9d9 100644
 > --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
 > +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -351,7 +351,9 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
->  		spin_unlock_irqrestore(&client->lock, flags);
->  	}
+> @@ -12,6 +12,7 @@
+>  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
+>  #define CMDQ_POLL_ENABLE_MASK	BIT(0)
+>  #define CMDQ_EOC_IRQ_EN		BIT(0)
+> +#define CMDQ_REG_TYPE		1
 >  
-> -	mbox_send_message(client->chan, pkt);
-> +	err = mbox_send_message(client->chan, pkt);
-> +	if (err < 0)
-> +		return err;
->  	/* We can send next packet immediately, so just call txdone. */
->  	mbox_client_txdone(client->chan, 0);
+>  struct cmdq_instruction {
+>  	union {
+> @@ -21,8 +22,17 @@ struct cmdq_instruction {
+>  	union {
+>  		u16 offset;
+>  		u16 event;
+> +		u16 reg_dst;
+> +	};
+> +	union {
+> +		u8 subsys;
+> +		struct {
+> +			u8 sop:5;
+> +			u8 arg_c_t:1;
+> +			u8 arg_b_t:1;
+> +			u8 dst_t:1;
+> +		};
+
+This union seems without context in this patch. Please drop.
+
+Regards,
+Matthias
+
+>  	};
+> -	u8 subsys;
+>  	u8 op;
+>  };
 >  
+> @@ -277,6 +287,18 @@ int cmdq_pkt_poll_mask(struct cmdq_pkt *pkt, u8 subsys,
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_poll_mask);
+>  
+> +int cmdq_pkt_assign(struct cmdq_pkt *pkt, u16 reg_idx, u32 value)
+> +{
+> +	struct cmdq_instruction inst = { {0} };
+> +
+> +	inst.op = CMDQ_CODE_LOGIC;
+> +	inst.dst_t = CMDQ_REG_TYPE;
+> +	inst.reg_dst = reg_idx;
+> +	inst.value = value;
+> +	return cmdq_pkt_append_command(pkt, inst);
+> +}
+> +EXPORT_SYMBOL(cmdq_pkt_assign);
+> +
+>  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  {
+>  	struct cmdq_instruction inst = { {0} };
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index dfe5b2eb85cc..121c3bb6d3de 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -59,6 +59,7 @@ enum cmdq_code {
+>  	CMDQ_CODE_JUMP = 0x10,
+>  	CMDQ_CODE_WFE = 0x20,
+>  	CMDQ_CODE_EOC = 0x40,
+> +	CMDQ_CODE_LOGIC = 0xa0,
+>  };
+>  
+>  enum cmdq_cb_status {
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index a74c1d5acdf3..83340211e1d3 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -152,6 +152,20 @@ int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
+>   */
+>  int cmdq_pkt_poll_mask(struct cmdq_pkt *pkt, u8 subsys,
+>  		       u16 offset, u32 value, u32 mask);
+> +
+> +/**
+> + * cmdq_pkt_assign() - Append logic assign command to the CMDQ packet, ask GCE
+> + *		       to execute an instruction that set a constant value into
+> + *		       internal register and use as value, mask or address in
+> + *		       read/write instruction.
+> + * @pkt:	the CMDQ packet
+> + * @reg_idx:	the CMDQ internal register ID
+> + * @value:	the specified value
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + */
+> +int cmdq_pkt_assign(struct cmdq_pkt *pkt, u16 reg_idx, u32 value);
+> +
+>  /**
+>   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+>   *                          packet and call back at the end of done packet
 > 
