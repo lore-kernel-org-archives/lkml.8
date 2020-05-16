@@ -2,113 +2,77 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6455DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCA5C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7A620657
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:17:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="aKdbcVTI"
+	by mail.kernel.org (Postfix) with ESMTP id 14EBD20671
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:19:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgEPHRY (ORCPT
+        id S1726868AbgEPHTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 03:17:24 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17785 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725807AbgEPHRY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 03:17:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1589613403; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=Gx1m+RSTYF08xlcc5sJefHNltDRzMnGnkxpsTnXHkU89ZGD3ePPU6KsO0XciPTK/dT78+5ZHBPwFdck+2k7I/aLh0V+zztYVDY4sGjRNJ19YrCpImlrpqFJ2NK+FnJRD8k6PbEg8byKFXC15n5deA6N/jH3CXl4/VX/CdPWoxQ0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1589613403; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
-        bh=icecfiXkkDsRqhn5m2sHi0QsuxMPAJI9JuFBm6LuO64=; 
-        b=RsqpzzvBfjuBQTiXCMGU791Fyce+cvQgQIl7kYGwpYscU/aFdyJ2q1NGfcqcDAHT0pi0ggHoIIjPLnXKSrTZYqH7ImvR+fIwiQ1NLUpFLWqtXlB/W+a5v/dHvCoCmE4CFXNKreDBmkAulngy6XD7bg9JsXaZmrDv9ltMUeZLENI=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589613403;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=icecfiXkkDsRqhn5m2sHi0QsuxMPAJI9JuFBm6LuO64=;
-        b=aKdbcVTIg77LiBJDYoC5dyh1+HfEzQOx7cMI4IrjqH8DIuCtM6b7Yw/r3eSr6Nj+
-        o0ckXO1PI8iqa9p7+mDBaYqXPazN8yORlc59qlU6HYkILiQUwNnbEK+CaT5jZ+T4Uof
-        3w1YBIdK8nIN/9x9bZyFfYxh1feJjRiWk9TFgjUI=
-Received: from [127.0.0.1] (223.104.212.75 [223.104.212.75]) by mx.zoho.com.cn
-        with SMTPS id 1589613400205894.5480665644669; Sat, 16 May 2020 15:16:40 +0800 (CST)
-Date:   Sat, 16 May 2020 15:16:36 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>
-CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH] MIPS: Loongson: Add support for serial console
-User-Agent: K-9 Mail for Android
-Reply-to: jiaxun.yang@flygoat.com
-In-Reply-To: <1589612588-29196-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1589612588-29196-1-git-send-email-yangtiezhu@loongson.cn>
-Message-ID: <41961321-A428-42BF-ADDB-C2ACBBE25E4E@flygoat.com>
+        Sat, 16 May 2020 03:19:36 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4797 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725807AbgEPHTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 03:19:35 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B580D942583F32C4960F;
+        Sat, 16 May 2020 15:19:33 +0800 (CST)
+Received: from [10.166.215.145] (10.166.215.145) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 16 May 2020 15:19:29 +0800
+Subject: Re: [PATCH] kdb: Make the internal env 'KDBFLAGS' undefinable
+To:     Doug Anderson <dianders@chromium.org>
+CC:     Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        <kgdb-bugreport@lists.sourceforge.net>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200511021637.37029-1-liwei391@huawei.com>
+ <CAD=FV=VNTkRW9LbNjY_0Ljj57m19gFUEHAuYKd-i6jpu_QpMgg@mail.gmail.com>
+From:   "liwei (GF)" <liwei391@huawei.com>
+Message-ID: <1672625a-5f2b-33db-c516-42abb070a26e@huawei.com>
+Date:   Sat, 16 May 2020 15:19:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+In-Reply-To: <CAD=FV=VNTkRW9LbNjY_0Ljj57m19gFUEHAuYKd-i6jpu_QpMgg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.145]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Douglas,
 
+On 2020/5/14 7:41, Doug Anderson wrote:
 
-=E4=BA=8E 2020=E5=B9=B45=E6=9C=8816=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=883=
-:03:08, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
->After commit 87fcfa7b7fe6 ("MIPS: Loongson64: Add generic dts"),
->there already exists the node and property of Loongson CPU UART0
->in loongson3-package=2Edtsi:
->
->cpu_uart0: serial@1fe001e0 {
->        compatible =3D "ns16550a";
->        reg =3D <0 0x1fe001e0 0x8>;
->        clock-frequency =3D <33000000>;
->        interrupt-parent =3D <&liointc>;
->        interrupts =3D <10 IRQ_TYPE_LEVEL_HIGH>;
->        no-loopback-test;
->};
->
->In order to support for serial console on the Loongson platform,
->add CONFIG_SERIAL_OF_PLATFORM=3Dy to loongson3_defconfig=2E
->
->With this patch, we can see the following boot message:
->
->[    1=2E877745] printk: console [ttyS0] disabled
->[    1=2E881979] 1fe001e0=2Eserial: ttyS0 at MMIO 0x1fe001e0 (irq =3D 16,=
- base_baud =3D 2062500) is a 16550A
->[    1=2E890838] printk: console [ttyS0] enabled
->
->And also, we can login normally from the serial console=2E
->
->Signed-off-by: Tiezhu Yang <yangtiezhu@loongson=2Ecn>
->---
->
->Hi Jiaxun,
->
->Thank you very much for your suggestion=2E
+>> -       }
+>> +       } else if (strcmp(argv[1], "KDBFLAGS") == 0)
+>> +               return KDB_NOPERM;
+> 
+> One slight nit is that my personal preference is that if one half of
+> an "if/else" needs braces then both halves should have braces.  I
+Thanks for spotting it. Refer to Documentation/process/coding-style.rst, i
+will fix it in the v2.
 
-Reviewed-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+> don't know what Daniel and Jason's policies are, though.  In any case,
+> not that I've ever used the KDBDEBUG functionality, but your change
+> seems sane.  Without it if I set "KDBDEBUG" and "KDBFLAGS" and then
+> type "env" I see the flags listed twice, but one is real and one is
+> fake.
+> 
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> 
+> -Doug
+> 
 
-Looks like we need a Kconfig clean up=2E
-I'll do that after getting LS7A PCH support merged=2E
-
-Anyway, thanks for catching this=2E
-
-[=2E=2E=2E]
---=20
-Jiaxun Yang
+Thanks,
+Wei
