@@ -2,104 +2,131 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F52C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A638920671
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E23206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589631609;
+	bh=nw2Sia0XA65XHVWMqYVds6MhO4JKpPbeVteRggM9X6Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cM0yVzQl0sLaHY6GJ2DkcmzhoRKTpbjg1n4LBVJLceDNClKRopf2wQuWAEp/xQrxK
+	 9omwRWbAFJ8WWW0v9XHNr1e/Ft2Y2e0MEAwKyGbLT3lQZMgHdf/mL1xaqqSkKVMzWN
+	 Mux5BZgl4eba6jPXgZFonfKRMGQUHwiszb18P2/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgEPMQw (ORCPT
+        id S1726252AbgEPMUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 08:16:52 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:39998 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbgEPMQv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 08:16:51 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 536038030809;
-        Sat, 16 May 2020 12:16:49 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id XQwN5PDN9x4R; Sat, 16 May 2020 15:16:48 +0300 (MSK)
-Date:   Sat, 16 May 2020 15:16:47 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 7/7] clocksource: mips-gic-timer: Set limitations on
- clocksource/sched-clocks usage
-Message-ID: <20200516121647.g6jua35kkihmw5r6@mobilestation>
-References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
- <20200506214107.25956-8-Sergey.Semin@baikalelectronics.ru>
- <20200515171004.GA760381@linaro.org>
+        Sat, 16 May 2020 08:20:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726202AbgEPMUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 08:20:08 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16BC220671;
+        Sat, 16 May 2020 12:20:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589631608;
+        bh=nw2Sia0XA65XHVWMqYVds6MhO4JKpPbeVteRggM9X6Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RywIqY9jUZ2i9yasZQmuX628UFtHs7uWrk2dHNRY7bBgka+03jIOAUDSmRRafYAPK
+         cCry4nzPCL41GXZXcFgtU6XraqcDI1tHZeIFnTeA4VeVvokttXskYNiffcEWLDkcn5
+         M21QP3h9D/SdqZbs40nwJX0FvS9bNAXUvWfp7QlQ=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jZvnS-00Co8e-GD; Sat, 16 May 2020 13:20:06 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200515171004.GA760381@linaro.org>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 16 May 2020 13:20:06 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Anup Patel <anup.patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] irqchip/sifive-plic: Improve boot prints for multiple
+ PLIC instances
+In-Reply-To: <20200516063901.18365-3-anup.patel@wdc.com>
+References: <20200516063901.18365-1-anup.patel@wdc.com>
+ <20200516063901.18365-3-anup.patel@wdc.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <718b4b4fd894f74a178d3e38073ffdcc@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: anup.patel@wdc.com, palmer@dabbelt.com, paul.walmsley@sifive.com, tglx@linutronix.de, jason@lakedaemon.net, atish.patra@wdc.com, Alistair.Francis@wdc.com, anup@brainfault.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Daniel,
-
-Thanks for your comment. My response is below.
-
-On Fri, May 15, 2020 at 07:10:04PM +0200, Daniel Lezcano wrote:
-> On Thu, May 07, 2020 at 12:41:07AM +0300, Serge Semin wrote:
-> > Currently neither clocksource nor scheduler clock kernel framework
-> > support the clocks with variable frequency. Needless to say how many
-> > problems may cause the sudden base clocks frequency change. In a
-> > simplest case the system time will either slow down or speed up.
-> > Since on CM2.5 and earlier MIPS GIC timer is synchronously clocked
-> > with CPU we must set some limitations on using it for these frameworks
-> > if CPU frequency may change. First of all it's not safe to have the
-> > MIPS GIC used for scheduler timings. So we shouldn't proceed with
-> > the clocks registration in the sched-subsystem. Secondly we must
-> > significantly decrease the MIPS GIC clocksource rating. This will let
-> > the system to use it only as a last resort.
-> >
-> > Note CM3.x-based systems may also experience the problems with MIPS GIC
-> > if the CPU-frequency change is activated for the whole CPU cluster
-> > instead of using the individual CPC core clocks divider.
+On 2020-05-16 07:38, Anup Patel wrote:
+> We improve PLIC banner to help distinguish multiple PLIC instances
+> in boot time prints.
 > 
-> May be there is no alternative but the code looks a bit hacksih. Isn't possible
-> to do something with the sched_mark_unstable?
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> ---
+>  drivers/irqchip/irq-sifive-plic.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
 > 
-> Or just not use the timer at all ?
+> diff --git a/drivers/irqchip/irq-sifive-plic.c
+> b/drivers/irqchip/irq-sifive-plic.c
+> index 7dc23edb3267..2d3db927a551 100644
+> --- a/drivers/irqchip/irq-sifive-plic.c
+> +++ b/drivers/irqchip/irq-sifive-plic.c
+> @@ -284,6 +284,11 @@ static int __init plic_init(struct device_node 
+> *node,
+>  	u32 nr_irqs;
+>  	struct plic_priv *priv;
+>  	struct plic_handler *handler;
+> +	struct resource iores;
+> +
+> +	error = of_address_to_resource(node, 0, &iores);
+> +	if (error)
+> +		return error;
+> 
+>  	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+>  	if (!priv)
+> @@ -377,8 +382,10 @@ static int __init plic_init(struct device_node 
+> *node,
+>  		plic_cpuhp_setup_done = true;
+>  	}
+> 
+> -	pr_info("mapped %d interrupts with %d handlers for %d contexts.\n",
+> -		nr_irqs, nr_handlers, nr_contexts);
+> +	pr_info("interrupt-controller at 0x%llx "
+> +		"(interrupts=%d, contexts=%d, handlers=%d)\n",
+> +		(unsigned long long)iores.start, nr_irqs,
+> +		nr_contexts, nr_handlers);
 
-Not using the timer might be better, but not that good alternative either
-especially in our case due to very slow external timer. Me and Thomas
-Bogendoerfer discussed the similar commit I've provided to the csrc-r4k driver
-available on MIPS:
-https://lkml.org/lkml/2020/5/11/576
+Instead of displaying "interrupt controller at ...", why not use the
+existing printk format for OF nodes? Something along the lines of
 
-To cut it short, you are right. The solution with using clocksource_mark_unstable()
-is better alternative spied up in x86 tsc implementation. I'll use a similar
-approach here and submit the updated patch in v3.
+     pr_info("%pOF : mapped %d interrupts with %d handlers for %d 
+contexts\n",
+             node, nr_irqs, nr_handlers, nr_contexts);
 
-Could you please proceed with the rest of the series review? I'd like to send
-the next version with as many comments taken into account as possible. The
-patchset has been submitted a while ago, but except Rob noone have had any
-comments.(
+>  	set_handle_irq(plic_handle_irq);
+>  	return 0;
 
--Sergey
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
