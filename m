@@ -2,312 +2,131 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89456C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF77C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6165620728
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966BE20728
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 09:43:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgEPJnE (ORCPT
+        id S1727022AbgEPJnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 05:43:04 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34708 "EHLO huawei.com"
+        Sat, 16 May 2020 05:43:35 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56674 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725997AbgEPJnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 05:43:04 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DD50BD1E35E2BA3F453C;
-        Sat, 16 May 2020 17:43:00 +0800 (CST)
-Received: from localhost.localdomain (10.175.118.36) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 16 May 2020 17:42:54 +0800
-From:   Luo bin <luobin9@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, <luobin9@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-Subject: [PATCH net-next] hinic: add support to set and get pause param
-Date:   Sat, 16 May 2020 02:00:30 +0000
-Message-ID: <20200516020030.23017-1-luobin9@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        id S1727006AbgEPJne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 05:43:34 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf9+ftb9eyGs1AA--.4S3;
+        Sat, 16 May 2020 17:42:56 +0800 (CST)
+Subject: Re: [PATCH 2/3] mm/memory.c: Update local TLB if PTE entry exists
+To:     Andrew Morton <akpm@linux-foundation.org>
+References: <1589515809-32422-1-git-send-email-maobibo@loongson.cn>
+ <1589515809-32422-2-git-send-email-maobibo@loongson.cn>
+ <20200515134046.cf107c6a13b9604c46ad71b8@linux-foundation.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <61ebeb0a-89cf-834f-1d20-765a2ab43161@loongson.cn>
+Date:   Sat, 16 May 2020 17:42:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.118.36]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200515134046.cf107c6a13b9604c46ad71b8@linux-foundation.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxf9+ftb9eyGs1AA--.4S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJryxGry5Ww47Cr1xXr4DCFg_yoW8CFy7pr
+        9aka9FqFs7tw18Wr4xXr1qqr18Z342qFy5C34fta4Yk3sFqrs5tFWrGw4F9rW5Zr1fuF4q
+        ya1jgr17Zan7ZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9mb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xK
+        xwCYjI0SjxkI62AI1cAE67vIY487MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
+        6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07b0NVkUUUUU=
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add support to set pause param with ethtool -A and get pause
-param with ethtool -a. Also remove set_link_ksettings ops for VF.
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
----
- .../net/ethernet/huawei/hinic/hinic_ethtool.c | 100 +++++++++++++++++-
- .../net/ethernet/huawei/hinic/hinic_hw_dev.c  |   2 +
- .../net/ethernet/huawei/hinic/hinic_hw_io.h   |   9 ++
- .../net/ethernet/huawei/hinic/hinic_main.c    |  27 ++++-
- .../net/ethernet/huawei/hinic/hinic_port.c    |   5 +
- 5 files changed, 140 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-index 9796c1fbe132..3a5b846c190b 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-@@ -613,6 +613,78 @@ static int hinic_set_ringparam(struct net_device *netdev,
- 
- 	return 0;
- }
-+
-+static void hinic_get_pauseparam(struct net_device *netdev,
-+				 struct ethtool_pauseparam *pause)
-+{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	struct hinic_pause_config pause_info = {0};
-+	struct hinic_nic_cfg *nic_cfg;
-+	int err;
-+
-+	nic_cfg = &nic_dev->hwdev->func_to_io.nic_cfg;
-+
-+	err = hinic_get_hw_pause_info(nic_dev->hwdev, &pause_info);
-+	if (err) {
-+		netif_err(nic_dev, drv, netdev,
-+			  "Failed to get pauseparam from hw\n");
-+	} else {
-+		pause->autoneg = pause_info.auto_neg;
-+		if (nic_cfg->pause_set) {
-+			pause->rx_pause = nic_cfg->rx_pause;
-+			pause->tx_pause = nic_cfg->tx_pause;
-+		} else {
-+			pause->rx_pause = pause_info.rx_pause;
-+			pause->tx_pause = pause_info.tx_pause;
-+		}
-+	}
-+}
-+
-+static int hinic_set_pauseparam(struct net_device *netdev,
-+				struct ethtool_pauseparam *pause)
-+{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	struct hinic_pause_config pause_info = {0};
-+	struct hinic_port_cap port_cap = {0};
-+	int err;
-+
-+	err = hinic_port_get_cap(nic_dev, &port_cap);
-+	if (err) {
-+		netif_err(nic_dev, drv, netdev,
-+			  "Failed to get port capability\n");
-+		return -EIO;
-+	}
-+
-+	if (pause->autoneg != port_cap.autoneg_state) {
-+		netif_err(nic_dev, drv, netdev,
-+			  "To change autoneg please use: ethtool -s <dev> autoneg <on|off>\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	pause_info.auto_neg = pause->autoneg;
-+	pause_info.rx_pause = pause->rx_pause;
-+	pause_info.tx_pause = pause->tx_pause;
-+
-+	down(&nic_dev->hwdev->func_to_io.nic_cfg.cfg_lock);
-+	err = hinic_set_hw_pause_info(nic_dev->hwdev, &pause_info);
-+	if (err) {
-+		netif_err(nic_dev, drv, netdev, "Failed to set pauseparam\n");
-+		up(&nic_dev->hwdev->func_to_io.nic_cfg.cfg_lock);
-+		return err;
-+	}
-+	nic_dev->hwdev->func_to_io.nic_cfg.pause_set = true;
-+	nic_dev->hwdev->func_to_io.nic_cfg.auto_neg = pause->autoneg;
-+	nic_dev->hwdev->func_to_io.nic_cfg.rx_pause = pause->rx_pause;
-+	nic_dev->hwdev->func_to_io.nic_cfg.tx_pause = pause->tx_pause;
-+	up(&nic_dev->hwdev->func_to_io.nic_cfg.cfg_lock);
-+
-+	netif_info(nic_dev, drv, netdev, "Set pause options, tx: %s, rx: %s\n",
-+		   pause->tx_pause ? "on" : "off",
-+		   pause->rx_pause ? "on" : "off");
-+
-+	return 0;
-+}
-+
- static void hinic_get_channels(struct net_device *netdev,
- 			       struct ethtool_channels *channels)
- {
-@@ -1247,6 +1319,27 @@ static const struct ethtool_ops hinic_ethtool_ops = {
- 	.get_link = ethtool_op_get_link,
- 	.get_ringparam = hinic_get_ringparam,
- 	.set_ringparam = hinic_set_ringparam,
-+	.get_pauseparam = hinic_get_pauseparam,
-+	.set_pauseparam = hinic_set_pauseparam,
-+	.get_channels = hinic_get_channels,
-+	.set_channels = hinic_set_channels,
-+	.get_rxnfc = hinic_get_rxnfc,
-+	.set_rxnfc = hinic_set_rxnfc,
-+	.get_rxfh_key_size = hinic_get_rxfh_key_size,
-+	.get_rxfh_indir_size = hinic_get_rxfh_indir_size,
-+	.get_rxfh = hinic_get_rxfh,
-+	.set_rxfh = hinic_set_rxfh,
-+	.get_sset_count = hinic_get_sset_count,
-+	.get_ethtool_stats = hinic_get_ethtool_stats,
-+	.get_strings = hinic_get_strings,
-+};
-+
-+static const struct ethtool_ops hinicvf_ethtool_ops = {
-+	.get_link_ksettings = hinic_get_link_ksettings,
-+	.get_drvinfo = hinic_get_drvinfo,
-+	.get_link = ethtool_op_get_link,
-+	.get_ringparam = hinic_get_ringparam,
-+	.set_ringparam = hinic_set_ringparam,
- 	.get_channels = hinic_get_channels,
- 	.set_channels = hinic_set_channels,
- 	.get_rxnfc = hinic_get_rxnfc,
-@@ -1262,5 +1355,10 @@ static const struct ethtool_ops hinic_ethtool_ops = {
- 
- void hinic_set_ethtool_ops(struct net_device *netdev)
- {
--	netdev->ethtool_ops = &hinic_ethtool_ops;
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+
-+	if (!HINIC_IS_VF(nic_dev->hwdev->hwif))
-+		netdev->ethtool_ops = &hinic_ethtool_ops;
-+	else
-+		netdev->ethtool_ops = &hinicvf_ethtool_ops;
- }
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 0245da02efbb..c5b296ed0556 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -777,6 +777,8 @@ struct hinic_hwdev *hinic_init_hwdev(struct pci_dev *pdev)
- 		goto err_dev_cap;
- 	}
- 
-+	sema_init(&hwdev->func_to_io.nic_cfg.cfg_lock, 1);
-+
- 	err = hinic_vf_func_init(hwdev);
- 	if (err) {
- 		dev_err(&pdev->dev, "Failed to init nic mbox\n");
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_io.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_io.h
-index 214f162f7579..8cd0613b3e57 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_io.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_io.h
-@@ -47,6 +47,14 @@ struct hinic_free_db_area {
- 	struct semaphore        idx_lock;
- };
- 
-+struct hinic_nic_cfg {
-+	struct semaphore	cfg_lock;
-+	bool			pause_set;
-+	u32			auto_neg;
-+	u32			rx_pause;
-+	u32			tx_pause;
-+};
-+
- struct hinic_func_to_io {
- 	struct hinic_hwif       *hwif;
- 	struct hinic_hwdev      *hwdev;
-@@ -78,6 +86,7 @@ struct hinic_func_to_io {
- 	u16			max_vfs;
- 	struct vf_data_storage	*vf_infos;
- 	u8			link_status;
-+	struct hinic_nic_cfg	nic_cfg;
- };
- 
- struct hinic_wq_page_size {
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-index 2c07b03bf6e5..d24c5af89bad 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -899,6 +899,26 @@ static void netdev_features_init(struct net_device *netdev)
- 	netdev->features = netdev->hw_features | NETIF_F_HW_VLAN_CTAG_FILTER;
- }
- 
-+static void hinic_refresh_nic_cfg(struct hinic_dev *nic_dev)
-+{
-+	struct hinic_nic_cfg *nic_cfg = &nic_dev->hwdev->func_to_io.nic_cfg;
-+	struct hinic_pause_config pause_info = {0};
-+	struct hinic_port_cap port_cap = {0};
-+
-+	if (hinic_port_get_cap(nic_dev, &port_cap))
-+		return;
-+
-+	down(&nic_cfg->cfg_lock);
-+	if (nic_cfg->pause_set) {
-+		nic_cfg->auto_neg = port_cap.autoneg_state;
-+		pause_info.auto_neg = nic_cfg->auto_neg;
-+		pause_info.rx_pause = nic_cfg->rx_pause;
-+		pause_info.tx_pause = nic_cfg->tx_pause;
-+		hinic_set_hw_pause_info(nic_dev->hwdev, &pause_info);
-+	}
-+	up(&nic_cfg->cfg_lock);
-+}
-+
- /**
-  * link_status_event_handler - link event handler
-  * @handle: nic device for the handler
-@@ -930,6 +950,9 @@ static void link_status_event_handler(void *handle, void *buf_in, u16 in_size,
- 
- 		up(&nic_dev->mgmt_lock);
- 
-+		if (!HINIC_IS_VF(nic_dev->hwdev->hwif))
-+			hinic_refresh_nic_cfg(nic_dev);
-+
- 		netif_info(nic_dev, drv, nic_dev->netdev, "HINIC_Link is UP\n");
- 	} else {
- 		down(&nic_dev->mgmt_lock);
-@@ -1020,8 +1043,6 @@ static int nic_dev_init(struct pci_dev *pdev)
- 		goto err_alloc_etherdev;
- 	}
- 
--	hinic_set_ethtool_ops(netdev);
--
- 	if (!HINIC_IS_VF(hwdev->hwif))
- 		netdev->netdev_ops = &hinic_netdev_ops;
- 	else
-@@ -1044,6 +1065,8 @@ static int nic_dev_init(struct pci_dev *pdev)
- 	nic_dev->sriov_info.pdev = pdev;
- 	nic_dev->max_qps = num_qps;
- 
-+	hinic_set_ethtool_ops(netdev);
-+
- 	sema_init(&nic_dev->mgmt_lock, 1);
- 
- 	tx_stats = &nic_dev->tx_stats;
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.c b/drivers/net/ethernet/huawei/hinic/hinic_port.c
-index 175c0ee00038..4b51121b3021 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_port.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_port.c
-@@ -1082,6 +1082,7 @@ int hinic_get_link_mode(struct hinic_hwdev *hwdev,
- 	if (!hwdev || !link_mode)
- 		return -EINVAL;
- 
-+	link_mode->func_id = HINIC_HWIF_FUNC_IDX(hwdev->hwif);
- 	out_size = sizeof(*link_mode);
- 
- 	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_GET_LINK_MODE,
-@@ -1172,6 +1173,8 @@ int hinic_get_hw_pause_info(struct hinic_hwdev *hwdev,
- 	u16 out_size = sizeof(*pause_info);
- 	int err;
- 
-+	pause_info->func_id = HINIC_HWIF_FUNC_IDX(hwdev->hwif);
-+
- 	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_GET_PAUSE_INFO,
- 				 pause_info, sizeof(*pause_info),
- 				 pause_info, &out_size);
-@@ -1190,6 +1193,8 @@ int hinic_set_hw_pause_info(struct hinic_hwdev *hwdev,
- 	u16 out_size = sizeof(*pause_info);
- 	int err;
- 
-+	pause_info->func_id = HINIC_HWIF_FUNC_IDX(hwdev->hwif);
-+
- 	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_SET_PAUSE_INFO,
- 				 pause_info, sizeof(*pause_info),
- 				 pause_info, &out_size);
--- 
-2.17.1
+On 05/16/2020 04:40 AM, Andrew Morton wrote:
+> On Fri, 15 May 2020 12:10:08 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
+> 
+>> If there are two threads hitting page fault at the same page,
+>> one thread updates PTE entry and local TLB, the other can
+>> update local tlb also, rather than give up and do page fault
+>> again.
+>>
+>> ...
+>>
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -1770,8 +1770,8 @@ static vm_fault_t insert_pfn(struct vm_area_struct *vma, unsigned long addr,
+>>  			}
+>>  			entry = pte_mkyoung(*pte);
+>>  			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+>> -			if (ptep_set_access_flags(vma, addr, pte, entry, 1))
+>> -				update_mmu_cache(vma, addr, pte);
+>> +			ptep_set_access_flags(vma, addr, pte, entry, 1);
+>> +			update_mmu_cache(vma, addr, pte);
+> 
+> Presumably these changes mean that other architectures will run
+> update_mmu_cache() more frequently than they used to.  How much more
+> frequently, and what will be the impact of this change?  (Please fully
+> explain all this in the changelog).
+> 
+It is only useful for those architects where software can update tlb, if the  function update_mmu_cache is used for other reason, it will bring out somewhat impact, and I will explain it in the changelog.
+
+>>  		}
+>>  		goto out_unlock;
+>>  	}
+>>
+>> ...
+>>
+>> @@ -2463,7 +2462,8 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
+>>  		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
+>>  		locked = true;
+>>  		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+>> -			/* The PTE changed under us. Retry page fault. */
+>> +			/* The PTE changed under us, update local tlb */
+>> +			pdate_mmu_cache(vma, addr, vmf->pte);
+> 
+> Missing a 'u' there.  Which tells me this patch isn't the one which you
+> tested!
+> 
+Sorry about it, I will refresh the patch and add modification about this obvious typo
+
+regards
+bibo, mao
+>>  			ret = false;
+>>  			goto pte_unlock;
+>>  		}
+>>
+>> ...
+>>
 
