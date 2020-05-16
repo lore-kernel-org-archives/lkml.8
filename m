@@ -2,140 +2,260 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65791C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 19:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD433C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 19:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26645206F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 19:24:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="ZfYz2O39"
+	by mail.kernel.org (Postfix) with ESMTP id 9C03520727
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 19:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgEPTYe (ORCPT
+        id S1726665AbgEPTYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 15:24:34 -0400
-Received: from mail-mw2nam10on2045.outbound.protection.outlook.com ([40.107.94.45]:50400
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726360AbgEPTYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 15:24:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MM/zrXnIt0vohgGR9eKQw1YCYU6aoVeTSus9LzbCAzZr15ot8qmYyv/3OrbrEMHDN6w9crwWiMN7zN7nYsK/pC6gxoOhABpcPnz4bpXZswWsemZlDTQ3ANxvDkRFqZs8PJmyucVWh/9EFtxexlwh7wwxK3bfksPUhjDfUHJHtHbVbG1z0JdASM+xW6AwCIJvxCfSFqt1xrMNvWXECsQ7mXVcgfhM3AiTZ2zYmpTW1iTHB0DWncWnKxq2DQ97aTtz4coi+v9JZUySOm5nU1ejfRnkOZZUb2wEGC5wz1tLn7hDtlCrdhTjTxJAZIKLKpRWpAO0Gv/Xm0F3/Lj8MMWWBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4D2ggoSqjtsWx+YLOxSg+Rp2JayxG48GOUFWTuM8UD8=;
- b=ceSTO3KiRahwstvU25GSncGW4JQucLxLhkWYQYGnXHtrh3T/SuXVG3nuYLEniP9QUArjUHDuSBJJDMfrre69wMqgfuUE6aljpIHJmZPhr1HgagweYIg9/63K5mz3npdQGjSw23kSdG2KGraAE/rrzHagnPRo3dDA8lekB7VLh/elDx9BAs4hX7MzF1W27da5SLF9+pO80fMmyxJiWLjIAEEAilBVhcQ+0MGrIppIhPwl3GWB/m+JeD2dqXW2jXO0VXeGmRYLVysznH93h90hsW2QYE35gR5nSlzzZLdf6r78lUF+yZRsBxns6vUs7hj5aIAiS0fQY30NW2kWKX7a7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4D2ggoSqjtsWx+YLOxSg+Rp2JayxG48GOUFWTuM8UD8=;
- b=ZfYz2O39dwfyd1divXUmPBMdCuTBrqsefLmVqFEiyWVLnxKm2WDbuEc4XFvU6Vka+b+Zn7QVDVCgNWdMeGaHF77PHvocn8ybQmh8WwphrMSPVejJ9dTWEegLXqLkhJGXsub/AID3tNw3Lp9+OtlDirAG3+aSbff7ytBCSMJ/dF8=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=silabs.com;
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com (2603:10b6:300:10e::14)
- by MWHPR11MB1280.namprd11.prod.outlook.com (2603:10b6:300:2b::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Sat, 16 May
- 2020 19:24:31 +0000
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::e055:3e6d:ff4:56da]) by MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::e055:3e6d:ff4:56da%5]) with mapi id 15.20.3000.022; Sat, 16 May 2020
- 19:24:30 +0000
-From:   =?ISO-8859-1?Q?J=E9r=F4me?= Pouiller <jerome.pouiller@silabs.com>
-To:     Mohamed Dawod <mhm.dawod@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: wfx: typo fix
-Date:   Sat, 16 May 2020 21:24:26 +0200
-Message-ID: <3228807.hdANLyfC2B@pc-42>
-Organization: Silicon Labs
-In-Reply-To: <20200516124359.GA11592@dinux>
-References: <20200516124359.GA11592@dinux>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-ClientProxiedBy: DM5PR07CA0102.namprd07.prod.outlook.com
- (2603:10b6:4:ae::31) To MWHPR11MB1775.namprd11.prod.outlook.com
- (2603:10b6:300:10e::14)
+        Sat, 16 May 2020 15:24:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726360AbgEPTYu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 15:24:50 -0400
+Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0C5AC061A0C;
+        Sat, 16 May 2020 12:24:49 -0700 (PDT)
+Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=pengu.fritz.box); authenticated
+        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1ja2QE-000668-8m; Sat, 16 May 2020 21:24:34 +0200
+From:   Roelof Berg <rberg@berg-solutions.de>
+To:     rberg@berg-solutions.de
+Cc:     andrew@lunn.ch, Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] lan743x: Added fixed link support
+Date:   Sat, 16 May 2020 21:24:01 +0200
+Message-Id: <20200516192402.4201-1-rberg@berg-solutions.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.localnet (82.67.86.106) by DM5PR07CA0102.namprd07.prod.outlook.com (2603:10b6:4:ae::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25 via Frontend Transport; Sat, 16 May 2020 19:24:29 +0000
-X-Originating-IP: [82.67.86.106]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 15345b2e-26cd-4d3d-b622-08d7f9cec16a
-X-MS-TrafficTypeDiagnostic: MWHPR11MB1280:
-X-Microsoft-Antispam-PRVS: <MWHPR11MB1280F2BB9DA46B9A71B771BE93BA0@MWHPR11MB1280.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 040513D301
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vOMa/yBw48Z04SPwq+3RiV+B8xUMrQP4S18zpdF2IoOXz0agbkWEL2uJqgpZU5c3xqWMKFiXxymqOOnqEWetnjiV2RG0b8m/UT9xZwPjwVmhHoIci8dlvYFGWjhAZ/kI3OU3G7GNs7Bwm71Sc2vDEj/NK4PTICk+MguRWnEDjIXhD/BRjNXo/1lCfojeKrO4NJ+Y6nWfdE86JMhewEKa94iwTiykEO5F+MMXM0eDeb+fYAgTaW5TvUiBKt5Nm19hjNsFU/xtrFU2emShBRkFGLzE8rGo4SVOx5ODQBWboV4jAp8ykqo+cHSnX3OSYQeOF33xPz67OFRg7dVNnI9/60bWS/2BzcKQGz9CZ6UQcp3wKzcSfuoi5RqwlSWB/wRfEHnoIK9VMrMzGvtz7vnFtDHHOoIm/M93ad6DgqZmOEOrkCNxhNOCMLVr4ROqcnnTdjHc9D6eNlCErl72PgA8PhI0LjAbMHA0n3dYOzpaWfg3bgfOiAfzghVw9KxFYWAfrTVGora2+8Cw8WpOehWbsg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1775.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(39850400004)(396003)(366004)(136003)(26005)(5660300002)(8936002)(16526019)(6486002)(316002)(66946007)(86362001)(66476007)(66556008)(186003)(478600001)(4326008)(6506007)(956004)(8676002)(6666004)(33716001)(6916009)(2906002)(6512007)(36916002)(9686003)(52116002)(39026012)(21314003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: wnQNCyUHBFA3d2MLjAWq0I6hbqvp1cE4Wvnit0kW85Bq+By2PzQ6weK3YiXtZ8VhkB4OlOSdq05EGGhyjUgxAsLxNOiLcstaMqDdp1QGeF5qdshPwpufpKR4M3mbz4KDj9pkEdGZ01CLDB30eggQo235gakdDeb6U9ZfCLyNaaIMLtNKRxyuVevLKQ08dHYBkIX1DP3WOva44Cmrz5oSEQftiOd8v7339imC4ZvZxbYvkzjR4oLDJw6Hj5dGU5U4rISJIQc9EDZ2ffQjQfP9ugVhiTyAsKLtDB8T5hKl+zyVSMQ9w2BJqHmTrf6FV187B8mfEaOony4id7ajp11fAPiJLCOZnffeZHaKC7GIiKUCFHZK80YQNlhIWAEOK9H0ugzwi1L7s5fElcLCjcdNgcNRDofI/xTt3Yo4HQhNQ8DgUKb9HkrwaS5CK5fyWY8Ga1TCm3HsAWerR8UTK17+SgfmMVbr5OGocrovHYXIx7E=
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15345b2e-26cd-4d3d-b622-08d7f9cec16a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2020 19:24:30.2868
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: twFzLSu2aGIz7knIUJtuA25p8RC+OW9olp+yAk0kJ4UAClS6xG7AvzbzuE1WciB97XASrxsXC9wzKo/c3/zgFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1280
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1589657090;71ce8ce2;
+X-HE-SMSGID: 1ja2QE-000668-8m
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Saturday 16 May 2020 14:43:59 CEST Mohamed Dawod wrote:
-> Fixing some typo errors in traces.h file
->=20
-> Signed-off-by: Mohamed Dawod <mhm.dawod@gmail.com>
-> ---
->  drivers/staging/wfx/traces.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/staging/wfx/traces.h b/drivers/staging/wfx/traces.h
-> index bb9f7e9..80e131c 100644
-> --- a/drivers/staging/wfx/traces.h
-> +++ b/drivers/staging/wfx/traces.h
-> @@ -32,16 +32,16 @@
->   *             xxx_name(XXX)       \
->   *             ...
->   *
-> - *   3. Instanciate that list_names:
-> + *   3. Instantiate that list_names:
->   *
->   *          list_names
->   *
-> - *   4. Redefine xxx_name() as a entry of array for __print_symbolic()
-> + *   4. Redefine xxx_name() as an entry of array for __print_symbolic()
->   *
->   *          #undef xxx_name
->   *          #define xxx_name(msg) { msg, #msg },
->   *
-> - *   5. list_name can now nearlu be used with __print_symbolic() but,
-> + *   5. list_name can now nearly be used with __print_symbolic() but,
->   *      __print_symbolic() dislike last comma of list. So we define a ne=
-w list
->   *      with a dummy element:
->   *
+Microchip lan7431 is frequently connected to a phy. However, it
+can also be directly connected to a MII remote peer without
+any phy in between. For supporting such a phyless hardware setup
+in Linux we added the capability to the driver to understand
+the fixed-link and the phy-connection-type entries in the device
+tree.
 
-The subject of the mail should have been "[PATCH v2]" (it is automatic if
-use the -v option of "git send-email").
+If a fixed-link node is configured in the device tree the lan7431
+device will deactivate auto negotiation and uses the speed and
+duplex settings configured in the fixed-link node.
 
-Apart from that:
+Also the phy-connection-type can be configured in the device tree
+and in case of a fixed-link connection the RGMII mode can be
+configured, all other modes fall back to the default: GMII.
 
-Reviewed-by: J=E9r=F4me Pouiller <jerome.pouiller@silabs.com>
+Example:
 
+ &pcie {
+	status = "okay";
 
---=20
-J=E9r=F4me Pouiller
+	host@0 {
+		reg = <0 0 0 0 0>;
 
+		#address-cells = <3>;
+		#size-cells = <2>;
+
+		ethernet@0 {
+			compatible = "weyland-yutani,noscom1", "microchip,lan743x";
+			status = "okay";
+			reg = <0 0 0 0 0>;
+			phy-connection-type = "rgmii";
+
+			fixed-link {
+				speed = <100>;
+				full-duplex;
+			};
+		};
+	};
+};
+
+Signed-off-by: Roelof Berg <rberg@berg-solutions.de>
+---
+ drivers/net/ethernet/microchip/lan743x_main.c | 93 +++++++++++++++++--
+ drivers/net/ethernet/microchip/lan743x_main.h |  4 +
+ 2 files changed, 89 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
+index a43140f7b5eb..278765dfc3b3 100644
+--- a/drivers/net/ethernet/microchip/lan743x_main.c
++++ b/drivers/net/ethernet/microchip/lan743x_main.c
+@@ -9,9 +9,12 @@
+ #include <linux/microchipphy.h>
+ #include <linux/net_tstamp.h>
+ #include <linux/phy.h>
++#include <linux/phy_fixed.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/iopoll.h>
+ #include <linux/crc16.h>
++#include <linux/of_mdio.h>
++#include <linux/of_net.h>
+ #include "lan743x_main.h"
+ #include "lan743x_ethtool.h"
+ 
+@@ -946,6 +949,9 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
+ {
+ 	struct lan743x_adapter *adapter = netdev_priv(netdev);
+ 	struct phy_device *phydev = netdev->phydev;
++	struct device_node *phynode;
++	phy_interface_t phyifc = PHY_INTERFACE_MODE_GMII;
++	u32 data;
+ 
+ 	phy_print_status(phydev);
+ 	if (phydev->state == PHY_RUNNING) {
+@@ -953,6 +959,48 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
+ 		int remote_advertisement = 0;
+ 		int local_advertisement = 0;
+ 
++		/* check if a fixed-link is defined in device-tree */
++		phynode = of_node_get(adapter->pdev->dev.of_node);
++		if (phynode && of_phy_is_fixed_link(phynode)) {
++			/* Configure MAC to fixed link parameters */
++			data = lan743x_csr_read(adapter, MAC_CR);
++			/* Disable auto negotiation */
++			data &= ~(MAC_CR_ADD_ | MAC_CR_ASD_);
++			/* Set duplex mode */
++			if (phydev->duplex)
++				data |= MAC_CR_DPX_;
++			else
++				data &= ~MAC_CR_DPX_;
++			/* Set bus speed */
++			switch (phydev->speed) {
++			case 10:
++				data &= ~MAC_CR_CFG_H_;
++				data &= ~MAC_CR_CFG_L_;
++				break;
++			case 100:
++				data &= ~MAC_CR_CFG_H_;
++				data |= MAC_CR_CFG_L_;
++				break;
++			case 1000:
++				data |= MAC_CR_CFG_H_;
++				data |= MAC_CR_CFG_L_;
++				break;
++			}
++			/* Set interface mode */
++			of_get_phy_mode(phynode, &phyifc);
++			if (phyifc == PHY_INTERFACE_MODE_RGMII ||
++			    phyifc == PHY_INTERFACE_MODE_RGMII_ID ||
++			    phyifc == PHY_INTERFACE_MODE_RGMII_RXID ||
++			    phyifc == PHY_INTERFACE_MODE_RGMII_TXID)
++				/* RGMII */
++				data &= ~MAC_CR_MII_EN_;
++			else
++				/* GMII */
++				data |= MAC_CR_MII_EN_;
++			lan743x_csr_write(adapter, MAC_CR, data);
++		}
++		of_node_put(phynode);
++
+ 		memset(&ksettings, 0, sizeof(ksettings));
+ 		phy_ethtool_get_link_ksettings(netdev, &ksettings);
+ 		local_advertisement =
+@@ -974,6 +1022,8 @@ static void lan743x_phy_close(struct lan743x_adapter *adapter)
+ 
+ 	phy_stop(netdev->phydev);
+ 	phy_disconnect(netdev->phydev);
++	if (of_phy_is_fixed_link(adapter->pdev->dev.of_node))
++		of_phy_deregister_fixed_link(adapter->pdev->dev.of_node);
+ 	netdev->phydev = NULL;
+ }
+ 
+@@ -982,18 +1032,44 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
+ 	struct lan743x_phy *phy = &adapter->phy;
+ 	struct phy_device *phydev;
+ 	struct net_device *netdev;
++	struct device_node *phynode = NULL;
++	phy_interface_t phyifc = PHY_INTERFACE_MODE_GMII;
+ 	int ret = -EIO;
+ 
+ 	netdev = adapter->netdev;
+-	phydev = phy_find_first(adapter->mdiobus);
+-	if (!phydev)
+-		goto return_error;
+ 
+-	ret = phy_connect_direct(netdev, phydev,
+-				 lan743x_phy_link_status_change,
+-				 PHY_INTERFACE_MODE_GMII);
+-	if (ret)
+-		goto return_error;
++	/* check if a fixed-link is defined in device-tree */
++	phynode = of_node_get(adapter->pdev->dev.of_node);
++	if (phynode && of_phy_is_fixed_link(phynode)) {
++		netdev_dbg(netdev, "fixed-link detected\n");
++
++		ret = of_phy_register_fixed_link(phynode);
++		if (ret) {
++			netdev_err(netdev, "cannot register fixed PHY\n");
++			goto return_error;
++		}
++
++		of_get_phy_mode(phynode, &phyifc);
++		phydev = of_phy_connect(netdev, phynode,
++					lan743x_phy_link_status_change,
++					0, phyifc);
++		if (!phydev)
++			goto return_error;
++	} else {
++		phydev = phy_find_first(adapter->mdiobus);
++		if (!phydev)
++			goto return_error;
++
++		ret = phy_connect_direct(netdev, phydev,
++					 lan743x_phy_link_status_change,
++					 PHY_INTERFACE_MODE_GMII);
++		/* Note: We cannot use phyifc here because this would be SGMII
++		 * on a standard PC.
++		 */
++		if (ret)
++			goto return_error;
++	}
++	of_node_put(phynode);
+ 
+ 	/* MAC doesn't support 1000T Half */
+ 	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
+@@ -1008,6 +1084,7 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
+ 	return 0;
+ 
+ return_error:
++	of_node_put(phynode);
+ 	return ret;
+ }
+ 
+diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
+index 3b02eeae5f45..e49f6b6cd440 100644
+--- a/drivers/net/ethernet/microchip/lan743x_main.h
++++ b/drivers/net/ethernet/microchip/lan743x_main.h
+@@ -104,10 +104,14 @@
+ 	((value << 0) & FCT_FLOW_CTL_ON_THRESHOLD_)
+ 
+ #define MAC_CR				(0x100)
++#define MAC_CR_MII_EN_			BIT(19)
+ #define MAC_CR_EEE_EN_			BIT(17)
+ #define MAC_CR_ADD_			BIT(12)
+ #define MAC_CR_ASD_			BIT(11)
+ #define MAC_CR_CNTR_RST_		BIT(5)
++#define MAC_CR_DPX_			BIT(3)
++#define MAC_CR_CFG_H_			BIT(2)
++#define MAC_CR_CFG_L_			BIT(1)
+ #define MAC_CR_RST_			BIT(0)
+ 
+ #define MAC_RX				(0x104)
+-- 
+2.20.1
 
