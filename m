@@ -2,153 +2,122 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D12C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917A0C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7F8320756
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:41:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589647298;
-	bh=m15GOjsqCZofcghjojCOp4k6ouOZrB8isgLzQNxlHj0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FY6aa61jH2X4mvBdcZGTolUikC92W/jqzsnpowy5c9vMOOAa4RynBfCBoi1YOYGrV
-	 z3uCRLz6dQeSCdCIxDZ4ruJwX5QQ8LWyhXfhKF/pX/k+1Ed2EnrESXGcFUOQ4vzRPv
-	 fcuEocTI9NxHusI9lmJu189yMadwSHDlV9KfCTE0=
+	by mail.kernel.org (Postfix) with ESMTP id 6BE12206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:43:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1kduRrm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbgEPQli (ORCPT
+        id S1726298AbgEPQnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 12:41:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726206AbgEPQlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 12:41:37 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 366BF206D4;
-        Sat, 16 May 2020 16:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589647296;
-        bh=m15GOjsqCZofcghjojCOp4k6ouOZrB8isgLzQNxlHj0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wDxJm9t8Vn27UnYuSNPeGIqagzJQClNr8RuLFcCeD1438bMduIqkBO0ztmfv3pzom
-         CFBBdNJ3lgmqZaaLtykjOD8VoE1TvC3DVIWBrcURWVrcl5qRci6eMpEsSE/6Jj0pmy
-         JqYatbBk/pCvrzHoj494xO++ZHCwrgwykntr82/I=
-Date:   Sat, 16 May 2020 17:41:31 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v14 0/2] iio: proximity: driver for vcnl3020
-Message-ID: <20200516174119.4b8d0137@archlinux>
-In-Reply-To: <20200510184537.10335-1-i.mikhaylov@yadro.com>
-References: <20200510184537.10335-1-i.mikhaylov@yadro.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 16 May 2020 12:43:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726226AbgEPQnG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 12:43:06 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A957C061A0C;
+        Sat, 16 May 2020 09:43:06 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id j8so5953916iog.13;
+        Sat, 16 May 2020 09:43:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=es9nL54eWtZHft09jub95D9GHT1PJmvu2Z8TIUZE1HE=;
+        b=M1kduRrmNJ2LfBxzdNYtGyJIwFzAT8zQ07ft97xpD7bINmJeTahKoii+pK8MSBuefX
+         jTNWAKUldm4hLlI4GQAox/u0GNKJg1Jy+PeFq9IcrjhZd9G1gtqJzJDdtYar8DmV+9X5
+         2JYcRhXv455Hp8H/VI9+SgmLsccCrRiTizqJmVU53PGnO7ghr2hyyy/eSERlASO6QYq4
+         AhiTJ25AR/74KnKmYpT05UZmPcrduy9yWJLEJMgYLw09yfoBz0adOZCl9kpW4PDVHXx7
+         SMQoJ51RzgphlHzkts7N9X0wVhnBeeN/KjjSJTbb69LFzZHet7JJxtlwYu2A/MENSg1u
+         Nxvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=es9nL54eWtZHft09jub95D9GHT1PJmvu2Z8TIUZE1HE=;
+        b=G39ej229Rbh/agbeGxMvo5taCRZMXmcriDlwRxc1k6hXgav1gvOvILt2A7rJ7vgA6O
+         Gpn5QCn8PXi4c70WD9YOaEqPQnrj15IY6qiaMLHl+RKc2q4jPqjFzfOto2pdLEiVmPoy
+         L2aC2UN56VJ1eIX9idEo77NJQS+rYkoA/kNqrSH03gjvsl/sB5thw6mCdMkubm7YBE2L
+         Yz4CgEnBo2qNIU7bDKpIFj1c2HQxjMmRtSXn6N6z7fpAeJa8pl7PYxArsQDp33+f3Ea0
+         BpJf2WJAvmU672f+0SrTYwu75WTENmzLedKsQHNqop01D4n9onYrwl5yp1/NL4EXpp6/
+         a0nw==
+X-Gm-Message-State: AOAM533OCCGLOLw4xFsjuzGLOWGzSMATY5bkQQ6mgG7R6cQYVeh9sPk8
+        V48+l/DWAiKKprlHVldFQmD6/TQog6S2wUrAUY4=
+X-Google-Smtp-Source: ABdhPJyWt1i35sqAOn9/rO23bWin4il7OPHMsfMMrRANxiNO7OJknI3O+Ga/dVCgUlPGa/if769CICudAjNGcHdWOyk=
+X-Received: by 2002:a5e:8717:: with SMTP id y23mr7822272ioj.172.1589647385473;
+ Sat, 16 May 2020 09:43:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200516042303.6070-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20200516042303.6070-1-andrew.smirnov@gmail.com>
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Sat, 16 May 2020 09:42:51 -0700
+Message-ID: <CAFXsbZoZWzD5deLfCS=rMcw80-gBcm30_3CSMm--Cc-fPSq=BA@mail.gmail.com>
+Subject: Re: [PATCH] crypto: caam - make soc match data optional
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-crypto@vger.kernel.org,
+        =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Fabio Estevam <festevam@gmail.com>, linux-imx@nxp.com,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 May 2020 21:45:35 +0300
-Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+With all four of Vybrid VF610, i.MX6q, i.MX6qp, and i.MX8M, this patch
+caused no regressions for me.  Additionally, with the VF610 and a
+follow on devicetree patch, the CAAM is detected and works.
 
-> Add proximity sensor driver for Vishay vcnl3020. Only on-demand
-> measurement is supported for now.
-Hi Ivan,
+Tested by: Chris Healy <cphealy@gmail.com>
 
-Great and thanks for your persistence on this driver!
-All looks good to me.
-
-I will give time or a dt-bindings review as so far only
-Rob's bot as commented.  The look fine to me but as Rob
-can certify I'm not very good at reviewing those things!
-
-Thanks,
-
-Jonathan
-
-> 
-> Changes from v13:
->    1. description change for LED current.
-> 
-> Changes from v12:
->    1. forgot to change path inside yaml.
-> 
-> Changes from v11:
->    1. minor changes to yaml.
-> 
-> Changes from v10:
->    1. add vcnl3020_property struct for optional properties.
-> 
-> Changes from v9:
->    1. minor changes.
->    2. pass microamps from dts, not register value.
-> 
-> Changes from v8:
->    1. add vcnl3020 prefix into get_and_apply_property function.
->    2. add bsd license into yaml.
->    3. vishay,led-current-milliamp -> vishay,led-current-microamp.
->    4. add default value into vishay,led-current-microamp and change
->       register values into microamps.
-> 
-> Changes from v7:
->    1. forgot to add Reviewed-by tag.
-> 
-> Changes from v6:
->    1. minor changes
->      1.1 remove VCNL_DRV_NAME
->      1.2 add braces in get_and_apply_property
-> 
-> Changes from v5:
->    1. add get_and_apply_property function for optional parameters.
->    2. minor changes.
-> 
-> Changes from v4:
->    1. add vdd-supply,vddio-supply,interrupts properties into yaml.
->    2. led-current -> vishay,led-current-milliamp in yaml.
->    3. add possible values enum list.
->    4. add bulk_read for result hi/lo registers.
->    5. add description of vcnl3020_data structure.
->    6. vcnl3020 id table is removed.
->    7. make "vishay,led-current-milliamp" optional in yaml and code.
-> 
-> Changes from v3:
->    1. minor changes.
->    2. add i2c block to fix dts section in yaml.
-> 
-> Changes from v2:
->    1. using regmap_read_poll_timeout instead of do-while in measurement
->       function.
->    2. change struct i2client* in vcnl3020_data to struct dev*
->    3. enable REGMAP_I2C in Kconfig
-> 
-> Changes from v1:
->    1. using regmap interface instead of i2c_smbus_* calls.
->    2. switch from probe to probe_new.
->    3. s32/int32_t -> int
-> 
-> Ivan Mikhaylov (2):
->   dt-bindings: proximity: provide vcnl3020 device tree binding document
->   iio: proximity: Add driver support for vcnl3020 proximity sensor
-> 
->  .../iio/proximity/vishay,vcnl3020.yaml        |  62 +++++
->  drivers/iio/proximity/Kconfig                 |  11 +
->  drivers/iio/proximity/Makefile                |   1 +
->  drivers/iio/proximity/vcnl3020.c              | 258 ++++++++++++++++++
->  4 files changed, 332 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
->  create mode 100644 drivers/iio/proximity/vcnl3020.c
-> 
-
+On Fri, May 15, 2020 at 9:23 PM Andrey Smirnov <andrew.smirnov@gmail.com> w=
+rote:
+>
+> Vyrbrid devices don't have any clock that need to be taken care of, so
+> make clock data optional on i.MX.
+>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Horia Geant=C4=83 <horia.geanta@nxp.com>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: linux-imx@nxp.com
+> Cc: linux-crypto@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/crypto/caam/ctrl.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+>
+> diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+> index 4fcdd262e581..6aba430793cc 100644
+> --- a/drivers/crypto/caam/ctrl.c
+> +++ b/drivers/crypto/caam/ctrl.c
+> @@ -630,12 +630,7 @@ static int caam_probe(struct platform_device *pdev)
+>         imx_soc_match =3D soc_device_match(caam_imx_soc_table);
+>         caam_imx =3D (bool)imx_soc_match;
+>
+> -       if (imx_soc_match) {
+> -               if (!imx_soc_match->data) {
+> -                       dev_err(dev, "No clock data provided for i.MX SoC=
+");
+> -                       return -EINVAL;
+> -               }
+> -
+> +       if (imx_soc_match && imx_soc_match->data) {
+>                 ret =3D init_clocks(dev, imx_soc_match->data);
+>                 if (ret)
+>                         return ret;
+> --
+> 2.21.3
