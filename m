@@ -2,138 +2,95 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77873C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 14:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 14:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6302C20671
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 14:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900D82065C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 14:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgEPOJh (ORCPT
+        id S1726694AbgEPOrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 10:09:37 -0400
-Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:51750 "EHLO
-        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgEPOJg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 10:09:36 -0400
-Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: hDidN96EUzAnOHMS55xkxs8WWGVq+5pBKthbrckMfVRSrIbE6S6mARR7e6iCmfxtRs+t6dZgOn
- ky111k+QuspRYuPHlo/+bvt29pmbSElOVJe4am+k+1tbPdGq/i+V24dJ3m99rHE8HATp2ZNRal
- knsFZmYHRfkpmlZjBldpccNopJkJ6lo0HltBZH+ddN3rfRQYUukAzDVjzrj80JOwNd+xhBnxBN
- 4I+HAvqcn84qN2FSgGa3aBcSWhG+FVqxNDKAS3eGl286pjYdRCihkiuh2RLGpNdST+isqSx6Wx
- l98=
-X-SBRS: None
-X-MesageID: 17965253
-X-Ironport-Server: esa5.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.73,398,1583211600"; 
-   d="scan'208";a="17965253"
-Subject: Re: [PATCH v10 01/26] Documentation/x86: Add CET description
-To:     "H.J. Lu" <hjl.tools@gmail.com>
-CC:     Dave Hansen <dave.hansen@intel.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        "Arnd Bergmann" <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Eugene Syromiatnikov" <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "Jann Horn" <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
- <20200429220732.31602-2-yu-cheng.yu@intel.com>
- <b5197a8d-5d8b-e1f7-68d4-58d80261904c@intel.com>
- <dd5b9bab31ecf247a0b4890e22bfbb486ff52001.camel@intel.com>
- <5cc163ff9058d1b27778e5f0a016c88a3b1a1598.camel@intel.com>
- <b0581ddc-0d99-cbcf-278e-0be55ba939a0@intel.com>
- <44c055342bda4fb4730703f987ae35195d1d0c38.camel@intel.com>
- <32235ffc-6e6c-fb3d-80c4-a0478e2d0e0f@intel.com>
- <6272c481-af90-05c5-7231-3ba44ff9bd02@citrix.com>
- <CAMe9rOqwbxis1xEWbOsftMB9Roxdb3=dp=_MgK8z2pwPP36uRw@mail.gmail.com>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Message-ID: <f8ce9863-6ada-2bc4-5141-122f64292aba@citrix.com>
-Date:   Sat, 16 May 2020 15:09:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <CAMe9rOqwbxis1xEWbOsftMB9Roxdb3=dp=_MgK8z2pwPP36uRw@mail.gmail.com>
+        Sat, 16 May 2020 10:47:45 -0400
+Received: from mga02.intel.com ([134.134.136.20]:30525 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726416AbgEPOro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 10:47:44 -0400
+IronPort-SDR: 31F+ocGR0+ZvC8+wJBOXiGht+TKxMk9Nz02gmffTSGqepy9Uw2E+UjXAIBxkK+YUAzolwaCf0J
+ vkEqM6rgRg4g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 07:47:44 -0700
+IronPort-SDR: rqwkQ6MFAbHlJLc5tUrGJ0anEOwZmDNYpGm8atU4HKFqjbNTQRoqanzY2doi7gOqg5BubK6nnN
+ o48Fj2d1/Kcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,398,1583222400"; 
+   d="scan'208";a="372965421"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by fmsmga001.fm.intel.com with ESMTP; 16 May 2020 07:47:43 -0700
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.83]) by
+ ORSMSX110.amr.corp.intel.com ([169.254.10.248]) with mapi id 14.03.0439.000;
+ Sat, 16 May 2020 07:47:43 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     Jue Wang <juew@google.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/mm: Don't try to change poison pages to uncacheable
+ in a guest
+Thread-Topic: [PATCH] x86/mm: Don't try to change poison pages to
+ uncacheable in a guest
+Thread-Index: AQHWIw2S9gwrq1Tja0uhU2CYrRqdxaiqzPCAgAAO3DI=
+Date:   Sat, 16 May 2020 14:47:42 +0000
+Message-ID: <1138B55F-89DD-4ABA-98C2-61D2ED961764@intel.com>
+References: <20200505184648.2264-1-tony.luck@intel.com>,<20200516065431.GB25771@zn.tnic>
+In-Reply-To: <20200516065431.GB25771@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/05/2020 03:37, H.J. Lu wrote:
-> On Fri, May 15, 2020 at 5:13 PM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
->> Finally seeing as the question was asked but not answered, it is
->> actually quite easy to figure out whether shadow stacks are enabled in
->> the current thread.
->>
->>     mov     $1, %eax
->>     rdsspd  %eax
-> This is for 32-bit mode.
-
-It actually works for both, if all you need is a shstk yes/no check.
-
-Usually, you also want SSP in the yes case, so substitute rdsspq %rax as
-appropriate.
-
-(On a tangent - binutils mandating the D/Q suffixes is very irritating
-with mixed 32/64bit code because you have to #ifdef your instructions
-despite the register operands being totally unambiguous.  Also, D is the
-wrong suffix for AT&T syntax, and should be L.  Frankly - the Intel
-manuals are wrong and should not have the operand size suffix included
-in the opcode name, as they are consistent with all the other
-instructions in this regard.)
-
->   I use
->
->         /* Check if shadow stack is in use.  */
->         xorl    %esi, %esi
->         rdsspq  %rsi
->         testq   %rsi, %rsi
->         /* Normal return if shadow stack isn't in use.  */
->         je      L(no_shstk)
-
-This is probably fine for user code, as I don't think it would be
-legitimate for shstk to be enabled, with SSP being 0.
-
-Sadly, the same is not true for kernel shadow stacks.
-
-SSP is 0 after SYSCALL, SYSENTER and CLRSSBSY, and you've got to be
-careful to re-establish the shadow stack before a CALL, interrupt or
-exception tries pushing a word onto the shadow stack at 0xfffffffffffffff8.
-
-It is a very good (lucky?) thing that frame is unmapped for other
-reasons, because this corner case does not protect against multiple
-threads/cores using the same shadow stack concurrently.
-
-~Andrew
+VGhlcmUgaXMgb25seSBvbmUgYWN0dWFsIG1hY2hpbmUgY2hlY2suIEJ1dCB0aGUgVk1NIHNpbXVs
+YXRlcyBhIHNlY29uZCBtYWNoaW5lIGNoZWNrIHRvIHRoZSBndWVzdCB3aGVuIHRoZSBndWVzdCB0
+cmllcyB0byBhY2Nlc3MgdGhlIHBvaXNvbmVkIHBhZ2UuDQoNClRoZSBzdGFjayB0cmFjZSB3YXMg
+ZnJvbSBKdWUuIEkgZGlkbuKAmXQgdHJ5IHRvIGNoZWNrIGl0LiBCdXQgaXQgbG9va2VkIHJlYXNv
+bmFibGUgdGhhdCBMaW51eCB3b3VsZCBmbHVzaCB0aGUgY2FjaGUgZm9yIGEgcGFnZSB0aGF0IGlz
+IHRyYW5zaXRpb25pbmcgZnJvbSBjYWNoZWFibGUgdG8gdW5jYWNoZWFibGUuDQoNClNlbnQgZnJv
+bSBteSBpUGhvbmUNCg0KPiBPbiBNYXkgMTUsIDIwMjAsIGF0IDIzOjU0LCBCb3Jpc2xhdiBQZXRr
+b3YgPGJwQGFsaWVuOC5kZT4gd3JvdGU6DQo+IA0KPiDvu79PbiBUdWUsIE1heSAwNSwgMjAyMCBh
+dCAxMTo0Njo0OEFNIC0wNzAwLCBUb255IEx1Y2sgd3JvdGU6DQo+PiBBbiBpbnRlcmVzdGluZyB0
+aGluZyBoYXBwZW5lZCB3aGVuIGEgZ3Vlc3QgTGludXggaW5zdGFuY2UgdG9vaw0KPj4gYSBtYWNo
+aW5lIGNoZWNrLiBUaGUgVk1NIHVubWFwcGVkIHRoZSBiYWQgcGFnZSBmcm9tIGd1ZXN0IHBoeXNp
+Y2FsDQo+PiBzcGFjZSBhbmQgcGFzc2VkIHRoZSBtYWNoaW5lIGNoZWNrIHRvIHRoZSBndWVzdC4N
+Cj4+IA0KPj4gTGludXggdG9vayBhbGwgdGhlIG5vcm1hbCBhY3Rpb25zIHRvIG9mZmxpbmUgdGhl
+IHBhZ2UgZnJvbSB0aGUgcHJvY2Vzcw0KPj4gdGhhdCB3YXMgdXNpbmcgaXQuIEJ1dCB0aGVuIGd1
+ZXN0IExpbnV4IGNyYXNoZWQgYmVjYXVzZSBpdCBzYWlkIHRoZXJlDQo+PiB3YXMgYSBzZWNvbmQg
+bWFjaGluZSBjaGVjayBpbnNpZGUgdGhlIGtlcm5lbCB3aXRoIHRoaXMgc3RhY2sgdHJhY2U6DQo+
+PiANCj4+IGRvX21lbW9yeV9mYWlsdXJlDQo+PiAgICBzZXRfbWNlX25vc3BlYw0KPj4gICAgICAg
+ICBzZXRfbWVtb3J5X3VjDQo+PiAgICAgICAgICAgICAgX3NldF9tZW1vcnlfdWMNCj4+ICAgICAg
+ICAgICAgICAgICAgIGNoYW5nZV9wYWdlX2F0dHJfc2V0X2Nscg0KPj4gICAgICAgICAgICAgICAg
+ICAgICAgICBjcGFfZmx1c2gNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGZsdXNo
+X2NhY2hlX3JhbmdlX29wdA0KPiANCj4gTWF5YmUgSSBkb24ndCBzZWUgaXQgYnV0IGhvdyBjYW4g
+Y2xmbHVzaF9jYWNoZV9yYW5nZV9vcHQoKSBjYWxsDQo+IGNwYV9mbHVzaCgpID8NCj4gDQo+PiBU
+aGlzIHdhcyBvZGQsIGJlY2F1c2UgYSBDTEZMVVNIIGluc3RydWN0aW9uIHNob3VsZG4ndCByYWlz
+ZSBhIG1hY2hpbmUNCj4+IGNoZWNrIChpdCBpc24ndCBjb25zdW1pbmcgdGhlIGRhdGEpLiBGdXJ0
+aGVyIGludmVzdGlnYXRpb24gc2hvd2VkIHRoYXQNCj4+IHRoZSBWTU0gaGFkIHBhc3NlZCBpbiBh
+bm90aGVyIG1hY2hpbmUgY2hlY2sgYmVjYXVzZSBpcyBhcHBlYXJlZCB0aGF0IHRoZQ0KPj4gZ3Vl
+c3Qgd2FzIGFjY2Vzc2luZyB0aGUgYmFkIHBhZ2UuDQo+IA0KPiBUaGlzIGlzIHdoZXJlIHlvdSBs
+b3N0IG1lIC0gaWYgdGhlIFZNTSB1bm1hcHMgdGhlIHBhZ2UgZHVyaW5nIHRoZSBmaXJzdA0KPiBN
+Q0UsIGhvdyBjYW4gdGhlIGd1ZXN0IGV2ZW4gYXR0ZW1wdCB0byB0b3VjaCBpdCBhbmQgZG8gdGhp
+cyBzdGFjayB0cmFjZQ0KPiBhYm92ZT8NCj4gDQo+IC9tZSBpcyBjb25mdXNlZC4NCj4gDQo+IC0t
+IA0KPiBSZWdhcmRzL0dydXNzLA0KPiAgICBCb3Jpcy4NCj4gDQo+IGh0dHBzOi8vcGVvcGxlLmtl
+cm5lbC5vcmcvdGdseC9ub3Rlcy1hYm91dC1uZXRpcXVldHRlDQo=
