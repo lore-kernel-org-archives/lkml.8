@@ -2,290 +2,384 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B025920767
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:29:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ekDPfIa1";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="qQXIJ5bm"
+	by mail.kernel.org (Postfix) with ESMTP id BAA4520756
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:29:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589646559;
+	bh=HIemR99HfkSdMhZGSFDxQRNk4ZkfPVZUNzjqEWHFzps=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=d1PtZ8Bsb9eopDH4QECQyVUL3J4Yq39EDm5UJb9JEIYEy0ED5ox/wuHnMJ/fPHPx5
+	 XRlGe1V5xIEKi8bQRiw2vCgSD6agTDVIArK9x9Qmsg6KGXvJkQ/olgCVhgmuyWXSry
+	 CW29uPR7560lC+HiJAHFVxLUvhjYc8be4MhEw6HA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726288AbgEPQ3B (ORCPT
+        id S1726341AbgEPQ3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 12:29:01 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:35492 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbgEPQ3A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 12:29:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1589646541; x=1621182541;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=5zw3VxyMpC6zD648FB3a21N8+zQDugcioy5nX95MOWc=;
-  b=ekDPfIa186114zQKq8yI/c+nNQ8CmKFThlXzEQK5NeGGIWkoEO1adyPP
-   z414WuRLWwQcy4e8eKrJtG4PoQ9cKPmPThf3aGis0zVKiI/KY1bompDbb
-   2Svj/j8oYN7+1u13dzsa4pZLM46qhkMQmWm0L+POZR7KE6ALBeaRBQZbG
-   dA2dRhhC61wiQOQZMp4ZBAi2s1FHHpi7aJarylLELXKbObQ/DxHg6FuML
-   Gi3+cLxg26l42t5zzOV6XPOHwVcr8xK6moceSxfrAQ0/8VFGOmRU3JuQy
-   93U/U/ze+k7MB5S/Y8I5yCSntJxLBB+kamoYxGNn2bl1ct8VUo4KzB3Uj
-   Q==;
-IronPort-SDR: xaFDZLHm1ps/Zifq5Y4MSB9tbFzrfVIX0U+M4lVpwiAM5ihq87sh6nHL6CLsOg1d+haCELCXKO
- yLOCiDDFMvbEZkAyhPT0arGrF4fcfvQTRyr3RQGfQiQVioLxUovO0yiN+WN7WA2eZubBQIsygH
- tvdMKwsscDOvsPtDXXYDbwPOsZ8COCzqw2MiTuXMfhfgCQqWHU+zFPmXP4T+BLqNCkPo/s8Trf
- f7wzTpe+t3zJHtUj5xLM8NVYdMtuxJ4oO51v/Vhsj6EDFrNgzLJvpgtY7so6yPiVc5e35cAfNy
- 8iA=
-X-IronPort-AV: E=Sophos;i="5.73,398,1583164800"; 
-   d="scan'208";a="138190562"
-Received: from mail-co1nam11lp2172.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.172])
-  by ob1.hgst.iphmx.com with ESMTP; 17 May 2020 00:28:59 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m5xEP7Irhk1AmFPGJ+ETiuxcDmExbl1n9rmVzEeaOMZSSABvmlqsCq0UyRx0/UV+qi2QTImCUKqGSMIPqydj0RuwNaTkms3jN5U8pRI3dZKYH8LHgugjeR3pdvUR+9+1rSbIxorh2VppxMBZ+5hNo1Guo2Lt9XML2ciCblnTM1Y33OMw2EPKkuK/qVn/ZU9r+nUWQFYLAj1I2xj4WVxGPdduRUIi3Dmsiui5M3HSUEeMTQCrUkueGPjox11viWRkvuEWK8fJaHho12aEJxhoCG0cWOXG6ErTiGoFkWyXNQpVEtGhbfupajpke93Mgnk6SX5S3K8J/oXV8QU2L7Iq+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TT2DrQTL0OiqTtbnDMDu0LZA+YYhjTRvd4lAfAoXj0o=;
- b=lUT6VO1mD0ZfGT5L8lFe0HiHbRxgm6KkvbngKh2itgnR4NmfJ7NRVPcS6+7eOxM2hqzeYTQ5++HBa8J7gMW5+uBzs7S8SrmyPTPHd7GJr5UW2JK2puFLuVD+KQSxjJtbvmRQva/yJXpVGYs1sr2gc3Inb3EntrqNom5I09GveLz5X8wovQ4noF/j93TdHRqgRR4KWck4A1Pi/NULCxmUXV07wcXVpJ5KzL9ANAbMGgjw36YNzmlKBlyVrY360BysPa1Kmc8dALjmecZtTWUlLmP9oudT8i6toNVsIcTtNoUAn0FpGD6KnXOLkXsGlxhAyl3KY+FpuySXVbkMxBWnzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TT2DrQTL0OiqTtbnDMDu0LZA+YYhjTRvd4lAfAoXj0o=;
- b=qQXIJ5bmZJ8jLC4hwEQTs6h0zELJi41lc2vihcP7mP0b1jFwOQGNf6rUKJEACGdYsEhfHlOJyeb88s2uHFGNggrhDZ8yZNgW0vdv+NEPVMmTiqZHQvsXK7VxLTOCr/fOlyPq2nKFuvCmZ4P0BSu5Syj4Z2dxLzEYm6VBP3EXhwU=
-Received: from MN2PR04MB6207.namprd04.prod.outlook.com (2603:10b6:208:de::32)
- by MN2PR04MB7136.namprd04.prod.outlook.com (2603:10b6:208:1eb::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Sat, 16 May
- 2020 16:28:56 +0000
-Received: from MN2PR04MB6207.namprd04.prod.outlook.com
- ([fe80::e0ef:7fce:ff0d:f580]) by MN2PR04MB6207.namprd04.prod.outlook.com
- ([fe80::e0ef:7fce:ff0d:f580%7]) with mapi id 15.20.3000.022; Sat, 16 May 2020
- 16:28:56 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Anup Patel <anup@brainfault.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/4] irqchip/sifive-plic: Setup cpuhp once after current
- handler is present
-Thread-Topic: [PATCH 1/4] irqchip/sifive-plic: Setup cpuhp once after current
- handler is present
-Thread-Index: AQHWK0zCQd2Rb1y8/UKUOdOD8b1Y6qiqn7gAgAAG1ICAAA9DAIAALzWQ
-Date:   Sat, 16 May 2020 16:28:56 +0000
-Message-ID: <MN2PR04MB6207F08A89A9116D83BDAA2F8DBA0@MN2PR04MB6207.namprd04.prod.outlook.com>
-References: <20200516063901.18365-1-anup.patel@wdc.com>
- <20200516063901.18365-2-anup.patel@wdc.com>
- <d4e0dcceecad49e71ffe785f8950981d@kernel.org>
- <DM6PR04MB62012DBAF3FAA7A264094C418DBA0@DM6PR04MB6201.namprd04.prod.outlook.com>
- <0be23fcd363998ddd527eceb308f592c@kernel.org>
-In-Reply-To: <0be23fcd363998ddd527eceb308f592c@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [106.51.108.254]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: abb20d03-9d68-4103-abe8-08d7f9b63ae0
-x-ms-traffictypediagnostic: MN2PR04MB7136:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB713650B7D9EC81A8004F59D78DBA0@MN2PR04MB7136.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 040513D301
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YUSQM3QQvqzIqfUs/D5gTBbG5lLvg+KMs4mORgKZ/1/V56Ut9Sar63uBH5DuNaE+4iCweapv94AnZrlBR38ccgAFRanNindPtSasfHtbeKdt+DqRgLmY5oxDR5ecxdVsURkvCsLrcW8D4RP1XCtnur9wTELbGgjoRRTK8es7IEVZgheiNiR5k+PNF5EY01dWsQIP1mq+d7qABAfyqQuN0hN6Fp+QNMienhW+As7GE9zZ7lrZipNeDVjR1s8jLDzjvU+1OjA2FGQVcq4UB5tERPG67YPVwTJXMBiOXo6BSA43r9eJBLmZ3CfLiAkekDdBIS7+BYcRywPEytYkqQsFBkOWxM15kWmfUVru7u31mEmKuimXA0HvZQA1gKKQ5Se2L5CCp35mdTpEBn743vXp2nrS/Vbn+/1NqjZ1jiH3HVTNvfQL6Je7ZLdpX7LJKfW1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR04MB6207.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(366004)(376002)(396003)(39860400002)(4326008)(64756008)(71200400001)(54906003)(26005)(186003)(55236004)(53546011)(7696005)(316002)(478600001)(6506007)(76116006)(8676002)(8936002)(66446008)(66946007)(66476007)(6916009)(66556008)(9686003)(52536014)(86362001)(33656002)(2906002)(55016002)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 56bitYnKzXuZkDZiqnfBhgRUuvJYNIVq8ir01Jx/nFaJQ8B8cVB4AiOn3huP7U3mZ/c+tTrnm4Z4rrVzmOZDkN8bnJzoYlanJ0IlP0INq0PElQwYsjF7cdKN1tw+l0bp9YY4hUzMxT2R4zn3azZn/X+RYD2TKTOT/lhgr7ER4j5aAENTvc+pmYPWSrtdYD7m6A+3nZCSOtuG7/9ltWfckvPxPC4rH0UO28/x45OamoJGpCTv+g86GJQl0aszdUUs2I9VVDQmTs9RaHyzabl6eXn+AGmI87/DgAxs7dioHj3EuoOnqUuKAOqbH9uid5oJUIzTdixh/b9l4zbhJZ78Guawa852/118R+jWq9MQuW/kQPaGteMBiBCUTmcBRV/UJJn9olrMorgF6k71YoY0mAnfAjA6l+HZ7fg3Y8VV1uXjuhzkDkAgD3qJlPjJzsue99w8vn6rTeQHje9wm5YR/ypSHElYF5YVstI9T8+qG5TL0fL78P8SZoG1xrnKumKB
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 16 May 2020 12:29:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbgEPQ3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 12:29:18 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 123C9206D8;
+        Sat, 16 May 2020 16:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589646556;
+        bh=HIemR99HfkSdMhZGSFDxQRNk4ZkfPVZUNzjqEWHFzps=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WNmbVyirVOMuSLuy9M2DD+J0jWMIVNgNOXihrpeMrYqF5c7Z8ZkQR/6SaYFjbdAmp
+         8iqiJsFJID6rlvPto9G/yhAzv2iokDMUfN8SFOHnNhiWO7wH1taeg/UNX6YiILNOS/
+         3puHS10lak01zp70LxPDTPikMjORkPOvs9BzkcmM=
+Date:   Sat, 16 May 2020 17:29:13 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 1/3] iio: core: wrap IIO device into a iio_dev_priv
+ object
+Message-ID: <20200516172913.38f05fc1@archlinux>
+In-Reply-To: <fa44556e2c10440a4b354591a3ebe379397a1f7e.camel@analog.com>
+References: <20200508141306.17222-1-alexandru.ardelean@analog.com>
+        <20200508164015.0000223f@Huawei.com>
+        <20200508164430.00001741@Huawei.com>
+        <b667b10489c65b541aacadd7975b0a6352672153.camel@analog.com>
+        <20200511184213.0000003c@Huawei.com>
+        <fa44556e2c10440a4b354591a3ebe379397a1f7e.camel@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: abb20d03-9d68-4103-abe8-08d7f9b63ae0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2020 16:28:56.2301
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ug36WYj0jE8HiRjallIN15Rxw/LaQ5FWjI8z2ivBPzaKzF+lrpm3DzIbyh72GXCe4B2WKSbxBM1EoW6zDYCHyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB7136
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 12 May 2020 11:26:08 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
+> On Mon, 2020-05-11 at 18:42 +0100, Jonathan Cameron wrote:
+> > [External]
+> > 
+> > On Mon, 11 May 2020 09:16:32 +0000
+> > "Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+> >   
+> > > On Fri, 2020-05-08 at 16:44 +0100, Jonathan Cameron wrote:  
+> > > > [External]
+> > > > 
+> > > > On Fri, 8 May 2020 16:40:15 +0100
+> > > > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> > > >     
+> > > > > On Fri, 8 May 2020 17:13:04 +0300
+> > > > > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> > > > >     
+> > > > > > There are plenty of bad designs we want to discourage or not have to
+> > > > > > review
+> > > > > > manually usually about accessing private (marked as [INTERN]) fields
+> > > > > > of
+> > > > > > 'struct iio_dev'.      
+> > > > > 
+> > > > > This has been on the todo list for many years so great you are having a
+> > > > > go.
+> > > > >      
+> > > > > > This is difficult, as a lot of users copy drivers, and not always the
+> > > > > > best
+> > > > > > examples.
+> > > > > > 
+> > > > > > A better idea is to hide those fields into the framework.
+> > > > > > For 'struct iio_dev' this is a 'struct iio_dev_priv' which wraps a
+> > > > > > public
+> > > > > > 'struct iio_dev' object.
+> > > > > > 
+> > > > > > In the next patches, some fields will be moved to this new struct,
+> > > > > > each
+> > > > > > with it's own rework.
+> > > > > > 
+> > > > > > This rework will not be complete[-able] for a while, as many fields
+> > > > > > need
+> > > > > > some drivers to be reworked in order to finalize them
+> > > > > > (e.g. 'indio_dev->mlock').
+> > > > > > 
+> > > > > > But some fields can already be moved, and in time, all of them may get
+> > > > > > there (in the 'struct iio_dev_priv' object).
+> > > > > > 
+> > > > > > We also need to hide the implementations for 'iio_priv()' &
+> > > > > > 'iio_priv_to_dev()', as the pointer arithmetic will not match once
+> > > > > > things
+> > > > > > are moved.      
+> > > > > 
+> > > > > This last bit has the disadvantage of potentially putting a function
+> > > > > call in some fast paths where there wasn't one before.    
+> > > 
+> > > Hmm.
+> > > I think we can change this to have a void *ptr in the public iio.h header
+> > > and
+> > > that points to the private data in the private struct, and we compute it
+> > > once,
+> > > and just return it.
+> > > 
+> > > so:
+> > > 
+> > > struct iio_dev_opaque;
+> > > 
+> > > struct iio_dev {
+> > >     struct iio_dev_opaque *opaque;  // compute this during
+> > > iio_device_alloc()
+> > >     void *priv;                     // compute this during
+> > > iio_device_alloc()
+> > > };
+> > > 
+> > > static inline void *iio_priv(const struct iio_dev *indio_dev)
+> > > {
+> > >         return indio_dev->priv;
+> > > }
+> > > 
+> > > [ or even just convert it to a macro ; no preference ]  
+> > 
+> > That works for me and avoids any of the messy stuff below.
+> > 
+> > Make sure to add a comment that the region that points to is guaranteed
+> > to maintain cacheline alignment as thats hidden now.  
+> 
+> 1 note: I would still need to hide the iio_priv_to_dev() implementation.
+> It's a bit hard not to; or I can't come up with a good idea now, like for
+> iio_priv().
+> Thing is, not many drivers use it, and it looks a bit funky that they use it.
+> It looks like each driver should just keep (or use) a reference to the iio_dev
+> object, since it should be in the driver somewhere.
+> 
+> Maybe this series needs to be extended to clean-up those uses
+> of iio_priv_to_dev().
 
-> -----Original Message-----
-> From: Marc Zyngier <maz@kernel.org>
-> Sent: 16 May 2020 19:01
-> To: Anup Patel <Anup.Patel@wdc.com>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>; Paul Walmsley
-> <paul.walmsley@sifive.com>; Thomas Gleixner <tglx@linutronix.de>; Jason
-> Cooper <jason@lakedaemon.net>; Atish Patra <Atish.Patra@wdc.com>; Alistai=
-r
-> Francis <Alistair.Francis@wdc.com>; Anup Patel <anup@brainfault.org>; lin=
-ux-
-> riscv@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 1/4] irqchip/sifive-plic: Setup cpuhp once after curr=
-ent
-> handler is present
->=20
-> On 2020-05-16 13:52, Anup Patel wrote:
-> >> -----Original Message-----
-> >> From: Marc Zyngier <maz@kernel.org>
-> >> Sent: 16 May 2020 17:42
-> >> To: Anup Patel <Anup.Patel@wdc.com>
-> >> Cc: Palmer Dabbelt <palmer@dabbelt.com>; Paul Walmsley
-> >> <paul.walmsley@sifive.com>; Thomas Gleixner <tglx@linutronix.de>;
-> >> Jason Cooper <jason@lakedaemon.net>; Atish Patra
-> >> <Atish.Patra@wdc.com>; Alistair Francis <Alistair.Francis@wdc.com>;
-> >> Anup Patel <anup@brainfault.org>;
-> >> linux-
-> >> riscv@lists.infradead.org; linux-kernel@vger.kernel.org
-> >> Subject: Re: [PATCH 1/4] irqchip/sifive-plic: Setup cpuhp once after
-> >> current handler is present
-> >>
-> >> Hi Anup,
-> >>
-> >> On 2020-05-16 07:38, Anup Patel wrote:
-> >> > For multiple PLIC instances, the plic_init() is called once for
-> >> > each PLIC instance. Due to this we have two issues:
-> >> > 1. cpuhp_setup_state() is called multiple times 2.
-> >> > plic_starting_cpu() can crash for boot CPU if cpuhp_setup_state()
-> >> >    is called before boot CPU PLIC handler is available.
-> >> >
-> >> > This patch fixes both above issues.
-> >> >
-> >> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> >> > ---
-> >> >  drivers/irqchip/irq-sifive-plic.c | 14 ++++++++++++--
-> >> >  1 file changed, 12 insertions(+), 2 deletions(-)
-> >> >
-> >> > diff --git a/drivers/irqchip/irq-sifive-plic.c
-> >> > b/drivers/irqchip/irq-sifive-plic.c
-> >> > index 822e074c0600..7dc23edb3267 100644
-> >> > --- a/drivers/irqchip/irq-sifive-plic.c
-> >> > +++ b/drivers/irqchip/irq-sifive-plic.c
-> >> > @@ -76,6 +76,7 @@ struct plic_handler {
-> >> >  	void __iomem		*enable_base;
-> >> >  	struct plic_priv	*priv;
-> >> >  };
-> >> > +static bool plic_cpuhp_setup_done;
-> >> >  static DEFINE_PER_CPU(struct plic_handler, plic_handlers);
-> >> >
-> >> >  static inline void plic_toggle(struct plic_handler *handler, @@
-> >> > -282,6 +283,7 @@ static int __init plic_init(struct device_node *nod=
-e,
-> >> >  	int error =3D 0, nr_contexts, nr_handlers =3D 0, i;
-> >> >  	u32 nr_irqs;
-> >> >  	struct plic_priv *priv;
-> >> > +	struct plic_handler *handler;
-> >> >
-> >> >  	priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
-> >> >  	if (!priv)
-> >> > @@ -310,7 +312,6 @@ static int __init plic_init(struct device_node
-> >> > *node,
-> >> >
-> >> >  	for (i =3D 0; i < nr_contexts; i++) {
-> >> >  		struct of_phandle_args parent;
-> >> > -		struct plic_handler *handler;
-> >> >  		irq_hw_number_t hwirq;
-> >> >  		int cpu, hartid;
-> >> >
-> >> > @@ -364,9 +365,18 @@ static int __init plic_init(struct device_node
-> >> > *node,
-> >> >  		nr_handlers++;
-> >> >  	}
-> >> >
-> >> > -	cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
-> >> > +	/*
-> >> > +	 * We can have multiple PLIC instances so setup cpuhp state only
-> >> > +	 * when context handler for current/boot CPU is present.
-> >> > +	 */
-> >> > +	handler =3D this_cpu_ptr(&plic_handlers);
-> >> > +	if (handler->present && !plic_cpuhp_setup_done) {
-> >>
-> >> If there is no context handler for the boot CPU, the system is
-> >> doomed, right? It isn't able to get any interrupt, and you don't
-> >> register the hotplug notifier that could allow secondary CPUs to
-> >> boot.
-> >>
-> >> So what is the point? It feels like you should just give up here.
-> >>
-> >> Also, the boot CPU is always CPU 0. So checking that you only
-> >> register the hotplug notifier from CPU 0 should be enough.
-> >
-> > The boot CPU is not fixed in RISC-V, the logical id of the boot CPU
-> > will always be zero but physical id (or HART id) can be something
-> > totally different.
->=20
-> So on riscv, smp_processor_id() can return a non-zero value on the the bo=
-ot
-> CPU? Interesting... :-/
+I never liked that interface.  IIRC we removed it once before but
+it snuck back in because one of those cases was really fiddly with out it
+(I can't remember which though :(
 
-On RISC-V, smp_processor_id() returns logical id (which is the order in
-Which CPUs are brought up).
+> 
+> And a question; since I am not clear.
+> On the 'to_iio_dev_opaque()' : is it preferred to access it via 'indio_dev-
+> >opaque' or via pointer arithmentic?  
+> i.e. the classic 
+> #define to_iio_dev_opaque(indio_dev)            \
+>         container_of(indio_dev, struct iio_dev_opaque, indio_dev)
 
-We have special function cpuid_to_hartid_map() in asm/smp.h which
-helps us convert logical id to HART id.
+container of I think. Though I'm not quite sure what you mean by
+pointer arithmetic as an alternative..
 
-The HART id in RISC-V world is like to MPIDR of ARM world.
+> 
+> either is fine from my side; i'll just do the macro, and then the implementation
+> can be changed as i get the answer;
+> 
+> >   
+> > > > > We may not need to 'forcefully' hide the internal parts.  May be
+> > > > > enough to just make their use really obvious.  If you have to cast
+> > > > > to an iio_dev_priv then you are doing something very wrong.    
+> > > > 
+> > > > Note, definitely keep the to_* macro only in the private core header.
+> > > >     
+> > > > > The old stick __ in front of it may make that even more obvious.
+> > > > > 
+> > > > > Naming is a bit confusing though.  iio_dev_priv sounds like private
+> > > > > to the device... iio_dev_opaque maybe?    
+> > > 
+> > > regarding the 'opaque' part, that would be a 'struct iio_dev_opaque {' that
+> > > lives somewhere like
+> > > 
+> > > struct iio_dev_opaque {
+> > >     struct iio_dev   indio_dev;  // public IIO device part
+> > >     ... // opaque IIO device parts
+> > >     ... // iio_priv data
+> > > }
+> > > 
+> > > The stick __ in front, may work just fine as well.
+> > > 
+> > > Personally, I would prefer to forcefully hide stuff, because then the
+> > > compiler
+> > > could also be useful in telling people not to use some private fields.
+> > > People [juniors usually] listen to compilers more than they listen to
+> > > review-
+> > > comments. 
+> > > We could move the 'struct iio_dev_opaque' in 'include/linux/iio/iio-
+> > > opaque.h',
+> > > so that if they need to access some fields for some advanced/hacky
+> > > debugging, it
+> > > should work as well.
+> > > 
+> > > Still, if it's more preferred to prefix them, I can do that as well.
+> > > But we should prefix them as we manage to somehow make the more opaque, or
+> > > remove the fields from places they should be used.
+> > > Otherwise it is pointless, as people would copy 'indio_dev->__mlock' anyway.
+> > > 
+> > >   
+> > > > >     
+> > > > > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > > > > > ---
+> > > > > > 
+> > > > > > Just as a note here, I've been running this patchset without a problem
+> > > > > > for 2 weeks now in a work branch.
+> > > > > > But it's only been a setup, so no idea if some other thing may cause
+> > > > > > bigger issues.
+> > > > > > 
+> > > > > > This small patchset is meant to kickstart this, for GSoC people or for
+> > > > > > people wanting to start contributing to IIO.
+> > > > > > 
+> > > > > >  drivers/iio/iio_core.h          | 11 +++++++++++
+> > > > > >  drivers/iio/industrialio-core.c | 32 +++++++++++++++++++++++++++-----
+> > > > > >  include/linux/iio/iio.h         | 12 ++----------
+> > > > > >  3 files changed, 40 insertions(+), 15 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
+> > > > > > index fd9a5f1d5e51..84f3b4590c05 100644
+> > > > > > --- a/drivers/iio/iio_core.h
+> > > > > > +++ b/drivers/iio/iio_core.h
+> > > > > > @@ -17,6 +17,17 @@ struct iio_dev;
+> > > > > >  
+> > > > > >  extern struct device_type iio_device_type;
+> > > > > >  
+> > > > > > +/**
+> > > > > > + * struct iio_dev_priv - industrial I/O device private information
+> > > > > > + * @indio_dev:			public IIO device object
+> > > > > > + */
+> > > > > > +struct iio_dev_priv {
+> > > > > > +	struct iio_dev			indio_dev;
+> > > > > > +};
+> > > > > > +
+> > > > > > +#define to_iio_dev_priv(indio_dev)	\
+> > > > > > +	container_of(indio_dev, struct iio_dev_priv, indio_dev)
+> > > > > > +
+> > > > > >  int __iio_add_chan_devattr(const char *postfix,
+> > > > > >  			   struct iio_chan_spec const *chan,
+> > > > > >  			   ssize_t (*func)(struct device *dev,
+> > > > > > diff --git a/drivers/iio/industrialio-core.c
+> > > > > > b/drivers/iio/industrialio-
+> > > > > > core.c
+> > > > > > index 462d3e810013..f0888dd84d3d 100644
+> > > > > > --- a/drivers/iio/industrialio-core.c
+> > > > > > +++ b/drivers/iio/industrialio-core.c
+> > > > > > @@ -164,6 +164,23 @@ static const char * const iio_chan_info_postfix[]
+> > > > > > = {
+> > > > > >  	[IIO_CHAN_INFO_THERMOCOUPLE_TYPE] = "thermocouple_type",
+> > > > > >  };
+> > > > > >  
+> > > > > > +
+> > > > > > +void *iio_priv(const struct iio_dev *indio_dev)
+> > > > > > +{
+> > > > > > +	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
+> > > > > > +	return (char *)iio_dev_priv + ALIGN(sizeof(struct iio_dev_priv),
+> > > > > > IIO_ALIGN);
+> > > > > > +}
+> > > > > > +EXPORT_SYMBOL_GPL(iio_priv);
+> > > > > > +
+> > > > > > +struct iio_dev *iio_priv_to_dev(void *priv)
+> > > > > > +{
+> > > > > > +	struct iio_dev_priv *iio_dev_priv =
+> > > > > > +		(struct iio_dev_priv *)((char *)priv -
+> > > > > > +				  ALIGN(sizeof(struct iio_dev_priv),
+> > > > > > IIO_ALIGN));
+> > > > > > +	return &iio_dev_priv->indio_dev;
+> > > > > > +}
+> > > > > > +EXPORT_SYMBOL_GPL(iio_priv_to_dev);
+> > > > > > +
+> > > > > >  /**
+> > > > > >   * iio_find_channel_from_si() - get channel from its scan index
+> > > > > >   * @indio_dev:		device
+> > > > > > @@ -1476,6 +1493,8 @@ static void iio_device_unregister_sysfs(struct
+> > > > > > iio_dev *indio_dev)
+> > > > > >  static void iio_dev_release(struct device *device)
+> > > > > >  {
+> > > > > >  	struct iio_dev *indio_dev = dev_to_iio_dev(device);
+> > > > > > +	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
+> > > > > > +
+> > > > > >  	if (indio_dev->modes & INDIO_ALL_TRIGGERED_MODES)
+> > > > > >  		iio_device_unregister_trigger_consumer(indio_dev);
+> > > > > >  	iio_device_unregister_eventset(indio_dev);
+> > > > > > @@ -1484,7 +1503,7 @@ static void iio_dev_release(struct device
+> > > > > > *device)
+> > > > > >  	iio_buffer_put(indio_dev->buffer);
+> > > > > >  
+> > > > > >  	ida_simple_remove(&iio_ida, indio_dev->id);
+> > > > > > -	kfree(indio_dev);
+> > > > > > +	kfree(iio_dev_priv);
+> > > > > >  }
+> > > > > >  
+> > > > > >  struct device_type iio_device_type = {
+> > > > > > @@ -1498,10 +1517,11 @@ struct device_type iio_device_type = {
+> > > > > >   **/
+> > > > > >  struct iio_dev *iio_device_alloc(int sizeof_priv)
+> > > > > >  {
+> > > > > > +	struct iio_dev_priv *iio_dev_priv;
+> > > > > >  	struct iio_dev *dev;
+> > > > > >  	size_t alloc_size;
+> > > > > >  
+> > > > > > -	alloc_size = sizeof(struct iio_dev);
+> > > > > > +	alloc_size = sizeof(struct iio_dev_priv);
+> > > > > >  	if (sizeof_priv) {
+> > > > > >  		alloc_size = ALIGN(alloc_size, IIO_ALIGN);
+> > > > > >  		alloc_size += sizeof_priv;
+> > > > > > @@ -1509,10 +1529,12 @@ struct iio_dev *iio_device_alloc(int
+> > > > > > sizeof_priv)
+> > > > > >  	/* ensure 32-byte alignment of whole construct ? */
+> > > > > >  	alloc_size += IIO_ALIGN - 1;
+> > > > > >  
+> > > > > > -	dev = kzalloc(alloc_size, GFP_KERNEL);
+> > > > > > -	if (!dev)
+> > > > > > +	iio_dev_priv = kzalloc(alloc_size, GFP_KERNEL);
+> > > > > > +	if (!iio_dev_priv)
+> > > > > >  		return NULL;
+> > > > > >  
+> > > > > > +	dev = &iio_dev_priv->indio_dev;
+> > > > > > +
+> > > > > >  	dev->dev.groups = dev->groups;
+> > > > > >  	dev->dev.type = &iio_device_type;
+> > > > > >  	dev->dev.bus = &iio_bus_type;
+> > > > > > @@ -1526,7 +1548,7 @@ struct iio_dev *iio_device_alloc(int
+> > > > > > sizeof_priv)
+> > > > > >  	if (dev->id < 0) {
+> > > > > >  		/* cannot use a dev_err as the name isn't available */
+> > > > > >  		pr_err("failed to get device id\n");
+> > > > > > -		kfree(dev);
+> > > > > > +		kfree(iio_dev_priv);
+> > > > > >  		return NULL;
+> > > > > >  	}
+> > > > > >  	dev_set_name(&dev->dev, "iio:device%d", dev->id);
+> > > > > > diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> > > > > > index 5f9f439a4f01..38c4ea505394 100644
+> > > > > > --- a/include/linux/iio/iio.h
+> > > > > > +++ b/include/linux/iio/iio.h
+> > > > > > @@ -678,16 +678,8 @@ static inline void *iio_device_get_drvdata(struct
+> > > > > > iio_dev *indio_dev)
+> > > > > >  #define IIO_ALIGN L1_CACHE_BYTES
+> > > > > >  struct iio_dev *iio_device_alloc(int sizeof_priv);
+> > > > > >  
+> > > > > > -static inline void *iio_priv(const struct iio_dev *indio_dev)
+> > > > > > -{
+> > > > > > -	return (char *)indio_dev + ALIGN(sizeof(struct iio_dev),
+> > > > > > IIO_ALIGN);
+> > > > > > -}
+> > > > > > -
+> > > > > > -static inline struct iio_dev *iio_priv_to_dev(void *priv)
+> > > > > > -{
+> > > > > > -	return (struct iio_dev *)((char *)priv -
+> > > > > > -				  ALIGN(sizeof(struct iio_dev),
+> > > > > > IIO_ALIGN));
+> > > > > > -}
+> > > > > > +void *iio_priv(const struct iio_dev *indio_dev);
+> > > > > > +struct iio_dev *iio_priv_to_dev(void *priv);
+> > > > > >  
+> > > > > >  void iio_device_free(struct iio_dev *indio_dev);
+> > > > > >  struct iio_dev *devm_iio_device_alloc(struct device *dev, int
+> > > > > > sizeof_priv);      
+> > > > 
+> > > >     
+> > 
+> >   
 
->=20
-> >
-> > On RISC-V NUMA system, we will have a separate PLIC in each NUMA node.
-> >
-> > Let's say we have a system with 2 NUMA nodes, each NUMA node having
-> > 4 CPUs (or 4 HARTs).  In this case, the DTB passed to Linux will have
-> > two PLIC DT nodes where each PLIC device targets only 4 CPUs (or 4
-> > HARTs). The
-> > plic_init() functions will setup handlers for only 4 CPUs (or 4 HARTs).
-> > In other
-> > words, plic_init() for "PLIC0" will setup handler for HART id 0 to 3
-> > and
-> > plic_init() for "PLIC1" will setup handler for HART id 4 to 7. Now,
-> > any CPU can be boot CPU so it is possible that CPU with HART id 4 is
-> > boot CPU and when plic_init() is first called for "PLIC0" the handler
-> > for HART id 4 is not setup because it will be setup later when
-> > plic_init() is called for "PLIC1".
-> > This cause plic_starting_cpu() to crash when plic_init() is called for
-> > "PLIC0".
-> >
-> > I hope above example helps understanding the issue.
->=20
-> It does, thanks. This pseudo NUMA thing really is a terrible hack...
->=20
-> >
-> > I encounter this issue randomly when booting Linux on QEMU RISC-V with
-> > multiple NUMA nodes.
->=20
-> Then why don't you defer the probing of the PLIC you can't initialize fro=
-m this
-> CPU? If you're on CPU4-7, only initialize the PLIC that matters to you, a=
-nd not
-> the the others. It would certainly make a lot more sense, and be more rob=
-ust.
-
-Okay, I will try -EPROBE defer approach for v2.
-
-Thanks,
-Anup
