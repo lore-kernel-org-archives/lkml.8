@@ -2,193 +2,119 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8595CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECBEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4292074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9CF7207C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:13:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uUvSF0rd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgEPKML (ORCPT
+        id S1726312AbgEPKNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 06:12:11 -0400
-Received: from mga17.intel.com ([192.55.52.151]:49347 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbgEPKML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 06:12:11 -0400
-IronPort-SDR: xP2rkfd2zA0u44eGG+MZnW/66kVgFGjruSVzfgGd6FjDYUK5cyZAcUvzvLgcs+3p+VqoJHFoOM
- UnHkPTIpX0oA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 03:12:10 -0700
-IronPort-SDR: kEZfFbkE+wTdM/PHWM1tcb+Ivl7bKx8CeOp6H50AstfRWhJ4vCeGOYv2U7cfZB4BBtU8/6+yLw
- y7o7z1/Yfy9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,398,1583222400"; 
-   d="scan'208";a="299291948"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 16 May 2020 03:12:08 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jZtnb-0003wA-PW; Sat, 16 May 2020 18:12:07 +0800
-Date:   Sat, 16 May 2020 18:11:58 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:tglx.2020.05.15a] BUILD SUCCESS
- 0adeeee7dd32b29e2f0d911a48aeac05475766fc
-Message-ID: <5ebfbc6e.whHnQzdFOwipRnQJ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Sat, 16 May 2020 06:13:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725853AbgEPKNE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 06:13:04 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4283EC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 03:13:04 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id u35so2251677pgk.6
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 03:13:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=zStSSHGq5gQmDYLVefWI5JuXKhK3ughKSmR37kNuD1M=;
+        b=uUvSF0rd51cC55NRN/sKuf1dDFDOpo+/2DWzqnoiAD8CGMXfdng1fgx+/ZUMYdtn5x
+         u86nmq7Hs0RFpZZy0Ed9u+K8f4Jq2GCVgmPRc7Og6X5/ocgos+5fZeab8ni5KqYA9hh+
+         bzY0cEV2Nl3QSVlhjuOiaV4WjvL7sFNMHd7Qh3JMs9LLmSlgwIdFtZXXRdCCkXrZprfu
+         SYlTpo89ZauEf8kcjxfmfLdW5zQGR5uehvwc/IqmkoF5vTZUcYTHUNfDlyKrlaMvm41T
+         vU/4lcZpoA+AFU0obKLa0QSl3V07eCsFhXHcRqVqvxuzyK7j9FKI/DqAWeL5ZhfHe6Hg
+         kjvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zStSSHGq5gQmDYLVefWI5JuXKhK3ughKSmR37kNuD1M=;
+        b=GAxVlqMG1qHa7SbCEF13sGaA2KSSQFk6nKfCK5/JqBvnh/eqAfTGTsIhHErec9ZlQw
+         WeHcRrXD5ChHZ8VXse4K0VRDx707hKAkJWHUxSZIt7xOak70hSybL0UisvMWDjTIDPuX
+         DPbuX8fxzfS+Of1JVaqebrnqCTqFZgK+EyW9zHDX+hKwgS46np1KPw2fU8i/5xwdL/4w
+         rOPHOIoCOGzl8EcpSpWBc90v9JCOHtS0Vi1P5Q1CD6zAFo+NMIXQ15LVTxqiUQ49BKIo
+         M+Y+kC9BrgWGZzVeLigirccMrZMYvXVFRftAuwf//EByMzGh/4jgp8pg2z8fxLVsxf8C
+         LSjw==
+X-Gm-Message-State: AOAM533OftlZMpTrAW/o4arC2JSjx5/EArZtwyS5YKb/UCTIndr6EjM0
+        +1xl1HtvYg7/ATC+IU7edgc=
+X-Google-Smtp-Source: ABdhPJy0bMLh5fPEK32TUYMmK45RyYoIZ7bXW9Q0OU8kWL9sCK5RbQXtKaXsxl3794IFvCaCthKDpw==
+X-Received: by 2002:a63:e809:: with SMTP id s9mr6997696pgh.191.1589623983347;
+        Sat, 16 May 2020 03:13:03 -0700 (PDT)
+Received: from localhost.localdomain ([45.135.186.16])
+        by smtp.gmail.com with ESMTPSA id x10sm3554542pgr.65.2020.05.16.03.12.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 May 2020 03:13:02 -0700 (PDT)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     lee.jones@linaro.org, arnd@arndb.de
+Cc:     broonie@kernel.org, baolin.wang7@gmail.com, orsonzhai@gmail.com,
+        zhang.lyra@gmail.com, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/2] Add new physical regmap bus support
+Date:   Sat, 16 May 2020 18:12:27 +0800
+Message-Id: <cover.1589623456.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  tglx.2020.05.15a
-branch HEAD: 0adeeee7dd32b29e2f0d911a48aeac05475766fc  rcu: Provide __rcu_is_watching()
+The Spreadtrum platform uses a special set/clear method to update
+registers' bits, thus this patch set exports a weak function to
+allow to register a physical regmap bus to support this feature
+instead of using the MMIO bus, which is not a physical regmap bus.
 
-elapsed time: 481m
+Any comments are welcome. Thanks.
 
-configs tested: 126
-configs skipped: 12
+Changes from v3:
+ - Remove vendor specific support from the syscon driver, and export
+ a weak function to support physical regmap bus.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Changes from v2:
+ - Fix building errors without enabling CONFIG_ARCH_SPRD.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-mips                             allyesconfig
-m68k                             allyesconfig
-sparc                            allyesconfig
-arm                           u8500_defconfig
-arm                           spitz_defconfig
-microblaze                          defconfig
-arm                         at91_dt_defconfig
-sh                          sdk7786_defconfig
-powerpc                    gamecube_defconfig
-ia64                         bigsur_defconfig
-sh                        sh7757lcr_defconfig
-arm                           sama5_defconfig
-arm                        realview_defconfig
-arm                       spear13xx_defconfig
-powerpc                     pq2fads_defconfig
-c6x                        evmc6678_defconfig
-parisc                              defconfig
-arm                            u300_defconfig
-arm                           omap1_defconfig
-arm                         lubbock_defconfig
-arm                          badge4_defconfig
-arm                         hackkit_defconfig
-mips                            e55_defconfig
-sh                                allnoconfig
-arm                              zx_defconfig
-i386                              allnoconfig
-arm                  colibri_pxa300_defconfig
-arc                                 defconfig
-mips                      fuloong2e_defconfig
-s390                                defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-microblaze                        allnoconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a006-20200515
-i386                 randconfig-a005-20200515
-i386                 randconfig-a003-20200515
-i386                 randconfig-a001-20200515
-i386                 randconfig-a004-20200515
-i386                 randconfig-a002-20200515
-i386                 randconfig-a006-20200516
-i386                 randconfig-a005-20200516
-i386                 randconfig-a003-20200516
-i386                 randconfig-a001-20200516
-i386                 randconfig-a004-20200516
-i386                 randconfig-a002-20200516
-i386                 randconfig-a012-20200515
-i386                 randconfig-a016-20200515
-i386                 randconfig-a014-20200515
-i386                 randconfig-a011-20200515
-i386                 randconfig-a013-20200515
-i386                 randconfig-a015-20200515
-x86_64               randconfig-a005-20200515
-x86_64               randconfig-a003-20200515
-x86_64               randconfig-a006-20200515
-x86_64               randconfig-a004-20200515
-x86_64               randconfig-a001-20200515
-x86_64               randconfig-a002-20200515
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-x86_64                              defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+Changes from v1:
+ - Add WARN_ONCE() for seting bits and clearing bits at the same time.
+ - Remove the Spreadtrum SoC syscon driver, instead moving the regmap_bus
+ instance into syscon.c driver.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Changes from RFC v2:
+ - Drop regmap change, which was applied by Mark.
+ - Add more information about how to use set/clear.
+ - Add checking to ensure the platform is compatible with
+ using a new physical regmap bus.
+
+Changes from RFC v1:
+ - Add new helper to registers a physical regmap bus instead of
+ using the MMIO bus.
+
+Baolin Wang (2):
+  mfd: syscon: Support physical regmap bus
+  soc: sprd: Add Spreadtrum special bits updating support
+
+ drivers/mfd/syscon.c           |  9 +++-
+ drivers/soc/Kconfig            |  1 +
+ drivers/soc/Makefile           |  1 +
+ drivers/soc/sprd/Kconfig       | 16 +++++++
+ drivers/soc/sprd/Makefile      |  2 +
+ drivers/soc/sprd/sprd_syscon.c | 86 ++++++++++++++++++++++++++++++++++
+ include/linux/mfd/syscon.h     | 11 +++++
+ 7 files changed, 125 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/soc/sprd/Kconfig
+ create mode 100644 drivers/soc/sprd/Makefile
+ create mode 100644 drivers/soc/sprd/sprd_syscon.c
+
+-- 
+2.17.1
+
