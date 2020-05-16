@@ -2,109 +2,157 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D02E2074A
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87FEF206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:08:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZfZU+bDo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFvRiZhe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgEPEIO (ORCPT
+        id S1726399AbgEPEIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 00:08:14 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49930 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725803AbgEPEIO (ORCPT
+        Sat, 16 May 2020 00:08:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725275AbgEPEIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 00:08:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589602093;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pzKGrP1dcY39C40zoZZuybJrD8WuaSa1VZ90S7jsI/c=;
-        b=ZfZU+bDoVi25nxnueq90LhzYJL/q22JR5IShWx7MNiAKJLJmMWqkOjAvcDRbb65bmPdcDh
-        sEXKmlYC6zbzFEhHjEOp7YjKTD3oGCuT8XQAGQd/wqx8RR9RTxKlzBZsxX2tVliCURqYHh
-        vRtHcsZ/b4S5040YubyAGVkyQAcZmd0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-90-7693THB7NYWd8sy1S5ZWpw-1; Sat, 16 May 2020 00:08:06 -0400
-X-MC-Unique: 7693THB7NYWd8sy1S5ZWpw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9132D80B713;
-        Sat, 16 May 2020 04:08:03 +0000 (UTC)
-Received: from x1-fbsd (unknown [10.3.128.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C51F199D8;
-        Sat, 16 May 2020 04:07:52 +0000 (UTC)
-Date:   Sat, 16 May 2020 00:07:49 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
-        rostedt@goodmis.org, mingo@redhat.com, cai@lca.pw,
-        dyoung@redhat.com, bhe@redhat.com, peterz@infradead.org,
-        tglx@linutronix.de, gpiccoli@canonical.com, pmladek@suse.com,
-        tiwai@suse.de, schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Derek Chickles <dchickles@marvell.com>,
-        Satanand Burla <sburla@marvell.com>,
-        Felix Manlunas <fmanlunas@marvell.com>
-Subject: Re: [PATCH v2 06/15] liquidio: use new module_firmware_crashed()
-Message-ID: <20200516040749.GF3182@x1-fbsd>
-References: <20200515212846.1347-1-mcgrof@kernel.org>
- <20200515212846.1347-7-mcgrof@kernel.org>
+        Sat, 16 May 2020 00:08:45 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34726C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 21:08:44 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id 59so2149201qva.13
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 21:08:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :organization:user-agent:mime-version:content-transfer-encoding;
+        bh=JLYon1khC+eLSB3T5yIWcEJuhbgDHgHLlnuv7ZU3dhk=;
+        b=mFvRiZhecmwLYm5l9KNIE/vtdE8qUAe9hp2hsnr2PX9xg9BOgVi4qtzyUgtAC5+xN9
+         gzr9aPXrekEB6e1OGUlx0Sds6YjHkFWX9tTCtlE2BFfYrt3Hl3N3bLhrSYASAIpmbEPS
+         aPxhNJJiyXLxA7+TY4O2EUxcHUdyXOmJ70TelgHJBgOo2hDMetmXztNpjYJoChkP8MeE
+         jZwWyDI/egW5yRF1RlbiDyyGLdWwkMAmK38Awt3Q3WTuWq+0vm7iBUc3dE+Dlv6ESLkp
+         Ufh91CZ3Dmatr57/8Ng1tQsEXuBq4vACYlwt1/+wfabYrY9SMSsN6Md4NrP12KhaMbhE
+         jymA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=JLYon1khC+eLSB3T5yIWcEJuhbgDHgHLlnuv7ZU3dhk=;
+        b=gmXilHsnOJvvOWl9Ipcgl6fgKj1dnBlnC1usTwgLbFWEH4HX+rihWyMciNraJXLLlk
+         b9BZhP6pdRqtZHChf8Cg8d6KEUsX/79AYLCH+0/BXu26vI8/n7XVVCZ/Y+U6BL6U5rV+
+         uOg7uIQHjXyH7SaOEStJgq096i7rDGvZlQXLB7dgUrk1HAUnnocnUdbTqt4MB1hmPh5v
+         Zzd7ZjSXrKpHkmXaAmu08J6w1wc8ZWU5/XiRME7UFyu24lXSUCiCJQRqiGyW5FRXqsFZ
+         wPvFU6lQwAycnt/rIV6ozjNFIaJfoZ2GrJ4jN6FfcwQZf4TEM0zz0az9Ta2h+z7c6ADP
+         D73g==
+X-Gm-Message-State: AOAM530uE3BLWb1Xq27UdDYxBdiDpkWQtdJn2DLKPNQzsAXjf/RGO1bj
+        ohllOk2HjCjjRqHR2Jiypc0=
+X-Google-Smtp-Source: ABdhPJwV0bAzte0qxgz4LPU+Qi0Jji9W/CS3UUB2E/LXBbuOssBt4QMYPAiKrw/w64nGdh9PtV8R/w==
+X-Received: by 2002:a05:6214:42a:: with SMTP id a10mr6285253qvy.78.1589602123418;
+        Fri, 15 May 2020 21:08:43 -0700 (PDT)
+Received: from LeoBras (179-125-143-209.dynamic.desktop.com.br. [179.125.143.209])
+        by smtp.gmail.com with ESMTPSA id f198sm3185622qke.46.2020.05.15.21.08.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 21:08:42 -0700 (PDT)
+Message-ID: <97dcf4d840871ae3ce87e3f3c2efbdb709d66db5.camel@gmail.com>
+Subject: Re: [PATCH v4 2/2] powerpc/rtas: Implement reentrant rtas call
+From:   Leonardo Bras <leobras.c@gmail.com>
+To:     Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nadav Amit <namit@vmware.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Sat, 16 May 2020 01:08:24 -0300
+In-Reply-To: <1589525800.2asfsw2zlu.astroid@bobo.none>
+References: <20200514235138.150722-1-leobras.c@gmail.com>
+         <20200514235138.150722-3-leobras.c@gmail.com>
+         <1589525800.2asfsw2zlu.astroid@bobo.none>
+Organization: IBM
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515212846.1347-7-mcgrof@kernel.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 09:28:37PM +0000, Luis Chamberlain wrote:
-> This makes use of the new module_firmware_crashed() to help
-> annotate when firmware for device drivers crash. When firmware
-> crashes devices can sometimes become unresponsive, and recovery
-> sometimes requires a driver unload / reload and in the worst cases
-> a reboot.
+Hello Nick,
+
+On Fri, 2020-05-15 at 17:30 +1000, Nicholas Piggin wrote:
+> Excerpts from Leonardo Bras's message of May 15, 2020 9:51 am:
+> > Implement rtas_call_reentrant() for reentrant rtas-calls:
+> > "ibm,int-on", "ibm,int-off",ibm,get-xive" and  "ibm,set-xive".
+> > 
+> > On LoPAPR Version 1.1 (March 24, 2016), from 7.3.10.1 to 7.3.10.4,
+> > items 2 and 3 say:
+> > 
+> > 2 - For the PowerPC External Interrupt option: The * call must be
+> > reentrant to the number of processors on the platform.
+> > 3 - For the PowerPC External Interrupt option: The * argument call
+> > buffer for each simultaneous call must be physically unique.
+> > 
+> > So, these rtas-calls can be called in a lockless way, if using
+> > a different buffer for each cpu doing such rtas call.
 > 
-> Using a taint flag allows us to annotate when this happens clearly.
+> What about rtas_call_unlocked? Do the callers need to take the rtas 
+> lock?
 > 
-> Cc: Derek Chickles <dchickles@marvell.com>
-> Cc: Satanand Burla <sburla@marvell.com>
-> Cc: Felix Manlunas <fmanlunas@marvell.com>
-> Reviewed-by: Derek Chickles <dchickles@marvell.com>
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->  drivers/net/ethernet/cavium/liquidio/lio_main.c | 1 +
->  1 file changed, 1 insertion(+)
+> Machine checks must call ibm,nmi-interlock too, which we really don't 
+> want to take a lock for either. Hopefully that's in a class of its own
+> and we can essentially ignore with respect to other rtas calls.
 > 
-> diff --git a/drivers/net/ethernet/cavium/liquidio/lio_main.c b/drivers/net/ethernet/cavium/liquidio/lio_main.c
-> index 66d31c018c7e..f18085262982 100644
-> --- a/drivers/net/ethernet/cavium/liquidio/lio_main.c
-> +++ b/drivers/net/ethernet/cavium/liquidio/lio_main.c
-> @@ -801,6 +801,7 @@ static int liquidio_watchdog(void *param)
->  			continue;
->  
->  		WRITE_ONCE(oct->cores_crashed, true);
-> +		module_firmware_crashed();
->  		other_oct = get_other_octeon_device(oct);
->  		if (other_oct)
->  			WRITE_ONCE(other_oct->cores_crashed, true);
-> -- 
-> 2.26.2
+> The spec is pretty vague too :(
 > 
-Acked-by: Rafael Aquini <aquini@redhat.com>
+> "The ibm,get-xive call must be reentrant to the number of processors on 
+> the platform."
+> 
+> This suggests ibm,get-xive can be called concurrently by multiple
+> processors. It doesn't say anything about being re-entrant against any 
+> of the other re-entrant calls. Maybe that could be reasonably assumed,
+> but I don't know if it's reasonable to assume it can be called 
+> concurrently with a *non-reentrant* call, is it?
+
+This was discussed on a previous version of the patchset:
+
+https://lore.kernel.org/linuxppc-dev/875zcy2v8o.fsf@linux.ibm.com/
+
+He checked with partition firmware development and these calls can be
+used concurrently with arbitrary other RTAS calls.
+
+> 
+> > For this, it was suggested to add the buffer (struct rtas_args)
+> > in the PACA struct, so each cpu can have it's own buffer.
+> 
+> You can't do this, paca is not limited to RTAS_INSTANTIATE_MAX.
+> Which is good, because I didn't want you to add another 88 bytes to the 
+> paca :) Can you make it a pointer and allocate it separately? Check
+> the slb_shadow allocation, you could use a similar pattern.
+
+Sure, I will send the next version with this change.
+
+> 
+> The other option would be to have just one more rtas args, and have the 
+> crashing CPU always that. That would skirt the re-entrancy issue -- the
+> concurrency is only ever a last resort. Would be a bit tricker though.
+
+It seems a good idea, but I would like to try the previous alternative
+first.
+
+> Thanks,
+> Nick
+
+Thank you Nick! 
 
