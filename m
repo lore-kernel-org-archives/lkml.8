@@ -2,84 +2,99 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0559C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8125CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2D3020756
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6649B20657
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 13:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgEPNZE (ORCPT
+        id S1726642AbgEPN0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 09:25:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726302AbgEPNZD (ORCPT
+        Sat, 16 May 2020 09:26:12 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:40142 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgEPN0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 09:25:03 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72C71C061A0C;
-        Sat, 16 May 2020 06:25:03 -0700 (PDT)
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.93)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1jZwnO-00EBvX-6E; Sat, 16 May 2020 15:24:06 +0200
-Message-ID: <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
-Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Luis Chamberlain <mcgrof@kernel.org>, jeyu@kernel.org
-Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath10k@lists.infradead.org
-Date:   Sat, 16 May 2020 15:24:01 +0200
-In-Reply-To: <20200515212846.1347-13-mcgrof@kernel.org> (sfid-20200515_233205_994687_1F26BDAB)
-References: <20200515212846.1347-1-mcgrof@kernel.org>
-         <20200515212846.1347-13-mcgrof@kernel.org>
-         (sfid-20200515_233205_994687_1F26BDAB)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Sat, 16 May 2020 09:26:12 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 33EAE8030791;
+        Sat, 16 May 2020 13:26:04 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id dj6AGkqSPpUY; Sat, 16 May 2020 16:26:01 +0300 (MSK)
+Date:   Sat, 16 May 2020 16:26:00 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>, Sebastian Reichel <sre@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-mips@vger.kernel.org>, Allison Randal <allison@lohutok.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Paul Burton <paulburton@kernel.org>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Subject: Re: [PATCH v2 2/3] dt-bindings: power: reset: Unrequire regmap
+ property in syscon-reboot node
+Message-ID: <20200516132600.aloxet3n4373nz6e@mobilestation>
+References: <20200306130356.6ABDD8030703@mail.baikalelectronics.ru>
+ <20200507233846.11548-1-Sergey.Semin@baikalelectronics.ru>
+ <20200507233846.11548-3-Sergey.Semin@baikalelectronics.ru>
+ <20200515031449.GA32456@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200515031449.GA32456@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-15 at 21:28 +0000, Luis Chamberlain wrote:> module_firmware_crashed
+On Thu, May 14, 2020 at 10:14:49PM -0500, Rob Herring wrote:
+> On Fri, 8 May 2020 02:38:45 +0300, Serge Semin wrote:
+> > Since normally syscon-reboot block is supposed to be a part of a system
+> > controller, lets mark the regmap property as deprecated and recommend the
+> > syscon-reboot node to be a sub-node of SYSCON.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Allison Randal <allison@lohutok.net>
+> > Cc: Richard Fontana <rfontana@redhat.com>
+> > Cc: Kate Stewart <kstewart@linuxfoundation.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: linux-mips@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v2:
+> > - This is a new patch created as a result of the discussion:
+> >   https://lore.kernel.org/linux-pm/20200306130402.1F4F0803079F@mail.baikalelectronics.ru/
+> > ---
+> >  .../bindings/power/reset/syscon-reboot.yaml       | 15 ++++++++++-----
+> >  1 file changed, 10 insertions(+), 5 deletions(-)
+> > 
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-You didn't CC me or the wireless list on the rest of the patches, so I'm
-replying to a random one, but ...
+Great. Thanks!
 
-What is the point here?
+Sebastian, Rob is ok with the change. Could you take a look at the next patch?
 
-This should in no way affect the integrity of the system/kernel, for
-most devices anyway.
-
-So what if ath10k's firmware crashes? If there's a driver bug it will
-not handle it right (and probably crash, WARN_ON, or something else),
-but if the driver is working right then that will not affect the kernel
-at all.
-
-So maybe I can understand that maybe you want an easy way to discover -
-per device - that the firmware crashed, but that still doesn't warrant a
-complete kernel taint.
-
-Instead of the kernel taint, IMHO you should provide an annotation in
-sysfs (or somewhere else) for the *struct device* that had its firmware
-crash. Or maybe, if it's too complex to walk the entire hierarchy
-checking for that, have a uevent, or add the ability for the kernel to
-print out elsewhere in debugfs the list of devices that crashed at some
-point... All of that is fine, but a kernel taint?
-
-johannes
-
+-Sergey
