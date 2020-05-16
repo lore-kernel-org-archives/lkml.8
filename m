@@ -2,90 +2,126 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C99FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2A0D20727
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:53:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OPdJwO2w"
+	by mail.kernel.org (Postfix) with ESMTP id 4752820727
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 10:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgEPKx4 (ORCPT
+        id S1726246AbgEPK5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 06:53:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50672 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726044AbgEPKxz (ORCPT
+        Sat, 16 May 2020 06:57:46 -0400
+Received: from smtp07.smtpout.orange.fr ([80.12.242.129]:24133 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbgEPK5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 06:53:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589626434;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6Sgk4L76+G8NMqHYS6ddlBe3JD0wGPSl87Vyk1kROUo=;
-        b=OPdJwO2wxM8IJNmWFz+qq5Ifmn534kfTeiCd/fhSOuzR5Vhepy2wXyfECg1vvpacmv7SRl
-        XSrcvaF8/V8qs8s2xrRMBYFPqJzmyJJba+rS4K5d5x2VlWvnbZQ9h+QGVvM4Trv8QbfxCl
-        VAXyevdltaHhWzVp9/lH1ObK9w53laI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-13-GcqHfzqTMWmxPdkJ6SiDpg-1; Sat, 16 May 2020 06:53:50 -0400
-X-MC-Unique: GcqHfzqTMWmxPdkJ6SiDpg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD92F1005512;
-        Sat, 16 May 2020 10:53:48 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 10CCB5C6CA;
-        Sat, 16 May 2020 10:53:46 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <7c446f9f404135f0f4109e03646c4ce598484cae.camel@hammerspace.com>
-References: <7c446f9f404135f0f4109e03646c4ce598484cae.camel@hammerspace.com> <f91b8f29-271a-b5cd-410b-a43a399d34aa@infradead.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     dhowells@redhat.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "viro@ZenIV.linux.org.uk" <viro@ZenIV.linux.org.uk>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH -next] nfs: fsinfo: fix build when CONFIG_NFS_V4 is not enabled
+        Sat, 16 May 2020 06:57:46 -0400
+Received: from localhost.localdomain ([93.22.148.0])
+        by mwinf5d14 with ME
+        id fNxd2200K00kvqt03Nxeb5; Sat, 16 May 2020 12:57:43 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 16 May 2020 12:57:43 +0200
+X-ME-IP: 93.22.148.0
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     inki.dae@samsung.com, jy0922.shim@samsung.com,
+        sw0312.kim@samsung.com, kyungmin.park@samsung.com,
+        airlied@linux.ie, daniel@ffwll.ch, kgene@kernel.org,
+        krzk@kernel.org
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH v2] drm/exynos: dsi: Remove bridge node reference in error handling path in probe function
+Date:   Sat, 16 May 2020 12:57:36 +0200
+Message-Id: <20200516105736.269669-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <537091.1589626426.1@warthog.procyon.org.uk>
-Date:   Sat, 16 May 2020 11:53:46 +0100
-Message-ID: <537092.1589626426@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trond Myklebust <trondmy@hammerspace.com> wrote:
+'exynos_dsi_parse_dt()' takes a reference to 'dsi->in_bridge_node'.
+This must be released in the error handling path.
 
-> This whole thing needs to be reviewed and acked by the NFS community,
-> and quite frankly I'm inclined to NAK this. This is the second time
-> David tries to push this unwanted rewrite of totally unrelated code.
+In order to do that, add an error handling path and move the
+'exynos_dsi_parse_dt()' call from the beginning to the end of the probe
+function to ease the error handling path.
+This function only sets some variables which are used only in the
+'transfer' function.
 
-Rewrite?  What?
+The call chain is:
+   .transfer
+    --> exynos_dsi_host_transfer
+      --> exynos_dsi_init
+        --> exynos_dsi_enable_clock  (use burst_clk_rate and esc_clk_rate)
+          --> exynos_dsi_set_pll     (use pll_clk_rate)
 
-It's example code of what NFS could export through this interface.  I didn't
-submit it to Linus with the rest of the patches as it's only an example; same
-for the ext4 example.  I've tried running it past you and other NFS people a
-couple of times to try and elicit a response and wanted to try and ask you
-about it at LSF:-(
+While at it, also handle cases where 'component_add()' fails.
 
-Anyway, I've dropped it for now.
+This patch is similar to commit 70505c2ef94b ("drm/exynos: dsi: Remove bridge node reference in removal")
+which fixed the issue in the remove function.
 
-David
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+A Fixes tag could be required, but I've not been able to figure out which
+one to use.
+
+v2: move around 'exynos_dsi_parse_dt' instead of adding many gotos
+    handle component_add failures
+---
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+index 902938d2568f..a9d24402fabf 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+@@ -1759,10 +1759,6 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+ 	dsi->dev = dev;
+ 	dsi->driver_data = of_device_get_match_data(dev);
+ 
+-	ret = exynos_dsi_parse_dt(dsi);
+-	if (ret)
+-		return ret;
+-
+ 	dsi->supplies[0].supply = "vddcore";
+ 	dsi->supplies[1].supply = "vddio";
+ 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(dsi->supplies),
+@@ -1823,11 +1819,25 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	ret = exynos_dsi_parse_dt(dsi);
++	if (ret)
++		return ret;
++
+ 	platform_set_drvdata(pdev, &dsi->encoder);
+ 
+ 	pm_runtime_enable(dev);
+ 
+-	return component_add(dev, &exynos_dsi_component_ops);
++	ret = component_add(dev, &exynos_dsi_component_ops);
++	if (ret)
++		goto err_disable_runtime;
++
++	return 0;
++
++err_disable_runtime:
++	pm_runtime_disable(dev);
++	of_node_put(dsi->in_bridge_node);
++
++	return ret;
+ }
+ 
+ static int exynos_dsi_remove(struct platform_device *pdev)
+-- 
+2.25.1
 
