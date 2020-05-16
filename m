@@ -2,190 +2,98 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33420C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58063C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14BEE20756
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3643620756
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 02:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgEPCNf (ORCPT
+        id S1727903AbgEPCQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 May 2020 22:13:35 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53888 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgEPCNe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 May 2020 22:13:34 -0400
-Received: by mail-pj1-f66.google.com with SMTP id hi11so1725625pjb.3;
-        Fri, 15 May 2020 19:13:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=4A1yJQWH0zlW7qYrgn5UB7I/2Jue1bZ9pkew6X207TM=;
-        b=AvZ7Q4j4h+cKqMg+rSeD3GB8n2Ftt42VFvpOq6YBCOZPshJTNYk0ZbBPgprRmGr7jD
-         lqm0e+rsf5jLA9jYAkR7Zu68y+bYbay4e6PSgD7r9cRBBFH8w91O+pk8wAIcmVm6TXpQ
-         yAuTNCWB3M1LIRliSb5NZYjxrOtNQaTGpT+ncQA7Fjzr4YxKENf0OH36qLlxRxS/hfIM
-         mTl+TiVx0E1qZT5QkUSiVF2cyEQb3c4h0TpgX8T7Fv6bezovooea0QukLBmDl3BG1H5m
-         Gs+M569pufPPs/SjxWFqr+V5r/dQmwNqqN1l0aTcgJ3EGRP+CcjItcwfN7/dIcqu4SqV
-         tHHA==
-X-Gm-Message-State: AOAM5334i2j2PTtnLXsnaIPpcZegr39K3c6ToskCC/zDGSKzhoSlPIRV
-        DISjzShpAToY0ActbYRHDSI=
-X-Google-Smtp-Source: ABdhPJyYPlqyuINHfKCvbHNeyyGJJpZhkPWeb9Y7RWy4Fh1Pew4OKmCYnY1iZT2Aeye1QahSPuX+Xg==
-X-Received: by 2002:a17:90a:71c3:: with SMTP id m3mr2825793pjs.17.1589595212441;
-        Fri, 15 May 2020 19:13:32 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:f99a:ee92:9332:42a? ([2601:647:4000:d7:f99a:ee92:9332:42a])
-        by smtp.gmail.com with ESMTPSA id v1sm2721182pgl.11.2020.05.15.19.13.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2020 19:13:31 -0700 (PDT)
-Subject: Re: [RFC PATCH 06/13] scsi: scsi_dh: ufshpb: Prepare for L2P cache
- management
-To:     Avri Altman <avri.altman@wdc.com>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     alim.akhtar@samsung.com, asutoshd@codeaurora.org,
-        Zang Leigang <zangleigang@hisilicon.com>,
-        Avi Shchislowski <avi.shchislowski@wdc.com>,
-        Bean Huo <beanhuo@micron.com>, cang@codeaurora.org,
-        stanley.chu@mediatek.com,
-        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>
-References: <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
- <1589538614-24048-7-git-send-email-avri.altman@wdc.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <953f883a-1911-7de9-3b72-477a03a01222@acm.org>
-Date:   Fri, 15 May 2020 19:13:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <1589538614-24048-7-git-send-email-avri.altman@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 15 May 2020 22:16:00 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:39078 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726541AbgEPCQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 May 2020 22:16:00 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX93WTL9e81M1AA--.61S2;
+        Sat, 16 May 2020 10:15:50 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v3 1/2] MIPS: Loongson: Build ATI Radeon GPU driver as module
+Date:   Sat, 16 May 2020 10:15:48 +0800
+Message-Id: <1589595349-31656-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxX93WTL9e81M1AA--.61S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7KFWUWr4kKrW7tFW5JF4ruFg_yoW8Xw4Dpr
+        45Gan3JFWkGrnYkFZ7CrZ7WrWYvFs5JFW3uF40kry7Crs3ua40vry5tr1UJr4UXrZxta1S
+        9F93Gr1fCanrCa7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkq14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
+        WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4U
+        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+        W8JwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbxpnPUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-15 03:30, Avri Altman wrote:
-> +static int ufshpb_mempool_init(struct ufshpb_dh_lun *hpb)
-> +{
-> +	unsigned int max_active_subregions = hpb->max_active_regions *
-> +		subregions_per_region;
-> +	int i;
-> +
-> +	INIT_LIST_HEAD(&hpb->lh_map_ctx);
-> +	spin_lock_init(&hpb->map_list_lock);
-> +
-> +	for (i = 0 ; i < max_active_subregions; i++) {
-> +		struct ufshpb_map_ctx *mctx =
-> +			kzalloc(sizeof(struct ufshpb_map_ctx), GFP_KERNEL);
-> +
-> +		if (!mctx) {
-> +			/*
-> +			 * mctxs already added in lh_map_ctx will be removed in
-> +			 * detach
-> +			 */
-> +			return -ENOMEM;
-> +		}
-> +
-> +		/* actual page allocation is done upon subregion activation */
-> +
-> +		INIT_LIST_HEAD(&mctx->list);
-> +		list_add(&mctx->list, &hpb->lh_map_ctx);
-> +	}
-> +
-> +	return 0;
-> +
-> +}
+When ATI Radeon GPU driver has been compiled directly into the kernel
+instead of as a module, we should make sure the firmware for the model
+(check available ones in /lib/firmware/radeon) is built-in to the kernel
+as well, otherwise there exists the following fatal error during GPU init,
+change CONFIG_DRM_RADEON=y to CONFIG_DRM_RADEON=m to fix it.
 
-Could kmem_cache_create() have been used instead of implementing yet
-another memory pool implementation?
+[    1.900997] [drm] Loading RS780 Microcode
+[    1.905077] radeon 0000:01:05.0: Direct firmware load for radeon/RS780_pfp.bin failed with error -2
+[    1.914140] r600_cp: Failed to load firmware "radeon/RS780_pfp.bin"
+[    1.920405] [drm:r600_init] *ERROR* Failed to load firmware!
+[    1.926069] radeon 0000:01:05.0: Fatal error during GPU init
+[    1.931729] [drm] radeon: finishing device.
 
-> +static int ufshpb_region_tbl_init(struct ufshpb_dh_lun *hpb)
-> +{
-> +	struct ufshpb_region *regions;
-> +	int i, j;
-> +
-> +	regions = kcalloc(hpb->regions_per_lun, sizeof(*regions), GFP_KERNEL);
-> +	if (!regions)
-> +		return -ENOMEM;
-> +
-> +	atomic_set(&hpb->active_regions, 0);
-> +
-> +	for (i = 0 ; i < hpb->regions_per_lun; i++) {
-> +		struct ufshpb_region *r = regions + i;
-> +		struct ufshpb_subregion *subregions;
-> +
-> +		subregions = kcalloc(subregions_per_region, sizeof(*subregions),
-> +				     GFP_KERNEL);
-> +		if (!subregions)
-> +			goto release_mem;
-> +
-> +		for (j = 0; j < subregions_per_region; j++) {
-> +			struct ufshpb_subregion *s = subregions + j;
-> +
-> +			s->hpb = hpb;
-> +			s->r = r;
-> +			s->region = i;
-> +			s->subregion = j;
-> +		}
-> +
-> +		r->subregion_tbl = subregions;
-> +		r->hpb = hpb;
-> +		r->region = i;
-> +	}
-> +
-> +	hpb->region_tbl = regions;
-> +
-> +	return 0;
+Fixes: 024e6a8b5bb1 ("MIPS: Loongson: Add a Loongson-3 default config file")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
-Could kvmalloc() have been used to allocate multiple subregion data
-structures instead of calling kcalloc() multiple times?
+v2:
+  - Modify the patch subject and update the commit message
 
-> +	spin_lock(&hpb->map_list_lock);
-> +
-> +	list_for_each_entry_safe(mctx, next, &hpb->lh_map_ctx, list) {
-> +		list_del(&mctx->list);
-> +		kfree(mctx);
-> +	}
-> +
-> +	spin_unlock(&hpb->map_list_lock);
+v3:
+  - No changes
 
-Spinlocks should be held during a short time. I'm not sure that's the
-case for the above loop.
+ arch/mips/configs/loongson3_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
+diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
+index 6768c16..4df2434 100644
+--- a/arch/mips/configs/loongson3_defconfig
++++ b/arch/mips/configs/loongson3_defconfig
+@@ -230,7 +230,7 @@ CONFIG_MEDIA_CAMERA_SUPPORT=y
+ CONFIG_MEDIA_USB_SUPPORT=y
+ CONFIG_USB_VIDEO_CLASS=m
+ CONFIG_DRM=y
+-CONFIG_DRM_RADEON=y
++CONFIG_DRM_RADEON=m
+ CONFIG_FB_RADEON=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_LCD_PLATFORM=m
+-- 
+2.1.0
 
-Bart.
