@@ -2,75 +2,59 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D13AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 20:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E13C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 20:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3503420709
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 20:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2988A207BB
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 20:40:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgEPUfK (ORCPT
+        id S1726715AbgEPUkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 16:35:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34796 "EHLO
+        Sat, 16 May 2020 16:40:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726460AbgEPUfK (ORCPT
+        by vger.kernel.org with ESMTP id S1726460AbgEPUkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 16:35:10 -0400
+        Sat, 16 May 2020 16:40:20 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2321DC061A0C;
-        Sat, 16 May 2020 13:35:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB830C061A0C;
+        Sat, 16 May 2020 13:40:19 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6F4081194478D;
-        Sat, 16 May 2020 13:35:09 -0700 (PDT)
-Date:   Sat, 16 May 2020 13:35:08 -0700 (PDT)
-Message-Id: <20200516.133508.2302524641917348540.davem@davemloft.net>
-To:     luobin9@huawei.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        luoxianjun@huawei.com, yin.yinshi@huawei.com,
-        cloud.wangxiaoyun@huawei.com
-Subject: Re: [PATCH net-next v1] hinic: add set_channels ethtool_ops support
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 56B301194479F;
+        Sat, 16 May 2020 13:40:19 -0700 (PDT)
+Date:   Sat, 16 May 2020 13:40:18 -0700 (PDT)
+Message-Id: <20200516.134018.1760282800329273820.davem@davemloft.net>
+To:     shakeelb@google.com
+Cc:     edumazet@google.com, willemb@google.com, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/packet: simply allocations in alloc_one_pg_vec_page
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200515194212.10381-1-luobin9@huawei.com>
-References: <20200515194212.10381-1-luobin9@huawei.com>
+In-Reply-To: <20200516021736.226222-1-shakeelb@google.com>
+References: <20200516021736.226222-1-shakeelb@google.com>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 16 May 2020 13:35:09 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 16 May 2020 13:40:19 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
-Date: Fri, 15 May 2020 19:42:12 +0000
+From: Shakeel Butt <shakeelb@google.com>
+Date: Fri, 15 May 2020 19:17:36 -0700
 
-> add support to change TX/RX queue number with ethtool -L
-> 
-> Signed-off-by: Luo bin <luobin9@huawei.com>
+> and thus there is no need to have any fallback after vzalloc.
 
-I don't think you are properly following the semantics of this
-ethtool command with your changes.
+This statement is false.
 
-In fact, you are breaking the hinic_get_channels() function which
-is properly advertising the ->max_* values currently.  Now it will
-return zero.
+The virtual mapping allocation or the page table allocations can fail.
 
-Whatever is advertised in ->max_* should be the driver's maximum
-capabilities.
-
-This means that the user can request anything in the range from '1'
-to these max values.
-
-Whatever the user asks for in ->combined_count and elsewhere, you
-_MUST_ provide or return an error.
-
-That is not what hinic_set_channels() is doing.  It is using
-combined_count as a "limit" rather than the value to use.
+A fallback is therefore indeed necessary.
