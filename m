@@ -2,104 +2,102 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB256C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C54C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B39D92074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:17:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="P+RMnErT"
+	by mail.kernel.org (Postfix) with ESMTP id E3258206F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 08:20:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgEPIRV (ORCPT
+        id S1726833AbgEPIUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 04:17:21 -0400
-Received: from mail-eopbgr80050.outbound.protection.outlook.com ([40.107.8.50]:38882
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        Sat, 16 May 2020 04:20:47 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49436 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725934AbgEPIRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 04:17:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h+GdqpOPSRR7ezBKDgK++vugiueZlUIY97kKskDR9euTb/ZHujXVXF89hdNf9OxcT6xuScKp4Gj+HXtq3V9HPkLJdAYfzu6OM2uTWsi1mbtapb/7CBn62hJ71YDSAosLHzRR1L2IA4vV+gUGOHBJw/KofHnS7POgZtRudfoM1JcEBn1h+ZxEl+ZLpv9hrijolFswTwGUF54iceFbTqmw9qFwhAuTP2aSSTrO/x+doMSovLuMUFpOfiYZQnVKvQFHYrgCqq7GTiB9S0L7os/pFCeNEfcywAKAM1GWKuZh+Da5bkDYZszb0eSgQeZvWUQYtbhOVQ5mF6JNjOW7T0ER2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xoIHbYVNRhSTZKy/3H1bk9U0yapx8IAlAuychXV9BKc=;
- b=DhIyWymPVcguH5a+hXgb+b+c5x2nFz1jnSbIupcHN4h+oQLVZDb0VjB4AbgD8tsYW+0RimCkg6o1UP5T9+OgWm3jiDSfTBbh8ZotX2SH6e9pMbdHrEwYHwk2V7unCPnvn6lM03+aMZWpvotGaldC5AczJdULL46WIbeD6uaiueb4G2kO1b+W7jcCJ9MpPp9ZoNZQ8O4vChsOWDz5QfLDmRvQm5tw5VHvKbe1AxIqQbQvSzx+yfwcbVt0NBQmr5zSkE3BUuuNkYc8TEQBOcUmc1RIKKqJtdiyXb72UAI4nTGRltAsNjVane3t3ZvciU9GhMLXtFlaTTg6hcE6l7d7kg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xoIHbYVNRhSTZKy/3H1bk9U0yapx8IAlAuychXV9BKc=;
- b=P+RMnErTjFXPSb0kozDo55c4Ptu73/yTRjSEiD01DVmkHm6ZkTJEsua2s4wFAoP7jL3TvTNO0HPcNWHcx+lq+K2PrJsli7LAa//+bziytCl5EfMY1oVivLcS5U1xCNNV0sVbO+m9O/uCAd2mIUhGMsADj1GeB+m+JsnnHSde6r0=
-Received: from VI1PR04MB4366.eurprd04.prod.outlook.com (2603:10a6:803:3d::27)
- by VI1PR04MB6253.eurprd04.prod.outlook.com (2603:10a6:803:f3::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24; Sat, 16 May
- 2020 08:17:17 +0000
-Received: from VI1PR04MB4366.eurprd04.prod.outlook.com
- ([fe80::8102:b59d:36b:4d09]) by VI1PR04MB4366.eurprd04.prod.outlook.com
- ([fe80::8102:b59d:36b:4d09%7]) with mapi id 15.20.3000.022; Sat, 16 May 2020
- 08:17:17 +0000
-From:   Ganapathi Bhat <ganapathi.bhat@nxp.com>
-To:     =?iso-8859-1?Q?Pali_Roh=E1r?= <pali@kernel.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        =?iso-8859-1?Q?Marek_Beh=FAn?= <marek.behun@nic.cz>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] mwifiex: Firmware name for W8997 sdio wifi chip
-Thread-Topic: [EXT] mwifiex: Firmware name for W8997 sdio wifi chip
-Thread-Index: AQHWKrwXtO/N2oQua0+uJ10PPhSg4aiqXxHQ
-Date:   Sat, 16 May 2020 08:17:17 +0000
-Message-ID: <VI1PR04MB4366625917BB57695BE454448FBA0@VI1PR04MB4366.eurprd04.prod.outlook.com>
-References: <20200515132353.vfor7v4buzoddfmb@pali>
-In-Reply-To: <20200515132353.vfor7v4buzoddfmb@pali>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [103.54.18.180]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b1c46a81-ffd5-419e-1b0c-08d7f9718c01
-x-ms-traffictypediagnostic: VI1PR04MB6253:
-x-microsoft-antispam-prvs: <VI1PR04MB625351D0B69455EE1D6136F58FBA0@VI1PR04MB6253.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 040513D301
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: F3NwSc4HTvY4v+pP8o36PlO0uS75hO0j2K1OEu5feRPUjnAEPDsW2Gex38Q3AIJA2snOK7+tUZdiqAZQqxwPwSCg2fkozVpkVVrPp1EbBC0nlAdC6+gW2bAwBEs0/ocWNYKNxsc5AWhxYEEIk4/pKLG7My1gWt9HOwc2ZkhOyE/AsUoChw7DswUdPl5+v2fensyUXK9qjO3wvKtaVMp9AmQpAIT+UJVf7jRUkSLOYEXShSunbmTmKOTxiJZjY8Wld5rbnFc+xu8TKk5tMoLy8Ws6g6K3hOUUlZZlhghtMpydEiOsvbFGDykYiYrLoByxAtl/0pYNpcF2lD7rIGBUrmPafAXizzDf5MebEzWTmG+Hs5P4n6nhdW2OI6R6BwUbNi2jpZ7kjkpKMBBoYXaPYM7n606MTIxwHwsojh2mesWP5IWL8Fre1y9rXCXlyeGZ
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(136003)(396003)(366004)(376002)(33656002)(52536014)(558084003)(5660300002)(110136005)(66946007)(66446008)(76116006)(316002)(64756008)(478600001)(7696005)(66556008)(9686003)(66476007)(71200400001)(6506007)(44832011)(8676002)(26005)(86362001)(55016002)(8936002)(2906002)(186003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: u47TGSW8UY1vbT6c4CLgOLrvopsZk1HfRgEAh+Xcqok8wHmn0VKqrKE/1UUj+hNol8zItLSIj/Z/vmY0LT+EC4CTe8vMflUB/BixPgdePcBsW7y+prZNhXa26CI1nxJM6FhVQf0fFAP1Sc+VCAgXSgjl6yJtQPbZrUWSG8sHz9bbM57/wOXIuftD3npEJZQmo8MDbadQc4BHYezP4vA5n+R24WP9UelJ/+hsFFeTVLkFwbc31Tw0cvtr7adC7XTKuDgnz3+p9H5ACZHfuHrQJpQL27rfpX6gLx8iQrYDaZE+KBB+F/yPVg/k1WzhSQ6KCvK/Swte17n/nUrWWtajRl0UTAWeFYQtEQzGjxIXI5wHbo1+4pBkLLqKIXA/wc+pquloPIzrnuxSsT//xE0Vr5fwcIBhze5v6jjdzJs0EY0Dlq5/5uH2Gacu3s6bZ+WpbhqkqtpsUeHNXfuk1e0I+GnfikB1fPHvJXc7x8LJf6A=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1725934AbgEPIUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 04:20:46 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C9FD0778710BA671C180;
+        Sat, 16 May 2020 16:20:39 +0800 (CST)
+Received: from [10.166.215.145] (10.166.215.145) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 16 May 2020 16:20:36 +0800
+Subject: Re: [PATCH 0/4] arm64: kgdb/kdb: Fix single-step debugging issues
+To:     Doug Anderson <dianders@chromium.org>
+CC:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, <liwei1412@163.com>
+References: <20200509214159.19680-1-liwei391@huawei.com>
+ <CAD=FV=Xv6xgj_M9tYjHzmW4UZD2RdH2c5=dagNybSkdfBabYZw@mail.gmail.com>
+From:   "liwei (GF)" <liwei391@huawei.com>
+Message-ID: <a20ee677-495b-9336-a329-eabd50dd1cad@huawei.com>
+Date:   Sat, 16 May 2020 16:20:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1c46a81-ffd5-419e-1b0c-08d7f9718c01
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2020 08:17:17.0778
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3Mh1f9Zu46shyqcrnS0lt3egqu6mStuUPAFdd/dtg5dGENOyvwsM5SIkyVA/3RYg1olO6VkcuLkq75goOoDHew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6253
+In-Reply-To: <CAD=FV=Xv6xgj_M9tYjHzmW4UZD2RdH2c5=dagNybSkdfBabYZw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.145]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pali,
+Hi Douglas,
 
-Thanks for this notice. We will try to push the new firmware and also, fix =
-the naming problem.
+On 2020/5/14 8:34, Doug Anderson wrote:
+> Hi,
+> 
+> On Sat, May 9, 2020 at 6:49 AM Wei Li <liwei391@huawei.com> wrote:
+>>
+>> This patch set is to fix several issues of single-step debugging
+>> in kgdb/kdb on arm64.
+>>
+>> It seems that these issues have been shelved a very long time,
+>> but i still hope to solve them, as the single-step debugging
+>> is an useful feature.
+>>
+>> Note:
+>> Based on patch "arm64: cacheflush: Fix KGDB trap detection",
+>> https://www.spinics.net/lists/arm-kernel/msg803741.html
+>>
+>> Wei Li (4):
+>>   arm64: kgdb: Fix single-step exception handling oops
+>>   arm64: Extract kprobes_save_local_irqflag() and
+>>     kprobes_restore_local_irqflag()
+>>   arm64: kgdb: Fix single-stepping into the irq handler wrongly
+>>   arm64: kgdb: Set PSTATE.SS to 1 to reenable single-step
+>>
+>>  arch/arm64/include/asm/debug-monitors.h |  6 ++++++
+>>  arch/arm64/kernel/debug-monitors.c      | 28 ++++++++++++++++++++++++-
+>>  arch/arm64/kernel/kgdb.c                | 16 +++++++++++---
+>>  arch/arm64/kernel/probes/kprobes.c      | 28 ++-----------------------
+>>  4 files changed, 48 insertions(+), 30 deletions(-)
+> 
+> Just an overall note that I'm very happy that you posted this patch
+> series!  It's always been a thorn in my side that stepping and
+> breakpoints were so broken on arm64 and I'm really excited that you're
+> fixing them.  Now I'll have to get in the habit of using kgdb for more
+> than just debugging crashes and maybe I can use it more for exploring
+> how functions work more.  :-)
+> > I'll also note that with your patch series I'm even seeing the "call"
+> feature of gdb working now.  That has always been terribly broken for
+> me.
+> 
+Thanks for reviewing and testing this series.
+Enjoy exploring the kernel with kgdb/kdb! :-)
 
-Regards,
-Ganapathi
+Thanks,
+Wei
