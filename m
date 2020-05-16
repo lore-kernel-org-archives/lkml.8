@@ -6,35 +6,37 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC93CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26927C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B39B32074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2F82074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgEPHWE (ORCPT
+        id S1726957AbgEPHWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 03:22:04 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4850 "EHLO huawei.com"
+        Sat, 16 May 2020 03:22:52 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44510 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725807AbgEPHWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 03:22:04 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B6D372E8431338979092;
-        Sat, 16 May 2020 15:22:01 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.237) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Sat, 16 May 2020
- 15:21:51 +0800
+        id S1725807AbgEPHWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 03:22:51 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A2557B10F7855F44BA83;
+        Sat, 16 May 2020 15:22:49 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.237) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Sat, 16 May 2020
+ 15:22:42 +0800
+Subject: [PATCH 2/2] lib: 842 - Remove useless checking in check_template()
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
 To:     <haren@us.ibm.com>, <linux-kernel@vger.kernel.org>,
         Shiyuan Hu <hushiyuan@huawei.com>,
         Hewenliang <hewenliang4@huawei.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH 1/2] lib: 842 - Remove useless checking in add_template()
-Message-ID: <e46137c5-6bdd-59bd-1a20-59752f2bb8c2@huawei.com>
-Date:   Sat, 16 May 2020 15:21:40 +0800
+References: <e46137c5-6bdd-59bd-1a20-59752f2bb8c2@huawei.com>
+Message-ID: <74705394-8f7c-9635-12c0-10fed1fe8f8f@huawei.com>
+Date:   Sat, 16 May 2020 15:22:41 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <e46137c5-6bdd-59bd-1a20-59752f2bb8c2@huawei.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -46,9 +48,9 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 A warning was found by smatch tool:
-  "add_template() error: testing array offset 'c' after use."
+  "check_template() error: testing array offset 'c' after use."
 
-Fix it by removing the useless checking in add_template().
+Fix it by removing the useless checking in check_template().
 
 Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
 ---
@@ -56,19 +58,19 @@ Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
  1 file changed, 3 deletions(-)
 
 diff --git a/lib/842/842_compress.c b/lib/842/842_compress.c
-index c02baa4168e1..18255d25781b 100644
+index 18255d25781b..8d25345b4b49 100644
 --- a/lib/842/842_compress.c
 +++ b/lib/842/842_compress.c
-@@ -225,9 +225,6 @@ static int add_template(struct sw842_param *p, u8 c)
+@@ -379,9 +379,6 @@ static bool check_template(struct sw842_param *p, u8 c)
  	u8 *t = comp_ops[c];
- 	bool inv = false;
+ 	int i, match, b = 0;
 
 -	if (c >= OPS_MAX)
--		return -EINVAL;
+-		return false;
 -
- 	pr_debug("template %x\n", t[4]);
-
- 	ret = add_bits(p, t[4], OP_BITS);
+ 	for (i = 0; i < 4; i++) {
+ 		if (t[i] & OP_ACTION_INDEX) {
+ 			if (t[i] & OP_AMOUNT_2)
 -- 
 1.8.3.1
 
