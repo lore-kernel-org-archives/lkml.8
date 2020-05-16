@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD4EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 393B420786
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D64207CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 23:59:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U1Hw8S8E"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P54OzxSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgEPXxF (ORCPT
+        id S1726895AbgEPX7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 19:53:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37370 "EHLO
+        Sat, 16 May 2020 19:59:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726670AbgEPXxE (ORCPT
+        by vger.kernel.org with ESMTP id S1726670AbgEPX7f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 19:53:04 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6198FC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 16:53:04 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id e125so4104557lfd.1
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 16:53:04 -0700 (PDT)
+        Sat, 16 May 2020 19:59:35 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09ACBC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 16:59:35 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h4so6027906ljg.12
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 16:59:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aTOjg3LRKrOjZRaH+MBDwrWQ5QHycpS6ns5xrDhIPQU=;
-        b=U1Hw8S8Ez1s26H+C7pGO1kjxeK+sPTVI/z5nX39rct4L2PiislzUljGXwNawxrIVc1
-         CAerMm7TVyp+RbCU7OUnur9kefVzVsdlo0TouI8ATDIG0vk+6K+t1N1cZ7IUoVlOUALN
-         sUKapGdU8n+9LV7zek6BnrmwjdtQGTHfbcpdt33B14UNMGDo8pwPim+6coFHxhNmJ6UK
-         azckhOkGBYnfTGNpVTASqLiqCf23MUkWeNI8Hn6WBFnH7p305/ZNH1wlkZuGejL8fEBi
-         U7yFY9xUoIgP/ywCN1FIfVvYe/MICTHZh1sJKEjF4GC/QZvbBdeG9gGgnBpOp0dbuB+n
-         RchA==
+        bh=nDEHZY/PsMR8qXioVOkwgQjNCpyRlOPlYpF92vL83Bo=;
+        b=P54OzxSpbB00QNa1Vl9WFApqmqJ/4B0rUpbBMDMmPsI/C8A9uvrD4Ks0sH03/n/Ea8
+         TthdS9fKbtNSBKevVXQXJ0hQwN1Cr21r0DS9ympS50RYBG6qN73K0ac9Z2luaU+W0UJb
+         Ib5zltG1UqMylh0kpknA01DYSc+lcNyz7Vo8L7ukwpSfgXHUT/ABT/xtEvzvHa6ZPO7f
+         hVftgDHyQS+Qwumq/NzRXEypHe6LQAniqULJKgLzOb5VrJTE7ftIzqSwCXiVzZWL99Zg
+         ckBhnhbDgCDabIapMZtrwe2jd11elo2NxMB1KnXMCzE2KXPlETdMkQs44AO7W4+LaHzv
+         y5nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aTOjg3LRKrOjZRaH+MBDwrWQ5QHycpS6ns5xrDhIPQU=;
-        b=sqdnvEhXm+Au1Ink0VdgXoJKGRlJGZ+OdYYiAn7FaL4PPXw79fhNmBn2ranB/145LJ
-         tQjjm0H/htkVIlWXAuH80E2TYPsKkRaNUjQrmrbLz9EHJa830VMNqL0K6qNpGMZ5seVi
-         ATCGolqwu48XzEzOmg2lQB4Nar8FlKCeZR34NjkeY5Cc0jk0OguDRf8iEgK1lbcM+2/y
-         JWxkKL2t/WV/fP9mIZbQpjCBiAdTYDiWfqids40kMXtLBhPb1dKYT8IzJCIyIIf48yj6
-         RZa09sSWqANDcoM3uY3xG5b56NtD/I9Fn9p81ny0uwdKeJP2qPRDTzVBLZ22AZJwOUrP
-         pBsQ==
-X-Gm-Message-State: AOAM5321uEiOwu7deZYAEPYlMCy/6SqzNmkna/uQbk1TnfasgshbU6WN
-        jaFyOFe+3qivPbRme9XtygAszkV+L9w/kgVGxarJmg==
-X-Google-Smtp-Source: ABdhPJxFg6Br+F3mfeEIVbPQPPWU4BQ1MiaAuBlHfXbkGVPTd6FVFzu+L7aXuGKZs0dkcczJTNgLtD1Ii7hmk99pxHw=
-X-Received: by 2002:a19:d52:: with SMTP id 79mr5914680lfn.125.1589673182415;
- Sat, 16 May 2020 16:53:02 -0700 (PDT)
+        bh=nDEHZY/PsMR8qXioVOkwgQjNCpyRlOPlYpF92vL83Bo=;
+        b=uB1RLB9IwQxCU7q4mpZkbM+mYPVUNaArQcbu1cNEm9hyPRXauYyAyeT0XTG1Ct0/lE
+         jtjleLKiWmu9fT77BgRhBF0KGeytq0Ad00dxUuuJK0DTYOpn3LZ7kdEj1dae53u1ywWP
+         FCcMcUY/kxDednF5dh8y5joLTfrTT2gyAvswwMo7dJjEzqYz9f+mFVoRZZLwBwN67mig
+         wNCMZuUov9o2owNxyGE5RqjJMbaFprIrue95ptnwU7oLhdZpgp6CJK5X0lGTPxEngURN
+         DJI0zBFRirjz1pgRlArgS/hn5toKeJeQ7TQUxq180qe194ZTVKN2t0KYXmit2RRaUhKQ
+         fRGg==
+X-Gm-Message-State: AOAM531i4AATEDvd6OQU+qcb/Luuz4gdrZ/wrFAubky0XaSTTXBx76sa
+        nhwIylbIzpBS3n3XArbs7WRBXEIgSftRpQlUY8DHSg==
+X-Google-Smtp-Source: ABdhPJw0ZfYrSkQBOU7HtlJ+qMtghoYxNb4Yi76ISuBNl6ETii85WUeEH5eTH7QX7VYFW8gzbaKKijv4ok8EvnEZF+c=
+X-Received: by 2002:a2e:9d5:: with SMTP id 204mr5185058ljj.168.1589673572976;
+ Sat, 16 May 2020 16:59:32 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200516021736.226222-1-shakeelb@google.com> <20200516.134018.1760282800329273820.davem@davemloft.net>
- <CALvZod7euq10j6k9Z_dej4BvGXDjqbND05oM-u6tQrLjosX31A@mail.gmail.com> <CANn89iJ9BYNi__DhLp_QE5JU7=RxkzknOSxD+P+qiHg2=Ho6Ow@mail.gmail.com>
-In-Reply-To: <CANn89iJ9BYNi__DhLp_QE5JU7=RxkzknOSxD+P+qiHg2=Ho6Ow@mail.gmail.com>
+ <CALvZod7euq10j6k9Z_dej4BvGXDjqbND05oM-u6tQrLjosX31A@mail.gmail.com> <20200516.163927.1112911965183377217.davem@davemloft.net>
+In-Reply-To: <20200516.163927.1112911965183377217.davem@davemloft.net>
 From:   Shakeel Butt <shakeelb@google.com>
-Date:   Sat, 16 May 2020 16:52:51 -0700
-Message-ID: <CALvZod6b2tHDGGzkspxT1r7c4So95BpUagPcwgUVf+++5eX5Hw@mail.gmail.com>
+Date:   Sat, 16 May 2020 16:59:21 -0700
+Message-ID: <CALvZod4cqCNHVLVMsoHKtQxWdY3YUqJBuqwFwE8MLeVh-jbdUw@mail.gmail.com>
 Subject: Re: [PATCH] net/packet: simply allocations in alloc_one_pg_vec_page
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     David Miller <davem@davemloft.net>,
+To:     David Miller <davem@davemloft.net>
+Cc:     Eric Dumazet <edumazet@google.com>,
         Willem de Bruijn <willemb@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         netdev <netdev@vger.kernel.org>,
@@ -75,32 +75,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 3:45 PM Eric Dumazet <edumazet@google.com> wrote:
+On Sat, May 16, 2020 at 4:39 PM David Miller <davem@davemloft.net> wrote:
 >
-> On Sat, May 16, 2020 at 3:35 PM Shakeel Butt <shakeelb@google.com> wrote:
-> >
-> > On Sat, May 16, 2020 at 1:40 PM David Miller <davem@davemloft.net> wrote:
-> > >
-> > > From: Shakeel Butt <shakeelb@google.com>
-> > > Date: Fri, 15 May 2020 19:17:36 -0700
-> > >
-> > > > and thus there is no need to have any fallback after vzalloc.
-> > >
-> > > This statement is false.
-> > >
-> > > The virtual mapping allocation or the page table allocations can fail.
-> > >
-> > > A fallback is therefore indeed necessary.
-> >
-> > I am assuming that you at least agree that vzalloc should only be
-> > called for non-zero order allocations. So, my argument is if non-zero
-> > order vzalloc has failed (allocations internal to vzalloc, including
-> > virtual mapping allocation and page table allocations, are order 0 and
-> > use GFP_KERNEL i.e. triggering reclaim and oom-killer) then the next
-> > non-zero order page allocation has very low chance of succeeding.
+> From: Shakeel Butt <shakeelb@google.com>
+> Date: Sat, 16 May 2020 15:35:46 -0700
 >
+> > So, my argument is if non-zero order vzalloc has failed (allocations
+> > internal to vzalloc, including virtual mapping allocation and page
+> > table allocations, are order 0 and use GFP_KERNEL i.e. triggering
+> > reclaim and oom-killer) then the next non-zero order page allocation
+> > has very low chance of succeeding.
 >
-> 32bit kernels might have exhausted their vmalloc space, yet they can
-> still allocate order-0 pages.
+> Also not true.
+>
+> Page table allocation strategies and limits vary by architecture, they
+> may even need virtual mappings themselves.  So they can fail in situations
+> where a non-zero GFP_KERNEL page allocator allocation would succeed.
 
-Oh ok it makes sense.
+Thanks for the explanation. Do you think calling vzalloc only for
+non-zero order here has any value?
