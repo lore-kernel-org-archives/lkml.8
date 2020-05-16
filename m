@@ -2,75 +2,106 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA84C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B41C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 354012065C
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:01:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589612497;
-	bh=pT8e+7o3TercEeuJfTZj5CiH2h8xBjPmu+OZSlMXKoE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gB6r2lkDq7yaOa82bK2fXplWc95f2ER5Sd/Gtdd1/h47RR7rXQD9sRvXNUVfEh5aN
-	 T7HogV9GyIGpLAEpknzg4UIdL+RQyGYHDwH834Qilw6tz+dycMok1dmer9yNCKT5Se
-	 oAcAq/64XPxxNw8idz9VC0xEPt2GmELYkBmpc4NA=
+	by mail.kernel.org (Postfix) with ESMTP id 46C57206F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 07:03:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgEPHBg (ORCPT
+        id S1726920AbgEPHDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 03:01:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgEPHBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 03:01:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3C142065C;
-        Sat, 16 May 2020 07:01:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589612494;
-        bh=pT8e+7o3TercEeuJfTZj5CiH2h8xBjPmu+OZSlMXKoE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gFYicTCZOTybYHNii6SO9Ip7WlV4TNvEH1j2OckSYViR962JwC11BP1mzY8DL0W/d
-         kmaF8iBegT3WqLVX8zd9zGxLbBryXbSMCGu8QHCkOJzLS9gxW92x9V5Qqz6/MX4MI5
-         LXt/gyWFds9pprvUYuBKHAmHPnqzHndQMvj1MOPE=
-Date:   Sat, 16 May 2020 09:01:31 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     arnd@arndb.de, manivannan.sadhasivam@linaro.org,
-        bjorn.andersson@linaro.org, wufan@codeaurora.org,
-        pratanan@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 3/8] qaic: Create char dev
-Message-ID: <20200516070131.GB3964535@kroah.com>
-References: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
- <1589465266-20056-4-git-send-email-jhugo@codeaurora.org>
- <20200514141211.GA2643665@kroah.com>
- <0421a64a-10f3-08df-9ef1-14fdb570db0d@codeaurora.org>
- <20200514155615.GA2963499@kroah.com>
- <4be546d3-b571-0659-0140-f34ec88f95ff@codeaurora.org>
- <4683046a-c6b5-30a5-ef02-2f610523ae1c@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4683046a-c6b5-30a5-ef02-2f610523ae1c@codeaurora.org>
+        Sat, 16 May 2020 03:03:22 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:40162 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725275AbgEPHDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 03:03:22 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxFuoxkL9eqmM1AA--.11S2;
+        Sat, 16 May 2020 15:03:14 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH] MIPS: Loongson: Add support for serial console
+Date:   Sat, 16 May 2020 15:03:08 +0800
+Message-Id: <1589612588-29196-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9AxFuoxkL9eqmM1AA--.11S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw1DuFWkXrWxXF47WrWDCFg_yoW8XF45pa
+        15Aa1DJFWkWFn5trW8GFyDurWFyFnxAFW2gF17Jr15ua98t34jvr1Sy34Utr47XFWkt3yF
+        vr93KF9FyF47C3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
+        GF4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
+        WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
+        7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+        1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+        IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjX_-PUUUU
+        U==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 03:08:59PM -0600, Jeffrey Hugo wrote:
-> 2. There are a limited number of dynamic minor numbers for misc devs (64),
-> so if you are expecting more devices than that, a misc dev is not
-> appropiate.  Also, these minors are shared with other misc dev users, so
-> depending on the system configuration, you might have significantly less
-> than 64 minors available for use.
+After commit 87fcfa7b7fe6 ("MIPS: Loongson64: Add generic dts"),
+there already exists the node and property of Loongson CPU UART0
+in loongson3-package.dtsi:
 
-I'm pretty sure we can have more than 64 misc devices, that limitation
-should have been removed a while ago.  Try it and see :)
+cpu_uart0: serial@1fe001e0 {
+        compatible = "ns16550a";
+        reg = <0 0x1fe001e0 0x8>;
+        clock-frequency = <33000000>;
+        interrupt-parent = <&liointc>;
+        interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+        no-loopback-test;
+};
 
-greg k-h
+In order to support for serial console on the Loongson platform,
+add CONFIG_SERIAL_OF_PLATFORM=y to loongson3_defconfig.
+
+With this patch, we can see the following boot message:
+
+[    1.877745] printk: console [ttyS0] disabled
+[    1.881979] 1fe001e0.serial: ttyS0 at MMIO 0x1fe001e0 (irq = 16, base_baud = 2062500) is a 16550A
+[    1.890838] printk: console [ttyS0] enabled
+
+And also, we can login normally from the serial console.
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+
+Hi Jiaxun,
+
+Thank you very much for your suggestion.
+
+ arch/mips/configs/loongson3_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
+index 6768c16..cd95f08 100644
+--- a/arch/mips/configs/loongson3_defconfig
++++ b/arch/mips/configs/loongson3_defconfig
+@@ -217,6 +217,7 @@ CONFIG_SERIAL_8250_EXTENDED=y
+ CONFIG_SERIAL_8250_MANY_PORTS=y
+ CONFIG_SERIAL_8250_SHARE_IRQ=y
+ CONFIG_SERIAL_8250_RSA=y
++CONFIG_SERIAL_OF_PLATFORM=y
+ CONFIG_HW_RANDOM=y
+ CONFIG_RAW_DRIVER=m
+ CONFIG_I2C_CHARDEV=y
+-- 
+2.1.0
+
