@@ -2,125 +2,138 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B34C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 14:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77873C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 14:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74A2F20735
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 14:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6302C20671
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 14:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgEPOGe (ORCPT
+        id S1726615AbgEPOJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 10:06:34 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:40236 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgEPOGd (ORCPT
+        Sat, 16 May 2020 10:09:37 -0400
+Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:51750 "EHLO
+        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgEPOJg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 10:06:33 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B8B9C8030809;
-        Sat, 16 May 2020 14:06:30 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id kzvn8ktOIz_p; Sat, 16 May 2020 17:06:28 +0300 (MSK)
-Date:   Sat, 16 May 2020 17:06:27 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Sat, 16 May 2020 10:09:36 -0400
+Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: hDidN96EUzAnOHMS55xkxs8WWGVq+5pBKthbrckMfVRSrIbE6S6mARR7e6iCmfxtRs+t6dZgOn
+ ky111k+QuspRYuPHlo/+bvt29pmbSElOVJe4am+k+1tbPdGq/i+V24dJ3m99rHE8HATp2ZNRal
+ knsFZmYHRfkpmlZjBldpccNopJkJ6lo0HltBZH+ddN3rfRQYUukAzDVjzrj80JOwNd+xhBnxBN
+ 4I+HAvqcn84qN2FSgGa3aBcSWhG+FVqxNDKAS3eGl286pjYdRCihkiuh2RLGpNdST+isqSx6Wx
+ l98=
+X-SBRS: None
+X-MesageID: 17965253
+X-Ironport-Server: esa5.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.73,398,1583211600"; 
+   d="scan'208";a="17965253"
+Subject: Re: [PATCH v10 01/26] Documentation/x86: Add CET description
+To:     "H.J. Lu" <hjl.tools@gmail.com>
+CC:     Dave Hansen <dave.hansen@intel.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 05/19] spi: dw: Enable interrupts in accordance with
- DMA xfer mode
-Message-ID: <20200516140627.zwigqoz335lhkxns@mobilestation>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-6-Sergey.Semin@baikalelectronics.ru>
- <20200515122700.GY185537@smile.fi.intel.com>
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        "Arnd Bergmann" <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Eugene Syromiatnikov" <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Jann Horn" <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
+ <20200429220732.31602-2-yu-cheng.yu@intel.com>
+ <b5197a8d-5d8b-e1f7-68d4-58d80261904c@intel.com>
+ <dd5b9bab31ecf247a0b4890e22bfbb486ff52001.camel@intel.com>
+ <5cc163ff9058d1b27778e5f0a016c88a3b1a1598.camel@intel.com>
+ <b0581ddc-0d99-cbcf-278e-0be55ba939a0@intel.com>
+ <44c055342bda4fb4730703f987ae35195d1d0c38.camel@intel.com>
+ <32235ffc-6e6c-fb3d-80c4-a0478e2d0e0f@intel.com>
+ <6272c481-af90-05c5-7231-3ba44ff9bd02@citrix.com>
+ <CAMe9rOqwbxis1xEWbOsftMB9Roxdb3=dp=_MgK8z2pwPP36uRw@mail.gmail.com>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <f8ce9863-6ada-2bc4-5141-122f64292aba@citrix.com>
+Date:   Sat, 16 May 2020 15:09:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200515122700.GY185537@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <CAMe9rOqwbxis1xEWbOsftMB9Roxdb3=dp=_MgK8z2pwPP36uRw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 03:27:00PM +0300, Andy Shevchenko wrote:
-> On Fri, May 15, 2020 at 01:47:44PM +0300, Serge Semin wrote:
-> > It's pointless to track the Tx overrun interrupts if Rx-only SPI
-> > transfer is issued. Similarly there is no need in handling the Rx
-> > overrun/underrun interrupts if Tx-only SPI transfer is executed.
-> > So lets unmask the interrupts only if corresponding SPI
-> > transactions are implied.
-> 
-> My comments below.
-> 
-> > Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> > Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Allison Randal <allison@lohutok.net>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: linux-mips@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> 
-> I think you really need to revisit Cc list in all patches (DT people hardly
-> interested in this one, though ones where properties are being used might be
-> point of interest).
-> 
-> ...
-> 
-> >  	/* Set the interrupt mask */
-> > -	spi_umask_intr(dws, SPI_INT_TXOI | SPI_INT_RXUI | SPI_INT_RXOI);
-> > +	spi_umask_intr(dws, imr);
-> 
+On 16/05/2020 03:37, H.J. Lu wrote:
+> On Fri, May 15, 2020 at 5:13 PM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+>> Finally seeing as the question was asked but not answered, it is
+>> actually quite easy to figure out whether shadow stacks are enabled in
+>> the current thread.
+>>
+>>     mov     $1, %eax
+>>     rdsspd  %eax
+> This is for 32-bit mode.
 
-> Can we rather do like this
-> 
-> 	/* Set the interrupt mask */
-> 	if (xfer->tx_buf)
-> 		imr |= SPI_INT_TXOI;
-> 	if (xfer->rx_buf)
-> 		imr |= SPI_INT_RXUI | SPI_INT_RXOI;
-> 	spi_umask_intr(dws, imr);
-> 
-> ?
-> 
-> (First block sets DMA, second one IRQ)
+It actually works for both, if all you need is a shstk yes/no check.
 
-I'd rather leave it as is.
+Usually, you also want SSP in the yes case, so substitute rdsspq %rax as
+appropriate.
 
--Sergey
+(On a tangent - binutils mandating the D/Q suffixes is very irritating
+with mixed 32/64bit code because you have to #ifdef your instructions
+despite the register operands being totally unambiguous.  Also, D is the
+wrong suffix for AT&T syntax, and should be L.  Frankly - the Intel
+manuals are wrong and should not have the operand size suffix included
+in the opcode name, as they are consistent with all the other
+instructions in this regard.)
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+>   I use
+>
+>         /* Check if shadow stack is in use.  */
+>         xorl    %esi, %esi
+>         rdsspq  %rsi
+>         testq   %rsi, %rsi
+>         /* Normal return if shadow stack isn't in use.  */
+>         je      L(no_shstk)
+
+This is probably fine for user code, as I don't think it would be
+legitimate for shstk to be enabled, with SSP being 0.
+
+Sadly, the same is not true for kernel shadow stacks.
+
+SSP is 0 after SYSCALL, SYSENTER and CLRSSBSY, and you've got to be
+careful to re-establish the shadow stack before a CALL, interrupt or
+exception tries pushing a word onto the shadow stack at 0xfffffffffffffff8.
+
+It is a very good (lucky?) thing that frame is unmapped for other
+reasons, because this corner case does not protect against multiple
+threads/cores using the same shadow stack concurrently.
+
+~Andrew
