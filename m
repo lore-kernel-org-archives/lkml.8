@@ -2,82 +2,66 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FD0C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 20:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA990C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 21:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA37207C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 20:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 963C6207CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 21:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgEPU75 (ORCPT
+        id S1726707AbgEPVSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 16:59:57 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:41012 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbgEPU75 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 16:59:57 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0322E8030875;
-        Sat, 16 May 2020 20:59:55 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 55Mvyz7LEB48; Sat, 16 May 2020 23:59:54 +0300 (MSK)
-Date:   Sat, 16 May 2020 23:59:53 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        <linux-mips@vger.kernel.org>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 19/19] dt-bindings: spi: Convert DW SPI binding to DT
- schema
-Message-ID: <20200516205953.2wbhe35d5ql4uklu@mobilestation>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-20-Sergey.Semin@baikalelectronics.ru>
+        Sat, 16 May 2020 17:18:41 -0400
+Received: from mga01.intel.com ([192.55.52.88]:33290 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726592AbgEPVSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 17:18:40 -0400
+IronPort-SDR: ZZuzS8IOBXEW+v1h5cTEDq1glsAs1qI7TZgrFxM1SszOZPiI9+RRkQYe6gPllyR2EljTeETAGu
+ zfhwKtfrfxhw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 14:18:40 -0700
+IronPort-SDR: 4HImsPeXTq8GVTqmQwHZliWu3mNe+7BFYnanUSVp9o34M/EvriE/pW7+Z4quvME4eFN/A9tkat
+ wwDWchkPNZhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,400,1583222400"; 
+   d="scan'208";a="252700197"
+Received: from mroth-mobl.ger.corp.intel.com ([10.249.39.103])
+  by fmsmga007.fm.intel.com with ESMTP; 16 May 2020 14:18:37 -0700
+Message-ID: <107345f21c1091dc7fb34054769332e08d256f70.camel@linux.intel.com>
+Subject: Re: [PATCH 1/1] Documentation: security: core.rst: add missing
+ argument
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Ben Boeckel <me@benboeckel.net>, keyrings@vger.kernel.org
+Cc:     Ben Boeckel <mathstuf@gmail.com>, dhowells@redhat.com,
+        corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Sun, 17 May 2020 00:18:36 +0300
+In-Reply-To: <20200516003917.2035545-2-list.lkml.keyrings@me.benboeckel.net>
+References: <20200516003917.2035545-1-list.lkml.keyrings@me.benboeckel.net>
+         <20200516003917.2035545-2-list.lkml.keyrings@me.benboeckel.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200515104758.6934-20-Sergey.Semin@baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob,
-Could you take a look at this patch? We are getting closer to merging the series
-into the spi/for-next branch and then to the kernel 5.8. It would be great to
-have the bindings converted by the next merge window.
+On Fri, 2020-05-15 at 20:39 -0400, Ben Boeckel wrote:
+> From: Ben Boeckel <mathstuf@gmail.com>
+> 
+> This argument was just never documented in the first place.
+> 
+> Signed-off-by: Ben Boeckel <mathstuf@gmail.com>
 
--Sergey
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-On Fri, May 15, 2020 at 01:47:58PM +0300, Serge Semin wrote:
-> Modern device tree bindings are supposed to be created as YAML-files
-> in accordance with dt-schema. This commit replaces two DW SPI legacy
-> bare text bindings with YAML file. As before the bindings file states
-> that the corresponding dts node is supposed to be compatible either
-> with generic DW APB SSI controller or with Microsemi/Amazon/Renesas/Intel
-> vendors-specific controllers, to have registers, interrupts and clocks
-> properties. Though in case of Microsemi version of the controller
-> there must be two registers resources specified. Properties like
-> clock-names, reg-io-width, cs-gpio, num-cs, DMA and slave device
-> sub-nodes are optional.
+/Jarkko
 
-[nip]
