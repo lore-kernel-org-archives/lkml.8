@@ -2,75 +2,115 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FECAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA7C820657
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56BE420756
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 16:57:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589648273;
+	bh=yrEFJDYoN/FggKDClCKUlGRV30ppunF5ObL3yT+UHMY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uujVw/aTjJzo0z/Fzp7FmdocphbrZT7W3jUgtACMVM+eYnUWZy+zZBlA/snrDihcR
+	 S7dFEeX49B4fIHfLyJ0aJnyC3XwpOkS+teIm++DX7xPGG+xelNRGyDMFT56YoJxtw0
+	 uXSwFHZYC0nkMMIcC8oLaa5tQzbSqyVIeseZeOvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbgEPQ42 (ORCPT
+        id S1726406AbgEPQ5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 12:56:28 -0400
-Received: from winnie.ispras.ru ([83.149.199.91]:28364 "EHLO smtp.ispras.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726237AbgEPQ41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 12:56:27 -0400
-Received: from monopod.intra.ispras.ru (monopod.intra.ispras.ru [10.10.3.121])
-        by smtp.ispras.ru (Postfix) with ESMTP id F0B5C203BF;
-        Sat, 16 May 2020 19:56:22 +0300 (MSK)
-Date:   Sat, 16 May 2020 19:56:22 +0300 (MSK)
-From:   Alexander Monakov <amonakov@ispras.ru>
-To:     Stephane Eranian <eranian@google.com>
-cc:     linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@elte.hu,
-        irogers@google.com, kim.phillips@amd.com, jolsa@redhat.com
-Subject: Re: [PATCH 0/3] perf/x86/rapl: Enable RAPL for AMD Fam17h
-In-Reply-To: <20200515215733.20647-1-eranian@google.com>
-Message-ID: <alpine.LNX.2.20.13.2005161908000.16957@monopod.intra.ispras.ru>
-References: <20200515215733.20647-1-eranian@google.com>
-User-Agent: Alpine 2.20.13 (LNX 116 2015-12-14)
+        Sat, 16 May 2020 12:57:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbgEPQ5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 12:57:49 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A6692065C;
+        Sat, 16 May 2020 16:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589648269;
+        bh=yrEFJDYoN/FggKDClCKUlGRV30ppunF5ObL3yT+UHMY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=i1r0eFRS1CrTWaTLh2ht841l38l415ZP6vkYFqps0X1ffld5qxhfkEAkZkj2eoNcx
+         rUs8Dub27QzwyG8FS2PMJMcyGEHVV/rhq612jj3tEuG4GuYk0iahLRydK2PjYr4nDO
+         kjCqxoYjGxiHfNLnb1wTJN3AsphphKhu5CeLEYLY=
+Date:   Sat, 16 May 2020 17:57:42 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: buffer: remove attrcount_orig var from sysfs
+ creation
+Message-ID: <20200516175742.192853f5@archlinux>
+In-Reply-To: <20200511125322.17147-1-alexandru.ardelean@analog.com>
+References: <20200511125322.17147-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 May 2020, Stephane Eranian wrote:
+On Mon, 11 May 2020 15:53:22 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-> The series first moves the rapl.c file to common perf_events x86 and then
-> adds the support.
-> From the user's point of view, the interface is identical with
-> /sys/devices/power. The energy-pkg event is the only one supported.
+> The variable no longer does anything.
+> It should have been removed with commit 2e036804d773e ("iio: buffer: remove
+> 'scan_el_attrs' attribute group from buffer struct").
+> That was about the last time this was needed.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to hopefully not notice it.
 
-AMD also has per-core energy metering via MSR 0xc001029a, and I wonder
-if you have plans to expose it to perf as well. I see it does not fit
-so nicely with the existing code (as it's per-core instead of per-die).
+Thanks,
 
-The turbostat tool already exposes these per-core readings:
+Jonathan
 
-Core    CPU     Avg_MHz Busy%   Bzy_MHz TSC_MHz CorWatt PkgWatt
--       -       3951    100.00  3951    2373    54.92   30.04
-0       0       3945    100.00  3945    2370    8.97    29.98
-1       1       3945    100.00  3945    2370    9.11
-2       2       3945    100.00  3945    2370    8.96
-4       3       3946    100.00  3946    2370    9.32
-5       4       3946    100.00  3946    2370    9.11
-6       5       3946    100.00  3946    2370    9.39
+> ---
+> 
+> If desired (and still possible) this can be squashed in
+> commit 2e036804d773e ("iio: buffer: remove 'scan_el_attrs' attribute group
+> from buffer struct").
+> 
+>  drivers/iio/industrialio-buffer.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+> index eae39eaf49af..386c9231c2ee 100644
+> --- a/drivers/iio/industrialio-buffer.c
+> +++ b/drivers/iio/industrialio-buffer.c
+> @@ -1244,7 +1244,7 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
+>  	struct iio_dev_attr *p;
+>  	struct attribute **attr;
+>  	struct iio_buffer *buffer = indio_dev->buffer;
+> -	int ret, i, attrn, attrcount, attrcount_orig = 0;
+> +	int ret, i, attrn, attrcount;
+>  	const struct iio_chan_spec *channels;
+>  
+>  	channels = indio_dev->channels;
+> @@ -1288,7 +1288,7 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
+>  
+>  	indio_dev->groups[indio_dev->groupcounter++] = &buffer->buffer_group;
+>  
+> -	attrcount = attrcount_orig;
+> +	attrcount = 0;
+>  	INIT_LIST_HEAD(&buffer->scan_el_dev_attr_list);
+>  	channels = indio_dev->channels;
+>  	if (channels) {
+> @@ -1325,7 +1325,7 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
+>  		ret = -ENOMEM;
+>  		goto error_free_scan_mask;
+>  	}
+> -	attrn = attrcount_orig;
+> +	attrn = 0;
+>  
+>  	list_for_each_entry(p, &buffer->scan_el_dev_attr_list, l)
+>  		buffer->scan_el_group.attrs[attrn++] = &p->dev_attr.attr;
 
-turbostat sums the per-core energy figures to show the per-socket 54.92W
-value. Though as you can see on this example, the figure is not in agreement
-with the per-socket MSR you're using in your patch. Maybe the per-core
-values are less reliable, but I believe I have a test that shows per-package
-figure to be inaccurate as well. It would be nice if AMD clarified how the
-counters work.
-
-And, for what (little) it's worth, the series is:
-
-Tested-by: Alexander Monakov <amonakov@ispras.ru>
-
-Thank you.
-Alexander
