@@ -2,116 +2,99 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F0CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3235C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56791206D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93F0206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 04:27:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQwc7OQZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mq7hZ7t0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgEPEXO (ORCPT
+        id S1726290AbgEPE1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 00:23:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52964 "EHLO
+        Sat, 16 May 2020 00:27:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725275AbgEPEXN (ORCPT
+        by vger.kernel.org with ESMTP id S1725275AbgEPE1M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 00:23:13 -0400
+        Sat, 16 May 2020 00:27:12 -0400
 Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9A0C061A0C;
-        Fri, 15 May 2020 21:23:12 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t16so1752047plo.7;
-        Fri, 15 May 2020 21:23:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27706C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 21:27:12 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id q16so1762166plr.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 May 2020 21:27:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OEbwsoaIcCQ4y8nX9CNRFLXSvzUNmbajCyzAAZz+JCQ=;
-        b=pQwc7OQZ3rtpfftGLFLVGY4y3q033b7NvjPTHqTWGp38v5/q+pSlYTxQ+94qxbdP5b
-         Zd70wtp902/pB3pzBoWRiPty2nvL7PCf8tiLh4pUhdav2+ELgKksaRc5v3dr8GggRrsj
-         1RF3XFvOhQfAiCvyydbYIbqv+gJBwpL7YspXlUirnbR3gQ/qSA801ZBE78iXr6MDqMqY
-         6nRJSUqFJm7iVGEz7geJmTmYpZuWfpQIIUaqiH4HK9a8LLX/F4jNBb1zmbV0Ctq+Ip1D
-         zdnFxprUWamkRp/43Aof9bRkdeyiWtsb5NfjcHywsNH1diI+rt6GSwQEtIzKBsMveh0O
-         QFMA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tPkPOYZysew96j08Wnlp5zLqgqkBLLZVAOPiwHUVlcU=;
+        b=Mq7hZ7t0c4Mp5Zsz60GwWUOIj2CQRi9FIHgIM7oaIylr4JiEgVCON6Vio7F0LDGCMR
+         EjkBgq7Bn1+ixfF68MflbDXNcZ5QcERKQjPj6nzVx66oKunFwogsQdcQmQtAqjXdnGDH
+         uSZIgtZlKxxaXXZ8A+kMoPe3OMc+ui9P1tKjZhlMMoxLGfs3fdp+cZ3DJHGbA6HlPI9h
+         Wy1dQPqiWU3zOiombSq5kUvUMtzTnNWI3XPouyFR+Wl9I+XJ2tvRr/ymNuhDwj5h0Zkk
+         uprtVMK8MvNTYqOzbdrtfvy8xN6cm3kPAEDFUk2jMq0zqJ259mcwv67p5pBpMIYcdKtL
+         9ofQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OEbwsoaIcCQ4y8nX9CNRFLXSvzUNmbajCyzAAZz+JCQ=;
-        b=ktBECvp/740AQNl+aeWKMHXU0tg7ltcWFaZ+uG4L3vVGe7bxHaIpCbPfrx56pTc3qN
-         kgOz1rzub4Bt4ELAalV4PBuugiK6aGyoMjyGdsW0sN09Jd821Asb7wX/C9FAkLTZdJ3T
-         vCT4/26jX06MBnffMpwilOS2NuowaN3HRFcDeTyTiLEKDtzyPPkF+dB0JhkA4aQ6mFM5
-         Q6wnXJZ/zra5/Ea2Bel/sFC4pNi43zJ6kGYmfN+BwB/OZhyk+2ZNLuHd0LpLPYHvS0PB
-         kkWTeKJe6YoEb3zknEQoUI+OnrnwDpcidei/R4ziFDW7l+Ss3njCk2TMwAYHpffX3Y2g
-         FXxg==
-X-Gm-Message-State: AOAM533v4wjFyEbf4Rpu8Bly8ixs6f2OGCafuL87W+5MVeWnVaSvR00N
-        xLEBa4VF8tpEddOaxsdkZblTfmA3
-X-Google-Smtp-Source: ABdhPJzPzhcBZlRBUKU1oBCmskE7TfbETcrLnUkLn/PjCMvGULNr+qVI6ZvaXshdd/gkV10B9Fp9Vw==
-X-Received: by 2002:a17:902:bd87:: with SMTP id q7mr6582092pls.92.1589602991273;
-        Fri, 15 May 2020 21:23:11 -0700 (PDT)
-Received: from squirtle.lan (c-67-165-113-11.hsd1.wa.comcast.net. [67.165.113.11])
-        by smtp.gmail.com with ESMTPSA id 196sm2862590pfx.105.2020.05.15.21.23.09
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tPkPOYZysew96j08Wnlp5zLqgqkBLLZVAOPiwHUVlcU=;
+        b=W8gwQXUz/TdWWPrIhiqVkvI9/Vd20e3H5VI4t6RU4vpts3eehXhXZ6GDjjLije8JR3
+         0acdB5oF21e5xebRI7h6JlhlPFlAecNOc8rnzKp8G2x/q+V+6HVRUQafZvYQHGq4dPVO
+         C1c08+XhoyHNCJFqwWdx71VWdz2dJNUb80ywSzcZYnBAiqy/8+SvnNi/39jvreqYQZIQ
+         wc2scgfeM2hqqYX81n12dQjrJch1qdTy4RNrOEFFALCUyt9EapYFNUiVsta9CkucWwr+
+         yQopfOp+69ZtGuaAEsP9a3LdUlJre2JlDF7IOgKvpg4dy3k9986PuGdFexii09iFxOUn
+         cBRA==
+X-Gm-Message-State: AOAM532ppZzow0YqDbcTUrlYwQJolJe5yvcjtb2EKIv+pNnRjiuy8UaJ
+        XEna0g9xfPpWWfQMn6noaiPIHg==
+X-Google-Smtp-Source: ABdhPJx83N5ilwFzhmwX2USC+EChRORAFmxYt53NMlow85JNFoFTVDq0ZokayI7+FeCWgaFlR7ejsA==
+X-Received: by 2002:a17:90a:4149:: with SMTP id m9mr6748252pjg.200.1589603231320;
+        Fri, 15 May 2020 21:27:11 -0700 (PDT)
+Received: from google.com ([2620:15c:2cd:202:2523:d194:de3b:636f])
+        by smtp.gmail.com with ESMTPSA id ay15sm2702004pjb.18.2020.05.15.21.27.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 21:23:10 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-crypto@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Fabio Estevam <festevam@gmail.com>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: caam - make soc match data optional
-Date:   Fri, 15 May 2020 21:23:03 -0700
-Message-Id: <20200516042303.6070-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.3
+        Fri, 15 May 2020 21:27:07 -0700 (PDT)
+Date:   Fri, 15 May 2020 21:27:05 -0700
+From:   Michel Lespinasse <walken@google.com>
+To:     Lai Jiangshan <laijs@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Rik van Riel <riel@redhat.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH V2 2/2] rbtree_latch: don't need to check seq when it
+ found a node
+Message-ID: <20200516042705.GA82414@google.com>
+References: <20200515150122.GY2957@hirez.programming.kicks-ass.net>
+ <20200515155912.1713-1-laijs@linux.alibaba.com>
+ <20200515155912.1713-2-laijs@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515155912.1713-2-laijs@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vyrbrid devices don't have any clock that need to be taken care of, so
-make clock data optional on i.MX.
+On Fri, May 15, 2020 at 03:59:09PM +0000, Lai Jiangshan wrote:
+> latch_tree_find() should be protected by caller via RCU or so.
+> When it find a node in an attempt, the node must be a valid one
+> in RCU's point's of view even the tree is (being) updated with a
+> new node with the same key which is entirely subject to timing
+> anyway.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Horia Geantă <horia.geanta@nxp.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: linux-imx@nxp.com
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/crypto/caam/ctrl.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+I'm not sure I buy this. Even if we get a valid node, is it the one we
+were searching for ? I don't see how this could be guaranteed if the
+read raced with a tree rebalancing.
 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index 4fcdd262e581..6aba430793cc 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -630,12 +630,7 @@ static int caam_probe(struct platform_device *pdev)
- 	imx_soc_match = soc_device_match(caam_imx_soc_table);
- 	caam_imx = (bool)imx_soc_match;
-
--	if (imx_soc_match) {
--		if (!imx_soc_match->data) {
--			dev_err(dev, "No clock data provided for i.MX SoC");
--			return -EINVAL;
--		}
--
-+	if (imx_soc_match && imx_soc_match->data) {
- 		ret = init_clocks(dev, imx_soc_match->data);
- 		if (ret)
- 			return ret;
---
-2.21.3
+-- 
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
