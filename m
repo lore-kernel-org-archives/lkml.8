@@ -2,199 +2,217 @@ Return-Path: <SRS0=wIUh=66=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E897C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E85C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77AED20671
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:53:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Qh5jqimv";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="gD0zhBs/"
+	by mail.kernel.org (Postfix) with ESMTP id 0892920671
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 May 2020 12:53:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgEPMxG (ORCPT
+        id S1726492AbgEPMxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 08:53:06 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:3052 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbgEPMxF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 08:53:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1589633585; x=1621169585;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=VUurkwn0TZk68uroqiJzx0HrRwY2VAS6W4WrXVKkMto=;
-  b=Qh5jqimv9dokvHItc/PS+bGfulelhSg7dHPEKYkztXxFpFEJMh6dJBOh
-   wk+xJzJjK1qX9ke7Mpb3xMJuLxY4ExScOl6r9RI6I+Cr8lV9yvEDpAPkc
-   mAfzSpn68r/0n43R2vQ+dX2TaZI/RCYvqkpmJTscRu5uz8levdcJgVS5A
-   8mD/LoKgl3VfijTBB2hpJHlvql7WOGaPSD//ZeGfeGZ6ZzMkPxyDGxjpZ
-   xZQrSWnDNHZVWqN+TfdlPNEV8WJRdPNpQ2ODJOCBFnfGmMXxv1xkPxy+6
-   d9XqXw8GNzYUjOILiipJTx2iTq7G/SB5slMAy0U/UoKfmbf0EpmIvoW0T
-   w==;
-IronPort-SDR: V2QSNTXz+WtQiDzS9dYbKlngnFF0BEyg1vEC/+UjhEYAMVl5ZCkB4v8Qd4x/bMjbF6l14iljKx
- /LWqBLDdb9QKjaOS/CbjOGpVN4iVOVRGd6PLD4MjoFgG2DHktofHvWa0LeNepAB4VlCAQM8hYW
- geT/misXkgRxyV4NdPREqIFXYpAa1rnLNYgIeCpsU885KaGsw4TVdH6ce5250VtSaTrdlh1ePL
- fmwif9vExWzHrDZPXKEgFUVTeeMg2wW59eXhWBQbh2ajT54W4Anp2cHqnN8zQE4xz2zL/LbLv+
- Xe4=
-X-IronPort-AV: E=Sophos;i="5.73,398,1583164800"; 
-   d="scan'208";a="246819782"
-Received: from mail-mw2nam12lp2048.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.48])
-  by ob1.hgst.iphmx.com with ESMTP; 16 May 2020 20:53:04 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S4xa8yOzF257L6i9kJfv1I8NcI1wzvXU9WVDOYxArP1j06wfm+82ax0E4Eu5TdMc5f0EDZBjiONSu8T6FIxCfsSPQkT7VwuqfchN9oV66QgMIpoL7GR1kbIgkicaFDS8OohKH5il/Jype+/H/Z3RFW+RauguKmbur4Kenv7jLYq1sC3+nRw0INbq+9KNYvoKAy+H1v6DKgJE6rZLPTNL6JuYKJSypeN4AVFrO/mQqQA5YUH9JGk9TGH5flF/QZYY29iSLuGzlXR1jEtNXF1Kp1by77V7ZXRt0mrFMTOCqIqiXWB+42DImet1H8FNYv3K8RYQ2Dtv2gGGnPvPuAnKdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M7HD3mCIWRI+x1QnOqGoK9EDg9pE7f9RogiWHhwYc9Q=;
- b=gHoSGQbV/ZcVQct/JT9Oet4yygA3Xtan3OMQSJu68F4szGMt3b4ziO07qFwqa7cUW1wOzptSZ/x+s7HNn8bA6hi2hqs81cmiCM7VQ2usipDKD+bga9cEavDyNeAsKsVKJO4GKVoDSL4u1vGhIIi0/tf8hqmV9ZuX75cDc/KH424yxAQ3uoywpEUShCiXPufvQBG2hd1IlWgGzpF0ZU6THGS6lVYk6uGTw6VRMXBztbP/YZc2VTojhNwPTvptioTTDsAkuBxH9Fewp6bkwsE+xmvMqiCRD8UIfk/A3NqKUW2a+alMuAxdYOKL7X2RN6glXBJeRFRC6oxJu4/D2c/dlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M7HD3mCIWRI+x1QnOqGoK9EDg9pE7f9RogiWHhwYc9Q=;
- b=gD0zhBs/3lTUbMBHEXkjIhm/jXnFskMrH3520pbbPSnYCJWBFGNJZmIDibfrIWnbxL9Si0ZmAtoGvqyocx+R/lpygGS+omU8KXKZzeFdQdz32LoflCzUfnRHVKXdb8bfcBaIJjLIuN0HmAshToy6Haaw0+4VR9KG55ZdzAWbEvU=
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
- by DM6PR04MB7051.namprd04.prod.outlook.com (2603:10b6:5:244::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Sat, 16 May
- 2020 12:53:03 +0000
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::f8b3:c124:482b:52e0]) by DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::f8b3:c124:482b:52e0%5]) with mapi id 15.20.2979.033; Sat, 16 May 2020
- 12:53:03 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Anup Patel <anup@brainfault.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/4] irqchip/sifive-plic: Improve boot prints for multiple
- PLIC instances
-Thread-Topic: [PATCH 2/4] irqchip/sifive-plic: Improve boot prints for
- multiple PLIC instances
-Thread-Index: AQHWK0zFOMpDkXxo9EaOaVqvEbCb/KiqohAAgAAI/xA=
-Date:   Sat, 16 May 2020 12:53:03 +0000
-Message-ID: <DM6PR04MB6201773F57F2F41B77B926808DBA0@DM6PR04MB6201.namprd04.prod.outlook.com>
-References: <20200516063901.18365-1-anup.patel@wdc.com>
- <20200516063901.18365-3-anup.patel@wdc.com>
- <718b4b4fd894f74a178d3e38073ffdcc@kernel.org>
-In-Reply-To: <718b4b4fd894f74a178d3e38073ffdcc@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [106.51.108.254]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c698a9bf-a4e1-46eb-43d6-08d7f9981259
-x-ms-traffictypediagnostic: DM6PR04MB7051:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR04MB7051E826F5F176493B85D6F58DBA0@DM6PR04MB7051.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 040513D301
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9zfi3hJtw8Oa8R+b5gI3bSfchXSRdg0OrayG6yFOVbfz6NcH+q0nQvMcgg64zJLVXZS94o8HuKyi1AH2gYNftZiUx9EasgdaOXQa0+Ov1JPaVeHYhEEj8WhcHGZuu+CC8cK6l+JPidnb62Fy7+DOAeuAZ4eVSmak578ZRjEqCrBUUbzzrtM0UNkvA8wT1qxqpD5YLYMxDNewEFypGWZwKOE0utuSvIhL2GAYwq0/U1oyQGxMztl+y/gS+mhEWsi99i7BUD/s50EHelGfI52qsCdmgJhCcJ76qMUP0Q/GZ4x8GQQDv5ewzZtqFk5e9UaIaDlqCx00u/Q8L/Yh1oV5T/t6YK9VTRzEWIjL8pfvXm90zDSte5BhI4eNMO07+u6rGxIzc9HTJSj9ZXA/sQdQZh1TWGNTMe16pgYBqGwZVlolJBMsb6QapKy+ruG4jKDG
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(346002)(366004)(396003)(52536014)(8936002)(5660300002)(2906002)(33656002)(7696005)(54906003)(186003)(55236004)(86362001)(6506007)(26005)(316002)(53546011)(478600001)(66556008)(66446008)(9686003)(4326008)(66946007)(8676002)(66476007)(64756008)(76116006)(71200400001)(55016002)(6916009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: oQ6uPyZWwts6tqvK1rqkBaFRGWHTX1nxhYELEm2sog0RJrg6GXnjj6LFrzze69QcXiyqtDhdVLFVImzRSxanVDV1QwlVFV0jOJIX3BSMdoP1Sb8OarN68mXFPtmzH+rGarLnxEVpR/bPwxP2k3Stv087rdvY5woyesfcCrbUM9KTyFCJ+7Hbx5ztpy9FmqOTUMmnb7Y5/GikL0ZQH6LdyNu2O4mXiypif/4p/eKcNBmNJyZ+c4bCBAcq7HLFNU2k4XJ1OAdm3z6rbr9yj/oW1ZX1221Xx7muXTxSesSJ+c6fwf+QmvatXspn/7JVdezHaYs+HJid7CVV5Lmgnt+bcSCZPa9AzbOOTecQPs6Oozk5PcKfTWvjmorAgz15bwIxsOkgdPu+JXvWGr15dBWNNj9Y+1wWlynIhZ1Il+uWBmlvIaYtDNSZIFZRC7MQ+RQFfmviM2MNm+ZcLRuOWEzKqdAIm7cB6Hf6M0YII7gItszrnh8Gcpt4dfzvoQf+akNS
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c698a9bf-a4e1-46eb-43d6-08d7f9981259
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2020 12:53:03.3890
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: u1Azxc0lMnI6B3nICizhlof+mjmwTQMk9XgiKwjHNCYcfOUCRTJpxZycWuD4ZiwO+Dz7NUxmEFvrODBC7AjQ0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB7051
+        Sat, 16 May 2020 08:53:49 -0400
+Received: from mga07.intel.com ([134.134.136.100]:47556 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbgEPMxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 08:53:47 -0400
+IronPort-SDR: fbGNjuqPOCNK8gyThPPJKkJJVV4eh7p4APUP/NpYBSSkLsR04Cw9cJWFlzV/Pd8zvfmIB7xqni
+ SObLca9w1oJw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 05:53:47 -0700
+IronPort-SDR: sbqftmmVcFc4D2SXw3rJvdnHw3nAKdoS2uFgfy0l/AKikOds0lLzau6antuX5/fcUMvMW1c/3V
+ VuqJXpkChfsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,398,1583222400"; 
+   d="scan'208";a="288076556"
+Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
+  by fmsmga004.fm.intel.com with ESMTP; 16 May 2020 05:53:44 -0700
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        sean.j.christopherson@intel.com
+Cc:     yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
+        edwin.zhai@intel.com, ssicleru@bitdefender.com,
+        Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH v12 00/11] Enable Sub-Page Write Protection Support
+Date:   Sat, 16 May 2020 20:54:56 +0800
+Message-Id: <20200516125507.5277-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+EPT-Based Sub-Page write Protection(SPP) allows Virtual Machine Monitor(VMM)
+specify write-permission for guest physical memory at a sub-page(128 byte)
+granularity. When SPP works, HW enforces write-access check for sub-pages
+within a protected 4KB page.
+
+The feature targets to provide fine-grained memory protection for usages such
+as memory guard and VM introspection etc.
+
+SPP is active when the "sub-page write protection" (bit 23) is set in Secondary
+VM-Execution Controls. The feature is backed with a Sub-Page Permission Table(SPPT).
+The subpage permission vector is stored in the leaf entry of SPPT. The root page
+is referenced via a Sub-Page Permission Table Pointer (SPPTP) in VMCS.
+
+To enable SPP for guest memory, the guest page should be first mapped in a 4KB EPT
+entry, then set SPP bit 61 of the corresponding entry. While HW walks EPT, it traverses
+SPPT with the gpa to look up the sub-page permission vector within SPPT leaf entry.
+If the corresponding bit is set, write to sub-page is permitted, otherwise, SPP induced
+EPT violation is generated.
+
+This patch serial passed SPP function test and selftest on Ice-Lake platform.
+
+Please refer to the SPP introduction document in this patch set and
+Intel SDM for details:
+
+Intel SDM:
+https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+
+Patch 1: Documentation for SPP and related API.
+Patch 2: Put MMU/SSP shared definitions to a new mmu_internal.h file.
+Patch 3: SPPT setup functions
+Patch 4: Functions to {get|set}_subpage permission
+Patch 5: Introduce user-space SPP IOCTLs
+Patch 6: Handle SPP induced vmexit and EPT violation
+Patch 7: Enable Lazy mode SPP protection
+Patch 8: Re-enable SPP if EPT mapping changes
+Patch 9: Enable SPP in instruction emulation
+Patch 10: Initialize SPP related data structures.
+Patch 11: selftest for SPP.
 
 
-> -----Original Message-----
-> From: Marc Zyngier <maz@kernel.org>
-> Sent: 16 May 2020 17:50
-> To: Anup Patel <Anup.Patel@wdc.com>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>; Paul Walmsley
-> <paul.walmsley@sifive.com>; Thomas Gleixner <tglx@linutronix.de>; Jason
-> Cooper <jason@lakedaemon.net>; Atish Patra <Atish.Patra@wdc.com>; Alistai=
-r
-> Francis <Alistair.Francis@wdc.com>; Anup Patel <anup@brainfault.org>; lin=
-ux-
-> riscv@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 2/4] irqchip/sifive-plic: Improve boot prints for mul=
-tiple
-> PLIC instances
->=20
-> On 2020-05-16 07:38, Anup Patel wrote:
-> > We improve PLIC banner to help distinguish multiple PLIC instances in
-> > boot time prints.
-> >
-> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> > ---
-> >  drivers/irqchip/irq-sifive-plic.c | 11 +++++++++--
-> >  1 file changed, 9 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/irqchip/irq-sifive-plic.c
-> > b/drivers/irqchip/irq-sifive-plic.c
-> > index 7dc23edb3267..2d3db927a551 100644
-> > --- a/drivers/irqchip/irq-sifive-plic.c
-> > +++ b/drivers/irqchip/irq-sifive-plic.c
-> > @@ -284,6 +284,11 @@ static int __init plic_init(struct device_node
-> > *node,
-> >  	u32 nr_irqs;
-> >  	struct plic_priv *priv;
-> >  	struct plic_handler *handler;
-> > +	struct resource iores;
-> > +
-> > +	error =3D of_address_to_resource(node, 0, &iores);
-> > +	if (error)
-> > +		return error;
-> >
-> >  	priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
-> >  	if (!priv)
-> > @@ -377,8 +382,10 @@ static int __init plic_init(struct device_node
-> > *node,
-> >  		plic_cpuhp_setup_done =3D true;
-> >  	}
-> >
-> > -	pr_info("mapped %d interrupts with %d handlers for %d contexts.\n",
-> > -		nr_irqs, nr_handlers, nr_contexts);
-> > +	pr_info("interrupt-controller at 0x%llx "
-> > +		"(interrupts=3D%d, contexts=3D%d, handlers=3D%d)\n",
-> > +		(unsigned long long)iores.start, nr_irqs,
-> > +		nr_contexts, nr_handlers);
->=20
-> Instead of displaying "interrupt controller at ...", why not use the exis=
-ting printk
-> format for OF nodes? Something along the lines of
->=20
->      pr_info("%pOF : mapped %d interrupts with %d handlers for %d context=
-s\n",
->              node, nr_irqs, nr_handlers, nr_contexts);
+Change logs:
+v12:
+  1. Put MMU/SPP shared definitions/prototypes into a new mmu_internal.h per
+     maintainers' comments.
+  2. Changed fast_page_fault()'s return type from bool to RET_PF_* per Paolo's
+     suggestion.
+  3. Re-allocate SPPT root page if the root is allocated in an early spp_init()
+     but is freed accompanied with EPT root page release.
+     The issue is reported by Stefan Sicleru <ssicleru@bitdefender.com>.
+  4. Other refactor per above changes.
+  5. Rebased patches to 5.7-rc5.
+  6. Fixed a virtual address mapping issue of selftest.
 
-Sure, I will go with your suggestion and use printk for OF nodes.
+v11:
+  1. Refactored patches Per Sean's review feedback.
+  2. Added HW/KVM capabilities check before initializes SPP.
+  3. Combined a few functions having similar usages.
+  4. Removed unecessary functions in kvm_x86_ops.
+  5. Other code fix according to testing.
 
-Regards,
-Anup
+v10:
+  1. Cleared SPP active flag on VM resetting.
+  2. Added trancepoints on subpage setup and SPP induced vmexits.
+  3. Fixed a few code issues reported by Intel test robot.
+
+v9:
+  1. Added SPP protection check in pte prefetch case.
+  2. Flushed EPT rmap to remove existing mappings of the target gfns.
+  3. Modified documentation to reflect recent changes.
+  4. Other minor code refactor.
+
+v8:
+  1. Changed ioctl interface definition per Paolo's comments.
+  2. Replaced SPP_INIT ioctl funciton with KVM_ENABLE_CAP.
+  3. Removed SPP bit from X86 feature word.
+  4. Returned instruction length to user-space when SPP induced EPT
+     violation happens, this is to provide flexibility to use SPP,
+     revert write or track write.
+  5. Modified selftest application and added into this serial.
+  6. Simplified SPP permission vector check.
+  7. Moved spp.c and spp.h to kvm/mmu folder.
+  8. Other code fix according to Paolo's feedback and testing.
+
+v7:
+  1. Configured all available protected pages once SPP induced vmexit
+     happens since there's no PRESENT bit in SPPT leaf entry.
+  2. Changed SPP protection check flow in tdp_page_fault().
+  3. Code refactor and minior fixes.
+
+v6:
+  1. Added SPP protection patch for emulation cases per Jim's review.
+  2. Modified documentation and added API description per Jim's review.
+  3. Other minior changes suggested by Jim.
+
+v5:
+  1. Enable SPP support for Hugepage(1GB/2MB) to extend application.
+  2. Make SPP miss vm-exit handler as the unified place to set up SPPT.
+  3. If SPP protected pages are access-tracked or dirty-page-tracked,
+     store SPP flag in reserved address bit, restore it in
+     fast_page_fault() handler.
+  4. Move SPP specific functions to vmx/spp.c and vmx/spp.h
+  5. Rebased code to kernel v5.3
+  6. Other change suggested by KVM community.
+  
+v4:
+  1. Modified documentation to make it consistent with patches.
+  2. Allocated SPPT root page in init_spp() instead of vmx_set_cr3() to
+     avoid SPPT miss error.
+  3. Added back co-developers and sign-offs.
+
+v3:                                                                
+  1. Rebased patches to kernel 5.1 release                                
+  2. Deferred SPPT setup to EPT fault handler if the page is not
+     available while set_subpage() is being called.
+  3. Added init IOCTL to reduce extra cost if SPP is not used.
+  4. Refactored patch structure, cleaned up cross referenced functions.
+  5. Added code to deal with memory swapping/migration/shrinker cases.
+
+v1:
+  1. Rebased to 4.20-rc1
+  2. Move VMCS change to a separated patch.
+  3. Code refine and Bug fix 
+
+Yang Weijiang (11):
+  Documentation: Add EPT based Subpage Protection and related APIs
+  mmu: spp: Add a new header file to put definitions shared by MMU and
+    SPP
+  mmu: spp: Implement SPPT setup functions
+  mmu: spp: Implement functions to {get|set}_subpage permission
+  x86: spp: Introduce user-space SPP IOCTLs
+  vmx: spp: Handle SPP induced vmexit and EPT violation
+  mmu: spp: Enable Lazy mode SPP protection
+  mmu: spp: Re-enable SPP protection when EPT mapping changes
+  x86: spp: Add SPP protection check in instruction emulation
+  vmx: spp: Initialize SPP bitmap and SPP protection
+  kvm: selftests: selftest for Sub-Page protection
+
+ Documentation/virt/kvm/api.rst                |  38 ++
+ Documentation/virtual/kvm/spp_kvm.txt         | 179 +++++
+ arch/x86/include/asm/kvm_host.h               |  11 +-
+ arch/x86/include/asm/vmx.h                    |  10 +
+ arch/x86/include/asm/vmxfeatures.h            |   1 +
+ arch/x86/include/uapi/asm/vmx.h               |   2 +
+ arch/x86/kvm/Makefile                         |   2 +-
+ arch/x86/kvm/mmu.h                            |   9 +-
+ arch/x86/kvm/mmu/mmu.c                        | 287 ++++----
+ arch/x86/kvm/mmu/spp.c                        | 621 ++++++++++++++++++
+ arch/x86/kvm/mmu/spp.h                        |  39 ++
+ arch/x86/kvm/mmu_internal.h                   | 147 +++++
+ arch/x86/kvm/mmutrace.h                       |  10 +-
+ arch/x86/kvm/trace.h                          |  66 ++
+ arch/x86/kvm/vmx/capabilities.h               |   5 +
+ arch/x86/kvm/vmx/vmx.c                        | 110 ++++
+ arch/x86/kvm/x86.c                            | 135 ++++
+ include/uapi/linux/kvm.h                      |  17 +
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    |   1 +
+ tools/testing/selftests/kvm/x86_64/spp_test.c | 235 +++++++
+ 21 files changed, 1793 insertions(+), 133 deletions(-)
+ create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
+ create mode 100644 arch/x86/kvm/mmu/spp.c
+ create mode 100644 arch/x86/kvm/mmu/spp.h
+ create mode 100644 arch/x86/kvm/mmu_internal.h
+ create mode 100644 tools/testing/selftests/kvm/x86_64/spp_test.c
+
+-- 
+2.17.2
+
