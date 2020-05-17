@@ -2,265 +2,250 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BEEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5967F20758
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:41:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E64Y9ONs"
+	by mail.kernel.org (Postfix) with ESMTP id 1B59320758
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:45:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgEQUk6 (ORCPT
+        id S1726703AbgEQUpN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 16:40:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60852 "EHLO
+        Sun, 17 May 2020 16:45:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgEQUk5 (ORCPT
+        with ESMTP id S1726368AbgEQUpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 16:40:57 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD76C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 13:40:56 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id b7so8168499qkk.6
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 13:40:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=bF8z93o47HlcJUHuxu+yzZBCELvhT+1hX5AP8cWzK7I=;
-        b=E64Y9ONsVfkw//ihBt0DC9gxvYSa+BKgHcOUpyjkoPceQDRfsZkmqiZByuH8YYS2TY
-         jyIyYzQdyDLQotkkm/fvH4TqOAkrabjm3I3DZNapKGQWkx/Z4I0cPtGqzFlLi3elqLdN
-         3MxxYM6R0WXo7F4FRGCjyQZBHrJ1iCoynT/eR5BiGEyPPAkHrCUFlqBBexv4YSlxc47E
-         O5iPTkgbnsna/k0PvnrSGH1jweGHtcwEsZxRpVOvGPM/gLxAxKswS0YwcVfIv+j7V6lj
-         40IgIa+u7R9UasxmkcsJds+h10hPDApFDMLf3BBm/TGY/8angiQNHPh81tRPCR+je5io
-         3VJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=bF8z93o47HlcJUHuxu+yzZBCELvhT+1hX5AP8cWzK7I=;
-        b=Bw3NE4ekUFzBRfHNedWh6HNAdY4jToZcROY2a4pk490OroNw7Hy67hE8IUIpP7v4oO
-         Ev8EGyaHo+SzYXI3xygOX6U1eh13/7mKml9NnVF5j9HAHfQyartHsuclz0642YurTTIh
-         Vm5oMWqWTkjNdP6bRE7OswbLzKkFCa+eXQzdYQry+l/N1qR/oeib32ZYdatT1RLsgLDT
-         r2Tnk5K6ZtdKlFON0Uzm7KN3SpUVBovcpkvUMzZeYytWDtMeVxXcuby3F9+tNy/B/4c5
-         /Defs67XTwEJY2fjxa0pO5xI5xecR/RV3KNYBINe2EUEWe8lK4LB8ohjNguL2pQ/HPB5
-         Ui4w==
-X-Gm-Message-State: AOAM532RYxXS1maKeR1UTpNVhajXWUB43Wux63EeuJxcmQev6mmAzCiZ
-        uiY9Fr3Fvj2iXEZsSrKP8WDpVmn6ZeqV
-X-Google-Smtp-Source: ABdhPJxlVJJySVMnIedJ10ma6f1gnAgrsaqX8sLvSYKLVhCS3BSZwwQgI/KGbhgTYPV1NwOAcBxXXA1tth1u
-X-Received: by 2002:a0c:b5c4:: with SMTP id o4mr12587567qvf.229.1589748055115;
- Sun, 17 May 2020 13:40:55 -0700 (PDT)
-Date:   Sun, 17 May 2020 21:40:45 +0100
-In-Reply-To: <202005180407.tRbGahKX%lkp@intel.com>
-Message-Id: <20200517204045.183223-1-pterjan@google.com>
-Mime-Version: 1.0
-References: <202005180407.tRbGahKX%lkp@intel.com>
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH v2] staging: rtl8192u: Merge almost duplicate code
-From:   Pascal Terjan <pterjan@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     Pascal Terjan <pterjan@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 17 May 2020 16:45:12 -0400
+Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A897C061A0C;
+        Sun, 17 May 2020 13:45:12 -0700 (PDT)
+Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=roelofs-mbp.fritz.box); authenticated
+        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1jaQ9Y-0004sd-UM; Sun, 17 May 2020 22:44:57 +0200
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] lan743x: Added fixed link support
+From:   Roelof Berg <rberg@berg-solutions.de>
+In-Reply-To: <20200517183710.GC606317@lunn.ch>
+Date:   Sun, 17 May 2020 22:44:56 +0200
+Cc:     Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <6E144634-8E2F-48F7-A0A4-6073164F2B70@berg-solutions.de>
+References: <20200516192402.4201-1-rberg@berg-solutions.de>
+ <20200517183710.GC606317@lunn.ch>
+To:     Andrew Lunn <andrew@lunn.ch>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1589748312;3d2e5435;
+X-HE-SMSGID: 1jaQ9Y-0004sd-UM
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This causes a change in behaviour:
-- stats also get updated when reordering, this seems like it should be
-  the case but those lines were commented out.
-- sub_skb NULL check now happens early in both cases, previously it
-  happened only after dereferencing it 12 times, so it may not actually
-  be needed.
+To Everyone: I need a test hardware recommendation for a lan7431/0 NIC in normal mode (not fixed-link mode). In prior patches this was not necessary, because I was able to ensure 100% backwards compatibility by careful coding alone. But I might soon come to a point where I need to test phy-connected devices as well.
 
-Signed-off-by: Pascal Terjan <pterjan@google.com>
+Hi Andrew,
 
----
+thanks for commenting on my patch.
 
-v2: Made the new function static
 
- .../staging/rtl8192u/ieee80211/ieee80211_rx.c | 127 +++++++-----------
- 1 file changed, 50 insertions(+), 77 deletions(-)
+> Am 17.05.2020 um 20:37 schrieb Andrew Lunn <andrew@lunn.ch>:
+> 
+>> @@ -946,6 +949,9 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
+>> {
+>> 	struct lan743x_adapter *adapter = netdev_priv(netdev);
+>> 	struct phy_device *phydev = netdev->phydev;
+>> +	struct device_node *phynode;
+>> +	phy_interface_t phyifc = PHY_INTERFACE_MODE_GMII;
+>> +	u32 data;
+>> 
+>> 	phy_print_status(phydev);
+>> 	if (phydev->state == PHY_RUNNING) {
+>> @@ -953,6 +959,48 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
+>> 		int remote_advertisement = 0;
+>> 		int local_advertisement = 0;
+>> 
+>> +		/* check if a fixed-link is defined in device-tree */
+>> +		phynode = of_node_get(adapter->pdev->dev.of_node);
+>> +		if (phynode && of_phy_is_fixed_link(phynode)) {
+> 
+> Hi Roelof
+> 
+> The whole point for fixed link is that it looks like a PHY. You should
+> not need to care if it is a real PHY or a fixed link.
+> 
 
-diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-index e101f7b13c7e..60dbb584b22c 100644
---- a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-+++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-@@ -520,55 +520,68 @@ static bool AddReorderEntry(struct rx_ts_record *pTS, struct rx_reorder_entry *p
- 	return true;
- }
- 
--void ieee80211_indicate_packets(struct ieee80211_device *ieee, struct ieee80211_rxb **prxbIndicateArray, u8  index)
-+static void indicate_packets(struct ieee80211_device *ieee,
-+			     struct ieee80211_rxb *rxb)
- {
--	u8 i = 0, j = 0;
-+	struct net_device_stats *stats = &ieee->stats;
-+	struct net_device *dev = ieee->dev;
- 	u16 ethertype;
--//	if(index > 1)
--//		IEEE80211_DEBUG(IEEE80211_DL_REORDER,"%s(): hahahahhhh, We indicate packet from reorder list, index is %u\n",__func__,index);
--	for (j = 0; j < index; j++) {
--//added by amy for reorder
--		struct ieee80211_rxb *prxb = prxbIndicateArray[j];
--		for (i = 0; i < prxb->nr_subframes; i++) {
--			struct sk_buff *sub_skb = prxb->subframes[i];
-+	u8 i;
-+
-+	for (i = 0; i < rxb->nr_subframes; i++) {
-+		struct sk_buff *sub_skb = rxb->subframes[i];
-+
-+		if (!sub_skb)
-+			continue;
- 
- 		/* convert hdr + possible LLC headers into Ethernet header */
--			ethertype = (sub_skb->data[6] << 8) | sub_skb->data[7];
--			if (sub_skb->len >= 8 &&
--				((memcmp(sub_skb->data, rfc1042_header, SNAP_SIZE) == 0 &&
--				  ethertype != ETH_P_AARP && ethertype != ETH_P_IPX) ||
--				 memcmp(sub_skb->data, bridge_tunnel_header, SNAP_SIZE) == 0)) {
-+		ethertype = (sub_skb->data[6] << 8) | sub_skb->data[7];
-+		if (sub_skb->len >= 8 &&
-+		    ((!memcmp(sub_skb->data, rfc1042_header, SNAP_SIZE) &&
-+			ethertype != ETH_P_AARP &&
-+			ethertype != ETH_P_IPX) ||
-+		     !memcmp(sub_skb->data, bridge_tunnel_header, SNAP_SIZE))) {
- 			/* remove RFC1042 or Bridge-Tunnel encapsulation and
- 			 * replace EtherType */
--				skb_pull(sub_skb, SNAP_SIZE);
--				memcpy(skb_push(sub_skb, ETH_ALEN), prxb->src, ETH_ALEN);
--				memcpy(skb_push(sub_skb, ETH_ALEN), prxb->dst, ETH_ALEN);
--			} else {
-+			skb_pull(sub_skb, SNAP_SIZE);
-+		} else {
- 			/* Leave Ethernet header part of hdr and full payload */
--				put_unaligned_be16(sub_skb->len, skb_push(sub_skb, 2));
--				memcpy(skb_push(sub_skb, ETH_ALEN), prxb->src, ETH_ALEN);
--				memcpy(skb_push(sub_skb, ETH_ALEN), prxb->dst, ETH_ALEN);
--			}
--			//stats->rx_packets++;
--			//stats->rx_bytes += sub_skb->len;
-+			put_unaligned_be16(sub_skb->len, skb_push(sub_skb, 2));
-+		}
-+		memcpy(skb_push(sub_skb, ETH_ALEN), rxb->src, ETH_ALEN);
-+		memcpy(skb_push(sub_skb, ETH_ALEN), rxb->dst, ETH_ALEN);
-+
-+		stats->rx_packets++;
-+		stats->rx_bytes += sub_skb->len;
-+		if (is_multicast_ether_addr(rxb->dst))
-+			stats->multicast++;
- 
- 		/* Indicate the packets to upper layer */
--			if (sub_skb) {
--				sub_skb->protocol = eth_type_trans(sub_skb, ieee->dev);
--				memset(sub_skb->cb, 0, sizeof(sub_skb->cb));
--				sub_skb->dev = ieee->dev;
--				sub_skb->ip_summed = CHECKSUM_NONE; /* 802.11 crc not sufficient */
--				//skb->ip_summed = CHECKSUM_UNNECESSARY; /* 802.11 crc not sufficient */
--				ieee->last_rx_ps_time = jiffies;
--				netif_rx(sub_skb);
--			}
--		}
-+		sub_skb->protocol = eth_type_trans(sub_skb, dev);
-+		memset(sub_skb->cb, 0, sizeof(sub_skb->cb));
-+		sub_skb->dev = dev;
-+		/* 802.11 crc not sufficient */
-+		sub_skb->ip_summed = CHECKSUM_NONE;
-+		ieee->last_rx_ps_time = jiffies;
-+		netif_rx(sub_skb);
-+	}
-+}
-+
-+void ieee80211_indicate_packets(struct ieee80211_device *ieee,
-+				struct ieee80211_rxb **prxbIndicateArray,
-+				u8 index)
-+{
-+	u8 i;
-+
-+	for (i = 0; i < index; i++) {
-+		struct ieee80211_rxb *prxb = prxbIndicateArray[i];
-+
-+		indicate_packets(ieee, prxb);
- 		kfree(prxb);
- 		prxb = NULL;
- 	}
- }
- 
--
- static void RxReorderIndicatePacket(struct ieee80211_device *ieee,
- 				    struct ieee80211_rxb *prxb,
- 				    struct rx_ts_record *pTS, u16 SeqNum)
-@@ -721,6 +734,7 @@ static void RxReorderIndicatePacket(struct ieee80211_device *ieee,
- 
- 	/* Handling pending timer. Set this timer to prevent from long time Rx buffering.*/
- 	if (index > 0) {
-+		u8 i;
- 		// Cancel previous pending timer.
- 	//	del_timer_sync(&pTS->rx_pkt_pending_timer);
- 		pTS->rx_timeout_indicate_seq = 0xffff;
-@@ -877,7 +891,6 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
- 	u16 fc, type, stype, sc;
- 	struct net_device_stats *stats;
- 	unsigned int frag;
--	u16 ethertype;
- 	//added by amy for reorder
- 	u8	TID = 0;
- 	u16	SeqNum = 0;
-@@ -1260,47 +1273,7 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
- 
- //added by amy for reorder
- 	if (!ieee->pHTInfo->bCurRxReorderEnable || !pTS) {
--//added by amy for reorder
--		for (i = 0; i < rxb->nr_subframes; i++) {
--			struct sk_buff *sub_skb = rxb->subframes[i];
--
--			if (sub_skb) {
--				/* convert hdr + possible LLC headers into Ethernet header */
--				ethertype = (sub_skb->data[6] << 8) | sub_skb->data[7];
--				if (sub_skb->len >= 8 &&
--						((memcmp(sub_skb->data, rfc1042_header, SNAP_SIZE) == 0 &&
--						  ethertype != ETH_P_AARP && ethertype != ETH_P_IPX) ||
--						 memcmp(sub_skb->data, bridge_tunnel_header, SNAP_SIZE) == 0)) {
--					/* remove RFC1042 or Bridge-Tunnel encapsulation and
--					 * replace EtherType */
--					skb_pull(sub_skb, SNAP_SIZE);
--					memcpy(skb_push(sub_skb, ETH_ALEN), src, ETH_ALEN);
--					memcpy(skb_push(sub_skb, ETH_ALEN), dst, ETH_ALEN);
--				} else {
--					u16 len;
--					/* Leave Ethernet header part of hdr and full payload */
--					len = be16_to_cpu(htons(sub_skb->len));
--					memcpy(skb_push(sub_skb, 2), &len, 2);
--					memcpy(skb_push(sub_skb, ETH_ALEN), src, ETH_ALEN);
--					memcpy(skb_push(sub_skb, ETH_ALEN), dst, ETH_ALEN);
--				}
--
--				stats->rx_packets++;
--				stats->rx_bytes += sub_skb->len;
--				if (is_multicast_ether_addr(dst)) {
--					stats->multicast++;
--				}
--
--				/* Indicate the packets to upper layer */
--				sub_skb->protocol = eth_type_trans(sub_skb, dev);
--				memset(sub_skb->cb, 0, sizeof(sub_skb->cb));
--				sub_skb->dev = dev;
--				sub_skb->ip_summed = CHECKSUM_NONE; /* 802.11 crc not sufficient */
--				//skb->ip_summed = CHECKSUM_UNNECESSARY; /* 802.11 crc not sufficient */
--				ieee->last_rx_ps_time = jiffies;
--				netif_rx(sub_skb);
--			}
--		}
-+		indicate_packets(ieee, rxb);
- 		kfree(rxb);
- 		rxb = NULL;
- 
--- 
-2.26.2.761.g0e0b3e54be-goog
+Ok, I can try to remove the additional speed and baud configuration, when the PHY simulation should lead to the same result. Understood, thanks, I’ll test this and remove the overhead.
+
+> 
+>> +			/* Configure MAC to fixed link parameters */
+>> +			data = lan743x_csr_read(adapter, MAC_CR);
+>> +			/* Disable auto negotiation */
+>> +			data &= ~(MAC_CR_ADD_ | MAC_CR_ASD_);
+> 
+> Why does the MAC care about autoneg? In general, all the MAC needs to
+> know is the speed and duplex.
+> 
+
+My assumption is, that in fixed-link mode we should switch off the autonegotiation between MAC and remote peer (e.g. a switch). I didn’t test, if it would also wun with the hardware doing auto-negotiation, however it feels cleaner to me to prevent the hardware from initiating any auto-negotiation in fixed-link mode.
+
+>> +			/* Set duplex mode */
+>> +			if (phydev->duplex)
+>> +				data |= MAC_CR_DPX_;
+>> +			else
+>> +				data &= ~MAC_CR_DPX_;
+>> +			/* Set bus speed */
+>> +			switch (phydev->speed) {
+>> +			case 10:
+>> +				data &= ~MAC_CR_CFG_H_;
+>> +				data &= ~MAC_CR_CFG_L_;
+>> +				break;
+>> +			case 100:
+>> +				data &= ~MAC_CR_CFG_H_;
+>> +				data |= MAC_CR_CFG_L_;
+>> +				break;
+>> +			case 1000:
+>> +				data |= MAC_CR_CFG_H_;
+>> +				data |= MAC_CR_CFG_L_;
+>> +				break;
+>> +			}
+> 
+> The current code is unusual, in that it uses
+> phy_ethtool_get_link_ksettings(). That should do the right thing with
+> a fixed-link PHY, although i don't know if anybody uses it like
+> this. So in theory, the current code should take care of duplex, flow
+> control, and speed for you. Just watch out for bug/missing features in
+> fixed link.
+
+Ok, I test and report if it works. Now I understand the concept.
+
+> 
+> 
+>> +			/* Set interface mode */
+>> +			of_get_phy_mode(phynode, &phyifc);
+>> +			if (phyifc == PHY_INTERFACE_MODE_RGMII ||
+>> +			    phyifc == PHY_INTERFACE_MODE_RGMII_ID ||
+>> +			    phyifc == PHY_INTERFACE_MODE_RGMII_RXID ||
+>> +			    phyifc == PHY_INTERFACE_MODE_RGMII_TXID)
+>> +				/* RGMII */
+>> +				data &= ~MAC_CR_MII_EN_;
+>> +			else
+>> +				/* GMII */
+>> +				data |= MAC_CR_MII_EN_;
+>> +			lan743x_csr_write(adapter, MAC_CR, data);
+>> +		}
+>> +		of_node_put(phynode);
+> 
+> It is normal to do of_get_phy_mode when connecting to the PHY, and
+> store the value in the private structure. This is also not specific to
+> fixed link.
+> 
+> There is also a helper you can use phy_interface_mode_is_rgmii().
+
+Thanks for pointing to the method is_rgmii, very handy.
+
+Using get_phy_mode() in all cases is not possible on a PC as it returns SGMII on a standard PC, but using GMII is today’s driver behavior. So what I basically did (on two places) is:
+
+if(fixed-link)
+   Use get_phy_mode()’s result in of_phy_connect() and in the lan7431 register configuration.
+else
+   Keep the prior behavior for backwards compatibility (i.e. ignoring the wrong interface mode config on a PC and use GMII constant)
+
+The method is_rgmii you mention can lessen the pain here, thanks, and lead to:
+
+if(is_rgmii()
+	use RGMII
+else
+	use GMII
+
+I need to think about this, because NOT passing get_phy_mode’s result directly into of_phy_connect or phy_connect_direct (and instead use above's (is_rgmii() ? RGMII : GMII) code) could have side effects.
+
+However I don’t dare to pass get_phy_mode’s result directly into of_phy_connect or phy_connect_direct on a PC because then I might change the behavior of all standard PC NIC drivers. I haven’t researched yet why on a PC SGMII is returned by get_phy_mode(), does someone know ?. 
+
+> 
+>> +
+>> 		memset(&ksettings, 0, sizeof(ksettings));
+>> 		phy_ethtool_get_link_ksettings(netdev, &ksettings);
+>> 		local_advertisement =
+>> @@ -974,6 +1022,8 @@ static void lan743x_phy_close(struct lan743x_adapter *adapter)
+>> 
+>> 	phy_stop(netdev->phydev);
+>> 	phy_disconnect(netdev->phydev);
+>> +	if (of_phy_is_fixed_link(adapter->pdev->dev.of_node))
+>> +		of_phy_deregister_fixed_link(adapter->pdev->dev.of_node);
+>> 	netdev->phydev = NULL;
+>> }
+>> 
+>> @@ -982,18 +1032,44 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
+>> 	struct lan743x_phy *phy = &adapter->phy;
+>> 	struct phy_device *phydev;
+>> 	struct net_device *netdev;
+>> +	struct device_node *phynode = NULL;
+>> +	phy_interface_t phyifc = PHY_INTERFACE_MODE_GMII;
+>> 	int ret = -EIO;
+> 
+> netdev uses reverse christmas tree, meaning the lines should be
+> sorted, longest first, getting shorter.
+Ok
+> 
+>> 
+>> 	netdev = adapter->netdev;
+>> -	phydev = phy_find_first(adapter->mdiobus);
+>> -	if (!phydev)
+>> -		goto return_error;
+>> 
+>> -	ret = phy_connect_direct(netdev, phydev,
+>> -				 lan743x_phy_link_status_change,
+>> -				 PHY_INTERFACE_MODE_GMII);
+>> -	if (ret)
+>> -		goto return_error;
+>> +	/* check if a fixed-link is defined in device-tree */
+>> +	phynode = of_node_get(adapter->pdev->dev.of_node);
+>> +	if (phynode && of_phy_is_fixed_link(phynode)) {
+>> +		netdev_dbg(netdev, "fixed-link detected\n");
+> 
+> This is something which is useful during debug. But once it works can
+> be removed.
+Ok
+> 
+>> +		ret = of_phy_register_fixed_link(phynode);
+>> +		if (ret) {
+>> +			netdev_err(netdev, "cannot register fixed PHY\n");
+>> +			goto return_error;
+>> +		}
+>> +
+>> +		of_get_phy_mode(phynode, &phyifc);
+>> +		phydev = of_phy_connect(netdev, phynode,
+>> +					lan743x_phy_link_status_change,
+>> +					0, phyifc);
+>> +		if (!phydev)
+>> +			goto return_error;
+>> +	} else {
+>> +		phydev = phy_find_first(adapter->mdiobus);
+>> +		if (!phydev)
+>> +			goto return_error;
+>> +
+>> +		ret = phy_connect_direct(netdev, phydev,
+>> +					 lan743x_phy_link_status_change,
+>> +					 PHY_INTERFACE_MODE_GMII);
+>> +		/* Note: We cannot use phyifc here because this would be SGMII
+>> +		 * on a standard PC.
+>> +		 */
+> 
+> I don't understand this comment.
+> 
+
+See above the lengthy section. On a PC SGMII is returned when I call of_get_phy_mode(phynode, &phyifc); but the original driver is using PHY_INTERFACE_MODE_GMII; and I don’t dare to change this behavior. Which I would do when I would pass on the result of of_get_phy_mode(). That’s what I meant by the comment.
+
+Thanks a lot directing me to the proper way,
+Roelof
+
 
