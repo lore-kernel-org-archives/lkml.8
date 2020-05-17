@@ -2,216 +2,120 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CA1C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB1EA206F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzXUO/0e"
+	by mail.kernel.org (Postfix) with ESMTP id 5B099206D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:22:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgEQLTf (ORCPT
+        id S1727964AbgEQLWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 07:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbgEQLTa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 07:19:30 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78BEAC05BD09;
-        Sun, 17 May 2020 04:19:30 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u15so6795306ljd.3;
-        Sun, 17 May 2020 04:19:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=9wt+O+yv/PQr9z525iw+0SXZ25Ejzm66XRYb+KUwGw4=;
-        b=KzXUO/0e/U2U3jf8/0azMceYt7Tb+FOrIhkouxp36MBvrDy1XNnEfMwRJXAhKx+5oF
-         /B+C/WYoqCFhCLShik3HTZvXIEqMKHMxBiF/AophQhHMMfLyJ/c/rIiRodG/fh/QrabH
-         Fjef5Hz7g4qUCvj54TOAFvx8+T+BuOaFgFvZerOwwLzmD4iYZNo5XEZGg5p26Ho5/u5p
-         kXWkgX73WIU4p9dhRg4TwY4H+UnSFcPaglGLtja8kvNoJEftOhwWiXPRXbd1nukIrcyb
-         cPz0xv2Ypv3z61KRa8xW6e8/B9Mn2tDEeb2Ggzy1IGRsSoH7h6GZoqGUxG/Rbi9UgwS6
-         gPEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9wt+O+yv/PQr9z525iw+0SXZ25Ejzm66XRYb+KUwGw4=;
-        b=pwpeA3h9W5Jnjj0NvepyeEOeWFWFKS9grMUOWQzSn3Fj/jSd/N7xOPhmYe79BkPP8u
-         4MHzd+UTE7QTxxd8TISjnlUVDNM51MsIKvInHsftTSXoI14vHznEj+LVoKNlv8E4TO5m
-         BjBpENywdznVdP+avGINCmRXBQV7enQttkufTF1zw//E3PFRPs5B3jAgus+unVFBXlTO
-         0+lYDC73dSpov8rtKyRHI2sn/oR99YrkYpPSWNMD2tz+hH6xRSvBvX5Exbt7hErWzx8e
-         N5AcCYUBKRKyNgaTR8AIre7t8rgGz+ctaoZ+ggP48dXAKt62UhBC79/rJz0YROWdpmrN
-         tcuw==
-X-Gm-Message-State: AOAM533oMcgLslv+moV9gVDWuQsmuSZ/PEe3v14zi//16JB7Ab/5q9VX
-        wlYZ4A8d2CdFvGY4iiklPxk=
-X-Google-Smtp-Source: ABdhPJzZmnBIgNfB2kgiLaSIcUx4eSFZOxuJqvpBxny5qrEj8rUtQ/GUxtH4/Eghg1vkKcu4qJzOrw==
-X-Received: by 2002:a2e:b004:: with SMTP id y4mr886045ljk.273.1589714368947;
-        Sun, 17 May 2020 04:19:28 -0700 (PDT)
-Received: from localhost.localdomain ([82.209.196.123])
-        by smtp.gmail.com with ESMTPSA id f24sm5534246lfk.36.2020.05.17.04.19.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2020 04:19:28 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] io_uring: add tee(2) support
-Date:   Sun, 17 May 2020 14:18:06 +0300
-Message-Id: <75938ad218288a56c0a0add9abca02fe097c51ad.1589714180.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1589714180.git.asml.silence@gmail.com>
-References: <cover.1589714180.git.asml.silence@gmail.com>
+        Sun, 17 May 2020 07:22:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43750 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727858AbgEQLWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 07:22:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 96586AC53;
+        Sun, 17 May 2020 11:22:07 +0000 (UTC)
+Date:   Sun, 17 May 2020 21:21:56 +1000
+From:   Aleksa Sarai <asarai@suse.de>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
+Message-ID: <20200517112156.cphs2h33hx2wfcs4@yavin.dot.cyphar.com>
+References: <20200515234005.32370-1-sargun@sargun.me>
+ <202005162344.74A02C2D@keescook>
+ <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nwxvb3yzfbh4rrle"
+Content-Disposition: inline
+In-Reply-To: <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add IORING_OP_TEE implementing tee(2) support. Almost identical to
-splice bits, but without offsets.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c                 | 62 +++++++++++++++++++++++++++++++++--
- include/uapi/linux/io_uring.h |  1 +
- 2 files changed, 60 insertions(+), 3 deletions(-)
+--nwxvb3yzfbh4rrle
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 83b599815cf0..7f25e145a60a 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -853,6 +853,11 @@ static const struct io_op_def io_op_defs[] = {
- 	},
- 	[IORING_OP_PROVIDE_BUFFERS] = {},
- 	[IORING_OP_REMOVE_BUFFERS] = {},
-+	[IORING_OP_TEE] = {
-+		.needs_file		= 1,
-+		.hash_reg_file		= 1,
-+		.unbound_nonreg_file	= 1,
-+	},
- };
- 
- static void io_wq_submit_work(struct io_wq_work **workptr);
-@@ -2748,7 +2753,8 @@ static int io_write(struct io_kiocb *req, bool force_nonblock)
- 	return ret;
- }
- 
--static int io_splice_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
-+static int __io_splice_prep(struct io_kiocb *req,
-+			    const struct io_uring_sqe *sqe)
- {
- 	struct io_splice* sp = &req->splice;
- 	unsigned int valid_flags = SPLICE_F_FD_IN_FIXED | SPLICE_F_ALL;
-@@ -2758,8 +2764,6 @@ static int io_splice_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 		return 0;
- 
- 	sp->file_in = NULL;
--	sp->off_in = READ_ONCE(sqe->splice_off_in);
--	sp->off_out = READ_ONCE(sqe->off);
- 	sp->len = READ_ONCE(sqe->len);
- 	sp->flags = READ_ONCE(sqe->splice_flags);
- 
-@@ -2778,6 +2782,46 @@ static int io_splice_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	return 0;
- }
- 
-+static int io_tee_prep(struct io_kiocb *req,
-+		       const struct io_uring_sqe *sqe)
-+{
-+	if (READ_ONCE(sqe->splice_off_in) || READ_ONCE(sqe->off))
-+		return -EINVAL;
-+	return __io_splice_prep(req, sqe);
-+}
-+
-+static int io_tee(struct io_kiocb *req, bool force_nonblock)
-+{
-+	struct io_splice *sp = &req->splice;
-+	struct file *in = sp->file_in;
-+	struct file *out = sp->file_out;
-+	unsigned int flags = sp->flags & ~SPLICE_F_FD_IN_FIXED;
-+	long ret = 0;
-+
-+	if (force_nonblock)
-+		return -EAGAIN;
-+	if (sp->len)
-+		ret = do_tee(in, out, sp->len, flags);
-+
-+	io_put_file(req, in, (sp->flags & SPLICE_F_FD_IN_FIXED));
-+	req->flags &= ~REQ_F_NEED_CLEANUP;
-+
-+	io_cqring_add_event(req, ret);
-+	if (ret != sp->len)
-+		req_set_fail_links(req);
-+	io_put_req(req);
-+	return 0;
-+}
-+
-+static int io_splice_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
-+{
-+	struct io_splice* sp = &req->splice;
-+
-+	sp->off_in = READ_ONCE(sqe->splice_off_in);
-+	sp->off_out = READ_ONCE(sqe->off);
-+	return __io_splice_prep(req, sqe);
-+}
-+
- static int io_splice(struct io_kiocb *req, bool force_nonblock)
- {
- 	struct io_splice *sp = &req->splice;
-@@ -5087,6 +5131,9 @@ static int io_req_defer_prep(struct io_kiocb *req,
- 	case IORING_OP_REMOVE_BUFFERS:
- 		ret = io_remove_buffers_prep(req, sqe);
- 		break;
-+	case IORING_OP_TEE:
-+		ret = io_tee_prep(req, sqe);
-+		break;
- 	default:
- 		printk_once(KERN_WARNING "io_uring: unhandled opcode %d\n",
- 				req->opcode);
-@@ -5161,6 +5208,7 @@ static void io_cleanup_req(struct io_kiocb *req)
- 		putname(req->open.filename);
- 		break;
- 	case IORING_OP_SPLICE:
-+	case IORING_OP_TEE:
- 		io_put_file(req, req->splice.file_in,
- 			    (req->splice.flags & SPLICE_F_FD_IN_FIXED));
- 		break;
-@@ -5391,6 +5439,14 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 		}
- 		ret = io_remove_buffers(req, force_nonblock);
- 		break;
-+	case IORING_OP_TEE:
-+		if (sqe) {
-+			ret = io_tee_prep(req, sqe);
-+			if (ret < 0)
-+				break;
-+		}
-+		ret = io_tee(req, force_nonblock);
-+		break;
- 	default:
- 		ret = -EINVAL;
- 		break;
-diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-index 8c5775df08b8..92c22699a5a7 100644
---- a/include/uapi/linux/io_uring.h
-+++ b/include/uapi/linux/io_uring.h
-@@ -129,6 +129,7 @@ enum {
- 	IORING_OP_SPLICE,
- 	IORING_OP_PROVIDE_BUFFERS,
- 	IORING_OP_REMOVE_BUFFERS,
-+	IORING_OP_TEE,
- 
- 	/* this goes last, obviously */
- 	IORING_OP_LAST,
--- 
-2.24.0
+On 2020-05-17, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> Or... And that's more invasive but ultimately cleaner we v2 the whole
+> thing so e.g. SECCOMP_IOCTL_NOTIF_RECV2, SECCOMP_IOCTL_NOTIF_SEND2, and
+> embedd the size argument in the structs. Userspace sets the size
+> argument, we use get_user() to get the size first and then
+> copy_struct_from_user() to handle it cleanly based on that. A similar
+> model as with sched (has other unrelated quirks because they messed up
+> something too):
+>=20
+> static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_=
+attr *attr)
+> {
+> 	u32 size;
+> 	int ret;
+>=20
+> 	/* Zero the full structure, so that a short copy will be nice: */
+> 	memset(attr, 0, sizeof(*attr));
+>=20
+> 	ret =3D get_user(size, &uattr->size);
+> 	if (ret)
+> 		return ret;
+>=20
+> 	/* ABI compatibility quirk: */
+> 	if (!size)
+> 		size =3D SCHED_ATTR_SIZE_VER0;
+> 	if (size < SCHED_ATTR_SIZE_VER0 || size > PAGE_SIZE)
+> 		goto err_size;
+>=20
+> 	ret =3D copy_struct_from_user(attr, sizeof(*attr), uattr, size);
+> 	if (ret) {
+> 		if (ret =3D=3D -E2BIG)
+> 			goto err_size;
+> 		return ret;
+> 	}
+>=20
+> We're probably the biggest user of this right now and I'd be ok with
+> that change. If it's a v2 than whatever. :)
 
+I'm :+1: on a new version and switch to copy_struct_from_user(). I was a
+little surprised when I found out that user_notif doesn't do it this
+way a while ago (and although in theory it is userspace's fault, ideally
+we could have an API that doesn't have built-in footguns).
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--nwxvb3yzfbh4rrle
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl7BHlEACgkQnhiqJn3b
+jbR9pRAAnO1r26da3EnqUIDsjxOHWMLuwpB3QN+k925fWG47jt706mzLU1duX8EG
+V8hWXeSYIX8Fk+tWv7dbb6xl4uYF18wvZUX3EZFROQUZKiLqjQSSJUKs05IpdZwl
+cvXwIvzMM3xv9qc8NHQoK8D0GQkbdem8Oaxd8n2VNHL2eYirDENb62xcr1vLjp2b
+psvcpgXWoPKr8m8wyY3NZsXcbJwLg77qQDN+1jjHjnBLXhSVugnMbR1aXFtWsYh8
+bAYFv7Rq0nv0+bqnyxKSL3lfgyuraZCz4ZF8NlyTnFIbUmtJrHEAF7ykT1wvfjXk
+SP/gntWDRKm2QLLr8JnAPtrp1sXXEqRBLmltK8BRtc597YSG5jrz+Lwt4mwRbpf8
+EvfLqeBXZNVEZSdS5Zvjl93ryCK9yyE9eiRdZPsKFuoUPmipXlp52WRp9ldCj9Rm
+JF7P4qarU5MSWLNMb8V1LC6BSPUDd88EfbsA6OaQ/HSkVaV2ueNzyJRxIYChu/se
+20gfe9+VR4nS4Iys0AL1pzeg18yKJdCNqR0rg+Iaj64gjANmEX6QiJwluaOcw8Dh
+fl60XE5LZzOe5N2wy1vKaRkcAP/IMmm7OFGd97QWrG2bPoX/VDpDE59pTpkaHk2H
+rhR+vla/f6OXERSCd0F4QWYIxcNSs9Um0STXyT7iQhWDpLM/IKY=
+=Huyx
+-----END PGP SIGNATURE-----
+
+--nwxvb3yzfbh4rrle--
