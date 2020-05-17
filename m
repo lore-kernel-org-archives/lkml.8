@@ -2,132 +2,103 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F802C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 01:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 01:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0E8207C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 01:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36489207C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 01:46:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="p0pBPkQo"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="mTuyBRur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgEQBXj (ORCPT
+        id S1726948AbgEQBqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 21:23:39 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11725 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbgEQBXj (ORCPT
+        Sat, 16 May 2020 21:46:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbgEQBqJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 21:23:39 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec091cd0000>; Sat, 16 May 2020 18:22:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 16 May 2020 18:23:38 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 16 May 2020 18:23:38 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 17 May
- 2020 01:23:38 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 17 May 2020 01:23:38 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.48.175]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ec092190001>; Sat, 16 May 2020 18:23:37 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-CC:     John Hubbard <jhubbard@nvidia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <rds-devel@oss.oracle.com>
-Subject: [PATCH] rds: convert get_user_pages() --> pin_user_pages()
-Date:   Sat, 16 May 2020 18:23:36 -0700
-Message-ID: <20200517012336.382624-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-X-NVConfidentiality: public
+        Sat, 16 May 2020 21:46:09 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B7F6C05BD09
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 18:46:09 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id z80so6800785qka.0
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 18:46:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=v8/1I95wcTj1mWlxsoep0Hvc73TKsH79uHMoZbzZUWA=;
+        b=mTuyBRurXQZEK9utptTiC11aN2pRP5dmNcE3mS9JBiWGvq+XHi1IprBG0ma5RZ8d1B
+         mq/y+wqaSGx+FRZ55wJjSWJknBkFCrIAqsYJSJG+IJNbVLUiZY0PjS65iNMYjH5poapJ
+         ano66ITpWYc7rAQifzLH5VBHZaDrUFXLp87bcqJILV29+PDGdX7D8K7W9M26JKqOX6FC
+         aQiPnMJf1SdeDID06QRXlqxWkRGX8BJvxwE8AUiQJvRghyyLv3dtN/xklxayHY2TAiOW
+         QudmNWPFzxw7MllH6ftOp0wvqb3tMAV8Mda48M/0Wy7idJzc4TBrjXekP9QxEtS5uGvd
+         wtyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=v8/1I95wcTj1mWlxsoep0Hvc73TKsH79uHMoZbzZUWA=;
+        b=R3dtu+NwRDydQRRgfuKGGp8f5Qw1K966j+JviOGwKqP/VaaNEKMIX5uCNlG+tVzmmY
+         t5zYwEI6cZV6yU2JWflpIdC2PJLa6b4Hshhn8TCkikTCebIGUv0PuVdWvSibFzqS980B
+         LNJbdy15enTbwQQZ3sjFaeb1CzJ9m5P5y6tPNFs6u51o+SrDTuO2ca7s1y1Q4/qj3olh
+         SmdnyyLYMOKhLRubmFzvAyC8bsYWtemZcRw+o4oP8eUcugRwbgPIjTKIodmPeFeUtkuK
+         J/dFtIEHef4LPgJM8xGq9DsbP8RekJD5DSafcGQyRZx4+WmtRNiziq3kujiLbIcohf67
+         fY5Q==
+X-Gm-Message-State: AOAM530WgIrvPDwzE+s3NS8qS3xsHKeiXPbtpVj0aBSxGOESwqU0ngfb
+        3hgAPPNWTU079tGRXIv4DNPq4MpzNn/uZQ==
+X-Google-Smtp-Source: ABdhPJzStOu9xj05KLKxunZry1UUBpBOKseoEyDnnEQBwPMBKvyZuLowmwoxKqJL+Hq9l1aoJW48+Q==
+X-Received: by 2002:ae9:e858:: with SMTP id a85mr10042251qkg.478.1589679967192;
+        Sat, 16 May 2020 18:46:07 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id g66sm5186785qkb.122.2020.05.16.18.46.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 16 May 2020 18:46:06 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589678542; bh=7TXMCvjqbZxuHVM5y97rS09KLJM6SOiZujb09twA/Dk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=p0pBPkQo7mb5Cwoe2du0glhdJwKo1677mvVSBz22sE9cCQM3wGXIlE5laIOCpyHYr
-         3qa8VtddbcJJhPx9D+WMM0oxMHvZR38SI08df83Ab9p7pnBmsuhWAIpgl4xV3PBtFa
-         KmsStxBTAZzOOuN/qKmICrQuaqSOPsDArBzf7+rLWbiu9xXJ7/Wvc15sev8rRw/Nba
-         ogtop5i930W9FQEhrNP73FVSCcYjNYgM7sU1FXzygboz+d+uKyT0Z50TedeVRoiInM
-         xkgR8Yv5tGyF5UfbyoXwQE4no8zx1mhMLQRR9lUIB9qGCdxfwU6Yr11M/3oO8C1CXk
-         L0IYKYw6T1CYw==
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 4/4] mm/slub: Fix sysfs shrink circular locking dependency
+Date:   Sat, 16 May 2020 21:46:05 -0400
+Message-Id: <62C1A69E-A14F-42EE-970F-ABAEA2782256@lca.pw>
+References: <56327de0-fa44-d5f3-2409-69cf2b97a209@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Juri Lelli <juri.lelli@redhat.com>
+In-Reply-To: <56327de0-fa44-d5f3-2409-69cf2b97a209@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code was using get_user_pages_fast(), in a "Case 2" scenario
-(DMA/RDMA), using the categorization from [1]. That means that it's
-time to convert the get_user_pages_fast() + put_page() calls to
-pin_user_pages_fast() + unpin_user_pages() calls.
 
-There is some helpful background in [2]: basically, this is a small
-part of fixing a long-standing disconnect between pinning pages, and
-file systems' use of those pages.
 
-[1] Documentation/core-api/pin_user_pages.rst
+> On Apr 28, 2020, at 10:07 AM, Waiman Long <longman@redhat.com> wrote:
+>=20
+> Trylock is handled differently from lockdep's perspective as trylock can f=
+ailed. When trylock succeeds, the critical section is executed. As long as i=
+t doesn't try to acquire another lock in the circular chain, the execution w=
+ill finish at some point and release the lock. On the other hand, if another=
+ task has already held all those locks, the trylock will fail and held locks=
+ should be released. Again, no deadlock will happen.
 
-[2] "Explicit pinning of user-space pages":
-    https://lwn.net/Articles/807108/
+Ok, I can see that in validate_chain() especially mentioned,
 
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org
-Cc: linux-rdma@vger.kernel.org
-Cc: rds-devel@oss.oracle.com
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- net/rds/info.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+=E2=80=9CTrylock needs to maintain the stack of held locks, but it does not a=
+dd new dependencies, because trylock can be done in any order.=E2=80=9D
 
-diff --git a/net/rds/info.c b/net/rds/info.c
-index 03f6fd56d237..e1d63563e81c 100644
---- a/net/rds/info.c
-+++ b/net/rds/info.c
-@@ -162,7 +162,6 @@ int rds_info_getsockopt(struct socket *sock, int optnam=
-e, char __user *optval,
- 	struct rds_info_lengths lens;
- 	unsigned long nr_pages =3D 0;
- 	unsigned long start;
--	unsigned long i;
- 	rds_info_func func;
- 	struct page **pages =3D NULL;
- 	int ret;
-@@ -193,7 +192,7 @@ int rds_info_getsockopt(struct socket *sock, int optnam=
-e, char __user *optval,
- 		ret =3D -ENOMEM;
- 		goto out;
- 	}
--	ret =3D get_user_pages_fast(start, nr_pages, FOLL_WRITE, pages);
-+	ret =3D pin_user_pages_fast(start, nr_pages, FOLL_WRITE, pages);
- 	if (ret !=3D nr_pages) {
- 		if (ret > 0)
- 			nr_pages =3D ret;
-@@ -235,8 +234,7 @@ int rds_info_getsockopt(struct socket *sock, int optnam=
-e, char __user *optval,
- 		ret =3D -EFAULT;
-=20
- out:
--	for (i =3D 0; pages && i < nr_pages; i++)
--		put_page(pages[i]);
-+	unpin_user_pages(pages, nr_pages);
- 	kfree(pages);
-=20
- 	return ret;
-
-base-commit: 3d1c1e5931ce45b3a3f309385bbc00c78e9951c6
---=20
-2.26.2
-
+So, I agree this trylock trick could really work. Especially, I don=E2=80=99=
+t know any other better way to fix this.=
