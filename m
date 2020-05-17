@@ -2,56 +2,75 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF29DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A24AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86ED1207E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B15206F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgEQTbZ (ORCPT
+        id S1726552AbgEQTej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 15:31:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50096 "EHLO
+        Sun, 17 May 2020 15:34:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgEQTbZ (ORCPT
+        with ESMTP id S1726269AbgEQTej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 15:31:25 -0400
+        Sun, 17 May 2020 15:34:39 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739D3C061A0C;
-        Sun, 17 May 2020 12:31:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4827CC061A0C;
+        Sun, 17 May 2020 12:34:39 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 92386128A0772;
-        Sun, 17 May 2020 12:31:24 -0700 (PDT)
-Date:   Sun, 17 May 2020 12:31:24 -0700 (PDT)
-Message-Id: <20200517.123124.1192834571134059077.davem@davemloft.net>
-To:     olteanv@gmail.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com,
-        kuba@kernel.org, eric.dumazet@gmail.com, jiri@mellanox.com,
-        idosch@idosch.org, rmk+kernel@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: dsa: sja1105: disable rxvlan offload for
- the DSA master
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EBAB8128A077E;
+        Sun, 17 May 2020 12:34:37 -0700 (PDT)
+Date:   Sun, 17 May 2020 12:34:37 -0700 (PDT)
+Message-Id: <20200517.123437.2084818619487673025.davem@davemloft.net>
+To:     zhangshaokun@hisilicon.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        jinyuqi@huawei.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kuba@kernel.org, jiri@resnulli.us, nivedita@alum.mit.edu,
+        peterz@infradead.org, edumazet@google.com, jiongwang@huawei.com
+Subject: Re: [PATCH v2] net: revert "net: get rid of an signed integer
+ overflow in ip_idents_reserve()"
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200512234921.25460-1-olteanv@gmail.com>
-References: <20200512234921.25460-1-olteanv@gmail.com>
+In-Reply-To: <1589600809-18001-1-git-send-email-zhangshaokun@hisilicon.com>
+References: <1589600809-18001-1-git-send-email-zhangshaokun@hisilicon.com>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 17 May 2020 12:31:25 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 17 May 2020 12:34:38 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Date: Sat, 16 May 2020 11:46:49 +0800
 
-I've asked Eric to look at this twice and no response, so I'm marking this
-deferred because I'm not applying this without someone knowledgable about
-the quoted VLAN change can take a look at this.
+> From: Yuqi Jin <jinyuqi@huawei.com>
+> 
+> Commit adb03115f459 ("net: get rid of an signed integer overflow in ip_idents_reserve()")
+> used atomic_cmpxchg to replace "atomic_add_return" inside the function
+> "ip_idents_reserve". The reason was to avoid UBSAN warning.
+> However, this change has caused performance degrade and in GCC-8,
+> fno-strict-overflow is now mapped to -fwrapv -fwrapv-pointer
+> and signed integer overflow is now undefined by default at all
+> optimization levels[1]. Moreover, it was a bug in UBSAN vs -fwrapv
+> /-fno-strict-overflow, so Let's revert it safely.
+> 
+> [1] https://gcc.gnu.org/gcc-8/changes.html
+> 
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Suggested-by: Eric Dumazet <edumazet@google.com>
+ ...
+> Signed-off-by: Yuqi Jin <jinyuqi@huawei.com>
+> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+
+Applied, thanks.
