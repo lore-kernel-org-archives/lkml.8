@@ -2,111 +2,199 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC953C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF21C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD9120727
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75511207D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:26:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ll5q4FSK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgEQNQi (ORCPT
+        id S1727957AbgEQN0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 09:16:38 -0400
-Received: from mga18.intel.com ([134.134.136.126]:39668 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727893AbgEQNQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 09:16:37 -0400
-IronPort-SDR: DFlw8e1o+WHH2jeI38efaqFE2zt8ucTCRnPH57TZTW8DuyulRG/QRmPSwPR2c4cK6iqjQmf30Z
- pMPtl3zEXRrA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 06:16:36 -0700
-IronPort-SDR: zhQWz6zJtdh7KjcmjnZKRjeXHNtHBqtNt3KExXT8g1fzGRy1IuLP23L6G3vJftLQ6AvuYdON9u
- n6dyaOResZ2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,403,1583222400"; 
-   d="scan'208";a="263688852"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by orsmga003.jf.intel.com with ESMTP; 17 May 2020 06:16:33 -0700
-Subject: Re: [PATCH V7 00/15] perf/x86: Add perf text poke events
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel@vger.kernel.org
-References: <20200512121922.8997-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <bee04840-143c-18bb-df82-5aa58d70730e@intel.com>
-Date:   Sun, 17 May 2020 16:16:50 +0300
+        Sun, 17 May 2020 09:26:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727893AbgEQN0f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 09:26:35 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C42C061A0C;
+        Sun, 17 May 2020 06:26:35 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id h26so5657668lfg.6;
+        Sun, 17 May 2020 06:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=W84wXIL0NQcT3OvZ70B+DYFri+U6bqyzquUpS33uBSk=;
+        b=ll5q4FSKI7XKnlyRTk0D9+zt3YTM6eTbjPHj189AsjvXjiyj44YM1ijd43VLrlNFI9
+         yJHxTELAFObX5PP/x42S8D5JosrfJ6mT7m0N5ABEIoboPFV06+AoiSW04kZKil5iQBaR
+         0B57pzu1JzbKvqq+uzSCIdtnsmU1t/bd5VOtceiDO7CW+mWbf9ID2079qqpiVTEJRalU
+         N+HFzlphkvjbGGcoVkwXLexeTIEuN/BDCL6Q/NDzd1TBmsvbZouOSLsIy5lDODbx04il
+         btCunaurBr05Ytzdd57+OZExLJus33/9bNk9ZGsiPZ4YH0HAij7Jp0b/TUe7APRqGnFa
+         A10g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W84wXIL0NQcT3OvZ70B+DYFri+U6bqyzquUpS33uBSk=;
+        b=GdsUw6kqBwiD3WijSM8fhpfxsWhlCxiNIHOGc4v1eW20EfDIptZ5Btb9mZZw/gXm4T
+         sCLAhAC+/8FUmXGd6Xwk7+SK1fJBS2Da1CfKBg6FXtQxCU5B+kMU2N9pgaqvRtbWCexK
+         /GaM9AKB+dG1VhJnTeyeAA6POyhHNIM0Ka7VWP1Cib6n9lZ5gYW0iGugnU/x6li/+1rw
+         mJ+W5tRvbOlPqYEbJy4aHSwePkI9leGApEiwQ7odmmS2iXDrecgvM+W5nbHwa2mZ0nDf
+         7LEjjp1VV0qBVzQszLGca3j4a3+ldx9XZbZVnmbA12zaTQCVXCJKF11pJnrMs+VaFEP9
+         eVXQ==
+X-Gm-Message-State: AOAM531feTmEWjr296Noddc3BBOhGGoTOztxUXMwkc/ekxko490juQj8
+        XpGiDWXdRJefkXFv0SxHjEU=
+X-Google-Smtp-Source: ABdhPJwsTCjmJG8ON/aXCUhUqcjuvDg+q8Fk/jH5fwniCwBIgwbzG/i2Cc3O9JCOwYEssDTgZPac5Q==
+X-Received: by 2002:ac2:4105:: with SMTP id b5mr8612264lfi.94.1589721993618;
+        Sun, 17 May 2020 06:26:33 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id x10sm1374694ljd.25.2020.05.17.06.26.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 May 2020 06:26:33 -0700 (PDT)
+Subject: Re: [PATCH v11 33/56] Input: atmel_mxt_ts - delay enabling IRQ when
+ not using regulators
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     "Wang, Jiada" <jiada_wang@mentor.com>
+Cc:     nick@shmanahar.org, dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200508055656.96389-1-jiada_wang@mentor.com>
+ <20200508055656.96389-34-jiada_wang@mentor.com>
+ <3a942afa-c047-2c88-1c8e-a90fa018738e@gmail.com>
+ <6af23ae6-2f1c-0459-d2b6-1b01ddb0c3dc@mentor.com>
+ <c88d24ef-e0e0-db3b-1000-b21af906eb4f@gmail.com>
+ <aaf99a11-037e-93d8-93e4-d83e3aa4a42e@mentor.com>
+ <63c93fc0-ac09-ec77-c590-08e419734205@gmail.com>
+ <8c6f73a2-f613-b402-d727-5cb7fb3e1f09@mentor.com>
+ <2e41656c-e7e4-5dcb-1156-bcfcbc8ea595@gmail.com>
+Message-ID: <f5da1587-02e7-5704-a676-1829b915c6f8@gmail.com>
+Date:   Sun, 17 May 2020 16:26:32 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200512121922.8997-1-adrian.hunter@intel.com>
+In-Reply-To: <2e41656c-e7e4-5dcb-1156-bcfcbc8ea595@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/05/20 3:19 pm, Adrian Hunter wrote:
-> Hi
+17.05.2020 16:08, Dmitry Osipenko пишет:
+> 17.05.2020 06:32, Wang, Jiada пишет:
+>> Hello Dmitry
+>>
+>> On 2020/05/14 13:53, Dmitry Osipenko wrote:
+>>> 13.05.2020 08:07, Wang, Jiada пишет:
+>>>> Hello Dmitry
+>>>>
+>>>> On 2020/05/12 8:13, Dmitry Osipenko wrote:
+>>>>> 11.05.2020 05:05, Wang, Jiada пишет:
+>>>>>> Hello Dmitry
+>>>>>>
+>>>>>> Thanks for your comment and test,
+>>>>>>
+>>>>>> can you let me know which platform (board) you are using for test,
+>>>>>> and DTS changes if you have added any.
+>>>>>
+>>>>> That's this device-tree [1] without any extra changes.
+>>>>>
+>>>> I am using Samsung Chromebook Pro for testing,
+>>>> but obviously some of the use cases it can't cover.
+>>>>
+>>>> I also would like to test on same device you are using,
+>>>> would you please let me know how to boot Acer Iconia Tab A500
+>>>> with custom images. Are you booting Linux or Android on it?
+>>>
+>>> I'm using Ubuntu 20.04 on it at the moment. In order to boot custom
+>>> images you'll need at least to install a custom recovery, which will
+>>> allow to flash boot.img on eMMC storage.
+>>>
+>>> Ideally, you'll need to install an unlocked bootloader that will enable
+>>> Android's fastboot, and thus, allow to easily boot kernel zImage without
+>>> messing with flashing boot images.
+>>>
+>>> Could you please tell what is the current state of yours device: does it
+>>> have a stock Android installed? is it rooted? is custom recovery
+>>> installed?
+>>>
+>> Thanks for your information
+>>
+>> By following instructions found in XDA forums,
+>> now I am able to install an unlocked bootloader,
+>> boot among primary kernel, recovery kernel or fastboot,
+>> an Android custom stock rom also has been installed
 > 
-> Here are patches to add a text poke event to record changes to kernel text
-> (i.e. self-modifying code) in order to support tracers like Intel PT
-> decoding through jump labels, kprobes and ftrace trampolines.
+> Awesome!
 > 
-> The first 8 patches make the kernel changes and the subsequent patches are
-> tools changes.
+>> Could you please let me know how to install local built ubuntu images
 > 
-> The next 4 patches add support for updating perf tools' data cache
-> with the changed bytes.
+> Sure, please follow these steps:
 > 
-> The next patch is an Intel PT specific tools change.
+> 1. Download rootfs from
+> http://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04-base-armhf.tar.gz
 > 
-> The final 2 patches add perf script --show-text-poke-events option
+> 2. Extract it wherever you want yours root to be, like ExternalSD card
+> or eMMC /data partition or even NFS directory if you'll use usbnet.
 > 
-> Patches also here:
+> 3. Clone this kernel https://github.com/grate-driver/linux which is a
+> recent upstream linux-next + work-in-progress patches that haven't been
+> merged into upstream yet. For example DRM bridges and Tegra Partition
+> Table patches are under review now.
 > 
-> 	git://git.infradead.org/users/ahunter/linux-perf.git text_poke
+> 4. Select tegra_defconfig:
 > 
-> Changes in V7
+> 	ARCH=arm make tegra_defconfig
 > 
->   perf: Add perf text poke event
->   perf/x86: Add support for perf text poke event for text_poke_bp_batch() callers
->   kprobes: Add symbols for kprobe insn pages
->   kprobes: Add perf ksymbol events for kprobe insn pages
->   perf/x86: Add perf text poke events for kprobes
->   ftrace: Add symbols for ftrace trampolines
->   ftrace: Add perf ksymbol events for ftrace trampolines
->   ftrace: Add perf text poke events for ftrace trampolines
+> 5. Compile kernel:
 > 
-> 	Added Peter's Ack
-> 	Improved commit message for text_poke events for ftrace trampolines
+> 	ARCH=arm make
 > 
->   perf kcore_copy: Fix module map when there are no modules loaded
->   perf evlist: Disable 'immediate' events last
->   perf tools: Add support for PERF_RECORD_TEXT_POKE
->   perf tools: Add support for PERF_RECORD_KSYMBOL_TYPE_OOL
->   perf intel-pt: Add support for text poke events
->   perf script: Add option --show-text-poke-events
->   perf script: Show text poke address symbol
+> 6. Append DTB to zImage:
 > 
-> 	Re-based on Arnaldo's perf/core branch
+> 	cat arch/arm/boot/zImage
+> arch/arm/boot/dts/tegra20-acer-a500-picasso.dtb > arch/arm/boot/zImage-dtb
+> 
+> 7. Turn on A500 and select 'fastboot' option in the bootloader's menu.
+> 
+> 8. Boot compiled kernel:
+> 
+> 	fastboot -c "root=/dev/mmcblk2p8 gpt tegraboot=sdmmc" boot
+> arch/arm/boot/zImage-dtb
+> 
+> 9. Grab touchscreen/WiFi/Bluetooth firmware files from
+> https://github.com/digetx/linux-firmware
+> 
+> 10. Grab ALSA UCM rule from https://github.com/digetx/alsa-ucm-conf
+> 
+> 11. Enjoy!
+> 
+> Please let me know you'll experience any problems, I'll be glad to help.
 > 
 
-Arnaldo, any comments on the tools patches?
+Also, there is an Ubuntu PPA for Tegra20/30 devices with drivers from
+GRATE-driver project:
+https://launchpad.net/~grate-driver/+archive/ubuntu/ppa
+
+Please keep in mind that there is no GL driver that work with upstream
+kernel.
+
+I'd recommend to use KDE Plasma 5 for the desktop environment. For the
+good experience you'll need to tell Qt to use software render, the
+easiest way is to set required env variables globally:
+
+echo -e
+"QT_QUICK_BACKEND=software\nLIBGL_ALWAYS_SOFTWARE=1\nQT_IM_MODULE=qtvirtualkeyboard"
+>> /etc/security/pam_env.conf
