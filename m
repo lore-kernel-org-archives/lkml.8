@@ -2,129 +2,88 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB40C207D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:39:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IRCvmfBk"
+	by mail.kernel.org (Postfix) with ESMTP id 21069207D3
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589752038;
+	bh=PNWctZk9pMdFlRDTenYl+JHp5npRYe1kEdnmws7kakU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=u57ZI6SQL+P0ztS/b6QWVeuh0F/yVCiUEFsU9iz+quNXaY85CIuQtVBF10Rwo+ohf
+	 bj3trszHh/phhuuen3SVK6+v46InjGFKTIIcdY1l6mkuYpx5gSi4/phptu7pyF3W+R
+	 RfRhvhCj8eSwEcMTpU2EO89ExYDjrVMpA81ULYqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgEQVjw (ORCPT
+        id S1726551AbgEQVrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 17:39:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbgEQVjv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 17:39:51 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B09BC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 14:39:51 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id c24so6585803qtw.7
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 14:39:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VXQSpo5cOSVhswku2XbziWLym4GqZt6GcybWhlW7HkQ=;
-        b=IRCvmfBkpaRfxNOUPPCR/hBNAViX/cvtUaNm27KNkJ/l9DmhNzD66nZJb12UbMAAHS
-         DhpX1THLXZ9brLgO6YCFm4ymQikeG2HM8O4UmjmjevM3DSxP88f/sokRBfCoeLrYqQqw
-         fWVWdVcxjnNRaFLLyNa3WqQk0pKKcVqGqxowFVsQsvSI4Ty1+NNhTXk5KrKcpp3XB7wL
-         wklWF49OvbBYbBJ6+TN9Kx6E3MLPeAFsXcP/IYFQY80lXXGmdAyRoT0sVbfzgj5rObqi
-         bQM4hJooDpbHZ8lLbKMB3tQMPvkZGXUKcqCRiqMHSXezddtFBdQhHtZQqMmVvvKI8oPP
-         invQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VXQSpo5cOSVhswku2XbziWLym4GqZt6GcybWhlW7HkQ=;
-        b=hBAzM7IPAUyPj9ozbzv241AzLeXAEs72kTYrKN2XbuSJL4eoebIGEoLhqO6qF5kWhq
-         NvNpbpYAY6g4+aW7vhTDyTMYXVKEWNYwOZ1omfLDagPBTRymlRCVgGud+/dc3FLUnHkY
-         YmVKJhp66MhG1rjiCAG4OQwW6KQqb191T/fkqjbpOJDpQjUDjpH/q81+4WIzeS8vjBRp
-         lCjRaEC3/i8zyo+wkB9R0AVdX5dFzLH7aNnf3N9xJCVl/i4EL4kK1NWUWE/i3cqC0MQN
-         8mXLNlW0mCoI41OErP2kY7ifWguuXsAXwIJQKR4GVULckup65j1wZcZ4uNUuZLE1kmhf
-         4RwA==
-X-Gm-Message-State: AOAM532J/gMzNHNJaYzQAHjp20/YmuKYen5bgaYtZECsY7Mbfx4ypwnU
-        qgk+cc1i/KkLpWlWiOekWSa4gogWKBbDpcvWy0LUJw==
-X-Google-Smtp-Source: ABdhPJyu1/pp1+dd5u1Mh4CvToq01YPVEZoUBmwc4NcKE5KzMsrD9d2oBzS123FiHqkqb7CUyPMK6xR0zLlyHFn0U4A=
-X-Received: by 2002:ac8:fb5:: with SMTP id b50mr13533689qtk.164.1589751590455;
- Sun, 17 May 2020 14:39:50 -0700 (PDT)
+        Sun, 17 May 2020 17:47:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726297AbgEQVrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 17:47:17 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3B1320671;
+        Sun, 17 May 2020 21:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589752036;
+        bh=PNWctZk9pMdFlRDTenYl+JHp5npRYe1kEdnmws7kakU=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=0pYJcjwjUWt2iMR1Fzx4eiXRxNMJtNzQN1ic9wt17ujnkd86ZbwOxWEtwOpiFJZ50
+         ayFOa3Nl1r6SLO58+RA0zxc2hA3GMTOurtjhW4G6e7CxkE/R9IMd1CX1Jq3Z0HACuI
+         f4zL2mj4RGhLcQdUiBUPhIsdeKHNvboalXxNRnwA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B93DB35233BC; Sun, 17 May 2020 14:47:16 -0700 (PDT)
+Date:   Sun, 17 May 2020 14:47:16 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Amol Grover <frextrite@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>, philip.li@intel.com,
+        lkp@intel.com, fengguang.wu@intel.com, rong.a.chen@intel.com
+Subject: Re: Default enable RCU list lockdep debugging with PROVE_RCU
+Message-ID: <20200517214716.GT2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200514181305.GT2869@paulmck-ThinkPad-P72>
+ <CA610F47-290E-4826-B1D9-7CE09D7CEA6D@lca.pw>
 MIME-Version: 1.0
-References: <20200502124802.9758-1-richard@nod.at>
-In-Reply-To: <20200502124802.9758-1-richard@nod.at>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Sun, 17 May 2020 23:39:39 +0200
-Message-ID: <CAFLxGvw9Tc9dr+=Dyuut9gXeLfUg2aUROGdZ4-g5=_OtS_hnLA@mail.gmail.com>
-Subject: Re: [PATCH] ubi: Fix seq_file usage in detailed_erase_block_info
- debugfs file
-To:     Richard Weinberger <richard@nod.at>
-Cc:     linux-mtd@lists.infradead.org, ben.shelton@ni.com,
-        LKML <linux-kernel@vger.kernel.org>, zach.brown@ni.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA610F47-290E-4826-B1D9-7CE09D7CEA6D@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 2, 2020 at 2:48 PM Richard Weinberger <richard@nod.at> wrote:
->
-> 3bfa7e141b0b ("fs/seq_file.c: seq_read(): add info message about buggy .next functions")
-> showed that we don't use seq_file correctly.
-> So make sure that our ->next function always updates the position.
->
-> Fixes: 7bccd12d27b7 ("ubi: Add debugfs file for tracking PEB state")
-> Signed-off-by: Richard Weinberger <richard@nod.at>
-> ---
->  drivers/mtd/ubi/debug.c | 12 ++----------
->  1 file changed, 2 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/mtd/ubi/debug.c b/drivers/mtd/ubi/debug.c
-> index 54646c2c2744..ac2bdba8bb1a 100644
-> --- a/drivers/mtd/ubi/debug.c
-> +++ b/drivers/mtd/ubi/debug.c
-> @@ -393,9 +393,6 @@ static void *eraseblk_count_seq_start(struct seq_file *s, loff_t *pos)
->  {
->         struct ubi_device *ubi = s->private;
->
-> -       if (*pos == 0)
-> -               return SEQ_START_TOKEN;
-> -
->         if (*pos < ubi->peb_count)
->                 return pos;
->
-> @@ -409,8 +406,6 @@ static void *eraseblk_count_seq_next(struct seq_file *s, void *v, loff_t *pos)
->  {
->         struct ubi_device *ubi = s->private;
->
-> -       if (v == SEQ_START_TOKEN)
-> -               return pos;
->         (*pos)++;
->
->         if (*pos < ubi->peb_count)
-> @@ -432,11 +427,8 @@ static int eraseblk_count_seq_show(struct seq_file *s, void *iter)
->         int err;
->
->         /* If this is the start, print a header */
-> -       if (iter == SEQ_START_TOKEN) {
-> -               seq_puts(s,
-> -                        "physical_block_number\terase_count\tblock_status\tread_status\n");
-> -               return 0;
-> -       }
-> +       if (*block_number == 0)
-> +               seq_puts(s, "physical_block_number\terase_count\n");
->
->         err = ubi_io_is_bad(ubi, *block_number);
->         if (err)
-> --
+On Fri, May 15, 2020 at 02:36:26PM -0400, Qian Cai wrote:
+> 
+> 
+> > On May 14, 2020, at 2:13 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > 
+> > Fair enough!  And yes, the Linux kernel is quite large, so I certainly am
+> > not asking you to test the whole thing yourself.
+> 
+> Ok, I saw 0day bot also started to report those which is good. For example,
+> 
+> lkml.org/lkml/2020/5/12/1358
+> 
+> which so far is nit blocking 0day on linux-next since it does not use panic_on_warn yet (while syzbot does).
+> 
+> Thus, I am more convinced that we should not revert the commit just for syzbot until someone could also convince 0day to select RCU_EXPERT and then DEBUG_RCU_LIST?
 
-Applied!
+Let's ask the 0day people, now CCed, if they would be willing to
+build with CONFIG_RCU_EXPERT=y and CONFIG_DEBUG_RCU_LIST=y on some
+fraction of their testing.  ;-)
 
--- 
-Thanks,
-//richard
+							Thanx, Paul
