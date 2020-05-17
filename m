@@ -2,77 +2,107 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7496C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70E0620758
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F48206F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:52:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHa30mzp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgEQUtx (ORCPT
+        id S1726671AbgEQUwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 16:49:53 -0400
-Received: from smtprelay0202.hostedemail.com ([216.40.44.202]:48656 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726299AbgEQUtx (ORCPT
+        Sun, 17 May 2020 16:52:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34468 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbgEQUwx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 16:49:53 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 4A25D18225E0F;
-        Sun, 17 May 2020 20:49:52 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bean20_5608517ad065c
-X-Filterd-Recvd-Size: 1980
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 17 May 2020 20:49:51 +0000 (UTC)
-Message-ID: <ec2fa70939ab20dc7c454897b0b8ed08570dca80.camel@perches.com>
-Subject: Re: [RFC PATCH] staging: rtl8192u: indicate_packets() can be static
-From:   Joe Perches <joe@perches.com>
-To:     kbuild test robot <lkp@intel.com>,
-        Pascal Terjan <pterjan@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     kbuild-all@lists.01.org
-Date:   Sun, 17 May 2020 13:49:50 -0700
-In-Reply-To: <20200517202216.GA24634@8c544063f25c>
-References: <20200517165819.136715-1-pterjan@google.com>
-         <20200517202216.GA24634@8c544063f25c>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Sun, 17 May 2020 16:52:53 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365D4C061A0C;
+        Sun, 17 May 2020 13:52:53 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id m18so1901328vkk.9;
+        Sun, 17 May 2020 13:52:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kRpHuRKc3Bl5TABsYSL7dPRXInYL17v1wVRbBgtX7NU=;
+        b=BHa30mzp37Lx79gKYaUpW35MfR/+nyf53/vZfb5HUDKCP+7TubeNHZQ1DYE/8kYYbn
+         jEzI8UdvK58BUbyWQOKQEf/UJOkvX2dQA3eOITt4CKH8Z5cJ7UILc9Vvj3fO0yh4vWEg
+         3x97oavd04iRx/wYwoNap1FdYnqdKNsI6C0xtr8QjajzLqGzEb793iL99VwfdWu6XTEa
+         qstMMN+z9D5pwTONtStgS/sHYzMx0w0zv1ToEKy7mZjWuNtHD1YKBt+qgegXJ1GKq3Rd
+         ZxFAw376tZwcO24fv/PuyU/MiOMGhFcrkZUJmJOMjBs3noHZ/tFm0BH4Trz0THJHhNRb
+         PPtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kRpHuRKc3Bl5TABsYSL7dPRXInYL17v1wVRbBgtX7NU=;
+        b=rxwn2oCfeic4XkTQVBBDXwVT8NHw44dOQOljkCSEIURacv3g8UtEeUcuHVyhss3tCf
+         SBqLitjunUTD8kYE1OGGIJhfIjpX9dIhdVZBWhqSrQX/3oVXoErR0lz1cc1LKReE26qe
+         UjGQr9aJn9EYBD6ytdqZvWKJNOAGO7/vYqHQILHvFTbPISIzhSeBa4Dx19ltbqt3XfJY
+         Dx7O/kPdlVypMvKjRjeDhgd5q3whNdF51xJQp/FLm4m0n4IPade3xvFI0/Rhqoa4h5Uu
+         WQfk+pbcVOvrkwZBHUiAynESwVOW+P94xVDTwb/7U4wmuyH0nGGxgTQxdpO4b534j2ax
+         7A2A==
+X-Gm-Message-State: AOAM5331gJAs+sKu/gOgZvx+C9IVioVKz8ATX3n5rZ2i3DFs+Y+KtZEj
+        Hi36dzBUctqSGLOGUyDZ6ztGSCvaGwjmdXh4/+A=
+X-Google-Smtp-Source: ABdhPJxxoulbFHKkk5sAmi3frB7/d9hBxGQD8EXWebg6haLP3CNxcYOexxdkVTIOKDudrgSrCIxG+52osvlzN3ensV0=
+X-Received: by 2002:a1f:ac0e:: with SMTP id v14mr9168388vke.28.1589748772323;
+ Sun, 17 May 2020 13:52:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200316163907.13709-1-wsa+renesas@sang-engineering.com>
+ <20200512162837.GJ13516@ninjato> <CACvgo526Ut+rpi9TXP4jZKPZmRUbnh8U-ETj7VTAz9ykut5Uig@mail.gmail.com>
+In-Reply-To: <CACvgo526Ut+rpi9TXP4jZKPZmRUbnh8U-ETj7VTAz9ykut5Uig@mail.gmail.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Sun, 17 May 2020 21:50:03 +0100
+Message-ID: <CACvgo51TTsggO4r3C5rsmgJP6w41twD4ngX6M5QxhyH7Jj4v0Q@mail.gmail.com>
+Subject: Re: [PATCH 0/2] drm: encoder_slave: some updates
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-renesas-soc@vger.kernel.org,
+        Dave Airlie <airlied@redhat.com>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-18 at 04:22 +0800, kbuild test robot wrote:
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> ---
+On Wed, 13 May 2020 at 10:35, Emil Velikov <emil.l.velikov@gmail.com> wrote:
+>
+> Hi Wolfram,
+>
+> On Wed, 13 May 2020 at 10:10, Wolfram Sang
+> <wsa+renesas@sang-engineering.com> wrote:
+> >
+> > On Mon, Mar 16, 2020 at 05:39:05PM +0100, Wolfram Sang wrote:
+> > > While converting I2C users to new APIs, I found a refcounting problem in
+> > > the encoder_slave implementation. This series fixes it and converts to
+> > > the new API.
+> > >
+> > > Based on linux-next and only build tested.
+> > >
+> > > Wolfram Sang (2):
+> > >   drm: encoder_slave: fix refcouting error for modules
+> > >   drm: encoder_slave: use new I2C API
+> > >
+> > >  drivers/gpu/drm/drm_encoder_slave.c | 15 +++++----------
+> > >  1 file changed, 5 insertions(+), 10 deletions(-)
+> >
+> > Is there someone I should add to the CC list maybe?
+> >
+> The series is:
+> Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+>
+> Unless someone beats me to it, I'll commit them to drm-misc later today.
+>
+And after a short delay, pushed to drm-misc-next.
+Thanks for the patches Wolfram.
 
-This doesn't apply on Linus' tree or -next so perhaps the
-robot should put what tree and branch patches like these
-are meant to be applied on after the --- line
-
->  ieee80211_rx.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-> index 3309f64be4c94..bceff1ba3d7d4 100644
-> --- a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-> +++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-> @@ -520,7 +520,7 @@ static bool AddReorderEntry(struct rx_ts_record *pTS, struct rx_reorder_entry *p
->  	return true;
->  }
->  
-> -void indicate_packets(struct ieee80211_device *ieee, struct ieee80211_rxb *rxb)
-> +static void indicate_packets(struct ieee80211_device *ieee, struct ieee80211_rxb *rxb)
->  {
->  	struct net_device_stats *stats = &ieee->stats;
->  	struct net_device *dev = ieee->dev;
-
+-Emil
