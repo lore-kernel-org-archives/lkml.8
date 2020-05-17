@@ -2,130 +2,131 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F52C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F81BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 710222070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E60207BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:02:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="S9FT77W3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgEQPBa (ORCPT
+        id S1728045AbgEQPCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 11:01:30 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59300 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727970AbgEQPBa (ORCPT
+        Sun, 17 May 2020 11:02:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727973AbgEQPCR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 11:01:30 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jaKn6-00031w-BG; Sun, 17 May 2020 15:01:24 +0000
-Date:   Sun, 17 May 2020 17:01:23 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     arnd@arndb.de, guoren@kernel.org, linux-csky@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH 0/3] sparc: port to copy_thread_tls() and struct
- kernel_clone_args
-Message-ID: <20200517150123.sl36ug27gwnyz6gf@wittgenstein>
-References: <20200512171527.570109-1-christian.brauner@ubuntu.com>
- <20200512.130633.293867428547074800.davem@davemloft.net>
+        Sun, 17 May 2020 11:02:17 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B765AC061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 08:02:17 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id e8so7329771ilm.7
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 08:02:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qfGQru1DQ7dhkCFJk1ko3cW7sBpUltkWhzAfvUqe2DI=;
+        b=S9FT77W3xRwy8bthBnonelSGFRbLLRr9pn0lRgc1aSkv46DpI3gf7LfrlD65NIi4OR
+         q8s3XDTbjL9kMl4JWpwnj3eBd2SCbQKZR7GIkomjucnuCvqRAToM8aPj1L5hCPdpNa+U
+         qkCk+tr6w5icMS2X+S65yh/oxsOCHqrRZiJb1Bu2bz5z722jMUxRutTQraOoe1/40EGc
+         Hc8ZdyNhOxKp+xjDqRpaUcprPnYOw6XEOtudSuy8qFp8opTzZQEXJ65vmRfy3m3o19vn
+         fG7LP9179cdFmNKVsLEYc/3l1ic+AH/ipaxStjOFM+VrT9HXSKeM42GTYYZJL3CNBWBs
+         BsXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qfGQru1DQ7dhkCFJk1ko3cW7sBpUltkWhzAfvUqe2DI=;
+        b=uf8VwgrlOFHibUjbNAC6RlaHlAubBVVzbi8CAOxhDRX4UoFBltygWjoT3G/fPc8ZZq
+         WfsgZ+hEsGZllrfhFcr8Tz8ek8l/2U8teQEiQDkyHQGueT9aRfOGiI5LTJOSPtqzmJiH
+         mHcl5IkGlbq7ihAuP7tCVc0bqpPJbG0+zOgu4cixyQpqoUwFtkQDwtdZ8FMQJuwq2UUa
+         a/zESK6KWMXa6Na0uCfSDxUTVfgRvqg2ZLBvmd0H4oF6CNG7DpIC4uqhuLmyGi1FcMyx
+         R1eAAZ2N1z2JthK6QlVzsv0GlNZUhl/mQmo6IqFHFPnss3Bhf5+1KPIjFsHYx8iCKelo
+         MEHg==
+X-Gm-Message-State: AOAM532+ErxoO757IclgUOFyyC8RjSbrzS44qSjQSVdoyuHtRgN/9PVl
+        m868MPFfCwYKha6hDu5iLK1yew==
+X-Google-Smtp-Source: ABdhPJzikVveOD4S1XQewT9omGCsdCBEnHet0SfjPhOw6Ylol0GuiR99q2n7cdDHqo9cXkWZIsJz0w==
+X-Received: by 2002:a92:c211:: with SMTP id j17mr12489801ilo.85.1589727737033;
+        Sun, 17 May 2020 08:02:17 -0700 (PDT)
+Received: from cisco ([2601:282:b02:8120:6155:7c8c:3dc0:c56e])
+        by smtp.gmail.com with ESMTPSA id s5sm2930758iop.4.2020.05.17.08.02.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 08:02:16 -0700 (PDT)
+Date:   Sun, 17 May 2020 09:02:15 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Aleksa Sarai <asarai@suse.de>, Kees Cook <keescook@chromium.org>,
+        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
+Message-ID: <20200517150215.GE1996744@cisco>
+References: <20200515234005.32370-1-sargun@sargun.me>
+ <202005162344.74A02C2D@keescook>
+ <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
+ <20200517112156.cphs2h33hx2wfcs4@yavin.dot.cyphar.com>
+ <20200517142316.GA1996744@cisco>
+ <20200517143311.fmxaf3pnopuaezl4@wittgenstein>
+ <20200517144603.GD1996744@cisco>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512.130633.293867428547074800.davem@davemloft.net>
+In-Reply-To: <20200517144603.GD1996744@cisco>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 01:06:33PM -0700, David Miller wrote:
-> From: Christian Brauner <christian.brauner@ubuntu.com>
-> Date: Tue, 12 May 2020 19:15:24 +0200
+On Sun, May 17, 2020 at 08:46:03AM -0600, Tycho Andersen wrote:
+> On Sun, May 17, 2020 at 04:33:11PM +0200, Christian Brauner wrote:
+> > struct seccomp_notif2 {
+> > 	__u32 notif_size;
+> > 	__u64 id;
+> > 	__u32 pid;
+> > 	__u32 flags;
+> > 	struct seccomp_data data;
+> > 	__u32 data_size;
+> > };
 > 
-> > I've tested this series with qemu-system-sparc64 and a Debian Sid image
-> > and it comes up no problem (Here's a little recording
-> > https://asciinema.org/a/329510 ).
+> I guess you need to put data_size before data, otherwise old userspace
+> with a smaller struct seccomp_data will look in the wrong place.
 > 
-> Can you show how you put this environment together and also what
-> compilation tools you used?  Looks great.
+> But yes, that'll work if you put two sizes in, which is probably
+> reasonable since we're talking about two structs.
 
-Sorry for the delay. That mail somehow got lost in my inbox.
+Well, no, it doesn't either. Suppose we add a new field first to
+struct seccomp_notif2:
 
-So in general, I used qemu-system-sparc64 which is available in Universe
-with either Debian or Ubuntu and that's what I've been using as host
-distro. So you need a 
+struct seccomp_notif2 {
+    __u32 notif_size;
+    __u64 id;
+    __u32 pid;
+    __u32 flags;
+    struct seccomp_data data;
+    __u32 data_size;
+    __u32 new_field;
+};
 
-deb http://us.archive.ubuntu.com/ubuntu/ <release-name> universe
-deb-src http://us.archive.ubuntu.com/ubuntu/ <release-name> universe
-deb http://us.archive.ubuntu.com/ubuntu/ <release-name>-updates universe
-deb-src http://us.archive.ubuntu.com/ubuntu/ <release-name>-updates universe
+And next we add a new field to struct secccomp_data. When a userspace
+compiled with just the new seccomp_notif2 field does:
 
-int /etc/apt/sources.list
+seccomp_notif2.new_field = ...;
 
-So after this, you should be able to install
+the compiler will put it in the wrong place for the kernel with the
+new seccomp_data field too.
 
-apt install qemu-system-sparc
+Sort of feels like we should do:
 
-Now we need an image and believe it or not there's a guy who lives in
-Berlin too who builds Debian images for all crazy architectures. You can
-download them from:
+struct seccomp_notif2 {
+    struct seccomp_notif *notif;
+    struct seccomp_data *data;
+};
 
-https://cdimage.debian.org/cdimage/ports/
+?
 
-They're built quite frequently. Sometimes you get unlucky because a new
-kernel won't boot anymore then going a couple of months back usually
-helps. So for this experiment I downloaded:
-
-https://cdimage.debian.org/cdimage/ports/9.0/sparc64/iso-cd/debian-9.0-sparc64-NETINST-1.iso
-
-then I did:
-
-cd .local/share/qemu
-truncate -s 15GB sparc64.img
-
-And then to _install_:
-
-qemu-system-sparc64 \
-        -m 4096 \
-  	-device virtio-blk-pci,bus=pciB,drive=hd \
-  	-drive file=/home/brauner/Downloads/debian-9.0-sparc64-NETINST-1.iso,format=raw,if=ide,bus=1,unit=0,media=cdrom,readonly=on \
-	-drive file=/home/brauner/.local/share/qemu/sparc64.img,format=raw,if=none,id=hd \
-	-boot order=d \
-        -net nic \
-	-net user \
-	-nographic \
-
-Then the Debian install will run after it finishes you can boot with:
-
-qemu-system-sparc64 \
-	-name debian-unstable-sparc64 -machine sun4u,accel=tcg,usb=off -m 4096 \
-	-smp 1,sockets=1,cores=1,threads=1 \
-	-uuid ccd8b5c2-b8e4-4d5e-af19-9322cd8e55bf -rtc base=utc -no-reboot -no-shutdown \
-	-boot strict=on \
-	-drive file=/home/brauner/.local/share/qemu/sparc64.img,if=none,id=drive-ide0-0-1,format=raw,cache=none,aio=native \
-	-device ide-hd,bus=ide.0,unit=0,drive=drive-ide0-0-1,id=ide0-0-1 \
-	-msg timestamp=on -nographic
-
-If the install isn't setting up the repos right and you can't install
-stuff the correct url is:
-http://ftp.ports.debian.org/debian-ports/
-to put into sources.list
-
-> 
-> > This is the sparc specific bit and _if_ you agree with the changes here
-> > it'd be nice if I could get your review, and if technically correct,
-> > your ack so I can fold this into a larger series and move on to the next
-> > arch.
-> 
-> With the delay slot instruction indentation fixed:
-> 
-> Acked-by: David S. Miller <davem@davemloft.net>
-
-Thank you, Dave!
-Christian
+Tycho
