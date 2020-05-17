@@ -2,199 +2,369 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA38C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 590FE20674
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:36:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=micronovasrl.com header.i=@micronovasrl.com header.b="EpT6X1/S"
+	by mail.kernel.org (Postfix) with ESMTP id 0061120674
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgEQRgV (ORCPT
+        id S1726552AbgEQRhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 13:36:21 -0400
-Received: from mail.micronovasrl.com ([212.103.203.10]:58348 "EHLO
-        mail.micronovasrl.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgEQRgV (ORCPT
+        Sun, 17 May 2020 13:37:11 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:43113 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbgEQRhL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 13:36:21 -0400
-Received: from mail.micronovasrl.com (mail.micronovasrl.com [127.0.0.1])
-        by mail.micronovasrl.com (Postfix) with ESMTP id A044AB033E9
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 19:28:07 +0200 (CEST)
-Authentication-Results: mail.micronovasrl.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)" header.d=micronovasrl.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=micronovasrl.com;
-         h=content-transfer-encoding:content-language:content-type
-        :content-type:in-reply-to:mime-version:user-agent:date:date
-        :message-id:from:from:references:to:subject:subject; s=dkim; t=
-        1589736487; x=1590600488; bh=BTMk5YTSUT9CYUvfxuhhjtuD3oQXc0xwa2+
-        R9dvv3Gg=; b=EpT6X1/ScxgFvbYJfKKn6NJJuZgEMW2G5vdSm1TPAtTuBkmUC8K
-        4CFSsVjztkNpEaclA/GQJ8rII93yNEpbu2iQUsHlopcbESyvTRQCBV40Rz3EZJb9
-        ULJqZ1PVEl/xc6hwXhiCwZ6CBFE6nUF2lsd7z5M/Rg3xFMZ10A0yRLXQ=
-X-Virus-Scanned: Debian amavisd-new at mail.micronovasrl.com
-Received: from mail.micronovasrl.com ([127.0.0.1])
-        by mail.micronovasrl.com (mail.micronovasrl.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id xYKZj1p4JBYJ for <linux-kernel@vger.kernel.org>;
-        Sun, 17 May 2020 19:28:07 +0200 (CEST)
-Received: from [192.168.2.105] (146-241-10-121.dyn.eolo.it [146.241.10.121])
-        by mail.micronovasrl.com (Postfix) with ESMTPSA id 0F597B033DB;
-        Sun, 17 May 2020 19:28:06 +0200 (CEST)
-Subject: Re: [PATCH v2 4/7] serial: 8250: Handle implementations not having
- TEMT interrupt using em485
-To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        andriy.shevchenko@linux.intel.com, matwey.kornilov@gmail.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lukas@wunner.de, christoph.muellner@theobroma-systems.com
-References: <20200325231422.1502366-1-heiko@sntech.de>
- <12195570.sTQbgxCmNy@diego>
- <ac74f702-9444-f660-974b-85a006805070@micronovasrl.com>
- <3036126.9QgpAzkLCg@diego>
-From:   Giulio Benetti <giulio.benetti@micronovasrl.com>
-Message-ID: <d7723588-3df8-10f4-45a3-2e061cd06dc2@micronovasrl.com>
-Date:   Sun, 17 May 2020 19:28:09 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 17 May 2020 13:37:11 -0400
+Received: from localhost (lfbn-lyo-1-1912-bdcst.w90-65.abo.wanadoo.fr [90.65.91.255])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id A176E240003;
+        Sun, 17 May 2020 17:37:06 +0000 (UTC)
+Date:   Sun, 17 May 2020 19:37:06 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Vaibhav Agarwal <vaibhav.sr@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Mark Greer <mgreer@animalcreek.com>,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V1 5/6] staging: greybus: audio: Add helper APIs for
+ dynamic audio modules
+Message-ID: <20200517173706.GB34497@piout.net>
+References: <cover.1589734179.git.vaibhav.sr@gmail.com>
+ <c1339e4d57c8b39bd25197d4514fabd868b829b1.1589734179.git.vaibhav.sr@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <3036126.9QgpAzkLCg@diego>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Language: it
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c1339e4d57c8b39bd25197d4514fabd868b829b1.1589734179.git.vaibhav.sr@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko,
+Hi,
 
-Il 17/05/2020 17:04, Heiko Stübner ha scritto:
-> Hi Giulio,
+On 17/05/2020 22:47:20+0530, Vaibhav Agarwal wrote:
+> Greybus Codec driver allows modules to be dynamically added and removed,
+> which further requires updating the DAPM configurations as well.
 > 
-> Am Donnerstag, 26. März 2020, 03:02:39 CEST schrieb Giulio Benetti:
->> Il 26/03/2020 01:05, Heiko Stübner ha scritto:
->>> Am Donnerstag, 26. März 2020, 00:47:38 CET schrieb Giulio Benetti:
->>>> very cleaner way to handle TEMT as a capability!
->>>> And I've found one thing...
->>>>
->>>> Il 26/03/2020 00:14, Heiko Stuebner ha scritto:
->>>>> From: Giulio Benetti <giulio.benetti@micronovasrl.com>
->>>>>
->>>>> Some 8250 ports have a TEMT interrupt but it's not a part of the 8250
->>>>> standard, instead only available on some implementations.
->>>>>
->>>>> The current em485 implementation does not work on ports without it.
->>>>> The only chance to make it work is to loop-read on LSR register.
->>>>>
->>>>> So add UART_CAP_TEMT to mark 8250 uarts having this interrupt,
->>>>> update all current em485 users with that capability and make
->>>>> the stop_tx function loop-read on uarts not having it.
->>>>>
->>>>> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
->>>>> [moved to use added UART_CAP_TEMT, use readx_poll_timeout]
->>>>> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
->>>>> ---
->>>>>     drivers/tty/serial/8250/8250.h            |  1 +
->>>>>     drivers/tty/serial/8250/8250_bcm2835aux.c |  2 +-
->>>>>     drivers/tty/serial/8250/8250_of.c         |  2 ++
->>>>>     drivers/tty/serial/8250/8250_omap.c       |  2 +-
->>>>>     drivers/tty/serial/8250/8250_port.c       | 25 +++++++++++++++++++----
->>>>>     5 files changed, 26 insertions(+), 6 deletions(-)
->>>>>
->>>>> diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
->>>>> index 52bb21205bb6..770eb00db497 100644
->>>>> --- a/drivers/tty/serial/8250/8250.h
->>>>> +++ b/drivers/tty/serial/8250/8250.h
->>>>> @@ -82,6 +82,7 @@ struct serial8250_config {
->>>>>     #define UART_CAP_MINI	(1 << 17)	/* Mini UART on BCM283X family lacks:
->>>>>     					 * STOP PARITY EPAR SPAR WLEN5 WLEN6
->>>>>     					 */
->>>>> +#define UART_CAP_TEMT	(1 << 18)	/* UART has TEMT interrupt */
->>>>>     
->>>>>     #define UART_BUG_QUOT	(1 << 0)	/* UART has buggy quot LSB */
->>>>>     #define UART_BUG_TXEN	(1 << 1)	/* UART has buggy TX IIR status */
->>>>> diff --git a/drivers/tty/serial/8250/8250_bcm2835aux.c b/drivers/tty/serial/8250/8250_bcm2835aux.c
->>>>> index 12d03e678295..3881242424ca 100644
->>>>> --- a/drivers/tty/serial/8250/8250_bcm2835aux.c
->>>>> +++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
->>>>> @@ -91,7 +91,7 @@ static int bcm2835aux_serial_probe(struct platform_device *pdev)
->>>>>     		return -ENOMEM;
->>>>>     
->>>>>     	/* initialize data */
->>>>> -	up.capabilities = UART_CAP_FIFO | UART_CAP_MINI;
->>>>> +	up.capabilities = UART_CAP_FIFO | UART_CAP_MINI | UART_CAP_TEMT;
->>>>>     	up.port.dev = &pdev->dev;
->>>>>     	up.port.regshift = 2;
->>>>>     	up.port.type = PORT_16550;
->>>>> diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
->>>>> index 65e9045dafe6..841f6fcb2878 100644
->>>>> --- a/drivers/tty/serial/8250/8250_of.c
->>>>> +++ b/drivers/tty/serial/8250/8250_of.c
->>>>> @@ -225,6 +225,8 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
->>>>>     			&port8250.overrun_backoff_time_ms) != 0)
->>>>>     		port8250.overrun_backoff_time_ms = 0;
->>>>>     
->>>>> +	port8250.capabilities |= UART_CAP_TEMT;
->>>>> +
->>>>
->>>> Shouldn't this be NOT UART_CAP_TEMT set by default? On all other
->>>> vendor specific files you enable it, I think here you shouldn't enable
->>>> it too by default. Right?
->>>
->>> 8250_of does use the em485 emulation - see of_platform_serial_setup()
->>> So I did go by the lazy assumption that any 8250 driver using rs485
->>> before my series always used the interrupt driver code path, so
->>> implicitly required to have the TEMT interrupt.
->>>
->>> Of course, you're right that with the 8250_of maybe not all variants
->>> actually do have this interrupt, so falling back to the polling here might
->>> be safer.
->>
->> Probably here it's worth introducing a dt boolean property like
->> "temt-capability", then you set or not UART_CAP_TEMT according to its
->> presence in dts. This way all cases are covered and we can act
->> completely through dts files.
->>
->> What about that?
+> With current snd_soc architecture, dynamic audio modules is not yet
+> supported. This patch provides helper APIs to update DAPM configurations
+> in response to modules which are dynamically added or removed. The
+> source is primarily based on snd_dapm.c
 > 
-> Sorry that this was sitting around for over a month.
 
-np at all
+I really think you should send this patch series to the ASoC
+maintainers, especially this patch. The main goal shouldn't be to simply
+fix compilation issues but to try to get the driver out of staging else,
+the current situation will happen again.
 
-> I think there are two problems with this:
+> Signed-off-by: Vaibhav Agarwal <vaibhav.sr@gmail.com>
+> ---
+>  drivers/staging/greybus/Makefile       |   2 +-
+>  drivers/staging/greybus/audio_codec.c  |  13 ++-
+>  drivers/staging/greybus/audio_helper.c | 197 +++++++++++++++++++++++++++++++++
+>  drivers/staging/greybus/audio_helper.h |  17 +++
+>  4 files changed, 224 insertions(+), 5 deletions(-)
+>  create mode 100644 drivers/staging/greybus/audio_helper.c
+>  create mode 100644 drivers/staging/greybus/audio_helper.h
 > 
-> (1) this would break backwards compatibility ... right now the whole code
-> just assumes that everyone does support the TEMT interrupt, so adding
-> a property to keep it working would break old DTs, which is something that
-> should not happen ... I guess one option would be to use the inverse
-> no-temt-interrupt
+> diff --git a/drivers/staging/greybus/Makefile b/drivers/staging/greybus/Makefile
+> index 627e44f2a983..3b4b6cabff19 100644
+> --- a/drivers/staging/greybus/Makefile
+> +++ b/drivers/staging/greybus/Makefile
+> @@ -28,7 +28,7 @@ obj-$(CONFIG_GREYBUS_VIBRATOR)	+= gb-vibrator.o
+>  
+>  # Greybus Audio is a bunch of modules
+>  gb-audio-module-y	:= audio_module.o audio_topology.o
+> -gb-audio-codec-y	:= audio_codec.o
+> +gb-audio-codec-y	:= audio_codec.o audio_helper.o
+>  gb-audio-gb-y		:= audio_gb.o
+>  gb-audio-apbridgea-y	:= audio_apbridgea.o
+>  gb-audio-manager-y	:= audio_manager.o audio_manager_module.o
+> diff --git a/drivers/staging/greybus/audio_codec.c b/drivers/staging/greybus/audio_codec.c
+> index bbd072acda5c..866b3342515f 100644
+> --- a/drivers/staging/greybus/audio_codec.c
+> +++ b/drivers/staging/greybus/audio_codec.c
+> @@ -14,6 +14,7 @@
+>  #include "audio_codec.h"
+>  #include "audio_apbridgea.h"
+>  #include "audio_manager.h"
+> +#include "audio_helper.h"
+>  
+>  static struct gbaudio_codec_info *gbcodec;
+>  
+> @@ -874,7 +875,7 @@ int gbaudio_register_module(struct gbaudio_module_info *module)
+>  
+>  	/* card already instantiated, create widgets here only */
+>  	if (component->card->instantiated) {
+> -		snd_soc_dapm_link_component_dai_widgets(component->card,
+> +		gbaudio_dapm_link_component_dai_widgets(component->card,
+>  							&component->dapm);
+>  #ifdef CONFIG_SND_JACK
+>  		/*
+> @@ -1004,19 +1005,23 @@ void gbaudio_unregister_module(struct gbaudio_module_info *module)
+>  	if (module->dapm_routes) {
+>  		dev_dbg(component->dev, "Removing %d routes\n",
+>  			module->num_dapm_routes);
+> +		/* verify routes with controls are removed */
+>  		snd_soc_dapm_del_routes(&component->dapm, module->dapm_routes,
+>  					module->num_dapm_routes);
+>  	}
+>  	if (module->controls) {
+>  		dev_dbg(component->dev, "Removing %d controls\n",
+>  			module->num_controls);
+> -		snd_soc_remove_codec_controls(component, module->controls,
+> -					      module->num_controls);
+> +		/* release control semaphore */
+> +		up_write(&card->controls_rwsem);
+> +		gbaudio_remove_component_controls(component, module->controls,
+> +						  module->num_controls);
+> +		down_write(&card->controls_rwsem);
+>  	}
+>  	if (module->dapm_widgets) {
+>  		dev_dbg(component->dev, "Removing %d widgets\n",
+>  			module->num_dapm_widgets);
+> -		snd_soc_dapm_free_controls(&component->dapm,
+> +		gbaudio_dapm_free_controls(&component->dapm,
+>  					   module->dapm_widgets,
+>  					   module->num_dapm_widgets);
+>  	}
+> diff --git a/drivers/staging/greybus/audio_helper.c b/drivers/staging/greybus/audio_helper.c
+> new file mode 100644
+> index 000000000000..e2f113a811ee
+> --- /dev/null
+> +++ b/drivers/staging/greybus/audio_helper.c
+> @@ -0,0 +1,197 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Greybus Audio Sound SoC helper APIs
+> + */
+> +
+> +#include <linux/debugfs.h>
+> +#include <sound/core.h>
+> +#include <sound/soc.h>
+> +#include <sound/soc-dapm.h>
+> +
+> +#define gbaudio_dapm_for_each_direction(dir) \
+> +	for ((dir) = SND_SOC_DAPM_DIR_IN; (dir) <= SND_SOC_DAPM_DIR_OUT; \
+> +		(dir)++)
+> +
+> +static void gbaudio_dapm_link_dai_widget(struct snd_soc_dapm_widget *dai_w,
+> +					 struct snd_soc_card *card)
+> +{
+> +	struct snd_soc_dapm_widget *w;
+> +	struct snd_soc_dapm_widget *src, *sink;
+> +	struct snd_soc_dai *dai = dai_w->priv;
+> +
+> +	/* ...find all widgets with the same stream and link them */
+> +	list_for_each_entry(w, &card->widgets, list) {
+> +		if (w->dapm != dai_w->dapm)
+> +			continue;
+> +
+> +		switch (w->id) {
+> +		case snd_soc_dapm_dai_in:
+> +		case snd_soc_dapm_dai_out:
+> +			continue;
+> +		default:
+> +			break;
+> +		}
+> +
+> +		if (!w->sname || !strstr(w->sname, dai_w->sname))
+> +			continue;
+> +
+> +		/*
+> +		 * check if widget is already linked,
+> +		 * if (w->linked)
+> +		 *	return;
+> +		 */
+> +
+> +		if (dai_w->id == snd_soc_dapm_dai_in) {
+> +			src = dai_w;
+> +			sink = w;
+> +		} else {
+> +			src = w;
+> +			sink = dai_w;
+> +		}
+> +		dev_dbg(dai->dev, "%s -> %s\n", src->name, sink->name);
+> +		/* Add the DAPM path and set widget's linked status
+> +		 * snd_soc_dapm_add_path(w->dapm, src, sink, NULL, NULL);
+> +		 * w->linked = 1;
+> +		 */
+> +	}
+> +}
+> +
+> +int gbaudio_dapm_link_component_dai_widgets(struct snd_soc_card *card,
+> +					    struct snd_soc_dapm_context *dapm)
+> +{
+> +	struct snd_soc_dapm_widget *dai_w;
+> +
+> +	/* For each DAI widget... */
+> +	list_for_each_entry(dai_w, &card->widgets, list) {
+> +		if (dai_w->dapm != dapm)
+> +			continue;
+> +		switch (dai_w->id) {
+> +		case snd_soc_dapm_dai_in:
+> +		case snd_soc_dapm_dai_out:
+> +			break;
+> +		default:
+> +			continue;
+> +		}
+> +		gbaudio_dapm_link_dai_widget(dai_w, card);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void gbaudio_dapm_free_path(struct snd_soc_dapm_path *path)
+> +{
+> +	list_del(&path->list_node[SND_SOC_DAPM_DIR_IN]);
+> +	list_del(&path->list_node[SND_SOC_DAPM_DIR_OUT]);
+> +	list_del(&path->list_kcontrol);
+> +	list_del(&path->list);
+> +	kfree(path);
+> +}
+> +
+> +static void gbaudio_dapm_free_widget(struct snd_soc_dapm_widget *w)
+> +{
+> +	struct snd_soc_dapm_path *p, *next_p;
+> +	enum snd_soc_dapm_direction dir;
+> +
+> +	list_del(&w->list);
+> +	/*
+> +	 * remove source and sink paths associated to this widget.
+> +	 * While removing the path, remove reference to it from both
+> +	 * source and sink widgets so that path is removed only once.
+> +	 */
+> +	gbaudio_dapm_for_each_direction(dir) {
+> +		snd_soc_dapm_widget_for_each_path_safe(w, dir, p, next_p)
+> +			gbaudio_dapm_free_path(p);
+> +	}
+> +
+> +	kfree(w->kcontrols);
+> +	kfree_const(w->name);
+> +	kfree_const(w->sname);
+> +	kfree(w);
+> +}
+> +
+> +int gbaudio_dapm_free_controls(struct snd_soc_dapm_context *dapm,
+> +			       const struct snd_soc_dapm_widget *widget,
+> +			       int num)
+> +{
+> +	int i;
+> +	struct snd_soc_dapm_widget *w, *next_w;
+> +#ifdef CONFIG_DEBUG_FS
+> +	struct dentry *parent = dapm->debugfs_dapm;
+> +	struct dentry *debugfs_w = NULL;
+> +#endif
+> +
+> +	mutex_lock(&dapm->card->dapm_mutex);
+> +	for (i = 0; i < num; i++) {
+> +		/* below logic can be optimized to identify widget pointer */
+> +		list_for_each_entry_safe(w, next_w, &dapm->card->widgets,
+> +					 list) {
+> +			if (w->dapm != dapm)
+> +				continue;
+> +			if (!strcmp(w->name, widget->name))
+> +				break;
+> +			w = NULL;
+> +		}
+> +		if (!w) {
+> +			dev_err(dapm->dev, "%s: widget not found\n",
+> +				widget->name);
+> +			return -EINVAL;
+> +		}
+> +		widget++;
+> +#ifdef CONFIG_DEBUG_FS
+> +		if (!parent)
+> +			debugfs_w = debugfs_lookup(w->name, parent);
+> +		debugfs_remove(debugfs_w);
+> +		debugfs_w = NULL;
+> +#endif
+> +		gbaudio_dapm_free_widget(w);
+> +	}
+> +	mutex_unlock(&dapm->card->dapm_mutex);
+> +	return 0;
+> +}
+> +
+> +static int gbaudio_remove_controls(struct snd_card *card, struct device *dev,
+> +				   const struct snd_kcontrol_new *controls,
+> +				   int num_controls, const char *prefix)
+> +{
+> +	int i, err;
+> +
+> +	for (i = 0; i < num_controls; i++) {
+> +		const struct snd_kcontrol_new *control = &controls[i];
+> +		struct snd_ctl_elem_id id;
+> +		struct snd_kcontrol *kctl;
+> +
+> +		if (prefix)
+> +			snprintf(id.name, sizeof(id.name), "%s %s", prefix,
+> +				 control->name);
+> +		else
+> +			strlcpy(id.name, control->name, sizeof(id.name));
+> +		id.numid = 0;
+> +		id.iface = control->iface;
+> +		id.device = control->device;
+> +		id.subdevice = control->subdevice;
+> +		id.index = control->index;
+> +		kctl = snd_ctl_find_id(card, &id);
+> +		if (!kctl) {
+> +			dev_err(dev, "%d: Failed to find %s\n", err,
+> +				control->name);
+> +			return -ENOENT;
+> +		}
+> +		err = snd_ctl_remove(card, kctl);
+> +		if (err < 0) {
+> +			dev_err(dev, "%d: Failed to remove %s\n", err,
+> +				control->name);
+> +			return err;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +int gbaudio_remove_component_controls(struct snd_soc_component *component,
+> +				      const struct snd_kcontrol_new *controls,
+> +				      unsigned int num_controls)
+> +{
+> +	struct snd_card *card = component->card->snd_card;
+> +
+> +	return gbaudio_remove_controls(card, component->dev, controls,
+> +				       num_controls, component->name_prefix);
+> +}
+> diff --git a/drivers/staging/greybus/audio_helper.h b/drivers/staging/greybus/audio_helper.h
+> new file mode 100644
+> index 000000000000..5cf1c6d7d3ea
+> --- /dev/null
+> +++ b/drivers/staging/greybus/audio_helper.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Greybus Audio Sound SoC helper APIs
+> + */
+> +
+> +#ifndef __LINUX_GBAUDIO_HELPER_H
+> +#define __LINUX_GBAUDIO_HELPER_H
+> +
+> +int gbaudio_dapm_link_component_dai_widgets(struct snd_soc_card *card,
+> +					    struct snd_soc_dapm_context *dapm);
+> +int gbaudio_dapm_free_controls(struct snd_soc_dapm_context *dapm,
+> +			       const struct snd_soc_dapm_widget *widget,
+> +			       int num);
+> +int gbaudio_remove_component_controls(struct snd_soc_component *component,
+> +				      const struct snd_kcontrol_new *controls,
+> +				      unsigned int num_controls);
+> +#endif
+> -- 
+> 2.7.4
 > 
-> (2) uarts handled by 8250_of are still identified by their compatible
-> though and there is no generic 8250-of compatible, so the
-> presence / absence of the temt capability should actually just be
-> bound to the relevant compatible.
-> 
-> 
-> So my "gut feeling" is to just keep the current way
-> (was expecting temt-capability before anyway) until an uart
-> variant without temt comes along
 
-I agree with you, what I was proposing is another thing more to do an
-can be done when needed.
-
-Best regards
 -- 
-Giulio Benetti
-CTO
-
-MICRONOVA SRL
-Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
-Tel. 049/8931563 - Fax 049/8931346
-Cod.Fiscale - P.IVA 02663420285
-Capitale Sociale ¤ 26.000 i.v.
-Iscritta al Reg. Imprese di Padova N. 02663420285
-Numero R.E.A. 258642
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
