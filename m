@@ -2,112 +2,119 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE79C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40272C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 369E2207E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:48:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589737717;
-	bh=Q5mp8b6C2Vhyekeuu4yeHZX3Zj7dHJRcQuLzeMYZu7U=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=RDBqcBFYMdwAyMORzq4nX+HBsQi0uQx+bnN8dyFx0XxbIqVFG6tOLP0rCg4rXQJq3
-	 T9ON4ULbVuzuTZEQkRvqOZubObEPNSgsTEB0bP4Rd+9UfJtI0Ee/uwoM4Ci+1g8Puu
-	 fb2L4ULUWbahcBrmzVnMaHqIAACLFPhK0/YiI5p8=
+	by mail.kernel.org (Postfix) with ESMTP id 1D29C20758
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:52:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ndeZkgTj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgEQRsg (ORCPT
+        id S1726288AbgEQRwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 13:48:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726263AbgEQRsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 13:48:36 -0400
-Received: from mail.kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80BF2207E8;
-        Sun, 17 May 2020 17:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589737715;
-        bh=Q5mp8b6C2Vhyekeuu4yeHZX3Zj7dHJRcQuLzeMYZu7U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Rmi0mj+4K1lqTW5+VbBurce9v/rZOtldzK/3o4ob80LuRVKrz6ydVL+pBWMz6mFVD
-         wmrVeTRXZjXgQUD3k/cS4tIsC916C1mmGxX0AICcW3kzWou1J9eOPZy9LB9ZQOPlYl
-         P3NZmuPgJ0hQoqpquFmpUIvSpJSHEwq8M1pluc1Q=
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] clk fixes for v5.7-rc5
-Date:   Sun, 17 May 2020 10:48:34 -0700
-Message-Id: <20200517174834.126920-1-sboyd@kernel.org>
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
+        Sun, 17 May 2020 13:52:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgEQRwW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 13:52:22 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D3EC061A0C;
+        Sun, 17 May 2020 10:52:22 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x15so3765602pfa.1;
+        Sun, 17 May 2020 10:52:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+C97Gq4KJubJIcHPbkTJGpTHN9vsY4KHjuqSmBqZUeQ=;
+        b=ndeZkgTjN1/SBongK5H2lbIiQYmOG+a5nD4L7iYRU6uHmp8pLqXhtF6OGaND1s51er
+         vKXI73P5t3f0wlGe8gRig7RfkXbebj81TeHfKhiwMra8OfF783WBSg9wV8qTuv3/V2i5
+         CZ80gDsfoW601TICLNbi3icTRsochknF+1i4xtaF6o/GCUOhKhnNtuWhJslYgZ4x4QjT
+         8cBxWEEL2JbuVZ8wzq2Ee1EZeYVmsNf8djDPSeEBAArvx3FqURsum9I1Onkjqxg055a7
+         YnpPPunf/h1341hk9CLtVt4NN5q7vw7ly/v4RpiNGc5Uz7j6H+TienIz/xdLcgyAPOdi
+         lfdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=+C97Gq4KJubJIcHPbkTJGpTHN9vsY4KHjuqSmBqZUeQ=;
+        b=t6LLva9IcacceZM8eqMn63V0Yfu/fH0h9cJ2a9He+Il4cIzy2PFHKcxpcv5AGXH6AY
+         AtQAeyOryV18fdARtObxbeuNdONPn6zJfn2OGAlrcG0ta/VDBEcKkL4ilK3G+4WsumB0
+         S1OWAa1ZohygzZnxl03jMnXk38FNUqTpwHujdpp8yD+udI+yDQ6yDF3NxEB3YtQ0VT7W
+         7z5GMZwybTs3ldcVc13WdQ9JLZc3qkmseoRT1Zy2KgMhnEK2X/UkHS4a/8/PRo+wybr4
+         3XSZuFeSaGHwv44WDy/Gk8QHAp43TOpqDu0Ytl0RF/Wmuc3sAJrCXkwnpb9TMWjCuk0N
+         +dug==
+X-Gm-Message-State: AOAM530DViYt5o5HVVlxzI4Mom4Aku4/CPY23sZyJYl0ctpX3R6IadeY
+        ymvgkAMLFNLSXnLgykIY9rSdPJ2y
+X-Google-Smtp-Source: ABdhPJyZKUFY+0Vv/jG56FfsR4Kevaou7/BiaiahUsG3Ctu0HH2TxFN8/lOcCdQ1X/aTh56lI/WIJQ==
+X-Received: by 2002:a62:ed02:: with SMTP id u2mr13717273pfh.60.1589737942085;
+        Sun, 17 May 2020 10:52:22 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z18sm6734907pfj.148.2020.05.17.10.52.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 17 May 2020 10:52:21 -0700 (PDT)
+Date:   Sun, 17 May 2020 10:52:20 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Guo Ren <guoren@linux.alibaba.com>
+Cc:     linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] csky: Fixup calltrace panic
+Message-ID: <20200517175220.GA48379@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit ca6df49d62d7cc4c1653a4d9b1ecc61ecd530e02:
+Hi,
 
-  clk: sprd: don't gate uart console clock (2020-04-13 12:20:07 -0700)
+On Wed, May 13, 2020 at 03:15:25PM +0800, Guo Ren wrote:
+> The implementation of show_stack will panic with wrong fp:
+> 
+> addr    = *fp++;
+> 
+> because the fp isn't checked properly.
+> 
+> The current implementations of show_stack, wchan and stack_trace
+> haven't been designed properly, so just deprecate them.
+> 
+> This patch is a reference to riscv's way, all codes are modified from
+> arm's. The patch is passed with:
+> 
+>  - cat /proc/<pid>/stack
+>  - cat /proc/<pid>/wchan
+>  - echo c > /proc/sysrq-trigger
+> 
+> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 
-are available in the Git repository at:
+This patch results in:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
+gcc version: csky-linux-gcc (GCC) 9.3.0
 
-for you to fetch changes up to 852049594b9af58fa2972103699fd58a7ac165c6:
+Building csky:defconfig ... failed
+--------------
+Error log:
+csky-linux-gcc: error: unrecognized command line option '-mbacktrace'; did you mean '-fbacktrace'?
+csky-linux-gcc: error: unrecognized command line option '-mbacktrace'; did you mean '-fbacktrace'?
+make[2]: *** [scripts/mod/devicetable-offsets.s] Error 1
+make[2]: *** Waiting for unfinished jobs....
+csky-linux-gcc: error: unrecognized command line option '-mbacktrace'; did you mean '-fbacktrace'?
+make[2]: *** [scripts/mod/empty.o] Error 1
+make[1]: *** [prepare0] Error 2
+make: *** [sub-make] Error 2
 
-  clk: ti: clkctrl: convert subclocks to use proper names also (2020-05-12 20:18:19 -0700)
+when trying to build csky images with upstream gcc 9.3.0.
 
-----------------------------------------------------------------
-Some more clk driver fixes for the merge window and one core framework
-fix:
+What version of gcc is needed to build csky images ? Also, would it be
+possible to support the upstream version of gcc ?
 
- - A handful of TI driver fixes for bad of_node_put() and incorrect
-   parent names
- - Rockchip rk3228 aclk_gpu* creation was interfering with lima GPU work
-   so we use a composite clk now
- - Resuming from suspend on Tegra Jetson TK1 was broken because an audio
-   PLL calculated an incorrect rate
- - A fix for devicetree probing on IM-PD1 by actually specifying a clk
-   name which is required to pass clk registration
- - Avoid list corruption if registration fails for a critical clk
-
-----------------------------------------------------------------
-Justin Swartz (1):
-      clk: rockchip: fix incorrect configuration of rk3228 aclk_gpu* clocks
-
-Linus Walleij (1):
-      clk: impd1: Look up clock-output-names
-
-Marc Zyngier (1):
-      clk: Unlink clock if failed to prepare or enable
-
-Stephen Boyd (1):
-      Merge tag 'v5.7-rockchip-clk-fixes1' of git://git.kernel.org/.../mmind/linux-rockchip into clk-fixes
-
-Tero Kristo (3):
-      clk: ti: clkctrl: Fix Bad of_node_put within clkctrl_get_name
-      clk: ti: am33xx: fix RTC clock parent
-      clk: ti: clkctrl: convert subclocks to use proper names also
-
-Thierry Reding (1):
-      clk: tegra: Fix initial rate for pll_a on Tegra124
-
- drivers/clk/clk.c                 |  3 ++
- drivers/clk/rockchip/clk-rk3228.c | 17 ++-----
- drivers/clk/tegra/clk-tegra124.c  |  2 +-
- drivers/clk/ti/clk-33xx.c         |  2 +-
- drivers/clk/ti/clkctrl.c          | 99 +++++++++++++++++++--------------------
- drivers/clk/versatile/clk-impd1.c |  1 +
- 6 files changed, 58 insertions(+), 66 deletions(-)
-
--- 
-Sent by a computer, using git, on the internet
+Thanks,
+Guenter
