@@ -2,105 +2,169 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 01:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B09A206F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:44:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qAKXBD7I"
+	by mail.kernel.org (Postfix) with ESMTP id 814BC20671
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 01:05:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgEQAoy (ORCPT
+        id S1726912AbgEQBFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 20:44:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45388 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbgEQAoy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 20:44:54 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C368C061A0C;
-        Sat, 16 May 2020 17:44:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=oXEwYMh56jP/jhXSylitEbrYxOmXJzOOvEwzfWzqxsY=; b=qAKXBD7IRVa5nZGnQMYp7EAHiS
-        QHFpaF2P1IVwaqinpvrE797uhAPmiooSzWNW6DLG0iVscFGcXXrfhWHtWiLxWf9WKnYYZX09j8GKd
-        N9/um3djtTvFtOW9I4vj7jCkKZMKmLkNLhFHE4q5FuAOBA5m5IvCHZqN9SN4PwIvmtMfb0I1BX+yg
-        Zrqc6/XeNs+SHPvs0JIMfcUS7zvVxwdp8J/jeeh0TP0kI1QDOvgvS15/TKc04HnMXO/0kxj+h9lhu
-        ZU8I6fv8ZSjXvNJAiYKZ9oESe5BiihA7RGH76iy5krBASPeFxB02doNP1BdoOpBtu01hQmczm8iJw
-        5tlBWcfA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ja7Px-0005su-Jb; Sun, 17 May 2020 00:44:37 +0000
-Date:   Sat, 16 May 2020 17:44:37 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Balbir Singh <bsingharora@gmail.com>
-Cc:     Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v3] mm: Add kvfree_sensitive() for freeing sensitive data
- objects
-Message-ID: <20200517004437.GN16070@bombadil.infradead.org>
-References: <20200407200318.11711-1-longman@redhat.com>
- <1158ff38-c65d-379f-8ae7-6f507d9fc8dd@gmail.com>
- <20200514120018.GA16070@bombadil.infradead.org>
- <f779dea1-3b50-e354-3914-7394b4473f5b@gmail.com>
+        Sat, 16 May 2020 21:05:02 -0400
+Received: from mga11.intel.com ([192.55.52.93]:4196 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726295AbgEQBFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 21:05:02 -0400
+IronPort-SDR: 8B6s+htQd2MIIUTtYbUQ+YrOkZOqQAKoRoYeIrrDxjaEPa8JhQeq5EwUYFw2d0z60EmgBGZPBz
+ UgZzHcj1mZlg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 18:05:01 -0700
+IronPort-SDR: EkVkhr3HzUfPyNvOlJzfFDSVSK1AO9oEoq5EiCfKAPcZYKg6OS++z41D+UZdYcHIkJN8ihkw/L
+ XNspzKndRwWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,401,1583222400"; 
+   d="scan'208";a="263581680"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 16 May 2020 18:05:00 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1ja7jf-000GmV-Pb; Sun, 17 May 2020 09:04:59 +0800
+Date:   Sun, 17 May 2020 09:04:53 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:lkmm-dev] BUILD SUCCESS
+ ae801b4aaca0db21c44819ab833dc591b1d3219e
+Message-ID: <5ec08db5.ULVqKmT63BWLVABh%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f779dea1-3b50-e354-3914-7394b4473f5b@gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 10:27:39AM +1000, Balbir Singh wrote:
-> On 14/5/20 10:00 pm, Matthew Wilcox wrote:
-> > On Thu, May 14, 2020 at 09:00:40PM +1000, Balbir Singh wrote:
-> >> I wonder if the right thing to do is also to disable pre-emption, just so that the thread does not linger on with sensitive data.
-> >>
-> >> void kvfree_sensitive(const void *addr, size_t len)
-> >> {
-> >> 	preempt_disable();
-> >> 	if (likely(!ZERO_OR_NULL_PTR(addr))) {
-> >> 		memzero_explicit((void *)addr, len);
-> >> 		kvfree(addr);
-> >> 	}
-> >> 	preempt_enable();
-> >> }
-> >> EXPORT_SYMBOL(kvfree_sensitive);
-> > 
-> > If it's _that_ sensitive then the caller should have disabled preemption.
-> > Because preemption could otherwise have occurred immediately before
-> > kvfree_sensitive() was called.
-> > 
-> 
-> May be, but the callers of the API have to be explictly aware of the contract.
-> I don't disagree with you on what you've said, but I was referring to the
-> intent of freeing sensitive data vs the turn around time for doing so.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  lkmm-dev
+branch HEAD: ae801b4aaca0db21c44819ab833dc591b1d3219e  tools/memory-model: Use "-unroll 0" to keep --hw runs finite
 
-It's the caller's information.  They should be aware of their own
-requirements.  If they do something like:
+elapsed time: 482m
 
-p = kmalloc();
-preempt_disable();
-construct(p);
-use(p);
-preempt_enable();
-kvfree_sensitive(p);
+configs tested: 102
+configs skipped: 1
 
-there's really nothing we can do to help them inside kvfree_sensitive().
-Actually, can you come up with a scenario where disabling preemption
-inside kvfree_sensitive() will help with anything?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+m68k                             allyesconfig
+mips                             allyesconfig
+sparc                            allyesconfig
+mips                malta_kvm_guest_defconfig
+arc                            hsdk_defconfig
+arc                           tb10x_defconfig
+h8300                            alldefconfig
+powerpc                           allnoconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+x86_64               randconfig-a005-20200517
+x86_64               randconfig-a003-20200517
+x86_64               randconfig-a006-20200517
+x86_64               randconfig-a004-20200517
+x86_64               randconfig-a001-20200517
+x86_64               randconfig-a002-20200517
+i386                 randconfig-a006-20200517
+i386                 randconfig-a005-20200517
+i386                 randconfig-a003-20200517
+i386                 randconfig-a001-20200517
+i386                 randconfig-a004-20200517
+i386                 randconfig-a002-20200517
+i386                 randconfig-a012-20200517
+i386                 randconfig-a016-20200517
+i386                 randconfig-a014-20200517
+i386                 randconfig-a011-20200517
+i386                 randconfig-a013-20200517
+i386                 randconfig-a015-20200517
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+x86_64                              defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
