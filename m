@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B06C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E7AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63D6E2065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C074B207EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589708987;
-	bh=Qvq2DACA0PxYaLnNNCWS7qJx9lLvvl5f0pSMc/4MtIg=;
+	s=default; t=1589708990;
+	bh=VZYWrsno8uUAYcRLOLZAnMwrpQ73bgGyNQHMjkN2ijw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kxhTdgDnJ4yhkxXe9Nzy3tX5vyY67nz5DHWNcOjJVagpOsja0YVpPj/zwsSlLqxsq
-	 rDkoQevDG9P3RHdTUU5xP5/44tKm/1bpXsFw4zAkV3giEW6QiNWHsIN58f9Sf1CEno
-	 OGM/u7IjMgI0Rvdb0A3N+6WKuwKR471zfMVd3C00=
+	b=aNy8/hON56VUAygDiLZtSe2lp9h8miKY5xxcf7tIQkBN5lu4x25KiWrwKpxTaOCXQ
+	 o5/SBRK45UX/dL15pUGoNdYWy+XJsCwSpv4Ge5CtWxapWCnJFJL2+MzHStJvkehBTo
+	 oBzAfdeaUMlERs/gQJaIfeRIG9M532BVVaCKUbxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgEQJth (ORCPT
+        id S1727954AbgEQJtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 05:49:37 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:38302 "EHLO
+        Sun, 17 May 2020 05:49:49 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:38336 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbgEQJtf (ORCPT
+        with ESMTP id S1727823AbgEQJth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 05:49:35 -0400
+        Sun, 17 May 2020 05:49:37 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 04H9n4L6018560;
-        Sun, 17 May 2020 18:49:10 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4L6018560
+        by conuserg-08.nifty.com with ESMTP id 04H9n4LI018560;
+        Sun, 17 May 2020 18:49:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4LI018560
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589708950;
-        bh=4G/LU/whNlt1qcU7HLw7OO1/pSZrdFyVabhepRCEO/Q=;
+        s=dec2015msa; t=1589708958;
+        bh=Jq5KPdK2SrGwy3yG8IpxZntWGCJlXQt0dlxR4EZDgY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GI5LEdjPfr2KlWPvSIftDRPwYqgr2RSSRvCJ2TJdqpZHAEzXclb33RXkpuEWF/Arc
-         eeNnAOLqPXmr906gADNCHfhbLN5yhLRRRmLLRkc4/sE2m73zzNn5YdVGzwnNUbnum7
-         jFB6t0VpdEz/muIbS1xhJ70KqFMASP92Gm/6BnWfOc70dZYEN+lPsz5rpeGD034KeV
-         SpqsSFe5eoeUHx2+DQ3mFAS8OC6qIgB1ynCM3d64vPFR4FK8NjJ/p+zOfIbJvyOlyj
-         n3vdtEctZlRNy+w1u+w5epcSt9QhfKSSzgCM/eB1g58zYWqqcNp8cGkyqsZSHoDERr
-         aWhWatRfEbNHA==
+        b=0aM9P/Q2Jj0ICohSgvk6LhuPCkKoMKUzgHzJFE1TJ4oaOB17sPDeQKp1tOwEXEHVZ
+         zf2b3PhEkOKtPf0CQhTGVuZ1cie42bBjuPzO9StJ5SnBqkPceUp6auKrAyxrBadhvf
+         zUt5aD0f+cEPh+1cpBIqXw9/s+3Ia4YOHizMSntGxNs9v22DW2PlpJChnugzZe62im
+         Zfu6esaPiYMlsN+P/PKnGvA2YpuAs0NvXCbWGeyOoGfhzdSA+rZRbE6NJGrirRKyhc
+         HXkeOMXdTFomY1J4y+HFyNOrbfJi7tlDReZo1+BCQTBiZ786qEaMwQiSI2HsKQs7ng
+         WXAb9GzEl7sTA==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -49,9 +49,9 @@ Cc:     Jessica Yu <jeyu@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 09/29] kbuild: disallow multi-word in M= or KBUILD_EXTMOD
-Date:   Sun, 17 May 2020 18:48:39 +0900
-Message-Id: <20200517094859.2376211-10-masahiroy@kernel.org>
+Subject: [PATCH 21/29] modpost: remove -s option
+Date:   Sun, 17 May 2020 18:48:51 +0900
+Message-Id: <20200517094859.2376211-22-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200517094859.2376211-1-masahiroy@kernel.org>
 References: <20200517094859.2376211-1-masahiroy@kernel.org>
@@ -62,47 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-$(firstword ...) in scripts/Makefile.modpost was added by commit
-3f3fd3c05585 ("[PATCH] kbuild: allow multi-word $M in Makefile.modpost")
-to build multiple external module directories.
+The -s option was added by commit 8d8d8289df65 ("kbuild: do not do
+section mismatch checks on vmlinux in 2nd pass").
 
-This feature has been broken for a while. Remove the bitrotten code, and
-stop parsing if M or KBUILD_EXTMOD contains multiple words.
+Now that the second pass does not parse vmlinux, this option is
+unneeded.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- Makefile                 | 3 +++
- scripts/Makefile.modpost | 2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ scripts/Makefile.modpost |  2 +-
+ scripts/mod/modpost.c    | 10 ++--------
+ 2 files changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 1915630cc24b..aeb690c692ee 100644
---- a/Makefile
-+++ b/Makefile
-@@ -218,6 +218,9 @@ ifeq ("$(origin M)", "command line")
-   KBUILD_EXTMOD := $(M)
- endif
- 
-+$(if $(word 2, $(KBUILD_EXTMOD)), \
-+	$(error building multiple external modules is not supported))
-+
- export KBUILD_CHECKSRC KBUILD_EXTMOD
- 
- extmod-prefix = $(if $(KBUILD_EXTMOD),$(KBUILD_EXTMOD)/)
 diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index 957eed6a17a5..b79bf0e30d32 100644
+index 1c597999b6a0..67db4bba2d45 100644
 --- a/scripts/Makefile.modpost
 +++ b/scripts/Makefile.modpost
-@@ -44,7 +44,7 @@ include include/config/auto.conf
- include scripts/Kbuild.include
+@@ -63,7 +63,7 @@ __modpost:
+ else
  
- kernelsymfile := $(objtree)/Module.symvers
--modulesymfile := $(firstword $(KBUILD_EXTMOD))/Module.symvers
-+modulesymfile := $(KBUILD_EXTMOD)/Module.symvers
+ # modpost options for modules (both in-kernel and external)
+-MODPOST += $(subst -i,-n,$(filter -i,$(MAKEFLAGS))) -s \
++MODPOST += $(subst -i,-n,$(filter -i,$(MAKEFLAGS))) \
+ 	$(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS)$(KBUILD_NSDEPS),-N) \
+ 	$(if $(KBUILD_NSDEPS),-d $(MODULES_NSDEPS))
  
- MODPOST = scripts/mod/modpost								\
- 	$(if $(CONFIG_MODVERSIONS),-m)							\
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index ff715623b37e..c6e1a349421c 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -30,8 +30,6 @@ static int have_vmlinux = 0;
+ static int all_versions = 0;
+ /* If we are modposting external module set to 1 */
+ static int external_module = 0;
+-/* Warn about section mismatch in vmlinux if set to 1 */
+-static int vmlinux_section_warnings = 1;
+ /* Only warn about unresolved symbols */
+ static int warn_unresolved = 0;
+ /* How a symbol is exported */
+@@ -2068,8 +2066,7 @@ static void read_symbols(const char *modname)
+ 		}
+ 	}
+ 
+-	if (!is_vmlinux(modname) || vmlinux_section_warnings)
+-		check_sec_ref(mod, modname, &info);
++	check_sec_ref(mod, modname, &info);
+ 
+ 	if (!is_vmlinux(modname)) {
+ 		version = get_modinfo(&info, "version");
+@@ -2558,7 +2555,7 @@ int main(int argc, char **argv)
+ 	struct dump_list *dump_read_start = NULL;
+ 	struct dump_list **dump_read_iter = &dump_read_start;
+ 
+-	while ((opt = getopt(argc, argv, "ei:mnsT:o:awENd:")) != -1) {
++	while ((opt = getopt(argc, argv, "ei:mnT:o:awENd:")) != -1) {
+ 		switch (opt) {
+ 		case 'e':
+ 			external_module = 1;
+@@ -2581,9 +2578,6 @@ int main(int argc, char **argv)
+ 		case 'a':
+ 			all_versions = 1;
+ 			break;
+-		case 's':
+-			vmlinux_section_warnings = 0;
+-			break;
+ 		case 'T':
+ 			files_source = optarg;
+ 			break;
 -- 
 2.25.1
 
