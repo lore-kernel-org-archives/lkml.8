@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FDDC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63969207D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E7C0207D5
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:13:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alkOYhWo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdW+KTGe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgEQCNn (ORCPT
+        id S1727775AbgEQCNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 22:13:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59092 "EHLO
+        Sat, 16 May 2020 22:13:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgEQCNa (ORCPT
+        with ESMTP id S1726967AbgEQCNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 22:13:30 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5EA5C061A0C;
-        Sat, 16 May 2020 19:13:29 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id z22so5019461lfd.0;
-        Sat, 16 May 2020 19:13:29 -0700 (PDT)
+        Sat, 16 May 2020 22:13:23 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF134C061A0C;
+        Sat, 16 May 2020 19:13:22 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id u6so6175203ljl.6;
+        Sat, 16 May 2020 19:13:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IP+BxwWBlUXPBXueysYxAs7IO8akrsULJxsrGPOeSI4=;
-        b=alkOYhWoh0I4SWI+iJRQxVVq1CGW8TrvfXWvV30WKoUHOCg3r1qTvSq82tkNWTBZQf
-         45c0vKhHCGVyaOd8ziMJPljE9XCwfy4A7YqXZimf/+oEGbevVMfGPG1iNDT0WznfhLyu
-         ISQ25Ry5szHMAns2p86MDOnRw6EFvHpKOApKn8w8/uxGvKTOM58NaoOOFIsHHmTs1FJa
-         n3y3nJFwpWOVJcQmm7yoFPEn4Bg1E22UIirhQ0dbwB/jglCZHpmNiO87X1gapuu4gZHg
-         kCERjV//1XSAwpfVdO+6GxeHNsiaSKQvsHkkRKhh7E1Gc0F3m2nlNpP0fwuwOoiFQnBh
-         9kwQ==
+        bh=xOq5yyY/u+0O8ZudKc0fLqZJ0PgNfXdMDM0w1gmW1jw=;
+        b=NdW+KTGePpb1F/7NPdBU6M0SLKqzKRvW1r5p/XS9cQwbJijB6jHoDQjYNRZXoveSEx
+         nX/L+YW5IMStWAijgpYsgBPI/oJBa9U/va0hjIUfBv7o+9YGMn2OFGKfMqMs6elL9gh+
+         oOeS0CZSAz8pBx3gg2VsGD53qnyd5G4bBVbNgj68JcvVSZQ19jCkUOqiXRXbEpA3IiBQ
+         JUMREOgMhkbyORHkbtFEaDk31oNVzyPrswIIjuQpnVzRGFcGT6+JnN/nUMW6+FNvOF/l
+         95rqW4TY55jJv0gOsJ2AGSgZSKY92ki6PrMz6ekt6myyJmZMHcl6jqndzZByRGaFnLvr
+         tbxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IP+BxwWBlUXPBXueysYxAs7IO8akrsULJxsrGPOeSI4=;
-        b=PgFUfe/03wfXg0ibYdj2lZ40tEjmu8FSMQ55H3vu8gotmkw/dukJUAAmIkVy/NX2l/
-         zY3cDBg6pnbQYYo3XMm7hE9BbMHqCM10SX6X3GR1MYmrGDd67Vk49C4uTncKeQxrQ89x
-         KE08pQ3K0t5h4ylHl/AFJj/bGzoYB9agm8AirKsK9ShOcYgs4OSoY68gWAKxj+DHKjFk
-         L6YnxV6Qzql/ZtJL4R1a686o1+9z3Sxa5N1OplWaocCl5cvKBj8oPpJyO/796hNEZ8X+
-         4cCNitVPBFLYEA2SClSnMBMkvedW+BLrAvLK0aMdF+XBmH4TALSScvqx7non2pDul3p9
-         WCvQ==
-X-Gm-Message-State: AOAM5313/B3CLniixNmGzfY1nkFTBwISm//rBa0D28VRsDf82cVM4B/q
-        iBEJ1JREPvDQ3LxE7FF41Fk=
-X-Google-Smtp-Source: ABdhPJw/bVQ87JUqY1gbJ5Zx5GeauhxKMkNWBv6w6r3pUsmAkL58Iy1NMM7z5kcFfr/P2a/OqJzhYA==
-X-Received: by 2002:ac2:5e24:: with SMTP id o4mr7014363lfg.37.1589681607261;
-        Sat, 16 May 2020 19:13:27 -0700 (PDT)
+        bh=xOq5yyY/u+0O8ZudKc0fLqZJ0PgNfXdMDM0w1gmW1jw=;
+        b=L8Rd9CdrvkseIE7wRyyOJP79mty9wgHU1E+VZYhVP+eABunTQJqTA3aXKBTCmCJapi
+         W6NKN3M7Ry09X8Q6BOQTa0lv5bg/AAnwW+YYInHXqqEm/pcCEPiJmEY7N7HLGNtsWR47
+         z/7Ey+dRXSCgVj8p5wJLqoB2Ri7dFRmleSQftZlHZgpz+FO1Ej4BuciiuvSoQZZRx4OZ
+         t836chwyJgSO6gNnSVykCjm52k4Dh6Q1pBcMtV97ViXycEK2MeqOp5Hwes8qSvhJ8fyw
+         LX0py7jQzF5u1XbvqHv99iLECRQhOU+8EDHnnpL7W++LJWa8Pb1AIGWCSXt0D03pCP44
+         hq8w==
+X-Gm-Message-State: AOAM533lW1IVexX2NjN1yqFTu+joNBnJnQUikQx+6BPr7KG7YojIutqj
+        50QxAa/6zcFMf0/QCwB2F6U=
+X-Google-Smtp-Source: ABdhPJwNTnCRnGEzwWDtys0C350gFVYZafJyGxx10kmH9E/ezrlftQ5uNzOWVv7fIQIj/73s/2utSg==
+X-Received: by 2002:a2e:700a:: with SMTP id l10mr6079423ljc.88.1589681601391;
+        Sat, 16 May 2020 19:13:21 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id z5sm3463149lji.30.2020.05.16.19.13.26
+        by smtp.gmail.com with ESMTPSA id z5sm3463149lji.30.2020.05.16.19.13.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 May 2020 19:13:26 -0700 (PDT)
+        Sat, 16 May 2020 19:13:20 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -83,9 +83,9 @@ Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
         Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
         linux-kernel@vger.kernel.org, Steve McIntyre <steve@einval.com>,
         linux-efi <linux-efi@vger.kernel.org>
-Subject: [PATCH v6 6/7] partitions/tegra: Support enforced GPT scanning
-Date:   Sun, 17 May 2020 05:12:24 +0300
-Message-Id: <20200517021225.22890-7-digetx@gmail.com>
+Subject: [PATCH v6 2/7] mmc: block: Add mmc_bdev_to_card() helper
+Date:   Sun, 17 May 2020 05:12:20 +0300
+Message-Id: <20200517021225.22890-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200517021225.22890-1-digetx@gmail.com>
 References: <20200517021225.22890-1-digetx@gmail.com>
@@ -96,140 +96,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Downstream NVIDIA bootloader provides gpt_sector=<sector> kernel command
-line option to the kernel. This option should instruct the GPT partition
-parser to look at the specified sector for a valid GPT header if the GPT
-is not found at the beginning or the end of a block device. Support of
-this feature is needed by Tegra-based devices that have TegraPT and GPT
-placed in inaccessible by kernel locations.  The GPT entry duplicates
-TegraPT partitions.
-
-Secondly, some Tegra-based devices have bootloader that enforces the GPT
-scanning of the backup/alternative GPT entry by providing "gpt" cmdline
-option to the kernel, but doesn't provide the "gpt_sector" option.
-In this case GPT entry resides at a special offset from the end of eMMC
-storage.  It is a common situation for older bootloader versions.
-
-The offset is calculated as a total number of eMMC sectors minus number of
-eMMC boot sectors minus 1.  This equation is explicitly defined and used
-by the downstream Tegra kernels for locating GPT entry.
+NVIDIA Tegra Partition Table takes into account MMC card's BOOT_SIZE_MULT
+parameter, and thus, the partition parser needs to retrieve that EXT_CSD
+value from the block device.  There are also some other parts of struct
+mmc_card that are needed for the partition parser in order to calculate
+the eMMC offset and verify different things.  This patch introduces new
+helper which takes block device for the input argument and returns the
+corresponding MMC card.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- block/partitions/check.h |  1 +
- block/partitions/core.c  |  1 +
- block/partitions/efi.c   |  9 +++++++
- block/partitions/tegra.c | 57 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 68 insertions(+)
+ drivers/mmc/core/block.c   | 15 +++++++++++++++
+ include/linux/mmc/blkdev.h | 13 +++++++++++++
+ 2 files changed, 28 insertions(+)
+ create mode 100644 include/linux/mmc/blkdev.h
 
-diff --git a/block/partitions/check.h b/block/partitions/check.h
-index 55acf6340e5b..1ce445d1c7f0 100644
---- a/block/partitions/check.h
-+++ b/block/partitions/check.h
-@@ -68,5 +68,6 @@ int osf_partition(struct parsed_partitions *state);
- int sgi_partition(struct parsed_partitions *state);
- int sun_partition(struct parsed_partitions *state);
- int sysv68_partition(struct parsed_partitions *state);
-+int tegra_partition_forced_gpt(struct parsed_partitions *state);
- int tegra_partition(struct parsed_partitions *state);
- int ultrix_partition(struct parsed_partitions *state);
-diff --git a/block/partitions/core.c b/block/partitions/core.c
-index 0b4720372f07..1931647d9742 100644
---- a/block/partitions/core.c
-+++ b/block/partitions/core.c
-@@ -83,6 +83,7 @@ static int (*check_part[])(struct parsed_partitions *) = {
- 	sysv68_partition,
- #endif
- #ifdef CONFIG_TEGRA_PARTITION
-+	tegra_partition_forced_gpt,
- 	tegra_partition,
- #endif
- 	NULL
-diff --git a/block/partitions/efi.c b/block/partitions/efi.c
-index f0229e7a6894..f8036fd55501 100644
---- a/block/partitions/efi.c
-+++ b/block/partitions/efi.c
-@@ -101,6 +101,15 @@ static int force_gpt;
- static int __init
- force_gpt_fn(char *str)
- {
-+	/*
-+	 * This check allows to properly parse cmdline variants like
-+	 * "gpt gpt_sector=<sector>" and "gpt_sector=<sector> gpt" since
-+	 * "gpt" overlaps with the "gpt_sector=", see tegra_gpt_sector_fn().
-+	 * The argument should be absent for a boolean cmdline option.
-+	 */
-+	if (strlen(str))
-+		return 0;
-+
- 	force_gpt = 1;
- 	return 1;
- }
-diff --git a/block/partitions/tegra.c b/block/partitions/tegra.c
-index d3a00ade145a..831dedb9a11c 100644
---- a/block/partitions/tegra.c
-+++ b/block/partitions/tegra.c
-@@ -565,3 +565,60 @@ int tegra_partition(struct parsed_partitions *state)
+diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+index c5367e2c8487..99298e888381 100644
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -40,6 +40,7 @@
+ #include <linux/debugfs.h>
  
+ #include <linux/mmc/ioctl.h>
++#include <linux/mmc/blkdev.h>
+ #include <linux/mmc/card.h>
+ #include <linux/mmc/host.h>
+ #include <linux/mmc/mmc.h>
+@@ -305,6 +306,20 @@ static ssize_t force_ro_store(struct device *dev, struct device_attribute *attr,
  	return ret;
  }
+ 
++struct mmc_card *mmc_bdev_to_card(struct block_device *bdev)
++{
++	struct mmc_blk_data *md;
 +
++	if (bdev->bd_disk->major != MMC_BLOCK_MAJOR)
++		return NULL;
++
++	md = mmc_blk_get(bdev->bd_disk);
++	if (!md)
++		return NULL;
++
++	return md->queue.card;
++}
++
+ static int mmc_blk_open(struct block_device *bdev, fmode_t mode)
+ {
+ 	struct mmc_blk_data *md = mmc_blk_get(bdev->bd_disk);
+diff --git a/include/linux/mmc/blkdev.h b/include/linux/mmc/blkdev.h
+new file mode 100644
+index 000000000000..67608c58de70
+--- /dev/null
++++ b/include/linux/mmc/blkdev.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
-+ * This allows a kernel command line option 'gpt_sector=<sector>' to
-+ * enable GPT header lookup at a non-standard location. This option
-+ * is provided to kernel by NVIDIA's proprietary bootloader.
++ *  linux/include/linux/mmc/blkdev.h
 + */
-+static sector_t tegra_gpt_sector;
-+static int __init tegra_gpt_sector_fn(char *str)
-+{
-+	WARN_ON(kstrtoull(str, 10, &tegra_gpt_sector) < 0);
-+	return 1;
-+}
-+__setup("gpt_sector=", tegra_gpt_sector_fn);
++#ifndef LINUX_MMC_BLOCK_DEVICE_H
++#define LINUX_MMC_BLOCK_DEVICE_H
 +
-+int tegra_partition_forced_gpt(struct parsed_partitions *state)
-+{
-+	int ret = 0;
++struct block_device;
++struct mmc_card;
 +
-+#ifdef CONFIG_EFI_PARTITION
-+	struct tegra_partition_table_parser ptp = {};
++struct mmc_card *mmc_bdev_to_card(struct block_device *bdev);
 +
-+	if (!soc_is_tegra() || !tegra_boot_sdmmc)
-+		return 0;
-+
-+	ptp.state = state;
-+
-+	ptp.boot_offset = tegra_partition_table_emmc_boot_offset(&ptp);
-+	if (ptp.boot_offset < 0)
-+		return 0;
-+
-+	/*
-+	 * Some Tegra devices do not use gpt_sector=<sector> kernel command
-+	 * line option. In this case these devices usually have a GPT entry
-+	 * at the end of the block device and the GPT entry address is
-+	 * calculated this way for eMMC:
-+	 *
-+	 * gpt_sector = ext_csd.sectors_num - ext_csd.boot_sectors_num - 1
-+	 *
-+	 * This algorithm is defined and used by NVIDIA in the downstream
-+	 * kernel of those devices.
-+	 *
-+	 * Please note that bootloader supplies the "gpt" cmdline option
-+	 * which enforces the GPT scanning, meaning that the scanning will
-+	 * be a NO-OP on devices that do not use GPT.
-+	 */
-+	if (tegra_gpt_sector) {
-+		state->force_gpt_sector = tegra_gpt_sector;
-+	} else {
-+		state->force_gpt_sector  = get_capacity(state->bdev->bd_disk);
-+		state->force_gpt_sector -= ptp.boot_offset + 1;
-+	}
-+
-+	ret = efi_partition(state);
-+	state->force_gpt_sector = 0;
-+#endif
-+	return ret;
-+}
++#endif /* LINUX_MMC_BLOCK_DEVICE_H */
 -- 
 2.26.0
 
