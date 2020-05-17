@@ -2,98 +2,109 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1002CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 23:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74400C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 23:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEA402070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 23:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4517D206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 23:50:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XjhPGZRo"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RjUwc6az"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgEQXjg (ORCPT
+        id S1726726AbgEQXug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 19:39:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbgEQXjf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 19:39:35 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EF1FC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 16:39:35 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id l1so6719283qtp.6
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 16:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uyEuxRNFXxTHy3jGi0sWbeje0rtWktiI61ku1YR5XQM=;
-        b=XjhPGZRo0hy8lSmN30iv1FoYoHjLrpvvcHo2ygtee9JGSbbc23mYomHH8Z86s2tlCX
-         gnqc2lLavwzbflQSUEgeR0JQ6AsJHCUplyGvNtfeCAEUoNY009++TEHuN2WdzM5d+FO9
-         g7ahM11TlktabGO9d5LIGR3Rob5zJaeP4GICBIBjYyDxvVdMrkk0yheOmhFnAgWVy0x3
-         iVRXrugQ4lAyw+MIKA3ccFfqbZI61v5/idR6NHYVq0uAcJ5ZGTd7PfCjj9+SK6zeJpBd
-         rpeTm1mqNIgKMC3U+Mu/KfxUhILzYwZEgY2/4u76ovdTYjffdFJVBEo6KZThyEmnuSLD
-         DqIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uyEuxRNFXxTHy3jGi0sWbeje0rtWktiI61ku1YR5XQM=;
-        b=HtAiJqjv4cveMyrCZP6fAN0KVBIaM+ExAxwA9c1Vtgh6Vdi+hqtFvDgetcnRC9fQc0
-         pZAite9+q4m8R3wnJVv3r+BP+H3Y+2bhI/LcMSaDtI5z4JA1spYJypRj0u9cl2ur1yeS
-         eX6GnjRJ841AEIJ3yFjlRyHQ0QUsKovjgxjYlVMURzEJj1QuWUwR2HI71aKN4tqJyKRr
-         TtaV6b/dE5KEGPpGu2hapdXfxBJXH+oIZkqtpvcgkk/agokdhGr4bbRc2h2dj/qvR3TJ
-         SrnSIwPuMWx1LT0FSQ2KQqIKgTOG/GWvq+/8OFEELDNUUNYh19JYEGg4xIEXz5/LTF+v
-         ZIFA==
-X-Gm-Message-State: AOAM531JBj30H8gGkxyvpxEF1s02bvvxE/rOaQeQnnLbvJ9pewWbWWy6
-        p8lYufMfqSeG/rlMpKaiQhAtcw==
-X-Google-Smtp-Source: ABdhPJywRpZiu8hlsjiCj7AHdvyj1Pqr2ufHjq9Exhw35hVjtBlDgjnAeGfjnWQZjfBVBC7HAqbrAg==
-X-Received: by 2002:ac8:518f:: with SMTP id c15mr13340000qtn.142.1589758774534;
-        Sun, 17 May 2020 16:39:34 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id j45sm8412885qtk.14.2020.05.17.16.39.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 17 May 2020 16:39:34 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jaSsX-0005YA-Ll; Sun, 17 May 2020 20:39:33 -0300
-Date:   Sun, 17 May 2020 20:39:33 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     bvanassche@acm.org, dledford@redhat.com,
-        linux-rdma@vger.kernel.org, target-devel@vger.kernel.org,
+        Sun, 17 May 2020 19:50:36 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:36466 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726656AbgEQXug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 19:50:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=LLTzz3YzvyMyBPk+Kolqx1Uu8fddMZ1ye55MJSgzQRA=; b=RjUwc6azwrY5RW4MhmjFAjsr0D
+        1J0L/dBUzDvf1yDZzamdb3Ob8HfeWJWqAFZR3PtWxFbpetrN2DHYTFXkLBYjd/WuwAVi8Qbs1ECTp
+        xjAYyJOUm8rLY4XIUBYO+fXGvRBF1u+qS4iWeNM90jkIuon6PrhgFLzqHDtk6yfbZ2ho=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jaT34-002ZTa-Tb; Mon, 18 May 2020 01:50:26 +0200
+Date:   Mon, 18 May 2020 01:50:26 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Roelof Berg <rberg@berg-solutions.de>
+Cc:     Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RDMA/srpt: Add a newline when printing parameter
- 'srpt_service_guid' by sysfs
-Message-ID: <20200517233933.GA21233@ziepe.ca>
-References: <1589182629-27743-1-git-send-email-wangxiongfeng2@huawei.com>
+Subject: Re: [PATCH] lan743x: Added fixed link support
+Message-ID: <20200517235026.GD610998@lunn.ch>
+References: <20200516192402.4201-1-rberg@berg-solutions.de>
+ <20200517183710.GC606317@lunn.ch>
+ <6E144634-8E2F-48F7-A0A4-6073164F2B70@berg-solutions.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1589182629-27743-1-git-send-email-wangxiongfeng2@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6E144634-8E2F-48F7-A0A4-6073164F2B70@berg-solutions.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 03:37:09PM +0800, Xiongfeng Wang wrote:
-> When I cat module parameter 'srpt_service_guid', it displays as follows.
-> It is better to add a newline for easy reading.
+> >> +			/* Configure MAC to fixed link parameters */
+> >> +			data = lan743x_csr_read(adapter, MAC_CR);
+> >> +			/* Disable auto negotiation */
+> >> +			data &= ~(MAC_CR_ADD_ | MAC_CR_ASD_);
+> > 
+> > Why does the MAC care about autoneg? In general, all the MAC needs to
+> > know is the speed and duplex.
+> > 
 > 
-> [root@hulk-202 ~]# cat /sys/module/ib_srpt/parameters/srpt_service_guid
-> 0x0205cdfffe8346b9[root@hulk-202 ~]#
+
+> My assumption is, that in fixed-link mode we should switch off the
+> autonegotiation between MAC and remote peer (e.g. a switch). I
+> didn’t test, if it would also wun with the hardware doing
+> auto-negotiation, however it feels cleaner to me to prevent the
+> hardware from initiating any auto-negotiation in fixed-link mode.
+
+The MAC is not involved in autoneg. autoneg is between two PHYs. They
+talk with each other, and then phylibs sees the results and tells the
+MAC the results of the negotiation. That happens via this call
+back. So i have no idea what this is doing in general in the MAC. And
+in your setup, you don't have any PHYs at all. So there is no
+auto-neg. You should read the datasheet and understand what this is
+controlling. It might need to be disabled in general.
+
+> Using get_phy_mode() in all cases is not possible on a PC as it
+> returns SGMII on a standard PC.
+
+Why do you think that?
+
+> > I don't understand this comment.
+> > 
 > 
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> ---
->  drivers/infiniband/ulp/srpt/ib_srpt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> See above the lengthy section. On a PC SGMII is returned when I call of_get_phy_mode(phynode, &phyifc);
 
-Applied to for-next, thanks
+There are two things possible here:
 
-Jason
+A PC has no OF support, so you are using:
+
+https://elixir.bootlin.com/linux/latest/source/include/linux/of_net.h#L19
+
+So you get the error code -ENODEV, and phyifc is not changed.
+
+Or you are using:
+
+https://elixir.bootlin.com/linux/latest/source/drivers/of/of_net.c#L25
+
+There is unlikely to be a device node, so phyifc is set to
+PHY_INTERFACE_MODE_NA and -ENODEV is returned.
+
+So if of_get_phy_mode() returns an error, use RMII. Otherwise use what
+value it set phyifc to.
+
+      Andrew
