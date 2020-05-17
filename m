@@ -2,106 +2,136 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64719C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3820C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A66F206F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D287C20810
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:47:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kWKN4Sqx"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oDEVZsp6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgEQKc0 (ORCPT
+        id S1727893AbgEQKrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 06:32:26 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:13710 "EHLO
+        Sun, 17 May 2020 06:47:04 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:19161 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727869AbgEQKc0 (ORCPT
+        by vger.kernel.org with ESMTP id S1727836AbgEQKrD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 06:32:26 -0400
+        Sun, 17 May 2020 06:47:03 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589711545; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=2Ot+L1wKDGqMcBOo6FkL+oGSqA8tD3Wir6teurhqckc=;
- b=kWKN4SqxCv7x7QImg/AOW3ttonknDfgX7IqTKeN+8RkXZFl0PIvmuY53Au1kpdlG9AFsZWFo
- 8by5g+h8sQY3VyBFGnyybHDSi+8JCfKy8LWhnIggqSnFTX9UWWKxUhxUheXlc15KAdyBBvWm
- V+mCu2Ib0exxqRlM45cmIyQfJ1s=
+ s=smtp; t=1589712423; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=bpYRKGxi7S4lmPb9T2zE3w/nH3uH2ZxR+FnFM4pHa+Y=; b=oDEVZsp6Rhnu7YcSUIGZk9j/Xn/bJMrnaQ7kUCcMvMjGeFYWFjNgYJfXfkPKircuRFqzKXX8
+ Pdd+xIbmn77T4EZCb0x4qqSEtlUUnKif4GWKS6R7fIlBIyg8Oo1zgD2ROQ1Mr8UE9fF9rAHf
+ xu0DcTuPM+/i1Fl9E0rgZChWmfM=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5ec112b90404ab4a8dd82d64 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 17 May 2020 10:32:25
- GMT
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec11626.7f9b1f1e1570-smtp-out-n01;
+ Sun, 17 May 2020 10:47:02 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 870FFC433D2; Sun, 17 May 2020 10:32:24 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id 2BE57C433D2; Sun, 17 May 2020 10:47:01 +0000 (UTC)
+Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: manafm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B7D50C433F2;
-        Sun, 17 May 2020 10:32:23 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 17 May 2020 16:02:23 +0530
-From:   manafm@codeaurora.org
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: thermal: tsens: Add zeroc interrupt
- support in yaml
-In-Reply-To: <20200505153819.GA19181@bogus>
-References: <20200505111204.963-1-manafm@codeaurora.org>
- <20200505111204.963-3-manafm@codeaurora.org> <20200505153819.GA19181@bogus>
-Message-ID: <73fa201face9710efa5ce143980f9b9e@codeaurora.org>
-X-Sender: manafm@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B753DC433F2;
+        Sun, 17 May 2020 10:46:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B753DC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH v9] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Sun, 17 May 2020 16:16:51 +0530
+Message-Id: <1589712411-26718-1-git-send-email-pillair@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-05 21:08, Rob Herring wrote:
-> On Tue,  5 May 2020 16:42:04 +0530, Manaf Meethalavalappu Pallikunhi 
-> wrote:
->> Add 0C (zeroc) interrupt support for tsens in yaml.
->> 
->> Signed-off-by: Manaf Meethalavalappu Pallikunhi 
->> <manafm@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 7 +++++--
->>  1 file changed, 5 insertions(+), 2 deletions(-)
->> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml:
-> thermal-sensor@c263000: interrupt-names: ['uplow', 'critical',
-> 'zeroc'] is too long
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/qcom-tsens.example.dt.yaml:
-> thermal-sensor@c263000: interrupts: [[0, 506, 4], [0, 508, 4], [0,
-> 510, 1]] is too long
-> 
-> See https://patchwork.ozlabs.org/patch/1283470
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install
-> git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-Addressed above errors for 
-Documentation/devicetree/bindings/thermal/qcom-tsens.yaml in v2
+Add device node for the ath10k SNOC platform driver probe
+and add resources required for WCN3990 on sc7180 soc.
+
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+---
+Changes from v8:
+- Removed the qcom,msa-fixed-perm
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts |  7 +++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27 +++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 4e9149d..38b102e 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -389,6 +389,13 @@
+ 	};
+ };
+ 
++&wifi {
++	status = "okay";
++	wifi-firmware {
++		iommus = <&apps_smmu 0xc2 0x1>;
++	};
++};
++
+ /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+ 
+ &qspi_clk {
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index f1280e0..dd4e095 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -63,6 +63,11 @@
+ 			clock-frequency = <32764>;
+ 			#clock-cells = <0>;
+ 		};
++
++		wlan_fw_mem: memory@94100000 {
++			reg = <0 0x94100000 0 0x200000>;
++			no-map;
++		};
+ 	};
+ 
+ 	reserved_memory: reserved-memory {
+@@ -944,6 +949,28 @@
+ 			};
+ 		};
+ 
++		wifi: wifi@18800000 {
++			compatible = "qcom,wcn3990-wifi";
++			reg = <0 0x18800000 0 0x800000>;
++			reg-names = "membase";
++			iommus = <&apps_smmu 0xc0 0x1>;
++			interrupts =
++				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
++				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
++				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
++				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
++				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
++				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
++				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
++				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
++				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
++				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
++				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
++				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
++			memory-region = <&wlan_fw_mem>;
++			status = "disabled";
++		};
++
+ 		config_noc: interconnect@1500000 {
+ 			compatible = "qcom,sc7180-config-noc";
+ 			reg = <0 0x01500000 0 0x28000>;
+-- 
+2.7.4
