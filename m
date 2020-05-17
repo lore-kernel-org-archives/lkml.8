@@ -2,154 +2,130 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AB1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 14:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F09C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 14:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3473207BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 14:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CAE2207DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 14:23:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AQHNj2p1"
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="je7fiBAl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgEQOPe (ORCPT
+        id S1727990AbgEQOXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 10:15:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51712 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727893AbgEQOPe (ORCPT
+        Sun, 17 May 2020 10:23:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727893AbgEQOXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 10:15:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589724932;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZSCD2rskbMKGy3GhvSaftPT2Y5k+GJ/7kryyIprAvdw=;
-        b=AQHNj2p1or6dyAi+aujwENogmex3xcdZwV0dmXUPm5UoccCKJ3jlg6ytMQHin4w+yk7IXQ
-        bQCMoujz7VCdBEtyH2pCTCxeMfPlYZnNldyefKsLxbhG3UH1zbuNKJj1sHDxQU2EZU8PMY
-        DuhinuHOtsCM0pGtYcIPHtgMK80bJ28=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-377-kdyH184UP7q8iWcgAZwJLQ-1; Sun, 17 May 2020 10:15:27 -0400
-X-MC-Unique: kdyH184UP7q8iWcgAZwJLQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8CEF01005510;
-        Sun, 17 May 2020 14:15:25 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F316D5D9D7;
-        Sun, 17 May 2020 14:15:17 +0000 (UTC)
-Date:   Sun, 17 May 2020 10:15:15 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     fw@strlen.de, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        twoerner@redhat.com, Eric Paris <eparis@parisplace.org>,
-        tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v4 3/3] audit: add subj creds to NETFILTER_CFG
- record to cover async unregister
-Message-ID: <20200517141515.qqx3jx5ulb2546tx@madcap2.tricolour.ca>
-References: <cover.1587500467.git.rgb@redhat.com>
- <b8ba40255978a73ea15e3859d5c945ecd5fede8e.1587500467.git.rgb@redhat.com>
- <CAHC9VhR9sNB58A8uQ4FNgAXOgVJ3RaWF4y5MAo=3mcTojaym0Q@mail.gmail.com>
+        Sun, 17 May 2020 10:23:19 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A4E8C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 07:23:19 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id t12so7274802ile.9
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 07:23:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IbfxFWmNaCFRv5atb1UVjA4fbxw7MwwdE/4yErlVGmg=;
+        b=je7fiBAlwjWMz5XOH6obv3seJ6Qc1ORc7AEna2ImpH6OqXUkGAqyKq8GUs3CsuYYXr
+         KBg3CyPJpe6HvQWguYHHAHk3/VzpYEP37fKaUZ+OPo+z+V0R1gnnDq+Qtm0wMZidVsUJ
+         X6WmzqTtBUq/oACqtHkCZbzRTaWsAR5uk7O9GZs7I2Nx31icT8zZtQWaxsfBYRGf2E4P
+         PS+NgNCQgJB1iOzfXIbUoxtvRgWpM3ETaj18lriLt9WSB99bRQALzUT/8+De019DOL4e
+         HRv2Sr+VqUp1VJq8OBs4hx2xEK79lLiabdfmgJfUofXyrOj0Dkr6RdB6S/aTVecXYRyQ
+         Q7XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IbfxFWmNaCFRv5atb1UVjA4fbxw7MwwdE/4yErlVGmg=;
+        b=d9ZcXlyRqRLCh6P16aSjOn40ZtpEuOrC4ZGbalqyt2XpaofvB6OyuZtDxG2P/z/axf
+         v6Diyd1WKZQpwzxBjRTykuFfD8XBT+QmhbEZwNfgU8wf/ZtUXjCwMAZomrnrmATRu8XP
+         W0gi+Fs7Sar857C4DI1pGdwc+/6rDLbvz9fRGyIapxytabkHhoeOz4dCRdTHqQpZGzMB
+         uL+0c2PQwFLP9v00ZkLjAVJiWBvQJR5YA6V0YwvI8gECRxTnmVwysHhTYMlU3nzAWxwA
+         fddQs+SharXmKSv96uOanAGkmMnoRf8is4g/Bcjr+YQeCFcsr0wrqTJ1j0K7vq/zdjbW
+         CDOA==
+X-Gm-Message-State: AOAM532F+1crKVajFU7MfnJlhbfY+UQ6unF4MfGFWVFnNVOx2y0lIMeb
+        JJnb3xqVtMoVbRXmnjIfVhaWSA==
+X-Google-Smtp-Source: ABdhPJyzNgsOxAZkttvDEg6NKZQAJmyD7lHhDU9WO1jsRvLG6YbeZfbmTGx6t/c6mCbuwTbVVStT9Q==
+X-Received: by 2002:a92:9e51:: with SMTP id q78mr12641146ili.268.1589725397996;
+        Sun, 17 May 2020 07:23:17 -0700 (PDT)
+Received: from cisco ([2601:282:b02:8120:6155:7c8c:3dc0:c56e])
+        by smtp.gmail.com with ESMTPSA id g205sm2861748iof.21.2020.05.17.07.23.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 07:23:17 -0700 (PDT)
+Date:   Sun, 17 May 2020 08:23:16 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Aleksa Sarai <asarai@suse.de>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
+Message-ID: <20200517142316.GA1996744@cisco>
+References: <20200515234005.32370-1-sargun@sargun.me>
+ <202005162344.74A02C2D@keescook>
+ <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
+ <20200517112156.cphs2h33hx2wfcs4@yavin.dot.cyphar.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhR9sNB58A8uQ4FNgAXOgVJ3RaWF4y5MAo=3mcTojaym0Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200517112156.cphs2h33hx2wfcs4@yavin.dot.cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-28 18:25, Paul Moore wrote:
-> On Wed, Apr 22, 2020 at 5:40 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > Some table unregister actions seem to be initiated by the kernel to
-> > garbage collect unused tables that are not initiated by any userspace
-> > actions.  It was found to be necessary to add the subject credentials to
-> > cover this case to reveal the source of these actions.  A sample record:
-> >
-> >   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat family=bridge entries=0 op=unregister pid=153 uid=root auid=unset tty=(none) ses=unset subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2 exe=(null)
+On Sun, May 17, 2020 at 09:21:56PM +1000, Aleksa Sarai wrote:
+> On 2020-05-17, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> > Or... And that's more invasive but ultimately cleaner we v2 the whole
+> > thing so e.g. SECCOMP_IOCTL_NOTIF_RECV2, SECCOMP_IOCTL_NOTIF_SEND2, and
+> > embedd the size argument in the structs. Userspace sets the size
+> > argument, we use get_user() to get the size first and then
+> > copy_struct_from_user() to handle it cleanly based on that. A similar
+> > model as with sched (has other unrelated quirks because they messed up
+> > something too):
+> > 
+> > static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_attr *attr)
+> > {
+> > 	u32 size;
+> > 	int ret;
+> > 
+> > 	/* Zero the full structure, so that a short copy will be nice: */
+> > 	memset(attr, 0, sizeof(*attr));
+> > 
+> > 	ret = get_user(size, &uattr->size);
+> > 	if (ret)
+> > 		return ret;
+> > 
+> > 	/* ABI compatibility quirk: */
+> > 	if (!size)
+> > 		size = SCHED_ATTR_SIZE_VER0;
+> > 	if (size < SCHED_ATTR_SIZE_VER0 || size > PAGE_SIZE)
+> > 		goto err_size;
+> > 
+> > 	ret = copy_struct_from_user(attr, sizeof(*attr), uattr, size);
+> > 	if (ret) {
+> > 		if (ret == -E2BIG)
+> > 			goto err_size;
+> > 		return ret;
+> > 	}
+> > 
+> > We're probably the biggest user of this right now and I'd be ok with
+> > that change. If it's a v2 than whatever. :)
 > 
-> [I'm going to comment up here instead of in the code because it is a
-> bit easier for everyone to see what the actual impact might be on the
-> records.]
-> 
-> Steve wants subject info in this case, okay, but let's try to trim out
-> some of the fields which simply don't make sense in this record; I'm
-> thinking of fields that are unset/empty in the kernel case and are
-> duplicates of other records in the userspace/syscall case.  I think
-> that means we can drop "tty", "ses", "comm", and "exe" ... yes?
-> 
-> While "auid" is a potential target for removal based on the
-> dup-or-unset criteria, I think it falls under Steve's request for
-> subject info here, even if it is garbage in this case.
+> I'm :+1: on a new version and switch to copy_struct_from_user(). I was a
+> little surprised when I found out that user_notif doesn't do it this
+> way a while ago (and although in theory it is userspace's fault, ideally
+> we could have an API that doesn't have built-in footguns).
 
-Can you explain why auid falls under this criteria but ses does not if
-both are unset?  If auid is unset then we know ses is unset?  If subj
-contains *:kernel_t:* then uid can also be dropped even though it is
-set, no?  I figure if we are going to start dropping fields, might as
-well drop enough to make it worth the effort, even though this is a rare
-event.
+But I thought the whole point was that we couldn't do that, because
+there's two things that can vary in length (struct seccomp_notif and
+struct seccomp_data)?
 
-As for searchability, I have solved that easily in the parser.
+https://lore.kernel.org/lkml/CAGXu5j+ZPxu6egE1fEr+N9+zLx3N+SJ_vbS_zzj9_hrdWrrrWQ@mail.gmail.com/
 
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> >  kernel/auditsc.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >
-> > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> > index d281c18d1771..d7a45b181be0 100644
-> > --- a/kernel/auditsc.c
-> > +++ b/kernel/auditsc.c
-> > @@ -2557,12 +2557,30 @@ void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
-> >                        enum audit_nfcfgop op)
-> >  {
-> >         struct audit_buffer *ab;
-> > +       const struct cred *cred;
-> > +       struct tty_struct *tty;
-> > +       char comm[sizeof(current->comm)];
-> >
-> >         ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_NETFILTER_CFG);
-> >         if (!ab)
-> >                 return;
-> >         audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
-> >                          name, af, nentries, audit_nfcfgs[op].s);
-> > +
-> > +       cred = current_cred();
-> > +       tty = audit_get_tty();
-> > +       audit_log_format(ab, " pid=%u uid=%u auid=%u tty=%s ses=%u",
-> > +                        task_pid_nr(current),
-> > +                        from_kuid(&init_user_ns, cred->uid),
-> > +                        from_kuid(&init_user_ns, audit_get_loginuid(current)),
-> > +                        tty ? tty_name(tty) : "(none)",
-> > +                        audit_get_sessionid(current));
-> > +       audit_put_tty(tty);
-> > +       audit_log_task_context(ab); /* subj= */
-> > +       audit_log_format(ab, " comm=");
-> > +       audit_log_untrustedstring(ab, get_task_comm(comm, current));
-> > +       audit_log_d_path_exe(ab, current->mm); /* exe= */
-> > +
-> >         audit_log_end(ab);
-> >  }
-> >  EXPORT_SYMBOL_GPL(__audit_log_nfcfg);
-> 
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+Tycho
