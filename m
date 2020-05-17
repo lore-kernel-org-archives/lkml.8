@@ -2,130 +2,168 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC57C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8008020727
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:47:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OcifvWB5"
+	by mail.kernel.org (Postfix) with ESMTP id 5A7F720727
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:47:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgEQKr2 (ORCPT
+        id S1727991AbgEQKrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 06:47:28 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:55769 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727944AbgEQKr1 (ORCPT
+        Sun, 17 May 2020 06:47:32 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56066 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727957AbgEQKra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 06:47:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589712446; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=q9iI9zh/lVW9wi2kuh1erK872V+tOBI5Kri0nX3QX1U=; b=OcifvWB5ZBt4Imo9Kw8k77itlEYztx2TPo+ZZSPhlUVqs3xVBuSWkHyJF3dkTD2uEKSWLBS/
- IZ0UxYGkgipcWXjpDdTwPsCX53/ljEq4idpYq7tHC6Ds0hO5KMlBFKIubUQAh+XhF0DoZspP
- WFaIE/aFvCswW7N/DOpAAHOGWHw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec1163e.7f453b6a4e30-smtp-out-n05;
- Sun, 17 May 2020 10:47:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 527B6C4478C; Sun, 17 May 2020 10:47:25 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: manafm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A30F1C44791;
-        Sun, 17 May 2020 10:47:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A30F1C44791
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=manafm@codeaurora.org
-From:   Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
-Subject: [PATCH v2 2/2] dt-bindings: thermal: tsens: Add zeroc interrupt support in yaml
-Date:   Sun, 17 May 2020 16:16:27 +0530
-Message-Id: <20200517104627.29501-3-manafm@codeaurora.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200517104627.29501-1-manafm@codeaurora.org>
-References: <20200517104627.29501-1-manafm@codeaurora.org>
+        Sun, 17 May 2020 06:47:30 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jaGpB-0006im-8W; Sun, 17 May 2020 10:47:17 +0000
+Date:   Sun, 17 May 2020 12:47:01 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Sargun Dhillon <sargun@sargun.me>, linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        tycho@tycho.ws, cyphar@cyphar.com
+Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
+Message-ID: <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
+References: <20200515234005.32370-1-sargun@sargun.me>
+ <202005162344.74A02C2D@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202005162344.74A02C2D@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add zeroc interrupt support for tsens in yaml.
+On Sun, May 17, 2020 at 12:17:14AM -0700, Kees Cook wrote:
+> On Fri, May 15, 2020 at 04:40:05PM -0700, Sargun Dhillon wrote:
+> > This includes the thread group leader ID in the seccomp_notif. This is
+> > immediately useful for opening up a pidfd for the group leader, as
+> > pidfds only work on group leaders.
+> > 
+> > Previously, it was considered to include an actual pidfd in the
+> > seccomp_notif structure[1], but it was suggested to avoid proliferating
+> > mechanisms to create pidfds[2].
+> > 
+> > [1]: https://lkml.org/lkml/2020/1/24/133
+> > [2]: https://lkml.org/lkml/2020/5/15/481
+> 
+> nit: please use lore.kernel.org/lkml/ URLs
+> 
+> > Suggested-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> > ---
+> >  include/uapi/linux/seccomp.h                  |  2 +
+> >  kernel/seccomp.c                              |  1 +
+> >  tools/testing/selftests/seccomp/seccomp_bpf.c | 50 +++++++++++++++++++
+> >  3 files changed, 53 insertions(+)
+> > 
+> > diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
+> > index c1735455bc53..f0c272ef0f1e 100644
+> > --- a/include/uapi/linux/seccomp.h
+> > +++ b/include/uapi/linux/seccomp.h
+> > @@ -75,6 +75,8 @@ struct seccomp_notif {
+> >  	__u32 pid;
+> >  	__u32 flags;
+> >  	struct seccomp_data data;
+> > +	__u32 tgid;
+> > +	__u8 pad0[4];
+> >  };
+> 
+> I think we need to leave off padding and instead use __packed. If we
+> don't then userspace can't tell when "pad0" changes its "meaning" (i.e.
+> the size of seccomp_notif becomes 88 bytes with above -- either via
+> explicit padding like you've got or via implicit by the compiler. If
+> some other u32 gets added in the future, user space will still see "88"
+> as the size.
+> 
+> So I *think* the right change here is:
+> 
+> -};
+> +	__u32 tgid;
+> +} __packed;
+> 
+> Though tgid may need to go above seccomp_data... for when it grows.
+> Agh...
+> 
+> _However_, unfortunately, I appear to have no thought this through very
+> well, and there is actually no sanity-checking in the kernel for dealing
+> with an old userspace when sizes change. :( For example, if a userspace
+> doesn't check sizes and calls an ioctl, etc, the kernel will clobber the
+> user buffer if it's too small.
 
-Signed-off-by: Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
----
- .../bindings/thermal/qcom-tsens.yaml          | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+I'd just argue that that's just userspace messing up.
 
-diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-index 2ddd39d96766..717b0dd967e2 100644
---- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-+++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-@@ -52,12 +52,14 @@ properties:
-     items:
-       - description: Combined interrupt if upper or lower threshold crossed
-       - description: Interrupt if critical threshold crossed
-+      - description: Interrupt if zeroC threshold is crossed
- 
-   interrupt-names:
-     minItems: 1
-     items:
-       - const: uplow
-       - const: critical
-+      - const: zeroc
- 
-   nvmem-cells:
-     minItems: 1
-@@ -109,8 +111,10 @@ allOf:
-       properties:
-         interrupts:
-           minItems: 2
-+          maxItems: 3
-         interrupt-names:
-           minItems: 2
-+          maxItems: 3
- 
- required:
-   - compatible
-@@ -174,4 +178,21 @@ examples:
-            #qcom,sensors = <13>;
-            #thermal-sensor-cells = <1>;
-     };
-+
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    // Example 4 (for any platform containing v2.6+ of the TSENS IP):
-+    tsens4: thermal-sensor@c265000 {
-+           compatible = "qcom,sc7180-tsens", "qcom,tsens-v2";
-+           reg = <0xc265000 0x1ff>,
-+                 <0xc223000 0x1ff>;
-+
-+           interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
-+                        <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>,
-+                        <GIC_SPI 501 IRQ_TYPE_EDGE_RISING>;
-+           interrupt-names = "uplow", "critical", "zeroc";
-+
-+           #qcom,sensors = <15>;
-+           #thermal-sensor-cells = <1>;
-+    };
- ...
--- 
-2.26.2
+> 
+> Even the SECCOMP_GET_NOTIF_SIZES command lacks a buffer size argument.
+> :(
+> 
+> So:
+> 
+> - should we just declare such userspace as "wrong"? I don't think
+>   that'll work, especially since what if we ever change the size of
+>   seccomp_data...  that predated the ..._SIZES command.
+
+Yeah, that's nasty since the struct member in seccomp_notif would now
+clobber each other.
+
+> 
+> - should we add a SECCOMP_SET_SIZES command to tell the kernel what
+>   we're expecting? There's no "state" associated across seccomp(2)
+>   calls, but maybe that doesn't matter because only user_notif writes
+>   back to userspace. For the ioctl, the state could be part of the
+>   private file data? Sending seccomp_data back to userspace only
+>   happens here, and any changes in seccomp_data size will just be seen
+>   as allowing a filter to query further into it.
+
+Sounds ok-ish in my opinion.
+
+> 
+> - should GET_SIZES report "useful" size? (i.e. exclude padding?)
+
+Or... And that's more invasive but ultimately cleaner we v2 the whole
+thing so e.g. SECCOMP_IOCTL_NOTIF_RECV2, SECCOMP_IOCTL_NOTIF_SEND2, and
+embedd the size argument in the structs. Userspace sets the size
+argument, we use get_user() to get the size first and then
+copy_struct_from_user() to handle it cleanly based on that. A similar
+model as with sched (has other unrelated quirks because they messed up
+something too):
+
+static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_attr *attr)
+{
+	u32 size;
+	int ret;
+
+	/* Zero the full structure, so that a short copy will be nice: */
+	memset(attr, 0, sizeof(*attr));
+
+	ret = get_user(size, &uattr->size);
+	if (ret)
+		return ret;
+
+	/* ABI compatibility quirk: */
+	if (!size)
+		size = SCHED_ATTR_SIZE_VER0;
+	if (size < SCHED_ATTR_SIZE_VER0 || size > PAGE_SIZE)
+		goto err_size;
+
+	ret = copy_struct_from_user(attr, sizeof(*attr), uattr, size);
+	if (ret) {
+		if (ret == -E2BIG)
+			goto err_size;
+		return ret;
+	}
+
+We're probably the biggest user of this right now and I'd be ok with
+that change. If it's a v2 than whatever. :)
+
+Christian
