@@ -2,119 +2,142 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42424C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 01:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 079EF206F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 01:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5517206F9
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:07:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="nkDo28rE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L+tYfVJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgEQB6C (ORCPT
+        id S1726956AbgEQCH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 21:58:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56700 "EHLO
+        Sat, 16 May 2020 22:07:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgEQB6B (ORCPT
+        with ESMTP id S1726880AbgEQCHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 21:58:01 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B98DC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 18:58:01 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id p4so3068211qvr.10
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 18:58:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=s3yeuZAhDmFpBOUorb/iouNYdnDc9CDj+UxZLN9lvxg=;
-        b=nkDo28rEL9kgR2hMhdY3aEgW0FJDqa7d8Al3/yHezV2tdkx30CmhQBcLfiTqOPrgjm
-         ARxWaM3min6L9oyJv9TR/E2FlcMiEFBvPZi+GOOGp8QQxTSAD1A/0d1nDMyJMiJEBFlt
-         cTisUARGGxzRNNipr3nyN4uDk6/wf1RqeFdZGbWd3rIOcAkAuj4SjJMXo2XR6Rte5iG/
-         T5gYipkgIEKTuHxcguMJWsNTk8+IgoOTRYVBFAdEG+tn2bDC8wbgLiiB+J0M8Uwnqbdm
-         YuOZdqBrSRWUWn8mWck7nvrVHNn4YJ2VCn1Vwg1F8PbZqe145Ns41oZ15DEX/nBqYWRI
-         W7YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=s3yeuZAhDmFpBOUorb/iouNYdnDc9CDj+UxZLN9lvxg=;
-        b=AyLeqNwV0eIMnvNaVD/kdeXds76vHC99i6ma0QD4YqaBj+fBZXtS7oMa6Xgws52NDg
-         EAQVy5qW/fYdL4GgOdSXgpnpXituW1Jer/MbJAqV8WR8I9HpxXWffrwBHH9Q05np9M5Y
-         rVGwXfMzSscU+vkqZQALDdab2Yis0dobISSiNeR96j8fDTL0cYHUq2QBYK4r0/1kIZQr
-         ZdLMKZuNTe2kIvkThXP2f8tp5RyvobINnqvcKum2pZ0XKi9NVVzfsU865/GvCi4587iu
-         0dm6JHTi8DUSDhOeM6JhU+yiRLfmkxvYwO67ksgiI4/w85DFOQoeKylnk548qmyQCDBq
-         CZlA==
-X-Gm-Message-State: AOAM531fdqLDRb6spzvGg3vNwCY6kirtQiWQzquuzFrov+uTZXWLEsnE
-        YbTg4WKU959e+VO+Rhi1fgPSjg==
-X-Google-Smtp-Source: ABdhPJyNxW8iFR2eteeZ+lqQ9hA289cfRSQ9jxFJxVPy9mAJlEuKi+nIP5JCkbJ2hYF5z2utUz5qoA==
-X-Received: by 2002:a0c:c603:: with SMTP id v3mr10304208qvi.82.1589680680311;
-        Sat, 16 May 2020 18:58:00 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id l184sm5080303qke.115.2020.05.16.18.57.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 May 2020 18:57:59 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 4/4] mm/slub: Fix sysfs shrink circular locking dependency
-Date:   Sat, 16 May 2020 21:57:58 -0400
-Message-Id: <3D1CF487-DD7E-4C5F-B977-D161CCED5234@lca.pw>
-References: <20200427235621.7823-5-longman@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        Juri Lelli <juri.lelli@redhat.com>
-In-Reply-To: <20200427235621.7823-5-longman@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: iPhone Mail (17E262)
+        Sat, 16 May 2020 22:07:55 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E6BC05BD09;
+        Sat, 16 May 2020 19:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=jYsH3V4w6+m7UpSLG16Z+T62n7FwSrrB/HogFSqz6mQ=; b=L+tYfVJP0eD0J+b/bL5Roh1znl
+        DXaI98CFHgO3upEWJVw9j0o7aJZ7MoeFPcuUywND7fYoSh38hxHa6Hzw7uPIzIhEGDiWLSADm83L6
+        U95KipryMx53N5VCXetQq3cF6SEJj2NE5rgrCir3oqWHZEUQQDVV9hPPrJ3Y6PlTMJeDyY5evQjhd
+        1UN+s0Tpe6J4QYm3JrabEHDe4Jr+hDo/DNFlkWCultHrzC3CEV0wjU/8/VPAaE3Bpwh4+n9kE93GL
+        HyEFwFK6ksr3mlMhOwuJG7Ih4p52ePrKtn58MiNDehzRnjjsnJ2rd5tHcP2nxf3nwEB292MNHDM3b
+        a2N8NrfA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ja8iO-0002Ec-Lt; Sun, 17 May 2020 02:07:44 +0000
+Subject: Re: [PATCH v5 4/6] partitions/efi: Support GPT entry lookup at a
+ non-standard location
+To:     Dmitry Osipenko <digetx@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>,
+        =?UTF-8?Q?Nils_=c3=96stlund?= <nils@naltan.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
+        Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Steve McIntyre <steve@einval.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+References: <20200516153644.13748-1-digetx@gmail.com>
+ <20200516153644.13748-5-digetx@gmail.com>
+ <2ae298ca-016a-8867-52dd-86d99b9e0f3b@infradead.org>
+ <595392b8-d950-4be6-f6cf-e274b4760b94@gmail.com>
+ <4a0f6a9c-b652-598a-c8a0-580a3e98171b@infradead.org>
+ <68d36582-5a47-11b4-360a-ceb2e272e459@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <27b18ce5-1f73-3acd-ed84-87f98498b256@infradead.org>
+Date:   Sat, 16 May 2020 19:07:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <68d36582-5a47-11b4-360a-ceb2e272e459@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/16/20 5:11 PM, Dmitry Osipenko wrote:
+> 16.05.2020 19:58, Randy Dunlap пишет:
+>> On 5/16/20 9:50 AM, Dmitry Osipenko wrote:
+>>> 16.05.2020 18:51, Randy Dunlap пишет:
+>>>> On 5/16/20 8:36 AM, Dmitry Osipenko wrote:
+>>>>> diff --git a/block/partitions/efi.c b/block/partitions/efi.c
+>>>>> index b64bfdd4326c..3af4660bc11f 100644
+>>>>> --- a/block/partitions/efi.c
+>>>>> +++ b/block/partitions/efi.c
+>>>>> @@ -621,6 +621,14 @@ static int find_valid_gpt(struct parsed_partitions *state, gpt_header **gpt,
+>>>>>          if (!good_agpt && force_gpt)
+>>>>>                  good_agpt = is_gpt_valid(state, lastlba, &agpt, &aptes);
+>>>>>  
+>>>>> +	/* The force_gpt_sector is used by NVIDIA Tegra partition parser in
+>>>>> +	 * order to convey a non-standard location of the GPT entry for lookup.
+>>>>> +	 * By default force_gpt_sector is set to 0 and has no effect.
+>>>>> +	 */
+>>>>
+>>>> Please fix the multi-line comment format as described in
+>>>> Documentation/process/coding-style.rst.
+>>>>
+>>>>> +	if (!good_agpt && force_gpt && state->force_gpt_sector)
+>>>>> +		good_agpt = is_gpt_valid(state, state->force_gpt_sector,
+>>>>> +					 &agpt, &aptes);
+>>>>> +
+>>>>>          /* The obviously unsuccessful case */
+>>>>>          if (!good_pgpt && !good_agpt)
+>>>>>                  goto fail;
+>>>>
+>>>> thanks.
+>>>>
+>>>
+>>> Hello Randy,
+>>>
+>>> I know that it's not a proper kernel-style formatting, but that's the
+>>> style used by the whole efi.c source code and I wanted to maintain the
+>>> same style, for consistency. Of course I can change to a proper style if
+>>> it's more desirable than the consistency. Thank you for the comment!
+>>>
+>>
+>> too bad. Sorry to hear that.
+>> It should have been "fixed" much earlier.
+>> It's probably too late now.
+> 
+> Actually, I now see that there is a mix of different comment styles in
+> the efi.c code. So it should be fine to use the proper style, I'll
+> change it in v6.
+> 
+> I don't think it's too late, it's never late to make a correction :)
+> There are some other coding style problems in the efi.c that won't hurt
+> to fix, I may take a look at fixing them later on.
+> 
 
+OK, great. Thanks.
 
-> On Apr 27, 2020, at 7:56 PM, Waiman Long <longman@redhat.com> wrote:
->=20
-> A lockdep splat is observed by echoing "1" to the shrink sysfs file
-> and then shutting down the system:
->=20
-> [  167.473392] Chain exists of:
-> [  167.473392]   kn->count#279 --> mem_hotplug_lock.rw_sem --> slab_mutex
-> [  167.473392]
-> [  167.484323]  Possible unsafe locking scenario:
-> [  167.484323]
-> [  167.490273]        CPU0                    CPU1
-> [  167.494825]        ----                    ----
-> [  167.499376]   lock(slab_mutex);
-> [  167.502530]                                lock(mem_hotplug_lock.rw_sem=
-);
-> [  167.509356]                                lock(slab_mutex);
-> [  167.515044]   lock(kn->count#279);
-> [  167.518462]
-> [  167.518462]  *** DEADLOCK ***
->=20
-> It is because of the get_online_cpus() and get_online_mems() calls in
-> kmem_cache_shrink() invoked via the shrink sysfs file. To fix that, we
-> have to use trylock to get the memory and cpu hotplug read locks. Since
-> hotplug events are rare, it should be fine to refuse a kmem caches
-> shrink operation when some hotplug events are in progress.
->=20
-> Signed-off-by: Waiman Long <longman@redhat.com>
+-- 
+~Randy
 
-Feel free to use,
-
-Reviewed-by: Qian Cai <cai@lca.pw>=
