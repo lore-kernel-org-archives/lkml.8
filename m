@@ -2,143 +2,101 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 476FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 12:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2486020735
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 12:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589720344;
-	bh=K4bW9SUbhJFwMKYXQlU1RiO8Sw6g6tGuIMcVLffkWtQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FlRM42bL/UO49FTBeWfjAh3rkYKHY2BaCK2IzS7SihR6jA6rMmwuKwijPY1YKDc71
-	 AChuAuaq+5rNGe5rgKxRqW2xl4QS7MKz4vagA9Vh+F+o5D4J7EiqDp0vsMSC6eHxB8
-	 8vpU4gd3oLb5krQMqaSQieiBZaW8XDP80aALYWms=
+	by mail.kernel.org (Postfix) with ESMTP id E49572075F
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:08:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgEQM7D (ORCPT
+        id S1727943AbgEQNIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 08:59:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728035AbgEQM7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 08:59:02 -0400
-Received: from e123331-lin.nice.arm.com (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57FEC204EC;
-        Sun, 17 May 2020 12:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589720341;
-        bh=K4bW9SUbhJFwMKYXQlU1RiO8Sw6g6tGuIMcVLffkWtQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=18z8pliLqz4DFmOz9J9BnY3COarwmndS4ufpOhNNlGWHJCAL/O4I7tbGdc2Jqp+ZI
-         pgolYbCZG9MVlLz39aLLLZhL+JouD7SH2Ot+n3aAMdbFCzoGMCnYl0bo08ZcGA8dH/
-         n9BOSSHYbE9UG3DOTmMwS9ZeZ1+iEdFHrtjsW794=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Benjamin Thiel <b.thiel@posteo.de>,
-        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Lenny Szubowicz <lszubowi@redhat.com>,
-        linux-acpi@vger.kernel.org, Loic Yhuel <loic.yhuel@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Mike Lothian <mike@fireburn.co.uk>,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Subject: [PATCH 7/7] tpm: check event log version before reading final events
-Date:   Sun, 17 May 2020 14:57:54 +0200
-Message-Id: <20200517125754.8934-8-ardb@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200517125754.8934-1-ardb@kernel.org>
-References: <20200517125754.8934-1-ardb@kernel.org>
+        Sun, 17 May 2020 09:08:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727893AbgEQNIb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 09:08:31 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADFFDC061A0C;
+        Sun, 17 May 2020 06:08:30 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jaJ1n-0002k2-19; Sun, 17 May 2020 15:08:27 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7739C1C009F;
+        Sun, 17 May 2020 15:08:26 +0200 (CEST)
+Date:   Sun, 17 May 2020 13:08:26 -0000
+From:   "tip-bot2 for Andrew Morton" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/build] x86/build: Use $(CONFIG_SHELL)
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200505211932.GE6880@zn.tnic>
+References: <20200505211932.GE6880@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <158972090630.17951.4281123342624645094.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loic Yhuel <loic.yhuel@gmail.com>
+The following commit has been merged into the x86/build branch of tip:
 
-This fixes the boot issues since 5.3 on several Dell models when the TPM
-is enabled. Depending on the exact grub binary, booting the kernel would
-freeze early, or just report an error parsing the final events log.
+Commit-ID:     0be11088b848774ae1f693169fdb9575e0ff06ba
+Gitweb:        https://git.kernel.org/tip/0be11088b848774ae1f693169fdb9575e0ff06ba
+Author:        Andrew Morton <akpm@linux-foundation.org>
+AuthorDate:    Tue, 05 May 2020 14:26:51 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 17 May 2020 16:01:33 +03:00
 
-We get an event log in the SHA-1 format, which doesn't have a
-tcg_efi_specid_event_head in the first event, and there is a final events
-table which doesn't match the crypto agile format.
-__calc_tpm2_event_size reads bad "count" and "efispecid->num_algs", and
-either fails, or loops long enough for the machine to be appear frozen.
+x86/build: Use $(CONFIG_SHELL)
 
-So we now only parse the final events table, which is per the spec always
-supposed to be in the crypto agile format, when we got a event log in this
-format.
+When scripts/x86-check-compiler.sh doesn't have the executable bit set:
 
-Fixes: c46f3405692de ("tpm: Reserve the TPM final events table")
-Fixes: 166a2809d65b2 ("tpm: Don't duplicate events from the final event log in the TCG2 log")
-Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1779611
-Signed-off-by: Loïc Yhuel <loic.yhuel@gmail.com>
-Link: https://lore.kernel.org/r/20200512040113.277768-1-loic.yhuel@gmail.com
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Matthew Garrett <mjg59@google.com>
-[ardb: warn when final events table is missing or in the wrong format]
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+  q:/usr/src/25> make clean
+  make: execvp: ./scripts/x86-check-compiler.sh: Permission denied
+
+Fix this by using $(CONFIG_SHELL).
+
+This will happen if the user downloads and applies patch-5.7.tar.gz, since
+patch(1) doesn't preserve the x bit.
+
+Fixes: 73da86741e7f7 ("x86/build: Check whether the compiler is sane")
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200505211932.GE6880@zn.tnic
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- drivers/firmware/efi/libstub/tpm.c | 5 +++--
- drivers/firmware/efi/tpm.c         | 5 ++++-
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ arch/x86/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/libstub/tpm.c b/drivers/firmware/efi/libstub/tpm.c
-index 1d59e103a2e3..e9a684637b70 100644
---- a/drivers/firmware/efi/libstub/tpm.c
-+++ b/drivers/firmware/efi/libstub/tpm.c
-@@ -54,7 +54,7 @@ void efi_retrieve_tpm2_eventlog(void)
- 	efi_status_t status;
- 	efi_physical_addr_t log_location = 0, log_last_entry = 0;
- 	struct linux_efi_tpm_eventlog *log_tbl = NULL;
--	struct efi_tcg2_final_events_table *final_events_table;
-+	struct efi_tcg2_final_events_table *final_events_table = NULL;
- 	unsigned long first_entry_addr, last_entry_addr;
- 	size_t log_size, last_entry_size;
- 	efi_bool_t truncated;
-@@ -127,7 +127,8 @@ void efi_retrieve_tpm2_eventlog(void)
- 	 * Figure out whether any events have already been logged to the
- 	 * final events structure, and if so how much space they take up
- 	 */
--	final_events_table = get_efi_config_table(LINUX_EFI_TPM_FINAL_LOG_GUID);
-+	if (version == EFI_TCG2_EVENT_LOG_FORMAT_TCG_2)
-+		final_events_table = get_efi_config_table(LINUX_EFI_TPM_FINAL_LOG_GUID);
- 	if (final_events_table && final_events_table->nr_events) {
- 		struct tcg_pcr_event2_head *header;
- 		int offset;
-diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-index 31f9f0e369b9..0543fbf60222 100644
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -62,8 +62,11 @@ int __init efi_tpm_eventlog_init(void)
- 	tbl_size = sizeof(*log_tbl) + log_tbl->size;
- 	memblock_reserve(efi.tpm_log, tbl_size);
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 38d3eec..9e22791 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -2,7 +2,7 @@
+ # Unified Makefile for i386 and x86_64
  
--	if (efi.tpm_final_log == EFI_INVALID_TABLE_ADDR)
-+	if (efi.tpm_final_log == EFI_INVALID_TABLE_ADDR ||
-+	    log_tbl->version != EFI_TCG2_EVENT_LOG_FORMAT_TCG_2) {
-+		pr_warn(FW_BUG "TPM Final Events table missing or invalid\n");
- 		goto out;
-+	}
+ #  Check the compiler
+-sane_compiler := $(shell $(srctree)/scripts/x86-check-compiler.sh $(CC))
++sane_compiler := $($(CONFIG_SHELL) $(srctree)/scripts/x86-check-compiler.sh $(CC))
+ $(if $(sane_compiler),$(error $(CC) check failed. Aborting),)
  
- 	final_tbl = early_memremap(efi.tpm_final_log, sizeof(*final_tbl));
- 
--- 
-2.17.1
-
+ # select defconfig based on actual architecture
