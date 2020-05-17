@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C662C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEB662065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DC320671
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589709069;
-	bh=tk/fwOURHRn164tNk1hs4Cayy/xACe3yQIyzTiOvCC8=;
+	s=default; t=1589709073;
+	bh=RF+hFuL3YwXZLBLPwtTxnHK/TvfkxaKkPpgx3op/R7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YTnWWU7/+ldn1Z/WXdKGOppndlXTQC8uNi9scuI3698KYTaInAZT/GHt5wUors2ma
-	 1iIFGQ91BYql6g5ADM5DbJ30lxWR/rfFlmqfk62JsxOqsljsuTIE6EnukWz8WLKds/
-	 W3xPG47Ss8AW95qeovcjBsOLZVtM8TNWpOwtWTQo=
+	b=r6c6oKZ7fEyMltAbqG3pDsBMoQO7iCdwSLeFlFYhywgpHl8J4LZR/sgA8Tra/RfGo
+	 xKr+K+hwa1tK36x9wE3I+0tA27QTNTaXUW/qN4B+PHPqlkyjxgE7T+iBj09h+VdGUq
+	 jnNzPkUyEkI6NV3nW+3IhbbTyVV4IckJRRfoFFAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgEQJvI (ORCPT
+        id S1728296AbgEQJvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 05:51:08 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:38303 "EHLO
+        Sun, 17 May 2020 05:51:12 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:38298 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727768AbgEQJtf (ORCPT
+        with ESMTP id S1727113AbgEQJtf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 17 May 2020 05:49:35 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 04H9n4L2018560;
-        Sun, 17 May 2020 18:49:08 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4L2018560
+        by conuserg-08.nifty.com with ESMTP id 04H9n4L9018560;
+        Sun, 17 May 2020 18:49:12 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4L9018560
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589708948;
-        bh=8KRAehNYEbD8P1SFsb4sUZSCAiUKonw/xvsoBMy6pYY=;
+        s=dec2015msa; t=1589708952;
+        bh=fKQ2suNbonPmMpy+xo1CkibGOmskSnkybnUC1ujH2W0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zdzkC2hYifs4g9KJvQEX5U8dgYdzH4gpmuFFlmKr1vIF2dGnfoqy+bocgP5t1oUmV
-         O92dYh1+H8lfuO2TmHLJQBu8qpMpVg6T3NjEiK5OaYyyagoKwi+LeIntk/oV5KtLI/
-         R56RixOEehto6Cb2cOX1ofDH6dlzF3U8nzXZEgl4emHxdDS0wN7YISkbklyH05lG66
-         UHfwvzxgbu5ebRZtyIsK1KoHuyRrD4P+SER39sEEj0dloVkAtoHn+fFsm6cude5ZBC
-         +Rc+oBVX2U+wAwj12zgMGKwU6nvLIy8elpjOZVKTl/2M7CRiP+bB4LmtZ2a6k9Wt9u
-         LPbs0dfUZ23Ig==
+        b=OHlez3+wyMKPlWr+X8K+9UOvN4ATUr1THtxYvbI9jU3dZO8plShQFKy9Onx5uvBJj
+         vKA2YbzH7iPwEZrs5hjG/WQHOgAOL5yS++JNk1KKRaezmtffCJZqAumw3H6wSeEKby
+         2Sfqr/DG5vRgNJSDKPauYNXttGjQbUOxFZU1ZUFwu+iy8xmNJuoPpTuVGa2LF4DDhL
+         y5zizcg8aTTJitesUGn4O5gl5RnHnwtV41y3d/qylfwiLdIp2fKKYvAdO+qThe4vG5
+         tktYnGiH+IDZmCPNtwDE4+4XZLp3Exrlhujr5+JA5R5k4DAIt0GZbXg426pdMHbxRL
+         Yxd/isp9zdDIg==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -49,9 +49,9 @@ Cc:     Jessica Yu <jeyu@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 05/29] modpost: re-add warning about missing *.mod file
-Date:   Sun, 17 May 2020 18:48:35 +0900
-Message-Id: <20200517094859.2376211-6-masahiroy@kernel.org>
+Subject: [PATCH 12/29] modpost: move external module options
+Date:   Sun, 17 May 2020 18:48:42 +0900
+Message-Id: <20200517094859.2376211-13-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200517094859.2376211-1-masahiroy@kernel.org>
 References: <20200517094859.2376211-1-masahiroy@kernel.org>
@@ -62,44 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts 4be40e22233c ("kbuild: do not emit src version warning for
-non-modules").
-
-I do not fully understand what that commit addressed, but commit
-91341d4b2c19 ("kbuild: introduce new option to enhance section mismatch
-analysis") introduced partial section checks by using modpost. built-in.o
-was parsed by modpost. Even modules had a problem because *.mod files
-were created after the modpost check.
-
-Commit b7dca6dd1e59 ("kbuild: create *.mod with full directory path and
-remove MODVERDIR") stopped doing that. Now that modpost is only invoked
-after the directory descend, *.mod files should always exist at the
-modpost stage. If not, something went wrong, which should be warned.
+Separate out the external-only code for readability.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/mod/sumversion.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ scripts/Makefile.modpost | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/scripts/mod/sumversion.c b/scripts/mod/sumversion.c
-index f9aa532d93cf..f9df0b1863f1 100644
---- a/scripts/mod/sumversion.c
-+++ b/scripts/mod/sumversion.c
-@@ -402,9 +402,11 @@ void get_src_version(const char *modname, char sum[], unsigned sumlen)
- 		 (int)strlen(modname) - 1, modname);
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index bc5561aedb24..8321068abb31 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -44,14 +44,11 @@ include include/config/auto.conf
+ include scripts/Kbuild.include
  
- 	buf = read_text_file(filelist);
--	if (!buf)
--		/* not a module or .mod file missing - ignore */
-+	if (!buf) {
-+		warn("failed to open %s. cannot calculate checksum\n",
-+		     filelist);
- 		return;
-+	}
+ kernelsymfile := $(objtree)/Module.symvers
+-modulesymfile := $(KBUILD_EXTMOD)/Module.symvers
  
- 	pos = buf;
- 	firstline = get_line(&pos);
+ MODPOST = scripts/mod/modpost								\
+ 	$(if $(CONFIG_MODVERSIONS),-m)							\
+ 	$(if $(CONFIG_MODULE_SRCVERSION_ALL),-a)					\
+-	$(if $(KBUILD_EXTMOD),-i,-o) $(kernelsymfile)					\
+-	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))			\
+-	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))					\
++	$(if $(KBUILD_EXTMOD),,-o $(kernelsymfile))					\
+ 	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)					\
+ 	$(if $(KBUILD_MODPOST_WARN),-w)
+ 
+@@ -81,6 +78,13 @@ src := $(obj)
+ # Include the module's Makefile to find KBUILD_EXTRA_SYMBOLS
+ include $(if $(wildcard $(KBUILD_EXTMOD)/Kbuild), \
+              $(KBUILD_EXTMOD)/Kbuild, $(KBUILD_EXTMOD)/Makefile)
++
++# modpost options for external modules
++MODPOST += \
++	-i Module.symvers \
++	$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)) \
++	-o $(KBUILD_EXTMOD)/Module.symvers
++
+ endif
+ 
+ # find all modules listed in modules.order
 -- 
 2.25.1
 
