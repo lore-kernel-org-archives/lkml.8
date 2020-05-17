@@ -2,103 +2,119 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD493C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C74C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 824DD206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92ADD207D3
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:27:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YnG6kEfa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZM12Y5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgEQAZO (ORCPT
+        id S1726956AbgEQA1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 20:25:14 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16124 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbgEQAZM (ORCPT
+        Sat, 16 May 2020 20:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbgEQA1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 20:25:12 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec0845b0000>; Sat, 16 May 2020 17:24:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sat, 16 May 2020 17:25:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sat, 16 May 2020 17:25:12 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 17 May
- 2020 00:25:11 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 17 May 2020 00:25:11 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.48.175]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ec084670001>; Sat, 16 May 2020 17:25:11 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Brian Geffon <bgeffon@google.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kselftest@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH 1/1] selftests/vm/.gitignore: add khugepaged, mremap_dontunmap
-Date:   Sat, 16 May 2020 17:25:09 -0700
-Message-ID: <20200517002509.362401-2-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200517002509.362401-1-jhubbard@nvidia.com>
-References: <20200517002509.362401-1-jhubbard@nvidia.com>
+        Sat, 16 May 2020 20:27:49 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36BC8C061A0C;
+        Sat, 16 May 2020 17:27:49 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x2so2972542pfx.7;
+        Sat, 16 May 2020 17:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NIIv/XyY0O9Xz6PLyvj9mxt+StwQRUOgmE4anFhaN7Q=;
+        b=eZM12Y5QF2vu3U/oPfGiRQrKgdsqdS6VH89cAt7GiBSFWhvvqQbtcN4RTBqGeB13j8
+         0soEliS0TIb3kqeo5cds5xiKNiO0YlkZttGPKlLMPWAiXyWKW9cY0Ez3X8ebqic1HMaS
+         xAgoMZHyPlAn6uKNRYQDa83wX5OTS/h6WB273VFiCF8i14GyJLrCzVo0HIgu6er/wlSd
+         yocH0myVYzg92DmtrjX+JSkHxpbR2ItDTt+gpDnB/LiPKDMNFOrwFk9LHeepTu1JUYJb
+         pXW/JS6j08YhggraE/twY3wWWytRuG7AIkuG6X9IcUluanKwXJH7xygez+Xt8o/t8OIJ
+         ACVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NIIv/XyY0O9Xz6PLyvj9mxt+StwQRUOgmE4anFhaN7Q=;
+        b=JKASqW1SjSu6vn45wsnMIURfulotG0h/nDTDHcyn9AygRIutjHXFY3As3a8sJRsd69
+         +1iAWNH5iJqGln+W0TU3TZLiIW+YjQy7oO3zxR3B1ETO4E0ZRtQTabHkJFXD65fuv9op
+         jSU959NySOIDZqjDrsCxNXiLYDwB+mQyM7DwRna8LpSrd3AZeyPaJzXPyVR5hIGoN++E
+         JgpXwYW/TNWjX3wgIPXsqlIk7l4fdpfo/Gt7LvaCBtdlIcjzhjHF0JVferQQL8JwqVZj
+         tTZp1bp7t6p2SBGaBilLZYY75NaXrf6H9JMUAl2lg4HvYYYgwjBHdEn5mOsdMKYJpC3P
+         Gmuw==
+X-Gm-Message-State: AOAM531wEx3M/M0wTkRsjZ/JEjvi5ZJ8gM8G6vqONV6f2H/Cg6GSJ5rq
+        zf6ChwmWzQM/iTmeYLnkl6E=
+X-Google-Smtp-Source: ABdhPJwsa9AocdDlyKPIRck6y0pp4qnnz6xKVHUzR46H8TOxyF/1wqQjkq0i5/K2t5AS2fIaleSBcg==
+X-Received: by 2002:a62:3c5:: with SMTP id 188mr10053202pfd.41.1589675267856;
+        Sat, 16 May 2020 17:27:47 -0700 (PDT)
+Received: from [192.168.68.125] ([210.185.116.244])
+        by smtp.gmail.com with ESMTPSA id p24sm5080988pff.92.2020.05.16.17.27.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 16 May 2020 17:27:46 -0700 (PDT)
+Subject: Re: [PATCH v3] mm: Add kvfree_sensitive() for freeing sensitive data
+ objects
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        David Rientjes <rientjes@google.com>
+References: <20200407200318.11711-1-longman@redhat.com>
+ <1158ff38-c65d-379f-8ae7-6f507d9fc8dd@gmail.com>
+ <20200514120018.GA16070@bombadil.infradead.org>
+From:   Balbir Singh <bsingharora@gmail.com>
+Message-ID: <f779dea1-3b50-e354-3914-7394b4473f5b@gmail.com>
+Date:   Sun, 17 May 2020 10:27:39 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589675099; bh=hLSvN+wnL0qj4RxGnT+ilPGcckAlLs8+Gg8Y7Cvm3mQ=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=YnG6kEfas4ZWgZtiO4kw8K+46zWqo3PS2sBL2FGm2fHgt8ZbYp3QZz4njTQoIlJQU
-         nTLGj1w972+J7SVQit8Snisv2HLTqOoCu9JUxbjRfvgr8LKNtOBfOYkxSYEzvetr06
-         nyYi4sod+is+26aZn2ORYRI++qzWLL7gtJi9VgAiwxLTSR16a2kJAiw1+qI0IYI6IK
-         Y2jUAygzlSGWf52kmRt4A09iSpksfY9Wf/XGpZhXrSHCO2kKA0skgKFuaYdHJUWNCE
-         m1UwDS/eRjzI9zDkNjdiml+wpuGgBRYh35ld37ZO2Lw5OlXSFOYARvGBhwyYNAGlmK
-         9xARmjFST8Jvg==
+In-Reply-To: <20200514120018.GA16070@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add mremap_dontunmap and khugepaged to .gitignore.
 
-Fixes: 6582dba23f8b ("khugepaged: add self test")
-Fixes: 0c28759ee3c9 ("selftests: add MREMAP_DONTUNMAP selftest")
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Brian Geffon <bgeffon@google.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- tools/testing/selftests/vm/.gitignore | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/selftests/vm/.gitignore b/tools/testing/selftest=
-s/vm/.gitignore
-index 4ff9708277fb..ddf5426416fa 100644
---- a/tools/testing/selftests/vm/.gitignore
-+++ b/tools/testing/selftests/vm/.gitignore
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+mremap_dontunmap
- hugepage-mmap
- hugepage-shm
- map_hugetlb
-@@ -18,3 +19,4 @@ va_128TBswitch
- map_fixed_noreplace
- write_to_hugetlbfs
- hmm-tests
-+khugepaged
---=20
-2.26.2
+On 14/5/20 10:00 pm, Matthew Wilcox wrote:
+> On Thu, May 14, 2020 at 09:00:40PM +1000, Balbir Singh wrote:
+>> I wonder if the right thing to do is also to disable pre-emption, just so that the thread does not linger on with sensitive data.
+>>
+>> void kvfree_sensitive(const void *addr, size_t len)
+>> {
+>> 	preempt_disable();
+>> 	if (likely(!ZERO_OR_NULL_PTR(addr))) {
+>> 		memzero_explicit((void *)addr, len);
+>> 		kvfree(addr);
+>> 	}
+>> 	preempt_enable();
+>> }
+>> EXPORT_SYMBOL(kvfree_sensitive);
+> 
+> If it's _that_ sensitive then the caller should have disabled preemption.
+> Because preemption could otherwise have occurred immediately before
+> kvfree_sensitive() was called.
+> 
 
+May be, but the callers of the API have to be explictly aware of the contract.
+I don't disagree with you on what you've said, but I was referring to the
+intent of freeing sensitive data vs the turn around time for doing so.
+
+Balbir Singh.
