@@ -2,68 +2,113 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61C22206F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589746519;
-	bh=fCxCn12M87UFjDxVDV9rqXy2y/vhO87qv7lzuRVDnvs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=T4WGg8y0Icfc//s9pR0lFVamcwr8iDPVLJ8igNjynGF3YpxL1o27ZPDWzxLFh2W5G
-	 dHhBlih4YF70UL3dq0vvShDAiUlhGI9XAk4Wpc0CSauGeineexFoRoTXzbSr0HMKLn
-	 mWLdyWqwWezBSmY8p8AS+udaaQKtrekm6YgPYKwE=
+	by mail.kernel.org (Postfix) with ESMTP id 6790E206F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:18:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgEQUPS (ORCPT
+        id S1726559AbgEQUS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 16:15:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45778 "EHLO mail.kernel.org"
+        Sun, 17 May 2020 16:18:27 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:48426 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726299AbgEQUPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 16:15:03 -0400
-Subject: Re: [GIT pull] objtool/urgent for v5.7-rc6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589746503;
-        bh=fCxCn12M87UFjDxVDV9rqXy2y/vhO87qv7lzuRVDnvs=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=RYxAL7kIRj4V+KAgapIQ+L+9TVJQl835MFWZF9h5R5UXOQ4s1YCTJU9+J8mfnnel3
-         Ei/Y8nme1wTzj2KvhpOrBsvxMO4YBw4fNsmyATWV8uftZ9vJqZQLsLx6/+fdeUS2Cr
-         BJGsmIcO4zf7uivBAkdOmp9tTDQ1euotvlbC9xMs=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <158970986085.17297.6965424675815657314.tglx@nanos.tec.linutronix.de>
-References: <158970986085.17297.6965424675815657314.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <158970986085.17297.6965424675815657314.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- objtool-urgent-2020-05-17
-X-PR-Tracked-Commit-Id: 71c95825289f585014fe9741b051d32a7a916680
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ef0d5b9102c4614c45e04ede10d04e572a165ca8
-Message-Id: <158974650344.31612.1606316090483168039.pr-tracker-bot@kernel.org>
-Date:   Sun, 17 May 2020 20:15:03 +0000
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
+        id S1726271AbgEQUS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 16:18:27 -0400
+X-Greylist: delayed 114566 seconds by postgrey-1.27 at vger.kernel.org; Sun, 17 May 2020 16:18:26 EDT
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 5AA1C45548;
+        Sun, 17 May 2020 20:18:24 +0000 (UTC)
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: documentation
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200516122740.30665-1-grandmaster@al2klimov.de>
+ <20200517134544.7d649bbb@lwn.net>
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Message-ID: <1bc96da4-49d7-1c8e-de15-858641aba59f@al2klimov.de>
+Date:   Sun, 17 May 2020 22:18:23 +0200
+MIME-Version: 1.0
+In-Reply-To: <20200517134544.7d649bbb@lwn.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 17 May 2020 10:04:20 -0000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-urgent-2020-05-17
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ef0d5b9102c4614c45e04ede10d04e572a165ca8
+Am 17.05.20 um 21:45 schrieb Jonathan Corbet:
+> On Sat, 16 May 2020 14:27:40 +0200
+> "Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
+> 
+>> ... for security reasons.
+>>
+>> No breaking changes as either the HTTP vhost redirects to HTTPS
+>> or both vhosts redirect to the same location
+>> or both serve the same content.
+> 
+> We're getting closer, but...
+> 
+>   - There is still too much stuff here.  Remember that somebody has to look
+>     at and review this stuff.
+OK.
 
-Thank you!
+> 
+>   - A quick check shows that a fair number of these links are broken or
+>     redirect to somewhere else.  What is the value of adding "https" to a
+>     broken link?
+Literally none. Either some vhosts broke since I have created the first 
+prototype of this or (more likely) I was wrong that checking for no 
+breaking changes at vhost level is enough.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+> 
+>   - Various documents have maintainers who are likely to be interested in
+>     changes and should be copied; that is what the get_maintainer.pl script
+>     is for.  If that generates a massive list of recipients, that's a cue
+>     that your patch is too large.
+Huh? I *did* run that script (automated) per file and grouped files per 
+identical set of patch recipients. I.e. this patch should contain only 
+changes for the recipients I've sent it to.
+If your invocation of the script doesn't agree with me, please share the 
+output and how to reproduce (as if I had just my own patch eMail, the 
+upstream Git repo and all the tools of course).
+Note that I'm not arguing with you, nor not believing you, exactly the 
+opposite: The more pieces I shall split this stuff into, the less errors 
+I want to make (and have to correct for every single piece) in the future.
+
+> 
+> If you really want to push this forward, please:
+> 
+>   - narrow down further.  Start with, say, Documentation/maintainer and
+>     just do that.
+OK.
+
+> 
+>   - Make sure every link you touch actually works.  If they don't, don't
+>     just add "https", figure out what the link should be or, if no
+>     applicable link exists, delete them.
+OK, I'll switch from vhost level to link level (will take some time), 
+but I won't touch broken links. IMAO that's a different construction area.
+
+> 
+>   - Justify the changes in the changelog; "for security reasons" is not, by
+>     itself, particularly convincing.  What security threat are you
+>     addressing here?
+OK.
+
+> 
+> Then, maybe, we'll have patches that can be reviewed and applied.
+> 
+> Thanks,
+> 
+> jon
+> 
