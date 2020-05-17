@@ -2,75 +2,179 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A24AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B15206F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD5A20820
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:34:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgEQTej (ORCPT
+        id S1726715AbgEQTe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 15:34:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgEQTej (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 15:34:39 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4827CC061A0C;
-        Sun, 17 May 2020 12:34:39 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EBAB8128A077E;
-        Sun, 17 May 2020 12:34:37 -0700 (PDT)
-Date:   Sun, 17 May 2020 12:34:37 -0700 (PDT)
-Message-Id: <20200517.123437.2084818619487673025.davem@davemloft.net>
-To:     zhangshaokun@hisilicon.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        jinyuqi@huawei.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org, jiri@resnulli.us, nivedita@alum.mit.edu,
-        peterz@infradead.org, edumazet@google.com, jiongwang@huawei.com
-Subject: Re: [PATCH v2] net: revert "net: get rid of an signed integer
- overflow in ip_idents_reserve()"
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1589600809-18001-1-git-send-email-zhangshaokun@hisilicon.com>
-References: <1589600809-18001-1-git-send-email-zhangshaokun@hisilicon.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 17 May 2020 12:34:38 -0700 (PDT)
+        Sun, 17 May 2020 15:34:57 -0400
+Received: from v6.sk ([167.172.42.174]:57012 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbgEQTe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 15:34:57 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 82082610A8;
+        Sun, 17 May 2020 19:34:53 +0000 (UTC)
+Date:   Sun, 17 May 2020 21:34:51 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 28/28] dt-bindings: usb: Convert ehci-mv to json-schema
+Message-ID: <20200517193451.GG1695525@furthur.local>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-29-lkundrak@v3.sk>
+ <20200327195520.GA2235@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327195520.GA2235@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Date: Sat, 16 May 2020 11:46:49 +0800
+On Fri, Mar 27, 2020 at 01:55:20PM -0600, Rob Herring wrote:
+> On Tue, Mar 17, 2020 at 10:39:22AM +0100, Lubomir Rintel wrote:
+> > A straightforward conversion of the ehci-mv binding to DT schema format
+> > using json-schema.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > ---
+> >  .../devicetree/bindings/usb/ehci-mv.txt       | 23 -------
+> >  .../bindings/usb/marvell,pxau2o-ehci.yaml     | 60 +++++++++++++++++++
+> >  2 files changed, 60 insertions(+), 23 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/usb/ehci-mv.txt
+> >  create mode 100644 Documentation/devicetree/bindings/usb/marvell,pxau2o-ehci.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/ehci-mv.txt b/Documentation/devicetree/bindings/usb/ehci-mv.txt
+> > deleted file mode 100644
+> > index 335589895763e..0000000000000
+> > --- a/Documentation/devicetree/bindings/usb/ehci-mv.txt
+> > +++ /dev/null
+> > @@ -1,23 +0,0 @@
+> > -* Marvell PXA/MMP EHCI controller.
+> > -
+> > -Required properties:
+> > -
+> > -- compatible: must be "marvell,pxau2o-ehci"
+> > -- reg: physical base addresses of the controller and length of memory mapped region
+> > -- interrupts: one EHCI controller interrupt should be described here
+> > -- clocks: phandle list of usb clocks
+> > -- clock-names: should be "USBCLK"
+> > -- phys: phandle for the PHY device
+> > -- phy-names: should be "usb"
+> > -
+> > -Example:
+> > -
+> > -	ehci0: usb-ehci@d4208000 {
+> > -		compatible = "marvell,pxau2o-ehci";
+> > -		reg = <0xd4208000 0x200>;
+> > -		interrupts = <44>;
+> > -		clocks = <&soc_clocks MMP2_CLK_USB>;
+> > -		clock-names = "USBCLK";
+> > -		phys = <&usb_otg_phy>;
+> > -		phy-names = "usb";
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/usb/marvell,pxau2o-ehci.yaml b/Documentation/devicetree/bindings/usb/marvell,pxau2o-ehci.yaml
+> > new file mode 100644
+> > index 0000000000000..189025ef1e92e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/marvell,pxau2o-ehci.yaml
+> > @@ -0,0 +1,60 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> 
+> Same license comment.
 
-> From: Yuqi Jin <jinyuqi@huawei.com>
-> 
-> Commit adb03115f459 ("net: get rid of an signed integer overflow in ip_idents_reserve()")
-> used atomic_cmpxchg to replace "atomic_add_return" inside the function
-> "ip_idents_reserve". The reason was to avoid UBSAN warning.
-> However, this change has caused performance degrade and in GCC-8,
-> fno-strict-overflow is now mapped to -fwrapv -fwrapv-pointer
-> and signed integer overflow is now undefined by default at all
-> optimization levels[1]. Moreover, it was a bug in UBSAN vs -fwrapv
-> /-fno-strict-overflow, so Let's revert it safely.
-> 
-> [1] https://gcc.gnu.org/gcc-8/changes.html
-> 
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Suggested-by: Eric Dumazet <edumazet@google.com>
- ...
-> Signed-off-by: Yuqi Jin <jinyuqi@huawei.com>
-> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+I wrote that binding document and chose that license.
 
-Applied, thanks.
+> > +# Copyright 2019,2020 Lubomir Rintel <lkundrak@v3.sk>
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/usb/marvell,pxau2o-ehci.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Marvell PXA/MMP EHCI bindings
+> > +
+> > +maintainers:
+> > +  - Lubomir Rintel <lkundrak@v3.sk>
+> > +
+> > +allOf:
+> > +  - $ref: usb-hcd.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: marvell,pxau2o-ehci
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    const: USBCLK
+> > +
+> > +  phys:
+> > +    maxItems: 1
+> > +
+> > +  phy-names:
+> > +    const: usb
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - clock-names
+> > +  - phys
+> > +  - phy-names
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/marvell,mmp2.h>
+> > +    usb@d4208000 {
+> > +        compatible = "marvell,pxau2o-ehci";
+> > +        reg = <0xd4208000 0x200>;
+> > +        interrupts = <44>;
+> > +        clocks = <&soc_clocks MMP2_CLK_USB>;
+> > +        clock-names = "USBCLK";
+> > +        phys = <&usb_otg_phy>;
+> > +        phy-names = "usb";
+> > +    };
+> > +
+> > +...
+> > -- 
+> > 2.25.1
+> > 
