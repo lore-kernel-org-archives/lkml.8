@@ -2,126 +2,137 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FA1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773D6C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 103E5206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56637207C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:13:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AGf4hNM+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPP3hSlo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgEQCIb (ORCPT
+        id S1726979AbgEQCNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 22:08:31 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12575 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgEQCIa (ORCPT
+        Sat, 16 May 2020 22:13:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgEQCNW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 22:08:30 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec09c510000>; Sat, 16 May 2020 19:07:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 16 May 2020 19:08:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 16 May 2020 19:08:30 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 17 May
- 2020 02:08:30 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 17 May 2020 02:08:29 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.48.175]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ec09c9d0002>; Sat, 16 May 2020 19:08:29 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-CC:     John Hubbard <jhubbard@nvidia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        <sparclinux@vger.kernel.org>
-Subject: [PATCH] oradax: convert get_user_pages() --> pin_user_pages()
-Date:   Sat, 16 May 2020 19:08:29 -0700
-Message-ID: <20200517020829.856731-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.26.2
+        Sat, 16 May 2020 22:13:22 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95463C05BD09;
+        Sat, 16 May 2020 19:13:21 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c12so1535284lfc.10;
+        Sat, 16 May 2020 19:13:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hY+h+hQNft22sbR2GRHdulgy1g8os6lzLdmN2sCZ1lE=;
+        b=GPP3hSlo2wSqNyGaaNBBg/CYUQSC947sEWJo/EBTwgMA026FZUzYgtVzSp2ARC96Jr
+         BFpGSQj6LJP6JWmX9r0Vqg5IFui8pixqCgFa+kdcvLVX5RjRGnjMKzaULQf8GgXoOBE+
+         tTFUweVwUIL66wqPgTTrr5BrEnM7z3cNuoajF+HZZrDtoda3qOzwbxsnogoW4jUgR1GI
+         9lK33cRMOL0vePFs+VxvgIsnkvixTAqWrybucs1hFIK+I27ucvUO4xU1aqZMjDGNvYxe
+         LP7SJ9GpjD/LyBSINDeOeMJtDZOl30QazCK0wxUdHmMxjhyt+tU3xnYlystt1lMIgIRK
+         F3MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hY+h+hQNft22sbR2GRHdulgy1g8os6lzLdmN2sCZ1lE=;
+        b=OsC2w+5I72iPPYxkODBThKXZocqeQsZMnd1GKLV20UuI5I6Nde+qOmoap6acjxzo3O
+         1wQARU+YxwDe8a2laaPdaLglZlEke/4weJstx/+fdpdRSldhrrC2eR+yCPOy/WyZ1qQL
+         4761HYxNs3Ys5LN67P/kEkcosuE6joFv1oMHNcLNbBqfwrTXZb2X9Qe5hg+51wrmrkOe
+         zgTa58S2B5x/pCyI4ggIBQTMocB4jC13NXV+U7xwJRC3Ux9boCcWBs7UJ32nwailwpQf
+         9FZnkPc5t92bFWdbQBzi/Dxu3DWiz6jChQdWmcx+i3CtZ9I15V9zuyZOaR+r1UZKeHuV
+         IeoA==
+X-Gm-Message-State: AOAM533irX4Oqcc3iyeycjFltQ615zbiqJDfWkoArKpcfKu/rX/8tNGY
+        dYB8a0utywyiSSDM8udJJEQ=
+X-Google-Smtp-Source: ABdhPJzWLG4SrgwuLfMGrs1OkODqENpWxx7JLW4U+iqms6vvO/Le8pvVJpm+CkAYvRzKRl4BJhmqNA==
+X-Received: by 2002:ac2:48b2:: with SMTP id u18mr6825402lfg.122.1589681600108;
+        Sat, 16 May 2020 19:13:20 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.gmail.com with ESMTPSA id z5sm3463149lji.30.2020.05.16.19.13.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 May 2020 19:13:19 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>,
+        =?UTF-8?q?Nils=20=C3=96stlund?= <nils@naltan.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
+        Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Steve McIntyre <steve@einval.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+Subject: [PATCH v6 1/7] mmc: core: Add raw_boot_mult field to mmc_ext_csd
+Date:   Sun, 17 May 2020 05:12:19 +0300
+Message-Id: <20200517021225.22890-2-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200517021225.22890-1-digetx@gmail.com>
+References: <20200517021225.22890-1-digetx@gmail.com>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589681233; bh=XuRV06lShXX0mEEPxDvd+aeuC8h5utZZzMaYdY4ajCA=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=AGf4hNM+Hifu2oHtMx1No3HpgirZ8E3C//643LsAa2WPrXWuKELF4Icoa4Kbtzday
-         S9Cnaz7rPJVHC9Ult3l8VmEilT7ZO8da2Nexc90RtVkKCDzSAlZHeg8BeZqJdz1ECJ
-         W7hXD7NkKjDQKErQJV4xA3659jO9NCbzu5NUMUFo4FgDKqkOIwdoGxL0S6ciGDx5Uu
-         WXxhlYAp3CMoOIacLqwTt7d0POwcvwDyOt6r1jo67shqGeHwiekD7u4GUFYlko0Dts
-         aeZ+LKH9CHcnkckthYL8gp3fHLycl/dDdjzgeFhuSu9oVprMxHuqjzatJ1kjwfbkpF
-         EmD+wIi+5lI+A==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code was using get_user_pages_fast(), in a "Case 2" scenario
-(DMA/RDMA), using the categorization from [1]. That means that it's
-time to convert the get_user_pages_fast() + put_page() calls to
-pin_user_pages_fast() + unpin_user_pages() calls.
+In order to support parsing of NVIDIA Tegra Partition Table format, we
+need to know the BOOT_SIZE_MULT value of the Extended CSD register because
+NVIDIA's bootloader linearizes the boot0/boot1/main partitions into a
+single virtual space, and thus, all partition addresses are shifted by
+the size of boot0 + boot1 partitions.
 
-There is some helpful background in [2]: basically, this is a small
-part of fixing a long-standing disconnect between pinning pages, and
-file systems' use of those pages.
-
-[1] Documentation/core-api/pin_user_pages.rst
-
-[2] "Explicit pinning of user-space pages":
-    https://lwn.net/Articles/807108/
-
-Cc: David S. Miller <davem@davemloft.net>
-Cc: sparclinux@vger.kernel.org
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/sbus/char/oradax.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/mmc/core/mmc.c   | 2 ++
+ include/linux/mmc/card.h | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/sbus/char/oradax.c b/drivers/sbus/char/oradax.c
-index 8af216287a84..21b7cb6e7e70 100644
---- a/drivers/sbus/char/oradax.c
-+++ b/drivers/sbus/char/oradax.c
-@@ -410,9 +410,7 @@ static void dax_unlock_pages(struct dax_ctx *ctx, int c=
-cb_index, int nelem)
-=20
- 			if (p) {
- 				dax_dbg("freeing page %p", p);
--				if (j =3D=3D OUT)
--					set_page_dirty(p);
--				put_page(p);
-+				unpin_user_pages_dirty_lock(&p, 1, j =3D=3D OUT);
- 				ctx->pages[i][j] =3D NULL;
- 			}
- 		}
-@@ -425,13 +423,13 @@ static int dax_lock_page(void *va, struct page **p)
-=20
- 	dax_dbg("uva %p", va);
-=20
--	ret =3D get_user_pages_fast((unsigned long)va, 1, FOLL_WRITE, p);
-+	ret =3D pin_user_pages_fast((unsigned long)va, 1, FOLL_WRITE, p);
- 	if (ret =3D=3D 1) {
- 		dax_dbg("locked page %p, for VA %p", *p, va);
- 		return 0;
- 	}
-=20
--	dax_dbg("get_user_pages failed, va=3D%p, ret=3D%d", va, ret);
-+	dax_dbg("pin_user_pages failed, va=3D%p, ret=3D%d", va, ret);
- 	return -1;
- }
-=20
-
-base-commit: 3d1c1e5931ce45b3a3f309385bbc00c78e9951c6
---=20
-2.26.2
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index 4203303f946a..112edfb1eb1d 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -417,6 +417,8 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+ 		ext_csd[EXT_CSD_ERASE_TIMEOUT_MULT];
+ 	card->ext_csd.raw_hc_erase_grp_size =
+ 		ext_csd[EXT_CSD_HC_ERASE_GRP_SIZE];
++	card->ext_csd.raw_boot_mult =
++		ext_csd[EXT_CSD_BOOT_MULT];
+ 	if (card->ext_csd.rev >= 3) {
+ 		u8 sa_shift = ext_csd[EXT_CSD_S_A_TIMEOUT];
+ 		card->ext_csd.part_config = ext_csd[EXT_CSD_PART_CONFIG];
+diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+index 7d46411ffaa2..cd6b58b66010 100644
+--- a/include/linux/mmc/card.h
++++ b/include/linux/mmc/card.h
+@@ -109,6 +109,7 @@ struct mmc_ext_csd {
+ 	u8			raw_hc_erase_gap_size;	/* 221 */
+ 	u8			raw_erase_timeout_mult;	/* 223 */
+ 	u8			raw_hc_erase_grp_size;	/* 224 */
++	u8			raw_boot_mult;		/* 226 */
+ 	u8			raw_sec_trim_mult;	/* 229 */
+ 	u8			raw_sec_erase_mult;	/* 230 */
+ 	u8			raw_sec_feature_support;/* 231 */
+-- 
+2.26.0
 
