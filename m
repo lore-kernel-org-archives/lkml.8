@@ -2,94 +2,109 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C835BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A21FC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B17920709
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589730804;
-	bh=Ww47uegJtkmfCjYmAAngFSupZRGswQhi+92Gghy9g90=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=xPLuLAW/tOeidlNgPPZVTxfxQUiJ7tJzk9FOi2vCMZuuhPudF9J7pxkNIk6GE68gO
-	 T8CZpUFDTRQWY1ueDGtg4NLQkPklk6f7eiOsVhV5p0+17szDY4IVqV/GKsFNcfK1qH
-	 DTtTiznU9sRHBXeS7Pu5o2BzDRY44ZOxepg7AuqY=
+	by mail.kernel.org (Postfix) with ESMTP id 4DEF120709
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgEQPxX (ORCPT
+        id S1728070AbgEQP5K convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 11:53:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727979AbgEQPxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 11:53:23 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1608206F4;
-        Sun, 17 May 2020 15:53:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589730802;
-        bh=Ww47uegJtkmfCjYmAAngFSupZRGswQhi+92Gghy9g90=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=c9iyUSP1ulImt0PavWrCbKBSl3ZQUawyVE+nrSlcJJ63ZHfHo2cQSzlJ8+uoCj9a+
-         HlwmMXmmpdex6YtTo4t0YLmhgZN/36EDb89sDwQhf5riXmOBoMcxzaQJTaDPOif3il
-         FLo4n/pC7lD9kLtKVYXiXi1o/w/RklVPe9z2tAO0=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A4F9A3520FBB; Sun, 17 May 2020 08:53:22 -0700 (PDT)
-Date:   Sun, 17 May 2020 08:53:22 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>, stable@kernel.org
-Subject: Re: [PATCH] tick/nohz: Narrow down noise while setting current
- task's tick dependency
-Message-ID: <20200517155322.GQ2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200515003429.4317-1-frederic@kernel.org>
- <20200516030718.GL2869@paulmck-ThinkPad-P72>
- <20200517133115.GA28573@lenoir>
+        Sun, 17 May 2020 11:57:10 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:54937 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727979AbgEQP5K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 11:57:10 -0400
+Received: from localhost (91-175-115-186.subs.proxad.net [91.175.115.186])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 39B1F200005;
+        Sun, 17 May 2020 15:57:03 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Marek =?utf-8?Q?Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and Compex wifi cards
+In-Reply-To: <20200513135643.478ffbda@windsurf.home>
+References: <20200430080625.26070-1-pali@kernel.org> <20200513135643.478ffbda@windsurf.home>
+Date:   Sun, 17 May 2020 17:57:02 +0200
+Message-ID: <87pnb2h7w1.fsf@FE-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200517133115.GA28573@lenoir>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 03:31:16PM +0200, Frederic Weisbecker wrote:
-> On Fri, May 15, 2020 at 08:07:18PM -0700, Paul E. McKenney wrote:
-> > On Fri, May 15, 2020 at 02:34:29AM +0200, Frederic Weisbecker wrote:
-> > > So far setting a tick dependency on any task, including current, used to
-> > > trigger an IPI to all CPUs. That's of course suboptimal but it wasn't
-> > > an issue as long as it was only used by posix-cpu-timers on nohz_full,
-> > > a combo that nobody seemed to use in real life.
-> > > 
-> > > But RCU started to use task tick dependency on current task to fix
-> > > stall issues on callbacks processing. These trigger regular and
-> > > undesired system wide IPIs on nohz_full.
-> > > 
-> > > The fix is very easy while setting a tick dependency on the current
-> > > task, only its CPU needs an IPI.
-> > 
-> > This passes moderate rcutorture testing.  If you want me to take it, please
-> > let me know, and otherwise:
-> > 
-> > Tested-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> If you already have a pending urgent queue, I'd love you to take it.
-> If not I can take it.
+Hello,
 
-Nothing urgent yet in -rcu, so if you would like it in the next merge
-window, please take it through your normal upstream path.
+> Hello,
+>
+> On Thu, 30 Apr 2020 10:06:13 +0200
+> Pali Rohár <pali@kernel.org> wrote:
+>
+>> Marek Behún (5):
+>>   PCI: aardvark: Improve link training
+>>   PCI: aardvark: Add PHY support
+>>   dt-bindings: PCI: aardvark: Describe new properties
+>>   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
+>>   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
+>> 
+>> Pali Rohár (7):
+>>   PCI: aardvark: Train link immediately after enabling training
+>>   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
+>>     read-only register
+>>   PCI: of: Zero max-link-speed value is invalid
+>>   PCI: aardvark: Issue PERST via GPIO
+>>   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
+>>   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
+>>     macros
+>>   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
+>
+> Thanks a lot for this work. For a number of reasons, I'm less involved
+> in Marvell platform support in Linux, but I reviewed your series and
+> followed the discussions around it, and I'm happy to give my:
+>
+> Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 
-							Thanx, Paul
+With this acked-by for the series, the reviewed-by from Rob on the
+binding and the tested-by, I am pretty confident so I applied the
+patches 10, 11 and 12 on mvebu/dt64.
+
+Thanks,
+
+Gregory
+
+
+>
+> for the whole series. The changes all seem sensible, and have been
+> tested by several folks.
+>
+> Thanks!
+>
+> Thomas
+> -- 
+> Thomas Petazzoni, CTO, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
