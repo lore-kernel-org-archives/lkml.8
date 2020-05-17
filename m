@@ -2,89 +2,129 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9811CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C76720727
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:04:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YgWeyREl"
+	by mail.kernel.org (Postfix) with ESMTP id EC887207F9
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgEQKEn (ORCPT
+        id S1727970AbgEQKEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 06:04:43 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:18555 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727910AbgEQKEm (ORCPT
+        Sun, 17 May 2020 06:04:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbgEQKEq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 06:04:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589709881; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=GSd52tyu+7u+kwp4k1i0T2QdVYhl7Vxns33l9iVbqEk=; b=YgWeyRElWCTWCm3N5ZRjFG6lzNgNmcyWeLy7BDfOwytDhrJRfB8vM/0XOUNfZerzBzmGaREI
- xfWGgBFKXvGXGwzBKaQAUovDxt3T+lMKtvj4BBYwDJKE51+EP9S9PWFYcDpj5IKMjKOu7TmB
- gKBx/hw/3QvaNV0Lq/td+tP47mk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec10c39.7f84313fcca8-smtp-out-n03;
- Sun, 17 May 2020 10:04:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6968AC43636; Sun, 17 May 2020 10:04:41 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8866FC43636;
-        Sun, 17 May 2020 10:04:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8866FC43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v2 2/3] dt-bindings: clock: Add gcc_sec_ctrl_clk_src clock ID
-Date:   Sun, 17 May 2020 15:34:20 +0530
-Message-Id: <1589709861-27580-3-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589709861-27580-1-git-send-email-tdas@codeaurora.org>
-References: <1589709861-27580-1-git-send-email-tdas@codeaurora.org>
+        Sun, 17 May 2020 06:04:46 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C3BEC061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 03:04:46 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jaG9z-0001jh-Pk; Sun, 17 May 2020 12:04:43 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id E392B100F15;
+        Sun, 17 May 2020 12:04:42 +0200 (CEST)
+Date:   Sun, 17 May 2020 10:04:20 -0000
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] objtool/urgent for v5.7-rc6
+Message-ID: <158970986085.17297.6965424675815657314.tglx@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The gcc_sec_ctrl_clk_src clock is required to be controlled by the
-secure controller driver.
+Linus,
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- include/dt-bindings/clock/qcom,gcc-sc7180.h | 1 +
- 1 file changed, 1 insertion(+)
+please pull the latest objtool/urgent branch from:
 
-diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-index 1258fd0..992b67b 100644
---- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
-+++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-@@ -137,6 +137,7 @@
- #define GCC_MSS_NAV_AXI_CLK					127
- #define GCC_MSS_Q6_MEMNOC_AXI_CLK				128
- #define GCC_MSS_SNOC_AXI_CLK					129
-+#define GCC_SEC_CTRL_CLK_SRC					130
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-urgent-2020-05-17
+
+up to:  71c95825289f: x86/unwind/orc: Fix error handling in __unwind_start()
+
+
+A single bugfix for the ORC unwinder to ensure that the error flag which
+tells the unwinding code whether a stack trace can be trusted or not is
+always set correctly. This was messed up by a couple of changes in the
+recent past.
+
+Thanks,
+
+	tglx
+
+------------------>
+Josh Poimboeuf (1):
+      x86/unwind/orc: Fix error handling in __unwind_start()
+
+
+ arch/x86/kernel/unwind_orc.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 5b0bd8581fe6..fa79e4227d3d 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -617,23 +617,23 @@ EXPORT_SYMBOL_GPL(unwind_next_frame);
+ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+ 		    struct pt_regs *regs, unsigned long *first_frame)
+ {
+-	if (!orc_init)
+-		goto done;
+-
+ 	memset(state, 0, sizeof(*state));
+ 	state->task = task;
  
- /* GCC resets */
- #define GCC_QUSB2PHY_PRIM_BCR					0
--- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
++	if (!orc_init)
++		goto err;
++
+ 	/*
+ 	 * Refuse to unwind the stack of a task while it's executing on another
+ 	 * CPU.  This check is racy, but that's ok: the unwinder has other
+ 	 * checks to prevent it from going off the rails.
+ 	 */
+ 	if (task_on_another_cpu(task))
+-		goto done;
++		goto err;
+ 
+ 	if (regs) {
+ 		if (user_mode(regs))
+-			goto done;
++			goto the_end;
+ 
+ 		state->ip = regs->ip;
+ 		state->sp = regs->sp;
+@@ -666,6 +666,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+ 		 * generate some kind of backtrace if this happens.
+ 		 */
+ 		void *next_page = (void *)PAGE_ALIGN((unsigned long)state->sp);
++		state->error = true;
+ 		if (get_stack_info(next_page, state->task, &state->stack_info,
+ 				   &state->stack_mask))
+ 			return;
+@@ -691,8 +692,9 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+ 
+ 	return;
+ 
+-done:
++err:
++	state->error = true;
++the_end:
+ 	state->stack_info.type = STACK_TYPE_UNKNOWN;
+-	return;
+ }
+ EXPORT_SYMBOL_GPL(__unwind_start);
+
