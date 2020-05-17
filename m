@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2095EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B06C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F10A42065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D6E2065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589708984;
-	bh=9LI3JIVQiKmqDC/p6tUdDJL8PK7qoZyG8zRAVS3e36Q=;
+	s=default; t=1589708987;
+	bh=Qvq2DACA0PxYaLnNNCWS7qJx9lLvvl5f0pSMc/4MtIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tOk5qxRh0ZUojjWR0fcfXt/eXsI78M5T2rmvWFInBCRQb13XDYsE7RKO18XdDj6iX
-	 2aKjMQ25Fm+cm/lFKHysVvpHemNgweXql/QN8P/F+Az6Ix0JgPhhuP2H17rhXysSVa
-	 Lk0oNlK7KoJzCikEPtpUyFav8ltcvlvu8nCAFFkY=
+	b=kxhTdgDnJ4yhkxXe9Nzy3tX5vyY67nz5DHWNcOjJVagpOsja0YVpPj/zwsSlLqxsq
+	 rDkoQevDG9P3RHdTUU5xP5/44tKm/1bpXsFw4zAkV3giEW6QiNWHsIN58f9Sf1CEno
+	 OGM/u7IjMgI0Rvdb0A3N+6WKuwKR471zfMVd3C00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgEQJti (ORCPT
+        id S1727890AbgEQJth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 05:49:38 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:38300 "EHLO
+        Sun, 17 May 2020 05:49:37 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:38302 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727782AbgEQJtf (ORCPT
+        with ESMTP id S1727117AbgEQJtf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 17 May 2020 05:49:35 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 04H9n4L8018560;
-        Sun, 17 May 2020 18:49:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4L8018560
+        by conuserg-08.nifty.com with ESMTP id 04H9n4L6018560;
+        Sun, 17 May 2020 18:49:10 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4L6018560
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589708952;
-        bh=FlAOnLT1LqdsWObR2ysUopltjBbbvrDg4vQLoWIKAiM=;
+        s=dec2015msa; t=1589708950;
+        bh=4G/LU/whNlt1qcU7HLw7OO1/pSZrdFyVabhepRCEO/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=15HD2aatotT/Wjw8EgUJG1wCfqw3VQiTGoP2bj8XBPxv6XR3djsRvTp2yL7CZvcF7
-         /XHrt/3ZHj+fUMyXt7uyQlDk4xAIxp5sXvs1LjwPkeph13YAhKHKBuwruMTJRa40VX
-         OgMkooKQB6EWdPyVom8bM0BWFd7xH12Y4p2duU7mPw8ZVoA2+jiI17S22mkNx1mviy
-         pOoi9wllTF+OVgbn4/Y9VOTjGAqHxgUSpWRIIHR/nXa3VyRdoaIk1aw6bWNWs8k4BW
-         DmiAo87ktf34SFg1idzcBZUTdDONFniFvPnxn1hlmnTcsu3xTNucMgPclPp+l+ZJIt
-         S817cL6f1YiQA==
+        b=GI5LEdjPfr2KlWPvSIftDRPwYqgr2RSSRvCJ2TJdqpZHAEzXclb33RXkpuEWF/Arc
+         eeNnAOLqPXmr906gADNCHfhbLN5yhLRRRmLLRkc4/sE2m73zzNn5YdVGzwnNUbnum7
+         jFB6t0VpdEz/muIbS1xhJ70KqFMASP92Gm/6BnWfOc70dZYEN+lPsz5rpeGD034KeV
+         SpqsSFe5eoeUHx2+DQ3mFAS8OC6qIgB1ynCM3d64vPFR4FK8NjJ/p+zOfIbJvyOlyj
+         n3vdtEctZlRNy+w1u+w5epcSt9QhfKSSzgCM/eB1g58zYWqqcNp8cGkyqsZSHoDERr
+         aWhWatRfEbNHA==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -49,9 +49,9 @@ Cc:     Jessica Yu <jeyu@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 11/29] modpost: pass -N option only for modules modpost
-Date:   Sun, 17 May 2020 18:48:41 +0900
-Message-Id: <20200517094859.2376211-12-masahiroy@kernel.org>
+Subject: [PATCH 09/29] kbuild: disallow multi-word in M= or KBUILD_EXTMOD
+Date:   Sun, 17 May 2020 18:48:39 +0900
+Message-Id: <20200517094859.2376211-10-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200517094859.2376211-1-masahiroy@kernel.org>
 References: <20200517094859.2376211-1-masahiroy@kernel.org>
@@ -62,39 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The built-in only code is not required to have MODULE_IMPORT_NS() to
-use symbols. So, the namespace is not checked for vmlinux(.o).
+$(firstword ...) in scripts/Makefile.modpost was added by commit
+3f3fd3c05585 ("[PATCH] kbuild: allow multi-word $M in Makefile.modpost")
+to build multiple external module directories.
 
-Do not pass the meaningless -N option to the first pass of modpost.
+This feature has been broken for a while. Remove the bitrotten code, and
+stop parsing if M or KBUILD_EXTMOD contains multiple words.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/Makefile.modpost | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Makefile                 | 3 +++
+ scripts/Makefile.modpost | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/Makefile b/Makefile
+index 1915630cc24b..aeb690c692ee 100644
+--- a/Makefile
++++ b/Makefile
+@@ -218,6 +218,9 @@ ifeq ("$(origin M)", "command line")
+   KBUILD_EXTMOD := $(M)
+ endif
+ 
++$(if $(word 2, $(KBUILD_EXTMOD)), \
++	$(error building multiple external modules is not supported))
++
+ export KBUILD_CHECKSRC KBUILD_EXTMOD
+ 
+ extmod-prefix = $(if $(KBUILD_EXTMOD),$(KBUILD_EXTMOD)/)
 diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index da7730a43819..bc5561aedb24 100644
+index 957eed6a17a5..b79bf0e30d32 100644
 --- a/scripts/Makefile.modpost
 +++ b/scripts/Makefile.modpost
-@@ -53,7 +53,6 @@ MODPOST = scripts/mod/modpost								\
- 	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))			\
- 	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))					\
- 	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)					\
--	$(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS)$(KBUILD_NSDEPS),-N) 	\
- 	$(if $(KBUILD_MODPOST_WARN),-w)
+@@ -44,7 +44,7 @@ include include/config/auto.conf
+ include scripts/Kbuild.include
  
- ifdef MODPOST_VMLINUX
-@@ -66,7 +65,9 @@ __modpost:
+ kernelsymfile := $(objtree)/Module.symvers
+-modulesymfile := $(firstword $(KBUILD_EXTMOD))/Module.symvers
++modulesymfile := $(KBUILD_EXTMOD)/Module.symvers
  
- else
- 
-+# modpost options for modules (both in-kernel and external)
- MODPOST += $(subst -i,-n,$(filter -i,$(MAKEFLAGS))) -s \
-+	$(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS)$(KBUILD_NSDEPS),-N) \
- 	$(if $(KBUILD_NSDEPS),-d $(MODULES_NSDEPS))
- 
- ifeq ($(KBUILD_EXTMOD),)
+ MODPOST = scripts/mod/modpost								\
+ 	$(if $(CONFIG_MODVERSIONS),-m)							\
 -- 
 2.25.1
 
