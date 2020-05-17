@@ -2,107 +2,94 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4165FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C835BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21DFD206F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:51:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGGCy6Tv"
+	by mail.kernel.org (Postfix) with ESMTP id 9B17920709
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589730804;
+	bh=Ww47uegJtkmfCjYmAAngFSupZRGswQhi+92Gghy9g90=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=xPLuLAW/tOeidlNgPPZVTxfxQUiJ7tJzk9FOi2vCMZuuhPudF9J7pxkNIk6GE68gO
+	 T8CZpUFDTRQWY1ueDGtg4NLQkPklk6f7eiOsVhV5p0+17szDY4IVqV/GKsFNcfK1qH
+	 DTtTiznU9sRHBXeS7Pu5o2BzDRY44ZOxepg7AuqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgEQPvT (ORCPT
+        id S1728113AbgEQPxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 11:51:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727979AbgEQPvS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 11:51:18 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93647C061A0C;
-        Sun, 17 May 2020 08:51:18 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f13so6837811wmc.5;
-        Sun, 17 May 2020 08:51:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4Y2aFJKNUiFBLQvn2vvnEK/Ead8cU3LUw4bCLelXdS0=;
-        b=UGGCy6TvvsLP2q0CxhmrvQHdIFIIbEfPAtgdI3IOIOuKhkTMRC/BC4WwPaymCW0tny
-         iuA1xi7IXR+ab/Gx0dG3BMqyVmQg3Fi9qXVgYFFiVuTIAyRHolD+PSSvfjAT7fMiHAZj
-         6nVTrrB4wq/zGBWaBB2eigVDmgqT/jlUuS3Q4d4L3pCviJGQ7AmJji+r28/hQCT+Qpzb
-         LyygNaW6zHilFl/dki//YzSLiEU13nnIKpfjyb07vIDh9jBNsMzNlb2KHuPmWmoqqHPt
-         +cHDt4W+xnFcnAzw5kDJxl5hjRkNZVI8s2trrxDWcCjhAXpW5WPXN/FXgCPGFfEx1bP4
-         JirQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4Y2aFJKNUiFBLQvn2vvnEK/Ead8cU3LUw4bCLelXdS0=;
-        b=R9IQa/P4HSmMjXJEDrkTm1sAwerEB17UNBTiIpuRoIkxFd842R6qO8uzcrWCXpr5iT
-         Z5MB2aP0ciCTLtisgbQTzKaXqNbkUAKHOj6ITq4b7N6YWudDV26Jt2RgQ4CH4cn5gBFD
-         RynXQh2LdCBo9GzMqqwJ/f3hkqm6FPEwquigufqRBREozDlCS8ITNAo0QPy9RCbyvX6P
-         ML9WV+I4Jj2eyGKsN9kemd5ecbvt/NwkwCFomaZEeSr0aU0HUmjoY4kaO59pm8T1nh8H
-         GTAHAe4kYPTcjGbaUaPyJTMDQQK7xEnWG0kL+s0KOkgNToaTLDuD/4aeWXPpSiGtXdWJ
-         xaLg==
-X-Gm-Message-State: AOAM53228y09W0qlrlFEtl39xPetmiomJArQkWYOUmn6l5fObNhCzh7H
-        bnQUtl/WhfVnoGWXvqfuD8ST5eP0u851n0mMrXLahVaJB6c=
-X-Google-Smtp-Source: ABdhPJw8gi9ZQ9b7ziDhHvd7AdBz6Ju+aZl0wFkN7BHXZ/1UxBruJsqKUGVLfoAJ0nQTpVk7cv98fXWPYNpz5Op4udc=
-X-Received: by 2002:a1c:de05:: with SMTP id v5mr14097715wmg.1.1589730675709;
- Sun, 17 May 2020 08:51:15 -0700 (PDT)
+        Sun, 17 May 2020 11:53:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727979AbgEQPxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 11:53:23 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1608206F4;
+        Sun, 17 May 2020 15:53:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589730802;
+        bh=Ww47uegJtkmfCjYmAAngFSupZRGswQhi+92Gghy9g90=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=c9iyUSP1ulImt0PavWrCbKBSl3ZQUawyVE+nrSlcJJ63ZHfHo2cQSzlJ8+uoCj9a+
+         HlwmMXmmpdex6YtTo4t0YLmhgZN/36EDb89sDwQhf5riXmOBoMcxzaQJTaDPOif3il
+         FLo4n/pC7lD9kLtKVYXiXi1o/w/RklVPe9z2tAO0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id A4F9A3520FBB; Sun, 17 May 2020 08:53:22 -0700 (PDT)
+Date:   Sun, 17 May 2020 08:53:22 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>, stable@kernel.org
+Subject: Re: [PATCH] tick/nohz: Narrow down noise while setting current
+ task's tick dependency
+Message-ID: <20200517155322.GQ2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200515003429.4317-1-frederic@kernel.org>
+ <20200516030718.GL2869@paulmck-ThinkPad-P72>
+ <20200517133115.GA28573@lenoir>
 MIME-Version: 1.0
-References: <20200409070448.3209-1-paweldembicki@gmail.com>
- <20200409070448.3209-2-paweldembicki@gmail.com> <87sgfyh9au.fsf@FE-laptop>
-In-Reply-To: <87sgfyh9au.fsf@FE-laptop>
-From:   =?UTF-8?Q?Pawe=C5=82_Dembicki?= <paweldembicki@gmail.com>
-Date:   Sun, 17 May 2020 17:51:04 +0200
-Message-ID: <CAJN1KkyhnG7qByXYP14ULTrUhYNbDt0AQ_Er=bnM-KymLz8bPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: kirkwood: Add Check Point L-50 board
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200517133115.GA28573@lenoir>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.05.2020 at 17:26 Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
->
-> Hi Pawel Dembicki,
->
+On Sun, May 17, 2020 at 03:31:16PM +0200, Frederic Weisbecker wrote:
+> On Fri, May 15, 2020 at 08:07:18PM -0700, Paul E. McKenney wrote:
+> > On Fri, May 15, 2020 at 02:34:29AM +0200, Frederic Weisbecker wrote:
+> > > So far setting a tick dependency on any task, including current, used to
+> > > trigger an IPI to all CPUs. That's of course suboptimal but it wasn't
+> > > an issue as long as it was only used by posix-cpu-timers on nohz_full,
+> > > a combo that nobody seemed to use in real life.
+> > > 
+> > > But RCU started to use task tick dependency on current task to fix
+> > > stall issues on callbacks processing. These trigger regular and
+> > > undesired system wide IPIs on nohz_full.
+> > > 
+> > > The fix is very easy while setting a tick dependency on the current
+> > > task, only its CPU needs an IPI.
+> > 
+> > This passes moderate rcutorture testing.  If you want me to take it, please
+> > let me know, and otherwise:
+> > 
+> > Tested-by: Paul E. McKenney <paulmck@kernel.org>
+> 
+> If you already have a pending urgent queue, I'd love you to take it.
+> If not I can take it.
 
-Hi Gregory,
+Nothing urgent yet in -rcu, so if you would like it in the next merge
+window, please take it through your normal upstream path.
 
->
-> Applied on mvebu/dt. I think the first patch should be applied by the
-> device tree maintainers.
->
-> Thanks,
->
-> Gregory
->
-
-I sent v3 of this patch some time ago:
-https://lkml.org/lkml/2020/4/22/1353
-
-Is possible to use it instead v2?
-
-Best Regards,
-Pawel Dembicki
+							Thanx, Paul
