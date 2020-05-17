@@ -2,190 +2,158 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA52C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B5EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47903206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71162070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:40:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="bD8nr86m";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zTmTPNi9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbgEQPcV (ORCPT
+        id S1728056AbgEQPkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 11:32:21 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:32786 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727981AbgEQPcV (ORCPT
+        Sun, 17 May 2020 11:40:14 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:55143 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727981AbgEQPkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 11:32:21 -0400
-Received: by mail-il1-f199.google.com with SMTP id b29so7481164ilb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 08:32:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=2doS7klhJosBZYIMMmPUj2nhv1GcHyUE0aRUwaSGsPk=;
-        b=BbxWPtiZmMgE9jsNXffDY3hIOyaN8MZT0+mTeDQjf54dOOmKFLFFZc7jAzzFg3A0Jt
-         ymu9NwFJX38M55y9EFJQc4REjiU0YF6EApomvdkc4Ej5j8kWKB4pyzTcZiIJPBeVi+oW
-         06kI/b3xuRI2kQ8xag5tkSC+frjCyyh8bQZRjKqyOoBxfGv784KseIA2x3A+lOmbWMDh
-         2UtEananzX6c0K9reifNII0jzbynhuPn18R5xfw62wf722s3LaZqIb2/69RirlxPXrRo
-         2hp7vc1lMc8pziPQQn+LelGOJ4CvBfnq2CSoLbVQuxnXWErKwvzPEAqAVG0M63rKiLXA
-         6tdA==
-X-Gm-Message-State: AOAM533hrFMYMNCmQysqV09dsjGKwKn2QfscJoBRRjOJM/pBSYnaPITN
-        IN8oa1367LKFfV8IhjIUcIj2CaS6SQeC1DzutmPKcqZBo8e0
-X-Google-Smtp-Source: ABdhPJyRqOw2N4zucehobh1VqdeBMSepkfOx12OOiImeDnQo31lVKxndyFcwzlDCgNZi8UjOR+zQHW3dshDHyOtfT1ajt+bLn+2o
+        Sun, 17 May 2020 11:40:14 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 21AEA5C007B;
+        Sun, 17 May 2020 11:40:13 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sun, 17 May 2020 11:40:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=SvumGBVOXeG8y7i/6ajg6+QVL/
+        4DjwHReqiJL3CMBSU=; b=bD8nr86mQlZ1IFGONAt9UqXXYcAXk4XkSxucApqwr0
+        jN8//UnWL5Whf37f1CGDRmwoVpelOr+SRVXtrfHYC0TbXzcwCxZqvcm15/BU2KCQ
+        sUlV74Ma8tYFGOLwqxiyQB1ztcjBtBPjT8uQcT6Rp9EI5UGwd1Y73mTeEEjQfZ9g
+        OXavYsqRKlf87sRBQamI1LL3tENdobe0jIgWGxCNuHbermmHZpc91W3P1lXl3uJx
+        Pnt3WwmJ6tEPxlEcqXFhxnfbLKoi6RzZ1tE+ofcUMAX+b1XaiiXFe1/t6MXxfdk9
+        aEWrw8QTHiAxMB541ODIl9W0U0iHZiZq3WT9NPUAJhdg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=SvumGBVOXeG8y7i/6
+        ajg6+QVL/4DjwHReqiJL3CMBSU=; b=zTmTPNi9ucpuFOHvEn6iu5BeXJ0oJ4p4C
+        CUmJebGOngCGr5jhBNrCwYtuNd1Pe5ZHd50npmlRACWSzAH6KZzrJMsH1V3geGI7
+        smOxqMd1TCAFX4qcIBOoujz5PFUvgZyeKVWHxokL2Bb133rRTekvC9zcyQQVmv6S
+        N6UTWwNju1Rqwd3rsl03IG/YdYnxS5ZU27H2UAuepbdH2mrMnJjw09Bo1Q9MwQGB
+        ku625hffMnd0KCdneM+CQT4cuZypjLkR96agY2tbpyHot5wTpcsSxLBs5sEFYxu/
+        qVr2/W4HfnubH6JbFyjgzfJuE2fqpmCGigZJR17pmkdeAmsrqe21A==
+X-ME-Sender: <xms:2lrBXts74oOx0OYXeuMD4sgYcH8w3-xAiUOACQReVAaI2ZekXZ-SKA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddtfedgleduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecuggftrfgrthhtvghrnhepkefhieffjeevfeevhedtieeihfefvdejle
+    dvvddthefftedujeethfeuueelfedtnecukfhppedugedrvddrieeirdduvddvnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifse
+    grjhdrihgurdgruh
+X-ME-Proxy: <xmx:2lrBXmda9Mgy54j2iciAs34_CUCLiCEaPG69vJzTaAy5081yctcMbA>
+    <xmx:2lrBXgxgl7lp9SKa8J7gZz99fkxMqFi4vlNTm2xwQTmyAeXcq8r9IQ>
+    <xmx:2lrBXkMZsj28PAIMjQVXM_Mg73iCna1KQvH_GL4JO93flQQjqqj7Xw>
+    <xmx:3VrBXoaJJUUEelfxTT3HM6N9j9GXlJrGC0f7KqGd8F9yU9RHCGm4yw>
+Received: from mistburn.lan (ppp14-2-66-122.adl-apt-pir-bras31.tpg.internode.on.net [14.2.66.122])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CD2A43280059;
+        Sun, 17 May 2020 11:40:07 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux@armlinux.org.uk, keescook@chromium.org, mhiramat@kernel.org,
+        labbott@redhat.com, mathieu.desnoyers@efficios.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: kprobes: Avoid fortify_panic() when copying optprobe template
+Date:   Mon, 18 May 2020 01:09:59 +0930
+Message-Id: <20200517153959.293224-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:58d6:: with SMTP id z83mr12182831ilf.129.1589729539621;
- Sun, 17 May 2020 08:32:19 -0700 (PDT)
-Date:   Sun, 17 May 2020 08:32:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007f8ce405a5d9c010@google.com>
-Subject: KASAN: slab-out-of-bounds Read in ath9k_hif_usb_rx_cb
-From:   syzbot <syzbot+c15a0a825788b6ba2bc4@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
-        davem@davemloft.net, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Setting both CONFIG_KPROBES=y and CONFIG_FORTIFY_SOURCE=y on ARM leads
+to a panic in memcpy() when injecting a kprobe despite the fixes found
+in commit e46daee53bb5 ("ARM: 8806/1: kprobes: Fix false positive with
+FORTIFY_SOURCE") and commit 0ac569bf6a79 ("ARM: 8834/1: Fix: kprobes:
+optimized kprobes illegal instruction").
 
-syzbot found the following crash on:
+arch/arm/include/asm/kprobes.h effectively declares
+the target type of the optprobe_template_entry assembly label as a u32,
+which leads memcpy()'s __builtin_object_size() call to determine that
+the pointed-to object is of size four. In practical terms the symbol is
+used as a handle for the optimised probe assembly template that is at
+least 96 bytes in size. The symbol's use despite its type blows up the
+memcpy() in ARM's arch_prepare_optimized_kprobe() with a false-positive
+fortify_panic() when it should instead copy the optimised probe template
+into place.
 
-HEAD commit:    806d8acc USB: dummy-hcd: use configurable endpoint naming ..
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1147bce6100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d800e9bad158025f
-dashboard link: https://syzkaller.appspot.com/bug?extid=c15a0a825788b6ba2bc4
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+As mentioned, a couple of attempts have been made to address the issue
+by casting a pointer to optprobe_template_entry before providing it to
+memcpy(), however gccs such as Ubuntu 20.04's arm-linux-gnueabi-gcc
+9.3.0 (Ubuntu 9.3.0-10ubuntu1) see through these efforts.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Squash the false-positive by aliasing the template assembly with a new
+symbol 'arm_optprobe_template'; declare it as a function object and
+pass the function object as the argument to memcpy() such that
+__builtin_object_size() cannot immediately determine the object size.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c15a0a825788b6ba2bc4@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:580 [inline]
-BUG: KASAN: slab-out-of-bounds in ath9k_hif_usb_rx_cb+0xad3/0xf90 drivers/net/wireless/ath/ath9k/hif_usb.c:666
-Read of size 4 at addr ffff8881cca0c0dc by task kworker/1:3/3075
-
-CPU: 1 PID: 3075 Comm: kworker/1:3 Not tainted 5.7.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events request_firmware_work_func
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xef/0x16e lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:382
- __kasan_report.cold+0x37/0x92 mm/kasan/report.c:511
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:580 [inline]
- ath9k_hif_usb_rx_cb+0xad3/0xf90 drivers/net/wireless/ath/ath9k/hif_usb.c:666
- __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1648
- usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1713
- dummy_timer+0x125e/0x32b4 drivers/usb/gadget/udc/dummy_hcd.c:1966
- call_timer_fn+0x1ac/0x700 kernel/time/timer.c:1405
- expire_timers kernel/time/timer.c:1450 [inline]
- __run_timers kernel/time/timer.c:1774 [inline]
- __run_timers kernel/time/timer.c:1741 [inline]
- run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1787
- __do_softirq+0x21e/0x9aa kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0x178/0x1a0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:546 [inline]
- smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1140
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
-RIP: 0010:console_trylock_spinning kernel/printk/printk.c:1779 [inline]
-RIP: 0010:vprintk_emit+0x3d0/0x3e0 kernel/printk/printk.c:2020
-Code: 00 83 fb ff 75 d6 e9 d8 fc ff ff e8 7a 2f 16 00 e8 55 8b 1b 00 41 56 9d e9 aa fd ff ff e8 68 2f 16 00 e8 43 8b 1b 00 41 56 9d <e9> 2a ff ff ff 90 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 f5 53 48
-RSP: 0018:ffff8881d5f8fab8 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000007 RBX: 0000000000000200 RCX: 1ffffffff1270ab2
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8881d5aeeb7c
-RBP: ffff8881d5f8fb00 R08: 0000000000000001 R09: fffffbfff126c8c8
-R10: ffffffff8936463f R11: fffffbfff126c8c7 R12: 000000000000002a
-R13: ffff8881d5e48000 R14: 0000000000000293 R15: 0000000000000000
- vprintk_func+0x75/0x113 kernel/printk/printk_safe.c:385
- printk+0xba/0xed kernel/printk/printk.c:2081
- ath9k_htc_hw_init.cold+0x17/0x2a drivers/net/wireless/ath/ath9k/htc_hst.c:502
- ath9k_hif_usb_firmware_cb+0x274/0x510 drivers/net/wireless/ath/ath9k/hif_usb.c:1187
- request_firmware_work_func+0x126/0x242 drivers/base/firmware_loader/main.c:1005
- process_one_work+0x965/0x1630 kernel/workqueue.c:2268
- worker_thread+0x96/0xe20 kernel/workqueue.c:2414
- kthread+0x326/0x430 kernel/kthread.c:268
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-
-Allocated by task 147:
- save_stack+0x1b/0x40 mm/kasan/common.c:49
- set_track mm/kasan/common.c:57 [inline]
- __kasan_kmalloc mm/kasan/common.c:495 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
- slab_post_alloc_hook mm/slab.h:586 [inline]
- slab_alloc_node mm/slub.c:2797 [inline]
- slab_alloc mm/slub.c:2805 [inline]
- kmem_cache_alloc+0xd8/0x300 mm/slub.c:2810
- getname_flags fs/namei.c:138 [inline]
- getname_flags+0xd2/0x5b0 fs/namei.c:128
- user_path_at_empty+0x2a/0x50 fs/namei.c:2632
- user_path_at include/linux/namei.h:59 [inline]
- vfs_statx+0x119/0x1e0 fs/stat.c:197
- vfs_lstat include/linux/fs.h:3284 [inline]
- __do_sys_newlstat+0x96/0x120 fs/stat.c:364
- do_syscall_64+0xb6/0x5a0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Freed by task 147:
- save_stack+0x1b/0x40 mm/kasan/common.c:49
- set_track mm/kasan/common.c:57 [inline]
- kasan_set_free_info mm/kasan/common.c:317 [inline]
- __kasan_slab_free+0x117/0x160 mm/kasan/common.c:456
- slab_free_hook mm/slub.c:1455 [inline]
- slab_free_freelist_hook mm/slub.c:1488 [inline]
- slab_free mm/slub.c:3045 [inline]
- kmem_cache_free+0x9b/0x360 mm/slub.c:3061
- putname+0xe1/0x120 fs/namei.c:259
- filename_lookup+0x282/0x3e0 fs/namei.c:2362
- user_path_at include/linux/namei.h:59 [inline]
- vfs_statx+0x119/0x1e0 fs/stat.c:197
- vfs_lstat include/linux/fs.h:3284 [inline]
- __do_sys_newlstat+0x96/0x120 fs/stat.c:364
- do_syscall_64+0xb6/0x5a0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-The buggy address belongs to the object at ffff8881cca0b300
- which belongs to the cache names_cache of size 4096
-The buggy address is located 3548 bytes inside of
- 4096-byte region [ffff8881cca0b300, ffff8881cca0c300)
-The buggy address belongs to the page:
-page:ffffea0007328200 refcount:1 mapcount:0 mapping:0000000063d385a8 index:0x0 head:ffffea0007328200 order:3 compound_mapcount:0 compound_pincount:0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da11e000
-raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881cca0bf80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881cca0c000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8881cca0c080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                    ^
- ffff8881cca0c100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881cca0c180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
+Fixes: e46daee53bb5 ("ARM: 8806/1: kprobes: Fix false positive with FORTIFY_SOURCE")
+Fixes: 0ac569bf6a79 ("ARM: 8834/1: Fix: kprobes: optimized kprobes illegal instruction")
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ arch/arm/include/asm/kprobes.h    | 7 +++++++
+ arch/arm/probes/kprobes/opt-arm.c | 4 +++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/arch/arm/include/asm/kprobes.h b/arch/arm/include/asm/kprobes.h
+index 213607a1f45c..94db8bf25f9c 100644
+--- a/arch/arm/include/asm/kprobes.h
++++ b/arch/arm/include/asm/kprobes.h
+@@ -43,6 +43,13 @@ int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
+ int kprobe_exceptions_notify(struct notifier_block *self,
+ 			     unsigned long val, void *data);
+ 
++/*
++ * The optprobe template buffer is not anything that should be called directly,
++ * however describe it as a function to give ourselves a handle to it that
++ * bypasses CONFIG_FORTIFY_SOURCE=y sanity checks in memcpy().
++ */
++extern __visible void arm_optprobe_template(void);
++
+ /* optinsn template addresses */
+ extern __visible kprobe_opcode_t optprobe_template_entry;
+ extern __visible kprobe_opcode_t optprobe_template_val;
+diff --git a/arch/arm/probes/kprobes/opt-arm.c b/arch/arm/probes/kprobes/opt-arm.c
+index 7a449df0b359..59133d59616a 100644
+--- a/arch/arm/probes/kprobes/opt-arm.c
++++ b/arch/arm/probes/kprobes/opt-arm.c
+@@ -31,6 +31,8 @@
+  * to the stack cost of the instruction.
+  */
+ asm (
++			".global arm_optprobe_template\n"
++			"arm_optprobe_template:\n"
+ 			".global optprobe_template_entry\n"
+ 			"optprobe_template_entry:\n"
+ 			".global optprobe_template_sub_sp\n"
+@@ -234,7 +236,7 @@ int arch_prepare_optimized_kprobe(struct optimized_kprobe *op, struct kprobe *or
+ 	}
+ 
+ 	/* Copy arch-dep-instance from template. */
+-	memcpy(code, (unsigned long *)&optprobe_template_entry,
++	memcpy(code, arm_optprobe_template,
+ 			TMPL_END_IDX * sizeof(kprobe_opcode_t));
+ 
+ 	/* Adjust buffer according to instruction. */
+-- 
+2.25.1
+
