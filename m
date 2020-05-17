@@ -2,256 +2,277 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D28E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F89C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B47E420657
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8D820735
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgEQTVR (ORCPT
+        id S1726602AbgEQTX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 15:21:17 -0400
-Received: from v6.sk ([167.172.42.174]:56896 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgEQTVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 15:21:16 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 6ACDC610A8;
-        Sun, 17 May 2020 19:21:12 +0000 (UTC)
-Date:   Sun, 17 May 2020 21:21:10 +0200
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sun, 17 May 2020 15:23:56 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:42920 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgEQTXz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 15:23:55 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 553428030802;
+        Sun, 17 May 2020 19:23:49 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CkA74w-y0tkp; Sun, 17 May 2020 22:23:48 +0300 (MSK)
+Date:   Sun, 17 May 2020 22:23:47 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 24/28] dt-bindings: media: Convert marvell,mmp2-ccic to
- json-schema
-Message-ID: <20200517192110.GD1695525@furthur.local>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
- <20200317093922.20785-25-lkundrak@v3.sk>
- <20200327194637.GA18803@bogus>
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200517192347.h3hiibsifwfyyr7z@mobilestation>
+References: <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+ <20200511115813.GG8216@sirena.org.uk>
+ <20200511134502.hjbu5evkiuh75chr@mobilestation>
+ <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
+ <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
+ <20200511210714.GO185537@smile.fi.intel.com>
+ <20200511210800.GP185537@smile.fi.intel.com>
+ <20200512124206.l3uv5hg2zimi24dq@mobilestation>
+ <20200515063039.GH333670@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200327194637.GA18803@bogus>
+In-Reply-To: <20200515063039.GH333670@vkoul-mobl>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 01:46:37PM -0600, Rob Herring wrote:
-> On Tue, Mar 17, 2020 at 10:39:18AM +0100, Lubomir Rintel wrote:
-> > Convert the marvell,mmp2-ccic binding to DT schema format using
-> > json-schema.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > ---
-> >  .../bindings/media/marvell,mmp2-ccic.txt      |  50 ---------
-> >  .../bindings/media/marvell,mmp2-ccic.yaml     | 102 ++++++++++++++++++
-> >  2 files changed, 102 insertions(+), 50 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> >  create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> > deleted file mode 100644
-> > index 7ec2c8c8a3b98..0000000000000
-> > --- a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> > +++ /dev/null
-> > @@ -1,50 +0,0 @@
-> > -Marvell MMP2 camera host interface
-> > -
-> > -Required properties:
-> > - - compatible: Should be "marvell,mmp2-ccic".
-> > - - reg: Register base and size.
-> > - - interrupts: The interrupt number.
-> > - - #clock-cells: Must be 0.
-> > -
-> > -Optional properties:
-> > - - clocks: Reference to the input clock as specified by
-> > -           Documentation/devicetree/bindings/clock/clock-bindings.txt.
-> > - - clock-names: Names of the clocks used; "axi" for the AXI bus interface,
-> > -                "func" for the peripheral clock and "phy" for the parallel
-> > -                video bus interface.
-> > - - clock-output-names: Optional clock source for sensors. Shall be "mclk".
-> > -
-> > -Required subnodes:
-> > - - port: The parallel bus interface port with a single endpoint linked to
-> > -         the sensor's endpoint as described in
-> > -         Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > -
-> > -Required endpoint properties:
-> > - - bus-type: data bus type, <5> or <6> for Parallel or Bt.656 respectively
-> > - - pclk-sample: pixel clock polarity
-> > - - hsync-active: horizontal synchronization polarity (only required for
-> > -   parallel bus)
-> > - - vsync-active: vertical synchronization polarity (only required for
-> > -   parallel bus)
-> > -
-> > -Example:
-> > -
-> > -	camera0: camera@d420a000 {
-> > -		compatible = "marvell,mmp2-ccic";
-> > -		reg = <0xd420a000 0x800>;
-> > -		interrupts = <42>;
-> > -		clocks = <&soc_clocks MMP2_CLK_CCIC0>;
-> > -		clock-names = "axi";
-> > -		#clock-cells = <0>;
-> > -		clock-output-names = "mclk";
-> > -
-> > -		port {
-> > -			camera0_0: endpoint {
-> > -				remote-endpoint = <&ov7670_0>;
-> > -                                bus-type = <5>;      /* Parallel */
-> > -                                hsync-active = <1>;  /* Active high */
-> > -                                vsync-active = <1>;  /* Active high */
-> > -                                pclk-sample = <0>;   /* Falling */
-> > -			};
-> > -		};
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml
-> > new file mode 100644
-> > index 0000000000000..890a3f9d0302f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml
-> > @@ -0,0 +1,102 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+On Fri, May 15, 2020 at 12:00:39PM +0530, Vinod Koul wrote:
+> Hi Serge,
 > 
-> GPL-2.0-only please. Dual license only if you have rights on the old 
-> file to do so.
+> On 12-05-20, 15:42, Serge Semin wrote:
+> > Vinod,
+> > 
+> > Could you join the discussion for a little bit?
+> > 
+> > In order to properly fix the problem discussed in this topic, we need to
+> > introduce an additional capability exported by DMA channel handlers on per-channel
+> > basis. It must be a number, which would indicate an upper limitation of the SG list
+> > entries amount.
+> > Something like this would do it:
+> > struct dma_slave_caps {
+> > ...
+> > 	unsigned int max_sg_nents;
+> > ...
+> 
+> Looking at the discussion, I agree we should can this up in the
+> interface. The max_dma_len suggests the length of a descriptor allowed,
+> it does not convey the sg_nents supported which in the case of nollp is
+> one.
+> 
+> Btw is this is a real hardware issue, I have found that value of such
+> hardware is very less and people did fix it up in subsequent revs to add
+> llp support.
 
-I do. I wrote the original binding file.
+Yes, it is. My DW DMAC doesn't support LLP and there isn't going to be new SoC
+version produced.(
 
-> > +# Copyright 2019,2020 Lubomir Rintel <lkundrak@v3.sk>
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/marvell,mmp2-ccic.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Marvell MMP2 camera host interface bindings
-> > +
-> > +maintainers:
-> > +  - Lubomir Rintel <lkundrak@v3.sk>
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    pattern: '^camera@[a-f0-9]+$'
-> > +
-> > +  compatible:
-> > +    const: marvell,mmp2-ccic
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  port:
-> > +    type: object
-> > +    additionalProperties: false
-> > +
-> > +    properties:
-> > +       endpoint:
 > 
-> Wrong indentaion.
+> Also, another question is why this cannot be handled in driver, I agree
+> your hardware does not support llp but that does not stop you from
+> breaking a multi_sg list into N hardware descriptors and keep submitting
+> them (for this to work submission should be done in isr and not in bh,
+> unfortunately very few driver take that route).
+
+Current DW DMA driver does that, but this isn't enough. The problem is that
+in order to fix the issue in the DMA hardware driver we need to introduce
+an inter-dependent channels abstraction and synchronously feed both Tx and
+Rx DMA channels with hardware descriptors (LLP entries) one-by-one. This hardly
+needed by any slave device driver rather than SPI, which Tx and Rx buffers are
+inter-dependent. So Andy's idea was to move the fix to the SPI driver (feed
+the DMA engine channels with Tx and Rx data buffers synchronously), but DMA
+engine would provide an info whether such fix is required. This can be
+determined by the maximum SG entries capability.
+
+(Note max_sg_ents isn't a limitation on the number of SG entries supported by
+the DMA driver, but the number of SG entries handled by the DMA engine in a
+single DMA transaction.)
+
+> TBH the max_sg_nents or
+> max_dma_len are HW restrictions and SW *can* deal with then :-)
+
+Yes, it can, but it only works for the cases when individual DMA channels are
+utilized. DMA hardware driver doesn't know that the target and source slave
+device buffers (SPI Tx and Rx FIFOs) are inter-dependent, that writing to one
+you will implicitly push data to another. So due to the interrupts handling
+latency Tx DMA channel is restarted faster than Rx DMA channel is reinitialized.
+This causes the SPI Rx FIFO overflow and data loss.
+
 > 
-> > +         type: object
-> > +         additionalProperties: false
-> > +
-> > +         # Properties described in
-> > +         # Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +         properties:
-> > +           remote-endpoint: true
-> > +           hsync-active: true
-> > +           vsync-active: true
-> > +           pclk-sample: true
-> > +           bus-type: true
-> > +
-> > +         required:
-> > +           - remote-endpoint
-> > +
-> > +    required:
-> > +      - endpoint
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    maxItems: 3
+> In an idea world, you should break the sw descriptor submitted into N hw
+> descriptors and submit to hardware and let user know when the sw
+> descriptor is completed. Of course we do not do that :(
+
+Well, the current Dw DMA driver does that. But due to the two slave device
+buffers inter-dependency this isn't enough to perform safe DMA transactions.
+Due to the interrupts handling latency Tx DMA channel pushes data to the slave
+device buffer faster than Rx DMA channel starts to handle incoming data. This
+causes the SPI Rx FIFO overflow.
+
 > 
-> Shouldn't really be variable for a single compatible.
+> > };
+> > As Andy suggested it's value should be interpreted as:
+> > 0          - unlimited number of entries,
+> > 1:MAX_UINT - actual limit to the number of entries.
 > 
-> > +    items:
-> > +      - description: AXI bus interface clock
-> > +      - description: Peripheral clock
-> > +      - description: Parallel video bus interface clock
-> > +
-> > +  clock-names:
-> > +    minItems: 1
-> > +    maxItems: 3
-> > +    items:
-> > +      - const: axi
-> > +      - const: func
-> > +      - const: phy
-> > +
-> > +  '#clock-cells':
-> > +    const: 0
-> > +
-> > +  clock-output-names:
-> > +    const: mclk
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - port
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/marvell,mmp2.h>
-> > +
-> > +    camera@d420a000 {
-> > +      compatible = "marvell,mmp2-ccic";
-> > +      reg = <0xd420a000 0x800>;
-> > +      interrupts = <42>;
-> > +      clocks = <&soc_clocks MMP2_CLK_CCIC0>;
-> > +      clock-names = "axi";
-> > +      #clock-cells = <0>;
-> > +      clock-output-names = "mclk";
-> > +
-> > +      port {
-> > +        camera0_0: endpoint {
-> > +          remote-endpoint = <&ov7670_0>;
-> > +          bus-type = <5>;      /* Parallel */
-> > +          hsync-active = <1>;  /* Active high */
-> > +          vsync-active = <1>;  /* Active high */
-> > +          pclk-sample = <0>;   /* Falling */
-> > +        };
-> > +      };
-> > +    };
-> > +
-> > +...
-> > -- 
-> > 2.25.1
+
+> Hmm why 0, why not MAX_UINT for unlimited?
+
+0 is much better for many reasons. First of all MAX_UINT is a lot, but it's
+still a number. On x64 platform this might be actual limit if for instance
+the block-size register is 32-bits wide. Secondly interpreting 0 as unlimited
+number of entries would be more suitable since most of the drivers support
+LLP functionality and we wouldn't need to update their code to set MAX_UINT.
+Thirdly DMA engines, which don't support LLPs would need to set this parameter
+as 1. So if we do as you say and interpret unlimited number of LLPs as MAX_UINT,
+then 0 would left unused.
+
+To sum up I also think that using 0 as unlimited number SG entries supported is
+much better.
+
+> 
+> > In addition to that seeing the dma_get_slave_caps() method provide the caps only
+> > by getting them from the DMA device descriptor, while we need to have an info on
+> > per-channel basis, it would be good to introduce a new DMA-device callback like:
+> > struct dma_device {
+> > ...
+> > 	int (*device_caps)(struct dma_chan *chan,
+> > 			   struct dma_slave_caps *caps);
+> 
+
+> Do you have a controller where channel caps are on per-channel basis?
+
+Yes, I do. Our DW DMA controller has got the maximum burst length non-uniformly
+distributed per DMA channels. There are eight channels our controller supports,
+among which first two channels can burst up to 32 transfer words, but the rest
+of the channels support bursting up to 4 transfer words.
+
+So having such device_caps() callback to customize the device capabilities on
+per-DMA-channel basis would be very useful! What do you think?
+
+-Sergey
+
+> 
+> > ...
+> > };
+> > So the DMA driver could override the generic DMA device capabilities with the
+> > values specific to the DMA channels. Such functionality will be also helpful for
+> > the max-burst-len parameter introduced by this patchset, since depending on the
+> > IP-core synthesis parameters it may be channel-specific.
 > > 
+> > Alternatively we could just introduce a new fields to the dma_chan structure and
+> > retrieve the new caps values from them in the dma_get_slave_caps() method.
+> > Though the solution with callback I like better.
+> > 
+> > What is your opinion about this? What solution you'd prefer?
+> > 
+> > On Tue, May 12, 2020 at 12:08:00AM +0300, Andy Shevchenko wrote:
+> > > On Tue, May 12, 2020 at 12:07:14AM +0300, Andy Shevchenko wrote:
+> > > > On Mon, May 11, 2020 at 10:32:55PM +0300, Serge Semin wrote:
+> > > > > On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
+> > > > > > On Mon, May 11, 2020 at 4:48 PM Serge Semin
+> > > > > > <Sergey.Semin@baikalelectronics.ru> wrote:
+> > > > > > >
+> > > > > > > On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
+> > > > > > > > On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
+> > > > > > > >
+> > > > > > > > > Alas linearizing the SPI messages won't help in this case because the DW DMA
+> > > > > > > > > driver will split it into the max transaction chunks anyway.
+> > > > > > > >
+> > > > > > > > That sounds like you need to also impose a limit on the maximum message
+> > > > > > > > size as well then, with that you should be able to handle messages up
+> > > > > > > > to whatever that limit is.  There's code for that bit already, so long
+> > > > > > > > as the limit is not too low it should be fine for most devices and
+> > > > > > > > client drivers can see the limit so they can be updated to work with it
+> > > > > > > > if needed.
+> > > > > > >
+> > > > > > > Hmm, this might work. The problem will be with imposing such limitation through
+> > > > > > > the DW APB SSI driver. In order to do this I need to know:
+> > > > > > > 1) Whether multi-block LLP is supported by the DW DMA controller.
+> > > > > > > 2) Maximum DW DMA transfer block size.
+> > > > > > > Then I'll be able to use this information in the can_dma() callback to enable
+> > > > > > > the DMA xfers only for the safe transfers. Did you mean something like this when
+> > > > > > > you said "There's code for that bit already" ? If you meant the max_dma_len
+> > > > > > > parameter, then setting it won't work, because it just limits the SG items size
+> > > > > > > not the total length of a single transfer.
+> > > > > > >
+> > > > > > > So the question is of how to export the multi-block LLP flag from DW DMAc
+> > > > > > > driver. Andy?
+> > > > > > 
+> > > > > > I'm not sure I understand why do you need this being exported. Just
+> > > > > > always supply SG list out of single entry and define the length
+> > > > > > according to the maximum segment size (it's done IIRC in SPI core).
+> > > > > 
+> > > > > Finally I see your point. So you suggest to feed the DMA engine with SG list
+> > > > > entries one-by-one instead of sending all of them at once in a single
+> > > > > dmaengine_prep_slave_sg() -> dmaengine_submit() -> dma_async_issue_pending()
+> > > > > session. Hm, this solution will work, but there is an issue. There is no
+> > > > > guarantee, that Tx and Rx SG lists are symmetric, consisting of the same
+> > > > > number of items with the same sizes. It depends on the Tx/Rx buffers physical
+> > > > > address alignment and their offsets within the memory pages. Though this
+> > > > > problem can be solved by making the Tx and Rx SG lists symmetric. I'll have
+> > > > > to implement a clever DMA IO loop, which would extract the DMA
+> > > > > addresses/lengths from the SG entries and perform the single-buffer DMA 
+> > > > > transactions with the DMA buffers of the same length.
+> > > > > 
+> > > > > Regarding noLLP being exported. Obviously I intended to solve the problem in a
+> > > > > generic way since the problem is common for noLLP DW APB SSI/DW DMAC combination.
+> > > > > In order to do this we need to know whether the multi-block LLP feature is
+> > > > > unsupported by the DW DMA controller. We either make such info somehow exported
+> > > > > from the DW DMA driver, so the DMA clients (like Dw APB SSI controller driver)
+> > > > > could be ready to work around the problem; or just implement a flag-based quirk
+> > > > > in the DMA client driver, which would be enabled in the platform-specific basis
+> > > > > depending on the platform device actually detected (for instance, a specific
+> > > > > version of the DW APB SSI IP). AFAICS You'd prefer the later option. 
+> > > > 
+> > > > So, we may extend the struct of DMA parameters to tell the consumer amount of entries (each of which is no longer than maximum segment size) it can afford:
+> > > > - 0: Auto (DMA driver handles any cases itself)
+> > > > - 1: Only single entry
+> > > > - 2: Up to two...
+> > > 
+> > > It will left implementation details (or i.o.w. obstacles or limitation) why DMA
+> > > can't do otherwise.
+> > 
+> > Sounds good. Thanks for assistance.
+> > 
+> > -Sergey
+> > 
+> > > 
+> > > -- 
+> > > With Best Regards,
+> > > Andy Shevchenko
+> > > 
+> > > 
+> 
+> -- 
+> ~Vinod
