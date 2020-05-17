@@ -2,134 +2,100 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 16:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B539C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 16:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBA0A206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 16:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2910207E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 16:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589732133;
+	bh=z8Iw2EC+hWk47H3+Gu60kXdJkbzskZsG8hE0DV8tELA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=tTiUi5TUfR9/8rB+oO4hXdrekDNSkbYELdXWk2hn/p7iLpekjCSpoREMtwvTdiyff
+	 qcxWRozQMSzHiMkp/pj5IRn0kd/kbpY/Ct/p6v/Kk1cFYi5AA/XFQ2Sd1dyU7Oh6Mg
+	 IGEMVfAz9RynxOM7Pk6A3LbKkodZfU5iWtXDP2LQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgEQQJQ (ORCPT
+        id S1728079AbgEQQPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 12:09:16 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:36642 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727979AbgEQQJP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 12:09:15 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jaLqk-0007sp-1s; Sun, 17 May 2020 10:09:14 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jaLqj-0008VG-1v; Sun, 17 May 2020 10:09:13 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     <linux-kernel@vger.kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-        Willy Tarreau <w@1wt.eu>, Kees Cook <keescook@chromium.org>
-Date:   Sun, 17 May 2020 11:05:35 -0500
-Message-ID: <87imgu7dio.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sun, 17 May 2020 12:15:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728010AbgEQQPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 12:15:31 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 662CB20643;
+        Sun, 17 May 2020 16:15:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589732131;
+        bh=z8Iw2EC+hWk47H3+Gu60kXdJkbzskZsG8hE0DV8tELA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=jCS7rAMi2xLjJ0rvElPrDXgnAgS9Ns+nBT/X63KQiAtfs4w1qI5UudP8sdQHZacVt
+         FOuK20in43lyVZ388KIZxzfB4aVBwJm40wBl8qWrUVsjPy79AUYadTQaLOwoqmjicq
+         21oS7f4h7VSnXF+rcO5G2hpl0gX42tLGGPj1BPqY=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 406E53520FBB; Sun, 17 May 2020 09:15:31 -0700 (PDT)
+Date:   Sun, 17 May 2020 09:15:31 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>, frextrite@gmail.com,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        madhuparnabhowmik04@gmail.com,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        peterz@infradead.org, Petr Mladek <pmladek@suse.com>,
+        rcu@vger.kernel.org, rostedt@goodmis.org, vpillai@digitalocean.com
+Subject: Re: [PATCH v3 0/5] RCU dyntick nesting counter cleanups for rcu -dev
+Message-ID: <20200517161531.GR2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200504120505.89351-1-joel@joelfernandes.org>
+ <20200504171532.GR2869@paulmck-ThinkPad-P72>
+ <20200504174413.GA8883@paulmck-ThinkPad-P72>
+ <20200516171223.GC2639@paulmck-ThinkPad-P72>
+ <87wo5adfh8.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jaLqj-0008VG-1v;;;mid=<87imgu7dio.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/V3gXJx7hQNIV5VkJ+RzUCl7Md0bFRkyQ=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [GIT PULL] Please pull exec fix for v5.7
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87wo5adfh8.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 17, 2020 at 12:26:43PM +0200, Thomas Gleixner wrote:
+> Paul,
+> 
+> "Paul E. McKenney" <paulmck@kernel.org> writes:
+> > And I have allegedly resolved the conflicts with Thomas's and Peter's
+> > series, or at least the noinstr-rcu-nmi-2020-05-15 branch of that series.
+> > At least one conflict was completely invisible to "git rebase" (but
+> > fortunately blindingly obvious to the compiler).  This naturally makes
+> > me suspect that additional adjustments might be needed.  Especially
+> > given that misplaced instrumentation_begin() and instrumentation_end()
+> > calls are invisible not only to the compiler, but also to rcutorture in
+> > my setup.  (For example, tracing before instrumentation_begin() or after
+> > instrumentation_end() is a bug.)
+> 
+> there is tooling to verify that. If you merge
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry-v7-full
+> 
+> into your dev branch (trivial conflict) and after building it, run:
+> 
+>  objtool check -fal $BUILDIR/vmlinux.o
 
-Linus,
+The conflict was trivial, but for future reference, where should I be
+getting the proper objtool from?
 
-Please pull the exec-linus branch from the git tree:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git exec-linus
-
-   HEAD: f87d1c9559164294040e58f5e3b74a162bf7c6e8 exec: Move would_dump into flush_old_exec
-
-While working on my exec cleanups I found a bug in exec that I
-introduced by accident a couple of years ago.  I apparently missed the
-fact that bprm->file can change.
-
-Now I have a very personal motive to clean up exec and make it more
-approachable.
-
-The change is just moving woud_dump to where it acts on the final
-bprm->file not the initial bprm->file.   I have been careful and
-tested and verify this fix works.
-
-Eric
-
----
-
-From f87d1c9559164294040e58f5e3b74a162bf7c6e8 Mon Sep 17 00:00:00 2001
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-Date: Sat, 16 May 2020 16:29:20 -0500
-Subject: [PATCH] exec: Move would_dump into flush_old_exec
-
-I goofed when I added mm->user_ns support to would_dump.  I missed the
-fact that in the case of binfmt_loader, binfmt_em86, binfmt_misc, and
-binfmt_script bprm->file is reassigned.  Which made the move of
-would_dump from setup_new_exec to __do_execve_file before exec_binprm
-incorrect as it can result in would_dump running on the script instead
-of the interpreter of the script.
-
-The net result is that the code stopped making unreadable interpreters
-undumpable.  Which allows them to be ptraced and written to disk
-without special permissions.  Oops.
-
-The move was necessary because the call in set_new_exec was after
-bprm->mm was no longer valid.
-
-To correct this mistake move the misplaced would_dump from
-__do_execve_file into flos_old_exec, before exec_mmap is called.
-
-I tested and confirmed that without this fix I can attach with gdb to
-a script with an unreadable interpreter, and with this fix I can not.
-
-Cc: stable@vger.kernel.org
-Fixes: f84df2a6f268 ("exec: Ensure mm->user_ns contains the execed files")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- fs/exec.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/exec.c b/fs/exec.c
-index 06b4c550af5d..2c465119affc 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1317,6 +1317,8 @@ int flush_old_exec(struct linux_binprm * bprm)
- 	 */
- 	set_mm_exe_file(bprm->mm, bprm->file);
- 
-+	would_dump(bprm, bprm->file);
-+
- 	/*
- 	 * Release all of the old mmap stuff
- 	 */
-@@ -1876,8 +1878,6 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	if (retval < 0)
- 		goto out;
- 
--	would_dump(bprm, bprm->file);
--
- 	retval = exec_binprm(bprm);
- 	if (retval < 0)
- 		goto out;
--- 
-2.20.1
-
+							Thanx, Paul
