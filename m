@@ -2,275 +2,148 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F741C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 06:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60733C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 06:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27F38207D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 06:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32784206D5
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 06:12:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="PpjDoYeP";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="OOVCxjsx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgEQGMN (ORCPT
+        id S1727031AbgEQGMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 02:12:13 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:50928 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbgEQGMN (ORCPT
+        Sun, 17 May 2020 02:12:43 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:9878 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbgEQGMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 02:12:13 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 2DD1980513;
-        Sun, 17 May 2020 08:12:07 +0200 (CEST)
-Date:   Sun, 17 May 2020 08:12:05 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        devicetree@vger.kernel.org, od@zcrc.me,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 01/12] dt-bindings: display: Convert ingenic,lcd.txt to
- YAML
-Message-ID: <20200517061205.GA609600@ravnborg.org>
-References: <20200516215057.392609-1-paul@crapouillou.net>
+        Sun, 17 May 2020 02:12:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1589695962; x=1621231962;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=dZ7xDRy+NDRy9VrDiWRcAask7gO6JXYBEm3+7xuYEVc=;
+  b=PpjDoYePznsk6JMN5CgxXt8MB2rJbOwaBWmIrMegH8pwvM3vSgrWRkD6
+   s7sJ/iWUjDjyrq/hX+oiMDlzz3RMgyys46bX3yLgPLtGdjhqTWLBxqv+q
+   0efTqxPK0yr4+cC6gnlvmkjS+wvu5vwKjZLpoclk7V/mHqV7phKekvd0b
+   mJVDgWaxlV3jStAKoec6GnK1xr+MLVFsrckrqazgFzp3n7VCLQ2OgitTN
+   FZYSd8rnpjDG9gbC+RICa0H7YayH7G2U8FFYWStH+BpBI4mr6YnJW1waR
+   iL7KpR+MLlnsEoyLaqGqEvU/+iCI10fH6Yg9Qadibnj+/TF0dYLJBTAjh
+   g==;
+IronPort-SDR: YPIGDOFbQR4wwZU2/37k7OUjuS7kvB9oQZcuKIYDBkzZYWYmJxivtklO03oPN9XD4zU+Fgfbud
+ vhktaLO/UjgrgoM9EbeSPs3gzJRYF2PZ1m+olu9SyOzMu6d/2re+g4lk7m4DTgpf94bCUPfacm
+ QGDHue5+R56rfezUbAe9ln0ZHhmQFFHtIB++ZlYsOqKFJ2D+/QaNSkC8ZeiVDR6wwnEpP4/pH+
+ FUPp8CLEXhAH04f0mrDiNwLx3LwkN+xMN6H7zlXzSKp4dYAWU6NJKiE12us2qgqY7w3wg8WSDW
+ sUQ=
+X-IronPort-AV: E=Sophos;i="5.73,402,1583164800"; 
+   d="scan'208";a="139303402"
+Received: from mail-co1nam11lp2175.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.175])
+  by ob1.hgst.iphmx.com with ESMTP; 17 May 2020 14:12:40 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OU+DACGenf8zDVztRNkEBoZqM3w0h9oiirDThHt8Gl9yGbLA1E1VIuCh08CNnHhkiwAbidReF31HPf6PfBHSZoNRNhHKsr6lm2zooQbESVsW1YTqt9dMHxGBu2b97/2nGHQQZybAxyNVRDyjHnZjbYt8bqEQPU1TKQcm5Dk0X9mC+s+LPnPR8D074weT/iIg4gMefL+TUMDT3uyQYNPldCMXlp3oXj9B6nYmxnoFOkLHFqaX+ECQUJ/oH4rcLqWz7+IWqbvlootnHulQw7PpPBfLmDS/h2/FhAKjDcAOmjBn3KXJ302gZ4UbNq8+720EPs+cAOq4qKs/Ym7SiSU9Rw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dZ7xDRy+NDRy9VrDiWRcAask7gO6JXYBEm3+7xuYEVc=;
+ b=AmDbA3OmkTrDBtvall6pKBQxU5mjKJrOFVFYVtmjSeRqapgQA3oSXvTnaGOo4ob/bOAEOWE4DyGaLtBt3q7qSjRi1ltlEJv2C3m3dexd/H8mEIW/9r5kIQSXe8qsrEp4BA3afeKrwAmAO74vKeGCMMOW1IthDtp+reNSIwaBoC0i/b69yY7CJsd5REAI6yRr3HPfT+Ux0WHrnov8207ZJMginrgXQGO/V8U6+6H6tYnFqHJ11JQUB/fJ2fS+gR3ptlIOLn254IhP6df1EgQcpf1Mve50Yt/XaLueLwUE5UoA2L1Gtsxi09Krm3ZEl4VQQXCu1eoRpOXHVMpnC3o0xw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dZ7xDRy+NDRy9VrDiWRcAask7gO6JXYBEm3+7xuYEVc=;
+ b=OOVCxjsxRcBwZv8M0iwsywg6RT0uMcsMwhuonJMfsHIuOwTrgHWDHFOLXSX1yc0pqBHyXFGlBN30yjHyWje4WG6vSsWaVB04sSNf6sdFwTw2dOwvwH6ztBmGb/MvBCUf+kBJRtcmewrYwJJGFTXa7dX4XBLraW9y0g/gIOHsD30=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB4351.namprd04.prod.outlook.com (2603:10b6:805:3c::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Sun, 17 May
+ 2020 06:12:37 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3000.022; Sun, 17 May 2020
+ 06:12:37 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>
+CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Subject: RE: [PATCH v3 2/5] scsi: ufs: Allow WriteBooster on UFS 2.2 devices
+Thread-Topic: [PATCH v3 2/5] scsi: ufs: Allow WriteBooster on UFS 2.2 devices
+Thread-Index: AQHWK6nuV0cbBolOlkSPSPwHxTr6fKirzNTA
+Date:   Sun, 17 May 2020 06:12:37 +0000
+Message-ID: <SN6PR04MB464093981353EEF1A5F6E3B1FCBB0@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200516174615.15445-1-stanley.chu@mediatek.com>
+ <20200516174615.15445-3-stanley.chu@mediatek.com>
+In-Reply-To: <20200516174615.15445-3-stanley.chu@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: mediatek.com; dkim=none (message not signed)
+ header.d=none;mediatek.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1b3e97a7-2bc0-4261-a018-08d7fa294c70
+x-ms-traffictypediagnostic: SN6PR04MB4351:
+x-microsoft-antispam-prvs: <SN6PR04MB4351DDFA4CC02077DE660296FCBB0@SN6PR04MB4351.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 040655413E
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YbDd9VfwYeAW8MvJkNwp5EYWFV+/3QvIiLbzN6p5COKnPRnj+JGOkmWiQi3amcapBaG8Hd1mzf2cX7J2wf/rLMivFhHGnv3vN67aFmShoJBeWdSGFMR84rH4kPwbhFJThDnfYbiR7ysjSO0bJWOpoHqwPvjgBLjW0UsQvVwUGmhd3Yd+XHUISlIfmUldaxeJ/Bqx4YKlshkR1uDL7r3uY0O/QKGN6JM2NZhSe73AfUY29EE/Ji/R5kyj2g+rv2Aom5V7jH0iCUgUc2CDbOLxWhUYJilOzKnBv6+GN9VjJVfjfksnpgphqhwMLB5B/eCaPZJ/k2Lx6rk756qy7NkuPZY0He/TbIvaDgh223M446/6AAQSjXDyFABO6ibGrNa/5adpYCozG1zuWXe5ywABsc+Op2Ug9MiAl3OZWi+NxtIIIjBzk5J3H1bU3/DnyNTt
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39850400004)(366004)(396003)(136003)(346002)(2906002)(6506007)(33656002)(52536014)(55016002)(54906003)(71200400001)(7416002)(9686003)(4326008)(86362001)(7696005)(26005)(110136005)(186003)(4744005)(8676002)(316002)(5660300002)(66946007)(66476007)(478600001)(64756008)(8936002)(66556008)(66446008)(76116006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 0OwEKp35sr+eShAE3NeqRq64oSQPQlNOGDll/r6VWK56c8HnxbgHTR19zDP/52NWl6jRP3V37aCuXFuuCROGiwgfeTONgiNRnD9b7ORs3olPAZL2GAeL67w8QbwNdSjONbkhggKSNRsCKjXsi/pZRWg9lrEJtDS5uPpBgBNsbAAOL+tLeBTxXylDo1V2PtXr5U0MDZV7soMJPQQpjb+X0A+ZNpIRxqcGi9+gk8MfECDSdKDf7MJp+/HNxE27of1b2j4Re7Sb4g0kAkawvkczsY2r+1maL8/2SsovR179eTONBqAQqbE04lwKx2hhahrAmeiaS/YsSzOJSofGh6pLN+isVUXv/7g8JkG965tc+7IKEoaA259PQ1ZNG7AYCNc3x2lXyrufkCgf8QRdH9F96y2hzKYfkWNT/AsgUPNDtt1ybp8UE5VidiJ7396vvjKpPJHolfnEj/O4ZK+bcCYNHOssBn989G5m4dVgBnzIEc0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200516215057.392609-1-paul@crapouillou.net>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8
-        a=e5mUnYsNAAAA:8 a=oDXG_uVl-8910JDl3hUA:9 a=CjuIK1q_8ugA:10
-        a=9LHmKk7ezEChjTCyhBa9:22 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b3e97a7-2bc0-4261-a018-08d7fa294c70
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2020 06:12:37.7977
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: j9zH/svPbWPht0NNHSwCZC4EqfIpbcMRD8tUnDWQsNMJQ2D19xC+6cKRVrsFauekty7m/Hnw5yFYWjTJmiGEdg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4351
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi PAul.
-
-On Sat, May 16, 2020 at 11:50:46PM +0200, Paul Cercueil wrote:
-> Convert the ingenic,lcd.txt to a new ingenic,lcd.yaml file.
-> 
-> In the process, the new ingenic,jz4780-lcd compatible string has been
-> added.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Looks good.
-Had to read the minItems/maxItems thing twice to get it,
-so I also played a little with the examples, and it worked as expected.
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-
-> ---
-> 
-> Notes:
->     This patch comes from a different patchset so it's effectively a V2.
->     
->     Changes were:
->     - lcd_pclk and lcd clocks are in the correct order now,
->     - Add 'port' and 'ports' properties, and document the valid ports.
-> 
->  .../bindings/display/ingenic,lcd.txt          |  45 -------
->  .../bindings/display/ingenic,lcd.yaml         | 126 ++++++++++++++++++
->  2 files changed, 126 insertions(+), 45 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.txt
->  create mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/ingenic,lcd.txt b/Documentation/devicetree/bindings/display/ingenic,lcd.txt
-> deleted file mode 100644
-> index 01e3261defb6..000000000000
-> --- a/Documentation/devicetree/bindings/display/ingenic,lcd.txt
-> +++ /dev/null
-> @@ -1,45 +0,0 @@
-> -Ingenic JZ47xx LCD driver
-> -
-> -Required properties:
-> -- compatible: one of:
-> -  * ingenic,jz4740-lcd
-> -  * ingenic,jz4725b-lcd
-> -  * ingenic,jz4770-lcd
-> -- reg: LCD registers location and length
-> -- clocks: LCD pixclock and device clock specifiers.
-> -	   The device clock is only required on the JZ4740.
-> -- clock-names: "lcd_pclk" and "lcd"
-> -- interrupts: Specifies the interrupt line the LCD controller is connected to.
-> -
-> -Example:
-> -
-> -panel {
-> -	compatible = "sharp,ls020b1dd01d";
-> -
-> -	backlight = <&backlight>;
-> -	power-supply = <&vcc>;
-> -
-> -	port {
-> -		panel_input: endpoint {
-> -			remote-endpoint = <&panel_output>;
-> -		};
-> -	};
-> -};
-> -
-> -
-> -lcd: lcd-controller@13050000 {
-> -	compatible = "ingenic,jz4725b-lcd";
-> -	reg = <0x13050000 0x1000>;
-> -
-> -	interrupt-parent = <&intc>;
-> -	interrupts = <31>;
-> -
-> -	clocks = <&cgu JZ4725B_CLK_LCD>;
-> -	clock-names = "lcd";
-> -
-> -	port {
-> -		panel_output: endpoint {
-> -			remote-endpoint = <&panel_input>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/ingenic,lcd.yaml b/Documentation/devicetree/bindings/display/ingenic,lcd.yaml
-> new file mode 100644
-> index 000000000000..d56db1802fad
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/ingenic,lcd.yaml
-> @@ -0,0 +1,126 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/ingenic,lcd.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Ingenic SoCs LCD controller devicetree bindings
-> +
-> +maintainers:
-> +  - Paul Cercueil <paul@crapouillou.net>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^lcd-controller@[0-9a-f]+$"
-> +
-> +  compatible:
-> +    enum:
-> +      - ingenic,jz4740-lcd
-> +      - ingenic,jz4725b-lcd
-> +      - ingenic,jz4770-lcd
-> +      - ingenic,jz4780-lcd
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Pixel clock
-> +      - description: Module clock
-> +    minItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: lcd_pclk
-> +      - const: lcd
-> +    minItems: 1
-> +
-> +  port:
-> +    description: OF graph bindings (specified in bindings/graph.txt).
-> +
-> +  ports:
-> +    description: OF graph bindings (specified in bindings/graph.txt).
-> +    type: object
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description: DPI output, to interface with TFT panels.
-> +
-> +      port@8:
-> +        type: object
-> +        description: Link to the Image Processing Unit (IPU).
-> +          (See ingenic,ipu.yaml).
-> +
-> +    required:
-> +      - port@0
-> +
-> +required:
-> +    - compatible
-> +    - reg
-> +    - interrupts
-> +    - clocks
-> +    - clock-names
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - ingenic,jz4740-lcd
-> +          - ingenic,jz4780-lcd
-> +then:
-> +  properties:
-> +    clocks:
-> +      minItems: 2
-> +    clock-names:
-> +      minItems: 2
-> +else:
-> +  properties:
-> +    clocks:
-> +      maxItems: 1
-> +    clock-names:
-> +      maxItems: 1
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/jz4740-cgu.h>
-> +    lcd-controller@13050000 {
-> +      compatible = "ingenic,jz4740-lcd";
-> +      reg = <0x13050000 0x1000>;
-> +
-> +      interrupt-parent = <&intc>;
-> +      interrupts = <30>;
-> +
-> +      clocks = <&cgu JZ4740_CLK_LCD_PCLK>, <&cgu JZ4740_CLK_LCD>;
-> +      clock-names = "lcd_pclk", "lcd";
-> +
-> +      port {
-> +        endpoint {
-> +          remote-endpoint = <&panel_input>;
-> +        };
-> +      };
-> +    };
-> +
-> +  - |
-> +    #include <dt-bindings/clock/jz4725b-cgu.h>
-> +    lcd-controller@13050000 {
-> +      compatible = "ingenic,jz4725b-lcd";
-> +      reg = <0x13050000 0x1000>;
-> +
-> +      interrupt-parent = <&intc>;
-> +      interrupts = <31>;
-> +
-> +      clocks = <&cgu JZ4725B_CLK_LCD>;
-> +      clock-names = "lcd_pclk";
-> +
-> +      port {
-> +        endpoint {
-> +          remote-endpoint = <&panel_input>;
-> +        };
-> +      };
-> +    };
-> -- 
-> 2.26.2
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+=20
+>=20
+> According to the UFS specification, WriteBooster is officially
+> supported by UFS 2.2.
+>=20
+> Since UFS 2.2 specification has been finalized in JEDEC and
+> such devices have also showed up in the market, modify the
+> checking rule for ufshcd_wb_probe() to allow these devices to enable
+> WriteBooster.
+>=20
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
