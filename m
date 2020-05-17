@@ -2,103 +2,87 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13432C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E72FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBC8A206F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33CB206F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:15:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gVfUAYDo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="he8AYzJC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgEQLMh (ORCPT
+        id S1727928AbgEQLPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 07:12:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57618 "EHLO
+        Sun, 17 May 2020 07:15:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727832AbgEQLMg (ORCPT
+        with ESMTP id S1727832AbgEQLPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 07:12:36 -0400
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F2A7C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 04:12:36 -0700 (PDT)
-Received: by mail-qt1-x82e.google.com with SMTP id c24so5811367qtw.7
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 04:12:36 -0700 (PDT)
+        Sun, 17 May 2020 07:15:03 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5181AC061A0C;
+        Sun, 17 May 2020 04:15:03 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id g1so6765689ljk.7;
+        Sun, 17 May 2020 04:15:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=Zyl3SarFIasLxbZ+RIzpA3l1T3ELrj/FBTllereD9vE=;
-        b=gVfUAYDorbrrcavuF+7jzMivSWiuHH+HWijoJzN3x7+36DiWCaaXZeshs+HeYjbaVn
-         sGCIdzXE40/UKgJpzhp6xtYBzBttOR1dp0VfiBDyCwjXB0YfyAe6xiHM89fH0ZP3ahLL
-         UhcWS/esXKCSeQcqrLW+7fpfza1HvO8lSghtmjsxG8/YGZCa3aOtGDgCrymKSfNZOQBf
-         nA7McKvnwl3+7T8j+oBVAMFpmLWFAUusLSQ1cNwHflYRsvbUIfre1u0PiJc1Olkvk+NY
-         wxqDt8f4P1AJMRy/r8DBlmxXn+MNt/9s24JKgmQAGONF0XNS4AUhbTlErFPS7ie6dOyR
-         zkkw==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RSQAPsgGzrqW7IB05tQeE8zTcJ425e34evOvuPIjr1Y=;
+        b=he8AYzJCf7a+a8FS1JLQW3b2YPl7mRZ7Qyy4jwXg8Od4ZSwiz6mpaIhwMAETWoghgQ
+         5QUOm976HCJspd/plUq3pBRcvlYoLNmJ439O4na+551VvgS4V1lDBV2P/nqQpSQ0rJoB
+         Y8dG4aMB4Dw848h3XZMRDioLvWmnBr4kyRz0lacIPVgWXtcgwcFAh13lQb/wOjFVPK2S
+         iiLdItXKDK+h9YG5gtmG7xl6PZVoOeyp/l4JCzvMxQPaVMPdQUqidfXVjrpKeUelElmg
+         PP/6YKIVBlSaerEK6HV6AnH8Eg3+HA4mF0arcaoyeRNBJTBv36xHhjYgkrqh/fynVUny
+         fuFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=Zyl3SarFIasLxbZ+RIzpA3l1T3ELrj/FBTllereD9vE=;
-        b=PuWjLAlCxhEaLP+Db+dANv6h2+EV1Sq+yfCpTNBkRPyVC3ITeX2BVqeekaabTbD15G
-         ELQQGRkgyHQup3Ar+fZtWbUIMlGSJmEgI0iK8d2Tmpj7+/v8YtIred6Bcl3gGcR3xYT+
-         foIS9xUAMH51o2rrsjTlJFvTZiQZXbLuGZIrxFDF6kRkKIGxgZl+xMyYUG0gnPfQeSTR
-         ogWsBXnrl29e+vhi5ci8w0U68OGzGl+GbKdirSY31H8o910H7lY5theJ3Sive6u3Jz7x
-         c0N0+u6+CzmgLRp6MhbjZr+UsY/meod1aeVFqBkKzBjdUETy99hgZ56MgQZsBTjmaq94
-         hkjg==
-X-Gm-Message-State: AOAM5323eRx+JDUiAveOW5Hkyfrmy5sGp5ah0R4dERU2JMHdZihVffxS
-        1DGooWMXo663vmpdkl+hhiuCew==
-X-Google-Smtp-Source: ABdhPJxm+Z6psJVh1daO567GdnW4roVUxYUbV5oTdCairc5qpsrr0Ja8dmh8CYKiFCVFihyKb1Eg+w==
-X-Received: by 2002:ac8:4650:: with SMTP id f16mr11496052qto.168.1589713954634;
-        Sun, 17 May 2020 04:12:34 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id h22sm6512975qtn.23.2020.05.17.04.12.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 May 2020 04:12:33 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: "BUG: MAX_LOCKDEP_ENTRIES too low" with 6979 "&type->s_umount_key"
-Date:   Sun, 17 May 2020 07:12:33 -0400
-Message-Id: <06E43DA0-9976-4D44-AC72-5ED8A7022FA3@lca.pw>
-References: <e8c6d3af-3045-0a37-5e9e-bfd60c09f97d@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-In-Reply-To: <e8c6d3af-3045-0a37-5e9e-bfd60c09f97d@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: iPhone Mail (17E262)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RSQAPsgGzrqW7IB05tQeE8zTcJ425e34evOvuPIjr1Y=;
+        b=Vm6HPpOf18QMdaVMcfM4mWpc9CmjnkMP0EfzAj/kTKvZ5kmxWdKTIgGG8xyuIVkwg4
+         kSXCmZZaX7vqpIEzC6mypTFMmfsyupZq6TR/Ej0Ojx62uHLx2YOymtIM5gfiqCqIVajN
+         mqtA9mLTHAwNpeWuQT26fY0gp5SLC+uBVzWdMWSC/D2Cb2s65FRqxCkzbEcpdJ325Cks
+         ANIy3nGBztzLBAxTwZPFkbz0VQhUwim91Zpmu0rT5V9jUDaRBL3opLEENgyyPozja0uf
+         FvozS0YbOtdHFfBTH+B33pN5MVykiUhfoRkALu7gFgQjJaofqKwf+P+mDf8/r5PZMDsY
+         8wEA==
+X-Gm-Message-State: AOAM531KT1G+0HyBt881qT7ArqUQXhHYJ7C5+oBV7zIxazhtY0ezm8tn
+        1tCBo6Af0hCUKdYKPb4Uf7ZQptoC
+X-Google-Smtp-Source: ABdhPJzXSNe5kr20fcUecD19L3CoUBiqV0xx3N7mgDQxhdUQt8LPYeZqjBDu7TT7H55+8vfAFsTopw==
+X-Received: by 2002:a05:651c:105c:: with SMTP id x28mr7570624ljm.65.1589714101645;
+        Sun, 17 May 2020 04:15:01 -0700 (PDT)
+Received: from localhost.localdomain ([82.209.196.123])
+        by smtp.gmail.com with ESMTPSA id v2sm3970990ljv.86.2020.05.17.04.15.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 04:15:01 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH for-next 0/3] unrelated cleanups for next
+Date:   Sun, 17 May 2020 14:13:39 +0300
+Message-Id: <cover.1589713554.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Independent cleanups, that's it.
 
+Pavel Begunkov (3):
+  io_uring: remove req->needs_fixed_files
+  io_uring: rename io_file_put()
+  io_uring: don't repeat valid flag list
 
-> On May 16, 2020, at 9:16 PM, Waiman Long <longman@redhat.com> wrote:
->=20
-> The lock_list table entries are for tracking a lock's forward and backward=
- dependencies. The lockdep_chains isn't the right lockdep file to look at. I=
-nstead, check the lockdep files for entries with the maximum BD (backward de=
-pendency) + FD (forward dependency). That will give you a better view of whi=
-ch locks are consuming most of the lock_list entries. Also take a look at lo=
-ckdep_stats for an overall view of how much various table entries are being c=
-onsumed.
+ fs/io_uring.c | 47 ++++++++++++++++++++++++++---------------------
+ 1 file changed, 26 insertions(+), 21 deletions(-)
 
-Thanks for the hint. It seems something in vfs is the culprit because every s=
-ingle one of those triggering from path_openat() (vfs_open()) or vfs_get_tre=
-e()
+-- 
+2.24.0
 
-When the system after boot, lock_list entries is around 10000. After running=
- LTP syscalls and mm tests, the number is around 20000. Then, it will go all=
- the way over the max (32700) while running LTP fs tests. Most of the time f=
-rom a test that would read every single file in sysfs.
-
-I=E2=80=99ll decode the lockdep file to see if there is any more clues.=
