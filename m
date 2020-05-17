@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB548C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C244920735
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856972086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589709019;
-	bh=YiI/+QcoX6kGt2EAPh+B5lk5WcWYLkMLm21tURRMwjI=;
+	s=default; t=1589709022;
+	bh=HmPW0B6m9fN4YEWgNESi+upgw0chqrek8y0TCtFUCaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VtjV28KTaN5dI5e7Oz9n8k6mSLtYoIA6r/u8/blzP+MFm+e5azzK9p81VC6jkcyfm
-	 kCgaXDYpOtEnzcq4eZdYzFnQh5TZXDTDntnUTbyDeI3HHD3OPzgCbUSUAtQGSPEf+A
-	 m8YGpBVVVvTPW/f7/3TidyS6xJOoDa+dZE/Vuiwo=
+	b=H8UFoFf6abMNsq88vRB79GMdMiwbgHDfP4mOFAF2Oj58oGxXsZIfO+ikPhCoi01oa
+	 1l3r8H7DUOBzyrnsJxePIVpjAgweGKrUKAaRtF1+Mr9H8TMybeRWh5zBGjEhgXW3SX
+	 Fqz9MngEXC5EMnJhJnJyQLKh1zuyG35PjGZqicy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgEQJuB (ORCPT
+        id S1727867AbgEQJtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 05:50:01 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:38340 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbgEQJtg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 17 May 2020 05:49:36 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:38296 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbgEQJte (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 05:49:34 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 04H9n4LL018560;
-        Sun, 17 May 2020 18:49:19 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4LL018560
+        by conuserg-08.nifty.com with ESMTP id 04H9n4L7018560;
+        Sun, 17 May 2020 18:49:11 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4L7018560
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589708960;
-        bh=+Ps6TRq8xODSNqD/psT6gHTGOvLLt38km45fSAJiiCc=;
+        s=dec2015msa; t=1589708951;
+        bh=6Cr9X2+4BN3lVVZXhv05Fyg+wVggFB+AaKLKTTsUPlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CrSJNg+MszysK2CgTvk+Y6Il0lLBME72WkYGlKcKkeQ9KqhoF2nQVRz8mZZcWS1Df
-         wSVuXKHNe+P7AetP6k7QjR8+zqDOt+FPvLMNr4hcg0r+dT6RYYcLWfpQN8teFD35fO
-         A1iFEOq1XoJAsJHiuk8KW5oW63b85AHeJBBfwI5xNOv7H9ZOmxs6LnXwHdYWOVCyE9
-         wak8Mp58THpLhwJaKGfHXwawoYii/W/pYai+z1ryqVeDtxRX2kYL0PYTbdVb4qPxcX
-         uYYm//sc1VBDcy2WHfASU23hecxlxoefzB6pUwE7A29F8IaZyCHctToO1+C5zF/z5m
-         M8/X8AqqL3b4A==
+        b=Bup/iJkGpO7CpryozjlUvShNo2kHLXyFqBwt5QaqHD98AmbzDSNJ0rv4spEKK6qcg
+         dLrZPhW+TbZponso5fudJRA2WKp0xnvNklZ+mhXbC9wrARfmxQZVNOsGhxaA5lGXZF
+         Fo9LpYKdaKJ3kPIj4NsDSVCrM9M5LVHMXAy9tKwdqmvSU7+7Ehmg/JCIWKXu7oHlGn
+         /qoXcAFc+pyHUCjkMYBeRzGxqJ2Lph0j84FjS+ozvh8vZHBDHrNr0pJWEnniAshs9m
+         NsIwmuqakHBYKf4D/MVLyNGyR+SxHfin5jbNRCGUGgCGIv+DvDSmFcIZdfAwoRbTJV
+         qTKX0ey1TW63Q==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -49,9 +49,9 @@ Cc:     Jessica Yu <jeyu@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 24/29] modpost: add mod->is_vmlinux struct member
-Date:   Sun, 17 May 2020 18:48:54 +0900
-Message-Id: <20200517094859.2376211-25-masahiroy@kernel.org>
+Subject: [PATCH 10/29] modpost: move -T option close to the modpost command
+Date:   Sun, 17 May 2020 18:48:40 +0900
+Message-Id: <20200517094859.2376211-11-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200517094859.2376211-1-masahiroy@kernel.org>
 References: <20200517094859.2376211-1-masahiroy@kernel.org>
@@ -62,110 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-is_vmlinux() is called in several places to check whether the current
-module is vmlinux or not.
+The '-T -' option reads the file list from stdin.
 
-It is faster and clearer to check mod->is_vmlinux flag.
+It is clearer to put it close to the piped command.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/mod/modpost.c | 19 ++++++++++---------
- scripts/mod/modpost.h |  1 +
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ scripts/Makefile.modpost | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 4155669a92bd..0df0fc82412d 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -176,6 +176,7 @@ static struct module *new_module(const char *modname)
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index b79bf0e30d32..da7730a43819 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -66,7 +66,7 @@ __modpost:
  
- 	/* add to list */
- 	mod->name = p;
-+	mod->is_vmlinux = is_vmlinux(modname);
- 	mod->gpl_compatible = -1;
- 	mod->next = modules;
- 	modules = mod;
-@@ -417,11 +418,11 @@ static struct symbol *sym_add_exported(const char *name, struct module *mod,
+ else
  
- 	if (!s) {
- 		s = new_symbol(name, mod, export);
--	} else if (!external_module || is_vmlinux(s->module->name) ||
-+	} else if (!external_module || s->module->is_vmlinux ||
- 		   s->module == mod) {
- 		warn("%s: '%s' exported twice. Previous export was in %s%s\n",
- 		     mod->name, name, s->module->name,
--		     is_vmlinux(s->module->name) ? "" : ".ko");
-+		     s->module->is_vmlinux ? "" : ".ko");
- 		return s;
- 	}
+-MODPOST += $(subst -i,-n,$(filter -i,$(MAKEFLAGS))) -s -T - \
++MODPOST += $(subst -i,-n,$(filter -i,$(MAKEFLAGS))) -s \
+ 	$(if $(KBUILD_NSDEPS),-d $(MODULES_NSDEPS))
  
-@@ -678,7 +679,7 @@ static void handle_modversion(const struct module *mod,
+ ifeq ($(KBUILD_EXTMOD),)
+@@ -88,7 +88,7 @@ modules := $(sort $(shell cat $(MODORDER)))
+ # Read out modules.order instead of expanding $(modules) to pass in modpost.
+ # Otherwise, allmodconfig would fail with "Argument list too long".
+ quiet_cmd_modpost = MODPOST $(words $(modules)) modules
+-      cmd_modpost = sed 's/ko$$/o/' $(MODORDER) | $(MODPOST)
++      cmd_modpost = sed 's/ko$$/o/' $(MODORDER) | $(MODPOST) -T -
  
- 	if (sym->st_shndx == SHN_UNDEF) {
- 		warn("EXPORT symbol \"%s\" [%s%s] version generation failed, symbol will not be versioned.\n",
--		     symname, mod->name, is_vmlinux(mod->name) ? "":".ko");
-+		     symname, mod->name, mod->is_vmlinux ? "" : ".ko");
- 		return;
- 	}
- 
-@@ -2001,12 +2002,12 @@ static void read_symbols(const char *modname)
- 
- 	mod = new_module(modname);
- 
--	if (is_vmlinux(modname)) {
-+	if (mod->is_vmlinux) {
- 		have_vmlinux = 1;
- 		mod->skip = 1;
- 	}
- 
--	if (!is_vmlinux(modname)) {
-+	if (!mod->is_vmlinux) {
- 		license = get_modinfo(&info, "license");
- 		if (!license)
- 			warn("missing MODULE_LICENSE() in %s\n", modname);
-@@ -2065,7 +2066,7 @@ static void read_symbols(const char *modname)
- 
- 	check_sec_ref(mod, modname, &info);
- 
--	if (!is_vmlinux(modname)) {
-+	if (!mod->is_vmlinux) {
- 		version = get_modinfo(&info, "version");
- 		if (version || all_versions)
- 			get_src_version(modname, mod->srcversion,
-@@ -2335,7 +2336,7 @@ static void add_depends(struct buffer *b, struct module *mod)
- 	/* Clear ->seen flag of modules that own symbols needed by this. */
- 	for (s = mod->unres; s; s = s->next)
- 		if (s->module)
--			s->module->seen = is_vmlinux(s->module->name);
-+			s->module->seen = s->module->is_vmlinux;
- 
- 	buf_printf(b, "\n");
- 	buf_printf(b, "MODULE_INFO(depends, \"");
-@@ -2452,9 +2453,9 @@ static void read_dump(const char *fname)
- 			goto fail;
- 		mod = find_module(modname);
- 		if (!mod) {
--			if (is_vmlinux(modname))
--				have_vmlinux = 1;
- 			mod = new_module(modname);
-+			if (mod->is_vmlinux)
-+				have_vmlinux = 1;
- 			mod->skip = 1;
- 			mod->from_dump = 1;
- 		}
-diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-index 554f02c69ac2..ec717ab20b98 100644
---- a/scripts/mod/modpost.h
-+++ b/scripts/mod/modpost.h
-@@ -120,6 +120,7 @@ struct module {
- 	int gpl_compatible;
- 	struct symbol *unres;
- 	int from_dump;  /* 1 if module was loaded from *.symver */
-+	int is_vmlinux;
- 	int seen;
- 	int skip;
- 	int has_init;
+ __modpost:
+ 	$(call cmd,modpost)
 -- 
 2.25.1
 
