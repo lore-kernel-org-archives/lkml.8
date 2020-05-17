@@ -2,120 +2,89 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CA1C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0556C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B099206D4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95540206D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:25:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWaZjFkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgEQLWH (ORCPT
+        id S1727943AbgEQLZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 07:22:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43750 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727858AbgEQLWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 07:22:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 96586AC53;
-        Sun, 17 May 2020 11:22:07 +0000 (UTC)
-Date:   Sun, 17 May 2020 21:21:56 +1000
-From:   Aleksa Sarai <asarai@suse.de>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
-Message-ID: <20200517112156.cphs2h33hx2wfcs4@yavin.dot.cyphar.com>
-References: <20200515234005.32370-1-sargun@sargun.me>
- <202005162344.74A02C2D@keescook>
- <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
+        Sun, 17 May 2020 07:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727858AbgEQLZN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 07:25:13 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B828AC061A0C;
+        Sun, 17 May 2020 04:25:12 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id a4so5490102lfh.12;
+        Sun, 17 May 2020 04:25:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YKbSELN0l7cHzpwYGDHQPZKeqFZ1P5TAwLPgFHhXmgo=;
+        b=YWaZjFkqHIeOpn54/x2FhvMVGtUL2g8BF5ylkcpVOQH2v5xVrWjPRO2gkJbaJ1Q/kN
+         RKiQ44Tga/BrS/UR6euaGZ2SutEhouKvbZJzcODau7l3RXEpqy+2BP7I4An1yPDAuQTK
+         bzyTdgfGS7zAsjVz+H5k/04QAu0DcZ92/gWgADi5qJoX/43K3WqLQzgRMNlxYaVZG1j9
+         pHrNULXAIEnBNG2Hmw8H7QgvzFDoiVpQi2R4tCdk5Ec1dp9cbPA+4CWLIIT5riD1tbvL
+         Y8xkmwfoQi1SM5U9bJBRvbPyBPEC8yQ0USiHhn+hR6hQovNOdArPx6rD3oDXj3KNrMqb
+         s++w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YKbSELN0l7cHzpwYGDHQPZKeqFZ1P5TAwLPgFHhXmgo=;
+        b=KNJZOk8AoX2rxERilxBfZ7mFw5gr39Lqe5td/Z38KE1IUGQuZ3xnv3jNvM1VB/RNJ/
+         gDSuzcTiYiwY5vfh2ZAnTFmSCLNPkNdMtVRG3ft0+bosDkSVbW1u/Ftrmop6fxmNnNme
+         jD2bORWm6uEyOuwXanKmxPIvhICeeO6Mq6yVvBLSDRhaHbw5b3yIGvTxjPbVGeF5+APh
+         EDwLEqxNBgeAIppUn1U/J5PMXx7maSDDehIwXMVS3BNSZJRc4C7bO2Fd/ct9/Bh6DWfq
+         yB+4fiDdJ1GtkP4Fi1N9zXVySWCN4GR4eHeKJkytRS1aGgCrUElYydVPE0Q05r35zXJ1
+         QH3A==
+X-Gm-Message-State: AOAM530coABLjtBwTzYTvr+fhhVhE62SHhQzSJB0H4xQEDD8MPbSHdut
+        uRSztcyRL4s0io7deA5rN50=
+X-Google-Smtp-Source: ABdhPJwdo7mcU+TlukK4He0EVI0vdQmLKDdxBSd2EyfB3yfGe4Zysm+/rvXNBonx1KgjPadzl26P7A==
+X-Received: by 2002:ac2:5e9c:: with SMTP id b28mr8203570lfq.50.1589714710973;
+        Sun, 17 May 2020 04:25:10 -0700 (PDT)
+Received: from localhost.localdomain ([82.209.196.123])
+        by smtp.gmail.com with ESMTPSA id c78sm5639828lfd.63.2020.05.17.04.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 04:25:10 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH liburing 0/4] splice/tee testing
+Date:   Sun, 17 May 2020 14:23:43 +0300
+Message-Id: <cover.1589714504.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nwxvb3yzfbh4rrle"
-Content-Disposition: inline
-In-Reply-To: <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add tee and improve splice tests
 
---nwxvb3yzfbh4rrle
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Pavel Begunkov (4):
+  splice/test: improve splice tests
+  update io_uring.h with tee()
+  tee/test: add test for tee(2)
+  splice/tee/tests: test len=0 splice/tee
 
-On 2020-05-17, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> Or... And that's more invasive but ultimately cleaner we v2 the whole
-> thing so e.g. SECCOMP_IOCTL_NOTIF_RECV2, SECCOMP_IOCTL_NOTIF_SEND2, and
-> embedd the size argument in the structs. Userspace sets the size
-> argument, we use get_user() to get the size first and then
-> copy_struct_from_user() to handle it cleanly based on that. A similar
-> model as with sched (has other unrelated quirks because they messed up
-> something too):
->=20
-> static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_=
-attr *attr)
-> {
-> 	u32 size;
-> 	int ret;
->=20
-> 	/* Zero the full structure, so that a short copy will be nice: */
-> 	memset(attr, 0, sizeof(*attr));
->=20
-> 	ret =3D get_user(size, &uattr->size);
-> 	if (ret)
-> 		return ret;
->=20
-> 	/* ABI compatibility quirk: */
-> 	if (!size)
-> 		size =3D SCHED_ATTR_SIZE_VER0;
-> 	if (size < SCHED_ATTR_SIZE_VER0 || size > PAGE_SIZE)
-> 		goto err_size;
->=20
-> 	ret =3D copy_struct_from_user(attr, sizeof(*attr), uattr, size);
-> 	if (ret) {
-> 		if (ret =3D=3D -E2BIG)
-> 			goto err_size;
-> 		return ret;
-> 	}
->=20
-> We're probably the biggest user of this right now and I'd be ok with
-> that change. If it's a v2 than whatever. :)
+ src/include/liburing/io_uring.h |   1 +
+ test/splice.c                   | 538 ++++++++++++++++++++++++++------
+ 2 files changed, 445 insertions(+), 94 deletions(-)
 
-I'm :+1: on a new version and switch to copy_struct_from_user(). I was a
-little surprised when I found out that user_notif doesn't do it this
-way a while ago (and although in theory it is userspace's fault, ideally
-we could have an API that doesn't have built-in footguns).
+-- 
+2.24.0
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---nwxvb3yzfbh4rrle
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl7BHlEACgkQnhiqJn3b
-jbR9pRAAnO1r26da3EnqUIDsjxOHWMLuwpB3QN+k925fWG47jt706mzLU1duX8EG
-V8hWXeSYIX8Fk+tWv7dbb6xl4uYF18wvZUX3EZFROQUZKiLqjQSSJUKs05IpdZwl
-cvXwIvzMM3xv9qc8NHQoK8D0GQkbdem8Oaxd8n2VNHL2eYirDENb62xcr1vLjp2b
-psvcpgXWoPKr8m8wyY3NZsXcbJwLg77qQDN+1jjHjnBLXhSVugnMbR1aXFtWsYh8
-bAYFv7Rq0nv0+bqnyxKSL3lfgyuraZCz4ZF8NlyTnFIbUmtJrHEAF7ykT1wvfjXk
-SP/gntWDRKm2QLLr8JnAPtrp1sXXEqRBLmltK8BRtc597YSG5jrz+Lwt4mwRbpf8
-EvfLqeBXZNVEZSdS5Zvjl93ryCK9yyE9eiRdZPsKFuoUPmipXlp52WRp9ldCj9Rm
-JF7P4qarU5MSWLNMb8V1LC6BSPUDd88EfbsA6OaQ/HSkVaV2ueNzyJRxIYChu/se
-20gfe9+VR4nS4Iys0AL1pzeg18yKJdCNqR0rg+Iaj64gjANmEX6QiJwluaOcw8Dh
-fl60XE5LZzOe5N2wy1vKaRkcAP/IMmm7OFGd97QWrG2bPoX/VDpDE59pTpkaHk2H
-rhR+vla/f6OXERSCd0F4QWYIxcNSs9Um0STXyT7iQhWDpLM/IKY=
-=Huyx
------END PGP SIGNATURE-----
-
---nwxvb3yzfbh4rrle--
