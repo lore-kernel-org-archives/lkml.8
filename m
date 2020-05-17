@@ -2,100 +2,92 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B539C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 16:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 196AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 16:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2910207E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 16:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E138920809
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 16:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589732133;
-	bh=z8Iw2EC+hWk47H3+Gu60kXdJkbzskZsG8hE0DV8tELA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=tTiUi5TUfR9/8rB+oO4hXdrekDNSkbYELdXWk2hn/p7iLpekjCSpoREMtwvTdiyff
-	 qcxWRozQMSzHiMkp/pj5IRn0kd/kbpY/Ct/p6v/Kk1cFYi5AA/XFQ2Sd1dyU7Oh6Mg
-	 IGEMVfAz9RynxOM7Pk6A3LbKkodZfU5iWtXDP2LQ=
+	s=default; t=1589732406;
+	bh=TDO7xsmcKGjAPbJRGrjHQpoxl4fnbpgAAlG8ud6evxA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vi8uubwKGtUBQfURIlMZ1cVT3MZEP50G9vPTv96RcuPoXS8d4TVQwBi221LtfJv5/
+	 /19p7SxnOaWLnDympgJ6WHdU7Dxz9/LVRj9K9t+UKiYje9Dn9SPtSu/oIqHCkzdNU6
+	 TLJOP263urrmV5TXxxTOuHaC1R2oZBsH8sJv6ATc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgEQQPc (ORCPT
+        id S1728070AbgEQQUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 12:15:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34198 "EHLO mail.kernel.org"
+        Sun, 17 May 2020 12:20:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728010AbgEQQPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 12:15:31 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1728010AbgEQQUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 12:20:05 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 662CB20643;
-        Sun, 17 May 2020 16:15:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95D2A2070A;
+        Sun, 17 May 2020 16:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589732131;
-        bh=z8Iw2EC+hWk47H3+Gu60kXdJkbzskZsG8hE0DV8tELA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=jCS7rAMi2xLjJ0rvElPrDXgnAgS9Ns+nBT/X63KQiAtfs4w1qI5UudP8sdQHZacVt
-         FOuK20in43lyVZ388KIZxzfB4aVBwJm40wBl8qWrUVsjPy79AUYadTQaLOwoqmjicq
-         21oS7f4h7VSnXF+rcO5G2hpl0gX42tLGGPj1BPqY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 406E53520FBB; Sun, 17 May 2020 09:15:31 -0700 (PDT)
-Date:   Sun, 17 May 2020 09:15:31 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>, frextrite@gmail.com,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        madhuparnabhowmik04@gmail.com,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        peterz@infradead.org, Petr Mladek <pmladek@suse.com>,
-        rcu@vger.kernel.org, rostedt@goodmis.org, vpillai@digitalocean.com
-Subject: Re: [PATCH v3 0/5] RCU dyntick nesting counter cleanups for rcu -dev
-Message-ID: <20200517161531.GR2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200504120505.89351-1-joel@joelfernandes.org>
- <20200504171532.GR2869@paulmck-ThinkPad-P72>
- <20200504174413.GA8883@paulmck-ThinkPad-P72>
- <20200516171223.GC2639@paulmck-ThinkPad-P72>
- <87wo5adfh8.fsf@nanos.tec.linutronix.de>
+        s=default; t=1589732405;
+        bh=TDO7xsmcKGjAPbJRGrjHQpoxl4fnbpgAAlG8ud6evxA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dLNpaudrp6xh0pygeVR9AKioUlPIP6uUjvX5YnPtFkIqNNkPeMf4UKqjLpueLqpSF
+         l/dMs5M3Lcn5N7NXgGw6fnPzN9SeuTMij3B6SVXauzr0nGcZUi7eYL0EybgunetcXv
+         w8N6P2iuOOd3H4HIMYs2aR7el2fhOtix3swR6gwU=
+Date:   Sun, 17 May 2020 18:20:02 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>, stable@kernel.org
+Subject: Re: [PATCH] tick/nohz: Narrow down noise while setting current
+ task's tick dependency
+Message-ID: <20200517162001.GA30646@lenoir>
+References: <20200515003429.4317-1-frederic@kernel.org>
+ <20200516030718.GL2869@paulmck-ThinkPad-P72>
+ <20200517133115.GA28573@lenoir>
+ <20200517155322.GQ2869@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87wo5adfh8.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <20200517155322.GQ2869@paulmck-ThinkPad-P72>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 12:26:43PM +0200, Thomas Gleixner wrote:
-> Paul,
+On Sun, May 17, 2020 at 08:53:22AM -0700, Paul E. McKenney wrote:
+> On Sun, May 17, 2020 at 03:31:16PM +0200, Frederic Weisbecker wrote:
+> > On Fri, May 15, 2020 at 08:07:18PM -0700, Paul E. McKenney wrote:
+> > > On Fri, May 15, 2020 at 02:34:29AM +0200, Frederic Weisbecker wrote:
+> > > > So far setting a tick dependency on any task, including current, used to
+> > > > trigger an IPI to all CPUs. That's of course suboptimal but it wasn't
+> > > > an issue as long as it was only used by posix-cpu-timers on nohz_full,
+> > > > a combo that nobody seemed to use in real life.
+> > > > 
+> > > > But RCU started to use task tick dependency on current task to fix
+> > > > stall issues on callbacks processing. These trigger regular and
+> > > > undesired system wide IPIs on nohz_full.
+> > > > 
+> > > > The fix is very easy while setting a tick dependency on the current
+> > > > task, only its CPU needs an IPI.
+> > > 
+> > > This passes moderate rcutorture testing.  If you want me to take it, please
+> > > let me know, and otherwise:
+> > > 
+> > > Tested-by: Paul E. McKenney <paulmck@kernel.org>
+> > 
+> > If you already have a pending urgent queue, I'd love you to take it.
+> > If not I can take it.
 > 
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > And I have allegedly resolved the conflicts with Thomas's and Peter's
-> > series, or at least the noinstr-rcu-nmi-2020-05-15 branch of that series.
-> > At least one conflict was completely invisible to "git rebase" (but
-> > fortunately blindingly obvious to the compiler).  This naturally makes
-> > me suspect that additional adjustments might be needed.  Especially
-> > given that misplaced instrumentation_begin() and instrumentation_end()
-> > calls are invisible not only to the compiler, but also to rcutorture in
-> > my setup.  (For example, tracing before instrumentation_begin() or after
-> > instrumentation_end() is a bug.)
-> 
-> there is tooling to verify that. If you merge
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry-v7-full
-> 
-> into your dev branch (trivial conflict) and after building it, run:
-> 
->  objtool check -fal $BUILDIR/vmlinux.o
+> Nothing urgent yet in -rcu, so if you would like it in the next merge
+> window, please take it through your normal upstream path.
 
-The conflict was trivial, but for future reference, where should I be
-getting the proper objtool from?
-
-							Thanx, Paul
+Got it, thanks!
