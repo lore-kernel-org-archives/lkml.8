@@ -2,199 +2,85 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF21C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11516C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75511207D4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:26:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ll5q4FSK"
+	by mail.kernel.org (Postfix) with ESMTP id D931F207BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:31:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589722280;
+	bh=j3mxr5IVPgfcoNTOXWaaIHv8SoKr2pxZMz433HXVkVs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u/1Di0WbTo5+XFwCIE7JFd2wYHV5QewZORBXi1YPHxzMjiN8tOraKdaC7U+I8nTdb
+	 aqOCYLzdUoqkznsFkVjUIGLhNbKzMTgjRdtUS12FigGnOASJs3xkw+qvB7ieV7Z1Fn
+	 0OpTYMurD0ySYm3XOFj3hgXIEWNZAPeZgUrgOQpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgEQN0g (ORCPT
+        id S1727991AbgEQNbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 09:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbgEQN0f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 09:26:35 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C42C061A0C;
-        Sun, 17 May 2020 06:26:35 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id h26so5657668lfg.6;
-        Sun, 17 May 2020 06:26:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=W84wXIL0NQcT3OvZ70B+DYFri+U6bqyzquUpS33uBSk=;
-        b=ll5q4FSKI7XKnlyRTk0D9+zt3YTM6eTbjPHj189AsjvXjiyj44YM1ijd43VLrlNFI9
-         yJHxTELAFObX5PP/x42S8D5JosrfJ6mT7m0N5ABEIoboPFV06+AoiSW04kZKil5iQBaR
-         0B57pzu1JzbKvqq+uzSCIdtnsmU1t/bd5VOtceiDO7CW+mWbf9ID2079qqpiVTEJRalU
-         N+HFzlphkvjbGGcoVkwXLexeTIEuN/BDCL6Q/NDzd1TBmsvbZouOSLsIy5lDODbx04il
-         btCunaurBr05Ytzdd57+OZExLJus33/9bNk9ZGsiPZ4YH0HAij7Jp0b/TUe7APRqGnFa
-         A10g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=W84wXIL0NQcT3OvZ70B+DYFri+U6bqyzquUpS33uBSk=;
-        b=GdsUw6kqBwiD3WijSM8fhpfxsWhlCxiNIHOGc4v1eW20EfDIptZ5Btb9mZZw/gXm4T
-         sCLAhAC+/8FUmXGd6Xwk7+SK1fJBS2Da1CfKBg6FXtQxCU5B+kMU2N9pgaqvRtbWCexK
-         /GaM9AKB+dG1VhJnTeyeAA6POyhHNIM0Ka7VWP1Cib6n9lZ5gYW0iGugnU/x6li/+1rw
-         mJ+W5tRvbOlPqYEbJy4aHSwePkI9leGApEiwQ7odmmS2iXDrecgvM+W5nbHwa2mZ0nDf
-         7LEjjp1VV0qBVzQszLGca3j4a3+ldx9XZbZVnmbA12zaTQCVXCJKF11pJnrMs+VaFEP9
-         eVXQ==
-X-Gm-Message-State: AOAM531feTmEWjr296Noddc3BBOhGGoTOztxUXMwkc/ekxko490juQj8
-        XpGiDWXdRJefkXFv0SxHjEU=
-X-Google-Smtp-Source: ABdhPJwsTCjmJG8ON/aXCUhUqcjuvDg+q8Fk/jH5fwniCwBIgwbzG/i2Cc3O9JCOwYEssDTgZPac5Q==
-X-Received: by 2002:ac2:4105:: with SMTP id b5mr8612264lfi.94.1589721993618;
-        Sun, 17 May 2020 06:26:33 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id x10sm1374694ljd.25.2020.05.17.06.26.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 May 2020 06:26:33 -0700 (PDT)
-Subject: Re: [PATCH v11 33/56] Input: atmel_mxt_ts - delay enabling IRQ when
- not using regulators
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     "Wang, Jiada" <jiada_wang@mentor.com>
-Cc:     nick@shmanahar.org, dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, bsz@semihalf.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200508055656.96389-1-jiada_wang@mentor.com>
- <20200508055656.96389-34-jiada_wang@mentor.com>
- <3a942afa-c047-2c88-1c8e-a90fa018738e@gmail.com>
- <6af23ae6-2f1c-0459-d2b6-1b01ddb0c3dc@mentor.com>
- <c88d24ef-e0e0-db3b-1000-b21af906eb4f@gmail.com>
- <aaf99a11-037e-93d8-93e4-d83e3aa4a42e@mentor.com>
- <63c93fc0-ac09-ec77-c590-08e419734205@gmail.com>
- <8c6f73a2-f613-b402-d727-5cb7fb3e1f09@mentor.com>
- <2e41656c-e7e4-5dcb-1156-bcfcbc8ea595@gmail.com>
-Message-ID: <f5da1587-02e7-5704-a676-1829b915c6f8@gmail.com>
-Date:   Sun, 17 May 2020 16:26:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 17 May 2020 09:31:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727893AbgEQNbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 09:31:19 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DA2A206F4;
+        Sun, 17 May 2020 13:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589722279;
+        bh=j3mxr5IVPgfcoNTOXWaaIHv8SoKr2pxZMz433HXVkVs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NCZKzl/ZNFZ1Zz/FDlUtkYSgTpyCkmQVB1RMQDCm5DzlzGYbzVHd7xbcEkyl46BkA
+         CT2ZeJAT7B5p24Vtat9IVos6UIMRjKPtAXDDiIY6J75vedSFZJ0tJ0o0oirbtmj992
+         Z+XbA4laSiRpqqwxG4mX1vhkhRt2icDx29Xv4rt0=
+Date:   Sun, 17 May 2020 15:31:16 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>, stable@kernel.org
+Subject: Re: [PATCH] tick/nohz: Narrow down noise while setting current
+ task's tick dependency
+Message-ID: <20200517133115.GA28573@lenoir>
+References: <20200515003429.4317-1-frederic@kernel.org>
+ <20200516030718.GL2869@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <2e41656c-e7e4-5dcb-1156-bcfcbc8ea595@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200516030718.GL2869@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.05.2020 16:08, Dmitry Osipenko пишет:
-> 17.05.2020 06:32, Wang, Jiada пишет:
->> Hello Dmitry
->>
->> On 2020/05/14 13:53, Dmitry Osipenko wrote:
->>> 13.05.2020 08:07, Wang, Jiada пишет:
->>>> Hello Dmitry
->>>>
->>>> On 2020/05/12 8:13, Dmitry Osipenko wrote:
->>>>> 11.05.2020 05:05, Wang, Jiada пишет:
->>>>>> Hello Dmitry
->>>>>>
->>>>>> Thanks for your comment and test,
->>>>>>
->>>>>> can you let me know which platform (board) you are using for test,
->>>>>> and DTS changes if you have added any.
->>>>>
->>>>> That's this device-tree [1] without any extra changes.
->>>>>
->>>> I am using Samsung Chromebook Pro for testing,
->>>> but obviously some of the use cases it can't cover.
->>>>
->>>> I also would like to test on same device you are using,
->>>> would you please let me know how to boot Acer Iconia Tab A500
->>>> with custom images. Are you booting Linux or Android on it?
->>>
->>> I'm using Ubuntu 20.04 on it at the moment. In order to boot custom
->>> images you'll need at least to install a custom recovery, which will
->>> allow to flash boot.img on eMMC storage.
->>>
->>> Ideally, you'll need to install an unlocked bootloader that will enable
->>> Android's fastboot, and thus, allow to easily boot kernel zImage without
->>> messing with flashing boot images.
->>>
->>> Could you please tell what is the current state of yours device: does it
->>> have a stock Android installed? is it rooted? is custom recovery
->>> installed?
->>>
->> Thanks for your information
->>
->> By following instructions found in XDA forums,
->> now I am able to install an unlocked bootloader,
->> boot among primary kernel, recovery kernel or fastboot,
->> an Android custom stock rom also has been installed
+On Fri, May 15, 2020 at 08:07:18PM -0700, Paul E. McKenney wrote:
+> On Fri, May 15, 2020 at 02:34:29AM +0200, Frederic Weisbecker wrote:
+> > So far setting a tick dependency on any task, including current, used to
+> > trigger an IPI to all CPUs. That's of course suboptimal but it wasn't
+> > an issue as long as it was only used by posix-cpu-timers on nohz_full,
+> > a combo that nobody seemed to use in real life.
+> > 
+> > But RCU started to use task tick dependency on current task to fix
+> > stall issues on callbacks processing. These trigger regular and
+> > undesired system wide IPIs on nohz_full.
+> > 
+> > The fix is very easy while setting a tick dependency on the current
+> > task, only its CPU needs an IPI.
 > 
-> Awesome!
+> This passes moderate rcutorture testing.  If you want me to take it, please
+> let me know, and otherwise:
 > 
->> Could you please let me know how to install local built ubuntu images
-> 
-> Sure, please follow these steps:
-> 
-> 1. Download rootfs from
-> http://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04-base-armhf.tar.gz
-> 
-> 2. Extract it wherever you want yours root to be, like ExternalSD card
-> or eMMC /data partition or even NFS directory if you'll use usbnet.
-> 
-> 3. Clone this kernel https://github.com/grate-driver/linux which is a
-> recent upstream linux-next + work-in-progress patches that haven't been
-> merged into upstream yet. For example DRM bridges and Tegra Partition
-> Table patches are under review now.
-> 
-> 4. Select tegra_defconfig:
-> 
-> 	ARCH=arm make tegra_defconfig
-> 
-> 5. Compile kernel:
-> 
-> 	ARCH=arm make
-> 
-> 6. Append DTB to zImage:
-> 
-> 	cat arch/arm/boot/zImage
-> arch/arm/boot/dts/tegra20-acer-a500-picasso.dtb > arch/arm/boot/zImage-dtb
-> 
-> 7. Turn on A500 and select 'fastboot' option in the bootloader's menu.
-> 
-> 8. Boot compiled kernel:
-> 
-> 	fastboot -c "root=/dev/mmcblk2p8 gpt tegraboot=sdmmc" boot
-> arch/arm/boot/zImage-dtb
-> 
-> 9. Grab touchscreen/WiFi/Bluetooth firmware files from
-> https://github.com/digetx/linux-firmware
-> 
-> 10. Grab ALSA UCM rule from https://github.com/digetx/alsa-ucm-conf
-> 
-> 11. Enjoy!
-> 
-> Please let me know you'll experience any problems, I'll be glad to help.
-> 
+> Tested-by: Paul E. McKenney <paulmck@kernel.org>
 
-Also, there is an Ubuntu PPA for Tegra20/30 devices with drivers from
-GRATE-driver project:
-https://launchpad.net/~grate-driver/+archive/ubuntu/ppa
+If you already have a pending urgent queue, I'd love you to take it.
+If not I can take it.
 
-Please keep in mind that there is no GL driver that work with upstream
-kernel.
-
-I'd recommend to use KDE Plasma 5 for the desktop environment. For the
-good experience you'll need to tell Qt to use software render, the
-easiest way is to set required env variables globally:
-
-echo -e
-"QT_QUICK_BACKEND=software\nLIBGL_ALWAYS_SOFTWARE=1\nQT_IM_MODULE=qtvirtualkeyboard"
->> /etc/security/pam_env.conf
+Thanks.
