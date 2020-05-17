@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E94C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C9AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 718CE20671
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43C82065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589708994;
-	bh=biGr+7OSEos7+YAAcuWWx3f+URSJesneHTeFMan8fRc=;
+	s=default; t=1589708997;
+	bh=94kzuLGLqodSVHeEukr593NVNHKOJFynf5l/GdMp870=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zInrU7nGTSvunBhavH3DVwEgefpFj1iWfzGXG6LTcoDRkuyKM93MclttP7cjpxmtr
-	 Tai+Kt8f7tflC5+YsVXdEumKBGSqZ5RLGaFn/AdSE5ehB+D3pn8Ayjjl/265yAew17
-	 3MXF6rCDLgUjYv9Uylj1C/FkA+WpzWzsONVJZ94M=
+	b=JN644EIyQYrWykVrmHZNEwYuvt59x45QA0AK66jD46T5V9w7cXQNLHgUFH5jpgzTc
+	 w6z/nu1sE/KMOniFGbmnngAqjlzYRvIw4NMT7NpPROf23Fr12IDQMaZVLE5ogKTbc7
+	 dL3uPEPMDGgqmQfVXf6mYTFqNRd+00t0L610cIbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgEQJtx (ORCPT
+        id S1727990AbgEQJt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 05:49:53 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:38335 "EHLO
+        Sun, 17 May 2020 05:49:56 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:38327 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbgEQJth (ORCPT
+        with ESMTP id S1727814AbgEQJth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 17 May 2020 05:49:37 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 04H9n4L1018560;
+        by conuserg-08.nifty.com with ESMTP id 04H9n4L0018560;
         Sun, 17 May 2020 18:49:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4L1018560
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4L0018560
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
         s=dec2015msa; t=1589708947;
-        bh=+Wli0ANQRSz5CyU9XJeWEiPgVaZDq/eZreAnc0MeVrw=;
+        bh=ibb66H/JCMPnh041HwrGfYVbBcz1hL248mIHX+8vOjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PD62mwGz3xj4mhmiGmkygw8oIMlUnyAVsQfrRijOnv61NK/Wix4ENPbS0mGdUU7QG
-         OWotyN8Uh1g6L3ibkVinUi/I01EL0gKMV3Qf7bWgK0LTz04oUpIsGrKNThFLINMrmO
-         QeAJegfB1WQF9JGi0SSvNJoRGnVUZ0TrAttYCN8npqRXUm5WF/OdG4tshjVmGw9tme
-         MLYw5Nimyh+KPNccEkFZgMEogDA/u467/XBlqgKLAw3cK/iY/LWPs1XDCe6G7PqBlP
-         ec6HRc3sTNWEWaB2LYlWmck7WdAZ7foQa8nooBx9qQin7yC67z5H/l8PgRim04ozTA
-         1dpNtsPY8cLxQ==
+        b=CZfhOX1z+ALUcwN6Vl5i+inuYyak49dlDdYH+DZgAtzWkNZre+zSNDUn+DaPL5tdv
+         OYVfMyQ4/Oy/oixAATxIKDsyqJ70ErdygaSJ3rRJlj2xo3e6VicK61hH0p6cgre90E
+         o4hy/+tcDbIBsWy/CgWLLyYkjlpZOoXh9fQsy9Vy/2AGdhIE3+p+9t7XW+MRjiMHQ1
+         UkYk7tvOR3SiaxM6l1DFNmgNzW4XoH3HX+y7A5rBjcwvZSUZXmsjkc8QENmXy+ZItx
+         214HAPqcj8so/ssL6zlj+pubEazgd2Qd9y1BOzZVyVtIBMqTIXk//2bj1MvvktegVn
+         vyWONmslV0yfg==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -49,9 +49,9 @@ Cc:     Jessica Yu <jeyu@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 04/29] modpost: fix potential mmap'ed file overrun in get_src_version()
-Date:   Sun, 17 May 2020 18:48:34 +0900
-Message-Id: <20200517094859.2376211-5-masahiroy@kernel.org>
+Subject: [PATCH 03/29] modpost: add read_text_file() and get_line() helpers
+Date:   Sun, 17 May 2020 18:48:33 +0900
+Message-Id: <20200517094859.2376211-4-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200517094859.2376211-1-masahiroy@kernel.org>
 References: <20200517094859.2376211-1-masahiroy@kernel.org>
@@ -62,90 +62,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I do not know how reliably this function works, but it seems dangerous
-to me, at least.
+modpost uses grab_file() to open a file, but it is not suitable for
+a text file because the mmaped file is not terminated by null byte.
+Actually, I see some issues for the use of grab_file().
 
-The function call
+The new helper, read_text_file() loads the whole file content into a
+malloc'ed buffer, and appends a null byte. Then, get_line() reads
+each line.
 
-    strchr(sources, '\n');
+To handle text files, I intend to replace as follows:
 
-... continues searching until it finds '\n' or it reaches the '\0'
-terminator. In other words, 'sources' should be a null-terminated
-string.
-
-However, grab_file() just mmaps a file, so 'sources' is not terminated
-with null byte. If the file does not contain '\n' at all, strchr() will
-go beyond the mmap'ed memory.
-
-Instead, use read_text_file(), which loads the file content into a
-malloc'ed buffer, appending null-byte.
-
-Here we are interested only in the first line of *.mod files. Use
-get_line() helper to get the first line.
+ grab_file()    -> read_text_file()
+ get_new_line() -> get_line()
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/mod/sumversion.c | 27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
+ scripts/mod/modpost.c | 36 ++++++++++++++++++++++++++++++++++++
+ scripts/mod/modpost.h |  2 ++
+ 2 files changed, 38 insertions(+)
 
-diff --git a/scripts/mod/sumversion.c b/scripts/mod/sumversion.c
-index f27f22420cbc..f9aa532d93cf 100644
---- a/scripts/mod/sumversion.c
-+++ b/scripts/mod/sumversion.c
-@@ -392,40 +392,37 @@ static int parse_source_files(const char *objfile, struct md4_ctx *md)
- /* Calc and record src checksum. */
- void get_src_version(const char *modname, char sum[], unsigned sumlen)
- {
--	void *file;
--	unsigned long len;
-+	char *buf, *pos, *firstline;
- 	struct md4_ctx md;
--	char *sources, *end, *fname;
-+	char *fname;
- 	char filelist[PATH_MAX + 1];
- 
- 	/* objects for a module are listed in the first line of *.mod file. */
- 	snprintf(filelist, sizeof(filelist), "%.*smod",
- 		 (int)strlen(modname) - 1, modname);
- 
--	file = grab_file(filelist, &len);
--	if (!file)
-+	buf = read_text_file(filelist);
-+	if (!buf)
- 		/* not a module or .mod file missing - ignore */
- 		return;
- 
--	sources = file;
--
--	end = strchr(sources, '\n');
--	if (!end) {
-+	pos = buf;
-+	firstline = get_line(&pos);
-+	if (!firstline) {
- 		warn("bad ending versions file for %s\n", modname);
--		goto release;
-+		goto free;
- 	}
--	*end = '\0';
- 
- 	md4_init(&md);
--	while ((fname = strsep(&sources, " ")) != NULL) {
-+	while ((fname = strsep(&firstline, " "))) {
- 		if (!*fname)
- 			continue;
- 		if (!(is_static_library(fname)) &&
- 				!parse_source_files(fname, &md))
--			goto release;
-+			goto free;
- 	}
- 
- 	md4_final_ascii(&md, sum, sumlen);
--release:
--	release_file(file, len);
-+free:
-+	free(buf);
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index af098d7efc22..2c6319f0ce19 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -112,6 +112,42 @@ void *do_nofail(void *ptr, const char *expr)
+ 	return ptr;
  }
+ 
++char *read_text_file(const char *filename)
++{
++	struct stat st;
++	int fd;
++	char *buf;
++
++	fd = open(filename, O_RDONLY);
++	if (fd < 0)
++		return NULL;
++
++	if (fstat(fd, &st) < 0)
++		return NULL;
++
++	buf = NOFAIL(malloc(st.st_size + 1));
++
++	if (read(fd, buf, st.st_size) != st.st_size) {
++		free(buf);
++		buf = NULL;
++		goto close;
++	}
++	buf[st.st_size] = '\0';
++close:
++	close(fd);
++
++	return buf;
++}
++
++char *get_line(char **stringp)
++{
++	/* do not return the unwanted extra line at EOF */
++	if (*stringp && **stringp == '\0')
++		return NULL;
++
++	return strsep(stringp, "\n");
++}
++
+ /* A list of all modules we processed */
+ static struct module *modules;
+ 
+diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
+index bbaf5cc37bfb..dfadaa0c01ec 100644
+--- a/scripts/mod/modpost.h
++++ b/scripts/mod/modpost.h
+@@ -190,6 +190,8 @@ void add_moddevtable(struct buffer *buf, struct module *mod);
+ void get_src_version(const char *modname, char sum[], unsigned sumlen);
+ 
+ /* from modpost.c */
++char *read_text_file(const char *filename);
++char *get_line(char **stringp);
+ void *grab_file(const char *filename, unsigned long *size);
+ char* get_next_line(unsigned long *pos, void *file, unsigned long size);
+ void release_file(void *file, unsigned long size);
 -- 
 2.25.1
 
