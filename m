@@ -2,83 +2,108 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15907C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 22:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF85C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 22:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D32E920735
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 22:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFE32081A
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 22:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DB+3QeZo"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HemK8Hfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgEQWhF (ORCPT
+        id S1726707AbgEQWkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 18:37:05 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37144 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726458AbgEQWhF (ORCPT
+        Sun, 17 May 2020 18:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbgEQWkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 18:37:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589755024;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=R6DBtpMAn3ekiwiyAskbqzCTE2dKTfdjjBHrVuQWSx4=;
-        b=DB+3QeZo7NLRokjCEDUd288kzPbBlZT/4TTz6y9jZifZ9YnUEn8BYdYG44/25F+yIk0YRV
-        YZ+7mB95VN7BSxQZJNVuMFZIEgZncAmzpxIE2JM71NIJ+FCYGByMxapXSHp0qIlK3gXeYq
-        jrEN2H90/lHN+8Smd/tGbRejPMU9f48=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-75-ZTKbhoElMFOsXiTYA5qa7g-1; Sun, 17 May 2020 18:37:01 -0400
-X-MC-Unique: ZTKbhoElMFOsXiTYA5qa7g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sun, 17 May 2020 18:40:35 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C55C061A0C;
+        Sun, 17 May 2020 15:40:35 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F2D01461;
-        Sun, 17 May 2020 22:36:58 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C1D4A5C1C8;
-        Sun, 17 May 2020 22:36:57 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200517210811.GQ16070@bombadil.infradead.org>
-References: <20200517210811.GQ16070@bombadil.infradead.org> <158974686528.785191.2525276665446566911.stgit@warthog.procyon.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] afs: Don't unlock fetched data pages until the op completes successfully
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49QHCz1l3Hz9sT4;
+        Mon, 18 May 2020 08:40:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589755233;
+        bh=R8QgB48sur5ouO2wvK1u0Cj0Vv99np8NdTl5OyKWVL0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HemK8HfpzcrsQfqTQ1gUK/FvalwzHNoBfDsnWZ/g7NeE2zcXvWvXkE6e4kWQpIg3S
+         +hT9+Er3qC6tvTbHusuDbD6SvZ78GXWPzPPGx3lYntYyrGv3yvuw5oSpiX9d+0Sjo9
+         o6/ShsIETB+befT10Y+n5UviZ0kYAp2q53s6MuYdU4Z6it60twkfyLXZCG5rFE5INL
+         7xXJb3l1P9mnAJ/XkAyuVN2Fc0UtCFPX8qB4YbjPE3FyaZQEC6fxBxHSUO3RjIoSFz
+         tfS2oS0XYbH/rv1KzyLP5fcm/V27h5F60nIEfYvBNPR/mUOv51frW80v2jNrJ43eNH
+         pAKkILPcJiaCQ==
+Date:   Mon, 18 May 2020 08:40:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>
+Subject: linux-next: build failure after merge of the mtd-fixes tree
+Message-ID: <20200518084021.64cbf411@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <796666.1589755017.1@warthog.procyon.org.uk>
-Date:   Sun, 17 May 2020 23:36:57 +0100
-Message-ID: <796667.1589755017@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: multipart/signed; boundary="Sig_/3/_22vS8vdYTJ5KggnHK=KD";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
+--Sig_/3/_22vS8vdYTJ5KggnHK=KD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > +	if (req->page_done)
-> > +		for (req->index = 0; req->index < req->nr_pages; req->index++)
-> > +			req->page_done(req);
-> > +
-> 
-> I'd suggest doing one call rather than N and putting the page iteration
-> inside the callback.  But this patch is appropriate for this late in
-> the -rc series, just something to consider for the future.
+Hi all,
 
-My rewrite of the fscache stuff changes this bit of the code anyway, and makes
-it one call which may start a write out to the cache.
+After merging the mtd-fixes tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-David
+/home/sfr/next/next/drivers/mtd/nand/spi/core.c: In function 'spinand_init':
+/home/sfr/next/next/drivers/mtd/nand/spi/core.c:1093:26: error: 'struct nan=
+d_device' has no member named 'ecc'
+ 1093 |  mtd->ecc_strength =3D nand->ecc.ctx.conf.strength;
+      |                          ^~
+/home/sfr/next/next/drivers/mtd/nand/spi/core.c:1094:27: error: 'struct nan=
+d_device' has no member named 'ecc'
+ 1094 |  mtd->ecc_step_size =3D nand->ecc.ctx.conf.step_size;
+      |                           ^~
 
+Caused by commit
+
+  d5baa0ec83de ("mtd: spinand: Propagate ECC information to the MTD structu=
+re")
+
+"This fix depends on recent changes and should not be backported as-is." ?
+
+I have reverted that commit for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/3/_22vS8vdYTJ5KggnHK=KD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7BvVUACgkQAVBC80lX
+0GzgrQf/eq9OZSE/dsSjxN+w+qoHJmXwNrl8Q2RM8yKWpfFcHm+jG6CT++2/BRPk
+l7ZrO/dhTV0Si3m3X2bKFYf7wErCFKD7UmAb1VJ6iTARTFXxJyzGokP4B2ZK0gy9
+YvBtGrpUn9heBL7Ii1M/6JZm0m3eo4IsT2vBnn/GEfj3v173hJ5pBzT37kSz4kHx
+9pdVJpFHUP7hQVpFkWGqGB8w3rmXrrYuqYkqyo3WPhYEkTy8F5iPcf04fW4DRuoq
+zY08MOUBCg2+wMFPdVt9eogBzVTF6Q9igetER7/kBANEMFaMCkI4N2A8aus3kSAY
+a/RrUMRM4Rg1y+pHPw8J5QuGVcv5Pw==
+=Ajry
+-----END PGP SIGNATURE-----
+
+--Sig_/3/_22vS8vdYTJ5KggnHK=KD--
