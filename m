@@ -2,211 +2,170 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3740AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6010C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12C2120671
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15AD20671
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:48:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="W4RlgQDE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fXmuXfld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgEQVsL (ORCPT
+        id S1727812AbgEQVsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 17:48:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42910 "EHLO
+        Sun, 17 May 2020 17:48:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgEQVr1 (ORCPT
+        with ESMTP id S1726301AbgEQVsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 17:47:27 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BC05C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 14:47:27 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g14so20994666wme.1
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 14:47:27 -0700 (PDT)
+        Sun, 17 May 2020 17:48:54 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7250AC061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 14:48:54 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id b12so3363569plz.13
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 14:48:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+NNOaVE9c9xGGuOYwwS94f/tcLOCL8JkmWYJIg2IYGE=;
-        b=W4RlgQDEM4dTeXyi2mptdIu5T2CvqwRG+TKlWVbkMelzNIfaff9Wmw0PAXMiyfwhWW
-         yJAe47ZFLz3pYPOG9I3Il9qsRPlFq0oKinV6U9c1odAv8brONkSKQKblNq8dfw6SdEge
-         qERSqJUwmaypO56h4G7DMc66bvjPx0fvQO9yOAmgusWYGI4DsNcSBiA08ndHk8UDn9Eo
-         BkGzmsf7dVh1lNVUwGgJCxs9MRBYBkgb+9Jlka1rcfFw+IHqrgMTQk554+4nG7sZ8+fl
-         d4ekX1CRU5P96jm1pxMRkllf8WkXhLbACTVHqQvDLQ36sdL8tVIO1XW7/hkyyr3mri9G
-         tS3A==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TseoBxNXqkGmc0BKeUpNhNoekdY6lwjjJANkYe94qbs=;
+        b=fXmuXfld1C+1UPw1bv9c3bwmjxXKQ31A0dYo8c5KzRXgHDVDq/BETl1kTkVyzT4Izt
+         vP9YW8g7iuXzdYnOt9Tx31MSyhBkvlqnenYGMaitwycLw4gdiHYi66Dl4OiTkwb0oTH9
+         F1q76kq5IFts9C62noNssP5sjvsEmychJJIgY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=+NNOaVE9c9xGGuOYwwS94f/tcLOCL8JkmWYJIg2IYGE=;
-        b=I7hztI2buIVzrgF3N7HMGhP+KUdyCzn7W9XZNQevoAxT8GDoYZsFKu5hHbYu6ltZ7B
-         bRL/FBm4gTjzplWbzZ8bC+pKmO8/z/71yIMMinImItqKh7om/rikcTgMOq/5IsWpOtaN
-         aQnXC22SCNydvWqwEbaiNR0tHFk/oCfGJhmQyRQJWSyv1pI2bB6JUhwv3NoftMGwPiBR
-         FAEB1XSGBpF6X+M82bfzRs+4R0CjCxEw0w5/8T+vSEuM620kpEqnXNcSOcZP6aFJzpLY
-         /qtIvos0pCi4vfLdUIP00IqyhmOJ5PNWoRE/np1IP3/O1XBUbAyQVV/Xr0P3IJ5VsYAm
-         ejUw==
-X-Gm-Message-State: AOAM530hXPOpAoJnhEbPrPNHfITPUkpcNORDiBvCJQiKXQAx5cHxpVJd
-        Ayo2wOawEfhTKx2FFq48fzi0lw==
-X-Google-Smtp-Source: ABdhPJwFvf8yPjIIkLewjmPunGXmJjDmpB+fcd9N0uP58czfZv7ot6xefo997dox8kuTcZtlMepuSQ==
-X-Received: by 2002:a7b:ce01:: with SMTP id m1mr4221199wmc.116.1589752046199;
-        Sun, 17 May 2020 14:47:26 -0700 (PDT)
-Received: from ls00508.pb.local ([2001:1438:4010:2540:bc3e:92a1:7010:2763])
-        by smtp.gmail.com with ESMTPSA id v126sm14441244wmb.4.2020.05.17.14.47.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TseoBxNXqkGmc0BKeUpNhNoekdY6lwjjJANkYe94qbs=;
+        b=GoNgo3I4bczlLl8NRaJrp84brjQS5TXnxlqzEptAwLeMUTITe3Yf8rYom+fTYO88Dy
+         Nnn7e2mCNK769HBRSpjTlPtOEKc8ehwobU4Ny3Q1mlasuRhCTwvKq+mnBqQZsxNQbxcw
+         Sce4YnQcaJmMrKXEG512GacMh/nhGOMfGoHNIYLwjthYD7SbdUCqrAcyNs2J3QtVUJH6
+         2SsVSpprdgY2AEvy6wdyRqfXtUhsuPTL7uXTBSQM7Pp8uGHJk5lDQRBehBnWCp28QPLe
+         NYP1KsKn6gUkjz8FOSRapuM5iq+o1AqVzddNUJS2LN6t8d7ftsLdHUntTIdER0E2lxEk
+         LG6w==
+X-Gm-Message-State: AOAM5338kgRJ7CD60Tb/VNtsuSyOI8KWp6kF+xG+6H/Droc7Hs2LYodA
+        4Xmbn4q0R3e4gMDCv7V9RiyeCA==
+X-Google-Smtp-Source: ABdhPJwu0BwlUzPfekehCQs1ka3ojGBVEk1UZ0Rcu5atUYqn4c22iHglE7ZsiOSiXntjAfphkl4Hcw==
+X-Received: by 2002:a17:90a:dc83:: with SMTP id j3mr15509573pjv.59.1589752133982;
+        Sun, 17 May 2020 14:48:53 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i184sm6443327pgc.36.2020.05.17.14.48.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2020 14:47:25 -0700 (PDT)
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-To:     akpm@linux-foundation.org, viro@zeniv.linux.org.uk
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        david@fromorbit.com, hch@infradead.org, willy@infradead.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
-Subject: [PATCH 03/10] btrfs: use attach/detach_page_private
-Date:   Sun, 17 May 2020 23:47:11 +0200
-Message-Id: <20200517214718.468-4-guoqing.jiang@cloud.ionos.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
-References: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
+        Sun, 17 May 2020 14:48:53 -0700 (PDT)
+Date:   Sun, 17 May 2020 14:48:52 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk,
+        mhiramat@kernel.org, labbott@redhat.com,
+        mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: kprobes: Avoid fortify_panic() when copying
+ optprobe template
+Message-ID: <202005171447.00CFE0C@keescook>
+References: <20200517153959.293224-1-andrew@aj.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200517153959.293224-1-andrew@aj.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the new pair function is introduced, we can call them to clean the
-code in btrfs.
+On Mon, May 18, 2020 at 01:09:59AM +0930, Andrew Jeffery wrote:
+> As mentioned, a couple of attempts have been made to address the issue
+> by casting a pointer to optprobe_template_entry before providing it to
+> memcpy(), however gccs such as Ubuntu 20.04's arm-linux-gnueabi-gcc
+> 9.3.0 (Ubuntu 9.3.0-10ubuntu1) see through these efforts.
 
-Cc: Chris Mason <clm@fb.com>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Cc: David Sterba <dsterba@suse.com>
-Cc: linux-btrfs@vger.kernel.org
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
----
-No change since RFC V3.
+Ah, dang. :P
 
-RFC V2 -> RFC V3
-1. rename clear_page_private to detach_page_private.
+How about converting them all to unsized arrays, which would also allow
+the code to drop the "&" everywhere, I think. This is untested:
 
-RFC -> RFC V2
-1. change the name of new functions to attach/clear_page_private.
-2. call attach_page_private(newpage, clear_page_private(page)) to
-   cleanup code further as suggested by Dave Chinner.
 
- fs/btrfs/disk-io.c   |  4 +---
- fs/btrfs/extent_io.c | 21 ++++++---------------
- fs/btrfs/inode.c     | 23 +++++------------------
- 3 files changed, 12 insertions(+), 36 deletions(-)
-
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index 714b57553ed6..44745d5e05cf 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -976,9 +976,7 @@ static void btree_invalidatepage(struct page *page, unsigned int offset,
- 		btrfs_warn(BTRFS_I(page->mapping->host)->root->fs_info,
- 			   "page private not zero on page %llu",
- 			   (unsigned long long)page_offset(page));
--		ClearPagePrivate(page);
--		set_page_private(page, 0);
--		put_page(page);
-+		detach_page_private(page);
- 	}
- }
+diff --git a/arch/arm/include/asm/kprobes.h b/arch/arm/include/asm/kprobes.h
+index 213607a1f45c..e26a278d301a 100644
+--- a/arch/arm/include/asm/kprobes.h
++++ b/arch/arm/include/asm/kprobes.h
+@@ -44,20 +44,20 @@ int kprobe_exceptions_notify(struct notifier_block *self,
+ 			     unsigned long val, void *data);
  
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 451d17bfafd8..704239546093 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -3099,22 +3099,16 @@ static int submit_extent_page(unsigned int opf,
- static void attach_extent_buffer_page(struct extent_buffer *eb,
- 				      struct page *page)
- {
--	if (!PagePrivate(page)) {
--		SetPagePrivate(page);
--		get_page(page);
--		set_page_private(page, (unsigned long)eb);
--	} else {
-+	if (!PagePrivate(page))
-+		attach_page_private(page, eb);
-+	else
- 		WARN_ON(page->private != (unsigned long)eb);
--	}
- }
+ /* optinsn template addresses */
+-extern __visible kprobe_opcode_t optprobe_template_entry;
+-extern __visible kprobe_opcode_t optprobe_template_val;
+-extern __visible kprobe_opcode_t optprobe_template_call;
+-extern __visible kprobe_opcode_t optprobe_template_end;
+-extern __visible kprobe_opcode_t optprobe_template_sub_sp;
+-extern __visible kprobe_opcode_t optprobe_template_add_sp;
+-extern __visible kprobe_opcode_t optprobe_template_restore_begin;
+-extern __visible kprobe_opcode_t optprobe_template_restore_orig_insn;
+-extern __visible kprobe_opcode_t optprobe_template_restore_end;
++extern __visible kprobe_opcode_t optprobe_template_entry[];
++extern __visible kprobe_opcode_t optprobe_template_val[];
++extern __visible kprobe_opcode_t optprobe_template_call[];
++extern __visible kprobe_opcode_t optprobe_template_end[];
++extern __visible kprobe_opcode_t optprobe_template_sub_sp[];
++extern __visible kprobe_opcode_t optprobe_template_add_sp[];
++extern __visible kprobe_opcode_t optprobe_template_restore_begin[];
++extern __visible kprobe_opcode_t optprobe_template_restore_orig_insn[];
++extern __visible kprobe_opcode_t optprobe_template_restore_end[];
  
- void set_page_extent_mapped(struct page *page)
- {
--	if (!PagePrivate(page)) {
--		SetPagePrivate(page);
--		get_page(page);
--		set_page_private(page, EXTENT_PAGE_PRIVATE);
--	}
-+	if (!PagePrivate(page))
-+		attach_page_private(page, (void *)EXTENT_PAGE_PRIVATE);
- }
+ #define MAX_OPTIMIZED_LENGTH	4
+ #define MAX_OPTINSN_SIZE				\
+-	((unsigned long)&optprobe_template_end -	\
+-	 (unsigned long)&optprobe_template_entry)
++	((unsigned long)optprobe_template_end -	\
++	 (unsigned long)optprobe_template_entry)
+ #define RELATIVEJUMP_SIZE	4
  
- static struct extent_map *
-@@ -4935,10 +4929,7 @@ static void btrfs_release_extent_buffer_pages(struct extent_buffer *eb)
- 			 * We need to make sure we haven't be attached
- 			 * to a new eb.
- 			 */
--			ClearPagePrivate(page);
--			set_page_private(page, 0);
--			/* One for the page private */
--			put_page(page);
-+			detach_page_private(page);
- 		}
+ struct arch_optimized_insn {
+diff --git a/arch/arm/probes/kprobes/opt-arm.c b/arch/arm/probes/kprobes/opt-arm.c
+index 7a449df0b359..c78180172120 100644
+--- a/arch/arm/probes/kprobes/opt-arm.c
++++ b/arch/arm/probes/kprobes/opt-arm.c
+@@ -85,21 +85,21 @@ asm (
+ 			"optprobe_template_end:\n");
  
- 		if (mapped)
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 037efc25d993..6c2d6ecedd6a 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -7927,11 +7927,8 @@ static void btrfs_readahead(struct readahead_control *rac)
- static int __btrfs_releasepage(struct page *page, gfp_t gfp_flags)
- {
- 	int ret = try_release_extent_mapping(page, gfp_flags);
--	if (ret == 1) {
--		ClearPagePrivate(page);
--		set_page_private(page, 0);
--		put_page(page);
--	}
-+	if (ret == 1)
-+		detach_page_private(page);
- 	return ret;
- }
- 
-@@ -7953,14 +7950,8 @@ static int btrfs_migratepage(struct address_space *mapping,
- 	if (ret != MIGRATEPAGE_SUCCESS)
- 		return ret;
- 
--	if (page_has_private(page)) {
--		ClearPagePrivate(page);
--		get_page(newpage);
--		set_page_private(newpage, page_private(page));
--		set_page_private(page, 0);
--		put_page(page);
--		SetPagePrivate(newpage);
--	}
-+	if (page_has_private(page))
-+		attach_page_private(newpage, detach_page_private(page));
- 
- 	if (PagePrivate2(page)) {
- 		ClearPagePrivate2(page);
-@@ -8082,11 +8073,7 @@ static void btrfs_invalidatepage(struct page *page, unsigned int offset,
- 	}
- 
- 	ClearPageChecked(page);
--	if (PagePrivate(page)) {
--		ClearPagePrivate(page);
--		set_page_private(page, 0);
--		put_page(page);
--	}
-+	detach_page_private(page);
- }
+ #define TMPL_VAL_IDX \
+-	((unsigned long *)&optprobe_template_val - (unsigned long *)&optprobe_template_entry)
++	((unsigned long *)optprobe_template_val - (unsigned long *)optprobe_template_entry)
+ #define TMPL_CALL_IDX \
+-	((unsigned long *)&optprobe_template_call - (unsigned long *)&optprobe_template_entry)
++	((unsigned long *)optprobe_template_call - (unsigned long *)optprobe_template_entry)
+ #define TMPL_END_IDX \
+-	((unsigned long *)&optprobe_template_end - (unsigned long *)&optprobe_template_entry)
++	((unsigned long *)optprobe_template_end - (unsigned long *)optprobe_template_entry)
+ #define TMPL_ADD_SP \
+-	((unsigned long *)&optprobe_template_add_sp - (unsigned long *)&optprobe_template_entry)
++	((unsigned long *)optprobe_template_add_sp - (unsigned long *)optprobe_template_entry)
+ #define TMPL_SUB_SP \
+-	((unsigned long *)&optprobe_template_sub_sp - (unsigned long *)&optprobe_template_entry)
++	((unsigned long *)optprobe_template_sub_sp - (unsigned long *)optprobe_template_entry)
+ #define TMPL_RESTORE_BEGIN \
+-	((unsigned long *)&optprobe_template_restore_begin - (unsigned long *)&optprobe_template_entry)
++	((unsigned long *)optprobe_template_restore_begin - (unsigned long *)optprobe_template_entry)
+ #define TMPL_RESTORE_ORIGN_INSN \
+-	((unsigned long *)&optprobe_template_restore_orig_insn - (unsigned long *)&optprobe_template_entry)
++	((unsigned long *)optprobe_template_restore_orig_insn - (unsigned long *)optprobe_template_entry)
+ #define TMPL_RESTORE_END \
+-	((unsigned long *)&optprobe_template_restore_end - (unsigned long *)&optprobe_template_entry)
++	((unsigned long *)optprobe_template_restore_end - (unsigned long *)optprobe_template_entry)
  
  /*
--- 
-2.17.1
+  * ARM can always optimize an instruction when using ARM ISA, except
+@@ -234,7 +234,7 @@ int arch_prepare_optimized_kprobe(struct optimized_kprobe *op, struct kprobe *or
+ 	}
+ 
+ 	/* Copy arch-dep-instance from template. */
+-	memcpy(code, (unsigned long *)&optprobe_template_entry,
++	memcpy(code, (unsigned long *)optprobe_template_entry,
+ 			TMPL_END_IDX * sizeof(kprobe_opcode_t));
+ 
+ 	/* Adjust buffer according to instruction. */
 
+-- 
+Kees Cook
