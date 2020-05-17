@@ -2,92 +2,100 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2007EC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34723C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02227207E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C64206F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:08:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FKKl0/dy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgEQVD2 (ORCPT
+        id S1726591AbgEQVIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 17:03:28 -0400
-Received: from sauhun.de ([88.99.104.3]:33632 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726288AbgEQVD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 17:03:27 -0400
-Received: from localhost (p5486C87C.dip0.t-ipconnect.de [84.134.200.124])
-        by pokefinder.org (Postfix) with ESMTPSA id 656312C2059;
-        Sun, 17 May 2020 23:03:23 +0200 (CEST)
-Date:   Sun, 17 May 2020 23:03:22 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 16/17] dt-bindings: watchdog: renesas,wdt: Document
- r8a7742 support
-Message-ID: <20200517210322.GK1370@kunai>
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Sun, 17 May 2020 17:08:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726288AbgEQVIQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 17:08:16 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EA7C061A0C;
+        Sun, 17 May 2020 14:08:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ZI/wjrmoE8yo1UlRT1uixmxXyXCoD/JXvDZ9ydl0TeI=; b=FKKl0/dyT7xRj9bORWp9hLMHn7
+        A3bq1CAcKdeF1Czdpl53nc1IhsVa/goilCVb2nU3qTcV2R7c8KVz9zscA8siHQPRZ8NTyF46azvl0
+        r4TVGOnaS6QpG3Js4MK4GPKpGkcKdO0CBb79HXcRR2iM+vAkYD7jVoYEvrJb0saOdeuf4lWGse6dx
+        N6nTggIgo8zj4sho1cK05NlX+X1Avp7SNjIZVU7vLsTqZCObnfLJTIDXIK/S2PfpLdwryVtDJVZcO
+        /LS3lIQ5QduVOAOOgrGHd/a/lM7R30aBmg59Ku30ibB/KvoxaRunX2u+cG5HxwfVEqC60tSlTgl/f
+        bFQbbY8A==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jaQW3-0003ri-60; Sun, 17 May 2020 21:08:11 +0000
+Date:   Sun, 17 May 2020 14:08:11 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org, linux-afs@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] afs: Don't unlock fetched data pages until the op
+ completes successfully
+Message-ID: <20200517210811.GQ16070@bombadil.infradead.org>
+References: <158974686528.785191.2525276665446566911.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/0P/MvzTfyTu5j9Q"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589555337-5498-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <158974686528.785191.2525276665446566911.stgit@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 17, 2020 at 09:21:05PM +0100, David Howells wrote:
+> Don't call req->page_done() on each page as we finish filling it with the
+> data coming from the network.  Whilst this might speed up the application a
+> bit, it's a problem if there's a network failure and the operation has to
+> be reissued.
 
---/0P/MvzTfyTu5j9Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's readpages, which by definition is called for pages that the
+application is _not_ currently waiting for.  Now, if the application
+is multithreaded and happens to want pages that are currently under
+->readpages, then that's going to be a problem (but also unlikely).
+Also if the application overruns the readahead window then it'll have
+to wait a little longer (but we ramp up the readahead window, so this
+should be a self-correcting problem).
 
-On Fri, May 15, 2020 at 04:08:56PM +0100, Lad Prabhakar wrote:
-> RZ/G1H (R8A7742) watchdog implementation is compatible with R-Car Gen2,
-> therefore add relevant documentation.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
-as.com>
+> If this happens, an oops occurs because afs_readpages_page_done() clears
+> the pointer to each page it unlocks and when a retry happens, the pointers
+> to the pages it wants to fill are now NULL (and the pages have been
+> unlocked anyway).
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+I mean, you could check for NULL pointers and not issue the I/O for that
+region ... but it doesn't seem necessary.
 
+> Instead, wait till the operation completes successfully and only then
+> release all the pages after clearing any terminal gap (the server can give
+> us less data than we requested as we're allowed to ask for more than is
+> available).
 
---/0P/MvzTfyTu5j9Q
-Content-Type: application/pgp-signature; name="signature.asc"
+s/release/mark up to date/
 
------BEGIN PGP SIGNATURE-----
+> +	if (req->page_done)
+> +		for (req->index = 0; req->index < req->nr_pages; req->index++)
+> +			req->page_done(req);
+> +
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7BppoACgkQFA3kzBSg
-KbY5eg//cr40LlhWss84VsWsqAA/+nyGrbhcXcOWUZvhTWF5Yb91/au8/mnj2xNm
-21DQjYq9udiHDWmFALlAYsqvTf/Idp5IjU5TwZ+hLQOJBlHC8VMNsERHglbQNmSR
-RGhkPlxrgtxwGyhzPBT/O3VLPh5wxtgGbg9D3xL6ERWFCLfeO0bXqbaGo4Rp4Kr5
-Is/9a3ljSzTKoMbMmkeRsunJWMiPBWGgiQ2tQNfk2m3ajXwArsfJukuW/vWhL0ba
-emEEIghT1Vl4JRcmGshTjnk2pQsY+xXJsmjcHWHxgZIfldfii5jzK5J0jOExeGi5
-1QAq46E5ciyeLQzZU15PYpPHkc2WxUq5n9xWswTYqfXzOrtBJktcBXLk2qHpkADB
-fS2T2LTfqwbP+uEgF7HyPxmHyeJtwFNitML9bMVnQbtEL8AQ4sugepE8SCERVHtI
-uG+iMG5W7IR/undrTq25Z3cognrOPuAxy0xP9/UZS3RS7c+4fRtULG4wk3DWhg89
-HMQWwRENFhniIHe/LaGtP1TT8xvDGggc+S1I27vS1zbef7tP1sdYzpYaxFk/fG0j
-RkC4I47CwxKUm0g1sYB7b9bbjzVTI00tXqhD+TOZAL05DrpJW8vuDGb4VLOXWBA+
-gsZZcvBQU7Be4AkFGZqVccz0xqWkcn9LdmCWk2ce6FrVOk2wJ60=
-=lyQL
------END PGP SIGNATURE-----
+I'd suggest doing one call rather than N and putting the page iteration
+inside the callback.  But this patch is appropriate for this late in
+the -rc series, just something to consider for the future.
 
---/0P/MvzTfyTu5j9Q--
+You might even want to use a bit in the req to indicate whether this is
+a readahead request ... that's the only user of the ->page_done callback
+that I can find.
+
+Anyway,
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
