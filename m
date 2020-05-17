@@ -2,167 +2,215 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FDDC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A74C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7C0207D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B753207C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:19:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdW+KTGe"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pIAwb2eo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgEQCNw (ORCPT
+        id S1726954AbgEQCTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 22:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59068 "EHLO
+        Sat, 16 May 2020 22:19:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbgEQCNX (ORCPT
+        with ESMTP id S1726880AbgEQCTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 22:13:23 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF134C061A0C;
-        Sat, 16 May 2020 19:13:22 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u6so6175203ljl.6;
-        Sat, 16 May 2020 19:13:22 -0700 (PDT)
+        Sat, 16 May 2020 22:19:15 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27646C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 19:19:15 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id a4so3107189qvj.3
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 19:19:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xOq5yyY/u+0O8ZudKc0fLqZJ0PgNfXdMDM0w1gmW1jw=;
-        b=NdW+KTGePpb1F/7NPdBU6M0SLKqzKRvW1r5p/XS9cQwbJijB6jHoDQjYNRZXoveSEx
-         nX/L+YW5IMStWAijgpYsgBPI/oJBa9U/va0hjIUfBv7o+9YGMn2OFGKfMqMs6elL9gh+
-         oOeS0CZSAz8pBx3gg2VsGD53qnyd5G4bBVbNgj68JcvVSZQ19jCkUOqiXRXbEpA3IiBQ
-         JUMREOgMhkbyORHkbtFEaDk31oNVzyPrswIIjuQpnVzRGFcGT6+JnN/nUMW6+FNvOF/l
-         95rqW4TY55jJv0gOsJ2AGSgZSKY92ki6PrMz6ekt6myyJmZMHcl6jqndzZByRGaFnLvr
-         tbxA==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=reILY0Vqckz9zOXZI1PQPYQDzXOJemhFua89GW65fy0=;
+        b=pIAwb2eoYglLwoftFfZRHOH1Iauxv47DwFt8guUDUzepmhBtdWKnf6tj+cBDhU9OTF
+         kECfnujvTJKr8YeroaSRIiYeVy5KG310PnOC4OsyxQQpkXo6JV8KUh6wHeidXXdnYJLi
+         2urTKHfOv2+fh2Z/drc7aLYPMpFOhLMO8thHY7q6ZR2EHH3E3rk2TZMBw375QmdTfjhS
+         WVxV5sKNACulZvEq6O83Mxk6dZiv9ieiAuoy2dCn3CpaWCc0E4KZvCOUTZwVthhcZqmp
+         hwBOf1zuiZPtXjLHkbZSyw6nLiwrG/RWBgQdUOmCje4sXZHYx8G88VLOW5OwZabR568J
+         jUkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xOq5yyY/u+0O8ZudKc0fLqZJ0PgNfXdMDM0w1gmW1jw=;
-        b=L8Rd9CdrvkseIE7wRyyOJP79mty9wgHU1E+VZYhVP+eABunTQJqTA3aXKBTCmCJapi
-         W6NKN3M7Ry09X8Q6BOQTa0lv5bg/AAnwW+YYInHXqqEm/pcCEPiJmEY7N7HLGNtsWR47
-         z/7Ey+dRXSCgVj8p5wJLqoB2Ri7dFRmleSQftZlHZgpz+FO1Ej4BuciiuvSoQZZRx4OZ
-         t836chwyJgSO6gNnSVykCjm52k4Dh6Q1pBcMtV97ViXycEK2MeqOp5Hwes8qSvhJ8fyw
-         LX0py7jQzF5u1XbvqHv99iLECRQhOU+8EDHnnpL7W++LJWa8Pb1AIGWCSXt0D03pCP44
-         hq8w==
-X-Gm-Message-State: AOAM533lW1IVexX2NjN1yqFTu+joNBnJnQUikQx+6BPr7KG7YojIutqj
-        50QxAa/6zcFMf0/QCwB2F6U=
-X-Google-Smtp-Source: ABdhPJwNTnCRnGEzwWDtys0C350gFVYZafJyGxx10kmH9E/ezrlftQ5uNzOWVv7fIQIj/73s/2utSg==
-X-Received: by 2002:a2e:700a:: with SMTP id l10mr6079423ljc.88.1589681601391;
-        Sat, 16 May 2020 19:13:21 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id z5sm3463149lji.30.2020.05.16.19.13.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 May 2020 19:13:20 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>,
-        =?UTF-8?q?Nils=20=C3=96stlund?= <nils@naltan.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
-        Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Steve McIntyre <steve@einval.com>,
-        linux-efi <linux-efi@vger.kernel.org>
-Subject: [PATCH v6 2/7] mmc: block: Add mmc_bdev_to_card() helper
-Date:   Sun, 17 May 2020 05:12:20 +0300
-Message-Id: <20200517021225.22890-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200517021225.22890-1-digetx@gmail.com>
-References: <20200517021225.22890-1-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=reILY0Vqckz9zOXZI1PQPYQDzXOJemhFua89GW65fy0=;
+        b=RretUece9frA990hspM3i0i/u3/JHbVSuRWzpnvcSTJfgyISprao8sg3jCFPssjNQ7
+         yW8a2v5oAh2RtG1QpB9mb1Hf62Dyf6FzHZv1BHt8Kn8mjU92cUMQqF/9SXqzHFuUJPGW
+         IpS5Bnlm585+PAK4o2tG8sWg+rLIXnt6xnk36Ip7JRk0Gck1f/4qOFMuGA35rbPRvkLv
+         OWuI8Oro9D50v/G8GzJcB4RWGKMnZQpf8l7euMyq8Cp/lz68wwaxmvssrlxF1kdwPLUq
+         IpoGEMyrYfEj4+ntvBAkosNuifXNf884KP2JdqzX8/qt+jarqwotR1k0Gpby3D6ZS91o
+         WKsg==
+X-Gm-Message-State: AOAM531C78UAmhLIbFuPdyQ+8QxB075YMVnvtvX4Gjcf/qfmhyMxqlqB
+        8MNao+6CDdSrE0w0AbR8fv5eZg==
+X-Google-Smtp-Source: ABdhPJy7zq2cEJTHKf+ULmWoR9KyBs8LT1Fv40ERTKM0O92tvWYebzQUeSdYbCbxP/SqXcLR53UE4g==
+X-Received: by 2002:a0c:f590:: with SMTP id k16mr7536598qvm.81.1589681954242;
+        Sat, 16 May 2020 19:19:14 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id p2sm5057375qkm.41.2020.05.16.19.19.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 16 May 2020 19:19:13 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 3/4] mm/slub: Fix another circular locking dependency in slab_attr_store()
+Date:   Sat, 16 May 2020 22:19:12 -0400
+Message-Id: <F1FA6654-C07C-42FD-B497-61EB635B264C@lca.pw>
+References: <20200427235621.7823-4-longman@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Juri Lelli <juri.lelli@redhat.com>
+In-Reply-To: <20200427235621.7823-4-longman@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NVIDIA Tegra Partition Table takes into account MMC card's BOOT_SIZE_MULT
-parameter, and thus, the partition parser needs to retrieve that EXT_CSD
-value from the block device.  There are also some other parts of struct
-mmc_card that are needed for the partition parser in order to calculate
-the eMMC offset and verify different things.  This patch introduces new
-helper which takes block device for the input argument and returns the
-corresponding MMC card.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/mmc/core/block.c   | 15 +++++++++++++++
- include/linux/mmc/blkdev.h | 13 +++++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 include/linux/mmc/blkdev.h
 
-diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-index c5367e2c8487..99298e888381 100644
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -40,6 +40,7 @@
- #include <linux/debugfs.h>
- 
- #include <linux/mmc/ioctl.h>
-+#include <linux/mmc/blkdev.h>
- #include <linux/mmc/card.h>
- #include <linux/mmc/host.h>
- #include <linux/mmc/mmc.h>
-@@ -305,6 +306,20 @@ static ssize_t force_ro_store(struct device *dev, struct device_attribute *attr,
- 	return ret;
- }
- 
-+struct mmc_card *mmc_bdev_to_card(struct block_device *bdev)
-+{
-+	struct mmc_blk_data *md;
-+
-+	if (bdev->bd_disk->major != MMC_BLOCK_MAJOR)
-+		return NULL;
-+
-+	md = mmc_blk_get(bdev->bd_disk);
-+	if (!md)
-+		return NULL;
-+
-+	return md->queue.card;
-+}
-+
- static int mmc_blk_open(struct block_device *bdev, fmode_t mode)
- {
- 	struct mmc_blk_data *md = mmc_blk_get(bdev->bd_disk);
-diff --git a/include/linux/mmc/blkdev.h b/include/linux/mmc/blkdev.h
-new file mode 100644
-index 000000000000..67608c58de70
---- /dev/null
-+++ b/include/linux/mmc/blkdev.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ *  linux/include/linux/mmc/blkdev.h
-+ */
-+#ifndef LINUX_MMC_BLOCK_DEVICE_H
-+#define LINUX_MMC_BLOCK_DEVICE_H
-+
-+struct block_device;
-+struct mmc_card;
-+
-+struct mmc_card *mmc_bdev_to_card(struct block_device *bdev);
-+
-+#endif /* LINUX_MMC_BLOCK_DEVICE_H */
--- 
-2.26.0
+> On Apr 27, 2020, at 7:56 PM, Waiman Long <longman@redhat.com> wrote:
+>=20
+> It turns out that switching from slab_mutex to memcg_cache_ids_sem in
+> slab_attr_store() does not completely eliminate circular locking dependenc=
+y
+> as shown by the following lockdep splat when the system is shut down:
+>=20
+> [ 2095.079697] Chain exists of:
+> [ 2095.079697]   kn->count#278 --> memcg_cache_ids_sem --> slab_mutex
+> [ 2095.079697]
+> [ 2095.090278]  Possible unsafe locking scenario:
+> [ 2095.090278]
+> [ 2095.096227]        CPU0                    CPU1
+> [ 2095.100779]        ----                    ----
+> [ 2095.105331]   lock(slab_mutex);
+> [ 2095.108486]                                lock(memcg_cache_ids_sem);
+> [ 2095.114961]                                lock(slab_mutex);
+> [ 2095.120649]   lock(kn->count#278);
+> [ 2095.124068]
+> [ 2095.124068]  *** DEADLOCK ***
 
+Can you show the full splat?
+
+>=20
+> To eliminate this possibility, we have to use trylock to acquire
+> memcg_cache_ids_sem. Unlikely slab_mutex which can be acquired in
+> many places, the memcg_cache_ids_sem write lock is only acquired
+> in memcg_alloc_cache_id() to double the size of memcg_nr_cache_ids.
+> So the chance of successive calls to memcg_alloc_cache_id() within
+> a short time is pretty low. As a result, we can retry the read lock
+> acquisition a few times if the first attempt fails.
+>=20
+> Signed-off-by: Waiman Long <longman@redhat.com>
+
+The code looks a bit hacky and probably not that robust. Since it is the shu=
+tdown path which is not all that important without lockdep, maybe you could d=
+rop this single patch for now until there is a better solution?
+
+> ---
+> include/linux/memcontrol.h |  1 +
+> mm/memcontrol.c            |  5 +++++
+> mm/slub.c                  | 25 +++++++++++++++++++++++--
+> 3 files changed, 29 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index d275c72c4f8e..9285f14965b1 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -1379,6 +1379,7 @@ extern struct workqueue_struct *memcg_kmem_cache_wq;=
+
+> extern int memcg_nr_cache_ids;
+> void memcg_get_cache_ids(void);
+> void memcg_put_cache_ids(void);
+> +int  memcg_tryget_cache_ids(void);
+>=20
+> /*
+>  * Helper macro to loop through all memcg-specific caches. Callers must st=
+ill
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 5beea03dd58a..9fa8535ff72a 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -279,6 +279,11 @@ void memcg_get_cache_ids(void)
+>    down_read(&memcg_cache_ids_sem);
+> }
+>=20
+> +int memcg_tryget_cache_ids(void)
+> +{
+> +    return down_read_trylock(&memcg_cache_ids_sem);
+> +}
+> +
+> void memcg_put_cache_ids(void)
+> {
+>    up_read(&memcg_cache_ids_sem);
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 44cb5215c17f..cf2114ca27f7 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -34,6 +34,7 @@
+> #include <linux/prefetch.h>
+> #include <linux/memcontrol.h>
+> #include <linux/random.h>
+> +#include <linux/delay.h>
+>=20
+> #include <trace/events/kmem.h>
+>=20
+> @@ -5572,6 +5573,7 @@ static ssize_t slab_attr_store(struct kobject *kobj,=
+
+>        !list_empty(&s->memcg_params.children)) {
+>        struct kmem_cache *c, **pcaches;
+>        int idx, max, cnt =3D 0;
+> +        int retries =3D 3;
+>        size_t size, old =3D s->max_attr_size;
+>        struct memcg_cache_array *arr;
+>=20
+> @@ -5585,9 +5587,28 @@ static ssize_t slab_attr_store(struct kobject *kobj=
+,
+>            old =3D cmpxchg(&s->max_attr_size, size, len);
+>        } while (old !=3D size);
+>=20
+> -        memcg_get_cache_ids();
+> -        max =3D memcg_nr_cache_ids;
+> +        /*
+> +         * To avoid the following circular lock chain
+> +         *
+> +         *   kn->count#278 --> memcg_cache_ids_sem --> slab_mutex
+> +         *
+> +         * We need to use trylock to acquire memcg_cache_ids_sem.
+> +         *
+> +         * Since the write lock is acquired only in
+> +         * memcg_alloc_cache_id() to double the size of
+> +         * memcg_nr_cache_ids. The chance of successive
+> +         * memcg_alloc_cache_id() calls within a short time is
+> +         * very low except at the beginning where the number of
+> +         * memory cgroups is low. So we retry a few times to get
+> +         * the memcg_cache_ids_sem read lock.
+> +         */
+> +        while (!memcg_tryget_cache_ids()) {
+> +            if (retries-- <=3D 0)
+> +                return -EBUSY;
+> +            msleep(100);
+> +        }
+>=20
+> +        max =3D memcg_nr_cache_ids;
+>        pcaches =3D kmalloc_array(max, sizeof(void *), GFP_KERNEL);
+>        if (!pcaches) {
+>            memcg_put_cache_ids();
