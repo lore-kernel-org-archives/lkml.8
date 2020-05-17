@@ -2,169 +2,104 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A50E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 01:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 01:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 814BC20671
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 01:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882CE206F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 01:17:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iaSiRWtO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgEQBFC (ORCPT
+        id S1726918AbgEQBQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 21:05:02 -0400
-Received: from mga11.intel.com ([192.55.52.93]:4196 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726295AbgEQBFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 21:05:02 -0400
-IronPort-SDR: 8B6s+htQd2MIIUTtYbUQ+YrOkZOqQAKoRoYeIrrDxjaEPa8JhQeq5EwUYFw2d0z60EmgBGZPBz
- UgZzHcj1mZlg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 18:05:01 -0700
-IronPort-SDR: EkVkhr3HzUfPyNvOlJzfFDSVSK1AO9oEoq5EiCfKAPcZYKg6OS++z41D+UZdYcHIkJN8ihkw/L
- XNspzKndRwWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,401,1583222400"; 
-   d="scan'208";a="263581680"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 16 May 2020 18:05:00 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1ja7jf-000GmV-Pb; Sun, 17 May 2020 09:04:59 +0800
-Date:   Sun, 17 May 2020 09:04:53 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:lkmm-dev] BUILD SUCCESS
- ae801b4aaca0db21c44819ab833dc591b1d3219e
-Message-ID: <5ec08db5.ULVqKmT63BWLVABh%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 16 May 2020 21:16:06 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48369 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726833AbgEQBQG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 21:16:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589678165;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DkMpg+DAZVobJN3z7nH0TAxZiR3oF4oJ3zndpFda8ag=;
+        b=iaSiRWtOYjwQRzRNseQg1TFLt0j1Z+mny0K/v7LWz9/rIKE/Ncl0bs/yxBO5gz1VRcF9//
+        464/Mc1zfeoNJ5LcpwrAKtOsc4sNDvamRZQq3MqYDtHforV8wvrzMKgFJ+bJFBo647+Qmv
+        kmF5OfFNfxPPYWLjNhlC7vnXgX1If3U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291-sw_h2SfLOCSt6ovumpljBA-1; Sat, 16 May 2020 21:15:58 -0400
+X-MC-Unique: sw_h2SfLOCSt6ovumpljBA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 771F01009440;
+        Sun, 17 May 2020 01:15:57 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-112-26.rdu2.redhat.com [10.10.112.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E7D805C1D6;
+        Sun, 17 May 2020 01:15:55 +0000 (UTC)
+Subject: Re: "BUG: MAX_LOCKDEP_ENTRIES too low" with 6979
+ "&type->s_umount_key"
+To:     Qian Cai <cai@lca.pw>, Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Alexander Viro <viro@ZenIV.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <F430E503-F8E9-41B6-B23E-D350FD73359B@lca.pw>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <e8c6d3af-3045-0a37-5e9e-bfd60c09f97d@redhat.com>
+Date:   Sat, 16 May 2020 21:15:55 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <F430E503-F8E9-41B6-B23E-D350FD73359B@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  lkmm-dev
-branch HEAD: ae801b4aaca0db21c44819ab833dc591b1d3219e  tools/memory-model: Use "-unroll 0" to keep --hw runs finite
+On 5/15/20 1:21 AM, Qian Cai wrote:
+> Lockdep is screwed here in next-20200514 due to "BUG: MAX_LOCKDEP_ENTRIES too low". One of the traces below pointed to this linux-next commit,
+>
+> 8c8e824d4ef0 watch_queue: Introduce a non-repeating system-unique superblock ID
+>
+> which was accidentally just showed up in next-20200514 along with,
+>
+> 46896d79c514 watch_queue: Add superblock notifications
+>
+> I did have here,
+>
+> CONFIG_SB_NOTIFICATIONS=y
+> CONFIG_MOUNT_NOTIFICATIONS=y
+> CONFIG_FSINFO=y
+>
+> While MAX_LOCKDEP_ENTRIES is 32768, I noticed there is one type of lock had a lot along,
+>
+> # grep  'type->s_umount_key’ /proc/lockdep_chains | wc -l
+> 6979
 
-elapsed time: 482m
+The lock_list table entries are for tracking a lock's forward and 
+backward dependencies. The lockdep_chains isn't the right lockdep file 
+to look at. Instead, check the lockdep files for entries with the 
+maximum BD (backward dependency) + FD (forward dependency). That will 
+give you a better view of which locks are consuming most of the 
+lock_list entries. Also take a look at lockdep_stats for an overall view 
+of how much various table entries are being consumed.
 
-configs tested: 102
-configs skipped: 1
+Cheers,
+Longman
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-m68k                             allyesconfig
-mips                             allyesconfig
-sparc                            allyesconfig
-mips                malta_kvm_guest_defconfig
-arc                            hsdk_defconfig
-arc                           tb10x_defconfig
-h8300                            alldefconfig
-powerpc                           allnoconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a005-20200517
-x86_64               randconfig-a003-20200517
-x86_64               randconfig-a006-20200517
-x86_64               randconfig-a004-20200517
-x86_64               randconfig-a001-20200517
-x86_64               randconfig-a002-20200517
-i386                 randconfig-a006-20200517
-i386                 randconfig-a005-20200517
-i386                 randconfig-a003-20200517
-i386                 randconfig-a001-20200517
-i386                 randconfig-a004-20200517
-i386                 randconfig-a002-20200517
-i386                 randconfig-a012-20200517
-i386                 randconfig-a016-20200517
-i386                 randconfig-a014-20200517
-i386                 randconfig-a011-20200517
-i386                 randconfig-a013-20200517
-i386                 randconfig-a015-20200517
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-x86_64                              defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
