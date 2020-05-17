@@ -2,181 +2,454 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536EAC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67CB22075F
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2988C207C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:13:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARxbEcTM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WvdZPeLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgEQNIf (ORCPT
+        id S1727992AbgEQNNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 09:08:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47300 "EHLO
+        Sun, 17 May 2020 09:13:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbgEQNIe (ORCPT
+        with ESMTP id S1727928AbgEQNNO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 09:08:34 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CC3BC061A0C;
-        Sun, 17 May 2020 06:08:34 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id z22so5649468lfd.0;
-        Sun, 17 May 2020 06:08:34 -0700 (PDT)
+        Sun, 17 May 2020 09:13:14 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2DC9C05BD0C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 06:13:13 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id e16so8630789wra.7
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 06:13:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aKLX6VTSdRiK9YTLmZQPvCDlkSARMjWiCKvL6+N4SsM=;
-        b=ARxbEcTMlApvt0jToNOC++bf5g9cpZWXPfXh2ZQ4yILhpPXcpx+KnOpcEIVWUIduux
-         78WCdMKEhpwQXPlmc6EJAVwgPNMQh53lfauVqhJMtOCvJiKLjapck68/f/vaS+jbndrz
-         6jr+MwnvXvV9AamXrumbnoq1Q7iH65v4UgnA0o6YisRDm5xiZMzZFWyukZTkmTv0/uC6
-         B9KXIYSCtoR6BfBYMTzKYS7PNFJ21QQ1I8HT5ISjNc+KZ2bg57e/W4qeF6Sj0072N3jr
-         r4JhG9UW6mo0v6DMLhUBfWdmGFeC3XfxA1lJInlboU7+zk0unaGHt7W9VmL7BIGnSTjd
-         N2gg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6imflI5Mq63w2A/20zqDnMtXu/MSW/rhrjlk3lZ1meg=;
+        b=WvdZPeLixKTmVz4E/4gyupH7wwMukSgfGsU/wwQfdrwgcM6lUS7InLy5FBG/jwLgud
+         mGGcNsHV5jW+amvLrvWxRGsktjFe2vi7gYD1ClIBriOuDAYwRZf+dSCnkyL8WocChlhm
+         BhLXukyuo2yFBdnzb89iOnAMSBljI3QbxUOi+INvgDoIEq1RCOUX5AbCTvI76qgkqB8l
+         Pdx5Ry4tbE9LEQ3MEm4IM71EHGwtk5eqmRghTqZAholL+8GSbJ3rBgY9JTPEGUiDpe1+
+         hnMizcRs1YzBMkP6jEavGElAwV2nyaBC4PFDLewDIRYYT6yMNqA5mBYzXSGgeWnIycEl
+         u3nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aKLX6VTSdRiK9YTLmZQPvCDlkSARMjWiCKvL6+N4SsM=;
-        b=NYXQNfZN+mUV8DNsgrRcsrHxQ1bvJri20BbfaPBtpUV8ZeBgrOR4OsFHByV691oDYz
-         hnt4rT0UvxIvip2q7+6QmPOtUB4XGrlh8PiPLPInsP5xwdwvAg8ugr+125KflyMPh0WS
-         SEEG15du6NGl8I9sfPc0f+nv/g0lhHaCi/MdRCzg7GBZoNK438E+reQ4LyInNCq4Ppvl
-         0VKx6Tw1vot3OC+oMRhXmsIga4oP8N+jtGPGZBDCjMIk1xETKhvmOwIEvBZqj/Pjc1Lo
-         TseHz/OcxdFVh56BvNp9buh7IoyvOBTz4T0vb0n685R+Uhy5P7SL5aO3qFoI9tk5r/eB
-         nn5w==
-X-Gm-Message-State: AOAM533i0QKjhY2+mqN6tsWbAu7i6461GtDs7K4pQynTtBISsCE2EKk7
-        vx+yskPGwzMm0YHy8/DhNvs=
-X-Google-Smtp-Source: ABdhPJwzGiXoJSyYrOM4t1lYkY/l5h0javR+XPysJOQttuqzPuboHKC4FPW4dbKr1xcQ6sKh9P/iEg==
-X-Received: by 2002:a19:c04:: with SMTP id 4mr8457763lfm.17.1589720912837;
-        Sun, 17 May 2020 06:08:32 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id j15sm4098636lja.71.2020.05.17.06.08.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 May 2020 06:08:32 -0700 (PDT)
-Subject: Re: [PATCH v11 33/56] Input: atmel_mxt_ts - delay enabling IRQ when
- not using regulators
-To:     "Wang, Jiada" <jiada_wang@mentor.com>
-Cc:     nick@shmanahar.org, dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, bsz@semihalf.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200508055656.96389-1-jiada_wang@mentor.com>
- <20200508055656.96389-34-jiada_wang@mentor.com>
- <3a942afa-c047-2c88-1c8e-a90fa018738e@gmail.com>
- <6af23ae6-2f1c-0459-d2b6-1b01ddb0c3dc@mentor.com>
- <c88d24ef-e0e0-db3b-1000-b21af906eb4f@gmail.com>
- <aaf99a11-037e-93d8-93e4-d83e3aa4a42e@mentor.com>
- <63c93fc0-ac09-ec77-c590-08e419734205@gmail.com>
- <8c6f73a2-f613-b402-d727-5cb7fb3e1f09@mentor.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <2e41656c-e7e4-5dcb-1156-bcfcbc8ea595@gmail.com>
-Date:   Sun, 17 May 2020 16:08:31 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6imflI5Mq63w2A/20zqDnMtXu/MSW/rhrjlk3lZ1meg=;
+        b=cfuBhzQvJuShMpi65kAcJKQZVItxRTcCCoEIVif3b2bFx5CUHlI4hGfOCaJCfiN7fB
+         cGLMoqfnQUQjACwUs5vj5Hn6aLS0HumWfZNFyHXecJTZg4liQMIo22FxCHdxLNWgQZA5
+         CCmo/gyJFI9QNz07iy3yaFXUTGCKeZi4nri+7Bcnu5iuUJt2aym0lJtXIfJDY/RjeLfv
+         3kzrJhf7VvRGKMdJzDyUEShShDdOCsLPdqijFk2AMSqyXVCYJB9CTvejAKdnCVJAKolD
+         q+ytxK9JwPXCSYxjbuFnTv2G+WXNyAuhZAcGAWSOOyeGCAHExmAd7y6SH/Ko1O5RTv4/
+         18Cg==
+X-Gm-Message-State: AOAM5300ae7sCbctn0uzl2SutIcA3vJTwdJJK4oHHxnyln35smbS7LV0
+        gNWRdvM1OPamVbLpfsXWDz8aPQ==
+X-Google-Smtp-Source: ABdhPJwNo8GS3265Gso+SlM11rmI/dtfNzfZ946DqBwotLPSpxQ32BD4ouFS0cZIF9Otf1LILf0fjA==
+X-Received: by 2002:adf:c381:: with SMTP id p1mr14792201wrf.148.1589721192483;
+        Sun, 17 May 2020 06:13:12 -0700 (PDT)
+Received: from localhost.localdomain ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id i21sm10962271wml.5.2020.05.17.06.13.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 06:13:12 -0700 (PDT)
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        shawn.guo@linaro.org, p.zabel@pengutronix.de,
+        vincent.knecht@mailoo.org, konradybcio@gmail.com,
+        bryan.odonoghue@linaro.org
+Subject: [PATCH v5 1/2] clk: qcom: Add DT bindings for MSM8939 GCC
+Date:   Sun, 17 May 2020 14:13:47 +0100
+Message-Id: <20200517131348.688405-2-bryan.odonoghue@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200517131348.688405-1-bryan.odonoghue@linaro.org>
+References: <20200517131348.688405-1-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <8c6f73a2-f613-b402-d727-5cb7fb3e1f09@mentor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.05.2020 06:32, Wang, Jiada пишет:
-> Hello Dmitry
-> 
-> On 2020/05/14 13:53, Dmitry Osipenko wrote:
->> 13.05.2020 08:07, Wang, Jiada пишет:
->>> Hello Dmitry
->>>
->>> On 2020/05/12 8:13, Dmitry Osipenko wrote:
->>>> 11.05.2020 05:05, Wang, Jiada пишет:
->>>>> Hello Dmitry
->>>>>
->>>>> Thanks for your comment and test,
->>>>>
->>>>> can you let me know which platform (board) you are using for test,
->>>>> and DTS changes if you have added any.
->>>>
->>>> That's this device-tree [1] without any extra changes.
->>>>
->>> I am using Samsung Chromebook Pro for testing,
->>> but obviously some of the use cases it can't cover.
->>>
->>> I also would like to test on same device you are using,
->>> would you please let me know how to boot Acer Iconia Tab A500
->>> with custom images. Are you booting Linux or Android on it?
->>
->> I'm using Ubuntu 20.04 on it at the moment. In order to boot custom
->> images you'll need at least to install a custom recovery, which will
->> allow to flash boot.img on eMMC storage.
->>
->> Ideally, you'll need to install an unlocked bootloader that will enable
->> Android's fastboot, and thus, allow to easily boot kernel zImage without
->> messing with flashing boot images.
->>
->> Could you please tell what is the current state of yours device: does it
->> have a stock Android installed? is it rooted? is custom recovery
->> installed?
->>
-> Thanks for your information
-> 
-> By following instructions found in XDA forums,
-> now I am able to install an unlocked bootloader,
-> boot among primary kernel, recovery kernel or fastboot,
-> an Android custom stock rom also has been installed
+Add compatible strings and the include files for the MSM8939 GCC.
 
-Awesome!
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Tested-by: Vincent Knecht <vincent.knecht@mailoo.org>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+---
+ .../devicetree/bindings/clock/qcom,gcc.yaml   |   3 +
+ include/dt-bindings/clock/qcom,gcc-msm8939.h  | 206 ++++++++++++++++++
+ include/dt-bindings/reset/qcom,gcc-msm8939.h  | 110 ++++++++++
+ 3 files changed, 319 insertions(+)
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8939.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8939.h
 
-> Could you please let me know how to install local built ubuntu images
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+index e533bb0cfd2b..ee0467fb5e31 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+@@ -22,6 +22,8 @@ description: |
+   - dt-bindings/reset/qcom,gcc-ipq6018.h
+   - dt-bindings/clock/qcom,gcc-ipq806x.h (qcom,gcc-ipq8064)
+   - dt-bindings/reset/qcom,gcc-ipq806x.h (qcom,gcc-ipq8064)
++  - dt-bindings/clock/qcom,gcc-msm8939.h
++  - dt-bindings/reset/qcom,gcc-msm8939.h
+   - dt-bindings/clock/qcom,gcc-msm8660.h
+   - dt-bindings/reset/qcom,gcc-msm8660.h
+   - dt-bindings/clock/qcom,gcc-msm8974.h
+@@ -41,6 +43,7 @@ properties:
+       - qcom,gcc-ipq8064
+       - qcom,gcc-msm8660
+       - qcom,gcc-msm8916
++      - qcom,gcc-msm8939
+       - qcom,gcc-msm8960
+       - qcom,gcc-msm8974
+       - qcom,gcc-msm8974pro
+diff --git a/include/dt-bindings/clock/qcom,gcc-msm8939.h b/include/dt-bindings/clock/qcom,gcc-msm8939.h
+new file mode 100644
+index 000000000000..0634467c4ce5
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,gcc-msm8939.h
+@@ -0,0 +1,206 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright 2020 Linaro Limited
++ */
++
++#ifndef _DT_BINDINGS_CLK_MSM_GCC_8939_H
++#define _DT_BINDINGS_CLK_MSM_GCC_8939_H
++
++#define GPLL0					0
++#define GPLL0_VOTE				1
++#define BIMC_PLL				2
++#define BIMC_PLL_VOTE				3
++#define GPLL1					4
++#define GPLL1_VOTE				5
++#define GPLL2					6
++#define GPLL2_VOTE				7
++#define PCNOC_BFDCD_CLK_SRC			8
++#define SYSTEM_NOC_BFDCD_CLK_SRC		9
++#define CAMSS_AHB_CLK_SRC			10
++#define APSS_AHB_CLK_SRC			11
++#define CSI0_CLK_SRC				12
++#define CSI1_CLK_SRC				13
++#define GFX3D_CLK_SRC				14
++#define VFE0_CLK_SRC				15
++#define BLSP1_QUP1_I2C_APPS_CLK_SRC		16
++#define BLSP1_QUP1_SPI_APPS_CLK_SRC		17
++#define BLSP1_QUP2_I2C_APPS_CLK_SRC		18
++#define BLSP1_QUP2_SPI_APPS_CLK_SRC		19
++#define BLSP1_QUP3_I2C_APPS_CLK_SRC		20
++#define BLSP1_QUP3_SPI_APPS_CLK_SRC		21
++#define BLSP1_QUP4_I2C_APPS_CLK_SRC		22
++#define BLSP1_QUP4_SPI_APPS_CLK_SRC		23
++#define BLSP1_QUP5_I2C_APPS_CLK_SRC		24
++#define BLSP1_QUP5_SPI_APPS_CLK_SRC		25
++#define BLSP1_QUP6_I2C_APPS_CLK_SRC		26
++#define BLSP1_QUP6_SPI_APPS_CLK_SRC		27
++#define BLSP1_UART1_APPS_CLK_SRC		28
++#define BLSP1_UART2_APPS_CLK_SRC		29
++#define CCI_CLK_SRC				30
++#define CAMSS_GP0_CLK_SRC			31
++#define CAMSS_GP1_CLK_SRC			32
++#define JPEG0_CLK_SRC				33
++#define MCLK0_CLK_SRC				34
++#define MCLK1_CLK_SRC				35
++#define CSI0PHYTIMER_CLK_SRC			36
++#define CSI1PHYTIMER_CLK_SRC			37
++#define CPP_CLK_SRC				38
++#define CRYPTO_CLK_SRC				39
++#define GP1_CLK_SRC				40
++#define GP2_CLK_SRC				41
++#define GP3_CLK_SRC				42
++#define BYTE0_CLK_SRC				43
++#define ESC0_CLK_SRC				44
++#define MDP_CLK_SRC				45
++#define PCLK0_CLK_SRC				46
++#define VSYNC_CLK_SRC				47
++#define PDM2_CLK_SRC				48
++#define SDCC1_APPS_CLK_SRC			49
++#define SDCC2_APPS_CLK_SRC			50
++#define APSS_TCU_CLK_SRC			51
++#define USB_HS_SYSTEM_CLK_SRC			52
++#define VCODEC0_CLK_SRC				53
++#define GCC_BLSP1_AHB_CLK			54
++#define GCC_BLSP1_SLEEP_CLK			55
++#define GCC_BLSP1_QUP1_I2C_APPS_CLK		56
++#define GCC_BLSP1_QUP1_SPI_APPS_CLK		57
++#define GCC_BLSP1_QUP2_I2C_APPS_CLK		58
++#define GCC_BLSP1_QUP2_SPI_APPS_CLK		59
++#define GCC_BLSP1_QUP3_I2C_APPS_CLK		60
++#define GCC_BLSP1_QUP3_SPI_APPS_CLK		61
++#define GCC_BLSP1_QUP4_I2C_APPS_CLK		62
++#define GCC_BLSP1_QUP4_SPI_APPS_CLK		63
++#define GCC_BLSP1_QUP5_I2C_APPS_CLK		64
++#define GCC_BLSP1_QUP5_SPI_APPS_CLK		65
++#define GCC_BLSP1_QUP6_I2C_APPS_CLK		66
++#define GCC_BLSP1_QUP6_SPI_APPS_CLK		67
++#define GCC_BLSP1_UART1_APPS_CLK		68
++#define GCC_BLSP1_UART2_APPS_CLK		69
++#define GCC_BOOT_ROM_AHB_CLK			70
++#define GCC_CAMSS_CCI_AHB_CLK			71
++#define GCC_CAMSS_CCI_CLK			72
++#define GCC_CAMSS_CSI0_AHB_CLK			73
++#define GCC_CAMSS_CSI0_CLK			74
++#define GCC_CAMSS_CSI0PHY_CLK			75
++#define GCC_CAMSS_CSI0PIX_CLK			76
++#define GCC_CAMSS_CSI0RDI_CLK			77
++#define GCC_CAMSS_CSI1_AHB_CLK			78
++#define GCC_CAMSS_CSI1_CLK			79
++#define GCC_CAMSS_CSI1PHY_CLK			80
++#define GCC_CAMSS_CSI1PIX_CLK			81
++#define GCC_CAMSS_CSI1RDI_CLK			82
++#define GCC_CAMSS_CSI_VFE0_CLK			83
++#define GCC_CAMSS_GP0_CLK			84
++#define GCC_CAMSS_GP1_CLK			85
++#define GCC_CAMSS_ISPIF_AHB_CLK			86
++#define GCC_CAMSS_JPEG0_CLK			87
++#define GCC_CAMSS_JPEG_AHB_CLK			88
++#define GCC_CAMSS_JPEG_AXI_CLK			89
++#define GCC_CAMSS_MCLK0_CLK			90
++#define GCC_CAMSS_MCLK1_CLK			91
++#define GCC_CAMSS_MICRO_AHB_CLK			92
++#define GCC_CAMSS_CSI0PHYTIMER_CLK		93
++#define GCC_CAMSS_CSI1PHYTIMER_CLK		94
++#define GCC_CAMSS_AHB_CLK			95
++#define GCC_CAMSS_TOP_AHB_CLK			96
++#define GCC_CAMSS_CPP_AHB_CLK			97
++#define GCC_CAMSS_CPP_CLK			98
++#define GCC_CAMSS_VFE0_CLK			99
++#define GCC_CAMSS_VFE_AHB_CLK			100
++#define GCC_CAMSS_VFE_AXI_CLK			101
++#define GCC_CRYPTO_AHB_CLK			102
++#define GCC_CRYPTO_AXI_CLK			103
++#define GCC_CRYPTO_CLK				104
++#define GCC_OXILI_GMEM_CLK			105
++#define GCC_GP1_CLK				106
++#define GCC_GP2_CLK				107
++#define GCC_GP3_CLK				108
++#define GCC_MDSS_AHB_CLK			109
++#define GCC_MDSS_AXI_CLK			110
++#define GCC_MDSS_BYTE0_CLK			111
++#define GCC_MDSS_ESC0_CLK			112
++#define GCC_MDSS_MDP_CLK			113
++#define GCC_MDSS_PCLK0_CLK			114
++#define GCC_MDSS_VSYNC_CLK			115
++#define GCC_MSS_CFG_AHB_CLK			116
++#define GCC_OXILI_AHB_CLK			117
++#define GCC_OXILI_GFX3D_CLK			118
++#define GCC_PDM2_CLK				119
++#define GCC_PDM_AHB_CLK				120
++#define GCC_PRNG_AHB_CLK			121
++#define GCC_SDCC1_AHB_CLK			122
++#define GCC_SDCC1_APPS_CLK			123
++#define GCC_SDCC2_AHB_CLK			124
++#define GCC_SDCC2_APPS_CLK			125
++#define GCC_GTCU_AHB_CLK			126
++#define GCC_JPEG_TBU_CLK			127
++#define GCC_MDP_TBU_CLK				128
++#define GCC_SMMU_CFG_CLK			129
++#define GCC_VENUS_TBU_CLK			130
++#define GCC_VFE_TBU_CLK				131
++#define GCC_USB2A_PHY_SLEEP_CLK			132
++#define GCC_USB_HS_AHB_CLK			133
++#define GCC_USB_HS_SYSTEM_CLK			134
++#define GCC_VENUS0_AHB_CLK			135
++#define GCC_VENUS0_AXI_CLK			136
++#define GCC_VENUS0_VCODEC0_CLK			137
++#define BIMC_DDR_CLK_SRC			138
++#define GCC_APSS_TCU_CLK			139
++#define GCC_GFX_TCU_CLK				140
++#define BIMC_GPU_CLK_SRC			141
++#define GCC_BIMC_GFX_CLK			142
++#define GCC_BIMC_GPU_CLK			143
++#define ULTAUDIO_LPAIF_PRI_I2S_CLK_SRC		144
++#define ULTAUDIO_LPAIF_SEC_I2S_CLK_SRC		145
++#define ULTAUDIO_LPAIF_AUX_I2S_CLK_SRC		146
++#define ULTAUDIO_XO_CLK_SRC			147
++#define ULTAUDIO_AHBFABRIC_CLK_SRC		148
++#define CODEC_DIGCODEC_CLK_SRC			149
++#define GCC_ULTAUDIO_PCNOC_MPORT_CLK		150
++#define GCC_ULTAUDIO_PCNOC_SWAY_CLK		151
++#define GCC_ULTAUDIO_AVSYNC_XO_CLK		152
++#define GCC_ULTAUDIO_STC_XO_CLK			153
++#define GCC_ULTAUDIO_AHBFABRIC_IXFABRIC_CLK	154
++#define GCC_ULTAUDIO_AHBFABRIC_IXFABRIC_LPM_CLK	155
++#define GCC_ULTAUDIO_LPAIF_PRI_I2S_CLK		156
++#define GCC_ULTAUDIO_LPAIF_SEC_I2S_CLK		157
++#define GCC_ULTAUDIO_LPAIF_AUX_I2S_CLK		158
++#define GCC_CODEC_DIGCODEC_CLK			159
++#define GCC_MSS_Q6_BIMC_AXI_CLK			160
++#define GPLL3					161
++#define GPLL3_VOTE				162
++#define GPLL4					163
++#define GPLL4_VOTE				164
++#define GPLL5					165
++#define GPLL5_VOTE				166
++#define GPLL6					167
++#define GPLL6_VOTE				168
++#define BYTE1_CLK_SRC				169
++#define GCC_MDSS_BYTE1_CLK			170
++#define ESC1_CLK_SRC				171
++#define GCC_MDSS_ESC1_CLK			172
++#define PCLK1_CLK_SRC				173
++#define GCC_MDSS_PCLK1_CLK			174
++#define GCC_GFX_TBU_CLK				175
++#define GCC_CPP_TBU_CLK				176
++#define GCC_MDP_RT_TBU_CLK			177
++#define USB_FS_SYSTEM_CLK_SRC			178
++#define USB_FS_IC_CLK_SRC			179
++#define GCC_USB_FS_AHB_CLK			180
++#define GCC_USB_FS_IC_CLK			181
++#define GCC_USB_FS_SYSTEM_CLK			182
++#define GCC_VENUS0_CORE0_VCODEC0_CLK		183
++#define GCC_VENUS0_CORE1_VCODEC0_CLK		184
++#define GCC_OXILI_TIMER_CLK			185
++
++/* Indexes for GDSCs */
++#define BIMC_GDSC				0
++#define VENUS_GDSC				1
++#define MDSS_GDSC				2
++#define JPEG_GDSC				3
++#define VFE_GDSC				4
++#define OXILI_GDSC				5
++#define VENUS_CORE0_GDSC			6
++#define VENUS_CORE1_GDSC			7
++
++#endif
+diff --git a/include/dt-bindings/reset/qcom,gcc-msm8939.h b/include/dt-bindings/reset/qcom,gcc-msm8939.h
+new file mode 100644
+index 000000000000..fa41ffeae7a2
+--- /dev/null
++++ b/include/dt-bindings/reset/qcom,gcc-msm8939.h
+@@ -0,0 +1,110 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright 2020 Linaro Limited
++ */
++
++#ifndef _DT_BINDINGS_RESET_MSM_GCC_8939_H
++#define _DT_BINDINGS_RESET_MSM_GCC_8939_H
++
++#define GCC_BLSP1_BCR			0
++#define GCC_BLSP1_QUP1_BCR		1
++#define GCC_BLSP1_UART1_BCR		2
++#define GCC_BLSP1_QUP2_BCR		3
++#define GCC_BLSP1_UART2_BCR		4
++#define GCC_BLSP1_QUP3_BCR		5
++#define GCC_BLSP1_QUP4_BCR		6
++#define GCC_BLSP1_QUP5_BCR		7
++#define GCC_BLSP1_QUP6_BCR		8
++#define GCC_IMEM_BCR			9
++#define GCC_SMMU_BCR			10
++#define GCC_APSS_TCU_BCR		11
++#define GCC_SMMU_XPU_BCR		12
++#define GCC_PCNOC_TBU_BCR		13
++#define GCC_PRNG_BCR			14
++#define GCC_BOOT_ROM_BCR		15
++#define GCC_CRYPTO_BCR			16
++#define GCC_SEC_CTRL_BCR		17
++#define GCC_AUDIO_CORE_BCR		18
++#define GCC_ULT_AUDIO_BCR		19
++#define GCC_DEHR_BCR			20
++#define GCC_SYSTEM_NOC_BCR		21
++#define GCC_PCNOC_BCR			22
++#define GCC_TCSR_BCR			23
++#define GCC_QDSS_BCR			24
++#define GCC_DCD_BCR			25
++#define GCC_MSG_RAM_BCR			26
++#define GCC_MPM_BCR			27
++#define GCC_SPMI_BCR			28
++#define GCC_SPDM_BCR			29
++#define GCC_MM_SPDM_BCR			30
++#define GCC_BIMC_BCR			31
++#define GCC_RBCPR_BCR			32
++#define GCC_TLMM_BCR			33
++#define GCC_USB_HS_BCR			34
++#define GCC_USB2A_PHY_BCR		35
++#define GCC_SDCC1_BCR			36
++#define GCC_SDCC2_BCR			37
++#define GCC_PDM_BCR			38
++#define GCC_SNOC_BUS_TIMEOUT0_BCR	39
++#define GCC_PCNOC_BUS_TIMEOUT0_BCR	40
++#define GCC_PCNOC_BUS_TIMEOUT1_BCR	41
++#define GCC_PCNOC_BUS_TIMEOUT2_BCR	42
++#define GCC_PCNOC_BUS_TIMEOUT3_BCR	43
++#define GCC_PCNOC_BUS_TIMEOUT4_BCR	44
++#define GCC_PCNOC_BUS_TIMEOUT5_BCR	45
++#define GCC_PCNOC_BUS_TIMEOUT6_BCR	46
++#define GCC_PCNOC_BUS_TIMEOUT7_BCR	47
++#define GCC_PCNOC_BUS_TIMEOUT8_BCR	48
++#define GCC_PCNOC_BUS_TIMEOUT9_BCR	49
++#define GCC_MMSS_BCR			50
++#define GCC_VENUS0_BCR			51
++#define GCC_MDSS_BCR			52
++#define GCC_CAMSS_PHY0_BCR		53
++#define GCC_CAMSS_CSI0_BCR		54
++#define GCC_CAMSS_CSI0PHY_BCR		55
++#define GCC_CAMSS_CSI0RDI_BCR		56
++#define GCC_CAMSS_CSI0PIX_BCR		57
++#define GCC_CAMSS_PHY1_BCR		58
++#define GCC_CAMSS_CSI1_BCR		59
++#define GCC_CAMSS_CSI1PHY_BCR		60
++#define GCC_CAMSS_CSI1RDI_BCR		61
++#define GCC_CAMSS_CSI1PIX_BCR		62
++#define GCC_CAMSS_ISPIF_BCR		63
++#define GCC_CAMSS_CCI_BCR		64
++#define GCC_CAMSS_MCLK0_BCR		65
++#define GCC_CAMSS_MCLK1_BCR		66
++#define GCC_CAMSS_GP0_BCR		67
++#define GCC_CAMSS_GP1_BCR		68
++#define GCC_CAMSS_TOP_BCR		69
++#define GCC_CAMSS_MICRO_BCR		70
++#define GCC_CAMSS_JPEG_BCR		71
++#define GCC_CAMSS_VFE_BCR		72
++#define GCC_CAMSS_CSI_VFE0_BCR		73
++#define GCC_OXILI_BCR			74
++#define GCC_GMEM_BCR			75
++#define GCC_CAMSS_AHB_BCR		76
++#define GCC_MDP_TBU_BCR			77
++#define GCC_GFX_TBU_BCR			78
++#define GCC_GFX_TCU_BCR			79
++#define GCC_MSS_TBU_AXI_BCR		80
++#define GCC_MSS_TBU_GSS_AXI_BCR		81
++#define GCC_MSS_TBU_Q6_AXI_BCR		82
++#define GCC_GTCU_AHB_BCR		83
++#define GCC_SMMU_CFG_BCR		84
++#define GCC_VFE_TBU_BCR			85
++#define GCC_VENUS_TBU_BCR		86
++#define GCC_JPEG_TBU_BCR		87
++#define GCC_PRONTO_TBU_BCR		88
++#define GCC_SMMU_CATS_BCR		89
++#define GCC_BLSP1_UART3_BCR		90
++#define GCC_CAMSS_CSI2_BCR		91
++#define GCC_CAMSS_CSI2PHY_BCR		92
++#define GCC_CAMSS_CSI2RDI_BCR		93
++#define GCC_CAMSS_CSI2PIX_BCR		94
++#define GCC_USB_FS_BCR			95
++#define GCC_BLSP1_QUP4_SPI_APPS_CBCR	96
++#define GCC_CAMSS_MCLK2_BCR		97
++#define GCC_CPP_TBU_BCR			98
++#define GCC_MDP_RT_TBU_BCR		99
++
++#endif
+-- 
+2.25.1
 
-Sure, please follow these steps:
-
-1. Download rootfs from
-http://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04-base-armhf.tar.gz
-
-2. Extract it wherever you want yours root to be, like ExternalSD card
-or eMMC /data partition or even NFS directory if you'll use usbnet.
-
-3. Clone this kernel https://github.com/grate-driver/linux which is a
-recent upstream linux-next + work-in-progress patches that haven't been
-merged into upstream yet. For example DRM bridges and Tegra Partition
-Table patches are under review now.
-
-4. Select tegra_defconfig:
-
-	ARCH=arm make tegra_defconfig
-
-5. Compile kernel:
-
-	ARCH=arm make
-
-6. Append DTB to zImage:
-
-	cat arch/arm/boot/zImage
-arch/arm/boot/dts/tegra20-acer-a500-picasso.dtb > arch/arm/boot/zImage-dtb
-
-7. Turn on A500 and select 'fastboot' option in the bootloader's menu.
-
-8. Boot compiled kernel:
-
-	fastboot -c "root=/dev/mmcblk2p8 gpt tegraboot=sdmmc" boot
-arch/arm/boot/zImage-dtb
-
-9. Grab touchscreen/WiFi/Bluetooth firmware files from
-https://github.com/digetx/linux-firmware
-
-10. Grab ALSA UCM rule from https://github.com/digetx/alsa-ucm-conf
-
-11. Enjoy!
-
-Please let me know you'll experience any problems, I'll be glad to help.
