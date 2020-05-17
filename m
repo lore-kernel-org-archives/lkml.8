@@ -2,334 +2,150 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7C0C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA045C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D577A20709
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813F520709
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:16:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZCkP13A7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgEQTLg (ORCPT
+        id S1726458AbgEQTQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 15:11:36 -0400
-Received: from v6.sk ([167.172.42.174]:56860 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgEQTLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 15:11:34 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 0856C610A8;
-        Sun, 17 May 2020 19:11:30 +0000 (UTC)
-Date:   Sun, 17 May 2020 21:11:28 +0200
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 23/28] dt-bindings: interrupt-controller: Convert
- mrvl,intc to json-schema
-Message-ID: <20200517191128.GC1695525@furthur.local>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
- <20200317093922.20785-24-lkundrak@v3.sk>
- <20200327194207.GA1996@bogus>
+        Sun, 17 May 2020 15:16:07 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26156 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726269AbgEQTQG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 15:16:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589742964;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=U+w/3zmaHjfLCAsHS652uDQzylLJ6xD4X3mXeELm+dc=;
+        b=ZCkP13A71+DPx6MTb9jLOT4UlzFLHaOoXi67wcfvVtkZ1BvLWEp1fF+sSkQjVYZWkQKlR6
+        O8s7iGQdSxuAVRl4e59djgh0Gut1I41dmCmo3/wbRu+MLw+OFymW2tp1jSm7jUB4qDZ4oc
+        rx+TFZaPGQvpz/NCJWzTzXGAku6Q7+U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291-N0Pb0_uqMOax4Nb0ao2KYw-1; Sun, 17 May 2020 15:16:02 -0400
+X-MC-Unique: N0Pb0_uqMOax4Nb0ao2KYw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3013E1005512;
+        Sun, 17 May 2020 19:16:01 +0000 (UTC)
+Received: from [10.10.112.55] (ovpn-112-55.rdu2.redhat.com [10.10.112.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 803735D9D7;
+        Sun, 17 May 2020 19:16:00 +0000 (UTC)
+Subject: Re: [PATCH target] target: Add initiatorname to NON_EXISTENT_LUN
+ error
+To:     Lance Digby <lance.digby@gmail.com>
+Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cd119ce943d9ec62ef1bff237ebb49e35a337c3b.1589407872.git.lance.digby@gmail.com>
+ <93c437ce-f881-9f54-5e39-afa8afd96141@redhat.com>
+ <CAHh6B+poeCFeZjCt04QT2c12bgvCf9UN+5vdx5EeK6PcgD2y3g@mail.gmail.com>
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <fb2b881c-fe23-4a80-53c3-189d744f2fe3@redhat.com>
+Date:   Sun, 17 May 2020 14:16:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327194207.GA1996@bogus>
+In-Reply-To: <CAHh6B+poeCFeZjCt04QT2c12bgvCf9UN+5vdx5EeK6PcgD2y3g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 01:42:07PM -0600, Rob Herring wrote:
-> On Tue, Mar 17, 2020 at 10:39:17AM +0100, Lubomir Rintel wrote:
-> > Convert the mrvl,intc binding to DT schema format using json-schema.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > ---
-> >  .../interrupt-controller/mrvl,intc.txt        |  64 --------
-> >  .../interrupt-controller/mrvl,intc.yaml       | 144 ++++++++++++++++++
-> >  2 files changed, 144 insertions(+), 64 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
-> > deleted file mode 100644
-> > index a0ed02725a9d7..0000000000000
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
-> > +++ /dev/null
-> > @@ -1,64 +0,0 @@
-> > -* Marvell MMP Interrupt controller
-> > -
-> > -Required properties:
-> > -- compatible : Should be
-> > -               "mrvl,mmp-intc" on Marvel MMP,
-> > -               "mrvl,mmp2-intc" along with "mrvl,mmp2-mux-intc" on MMP2 or
-> > -               "marvell,mmp3-intc" with "mrvl,mmp2-mux-intc" on MMP3
-> > -- reg : Address and length of the register set of the interrupt controller.
-> > -  If the interrupt controller is intc, address and length means the range
-> > -  of the whole interrupt controller. The "marvell,mmp3-intc" controller
-> > -  also has a secondary range for the second CPU core.  If the interrupt
-> > -  controller is mux-intc, address and length means one register. Since
-> > -  address of mux-intc is in the range of intc. mux-intc is secondary
-> > -  interrupt controller.
-> > -- reg-names : Name of the register set of the interrupt controller. It's
-> > -  only required in mux-intc interrupt controller.
-> > -- interrupts : Should be the port interrupt shared by mux interrupts. It's
-> > -  only required in mux-intc interrupt controller.
-> > -- interrupt-controller : Identifies the node as an interrupt controller.
-> > -- #interrupt-cells : Specifies the number of cells needed to encode an
-> > -  interrupt source.
-> > -- mrvl,intc-nr-irqs : Specifies the number of interrupts in the interrupt
-> > -  controller.
-> > -- mrvl,clr-mfp-irq : Specifies the interrupt that needs to clear MFP edge
-> > -  detection first.
-> > -
-> > -Example:
-> > -	intc: interrupt-controller@d4282000 {
-> > -		compatible = "mrvl,mmp2-intc";
-> > -		interrupt-controller;
-> > -		#interrupt-cells = <1>;
-> > -		reg = <0xd4282000 0x1000>;
-> > -		mrvl,intc-nr-irqs = <64>;
-> > -	};
-> > -
-> > -	intcmux4@d4282150 {
-> > -		compatible = "mrvl,mmp2-mux-intc";
-> > -		interrupts = <4>;
-> > -		interrupt-controller;
-> > -		#interrupt-cells = <1>;
-> > -		reg = <0x150 0x4>, <0x168 0x4>;
-> > -		reg-names = "mux status", "mux mask";
-> > -		mrvl,intc-nr-irqs = <2>;
-> > -	};
-> > -
-> > -* Marvell Orion Interrupt controller
-> > -
-> > -Required properties
-> > -- compatible :  Should be "marvell,orion-intc".
-> > -- #interrupt-cells: Specifies the number of cells needed to encode an
-> > -  interrupt source. Supported value is <1>.
-> > -- interrupt-controller : Declare this node to be an interrupt controller.
-> > -- reg : Interrupt mask address. A list of 4 byte ranges, one per controller.
-> > -        One entry in the list represents 32 interrupts.
-> > -
-> > -Example:
-> > -
-> > -	intc: interrupt-controller {
-> > -        	compatible = "marvell,orion-intc", "marvell,intc";
-> > -		interrupt-controller;
-> > -		#interrupt-cells = <1>;
-> > -                reg = <0xfed20204 0x04>,
-> > -		      <0xfed20214 0x04>;
-> > -        };
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
-> > new file mode 100644
-> > index 0000000000000..f0644f7d7e1d2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
-> > @@ -0,0 +1,144 @@
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/interrupt-controller/mrvl,intc.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Marvell MMP/Orion Interrupt controller bindings
-> > +
-> > +maintainers:
-> > +  - devicetree@vger.kernel.org
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/interrupt-controller.yaml#
+On 5/16/20 6:29 PM, Lance Digby wrote:
+> Mike,  Thanks for the review!
+>   The pr_err  Detected NON_EXISTENT_LUN is the error messages issued
+> for the TCM_NON_EXISTENT_LUN retcode so I believe they are the same.
+>   Simply scanning for the wrong lun on an initiator will generate this
+> error on the target but not generate an error on the initiator. And I
+> have seen installs, with a lot of initiators, automate the scanning of
+> such luns incorrectly deemed missing.
+>   While this looks like a simple problem it can take days to get
+> access or the tcp traces to sort it out.
 > 
-> Drop this. It is already applied based on matching on the node name.
-> 
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          not:
-> > +            contains:
-> > +              const: marvell,orion-intc
-> > +    then:
-> > +      required:
-> > +        - mrvl,intc-nr-irqs
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - mrvl,mmp-intc
-> > +              - mrvl,mmp2-intc
-> > +    then:
-> > +      properties:
-> > +        reg:
-> > +          minItems: 1
-> > +          maxItems: 1
-> 
-> Drop minItems, as just 'maxItems: 1' is enough.
-> 
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - marvell,mmp3-intc
-> > +              - mrvl,mmp2-mux-intc
-> > +    then:
-> > +      properties:
-> > +        reg:
-> > +          minItems: 2
-> > +          maxItems: 2
-> 
-> Just 'minItems: 2'.
-> 
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: marvell,orion-intc
-> > +    then:
-> > +      properties:
-> > +        reg:
-> > +          minItems: 1
-> > +          maxItems: 2
-> 
-> Normally, for a compatible this would not vary...
-> 
-> In any case, move this to the main section and drop this if.
-> 
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: mrvl,mmp2-mux-intc
-> > +    then:
-> > +      properties:
-> > +        interrupts:
-> > +          minItems: 1
-> > +          maxItems: 1
-> 
-> Just 'maxItems'
-> 
-> > +        reg-names:
-> > +          minItems: 2
-> > +          maxItems: 2
-> 
-> These are redundant as 'items' size implies this.
-> 
-> > +          items:
-> > +            - const: 'mux status'
-> > +            - const: 'mux mask'
-> 
-> Move this to the main section.
-> 
-> > +      required:
-> > +        - interrupts
-> > +    else:
-> > +      properties:
-> > +        interrupts: false
-> > +
-> > +properties:
-> > +  '#interrupt-cells':
-> > +    const: 1
-> > +
-> > +  compatible:
-> > +    enum:
-> > +      - mrvl,mmp-intc
-> > +      - mrvl,mmp2-intc
-> > +      - marvell,mmp3-intc
-> > +      - marvell,orion-intc
-> > +      - mrvl,mmp2-mux-intc
-> > +
-> > +  reg: true
-> > +
-> > +  reg-names: true
-> > +
-> > +  interrupts: true
-> > +
-> > +  interrupt-controller: true
-> > +
-> > +  mrvl,intc-nr-irqs:
-> > +    description: |
-> > +      Specifies the number of interrupts in the interrupt controller.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> Is there a max number?
+>    Within the same routine there is another pr_err for
+> TCM_WRITE_PROTECTED that I did not add the initiatorname to as I
+> thought this would leave a heavy footprint on the initiator. If you
 
-There's none in the original bindings document or enforced by the
-driver.
+I'm not sure what you mean by heavy footprint on the initiator part means.
 
-> > +
-> > +  mrvl,clr-mfp-irq:
-> > +    description: |
-> > +      Specifies the interrupt that needs to clear MFP edge detection first.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
+I would say do whatever is helpful to you to debug the problem. For
+TCM_WRITE_PROTECTED I'm not sure the initiatorname is helpful. I think
+the target name and tpg would be useful, because I think you sometimes
+set it at the tpg level then it gets inherited by the LU. But I think
+it's a pain to get to the target name from this code path, so I wouldn't
+worry about adding it now.
+
+> believe this should be changed for consistency please let me know and
+> I will add this and change to nacl->initiatorname.
+
+Just to make sure we are on the same page. I was just commenting about
+the other NON_EXISTENT_LUN instace in transport_lookup_tmr_lun. I just
+thought we would want/need the same info there.
+
+
 > 
-> Constraints?
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> On Sat, May 16, 2020 at 9:50 AM Mike Christie <mchristi@redhat.com> wrote:
+>>
+>> On 5/13/20 11:01 PM, Lance Digby wrote:
+>>> The NON_EXISTENT_LUN error can be written without an error condition
+>>>  on the initiator responsible. Adding the initiatorname to this message
+>>>  will reduce the effort required to fix this when many initiators are
+>>> supported by a target.
+>>>
+>>> Signed-off-by: Lance Digby <lance.digby@gmail.com>
+>>> ---
+>>>  drivers/target/target_core_device.c | 5 +++--
+>>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
+>>> index 4cee113..604dea0 100644
+>>> --- a/drivers/target/target_core_device.c
+>>> +++ b/drivers/target/target_core_device.c
+>>> @@ -100,9 +100,10 @@
+>>>                */
+>>>               if (unpacked_lun != 0) {
+>>>                       pr_err("TARGET_CORE[%s]: Detected NON_EXISTENT_LUN"
+>>> -                             " Access for 0x%08llx\n",
+>>> +                             " Access for 0x%08llx from %s\n",
+>>>                               se_cmd->se_tfo->fabric_name,
+>>> -                             unpacked_lun);
+>>> +                             unpacked_lun,
+>>> +                             se_sess->se_node_acl->initiatorname);
+>>
+>> You can do nacl->initiatorname.
+>>
+>> Do you also want add the name to the tmr case? It's probably not common,
+>> but the error message would be consistent.
+>>
+>>>                       return TCM_NON_EXISTENT_LUN;
+>>>               }
+>>>
+>>
+> 
 
-I don't know how should this be constrained and the original bindings
-document is not helpful.
-
-> > +
-> > +required:
-> > +  - '#interrupt-cells'
-> > +  - compatible
-> > +  - reg
-> > +  - interrupt-controller
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    interrupt-controller@d4282000 {
-> > +        compatible = "mrvl,mmp2-intc";
-> > +        interrupt-controller;
-> > +        #interrupt-cells = <1>;
-> > +        reg = <0xd4282000 0x1000>;
-> > +        mrvl,intc-nr-irqs = <64>;
-> > +    };
-> > +
-> > +    interrupt-controller@d4282150 {
-> > +        compatible = "mrvl,mmp2-mux-intc";
-> > +        interrupts = <4>;
-> > +        interrupt-controller;
-> > +        #interrupt-cells = <1>;
-> > +        reg = <0x150 0x4>, <0x168 0x4>;
-> > +        reg-names = "mux status", "mux mask";
-> > +        mrvl,intc-nr-irqs = <2>;
-> > +    };
-> > +  - |
-> > +    interrupt-controller@fed20204 {
-> > +        compatible = "marvell,orion-intc";
-> > +        interrupt-controller;
-> > +        #interrupt-cells = <1>;
-> > +        reg = <0xfed20204 0x04>,
-> > +              <0xfed20214 0x04>;
-> > +    };
-> > +
-> > +...
-> > -- 
-> > 2.25.1
-> > 
