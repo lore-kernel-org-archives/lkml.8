@@ -2,145 +2,159 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 06:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E05AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 06:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28102206D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 06:13:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YceMpeBT";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="cvGTXSti"
+	by mail.kernel.org (Postfix) with ESMTP id EA8A8206D5
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 06:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgEQGNe (ORCPT
+        id S1727010AbgEQGRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 02:13:34 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:9941 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbgEQGNd (ORCPT
+        Sun, 17 May 2020 02:17:15 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:51714 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbgEQGRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 02:13:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1589696012; x=1621232012;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=5ysBMUN6vaFLl7quhYekcnjisQqvLN1gbZQfetV10Ng=;
-  b=YceMpeBTeibe46Ts5VugqfhG/BvoQ76GQ0wK/km6qbd618YohE6xdEA0
-   65kBBUM1bdsiGFthasqi+VVS11UkwNUxVpACEG8r1wZQQJh7cymo3nnV9
-   +ZzfRK+jqpYoo36N4zjAWFwut3+kpT5pm2VHJf/RAAXAHyCKmI2xUoXEk
-   DaezJnnk5FzBn1HhEJZdLpnXp/+rddVnUjSJszeIEi00jWhFnAL/7x3k5
-   sW2xEVj8oMBusXgm0Me7ElLFexWb65cNRGSQq1Z+FdawgDtgNnqpwhaaW
-   eG5ezWhSFg4YHuO07uxiIqtD6u1ToIs9XeU667qy0nNqs5dz3YhA8SN8T
-   w==;
-IronPort-SDR: BraWwnHvAi1sUukqGVzXgGgWXqML1AnkMB5Z/toE3g9AkPQmNYceNwX1FO1+tXn/vl1y1h47kM
- pwF+a9Kcb6oO6mNHgYkrOh/Y9U2/RnTh2etwsK4iiJc9+EN3x5ntYfR9qi25TmRdKHG/63GAbl
- CHPYEJluJrODtabkRTXWMeS/MQ6ZbREzyrAUqJWUqTuF5kjAm2CQuLwNxh0ElcDXsm5Sbny1it
- SylJNtCnLgDxchrj83+rLg5LvNplmvr4/NPlkfH0qQyHEBtlQbJacqCW1GENMNSFvaX9RoUs3m
- VXw=
-X-IronPort-AV: E=Sophos;i="5.73,402,1583164800"; 
-   d="scan'208";a="139303422"
-Received: from mail-co1nam11lp2170.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.170])
-  by ob1.hgst.iphmx.com with ESMTP; 17 May 2020 14:13:30 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iG1dF5Rhd+HvBZjH+A93iRrDIA/f+ApEuNXtknrig99p+/ezHYYSN/p0l81WP1+dDS392LLe20svtIAiy3dwUl5vMIiLBERQMtLZtaC6qNg6zZCpsTSlmsEEbXlTdJEsPItxOysvauo8VErTYv/FCjl27S9Yp7DzUdNpZUJWlhZz3NUPAnakvnSWLWDRfWaVVFDS7bUosf32cCe1JZR87qJkZfNe1Wtq5XtCYSeQgt6lNFL9Cvnnlp1pINT0mmA8nxk4uIilg0WsvHlRwvQtYAbm15Ery9ZeIWsuzAceIOcBCunQCtEfX6xwt5cZLcBXtuyXAhVyc3s08s6Qwc2lqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5ysBMUN6vaFLl7quhYekcnjisQqvLN1gbZQfetV10Ng=;
- b=E/IZWSqVPpATZV0uN6mQXLYPl/+BsvVFU874OmjwhFhaOhM5OSLPZ+xQlKOoZV6p3tvj/Ohm1pYvA7GGs+sGjf/sPSn6Fzu090c3OkjPvisUtkn2kBazbxzuyH0PkHBu1Rq7NAg3LK84I5U+rBeUJPEVFrr54Qsc/bhvhoyNbdlLiZzFlWDzRNq1TkhX2JkGMpWDYuxfHFJjbpoVuWcCHzZVAjZ+qeDvEI88chvSC41Hd5+U72ehTF72UQK4F6ti7KC1BS5ecHuoMvwQe/ISZaGEH588FPRjg2b0nKQgXvV9ZkTsa2Ja30173tyObhakx0U/p8X/lVE/A47yRJ5GtA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5ysBMUN6vaFLl7quhYekcnjisQqvLN1gbZQfetV10Ng=;
- b=cvGTXStikk2vgvHwNo5WPF2Zj+EBV2ZM9nsL3PlgN5ixk+yjmpyNeSYgDCzV+7FoZPsEQbAcFma50dxzaSPJ7NzG7RBpcSTdl1M/XsyxvSHGq3JmoI5TuY7pL33IF/tcMUNVOezEsfuQ3hzAI3fr+VvGT/35Rg6NKS8i7LSW9BM=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4351.namprd04.prod.outlook.com (2603:10b6:805:3c::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Sun, 17 May
- 2020 06:13:29 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3000.022; Sun, 17 May 2020
- 06:13:29 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Stanley Chu <stanley.chu@mediatek.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>
-CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
-Subject: RE: [PATCH v3 3/5] scsi: ufs: Fix index of attributes query for
- WriteBooster feature
-Thread-Topic: [PATCH v3 3/5] scsi: ufs: Fix index of attributes query for
- WriteBooster feature
-Thread-Index: AQHWK6nu1TLXoSvyQka8tAwzTy8UMqirzQdw
-Date:   Sun, 17 May 2020 06:13:29 +0000
-Message-ID: <SN6PR04MB46400602F95EA8B975F74539FCBB0@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200516174615.15445-1-stanley.chu@mediatek.com>
- <20200516174615.15445-4-stanley.chu@mediatek.com>
-In-Reply-To: <20200516174615.15445-4-stanley.chu@mediatek.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: mediatek.com; dkim=none (message not signed)
- header.d=none;mediatek.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fa5bbe7d-b94a-4ad6-05c9-08d7fa296b24
-x-ms-traffictypediagnostic: SN6PR04MB4351:
-x-microsoft-antispam-prvs: <SN6PR04MB43510B0090FAE7CF79F224ACFCBB0@SN6PR04MB4351.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1107;
-x-forefront-prvs: 040655413E
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: v6LYmwI8cXj3S83sUQ0l/hRvfQ0MCFSeARC7xV1ArP6p8h0fR5fyhRLTzC+xU5P7OyFd6CQ9nKLCXzZ4aM5n7flX8ol3WsjzVvJGr6jDG6w2Q/jFFEAqGnC6TbGa/PvruLdrKJ2G2ZpekID61Kt2s68vSWLGNll/k4JgQUGTLCWDg1OzhjLRFbvyjJP9dqN+HncOO0VqEK/zIo/gSzOlgYPd1ExpBJIQym/IKIDbgGyvM84CLmueQHr9/98Dk5tn/jKlG8LTV5jJ2SN0YX8sIDl4QZ1TKkZCi5w0VRsILRAuhfReJjQNMu+c780VK+WC+v3ie70QGbH96o66qqogZq1yhx7ppqKSKxRZUPW1XE7l+WVnABZaoJLHEHMHP/bb1sxu4eSjre9vrllEZpZXc8u54qK/wrxaNXHtdqJ6JbeZJkMbxjJC4W369dCSSzRS
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39850400004)(366004)(396003)(136003)(346002)(2906002)(6506007)(33656002)(52536014)(55016002)(54906003)(71200400001)(7416002)(9686003)(4326008)(86362001)(7696005)(26005)(110136005)(186003)(558084003)(8676002)(316002)(5660300002)(66946007)(66476007)(478600001)(64756008)(8936002)(66556008)(66446008)(76116006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: p3cf5ZiJIWZbSbyBxbeARrpBB7dWSXGSf/uQFDAJEGT1XKxU9ESWjAtR+fXTEKuEziHVKDRg4yrNVSzu3CnBO3ioQkQe6ZC8y75pFQtAlwUUV85ykGDljFLXiOC1RUrUccqGIP/+DD5NOrlBfNIymBJCryusKTJNST7vhMSUIcQlR1oDgMCYF9swkPBijBtkRgFCW0PMIjs6LEDtphK2b9acjk/0jRaT+rqussb79/6brmR+2otNHcG7/+rRM+6Hg6Ka2ydxj/lA2k0zqNMdAmQLwG+CaHCEXp0Ys0rGuDF+eCQqDuj1uEWUtcr9GlD76/44GZGhQ0ZPbnY8XvUFJ+UdaDTdmLTMJMVQvz6+xyVq2PKwGHOHyKEvSrY0VC+9NcihZOu1fZfEA5Mq0d0lsel+T78Ov6+IbTXyVpHRCWjm15JMUYTrSQs+BBd/NuyDm4XRCsxxHMUsULRSH76M7tZtuOquPo9avbSMa+UTgzQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 17 May 2020 02:17:15 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 7C71F8052B;
+        Sun, 17 May 2020 08:17:11 +0200 (CEST)
+Date:   Sun, 17 May 2020 08:17:10 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        devicetree@vger.kernel.org, od@zcrc.me,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 02/12] dt-bindings: display: Add ingenic,ipu.yaml
+Message-ID: <20200517061710.GB609600@ravnborg.org>
+References: <20200516215057.392609-1-paul@crapouillou.net>
+ <20200516215057.392609-2-paul@crapouillou.net>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa5bbe7d-b94a-4ad6-05c9-08d7fa296b24
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2020 06:13:29.3381
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZtCPjEcSwmLHt36cApgVIcvo/Rs4HsxU6Ae8gjk6Rb3PeaN3nrUVD6Z3o1w5+jYd+GHgir8YFh+iIUsM+62vzg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4351
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200516215057.392609-2-paul@crapouillou.net>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=gEfo2CItAAAA:8 a=e5mUnYsNAAAA:8
+        a=b0PC0ugUiK8WXcUa1NUA:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
+        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
+        a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
->=20
-> For WriteBooster feature related attributes, the index used by
-> query shall be LUN ID if LU Dedicated buffer mode is enabled.
->=20
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Hi Paul.
+On Sat, May 16, 2020 at 11:50:47PM +0200, Paul Cercueil wrote:
+> Add documentation of the Device Tree bindings for the Image Processing
+> Unit (IPU) found in most Ingenic SoCs.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+
+For me it fails like this:
+
+/Documentation/devicetree/bindings/display/ingenic,ipu.yaml: ignoring, error in schema: properties: compatible: oneOf: 1: items
+warning: no schema found in file: Documentation/devicetree/bindings/display/ingenic,ipu.yaml
+make[2]: *** [Documentation/devicetree/bindings/Makefile:42: Documentation/devicetree/bindings/processed-schema.yaml] Error 255
+make[2]: *** Waiting for unfinished jobs....
+Documentation/devicetree/bindings/display/ingenic,ipu.yaml: properties:compatible:oneOf:1:items: ['ingenic,jz4770-ipu', 'ingenic,jz4760-ipu'] is not valid under any of the given schemas (Possible causes of the failure):
+	Documentation/devicetree/bindings/display/ingenic,ipu.yaml: properties:compatible:oneOf:1:items: ['ingenic,jz4770-ipu', 'ingenic,jz4760-ipu'] is not of type 'object', 'boolean'
+	Documentation/devicetree/bindings/display/ingenic,ipu.yaml: properties:compatible:oneOf:1:items:0: 'ingenic,jz4770-ipu' is not of type 'object', 'boolean'
+	Documentation/devicetree/bindings/display/ingenic,ipu.yaml: properties:compatible:oneOf:1:items:1: 'ingenic,jz4760-ipu' is not of type 'object', 'boolean'
+
+
+	Sam
+
+> ---
+>  .../bindings/display/ingenic,ipu.yaml         | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic,ipu.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ingenic,ipu.yaml b/Documentation/devicetree/bindings/display/ingenic,ipu.yaml
+> new file mode 100644
+> index 000000000000..22fe02ca866d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/ingenic,ipu.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/ingenic,ipu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Ingenic SoCs Image Processing Unit (IPU) devicetree bindings
+> +
+> +maintainers:
+> +  - Paul Cercueil <paul@crapouillou.net>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - enum:
+> +        - ingenic,jz4725b-ipu
+> +        - ingenic,jz4760-ipu
+> +      - items:
+> +        - ingenic,jz4770-ipu
+> +        - ingenic,jz4760-ipu
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: ipu
+> +
+> +patternProperties:
+> +  "^ports?$":
+> +    description: OF graph bindings (specified in bindings/graph.txt).
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4770-cgu.h>
+> +    ipu@13080000 {
+> +      compatible = "ingenic,jz4770-ipu", "ingenic,jz4760-ipu";
+> +      reg = <0x13080000 0x800>;
+> +
+> +      interrupt-parent = <&intc>;
+> +      interrupts = <29>;
+> +
+> +      clocks = <&cgu JZ4770_CLK_IPU>;
+> +      clock-names = "ipu";
+> +
+> +      port {
+> +        ipu_ep: endpoint {
+> +          remote-endpoint = <&lcdc_ep>;
+> +        };
+> +      };
+> +    };
+> -- 
+> 2.26.2
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
