@@ -2,232 +2,75 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD8BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0450C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD4C6207C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:21:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R4OvCP1a"
+	by mail.kernel.org (Postfix) with ESMTP id A61912065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 20:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbgEQUVO (ORCPT
+        id S1726633AbgEQUWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 16:21:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60583 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726271AbgEQUVN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 16:21:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589746871;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=o7QSlXKNRIHGSgeITtlTa8rgXRVQsZNct4CtfBWVqog=;
-        b=R4OvCP1a9yHNDXME4MN8rohQSENCgRYtk19HSWrOEsZXwKlgUPe+pF+0xuiIsnH/z58Aqa
-        Sg9Vx+DG0L+DNYiSyDLSnxVfKpX6m2iCuZAbKfNV4kdv08Eq6yYrF14Bhmam4rpYzvSK5e
-        sN8sd+J1pLrV20AvWQ3/3XW1piDk50c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-5M-Est2RNB-ciEfkjVS1lw-1; Sun, 17 May 2020 16:21:08 -0400
-X-MC-Unique: 5M-Est2RNB-ciEfkjVS1lw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2480B800053;
-        Sun, 17 May 2020 20:21:07 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 142F760BE2;
-        Sun, 17 May 2020 20:21:05 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] afs: Don't unlock fetched data pages until the op completes
- successfully
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sun, 17 May 2020 21:21:05 +0100
-Message-ID: <158974686528.785191.2525276665446566911.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        Sun, 17 May 2020 16:22:36 -0400
+Received: from mga17.intel.com ([192.55.52.151]:39256 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726271AbgEQUWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 16:22:35 -0400
+IronPort-SDR: +haE7v44fJAcN94mI8/ao6xivGuwZ1Zse9nZV83JmF+9C1PYnRTQ2Io79aUwtAZwby4Tm1ZoX+
+ F2QVSkuLQdPg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 13:22:35 -0700
+IronPort-SDR: 9aek+GDFWBwb8l4OXELI/9r9yhBrUbn4+pYxpO1CvikuvJ8L8nFuQZ67TNsbg/51Udj6JLkdFI
+ /OV/yg8zHqag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,404,1583222400"; 
+   d="scan'208";a="263753551"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 17 May 2020 13:22:33 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jaPns-00063p-Or; Mon, 18 May 2020 04:22:32 +0800
+Date:   Mon, 18 May 2020 04:22:16 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Pascal Terjan <pterjan@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, Pascal Terjan <pterjan@google.com>
+Subject: [RFC PATCH] staging: rtl8192u: indicate_packets() can be static
+Message-ID: <20200517202216.GA24634@8c544063f25c>
+References: <20200517165819.136715-1-pterjan@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200517165819.136715-1-pterjan@google.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't call req->page_done() on each page as we finish filling it with the
-data coming from the network.  Whilst this might speed up the application a
-bit, it's a problem if there's a network failure and the operation has to
-be reissued.
 
-If this happens, an oops occurs because afs_readpages_page_done() clears
-the pointer to each page it unlocks and when a retry happens, the pointers
-to the pages it wants to fill are now NULL (and the pages have been
-unlocked anyway).
-
-Instead, wait till the operation completes successfully and only then
-release all the pages after clearing any terminal gap (the server can give
-us less data than we requested as we're allowed to ask for more than is
-available).
-
-KASAN produces a bug like the following, and even without KASAN, it can
-oops and panic:
-
-BUG: KASAN: wild-memory-access in _copy_to_iter+0x323/0x5f4
-Write of size 1404 at addr 0005088000000000 by task md5sum/5235
-
-CPU: 0 PID: 5235 Comm: md5sum Not tainted 5.7.0-rc3-fscache+ #250
-Hardware name: ASUS All Series/H97-PLUS, BIOS 2306 10/09/2014
-Call Trace:
- dump_stack+0x97/0xd3
- ? _copy_to_iter+0x323/0x5f4
- __kasan_report+0x130/0x158
- ? _copy_to_iter+0x323/0x5f4
- kasan_report+0x42/0x51
- ? _copy_to_iter+0x323/0x5f4
- check_memory_region+0x13d/0x145
- memcpy+0x39/0x58
- _copy_to_iter+0x323/0x5f4
- ? iov_iter_get_pages_alloc+0x562/0x562
- ? match_held_lock+0x2e/0xff
- ? match_held_lock+0x2e/0xff
- ? __lock_is_held+0x2a/0x87
- ? lockdep_recursion_finish+0x1a/0x39
- __skb_datagram_iter+0x89/0x2a6
- ? copy_overflow+0x14/0x14
- ? lockdep_recursion_finish+0x1a/0x39
- skb_copy_datagram_iter+0x129/0x135
- rxrpc_recvmsg_data.isra.0+0x615/0xd42
- ? rxrpc_kernel_recv_data+0x182/0x3ae
- ? trace_rxrpc_rx_eproto.constprop.0+0x106/0x106
- ? lockdep_recursion_finish+0x1a/0x39
- ? mutex_trylock+0x96/0x96
- rxrpc_kernel_recv_data+0x1e9/0x3ae
- ? rxrpc_recvmsg_data.isra.0+0xd42/0xd42
- ? find_held_lock+0x81/0x90
- ? lockdep_recursion_finish+0x1a/0x39
- afs_extract_data+0x139/0x33a
- ? afs_send_simple_reply+0x2ef/0x2ef
- yfs_deliver_fs_fetch_data64+0x47a/0x91b
- ? afs_v2net+0x15e/0x15e
- afs_deliver_to_call+0x304/0x709
- ? afs_set_call_complete+0xcc/0xcc
- ? test_bit+0x22/0x2e
- afs_wait_for_call_to_complete+0x1cc/0x4ad
- ? afs_make_call+0x8b8/0x8b8
- ? wake_up_q+0x63/0x63
- ? __init_waitqueue_head+0x7b/0x85
- yfs_fs_fetch_data+0x279/0x288
- afs_fetch_data+0x1e1/0x38d
- ? afs_put_read+0x9a/0x9a
- ? test_bit+0x1d/0x27
- ? __kmalloc+0x16c/0x193
- ? afs_readpages+0x32f/0x72e
- afs_readpages+0x593/0x72e
- ? afs_fetch_data+0x38d/0x38d
- ? rcu_read_lock_sched_held+0x78/0xc5
- read_pages+0xf5/0x21e
- ? read_cache_pages+0x1cf/0x1cf
- ? xa_set_mark+0x34/0x34
- ? policy_nodemask+0x19/0x8b
- ? policy_node+0x3b/0x58
- __do_page_cache_readahead+0x128/0x23f
- ? blk_cgroup_congested+0x156/0x156
- ? rcu_gp_is_expedited+0x42/0x42
- ? lockdep_recursion_finish+0x1a/0x39
- ondemand_readahead+0x36e/0x37f
- generic_file_buffered_read+0x234/0x680
- ? iov_iter_init+0x8f/0x9e
- new_sync_read+0x109/0x17e
- ? generic_remap_file_range_prep+0x4a9/0x4a9
- ? __fsnotify_update_child_dentry_flags+0x18a/0x18a
- ? fsnotify_first_mark+0xa6/0xa6
- ? selinux_file_permission+0xea/0x133
- vfs_read+0xe6/0x138
- ksys_read+0xd8/0x14d
- ? kernel_write+0x74/0x74
- ? get_vtime_delta+0x9c/0xaa
- ? mark_held_locks+0x1f/0x78
- do_syscall_64+0x6e/0x8a
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Fixes: 196ee9cd2d04 ("afs: Make afs_fs_fetch_data() take a list of pages")
-Fixes: 30062bd13e36 ("afs: Implement YFS support in the fs client")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: kbuild test robot <lkp@intel.com>
 ---
+ ieee80211_rx.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- fs/afs/fsclient.c  |    8 ++++----
- fs/afs/yfsclient.c |    8 ++++----
- 2 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
-index a3e3a16b32d6..401de063996c 100644
---- a/fs/afs/fsclient.c
-+++ b/fs/afs/fsclient.c
-@@ -385,8 +385,6 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
- 		ASSERTCMP(req->offset, <=, PAGE_SIZE);
- 		if (req->offset == PAGE_SIZE) {
- 			req->offset = 0;
--			if (req->page_done)
--				req->page_done(req);
- 			req->index++;
- 			if (req->remain > 0)
- 				goto begin_page;
-@@ -440,11 +438,13 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
- 		if (req->offset < PAGE_SIZE)
- 			zero_user_segment(req->pages[req->index],
- 					  req->offset, PAGE_SIZE);
--		if (req->page_done)
--			req->page_done(req);
- 		req->offset = 0;
- 	}
- 
-+	if (req->page_done)
-+		for (req->index = 0; req->index < req->nr_pages; req->index++)
-+			req->page_done(req);
-+
- 	_leave(" = 0 [done]");
- 	return 0;
+diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
+index 3309f64be4c94..bceff1ba3d7d4 100644
+--- a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
++++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
+@@ -520,7 +520,7 @@ static bool AddReorderEntry(struct rx_ts_record *pTS, struct rx_reorder_entry *p
+ 	return true;
  }
-diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
-index b5b45c57e1b1..fe413e7a5cf4 100644
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -497,8 +497,6 @@ static int yfs_deliver_fs_fetch_data64(struct afs_call *call)
- 		ASSERTCMP(req->offset, <=, PAGE_SIZE);
- 		if (req->offset == PAGE_SIZE) {
- 			req->offset = 0;
--			if (req->page_done)
--				req->page_done(req);
- 			req->index++;
- 			if (req->remain > 0)
- 				goto begin_page;
-@@ -556,11 +554,13 @@ static int yfs_deliver_fs_fetch_data64(struct afs_call *call)
- 		if (req->offset < PAGE_SIZE)
- 			zero_user_segment(req->pages[req->index],
- 					  req->offset, PAGE_SIZE);
--		if (req->page_done)
--			req->page_done(req);
- 		req->offset = 0;
- 	}
  
-+	if (req->page_done)
-+		for (req->index = 0; req->index < req->nr_pages; req->index++)
-+			req->page_done(req);
-+
- 	_leave(" = 0 [done]");
- 	return 0;
- }
-
-
+-void indicate_packets(struct ieee80211_device *ieee, struct ieee80211_rxb *rxb)
++static void indicate_packets(struct ieee80211_device *ieee, struct ieee80211_rxb *rxb)
+ {
+ 	struct net_device_stats *stats = &ieee->stats;
+ 	struct net_device *dev = ieee->dev;
