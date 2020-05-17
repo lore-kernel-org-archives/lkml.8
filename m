@@ -2,204 +2,355 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 18:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B749C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3C7620758
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 18:37:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lX0Oesir"
+	by mail.kernel.org (Postfix) with ESMTP id ED343207D3
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:01:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgEQShT (ORCPT
+        id S1726448AbgEQTBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 14:37:19 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:36094 "EHLO vps0.lunn.ch"
+        Sun, 17 May 2020 15:01:17 -0400
+Received: from v6.sk ([167.172.42.174]:56822 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726259AbgEQShT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 14:37:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=4Yd8ZhZiIqCXIzRFu64EbLTYC+uGshJdZ1LlSPDs33M=; b=lX0OesirDzW10jj0DGLSvQ2UFp
-        SHUXQQrWM/82alGNX3HSlYwMN0zO7Qr2JGFTBB1dQG4n7xrVfs9VyHMTal6jqz7WgXQU/6fNI3vnB
-        iIvi8EpH9YSZcEQZ/p/z2ZTspuLtmoZet7lQHad4U9xJ8DRNkGerK0vAwCcmRmVfc7yA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jaO9u-002YLU-Gg; Sun, 17 May 2020 20:37:10 +0200
-Date:   Sun, 17 May 2020 20:37:10 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Roelof Berg <rberg@berg-solutions.de>
-Cc:     Bryan Whitehead <bryan.whitehead@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lan743x: Added fixed link support
-Message-ID: <20200517183710.GC606317@lunn.ch>
-References: <20200516192402.4201-1-rberg@berg-solutions.de>
+        id S1726269AbgEQTBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 15:01:16 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id D89DC610A8;
+        Sun, 17 May 2020 19:00:41 +0000 (UTC)
+Date:   Sun, 17 May 2020 21:00:39 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 21/28] dt-bindings: gpio: Convert mrvl-gpio to json-schema
+Message-ID: <20200517190039.GB1695525@furthur.local>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-22-lkundrak@v3.sk>
+ <20200327192820.GA8577@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200516192402.4201-1-rberg@berg-solutions.de>
+In-Reply-To: <20200327192820.GA8577@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -946,6 +949,9 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
->  {
->  	struct lan743x_adapter *adapter = netdev_priv(netdev);
->  	struct phy_device *phydev = netdev->phydev;
-> +	struct device_node *phynode;
-> +	phy_interface_t phyifc = PHY_INTERFACE_MODE_GMII;
-> +	u32 data;
->  
->  	phy_print_status(phydev);
->  	if (phydev->state == PHY_RUNNING) {
-> @@ -953,6 +959,48 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
->  		int remote_advertisement = 0;
->  		int local_advertisement = 0;
->  
-> +		/* check if a fixed-link is defined in device-tree */
-> +		phynode = of_node_get(adapter->pdev->dev.of_node);
-> +		if (phynode && of_phy_is_fixed_link(phynode)) {
+On Fri, Mar 27, 2020 at 01:28:20PM -0600, Rob Herring wrote:
+> On Tue, Mar 17, 2020 at 10:39:15AM +0100, Lubomir Rintel wrote:
+> > This converts the mrvl-gpio binding to DT schema format using json-schema.
+> > 
+> > Various fixes were done during the conversion, such as adding more
+> > properties that are in fact mandatory or extending the examples to
+> > include child nodes with extra GPIO blocks.
+> 
+> Ugg, not how I would have done this. Differences in register layout 
+> should be implied by the compatible strings. But I guess we have to live 
+> with it now.
+> 
+> > The compatible strings are a mess. It is not clear why so many of them
+> > are needed; the driver doesn't really seem to differentiate between the
+> > models. Some of them, like marvell,pxa93x-gpio and marvell,pxa1928-gpio
+> > are not used at all, so it's not known how many interrupts they utilize.
+> > On the other hand, mrvl,pxa-gpio has been seen in the tree, but it
+> > doesn't end up in any actual DTB file.
+> 
+> I added pxa1928 and then work on it ended. I think it is safe to remove, 
+> but I dug up dts file and it is 1 irq.
+> 
+> > In any case -- the schema merely copies whatever was in the original
+> > binding document, so it's hopefully no more wrong that the original.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > ---
+> >  .../devicetree/bindings/gpio/mrvl-gpio.txt    |  48 -----
+> >  .../devicetree/bindings/gpio/mrvl-gpio.yaml   | 173 ++++++++++++++++++
+> >  2 files changed, 173 insertions(+), 48 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+> > deleted file mode 100644
+> > index 30fd2201b3d4c..0000000000000
+> > --- a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+> > +++ /dev/null
+> > @@ -1,48 +0,0 @@
+> > -* Marvell PXA GPIO controller
+> > -
+> > -Required properties:
+> > -- compatible : Should be "intel,pxa25x-gpio", "intel,pxa26x-gpio",
+> > -		"intel,pxa27x-gpio", "intel,pxa3xx-gpio",
+> > -		"marvell,pxa93x-gpio", "marvell,mmp-gpio",
+> > -		"marvell,mmp2-gpio" or marvell,pxa1928-gpio.
+> > -- reg : Address and length of the register set for the device
+> > -- interrupts : Should be the port interrupt shared by all gpio pins.
+> > -  There're three gpio interrupts in arch-pxa, and they're gpio0,
+> > -  gpio1 and gpio_mux. There're only one gpio interrupt in arch-mmp,
+> > -  gpio_mux.
+> > -- interrupt-names : Should be the names of irq resources. Each interrupt
+> > -  uses its own interrupt name, so there should be as many interrupt names
+> > -  as referenced interrupts.
+> > -- interrupt-controller : Identifies the node as an interrupt controller.
+> > -- #interrupt-cells: Specifies the number of cells needed to encode an
+> > -  interrupt source.
+> > -- gpio-controller : Marks the device node as a gpio controller.
+> > -- #gpio-cells : Should be two.  The first cell is the pin number and
+> > -  the second cell is used to specify flags. See gpio.txt for possible
+> > -  values.
+> > -
+> > -Example for a MMP platform:
+> > -
+> > -	gpio: gpio@d4019000 {
+> > -		compatible = "marvell,mmp-gpio";
+> > -		reg = <0xd4019000 0x1000>;
+> > -		interrupts = <49>;
+> > -		interrupt-names = "gpio_mux";
+> > -		gpio-controller;
+> > -		#gpio-cells = <2>;
+> > -		interrupt-controller;
+> > -		#interrupt-cells = <1>;
+> > -      };
+> > -
+> > -Example for a PXA3xx platform:
+> > -
+> > -	gpio: gpio@40e00000 {
+> > -		compatible = "intel,pxa3xx-gpio";
+> > -		reg = <0x40e00000 0x10000>;
+> > -		interrupt-names = "gpio0", "gpio1", "gpio_mux";
+> > -		interrupts = <8 9 10>;
+> > -		gpio-controller;
+> > -		#gpio-cells = <0x2>;
+> > -		interrupt-controller;
+> > -		#interrupt-cells = <0x2>;
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+> > new file mode 100644
+> > index 0000000000000..5c713bf59b06d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+> > @@ -0,0 +1,173 @@
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/gpio/mrvl-gpio.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Marvell PXA GPIO controller
+> > +
+> > +maintainers:
+> > +  - devicetree@vger.kernel.org
+> 
+> Needs to be a real person that cares about this h/w.
 
-Hi Roelof
+As I've said in the cover letter -- it's not clear who would that be.
 
-The whole point for fixed link is that it looks like a PHY. You should
-not need to care if it is a real PHY or a fixed link.
+> > +
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - intel,pxa25x-gpio
+> > +              - intel,pxa26x-gpio
+> > +              - intel,pxa27x-gpio
+> > +              - intel,pxa3xx-gpio
+> > +    then:
+> > +      properties:
+> > +        interrupts:
+> > +          minItems: 3
+> > +          maxItems: 3
+> > +        interrupt-names:
+> > +          items:
+> > +            - const: gpio0
+> > +            - const: gpio1
+> > +            - const: gpio_mux
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - marvell,mmp-gpio
+> > +              - marvell,mmp2-gpio
+> 
+> I'd make this an else clause.
 
+This would imply that marvell,pxa93x-gpio has one interrupt and it is
+not know whether that is actually the case.
 
-> +			/* Configure MAC to fixed link parameters */
-> +			data = lan743x_csr_read(adapter, MAC_CR);
-> +			/* Disable auto negotiation */
-> +			data &= ~(MAC_CR_ADD_ | MAC_CR_ASD_);
+> > +    then:
+> > +      properties:
+> > +        interrupts:
+> > +          maxItems: 1
+> > +        interrupt-names:
+> > +          items:
+> > +            - const: gpio_mux
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: '^gpio@[0-9a-f]+$'
+> > +
+> > +  compatible:
+> > +    enum:
+> > +      - intel,pxa25x-gpio
+> > +      - intel,pxa26x-gpio
+> > +      - intel,pxa27x-gpio
+> > +      - intel,pxa3xx-gpio
+> > +      - marvell,mmp-gpio
+> > +      - marvell,mmp2-gpio
+> > +      - marvell,pxa93x-gpio
+> > +      - marvell,pxa1928-gpio
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  ranges: true
+> > +
+> > +  '#address-cells':
+> > +    const: 1
+> > +
+> > +  '#size-cells':
+> > +    const: 1
+> > +
+> > +  gpio-controller: true
+> > +
+> > +  '#gpio-cells':
+> > +    const: 2
+> > +
+> > +  gpio-ranges:
+> > +    maxItems: 1
+> 
+> My pxa1928 dts has this in the child nodes. Sure this is right?
 
-Why does the MAC care about autoneg? In general, all the MAC needs to
-know is the speed and duplex.
+I actually don't know anything about pxa1928. pxa27x.dtsi and
+pxa3xx.dtsi specify gpio-ranges on main gpio nodes and have no gcb
+child nodes.
 
-> +			/* Set duplex mode */
-> +			if (phydev->duplex)
-> +				data |= MAC_CR_DPX_;
-> +			else
-> +				data &= ~MAC_CR_DPX_;
-> +			/* Set bus speed */
-> +			switch (phydev->speed) {
-> +			case 10:
-> +				data &= ~MAC_CR_CFG_H_;
-> +				data &= ~MAC_CR_CFG_L_;
-> +				break;
-> +			case 100:
-> +				data &= ~MAC_CR_CFG_H_;
-> +				data |= MAC_CR_CFG_L_;
-> +				break;
-> +			case 1000:
-> +				data |= MAC_CR_CFG_H_;
-> +				data |= MAC_CR_CFG_L_;
-> +				break;
-> +			}
+> > +
+> > +  interrupts: true
+> > +
+> > +  interrupt-names: true
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +  '#interrupt-cells':
+> > +    const: 2
+> > +
+> > +patternProperties:
+> > +  '^gpio@[0-9a-f]*$':
+> > +    type: object
+> > +    properties:
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +    required:
+> > +      - reg
+> > +
+> > +    additionalProperties: false
+> > +
+> > +required:
+> > +  - compatible
+> > +  - '#address-cells'
+> > +  - '#size-cells'
+> > +  - reg
+> > +  - gpio-controller
+> > +  - '#gpio-cells'
+> > +  - interrupts
+> > +  - interrupt-names
+> > +  - interrupt-controller
+> > +  - '#interrupt-cells'
+> > +  - ranges
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/pxa-clock.h>
+> > +    gpio@40e00000 {
+> > +        compatible = "intel,pxa3xx-gpio";
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> > +        reg = <0x40e00000 0x10000>;
+> > +        gpio-controller;
+> > +        #gpio-cells = <2>;
+> > +        interrupts = <8>, <9>, <10>;
+> > +        interrupt-names = "gpio0", "gpio1", "gpio_mux";
+> > +        clocks = <&clks CLK_GPIO>;
+> > +        interrupt-controller;
+> > +        #interrupt-cells = <2>;
+> > +        ranges;
+> 
+> No child, so there should be no ranges here.
 
-The current code is unusual, in that it uses
-phy_ethtool_get_link_ksettings(). That should do the right thing with
-a fixed-link PHY, although i don't know if anybody uses it like
-this. So in theory, the current code should take care of duplex, flow
-control, and speed for you. Just watch out for bug/missing features in
-fixed link.
+Will fix in next version.
 
-
-> +			/* Set interface mode */
-> +			of_get_phy_mode(phynode, &phyifc);
-> +			if (phyifc == PHY_INTERFACE_MODE_RGMII ||
-> +			    phyifc == PHY_INTERFACE_MODE_RGMII_ID ||
-> +			    phyifc == PHY_INTERFACE_MODE_RGMII_RXID ||
-> +			    phyifc == PHY_INTERFACE_MODE_RGMII_TXID)
-> +				/* RGMII */
-> +				data &= ~MAC_CR_MII_EN_;
-> +			else
-> +				/* GMII */
-> +				data |= MAC_CR_MII_EN_;
-> +			lan743x_csr_write(adapter, MAC_CR, data);
-> +		}
-> +		of_node_put(phynode);
-
-It is normal to do of_get_phy_mode when connecting to the PHY, and
-store the value in the private structure. This is also not specific to
-fixed link.
-
-There is also a helper you can use phy_interface_mode_is_rgmii().
-
-> +
->  		memset(&ksettings, 0, sizeof(ksettings));
->  		phy_ethtool_get_link_ksettings(netdev, &ksettings);
->  		local_advertisement =
-> @@ -974,6 +1022,8 @@ static void lan743x_phy_close(struct lan743x_adapter *adapter)
->  
->  	phy_stop(netdev->phydev);
->  	phy_disconnect(netdev->phydev);
-> +	if (of_phy_is_fixed_link(adapter->pdev->dev.of_node))
-> +		of_phy_deregister_fixed_link(adapter->pdev->dev.of_node);
->  	netdev->phydev = NULL;
->  }
->  
-> @@ -982,18 +1032,44 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
->  	struct lan743x_phy *phy = &adapter->phy;
->  	struct phy_device *phydev;
->  	struct net_device *netdev;
-> +	struct device_node *phynode = NULL;
-> +	phy_interface_t phyifc = PHY_INTERFACE_MODE_GMII;
->  	int ret = -EIO;
-
-netdev uses reverse christmas tree, meaning the lines should be
-sorted, longest first, getting shorter.
-
->  
->  	netdev = adapter->netdev;
-> -	phydev = phy_find_first(adapter->mdiobus);
-> -	if (!phydev)
-> -		goto return_error;
->  
-> -	ret = phy_connect_direct(netdev, phydev,
-> -				 lan743x_phy_link_status_change,
-> -				 PHY_INTERFACE_MODE_GMII);
-> -	if (ret)
-> -		goto return_error;
-> +	/* check if a fixed-link is defined in device-tree */
-> +	phynode = of_node_get(adapter->pdev->dev.of_node);
-> +	if (phynode && of_phy_is_fixed_link(phynode)) {
-> +		netdev_dbg(netdev, "fixed-link detected\n");
-
-This is something which is useful during debug. But once it works can
-be removed.
-
-> +		ret = of_phy_register_fixed_link(phynode);
-> +		if (ret) {
-> +			netdev_err(netdev, "cannot register fixed PHY\n");
-> +			goto return_error;
-> +		}
-> +
-> +		of_get_phy_mode(phynode, &phyifc);
-> +		phydev = of_phy_connect(netdev, phynode,
-> +					lan743x_phy_link_status_change,
-> +					0, phyifc);
-> +		if (!phydev)
-> +			goto return_error;
-> +	} else {
-> +		phydev = phy_find_first(adapter->mdiobus);
-> +		if (!phydev)
-> +			goto return_error;
-> +
-> +		ret = phy_connect_direct(netdev, phydev,
-> +					 lan743x_phy_link_status_change,
-> +					 PHY_INTERFACE_MODE_GMII);
-> +		/* Note: We cannot use phyifc here because this would be SGMII
-> +		 * on a standard PC.
-> +		 */
-
-I don't understand this comment.
-
+> > +    };
+> > +  - |
+> > +    #include <dt-bindings/clock/marvell,pxa910.h>
+> > +    gpio@d4019000 {
+> > +        compatible = "marvell,mmp-gpio";
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> > +        reg = <0xd4019000 0x1000>;
+> > +        gpio-controller;
+> > +        #gpio-cells = <2>;
+> > +        interrupts = <49>;
+> > +        interrupt-names = "gpio_mux";
+> > +        clocks = <&soc_clocks PXA910_CLK_GPIO>;
+> > +        resets = <&soc_clocks PXA910_CLK_GPIO>;
+> > +        interrupt-controller;
+> > +        #interrupt-cells = <2>;
+> > +        ranges;
+> > +
+> > +        gpio@d4019000 {
+> > +            reg = <0xd4019000 0x4>;
+> > +        };
+> > +
+> > +        gpio@d4019004 {
+> > +            reg = <0xd4019004 0x4>;
+> > +        };
+> > +
+> > +        gpio@d4019008 {
+> > +            reg = <0xd4019008 0x4>;
+> > +        };
+> > +
+> > +        gpio@d4019100 {
+> > +            reg = <0xd4019100 0x4>;
+> > +        };
+> > +     };
+> > +
+> > +...
+> > -- 
+> > 2.25.1
+> > 
