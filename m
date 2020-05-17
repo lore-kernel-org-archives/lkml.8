@@ -6,96 +6,85 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 22:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 22:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A575E20735
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 22:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A054E20758
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 22:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgEQWBa (ORCPT
+        id S1726659AbgEQWN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 18:01:30 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:45200 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726299AbgEQWBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 18:01:30 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jaRLU-0002e6-TF; Mon, 18 May 2020 00:01:20 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        andriy.shevchenko@linux.intel.com, matwey.kornilov@gmail.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com,
-        giulio.benetti@micronovasrl.com
-Subject: Re: [PATCH v2 4/7] serial: 8250: Handle implementations not having TEMT interrupt using em485
-Date:   Mon, 18 May 2020 00:01:20 +0200
-Message-ID: <2596761.4mVKVPr5sX@diego>
-In-Reply-To: <20200502134927.6sb7f3na3ff3rpoa@wunner.de>
-References: <20200325231422.1502366-1-heiko@sntech.de> <20200325231422.1502366-5-heiko@sntech.de> <20200502134927.6sb7f3na3ff3rpoa@wunner.de>
+        Sun, 17 May 2020 18:13:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgEQWN5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 18:13:57 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48834C061A0C;
+        Sun, 17 May 2020 15:13:57 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jaRXW-00Alrb-WC; Sun, 17 May 2020 22:13:47 +0000
+Date:   Sun, 17 May 2020 23:13:46 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        David Miller <davem@davemloft.net>, arnd@arndb.de,
+        guoren@kernel.org, linux-csky@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH 0/3] sparc: port to copy_thread_tls() and struct
+ kernel_clone_args
+Message-ID: <20200517221346.GL23230@ZenIV.linux.org.uk>
+References: <20200512171527.570109-1-christian.brauner@ubuntu.com>
+ <20200512.130633.293867428547074800.davem@davemloft.net>
+ <20200517150123.sl36ug27gwnyz6gf@wittgenstein>
+ <cfc07b63-29e6-cda9-c611-235e37970763@ilande.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cfc07b63-29e6-cda9-c611-235e37970763@ilande.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukas,
+On Sun, May 17, 2020 at 05:34:34PM +0100, Mark Cave-Ayland wrote:
 
-Am Samstag, 2. Mai 2020, 15:49:27 CEST schrieb Lukas Wunner:
-> On Thu, Mar 26, 2020 at 12:14:19AM +0100, Heiko Stuebner wrote:
-> > @@ -1529,11 +1535,22 @@ static inline void __stop_tx(struct uart_8250_port *p)
-> >  		/*
-> >  		 * To provide required timeing and allow FIFO transfer,
-> >  		 * __stop_tx_rs485() must be called only when both FIFO and
-> > -		 * shift register are empty. It is for device driver to enable
-> > -		 * interrupt on TEMT.
-> > +		 * shift register are empty. If 8250 port supports it,
-> > +		 * it is for device driver to enable interrupt on TEMT.
-> > +		 * Otherwise must loop-read until TEMT and THRE flags are set.
-> >  		 */
-> > -		if ((lsr & BOTH_EMPTY) != BOTH_EMPTY)
-> > -			return;
-> > +		if (p->capabilities & UART_CAP_TEMT) {
-> > +			if ((lsr & BOTH_EMPTY) != BOTH_EMPTY)
-> > +				return;
-> > +		} else {
-> > +			int lsr;
-> > +
-> > +			if (readx_poll_timeout(__get_lsr, p, lsr,
-> > +					(lsr & BOTH_EMPTY) == BOTH_EMPTY,
-> > +					0, 10000) < 0)
-> > +				pr_warn("%s: timeout waiting for fifos to empty\n",
-> > +					p->port.name);
-> > +		}
+> FWIW if you're running a more recent version of QEMU (>=3.1) then you can also boot
+> from the virtio-blk-pci device directly instead of having to switch back to the IDE
+> device after installation as you have done above. Should be something like:
 > 
-> Do you actually need to check for the timeout?  How could this happen?
-> Only if some other part of the driver would disable the transmitter
-> I guess, which would be a bug.
+> qemu-system-sparc64 \
+>          -m 4096 \
+>    	-device virtio-blk-pci,bus=pciB,drive=hd \
+>  	-drive
+> file=/home/brauner/.local/share/qemu/sparc64.img,format=raw,if=none,id=hd,bootindex=0 \
+>         -net nic \
+>  	-net user \
+>  	-nographic
+> 
+> Note the removal of the legacy -boot argument and the addition of "bootindex=0" to
+> the -drive argument.
 
-Checking for a timeout was strongly suggested in v1 ;-)
+	Is virtio-blk-pci more resilent to lost interrupt bug introduced in 
+"sun4u: update PCI topology to include simba PCI bridges"?  I hadn't tried
+it yet (reverted to the last working mainline qemu commit for now); IDE
+definitely is screwed by that - both the Linux and NetBSD drivers, actually.
 
+	A 50Mb worth of wget(1) is more than enough to trigger that crap;
 
-> Also, note that __stop_tx() may be called from hardirq context via
-> serial8250_tx_chars().  If the baudrate is low, you may spin for a
-> fairly long time in IRQ context.  E.g. with 9600 8N1, it takes about
-> 1 msec for one char to transmit.
+commit 063833a6ec
+Merge: d634fc0499 bcf9e2c2f2
+Author: Peter Maydell <peter.maydell@linaro.org>
+Date:   Thu Oct 19 18:42:51 2017 +0100
 
-I did play around with different baud rates and data amounts today
-and even ran into the timeout with the current 10ms when doing a
-"dmesg > /dev/ttyS3" ... combined with the hardirq issue you mentioned
-I think I found a slightly better variant to do this ... by catching the first
-100us in the interrupt handler and otherwise re-using the existing
-stop-timer infrastructure to move this out of the actual __stop_tx function.
+    Merge remote-tracking branch 'remotes/mcayland/tags/qemu-sparc-signed' into staging
 
-I've sent a v3 based on your new series just now ... if you find time
-please have a look :-)
+hangs, d634fc0499 works, bcf9e2c2f2 hangs.
 
-Thanks
-Heiko
-
-
+I hadn't looked into details (the branch itself is only two commits long, but it
+incorporates an openbios update - 35 commits there, some obviously pci- and
+sun4u-related), but it's really easy to reproduce - -m 1024 and -hda <image>
+are probably the only relevant arguments.  Even dd if=/dev/sda of=/dev/null bs=64m
+is often enough to hang it, so I rather doubt that networking (e1000 on pciB,
+FWIW, with tap for backend) has anything to do with that.
