@@ -2,174 +2,163 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E96C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A46A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3DA20709
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FC420709
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:08:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uvmcdwzo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rw+x68Gk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgEQAHx (ORCPT
+        id S1726944AbgEQAIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 20:07:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39668 "EHLO
+        Sat, 16 May 2020 20:08:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726670AbgEQAHw (ORCPT
+        by vger.kernel.org with ESMTP id S1726670AbgEQAIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 20:07:52 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD00C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 17:07:52 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id f4so2890503pgi.10
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 17:07:52 -0700 (PDT)
+        Sat, 16 May 2020 20:08:43 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2ED6C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 17:08:42 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id d21so6040663ljg.9
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 17:08:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OwLBocF7GOWOm6ltPrRkZeo3oS8u31U+Qw2kOqsGVr4=;
-        b=UvmcdwzowRgRawYU0w29101+wpOUhbjvhH69OnFa2IuWfFBRR7UHo5bDBZdXFYTEUN
-         2usxzjnXdfY/TbcDAnR4RLO3Q3TPKLiJ+KOKwnXDPtNSQEsBVIPDtMjEL2Of+IuDcUkd
-         0CBrV3s/RWlKx2DwljWbI7bbWTkoNcvywA/9PEFqshgFOekyBA9u/VQCmEtnzI5/KgaS
-         C+1NebKSxcVaJKxvpqLuco+qi/3Gp+3FIGSs5x1Tgd3Zd1auruVywutms4LcWnYbmuFX
-         oCFh3V0SWGGo1xvkUhilro+xgM5o3h4cHEzq8M5BA9c7LFGpwxxGMs0klb92UF2KiYys
-         InQQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4yK6XL3gt0+XVfQIVvQaBK6umA0G1wGRMLl2rxzntKg=;
+        b=Rw+x68Gk2KHU/UctJ+dNo0cpBoS4UMhrSzyEuXKw25+eRMQAb/NP5+GLUgjybkerCH
+         k9g+onaYPAPx6egNYmUxxirOqXwmrxhmfnqvAJkSNcXht0YVhyfjknDGCQctTBgdPAp/
+         duJ1rTm3sqMfmljfgQ1fWA6b+eboSCUlXo8dTs+mS2vms5wN8UsPwDmpmrffD3WaORrP
+         mC8QKOXD89xXzoNUvTuWDG/f8Xu6NBHV2rVbabL2RbFeChVid39qXqXM71F5HUrSh5vF
+         shTxhe6nwUyx/VeAVZSnSlnQhUW5AzMsS4SYxSzdBxKHEXYBFeEF9531ewGCm5nlXuaM
+         xmEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OwLBocF7GOWOm6ltPrRkZeo3oS8u31U+Qw2kOqsGVr4=;
-        b=nE50pxxxMaR/BeFuFdWXxqLvydDw9QzAwarxikSSTURTgQAz2pMEIFQ0OGvH2aM+BF
-         7S87Lw8RTDxk9eiPuwelzFs2A+TfsIoKzfriV05JVJOqlWU7jDDMAgZCED2XhFA0RSum
-         7dQiM3sLTlLnNqizk46wkY/hjGE4/ML7rPiCEiq0lJfivBCD5k5S7EZz2R2f3CtfBwcF
-         ihkdeLxxccj0WcMzE/bWd2yvSvybMjFotYdS84v5xdqyPs5ZwY4FdPOQTmfDqXObsz8S
-         lK7X+yFpcw0Holz4ivByShtO6L4rkkSDPdWC2YVip8uQMoRpG3qrzJoEmtVvG0hBHtBu
-         IdBQ==
-X-Gm-Message-State: AOAM532Yt+72xzr0E02d5vRTuyar+zBpwaexFysNg0zpNRHod05l/jZL
-        e3XVRBk4eFTVfM9IErj1qY8=
-X-Google-Smtp-Source: ABdhPJxnBQEkV8dWwvdiPKsUmr97aRo42ryaoLpffx1qyYHoYOCTYromDSPxmNTC4a9ddKy6Wt8aOg==
-X-Received: by 2002:a62:528e:: with SMTP id g136mr11015600pfb.165.1589674072225;
-        Sat, 16 May 2020 17:07:52 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n16sm5087773pfq.61.2020.05.16.17.07.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 16 May 2020 17:07:51 -0700 (PDT)
-Date:   Sat, 16 May 2020 17:07:50 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, elver@google.com, tglx@linutronix.de,
-        paulmck@kernel.org, mingo@kernel.org, peterz@infradead.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v5 04/18] sparc32: mm: Reduce allocation size for PMD and
- PTE tables
-Message-ID: <20200517000750.GA157503@roeck-us.net>
-References: <20200511204150.27858-1-will@kernel.org>
- <20200511204150.27858-5-will@kernel.org>
- <20200517000050.GA87467@roeck-us.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4yK6XL3gt0+XVfQIVvQaBK6umA0G1wGRMLl2rxzntKg=;
+        b=Dthc/ZeVVZR+uJcn45L+OAFvT6DPSIWpiqKxyohhXgWRpILVtVjw3eTH20tYZq8MrF
+         Nypj2fiZop7miyffVm/vRLcEefKHhRMPs6ysOdNFwCjE+j2akVHsxJhmySUlXZXqkZ4f
+         3RTkj1qDiBf/fWNSRkuHAL7IzXeZZHGb9oBQ6IPARWs0ectT75nVehQkd3ZWxcdJXKgL
+         BVqrIbzpnxJfyyAiettul/YYN2KakyA0+dg5f4UFzeLpxyvToWASAtwMxK0+CmnJyRXE
+         mtV+i/NOFrDA6nhEi2MPA2Zr+pg4QBcKT2burUBlC/SNoVPWqPBtIKOe3YsMGLxHk1om
+         B7lg==
+X-Gm-Message-State: AOAM532+i/RgG1WdLsScRS1WVC7Xyb76aPKsz9AXg2e3I8ibnNGbI6ue
+        ZH2W19ZkYrgS0GIaim9ZpVVhQQNVuNOGUzPSG7c=
+X-Google-Smtp-Source: ABdhPJy9yhXC+SZCbQ/yx5oHorJEkdjFDe8NuHxiCHu9aO8xa9dp/EE7f2IAsmi/fFlQmck0+ryv/ErPTNHy23p3Mu0=
+X-Received: by 2002:a2e:81d5:: with SMTP id s21mr6116080ljg.258.1589674121262;
+ Sat, 16 May 2020 17:08:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200517000050.GA87467@roeck-us.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1589623456.git.baolin.wang7@gmail.com> <db5adf754300bdc89d561ea3fb23afc4b6a3ee87.1589623456.git.baolin.wang7@gmail.com>
+In-Reply-To: <db5adf754300bdc89d561ea3fb23afc4b6a3ee87.1589623456.git.baolin.wang7@gmail.com>
+From:   Orson Zhai <orsonzhai@gmail.com>
+Date:   Sun, 17 May 2020 08:08:29 +0800
+Message-ID: <CA+H2tpEJo3a7N5Sq0BzkGrGSrtBY61egZo9Xfc=nOMp2igKGFA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] mfd: syscon: Support physical regmap bus
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "arnd@arndb.de" <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 05:00:50PM -0700, Guenter Roeck wrote:
-> On Mon, May 11, 2020 at 09:41:36PM +0100, Will Deacon wrote:
-> > Now that the page table allocator can free page table allocations
-> > smaller than PAGE_SIZE, reduce the size of the PMD and PTE allocations
-> > to avoid needlessly wasting memory.
-> > 
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> 
-> Something in the sparc32 patches in linux-next causes all my sparc32 emulations
-> to crash. bisect points to this patch, but reverting it doesn't help, and neither
-> does reverting the rest of the series.
-> 
-Actually, turns out I see the same pattern (lots of scheduling while atomic
-followed by 'killing interrupt handler' in cryptomgr_test) with several
-powerpc boot tests.  I am currently bisecting those crashes. I'll report
-the results here as well as soon as I have it.
+On Sat, May 16, 2020 at 6:13 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> Some platforms such as Spreadtrum platform, define a special method to
+> update bits of the registers instead of reading and writing, which means
+> we should use a physical regmap bus to define the reg_update_bits()
+> operation instead of the MMIO regmap bus.
+>
+> Thus add a a __weak function  for the syscon driver to allow to register
 
-Guenter
+Typo -- duplicated "a".
 
-> Guenter
-> 
+It seems to be a better idea than before.
+
+-Orson
+
+> a physical regmap bus to support this new requirement.
+>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 > ---
-> Bisect log:
-> 
-> # bad: [bdecf38f228bcca73b31ada98b5b7ba1215eb9c9] Add linux-next specific files for 20200515
-> # good: [2ef96a5bb12be62ef75b5828c0aab838ebb29cb8] Linux 5.7-rc5
-> git bisect start 'HEAD' 'v5.7-rc5'
-> # bad: [3674d7aa7a8e61d993886c2fb7c896c5ef85e988] Merge remote-tracking branch 'crypto/master'
-> git bisect bad 3674d7aa7a8e61d993886c2fb7c896c5ef85e988
-> # bad: [1ab4d6ff0a3ee4b29441d8b0076bc8d4734bd16e] Merge remote-tracking branch 'hwmon-staging/hwmon-next'
-> git bisect bad 1ab4d6ff0a3ee4b29441d8b0076bc8d4734bd16e
-> # good: [dccfae3ab84387c94f2efc574d41efae005eeee5] Merge remote-tracking branch 'tegra/for-next'
-> git bisect good dccfae3ab84387c94f2efc574d41efae005eeee5
-> # bad: [20f9d1287c9f0047b81497197c9f4893485bbe15] Merge remote-tracking branch 'djw-vfs/vfs-for-next'
-> git bisect bad 20f9d1287c9f0047b81497197c9f4893485bbe15
-> # bad: [6537897637b5b91f921cb0ac6c465a593f4a665e] Merge remote-tracking branch 'sparc-next/master'
-> git bisect bad 6537897637b5b91f921cb0ac6c465a593f4a665e
-> # good: [bca1583e0693e0ba76450b684c5910f7083eeef4] Merge remote-tracking branch 'mips/mips-next'
-> git bisect good bca1583e0693e0ba76450b684c5910f7083eeef4
-> # good: [1f12096aca212af8fad3ef58d5673cde691a1452] Merge the lockless page table walk rework into next
-> git bisect good 1f12096aca212af8fad3ef58d5673cde691a1452
-> # good: [23a457b8d57dc8d0cc1dbd1882993dd2fcc4b0c0] s390: nvme reipl
-> git bisect good 23a457b8d57dc8d0cc1dbd1882993dd2fcc4b0c0
-> # good: [f57f5010c0c3fe2d924a957ddf1d17fbebb54d47] Merge remote-tracking branch 'risc-v/for-next'
-> git bisect good f57f5010c0c3fe2d924a957ddf1d17fbebb54d47
-> # good: [1d5fd6c33b04e5d5b665446c3b56f2148f0f1272] sh: add missing DECLARE_EXPORT() for __ashiftrt_r4_xx
-> git bisect good 1d5fd6c33b04e5d5b665446c3b56f2148f0f1272
-> # bad: [8c8f3156dd40f8bdc58f2ac461374bc804c28e3b] sparc32: mm: Reduce allocation size for PMD and PTE tables
-> git bisect bad 8c8f3156dd40f8bdc58f2ac461374bc804c28e3b
-> # good: [8e958839e4b9fb6ea4385ff2c52d1333a3a618de] sparc32: mm: Restructure sparc32 MMU page-table layout
-> git bisect good 8e958839e4b9fb6ea4385ff2c52d1333a3a618de
-> # good: [3f407976ac2953116cb8880a7a18b63bcc81829d] sparc32: mm: Change pgtable_t type to pte_t * instead of struct page *
-> git bisect good 3f407976ac2953116cb8880a7a18b63bcc81829d
-> # first bad commit: [8c8f3156dd40f8bdc58f2ac461374bc804c28e3b] sparc32: mm: Reduce allocation size for PMD and PTE tables
-> 
-> ---
-> Log messages:
-> 
-> Lots of:
-> 
-> BUG: scheduling while atomic: kthreadd/2/0xffffffff
-> Modules linked in:
-> CPU: 0 PID: 2 Comm: kthreadd Tainted: G        W         5.7.0-rc5-next-20200515 #1
-> [f04f2c94 :
-> here+0x16c/0x250 ]
-> [f04f2df0 :
-> schedule+0x78/0x11c ]
-> [f003f100 :
-> kthreadd+0x188/0x1a4 ]
-> [f0008448 :
-> ret_from_kernel_thread+0xc/0x38 ]
-> [00000000 :
-> 0x0 ]
-> 
-> followed by:
-> 
-> Kernel panic - not syncing: Aiee, killing interrupt handler!
-> CPU: 0 PID: 19 Comm: cryptomgr_test Tainted: G        W         5.7.0-rc5-next-20200515 #1
-> [f0024400 :
-> do_exit+0x7c8/0xa88 ]
-> [f0075540 :
-> __module_put_and_exit+0xc/0x18 ]
-> [f0221428 :
-> cryptomgr_test+0x28/0x48 ]
-> [f003edc0 :
-> kthread+0xf4/0x12c ]
-> [f0008448 :
-> ret_from_kernel_thread+0xc/0x38 ]
-> [00000000 :
-> 0x0 ]
+>  drivers/mfd/syscon.c       |  9 ++++++++-
+>  include/linux/mfd/syscon.h | 11 +++++++++++
+>  2 files changed, 19 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index 3a97816d0cba..dc92f3177ceb 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -40,6 +40,13 @@ static const struct regmap_config syscon_regmap_config = {
+>         .reg_stride = 4,
+>  };
+>
+> +struct regmap * __weak syscon_regmap_init(struct device_node *np,
+> +                                         void __iomem *base,
+> +                                         struct regmap_config *syscon_config)
+> +{
+> +       return regmap_init_mmio(NULL, base, syscon_config);
+> +}
+> +
+>  static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
+>  {
+>         struct clk *clk;
+> @@ -106,7 +113,7 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
+>         syscon_config.val_bits = reg_io_width * 8;
+>         syscon_config.max_register = resource_size(&res) - reg_io_width;
+>
+> -       regmap = regmap_init_mmio(NULL, base, &syscon_config);
+> +       regmap = syscon_regmap_init(np, base, &syscon_config);
+>         if (IS_ERR(regmap)) {
+>                 pr_err("regmap init failed\n");
+>                 ret = PTR_ERR(regmap);
+> diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+> index 7f20e9b502a5..85088e44fe7c 100644
+> --- a/include/linux/mfd/syscon.h
+> +++ b/include/linux/mfd/syscon.h
+> @@ -13,6 +13,7 @@
+>
+>  #include <linux/err.h>
+>  #include <linux/errno.h>
+> +#include <linux/regmap.h>
+>
+>  struct device_node;
+>
+> @@ -28,6 +29,9 @@ extern struct regmap *syscon_regmap_lookup_by_phandle_args(
+>                                         const char *property,
+>                                         int arg_count,
+>                                         unsigned int *out_args);
+> +extern struct regmap *syscon_regmap_init(struct device_node *np,
+> +                                        void __iomem *base,
+> +                                        struct regmap_config *syscon_config);
+>  #else
+>  static inline struct regmap *device_node_to_regmap(struct device_node *np)
+>  {
+> @@ -59,6 +63,13 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle_args(
+>  {
+>         return ERR_PTR(-ENOTSUPP);
+>  }
+> +
+> +static inline struct regmap *syscon_regmap_init(struct device_node *np,
+> +                                               void __iomem *base,
+> +                                               struct regmap_config *syscon_config)
+> +{
+> +       return ERR_PTR(-ENOTSUPP);
+> +}
+>  #endif
+>
+>  #endif /* __LINUX_MFD_SYSCON_H__ */
+> --
+> 2.17.1
+>
