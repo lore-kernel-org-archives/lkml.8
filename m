@@ -2,233 +2,177 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CDFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE3E207D4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC9E1207D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:15:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgEQRLy (ORCPT
+        id S1726292AbgEQRPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 13:11:54 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:45442 "EHLO raptor.unsafe.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbgEQRLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 13:11:54 -0400
-Received: from comp-core-i7-2640m-0182e6.redhat.com (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id 9BE6F20478;
-        Sun, 17 May 2020 17:11:47 +0000 (UTC)
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+c1af344512918c61362c@syzkaller.appspotmail.com>,
-        jmorris@namei.org, linux-next@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: [PATCH] proc: proc_pid_ns takes super_block as an argument
-Date:   Sun, 17 May 2020 19:11:34 +0200
-Message-Id: <20200517171134.2859789-1-gladkov.alexey@gmail.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <87lfltcbc4.fsf@x220.int.ebiederm.org>
-References: <87lfltcbc4.fsf@x220.int.ebiederm.org>
+        Sun, 17 May 2020 13:15:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbgEQRPb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 13:15:31 -0400
+X-Greylist: delayed 2439 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 17 May 2020 10:15:31 PDT
+Received: from mail.default.ilande.uk0.bigv.io (mail.ilande.co.uk [IPv6:2001:41c9:1:41f::167])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75374C061A0C;
+        Sun, 17 May 2020 10:15:31 -0700 (PDT)
+Received: from host109-156-104-24.range109-156.btcentralplus.com ([109.156.104.24] helo=[192.168.1.65])
+        by mail.default.ilande.uk0.bigv.io with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <mark.cave-ayland@ilande.co.uk>)
+        id 1jaMFU-0001BY-4U; Sun, 17 May 2020 17:34:53 +0100
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        David Miller <davem@davemloft.net>
+Cc:     arnd@arndb.de, guoren@kernel.org, linux-csky@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
+References: <20200512171527.570109-1-christian.brauner@ubuntu.com>
+ <20200512.130633.293867428547074800.davem@davemloft.net>
+ <20200517150123.sl36ug27gwnyz6gf@wittgenstein>
+From:   Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+Autocrypt: addr=mark.cave-ayland@ilande.co.uk; keydata=
+ mQENBFQJuzwBCADAYvxrwUh1p/PvUlNFwKosVtVHHplgWi5p29t58QlOUkceZG0DBYSNqk93
+ 3JzBTbtd4JfFcSupo6MNNOrCzdCbCjZ64ik8ycaUOSzK2tKbeQLEXzXoaDL1Y7vuVO7nL9bG
+ E5Ru3wkhCFc7SkoypIoAUqz8EtiB6T89/D9TDEyjdXUacc53R5gu8wEWiMg5MQQuGwzbQy9n
+ PFI+mXC7AaEUqBVc2lBQVpAYXkN0EyqNNT12UfDLdxaxaFpUAE2pCa2LTyo5vn5hEW+i3VdN
+ PkmjyPvL6DdY03fvC01PyY8zaw+UI94QqjlrDisHpUH40IUPpC/NB0LwzL2aQOMkzT2NABEB
+ AAG0ME1hcmsgQ2F2ZS1BeWxhbmQgPG1hcmsuY2F2ZS1heWxhbmRAaWxhbmRlLmNvLnVrPokB
+ OAQTAQIAIgUCVAm7PAIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQW8LFb64PMh9f
+ NAgAuc3ObOEY8NbZko72AGrg2tWKdybcMVITxmcor4hb9155o/OWcA4IDbeATR6cfiDL/oxU
+ mcmtXVgPqOwtW3NYAKr5g/FrZZ3uluQ2mtNYAyTFeALy8YF7N3yhs7LOcpbFP7tEbkSzoXNG
+ z8iYMiYtKwttt40WaheWuRs0ZOLbs6yoczZBDhna3Nj0LA3GpeJKlaV03O4umjKJgACP1c/q
+ T2Pkg+FCBHHFP454+waqojHp4OCBo6HyK+8I4wJRa9Z0EFqXIu8lTDYoggeX0Xd6bWeCFHK3
+ DhD0/Xi/kegSW33unsp8oVcM4kcFxTkpBgj39dB4KwAUznhTJR0zUHf63LkBDQRUCbs8AQgA
+ y7kyevA4bpetM/EjtuqQX4U05MBhEz/2SFkX6IaGtTG2NNw5wbcAfhOIuNNBYbw6ExuaJ3um
+ 2uLseHnudmvN4VSJ5Hfbd8rhqoMmmO71szgT/ZD9MEe2KHzBdmhmhxJdp+zQNivy215j6H27
+ 14mbC2dia7ktwP1rxPIX1OOfQwPuqlkmYPuVwZP19S4EYnCELOrnJ0m56tZLn5Zj+1jZX9Co
+ YbNLMa28qsktYJ4oU4jtn6V79H+/zpERZAHmH40IRXdR3hA+Ye7iC/ZpWzT2VSDlPbGY9Yja
+ Sp7w2347L5G+LLbAfaVoejHlfy/msPeehUcuKjAdBLoEhSPYzzdvEQARAQABiQEfBBgBAgAJ
+ BQJUCbs8AhsMAAoJEFvCxW+uDzIfabYIAJXmBepHJpvCPiMNEQJNJ2ZSzSjhic84LTMWMbJ+
+ opQgr5cb8SPQyyb508fc8b4uD8ejlF/cdbbBNktp3BXsHlO5BrmcABgxSP8HYYNsX0n9kERv
+ NMToU0oiBuAaX7O/0K9+BW+3+PGMwiu5ml0cwDqljxfVN0dUBZnQ8kZpLsY+WDrIHmQWjtH+
+ Ir6VauZs5Gp25XLrL6bh/SL8aK0BX6y79m5nhfKI1/6qtzHAjtMAjqy8ChPvOqVVVqmGUzFg
+ KPsrrIoklWcYHXPyMLj9afispPVR8e0tMKvxzFBWzrWX1mzljbBlnV2n8BIwVXWNbgwpHSsj
+ imgcU9TTGC5qd9g=
+Message-ID: <cfc07b63-29e6-cda9-c611-235e37970763@ilande.co.uk>
+Date:   Sun, 17 May 2020 17:34:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200517150123.sl36ug27gwnyz6gf@wittgenstein>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Sun, 17 May 2020 17:11:50 +0000 (UTC)
+X-SA-Exim-Connect-IP: 109.156.104.24
+X-SA-Exim-Mail-From: mark.cave-ayland@ilande.co.uk
+Subject: Re: [PATCH 0/3] sparc: port to copy_thread_tls() and struct
+ kernel_clone_args
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.default.ilande.uk0.bigv.io)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The proc_pid_ns() can be used for both inode and dentry. To avoid making
-two identical functions, change the argument type of the proc_pid_ns().
+On 17/05/2020 16:01, Christian Brauner wrote:
 
-Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
----
- fs/locks.c                 |  4 ++--
- fs/proc/array.c            |  2 +-
- fs/proc/base.c             | 10 +++++-----
- fs/proc/self.c             |  2 +-
- fs/proc/thread_self.c      |  2 +-
- include/linux/proc_fs.h    |  4 ++--
- kernel/fork.c              |  2 +-
- net/ipv6/ip6_flowlabel.c   |  2 +-
- security/tomoyo/realpath.c |  2 +-
- 9 files changed, 15 insertions(+), 15 deletions(-)
+> On Tue, May 12, 2020 at 01:06:33PM -0700, David Miller wrote:
+>> From: Christian Brauner <christian.brauner@ubuntu.com>
+>> Date: Tue, 12 May 2020 19:15:24 +0200
+>>
+>>> I've tested this series with qemu-system-sparc64 and a Debian Sid image
+>>> and it comes up no problem (Here's a little recording
+>>> https://asciinema.org/a/329510 ).
+>>
+>> Can you show how you put this environment together and also what
+>> compilation tools you used?  Looks great.
+> 
+> Sorry for the delay. That mail somehow got lost in my inbox.
+> 
+> So in general, I used qemu-system-sparc64 which is available in Universe
+> with either Debian or Ubuntu and that's what I've been using as host
+> distro. So you need a 
+> 
+> deb http://us.archive.ubuntu.com/ubuntu/ <release-name> universe
+> deb-src http://us.archive.ubuntu.com/ubuntu/ <release-name> universe
+> deb http://us.archive.ubuntu.com/ubuntu/ <release-name>-updates universe
+> deb-src http://us.archive.ubuntu.com/ubuntu/ <release-name>-updates universe
+> 
+> int /etc/apt/sources.list
+> 
+> So after this, you should be able to install
+> 
+> apt install qemu-system-sparc
+> 
+> Now we need an image and believe it or not there's a guy who lives in
+> Berlin too who builds Debian images for all crazy architectures. You can
+> download them from:
+> 
+> https://cdimage.debian.org/cdimage/ports/
+> 
+> They're built quite frequently. Sometimes you get unlucky because a new
+> kernel won't boot anymore then going a couple of months back usually
+> helps. So for this experiment I downloaded:
+> 
+> https://cdimage.debian.org/cdimage/ports/9.0/sparc64/iso-cd/debian-9.0-sparc64-NETINST-1.iso
+> 
+> then I did:
+> 
+> cd .local/share/qemu
+> truncate -s 15GB sparc64.img
+> 
+> And then to _install_:
+> 
+> qemu-system-sparc64 \
+>         -m 4096 \
+>   	-device virtio-blk-pci,bus=pciB,drive=hd \
+>   	-drive file=/home/brauner/Downloads/debian-9.0-sparc64-NETINST-1.iso,format=raw,if=ide,bus=1,unit=0,media=cdrom,readonly=on \
+> 	-drive file=/home/brauner/.local/share/qemu/sparc64.img,format=raw,if=none,id=hd \
+> 	-boot order=d \
+>         -net nic \
+> 	-net user \
+> 	-nographic \
+> 
+> Then the Debian install will run after it finishes you can boot with:
+> 
+> qemu-system-sparc64 \
+> 	-name debian-unstable-sparc64 -machine sun4u,accel=tcg,usb=off -m 4096 \
+> 	-smp 1,sockets=1,cores=1,threads=1 \
+> 	-uuid ccd8b5c2-b8e4-4d5e-af19-9322cd8e55bf -rtc base=utc -no-reboot -no-shutdown \
+> 	-boot strict=on \
+> 	-drive file=/home/brauner/.local/share/qemu/sparc64.img,if=none,id=drive-ide0-0-1,format=raw,cache=none,aio=native \
+> 	-device ide-hd,bus=ide.0,unit=0,drive=drive-ide0-0-1,id=ide0-0-1 \
+> 	-msg timestamp=on -nographic
+> 
+> If the install isn't setting up the repos right and you can't install
+> stuff the correct url is:
+> http://ftp.ports.debian.org/debian-ports/
+> to put into sources.list
 
-diff --git a/fs/locks.c b/fs/locks.c
-index 399c5dbb72c4..ab702d6efb55 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -2823,7 +2823,7 @@ static void lock_get_status(struct seq_file *f, struct file_lock *fl,
- {
- 	struct inode *inode = NULL;
- 	unsigned int fl_pid;
--	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file));
-+	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file)->i_sb);
- 
- 	fl_pid = locks_translate_pid(fl, proc_pidns);
- 	/*
-@@ -2901,7 +2901,7 @@ static int locks_show(struct seq_file *f, void *v)
- {
- 	struct locks_iterator *iter = f->private;
- 	struct file_lock *fl, *bfl;
--	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file));
-+	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file)->i_sb);
- 
- 	fl = hlist_entry(v, struct file_lock, fl_link);
- 
-diff --git a/fs/proc/array.c b/fs/proc/array.c
-index 8e16f14bb05a..a4d4763731e0 100644
---- a/fs/proc/array.c
-+++ b/fs/proc/array.c
-@@ -728,7 +728,7 @@ static int children_seq_show(struct seq_file *seq, void *v)
- {
- 	struct inode *inode = file_inode(seq->file);
- 
--	seq_printf(seq, "%d ", pid_nr_ns(v, proc_pid_ns(inode)));
-+	seq_printf(seq, "%d ", pid_nr_ns(v, proc_pid_ns(inode)->i_sb));
- 	return 0;
- }
- 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 5a307b3bb2d1..30c9fceca0b7 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -754,7 +754,7 @@ static const struct inode_operations proc_def_inode_operations = {
- static int proc_single_show(struct seq_file *m, void *v)
- {
- 	struct inode *inode = m->private;
--	struct pid_namespace *ns = proc_pid_ns(inode);
-+	struct pid_namespace *ns = proc_pid_ns(inode->i_sb);
- 	struct pid *pid = proc_pid(inode);
- 	struct task_struct *task;
- 	int ret;
-@@ -1423,7 +1423,7 @@ static const struct file_operations proc_fail_nth_operations = {
- static int sched_show(struct seq_file *m, void *v)
- {
- 	struct inode *inode = m->private;
--	struct pid_namespace *ns = proc_pid_ns(inode);
-+	struct pid_namespace *ns = proc_pid_ns(inode->i_sb);
- 	struct task_struct *p;
- 
- 	p = get_proc_task(inode);
-@@ -2466,7 +2466,7 @@ static int proc_timers_open(struct inode *inode, struct file *file)
- 		return -ENOMEM;
- 
- 	tp->pid = proc_pid(inode);
--	tp->ns = proc_pid_ns(inode);
-+	tp->ns = proc_pid_ns(inode->i_sb);
- 	return 0;
- }
- 
-@@ -3377,7 +3377,7 @@ int proc_pid_readdir(struct file *file, struct dir_context *ctx)
- {
- 	struct tgid_iter iter;
- 	struct proc_fs_info *fs_info = proc_sb_info(file_inode(file)->i_sb);
--	struct pid_namespace *ns = proc_pid_ns(file_inode(file));
-+	struct pid_namespace *ns = proc_pid_ns(file_inode(file)->i_sb);
- 	loff_t pos = ctx->pos;
- 
- 	if (pos >= PID_MAX_LIMIT + TGID_OFFSET)
-@@ -3730,7 +3730,7 @@ static int proc_task_readdir(struct file *file, struct dir_context *ctx)
- 	/* f_version caches the tgid value that the last readdir call couldn't
- 	 * return. lseek aka telldir automagically resets f_version to 0.
- 	 */
--	ns = proc_pid_ns(inode);
-+	ns = proc_pid_ns(inode->i_sb);
- 	tid = (int)file->f_version;
- 	file->f_version = 0;
- 	for (task = first_tid(proc_pid(inode), tid, ctx->pos - 2, ns);
-diff --git a/fs/proc/self.c b/fs/proc/self.c
-index 309301ac0136..ca5158fa561c 100644
---- a/fs/proc/self.c
-+++ b/fs/proc/self.c
-@@ -12,7 +12,7 @@ static const char *proc_self_get_link(struct dentry *dentry,
- 				      struct inode *inode,
- 				      struct delayed_call *done)
- {
--	struct pid_namespace *ns = proc_pid_ns(inode);
-+	struct pid_namespace *ns = proc_pid_ns(inode->i_sb);
- 	pid_t tgid = task_tgid_nr_ns(current, ns);
- 	char *name;
- 
-diff --git a/fs/proc/thread_self.c b/fs/proc/thread_self.c
-index 2493cbbdfa6f..ac284f409568 100644
---- a/fs/proc/thread_self.c
-+++ b/fs/proc/thread_self.c
-@@ -12,7 +12,7 @@ static const char *proc_thread_self_get_link(struct dentry *dentry,
- 					     struct inode *inode,
- 					     struct delayed_call *done)
- {
--	struct pid_namespace *ns = proc_pid_ns(inode);
-+	struct pid_namespace *ns = proc_pid_ns(inode->i_sb);
- 	pid_t tgid = task_tgid_nr_ns(current, ns);
- 	pid_t pid = task_pid_nr_ns(current, ns);
- 	char *name;
-diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-index 2cb424e6f36a..6ec524d8842c 100644
---- a/include/linux/proc_fs.h
-+++ b/include/linux/proc_fs.h
-@@ -202,9 +202,9 @@ int open_related_ns(struct ns_common *ns,
- 		   struct ns_common *(*get_ns)(struct ns_common *ns));
- 
- /* get the associated pid namespace for a file in procfs */
--static inline struct pid_namespace *proc_pid_ns(const struct inode *inode)
-+static inline struct pid_namespace *proc_pid_ns(struct super_block *sb)
- {
--	return proc_sb_info(inode->i_sb)->pid_ns;
-+	return proc_sb_info(sb)->pid_ns;
- }
- 
- #endif /* _LINUX_PROC_FS_H */
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 4385f3d639f2..e7bdaccad942 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1745,7 +1745,7 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
- 	pid_t nr = -1;
- 
- 	if (likely(pid_has_task(pid, PIDTYPE_PID))) {
--		ns = proc_pid_ns(file_inode(m->file));
-+		ns = proc_pid_ns(file_inode(m->file)->i_sb);
- 		nr = pid_nr_ns(pid, ns);
- 	}
- 
-diff --git a/net/ipv6/ip6_flowlabel.c b/net/ipv6/ip6_flowlabel.c
-index d64b83e85642..ce4fbba4acce 100644
---- a/net/ipv6/ip6_flowlabel.c
-+++ b/net/ipv6/ip6_flowlabel.c
-@@ -779,7 +779,7 @@ static void *ip6fl_seq_start(struct seq_file *seq, loff_t *pos)
- {
- 	struct ip6fl_iter_state *state = ip6fl_seq_private(seq);
- 
--	state->pid_ns = proc_pid_ns(file_inode(seq->file));
-+	state->pid_ns = proc_pid_ns(file_inode(seq->file)->i_sb);
- 
- 	rcu_read_lock_bh();
- 	return *pos ? ip6fl_get_idx(seq, *pos - 1) : SEQ_START_TOKEN;
-diff --git a/security/tomoyo/realpath.c b/security/tomoyo/realpath.c
-index 08b096e2f7e3..df4798980416 100644
---- a/security/tomoyo/realpath.c
-+++ b/security/tomoyo/realpath.c
-@@ -162,7 +162,7 @@ static char *tomoyo_get_local_path(struct dentry *dentry, char * const buffer,
- 	if (sb->s_magic == PROC_SUPER_MAGIC && *pos == '/') {
- 		char *ep;
- 		const pid_t pid = (pid_t) simple_strtoul(pos + 1, &ep, 10);
--		struct pid_namespace *proc_pidns = proc_pid_ns(d_inode(dentry));
-+		struct pid_namespace *proc_pidns = proc_pid_ns(sb);
- 
- 		if (*ep == '/' && pid && pid ==
- 		    task_tgid_nr_ns(current, proc_pidns)) {
--- 
-2.25.4
+FWIW if you're running a more recent version of QEMU (>=3.1) then you can also boot
+from the virtio-blk-pci device directly instead of having to switch back to the IDE
+device after installation as you have done above. Should be something like:
 
+qemu-system-sparc64 \
+         -m 4096 \
+   	-device virtio-blk-pci,bus=pciB,drive=hd \
+ 	-drive
+file=/home/brauner/.local/share/qemu/sparc64.img,format=raw,if=none,id=hd,bootindex=0 \
+        -net nic \
+ 	-net user \
+ 	-nographic
+
+Note the removal of the legacy -boot argument and the addition of "bootindex=0" to
+the -drive argument.
+
+
+ATB,
+
+Mark.
