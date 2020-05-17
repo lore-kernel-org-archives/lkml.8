@@ -2,172 +2,104 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B6DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75C412067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E572067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:35:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVFin6RX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="udThLv95"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbgEQRak (ORCPT
+        id S1726379AbgEQRfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 13:30:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59660 "EHLO
+        Sun, 17 May 2020 13:35:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgEQRak (ORCPT
+        with ESMTP id S1726248AbgEQRfB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 13:30:40 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0CCDC061A0C;
-        Sun, 17 May 2020 10:30:38 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id d7so6318481eja.7;
-        Sun, 17 May 2020 10:30:38 -0700 (PDT)
+        Sun, 17 May 2020 13:35:01 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD561C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 10:35:00 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id a7so8328450qvl.2
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 10:35:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0OZFa7jftTdxWcOSLEpkn4gNpXoELgMCtZ7/ZZaFvoc=;
-        b=bVFin6RXaSBqs/HWL6nZvR81KfYNuhyVWJLZyNS84/MnadktkEJcboxJxCvgXw+VE1
-         FQe9jEl3xSacnE8AKPGtI+9dS3AMwn1APPFZDevOK7raaxbPaQeJLPo+GZz9tsH5DoBZ
-         30ZNkXzHYor4VYEvi5iYT1vvspznozYtX76pSh+541dvBxXY+L41TDX3J9m0cse9U1ru
-         gaYcs09gf/paEjDfrGL38sv9CSY+Oxda6JzD1EqV4hradjEvhe0mOfJ2QBJjZlOQFNHd
-         tetYucXzh9C78+IzXrdWYA4T4CycFCg8/0rA7yBIm7uj6mazgIHD7IVwyqfQ+f161+OX
-         Nwhg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=E8Lan1lVGAalxV7aOXnLLVOZi8STuKzmmVorzW8cW60=;
+        b=udThLv95c17xKOqq6Zbqqup8Iy2Zn4zVnlkF5N/EO4EdHHP00zuQJluxG6SX+4Ogly
+         +eFzVKZVeXH7NsWhIpO7nPw7nXkGo6K0WcK4yzb2iAt7COWkUiPdu0bhJ/TTh/03vxj3
+         k+jEcEPXD1l3RMmhcTZwpX7wtkEmvD27BIij6KWs5q2BlhP0h6a6UPbwC563DvmaW0zJ
+         0/Iaw4i03t1tOg6dtQR97ju9rAyf62r03MkuVfnUv+MNI/jz7VcnZwU2NxXa0UhVF46x
+         ChB3jMwMyY45itBA8UZOPIS9jnIkfo+2qfIghmAnnjavsLO80LNKduL3mKeeIxQCe7jU
+         BXJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0OZFa7jftTdxWcOSLEpkn4gNpXoELgMCtZ7/ZZaFvoc=;
-        b=Bm/VfyyoJI2sCpOim1bZKkfTEU/lII8c4ObnvNaKwu3LkjTykKqhGBeYqiwKZULdDJ
-         hcP7eJ+2IGEaoNouUP2DRnVwHkH4VFtksJrNscbMTgOs9XihFbfFFnCS8O4jymMEWKlv
-         QQxkRuEhvnzMv1UAOc5OH7fre5d+XmB8Ns05ZA+IIIcgt/tjv0zdcUcCSSmdmgnyWHAn
-         kvj0BoGC/d5gApnbvJ39I9RPlNKMTKFY6d+l0rOqcoFnQb2WrZPrJfGHbZ4uYOBPbIH/
-         cc+ygqDpBytwPJy7DzzpqFzV3sovHetu31jqKeM5IAcFJTYTFTwiZBD5a+/NMBL8DDyu
-         3jlQ==
-X-Gm-Message-State: AOAM530fqBKjVG5hRO7J8eUHN0ruouDwJjzHR8iNabrGYj/11638yFKa
-        uHiZSWp+ZCfBUDBysMA7/udxFWpcWWti15oHsxA=
-X-Google-Smtp-Source: ABdhPJwK7lB3LMDKuVqlQkXmcjtEW9KkeZBuZ3TzasyL8xJgzyVYfbuqZAfyadINq/0M+0NGICy0or413Cq9tEvGVKw=
-X-Received: by 2002:a17:906:a1da:: with SMTP id bx26mr11905526ejb.42.1589736637173;
- Sun, 17 May 2020 10:30:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200515013556.5582-1-kim.andrewsy@gmail.com> <alpine.LFD.2.21.2005152044380.3860@ja.home.ssi.bg>
- <CABc050G5HRaTNp1r0P7HahAUu+RA_Gk2XZBbjDWQsQ40O4VGyw@mail.gmail.com>
-In-Reply-To: <CABc050G5HRaTNp1r0P7HahAUu+RA_Gk2XZBbjDWQsQ40O4VGyw@mail.gmail.com>
-From:   Andrew Kim <kim.andrewsy@gmail.com>
-Date:   Sun, 17 May 2020 13:30:25 -0400
-Message-ID: <CABc050HM=yMbqxDqKX1CLt4qKwXQsf_c6VM=9nkVKWz1GBKCQA@mail.gmail.com>
-Subject: Re: [PATCH] netfilter/ipvs: expire no destination UDP connections
- when expire_nodest_conn=1
-To:     Julian Anastasov <ja@ssi.bg>
-Cc:     Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "open list:IPVS" <netdev@vger.kernel.org>,
-        "open list:IPVS" <lvs-devel@vger.kernel.org>,
-        "open list:NETFILTER" <netfilter-devel@vger.kernel.org>,
-        "open list:NETFILTER" <coreteam@netfilter.org>,
-        open list <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=E8Lan1lVGAalxV7aOXnLLVOZi8STuKzmmVorzW8cW60=;
+        b=hmvlBRJJWgOjr9nO1yiQdzblJLOkZkoI9rz47Lz/Y8kpDLu8E5wIORR7y/sPVDtS+Z
+         vbSv2cNgtoIzQWh/F/TpgOMbyLiy7VckLHf3JmNGW3DraGfCK6dUy3se7kfaqmdr/a/R
+         j7kjrR9g8lBtzgGIDOqriHGT2RbBYjDePpqFTg/xN0n7yLxdlwV5PaTOR3HQbQ++AUf4
+         kQS6ebscRO1uESuFaCdWFBYaLBke5V2gyHWt3z9uqf8rawEQr0r6z4MKDRU4Y5ZkBg03
+         2g7DdnhuJ3CVzcJJL9NEdIfX0f0Nn9ugTqA4kJJp11tWY8+wtLe2uVXxBWX5HciWls1i
+         fF8w==
+X-Gm-Message-State: AOAM5302sCS1I5daDl1pUyfb7eBrrlALtLe8xMjYd6SnNEv0FzENPEtt
+        gSxjc3z49UqJtOoy6CTgxhOP/1ndgwSBJS8=
+X-Google-Smtp-Source: ABdhPJwnmolA1XadUuuUbj345XqWMgXquDlzfPY7m22VBISCtbWdMKRqFVEdYArb2FuSeTHCR/NYCpL4DVhmn7s=
+X-Received: by 2002:a0c:99d3:: with SMTP id y19mr12392810qve.72.1589736899372;
+ Sun, 17 May 2020 10:34:59 -0700 (PDT)
+Date:   Sun, 17 May 2020 10:34:53 -0700
+Message-Id: <20200517173453.157703-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
+Subject: [PATCH v1] driver core: Remove check in driver_deferred_probe_force_trigger()
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Saravana Kannan <saravanak@google.com>
+Cc:     kernel-team@android.com, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I sent a new patch diff based on my ask above. Please take a look :)
+The whole point behind adding driver_deferred_probe_force_trigger() in
+commit 716a7a259690 ("driver core: fw_devlink: Add support for batching
+fwnode parsing") was to skip the check for driver_deferred_probe_enable.
+Otherwise, it's identical to driver_deferred_probe_trigger().
 
-Thanks,
+Delete the check in driver_deferred_probe_force_trigger() so that
+fw_devlink_pause() and fw_devlink_resume() can kick off deferred probe
+as intended. Without doing this forced deferred probe trigger, some
+platforms seem to be crashing during boot because they assume probe
+order of devices.
 
-Andrew Sy Kim
+Fixes: 716a7a259690 ("driver core: fw_devlink: Add support for batching fwnode parsing")
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/base/dd.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-On Sun, May 17, 2020 at 1:27 PM Andrew Kim <kim.andrewsy@gmail.com> wrote:
->
-> Hi Julian,
->
-> Thanks for getting back to me, that makes sense.
->
-> Would you be opposed to trying to expire all UDP connections matching
-> a deleted destination only if expire_nodest_conn=1?
-> Even today with `expire_nodest_conn=1`, many packets could be dropped
-> if there are many requests from a single client
-> trying to reuse client ports matching a deleted destination. Setting
-> `expire_nodest_conn=1` and reducing the UDP timeout
-> helps but deleting all connections when the destination is deleted
-> seems more efficient.
->
-> Looking forward to hearing your thoughts,
->
-> Andrew Sy Kim
->
->
-> On Fri, May 15, 2020 at 2:07 PM Julian Anastasov <ja@ssi.bg> wrote:
-> >
-> >
-> >         Hello,
-> >
-> > On Thu, 14 May 2020, Andrew Sy Kim wrote:
-> >
-> > > When expire_nodest_conn=1 and an IPVS destination is deleted, IPVS
-> > > doesn't expire connections with the IP_VS_CONN_F_ONE_PACKET flag set (any
-> > > UDP connection). If there are many UDP packets to a virtual server from a
-> > > single client and a destination is deleted, many packets are silently
-> > > dropped whenever an existing connection entry with the same source port
-> > > exists. This patch ensures IPVS also expires UDP connections when a
-> > > packet matches an existing connection with no destinations.
-> > >
-> > > Signed-off-by: Andrew Sy Kim <kim.andrewsy@gmail.com>
-> > > ---
-> > >  net/netfilter/ipvs/ip_vs_core.c | 3 +--
-> > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > >
-> > > diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-> > > index aa6a603a2425..f0535586fe75 100644
-> > > --- a/net/netfilter/ipvs/ip_vs_core.c
-> > > +++ b/net/netfilter/ipvs/ip_vs_core.c
-> > > @@ -2116,8 +2116,7 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
-> > >               else
-> > >                       ip_vs_conn_put(cp);
-> >
-> >         Above ip_vs_conn_put() should free the ONE_PACKET
-> > connections because:
-> >
-> > - such connections never start timer, they are designed
-> > to exist just to schedule the packet, then they are released.
-> > - noone takes extra references
-> >
-> >         So, ip_vs_conn_put() simply calls ip_vs_conn_expire()
-> > where connections should be released immediately. As result,
-> > we can not access cp after this point here. That is why we work
-> > just with 'flags' below...
-> >
-> >         Note that not every UDP connection has ONE_PACKET
-> > flag, it is present if you configure it for the service.
-> > Do you have -o/--ops flag? If not, the UDP connection
-> > should expire before the next jiffie. This is the theory,
-> > in practice, you may observe some problem...
-> >
-> > > -             if (sysctl_expire_nodest_conn(ipvs) &&
-> > > -                 !(flags & IP_VS_CONN_F_ONE_PACKET)) {
-> > > +             if (sysctl_expire_nodest_conn(ipvs)) {
-> > >                       /* try to expire the connection immediately */
-> > >                       ip_vs_conn_expire_now(cp);
-> > >               }
-> >
-> >         You can also look at the discussion which resulted in
-> > the last patch for this place:
-> >
-> > http://archive.linuxvirtualserver.org/html/lvs-devel/2018-07/msg00014.html
-> >
-> > Regards
-> >
-> > --
-> > Julian Anastasov <ja@ssi.bg>
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 63991d97adcc..9a1d940342ac 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -169,9 +169,6 @@ static void driver_deferred_probe_trigger(void)
+ 
+ void driver_deferred_probe_force_trigger(void)
+ {
+-	if (!driver_deferred_probe_enable)
+-		return;
+-
+ 	/*
+ 	 * A successful probe means that all the devices in the pending list
+ 	 * should be triggered to be reprobed.  Move all the deferred devices
+-- 
+2.26.2.761.g0e0b3e54be-goog
+
