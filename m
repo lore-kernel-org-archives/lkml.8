@@ -2,101 +2,181 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEE6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E49572075F
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CB22075F
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 13:08:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARxbEcTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgEQNIb (ORCPT
+        id S1727983AbgEQNIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 09:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47288 "EHLO
+        Sun, 17 May 2020 09:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbgEQNIb (ORCPT
+        with ESMTP id S1727893AbgEQNIe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 09:08:31 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADFFDC061A0C;
-        Sun, 17 May 2020 06:08:30 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jaJ1n-0002k2-19; Sun, 17 May 2020 15:08:27 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7739C1C009F;
-        Sun, 17 May 2020 15:08:26 +0200 (CEST)
-Date:   Sun, 17 May 2020 13:08:26 -0000
-From:   "tip-bot2 for Andrew Morton" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/build] x86/build: Use $(CONFIG_SHELL)
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200505211932.GE6880@zn.tnic>
-References: <20200505211932.GE6880@zn.tnic>
+        Sun, 17 May 2020 09:08:34 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CC3BC061A0C;
+        Sun, 17 May 2020 06:08:34 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id z22so5649468lfd.0;
+        Sun, 17 May 2020 06:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aKLX6VTSdRiK9YTLmZQPvCDlkSARMjWiCKvL6+N4SsM=;
+        b=ARxbEcTMlApvt0jToNOC++bf5g9cpZWXPfXh2ZQ4yILhpPXcpx+KnOpcEIVWUIduux
+         78WCdMKEhpwQXPlmc6EJAVwgPNMQh53lfauVqhJMtOCvJiKLjapck68/f/vaS+jbndrz
+         6jr+MwnvXvV9AamXrumbnoq1Q7iH65v4UgnA0o6YisRDm5xiZMzZFWyukZTkmTv0/uC6
+         B9KXIYSCtoR6BfBYMTzKYS7PNFJ21QQ1I8HT5ISjNc+KZ2bg57e/W4qeF6Sj0072N3jr
+         r4JhG9UW6mo0v6DMLhUBfWdmGFeC3XfxA1lJInlboU7+zk0unaGHt7W9VmL7BIGnSTjd
+         N2gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aKLX6VTSdRiK9YTLmZQPvCDlkSARMjWiCKvL6+N4SsM=;
+        b=NYXQNfZN+mUV8DNsgrRcsrHxQ1bvJri20BbfaPBtpUV8ZeBgrOR4OsFHByV691oDYz
+         hnt4rT0UvxIvip2q7+6QmPOtUB4XGrlh8PiPLPInsP5xwdwvAg8ugr+125KflyMPh0WS
+         SEEG15du6NGl8I9sfPc0f+nv/g0lhHaCi/MdRCzg7GBZoNK438E+reQ4LyInNCq4Ppvl
+         0VKx6Tw1vot3OC+oMRhXmsIga4oP8N+jtGPGZBDCjMIk1xETKhvmOwIEvBZqj/Pjc1Lo
+         TseHz/OcxdFVh56BvNp9buh7IoyvOBTz4T0vb0n685R+Uhy5P7SL5aO3qFoI9tk5r/eB
+         nn5w==
+X-Gm-Message-State: AOAM533i0QKjhY2+mqN6tsWbAu7i6461GtDs7K4pQynTtBISsCE2EKk7
+        vx+yskPGwzMm0YHy8/DhNvs=
+X-Google-Smtp-Source: ABdhPJwzGiXoJSyYrOM4t1lYkY/l5h0javR+XPysJOQttuqzPuboHKC4FPW4dbKr1xcQ6sKh9P/iEg==
+X-Received: by 2002:a19:c04:: with SMTP id 4mr8457763lfm.17.1589720912837;
+        Sun, 17 May 2020 06:08:32 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id j15sm4098636lja.71.2020.05.17.06.08.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 May 2020 06:08:32 -0700 (PDT)
+Subject: Re: [PATCH v11 33/56] Input: atmel_mxt_ts - delay enabling IRQ when
+ not using regulators
+To:     "Wang, Jiada" <jiada_wang@mentor.com>
+Cc:     nick@shmanahar.org, dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200508055656.96389-1-jiada_wang@mentor.com>
+ <20200508055656.96389-34-jiada_wang@mentor.com>
+ <3a942afa-c047-2c88-1c8e-a90fa018738e@gmail.com>
+ <6af23ae6-2f1c-0459-d2b6-1b01ddb0c3dc@mentor.com>
+ <c88d24ef-e0e0-db3b-1000-b21af906eb4f@gmail.com>
+ <aaf99a11-037e-93d8-93e4-d83e3aa4a42e@mentor.com>
+ <63c93fc0-ac09-ec77-c590-08e419734205@gmail.com>
+ <8c6f73a2-f613-b402-d727-5cb7fb3e1f09@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <2e41656c-e7e4-5dcb-1156-bcfcbc8ea595@gmail.com>
+Date:   Sun, 17 May 2020 16:08:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Message-ID: <158972090630.17951.4281123342624645094.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <8c6f73a2-f613-b402-d727-5cb7fb3e1f09@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/build branch of tip:
+17.05.2020 06:32, Wang, Jiada пишет:
+> Hello Dmitry
+> 
+> On 2020/05/14 13:53, Dmitry Osipenko wrote:
+>> 13.05.2020 08:07, Wang, Jiada пишет:
+>>> Hello Dmitry
+>>>
+>>> On 2020/05/12 8:13, Dmitry Osipenko wrote:
+>>>> 11.05.2020 05:05, Wang, Jiada пишет:
+>>>>> Hello Dmitry
+>>>>>
+>>>>> Thanks for your comment and test,
+>>>>>
+>>>>> can you let me know which platform (board) you are using for test,
+>>>>> and DTS changes if you have added any.
+>>>>
+>>>> That's this device-tree [1] without any extra changes.
+>>>>
+>>> I am using Samsung Chromebook Pro for testing,
+>>> but obviously some of the use cases it can't cover.
+>>>
+>>> I also would like to test on same device you are using,
+>>> would you please let me know how to boot Acer Iconia Tab A500
+>>> with custom images. Are you booting Linux or Android on it?
+>>
+>> I'm using Ubuntu 20.04 on it at the moment. In order to boot custom
+>> images you'll need at least to install a custom recovery, which will
+>> allow to flash boot.img on eMMC storage.
+>>
+>> Ideally, you'll need to install an unlocked bootloader that will enable
+>> Android's fastboot, and thus, allow to easily boot kernel zImage without
+>> messing with flashing boot images.
+>>
+>> Could you please tell what is the current state of yours device: does it
+>> have a stock Android installed? is it rooted? is custom recovery
+>> installed?
+>>
+> Thanks for your information
+> 
+> By following instructions found in XDA forums,
+> now I am able to install an unlocked bootloader,
+> boot among primary kernel, recovery kernel or fastboot,
+> an Android custom stock rom also has been installed
 
-Commit-ID:     0be11088b848774ae1f693169fdb9575e0ff06ba
-Gitweb:        https://git.kernel.org/tip/0be11088b848774ae1f693169fdb9575e0ff06ba
-Author:        Andrew Morton <akpm@linux-foundation.org>
-AuthorDate:    Tue, 05 May 2020 14:26:51 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 17 May 2020 16:01:33 +03:00
+Awesome!
 
-x86/build: Use $(CONFIG_SHELL)
+> Could you please let me know how to install local built ubuntu images
 
-When scripts/x86-check-compiler.sh doesn't have the executable bit set:
+Sure, please follow these steps:
 
-  q:/usr/src/25> make clean
-  make: execvp: ./scripts/x86-check-compiler.sh: Permission denied
+1. Download rootfs from
+http://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04-base-armhf.tar.gz
 
-Fix this by using $(CONFIG_SHELL).
+2. Extract it wherever you want yours root to be, like ExternalSD card
+or eMMC /data partition or even NFS directory if you'll use usbnet.
 
-This will happen if the user downloads and applies patch-5.7.tar.gz, since
-patch(1) doesn't preserve the x bit.
+3. Clone this kernel https://github.com/grate-driver/linux which is a
+recent upstream linux-next + work-in-progress patches that haven't been
+merged into upstream yet. For example DRM bridges and Tegra Partition
+Table patches are under review now.
 
-Fixes: 73da86741e7f7 ("x86/build: Check whether the compiler is sane")
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200505211932.GE6880@zn.tnic
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+4. Select tegra_defconfig:
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 38d3eec..9e22791 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -2,7 +2,7 @@
- # Unified Makefile for i386 and x86_64
- 
- #  Check the compiler
--sane_compiler := $(shell $(srctree)/scripts/x86-check-compiler.sh $(CC))
-+sane_compiler := $($(CONFIG_SHELL) $(srctree)/scripts/x86-check-compiler.sh $(CC))
- $(if $(sane_compiler),$(error $(CC) check failed. Aborting),)
- 
- # select defconfig based on actual architecture
+	ARCH=arm make tegra_defconfig
+
+5. Compile kernel:
+
+	ARCH=arm make
+
+6. Append DTB to zImage:
+
+	cat arch/arm/boot/zImage
+arch/arm/boot/dts/tegra20-acer-a500-picasso.dtb > arch/arm/boot/zImage-dtb
+
+7. Turn on A500 and select 'fastboot' option in the bootloader's menu.
+
+8. Boot compiled kernel:
+
+	fastboot -c "root=/dev/mmcblk2p8 gpt tegraboot=sdmmc" boot
+arch/arm/boot/zImage-dtb
+
+9. Grab touchscreen/WiFi/Bluetooth firmware files from
+https://github.com/digetx/linux-firmware
+
+10. Grab ALSA UCM rule from https://github.com/digetx/alsa-ucm-conf
+
+11. Enjoy!
+
+Please let me know you'll experience any problems, I'll be glad to help.
