@@ -2,111 +2,189 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D441FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABC872070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BD502081A
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:06:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oQygXhr8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="JcNP/sXX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgEQLDl (ORCPT
+        id S1727899AbgEQLGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 07:03:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727839AbgEQLDj (ORCPT
+        Sun, 17 May 2020 07:06:51 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:43824 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgEQLGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 07:03:39 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ADB4C061A0C;
-        Sun, 17 May 2020 04:03:39 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id h188so5497412lfd.7;
-        Sun, 17 May 2020 04:03:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=tf6aUm2aDuFG+hLIypQmHMnKFy/TkQcplzpKMuoB/JQ=;
-        b=oQygXhr8IrST0MPEj1CqVNvPH7lRqdPQFgKc+eH+g2xHhN8uXtZQSs5OFm89yandoQ
-         VqXWtw5TH4Je366HsJlfE+JBFERSGSLGhwv+6MRKrzdzwSDo/3iWOvHTItnIQrLAkIts
-         TTEvrikDQ/m71LV6Brvw4N/q1WXwIGq22+nDFCxfQxnOmWfhWMFMLt+sujt0zn8mYqyi
-         R3UCrAjy9zFMa/ssLSEgGBbHoPYwnJdgf+4jgQZeV698HkGn4qnKmjRty6msMJSAs8bI
-         PpJC5BqG7L1IClPUt7ecL91N2piVt5i08sV3SORn83D392M3toPoUL4580ih3Lr8um/N
-         Ycfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tf6aUm2aDuFG+hLIypQmHMnKFy/TkQcplzpKMuoB/JQ=;
-        b=s/NM1SpqSdouan/JGabv1eSUxLtwSQkPtis0ecGvMzwZxMdns4y2yIfBz8XX21TRFz
-         6KwluV6CvZh1mBfnXuVw/Me/hX++LlMzxmy3381N9isz3zOtoisVgwbAoqhkltokr4bE
-         B2gahglh1E9qtLbP42oLRvxIRIDRV+vBdh0HM/7JTGhzfo8piclMGHYcnGLRIw0pvysk
-         GeMKRfEx8QK2I+zYG+8cicspaOiwHElaFB77w7aA9q4LgSE26Dh0Ok31CpRLV9ubaaDu
-         wDb15td/B5CUpy1Kt7KlR3suLZG4XXn4GcaPG+nGaCxXhxdnUFEJ69rMHyjuEePVCKtD
-         mMlA==
-X-Gm-Message-State: AOAM530NcoKzXx2A2qSieJl95/+B/Hw9hcuK5kKkumC2ofU2BkuohlUc
-        iVKAigXRwqBPsYKwXraud/Y=
-X-Google-Smtp-Source: ABdhPJxPaqzKSuXHOYyYbsoD4bVTxzPxeE8UoiCEpFMxqQXyWs3VRgzZSVNyKziTYbC2AWHvsviivQ==
-X-Received: by 2002:ac2:4304:: with SMTP id l4mr8130303lfh.87.1589713417528;
-        Sun, 17 May 2020 04:03:37 -0700 (PDT)
-Received: from localhost.localdomain ([82.209.196.123])
-        by smtp.gmail.com with ESMTPSA id w25sm1080333lfn.42.2020.05.17.04.03.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2020 04:03:37 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] io_uring: fix FORCE_ASYNC req preparation
-Date:   Sun, 17 May 2020 14:02:12 +0300
-Message-Id: <04738fd6d68c70df097d78539856e66986831e7f.1589712727.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1589712727.git.asml.silence@gmail.com>
-References: <cover.1589712727.git.asml.silence@gmail.com>
+        Sun, 17 May 2020 07:06:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1589713609; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=a+8uUs3KZErtQFYLwRFcI4Y9Qu/GahR4WBEx76kMicU=;
+        b=JcNP/sXXR5LlAQyGgIDVT84jR1N8QUsQZViSBBi4neVMfuz8zSKI3xrAbm6Kt4hZTkGpY8
+        oANNPgIIs9BhTuh23iqoxGTXZyOnEhbUrzyq5kOrxlI15KXhg6XigZB2qW1jydrd/+UJ55
+        TLLg3EO0buSMfIKZ5hHd8H+D4AJM7O8=
+Date:   Sun, 17 May 2020 13:06:38 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 02/12] dt-bindings: display: Add ingenic,ipu.yaml
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        devicetree@vger.kernel.org, od@zcrc.me,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Message-Id: <2V2HAQ.FED0YBJJAZ7D2@crapouillou.net>
+In-Reply-To: <20200517061710.GB609600@ravnborg.org>
+References: <20200516215057.392609-1-paul@crapouillou.net>
+        <20200516215057.392609-2-paul@crapouillou.net>
+        <20200517061710.GB609600@ravnborg.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As for other not inlined requests, alloc req->io for FORCE_ASYNC reqs,
-so they can be prepared properly.
+Hi Sam,
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+Le dim. 17 mai 2020 =E0 8:17, Sam Ravnborg <sam@ravnborg.org> a =E9crit :
+> Hi Paul.
+> On Sat, May 16, 2020 at 11:50:47PM +0200, Paul Cercueil wrote:
+>>  Add documentation of the Device Tree bindings for the Image=20
+>> Processing
+>>  Unit (IPU) found in most Ingenic SoCs.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>=20
+> For me it fails like this:
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 9e81781d7632..3d0a08560689 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -5692,9 +5692,15 @@ static void io_queue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 			io_double_put_req(req);
- 		}
- 	} else if (req->flags & REQ_F_FORCE_ASYNC) {
--		ret = io_req_defer_prep(req, sqe);
--		if (unlikely(ret < 0))
--			goto fail_req;
-+		if (!req->io) {
-+			ret = -EAGAIN;
-+			if (io_alloc_async_ctx(req))
-+				goto fail_req;
-+			ret = io_req_defer_prep(req, sqe);
-+			if (unlikely(ret < 0))
-+				goto fail_req;
-+		}
-+
- 		/*
- 		 * Never try inline submit of IOSQE_ASYNC is set, go straight
- 		 * to async execution.
--- 
-2.24.0
+Oops. I missed the 'const:' in the item list. Will fix when I send a=20
+V2, and verify it this time.
+
+Cheers,
+-Paul
+
+> /Documentation/devicetree/bindings/display/ingenic,ipu.yaml:=20
+> ignoring, error in schema: properties: compatible: oneOf: 1: items
+> warning: no schema found in file:=20
+> Documentation/devicetree/bindings/display/ingenic,ipu.yaml
+> make[2]: *** [Documentation/devicetree/bindings/Makefile:42:=20
+> Documentation/devicetree/bindings/processed-schema.yaml] Error 255
+> make[2]: *** Waiting for unfinished jobs....
+> Documentation/devicetree/bindings/display/ingenic,ipu.yaml:=20
+> properties:compatible:oneOf:1:items: ['ingenic,jz4770-ipu',=20
+> 'ingenic,jz4760-ipu'] is not valid under any of the given schemas=20
+> (Possible causes of the failure):
+> 	Documentation/devicetree/bindings/display/ingenic,ipu.yaml:=20
+> properties:compatible:oneOf:1:items: ['ingenic,jz4770-ipu',=20
+> 'ingenic,jz4760-ipu'] is not of type 'object', 'boolean'
+> 	Documentation/devicetree/bindings/display/ingenic,ipu.yaml:=20
+> properties:compatible:oneOf:1:items:0: 'ingenic,jz4770-ipu' is not of=20
+> type 'object', 'boolean'
+> 	Documentation/devicetree/bindings/display/ingenic,ipu.yaml:=20
+> properties:compatible:oneOf:1:items:1: 'ingenic,jz4760-ipu' is not of=20
+> type 'object', 'boolean'
+>=20
+>=20
+> 	Sam
+>=20
+>>  ---
+>>   .../bindings/display/ingenic,ipu.yaml         | 65=20
+>> +++++++++++++++++++
+>>   1 file changed, 65 insertions(+)
+>>   create mode 100644=20
+>> Documentation/devicetree/bindings/display/ingenic,ipu.yaml
+>>=20
+>>  diff --git=20
+>> a/Documentation/devicetree/bindings/display/ingenic,ipu.yaml=20
+>> b/Documentation/devicetree/bindings/display/ingenic,ipu.yaml
+>>  new file mode 100644
+>>  index 000000000000..22fe02ca866d
+>>  --- /dev/null
+>>  +++ b/Documentation/devicetree/bindings/display/ingenic,ipu.yaml
+>>  @@ -0,0 +1,65 @@
+>>  +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>  +%YAML 1.2
+>>  +---
+>>  +$id: http://devicetree.org/schemas/display/ingenic,ipu.yaml#
+>>  +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>  +
+>>  +title: Ingenic SoCs Image Processing Unit (IPU) devicetree bindings
+>>  +
+>>  +maintainers:
+>>  +  - Paul Cercueil <paul@crapouillou.net>
+>>  +
+>>  +properties:
+>>  +  compatible:
+>>  +    oneOf:
+>>  +      - enum:
+>>  +        - ingenic,jz4725b-ipu
+>>  +        - ingenic,jz4760-ipu
+>>  +      - items:
+>>  +        - ingenic,jz4770-ipu
+>>  +        - ingenic,jz4760-ipu
+>>  +
+>>  +  reg:
+>>  +    maxItems: 1
+>>  +
+>>  +  interrupts:
+>>  +    maxItems: 1
+>>  +
+>>  +  clocks:
+>>  +    maxItems: 1
+>>  +
+>>  +  clock-names:
+>>  +    const: ipu
+>>  +
+>>  +patternProperties:
+>>  +  "^ports?$":
+>>  +    description: OF graph bindings (specified in=20
+>> bindings/graph.txt).
+>>  +
+>>  +required:
+>>  +  - compatible
+>>  +  - reg
+>>  +  - interrupts
+>>  +  - clocks
+>>  +  - clock-names
+>>  +
+>>  +additionalProperties: false
+>>  +
+>>  +examples:
+>>  +  - |
+>>  +    #include <dt-bindings/clock/jz4770-cgu.h>
+>>  +    ipu@13080000 {
+>>  +      compatible =3D "ingenic,jz4770-ipu", "ingenic,jz4760-ipu";
+>>  +      reg =3D <0x13080000 0x800>;
+>>  +
+>>  +      interrupt-parent =3D <&intc>;
+>>  +      interrupts =3D <29>;
+>>  +
+>>  +      clocks =3D <&cgu JZ4770_CLK_IPU>;
+>>  +      clock-names =3D "ipu";
+>>  +
+>>  +      port {
+>>  +        ipu_ep: endpoint {
+>>  +          remote-endpoint =3D <&lcdc_ep>;
+>>  +        };
+>>  +      };
+>>  +    };
+>>  --
+>>  2.26.2
+>>=20
+>>  _______________________________________________
+>>  dri-devel mailing list
+>>  dri-devel@lists.freedesktop.org
+>>  https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
 
