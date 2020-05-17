@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FED6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A49A20735
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E147820727
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589709029;
-	bh=2QNSjsHZQIRQEjmAJwljJttRTcv9hT34NP+mJxFgdkw=;
+	s=default; t=1589709035;
+	bh=153qbt6zdgPrBNzsTsFmMgx7plf/KAaVn4AAZGV1Iws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=orkrlvrk0sZTwNWdpNf8bCydf86boVSJ85M6tntK8LQQrbJTQiAg5hc3LEIyCzkr9
-	 ApURbOJ69K8lAYrqra6iSdi1ZyYaVvSTtdNAtBkJqPuGSZAPszIpcTP2qHQuAzjr7R
-	 y2RjJbFXkITAQzYqvLyMWS0mWg/AyGvZALd2CFRQ=
+	b=xnKmDhVv7/vPKpSnbNNp+H7IIcIVYEfW9sK7YgvwiH34KGMRBKFNy7IAWBLMIN0Ay
+	 BDnqW+o72TEksP9moaiFEmNZ7yhOhEA5OfTVgA4lj6hE6GpH01Ail+oGg4CdYp7Y5K
+	 bOCIkaJBwKQWcYbBb8ZXRkmPoxFfRDEOV9pX8xzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgEQJu2 (ORCPT
+        id S1728152AbgEQJue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 05:50:28 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:38314 "EHLO
+        Sun, 17 May 2020 05:50:34 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:38318 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbgEQJtg (ORCPT
+        with ESMTP id S1727798AbgEQJtg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 17 May 2020 05:49:36 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 04H9n4LH018560;
-        Sun, 17 May 2020 18:49:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4LH018560
+        by conuserg-08.nifty.com with ESMTP id 04H9n4LC018560;
+        Sun, 17 May 2020 18:49:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4LC018560
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589708957;
-        bh=72IaotGqVMjE7/yt/MCBDsa6PL38XW+WDf2aqfQLvsQ=;
+        s=dec2015msa; t=1589708954;
+        bh=EH6Tl9YafH5Uj3o4QwAgcCL2CdVbpltrRpGmnprwbPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mfHtc6p+utdmVF+6W5P4suqQ4iqogn+SNZN7iDD/eb/Wp9sZdD9cFlc/v9qEM76hj
-         /fKFvHnhpDkNLXO9Rg7RLb8XCWmWG1Ib2O2JUN9FpiE2a5/+cLerNpsd+k1U6zCgjF
-         AynpskhaEB9a5xIXrSd26+hQBCaZ5jILlJQ8jZ0tNB7bRKEbYUYqDNIaRQ2Mp8IM6u
-         BuMpc2y1K9ACyvzuBzRtwulRaMzz2k3xZrNdD7m3w+C2KDXMrmnD3fpf8P3MOwlei3
-         rLsznrxIgHwNkteUAa0uw39cgRJfW3Q/h6EAyEBZI9mKZ8A1q+FY5MVaNpOS+ud6m8
-         ToXOf5GhBW05Q==
+        b=jjWXr8/G5Mre+10DI0OtdfIOh7FYZk7jkwsOb+HgjVd2xghOEYi5HLBOpNszt8thm
+         rn0Ukft7gRtLgXUw3Sii2GCC6nZ/c+6FrAlI/2bi/Woc73+lKht/VmajXieSzQK8Oj
+         QsZEibGOpnsks+PHy24JLuDNRb0BWncLT82Cq5ht/yDQOGtGQZ0mcISuMPjiUiaAtg
+         54d6FlZ86ieMIY3uQNoRSTFrFOU8m+TvMr7I/ebLBMVGZGnLrfWhgHGYrEge5p+ppG
+         i6OJHqMcv3zyLW8qxoz07WWMA6xsJmY6iGcKQSCpEAL01kQZNTugAPJedQKHYFmrvr
+         bRuag0YZ9HSrA==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -49,9 +49,9 @@ Cc:     Jessica Yu <jeyu@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 20/29] modpost: generate vmlinux.symvers and reuse it for the second modpost
-Date:   Sun, 17 May 2020 18:48:50 +0900
-Message-Id: <20200517094859.2376211-21-masahiroy@kernel.org>
+Subject: [PATCH 15/29] modpost: allow to pass -i option multiple times remove -e option
+Date:   Sun, 17 May 2020 18:48:45 +0900
+Message-Id: <20200517094859.2376211-16-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200517094859.2376211-1-masahiroy@kernel.org>
 References: <20200517094859.2376211-1-masahiroy@kernel.org>
@@ -62,114 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The full build runs modpost twice, first for vmlinux.o and second for
-modules.
+Now that there is no difference in the functionality of -i and -e,
+they can be unified.
 
-The first pass dumps all the vmlinux symbols into Module.symvers, but
-the second pass parses vmlinux again instead of reusing the dump file,
-presumably because it needs to avoid accumulating stale symbols.
+Make modpost accept the -i option multiple times, then remove -e.
 
-Loading symbol info from a dump file is faster than parsing an ELF object.
-Besides, modpost deals with various issues to parse vmlinux in the second
-pass.
-
-A solution is to make the first pass dumps symbols into a separate file,
-vmlinux.symvers. The second pass reads it, and parses module .o files.
-The merged symbol information is dumped into Module.symvers as before.
-
-This makes further modpost cleanups possible.
-
-Also, it fixes the problem of 'make vmlinux', which previously overwrote
-Module.symvers, throwing away module symbols.
-
-I slightly touched scripts/link-vmlinux.sh so that vmlinux is re-linked
-when you cross this commit. Otherwise, vmlinux.symvers would not be
-generated.
+I will reuse -e for a different purpose.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- .gitignore               |  1 +
- Makefile                 |  2 +-
- scripts/Makefile.modpost | 11 +++++++----
- scripts/link-vmlinux.sh  |  2 --
- 4 files changed, 9 insertions(+), 7 deletions(-)
+ scripts/Makefile.modpost | 2 +-
+ scripts/mod/modpost.c    | 9 +--------
+ 2 files changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/.gitignore b/.gitignore
-index 2258e906f01c..87b9dd8a163b 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -56,6 +56,7 @@ modules.order
- /linux
- /vmlinux
- /vmlinux.32
-+/vmlinux.symvers
- /vmlinux-gdb.py
- /vmlinuz
- /System.map
-diff --git a/Makefile b/Makefile
-index 27e8a0522a3c..43988ce4e17e 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1405,7 +1405,7 @@ endif # CONFIG_MODULES
- # make distclean Remove editor backup files, patch leftover files and the like
- 
- # Directories & files removed with 'make clean'
--CLEAN_FILES += include/ksym \
-+CLEAN_FILES += include/ksym vmlinux.symvers \
- 	       modules.builtin modules.builtin.modinfo modules.nsdeps
- 
- # Directories & files removed with 'make mrproper'
 diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index d14143b30b7a..1c597999b6a0 100644
+index 8321068abb31..a316095c843c 100644
 --- a/scripts/Makefile.modpost
 +++ b/scripts/Makefile.modpost
-@@ -43,17 +43,17 @@ __modpost:
- include include/config/auto.conf
- include scripts/Kbuild.include
+@@ -82,7 +82,7 @@ include $(if $(wildcard $(KBUILD_EXTMOD)/Kbuild), \
+ # modpost options for external modules
+ MODPOST += \
+ 	-i Module.symvers \
+-	$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)) \
++	$(addprefix -i ,$(KBUILD_EXTRA_SYMBOLS)) \
+ 	-o $(KBUILD_EXTMOD)/Module.symvers
  
--kernelsymfile := $(objtree)/Module.symvers
--
- MODPOST = scripts/mod/modpost								\
- 	$(if $(CONFIG_MODVERSIONS),-m)							\
- 	$(if $(CONFIG_MODULE_SRCVERSION_ALL),-a)					\
--	$(if $(KBUILD_EXTMOD),,-o $(kernelsymfile))					\
- 	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)					\
- 	$(if $(KBUILD_MODPOST_WARN),-w)
+ endif
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index 340b88647e94..d3141b217b57 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -2548,7 +2548,6 @@ int main(int argc, char **argv)
+ {
+ 	struct module *mod;
+ 	struct buffer buf = { };
+-	char *kernel_read = NULL;
+ 	char *missing_namespace_deps = NULL;
+ 	char *dump_write = NULL, *files_source = NULL;
+ 	int opt;
+@@ -2557,13 +2556,9 @@ int main(int argc, char **argv)
+ 	struct ext_sym_list *extsym_start = NULL;
+ 	struct ext_sym_list **extsym_iter = &extsym_start;
  
- ifdef MODPOST_VMLINUX
+-	while ((opt = getopt(argc, argv, "i:e:mnsT:o:awENd:")) != -1) {
++	while ((opt = getopt(argc, argv, "i:mnsT:o:awENd:")) != -1) {
+ 		switch (opt) {
+ 		case 'i':
+-			kernel_read = optarg;
+-			external_module = 1;
+-			break;
+-		case 'e':
+ 			external_module = 1;
+ 			*extsym_iter = NOFAIL(calloc(1, sizeof(**extsym_iter)));
+ 			(*extsym_iter)->file = optarg;
+@@ -2604,8 +2599,6 @@ int main(int argc, char **argv)
+ 		}
+ 	}
  
-+# modpost options for vmlinux.o
-+MODPOST += -o vmlinux.symvers
-+
- quiet_cmd_modpost = MODPOST vmlinux.o
-       cmd_modpost = $(MODPOST) vmlinux.o
+-	if (kernel_read)
+-		read_dump(kernel_read);
+ 	while (extsym_start) {
+ 		struct ext_sym_list *tmp;
  
-@@ -68,7 +68,10 @@ MODPOST += $(subst -i,-n,$(filter -i,$(MAKEFLAGS))) -s \
- 	$(if $(KBUILD_NSDEPS),-d $(MODULES_NSDEPS))
- 
- ifeq ($(KBUILD_EXTMOD),)
--MODPOST += $(wildcard vmlinux)
-+
-+# modpost options for in-kernel modules
-+MODPOST += -i vmlinux.symvers -o Module.symvers
-+
- else
- 
- # set src + obj - they may be used in the modules's Makefile
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index d09ab4afbda4..d5af6be50b50 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -218,8 +218,6 @@ on_signals()
- }
- trap on_signals HUP INT QUIT TERM
- 
--#
--#
- # Use "make V=1" to debug this script
- case "${KBUILD_VERBOSE}" in
- *1*)
 -- 
 2.25.1
 
