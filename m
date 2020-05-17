@@ -2,170 +2,120 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47468C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 03:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A69C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 03:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20AA52053B
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 03:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5449207D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 03:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgEQDFQ (ORCPT
+        id S1726959AbgEQDct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 23:05:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:29278 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbgEQDFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 23:05:15 -0400
-IronPort-SDR: z4iGFSS60gDSXv1IpFtwOphtRwh8EC2bPDOUO/Hqj5hUtdViCexUxEnKQanAbAha3//uO4R31+
- mZVgMnalX7Lg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2020 20:05:15 -0700
-IronPort-SDR: kHjbhU2/E7Gjp6G2MJzoIpfREUOzcRhI+pA0aENWYpz/8Y1Cv+/LqyJYHNTEl/OIufC9RrAx+Z
- LgforLZXUxFw==
-X-ExtLoop1: 1
+        Sat, 16 May 2020 23:32:49 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:2450 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbgEQDcs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 May 2020 23:32:48 -0400
+IronPort-SDR: NaEPZz90g8c/zqW1DsrTbzuX/hC9puSktqmxONSRsKGV84rKQetgUiIGozgldV6MKhd/ugFWqO
+ /0uo9Tq/95AkrNWWVPB+CGj0WOqCnaYnDgDngg+SNuKwGasTajSPsD3A8ndXwb7dGG5fNz5fom
+ stTCCMyUuuHYCbXmPKIQ/UPe5jVH2nNFaYDxXVPkyJdBVUmAQxlLCRX62cIsUA+OHlp5R67dui
+ rVp37fD25r04r4HMSBqliddk79Tka2elJKQZWSs6NJqAkYBBbp6IzjF8UQ9kaWpwf7qbUg0zto
+ zG0=
 X-IronPort-AV: E=Sophos;i="5.73,401,1583222400"; 
-   d="scan'208";a="263597798"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 16 May 2020 20:05:13 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1ja9c0-000EUN-QC; Sun, 17 May 2020 11:05:12 +0800
-Date:   Sun, 17 May 2020 11:04:41 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:lkmm] BUILD SUCCESS 7ab9d2b00209d140e02042e027f6e5f98f1dbec7
-Message-ID: <5ec0a9c9.z3HaKf9ih77/IZwG%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="50948193"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa1.mentor.iphmx.com with ESMTP; 16 May 2020 19:32:47 -0800
+IronPort-SDR: jW7d68kwo/4bC3nOkaV/TzDUc/le45OT7uf1mzkOHGN7ZcLcjXFEBj83lGH5BW3t4rCwV7YMfw
+ SV8H4vzHssKc+KPpzCeZfjaBO6l6ir827sa5Vntnj3SJo8M3WcUpIfBYMKZqyckanr1qjDhjcr
+ j/6jJtWuPhDoFoiLYty2LnwQ3yZG/RJmXtqEbx6J9dh8BEo9a3sE4LdW/GPg9kVA9hNZrYUexU
+ eOb7jqK3v4zTIS6gYZjRTbgmP9kwXldBPrxetsW6QgJFmjhyCYmPyDjVZkOz9jOkp0fwU74lsX
+ M14=
+Subject: Re: [PATCH v11 33/56] Input: atmel_mxt_ts - delay enabling IRQ when
+ not using regulators
+To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
+        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
+References: <20200508055656.96389-1-jiada_wang@mentor.com>
+ <20200508055656.96389-34-jiada_wang@mentor.com>
+ <3a942afa-c047-2c88-1c8e-a90fa018738e@gmail.com>
+ <6af23ae6-2f1c-0459-d2b6-1b01ddb0c3dc@mentor.com>
+ <c88d24ef-e0e0-db3b-1000-b21af906eb4f@gmail.com>
+ <aaf99a11-037e-93d8-93e4-d83e3aa4a42e@mentor.com>
+ <63c93fc0-ac09-ec77-c590-08e419734205@gmail.com>
+From:   "Wang, Jiada" <jiada_wang@mentor.com>
+Message-ID: <8c6f73a2-f613-b402-d727-5cb7fb3e1f09@mentor.com>
+Date:   Sun, 17 May 2020 12:32:42 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <63c93fc0-ac09-ec77-c590-08e419734205@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: svr-orw-mbx-08.mgc.mentorg.com (147.34.90.208) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  lkmm
-branch HEAD: 7ab9d2b00209d140e02042e027f6e5f98f1dbec7  Documentation/litmus-tests: Cite an RCU litmus test
+Hello Dmitry
 
-elapsed time: 602m
+On 2020/05/14 13:53, Dmitry Osipenko wrote:
+> 13.05.2020 08:07, Wang, Jiada пишет:
+>> Hello Dmitry
+>>
+>> On 2020/05/12 8:13, Dmitry Osipenko wrote:
+>>> 11.05.2020 05:05, Wang, Jiada пишет:
+>>>> Hello Dmitry
+>>>>
+>>>> Thanks for your comment and test,
+>>>>
+>>>> can you let me know which platform (board) you are using for test,
+>>>> and DTS changes if you have added any.
+>>>
+>>> That's this device-tree [1] without any extra changes.
+>>>
+>> I am using Samsung Chromebook Pro for testing,
+>> but obviously some of the use cases it can't cover.
+>>
+>> I also would like to test on same device you are using,
+>> would you please let me know how to boot Acer Iconia Tab A500
+>> with custom images. Are you booting Linux or Android on it?
+> 
+> I'm using Ubuntu 20.04 on it at the moment. In order to boot custom
+> images you'll need at least to install a custom recovery, which will
+> allow to flash boot.img on eMMC storage.
+> 
+> Ideally, you'll need to install an unlocked bootloader that will enable
+> Android's fastboot, and thus, allow to easily boot kernel zImage without
+> messing with flashing boot images.
+> 
+> Could you please tell what is the current state of yours device: does it
+> have a stock Android installed? is it rooted? is custom recovery installed?
+> 
+Thanks for your information
 
-configs tested: 104
-configs skipped: 2
+By following instructions found in XDA forums,
+now I am able to install an unlocked bootloader,
+boot among primary kernel, recovery kernel or fastboot,
+an Android custom stock rom also has been installed
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Could you please let me know how to install local built ubuntu images
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-m68k                             allyesconfig
-mips                             allyesconfig
-sparc                            allyesconfig
-mips                malta_kvm_guest_defconfig
-arc                            hsdk_defconfig
-arc                           tb10x_defconfig
-h8300                            alldefconfig
-powerpc                           allnoconfig
-xtensa                    xip_kc705_defconfig
-mips                 pnx8335_stb225_defconfig
-xtensa                              defconfig
-ia64                             allyesconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a005-20200517
-x86_64               randconfig-a003-20200517
-x86_64               randconfig-a006-20200517
-x86_64               randconfig-a004-20200517
-x86_64               randconfig-a001-20200517
-x86_64               randconfig-a002-20200517
-i386                 randconfig-a006-20200517
-i386                 randconfig-a005-20200517
-i386                 randconfig-a003-20200517
-i386                 randconfig-a001-20200517
-i386                 randconfig-a004-20200517
-i386                 randconfig-a002-20200517
-i386                 randconfig-a012-20200517
-i386                 randconfig-a016-20200517
-i386                 randconfig-a014-20200517
-i386                 randconfig-a011-20200517
-i386                 randconfig-a013-20200517
-i386                 randconfig-a015-20200517
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-x86_64                              defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+Thanks,
+Jiada
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> My device was unlocked about 8+ years ago, so I'm not sure what's the
+> best way to do it nowadays. The XDA forums [1] could be a good starting
+> point, I may give you some advises once you'll tell what's the current
+> status of yours device.
+> 
+> [1] https://forum.xda-developers.com/iconia-a500
+> 
