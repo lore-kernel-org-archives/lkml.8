@@ -2,133 +2,75 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7836DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A90F20657
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:37:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="T04bod5n"
+	by mail.kernel.org (Postfix) with ESMTP id 96740207E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 19:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgEQThZ (ORCPT
+        id S1726693AbgEQTiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 15:37:25 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:25224 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726269AbgEQThZ (ORCPT
+        Sun, 17 May 2020 15:38:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgEQTiH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 15:37:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589744244; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=CsqgeE+faSNQ00Ax1SuNjJJHtZAQakq3R2LnrPY8eDk=; b=T04bod5n+ER7Kecz4wzEbvxpWrwwHIZneOx7pqt686VoHVqXmSRdI0VIDJfBRbXmTezducg1
- uYUtXad/RATrTp9hBUI63MxfTV/735NnWIWkQVZF9UTlwMyBQ+W0ixi/dh9nXwmeGaIIbh6S
- 7mhUALHkEsa92T5nxPoPBRgmka8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5ec192748ebbf95ecb848265 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 17 May 2020 19:37:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 890DFC432C2; Sun, 17 May 2020 19:37:23 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F53FC433F2;
-        Sun, 17 May 2020 19:37:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F53FC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [RFC PATCH 3/8] qaic: Create char dev
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     arnd@arndb.de, manivannan.sadhasivam@linaro.org,
-        bjorn.andersson@linaro.org, wufan@codeaurora.org,
-        pratanan@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
- <1589465266-20056-4-git-send-email-jhugo@codeaurora.org>
- <20200514141211.GA2643665@kroah.com>
- <0421a64a-10f3-08df-9ef1-14fdb570db0d@codeaurora.org>
- <20200514155615.GA2963499@kroah.com>
- <4be546d3-b571-0659-0140-f34ec88f95ff@codeaurora.org>
- <4683046a-c6b5-30a5-ef02-2f610523ae1c@codeaurora.org>
- <20200516070131.GB3964535@kroah.com>
- <8e06c718-8b8a-f09a-4685-11c0c1581a0c@codeaurora.org>
- <20200517071417.GA3090070@kroah.com>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <46581ccf-9cd4-3b9f-9b03-ed1264dac03b@codeaurora.org>
-Date:   Sun, 17 May 2020 13:37:20 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200517071417.GA3090070@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Sun, 17 May 2020 15:38:07 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C8EC061A0C;
+        Sun, 17 May 2020 12:38:07 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 14568128A2D8A;
+        Sun, 17 May 2020 12:38:07 -0700 (PDT)
+Date:   Sun, 17 May 2020 12:38:06 -0700 (PDT)
+Message-Id: <20200517.123806.1659008654334663086.davem@davemloft.net>
+To:     jhubbard@nvidia.com
+Cc:     linux-kernel@vger.kernel.org, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com
+Subject: Re: [PATCH] rds: convert get_user_pages() --> pin_user_pages()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200517012336.382624-1-jhubbard@nvidia.com>
+References: <20200517012336.382624-1-jhubbard@nvidia.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 17 May 2020 12:38:07 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/17/2020 1:14 AM, Greg KH wrote:
-> On Sat, May 16, 2020 at 03:29:19PM -0600, Jeffrey Hugo wrote:
->> On 5/16/2020 1:01 AM, Greg KH wrote:
->>> On Fri, May 15, 2020 at 03:08:59PM -0600, Jeffrey Hugo wrote:
->>>> 2. There are a limited number of dynamic minor numbers for misc devs (64),
->>>> so if you are expecting more devices than that, a misc dev is not
->>>> appropiate.  Also, these minors are shared with other misc dev users, so
->>>> depending on the system configuration, you might have significantly less
->>>> than 64 minors available for use.
->>>
->>> I'm pretty sure we can have more than 64 misc devices, that limitation
->>> should have been removed a while ago.  Try it and see :)
->>
->> In total, there can be more tha 64 misc devices.  However my previous
->> comment was specific to dynamic minors (ie devices which do not have an
->> assigned minor).  The limit on dynamic minors still apears to be 64. Looking
->> at the code -
->>
->> DYNAMIC_MINORS is still 64
->> https://elixir.bootlin.com/linux/v5.7-rc5/source/drivers/char/misc.c#L63
->>
->> I see the same in -next
->>
->> DYNAMIC_MINORS is used to size a bitmap - one bit for each dynamic minor
->> misc device that exists at one particular point in time.  After all 64 bits
->> are consumed by misc_register() by clients requesting a dynamic minor, no
->> more dynamic minor misc devices can be registered until some are
->> unregistered.
->>
->> What am I missing?
+From: John Hubbard <jhubbard@nvidia.com>
+Date: Sat, 16 May 2020 18:23:36 -0700
+
+> This code was using get_user_pages_fast(), in a "Case 2" scenario
+> (DMA/RDMA), using the categorization from [1]. That means that it's
+> time to convert the get_user_pages_fast() + put_page() calls to
+> pin_user_pages_fast() + unpin_user_pages() calls.
 > 
-> Oops, nothing, my fault.  We fixed up the allocation of more dynamic
-> majors for chardev in 2017 and for some reason I thought we also
-> increased the number of misc dynamic minors at the same time, but that
-> was incorrect.
+> There is some helpful background in [2]: basically, this is a small
+> part of fixing a long-standing disconnect between pinning pages, and
+> file systems' use of those pages.
+> 
+> [1] Documentation/core-api/pin_user_pages.rst
+> 
+> [2] "Explicit pinning of user-space pages":
+>     https://lwn.net/Articles/807108/
+> 
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-rdma@vger.kernel.org
+> Cc: rds-devel@oss.oracle.com
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-No problem.
-
-> I'll gladly take patches that bump up the number of misc minors if
-> needed.
-
-I don't think its needed at this time, but I will keep that in mind.
-
-> But to get back to the main issue here, you are only going to have 1 or
-> maybe 2 of these devices in a system at a time, right?  So "burning" a
-> whole major number for that feels like a waste.
-
-Depends on what the customer wants to do.  We support a number of 
-systems, but one in particular has the capability of 6-12 devices.
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Applied to net-next, thanks.
