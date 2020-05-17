@@ -6,105 +6,182 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A21FC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDADAC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DEF120709
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A83A207D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:58:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgEQP5K convert rfc822-to-8bit (ORCPT
+        id S1728119AbgEQP6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 11:57:10 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:54937 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727979AbgEQP5K (ORCPT
+        Sun, 17 May 2020 11:58:14 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:49148 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727979AbgEQP6N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 11:57:10 -0400
-Received: from localhost (91-175-115-186.subs.proxad.net [91.175.115.186])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 39B1F200005;
-        Sun, 17 May 2020 15:57:03 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?utf-8?Q?Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and Compex wifi cards
-In-Reply-To: <20200513135643.478ffbda@windsurf.home>
-References: <20200430080625.26070-1-pali@kernel.org> <20200513135643.478ffbda@windsurf.home>
-Date:   Sun, 17 May 2020 17:57:02 +0200
-Message-ID: <87pnb2h7w1.fsf@FE-laptop>
+        Sun, 17 May 2020 11:58:13 -0400
+X-Greylist: delayed 329 seconds by postgrey-1.27 at vger.kernel.org; Sun, 17 May 2020 11:58:12 EDT
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id E85061BE6BF9B1;
+        Sun, 17 May 2020 15:52:40 +0000 (UTC)
+Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:34be:8c97:bb49:e7fd])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Sun, 17 May 2020 15:52:40 +0000 (UTC)
+Message-ID: <4ad2e18d37772bed00f1fd7c8a62ce4f98d69fe8.camel@archlinux.org>
+Subject: Re: [PATCH] HID: logitech-hidpp: add support for Logitech G533
+ headset
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Kamil =?UTF-8?Q?Doma=C5=84ski?= <kamil@domanski.co>,
+        linux-kernel@vger.kernel.org
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Nestor Lopez Casado <nlopezcasad@logitech.com>
+In-Reply-To: <273f52604e8cb2eae1629ba7c55020227b36b1ba.camel@domanski.co>
+References: <273f52604e8cb2eae1629ba7c55020227b36b1ba.camel@domanski.co>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-hDPsm5GUFiKwv6eXUHs9"
+Date:   Sun, 17 May 2020 16:52:39 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.36.2 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-> Hello,
->
-> On Thu, 30 Apr 2020 10:06:13 +0200
-> Pali Rohár <pali@kernel.org> wrote:
->
->> Marek Behún (5):
->>   PCI: aardvark: Improve link training
->>   PCI: aardvark: Add PHY support
->>   dt-bindings: PCI: aardvark: Describe new properties
->>   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
->>   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
->> 
->> Pali Rohár (7):
->>   PCI: aardvark: Train link immediately after enabling training
->>   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
->>     read-only register
->>   PCI: of: Zero max-link-speed value is invalid
->>   PCI: aardvark: Issue PERST via GPIO
->>   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
->>   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
->>     macros
->>   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
->
-> Thanks a lot for this work. For a number of reasons, I'm less involved
-> in Marvell platform support in Linux, but I reviewed your series and
-> followed the discussions around it, and I'm happy to give my:
->
-> Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+--=-hDPsm5GUFiKwv6eXUHs9
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With this acked-by for the series, the reviewed-by from Rob on the
-binding and the tested-by, I am pretty confident so I applied the
-patches 10, 11 and 12 on mvebu/dt64.
+On Sun, 2020-04-26 at 17:18 +0200, Kamil Doma=C5=84ski wrote:
 
-Thanks,
+*snip*
 
-Gregory
+> +/* ---------------------------------------------------------------------=
+----- */
+> +/* 0x1F20: Analog-digital converter measurement                         =
+      */
+> +/* ---------------------------------------------------------------------=
+----- */
+> +
+> +#define HIDPP_PAGE_ADC_MEASUREMENT 0x1F20
+> +
+> +#define CMD_ADC_MEASUREMENT_GET_VOLTAGE 0x01
+> +
+> +/**
+> + * hidpp20_adc_map_status_voltage() - convert HID++ code to power supply=
+ status
+> + * @hidpp: HID++ device struct.
+> + * @data: ADC report data.
+> + * @voltage: Pointer to variable where the ADC voltage shall be written.
+> + *
+> + * This function decodes the ADC voltage and charge status
+> + * of the device's battery.
+> + *
+> + * Return: Returns the power supply charge status code.
+> + */
+> +static int hidpp20_adc_map_status_voltage(struct hidpp_device *hidpp,
+> +						u8 data[3], int *voltage)
+> +{
+> +	bool isConnected;
+> +	bool isCharging;
+> +	bool chargingComplete;
+> +	bool chargingFault;
 
+We use snake case.
 
->
-> for the whole series. The changes all seem sensible, and have been
-> tested by several folks.
->
-> Thanks!
->
-> Thomas
-> -- 
-> Thomas Petazzoni, CTO, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> +
+> +	long flags =3D (long) data[2];
 
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Use u8 instead. Why are we even using a variable for this?
+
+> +
+> +	*voltage =3D get_unaligned_be16(data);
+> +	isConnected =3D test_bit(0, &flags);
+> +	isCharging =3D test_bit(1, &flags);
+> +	chargingComplete =3D test_bit(2, &flags);
+> +	chargingFault =3D test_bit(3, &flags);
+
+I don't think this is needed, just do it in the ifs directly.
+
+Here I would add a #define for each bit:
+
+#define FLAG_ADC_MAP_STATUS_CONNECTED 0
+...
+if (data[2] & FLAG_ADC_MAP_STATUS_CONNECTED)
+
+> +
+> +	if (!isConnected)
+> +		return POWER_SUPPLY_STATUS_UNKNOWN;
+> +
+> +	if (chargingFault)
+> +		return POWER_SUPPLY_STATUS_NOT_CHARGING;
+
+=46rom the spec:
+> Only valid if 'isCharging' is 1.
+
+> +
+> +	if (chargingComplete)
+> +		return POWER_SUPPLY_STATUS_FULL;
+
+=46rom the spec:
+> Only valid if 'isCharging' is 1.
+
+> +
+> +	if (isCharging)
+> +		return POWER_SUPPLY_STATUS_CHARGING;
+
+Put the two previous checks inside this if.
+
+> +	return POWER_SUPPLY_STATUS_DISCHARGING;
+> +}
+>=20
+
+*snip*
+
+> @@ -3994,6 +4189,8 @@ static const struct hid_device_id hidpp_devices[] =
+=3D {
+> =20
+>  	{ /* Logitech G403 Wireless Gaming Mouse over USB */
+>  	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC082) },
+> +	{ /* Logitech G533 Wireless Headset over USB */
+> +	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0x0A66) },
+
+Is this a receiver? If so, we need to know if it is used by other
+devices. Or better, see if it supports the DJ protocol and add it to
+hid-logitech-dj instead.
+
+>  	{ /* Logitech G703 Gaming Mouse over USB */
+>  	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC087) },
+>  	{ /* Logitech G703 Hero Gaming Mouse over USB */
+
+Cheers,
+Filipe La=C3=ADns
+
+--=-hDPsm5GUFiKwv6eXUHs9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl7BXcAACgkQ+JPGdIFq
+qV3dFg/9H/8qP/XCsbtCQq+SP52oCmC8gcVE66TLgfWgAcUwyh7SRihEbHsn3TGK
+81bC56ybt0AhrCpGMd9bakqOz4VKR6oXBaDV9f+DttcScQnjSE5gdrjH3mtXJUOM
+kMcWU7QmL+tC3JLOKL1RGX7MH+/jsvbsiFh3ghhXGPeIF8wJvIlvi4FDczh7TaYA
+cV7uOXoaYUOhfyoV5V46utmDtRgKtKBv1rtVlbDQUWlZJ1rnGHErx4Ahjj8JHXV0
+0zDMqxmaVP5Z1oVEgoLhkXQqlzMLS/ZRzC3W0p1nQC/y8vocHaItpQb8yS3Q4nMe
+IQ/StYoUDfHNEWV+6NxnNEvW4JGodC7CYV8bWkEUJpI9JuCLwZ4sYbPCKKOhv2QW
+/Dcnok6rfLUR47N/PYCmvw+Uoovx49T+9D18hVkY6EgH4Kc+Tnx7rn5vH2+nglYn
+mguXVebhRB2TlFcny1z7SU2O1CcuPExcBFzbZMFmwmOGrPKdWccLc1pzhV72G9uK
+fdma3VU8o3JYz3Rj2tSPhobWFjomKvlOzPdp7uecilHMU6fR1DA0aGv3bULdTR/D
+HHlvL4mhWNXg5Dr2VOJumr7Zmhmlaho0jUrt3wVwtP7Hb2+2oeUZ8vEFaSyHUzC7
+usmhGUoJJrz9q0O8dzbkAR3LhgohQJY6+LfKInHfZNgIsD6wPDk=
+=9AgG
+-----END PGP SIGNATURE-----
+
+--=-hDPsm5GUFiKwv6eXUHs9--
