@@ -2,112 +2,108 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0383C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 05:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E00CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 05:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF6B42067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 05:37:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589693831;
-	bh=Q5JOORAgFjJINGCBacajTvqUgliOjpbJB0rVNrTkx9g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wle9Bqvi8LtKAJhVKvKDaSJ9V7bl0v4fyjP265sK9/ELL9yOs+omtIChFVSg9dwQs
-	 yvrcL55xGysQgPOtoVhVUqu+GZnqrTxXftBaUXRsCmyDZfadLnCHEw16NCcoZf90Ro
-	 ctAyfUlNYjH9e4XwRWEVgKZxaOcaG8Qcho1uMj6Q=
+	by mail.kernel.org (Postfix) with ESMTP id 4AF5F20657
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 05:47:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WzUYx0wY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgEQFhL (ORCPT
+        id S1726982AbgEQFrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 01:37:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgEQFhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 01:37:10 -0400
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF9D7207F5
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 05:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589693830;
-        bh=Q5JOORAgFjJINGCBacajTvqUgliOjpbJB0rVNrTkx9g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EEzGI5OSGU5h+W2756RDp09wHippUuEcC9xLRJN//nAKhepuqaIGXAzl26DN+g7w5
-         fUV7cmCV1qwnKGsOFUkD2c3YHPbxGoLX73IMVEbwyv6zVqD9X36I2ZQo7PaB4p2jbT
-         5iZ49nJRgktGbYropGbit/4q90e+/X0sb+KlAAyc=
-Received: by mail-wr1-f52.google.com with SMTP id l11so8007284wru.0
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 22:37:09 -0700 (PDT)
-X-Gm-Message-State: AOAM531cM8mIAugFSQYV6vB6tLqiNs1bpZ12cPyQakDxPBeNRzApU5IF
-        nDfn3ogqtiZ11zc/7LwL5SuPRT76ynE1B5qxkHoamA==
-X-Google-Smtp-Source: ABdhPJxabyBe5VXC+uSpFQtBIbsioCXzbDZMAEGm3KRmQf+2eLcttRc6KbfcYsc6itH/XTlQi6c3RSidoOaJo9YIwkI=
-X-Received: by 2002:adf:a389:: with SMTP id l9mr12959069wrb.18.1589693828439;
- Sat, 16 May 2020 22:37:08 -0700 (PDT)
+        Sun, 17 May 2020 01:47:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgEQFrX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 01:47:23 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70E47C061A0C;
+        Sat, 16 May 2020 22:47:23 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id m7so2755916plt.5;
+        Sat, 16 May 2020 22:47:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=drmII/PwGs2+j+RC/yUKrWEgxCX9gLQZgVT9e2wht+c=;
+        b=WzUYx0wYfkC13YkdNT/husM8BOe7dmAbzZac3CVLTwuF/tG87AgQBU2iZsVagBcAFK
+         NrGpTa4TXzk3oqL3VHxHFn3yuwq+SHOmlaY5JM5ZoeUW+I6O6YNvd6d8kOFQVp1WT1YY
+         zWfUcNpZIPCP/DlNDgqTa7/pMbr2rPH02TQqkQf26OWuU/ZVfIdFKoctbRVsDy76Ok3k
+         Ht7O+zm50YbFrylSy5v5J5GS5g/Pncn+rFgilkxUw4yBAOoRprBMQtSf5MOUrc8C3tMR
+         kFvRLdr7cPhYjA2y3/qlQupLk26IwvqcENTK0XnoxZPhdDma0awdiYKjRj7XARUoyCyC
+         3Cyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=drmII/PwGs2+j+RC/yUKrWEgxCX9gLQZgVT9e2wht+c=;
+        b=lGvOQnoK4q9/sJAQmg6YjdU8Gllftuo8PFQ2w5g6c/UK2shnyqV+eD3H9DFvr98v2c
+         PENOVJGyl5sBoQEKJlzDfhXcleRtlpI+LrDHtdqlOAJFbpYwD1Z0SykhvFXO8hTBHT9j
+         LCRuT7IIVVDALtGKLuPzx6WL8e2Xa4tdFjMNGn39zTVuznWw9UJ7eo+IlWiO4sLIvJ57
+         tdSTdw4eXzBlwYDna7eu0WDuxhDveN9LBj2apeD0yrQla0iGEld7z9IEDLGJd+Rq/BV8
+         byAILqIRb5ganr5/6auuuV/gqsHoSlGcXDOl55M5m7grEvkynfk+Old7qSNG9fagsq9i
+         M+ag==
+X-Gm-Message-State: AOAM531DhD1KbZvZNdp2Qcl1bnTjczcJaHpU8m1QbvycHM5PHfB8ETJ8
+        jBq9meXZIYNbrTqw2GEMNyM=
+X-Google-Smtp-Source: ABdhPJye4WrT8yxOZNSKYH+VbCBliyGbSYG3H3GtqNgBv6eSe+mFst0mHVKXrqp9MpENO6SjSLpu+A==
+X-Received: by 2002:a17:90a:e30e:: with SMTP id x14mr10799845pjy.141.1589694442867;
+        Sat, 16 May 2020 22:47:22 -0700 (PDT)
+Received: from localhost ([203.205.141.39])
+        by smtp.gmail.com with ESMTPSA id v5sm875450pjy.4.2020.05.16.22.47.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 16 May 2020 22:47:22 -0700 (PDT)
+From:   Xiangyang Zhang <xyz.sun.ok@gmail.com>
+To:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com
+Cc:     gregkh@linuxfoundation.org, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Xiangyang Zhang <xyz.sun.ok@gmail.com>
+Subject: [PATCH] staging: qlge: unmap dma when lock failed
+Date:   Sun, 17 May 2020 13:46:38 +0800
+Message-Id: <20200517054638.10764-1-xyz.sun.ok@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-References: <20200515234547.710474468@linutronix.de> <20200515235124.783722942@linutronix.de>
-In-Reply-To: <20200515235124.783722942@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sat, 16 May 2020 22:36:57 -0700
-X-Gmail-Original-Message-ID: <CALCETrW2negGYRSQ8dqFVdiWGtYpYf6nKe5_hkotNv0e5mNBxA@mail.gmail.com>
-Message-ID: <CALCETrW2negGYRSQ8dqFVdiWGtYpYf6nKe5_hkotNv0e5mNBxA@mail.gmail.com>
-Subject: Re: [patch V6 04/37] x86: Make hardware latency tracing explicit
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
->
-> The hardware latency tracer calls into trace_sched_clock and ends up in
-> various instrumentable functions which is problemeatic vs. the kprobe
-> handling especially the text poke machinery. It's invoked from
-> nmi_enter/exit(), i.e. non-instrumentable code.
->
-> Use nmi_enter/exit_notrace() instead. These variants do not invoke the
-> hardware latency tracer which avoids chasing down complex callchains to
-> make them non-instrumentable.
->
-> The real interesting measurement is the actual NMI handler. Add an explicit
-> invocation for the hardware latency tracer to it.
->
-> #DB and #BP are uninteresting as they really should not be in use when
-> analzying hardware induced latencies.
->
+DMA not unmapped when lock failed, this patch fixed it.
 
-> @@ -849,7 +851,7 @@ static void noinstr handle_debug(struct
->  static __always_inline void exc_debug_kernel(struct pt_regs *regs,
->                                              unsigned long dr6)
->  {
-> -       nmi_enter();
-> +       nmi_enter_notrace();
+Signed-off-by: Xiangyang Zhang <xyz.sun.ok@gmail.com>
+---
+ drivers/staging/qlge/qlge_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Why can't exc_debug_kernel() handle instrumentation?  We shouldn't
-recurse into #DB since we've already cleared DR7, right?
+diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+index a9163fb659d9..402edaeffe12 100644
+--- a/drivers/staging/qlge/qlge_main.c
++++ b/drivers/staging/qlge/qlge_main.c
+@@ -227,7 +227,7 @@ int ql_write_cfg(struct ql_adapter *qdev, void *ptr, int size, u32 bit,
+ 
+ 	status = ql_sem_spinlock(qdev, SEM_ICB_MASK);
+ 	if (status)
+-		return status;
++		goto lock_failed;
+ 
+ 	status = ql_wait_cfg(qdev, bit);
+ 	if (status) {
+@@ -249,6 +249,7 @@ int ql_write_cfg(struct ql_adapter *qdev, void *ptr, int size, u32 bit,
+ 	status = ql_wait_cfg(qdev, bit);
+ exit:
+ 	ql_sem_unlock(qdev, SEM_ICB_MASK);	/* does flush too */
++lock_failed:
+ 	dma_unmap_single(&qdev->pdev->dev, map, size, direction);
+ 	return status;
+ }
+-- 
+2.19.1
+
