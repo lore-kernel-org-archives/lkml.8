@@ -2,110 +2,172 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D67C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE9FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD24B206D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:34:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KhNSpImq"
+	by mail.kernel.org (Postfix) with ESMTP id 843F62065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:40:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589708446;
+	bh=39EXHpNSdWNjjMtj/vp27M8IQbirDJAzBquVu1o5sDk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=PKmigTmcT4FzWL3EK2nF9F7b8wqIo0QH5Qn3O0E5ngiShmzwuUfUEK/zY8aVOU6Gc
+	 pakAqBRLxHYrkIyw+SXt7pC/KYKI1HVaWpR04faTJO/vtBa7XGwlgc6+HX5EcbPPjs
+	 RinxdwDyxk7I/eCnAi3Vj4HtxhKvjYu/8B9VcssM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgEQJe4 (ORCPT
+        id S1727125AbgEQJkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 05:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727043AbgEQJe4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 05:34:56 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A882C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 02:34:55 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id n11so3276189pgl.9
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 02:34:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yVlmeLGnp90jJYb5jgHidG2aB0CdImKuBH30RFWsXK0=;
-        b=KhNSpImq0B0NVOEpidL1zFDrBP1EW9J1j3ucq6P1zrI6Zib44BbUT3pwAAy+JzcMYJ
-         AO6x4OTdiqxyREM3eDmlO4Zs3v4Dq9ZZ9R4O2z1HLUKG9k7VML2kpdv6QSKoD0hlUmJM
-         EA1jHxMjk2bwujbHBhosOiSSvwxEm8jvVDn1VndoGQumRzo6QWIOVuTLgFA0Vzd+bkif
-         HexZri7n99Eqy+alAPcEsYl3AQ+hOL3I1Dk29Zbip3mwLu9U7nKnJ/qSZUyVmQumLBiK
-         4AOZA16OU1cKLqXBXt7/+nslb5FH7Jwdi6MkV71W9osalnGZtNmfsVC6H+9Qv0TWF84w
-         QOGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yVlmeLGnp90jJYb5jgHidG2aB0CdImKuBH30RFWsXK0=;
-        b=s48cY85IHn0dYqGNUbSPcRHclhkyvQEAtKjhMNyQmxkDWwBliC6FzAzafcY5y6G1HG
-         pfew+TLcvpaeYsXxol3AXYtaePWBRumnKHDeEbv7yqiUI8hbeuWRAuoVEqC1lidSDKHb
-         oxCaqPJXJrpbSkj+P3jOQ6xKYZpAgqLiX2FQgA/3nQ5mFdS14wPZr18qPiFGJ8ejOVgS
-         wzYgK7gllHbVNEXXOnTd+xSV6RTP6Icf4/ciiXUDUwRLqBRaoqBK6Bsgw7O/5jmAFhYV
-         JJG5yQSIjW5GL3OFAmJv0u1kzlWNgpZrFecfOjk/1P08GGZydHborKJeFI/iJe+VUBXz
-         pLJQ==
-X-Gm-Message-State: AOAM530QU2/IvmDJdZpFEiznZxlkvBi/EOHs2doCStZNv0eIxXLzy06I
-        rl6qbQMvKPlNbfgJKHeNRYc=
-X-Google-Smtp-Source: ABdhPJwyuXcaND2LBT8Cxc4eqUgAM04nsdxDsAPqBKKSkE+oja4gQDlQs1CD0IbNBT9veaJfnvNPpg==
-X-Received: by 2002:a63:68c3:: with SMTP id d186mr10417684pgc.269.1589708095311;
-        Sun, 17 May 2020 02:34:55 -0700 (PDT)
-Received: from mail.google.com ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id v9sm5606663pju.3.2020.05.17.02.34.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 17 May 2020 02:34:54 -0700 (PDT)
-Date:   Sun, 17 May 2020 09:34:52 +0000
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: do not create option file latency-format
-Message-ID: <20200517093451.uvm557aatmll62fo@mail.google.com>
-References: <20200516161017.155791-1-changbin.du@gmail.com>
- <20200516131521.02005210@oasis.local.home>
+        Sun, 17 May 2020 05:40:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727043AbgEQJkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 05:40:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFE792065F;
+        Sun, 17 May 2020 09:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589708443;
+        bh=39EXHpNSdWNjjMtj/vp27M8IQbirDJAzBquVu1o5sDk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VbmCACrRhYus1jCQDkTsAEbe13GfRJShQe5Ks4Pv4yhhmxjdximk+6ksw9JCo8fNP
+         BSF+wHtSsyesGai7WKK+U73e2+oBQ/YKOqtd14caEVrBGBsan1pk0LpQmrDBC/klyQ
+         oAAMbQLcCp05rI5jRTjG8UYFWAuBbWyZsIHsEbwA=
+Date:   Sun, 17 May 2020 11:40:41 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [GIT PULL] USB driver fixes for 5.7-rc6
+Message-ID: <20200517094041.GA3392057@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200516131521.02005210@oasis.local.home>
-User-Agent: NeoMutt/20180716-508-7c9a6d
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
+The following changes since commit 2ef96a5bb12be62ef75b5828c0aab838ebb29cb8:
 
-On Sat, May 16, 2020 at 01:15:21PM -0400, Steven Rostedt wrote:
-> On Sun, 17 May 2020 00:10:17 +0800
-> Changbin Du <changbin.du@gmail.com> wrote:
-> 
-> > The flag LATENCY_FMT actually is usually set by latency tracers internally.
-> > So I think we should not export it to userspace. This patch removes the
-> > option file 'latency-format' but keep the flag defined as usual.
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > ---
-> 
-> Sorry, I actually do sometimes use that option for things other than
-> latency tracers. So NACK.
->
-May I know which tracer use this option as well? As far as I know,
-besides latency tracers, the fgraph tracer also uses it.
+  Linux 5.7-rc5 (2020-05-10 15:16:58 -0700)
 
-I think 'irq-info' and 'latency-format' is somewhat overlaps. So
-my thought is:
- 1) function and function graph tracers should use irq-info.
- 2) latency tracers should set latency-format.
+are available in the Git repository at:
 
-I am not quite sure whether this is a good idea. :)
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.7-rc6
 
-> -- Steve
+for you to fetch changes up to 15753588bcd4bbffae1cca33c8ced5722477fe1f:
 
--- 
-Cheers,
-Changbin Du
+  USB: gadget: fix illegal array access in binding with UDC (2020-05-15 15:42:17 +0200)
+
+----------------------------------------------------------------
+USB fixes for 5.7-rc6
+
+Here are a number of USB fixes for 5.7-rc6
+
+The "largest" in here is a bunch of raw-gadget fixes and api changes as
+the driver just showed up in -rc1 and work has been done to fix up some
+uapi issues found with the original submission, before it shows up in a
+-final release.
+
+Other than that, a bunch of other small USB gadget fixes, xhci fixes,
+some quirks, andother tiny fixes for reported issues.
+
+All of these have been in linux-next with no reported issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Andrey Konovalov (6):
+      usb: raw-gadget: fix return value of ep read ioctls
+      usb: raw-gadget: improve uapi headers comments
+      usb: raw-gadget: fix gadget endpoint selection
+      usb: raw-gadget: support stalling/halting/wedging endpoints
+      usb: raw-gadget: documentation updates
+      usb: raw-gadget: fix null-ptr-deref when reenabling endpoints
+
+Andy Shevchenko (1):
+      usb: dwc3: pci: Enable extcon driver for Intel Merrifield
+
+Arnd Bergmann (1):
+      usb: dwc3: select USB_ROLE_SWITCH
+
+Christophe JAILLET (3):
+      usb: gadget: audio: Fix a missing error return value in audio_bind()
+      usb: phy: twl6030-usb: Fix a resource leak in an error handling path in 'twl6030_usb_probe()'
+      usb: gadget: net2272: Fix a memory leak in an error handling path in 'net2272_plat_probe()'
+
+Eugeniu Rosca (1):
+      usb: core: hub: limit HUB_QUIRK_DISABLE_AUTOSUSPEND to USB5534B
+
+Greg Kroah-Hartman (3):
+      Merge tag 'fixes-for-v5.7-rc5' of git://git.kernel.org/.../balbi/usb into usb-linus
+      USB: usbfs: fix mmap dma mismatch
+      Merge tag 'fixes-for-v5.7-rc6' of git://git.kernel.org/.../balbi/usb into usb-linus
+
+Jason Yan (1):
+      usb: cdns3: gadget: make a bunch of functions static
+
+John Stultz (1):
+      dwc3: Remove check for HWO flag in dwc3_gadget_ep_reclaim_trb_sg()
+
+Kyungtae Kim (1):
+      USB: gadget: fix illegal array access in binding with UDC
+
+Li Jun (1):
+      usb: host: xhci-plat: keep runtime active when removing host
+
+Masahiro Yamada (1):
+      usb: gadget: legacy: fix redundant initialization warnings
+
+Peter Chen (1):
+      usb: cdns3: gadget: prev_req->trb is NULL for ep0
+
+Prashant Malani (1):
+      usb: typec: mux: intel: Fix DP_HPD_LVL bit field
+
+Rikard Falkeborn (1):
+      usb: mtu3: constify struct debugfs_reg32
+
+Samuel Zou (1):
+      usb: gadget: udc: atmel: Make some symbols static
+
+Sriharsha Allenki (1):
+      usb: xhci: Fix NULL pointer dereference when enqueuing trbs from urb sg list
+
+Thierry Reding (1):
+      usb: gadget: tegra-xudc: Fix idle suspend/resume
+
+Wei Yongjun (2):
+      usb: gadget: legacy: fix error return code in cdc_bind()
+      usb: gadget: legacy: fix error return code in gncm_bind()
+
+ Documentation/usb/raw-gadget.rst        |  37 +++-
+ drivers/usb/cdns3/gadget.c              |  22 +--
+ drivers/usb/core/devio.c                |  16 +-
+ drivers/usb/core/hub.c                  |   6 +-
+ drivers/usb/dwc3/Kconfig                |   1 +
+ drivers/usb/dwc3/dwc3-pci.c             |   1 +
+ drivers/usb/dwc3/gadget.c               |   3 -
+ drivers/usb/gadget/configfs.c           |   3 +
+ drivers/usb/gadget/legacy/audio.c       |   4 +-
+ drivers/usb/gadget/legacy/cdc2.c        |   4 +-
+ drivers/usb/gadget/legacy/inode.c       |   3 +-
+ drivers/usb/gadget/legacy/ncm.c         |   4 +-
+ drivers/usb/gadget/legacy/raw_gadget.c  | 315 +++++++++++++++++++++++++-------
+ drivers/usb/gadget/udc/atmel_usba_udc.c |   4 +-
+ drivers/usb/gadget/udc/net2272.c        |   2 +
+ drivers/usb/gadget/udc/tegra-xudc.c     |   8 +-
+ drivers/usb/host/xhci-plat.c            |   4 +-
+ drivers/usb/host/xhci-ring.c            |   4 +-
+ drivers/usb/mtu3/mtu3_debugfs.c         |   4 +-
+ drivers/usb/phy/phy-twl6030-usb.c       |  12 +-
+ drivers/usb/typec/mux/intel_pmc_mux.c   |   6 +-
+ include/uapi/linux/usb/raw_gadget.h     | 108 +++++++++--
+ 22 files changed, 448 insertions(+), 123 deletions(-)
