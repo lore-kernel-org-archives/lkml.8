@@ -2,120 +2,107 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4165FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFCCE206F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21DFD206F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 15:51:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HrDveH5P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGGCy6Tv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbgEQPun (ORCPT
+        id S1728085AbgEQPvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 11:50:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44224 "EHLO
+        Sun, 17 May 2020 11:51:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727981AbgEQPum (ORCPT
+        with ESMTP id S1727979AbgEQPvS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 11:50:42 -0400
-Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51405C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 08:50:42 -0700 (PDT)
-Received: by mail-ua1-x931.google.com with SMTP id 14so991726uaq.11
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 08:50:42 -0700 (PDT)
+        Sun, 17 May 2020 11:51:18 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93647C061A0C;
+        Sun, 17 May 2020 08:51:18 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f13so6837811wmc.5;
+        Sun, 17 May 2020 08:51:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nrqyWKwX+Fo3y6zOYpSb7pR9qyYbIYzcbk9GR/Z/Ams=;
-        b=HrDveH5Pm5KAxHjik/u2RQB4xO6NSUjnWMOdvIhtxte52w5d+kAC88zVAsILxJJ/+g
-         ezY/v3ndryuUXHH1OEVKpk23Sfy0Ohp7XyeB+gqobKrs4Jn/yLT6sgl9XBjXk8t2kOPq
-         ag2Lbs9mYqknkLkhLQBCN4sviUplllFWTF89nUGxsTLgHQNGUCxg06E1JFteTcYFucLL
-         fXELzo/ENJn1w8D3joljU5vgGzLEVSDP5aEvDMdfi7JaSQH5ncljsHaE2Yg2VOnXl6c2
-         m5j/n4kFW93CzaWJmAnbA1shVlbpnqPeyT3XFDuIb+/caoFs3Z8FZyd/TxePp060kFb4
-         IIIQ==
+        bh=4Y2aFJKNUiFBLQvn2vvnEK/Ead8cU3LUw4bCLelXdS0=;
+        b=UGGCy6TvvsLP2q0CxhmrvQHdIFIIbEfPAtgdI3IOIOuKhkTMRC/BC4WwPaymCW0tny
+         iuA1xi7IXR+ab/Gx0dG3BMqyVmQg3Fi9qXVgYFFiVuTIAyRHolD+PSSvfjAT7fMiHAZj
+         6nVTrrB4wq/zGBWaBB2eigVDmgqT/jlUuS3Q4d4L3pCviJGQ7AmJji+r28/hQCT+Qpzb
+         LyygNaW6zHilFl/dki//YzSLiEU13nnIKpfjyb07vIDh9jBNsMzNlb2KHuPmWmoqqHPt
+         +cHDt4W+xnFcnAzw5kDJxl5hjRkNZVI8s2trrxDWcCjhAXpW5WPXN/FXgCPGFfEx1bP4
+         JirQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nrqyWKwX+Fo3y6zOYpSb7pR9qyYbIYzcbk9GR/Z/Ams=;
-        b=XgRPujcq6MYXsC/v0w5PjphKES+nJ8naIWkmsnJes3TplLzuv3lK8K8TlkvJmPQKry
-         3xRfYUDJDGdJMQXY3ylKb7KRDIJtJP7kPXLsD+KTtu7HhUlmNKfZ04yY7M/Iv8M4HPMV
-         7sEu+yMSqlej3XexRbUEuzT26tSuaLlZSC5/RoPnvqZsR8OESFs1QH5wZCY6Selna3cv
-         Ns2920iCYjIgKUt4PWUzP4YG8+4uRXh9rrl2OoxF9xFKhwtuMfvs6VgIfMHRxIx/iMR6
-         qsjiYXZJEyASNtQXDRGfTuVlHfaKGKxxzJvZjezUM2y73q2Oed5gfpLvVQmt/qSkIqeZ
-         MDpg==
-X-Gm-Message-State: AOAM532dbWk1gt/lx1KmdJv/HqeE0UfG79BJoqj2inY6ZXvTvJt1g4mT
-        gEIBHHe2TT0keBIxcXiqTLsVJCoobyaCnRjv2V7DNQ==
-X-Google-Smtp-Source: ABdhPJyQoWyrdr8ikSTKBJJeTscM2WvocE6S1h+caNwqM8ojA0qPrD7ha3T8pT3nJEE2pvYIQMJH39LyJgqMQZ5uc/4=
-X-Received: by 2002:ab0:d97:: with SMTP id i23mr7457516uak.106.1589730641263;
- Sun, 17 May 2020 08:50:41 -0700 (PDT)
+        bh=4Y2aFJKNUiFBLQvn2vvnEK/Ead8cU3LUw4bCLelXdS0=;
+        b=R9IQa/P4HSmMjXJEDrkTm1sAwerEB17UNBTiIpuRoIkxFd842R6qO8uzcrWCXpr5iT
+         Z5MB2aP0ciCTLtisgbQTzKaXqNbkUAKHOj6ITq4b7N6YWudDV26Jt2RgQ4CH4cn5gBFD
+         RynXQh2LdCBo9GzMqqwJ/f3hkqm6FPEwquigufqRBREozDlCS8ITNAo0QPy9RCbyvX6P
+         ML9WV+I4Jj2eyGKsN9kemd5ecbvt/NwkwCFomaZEeSr0aU0HUmjoY4kaO59pm8T1nh8H
+         GTAHAe4kYPTcjGbaUaPyJTMDQQK7xEnWG0kL+s0KOkgNToaTLDuD/4aeWXPpSiGtXdWJ
+         xaLg==
+X-Gm-Message-State: AOAM53228y09W0qlrlFEtl39xPetmiomJArQkWYOUmn6l5fObNhCzh7H
+        bnQUtl/WhfVnoGWXvqfuD8ST5eP0u851n0mMrXLahVaJB6c=
+X-Google-Smtp-Source: ABdhPJw8gi9ZQ9b7ziDhHvd7AdBz6Ju+aZl0wFkN7BHXZ/1UxBruJsqKUGVLfoAJ0nQTpVk7cv98fXWPYNpz5Op4udc=
+X-Received: by 2002:a1c:de05:: with SMTP id v5mr14097715wmg.1.1589730675709;
+ Sun, 17 May 2020 08:51:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200515105203.2792466-1-emil.l.velikov@gmail.com>
- <134d34de7e35861f33d3a1d9ffd8a70b0f92df33.camel@perches.com> <ba9cbced1ccb0e7da5593b587bb179328cecd80e.camel@perches.com>
-In-Reply-To: <ba9cbced1ccb0e7da5593b587bb179328cecd80e.camel@perches.com>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Sun, 17 May 2020 16:47:52 +0100
-Message-ID: <CACvgo51tt6v18btJAYMF01dwQ_bzvN9uyn-2Kg9iuhqJBSJ+dA@mail.gmail.com>
-Subject: Re: get_maintainer.pl: unexpected behaviour for path/to//file
-To:     Joe Perches <joe@perches.com>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+References: <20200409070448.3209-1-paweldembicki@gmail.com>
+ <20200409070448.3209-2-paweldembicki@gmail.com> <87sgfyh9au.fsf@FE-laptop>
+In-Reply-To: <87sgfyh9au.fsf@FE-laptop>
+From:   =?UTF-8?Q?Pawe=C5=82_Dembicki?= <paweldembicki@gmail.com>
+Date:   Sun, 17 May 2020 17:51:04 +0200
+Message-ID: <CAJN1KkyhnG7qByXYP14ULTrUhYNbDt0AQ_Er=bnM-KymLz8bPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: kirkwood: Add Check Point L-50 board
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 May 2020 at 18:22, Joe Perches <joe@perches.com> wrote:
+On 17.05.2020 at 17:26 Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
 >
-> On Fri, 2020-05-15 at 05:31 -0700, Joe Perches wrote:
-> > On Fri, 2020-05-15 at 11:52 +0100, Emil Velikov wrote:
-> > > Hi Joe,
-> > >
-> > > Recently I've noticed that get_maintainer behaves differently if there
-> > > is a double, sequential, forward slash in the path.
-> > >
-> > > AFAICT there should be no distinction between the two. Or at least many
-> > > existing applications and scripts consider them one and the same.
-> > >
-> > > I've tried fixing this, although my perl isn't quite up-to scratch.
-> > > Is this some weird bug or some intended feature?
-> >
-> > Not really an intended feature.
-> > The code counts slashes for directory depth.
-> >
-> > I suppose it might be simpler to do this:
+> Hi Pawel Dembicki,
 >
-> Or perhaps a better alternative is:
-> ---
->  scripts/get_maintainer.pl | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-> index 6d973f3685f9..484d2fbf5921 100755
-> --- a/scripts/get_maintainer.pl
-> +++ b/scripts/get_maintainer.pl
-> @@ -19,6 +19,7 @@ my $V = '0.26';
->  use Getopt::Long qw(:config no_auto_abbrev);
->  use Cwd;
->  use File::Find;
-> +use File::Spec::Functions;
->
->  my $cur_path = fastgetcwd() . '/';
->  my $lk_path = "./";
-> @@ -532,6 +533,7 @@ if (!@ARGV) {
->
->  foreach my $file (@ARGV) {
->      if ($file ne "&STDIN") {
-> +       $file = canonpath($file);
 
-This seems like the better option since it also handles path traversal.
-I would expect that people don't use it, yet who knows.
+Hi Gregory,
 
-Thanks for the prompt fix.
--Emil
+>
+> Applied on mvebu/dt. I think the first patch should be applied by the
+> device tree maintainers.
+>
+> Thanks,
+>
+> Gregory
+>
+
+I sent v3 of this patch some time ago:
+https://lkml.org/lkml/2020/4/22/1353
+
+Is possible to use it instead v2?
+
+Best Regards,
+Pawel Dembicki
