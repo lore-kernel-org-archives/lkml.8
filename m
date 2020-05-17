@@ -2,242 +2,204 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32C7C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 18:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EC4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 18:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC03220657
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 18:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C7620758
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 18:37:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lX0Oesir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgEQSft (ORCPT
+        id S1726602AbgEQShT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 14:35:49 -0400
-Received: from v6.sk ([167.172.42.174]:56754 "EHLO v6.sk"
+        Sun, 17 May 2020 14:37:19 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:36094 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726259AbgEQSfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 14:35:47 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id BAE55610A8;
-        Sun, 17 May 2020 18:35:43 +0000 (UTC)
-Date:   Sun, 17 May 2020 20:35:41 +0200
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH 19/28] dt-bindings: mmc: Convert sdhci-pxa to json-schema
-Message-ID: <20200517183541.GA1695525@furthur.local>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
- <20200317093922.20785-20-lkundrak@v3.sk>
- <CAL_JsqK-z+yx6vMv_vUCc-QCigDnN8K3zPkbWM_CgXj02FGY2w@mail.gmail.com>
+        id S1726259AbgEQShT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 14:37:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=4Yd8ZhZiIqCXIzRFu64EbLTYC+uGshJdZ1LlSPDs33M=; b=lX0OesirDzW10jj0DGLSvQ2UFp
+        SHUXQQrWM/82alGNX3HSlYwMN0zO7Qr2JGFTBB1dQG4n7xrVfs9VyHMTal6jqz7WgXQU/6fNI3vnB
+        iIvi8EpH9YSZcEQZ/p/z2ZTspuLtmoZet7lQHad4U9xJ8DRNkGerK0vAwCcmRmVfc7yA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jaO9u-002YLU-Gg; Sun, 17 May 2020 20:37:10 +0200
+Date:   Sun, 17 May 2020 20:37:10 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Roelof Berg <rberg@berg-solutions.de>
+Cc:     Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lan743x: Added fixed link support
+Message-ID: <20200517183710.GC606317@lunn.ch>
+References: <20200516192402.4201-1-rberg@berg-solutions.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqK-z+yx6vMv_vUCc-QCigDnN8K3zPkbWM_CgXj02FGY2w@mail.gmail.com>
+In-Reply-To: <20200516192402.4201-1-rberg@berg-solutions.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 04:37:55PM -0600, Rob Herring wrote:
-> On Tue, Mar 17, 2020 at 3:40 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
-> >
-> > Convert the sdhci-pxa binding to DT schema format using json-schema.
-> 
-> Ignore what my bot said, I see you addressed that earlier in the series.
-> 
-> > At the same time, fix a couple of issues with the examples discovered by
-> > the validation tool -- a semicolon instead of a comma and wrong node names.
-> >
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > ---
-> >  .../devicetree/bindings/mmc/sdhci-pxa.txt     |  50 ---------
-> >  .../devicetree/bindings/mmc/sdhci-pxa.yaml    | 101 ++++++++++++++++++
-> >  2 files changed, 101 insertions(+), 50 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
-> > deleted file mode 100644
-> > index 3d1b449d6097d..0000000000000
-> > --- a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
-> > +++ /dev/null
-> > @@ -1,50 +0,0 @@
-> > -* Marvell sdhci-pxa v2/v3 controller
-> > -
-> > -This file documents differences between the core properties in mmc.txt
-> > -and the properties used by the sdhci-pxav2 and sdhci-pxav3 drivers.
-> > -
-> > -Required properties:
-> > -- compatible: Should be "mrvl,pxav2-mmc", "mrvl,pxav3-mmc" or
-> > -  "marvell,armada-380-sdhci".
-> > -- reg:
-> > -  * for "mrvl,pxav2-mmc" and "mrvl,pxav3-mmc", one register area for
-> > -    the SDHCI registers.
-> > -
-> > -  * for "marvell,armada-380-sdhci", three register areas. The first
-> > -    one for the SDHCI registers themselves, the second one for the
-> > -    AXI/Mbus bridge registers of the SDHCI unit, the third one for the
-> > -    SDIO3 Configuration register
-> > -- reg names: should be "sdhci", "mbus", "conf-sdio3". only mandatory
-> > -  for "marvell,armada-380-sdhci"
-> > -- clocks: Array of clocks required for SDHCI; requires at least one for
-> > -    I/O clock.
-> > -- clock-names: Array of names corresponding to clocks property; shall be
-> > -    "io" for I/O clock and "core" for optional core clock.
-> > -
-> > -Optional properties:
-> > -- mrvl,clk-delay-cycles: Specify a number of cycles to delay for tuning.
-> > -
-> > -Example:
-> > -
-> > -sdhci@d4280800 {
-> > -       compatible = "mrvl,pxav3-mmc";
-> > -       reg = <0xd4280800 0x800>;
-> > -       bus-width = <8>;
-> > -       interrupts = <27>;
-> > -       clocks = <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
-> > -       clock-names = "io", "core";
-> > -       non-removable;
-> > -       mrvl,clk-delay-cycles = <31>;
-> > -};
-> > -
-> > -sdhci@d8000 {
-> > -       compatible = "marvell,armada-380-sdhci";
-> > -       reg-names = "sdhci", "mbus", "conf-sdio3";
-> > -       reg = <0xd8000 0x1000>,
-> > -               <0xdc000 0x100>;
-> > -               <0x18454 0x4>;
-> > -       interrupts = <0 25 0x4>;
-> > -       clocks = <&gateclk 17>;
-> > -       clock-names = "io";
-> > -       mrvl,clk-delay-cycles = <0x1F>;
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
-> > new file mode 100644
-> > index 0000000000000..4ae0926ac294f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
-> > @@ -0,0 +1,101 @@
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mmc/sdhci-pxa.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Marvell PXA SDHCI v2/v3 bindings
-> > +
-> > +maintainers:
-> > +  - devicetree@vger.kernel.org
-> > +
-> > +allOf:
-> > +  - $ref: mmc-controller.yaml#
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: marvell,armada-380-sdhci
-> > +    then:
-> > +      properties:
-> > +        regs:
-> > +          minItems: 3
-> > +          maxItems: 3
-> 
-> Here, you just need minItems.
-> 
-> > +        reg-names:
-> > +          items:
-> > +            - const: sdhci
-> > +            - const: mbus
-> > +            - const: conf-sdio3
-> 
-> This should be under the main definition of 'reg-names' and then just
-> 'minItems: 3' here.
-> 
-> > +      required:
-> > +        - reg-names
-> > +    else:
-> > +      properties:
-> > +        regs:
-> > +          minItems: 1
-> > +          maxItems: 1
-> 
-> Just 'maxItems' is sufficient.
-> 
-> > +        reg-names:
-> > +          minItems: 1
-> > +          maxItems: 1
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - mrvl,pxav2-mmc
-> > +      - mrvl,pxav3-mmc
-> > +      - marvell,armada-380-sdhci
-> > +
-> > +  reg: true
-> 
-> Here you should have:
-> 
-> minItems: 1
-> maxItems: 3
-> 
-> > +
-> > +  reg-names: true
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +
-> > +  clock-names:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +    items:
-> > +      - const: io
-> > +      - const: core
-> > +
-> > +  mrvl,clk-delay-cycles:
-> > +    description: Specify a number of cycles to delay for tuning.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> No range of valid values?
+> @@ -946,6 +949,9 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
+>  {
+>  	struct lan743x_adapter *adapter = netdev_priv(netdev);
+>  	struct phy_device *phydev = netdev->phydev;
+> +	struct device_node *phynode;
+> +	phy_interface_t phyifc = PHY_INTERFACE_MODE_GMII;
+> +	u32 data;
+>  
+>  	phy_print_status(phydev);
+>  	if (phydev->state == PHY_RUNNING) {
+> @@ -953,6 +959,48 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
+>  		int remote_advertisement = 0;
+>  		int local_advertisement = 0;
+>  
+> +		/* check if a fixed-link is defined in device-tree */
+> +		phynode = of_node_get(adapter->pdev->dev.of_node);
+> +		if (phynode && of_phy_is_fixed_link(phynode)) {
 
-No. The document I'm converting didn't specify a range. For some of the
-hardware supported Marvell doesn't provide documentation, and the
-drivers that use this seem to accept any u32 number.
+Hi Roelof
 
-If this needs a range, then I need to make something up. I can do that,
-but it will be difficult to defend that number if anyone asks.
+The whole point for fixed link is that it looks like a PHY. You should
+not need to care if it is a real PHY or a fixed link.
 
-Lubo
+
+> +			/* Configure MAC to fixed link parameters */
+> +			data = lan743x_csr_read(adapter, MAC_CR);
+> +			/* Disable auto negotiation */
+> +			data &= ~(MAC_CR_ADD_ | MAC_CR_ASD_);
+
+Why does the MAC care about autoneg? In general, all the MAC needs to
+know is the speed and duplex.
+
+> +			/* Set duplex mode */
+> +			if (phydev->duplex)
+> +				data |= MAC_CR_DPX_;
+> +			else
+> +				data &= ~MAC_CR_DPX_;
+> +			/* Set bus speed */
+> +			switch (phydev->speed) {
+> +			case 10:
+> +				data &= ~MAC_CR_CFG_H_;
+> +				data &= ~MAC_CR_CFG_L_;
+> +				break;
+> +			case 100:
+> +				data &= ~MAC_CR_CFG_H_;
+> +				data |= MAC_CR_CFG_L_;
+> +				break;
+> +			case 1000:
+> +				data |= MAC_CR_CFG_H_;
+> +				data |= MAC_CR_CFG_L_;
+> +				break;
+> +			}
+
+The current code is unusual, in that it uses
+phy_ethtool_get_link_ksettings(). That should do the right thing with
+a fixed-link PHY, although i don't know if anybody uses it like
+this. So in theory, the current code should take care of duplex, flow
+control, and speed for you. Just watch out for bug/missing features in
+fixed link.
+
+
+> +			/* Set interface mode */
+> +			of_get_phy_mode(phynode, &phyifc);
+> +			if (phyifc == PHY_INTERFACE_MODE_RGMII ||
+> +			    phyifc == PHY_INTERFACE_MODE_RGMII_ID ||
+> +			    phyifc == PHY_INTERFACE_MODE_RGMII_RXID ||
+> +			    phyifc == PHY_INTERFACE_MODE_RGMII_TXID)
+> +				/* RGMII */
+> +				data &= ~MAC_CR_MII_EN_;
+> +			else
+> +				/* GMII */
+> +				data |= MAC_CR_MII_EN_;
+> +			lan743x_csr_write(adapter, MAC_CR, data);
+> +		}
+> +		of_node_put(phynode);
+
+It is normal to do of_get_phy_mode when connecting to the PHY, and
+store the value in the private structure. This is also not specific to
+fixed link.
+
+There is also a helper you can use phy_interface_mode_is_rgmii().
+
+> +
+>  		memset(&ksettings, 0, sizeof(ksettings));
+>  		phy_ethtool_get_link_ksettings(netdev, &ksettings);
+>  		local_advertisement =
+> @@ -974,6 +1022,8 @@ static void lan743x_phy_close(struct lan743x_adapter *adapter)
+>  
+>  	phy_stop(netdev->phydev);
+>  	phy_disconnect(netdev->phydev);
+> +	if (of_phy_is_fixed_link(adapter->pdev->dev.of_node))
+> +		of_phy_deregister_fixed_link(adapter->pdev->dev.of_node);
+>  	netdev->phydev = NULL;
+>  }
+>  
+> @@ -982,18 +1032,44 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
+>  	struct lan743x_phy *phy = &adapter->phy;
+>  	struct phy_device *phydev;
+>  	struct net_device *netdev;
+> +	struct device_node *phynode = NULL;
+> +	phy_interface_t phyifc = PHY_INTERFACE_MODE_GMII;
+>  	int ret = -EIO;
+
+netdev uses reverse christmas tree, meaning the lines should be
+sorted, longest first, getting shorter.
+
+>  
+>  	netdev = adapter->netdev;
+> -	phydev = phy_find_first(adapter->mdiobus);
+> -	if (!phydev)
+> -		goto return_error;
+>  
+> -	ret = phy_connect_direct(netdev, phydev,
+> -				 lan743x_phy_link_status_change,
+> -				 PHY_INTERFACE_MODE_GMII);
+> -	if (ret)
+> -		goto return_error;
+> +	/* check if a fixed-link is defined in device-tree */
+> +	phynode = of_node_get(adapter->pdev->dev.of_node);
+> +	if (phynode && of_phy_is_fixed_link(phynode)) {
+> +		netdev_dbg(netdev, "fixed-link detected\n");
+
+This is something which is useful during debug. But once it works can
+be removed.
+
+> +		ret = of_phy_register_fixed_link(phynode);
+> +		if (ret) {
+> +			netdev_err(netdev, "cannot register fixed PHY\n");
+> +			goto return_error;
+> +		}
+> +
+> +		of_get_phy_mode(phynode, &phyifc);
+> +		phydev = of_phy_connect(netdev, phynode,
+> +					lan743x_phy_link_status_change,
+> +					0, phyifc);
+> +		if (!phydev)
+> +			goto return_error;
+> +	} else {
+> +		phydev = phy_find_first(adapter->mdiobus);
+> +		if (!phydev)
+> +			goto return_error;
+> +
+> +		ret = phy_connect_direct(netdev, phydev,
+> +					 lan743x_phy_link_status_change,
+> +					 PHY_INTERFACE_MODE_GMII);
+> +		/* Note: We cannot use phyifc here because this would be SGMII
+> +		 * on a standard PC.
+> +		 */
+
+I don't understand this comment.
+
