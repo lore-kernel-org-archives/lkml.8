@@ -2,182 +2,69 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 04:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 04:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF2EA205CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 04:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1C242067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 04:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589690705;
+	bh=Ev3BarUwLefDnz0vLo0R1BSS7yEmRIKNLX0qV5bHoSc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=h74hZ0dNqXHNF7t2Qx4Rz1MZaVrwseyHHhbulxZT8PxlwvTgHRqSyvS343iPA/74Z
+	 hdzdJ9qNq648lt5GcqdZ5RwTIUECLYLF3vMtwWj51Y/Iet6zTlUBwadJIfz5PtC7qN
+	 +wsiYzQ7lF3aljcbPDpfduFD1aASkL+QKJ4Budvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgEQEaQ (ORCPT
+        id S1726996AbgEQEpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 00:30:16 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:44774 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbgEQEaP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 00:30:15 -0400
-Received: by mail-io1-f70.google.com with SMTP id j10so5716656iop.11
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 21:30:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=xaEu04YoGRCkpn6vFmvFwzgqbWLVIpbeaTWbb3v/APY=;
-        b=YXV3eFziwAgkWH731O9XgmyH9GeNb4lqXc1d8cfN2tbGS8eQ35LkFnHqoQWxIDYKgF
-         U3zpEs08LDDoUCB3DKXfYPTHgW5hWRvQeY+7i/0elVb2qTWSkEJsSV2PFXD0CedX5r3h
-         kFyl2YFk2+W6Dp8N9zGC3uBBRDVG9EpvMKLhmcfLFYkgzyrWc0IcBPZQjCAUCqHQq7+i
-         UWjtg+c/nhRyX7DCC4gdyoSS2H/nepaMjfDAjoAKMmoGh7W9AdmyKcLLBE2RTI+ca3YX
-         54SX5LABkOdSyq1YslqAuEPRAx/Fmq5hpVX+vFFa3nJTC2oa/22iNXOz0f9pJ8OLrAid
-         5mfA==
-X-Gm-Message-State: AOAM530aQUNp8L8rpFIMAe7BhJNq4t2gCXYXvFiLlzruFfgQqOgBwdeK
-        UzDVPsx/SCkLyKFdFvyTOXrPvRBrs/tGyylWVzAEtm31KAxv
-X-Google-Smtp-Source: ABdhPJydXYeZ322UZxhICGUQDfn28nbDuV377Jh0kG83QVESbPkJTsE4aeDAOEQsdS7oYbXSodLuebAG/XUHZq1ZwNLaRNnmrpCi
-MIME-Version: 1.0
-X-Received: by 2002:a02:cc45:: with SMTP id i5mr10363125jaq.28.1589689813085;
- Sat, 16 May 2020 21:30:13 -0700 (PDT)
-Date:   Sat, 16 May 2020 21:30:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009cb15805a5d080d6@google.com>
-Subject: INFO: trying to register non-static key in io_cqring_ev_posted (3)
-From:   syzbot <syzbot+8c91f5d054e998721c57@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 17 May 2020 00:45:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726497AbgEQEpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 00:45:03 -0400
+Subject: Re: [GIT PULL] csky updates for v5.7-rc6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589690703;
+        bh=Ev3BarUwLefDnz0vLo0R1BSS7yEmRIKNLX0qV5bHoSc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=sJbJdnddUwCfIIBtBqyKYHEXt9Dq9jq7EjQGPa+ZGzbX4+JDqCZLd1KcamkBbF4n7
+         Sig6Mcl69buY2uo/WvTBUwePsJ113GeKhoVHJ8mdKWaAEMTezahate16apukvx2BZj
+         OIOOKY/tCM3D8qAsxNjJeU6IV3xPNdvre/feOEvw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200516093336.13886-1-guoren@kernel.org>
+References: <20200516093336.13886-1-guoren@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200516093336.13886-1-guoren@kernel.org>
+X-PR-Tracked-Remote: https://github.com/c-sky/csky-linux.git
+ tags/csky-for-linus-5.7-rc6
+X-PR-Tracked-Commit-Id: 51bb38cb78363fdad1f89e87357b7bc73e39ba88
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 26b089a7fc3301d8f53f99dd3607513d7700b505
+Message-Id: <158969070298.26561.10106671482752667154.pr-tracker-bot@kernel.org>
+Date:   Sun, 17 May 2020 04:45:02 +0000
+To:     guoren@kernel.org
+Cc:     torvalds@linux-foundation.org, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-csky@vger.kernel.org, guoren@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The pull request you sent on Sat, 16 May 2020 17:33:36 +0800:
 
-syzbot found the following crash on:
+> https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.7-rc6
 
-HEAD commit:    ac935d22 Add linux-next specific files for 20200415
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12deaa5e100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bc498783097e9019
-dashboard link: https://syzkaller.appspot.com/bug?extid=8c91f5d054e998721c57
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11d54c02100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17461e06100000
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/26b089a7fc3301d8f53f99dd3607513d7700b505
 
-The bug was bisected to:
+Thank you!
 
-commit b41e98524e424d104aa7851d54fd65820759875a
-Author: Jens Axboe <axboe@kernel.dk>
-Date:   Mon Feb 17 16:52:41 2020 +0000
-
-    io_uring: add per-task callback handler
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1488dc3c100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1688dc3c100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1288dc3c100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+8c91f5d054e998721c57@syzkaller.appspotmail.com
-Fixes: b41e98524e42 ("io_uring: add per-task callback handler")
-
-RSP: 002b:00007fffb1fb9aa8 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441319
-RDX: 0000000000000001 RSI: 0000000020000140 RDI: 000000000000047b
-RBP: 0000000000010475 R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402260
-R13: 00000000004022f0 R14: 0000000000000000 R15: 0000000000000000
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 1 PID: 7090 Comm: syz-executor222 Not tainted 5.7.0-rc1-next-20200415-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- assign_lock_key kernel/locking/lockdep.c:913 [inline]
- register_lock_class+0x1664/0x1760 kernel/locking/lockdep.c:1225
- __lock_acquire+0x104/0x4c50 kernel/locking/lockdep.c:4234
- lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4934
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
- __wake_up_common_lock+0xb4/0x130 kernel/sched/wait.c:122
- io_cqring_ev_posted+0xa5/0x1e0 fs/io_uring.c:1160
- io_poll_remove_all fs/io_uring.c:4357 [inline]
- io_ring_ctx_wait_and_kill+0x2bc/0x5a0 fs/io_uring.c:7305
- io_uring_create fs/io_uring.c:7843 [inline]
- io_uring_setup+0x115e/0x22b0 fs/io_uring.c:7870
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x441319
-Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffb1fb9aa8 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441319
-RDX: 0000000000000001 RSI: 0000000020000140 RDI: 000000000000047b
-RBP: 0000000000010475 R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402260
-R13: 00000000004022f0 R14: 0000000000000000 R15: 0000000000000000
-general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-CPU: 1 PID: 7090 Comm: syz-executor222 Not tainted 5.7.0-rc1-next-20200415-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__read_once_size include/linux/compiler.h:232 [inline]
-RIP: 0010:__wake_up_common+0xdc/0x600 kernel/sched/wait.c:86
-Code: b9 04 00 00 4c 8b 43 40 49 83 e8 18 49 8d 78 18 48 39 fd 0f 84 d0 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e3 04 00 00 49 bd 00 00 00 00 00 fc ff df 4d 8b
-RSP: 0018:ffffc90001677c20 EFLAGS: 00010046
-RAX: dffffc0000000000 RBX: ffff8880a6081120 RCX: 1ffffffff1517002
-RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000000
-RBP: ffff8880a6081160 R08: ffffffffffffffe8 R09: ffffc90001677cb8
-R10: 0000000000000003 R11: fffff520002cef7e R12: 0000000000000001
-R13: 0000000000000000 R14: 0000000000000003 R15: 0000000000000000
-FS:  000000000136f880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000140 CR3: 00000000936b4000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __wake_up_common_lock+0xd0/0x130 kernel/sched/wait.c:123
- io_cqring_ev_posted+0xa5/0x1e0 fs/io_uring.c:1160
- io_poll_remove_all fs/io_uring.c:4357 [inline]
- io_ring_ctx_wait_and_kill+0x2bc/0x5a0 fs/io_uring.c:7305
- io_uring_create fs/io_uring.c:7843 [inline]
- io_uring_setup+0x115e/0x22b0 fs/io_uring.c:7870
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x441319
-Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffb1fb9aa8 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441319
-RDX: 0000000000000001 RSI: 0000000020000140 RDI: 000000000000047b
-RBP: 0000000000010475 R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402260
-R13: 00000000004022f0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace bf24b131500537a6 ]---
-RIP: 0010:__read_once_size include/linux/compiler.h:232 [inline]
-RIP: 0010:__wake_up_common+0xdc/0x600 kernel/sched/wait.c:86
-Code: b9 04 00 00 4c 8b 43 40 49 83 e8 18 49 8d 78 18 48 39 fd 0f 84 d0 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e3 04 00 00 49 bd 00 00 00 00 00 fc ff df 4d 8b
-RSP: 0018:ffffc90001677c20 EFLAGS: 00010046
-RAX: dffffc0000000000 RBX: ffff8880a6081120 RCX: 1ffffffff1517002
-RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000000
-RBP: ffff8880a6081160 R08: ffffffffffffffe8 R09: ffffc90001677cb8
-R10: 0000000000000003 R11: fffff520002cef7e R12: 0000000000000001
-R13: 0000000000000000 R14: 0000000000000003 R15: 0000000000000000
-FS:  000000000136f880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000140 CR3: 00000000936b4000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
