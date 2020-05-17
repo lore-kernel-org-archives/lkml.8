@@ -2,215 +2,135 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A74C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFE5C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B753207C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78A1E204EF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:38:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pIAwb2eo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jO2sZobl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgEQCTQ (ORCPT
+        id S1726981AbgEQCiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 22:19:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59978 "EHLO
+        Sat, 16 May 2020 22:38:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgEQCTP (ORCPT
+        with ESMTP id S1726919AbgEQCiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 22:19:15 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27646C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 19:19:15 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id a4so3107189qvj.3
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 19:19:15 -0700 (PDT)
+        Sat, 16 May 2020 22:38:09 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90DCAC05BD09
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 19:38:08 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x77so3066398pfc.0
+        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 19:38:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=reILY0Vqckz9zOXZI1PQPYQDzXOJemhFua89GW65fy0=;
-        b=pIAwb2eoYglLwoftFfZRHOH1Iauxv47DwFt8guUDUzepmhBtdWKnf6tj+cBDhU9OTF
-         kECfnujvTJKr8YeroaSRIiYeVy5KG310PnOC4OsyxQQpkXo6JV8KUh6wHeidXXdnYJLi
-         2urTKHfOv2+fh2Z/drc7aLYPMpFOhLMO8thHY7q6ZR2EHH3E3rk2TZMBw375QmdTfjhS
-         WVxV5sKNACulZvEq6O83Mxk6dZiv9ieiAuoy2dCn3CpaWCc0E4KZvCOUTZwVthhcZqmp
-         hwBOf1zuiZPtXjLHkbZSyw6nLiwrG/RWBgQdUOmCje4sXZHYx8G88VLOW5OwZabR568J
-         jUkg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mfO04lVnt7IYPAWled0FL/Qi9c3JqESZey18DKMQFr4=;
+        b=jO2sZobl8FN0z739PXrPTzOWzGtM2j6pSWOxDORnMqRSl3aROaMeJk6a6FVacG6rbQ
+         MQeJCLHQkleMPSX7/qr/CQVX27F9LMjQPFe+fPMBMf5C2fZes5q0+5V/6y4EV2j47ZFM
+         B3ocmI7AJ3YCrMrlLYuW15XSTtcHAscFXCEMM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=reILY0Vqckz9zOXZI1PQPYQDzXOJemhFua89GW65fy0=;
-        b=RretUece9frA990hspM3i0i/u3/JHbVSuRWzpnvcSTJfgyISprao8sg3jCFPssjNQ7
-         yW8a2v5oAh2RtG1QpB9mb1Hf62Dyf6FzHZv1BHt8Kn8mjU92cUMQqF/9SXqzHFuUJPGW
-         IpS5Bnlm585+PAK4o2tG8sWg+rLIXnt6xnk36Ip7JRk0Gck1f/4qOFMuGA35rbPRvkLv
-         OWuI8Oro9D50v/G8GzJcB4RWGKMnZQpf8l7euMyq8Cp/lz68wwaxmvssrlxF1kdwPLUq
-         IpoGEMyrYfEj4+ntvBAkosNuifXNf884KP2JdqzX8/qt+jarqwotR1k0Gpby3D6ZS91o
-         WKsg==
-X-Gm-Message-State: AOAM531C78UAmhLIbFuPdyQ+8QxB075YMVnvtvX4Gjcf/qfmhyMxqlqB
-        8MNao+6CDdSrE0w0AbR8fv5eZg==
-X-Google-Smtp-Source: ABdhPJy7zq2cEJTHKf+ULmWoR9KyBs8LT1Fv40ERTKM0O92tvWYebzQUeSdYbCbxP/SqXcLR53UE4g==
-X-Received: by 2002:a0c:f590:: with SMTP id k16mr7536598qvm.81.1589681954242;
-        Sat, 16 May 2020 19:19:14 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id p2sm5057375qkm.41.2020.05.16.19.19.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 May 2020 19:19:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mfO04lVnt7IYPAWled0FL/Qi9c3JqESZey18DKMQFr4=;
+        b=B10yM52h/+r5x1/lx7VjtS73CxPQ85WKBHB8Sbtmf0X+qjgJZb2Mplvmw2PDE5G/0d
+         kZvhtROAu2IOcL5ZpAq+RYLJT2Sns8k2TRTzrJ0A6X29nD7P6erB1aONpkleCVskojDE
+         pLBjaW5PkysE+s+3nOIhbqJwzJQRvgW0w6TN5jpxu8j9ea3KSbw5Bv5/bveHHvVfWJw8
+         mJSc5ki3hHEX+tFgTM4hC5MSP3eGu7zgwCMTbHMCPnDd9vbZHWzDqTwmV9yrZXbiyZhi
+         u/TfxvUdSRzp3dadx3anivAdnm7EtRoY30T6CliY2QP2HAa2QmhMwhy/8aA8d7QmOT6T
+         W4OA==
+X-Gm-Message-State: AOAM5326hVlghtyG1GM0E5ObW1N82znRxFb0W8WIwgGWD//qOvqCwbKV
+        KDOGjow/FyNl+M1nyGh9ad1AAw==
+X-Google-Smtp-Source: ABdhPJxBn435AARzlLe+Tpbhq9aqJT+PbN4M9ODsGXZ+AeAEH2+YVTBrB9N6hMXYxXDJcIMl1t9fSg==
+X-Received: by 2002:a65:4487:: with SMTP id l7mr2923380pgq.221.1589683087859;
+        Sat, 16 May 2020 19:38:07 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m14sm696144pgn.83.2020.05.16.19.38.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 May 2020 19:38:05 -0700 (PDT)
+Date:   Sat, 16 May 2020 19:38:04 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     mcgrof@kernel.org, yzaikin@google.com, adobriyan@gmail.com,
+        mingo@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
+        yamada.masahiro@socionext.com, bauerman@linux.ibm.com,
+        gregkh@linuxfoundation.org, skhan@linuxfoundation.org,
+        dvyukov@google.com, svens@stackframe.org, joel@joelfernandes.org,
+        tglx@linutronix.de, Jisheng.Zhang@synaptics.com, pmladek@suse.com,
+        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, wangle6@huawei.com
+Subject: Re: [PATCH 2/4] proc/sysctl: add shared variables -1
+Message-ID: <202005161937.214F9A6@keescook>
+References: <1589517224-123928-1-git-send-email-nixiaoming@huawei.com>
+ <1589517224-123928-3-git-send-email-nixiaoming@huawei.com>
+ <202005150105.33CAEEA6C5@keescook>
+ <88f3078b-9419-b9c6-e789-7d6e50ca2cef@huawei.com>
+ <202005150904.743BB3E52@keescook>
+ <ab5f75d4-4d69-7b95-e6bd-ba8fd9792d94@huawei.com>
+ <202005151946.C6335E92@keescook>
+ <2656ae51-5348-0b37-d76d-1460b8eb3f10@huawei.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 3/4] mm/slub: Fix another circular locking dependency in slab_attr_store()
-Date:   Sat, 16 May 2020 22:19:12 -0400
-Message-Id: <F1FA6654-C07C-42FD-B497-61EB635B264C@lca.pw>
-References: <20200427235621.7823-4-longman@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        Juri Lelli <juri.lelli@redhat.com>
-In-Reply-To: <20200427235621.7823-4-longman@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: iPhone Mail (17E262)
+Content-Disposition: inline
+In-Reply-To: <2656ae51-5348-0b37-d76d-1460b8eb3f10@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, May 16, 2020 at 11:05:53AM +0800, Xiaoming Ni wrote:
+> On 2020/5/16 10:47, Kees Cook wrote:
+> > On Sat, May 16, 2020 at 10:32:19AM +0800, Xiaoming Ni wrote:
+> > > On 2020/5/16 0:05, Kees Cook wrote:
+> > > > On Fri, May 15, 2020 at 05:06:28PM +0800, Xiaoming Ni wrote:
+> > > > > On 2020/5/15 16:06, Kees Cook wrote:
+> > > > > > On Fri, May 15, 2020 at 12:33:42PM +0800, Xiaoming Ni wrote:
+> > > > > > > Add the shared variable SYSCTL_NEG_ONE to replace the variable neg_one
+> > > > > > > used in both sysctl_writes_strict and hung_task_warnings.
+> > > > > > > 
+> > > > > > > Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+> > > > > > > ---
+> > > > > > >     fs/proc/proc_sysctl.c     | 2 +-
+> > > > > > >     include/linux/sysctl.h    | 1 +
+> > > > > > >     kernel/hung_task_sysctl.c | 3 +--
+> > > > > > >     kernel/sysctl.c           | 3 +--
+> > > > > > 
+> > > > > > How about doing this refactoring in advance of the extraction patch?
+> > > > > Before  advance of the extraction patch, neg_one is only used in one file,
+> > > > > does it seem to have no value for refactoring?
+> > > > 
+> > > > I guess it doesn't matter much, but I think it's easier to review in the
+> > > > sense that neg_one is first extracted and then later everything else is
+> > > > moved.
+> > > > 
+> > > Later, when more features sysctl interface is moved to the code file, there
+> > > will be more variables that need to be extracted.
+> > > So should I only extract the neg_one variable here, or should I extract all
+> > > the variables used by multiple features?
+> > 
+> > Hmm -- if you're going to do a consolidation pass, then nevermind, I
+> > don't think order will matter then.
+> > 
+> > Thank you for the cleanup! Sorry we're giving you back-and-forth advice!
+> > 
+> > -Kees
+> > 
+> 
+> Sorry, I don't fully understand.
+> Does this mean that there is no need to adjust the patch order or the order
+> of variables in sysctl_vals?
+> Should I extract only SYSCTL_NEG_ONE or should I extract all variables?
 
+I think either order is fine -- I though you were only doing 1 variable.
+If you're don't a bunch, then I don't think order is important.
 
-> On Apr 27, 2020, at 7:56 PM, Waiman Long <longman@redhat.com> wrote:
->=20
-> It turns out that switching from slab_mutex to memcg_cache_ids_sem in
-> slab_attr_store() does not completely eliminate circular locking dependenc=
-y
-> as shown by the following lockdep splat when the system is shut down:
->=20
-> [ 2095.079697] Chain exists of:
-> [ 2095.079697]   kn->count#278 --> memcg_cache_ids_sem --> slab_mutex
-> [ 2095.079697]
-> [ 2095.090278]  Possible unsafe locking scenario:
-> [ 2095.090278]
-> [ 2095.096227]        CPU0                    CPU1
-> [ 2095.100779]        ----                    ----
-> [ 2095.105331]   lock(slab_mutex);
-> [ 2095.108486]                                lock(memcg_cache_ids_sem);
-> [ 2095.114961]                                lock(slab_mutex);
-> [ 2095.120649]   lock(kn->count#278);
-> [ 2095.124068]
-> [ 2095.124068]  *** DEADLOCK ***
-
-Can you show the full splat?
-
->=20
-> To eliminate this possibility, we have to use trylock to acquire
-> memcg_cache_ids_sem. Unlikely slab_mutex which can be acquired in
-> many places, the memcg_cache_ids_sem write lock is only acquired
-> in memcg_alloc_cache_id() to double the size of memcg_nr_cache_ids.
-> So the chance of successive calls to memcg_alloc_cache_id() within
-> a short time is pretty low. As a result, we can retry the read lock
-> acquisition a few times if the first attempt fails.
->=20
-> Signed-off-by: Waiman Long <longman@redhat.com>
-
-The code looks a bit hacky and probably not that robust. Since it is the shu=
-tdown path which is not all that important without lockdep, maybe you could d=
-rop this single patch for now until there is a better solution?
-
-> ---
-> include/linux/memcontrol.h |  1 +
-> mm/memcontrol.c            |  5 +++++
-> mm/slub.c                  | 25 +++++++++++++++++++++++--
-> 3 files changed, 29 insertions(+), 2 deletions(-)
->=20
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index d275c72c4f8e..9285f14965b1 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -1379,6 +1379,7 @@ extern struct workqueue_struct *memcg_kmem_cache_wq;=
-
-> extern int memcg_nr_cache_ids;
-> void memcg_get_cache_ids(void);
-> void memcg_put_cache_ids(void);
-> +int  memcg_tryget_cache_ids(void);
->=20
-> /*
->  * Helper macro to loop through all memcg-specific caches. Callers must st=
-ill
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 5beea03dd58a..9fa8535ff72a 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -279,6 +279,11 @@ void memcg_get_cache_ids(void)
->    down_read(&memcg_cache_ids_sem);
-> }
->=20
-> +int memcg_tryget_cache_ids(void)
-> +{
-> +    return down_read_trylock(&memcg_cache_ids_sem);
-> +}
-> +
-> void memcg_put_cache_ids(void)
-> {
->    up_read(&memcg_cache_ids_sem);
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 44cb5215c17f..cf2114ca27f7 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -34,6 +34,7 @@
-> #include <linux/prefetch.h>
-> #include <linux/memcontrol.h>
-> #include <linux/random.h>
-> +#include <linux/delay.h>
->=20
-> #include <trace/events/kmem.h>
->=20
-> @@ -5572,6 +5573,7 @@ static ssize_t slab_attr_store(struct kobject *kobj,=
-
->        !list_empty(&s->memcg_params.children)) {
->        struct kmem_cache *c, **pcaches;
->        int idx, max, cnt =3D 0;
-> +        int retries =3D 3;
->        size_t size, old =3D s->max_attr_size;
->        struct memcg_cache_array *arr;
->=20
-> @@ -5585,9 +5587,28 @@ static ssize_t slab_attr_store(struct kobject *kobj=
-,
->            old =3D cmpxchg(&s->max_attr_size, size, len);
->        } while (old !=3D size);
->=20
-> -        memcg_get_cache_ids();
-> -        max =3D memcg_nr_cache_ids;
-> +        /*
-> +         * To avoid the following circular lock chain
-> +         *
-> +         *   kn->count#278 --> memcg_cache_ids_sem --> slab_mutex
-> +         *
-> +         * We need to use trylock to acquire memcg_cache_ids_sem.
-> +         *
-> +         * Since the write lock is acquired only in
-> +         * memcg_alloc_cache_id() to double the size of
-> +         * memcg_nr_cache_ids. The chance of successive
-> +         * memcg_alloc_cache_id() calls within a short time is
-> +         * very low except at the beginning where the number of
-> +         * memory cgroups is low. So we retry a few times to get
-> +         * the memcg_cache_ids_sem read lock.
-> +         */
-> +        while (!memcg_tryget_cache_ids()) {
-> +            if (retries-- <=3D 0)
-> +                return -EBUSY;
-> +            msleep(100);
-> +        }
->=20
-> +        max =3D memcg_nr_cache_ids;
->        pcaches =3D kmalloc_array(max, sizeof(void *), GFP_KERNEL);
->        if (!pcaches) {
->            memcg_put_cache_ids();
+-- 
+Kees Cook
