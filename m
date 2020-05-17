@@ -2,168 +2,91 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2311C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7F720727
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C01C02070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 11:03:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODK3g1ue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgEQKrc (ORCPT
+        id S1727902AbgEQLDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 06:47:32 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56066 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727957AbgEQKra (ORCPT
+        Sun, 17 May 2020 07:03:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727839AbgEQLDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 06:47:30 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jaGpB-0006im-8W; Sun, 17 May 2020 10:47:17 +0000
-Date:   Sun, 17 May 2020 12:47:01 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Sargun Dhillon <sargun@sargun.me>, linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        tycho@tycho.ws, cyphar@cyphar.com
-Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
-Message-ID: <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
-References: <20200515234005.32370-1-sargun@sargun.me>
- <202005162344.74A02C2D@keescook>
+        Sun, 17 May 2020 07:03:34 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9875FC061A0C;
+        Sun, 17 May 2020 04:03:34 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id h188so5497326lfd.7;
+        Sun, 17 May 2020 04:03:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eX2hhdYXAY6cQWp3qZfQipnJT+tE/JVeO5y9PXYMiyc=;
+        b=ODK3g1ueObl/PTjmHpm4iPH3I+9Ynk8D5RU4U8kJSBve9NqyU4TY8kXHqNclkglcUj
+         57LMCYqWXcDzgG4mCaOaCR0AY8AtYyZK6XpgPwrnYt3ofLzVG9eYXazQcyQ0iV/E02ac
+         9tyr9kPLjLDQwooZLTsVbvQ5FdHSDMRMYQ6C9gwSoJriK25iNA1dQLzMnbIejqwiHvb9
+         6fC4GAFHk3FPRofwOZP5nFtdrx5doSK2lzE9zqH4CdIe16psVb9/NzEr4Z0l+BED1MVJ
+         1URvsQ/zxHvXHMrZXRrsHeNd75E0cN/ukoY/e3Ay7KW3opwlfNrOznRW8v4FYEMAqwad
+         AnKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eX2hhdYXAY6cQWp3qZfQipnJT+tE/JVeO5y9PXYMiyc=;
+        b=BaOgp1y69tM7QcySnzN6oVbd1P4UMMSoOKwH+TcDP5l1OGNcLxwD6ptZQmeiYz6uWC
+         3Q0nPr8N3qoN+0upiw3OTJtQ8+h8McsxURoucw340qJuJg8ASEPbfNdJqdi9pWku78cw
+         Q8/EeiEdByUAtVdFSoThBq49DoNbLpigqb/s4BpUSIQVcAm4i0ytQplrCeoh+v9yyMaA
+         8q4UIuqBZ0g6IMO25hrSK9I4GYXR7maGj39MxLuzo93S554yqfzcBdVnurfjbSQO/yXB
+         GABPcj64IWIsCM6AyfOQUPlHplLSphrLnAgwT91Bb8RXLoiHWI6vR9G47XdJwyxV5n0o
+         gXew==
+X-Gm-Message-State: AOAM530EmKN9wuUJ19G5VMdzUNsAxEAlzAuqzrd9oidwAjFGKX1DKReK
+        bA8weglOLdhAlPPexd3MQm2dsxOb
+X-Google-Smtp-Source: ABdhPJyiBfmWwqcseomv/5PVCeSRKEdXxSDEk7TWsi5B2qzamnudTrlvwrD2UZ6rQdV9Fr8w3bIX0g==
+X-Received: by 2002:a19:150:: with SMTP id 77mr3326626lfb.71.1589713413093;
+        Sun, 17 May 2020 04:03:33 -0700 (PDT)
+Received: from localhost.localdomain ([82.209.196.123])
+        by smtp.gmail.com with ESMTPSA id w25sm1080333lfn.42.2020.05.17.04.03.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 04:03:32 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH for-5.7 0/2] fortify async punt preparation
+Date:   Sun, 17 May 2020 14:02:10 +0300
+Message-Id: <cover.1589712727.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202005162344.74A02C2D@keescook>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 12:17:14AM -0700, Kees Cook wrote:
-> On Fri, May 15, 2020 at 04:40:05PM -0700, Sargun Dhillon wrote:
-> > This includes the thread group leader ID in the seccomp_notif. This is
-> > immediately useful for opening up a pidfd for the group leader, as
-> > pidfds only work on group leaders.
-> > 
-> > Previously, it was considered to include an actual pidfd in the
-> > seccomp_notif structure[1], but it was suggested to avoid proliferating
-> > mechanisms to create pidfds[2].
-> > 
-> > [1]: https://lkml.org/lkml/2020/1/24/133
-> > [2]: https://lkml.org/lkml/2020/5/15/481
-> 
-> nit: please use lore.kernel.org/lkml/ URLs
-> 
-> > Suggested-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> > ---
-> >  include/uapi/linux/seccomp.h                  |  2 +
-> >  kernel/seccomp.c                              |  1 +
-> >  tools/testing/selftests/seccomp/seccomp_bpf.c | 50 +++++++++++++++++++
-> >  3 files changed, 53 insertions(+)
-> > 
-> > diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-> > index c1735455bc53..f0c272ef0f1e 100644
-> > --- a/include/uapi/linux/seccomp.h
-> > +++ b/include/uapi/linux/seccomp.h
-> > @@ -75,6 +75,8 @@ struct seccomp_notif {
-> >  	__u32 pid;
-> >  	__u32 flags;
-> >  	struct seccomp_data data;
-> > +	__u32 tgid;
-> > +	__u8 pad0[4];
-> >  };
-> 
-> I think we need to leave off padding and instead use __packed. If we
-> don't then userspace can't tell when "pad0" changes its "meaning" (i.e.
-> the size of seccomp_notif becomes 88 bytes with above -- either via
-> explicit padding like you've got or via implicit by the compiler. If
-> some other u32 gets added in the future, user space will still see "88"
-> as the size.
-> 
-> So I *think* the right change here is:
-> 
-> -};
-> +	__u32 tgid;
-> +} __packed;
-> 
-> Though tgid may need to go above seccomp_data... for when it grows.
-> Agh...
-> 
-> _However_, unfortunately, I appear to have no thought this through very
-> well, and there is actually no sanity-checking in the kernel for dealing
-> with an old userspace when sizes change. :( For example, if a userspace
-> doesn't check sizes and calls an ioctl, etc, the kernel will clobber the
-> user buffer if it's too small.
+[2] fixes FORCE_ASYNC. I don't want to go through every bit, so
+not sure whether this is an actual issue with [1], but it's just
+safer this way. Please, consider it for-5.7
 
-I'd just argue that that's just userspace messing up.
+IMHO, all preparation thing became a bit messy, definitely could use
+some rethinking in the future.
 
-> 
-> Even the SECCOMP_GET_NOTIF_SIZES command lacks a buffer size argument.
-> :(
-> 
-> So:
-> 
-> - should we just declare such userspace as "wrong"? I don't think
->   that'll work, especially since what if we ever change the size of
->   seccomp_data...  that predated the ..._SIZES command.
+Pavel Begunkov (2):
+  io_uring: don't prepare DRAIN reqs twice
+  io_uring: fix FORCE_ASYNC req preparation
 
-Yeah, that's nasty since the struct member in seccomp_notif would now
-clobber each other.
+ fs/io_uring.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-> 
-> - should we add a SECCOMP_SET_SIZES command to tell the kernel what
->   we're expecting? There's no "state" associated across seccomp(2)
->   calls, but maybe that doesn't matter because only user_notif writes
->   back to userspace. For the ioctl, the state could be part of the
->   private file data? Sending seccomp_data back to userspace only
->   happens here, and any changes in seccomp_data size will just be seen
->   as allowing a filter to query further into it.
+-- 
+2.24.0
 
-Sounds ok-ish in my opinion.
-
-> 
-> - should GET_SIZES report "useful" size? (i.e. exclude padding?)
-
-Or... And that's more invasive but ultimately cleaner we v2 the whole
-thing so e.g. SECCOMP_IOCTL_NOTIF_RECV2, SECCOMP_IOCTL_NOTIF_SEND2, and
-embedd the size argument in the structs. Userspace sets the size
-argument, we use get_user() to get the size first and then
-copy_struct_from_user() to handle it cleanly based on that. A similar
-model as with sched (has other unrelated quirks because they messed up
-something too):
-
-static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_attr *attr)
-{
-	u32 size;
-	int ret;
-
-	/* Zero the full structure, so that a short copy will be nice: */
-	memset(attr, 0, sizeof(*attr));
-
-	ret = get_user(size, &uattr->size);
-	if (ret)
-		return ret;
-
-	/* ABI compatibility quirk: */
-	if (!size)
-		size = SCHED_ATTR_SIZE_VER0;
-	if (size < SCHED_ATTR_SIZE_VER0 || size > PAGE_SIZE)
-		goto err_size;
-
-	ret = copy_struct_from_user(attr, sizeof(*attr), uattr, size);
-	if (ret) {
-		if (ret == -E2BIG)
-			goto err_size;
-		return ret;
-	}
-
-We're probably the biggest user of this right now and I'd be ok with
-that change. If it's a v2 than whatever. :)
-
-Christian
