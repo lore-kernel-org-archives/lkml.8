@@ -2,142 +2,126 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5517206F9
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 103E5206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 02:08:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L+tYfVJP"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AGf4hNM+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgEQCH4 (ORCPT
+        id S1726977AbgEQCIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 22:07:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgEQCHz (ORCPT
+        Sat, 16 May 2020 22:08:31 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12575 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbgEQCIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 22:07:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E6BC05BD09;
-        Sat, 16 May 2020 19:07:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=jYsH3V4w6+m7UpSLG16Z+T62n7FwSrrB/HogFSqz6mQ=; b=L+tYfVJP0eD0J+b/bL5Roh1znl
-        DXaI98CFHgO3upEWJVw9j0o7aJZ7MoeFPcuUywND7fYoSh38hxHa6Hzw7uPIzIhEGDiWLSADm83L6
-        U95KipryMx53N5VCXetQq3cF6SEJj2NE5rgrCir3oqWHZEUQQDVV9hPPrJ3Y6PlTMJeDyY5evQjhd
-        1UN+s0Tpe6J4QYm3JrabEHDe4Jr+hDo/DNFlkWCultHrzC3CEV0wjU/8/VPAaE3Bpwh4+n9kE93GL
-        HyEFwFK6ksr3mlMhOwuJG7Ih4p52ePrKtn58MiNDehzRnjjsnJ2rd5tHcP2nxf3nwEB292MNHDM3b
-        a2N8NrfA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ja8iO-0002Ec-Lt; Sun, 17 May 2020 02:07:44 +0000
-Subject: Re: [PATCH v5 4/6] partitions/efi: Support GPT entry lookup at a
- non-standard location
-To:     Dmitry Osipenko <digetx@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>,
-        =?UTF-8?Q?Nils_=c3=96stlund?= <nils@naltan.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
-        Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Steve McIntyre <steve@einval.com>,
-        linux-efi <linux-efi@vger.kernel.org>
-References: <20200516153644.13748-1-digetx@gmail.com>
- <20200516153644.13748-5-digetx@gmail.com>
- <2ae298ca-016a-8867-52dd-86d99b9e0f3b@infradead.org>
- <595392b8-d950-4be6-f6cf-e274b4760b94@gmail.com>
- <4a0f6a9c-b652-598a-c8a0-580a3e98171b@infradead.org>
- <68d36582-5a47-11b4-360a-ceb2e272e459@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <27b18ce5-1f73-3acd-ed84-87f98498b256@infradead.org>
-Date:   Sat, 16 May 2020 19:07:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 16 May 2020 22:08:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec09c510000>; Sat, 16 May 2020 19:07:13 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 16 May 2020 19:08:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 16 May 2020 19:08:30 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 17 May
+ 2020 02:08:30 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sun, 17 May 2020 02:08:29 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.48.175]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ec09c9d0002>; Sat, 16 May 2020 19:08:29 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+CC:     John Hubbard <jhubbard@nvidia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        <sparclinux@vger.kernel.org>
+Subject: [PATCH] oradax: convert get_user_pages() --> pin_user_pages()
+Date:   Sat, 16 May 2020 19:08:29 -0700
+Message-ID: <20200517020829.856731-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <68d36582-5a47-11b4-360a-ceb2e272e459@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589681233; bh=XuRV06lShXX0mEEPxDvd+aeuC8h5utZZzMaYdY4ajCA=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=AGf4hNM+Hifu2oHtMx1No3HpgirZ8E3C//643LsAa2WPrXWuKELF4Icoa4Kbtzday
+         S9Cnaz7rPJVHC9Ult3l8VmEilT7ZO8da2Nexc90RtVkKCDzSAlZHeg8BeZqJdz1ECJ
+         W7hXD7NkKjDQKErQJV4xA3659jO9NCbzu5NUMUFo4FgDKqkOIwdoGxL0S6ciGDx5Uu
+         WXxhlYAp3CMoOIacLqwTt7d0POwcvwDyOt6r1jo67shqGeHwiekD7u4GUFYlko0Dts
+         aeZ+LKH9CHcnkckthYL8gp3fHLycl/dDdjzgeFhuSu9oVprMxHuqjzatJ1kjwfbkpF
+         EmD+wIi+5lI+A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/20 5:11 PM, Dmitry Osipenko wrote:
-> 16.05.2020 19:58, Randy Dunlap пишет:
->> On 5/16/20 9:50 AM, Dmitry Osipenko wrote:
->>> 16.05.2020 18:51, Randy Dunlap пишет:
->>>> On 5/16/20 8:36 AM, Dmitry Osipenko wrote:
->>>>> diff --git a/block/partitions/efi.c b/block/partitions/efi.c
->>>>> index b64bfdd4326c..3af4660bc11f 100644
->>>>> --- a/block/partitions/efi.c
->>>>> +++ b/block/partitions/efi.c
->>>>> @@ -621,6 +621,14 @@ static int find_valid_gpt(struct parsed_partitions *state, gpt_header **gpt,
->>>>>          if (!good_agpt && force_gpt)
->>>>>                  good_agpt = is_gpt_valid(state, lastlba, &agpt, &aptes);
->>>>>  
->>>>> +	/* The force_gpt_sector is used by NVIDIA Tegra partition parser in
->>>>> +	 * order to convey a non-standard location of the GPT entry for lookup.
->>>>> +	 * By default force_gpt_sector is set to 0 and has no effect.
->>>>> +	 */
->>>>
->>>> Please fix the multi-line comment format as described in
->>>> Documentation/process/coding-style.rst.
->>>>
->>>>> +	if (!good_agpt && force_gpt && state->force_gpt_sector)
->>>>> +		good_agpt = is_gpt_valid(state, state->force_gpt_sector,
->>>>> +					 &agpt, &aptes);
->>>>> +
->>>>>          /* The obviously unsuccessful case */
->>>>>          if (!good_pgpt && !good_agpt)
->>>>>                  goto fail;
->>>>
->>>> thanks.
->>>>
->>>
->>> Hello Randy,
->>>
->>> I know that it's not a proper kernel-style formatting, but that's the
->>> style used by the whole efi.c source code and I wanted to maintain the
->>> same style, for consistency. Of course I can change to a proper style if
->>> it's more desirable than the consistency. Thank you for the comment!
->>>
->>
->> too bad. Sorry to hear that.
->> It should have been "fixed" much earlier.
->> It's probably too late now.
-> 
-> Actually, I now see that there is a mix of different comment styles in
-> the efi.c code. So it should be fine to use the proper style, I'll
-> change it in v6.
-> 
-> I don't think it's too late, it's never late to make a correction :)
-> There are some other coding style problems in the efi.c that won't hurt
-> to fix, I may take a look at fixing them later on.
-> 
+This code was using get_user_pages_fast(), in a "Case 2" scenario
+(DMA/RDMA), using the categorization from [1]. That means that it's
+time to convert the get_user_pages_fast() + put_page() calls to
+pin_user_pages_fast() + unpin_user_pages() calls.
 
-OK, great. Thanks.
+There is some helpful background in [2]: basically, this is a small
+part of fixing a long-standing disconnect between pinning pages, and
+file systems' use of those pages.
 
--- 
-~Randy
+[1] Documentation/core-api/pin_user_pages.rst
+
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
+
+Cc: David S. Miller <davem@davemloft.net>
+Cc: sparclinux@vger.kernel.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ drivers/sbus/char/oradax.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/sbus/char/oradax.c b/drivers/sbus/char/oradax.c
+index 8af216287a84..21b7cb6e7e70 100644
+--- a/drivers/sbus/char/oradax.c
++++ b/drivers/sbus/char/oradax.c
+@@ -410,9 +410,7 @@ static void dax_unlock_pages(struct dax_ctx *ctx, int c=
+cb_index, int nelem)
+=20
+ 			if (p) {
+ 				dax_dbg("freeing page %p", p);
+-				if (j =3D=3D OUT)
+-					set_page_dirty(p);
+-				put_page(p);
++				unpin_user_pages_dirty_lock(&p, 1, j =3D=3D OUT);
+ 				ctx->pages[i][j] =3D NULL;
+ 			}
+ 		}
+@@ -425,13 +423,13 @@ static int dax_lock_page(void *va, struct page **p)
+=20
+ 	dax_dbg("uva %p", va);
+=20
+-	ret =3D get_user_pages_fast((unsigned long)va, 1, FOLL_WRITE, p);
++	ret =3D pin_user_pages_fast((unsigned long)va, 1, FOLL_WRITE, p);
+ 	if (ret =3D=3D 1) {
+ 		dax_dbg("locked page %p, for VA %p", *p, va);
+ 		return 0;
+ 	}
+=20
+-	dax_dbg("get_user_pages failed, va=3D%p, ret=3D%d", va, ret);
++	dax_dbg("pin_user_pages failed, va=3D%p, ret=3D%d", va, ret);
+ 	return -1;
+ }
+=20
+
+base-commit: 3d1c1e5931ce45b3a3f309385bbc00c78e9951c6
+--=20
+2.26.2
 
