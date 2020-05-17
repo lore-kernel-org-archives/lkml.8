@@ -2,72 +2,138 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD114C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08078C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A149207F9
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB52E20727
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 10:02:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lOFR0Dqq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgEQKAB (ORCPT
+        id S1727868AbgEQKCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 06:00:01 -0400
-Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:54488 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbgEQKAA (ORCPT
+        Sun, 17 May 2020 06:02:02 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:33587 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727043AbgEQKCB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 06:00:00 -0400
-Received: from localhost.localdomain ([92.140.207.208])
-        by mwinf5d56 with ME
-        id flzv2200S4WJoZY03lzwDN; Sun, 17 May 2020 11:59:58 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 17 May 2020 11:59:58 +0200
-X-ME-IP: 92.140.207.208
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     Michael.Hennerich@analog.com, renatogeh@gmail.com, lars@metafoo.de,
-        jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net,
-        giuliano.belinassi@usp.br
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] iio: adc: ad7780: Fix a resource handling path in 'ad7780_probe()'
-Date:   Sun, 17 May 2020 11:59:53 +0200
-Message-Id: <20200517095953.278950-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Sun, 17 May 2020 06:02:01 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589709721; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=KxeEKVLkrXkcEg8UpVr4Kr3YJM9oruaRmBCy5D4rvXc=; b=lOFR0DqqP53h/3FLZJ1Ku55hWfcUc0FOXXNVpXoF6AMc63klVcisxetn66Y7VOmBtAow/L9y
+ fSzRM2+P/Cw5PM4dyqFxJL/wB9p7762qr6AOKquGSrMaUQDnsns66T8rwvHmUysCccGaARdV
+ dF89JrOl1xGT8TNyRQmIbG/1lu0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ec10b8e32b098143c35fc48 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 17 May 2020 10:01:50
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BCD8EC433D2; Sun, 17 May 2020 10:01:49 +0000 (UTC)
+Received: from [192.168.0.102] (unknown [183.82.140.80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85A0BC433F2;
+        Sun, 17 May 2020 10:01:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85A0BC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v1 1/3] clk: qcom: gcc: Add support for a new frequency
+ for SC7180
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org
+References: <1584356082-26769-1-git-send-email-tdas@codeaurora.org>
+ <1584356082-26769-2-git-send-email-tdas@codeaurora.org>
+ <158438095454.88485.11063617239206162025@swboyd.mtv.corp.google.com>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <700ce3fd-8869-1531-ede3-79c2f514efad@codeaurora.org>
+Date:   Sun, 17 May 2020 15:31:43 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <158438095454.88485.11063617239206162025@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If 'ad7780_init_gpios()' fails, we must not release some resources that
-have not been allocated yet. Return directly instead.
+Hello Stephen,
 
-Fixes: 5bb30e7daf00 ("staging: iio: ad7780: move regulator to after GPIO init")
-Fixes: 9085daa4abcc ("staging: iio: ad7780: add gain & filter gpio support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/iio/adc/ad7780.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for your review.
 
-diff --git a/drivers/iio/adc/ad7780.c b/drivers/iio/adc/ad7780.c
-index f47606ebbbbe..b33fe6c3907e 100644
---- a/drivers/iio/adc/ad7780.c
-+++ b/drivers/iio/adc/ad7780.c
-@@ -329,7 +329,7 @@ static int ad7780_probe(struct spi_device *spi)
- 
- 	ret = ad7780_init_gpios(&spi->dev, st);
- 	if (ret)
--		goto error_cleanup_buffer_and_trigger;
-+		return ret;
- 
- 	st->reg = devm_regulator_get(&spi->dev, "avdd");
- 	if (IS_ERR(st->reg))
+On 3/16/2020 11:19 PM, Stephen Boyd wrote:
+> Quoting Taniya Das (2020-03-16 03:54:40)
+>> There is a requirement to support 51.2MHz from GPLL6 for qup clocks,
+>> thus update the frequency table and parent data/map to use the GPLL6
+>> source PLL.
+>>
+>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+>> ---
+> 
+> Any Fixes: tag for this? I guess the beginning of this driver being
+> introduced?
+> 
+
+Sure, will add the same.
+
+>>   drivers/clk/qcom/gcc-sc7180.c | 73 ++++++++++++++++++++++---------------------
+>>   1 file changed, 37 insertions(+), 36 deletions(-)
+>>
+>> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
+>> index 7f59fb8..ad75847 100644
+>> --- a/drivers/clk/qcom/gcc-sc7180.c
+>> +++ b/drivers/clk/qcom/gcc-sc7180.c
+>> @@ -405,8 +406,8 @@ static const struct freq_tbl ftbl_gcc_qupv3_wrap0_s0_clk_src[] = {
+>>
+>>   static struct clk_init_data gcc_qupv3_wrap0_s0_clk_src_init = {
+>>          .name = "gcc_qupv3_wrap0_s0_clk_src",
+>> -       .parent_data = gcc_parent_data_0,
+>> -       .num_parents = 4,
+>> +       .parent_data = gcc_parent_data_1,
+> 
+> This should have been done initially. We shouldn't need to describe
+> "new" parents when they have always been there. Are there other clks in
+> this driver that actually have more parents than we've currently
+> described? If so, please fix them.
+> 
+
+The auto generation script does not consider to define the parent unless 
+it is used in the frequency table to derive a frequency. For now I 
+didn't find any other sources missed.
+
+>> +       .num_parents = 5,
+> 
+> Can you use ARRAY_SIZE(gcc_parent_data_1) instead? That way this isn't a
+> hard-coded value.
+> 
+
+Yes will take care of it too.
+
+>>          .ops = &clk_rcg2_ops,
+>>   };
+>>
+
 -- 
-2.25.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
+--
