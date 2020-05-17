@@ -2,163 +2,155 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A46A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0016C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78FC420709
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F352075F
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 00:11:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rw+x68Gk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o0YM476v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgEQAIn (ORCPT
+        id S1726948AbgEQALG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 May 2020 20:08:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39802 "EHLO
+        Sat, 16 May 2020 20:11:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726670AbgEQAIn (ORCPT
+        by vger.kernel.org with ESMTP id S1726670AbgEQALF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 May 2020 20:08:43 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2ED6C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 17:08:42 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id d21so6040663ljg.9
-        for <linux-kernel@vger.kernel.org>; Sat, 16 May 2020 17:08:42 -0700 (PDT)
+        Sat, 16 May 2020 20:11:05 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19CDAC061A0C;
+        Sat, 16 May 2020 17:11:05 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id h188so4906795lfd.7;
+        Sat, 16 May 2020 17:11:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4yK6XL3gt0+XVfQIVvQaBK6umA0G1wGRMLl2rxzntKg=;
-        b=Rw+x68Gk2KHU/UctJ+dNo0cpBoS4UMhrSzyEuXKw25+eRMQAb/NP5+GLUgjybkerCH
-         k9g+onaYPAPx6egNYmUxxirOqXwmrxhmfnqvAJkSNcXht0YVhyfjknDGCQctTBgdPAp/
-         duJ1rTm3sqMfmljfgQ1fWA6b+eboSCUlXo8dTs+mS2vms5wN8UsPwDmpmrffD3WaORrP
-         mC8QKOXD89xXzoNUvTuWDG/f8Xu6NBHV2rVbabL2RbFeChVid39qXqXM71F5HUrSh5vF
-         shTxhe6nwUyx/VeAVZSnSlnQhUW5AzMsS4SYxSzdBxKHEXYBFeEF9531ewGCm5nlXuaM
-         xmEg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7RutZLM7sTgMICi4NTWTSRsk36VFF4JdskFPttU4j/s=;
+        b=o0YM476vzwQlNxJpTuH9H+ijd8e3EvZqzdxWlzzpq1FPrn8L61EGfOu4HyqhgcMIOx
+         DEjOLG0AdV0h8CPWUZwMdh8ti3WDm77Lfl9LzeB2QYU2hJ8CFoJ2lgybGuP14zh1Xpym
+         dI3ff2pUwIrCDxXs8p2Z5s5Tuj0mzOLq968EAbKqq+KZWfMQNAXW6+I4v0ScA5roRGzv
+         QGaUdgKlgkK5JXKH3ETnFFh7nNH7Dd18T080II0qslLGe1SbuNEpB4FzpjwvE0aViffR
+         PAHGplchIdgOSEQ1fBQfjZiqTVZlc08OGdm7hWkfDnHauNaA5qnavjvrNfvmmNqn5xX8
+         urTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4yK6XL3gt0+XVfQIVvQaBK6umA0G1wGRMLl2rxzntKg=;
-        b=Dthc/ZeVVZR+uJcn45L+OAFvT6DPSIWpiqKxyohhXgWRpILVtVjw3eTH20tYZq8MrF
-         Nypj2fiZop7miyffVm/vRLcEefKHhRMPs6ysOdNFwCjE+j2akVHsxJhmySUlXZXqkZ4f
-         3RTkj1qDiBf/fWNSRkuHAL7IzXeZZHGb9oBQ6IPARWs0ectT75nVehQkd3ZWxcdJXKgL
-         BVqrIbzpnxJfyyAiettul/YYN2KakyA0+dg5f4UFzeLpxyvToWASAtwMxK0+CmnJyRXE
-         mtV+i/NOFrDA6nhEi2MPA2Zr+pg4QBcKT2burUBlC/SNoVPWqPBtIKOe3YsMGLxHk1om
-         B7lg==
-X-Gm-Message-State: AOAM532+i/RgG1WdLsScRS1WVC7Xyb76aPKsz9AXg2e3I8ibnNGbI6ue
-        ZH2W19ZkYrgS0GIaim9ZpVVhQQNVuNOGUzPSG7c=
-X-Google-Smtp-Source: ABdhPJy9yhXC+SZCbQ/yx5oHorJEkdjFDe8NuHxiCHu9aO8xa9dp/EE7f2IAsmi/fFlQmck0+ryv/ErPTNHy23p3Mu0=
-X-Received: by 2002:a2e:81d5:: with SMTP id s21mr6116080ljg.258.1589674121262;
- Sat, 16 May 2020 17:08:41 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7RutZLM7sTgMICi4NTWTSRsk36VFF4JdskFPttU4j/s=;
+        b=c9XiUSPzP8DW0B1hXfzprAxtsRtnGhiOTpUDb1HtAmuVbux5j4CqhPh9XungmOwA0d
+         XwUTKn6ZvSwCcQsvq/AV83rZprgLccfOcIEp+hox+ZDLwz+4tgCV1sTmbNd6ojM58l8D
+         CE2VDD+BtDRMAkeFzXvkmDEf2EwAMYyL9aEZDBN8cyQp+Pcs5Oo3vgk4sgNGVX3AovoW
+         vCbDdtsHox4d83XRgoefgBwSyoILPYdzBG84xP39U+nnEs2SgHk8+9GDKIog+CeVZhPp
+         JfNbm8WWouuRucnn0uM/ZMNYAA3jWJMeMLmg7MFMV0XYPdLeK+v42LgOlQtJD7uZtXmX
+         pozg==
+X-Gm-Message-State: AOAM53231rPODXsmNjxAd7gWg3GaUQO0TMlVWMlGDfLK8nmbVXQK5EUZ
+        uH0tFsF1BZsJ4I2oR7Qa92FoZZyb
+X-Google-Smtp-Source: ABdhPJw7nBupc4+2lwltu5izN6Keaf3FMVvrR3LLLws4cyD6os+cDv47Cr9YSfN/AN/xkkT4bPGUmw==
+X-Received: by 2002:a05:6512:3139:: with SMTP id p25mr1900664lfd.214.1589674263161;
+        Sat, 16 May 2020 17:11:03 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id d16sm4007473lfm.35.2020.05.16.17.11.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 16 May 2020 17:11:02 -0700 (PDT)
+Subject: Re: [PATCH v5 4/6] partitions/efi: Support GPT entry lookup at a
+ non-standard location
+To:     Randy Dunlap <rdunlap@infradead.org>, Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>,
+        =?UTF-8?Q?Nils_=c3=96stlund?= <nils@naltan.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
+        Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Steve McIntyre <steve@einval.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+References: <20200516153644.13748-1-digetx@gmail.com>
+ <20200516153644.13748-5-digetx@gmail.com>
+ <2ae298ca-016a-8867-52dd-86d99b9e0f3b@infradead.org>
+ <595392b8-d950-4be6-f6cf-e274b4760b94@gmail.com>
+ <4a0f6a9c-b652-598a-c8a0-580a3e98171b@infradead.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <68d36582-5a47-11b4-360a-ceb2e272e459@gmail.com>
+Date:   Sun, 17 May 2020 03:11:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <cover.1589623456.git.baolin.wang7@gmail.com> <db5adf754300bdc89d561ea3fb23afc4b6a3ee87.1589623456.git.baolin.wang7@gmail.com>
-In-Reply-To: <db5adf754300bdc89d561ea3fb23afc4b6a3ee87.1589623456.git.baolin.wang7@gmail.com>
-From:   Orson Zhai <orsonzhai@gmail.com>
-Date:   Sun, 17 May 2020 08:08:29 +0800
-Message-ID: <CA+H2tpEJo3a7N5Sq0BzkGrGSrtBY61egZo9Xfc=nOMp2igKGFA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] mfd: syscon: Support physical regmap bus
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "arnd@arndb.de" <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4a0f6a9c-b652-598a-c8a0-580a3e98171b@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 6:13 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> Some platforms such as Spreadtrum platform, define a special method to
-> update bits of the registers instead of reading and writing, which means
-> we should use a physical regmap bus to define the reg_update_bits()
-> operation instead of the MMIO regmap bus.
->
-> Thus add a a __weak function  for the syscon driver to allow to register
+16.05.2020 19:58, Randy Dunlap пишет:
+> On 5/16/20 9:50 AM, Dmitry Osipenko wrote:
+>> 16.05.2020 18:51, Randy Dunlap пишет:
+>>> On 5/16/20 8:36 AM, Dmitry Osipenko wrote:
+>>>> diff --git a/block/partitions/efi.c b/block/partitions/efi.c
+>>>> index b64bfdd4326c..3af4660bc11f 100644
+>>>> --- a/block/partitions/efi.c
+>>>> +++ b/block/partitions/efi.c
+>>>> @@ -621,6 +621,14 @@ static int find_valid_gpt(struct parsed_partitions *state, gpt_header **gpt,
+>>>>          if (!good_agpt && force_gpt)
+>>>>                  good_agpt = is_gpt_valid(state, lastlba, &agpt, &aptes);
+>>>>  
+>>>> +	/* The force_gpt_sector is used by NVIDIA Tegra partition parser in
+>>>> +	 * order to convey a non-standard location of the GPT entry for lookup.
+>>>> +	 * By default force_gpt_sector is set to 0 and has no effect.
+>>>> +	 */
+>>>
+>>> Please fix the multi-line comment format as described in
+>>> Documentation/process/coding-style.rst.
+>>>
+>>>> +	if (!good_agpt && force_gpt && state->force_gpt_sector)
+>>>> +		good_agpt = is_gpt_valid(state, state->force_gpt_sector,
+>>>> +					 &agpt, &aptes);
+>>>> +
+>>>>          /* The obviously unsuccessful case */
+>>>>          if (!good_pgpt && !good_agpt)
+>>>>                  goto fail;
+>>>
+>>> thanks.
+>>>
+>>
+>> Hello Randy,
+>>
+>> I know that it's not a proper kernel-style formatting, but that's the
+>> style used by the whole efi.c source code and I wanted to maintain the
+>> same style, for consistency. Of course I can change to a proper style if
+>> it's more desirable than the consistency. Thank you for the comment!
+>>
+> 
+> too bad. Sorry to hear that.
+> It should have been "fixed" much earlier.
+> It's probably too late now.
 
-Typo -- duplicated "a".
+Actually, I now see that there is a mix of different comment styles in
+the efi.c code. So it should be fine to use the proper style, I'll
+change it in v6.
 
-It seems to be a better idea than before.
-
--Orson
-
-> a physical regmap bus to support this new requirement.
->
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> ---
->  drivers/mfd/syscon.c       |  9 ++++++++-
->  include/linux/mfd/syscon.h | 11 +++++++++++
->  2 files changed, 19 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> index 3a97816d0cba..dc92f3177ceb 100644
-> --- a/drivers/mfd/syscon.c
-> +++ b/drivers/mfd/syscon.c
-> @@ -40,6 +40,13 @@ static const struct regmap_config syscon_regmap_config = {
->         .reg_stride = 4,
->  };
->
-> +struct regmap * __weak syscon_regmap_init(struct device_node *np,
-> +                                         void __iomem *base,
-> +                                         struct regmap_config *syscon_config)
-> +{
-> +       return regmap_init_mmio(NULL, base, syscon_config);
-> +}
-> +
->  static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
->  {
->         struct clk *clk;
-> @@ -106,7 +113,7 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
->         syscon_config.val_bits = reg_io_width * 8;
->         syscon_config.max_register = resource_size(&res) - reg_io_width;
->
-> -       regmap = regmap_init_mmio(NULL, base, &syscon_config);
-> +       regmap = syscon_regmap_init(np, base, &syscon_config);
->         if (IS_ERR(regmap)) {
->                 pr_err("regmap init failed\n");
->                 ret = PTR_ERR(regmap);
-> diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-> index 7f20e9b502a5..85088e44fe7c 100644
-> --- a/include/linux/mfd/syscon.h
-> +++ b/include/linux/mfd/syscon.h
-> @@ -13,6 +13,7 @@
->
->  #include <linux/err.h>
->  #include <linux/errno.h>
-> +#include <linux/regmap.h>
->
->  struct device_node;
->
-> @@ -28,6 +29,9 @@ extern struct regmap *syscon_regmap_lookup_by_phandle_args(
->                                         const char *property,
->                                         int arg_count,
->                                         unsigned int *out_args);
-> +extern struct regmap *syscon_regmap_init(struct device_node *np,
-> +                                        void __iomem *base,
-> +                                        struct regmap_config *syscon_config);
->  #else
->  static inline struct regmap *device_node_to_regmap(struct device_node *np)
->  {
-> @@ -59,6 +63,13 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle_args(
->  {
->         return ERR_PTR(-ENOTSUPP);
->  }
-> +
-> +static inline struct regmap *syscon_regmap_init(struct device_node *np,
-> +                                               void __iomem *base,
-> +                                               struct regmap_config *syscon_config)
-> +{
-> +       return ERR_PTR(-ENOTSUPP);
-> +}
->  #endif
->
->  #endif /* __LINUX_MFD_SYSCON_H__ */
-> --
-> 2.17.1
->
+I don't think it's too late, it's never late to make a correction :)
+There are some other coding style problems in the efi.c that won't hurt
+to fix, I may take a look at fixing them later on.
