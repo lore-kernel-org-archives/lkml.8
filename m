@@ -2,98 +2,231 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D840EC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B630C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA6B0206F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4800B206F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 21:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgEQVIl (ORCPT
+        id S1726726AbgEQVKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 17:08:41 -0400
-Received: from sauhun.de ([88.99.104.3]:33722 "EHLO pokefinder.org"
+        Sun, 17 May 2020 17:10:11 -0400
+Received: from mga02.intel.com ([134.134.136.20]:44366 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726288AbgEQVIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 17:08:40 -0400
-Received: from localhost (p5486C87C.dip0.t-ipconnect.de [84.134.200.124])
-        by pokefinder.org (Postfix) with ESMTPSA id 59E902C049C;
-        Sun, 17 May 2020 23:08:37 +0200 (CEST)
-Date:   Sun, 17 May 2020 23:08:37 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 17/17] ARM: dts: r8a7742: Add RWDT node
-Message-ID: <20200517210837.GL1370@kunai>
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S1726288AbgEQVKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 17:10:11 -0400
+IronPort-SDR: rovWaLXfzCcpNxMpSHgMLP21AEhQmgq63Uwx4NmGgJo6u38EaVJQ4A5TRGRkHBjlSD9EoXkOq/
+ 16uc6v5WMm0w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 14:10:10 -0700
+IronPort-SDR: vlSObTwrir7bSCHvin/WTxAY+a8qteKzVwyVBi7o8jTQsZoybM5a8+GSIz6v74y6/l2HLQJXeA
+ xnt4bTGHTgfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,404,1583222400"; 
+   d="scan'208";a="299587636"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 17 May 2020 14:10:09 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jaQXw-000GUM-TI; Mon, 18 May 2020 05:10:08 +0800
+Date:   Mon, 18 May 2020 05:09:57 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/build] BUILD SUCCESS
+ 0be11088b848774ae1f693169fdb9575e0ff06ba
+Message-ID: <5ec1a825.Vn0gpHBok3s1Hn6x%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="L1EIGrW/+75u5Nmw"
-Content-Disposition: inline
-In-Reply-To: <1589555337-5498-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/build
+branch HEAD: 0be11088b848774ae1f693169fdb9575e0ff06ba  x86/build: Use $(CONFIG_SHELL)
 
---L1EIGrW/+75u5Nmw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+i386-tinyconfig vmlinux size:
 
-On Fri, May 15, 2020 at 04:08:57PM +0100, Lad Prabhakar wrote:
-> Add a device node for the Watchdog Timer (RWDT) controller on the Renesas
-> RZ/G1H (r8a7742) SoC.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
-as.com>
++-------+-----------------------------------+---------------------------------------------+
+| DELTA |              SYMBOL               |                   COMMIT                    |
++-------+-----------------------------------+---------------------------------------------+
+|   +96 | TOTAL                             | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
+|   +96 | TEXT                              | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
+| +1355 | balance_dirty_pages()             | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
+|  +615 | __setup_rt_frame()                | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
+|  +113 | klist_release()                   | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
+|   +93 | change_clocksource()              | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
+|   +86 | release_bdi()                     | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
+|   +84 | kobject_release()                 | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
+|   -68 | bdi_put()                         | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
+|   -77 | kobject_put()                     | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
+|   -79 | timekeeping_notify()              | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
+|   -99 | klist_dec_and_del()               | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
+|  -555 | do_signal()                       | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
+| -1383 | balance_dirty_pages_ratelimited() | 0be11088b848 x86/build: Use $(CONFIG_SHELL) |
++-------+-----------------------------------+---------------------------------------------+
 
-The DTS change looks fine, I checked it against similar SoCs (like the
-previous patched). So, for that:
+elapsed time: 484m
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+configs tested: 143
+configs skipped: 99
 
-However, just to make sure, have you checked the WDT (especially reboot)
-with SMP and multiple CPU cores enabled? Some early Gen2 SoCs had issues
-there.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+mips                             allyesconfig
+m68k                             allyesconfig
+sparc                            allyesconfig
+m68k                          hp300_defconfig
+powerpc                     pq2fads_defconfig
+parisc                           alldefconfig
+sh                   sh7770_generic_defconfig
+arm                        mvebu_v7_defconfig
+arm                            u300_defconfig
+mips                  cavium_octeon_defconfig
+microblaze                          defconfig
+powerpc64                        alldefconfig
+arm                      integrator_defconfig
+arc                     nsimosci_hs_defconfig
+s390                                defconfig
+powerpc                     mpc5200_defconfig
+arm                        clps711x_defconfig
+mips                           xway_defconfig
+mips                        maltaup_defconfig
+arm                            hisi_defconfig
+um                                  defconfig
+arm                            mmp2_defconfig
+mips                     loongson1c_defconfig
+arm                          ep93xx_defconfig
+arc                        nsimosci_defconfig
+arc                      axs103_smp_defconfig
+mips                        qi_lb60_defconfig
+ia64                         bigsur_defconfig
+openrisc                    or1ksim_defconfig
+sh                          lboxre2_defconfig
+arm                         lpc32xx_defconfig
+mips                 decstation_r4k_defconfig
+m68k                        stmark2_defconfig
+mips                         tb0219_defconfig
+parisc                              defconfig
+s390                             allyesconfig
+mips                          malta_defconfig
+arm                         assabet_defconfig
+arm                          exynos_defconfig
+m68k                                defconfig
+powerpc                         ps3_defconfig
+sparc64                             defconfig
+arm                        keystone_defconfig
+m68k                        m5272c3_defconfig
+parisc                           allyesconfig
+arm                        shmobile_defconfig
+sh                          r7780mp_defconfig
+arm                          pcm027_defconfig
+powerpc                       ppc64_defconfig
+parisc                generic-32bit_defconfig
+um                                allnoconfig
+powerpc                    amigaone_defconfig
+mips                           mtx1_defconfig
+parisc                generic-64bit_defconfig
+c6x                         dsk6455_defconfig
+sh                           sh2007_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a005-20200517
+x86_64               randconfig-a003-20200517
+x86_64               randconfig-a006-20200517
+x86_64               randconfig-a004-20200517
+x86_64               randconfig-a001-20200517
+x86_64               randconfig-a002-20200517
+i386                 randconfig-a006-20200517
+i386                 randconfig-a005-20200517
+i386                 randconfig-a003-20200517
+i386                 randconfig-a001-20200517
+i386                 randconfig-a004-20200517
+i386                 randconfig-a002-20200517
+i386                 randconfig-a012-20200517
+i386                 randconfig-a016-20200517
+i386                 randconfig-a014-20200517
+i386                 randconfig-a011-20200517
+i386                 randconfig-a013-20200517
+i386                 randconfig-a015-20200517
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                              allnoconfig
+s390                             allmodconfig
+x86_64                              defconfig
+sparc                               defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                               allyesconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
---L1EIGrW/+75u5Nmw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7Bp9UACgkQFA3kzBSg
-KbYEshAAosauCUFrzQlQlXv4wH1aOYquXgPvrPAxwbdOQrOJ3fJxzVrUgTiaPyGq
-yNcpBusF53fs7P2kVCRY7N3shXgrF8Ypa3C+JuY1Yb6xYATbfF3+XNMLfggcBThs
-htV0h0//jTN88J/2HYCalL31c73sMwBF7ItAMS/EU3KqzAKDMXJ2Sc4MV2FlU+3C
-MyvJKNgdjXYqOj/tdzkcB4BM4MCp9nHwkyS8sWx1jUaLwtenNVHtnJrNaLn5CFo0
-Q0YGgiM9shefCoMpqcuHNdxCT7qBjc+3dz0vYqwtPqthA+uYdkawI6bDMOFwI83n
-3O2Qgf1xeRY/JoI/kGcQies+09BaDN4HZ0NflEtWfetZ3DsIcQBuZ6menbYu8oG+
-D/h2oC9JeamOLn3deWz4Lfhnb8f7HDgzAHDrooFjqHgFetzOgZuj4QLoQH/Tz1T2
-4jRGfiN5qub1LnAI/D/joDp+VAV4UltJTCfM60OtToXX6fV04IWl2tLnCRLwoAIY
-rbRXQba9CBkGQZcerCI+jyy5df+flRx7WUND0lgdcgL8Qwqdz4KOGlSeE7yOZIV5
-zA37gqwG34M0PWpcFTbby4Wjjf99QY9uCvIrgWEqPd7bnouS6CtdGLWxW8KD5CwO
-k0nK6so1jXOIZ0L4XVO2n1muTpw6KN9GmNtOIi2A3nuYHlGROs8=
-=DE4O
------END PGP SIGNATURE-----
-
---L1EIGrW/+75u5Nmw--
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
