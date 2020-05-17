@@ -2,143 +2,112 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4810CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE79C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3465C20801
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369E2207E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 17:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589737717;
+	bh=Q5mp8b6C2Vhyekeuu4yeHZX3Zj7dHJRcQuLzeMYZu7U=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RDBqcBFYMdwAyMORzq4nX+HBsQi0uQx+bnN8dyFx0XxbIqVFG6tOLP0rCg4rXQJq3
+	 T9ON4ULbVuzuTZEQkRvqOZubObEPNSgsTEB0bP4Rd+9UfJtI0Ee/uwoM4Ci+1g8Puu
+	 fb2L4ULUWbahcBrmzVnMaHqIAACLFPhK0/YiI5p8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgEQRrt (ORCPT
+        id S1726442AbgEQRsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 13:47:49 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:42640 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgEQRrs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 13:47:48 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id EBE5C8030802;
-        Sun, 17 May 2020 17:47:41 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id wvmFBhhOKtqf; Sun, 17 May 2020 20:47:41 +0300 (MSK)
-Date:   Sun, 17 May 2020 20:47:39 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-mips@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200517174739.uis3wfievdcmtsxj@mobilestation>
-References: <20200511200528.nfkc2zkh3bvupn7l@mobilestation>
- <20200511210138.GN185537@smile.fi.intel.com>
- <20200511213531.wnywlljiulvndx6s@mobilestation>
- <20200512090804.GR185537@smile.fi.intel.com>
- <20200512114946.x777yb6bhe22ccn5@mobilestation>
- <20200512123840.GY185537@smile.fi.intel.com>
- <20200515060911.GF333670@vkoul-mobl>
- <20200515105137.GK185537@smile.fi.intel.com>
- <20200515105658.GR333670@vkoul-mobl>
- <20200515111112.4umynrpgzjnca223@mobilestation>
+        Sun, 17 May 2020 13:48:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726263AbgEQRsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 13:48:36 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80BF2207E8;
+        Sun, 17 May 2020 17:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589737715;
+        bh=Q5mp8b6C2Vhyekeuu4yeHZX3Zj7dHJRcQuLzeMYZu7U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Rmi0mj+4K1lqTW5+VbBurce9v/rZOtldzK/3o4ob80LuRVKrz6ydVL+pBWMz6mFVD
+         wmrVeTRXZjXgQUD3k/cS4tIsC916C1mmGxX0AICcW3kzWou1J9eOPZy9LB9ZQOPlYl
+         P3NZmuPgJ0hQoqpquFmpUIvSpJSHEwq8M1pluc1Q=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] clk fixes for v5.7-rc5
+Date:   Sun, 17 May 2020 10:48:34 -0700
+Message-Id: <20200517174834.126920-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200515111112.4umynrpgzjnca223@mobilestation>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 02:11:13PM +0300, Serge Semin wrote:
-> On Fri, May 15, 2020 at 04:26:58PM +0530, Vinod Koul wrote:
-> > On 15-05-20, 13:51, Andy Shevchenko wrote:
-> > > On Fri, May 15, 2020 at 11:39:11AM +0530, Vinod Koul wrote:
-> > > > On 12-05-20, 15:38, Andy Shevchenko wrote:
-> > > > > On Tue, May 12, 2020 at 02:49:46PM +0300, Serge Semin wrote:
-> > > > > > On Tue, May 12, 2020 at 12:08:04PM +0300, Andy Shevchenko wrote:
-> > > > > > > On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
-> > > > > > > > On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
-> > > > > > > > > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
-> > > > > > > > > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
-> > > > > > > > > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
-> > > 
-> > > ...
-> > > 
-> > > > > I leave it to Rob and Vinod.
-> > > > > It won't break our case, so, feel free with your approach.
-> > > > 
-> > > > I agree the DT is about describing the hardware and looks like value of
-> > > > 1 is not allowed. If allowed it should be added..
-> > > 
-> > > It's allowed at *run time*, it's illegal in *pre-silicon stage* when
-> > > synthesizing the IP.
-> > 
-> > Then it should be added ..
-> 
-> Vinod, max-burst-len is "MAXimum" burst length not "run-time or current or any
-> other" burst length. It's a constant defined at the IP-core synthesis stage and
-> according to the Data Book, MAX burst length can't be 1. The allowed values are
-> exactly as I described in the binding [4, 8, 16, 32, ...]. MAX burst length
-> defines the upper limit of the run-time burst length. So setting it to 1 isn't
-> about describing a hardware, but using DT for the software convenience.
-> 
-> -Sergey
+The following changes since commit ca6df49d62d7cc4c1653a4d9b1ecc61ecd530e02:
 
-Vinod, to make this completely clear. According to the DW DMAC data book:
-- In general, run-time parameter of the DMA transaction burst length (set in
-  the SRC_MSIZE/DST_MSIZE fields of the channel control register) may belong
-  to the set [1, 4, 8, 16, 32, 64, 128, 256].
-- Actual upper limit of the burst length run-time parameter is limited by a
-  constant defined at the IP-synthesize stage (it's called DMAH_CHx_MAX_MULT_SIZE)
-  and this constant belongs to the set [4, 8, 16, 32, 64, 128, 256]. (See, no 1
-  in this set).
+  clk: sprd: don't gate uart console clock (2020-04-13 12:20:07 -0700)
 
-So the run-time burst length in a case of particular DW DMA controller belongs
-to the range:
-1 <= SRC_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
-and
-1 <= DST_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
+are available in the Git repository at:
 
-See. No mater which DW DMA controller we get each of them will at least support
-the burst length of 1 and 4 transfer words. This is determined by design of the
-DW DMA controller IP since DMAH_CHx_MAX_MULT_SIZE constant set starts with 4.
+  https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
 
-In this patch I suggest to add the max-burst-len property, which specifies
-the upper limit for the run-time burst length. Since the maximum burst length
-capable to be set to the SRC_MSIZE/DST_MSIZE fields of the DMA channel control
-register is determined by the DMAH_CHx_MAX_MULT_SIZE constant (which can't be 1
-by the DW DMA IP design), max-burst-len property as being also responsible for
-the maximum burst length setting should be associated with DMAH_CHx_MAX_MULT_SIZE
-thus should belong to the same set [4, 8, 16, 32, 64, 128, 256].
+for you to fetch changes up to 852049594b9af58fa2972103699fd58a7ac165c6:
 
-So 1 shouldn't be in the enum of the max-burst-len property constraint, because
-hardware doesn't support such limitation by design, while setting 1 as
-max-burst-len would mean incorrect description of the DMA controller.
+  clk: ti: clkctrl: convert subclocks to use proper names also (2020-05-12 20:18:19 -0700)
 
-Vinod, could you take a look at the info I provided above and say your final word
-whether 1 should be really allowed to be in the max-burst-len enum constraints?
-I'll do as you say in the next version of the patchset.
+----------------------------------------------------------------
+Some more clk driver fixes for the merge window and one core framework
+fix:
 
-Regards,
--Sergey
+ - A handful of TI driver fixes for bad of_node_put() and incorrect
+   parent names
+ - Rockchip rk3228 aclk_gpu* creation was interfering with lima GPU work
+   so we use a composite clk now
+ - Resuming from suspend on Tegra Jetson TK1 was broken because an audio
+   PLL calculated an incorrect rate
+ - A fix for devicetree probing on IM-PD1 by actually specifying a clk
+   name which is required to pass clk registration
+ - Avoid list corruption if registration fails for a critical clk
 
-> 
-> > 
-> > -- 
-> > ~Vinod
+----------------------------------------------------------------
+Justin Swartz (1):
+      clk: rockchip: fix incorrect configuration of rk3228 aclk_gpu* clocks
+
+Linus Walleij (1):
+      clk: impd1: Look up clock-output-names
+
+Marc Zyngier (1):
+      clk: Unlink clock if failed to prepare or enable
+
+Stephen Boyd (1):
+      Merge tag 'v5.7-rockchip-clk-fixes1' of git://git.kernel.org/.../mmind/linux-rockchip into clk-fixes
+
+Tero Kristo (3):
+      clk: ti: clkctrl: Fix Bad of_node_put within clkctrl_get_name
+      clk: ti: am33xx: fix RTC clock parent
+      clk: ti: clkctrl: convert subclocks to use proper names also
+
+Thierry Reding (1):
+      clk: tegra: Fix initial rate for pll_a on Tegra124
+
+ drivers/clk/clk.c                 |  3 ++
+ drivers/clk/rockchip/clk-rk3228.c | 17 ++-----
+ drivers/clk/tegra/clk-tegra124.c  |  2 +-
+ drivers/clk/ti/clk-33xx.c         |  2 +-
+ drivers/clk/ti/clkctrl.c          | 99 +++++++++++++++++++--------------------
+ drivers/clk/versatile/clk-impd1.c |  1 +
+ 6 files changed, 58 insertions(+), 66 deletions(-)
+
+-- 
+Sent by a computer, using git, on the internet
