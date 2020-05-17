@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BF6C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2518C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 621FF20810
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E24320884
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 09:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589709037;
-	bh=tlJewrwL31JI+7fUF4XnE+WgsSXR1mjmjrHA4XmYEiw=;
+	s=default; t=1589709042;
+	bh=3quDtaeJHy0mK/+Mttu+EjJV+9LH+j4l8CefVTqNrHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zooooNhuI9JznnMV+K3nqOtdkZO5nFNJRpOTWsnaOlaN7r6Ex8G0hlAHHGsmnNkKH
-	 dCRRmpqNUlC9sTafDN4oM048eOxrJeEYKBern3zDknS70T3lbO5Bb+6+rOoNtWTM74
-	 X0HQIgqRGuvmrEcwnd0BPU8Z2OUQw+Py6zrgTu/8=
+	b=owlVRRAAX3teRS16uT0jKiOt5743LSJ41cjmZuxNmHOA3JKJkwiY1iV0W225O08Lq
+	 0LudfjjbJ7C0/15+WthOwtN+2KCPpXlQK0AjRveLRmD7V0QuFHdR/QIySONviGEV8r
+	 qtKCriXc0+gMs9Dabtw5F3yyRWJ1c8pcaGfBpM9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgEQJug (ORCPT
+        id S1728186AbgEQJul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 05:50:36 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:38334 "EHLO
+        Sun, 17 May 2020 05:50:41 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:38313 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727815AbgEQJtg (ORCPT
+        with ESMTP id S1727785AbgEQJtg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 17 May 2020 05:49:36 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 04H9n4LG018560;
-        Sun, 17 May 2020 18:49:16 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4LG018560
+        by conuserg-08.nifty.com with ESMTP id 04H9n4Kw018560;
+        Sun, 17 May 2020 18:49:05 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04H9n4Kw018560
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589708957;
-        bh=3cOKyKsGmuqpr2zeueDZI3YVHjDzjgw0wEw4sjujv90=;
+        s=dec2015msa; t=1589708946;
+        bh=ukd2Ha5ycOJDtM88DPTp8S4fSLpCUGmKI4WkTZgG/dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fq8BIDstruEuB67I0HFwq+pPP7mpG5a4LDFOGCzbBz6QOnbjc0wA5FEC0cwXtRNNv
-         X5Noj9WW0L0Z3XX9725cWG7ncmoLONUmsz5WuOWu7WuHZo5h42s1KhjUlvr3uYVD+K
-         tZUKF8leQmg27Plvv3Ek+314AeKxePh6yeFg3+x7/GBuMrfurxMT4fgYMW3V370w9L
-         okYktx3Dnxe1a82Ek2oE2chZTw1wsh5ADlqjsTtwyJouIJ/NciQNoqiH+E2UvxfUik
-         6BU7TUmj7BPa+ZGJI7zarRy62bCrMKeZdMf/Akird2zP7bX6WaNw/PDcUEivCFdgQ7
-         Zg8c1rPAACe1A==
+        b=HYz3Qv1DYXST6RSYafZFxihXRJfXVrchyZUsUEAWgs5nc22QSOkmi7J92uGDgpO4A
+         ElCr/yz9QtcOQq0JRj6rr+Q47nxWorUxWf8Iw5RqwYSuZ8PN6qq7vI2ZpEP1Gj91S/
+         hrGOV0IMP+eudk+TFRf7P3OjH/XQTKmfojKY7fO+ixmXtUts1dAQKvGHq8kjsN53q5
+         txYYjT7e+Eyfc0Pgdn/9ahV0sFzwIjhQ3yuLG4kFdbS9lZOCu4VmaQhWvhMOKt/gQ1
+         adpq5RAtXQYgngbWfISOK7E5BV6MLherplub3N+N8IbixKmmkvETeEW+Y7NTSRNDPW
+         Rn55lMo7QyEHQ==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -49,9 +49,9 @@ Cc:     Jessica Yu <jeyu@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 19/29] modpost: show warning if it fails to read symbol dump file
-Date:   Sun, 17 May 2020 18:48:49 +0900
-Message-Id: <20200517094859.2376211-20-masahiroy@kernel.org>
+Subject: [PATCH 01/29] modpost: drop RCS/CVS $Revision handling in MODULE_VERSION()
+Date:   Sun, 17 May 2020 18:48:31 +0900
+Message-Id: <20200517094859.2376211-2-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200517094859.2376211-1-masahiroy@kernel.org>
 References: <20200517094859.2376211-1-masahiroy@kernel.org>
@@ -62,81 +62,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If modpost fails to load a symbol dump file, it cannot check unresolved
-symbols, hence module dependency will not be added. Nor CRCs can be added.
+As far as I understood, this code gets rid of '$Revision$' or '$Revision:'
+of CVS, RCS or whatever in MODULE_VERSION() tags.
 
-Currently, external module builds check only $(objtree)/Module.symvers,
-but it should check files specified by KBUILD_EXTRA_SYMBOLS as well.
-
-Print the warnings in modpost. The warning in Makefile is unneeded.
+Remove the primeval code.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- Makefile              | 10 +---------
- scripts/mod/modpost.c | 11 +++++++++--
- 2 files changed, 10 insertions(+), 11 deletions(-)
+ scripts/mod/modpost.c    |  3 --
+ scripts/mod/modpost.h    |  4 ---
+ scripts/mod/sumversion.c | 66 ----------------------------------------
+ 3 files changed, 73 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index aeb690c692ee..27e8a0522a3c 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1638,17 +1638,9 @@ else # KBUILD_EXTMOD
- # We are always building modules
- KBUILD_MODULES := 1
- 
--PHONY += $(objtree)/Module.symvers
--$(objtree)/Module.symvers:
--	@test -e $(objtree)/Module.symvers || ( \
--	echo; \
--	echo "  WARNING: Symbol version dump $(objtree)/Module.symvers"; \
--	echo "           is missing; modules will have no dependencies and modversions."; \
--	echo )
--
- build-dirs := $(KBUILD_EXTMOD)
- PHONY += modules
--modules: descend $(objtree)/Module.symvers
-+modules: descend
- 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
- 
- PHONY += modules_install
 diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 8150be00e3df..ff715623b37e 100644
+index 4d4b979d76be..77e5425759e2 100644
 --- a/scripts/mod/modpost.c
 +++ b/scripts/mod/modpost.c
-@@ -41,6 +41,8 @@ static int sec_mismatch_fatal = 0;
- static int ignore_missing_files;
- /* If set to 1, only warn (instead of error) about missing ns imports */
- static int allow_missing_ns_imports;
-+/* Set when at list one dump file is missing */
-+static int missing_dump_file;
+@@ -2074,9 +2074,6 @@ static void read_symbols(const char *modname)
+ 		check_sec_ref(mod, modname, &info);
  
- enum export {
- 	export_plain,      export_unused,     export_gpl,
-@@ -2428,9 +2430,11 @@ static void read_dump(const char *fname)
- 	char *buf, *pos, *line;
+ 	version = get_modinfo(&info, "version");
+-	if (version)
+-		maybe_frob_rcs_version(modname, version, info.modinfo,
+-				       version - (char *)info.hdr);
+ 	if (version || (all_versions && !is_vmlinux(modname)))
+ 		get_src_version(modname, mod->srcversion,
+ 				sizeof(mod->srcversion)-1);
+diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
+index 39f6c29fb568..bbaf5cc37bfb 100644
+--- a/scripts/mod/modpost.h
++++ b/scripts/mod/modpost.h
+@@ -187,10 +187,6 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
+ void add_moddevtable(struct buffer *buf, struct module *mod);
  
- 	buf = read_text_file(fname);
--	if (!buf)
--		/* No symbol versions, silently ignore */
-+	if (!buf) {
-+		warn("failed to read '%s'\n", fname);
-+		missing_dump_file = 1;
- 		return;
-+	}
+ /* sumversion.c */
+-void maybe_frob_rcs_version(const char *modfilename,
+-			    char *version,
+-			    void *modinfo,
+-			    unsigned long modinfo_offset);
+ void get_src_version(const char *modname, char sum[], unsigned sumlen);
  
- 	pos = buf;
- 
-@@ -2615,6 +2619,9 @@ int main(int argc, char **argv)
- 	if (files_source)
- 		read_symbols_from_files(files_source);
- 
-+	if (missing_dump_file)
-+		warn("Symbol dump file is missing. Modules may not have dependencies or movversions.\n");
-+
- 	/*
- 	 * When there's no vmlinux, don't print warnings about
- 	 * unresolved symbols (since there'll be too many ;)
+ /* from modpost.c */
+diff --git a/scripts/mod/sumversion.c b/scripts/mod/sumversion.c
+index 63062024ce0e..f27f22420cbc 100644
+--- a/scripts/mod/sumversion.c
++++ b/scripts/mod/sumversion.c
+@@ -429,69 +429,3 @@ void get_src_version(const char *modname, char sum[], unsigned sumlen)
+ release:
+ 	release_file(file, len);
+ }
+-
+-static void write_version(const char *filename, const char *sum,
+-			  unsigned long offset)
+-{
+-	int fd;
+-
+-	fd = open(filename, O_RDWR);
+-	if (fd < 0) {
+-		warn("changing sum in %s failed: %s\n",
+-			filename, strerror(errno));
+-		return;
+-	}
+-
+-	if (lseek(fd, offset, SEEK_SET) == (off_t)-1) {
+-		warn("changing sum in %s:%lu failed: %s\n",
+-			filename, offset, strerror(errno));
+-		goto out;
+-	}
+-
+-	if (write(fd, sum, strlen(sum)+1) != strlen(sum)+1) {
+-		warn("writing sum in %s failed: %s\n",
+-			filename, strerror(errno));
+-		goto out;
+-	}
+-out:
+-	close(fd);
+-}
+-
+-static int strip_rcs_crap(char *version)
+-{
+-	unsigned int len, full_len;
+-
+-	if (strncmp(version, "$Revision", strlen("$Revision")) != 0)
+-		return 0;
+-
+-	/* Space for version string follows. */
+-	full_len = strlen(version) + strlen(version + strlen(version) + 1) + 2;
+-
+-	/* Move string to start with version number: prefix will be
+-	 * $Revision$ or $Revision: */
+-	len = strlen("$Revision");
+-	if (version[len] == ':' || version[len] == '$')
+-		len++;
+-	while (isspace(version[len]))
+-		len++;
+-	memmove(version, version+len, full_len-len);
+-	full_len -= len;
+-
+-	/* Preserve up to next whitespace. */
+-	len = 0;
+-	while (version[len] && !isspace(version[len]))
+-		len++;
+-	memmove(version + len, version + strlen(version),
+-		full_len - strlen(version));
+-	return 1;
+-}
+-
+-/* Clean up RCS-style version numbers. */
+-void maybe_frob_rcs_version(const char *modfilename,
+-			    char *version,
+-			    void *modinfo,
+-			    unsigned long version_offset)
+-{
+-	if (strip_rcs_crap(version))
+-		write_version(modfilename, version, version_offset);
+-}
 -- 
 2.25.1
 
