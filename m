@@ -2,111 +2,63 @@ Return-Path: <SRS0=/Won=67=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC17C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 07:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 07:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E61C207DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 07:14:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589699662;
-	bh=1NXTVdhTm9Mn+zSk8eASvguz0HCxxJOBrSMmsTfIQVI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wNAc9rDIkTW4p4G/pavg8lV+Otnhqb4gQNM9oowa6TMdZ5DQDX/CfeF1Uvb1dwBx1
-	 nNkoQh1yFIrGSCCtSU5Qo4049JP98g6jh24P8CDZ0RqtmAbL5pIIpPEzKAkgItEx0T
-	 sTFJ0Ebku+P8cfxz+sPcqFph75OxNSTZJw6Ya51w=
+	by mail.kernel.org (Postfix) with ESMTP id 9A168207D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 May 2020 07:16:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="k9OGzAAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgEQHOV (ORCPT
+        id S1727048AbgEQHQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 03:14:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44028 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbgEQHOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 03:14:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA36520735;
-        Sun, 17 May 2020 07:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589699660;
-        bh=1NXTVdhTm9Mn+zSk8eASvguz0HCxxJOBrSMmsTfIQVI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bv4DPDZOcNzVDkNjkMZatlVIPdoV/UuqP7zB8RS5rDQcXXrmL3Qr8FZC32ri0gIZx
-         leh3hrxSDHo48OtoglmI26OAHK7Ghi0FAf0tI5NmDGM5z7b4pUkkR3frNAoFDJt5Pg
-         9vYQ042UJnIqxzOvd7NW0Gwq3md1D4EP9m0SM1n0=
-Date:   Sun, 17 May 2020 09:14:17 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     arnd@arndb.de, manivannan.sadhasivam@linaro.org,
-        bjorn.andersson@linaro.org, wufan@codeaurora.org,
-        pratanan@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 3/8] qaic: Create char dev
-Message-ID: <20200517071417.GA3090070@kroah.com>
-References: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
- <1589465266-20056-4-git-send-email-jhugo@codeaurora.org>
- <20200514141211.GA2643665@kroah.com>
- <0421a64a-10f3-08df-9ef1-14fdb570db0d@codeaurora.org>
- <20200514155615.GA2963499@kroah.com>
- <4be546d3-b571-0659-0140-f34ec88f95ff@codeaurora.org>
- <4683046a-c6b5-30a5-ef02-2f610523ae1c@codeaurora.org>
- <20200516070131.GB3964535@kroah.com>
- <8e06c718-8b8a-f09a-4685-11c0c1581a0c@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e06c718-8b8a-f09a-4685-11c0c1581a0c@codeaurora.org>
+        Sun, 17 May 2020 03:16:20 -0400
+Received: from pv50p00im-ztbu10021601.me.com ([17.58.6.57]:48101 "EHLO
+        pv50p00im-ztbu10021601.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727002AbgEQHQU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 03:16:20 -0400
+X-Greylist: delayed 334 seconds by postgrey-1.27 at vger.kernel.org; Sun, 17 May 2020 03:16:20 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+        s=1a1hai; t=1589699446;
+        bh=on02TmoKtdgOncp6E9k3HdtNsGqN133gVxjq69i9C/Y=;
+        h=Content-Type:From:Subject:Date:Message-Id:To;
+        b=k9OGzAAZ736R1MxXDttqxbvadG1pNiei3p2efEoj5uivuczBCpHeNg7pe30bsAZ9C
+         xzYXBu1te2TlD+UB85lxvR/igExrFdYvMZMLeLNZu8lH5k2GcRWcN+y5RaKg2goDM9
+         GzA0I9lAzcv+NblJq2mkrSnqT7GQuh2ELEYvI8kpVGxXNQoj76Q2wGsBcnZ0ushNkb
+         cbhHXP+U4/PnpWbiaNtBNCCNe2WIWgCo+s2fTyC8rM8Lv4yh82T//uZL7dLzEq97/2
+         TVcl6pKUtZFqrodi0R2fQbrGZ+Fr5DLr9CremeJBkFqzDO3NfievKOrpibiXIm/FQh
+         jFEu40+tUDeTA==
+Received: from [192.168.0.103] (unknown [113.173.234.229])
+        by pv50p00im-ztbu10021601.me.com (Postfix) with ESMTPSA id A85686E04A8;
+        Sun, 17 May 2020 07:10:45 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Trinh tanLoc <trnhtanloc@icloud.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: Linux Kernel Code of Conduct Committee: August 2019 to November 2019 report
+Date:   Sun, 17 May 2020 14:10:40 +0700
+Message-Id: <4BC53B2F-A22C-4736-B5F6-B1C8C6E4B236@icloud.com>
+Cc:     linux-kernel@vger.kernel.org,
+        tech-board-discuss@lists.linuxfoundation.org
+To:     gregkh@linuxfoundation.org
+X-Mailer: iPad Mail (16G183)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-17_01:2020-05-15,2020-05-17 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 mlxscore=0
+ mlxlogscore=733 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-2002250000 definitions=main-2005170064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 03:29:19PM -0600, Jeffrey Hugo wrote:
-> On 5/16/2020 1:01 AM, Greg KH wrote:
-> > On Fri, May 15, 2020 at 03:08:59PM -0600, Jeffrey Hugo wrote:
-> > > 2. There are a limited number of dynamic minor numbers for misc devs (64),
-> > > so if you are expecting more devices than that, a misc dev is not
-> > > appropiate.  Also, these minors are shared with other misc dev users, so
-> > > depending on the system configuration, you might have significantly less
-> > > than 64 minors available for use.
-> > 
-> > I'm pretty sure we can have more than 64 misc devices, that limitation
-> > should have been removed a while ago.  Try it and see :)
-> 
-> In total, there can be more tha 64 misc devices.  However my previous
-> comment was specific to dynamic minors (ie devices which do not have an
-> assigned minor).  The limit on dynamic minors still apears to be 64. Looking
-> at the code -
-> 
-> DYNAMIC_MINORS is still 64
-> https://elixir.bootlin.com/linux/v5.7-rc5/source/drivers/char/misc.c#L63
-> 
-> I see the same in -next
-> 
-> DYNAMIC_MINORS is used to size a bitmap - one bit for each dynamic minor
-> misc device that exists at one particular point in time.  After all 64 bits
-> are consumed by misc_register() by clients requesting a dynamic minor, no
-> more dynamic minor misc devices can be registered until some are
-> unregistered.
-> 
-> What am I missing?
 
-Oops, nothing, my fault.  We fixed up the allocation of more dynamic
-majors for chardev in 2017 and for some reason I thought we also
-increased the number of misc dynamic minors at the same time, but that
-was incorrect.
 
-I'll gladly take patches that bump up the number of misc minors if
-needed.
-
-But to get back to the main issue here, you are only going to have 1 or
-maybe 2 of these devices in a system at a time, right?  So "burning" a
-whole major number for that feels like a waste.
-
-thanks,
-
-greg k-h
+=C4=90=C6=B0=E1=BB=A3c g=E1=BB=ADi t=E1=BB=AB iPad c=E1=BB=A7a t=C3=B4i=
