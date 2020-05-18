@@ -2,240 +2,200 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C42C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9B2207F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:56:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jXg2wpaX"
+	by mail.kernel.org (Postfix) with ESMTP id 11BDD207F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:00:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgERW4y (ORCPT
+        id S1727831AbgERXAA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 18:56:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52632 "EHLO
+        Mon, 18 May 2020 19:00:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbgERW4y (ORCPT
+        with ESMTP id S1726500AbgERXAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 18:56:54 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E5E2C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 15:56:54 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x2so5631646pfx.7
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 15:56:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0xdAxuqwLSAR4wU4rxIu2ac9SKwG/LSGWIocJ0QtT6w=;
-        b=jXg2wpaX0CwdrQaS00pYNMaIEh7CEHl6tslWLzd+iibMUU5UvqbxUyYj7ffChZY0GG
-         YPb3Xi6zizo+p5J8WbYJSzHS5vb5CRReaQbq96YarkGjGc4CIWFgQv6lHDJW0Jg0GT1/
-         9qIMvrY3ACO9C9XGbr/hZOfQqV7NmF2J6mWH4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0xdAxuqwLSAR4wU4rxIu2ac9SKwG/LSGWIocJ0QtT6w=;
-        b=KFyug0AlrWwdQl7rIRbkNvOsdvwLiYBL+PVped6rzUl0vfNjOaoh1MURX+LaNfUzZu
-         UdAtlLcAci63Imrs0NYAWB40BrKAHTXHD8a29EhEHHgnSG67PpeKBXCW/JL3sk6t523D
-         7Rw30qEdKvqjx4KnP7xNupBhCPlXAI6xr94oG+WhVFhR7z1p2tyEFU5pOGJMYj/niaX4
-         ShqSOiWlA9dNVZaOGa3tfJJPuwCOKMr+SQpy18vQcopJTiYEfkjQQujZ2YUfi/l5iRAd
-         IsuOvmY1z3I6t6Na165UyFIvTA0497cYdGqE0VEvx26DrpJCm0SiJbnuKtoSLdicyeVp
-         riTQ==
-X-Gm-Message-State: AOAM532lQJXb+1Nfi39Q7N8/vTXgj6hABTj4Qr2sHmqQ8oBCx1qC0Hd7
-        950sLvxl09fRXNXmP7lZUugF5w==
-X-Google-Smtp-Source: ABdhPJyKF51sCRODFCXTmnA674qG1KM8BNV3JMUFs5tmiJRRPukmQtLiPYLhoGwBRe+S+Lctt3Azbw==
-X-Received: by 2002:a63:3545:: with SMTP id c66mr2903262pga.82.1589842613663;
-        Mon, 18 May 2020 15:56:53 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p62sm9602982pfb.93.2020.05.18.15.56.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 15:56:52 -0700 (PDT)
-Date:   Mon, 18 May 2020 15:56:51 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] soc: fsl: qe: Replace one-element array and use
- struct_size() helper
-Message-ID: <202005181529.C0CB448FBB@keescook>
-References: <20200518221904.GA22274@embeddedor>
+        Mon, 18 May 2020 19:00:00 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3D3C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 16:00:00 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jaojc-0005Dt-Ik; Tue, 19 May 2020 00:59:48 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 0DB1C1006A1; Tue, 19 May 2020 00:59:48 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, bp@alien8.de, luto@kernel.org,
+        hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
+        ak@linux.intel.com, ravi.v.shankar@intel.com,
+        chang.seok.bae@intel.com,
+        Andrew Cooper <andrew.cooper3@citrix.com>, x86@kernel.org
+Subject: Re: [PATCH v12 10/18] x86/fsgsbase/64: Enable FSGSBASE instructions in helper functions
+In-Reply-To: <20200518202435.GD33628@sasha-vm>
+References: <20200511045311.4785-11-sashal@kernel.org> <87v9ktw1ev.fsf@nanos.tec.linutronix.de> <20200518202435.GD33628@sasha-vm>
+Date:   Tue, 19 May 2020 00:59:48 +0200
+Message-ID: <87y2povogr.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518221904.GA22274@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 05:19:04PM -0500, Gustavo A. R. Silva wrote:
-> The current codebase makes use of one-element arrays in the following
-> form:
-> 
-> struct something {
->     int length;
->     u8 data[1];
-> };
-> 
-> struct something *instance;
-> 
-> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> instance->length = size;
-> memcpy(instance->data, source, size);
-> 
-> but the preferred mechanism to declare variable-length types such as
-> these ones is a flexible array member[1][2], introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on. So, replace
-> the one-element array with a flexible-array member.
-> 
-> Also, make use of the new struct_size() helper to properly calculate the
-> size of struct qe_firmware.
-> 
-> This issue was found with the help of Coccinelle and, audited and fixed
-> _manually_.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/soc/fsl/qe/qe.c | 4 ++--
->  include/soc/fsl/qe/qe.h | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
-> index 447146861c2c1..2df20d6f85fa4 100644
-> --- a/drivers/soc/fsl/qe/qe.c
-> +++ b/drivers/soc/fsl/qe/qe.c
-> @@ -448,7 +448,7 @@ int qe_upload_firmware(const struct qe_firmware *firmware)
->  	unsigned int i;
->  	unsigned int j;
->  	u32 crc;
-> -	size_t calc_size = sizeof(struct qe_firmware);
-> +	size_t calc_size;
->  	size_t length;
->  	const struct qe_header *hdr;
->  
-> @@ -480,7 +480,7 @@ int qe_upload_firmware(const struct qe_firmware *firmware)
->  	}
->  
->  	/* Validate the length and check if there's a CRC */
-> -	calc_size += (firmware->count - 1) * sizeof(struct qe_microcode);
-> +	calc_size = struct_size(firmware, microcode, firmware->count);
->  
->  	for (i = 0; i < firmware->count; i++)
->  		/*
-> diff --git a/include/soc/fsl/qe/qe.h b/include/soc/fsl/qe/qe.h
-> index e282ac01ec081..3feddfec9f87d 100644
-> --- a/include/soc/fsl/qe/qe.h
-> +++ b/include/soc/fsl/qe/qe.h
-> @@ -307,7 +307,7 @@ struct qe_firmware {
->  		u8 revision;		/* The microcode version revision */
->  		u8 padding;		/* Reserved, for alignment */
->  		u8 reserved[4];		/* Reserved, for future expansion */
-> -	} __attribute__ ((packed)) microcode[1];
-> +	} __packed microcode[];
->  	/* All microcode binaries should be located here */
->  	/* CRC32 should be located here, after the microcode binaries */
->  } __attribute__ ((packed));
-> -- 
-> 2.26.2
-> 
+Sasha,
 
-Hm, looking at this code, I see a few other things that need to be
-fixed:
+Sasha Levin <sashal@kernel.org> writes:
+> Thank you for taking the time to review this.
 
-1) drivers/tty/serial/ucc_uart.c does not do a be32_to_cpu() conversion
-   on the length test (understandably, a little-endian system has never run
-   this code since it's ppc specific), but it's still wrong:
+welcome and sorry for the explosion.
 
-	if (firmware->header.length != fw->size) {
+> On Mon, May 18, 2020 at 08:20:08PM +0200, Thomas Gleixner wrote:
+>>Sasha Levin <sashal@kernel.org> writes:
+>>This conditional irqsave gunk is clearly NOT what was in the tip tree
+>>before it got reverted:
+>>
+>>  a86b4625138d ("x86/fsgsbase/64: Enable FSGSBASE instructions in helper functions")
+>
+> It wasn't in the reverted series, it came in Intel's v9 series, with
+> these comments in the cover letter:
+>
+> 	Updates from v8 [10]:
+> 	[...]
+> 	* Simplified GS base helper functions (Tony L.)
 
-   compare to the firmware loader:
+Ok. I never looked at that series because that requested confirmation
+that nothing will regress due to the ptrace changes was not there. After
+a bit of handwaving this dried out. So I completely missed that back
+then. And I did not look at any later variant which had 0day complaints.
 
-	length = be32_to_cpu(hdr->length);
+> And I did, Thomas. While I'm not intimately familiar with the code I
+> made sure that all the patches that came on top of the merged series
+> before it got reverted made it into this new series. However, more work
+> has happened here after the revert and I would expect that the code in
+> this new series will be different than the code you reverted last
+> year.
 
-2) drivers/soc/fsl/qe/qe.c does not perform bounds checking on the
-   per-microcode offsets, so the uploader might send data outside the
-   firmware buffer. Perhaps:
+It's obvious that it would be different from what was merged simply
+because the affected code has changed but not in substantial points like
+losing a kprobes protection by "simplifying" something which was
+carefully done in the first place.
 
+It's not your fault at all, you just happened to be the messanger. The
+people responsible for that mess owe you at least a beer.
 
-diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
-index 447146861c2c..c4e0bc452f03 100644
---- a/drivers/soc/fsl/qe/qe.c
-+++ b/drivers/soc/fsl/qe/qe.c
-@@ -451,6 +451,7 @@ int qe_upload_firmware(const struct qe_firmware *firmware)
- 	size_t calc_size = sizeof(struct qe_firmware);
- 	size_t length;
- 	const struct qe_header *hdr;
-+	void *firmware_end;
- 
- 	if (!firmware) {
- 		printk(KERN_ERR "qe-firmware: invalid pointer\n");
-@@ -491,19 +492,39 @@ int qe_upload_firmware(const struct qe_firmware *firmware)
- 		calc_size += sizeof(__be32) *
- 			be32_to_cpu(firmware->microcode[i].count);
- 
--	/* Validate the length */
-+	/* Validate total length */
- 	if (length != calc_size + sizeof(__be32)) {
- 		printk(KERN_ERR "qe-firmware: invalid length\n");
- 		return -EPERM;
- 	}
- 
- 	/* Validate the CRC */
--	crc = be32_to_cpu(*(__be32 *)((void *)firmware + calc_size));
-+	firmware_end = (void *)firmware + calc_size;
-+	crc = be32_to_cpu(*(__be32 *)firmware_end);
- 	if (crc != crc32(0, firmware, calc_size)) {
- 		printk(KERN_ERR "qe-firmware: firmware CRC is invalid\n");
- 		return -EIO;
- 	}
- 
-+	/* Validate ucode lengths and offsets */
-+	for (i = 0; i < firmware->count; i++) {
-+		const struct qe_microcode *ucode = &firmware->microcode[i];
-+		__be32 *code;
-+		size_t count;
-+
-+		if (!ucode->code_offset)
-+			continue;
-+
-+		code = (void *)firmware + be32_to_cpu(ucode->code_offset);
-+		count = be32_to_cpu(ucode->count) * sizeof(*code);
-+
-+		if (code < firmware || code >= firmware_end ||
-+		    code + count < firmware || code + count >= firmware_end) {
-+			printk(KERN_ERR "qe-firmware: invalid ucode offset\n");
-+			return -EIO;
-+		}
-+	}
-+
- 	/*
- 	 * If the microcode calls for it, split the I-RAM.
- 	 */
+>> - In paranoid_exit()
+>>
+>>-	TRACE_IRQS_IRETQ_DEBUG
+>>+	TRACE_IRQS_OFF_DEBUG
+>
+> (assuming we're looking at the same thing here, ) Changed in v8 of the
+> series.
 
+Sigh.
 
-I haven't tested this.
+> I'm a bit confused about the surprise here that v12 is different than
+> the reverted patches. There were multiple rounds of review which
+> resulted in the code being more than just a revert of the revert along
+> with a small fix.
+>
+>> > This looks unpleasant to review.  I wonder if it would be better to unrevert
+>> > the reversion, merge up to Linus' tree or -tip, and then base the changes on
+>> > top of that.
+>>
+>> I don't think that's a good idea. The old code is broken in several ways
+>> and not bisectable. So we really better start from scratch.
+>
+> And this is what we have here, a series that has more than trivial
+> differences from the revert, and is more of a pain to review. Look at
+> what you did with your 25 minutes: you've reverted the revert and went
+> on to apply fixes on top of it, exactly the thing you've asked
+> not to do a few months prior.
 
+I did that to analyse whether that new series has everything what was
+fixed back then and did not introduce new bugs. Mission accomplished.
 
--- 
-Kees Cook
+> No need to worry about me sending a new series, as I can't - I just
+> don't know what you want to see at this point: on one hand you're saying
+> "we really better start from scratch" and on the other hand "this
+> conditional irqsave gunk is clearly NOT what was in the tip tree before
+> it got reverted", you're making suggestions to change comments only to
+> later complain that "a gazillion of comment changes make reading the
+> diff harder". 
+
+Gah. That comment change thing was just an annoyance and I complained
+about it because I was already grumpy as hell.
+
+So what I meant is that the blind revert of the revert, i.e. just
+reapplying the previous stuff, is horrible. Simply because the reverted
+patches were already not bisectable. And then applying random changes on
+top does not make it any better.
+
+So yes, I would have done exactly where I started:
+
+   1) Extract the original patches from git
+
+   2) Apply them and fixup the rejects
+
+and on top of that:
+
+   3) Make them bisectable by folding back the fixes to the right place
+      and reordering them which creates a result which is equivalent to
+      'start from scratch' but without losing context and introducing
+      new bugs. Simply because it's trivial to diff against the state
+      before the revert.
+
+   4) Do the 'improvements' on top, discuss them and fold them back.
+
+For what you tried to do I would have omitted #4 completely and then
+did:
+
+   5) Rebase the latest Intel variant
+
+   6) Diff the results ideally step by step
+
+   7) Analyze the deltas carefully and if unsure about the result
+      ask.
+      
+   That way you really would have noticed that this helper patch is
+   substantially different and you would have noticed that the kprobes
+   protection is gone. Also that would have clearly shown you the IRQ
+   flag wreckage.
+
+So to go forward can you please just do #1 - #3 first?
+
+Vs. the s/GSBASE/GS base/g comment changes: I don't mind them per se,
+but they are incomplete because they just change it in the new code
+while there are still the original comments using GSBASE. So either we
+change it wholesale or not at all. If so, then this wants to be a
+separate patch right at the beginning of the new series which changes
+the existing comments before introducing a different variant.
+
+That "simplified" handling is going nowhere. That conditional irq
+disable and the redundant conditionals and the out of line invocation in
+switch_to() are just not going to happen.
+
+So when comparing it to the latest Intel trainwreck ignore that part
+completely,
+
+I've uploaded my quick shot with a few cleanups on top (folded back) for
+reference:
+
+  https://tglx.de/~tglx/patches-fsgs.tar
+
+Uncompiled and untested. I'm not claiming it's bug free either. If you
+find one, please keep it. Hope that helps.
+
+Thanks,
+
+        tglx
