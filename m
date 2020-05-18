@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74FF020884
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A445220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824536;
-	bh=ojTCDQRwP9wu3Su04Ln7NJUNO3cMlEDTawPCWWCKniU=;
+	s=default; t=1589824540;
+	bh=FoizjeQWVQ+PPrHic9gyMac+0ySrT3orkEdMtBwM2/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wPufRUFnG1TAWNO3UnX0pyN+rDdVyZFo49AoEaAETMhnIHCWtPEY4rSQmxOl1mmGO
-	 r+Q7qoE3vMsEH5Ljp7PQ+lw25IgIQKnlGjSYTv//UdxmV19n4nPfNK6stpMvjtARbU
-	 mrGZ7jeAyQ6GET8gQycdbqFnRBiW4CFmN7kCnHoI=
+	b=hlxizsaP/novRmvDZpDBAVnGMrZqAliMOsLs2Ky4YCVtYP9tVdpfBsYGDfR3QQz/D
+	 YAfLtdgAbkOM5cQZv7Kf3KBsF2TByyHDF/7eP6sgDHdU/q0XcLfflyZ/r4dKFdC8zZ
+	 A5EgJzWUveCy3VMDm5QAyRRPbJ76MR8SJu1wMEvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731470AbgERRzd (ORCPT
+        id S1731534AbgERRzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:55:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60894 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731453AbgERRz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:55:28 -0400
+        id S1730833AbgERRzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:55:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 521F8207C4;
-        Mon, 18 May 2020 17:55:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE02120674;
+        Mon, 18 May 2020 17:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824527;
-        bh=ojTCDQRwP9wu3Su04Ln7NJUNO3cMlEDTawPCWWCKniU=;
+        s=default; t=1589824530;
+        bh=FoizjeQWVQ+PPrHic9gyMac+0ySrT3orkEdMtBwM2/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lzJHkVty7INZWdfBDMTkR6QrqWjA9pvm/BkMR0qa2SZ6waS/BXg1H3hGNiicASkTC
-         /3GDmboHAM/xyC+V+N39vRyDmFxgr9l3Z+unlxjKORgnfTDPzvRF7vrkaqvWG/jG7/
-         GhMO6X5x0h1nX40GaiuruWO9XNd60Odqnh76YO+U=
+        b=kYHYM8EdrrUUpyNe12dO4LW4uQABsB4GGXGsi7QPpadTdXj9Ghdt/5am0CbG2IXnE
+         Iw1p4uvFzCjv0+ANtqM0ALdpUugHYpXXw3LlvaJ7xvpEli1zSOLb1N9kWt3YRnOY5c
+         Nw8GvX3J+A8fOnFLHoAyVRRbZs+c55c2sL4C4JDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luben Tuikov <luben.tuikov@amd.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Marek=20Ol=C5=A1=C3=A1k?= <marek.olsak@amd.com>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 048/147] drm/amdgpu: simplify padding calculations (v2)
-Date:   Mon, 18 May 2020 19:36:11 +0200
-Message-Id: <20200518173519.982019557@linuxfoundation.org>
+Subject: [PATCH 5.4 049/147] drm/amdgpu: invalidate L2 before SDMA IBs (v2)
+Date:   Mon, 18 May 2020 19:36:12 +0200
+Message-Id: <20200518173520.085222643@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -61,158 +63,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luben Tuikov <luben.tuikov@amd.com>
+From: Marek Olšák <marek.olsak@amd.com>
 
-[ Upstream commit ce73516d42c9ab011fad498168b892d28e181db4 ]
+[ Upstream commit fdf83646c0542ecfb9adc4db8f741a1f43dca058 ]
 
-Simplify padding calculations.
+This fixes GPU hangs due to cache coherency issues.
 
-v2: Comment update and spacing.
+v2: Split the version bump to a separate patch
 
-Signed-off-by: Luben Tuikov <luben.tuikov@amd.com>
+Signed-off-by: Marek Olšák <marek.olsak@amd.com>
 Reviewed-by: Christian König <christian.koenig@amd.com>
+Tested-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/cik_sdma.c  |  4 ++--
- drivers/gpu/drm/amd/amdgpu/sdma_v2_4.c |  4 ++--
- drivers/gpu/drm/amd/amdgpu/sdma_v3_0.c |  4 ++--
- drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c |  4 ++--
- drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c | 17 ++++++++++++-----
- 5 files changed, 20 insertions(+), 13 deletions(-)
+ .../gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h    | 16 ++++++++++++++++
+ drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c           | 14 +++++++++++++-
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/cik_sdma.c b/drivers/gpu/drm/amd/amdgpu/cik_sdma.c
-index c45304f1047c5..4af9acc2dc4f9 100644
---- a/drivers/gpu/drm/amd/amdgpu/cik_sdma.c
-+++ b/drivers/gpu/drm/amd/amdgpu/cik_sdma.c
-@@ -228,7 +228,7 @@ static void cik_sdma_ring_emit_ib(struct amdgpu_ring *ring,
- 	u32 extra_bits = vmid & 0xf;
+diff --git a/drivers/gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h b/drivers/gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h
+index 074a9a09c0a79..a5b60c9a24189 100644
+--- a/drivers/gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h
++++ b/drivers/gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h
+@@ -73,6 +73,22 @@
+ #define SDMA_OP_AQL_COPY  0
+ #define SDMA_OP_AQL_BARRIER_OR  0
  
- 	/* IB packet must end on a 8 DW boundary */
--	cik_sdma_ring_insert_nop(ring, (12 - (lower_32_bits(ring->wptr) & 7)) % 8);
-+	cik_sdma_ring_insert_nop(ring, (4 - lower_32_bits(ring->wptr)) & 7);
- 
- 	amdgpu_ring_write(ring, SDMA_PACKET(SDMA_OPCODE_INDIRECT_BUFFER, 0, extra_bits));
- 	amdgpu_ring_write(ring, ib->gpu_addr & 0xffffffe0); /* base must be 32 byte aligned */
-@@ -811,7 +811,7 @@ static void cik_sdma_ring_pad_ib(struct amdgpu_ring *ring, struct amdgpu_ib *ib)
- 	u32 pad_count;
- 	int i;
- 
--	pad_count = (8 - (ib->length_dw & 0x7)) % 8;
-+	pad_count = (-ib->length_dw) & 7;
- 	for (i = 0; i < pad_count; i++)
- 		if (sdma && sdma->burst_nop && (i == 0))
- 			ib->ptr[ib->length_dw++] =
-diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v2_4.c b/drivers/gpu/drm/amd/amdgpu/sdma_v2_4.c
-index a101758380130..b6af67f6f2149 100644
---- a/drivers/gpu/drm/amd/amdgpu/sdma_v2_4.c
-+++ b/drivers/gpu/drm/amd/amdgpu/sdma_v2_4.c
-@@ -255,7 +255,7 @@ static void sdma_v2_4_ring_emit_ib(struct amdgpu_ring *ring,
- 	unsigned vmid = AMDGPU_JOB_GET_VMID(job);
- 
- 	/* IB packet must end on a 8 DW boundary */
--	sdma_v2_4_ring_insert_nop(ring, (10 - (lower_32_bits(ring->wptr) & 7)) % 8);
-+	sdma_v2_4_ring_insert_nop(ring, (2 - lower_32_bits(ring->wptr)) & 7);
- 
- 	amdgpu_ring_write(ring, SDMA_PKT_HEADER_OP(SDMA_OP_INDIRECT) |
- 			  SDMA_PKT_INDIRECT_HEADER_VMID(vmid & 0xf));
-@@ -750,7 +750,7 @@ static void sdma_v2_4_ring_pad_ib(struct amdgpu_ring *ring, struct amdgpu_ib *ib
- 	u32 pad_count;
- 	int i;
- 
--	pad_count = (8 - (ib->length_dw & 0x7)) % 8;
-+	pad_count = (-ib->length_dw) & 7;
- 	for (i = 0; i < pad_count; i++)
- 		if (sdma && sdma->burst_nop && (i == 0))
- 			ib->ptr[ib->length_dw++] =
-diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v3_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v3_0.c
-index 5f4e2c616241f..cd3ebed46d05f 100644
---- a/drivers/gpu/drm/amd/amdgpu/sdma_v3_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/sdma_v3_0.c
-@@ -429,7 +429,7 @@ static void sdma_v3_0_ring_emit_ib(struct amdgpu_ring *ring,
- 	unsigned vmid = AMDGPU_JOB_GET_VMID(job);
- 
- 	/* IB packet must end on a 8 DW boundary */
--	sdma_v3_0_ring_insert_nop(ring, (10 - (lower_32_bits(ring->wptr) & 7)) % 8);
-+	sdma_v3_0_ring_insert_nop(ring, (2 - lower_32_bits(ring->wptr)) & 7);
- 
- 	amdgpu_ring_write(ring, SDMA_PKT_HEADER_OP(SDMA_OP_INDIRECT) |
- 			  SDMA_PKT_INDIRECT_HEADER_VMID(vmid & 0xf));
-@@ -1021,7 +1021,7 @@ static void sdma_v3_0_ring_pad_ib(struct amdgpu_ring *ring, struct amdgpu_ib *ib
- 	u32 pad_count;
- 	int i;
- 
--	pad_count = (8 - (ib->length_dw & 0x7)) % 8;
-+	pad_count = (-ib->length_dw) & 7;
- 	for (i = 0; i < pad_count; i++)
- 		if (sdma && sdma->burst_nop && (i == 0))
- 			ib->ptr[ib->length_dw++] =
-diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
-index 4554e72c83786..23de332f3c6ed 100644
---- a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
-@@ -698,7 +698,7 @@ static void sdma_v4_0_ring_emit_ib(struct amdgpu_ring *ring,
- 	unsigned vmid = AMDGPU_JOB_GET_VMID(job);
- 
- 	/* IB packet must end on a 8 DW boundary */
--	sdma_v4_0_ring_insert_nop(ring, (10 - (lower_32_bits(ring->wptr) & 7)) % 8);
-+	sdma_v4_0_ring_insert_nop(ring, (2 - lower_32_bits(ring->wptr)) & 7);
- 
- 	amdgpu_ring_write(ring, SDMA_PKT_HEADER_OP(SDMA_OP_INDIRECT) |
- 			  SDMA_PKT_INDIRECT_HEADER_VMID(vmid & 0xf));
-@@ -1579,7 +1579,7 @@ static void sdma_v4_0_ring_pad_ib(struct amdgpu_ring *ring, struct amdgpu_ib *ib
- 	u32 pad_count;
- 	int i;
- 
--	pad_count = (8 - (ib->length_dw & 0x7)) % 8;
-+	pad_count = (-ib->length_dw) & 7;
- 	for (i = 0; i < pad_count; i++)
- 		if (sdma && sdma->burst_nop && (i == 0))
- 			ib->ptr[ib->length_dw++] =
++#define SDMA_GCR_RANGE_IS_PA		(1 << 18)
++#define SDMA_GCR_SEQ(x)			(((x) & 0x3) << 16)
++#define SDMA_GCR_GL2_WB			(1 << 15)
++#define SDMA_GCR_GL2_INV		(1 << 14)
++#define SDMA_GCR_GL2_DISCARD		(1 << 13)
++#define SDMA_GCR_GL2_RANGE(x)		(((x) & 0x3) << 11)
++#define SDMA_GCR_GL2_US			(1 << 10)
++#define SDMA_GCR_GL1_INV		(1 << 9)
++#define SDMA_GCR_GLV_INV		(1 << 8)
++#define SDMA_GCR_GLK_INV		(1 << 7)
++#define SDMA_GCR_GLK_WB			(1 << 6)
++#define SDMA_GCR_GLM_INV		(1 << 5)
++#define SDMA_GCR_GLM_WB			(1 << 4)
++#define SDMA_GCR_GL1_RANGE(x)		(((x) & 0x3) << 2)
++#define SDMA_GCR_GLI_INV(x)		(((x) & 0x3) << 0)
++
+ /*define for op field*/
+ #define SDMA_PKT_HEADER_op_offset 0
+ #define SDMA_PKT_HEADER_op_mask   0x000000FF
 diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-index 8493bfbbc1484..2a792d7abe007 100644
+index 2a792d7abe007..bd715012185c6 100644
 --- a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
 +++ b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-@@ -382,8 +382,15 @@ static void sdma_v5_0_ring_emit_ib(struct amdgpu_ring *ring,
+@@ -382,6 +382,18 @@ static void sdma_v5_0_ring_emit_ib(struct amdgpu_ring *ring,
  	unsigned vmid = AMDGPU_JOB_GET_VMID(job);
  	uint64_t csa_mc_addr = amdgpu_sdma_get_csa_mc_addr(ring, vmid);
  
--	/* IB packet must end on a 8 DW boundary */
--	sdma_v5_0_ring_insert_nop(ring, (10 - (lower_32_bits(ring->wptr) & 7)) % 8);
-+	/* An IB packet must end on a 8 DW boundary--the next dword
-+	 * must be on a 8-dword boundary. Our IB packet below is 6
-+	 * dwords long, thus add x number of NOPs, such that, in
-+	 * modular arithmetic,
-+	 * wptr + 6 + x = 8k, k >= 0, which in C is,
-+	 * (wptr + 6 + x) % 8 = 0.
-+	 * The expression below, is a solution of x.
++	/* Invalidate L2, because if we don't do it, we might get stale cache
++	 * lines from previous IBs.
 +	 */
-+	sdma_v5_0_ring_insert_nop(ring, (2 - lower_32_bits(ring->wptr)) & 7);
- 
- 	amdgpu_ring_write(ring, SDMA_PKT_HEADER_OP(SDMA_OP_INDIRECT) |
- 			  SDMA_PKT_INDIRECT_HEADER_VMID(vmid & 0xf));
-@@ -1086,10 +1093,10 @@ static void sdma_v5_0_vm_set_pte_pde(struct amdgpu_ib *ib,
- }
- 
- /**
-- * sdma_v5_0_ring_pad_ib - pad the IB to the required number of dw
-- *
-+ * sdma_v5_0_ring_pad_ib - pad the IB
-  * @ib: indirect buffer to fill with padding
-  *
-+ * Pad the IB with NOPs to a boundary multiple of 8.
-  */
- static void sdma_v5_0_ring_pad_ib(struct amdgpu_ring *ring, struct amdgpu_ib *ib)
- {
-@@ -1097,7 +1104,7 @@ static void sdma_v5_0_ring_pad_ib(struct amdgpu_ring *ring, struct amdgpu_ib *ib
- 	u32 pad_count;
- 	int i;
- 
--	pad_count = (8 - (ib->length_dw & 0x7)) % 8;
-+	pad_count = (-ib->length_dw) & 0x7;
- 	for (i = 0; i < pad_count; i++)
- 		if (sdma && sdma->burst_nop && (i == 0))
- 			ib->ptr[ib->length_dw++] =
++	amdgpu_ring_write(ring, SDMA_PKT_HEADER_OP(SDMA_OP_GCR_REQ));
++	amdgpu_ring_write(ring, 0);
++	amdgpu_ring_write(ring, (SDMA_GCR_GL2_INV |
++				 SDMA_GCR_GL2_WB |
++				 SDMA_GCR_GLM_INV |
++				 SDMA_GCR_GLM_WB) << 16);
++	amdgpu_ring_write(ring, 0xffffff80);
++	amdgpu_ring_write(ring, 0xffff);
++
+ 	/* An IB packet must end on a 8 DW boundary--the next dword
+ 	 * must be on a 8-dword boundary. Our IB packet below is 6
+ 	 * dwords long, thus add x number of NOPs, such that, in
+@@ -1607,7 +1619,7 @@ static const struct amdgpu_ring_funcs sdma_v5_0_ring_funcs = {
+ 		SOC15_FLUSH_GPU_TLB_NUM_WREG * 3 +
+ 		SOC15_FLUSH_GPU_TLB_NUM_REG_WAIT * 6 * 2 +
+ 		10 + 10 + 10, /* sdma_v5_0_ring_emit_fence x3 for user fence, vm fence */
+-	.emit_ib_size = 7 + 6, /* sdma_v5_0_ring_emit_ib */
++	.emit_ib_size = 5 + 7 + 6, /* sdma_v5_0_ring_emit_ib */
+ 	.emit_ib = sdma_v5_0_ring_emit_ib,
+ 	.emit_fence = sdma_v5_0_ring_emit_fence,
+ 	.emit_pipeline_sync = sdma_v5_0_ring_emit_pipeline_sync,
 -- 
 2.20.1
 
