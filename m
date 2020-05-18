@@ -2,115 +2,231 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE57C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9987FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C56A20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:55:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ovxJaWVG"
+	by mail.kernel.org (Postfix) with ESMTP id 77150207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:55:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589820931;
+	bh=hOnNpB2qeCDBq2inKpYVvV8PTplmaY610Cbw/Rt4B0w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=kBlf4EIP8ENLWyCKY/7b5jF3OCTYi4Q74ztROU5GEkhJl+F0rvpTeKfh4Sso79FVZ
+	 bSrhHisnzMH4afiS7kGJqkY76+KxobyZnpC8SAyA+BjhakVrMkPKVE9bOUCne/OYpU
+	 +vJhHbjMBFuIT2NQaMAnGh783i1PsFxIKj7eeEnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgERQzC (ORCPT
+        id S1728289AbgERQza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:55:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgERQzC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:55:02 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67A6CC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:55:02 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f06e800e15d4bec2df949c0.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:e800:e15d:4bec:2df9:49c0])
+        Mon, 18 May 2020 12:55:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43542 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728152AbgERQza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 12:55:30 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 348E51EC011B;
-        Mon, 18 May 2020 18:55:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589820900;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=k6LpZAryra3EY4vS9Y/qTS00GPq5TvZ4jvfHqH6pFlI=;
-        b=ovxJaWVGjvXi6IWjpLFbNp73b8mFBz6lcbwj6YUbkNFmL46ov9WTvbWTti+KuNIpk1mBXG
-        nwz/NU7Stp1vYs84bXvV/hUeksh/4QpiDZLDH4taZs6CDgnUSOno22XuRXoZtYGdWqiPA/
-        Jdwy9Sgmngk+C63mxG0mFVeqOx+4afc=
-Date:   Mon, 18 May 2020 18:55:00 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Jue Wang <juew@google.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/mm: Don't try to change poison pages to uncacheable
- in a guest
-Message-ID: <20200518165500.GD25034@zn.tnic>
-References: <20200516150229.GB19372@zn.tnic>
- <8022D1E6-A8BC-4610-9F58-67A06B9A9575@intel.com>
- <CAPcxDJ50pbuTbittyvPwKq1uUT8q8jJ+dHH8rCug8a1DDZXVYw@mail.gmail.com>
- <CAPcxDJ6f3pBpwiR9nvXN_g_HBa1RAMG+aOmgfXLFT6aZ9HQn3w@mail.gmail.com>
- <20200518134813.GC25034@zn.tnic>
- <20200518153625.GA31444@agluck-desk2.amr.corp.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 4753420758;
+        Mon, 18 May 2020 16:55:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589820929;
+        bh=hOnNpB2qeCDBq2inKpYVvV8PTplmaY610Cbw/Rt4B0w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=2IR8oKxn7phJd0hwLTfzPJamN+EniZqn1TGqZqqkrvkx6tBZ9r6mNmpD8Be50yzcy
+         h8FhB6ce7+wl1A64dpYiJY+GJPH5NHzM1qkhbNr3TyqHvWtBPP+1nLOwN9lQTCuSrr
+         v7MMKGReiWL/AlZKk661urAZSH9985qTuOUmJVAc=
+Date:   Mon, 18 May 2020 11:55:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <sean.v.kelley@linux.intel.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 3/3] PCI: Add helpers to enable/disable CXL.mem and
+ CXL.cache
+Message-ID: <20200518165527.GA935823@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200518153625.GA31444@agluck-desk2.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200518163523.1225643-4-sean.v.kelley@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 08:36:25AM -0700, Luck, Tony wrote:
-> The VMM gets the page fault (because the unmapping of the guest
-> physical address is at the VMM EPT level).  The VMM can't map a new
-> page into that guest physical address because it has no way to
-> replace the contents of the old page.  The VMM could pass the #PF
-> to the guest, but that would just confuse the guest (its page tables
-> all say that the page is still valid). In this particular case the
-> page is part of the 1:1 kernel map. So the kernel will OOPS (I think).
+On Mon, May 18, 2020 at 09:35:23AM -0700, Sean V Kelley wrote:
+> With these helpers, a device driver can enable/disable access to
+> CXL.mem and CXL.cache. Note that the device driver is responsible for
+> managing the memory area.
+> 
+> Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
+> ---
+>  drivers/pci/cxl.c | 93 ++++++++++++++++++++++++++++++++++++++++++++---
+>  drivers/pci/pci.h |  8 ++++
+>  2 files changed, 96 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/cxl.c b/drivers/pci/cxl.c
+> index 4437ca69ad33..0d0a1b82ea98 100644
+> --- a/drivers/pci/cxl.c
+> +++ b/drivers/pci/cxl.c
+> @@ -24,6 +24,88 @@
+>  #define PCI_CXL_HDM_COUNT(reg)		(((reg) & (3 << 4)) >> 4)
+>  #define PCI_CXL_VIRAL			BIT(14)
+>  
+> +#define PCI_CXL_CONFIG_LOCK		BIT(0)
+> +
+> +static void pci_cxl_unlock(struct pci_dev *dev)
+> +{
+> +	int pos = dev->cxl_cap;
+> +	u16 lock;
+> +
+> +	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
+> +	lock &= ~PCI_CXL_CONFIG_LOCK;
+> +	pci_write_config_word(dev, pos + PCI_CXL_LOCK, lock);
+> +}
+> +
+> +static void pci_cxl_lock(struct pci_dev *dev)
+> +{
+> +	int pos = dev->cxl_cap;
+> +	u16 lock;
+> +
+> +	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
+> +	lock |= PCI_CXL_CONFIG_LOCK;
+> +	pci_write_config_word(dev, pos + PCI_CXL_LOCK, lock);
+> +}
 
-...
+Maybe a tiny comment about what PCI_CXL_CONFIG_LOCK does?  I guess
+these functions don't enforce mutual exclusion (as I first expected a
+"lock" function to do); they're simply telling the device to accept
+CTRL changes or something?
 
-> PLease explain how a guest (that doesn't even know that it is a guest)
-> is going to figure out that the EPT tables (that it has no way to access)
-> have marked this page invalid in guest physical address space.
+> +static int pci_cxl_enable_disable_feature(struct pci_dev *dev, int enable,
+> +					  u16 feature)
+> +{
+> +	int pos = dev->cxl_cap;
+> +	int ret;
+> +	u16 reg;
+> +
+> +	if (!dev->cxl_cap)
+> +		return -EINVAL;
 
-So somewhere BUS_MCEERR_AR was mentioned. So I'm assuming the error
-severity was "action required". What does happen in the kernel, on
-baremetal, with an AR error in kernel space, i.e., kernel memory?
+"pos"
 
-If we can't fixup the exception, we die.
+"pos" is the typical name for things like this, but sometimes I think
+the code would be more descriptive if we used things like "cxl",
+"aer", etc.
 
-So why should the guest behave any differently?
+> +
+> +	/* Only for PCIe */
+> +	if (!pci_is_pcie(dev))
+> +		return -EINVAL;
 
-Now, if you want for the guest to be more "robust" and handle that
-thing, fine. But then you'd need an explicit way to tell the guest
-kernel: "you've just had an MCE and I unmapped the page" so that the
-guest kernel can figure out what do to. Even if it means, to panic.
+Probably not necessary here.  We already checked it in pci_cxi_init().
 
-I.e., signal in an explicit way that EPT violation Jue is talking about
-in the other mail.
+> +	/* Only for Device 0 Function 0, Root Complex Integrated Endpoints */
+> +	if (dev->devfn != 0 || (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END))
+> +		return -EINVAL;
+> +
+> +	pci_cxl_unlock(dev);
+> +	ret = pci_read_config_word(dev, pos + PCI_CXL_CTRL, &reg);
+> +	if (ret)
+> +		goto lock;
+> +
+> +	if (enable)
+> +		reg |= feature;
+> +	else
+> +		reg &= ~feature;
+> +
+> +	ret = pci_write_config_word(dev, pos + PCI_CXL_CTRL, reg);
+> +
+> +lock:
+> +	pci_cxl_lock(dev);
+> +
+> +	return ret;
+> +}
+> +
+> +int pci_cxl_mem_enable(struct pci_dev *dev)
+> +{
+> +	return pci_cxl_enable_disable_feature(dev, true, PCI_CXL_MEM);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_cxl_mem_enable);
+> +
+> +void pci_cxl_mem_disable(struct pci_dev *dev)
+> +{
+> +	pci_cxl_enable_disable_feature(dev, false, PCI_CXL_MEM);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_cxl_mem_disable);
+> +
+> +int pci_cxl_cache_enable(struct pci_dev *dev)
+> +{
+> +	return pci_cxl_enable_disable_feature(dev, true, PCI_CXL_CACHE);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_cxl_cache_enable);
+> +
+> +void pci_cxl_cache_disable(struct pci_dev *dev)
+> +{
+> +	pci_cxl_enable_disable_feature(dev, false, PCI_CXL_CACHE);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_cxl_cache_disable);
+> +
+>  /*
+>   * pci_find_cxl_capability - Identify and return offset to Vendor-Specific
+>   * capabilities.
+> @@ -73,11 +155,6 @@ void pci_cxl_init(struct pci_dev *dev)
+>  	dev->cxl_cap = pos;
+>  
+>  	pci_read_config_word(dev, pos + PCI_CXL_CAP, &cap);
+> -	pci_read_config_word(dev, pos + PCI_CXL_CTRL, &ctrl);
+> -	pci_read_config_word(dev, pos + PCI_CXL_STS, &status);
+> -	pci_read_config_word(dev, pos + PCI_CXL_CTRL2, &ctrl2);
+> -	pci_read_config_word(dev, pos + PCI_CXL_STS2, &status2);
+> -	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
+>  
+>  	pci_info(dev, "CXL: Cache%c IO%c Mem%c Viral%c HDMCount %d\n",
+>  		FLAG(cap, PCI_CXL_CACHE),
+> @@ -86,6 +163,12 @@ void pci_cxl_init(struct pci_dev *dev)
+>  		FLAG(cap, PCI_CXL_VIRAL),
+>  		PCI_CXL_HDM_COUNT(cap));
+>  
+> +	pci_read_config_word(dev, pos + PCI_CXL_CTRL, &ctrl);
+> +	pci_read_config_word(dev, pos + PCI_CXL_STS, &status);
+> +	pci_read_config_word(dev, pos + PCI_CXL_CTRL2, &ctrl2);
+> +	pci_read_config_word(dev, pos + PCI_CXL_STS2, &status2);
+> +	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
 
-You can inject a #PF or better yet the *first* MCE which is being
-injected should say with a bit somehwere "I unmapped the address in
-m->addr". So that the guest kernel can handle that properly and know
-what *exactly* it is getting an MCE for.
+This looks like it's just moving these reads around and isn't actually
+related to this patch.  Put them where you want them in the first
+place so the move doesn't clutter this patch.
 
-What I don't like is the "am I running as a guest" check. Because
-someone else would come later and say, err, I'm not virtualizing this
-portion of MCA either, lemme add another "am I guest" check.
+>  	pci_info(dev, "CXL: cap ctrl status ctrl2 status2 lock\n");
+>  	pci_info(dev, "CXL: %04x %04x %04x %04x %04x %04x\n",
+>  		 cap, ctrl, status, ctrl2, status2, lock);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index d9905e2dee95..6336e16565ac 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -472,8 +472,16 @@ static inline void pci_restore_ats_state(struct pci_dev *dev) { }
+>  #ifdef CONFIG_PCI_CXL
+>  /* Compute eXpress Link */
+>  void pci_cxl_init(struct pci_dev *dev);
+> +int pci_cxl_mem_enable(struct pci_dev *dev);
+> +void pci_cxl_mem_disable(struct pci_dev *dev);
+> +int pci_cxl_cache_enable(struct pci_dev *dev);
+> +void pci_cxl_cache_disable(struct pci_dev *dev);
+>  #else
+>  static inline void pci_cxl_init(struct pci_dev *dev) { }
+> +static inline int pci_cxl_mem_enable(struct pci_dev *dev) {}
+> +static inline void pci_cxl_mem_disable(struct pci_dev *dev) {}
+> +static inline int pci_cxl_cache_enable(struct pci_dev *dev) {}
+> +static inline void pci_cxl_cache_disable(struct pci_dev *dev) {}
 
-Sure, it is a lot easier but when stuff like that starts spreading
-around in the MCE code, then we can just as well disable MCE when
-virtualized altogether. It would be a lot easier for everybody.
+The stubs in this file aren't completely consistent, but you can be at
+least locally consistent by including a space between the "{ }".
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+>  #endif
+>  
+>  #ifdef CONFIG_PCI_PRI
+> -- 
+> 2.26.2
+> 
