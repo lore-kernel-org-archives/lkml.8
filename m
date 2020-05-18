@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B04EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D509C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E58ED20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B7D207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824561;
-	bh=5YsxkCbiT4/BpBT77MVxcMiKuXtcFlXKvr3Vd7rcdao=;
+	s=default; t=1589824564;
+	bh=oiO+oGYe2TO77I0bRdx6WRJGyV4o5hYZ87yzWZ/FEvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mj10dTkbJ/f9e2tqZQ+PpUTZLueyWy62a74Fs3J/Febul1c/vEu5sDUCow5oxsxXV
-	 vH5+Y+saysc0XVzXDD0jXOSjAY16Fj1OXzuFxpWF8BprsJ8uc36I5JosRvgzFxmc+K
-	 L7izPutOA+Q8pqYNgEY0za10ry2S4ydd70qxau9k=
+	b=eCarjVEQ9gRWUQvQbuNkh/c6MDthkO5QcUsPtqPXOHM7Rr9zW3GoIra1xZa2HPFbF
+	 P+Fck2gCiCWQjLXXW0ncwJQ3DM6VUf0xSVzR0KK/Y4YnJNXzaN0JJqU5sRByb53qRy
+	 TQLlU2FdTr9H9QzQSw9G1J6BJdbss1Nj9UKsGz5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731572AbgERR4A (ORCPT
+        id S1731578AbgERR4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:56:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33494 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:56:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731529AbgERRzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:55:55 -0400
+        id S1731571AbgERR4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:56:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A18B420674;
-        Mon, 18 May 2020 17:55:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AC8620715;
+        Mon, 18 May 2020 17:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824555;
-        bh=5YsxkCbiT4/BpBT77MVxcMiKuXtcFlXKvr3Vd7rcdao=;
+        s=default; t=1589824559;
+        bh=oiO+oGYe2TO77I0bRdx6WRJGyV4o5hYZ87yzWZ/FEvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K6Ey3K+wCVuJPDCs9kMwxqEIcGsmZLvZOY2xaeOM3R7zJO/67aUEbWBV3oHGzGdFP
-         dodKChEt6SOE0E1rwv4Z+XBUJwvobhWEh2UAGqfoAUF2ZhCXnMuWMQaQU251ZIyqXw
-         2f1LLJZKdQovrYnShLxcbUZ8KMR1wvrhox9SZrrw=
+        b=rbobwBJkni2iyna+ZK64Gp+x4W3bZYao2sSItBEyPeVq4YqJ7mVsM7fdByf7/Flui
+         3ECBz4/KWuA09i8vp2XtYicKjhTnrlMv8kRBdodKRIjde0Va9LU8nsBROPlccJjaqp
+         LcLh4qYhxU4hXvebbHaHzSKQxxztvFk+J+U+w7SY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ansuel Smith <ansuelsmth@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 058/147] pinctrl: qcom: fix wrong write in update_dual_edge
-Date:   Mon, 18 May 2020 19:36:21 +0200
-Message-Id: <20200518173521.189845833@linuxfoundation.org>
+Subject: [PATCH 5.4 060/147] bpf: Fix error return code in map_lookup_and_delete_elem()
+Date:   Mon, 18 May 2020 19:36:23 +0200
+Message-Id: <20200518173521.476624061@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -61,37 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ansuel Smith <ansuelsmth@gmail.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 90bcb0c3ca0809d1ed358bfbf838df4b3d4e58e0 ]
+[ Upstream commit 7f645462ca01d01abb94d75e6768c8b3ed3a188b ]
 
-Fix a typo in the readl/writel accessor conversion where val is used
-instead of pol changing the behavior of the original code.
+Fix to return negative error code -EFAULT from the copy_to_user() error
+handling case instead of 0, as done elsewhere in this function.
 
-Cc: stable@vger.kernel.org
-Fixes: 6c73698904aa pinctrl: qcom: Introduce readl/writel accessors
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200414003726.25347-1-ansuelsmth@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: bd513cd08f10 ("bpf: add MAP_LOOKUP_AND_DELETE_ELEM syscall")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20200430081851.166996-1-weiyongjun1@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/qcom/pinctrl-msm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/bpf/syscall.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 763da0be10d6f..44320322037df 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -688,7 +688,7 @@ static void msm_gpio_update_dual_edge_pos(struct msm_pinctrl *pctrl,
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 14f4a76b44d5f..946cfdd3b2cc2 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1146,8 +1146,10 @@ static int map_lookup_and_delete_elem(union bpf_attr *attr)
+ 	if (err)
+ 		goto free_value;
  
- 		pol = msm_readl_intr_cfg(pctrl, g);
- 		pol ^= BIT(g->intr_polarity_bit);
--		msm_writel_intr_cfg(val, pctrl, g);
-+		msm_writel_intr_cfg(pol, pctrl, g);
+-	if (copy_to_user(uvalue, value, value_size) != 0)
++	if (copy_to_user(uvalue, value, value_size) != 0) {
++		err = -EFAULT;
+ 		goto free_value;
++	}
  
- 		val2 = msm_readl_io(pctrl, g) & BIT(g->in_bit);
- 		intstat = msm_readl_intr_status(pctrl, g);
+ 	err = 0;
+ 
 -- 
 2.20.1
 
