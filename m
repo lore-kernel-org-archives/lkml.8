@@ -2,115 +2,139 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TRACKER_ID,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F99C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBEF207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5592070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgERGXc (ORCPT
+        id S1726730AbgERGY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 02:23:32 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2139 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726040AbgERGXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 02:23:31 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 34D235D91A416AA7C583;
-        Mon, 18 May 2020 14:23:27 +0800 (CST)
-Received: from dggeme752-chm.china.huawei.com (10.3.19.98) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Mon, 18 May 2020 14:23:27 +0800
-Received: from dggeme756-chm.china.huawei.com (10.3.19.102) by
- dggeme752-chm.china.huawei.com (10.3.19.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Mon, 18 May 2020 14:23:26 +0800
-Received: from dggeme756-chm.china.huawei.com ([10.6.80.68]) by
- dggeme756-chm.china.huawei.com ([10.6.80.68]) with mapi id 15.01.1913.007;
- Mon, 18 May 2020 14:23:26 +0800
-From:   Hushijie <hushijie3@huawei.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-CC:     "will@kernel.org" <will@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nixiaoming <nixiaoming@huawei.com>,
-        "wangxu (AE)" <wangxu72@huawei.com>,
-        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
-        yangerkun <yangerkun@huawei.com>,
-        "Wangle (RTOS FAE)" <wangle6@huawei.com>,
-        "Chengang (L)" <cg.chen@huawei.com>,
-        "Chenjie (K)" <chenjie6@huawei.com>,
-        "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>
-Subject: Re: [PATCH v5] hugetlbfs: Get unmapped area below TASK_UNMAPPED_BASE
- for hugetlbfs
-Thread-Topic: [PATCH v5] hugetlbfs: Get unmapped area below TASK_UNMAPPED_BASE
- for hugetlbfs
-Thread-Index: AdYs3KFnzadL7fPfR1K7soKYD38V2Q==
-Date:   Mon, 18 May 2020 06:23:26 +0000
-Message-ID: <c27a402512b84ce598420b28f525eb75@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.67.103.250]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 18 May 2020 02:24:29 -0400
+Received: from mga02.intel.com ([134.134.136.20]:48658 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726378AbgERGY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 02:24:29 -0400
+IronPort-SDR: dNxq8mYf81djkVA01PNJKcvNAQuE7lhKxUbGFAT/g+PccKwYg5Y0tnGcWni4ih8QIKw5/iP4wz
+ Isau/ixTAoiQ==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 23:24:28 -0700
+IronPort-SDR: i/Efo5wE8sji1KgHmHKQOoWISCOrfbaG9dNAnzdGRzbN+bl1tSNbeTVj+LVpGkktlgEAS0whlt
+ u7ComdAa8dGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,406,1583222400"; 
+   d="asc'?scan'208";a="299674577"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.160.147])
+  by orsmga008.jf.intel.com with ESMTP; 17 May 2020 23:24:25 -0700
+Date:   Mon, 18 May 2020 14:09:29 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        clang-built-linux@googlegroups.com,
+        intel-gvt-dev@lists.freedesktop.org
+Subject: Re: [PATCH] drm/i915: Mark check_shadow_context_ppgtt as maybe unused
+Message-ID: <20200518060929.GS18545@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20200516023545.3332334-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="t54s24TTWYm6oOX+"
+Content-Disposition: inline
+In-Reply-To: <20200516023545.3332334-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pk9uIDUvMTYvMjAgMTI6NDcgQU0sIEh1c2hpamllIHdyb3RlOg0KPj4+IE9uIDUvMTQvMjAgNzoz
-MSBBTSwgU2hpamllIEh1IHdyb3RlOg0KPj4+PiArCWlmIChtbS0+Z2V0X3VubWFwcGVkX2FyZWEg
-PT0gYXJjaF9nZXRfdW5tYXBwZWRfYXJlYSkNCj4+Pj4gKwkJcmV0dXJuIGh1Z2V0bGJfZ2V0X3Vu
-bWFwcGVkX2FyZWFfYm90dG9tdXAoZmlsZSwgYWRkciwgbGVuLA0KPj4+PiArCQkJCXBnb2ZmLCBm
-bGFncyk7DQo+Pj4+ICsJcmV0dXJuIGh1Z2V0bGJfZ2V0X3VubWFwcGVkX2FyZWFfdG9wZG93bihm
-aWxlLCBhZGRyLCBsZW4sDQo+Pj4+ICsJCQlwZ29mZiwgZmxhZ3MpOw0KPj4+DQo+Pj4gSSBsaWtl
-IHRoaXMgY29kZSB1c2luZyB0aGUgdmFsdWUgb2YgbW0tPmdldF91bm1hcHBlZF9hcmVhIHRvIGRl
-dGVybWluZQ0KPj4+IHdoaWNoIHJvdXRpbmUgdG8gY2FsbC4gIEl0IGlzIHVzZWQgYnkgYSBmZXcg
-YXJjaGl0ZWN0dXJlcy4gICBIb3dldmVyLCBJDQo+Pj4gbm90aWNlZCB0aGF0IG9uIGF0IGxlYXN0
-IG9uZSBhcmNoaXRlY3R1cmUgKHBvd2VycGMpIG1tLT5nZXRfdW5tYXBwZWRfYXJlYQ0KPj4+IG1h
-eSBiZSBhc3NpZ25lZCB0byByb3V0aW5lcyBvdGhlciB0aGFuIGFyY2hfZ2V0X3VubWFwcGVkX2Fy
-ZWEgb3INCj4+PiBhcmNoX2dldF91bm1hcHBlZF9hcmVhX3RvcGRvd24uICBJbiBzdWNoIGEgY2Fz
-ZSwgd2Ugd291bGQgY2FsbCB0aGUgJ25ldycNCj4+PiB0b3Bkb3duIHJvdXRpbmUuICBJIHdvdWxk
-IHByZWZlciB0aGF0IHdlIGNhbGwgdGhlIGJvdHRvbXVwIHJvdXRpbmUgaW4gdGhpcw0KPj4+IGRl
-ZmF1bHQgY2FzZS4NCj4+Pg0KPj4+IEluIHJlYWxpdHksIHRoaXMgZG9lcyBub3QgaW1wYWN0IHBv
-d2VycGMgYXMgdGhhdCBhcmNoaXRlY3R1cmUgaGFzIGl0J3MNCj4+PiBvd24gaHVnZXRsYl9nZXRf
-dW5tYXBwZWRfYXJlYSByb3V0aW5lLg0KPj4+DQo+PiANCj4+IFllcywgSSBhbHNvIG5vdGljZWQg
-dGhpcyBiZWZvcmUsIHBvd2VycGMgdXNlcyByYWRpeF9fYXJjaF9nZXRfdW5tYXBwZWRfYXJlYSoo
-KSANCj4+IHdoZW4gQ09ORklHX1BQQ19SQURJWF9NTVUgb3BlbmVkIGFzICd5JyBhbmQgcmFkaXhf
-ZW5hYmxlZCgpIHJldHVybnMgDQo+PiB0cnVlLiBIb3dldmVyLCBwb3dlcnBjIGltcGxlbWVudGVk
-IGl0cyBvd24gaHVnZXRsYl9nZXRfdW5tYXBwZWRfYXJlYSgpLiBUaGlzDQo+PiBwYXRjaCBhY3R1
-YWxseSBoYXMgbm8gZWZmZWN0IG9uIHBvd2VycGMuDQo+PiANCj4+PiBCZWNhdXNlIG9mIHRoaXMs
-IEkgc3VnZ2VzdCB3ZSBhZGQgYSBjb21tZW50IGFib3ZlIHRoaXMgY29kZSBhbmQgc3dpdGNoDQo+
-Pj4gdGhlIGlmL2Vsc2Ugb3JkZXIuICBGb3IgZXhhbXBsZSwNCj4+Pg0KPj4+ICsgICAgICAgLyoN
-Cj4+PiArICAgICAgICAqIFVzZSBtbS0+Z2V0X3VubWFwcGVkX2FyZWEgdmFsdWUgYXMgYSBoaW50
-IHRvIHVzZSB0b3Bkb3duIHJvdXRpbmUuDQo+Pj4gKyAgICAgICAgKiBJZiBhcmNoaXRlY3R1cmVz
-IGhhdmUgc3BlY2lhbCBuZWVkcywgdGhleSBzaG91bGQgZGVmaW5lIHRoZWlyIG93bg0KPj4+ICsg
-ICAgICAgICogdmVyc2lvbiBvZiBodWdldGxiX2dldF91bm1hcHBlZF9hcmVhLg0KPj4+ICsgICAg
-ICAgICovDQo+Pj4gKyAgICAgICBpZiAobW0tPmdldF91bm1hcHBlZF9hcmVhID09IGFyY2hfZ2V0
-X3VubWFwcGVkX2FyZWFfdG9wZG93bikNCj4+PiArICAgICAgICAgICAgICAgcmV0dXJuIGh1Z2V0
-bGJfZ2V0X3VubWFwcGVkX2FyZWFfdG9wZG93bihmaWxlLCBhZGRyLCBsZW4sDQo+Pj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBwZ29mZiwgZmxhZ3MpOw0KPj4+ICsgICAgICAgcmV0
-dXJuIGh1Z2V0bGJfZ2V0X3VubWFwcGVkX2FyZWFfYm90dG9tdXAoZmlsZSwgYWRkciwgbGVuLA0K
-Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHBnb2ZmLCBmbGFncyk7DQo+Pj4NCj4+PiBUaG91
-Z2h0cz8NCj4+PiAtLSANCj4+PiBNaWtlIEtyYXZldHoNCj4+Pg0KPj4gSSBhZ3JlZSB3aXRoIHlv
-dS4gSXQncyBjbGV2ZXIgdG8gc3dpdGNoIHRoZSBpZi9lbHNlIG9yZGVyLiBJZiB0aGVyZSBpcyBz
-dWNoDQo+PiBhIGNhc2UsIG1tLT5nZXRfdW5tYXBwZWRfYXJlYSgpIGlzIG5laWh0ZXIgYXJjaF9n
-ZXRfdW5tYXBwZWRfYXJlYSgpIG5vcg0KPj4gYXJjaF9nZXRfdW5tYXBwZWRfYXJlYV90b3Bkb3du
-KCksIGl0IGlzIGluZGVlZCBtb3JlIGFwcHJvcHJpYXRlIHRvIG1ha2UgdGhlDQo+PiBib3R0b211
-cCByb3V0aW5lIGFzIHRoZSBkZWZhdWx0IGJlaGF2aW9yLg0KPj4gDQo+PiBNYXkgSSBwdXQgdGhp
-cyBjb2RlIGFuZCBjb21tZW50IHlvdSBzaG93IGFib3ZlIGludG8gcGF0Y2ggdjYgYW5kIGFkZCAN
-Cj4+ICJTaWduZWQtb2ZmLWJ5OiBNaWtlIEtyYXZldHogPG1pa2Uua3JhdmV0ekBvcmFjbGUuY29t
-PiIgdG8gaXQ/DQo+DQo+RmVlbCBmcmVlIHRvIGFkZCB0aGlzIGNvZGUgYW5kIG15IFNpZ25lZC1v
-ZmYtYnkuDQo+DQo+SSBhc3N1bWUgdGhpcyBzdGlsbCB3b3JrcyBmb3IgeW91ciB1c2UgY2FzZS4g
-IENvcnJlY3Q/DQo+LS0gDQo+TWlrZSBLcmF2ZXR6DQo+DQoNClllcywgSXQgc3RpbGwgd29ya3Mg
-Zm9yIG91ciB1c2UgY2FzZS4NCg0KVGhhbmtzIGZvciB5b3VyIHJlcGxpZXMgYW5kIHN1Z2dlc3Rp
-b25zLCBJIHdpbGwgc3VibWl0IHBhdGNoIHY2IGxhdGVyLg0KLS0NClNoaWppZSBIdQ0K
+
+--t54s24TTWYm6oOX+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2020.05.15 19:35:45 -0700, Nathan Chancellor wrote:
+> When CONFIG_DRM_I915_DEBUG_GEM is not set, clang warns:
+>=20
+> drivers/gpu/drm/i915/gvt/scheduler.c:884:1: warning: function
+> 'check_shadow_context_ppgtt' is not needed and will not be emitted
+> [-Wunneeded-internal-declaration]
+> check_shadow_context_ppgtt(struct execlist_ring_context *c, struct
+> intel_vgpu_mm *m)
+> ^
+> 1 warning generated.
+>=20
+> This warning is similar to -Wunused-function but rather than warning
+> that the function is completely unused, it warns that it is used in some
+> expression within the file but that expression will be evaluated to a
+> constant or be optimized away in the final assembly, essentially making
+> it appeared used but really isn't. Usually, this happens when a function
+> or variable is only used in sizeof, where it will appear to be used but
+> will be evaluated at compile time and not be required to be emitted.
+>=20
+> In this case, the function is only used in GEM_BUG_ON, which is defined
+> as BUILD_BUG_ON_INVALID, which intentionally follows this pattern. To
+> fix this warning, add __maybe_unused to make it clear that this is
+> intentional depending on the configuration.
+>=20
+> Fixes: bec3df930fbd ("drm/i915/gvt: Support PPGTT table load command")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1027
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/gpu/drm/i915/gvt/scheduler.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/i915/gvt/scheduler.c b/drivers/gpu/drm/i915/=
+gvt/scheduler.c
+> index f776c92de8d7..0fb1df71c637 100644
+> --- a/drivers/gpu/drm/i915/gvt/scheduler.c
+> +++ b/drivers/gpu/drm/i915/gvt/scheduler.c
+> @@ -880,7 +880,7 @@ static void update_guest_pdps(struct intel_vgpu *vgpu,
+>  				gpa + i * 8, &pdp[7 - i], 4);
+>  }
+> =20
+> -static bool
+> +static __maybe_unused bool
+>  check_shadow_context_ppgtt(struct execlist_ring_context *c, struct intel=
+_vgpu_mm *m)
+>  {
+>  	if (m->ppgtt_mm.root_entry_type =3D=3D GTT_TYPE_PPGTT_ROOT_L4_ENTRY) {
+>=20
+> base-commit: bdecf38f228bcca73b31ada98b5b7ba1215eb9c9
+
+Thanks for the fix!
+
+Acked-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+
+I'll pick up for gvt-next-fixes pull.
+
+--=20
+Open Source Technology Center, Intel ltd.
+
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+
+--t54s24TTWYm6oOX+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXsImmQAKCRCxBBozTXgY
+JxfOAJ94e1oxLhfjkCYgNWLtG0s7S2z1fACggFwQWbFs3UxsTHtWE9Ln1GA6M2A=
+=gdfP
+-----END PGP SIGNATURE-----
+
+--t54s24TTWYm6oOX+--
