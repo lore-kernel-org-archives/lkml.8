@@ -2,165 +2,149 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 525D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EE6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD6C20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA873207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F4482yxM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GET0otAd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgERQLH (ORCPT
+        id S1728330AbgERQLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:11:07 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:42298 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgERQLH (ORCPT
+        Mon, 18 May 2020 12:11:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbgERQLe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:11:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RMyYli+uYcg6GiJKKmuAIgS2Y/Kzt9nNBmazS9TcZzg=; b=F4482yxM4+Z7u9gmgoOYTqjX1j
-        jvn7nL6ik4SWbWbg/CL5d3F7r1XQteo89Y5PF7hA4Y3BSGqROFNUYsyMSwATr+RzgN8yPBJRchXJk
-        HiAEsT4h7JwfQuhXhXgiypPqBhdmDL7Jq3X2/I4hpUx33+FSwJYZgn13QWlS3JlPS3QeGQ9wdmtjN
-        /UvzrBzoox628yUDDyj+8TD7Tou4TybZwiWbELZVVbDqGMyiSAR1pzKYd/le4YjBBznXEYEp5+LfL
-        FtcSmtt6El1d6AAxMv8klTXZYm6YN5q8FR8y3iZEwBKyRpYLwOUSNPS4xgSRazsWvrawnbB0Wai6R
-        bQuuxlQg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jaiJ6-0006qD-IV; Mon, 18 May 2020 16:08:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D22643008A8;
-        Mon, 18 May 2020 18:07:50 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A184C2105F3B6; Mon, 18 May 2020 18:07:50 +0200 (CEST)
-Date:   Mon, 18 May 2020 18:07:50 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
+        Mon, 18 May 2020 12:11:34 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B53DC061A0C;
+        Mon, 18 May 2020 09:11:34 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t7so4430011plr.0;
+        Mon, 18 May 2020 09:11:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PZweTdyCTeKAMxoHO6mO1oUT3tSSWyHLqvLyIKGeBVY=;
+        b=GET0otAdKNcL69ksN3IiyWVrfDMA5oTmg2ORXQXg1dxMLmeJHGcqKUPueDZ892Waqk
+         LiahGzxVvAOb6eviKgbVMqpqH2xTB2Jmjekr265F2YTq8WGVTbTdHDJqMl0wXrOFGznR
+         /ndT2roEGwCQ/iQPRVIOevzp+C4dHL7DUiGmL/Du2l5bOwMSnizD6OXLURl/+Bmh0CrV
+         cSMqAO24vnPf3FXPRoGy9nntgG7zwj7eHXcOGf/gUHHXIQkUmuqSD2TACIHoLCzpICsI
+         E//FSD44Fk7xhaRAKeOGCz7JAFGzEWqiq8lgebRBy1KrqTyGOmYukDswhUiC3e2tvmjo
+         Hr2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PZweTdyCTeKAMxoHO6mO1oUT3tSSWyHLqvLyIKGeBVY=;
+        b=iglhkoupjheawNSQDkHvm47CwK5a+ZAwQ2F7Jj21oE5+ZCXKWkNsdkVs9U22TkbaLK
+         oFbajjkp+Zvg/kiGd2UnsdHc+sOWDeBFiI1T++u3V8c0piPlirzV6T8XR3wbbsuW9pz8
+         5RsQoxW0KAQOek4QIx8ns7MKWFjnk/4petFgxO6jDyoVwuUC/BsgKPDufa0l9+65s1S0
+         7v1cq/p2qbLh3D1LBgQ4cUu2+0sEqMNjkXEn397GDgo8giZ7d+RWvkpyYp3mwoy1ISXg
+         NYrJvQlG57qIQWRWW2pDv9VFFZNe0aB5BdIkhte+bxs8qGk0UIoV+LVKiz1jDLwnaXec
+         RW3A==
+X-Gm-Message-State: AOAM530xsxZs1RWCnnjKvDCPWogtle65rGFC0NPVF2vkfk9alq0j1/Hh
+        DXkNZtrjmuJWp3U6nMweR6o=
+X-Google-Smtp-Source: ABdhPJyiyoD11kFujK6YPCyAvn3cJt1s0JbqDvxe/z4TQ6/BdwXltCUrMAiNJwcIIoiI8qiWwb2Mbg==
+X-Received: by 2002:a17:902:228:: with SMTP id 37mr17432610plc.105.1589818294182;
+        Mon, 18 May 2020 09:11:34 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k3sm13299pjc.38.2020.05.18.09.11.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 May 2020 09:11:33 -0700 (PDT)
+Date:   Mon, 18 May 2020 09:11:32 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>
-Subject: Re: [patch V6 00/37] x86/entry: Rework leftovers and merge plan
-Message-ID: <20200518160750.GA279861@hirez.programming.kicks-ass.net>
-References: <20200515234547.710474468@linutronix.de>
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
+        Christian Koenig <christian.koenig@amd.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH V3 07/15] arch/kunmap_atomic: Consolidate duplicate code
+Message-ID: <20200518161132.GB66689@roeck-us.net>
+References: <20200507150004.1423069-1-ira.weiny@intel.com>
+ <20200507150004.1423069-8-ira.weiny@intel.com>
+ <20200516223306.GA161252@roeck-us.net>
+ <20200518034938.GA3023182@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515234547.710474468@linutronix.de>
+In-Reply-To: <20200518034938.GA3023182@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 17, 2020 at 08:49:39PM -0700, Ira Weiny wrote:
 
-So on top of you entry-v8-full; I had to chase one of those
-instrumentation_end() escapes an (extended) basic block chase (again!).
+[ ... ]
 
-How about we do something like the below; that fixes the current case
-(rcu_eqs_enter) but also kills the entire class.
+> > 
+> > ---
+> > # bad: [bdecf38f228bcca73b31ada98b5b7ba1215eb9c9] Add linux-next specific files for 20200515
+> > # good: [2ef96a5bb12be62ef75b5828c0aab838ebb29cb8] Linux 5.7-rc5
+> > git bisect start 'HEAD' 'v5.7-rc5'
+> > # good: [3674d7aa7a8e61d993886c2fb7c896c5ef85e988] Merge remote-tracking branch 'crypto/master'
+> > git bisect good 3674d7aa7a8e61d993886c2fb7c896c5ef85e988
+> > # good: [87f6f21783522e6d62127cf33ae5e95f50874beb] Merge remote-tracking branch 'spi/for-next'
+> > git bisect good 87f6f21783522e6d62127cf33ae5e95f50874beb
+> > # good: [5c428e8277d5d97c85126387d4e00aa5adde4400] Merge remote-tracking branch 'staging/staging-next'
+> > git bisect good 5c428e8277d5d97c85126387d4e00aa5adde4400
+> > # good: [f68de67ed934e7bdef4799fd7777c86f33f14982] Merge remote-tracking branch 'hyperv/hyperv-next'
+> > git bisect good f68de67ed934e7bdef4799fd7777c86f33f14982
+> > # bad: [54acd2dc52b069da59639eea0d0c92726f32fb01] mm/memblock: fix a typo in comment "implict"->"implicit"
+> > git bisect bad 54acd2dc52b069da59639eea0d0c92726f32fb01
+> > # good: [784a17aa58a529b84f7cc50f351ed4acf3bd11f3] mm: remove the pgprot argument to __vmalloc
+> > git bisect good 784a17aa58a529b84f7cc50f351ed4acf3bd11f3
+> > # good: [6cd8137ff37e9a37aee2d2a8889c8beb8eab192f] khugepaged: replace the usage of system(3) in the test
+> > git bisect good 6cd8137ff37e9a37aee2d2a8889c8beb8eab192f
+> > # bad: [6987da379826ed01b8a1cf046b67cc8cc10117cc] sparc: remove unnecessary includes
+> > git bisect bad 6987da379826ed01b8a1cf046b67cc8cc10117cc
+> > # good: [bc17b545388f64c09e83e367898e28f60277c584] mm/hugetlb: define a generic fallback for is_hugepage_only_range()
+> > git bisect good bc17b545388f64c09e83e367898e28f60277c584
+> > # bad: [9b5aa5b43f957f03a1f4a9aff5f7924e2ebbc011] arch-kmap_atomic-consolidate-duplicate-code-checkpatch-fixes
+> > git bisect bad 9b5aa5b43f957f03a1f4a9aff5f7924e2ebbc011
+> > # good: [0941a38ff0790c1004270f952067a5918a4ba32d] arch/kmap: remove redundant arch specific kmaps
+> > git bisect good 0941a38ff0790c1004270f952067a5918a4ba32d
+> > # good: [56e635a64c2cbfa815c851af10e0f811e809977b] arch-kunmap-remove-duplicate-kunmap-implementations-fix
+> > git bisect good 56e635a64c2cbfa815c851af10e0f811e809977b
+> > # bad: [60f96b2233c790d4f1c49317643051f1670bcb29] arch/kmap_atomic: consolidate duplicate code
+> > git bisect bad 60f96b2233c790d4f1c49317643051f1670bcb29
+> > # good: [7b3708dc3bf72a647243064fe7ddf9a76248ddfd] {x86,powerpc,microblaze}/kmap: move preempt disable
+> > git bisect good 7b3708dc3bf72a647243064fe7ddf9a76248ddfd
+> > # first bad commit: [60f96b2233c790d4f1c49317643051f1670bcb29] arch/kmap_atomic: consolidate duplicate code
+> 
+> I'm confused by this.  This points to an earlier commit being bad?
+> 
 
----
- arch/x86/include/asm/bug.h     |  2 +-
- include/linux/compiler.h       | 16 +++++++++++++---
- include/linux/compiler_types.h |  4 ----
- 3 files changed, 14 insertions(+), 8 deletions(-)
+Yes, you are correct. I was looking up the wrong commit; it had a similar
+subject line. Sorry for the confusion.
 
-diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
-index f128e5c2ed42..fb34ff641e0a 100644
---- a/arch/x86/include/asm/bug.h
-+++ b/arch/x86/include/asm/bug.h
-@@ -79,8 +79,8 @@ do {								\
- do {								\
- 	instrumentation_begin();				\
- 	_BUG_FLAGS(ASM_UD2, BUGFLAG_WARNING|(flags));		\
--	instrumentation_end();					\
- 	annotate_reachable();					\
-+	instrumentation_end();					\
- } while (0)
- 
- #include <asm-generic/bug.h>
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 7db5902f8f6e..b4c248e6b76a 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -120,25 +120,35 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- /* Annotate a C jump table to allow objtool to follow the code flow */
- #define __annotate_jump_table __section(.rodata..c_jump_table)
- 
-+#ifdef CONFIG_DEBUG_ENTRY
-+/* Section for code which can't be instrumented at all */
-+#define noinstr								\
-+	noinline notrace __attribute((__section__(".noinstr.text")))
-+
- /* Begin/end of an instrumentation safe region */
--#define instrumentation_begin() ({						\
-+#define instrumentation_begin() ({					\
- 	asm volatile("%c0:\n\t"						\
- 		     ".pushsection .discard.instr_begin\n\t"		\
- 		     ".long %c0b - .\n\t"				\
- 		     ".popsection\n\t" : : "i" (__COUNTER__));		\
- })
- 
--#define instrumentation_end() ({							\
--	asm volatile("%c0:\n\t"						\
-+#define instrumentation_end() ({					\
-+	asm volatile("%c0: nop\n\t"					\
- 		     ".pushsection .discard.instr_end\n\t"		\
- 		     ".long %c0b - .\n\t"				\
- 		     ".popsection\n\t" : : "i" (__COUNTER__));		\
- })
-+#endif /* CONFIG_DEBUG_ENTRY */
- 
- #else
- #define annotate_reachable()
- #define annotate_unreachable()
- #define __annotate_jump_table
-+#endif
-+
-+#ifndef noinstr
-+#define noinstr noinline notrace
- #define instrumentation_begin()		do { } while(0)
- #define instrumentation_end()		do { } while(0)
- #endif
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index ea15ea99efb4..6ed0612bc143 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -118,10 +118,6 @@ struct ftrace_likely_data {
- #define notrace			__attribute__((__no_instrument_function__))
- #endif
- 
--/* Section for code which can't be instrumented at all */
--#define noinstr								\
--	noinline notrace __attribute((__section__(".noinstr.text")))
--
- /*
-  * it doesn't make sense on ARM (currently the only user of __naked)
-  * to trace naked functions because then mcount is called without
+Guenter
