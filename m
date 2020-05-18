@@ -2,108 +2,101 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87934C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAF2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 609C2207D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D54020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:23:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ITPUUWy1"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EmRutMjn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgERIXK (ORCPT
+        id S1727772AbgERIXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 04:23:10 -0400
-Received: from mail-eopbgr60059.outbound.protection.outlook.com ([40.107.6.59]:31462
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726053AbgERIXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 04:23:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kYul8KkOaV5+rQYNeVhZMNJOp7gwSbl5x2R8ddnSm44y1l60yZvhc6/olRgskfudINIbkcJ9+W5njtiVk3j5+8x7KsmgWLTi7xfPI7DhFOimUgTsPlcxxx0f19f8MiGdzSxg9ncTtZDPfCsMwDOJDD/TSrKKktM84Ccrfl4U622sNHaPGDw7hC8zsMgmuZlRQjtgqRlVIRrasXPNquXaEJ4Q15sxR9k4EoN/HteNIPjeYzqVTmNuUL3r3x5RKDmzILE2RbP7zVkmzg2WZn1jbibjn638/R1QPndVr4fUzoU8C4F2i2cEpdzbMZRHn3guHKW1BZiorHly7eF4R93tWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=64JYowUwd/A5KUmz5cNjCaTYiWkFTBF/uBX/C2NIYjs=;
- b=cmuDpPe0lbYU8FHOKq3qGfDyyw1HepfHKLIzWO1IOYx1g9ZbZqiWhc/K4nb0nOoh9lnqM+Pr7hIjL0RDIHaCmKheVfEJFW/YZpA3w5yXHRNpMTMfQXgzp3HD3Bv/wFUUtZiNH7HupuRafGXDV/s82E3YjcNOx+NKsikvuAvP7OuKGtDOpAn6sfmeQLDzvU/TLIkynZoFomUifpJQJsZCMAKSfHdYIKMIVCsb5C3U+iENZ6tImz/JIed/Q3/MixNiKYahGf/pLi7rGUY43B8dtT620xX9Yn0x4YWh4wPPLi/t5wS4H0t0sWJPrri97Jweh4LKlpq0qPJTQtDwOD2cTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=64JYowUwd/A5KUmz5cNjCaTYiWkFTBF/uBX/C2NIYjs=;
- b=ITPUUWy1dnQwHF2qK/s3y/KrdTF4PZzrxTRPsx7OlJnqer70dFyNooTO4tUxYk+1AyiQsHilOK3h7xS5UatPkCSuDq+CutemXQBWkoyjlglndbhbWli6Jf4GOkXogwDVPxHh52zNmfeLo0gw8jP6PQux4FE5fHTHilZLbUYKDoY=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB5062.eurprd04.prod.outlook.com (2603:10a6:20b:11::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24; Mon, 18 May
- 2020 08:23:06 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.033; Mon, 18 May 2020
- 08:23:06 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "tremyfr@gmail.com" <tremyfr@gmail.com>,
-        "p.bruenn@beckhoff.com" <p.bruenn@beckhoff.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 2/2] dt-bindings: rtc: Convert MXC RTC V2 to json-schema
-Thread-Topic: [PATCH 2/2] dt-bindings: rtc: Convert MXC RTC V2 to json-schema
-Thread-Index: AQHWKbgdOQb+NRe5ikO0cYaurWM5Xqith2WA
-Date:   Mon, 18 May 2020 08:23:06 +0000
-Message-ID: <AM6PR04MB4966F61A94DE5C392DA0B23A80B80@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1589436805-22923-1-git-send-email-Anson.Huang@nxp.com>
- <1589436805-22923-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1589436805-22923-2-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 20e94edf-95bb-4179-3068-08d7fb04b11b
-x-ms-traffictypediagnostic: AM6PR04MB5062:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB5062CE121BD24B46EA183B9680B80@AM6PR04MB5062.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:949;
-x-forefront-prvs: 04073E895A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OaWy+ituiZzcE/Y/c7QqaxaG9g1j+tXLcg5ZnO1vQ6r7O5vOAC05iWXM3Hb6X98bfuQ2KfjUU8ybOE01IIbtwD7pBbUwIU4mCpc/8N6x3aQYTtCAos14ETtj9GnkSpHupkgAIGn/kkfhjLIXMDYhHwsacI+rEiQ/nRQE/88W+UC8DwxeK1dKcVv5FBQRV725ElATrlIx+GVdhMJSVXcFGyIjsdGfiMC+jiv9OoS8JUXRo6npEIj1x0Y+mxBaYDzalgyV5MzSuohctYFKxTJps2nJGdConYvC0XB90+IilLObeyeqs/aunPcl4KyLTdC3aFSrIVqhP/BWrOrpH6Tl7cGRyJhicHOXYjWMeZGoybqJFkt9U4+mMlStiTHasmQKooBQooTQLltsLpF1HSVYidn6C1YTNfGrza8zCNnFmx0NZlnhSU0JNZSYm7Fkdrve
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(44832011)(8676002)(64756008)(66446008)(66476007)(8936002)(66946007)(86362001)(52536014)(66556008)(316002)(478600001)(110136005)(186003)(26005)(4326008)(2906002)(71200400001)(76116006)(9686003)(558084003)(33656002)(55016002)(6506007)(7696005)(5660300002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 2wSF44wMnSuerzUCjQB9/wtagq5Zo5/sufhtVCycOdkJD731btCINxQhF17W6t14dpPcIuTEC7L2x3iQ27yWQrv4p8ZHm6Gm8xj3kQ3NcACdqAanpJFsJ2nwWXRvHnTOtTkQgyJMaqhFBaBQYhV9pWSCw26HsCC45sveA9afLsmcvWuoVj807rjb6kEJZIZsGVJkuMG4yg+khMDeBAuz48P1mO9TlCPHcAdIVyzFgOV5xQyhx1dw4ziENAHlUcowgLRWs+7wf1e+tLLHsDZr1U+POxfaVXe7aoXIKKq+91wrew/rJhwyIxQShgorv38qgEXW3nIAhDgaEt6m4VLqiy/Qt4HslP/eXo300hKW7HQhYEs45nJ8EUfHcNNlcQQG/dnP4PZbkZikd4j69iF96W7Bm8JspCAtYQ5/Hzex+wP0uouJOmdDNCJDPdLeafm5h2sxqu03Z0SLUWvNdzTE7wZq2UFWeWvxHjsIGhuFLX1bptR0l1oppdWHil4xQp5U
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 18 May 2020 04:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgERIXX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 04:23:23 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1096FC061A0C;
+        Mon, 18 May 2020 01:23:23 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F06E800ECDCE19D4A51D977.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:e800:ecdc:e19d:4a51:d977])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0AB141EC0295;
+        Mon, 18 May 2020 10:23:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1589790200;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=NRH8oUNhkxpcUz5rd9LcRTM109aECD+/gUl0zIMTl5w=;
+        b=EmRutMjnTt3s/OCgVTsnLs5lE1J795LjE9ueGF2jckGBoi40V3GjCQ465iK19AYHmDM2Ns
+        WS9YUgSW70oUTt9Jx7wyuf4vUyYmw5ddYxHDzc4pdOHplM0R13+b4syehDAXt8GPNlMRLR
+        nqaFEm49nhK7F0ahvS00kE5h7VwuMV4=
+Date:   Mon, 18 May 2020 10:23:13 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 31/75] x86/head/64: Install boot GDT
+Message-ID: <20200518082313.GA25034@zn.tnic>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-32-joro@8bytes.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20e94edf-95bb-4179-3068-08d7fb04b11b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2020 08:23:06.5614
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VBZxiIakuTNf2J/bzllc5RP4CRSkRa1BMGFYGlnbg/a7XJRi4+kG/72cY2Qr+w2G9M3RJiu9H8Sz4L/Mj6xKGg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5062
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200428151725.31091-32-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogVGh1cnNk
-YXksIE1heSAxNCwgMjAyMCAyOjEzIFBNDQo+IA0KPiBDb252ZXJ0IHRoZSBNWEMgUlRDIFYyIGJp
-bmRpbmcgdG8gRFQgc2NoZW1hIGZvcm1hdCB1c2luZyBqc29uLXNjaGVtYS4NCj4gDQo+IFNpZ25l
-ZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KDQpSZXZpZXdlZC1i
-eTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCg0KUmVnYXJkcw0KQWlzaGVu
-Zw0K
+On Tue, Apr 28, 2020 at 05:16:41PM +0200, Joerg Roedel wrote:
+> @@ -480,6 +500,22 @@ SYM_DATA_LOCAL(early_gdt_descr_base,	.quad INIT_PER_CPU_VAR(gdt_page))
+>  SYM_DATA(phys_base, .quad 0x0)
+>  EXPORT_SYMBOL(phys_base)
+>
+> +/* Boot GDT used when kernel addresses are not mapped yet */
+> +SYM_DATA_LOCAL(boot_gdt_descr,		.word boot_gdt_end - boot_gdt)
+> +SYM_DATA_LOCAL(boot_gdt_base,		.quad 0)
+> +SYM_DATA_START(boot_gdt)
+> +	.quad	0
+> +	.quad   0x00cf9a000000ffff	/* __KERNEL32_CS */
+> +	.quad   0x00af9a000000ffff	/* __KERNEL_CS */
+> +	.quad   0x00cf92000000ffff	/* __KERNEL_DS */
+> +	.quad	0			/* __USER32_CS - unused */
+> +	.quad	0			/* __USER_DS   - unused */
+> +	.quad	0			/* __USER_CS   - unused */
+> +	.quad	0			/* unused */
+> +	.quad   0x0080890000000000	/* TSS descriptor */
+> +	.quad   0x0000000000000000	/* TSS continued */
+
+Any chance you could use macros ala GDT_ENTRY_INIT() for those instead
+of the naked values?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
