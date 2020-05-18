@@ -2,170 +2,175 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D142DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFABC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9C5320829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 631FC207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Fj9vHeB8"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="y9jCMQ+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgEROHP (ORCPT
+        id S1727999AbgEROHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:07:15 -0400
-Received: from mout.web.de ([212.227.15.4]:40907 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgEROHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:07:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1589810819;
-        bh=bKxwgZuQN7kNtLLFjAQSHsWwwY7I6KjCkB1Igwn9wj0=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Fj9vHeB8O8VYoiABiQF3yqDmXHsAgo3nUYhVRdMHEqgQSUIePk0Nqvefl1kI65/L1
-         NjapP+KPtI5hSvLOFEgtqU7Rnn2LgGekg9fU3IcMHRzvQz5KUpgwFOLqz8KUnrRUdV
-         Nl633NSPfr+FncGDiyu8v9nQcHgjs7a22I1sSqmo=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.105.123]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M91LW-1jfbq10NmQ-00691M; Mon, 18
- May 2020 16:06:59 +0200
-Subject: Re: [PATCH v2] blkcg: Fix memory leak in blkg_conf_prep()
-To:     Wu Bo <wubo40@huawei.com>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Feilong Lin <linfeilong@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>
-References: <1589805366-328489-1-git-send-email-wubo40@huawei.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <48c1964b-a939-b33f-2c47-90ac7069317a@web.de>
-Date:   Mon, 18 May 2020 16:06:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 10:07:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgEROHf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 10:07:35 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D632C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 07:07:35 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id w25so10617113iol.12
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 07:07:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=88kserzSxBEIDjdSt5lOO0U4rUg4np+0t0E9MSvOSs4=;
+        b=y9jCMQ+BCO5bCs8V3KsG5KK/VGobVsgkQjY5AVz6q9lOYoUJM+8UK0wcbWXbI8xF3J
+         prvbfUFKweWoR6i7a/sKx8hd+VDVivXpCogr+13TXNGWTzBZpoaT3G04gbQTXtnAwNKm
+         b2zIgm05cKPpwTzQZBzWTIfeMmi6lp+iJJXuFHrQJEVyf70Wd/i8BU+zd33WziDDBQrr
+         1aDDD33/n5PpFBKnqs55DxtGDOKC++20oqW8SMvEt6g64DqxmPH3Ynmu/dkM2TvOboRT
+         smliBL1UFi7+UPGOT4cDY3LUQc1+4WEkr22dkDohlTcdglusE9AOIuhVsW1qLQbe12qf
+         X+2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=88kserzSxBEIDjdSt5lOO0U4rUg4np+0t0E9MSvOSs4=;
+        b=UPUKqhhCAD4dNv8j9OssCXNfsJ3kxCVSvId3NOPb6+4HNsXyChnElCG1dsAtB6qbe5
+         UIXJY6kkKDZ7nBtiQdbqRA8CBFx6ZmanGq7axpTw3X7ikiy3glxoUkGoZ/ZzQrgOFp+Z
+         k12y0mdDiZtAhYevIZzQpABnb6RS1HxfIXudvIUnfbi7DP5eoWSfsVT3g172b1PjPeVY
+         7wiIHWq8fo1quyVvrAUB05F3Jz4l2/DMZly7PWG6zfoR442lXuVPtNnZaI7V1dRHJMkX
+         3/RsH7NST+tjsWVemW18MTSxQPtvJtw7qQKqR1PkmN8VqUuNKxQPPJX5kUseIcr8ULtI
+         /y8A==
+X-Gm-Message-State: AOAM533MWhfHaVViBgaEJ4rZ7DiW4fN10RG5h73PB3L9m91LM440ZbW6
+        NTGBejok3xqMGYLJcP+9XeTDIQe+SYFzj+YZwDHx4w==
+X-Google-Smtp-Source: ABdhPJz7TVBqL0o8reZpmOjcpmNU0hBkhjlx8exFERPwwjlGWCDBsQrggYZf+B/u4J3tppWJHADctBPzuEotkI8yI7U=
+X-Received: by 2002:a6b:7c45:: with SMTP id b5mr14815810ioq.31.1589810854135;
+ Mon, 18 May 2020 07:07:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1589805366-328489-1-git-send-email-wubo40@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+References: <20200514075942.10136-1-brgl@bgdev.pl> <20200514075942.10136-11-brgl@bgdev.pl>
+ <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com>
+In-Reply-To: <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 18 May 2020 16:07:23 +0200
+Message-ID: <CAMRc=MeVyNzTWw_hk=J9kX1NE9reCE_O4P3wrNpMMc9z4xA_DA@mail.gmail.com>
+Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:sI80ThizeS69KMTqvvhc6bRRc3+j+Tg46Ywq9rCnop+dAKb9vYh
- P57NZtMHMxbQ3XW8dFwD3/BEdRIX5ir34/pIF9xtJghA4bnF9rbjh4sZs4mbSDMAMie6mUV
- 8uEG39j5DD4YiSimtuq7b8NqW6F2TmcxPKZPHzs0tP4JDpHpNOMxKlcrUDIDjN6NAF+que/
- E3R5Sd7myeKnybs97gYSw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yQTKaumUWdI=:H8E1bp864IKX9wfAT9++BJ
- 6lb1Ur9H5jHn6MvoukUZBeDxW5wcCC7yYCrZz9m78SIeMDLIvDHr/+L0SHKc79MXcnNNH42tn
- O/6ZvlQT8mrt6kQjPcRW723XFDSLHrXyQgHYedUR4nSjxrFlg8kUUDB+Jv03RpDiwvTJqyM/f
- fh3VY2AWhkjrhEucUxiayuA+FBHjD3AVBI4fLr/T3TJ5mQ7XScoEjLfnTrFhH+/m13MRikmYM
- NmQW7fGjzSlCcZRhkZKx77FmxkyZ2F7yH+KUFJENnjzPdTyNWr+vydJIqjRb2DSpGrKujZwU/
- 7uAW8ijAIb3LzgknIzpd08Jql08S1XBIeD+MqSivnrhbGjgjI1CAoHgUZ4ysSEn1hzL3YotTL
- K/DYihZuDQQDStPNxc1kceAjpcPh1hhwdDWjXn+02MweHlpYOv74uFwc6vXULA2FqTZB3pixq
- sPXxPHxfsLxWiNPhvf3WjoImtzJy0IL31SQN7y7BfRId3iHFKbCgNOGQpJzZquVSW8IbXd1mm
- pg78cm9YGduGrbgiccMfWgS4HI206u0z6mCwhe8nmBSSGBhKA5k3BXCM4vwmf0O3oUqE1JuQS
- iVkrECqHWS3gpc279AySmnVehzL3arRyCDAXlcjo612cpLAemvZtWaitfSi3DK4DvorXXHvIp
- tJoA4rVBS4vtJAh7FEOUmEqbKiueuHUsU3xUDZke3W9C3aZUkiSdWs8xhIWQc7yRsoiamxJzp
- Ow6ImgHA64atxbBCRwjDAodRIvJ+MfHJi9fDfNlD3vzSV/TFQHrWjocgQY2o2ZSNDaQ7CR3DE
- UGZkxu68UJXv+nXLFUV3Si9gWSg8Q309G6zD1D4uPd9p/Ba6ftq/Wkby/ORfCP+iHejTSkuVV
- 4R6wyvLyq+dQa0HHjIsJqMZUSV2QQMX2GMhSmoQC8M7gly8VfnQ1nAp5EWlcTujuAZKvhP6C+
- 4d/xBtEdunGNgDj36Rv9PXnGbeANo9bEn/sLtk67WBHRCi/f/lZWU+B+bAuhaVivigbLndxXb
- PnGfDUzbIZpFaHCLCBqYWtlMeIxjVrsoAnS/+z0FCZFmdeXFO/sjilhWMnExFaeSj6jBnNNQ1
- xHvqzNiBgWnaFXHLfmugXDlwJOoUhbkzMizLO9xjnWeB6EkxkBzSpBKWc2EExdySAoAH7wBOb
- sYhbv6hxsrTBao3ps2+5hK3pGhS3ot3vi9ot02odnnYUpsrch45CoT61VDvISqKUjNf+LpX4J
- RuLtfUyDDhjyl9WWQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> If a call of the function blkg_lookup_check() failed,
-
-Thanks that you would like to integrate something from my suggestion.
-
-
-> we should be release the previously allocated block group
-
-I find that an other wording would be preferred over =E2=80=9Cwe should=E2=
-=80=9D.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3Db9bbe6ed63b2b9f2c9ee5cbd0f=
-2c946a2723f4ce#n151
-
-
-> before jumping to the lable 'fail_unlock' in the implementation of
-
-Please avoid another typo here.
-
-
-> the function blkg_conf_prep().
+pt., 15 maj 2020 o 15:32 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a):
 >
-> Suggested-by: Markus Elfring <Markus.Elfring@web.de>
+> On Thu, May 14, 2020 at 10:00 AM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
+e:
+> > +static int mtk_mac_ring_pop_tail(struct mtk_mac_ring *ring,
+> > +                                struct mtk_mac_ring_desc_data *desc_da=
+ta)
+>
+> I took another look at this function because of your comment on the locki=
+ng
+> the descriptor updates, which seemed suspicious as the device side does n=
+ot
+> actually use the locks to access them
+>
+> > +{
+> > +       struct mtk_mac_ring_desc *desc =3D &ring->descs[ring->tail];
+> > +       unsigned int status;
+> > +
+> > +       /* Let the device release the descriptor. */
+> > +       dma_rmb();
+> > +       status =3D desc->status;
+> > +       if (!(status & MTK_MAC_DESC_BIT_COWN))
+> > +               return -1;
+>
+> The dma_rmb() seems odd here, as I don't see which prior read
+> is being protected by this.
+>
+> > +       desc_data->len =3D status & MTK_MAC_DESC_MSK_LEN;
+> > +       desc_data->flags =3D status & ~MTK_MAC_DESC_MSK_LEN;
+> > +       desc_data->dma_addr =3D ring->dma_addrs[ring->tail];
+> > +       desc_data->skb =3D ring->skbs[ring->tail];
+> > +
+> > +       desc->data_ptr =3D 0;
+> > +       desc->status =3D MTK_MAC_DESC_BIT_COWN;
+> > +       if (status & MTK_MAC_DESC_BIT_EOR)
+> > +               desc->status |=3D MTK_MAC_DESC_BIT_EOR;
+> > +
+> > +       /* Flush writes to descriptor memory. */
+> > +       dma_wmb();
+>
+> The comment and the barrier here seem odd as well. I would have expected
+> a barrier after the update to the data pointer, and only a single store
+> but no read of the status flag instead of the read-modify-write,
+> something like
+>
+>       desc->data_ptr =3D 0;
+>       dma_wmb(); /* make pointer update visible before status update */
+>       desc->status =3D MTK_MAC_DESC_BIT_COWN | (status & MTK_MAC_DESC_BIT=
+_EOR);
+>
+> > +       ring->tail =3D (ring->tail + 1) % MTK_MAC_RING_NUM_DESCS;
+> > +       ring->count--;
+>
+> I would get rid of the 'count' here, as it duplicates the information
+> that is already known from the difference between head and tail, and you
+> can't update it atomically without holding a lock around the access to
+> the ring. The way I'd do this is to have the head and tail pointers
+> in separate cache lines, and then use READ_ONCE/WRITE_ONCE
+> and smp barriers to access them, with each one updated on one
+> thread but read by the other.
+>
 
-I find this tag questionable because the bug fix was presented before.
-https://lore.kernel.org/linux-block/4c670a6c-98c3-2b14-7438-09199506d92f@w=
-eb.de/
-https://lkml.org/lkml/2020/5/15/779
+Your previous solution seems much more reliable though. For instance
+in the above: when we're doing the TX cleanup (we got the TX ready
+irq, we're iterating over descriptors until we know there are no more
+packets scheduled (count =3D=3D 0) or we encounter one that's still owned
+by DMA), a parallel TX path can schedule new packets to be sent and I
+don't see how we can atomically check the count (understood as a
+difference between tail and head) and run a new iteration (where we'd
+modify the head or tail) without risking the other path getting in the
+way. We'd have to always check the descriptor.
 
+I experimented a bit with this and couldn't come up with anything that
+would pass any stress test.
 
-> ---
-> V2: omit the source code quotation from
->     the change description
+On the other hand: spin_lock_bh() works fine and I like your approach
+from the previous e-mail - except for the work for updating stats as
+we could potentially lose some stats when we're updating in process
+context with RX/TX paths running in parallel in napi context but that
+would be rare enough to overlook it.
 
-* I recommend to improve also the patch subject accordingly.
+I hope v4 will be good enough even with spinlocks. :)
 
-* Would you like to move the name from the previous tag into
-  this information?
-
-
-> ---
->  block/blk-cgroup.c | 1 +
-
-I suggest to omit the triple dashes before this diffstat.
-
-Regards,
-Markus
+Bart
