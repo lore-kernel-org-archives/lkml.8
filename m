@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E654EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA041207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD46F20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824706;
-	bh=aBpD8Zk58zULU1+vPiY62RVuKiddyR9oFgNH3T0LIJg=;
+	s=default; t=1589824711;
+	bh=SaX49qfGwTNFGoVpFnGMa04LewjALtVS9R49yIOfXvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U9mezAqzxldLBQnfZf0ITpWmEMrJ8dlosczhGq+noEodscXKi6TuijJTOqdGtMnLX
-	 rAIMgaZSX0fr9K6PJcY44+cbzD/athaDJ5nLqb9caoIWPF7ZpWrXG2kGRGtxv62/zb
-	 Z27J1AAEIHGMBCE4UogOwmH18oF97QcHlaPN+M9Y=
+	b=RfBGHQ7tVuUFG8Jl0dkRiHvVBESuxXrZNSXTN4p6USp4noHrZmwNCkDN3tH6aBpbL
+	 ZI0UPoo2hhq1k6sDrC5Dzt9bN1q1JaUrEG0juxbOQ+pUnXgw7+I7NBYe1segavh16W
+	 WEu1KT52V6wwUISx1z50PGS0cGebncQ0PwHe7AcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731899AbgERR6Z (ORCPT
+        id S1731915AbgERR6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:58:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37722 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:58:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731891AbgERR6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:58:23 -0400
+        id S1731902AbgERR61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:58:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD1D320715;
-        Mon, 18 May 2020 17:58:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8E3620715;
+        Mon, 18 May 2020 17:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824702;
-        bh=aBpD8Zk58zULU1+vPiY62RVuKiddyR9oFgNH3T0LIJg=;
+        s=default; t=1589824707;
+        bh=SaX49qfGwTNFGoVpFnGMa04LewjALtVS9R49yIOfXvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PgHI+GOKtMHpj4SVcypnh19KAfUQQsVq3hQ66r+YJsdP8Xo2nDgQUYnXrt04SzU3y
-         h9dqDVL6pt45he8inLnCBUyftvztTrabuiGPFxF60CtWQe7hxW3V7YAX1NUXPmbbWA
-         IH0Wy6wkJDyuYRqwpAkg6z9DSk8R2iXnZ4DJbEJI=
+        b=NnuBk+AxtPClKfnFDUTvBWw0TEJxrUVFCMHqoSfR1OyGGWylAQcIoP4RocJbdMrV9
+         +RVNcmyF3M0tXpTAgWPBIiKMTmxzwlv63sQqcIm7Fs2jCzAESXpUHoAPafPCx2J9rN
+         6IKv2C2LNMNLL+UPvz9piQwvfRDgAd6nxeiEwv84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Seiichi Ikarashi <s.ikarashi@fujitsu.com>,
-        Daisuke Matsuda <matsuda-daisuke@fujitsu.com>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 080/147] nfs: fix NULL deference in nfs4_get_valid_delegation
-Date:   Mon, 18 May 2020 19:36:43 +0200
-Message-Id: <20200518173523.689033645@linuxfoundation.org>
+Subject: [PATCH 5.4 081/147] SUNRPC: Signalled ASYNC tasks need to exit
+Date:   Mon, 18 May 2020 19:36:44 +0200
+Message-Id: <20200518173523.780014614@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -63,62 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: J. Bruce Fields <bfields@redhat.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 29fe839976266bc7c55b927360a1daae57477723 ]
+[ Upstream commit ce99aa62e1eb793e259d023c7f6ccb7c4879917b ]
 
-We add the new state to the nfsi->open_states list, making it
-potentially visible to other threads, before we've finished initializing
-it.
+Ensure that signalled ASYNC rpc_tasks exit immediately instead of
+spinning until a timeout (or forever).
 
-That wasn't a problem when all the readers were also taking the i_lock
-(as we do here), but since we switched to RCU, there's now a possibility
-that a reader could see the partially initialized state.
+To avoid checking for the signal flag on every scheduler iteration,
+the check is instead introduced in the client's finite state
+machine.
 
-Symptoms observed were a crash when another thread called
-nfs4_get_valid_delegation() on a NULL inode, resulting in an oops like:
-
-	BUG: unable to handle page fault for address: ffffffffffffffb0 ...
-	RIP: 0010:nfs4_get_valid_delegation+0x6/0x30 [nfsv4] ...
-	Call Trace:
-	 nfs4_open_prepare+0x80/0x1c0 [nfsv4]
-	 __rpc_execute+0x75/0x390 [sunrpc]
-	 ? finish_task_switch+0x75/0x260
-	 rpc_async_schedule+0x29/0x40 [sunrpc]
-	 process_one_work+0x1ad/0x370
-	 worker_thread+0x30/0x390
-	 ? create_worker+0x1a0/0x1a0
-	 kthread+0x10c/0x130
-	 ? kthread_park+0x80/0x80
-	 ret_from_fork+0x22/0x30
-
-Fixes: 9ae075fdd190 "NFSv4: Convert open state lookup to use RCU"
-Reviewed-by: Seiichi Ikarashi <s.ikarashi@fujitsu.com>
-Tested-by: Daisuke Matsuda <matsuda-daisuke@fujitsu.com>
-Tested-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Cc: stable@vger.kernel.org # v4.20+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Fixes: ae67bd3821bb ("SUNRPC: Fix up task signalling")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4state.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/clnt.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index b53bcf40e2a77..ea680f619438b 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -733,9 +733,9 @@ nfs4_get_open_state(struct inode *inode, struct nfs4_state_owner *owner)
- 		state = new;
- 		state->owner = owner;
- 		atomic_inc(&owner->so_count);
--		list_add_rcu(&state->inode_states, &nfsi->open_states);
- 		ihold(inode);
- 		state->inode = inode;
-+		list_add_rcu(&state->inode_states, &nfsi->open_states);
- 		spin_unlock(&inode->i_lock);
- 		/* Note: The reclaim code dictates that we add stateless
- 		 * and read-only stateids to the end of the list */
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index f7f78566be463..f1088ca39d44c 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2422,6 +2422,11 @@ rpc_check_timeout(struct rpc_task *task)
+ {
+ 	struct rpc_clnt	*clnt = task->tk_client;
+ 
++	if (RPC_SIGNALLED(task)) {
++		rpc_call_rpcerror(task, -ERESTARTSYS);
++		return;
++	}
++
+ 	if (xprt_adjust_timeout(task->tk_rqstp) == 0)
+ 		return;
+ 
 -- 
 2.20.1
 
