@@ -4,137 +4,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1661EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4131C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E29A02070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F90D2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:46:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G3b7ywlj"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pYMWqZhb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgERFqe (ORCPT
+        id S1726833AbgERFqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 01:46:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgERFqd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 01:46:33 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FCF9C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 22:46:33 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id h26so6912489lfg.6
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 22:46:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ygsoJcQzy2g2jI/Taob7j4UIGHvK7ly0RJpFdbU+Cb4=;
-        b=G3b7ywljZcZCAX7nJXBHWye89fgIXWV1Y/Zi9/UIsGwtIZiAQx6o0HUfhuMVoDPo1w
-         hLvGWKlDX+XuIqbe3zySiJ9YKptYVBEz7TNH6oKzYopJNoJY37POYt3GcdMgO8U647BS
-         sEBMh9Qv3TmZ7Mps0cLu+9qi/HJniKyoE5IT/B1tEfEs9oKHXXAwf2KIN+WWwJwUQyRZ
-         KCZakvpO8oHau4eSIUGwLM09uWOlVosi5UtGk/WAqYqOlqII3hyHZRvOFDzXPNdNX+nd
-         UoEdzxlsRe9mhcxNjNtn81gNC8rPkwKMYMiPW5cMIMMQ2wdPlVYVDDZ+R7OvN0P2uE7f
-         hqYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ygsoJcQzy2g2jI/Taob7j4UIGHvK7ly0RJpFdbU+Cb4=;
-        b=l7lIPZ0mWoh6U156raOzyn6AteJxW8bn7zZJSJosdH7sPQnCsW4vL5Ad8u6UQB1Etm
-         TUUJRQPkp3zTsIRCW+COSxjSXIjkWzPFBRdCsxaDy61YNnmzPHIYHqr5JtWEl7KYSMCv
-         3EUfNI4da8F/zpUrwYC/R8xxaJ3AbNme5x0zgrcj+EyJe+GaG6n1fsIWufT7oeVrlC+U
-         HwYHp+hvEDgJhxfWPffAd+pHgyT4MK69bl5v2/Ny6ffksjEvcoQPmoaeIhqqK1TMVSzy
-         mJrLi+/5n+JRKXgvIe9nAIKRijXW/189PYAqLxg1onXtgGI4tNVNzLeZXXp+QLMHOsPV
-         bZlA==
-X-Gm-Message-State: AOAM531uetNv12+szXNW+CPKk7sc6gQ9kSq6SH5IojSykMpi6CeQGAO3
-        rVnYP5Wt/8GZqCorOz6k2F11gAc8RSO5aHTiFgoAXw==
-X-Google-Smtp-Source: ABdhPJyPLjwCY26rBdZ5XvQW0icPtULGRTn1trgI95j9zoosQIx4alkuPwcX0KcurhfvhDLJGNfimNIRIR5n3hOAMXM=
-X-Received: by 2002:ac2:4293:: with SMTP id m19mr10444777lfh.204.1589780791774;
- Sun, 17 May 2020 22:46:31 -0700 (PDT)
+        Mon, 18 May 2020 01:46:49 -0400
+Received: from ozlabs.org ([203.11.71.1]:43497 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726040AbgERFqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 01:46:49 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49QSgp2X8Dz9sPK;
+        Mon, 18 May 2020 15:46:46 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589780806;
+        bh=camaI/CUsYpafRr4ZNug59q6ikP4R0PDtFMjRrbZOhk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pYMWqZhbeB49L6XUAq/AUp2sa1Jx6y/j134OlfBWprHeY0s5vcqpVF2TSQNjWeiiL
+         YkBf/dVqe6cAoF/Mv+FTT4+zYz/l+ArNpgd+u9Lnfkcq8WFY6yURUykD9owB0jA5hw
+         RiAofTofHpPIt4Mkt04t9WBgMC4a129C3W7pgTe1Zy2vPsGOT2PRYZ5HnOlnZR3Mb4
+         OM0csLlTo/kIkMF2h1pnzzFbWnLtye8k1KIzF96Abn5HZ6TmOdalFdcm5btc64EwLi
+         2MYbppyyUHkDvpWHUykHKHn3j8ZS5tixL392xi+eaEITNSbvYhPNJUypkVFUniE5ZP
+         Rt3MC1YzKNLgw==
+Date:   Mon, 18 May 2020 15:46:45 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qian Cai <cai@lca.pw>, Wanpeng Li <wanpengli@tencent.com>
+Subject: Re: linux-next: manual merge of the kvm tree with the rcu tree
+Message-ID: <20200518154645.1b85a1c4@canb.auug.org.au>
+In-Reply-To: <20200518154240.777ca18e@canb.auug.org.au>
+References: <20200518154240.777ca18e@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200516124857.75004-1-lecopzer@gmail.com>
-In-Reply-To: <20200516124857.75004-1-lecopzer@gmail.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Mon, 18 May 2020 11:16:20 +0530
-Message-ID: <CAFA6WYNwp+_ENiS8QDao5+RXyt5ofJZyq6c5CKG_d0CNEmBNYg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] arm64: perf: Add support for Perf NMI interrupts
-To:     Lecopzer Chen <lecopzer@gmail.com>, julien.thierry.kdev@gmail.com
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        lecopzer.chen@mediatek.com, alexander.shishkin@linux.intel.com,
-        Catalin Marinas <catalin.marinas@arm.com>, jolsa@redhat.com,
-        acme@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        mingo@redhat.com, linux-mediatek@lists.infradead.org,
-        matthias.bgg@gmail.com, namhyung@kernel.org,
-        Will Deacon <will@kernel.org>, yj.chiang@mediatek.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/YO/8f+_NysuHb44fRCtBNr2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Julien
+--Sig_/YO/8f+_NysuHb44fRCtBNr2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Lecopzer,
+Hi all,
 
-On Sat, 16 May 2020 at 18:20, Lecopzer Chen <lecopzer@gmail.com> wrote:
->
-> These series implement Perf NMI funxtionality and depends on
-> Pseudo NMI [1] which has been upstreamed.
->
-> In arm64 with GICv3, Pseudo NMI was implemented for NMI-like interruts.
-> That can be extended to Perf NMI which is the prerequisite for hard-lockup
-> detector which had already a standard interface inside Linux.
->
-> Thus the first step we need to implement perf NMI interface and make sure
-> it works fine.
->
+On Mon, 18 May 2020 15:42:40 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>=20
+> Today's linux-next merge of the kvm tree got a conflict in:
+>=20
+>   arch/x86/kvm/svm/svm.c
+>=20
+> between commit:
+>=20
+>   9f24847d8fdb ("kvm/svm: Disable KCSAN for svm_vcpu_run()")
+>=20
+> from the rcu tree and commits:
+>=20
+>   a9ab13ff6e84 ("KVM: X86: Improve latency for single target IPI fastpath=
+")
+>   404d5d7bff0d ("KVM: X86: Introduce more exit_fastpath_completion enum v=
+alues")
+>=20
+> from the kvm tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-This is something that is already implemented via Julien's patch-set
-[1]. Its v4 has been floating since July, 2019 and I couldn't find any
-major blocking comments but not sure why things haven't progressed
-further.
+--=20
+Cheers,
+Stephen Rothwell
 
-Maybe Julien or Arm maintainers can provide updates on existing
-patch-set [1] and how we should proceed further with this interesting
-feature.
+diff --cc arch/x86/kvm/svm/svm.c
+index dca2bdbe34a7,4e9cd2a73ad0..000000000000
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@@ -3279,10 -3315,21 +3315,21 @@@ static void svm_cancel_injection(struc
+        svm_complete_interrupts(svm);
+  }
 
-And regarding hard-lockup detection, I have been able to enable it
-based on perf NMI events using Julien's perf patch-set [1]. Have a
-look at the patch here [2].
++ static fastpath_t svm_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
++ {
++       if (!is_guest_mode(vcpu) &&
++           to_svm(vcpu)->vmcb->control.exit_code =3D=3D SVM_EXIT_MSR &&
++           to_svm(vcpu)->vmcb->control.exit_info_1)
++               return handle_fastpath_set_msr_irqoff(vcpu);
++
++       return EXIT_FASTPATH_NONE;
++ }
++
+  void __svm_vcpu_run(unsigned long vmcb_pa, unsigned long *regs);
 
-[1] https://patchwork.kernel.org/cover/11047407/
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2020-May/732227.html
+- static __no_kcsan void svm_vcpu_run(struct kvm_vcpu *vcpu)
+ -static fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
+++static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
+  {
++       fastpath_t exit_fastpath;
+        struct vcpu_svm *svm =3D to_svm(vcpu);
 
--Sumit
+        svm->vmcb->save.rax =3D vcpu->arch.regs[VCPU_REGS_RAX];
+s
 
-> Perf NMI has been test by dd if=/dev/urandom of=/dev/null like the link [2]
-> did.
->
-> [1] https://lkml.org/lkml/2019/1/31/535
-> [2] https://www.linaro.org/blog/debugging-arm-kernels-using-nmifiq
->
->
-> Lecopzer Chen (3):
->   arm_pmu: Add support for perf NMI interrupts registration
->   arm64: perf: Support NMI context for perf event ISR
->   arm64: Kconfig: Add support for the Perf NMI
->
->  arch/arm64/Kconfig             | 10 +++++++
->  arch/arm64/kernel/perf_event.c | 36 ++++++++++++++++++------
->  drivers/perf/arm_pmu.c         | 51 ++++++++++++++++++++++++++++++----
->  include/linux/perf/arm_pmu.h   |  6 ++++
->  4 files changed, 88 insertions(+), 15 deletions(-)
->
-> --
-> 2.25.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--Sig_/YO/8f+_NysuHb44fRCtBNr2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7CIUUACgkQAVBC80lX
+0GzpqwgAjl8NVo9R0myWOP1T9NnrAue46nQwyyzOO9AOz9JJWtAi4V7Bhhw9scBm
+3JSCVuONL6W/k0XUYe+ipF7k2Cxbq4deYIgbfwBgXLYQ+y+Ba8LatABScEAdFKW5
+i8ePrODqNASHyyx1Sy6GRQw8XRgRsMlujKg8zIqOtOWmo1n57U/sz26SBrS11yFH
+D9hTVx5+KcqLK3pWW8oh1gafNp7PIxpbCyMNq6jKalLPMSrG/1918tEH+Lwjw2v1
+81eg/Cb+OHIZ0L/C9UTQjMbvwxWI3SrlqOfIKbuvRpt8oPBTvCHSBBDwliQ4+oDd
+NFv4fgAaOg36UCh0CU6n5Rs40YUImg==
+=+K9t
+-----END PGP SIGNATURE-----
+
+--Sig_/YO/8f+_NysuHb44fRCtBNr2--
