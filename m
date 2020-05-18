@@ -2,52 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D665C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 289A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43249207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CCC207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825161;
-	bh=zer0Mc5CO845JMY0f/NI3pFp3JuFH8Aq0s6Pjo72w6w=;
+	s=default; t=1589825165;
+	bh=kOd0bcbUg8fHPHC0USq6DxLSQK0hSCY2zfafB+/Tfwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zV/geH1Y1uADCOp1boVDRt1suZx44sSDL4pNc6/+W1O0jKFtzPFuNt2OPRstsm+0P
-	 tYhu1Zb8Yc1KLsBVCTTc8XqEvZBHeYRvZ3uPhbrKAvmT6Sa/4RJFfo+WI7bWfnT31Q
-	 FWXRSNQZvULn9WdEGTJBKz9AIIqqaMbA0n98WSKk=
+	b=BOL/iPYdVwR6Mcf6pBiwHQs9lahHyIRroeYq3XeICf3MM4eRTzOAgXKQ36EDHErSd
+	 HBk6nwcM+2bcaSt6fY/ksKL43Dg1OL+KGltkl63YJ1n2u1BBpHpFBhnLaqXsXSddGL
+	 mxVbhNFUYKH0bkOsswVBnV06klpVYqKbDIUAf9MU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733096AbgERSGA (ORCPT
+        id S1733088AbgERSF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:06:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53754 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:05:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733030AbgERSFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:05:55 -0400
+        id S1733042AbgERSFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:05:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B58FE20853;
-        Mon, 18 May 2020 18:05:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 418FE207D3;
+        Mon, 18 May 2020 18:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825155;
-        bh=zer0Mc5CO845JMY0f/NI3pFp3JuFH8Aq0s6Pjo72w6w=;
+        s=default; t=1589825152;
+        bh=kOd0bcbUg8fHPHC0USq6DxLSQK0hSCY2zfafB+/Tfwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2VAGBl0nrysYySEWjBwo/OvABpzSfVFeJBb1zbwON6FZZlYylhwPM4LLYpGws0sVn
-         9grxFaDiSvq1gqeSvLZ7SS5PoNyqBdAA6g9AszZrnz7s9RnOR+jEpuFhhmVYCNP/Pv
-         JVbFRQJpQpktOHwBRosCZgMIK6gvRZFy+aGqWpQM=
+        b=HGZlOH/pKz7UhuZDNt4QVuGFA0dnwq37KvJeYuWY0IKxbxTc296qQMNt+5Rv1SRZV
+         o/3/rathz59NcvhJ6gV2gX12fBukXVqqzejOX0AqnaEj+WIM3iQF+OfDHpe/bm0Y/K
+         Pln3DetEUzaHinqQqAHbTK8iA8s+KzESc0fgAM2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.6 150/194] ARM: dts: imx6dl-yapp4: Fix Ursa board Ethernet connection
-Date:   Mon, 18 May 2020 19:37:20 +0200
-Message-Id: <20200518173543.752028151@linuxfoundation.org>
+        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 123/194] NFSv3: fix rpc receive buffer size for MOUNT call
+Date:   Mon, 18 May 2020 19:36:53 +0200
+Message-Id: <20200518173541.823374362@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,36 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Vokáč <michal.vokac@ysoft.com>
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 
-commit cbe63a8358310244e6007398bd2c7c70c7fd51cd upstream.
+[ Upstream commit 8eed292bc8cbf737e46fb1c119d4c8f6dcb00650 ]
 
-The Y Soft yapp4 platform supports up to two Ethernet ports.
-The Ursa board though has only one Ethernet port populated and that is
-the port@2. Since the introduction of this platform into mainline a wrong
-port was deleted and the Ethernet could never work. Fix this by deleting
-the correct port node.
+Prior to commit e3d3ab64dd66 ("SUNRPC: Use au_rslack when
+computing reply buffer size"), there was enough slack in the reply
+buffer to commodate filehandles of size 60bytes. However, the real
+problem was that the reply buffer size for the MOUNT operation was
+not correctly calculated. Received buffer size used the filehandle
+size for NFSv2 (32bytes) which is much smaller than the allowed
+filehandle size for the v3 mounts.
 
-Fixes: 87489ec3a77f ("ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa boards")
-Cc: stable@vger.kernel.org
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix the reply buffer size (decode arguments size) for the MNT command.
 
+Fixes: 2c94b8eca1a2 ("SUNRPC: Use au_rslack when computing reply buffer size")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6dl-yapp4-ursa.dts |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/mount_clnt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
-@@ -38,7 +38,7 @@
- };
+diff --git a/fs/nfs/mount_clnt.c b/fs/nfs/mount_clnt.c
+index 35c8cb2d76372..dda5c3e65d8d6 100644
+--- a/fs/nfs/mount_clnt.c
++++ b/fs/nfs/mount_clnt.c
+@@ -30,6 +30,7 @@
+ #define encode_dirpath_sz	(1 + XDR_QUADLEN(MNTPATHLEN))
+ #define MNT_status_sz		(1)
+ #define MNT_fhandle_sz		XDR_QUADLEN(NFS2_FHSIZE)
++#define MNT_fhandlev3_sz	XDR_QUADLEN(NFS3_FHSIZE)
+ #define MNT_authflav3_sz	(1 + NFS_MAX_SECFLAVORS)
  
- &switch_ports {
--	/delete-node/ port@2;
-+	/delete-node/ port@3;
- };
+ /*
+@@ -37,7 +38,7 @@
+  */
+ #define MNT_enc_dirpath_sz	encode_dirpath_sz
+ #define MNT_dec_mountres_sz	(MNT_status_sz + MNT_fhandle_sz)
+-#define MNT_dec_mountres3_sz	(MNT_status_sz + MNT_fhandle_sz + \
++#define MNT_dec_mountres3_sz	(MNT_status_sz + MNT_fhandlev3_sz + \
+ 				 MNT_authflav3_sz)
  
- &touchscreen {
+ /*
+-- 
+2.20.1
+
 
 
