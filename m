@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 839BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8012CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63BA9207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BB520835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823599;
-	bh=21RvU87suyQJ5Bno2TZaPg+6cnc/R8INOsdBybhJ+a4=;
+	s=default; t=1589823607;
+	bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MKcSu/eH3LhE0yazHGjbclMWDMpCPlNtM+jzNLje97RxxytTrfb80NnL/8CDeaRn0
-	 puiQbCXOC0lElzqCmdaBktlQ/Hd5zpqgNPADdy9kUOUtZFV7hVXVWFq04UnzPfjtcE
-	 M8qccLLkcg/ulzpbvPHo5CNkArAcm4Mxk06DFycM=
+	b=tRAwwo66aLhFxTFqN4K/x4OvoonhKnpI7TpujT72QRUKFK/WL24SC8x5ByF85VBBp
+	 NnkF6x38n5tPUWuSjPwfEjbRPrJx/tL9L8PenttRc0E7haJmJcnDtLDRgfnPOLGmDv
+	 3dI4LxqZzaQOzRMDS/p7Jp6V5wR0Yeolh7sOALew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgERRj5 (ORCPT
+        id S1728967AbgERRkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:39:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34910 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:40:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728915AbgERRjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:39:53 -0400
+        id S1728942AbgERRj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:39:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E04512086A;
-        Mon, 18 May 2020 17:39:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C82B72086A;
+        Mon, 18 May 2020 17:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823593;
-        bh=21RvU87suyQJ5Bno2TZaPg+6cnc/R8INOsdBybhJ+a4=;
+        s=default; t=1589823598;
+        bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EzckmMIint4WAj6+lhtT0GgKR2VNBJ1gLmkqxmH8810lBqh/3JLY9J4sgGfC/J+Tw
-         /CpaYxQ1ZqXPuq6zugs19L2Ryew/YDm6SJ7LLkHnAyOPQncjls9+Jd2znwYpUCrU9B
-         9qOtRBdCSGdIKtINn2CNeukgCZA8N5SnzOJhiaP0=
+        b=sO4chUVCWxUPo2SuA1tlol2k9+SUYwImgZzdCXp/wt4hToriQRPvpD+UCQH1pUHDu
+         zCFY2D7zviBwm5a3wFcty6PPPuFYfzNgtV0CJ7R6wZUgt5WI3YMbfsIPPCBX+uDZ1D
+         j8Pueh54EtkvBWdNg+xz4brnMsMLVCJvL9hDHztQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 43/86] dmaengine: pch_dma.c: Avoid data race between probe and irq handler
-Date:   Mon, 18 May 2020 19:36:14 +0200
-Message-Id: <20200518173459.156844096@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 45/86] drm/qxl: lost qxl_bo_kunmap_atomic_page in qxl_image_init_helper()
+Date:   Mon, 18 May 2020 19:36:16 +0200
+Message-Id: <20200518173459.716638047@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -60,45 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 2e45676a4d33af47259fa186ea039122ce263ba9 ]
+[ Upstream commit 5b5703dbafae74adfbe298a56a81694172caf5e6 ]
 
-pd->dma.dev is read in irq handler pd_irq().
-However, it is set to pdev->dev after request_irq().
-Therefore, set pd->dma.dev to pdev->dev before request_irq() to
-avoid data race between pch_dma_probe() and pd_irq().
+v2: removed TODO reminder
 
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Link: https://lore.kernel.org/r/20200416062335.29223-1-madhuparnabhowmik10@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/a4e0ae09-a73c-1c62-04ef-3f990d41bea9@virtuozzo.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/pch_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/qxl/qxl_image.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
-index 113605f6fe208..32517003e118e 100644
---- a/drivers/dma/pch_dma.c
-+++ b/drivers/dma/pch_dma.c
-@@ -877,6 +877,7 @@ static int pch_dma_probe(struct pci_dev *pdev,
+diff --git a/drivers/gpu/drm/qxl/qxl_image.c b/drivers/gpu/drm/qxl/qxl_image.c
+index 7fbcc35e8ad35..c89c10055641e 100644
+--- a/drivers/gpu/drm/qxl/qxl_image.c
++++ b/drivers/gpu/drm/qxl/qxl_image.c
+@@ -210,7 +210,8 @@ qxl_image_init_helper(struct qxl_device *qdev,
+ 		break;
+ 	default:
+ 		DRM_ERROR("unsupported image bit depth\n");
+-		return -EINVAL; /* TODO: cleanup */
++		qxl_bo_kunmap_atomic_page(qdev, image_bo, ptr);
++		return -EINVAL;
  	}
- 
- 	pci_set_master(pdev);
-+	pd->dma.dev = &pdev->dev;
- 
- 	err = request_irq(pdev->irq, pd_irq, IRQF_SHARED, DRV_NAME, pd);
- 	if (err) {
-@@ -892,7 +893,6 @@ static int pch_dma_probe(struct pci_dev *pdev,
- 		goto err_free_irq;
- 	}
- 
--	pd->dma.dev = &pdev->dev;
- 
- 	INIT_LIST_HEAD(&pd->dma.channels);
- 
+ 	image->u.bitmap.flags = QXL_BITMAP_TOP_DOWN;
+ 	image->u.bitmap.x = width;
 -- 
 2.20.1
 
