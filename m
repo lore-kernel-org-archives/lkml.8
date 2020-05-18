@@ -2,183 +2,156 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF40FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F34C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99C23207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589828190;
-	bh=hDMgtnIxdRMx+igFYjzxKFmJlSiLPrW678U2lAXrdCk=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=npsSvzoH+bnU8Hz3pIfKPDuUENfXG6bj9qGKrbMTpJbe2fxb7nA9MdWrWr8Aeknb7
-	 rpJJLyr1VKPLi8FLPSYFaahsDGWshhU09+YX/bAMzXYrMko6p1KXUAADqMVDgM+Lnb
-	 Jgxhv6gha8b78S0H/3W5WJCcxEjWwY9YNMRk+FFA=
+	by mail.kernel.org (Postfix) with ESMTP id A93D3207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:00:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PFwKy8Nf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbgERS4a (ORCPT
+        id S1729579AbgERS7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:56:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728436AbgERS43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:56:29 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B3B9207C4;
-        Mon, 18 May 2020 18:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589828188;
-        bh=hDMgtnIxdRMx+igFYjzxKFmJlSiLPrW678U2lAXrdCk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=wLTG3i8+7pPhsNcmxh/tfuPi0KAiN9+rNwYF1Ar/qzZCPDuddh4MBl2oObDKZ0uIB
-         PkpBpv8RvJ9RMkacE5cZE0RVwwI4UYXgO5EPdBz3Ue8k3HCinQz8WFUi2+646ARBCo
-         9UDy8HCyIeRIaig29rKCy3h4f+scZmjVqeq+mI3c=
-Date:   Mon, 18 May 2020 14:01:14 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org H. Peter Anvin" <hpa@zytor.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] x86/uv/time: Replace one-element array and save heap space
-Message-ID: <20200518190114.GA7757@embeddedor>
+        Mon, 18 May 2020 14:59:49 -0400
+Received: from mail-am6eur05on2050.outbound.protection.outlook.com ([40.107.22.50]:37377
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728436AbgERS7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:59:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C64yOT3JWkxKpxgQ8GDcmReEDBlNEfLP1vo7iby32iLqfPBpsh7sJgv+YqQ53FfLAdtQt5+eKVzbdjxoGdmS2I20qiZkqIEJTpSNiYW6Re/YseSk9snkNMFmHZKABlDv+4RSuKTiMZN2zoOT3w09BnBmfwN0t+1on16kd6AGkaWt5yVvK7vE5OdDCDXEtbtKsT6uUi9QSANnE3Tm0af7d5GWywVMdYFzXZJ8mZxiGoVMpl+1SWnKbwlnQi1Hu9xEQ/50rlvjriHxHXI6FEirmj88SGZYc1LvbNF/kIDp4nZxaVdC04hQkdbOvbt2zP6XrXxLIEQzL7GXVcQjeTWtHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R0vLKOvf7n9zSXNZqc9CjLV8tzmGoLjxZu6uGCO+L4M=;
+ b=gMD+fGo79BUZfRIreHEQTnNrqp41nGWLJvIjXxku8jC9EDf99XbZRUW3KSmh+j/JCXZhwHf8mXhs5acLeyOFZOomrQKA4S8Xa0FtFOe1oDJgj118Z84qyXzuo/gsgC5Ygkxo34gwzeSVJd/BxOtYl9VR5SH5QoKR3Q9XzEV66cquimg3eml8W6c1F/f+Aip3D+qzmRcBZJwSbR5SpnD1VNoCTfUEKKeU4KE5fn13RMf8FATgt+yDykwDkbaoU0VQwaj2qMF4sJoH/wLrRpO+rmY5w2aV/D5B9AoT7I3EH1w2Em1YfEdx/L/wRhaaM7GRkVfspO5zVdMHC5yps0bW8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R0vLKOvf7n9zSXNZqc9CjLV8tzmGoLjxZu6uGCO+L4M=;
+ b=PFwKy8Nfbncc6O3exNkguL2qcx32qxNooObG2H1BFfS9NGxaeop0UU+d9/K8CRx4t/fMoMYSaCSmyC7zPpv4fb/AK9uvwJ5eqnnunxISbQecboi9fi49SDowqsQ160yn1OyLKc2hwNoKxu1lsOdrnyI/bSZff89M6NTdhmekKYU=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR04MB4046.eurprd04.prod.outlook.com (2603:10a6:803:4d::29)
+ by VI1SPR01MB0363.eurprd04.prod.outlook.com (2603:10a6:803:c9::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Mon, 18 May
+ 2020 18:59:35 +0000
+Received: from VI1PR04MB4046.eurprd04.prod.outlook.com
+ ([fe80::4cf0:3c9c:ed2:aacd]) by VI1PR04MB4046.eurprd04.prod.outlook.com
+ ([fe80::4cf0:3c9c:ed2:aacd%4]) with mapi id 15.20.3000.033; Mon, 18 May 2020
+ 18:59:35 +0000
+Subject: Re: [PATCH] crypto: caam - make soc match data optional
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Cc:     Chris Healy <cphealy@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200516042303.6070-1-andrew.smirnov@gmail.com>
+From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
+Message-ID: <befcc520-6556-b09b-0464-fe0b5f28cf1e@nxp.com>
+Date:   Mon, 18 May 2020 21:59:25 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <20200516042303.6070-1-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM0PR10CA0102.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:e6::19) To VI1PR04MB4046.eurprd04.prod.outlook.com
+ (2603:10a6:803:4d::29)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.129] (84.117.251.185) by AM0PR10CA0102.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:e6::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend Transport; Mon, 18 May 2020 18:59:34 +0000
+X-Originating-IP: [84.117.251.185]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 45c46176-eced-4046-ccb1-08d7fb5d9b2f
+X-MS-TrafficTypeDiagnostic: VI1SPR01MB0363:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1SPR01MB03635821E0D5458F8361CC3A98B80@VI1SPR01MB0363.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:580;
+X-Forefront-PRVS: 04073E895A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5+nlIMLjL3LHI4530krvPJlgmoDJbM/X1iYfFRFCchV3QRPT7UDOXOv998VwyKBk6Wyg1BC1YDdIAgnGr7DvEduGIfEpO+QG3aMc74QsxdjoPfR+7xL9rin3ZOafhGQ4lNOv+kDTI1rs8Hn67HP44IRj7zdZtp4MxDNAKlCaPLUmDRLT8df+BExglgP3IMXVawb5emQ3Z4MCCEUNh6UtBXgf1lOl3QFVZ2swqYyW6IjYwPNE+gt3GgFLBV0RTLClX4hlOq79XnWStHVO6rXTYRpPcbxv2PzyE0FH2yAmD8+zd/1FsMHcK988CB8i+Z+mLiitZ0y4/dcWiIP2NDwm3T09qjKbJXD88UnCeCTVvp78TaYPoZEVuFy5xIpctqbbf/BR/3aBLyCiMgZFOW2MQZa38IyxSTYXKNan3AtsGmIM2oUeiUIbmRe0mfM8egYmvhOFMdN/4Yn0UBqCHXB5s9+oWlYYVv07RxLMvPdkM5cWUG6cRE4EJ6s3T4ACyLAF
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(346002)(366004)(136003)(39860400002)(66946007)(66556008)(478600001)(110136005)(5660300002)(2616005)(86362001)(26005)(6486002)(8676002)(54906003)(31696002)(6666004)(66476007)(31686004)(53546011)(8936002)(16526019)(4326008)(2906002)(36756003)(16576012)(186003)(52116002)(316002)(956004)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: SrJa9gmPzBV9ZmEWkhkFuMu1ZmYNH3uEQRfb4fFBL1qXHmEHsWAgkWg3F/J9jvF8usX1ZeYXCYvWrdUwbI+qZHszz9QL6DTQl8FDj66g8HjQtWZ8vEa2ncf21nxH8ZEkoXoH+9TcAfbwXyjBV1JPoHfJZ6VHKEfX9t8LlY5rR6trHMO6+XYUUIh8U5CD6uKDOA01urQLDQZG1nUqZ9Y+Vp5ZpkcwQmZVPEICOhvwd9RcpGthVl3n+0ydziicxYQ45R9VoTblxTn3SUVYt2eR9GpWES0mydmniQ/MtHbZ34nJ32yvtoBQbL48mSXF6qo4TJCU2UtlB2/snC9sXXv5Nm9neAtqvE7ht4DKzgGTHFdlFll+W9vDoSc7RQPoedXBqx+lcPMfyPgx5zvTinWXmNQK6+1LXk/JSjPRiYWpPv8PUBCH7Xmw/Ky+BYcA7JSrh3HcjyfmoHH3Xrc1e6OoXluejxug7Bw6r+wRUd/EjDx1wOhBQrBT+oLkfjNljt/j
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45c46176-eced-4046-ccb1-08d7fb5d9b2f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2020 18:59:35.2464
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ik3HFR14vs9BGONf7FCqJq73q2KAwcva5cApnWefafEHoEn0aVM4RyE5ueMBpmdxsOcIcfPPVD8rOR+qOvA/ow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1SPR01MB0363
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of one-element arrays in the following
-form:
+On 5/16/2020 7:23 AM, Andrey Smirnov wrote:
+> Vyrbrid devices don't have any clock that need to be taken care of, so
+> make clock data optional on i.MX.
+> 
+Vybrid Security RM states that IPG clock used by CAAM
+can be gated by CCM_CCGR11[CG176].
 
-struct something {
-    int length;
-    u8 data[1];
-};
+Clock driver needs to be updated accordingly,
+and so will CAAM driver and DT node.
 
-struct something *instance;
+I don't have a board at hand, so patch below is not tested.
 
-instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-instance->length = size;
-memcpy(instance->data, source, size);
+Horia
 
-but the preferred mechanism to declare variable-length types such as
-these ones is a flexible array member[1][2], introduced in C99:
+------ >8 ------
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Subject: [PATCH] clk: imx: vf610: add CAAM clock
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on. So, replace
-the one-element array with a flexible-array member.
+According to Vybrid Security RM, CCM_CCGR11[CG176] can be used to
+gate CAAM ipg clock.
 
-Also, make use of the new struct_size() helper to properly calculate the
-total size needed to allocate dynamic memory for struct uv_rtc_timer_head.
-Notice that, due to the use of a one-element array, space for an extra
-struct cpu:
-
-struct {
-	int     lcpu;           /* systemwide logical cpu number */
-	u64     expires;        /* next timer expiration for this cpu */
-} cpu[1]
-
-was being allocated at the moment of applying the sizeof operator to
-struct uv_rtc_timer_head in the call to kmalloc_node() at line 159:
-
-159		head = kmalloc_node(sizeof(struct uv_rtc_timer_head) +
-160			(uv_blade_nr_possible_cpus(bid) *
-161				2 * sizeof(u64)),
-162			GFP_KERNEL, nid);
-
-but that extra cpu[] was never actually being accessed due to the
-following piece of code at line 168:
-
-168		head->ncpus = uv_blade_nr_possible_cpus(bid);
-
-and the piece of code at line 187:
-
-187		for (c = 0; c < head->ncpus; c++) {
-188			u64 exp = head->cpu[c].expires;
-189			if (exp < lowest) {
-190				bcpu = c;
-191				lowest = exp;
-192			}
-193		}
-
-so heap space was being wasted.
-
-Another thing important to notice is that through the use of the
-struct_size() helper, code at line 161:
-
-161		2 * sizeof(u64)),
-
-is changed to now be the actual size of struct cpu; see
-sizeof(*(p)->member) at include/linux/overflow.h:314:
-
-314 #define struct_size(p, member, n)                                       \
-315         __ab_c_size(n,                                                  \
-316                     sizeof(*(p)->member) + __must_be_array((p)->member),\
-317                     sizeof(*(p)))
-
-As a side note, the original developer could have implemented code at line
-161: 2 * sizeof(64) as follows:
-
-sizeof(*head->cpu)
-
-This issue has been out there since 2009.
-
-This issue was found with the help of Coccinelle and fixed _manually_.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 ---
- arch/x86/platform/uv/uv_time.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/clk/imx/clk-vf610.c             | 2 ++
+ include/dt-bindings/clock/vf610-clock.h | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
-index 7af31b245636..993a8ae6fdfb 100644
---- a/arch/x86/platform/uv/uv_time.c
-+++ b/arch/x86/platform/uv/uv_time.c
-@@ -52,7 +52,7 @@ struct uv_rtc_timer_head {
- 	struct {
- 		int	lcpu;		/* systemwide logical cpu number */
- 		u64	expires;	/* next timer expiration for this cpu */
--	} cpu[1];
-+	} cpu[];
- };
- 
- /*
-@@ -156,9 +156,8 @@ static __init int uv_rtc_allocate_timers(void)
- 		struct uv_rtc_timer_head *head = blade_info[bid];
- 
- 		if (!head) {
--			head = kmalloc_node(sizeof(struct uv_rtc_timer_head) +
--				(uv_blade_nr_possible_cpus(bid) *
--					2 * sizeof(u64)),
-+			head = kmalloc_node(struct_size(head, cpu,
-+				uv_blade_nr_possible_cpus(bid)),
- 				GFP_KERNEL, nid);
- 			if (!head) {
- 				uv_rtc_deallocate_timers();
--- 
-2.26.2
+diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
+index cd04e7dc1878..4f3066cf1b89 100644
+--- a/drivers/clk/imx/clk-vf610.c
++++ b/drivers/clk/imx/clk-vf610.c
+@@ -439,6 +439,8 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
+        clk[VF610_CLK_DAP] = imx_clk_gate("dap", "platform_bus", CCM_CCSR, 24);
+        clk[VF610_CLK_OCOTP] = imx_clk_gate("ocotp", "ipg_bus", CCM_CCGR6, CCM_CCGRx_CGn(5));
 
++       clk[VF610_CLK_CAAM] = imx_clk_gate2("caam", "ipg_bus", CCM_CCGR11, CCM_CCGRx_CGn(0));
++
+        imx_check_clocks(clk, ARRAY_SIZE(clk));
+
+        clk_set_parent(clk[VF610_CLK_QSPI0_SEL], clk[VF610_CLK_PLL1_PFD4]);
+diff --git a/include/dt-bindings/clock/vf610-clock.h b/include/dt-bindings/clock/vf610-clock.h
+index 95394f35a74a..0f2d60e884dc 100644
+--- a/include/dt-bindings/clock/vf610-clock.h
++++ b/include/dt-bindings/clock/vf610-clock.h
+@@ -195,6 +195,7 @@
+ #define VF610_CLK_WKPU                 186
+ #define VF610_CLK_TCON0                        187
+ #define VF610_CLK_TCON1                        188
+-#define VF610_CLK_END                  189
++#define VF610_CLK_CAAM                 189
++#define VF610_CLK_END                  190
+
+ #endif /* __DT_BINDINGS_CLOCK_VF610_H */
+--
+2.17.1
