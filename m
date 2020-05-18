@@ -2,182 +2,116 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4160C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1784CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA1D620758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589811039;
-	bh=qofNNklcalMpuGWBoUKJJY7FgfoOjbmW6q0duAvIXcU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=j6ZhXSFhcyAs6NTIM5iUCVtO+dlQUDdIoAlEQAmJeZAxBuO7XOp/4YD+zb1Vy6ivA
-	 dg50QPi32rzBNmOP+IX9Bun7MNuE0sLf2ZSf2rpxatG2gmWKil2YXyJtBfsw4WNYlc
-	 ZTtJ8Y60+kFZtvIDAqRiPdeZGWnExcpE9OVx9MfE=
+	by mail.kernel.org (Postfix) with ESMTP id E1513207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:10:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pr11FLB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgEROKi convert rfc822-to-8bit (ORCPT
+        id S1727983AbgEROKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:10:38 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54984 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726945AbgEROKi (ORCPT
+        Mon, 18 May 2020 10:10:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbgEROKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:10:38 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-294-Rc9al0JYPzyOmqTSwBUjXQ-1; Mon, 18 May 2020 10:10:32 -0400
-X-MC-Unique: Rc9al0JYPzyOmqTSwBUjXQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D090D835B8B;
-        Mon, 18 May 2020 14:10:30 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.40.196.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C71332CD69;
-        Mon, 18 May 2020 14:10:28 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: [RFC] perf trace: Fix compilation error for make NO_LIBBPF=1 DEBUG=1
-Date:   Mon, 18 May 2020 16:10:27 +0200
-Message-Id: <20200518141027.3765877-1-jolsa@kernel.org>
+        Mon, 18 May 2020 10:10:51 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C6D1C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 07:10:51 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id i15so11999019wrx.10
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 07:10:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YOX5omhjS6MVlVcf1+HCfCPScUqqHJPHWXBPkBcw5Vc=;
+        b=pr11FLB44dXeVmCeFhm2kLkFcvKq9R1XNel9RqCmjIlLXf0NHXh6N5q4lTtqlw5X9w
+         cjSPv7a4yMeGc9wjJ2F8rvDIQhV71OTBcLFzQlpADwWjShR9B0tFPaAIOQ3TEpvZzdFf
+         e/ocfgaiWvxjWSsBYLxLVPd/9XwKGNsybHU8G0tzfY4VlTpMEzwLr9g8ksvjvQJol/tY
+         STPPgPKt6uJ0zpHN1W4BpzP4mDBghiaQKAwWnF0T984l2Iyw8HO3GQmrflBpHYhzs3Cs
+         4xqMfF1fIvjzG+gDh/P7w/e3bwVd5C181Xi0SPFo9ZQzGpUb9QH0sGQwlS3/x+dk9qMO
+         pWNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YOX5omhjS6MVlVcf1+HCfCPScUqqHJPHWXBPkBcw5Vc=;
+        b=joRS/mJ/i5QDyFJkC6lE9MbdC4Ns7jbBEIH7zhobNb1IrpJcNImHsnjZII32CRxnOb
+         3kpnTLAATaqH7Xh7uzKM4fwVOgNGFZd1JJh2XKidLMM6M+bOt+JXqh34ONbBKqbgQVW/
+         Go3sNwqyh4a6giKucTHY2uWquKhRiVjTuhNYBj2IdwNlnNHWbWILliFpD5TbGH1+cjmo
+         Sc2EvvwjPiiH67fC5cMHBchYiZrcLgb4yvcTrKA8DHhGSZQcqpyzZXdD1gFeT31QPIhp
+         KDPt43Aj/AZBL1On6gEP2ejgvsYOW+YWPoChqr8M3UQNlDXou1r8xfkZDuutrckb04a7
+         WQvQ==
+X-Gm-Message-State: AOAM5308cSE+EmZ9zH2Pc9vviaVh3Ox1jth+LYHAOkKRwiQg0ST+Bv28
+        +R1McTMdoMfEJkm/fo7sgbJzeMFebTk=
+X-Google-Smtp-Source: ABdhPJzcFC8CwNoJQSsfOQ5xRC8i89rNRcwlP5YZ49Uavu9W/QxSd4XUPAMDyAQu6K4U8v/XWvb9lA==
+X-Received: by 2002:adf:e74a:: with SMTP id c10mr20442390wrn.109.1589811049905;
+        Mon, 18 May 2020 07:10:49 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
+        by smtp.googlemail.com with ESMTPSA id l13sm16393070wrm.55.2020.05.18.07.10.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 07:10:49 -0700 (PDT)
+Subject: Re: [PATCH] clocksource/drivers/rda: drop redundant Kconfig
+ dependency
+To:     Johan Hovold <johan@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200513122548.16974-1-johan@kernel.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <2871e212-c360-9d9c-a4aa-46fcd8867140@linaro.org>
+Date:   Mon, 18 May 2020 16:10:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: kernel.org
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200513122548.16974-1-johan@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I haven't tested if this breaks some perf trace functionality,
-hence RFC ;-)
+On 13/05/2020 14:25, Johan Hovold wrote:
+> Since commit 2f8a26c166eb ("clocksource: Improve GENERIC_CLOCKEVENTS
+> dependency") all clocksource drivers depend on GENERIC_CLOCKEVENTS so
+> drop the redundant attribute from the RDA-timer entry which was added
+> later.
+> 
+> Signed-off-by: Johan Hovold <johan@kernel.org>
 
-The perf compilation fails for NO_LIBBPF=1 DEBUG=1 with:
+Applied, thanks
+> ---
+>  drivers/clocksource/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index f2142e6bbea3..ef5331ce5fda 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -120,7 +120,6 @@ config OWL_TIMER
+>  
+>  config RDA_TIMER
+>  	bool "RDA timer driver" if COMPILE_TEST
+> -	depends on GENERIC_CLOCKEVENTS
+>  	select CLKSRC_MMIO
+>  	select TIMER_OF
+>  	help
+> 
 
-  $ make NO_LIBBPF=1 DEBUG=1
-    BUILD:   Doing 'make -j8' parallel build
-    CC       builtin-trace.o
-    LD       perf-in.o
-    LINK     perf
-  /usr/bin/ld: perf-in.o: in function `trace__find_bpf_map_by_name':
-  /home/jolsa/kernel/linux-perf/tools/perf/builtin-trace.c:4608: undefined reference to `bpf_object__find_map_by_name'
-  collect2: error: ld returned 1 exit status
-  make[2]: *** [Makefile.perf:631: perf] Error 1
-  make[1]: *** [Makefile.perf:225: sub-make] Error 2
-  make: *** [Makefile:70: all] Error 2
 
-Moving trace__find_bpf_map_by_name calls under HAVE_LIBBPF_SUPPORT
-ifdef and add make test for this.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/builtin-trace.c | 54 ++++++++++++++++++++++++--------------
- tools/perf/tests/make      |  1 +
- 2 files changed, 35 insertions(+), 20 deletions(-)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 56bcf1ab19f8..61bafca1018a 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -3174,6 +3174,26 @@ static int trace__set_ev_qualifier_tp_filter(struct trace *trace)
- }
- 
- #ifdef HAVE_LIBBPF_SUPPORT
-+static struct bpf_map *trace__find_bpf_map_by_name(struct trace *trace, const char *name)
-+{
-+	if (trace->bpf_obj == NULL)
-+		return NULL;
-+
-+	return bpf_object__find_map_by_name(trace->bpf_obj, name);
-+}
-+
-+static void trace__set_bpf_map_filtered_pids(struct trace *trace)
-+{
-+	trace->filter_pids.map = trace__find_bpf_map_by_name(trace, "pids_filtered");
-+}
-+
-+static void trace__set_bpf_map_syscalls(struct trace *trace)
-+{
-+	trace->syscalls.map = trace__find_bpf_map_by_name(trace, "syscalls");
-+	trace->syscalls.prog_array.sys_enter = trace__find_bpf_map_by_name(trace, "syscalls_sys_enter");
-+	trace->syscalls.prog_array.sys_exit  = trace__find_bpf_map_by_name(trace, "syscalls_sys_exit");
-+}
-+
- static struct bpf_program *trace__find_bpf_program_by_title(struct trace *trace, const char *name)
- {
- 	if (trace->bpf_obj == NULL)
-@@ -3512,6 +3532,20 @@ static void trace__delete_augmented_syscalls(struct trace *trace)
- 	trace->bpf_obj = NULL;
- }
- #else // HAVE_LIBBPF_SUPPORT
-+static struct bpf_map *trace__find_bpf_map_by_name(struct trace *trace __maybe_unused,
-+						   const char *name __maybe_unused)
-+{
-+	return NULL;
-+}
-+
-+static void trace__set_bpf_map_filtered_pids(struct trace *trace __maybe_unused)
-+{
-+}
-+
-+static void trace__set_bpf_map_syscalls(struct trace *trace __maybe_unused)
-+{
-+}
-+
- static int trace__set_ev_qualifier_bpf_filter(struct trace *trace __maybe_unused)
- {
- 	return 0;
-@@ -4600,26 +4634,6 @@ static int trace__parse_cgroups(const struct option *opt, const char *str, int u
- 	return 0;
- }
- 
--static struct bpf_map *trace__find_bpf_map_by_name(struct trace *trace, const char *name)
--{
--	if (trace->bpf_obj == NULL)
--		return NULL;
--
--	return bpf_object__find_map_by_name(trace->bpf_obj, name);
--}
--
--static void trace__set_bpf_map_filtered_pids(struct trace *trace)
--{
--	trace->filter_pids.map = trace__find_bpf_map_by_name(trace, "pids_filtered");
--}
--
--static void trace__set_bpf_map_syscalls(struct trace *trace)
--{
--	trace->syscalls.map = trace__find_bpf_map_by_name(trace, "syscalls");
--	trace->syscalls.prog_array.sys_enter = trace__find_bpf_map_by_name(trace, "syscalls_sys_enter");
--	trace->syscalls.prog_array.sys_exit  = trace__find_bpf_map_by_name(trace, "syscalls_sys_exit");
--}
--
- static int trace__config(const char *var, const char *value, void *arg)
- {
- 	struct trace *trace = arg;
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index 5d0c3a9c47a1..c3c59def9f87 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -84,6 +84,7 @@ make_no_libaudit    := NO_LIBAUDIT=1
- make_no_libbionic   := NO_LIBBIONIC=1
- make_no_auxtrace    := NO_AUXTRACE=1
- make_no_libbpf	    := NO_LIBBPF=1
-+make_no_libbpf_DEBUG := NO_LIBBPF=1 DEBUG=1
- make_no_libcrypto   := NO_LIBCRYPTO=1
- make_with_babeltrace:= LIBBABELTRACE=1
- make_no_sdt	    := NO_SDT=1
 -- 
-2.25.4
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
