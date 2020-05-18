@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC94DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 954C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4E51207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70773207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825092;
-	bh=mLNNcdMEzcijcd6WQUrQiMn6mZLH+CN0WL25fCbmqLo=;
+	s=default; t=1589825096;
+	bh=t3npKBEsuRcAzaeEdhUZ+UJDeNrUl67D2yV/RLVnfT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kyEevqRaA6ZsTS848UXZe1k2A7mW54dktPkIiT8JMRkGarHuLFN1NXq0WIaDwxCQR
-	 BiVBgEog6I8FKVbKNLokFtEz1vpnb1YhW6hw03b6QVzaUVkofhC8gWhKbi5eJDvcwW
-	 1xPLElHEIxah8JDZBDHEZx1yOEvO5oXyySjzqh8A=
+	b=mcrcH2oquN191DGn9ufKEanAdIlKbakiVQySCRd9rURKz9XXxhiwUJJmiwNe1yXTv
+	 CfLf/KB3AUbw8Dd3Izlhk03HzGdgVzf2dPvyPHhAsnpeg/Mqb+sEVoWY7Bn0tWs54P
+	 L/KNHTQMD7cVyEVOBusM7O2bVoxc5flXbUHJwJCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732853AbgERSEw (ORCPT
+        id S1732860AbgERSEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:04:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51796 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:04:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732814AbgERSEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:04:38 -0400
+        id S1732828AbgERSEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:04:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8983620826;
-        Mon, 18 May 2020 18:04:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70D5120826;
+        Mon, 18 May 2020 18:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825078;
-        bh=mLNNcdMEzcijcd6WQUrQiMn6mZLH+CN0WL25fCbmqLo=;
+        s=default; t=1589825082;
+        bh=t3npKBEsuRcAzaeEdhUZ+UJDeNrUl67D2yV/RLVnfT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KLu21Yuh411wPRrNEg+Trok+URExLsNDofeVHgOJXURSlp7fqkzjU4CME+NlqQHcF
-         6ZgR2ML7UQGLAoL+WWbiQSQR6y0csPp85uHmf31ffo72rRX6Wqs1hFGPBkqiPL8uQY
-         zaJ9cXe8IYYwMkuYlFIPmiZ1D6Gao8S2DvimbevI=
+        b=r6Re43xLf9O6vDUt0y4hcS0WkRzAKz8j3s1kc+RzBV9IYJCGr8j//8RQcnHFZztTC
+         cusUG81ljnb+vflAhJ0ZkMT1kyWbWfdNQP1NtECUfP/vwicrtsWiGfsUHDlnpQ6e7e
+         JSB5p62c5ZCatLEKOeoh9XTLzUHfAGoPg/sbkoT0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 118/194] s390/ism: fix error return code in ism_probe()
-Date:   Mon, 18 May 2020 19:36:48 +0200
-Message-Id: <20200518173541.485451607@linuxfoundation.org>
+Subject: [PATCH 5.6 083/194] i40iw: Fix error handling in i40iw_manage_arp_cache()
+Date:   Mon, 18 May 2020 19:36:13 +0200
+Message-Id: <20200518173538.650112591@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -62,39 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 29b74cb75e3572d83708745e81e24d37837415f9 ]
+[ Upstream commit 37e31d2d26a4124506c24e95434e9baf3405a23a ]
 
-Fix to return negative error code -ENOMEM from the smcd_alloc_dev()
-error handling case instead of 0, as done elsewhere in this function.
+The i40iw_arp_table() function can return -EOVERFLOW if
+i40iw_alloc_resource() fails so we can't just test for "== -1".
 
-Fixes: 684b89bc39ce ("s390/ism: add device driver for internal shared memory")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 4e9042e647ff ("i40iw: add hw and utils files")
+Link: https://lore.kernel.org/r/20200422092211.GA195357@mwanda
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/ism_drv.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/i40iw/i40iw_hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
-index 4fc2056bd2272..e615dc240150b 100644
---- a/drivers/s390/net/ism_drv.c
-+++ b/drivers/s390/net/ism_drv.c
-@@ -521,8 +521,10 @@ static int ism_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_hw.c b/drivers/infiniband/hw/i40iw/i40iw_hw.c
+index 55a1fbf0e670c..ae8b97c306657 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_hw.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_hw.c
+@@ -534,7 +534,7 @@ void i40iw_manage_arp_cache(struct i40iw_device *iwdev,
+ 	int arp_index;
  
- 	ism->smcd = smcd_alloc_dev(&pdev->dev, dev_name(&pdev->dev), &ism_ops,
- 				   ISM_NR_DMBS);
--	if (!ism->smcd)
-+	if (!ism->smcd) {
-+		ret = -ENOMEM;
- 		goto err_resource;
-+	}
- 
- 	ism->smcd->priv = ism;
- 	ret = ism_dev_init(ism);
+ 	arp_index = i40iw_arp_table(iwdev, ip_addr, ipv4, mac_addr, action);
+-	if (arp_index == -1)
++	if (arp_index < 0)
+ 		return;
+ 	cqp_request = i40iw_get_cqp_request(&iwdev->cqp, false);
+ 	if (!cqp_request)
 -- 
 2.20.1
 
