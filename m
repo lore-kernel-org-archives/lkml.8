@@ -2,172 +2,151 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D79FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E874EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9E7207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88F620809
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:16:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lm2sye2u"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iQhUbUFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgERENJ (ORCPT
+        id S1726505AbgEREQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 00:13:09 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5079 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgERENJ (ORCPT
+        Mon, 18 May 2020 00:16:36 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52138 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgEREQg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 00:13:09 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec20ac70001>; Sun, 17 May 2020 21:10:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 17 May 2020 21:13:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 17 May 2020 21:13:08 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
- 2020 04:13:08 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 18 May 2020 04:13:08 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.48.175]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ec20b540001>; Sun, 17 May 2020 21:13:08 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-CC:     Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH] drivers/mic/scif: convert get_user_pages() --> pin_user_pages()
-Date:   Sun, 17 May 2020 21:13:07 -0700
-Message-ID: <20200518041307.1987328-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 18 May 2020 00:16:36 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04I4EdwZ104806;
+        Mon, 18 May 2020 04:16:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=ZRniTmpB+UuFRdeuuUX10p+GAyzdj6frhKbG345loM0=;
+ b=iQhUbUFwwCYRvGdtY/721XmeKscPtlZjAoHaQXYgFwWTmjEbrHzJgdKFiFSuZ6qUZ7kg
+ CaOVviH8ZY+JeFv9IifMOjouln3gYitVTq5O+ztHjMQn+dFFUYiJnCzkZv/REk1vsciQ
+ 0sOh1SYQykapEPD9h9sO4XzptjiSvwmhY7+V7NLTgVLSnVbMEpS4QI/hHXqWDfQsmEKM
+ GyTSo5bCr7zsWGU6PFzO5utmKWvcVDm+VmakJzhOsb44Q2lfNj/vpmwGAXr4bAhCdNIX
+ 3J3tC0oNmyt7cy0uujC6zi63pnss7mKeaMkNT9xD/ibcgfbbJfGq8YQRgFNRS7rxOJum Zg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 3127kqvf82-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 18 May 2020 04:16:24 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04I4D1NT068398;
+        Mon, 18 May 2020 04:16:23 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 312sxpjcwd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 May 2020 04:16:23 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04I4GL4V022308;
+        Mon, 18 May 2020 04:16:22 GMT
+Received: from [192.168.0.157] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 17 May 2020 21:16:21 -0700
+Subject: Re: [PATCH v5] hugetlbfs: Get unmapped area below TASK_UNMAPPED_BASE
+ for hugetlbfs
+To:     Hushijie <hushijie3@huawei.com>
+Cc:     "will@kernel.org" <will@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nixiaoming <nixiaoming@huawei.com>,
+        "wangxu (AE)" <wangxu72@huawei.com>,
+        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
+        yangerkun <yangerkun@huawei.com>,
+        "Wangle (RTOS FAE)" <wangle6@huawei.com>,
+        "Chengang (L)" <cg.chen@huawei.com>,
+        "Chenjie (K)" <chenjie6@huawei.com>,
+        "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>
+References: <87d618c778584d2386c0f0c81be6319b@huawei.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <273e15fc-8b54-84d0-992c-76e4598d1590@oracle.com>
+Date:   Sun, 17 May 2020 21:16:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589775048; bh=cuwLKOTJKSE6e49q/J5ZEuun7K4FWrcNFCi0NALDsCU=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=lm2sye2uxDAzQsDuz72nrdclnyI+3mSXl54DWnuRzTk+mC20/nJG9pn0GZ45CY3Mn
-         dvPj8WeT0ELbY0UEwItFvN4jcTRLHFhLV4dHfZfqEsp6uWUgOGFYqu0DntiBv5TCQG
-         PUl0MbKAszDT/61TaTs2LM9sG3zpq+N+Dr73UK5uK8y6eOjsZc6pSt/TkFuI0f2Mhi
-         9Fi0DcmWd8Wwz9D54HyhQ3MIi6axa5MfHzSUiOFFcRF8nf5qweS+mtyjc0YyFP9Lpi
-         1982EhchbiVi7IjdMF9G7EfYjUc922cdxk162kvHRe4rb2GCna6azhPexEMrx5kE74
-         ovuORk6R7yPgg==
+In-Reply-To: <87d618c778584d2386c0f0c81be6319b@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9624 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 mlxscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005180038
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9624 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
+ suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005180037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code was using get_user_pages*(), in a "Case 2" scenario
-(DMA/RDMA), using the categorization from [1]. That means that it's
-time to convert the get_user_pages*() + put_page() calls to
-pin_user_pages*() + unpin_user_pages() calls.
+On 5/16/20 12:47 AM, Hushijie wrote:
+>> On 5/14/20 7:31 AM, Shijie Hu wrote:
+>>> +	if (mm->get_unmapped_area == arch_get_unmapped_area)
+>>> +		return hugetlb_get_unmapped_area_bottomup(file, addr, len,
+>>> +				pgoff, flags);
+>>> +	return hugetlb_get_unmapped_area_topdown(file, addr, len,
+>>> +			pgoff, flags);
+>>
+>> I like this code using the value of mm->get_unmapped_area to determine
+>> which routine to call.  It is used by a few architectures.   However, I
+>> noticed that on at least one architecture (powerpc) mm->get_unmapped_area
+>> may be assigned to routines other than arch_get_unmapped_area or
+>> arch_get_unmapped_area_topdown.  In such a case, we would call the 'new'
+>> topdown routine.  I would prefer that we call the bottomup routine in this
+>> default case.
+>>
+>> In reality, this does not impact powerpc as that architecture has it's
+>> own hugetlb_get_unmapped_area routine.
+>>
+> 
+> Yes, I also noticed this before, powerpc uses radix__arch_get_unmapped_area*() 
+> when CONFIG_PPC_RADIX_MMU opened as 'y' and radix_enabled() returns 
+> true. However, powerpc implemented its own hugetlb_get_unmapped_area(). This
+> patch actually has no effect on powerpc.
+> 
+>> Because of this, I suggest we add a comment above this code and switch
+>> the if/else order.  For example,
+>>
+>> +       /*
+>> +        * Use mm->get_unmapped_area value as a hint to use topdown routine.
+>> +        * If architectures have special needs, they should define their own
+>> +        * version of hugetlb_get_unmapped_area.
+>> +        */
+>> +       if (mm->get_unmapped_area == arch_get_unmapped_area_topdown)
+>> +               return hugetlb_get_unmapped_area_topdown(file, addr, len,
+>> +                               pgoff, flags);
+>> +       return hugetlb_get_unmapped_area_bottomup(file, addr, len,
+>> +                       pgoff, flags);
+>>
+>> Thoughts?
+>> -- 
+>> Mike Kravetz
+>>
+> I agree with you. It's clever to switch the if/else order. If there is such
+> a case, mm->get_unmapped_area() is neihter arch_get_unmapped_area() nor
+> arch_get_unmapped_area_topdown(), it is indeed more appropriate to make the
+> bottomup routine as the default behavior.
+> 
+> May I put this code and comment you show above into patch v6 and add 
+> "Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>" to it?
 
-There is some helpful background in [2]: basically, this is a small
-part of fixing a long-standing disconnect between pinning pages, and
-file systems' use of those pages.
+Feel free to add this code and my Signed-off-by.
 
-Note that this effectively changes the code's behavior as well: it now
-ultimately calls set_page_dirty_lock(), instead of SetPageDirty(). This
-is probably more accurate.
-
-As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
-dealing with a file backed page where we have reference on the inode it
-hangs off." [3]
-
-[1] Documentation/core-api/pin_user_pages.rst
-
-[2] "Explicit pinning of user-space pages":
-    https://lwn.net/Articles/807108/
-
-[3] https://lore.kernel.org/r/20190723153640.GB720@lst.de
-
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
-
-Hi,
-
-Note that I have only compile-tested this patch, although that does
-also include cross-compiling for a few other arches.
-
-thanks,
-John Hubbard
-NVIDIA
-
- drivers/misc/mic/scif/scif_rma.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/misc/mic/scif/scif_rma.c b/drivers/misc/mic/scif/scif_=
-rma.c
-index 01e27682ea30..406cd5abfa72 100644
---- a/drivers/misc/mic/scif/scif_rma.c
-+++ b/drivers/misc/mic/scif/scif_rma.c
-@@ -113,14 +113,17 @@ static int scif_destroy_pinned_pages(struct scif_pinn=
-ed_pages *pin)
- 	int writeable =3D pin->prot & SCIF_PROT_WRITE;
- 	int kernel =3D SCIF_MAP_KERNEL & pin->map_flags;
-=20
--	for (j =3D 0; j < pin->nr_pages; j++) {
--		if (pin->pages[j] && !kernel) {
--			if (writeable)
--				SetPageDirty(pin->pages[j]);
--			put_page(pin->pages[j]);
-+	if (kernel) {
-+		for (j =3D 0; j < pin->nr_pages; j++) {
-+			if (pin->pages[j] && !kernel) {
-+				if (writeable)
-+					set_page_dirty_lock(pin->pages[j]);
-+				put_page(pin->pages[j]);
-+			}
- 		}
--	}
--
-+	} else
-+		unpin_user_pages_dirty_lock(pin->pages, pin->nr_pages,
-+					    writeable);
- 	scif_free(pin->pages,
- 		  pin->nr_pages * sizeof(*pin->pages));
- 	scif_free(pin, sizeof(*pin));
-@@ -1375,7 +1378,7 @@ int __scif_pin_pages(void *addr, size_t len, int *out=
-_prot,
- 			}
- 		}
-=20
--		pinned_pages->nr_pages =3D get_user_pages_fast(
-+		pinned_pages->nr_pages =3D pin_user_pages_fast(
- 				(u64)addr,
- 				nr_pages,
- 				(prot & SCIF_PROT_WRITE) ? FOLL_WRITE : 0,
-@@ -1385,11 +1388,8 @@ int __scif_pin_pages(void *addr, size_t len, int *ou=
-t_prot,
- 				if (ulimit)
- 					__scif_dec_pinned_vm_lock(mm, nr_pages);
- 				/* Roll back any pinned pages */
--				for (i =3D 0; i < pinned_pages->nr_pages; i++) {
--					if (pinned_pages->pages[i])
--						put_page(
--						pinned_pages->pages[i]);
--				}
-+				unpin_user_pages(pinned_pages->pages,
-+						 pinned_pages->nr_pages);
- 				prot &=3D ~SCIF_PROT_WRITE;
- 				try_upgrade =3D false;
- 				goto retry;
---=20
-2.26.2
-
+I assume this still works for your use case.  Correct?
+-- 
+Mike Kravetz
