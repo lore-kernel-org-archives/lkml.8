@@ -2,200 +2,155 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11BDD207F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87FB62081A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:01:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+9BSmUU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgERXAA convert rfc822-to-8bit (ORCPT
+        id S1727981AbgERXBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 19:00:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53112 "EHLO
+        Mon, 18 May 2020 19:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbgERXAA (ORCPT
+        with ESMTP id S1726500AbgERXBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 19:00:00 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3D3C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 16:00:00 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jaojc-0005Dt-Ik; Tue, 19 May 2020 00:59:48 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 0DB1C1006A1; Tue, 19 May 2020 00:59:48 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, bp@alien8.de, luto@kernel.org,
-        hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
-        ak@linux.intel.com, ravi.v.shankar@intel.com,
-        chang.seok.bae@intel.com,
-        Andrew Cooper <andrew.cooper3@citrix.com>, x86@kernel.org
-Subject: Re: [PATCH v12 10/18] x86/fsgsbase/64: Enable FSGSBASE instructions in helper functions
-In-Reply-To: <20200518202435.GD33628@sasha-vm>
-References: <20200511045311.4785-11-sashal@kernel.org> <87v9ktw1ev.fsf@nanos.tec.linutronix.de> <20200518202435.GD33628@sasha-vm>
-Date:   Tue, 19 May 2020 00:59:48 +0200
-Message-ID: <87y2povogr.fsf@nanos.tec.linutronix.de>
+        Mon, 18 May 2020 19:01:35 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 303B8C061A0C;
+        Mon, 18 May 2020 16:01:35 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id c75so4511142pga.3;
+        Mon, 18 May 2020 16:01:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=n/2OdOyoZ864HE1NL5cRmRErjnYTeC8BJcUUPBVh8xM=;
+        b=A+9BSmUUtr7xOkMfzrYupN58DMh1l96MQ613yRIEfsWKPqD1QJfdrtHrKaRavl4Zrr
+         +Q0xZEhP4en3JvaFqxqsP0LawRxX5xfdQiwkfUebitrU8BwZk2zluMK2JvXbET7SNkeb
+         OL94AHQq1J12qDvV1UZD4fPNog6B/SyHdmHdJO/wOcsmxWCQEzBChgrWNOucDZynuGq2
+         FkwxBesagZnWfwsQ5eb+S2EJFE5ASRMNah32uFQ1Ffs1xPDedB5/n0x4O/Hl8m9ttRzM
+         sw5YtZKStt+nGP4UWBD6gNxs0AiI/qJvNv9IFo10aVWNSyEnHCoTxmjbjpMLTwWuhMlm
+         1o/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n/2OdOyoZ864HE1NL5cRmRErjnYTeC8BJcUUPBVh8xM=;
+        b=NRk2u07dgaPIRXiKE5wyBCoNuI9kYpkyMJz6I+TCxvK8qlE+bueMX8hmVue2TSwoXJ
+         9O0DhxxyJO06/0qUAIIOHG6PxeJztz+8PByCdE+C0oFaDGSCBouEPujXdGfkSfauj4oU
+         CH9NjcKt6FUWU18vTcibuZkVk/o2mMfszmzcyPJggzgn5XExYr7/ShQsp0jWEXLm+yGG
+         popiyWacgB3PkZJ33HrU1/3e79TBktsgyFwOlpSLpwzXsAv96coTjONkJTn+2evBvmQb
+         Z4uGWI3GP2xxsZQmwZhGsu302b4gJtL9lJC5G86maFQTtZpoMdwE8Jf06j6uOFqGV3Cl
+         sRpQ==
+X-Gm-Message-State: AOAM530X54S7QQDVeuarY+CsgWi7td6IxtPM8g0eIZlQMr66xa4pzKAY
+        JXherPbNd/W6PiIcp4sH/58=
+X-Google-Smtp-Source: ABdhPJx7GzJtBjw0rqbTS8tx+JTXheQvDQG/wzKR5PbOQzB2X/jRHeKRAJEZwrDiaHNKIu2UGq/xuQ==
+X-Received: by 2002:a05:6a00:1494:: with SMTP id v20mr13966289pfu.150.1589842894625;
+        Mon, 18 May 2020 16:01:34 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w199sm3811206pfc.68.2020.05.18.16.01.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 May 2020 16:01:33 -0700 (PDT)
+Date:   Mon, 18 May 2020 16:01:32 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 000/194] 5.6.14-rc1 review
+Message-ID: <20200518230132.GA176285@roeck-us.net>
+References: <20200518173531.455604187@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sasha,
+On Mon, May 18, 2020 at 07:34:50PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.6.14 release.
+> There are 194 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 20 May 2020 17:32:42 +0000.
+> Anything received after that time might be too late.
+> 
 
-Sasha Levin <sashal@kernel.org> writes:
-> Thank you for taking the time to review this.
+Quick feedback:
 
-welcome and sorry for the explosion.
+You also need to pull in commit 92db978f0d68 ("net: ethernet: ti: Remove
+TI_CPTS_MOD workaround") which fixes commit b6d49cab44b5 ("net: Make
+PTP-specific drivers depend on PTP_1588_CLOCK"). This is necessary to
+avoid various compile errors (see below).
 
-> On Mon, May 18, 2020 at 08:20:08PM +0200, Thomas Gleixner wrote:
->>Sasha Levin <sashal@kernel.org> writes:
->>This conditional irqsave gunk is clearly NOT what was in the tip tree
->>before it got reverted:
->>
->>  a86b4625138d ("x86/fsgsbase/64: Enable FSGSBASE instructions in helper functions")
->
-> It wasn't in the reverted series, it came in Intel's v9 series, with
-> these comments in the cover letter:
->
-> 	Updates from v8 [10]:
-> 	[...]
-> 	* Simplified GS base helper functions (Tony L.)
+Guenter
 
-Ok. I never looked at that series because that requested confirmation
-that nothing will regress due to the ptrace changes was not there. After
-a bit of handwaving this dried out. So I completely missed that back
-then. And I did not look at any later variant which had 0day complaints.
+---
+Building arm:omap2plus_defconfig ... failed
+--------------
+Error log:
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
+drivers/net/ethernet/ti/cpsw.c:886: undefined reference to `cpts_unregister'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_remove':
+drivers/net/ethernet/ti/cpsw.c:1741: undefined reference to `cpts_release'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_rx_handler':
+drivers/net/ethernet/ti/cpsw.c:437: undefined reference to `cpts_rx_timestamp'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_open':
+drivers/net/ethernet/ti/cpsw.c:840: undefined reference to `cpts_register'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_probe':
+drivers/net/ethernet/ti/cpsw.c:1716: undefined reference to `cpts_release'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o:(.debug_addr+0x34): undefined reference to `cpts_release'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o:(.debug_addr+0x194): undefined reference to `cpts_unregister'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o:(.debug_addr+0x350): undefined reference to `cpts_rx_timestamp'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o:(.debug_addr+0xb20): undefined reference to `cpts_register'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_priv.o: in function `cpsw_tx_handler':
+drivers/net/ethernet/ti/cpsw_priv.c:68: undefined reference to `cpts_tx_timestamp'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_priv.o: in function `cpsw_init_common':
+drivers/net/ethernet/ti/cpsw_priv.c:525: undefined reference to `cpts_create'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_priv.o:(.debug_addr+0xa38): undefined reference to `cpts_tx_timestamp'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_priv.o:(.debug_addr+0xc90): undefined reference to `cpts_create'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_ndo_stop':
+drivers/net/ethernet/ti/cpsw_new.c:814: undefined reference to `cpts_unregister'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_remove':
+drivers/net/ethernet/ti/cpsw_new.c:2028: undefined reference to `cpts_release'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_rx_handler':
+drivers/net/ethernet/ti/cpsw_new.c:379: undefined reference to `cpts_rx_timestamp'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_probe':
+drivers/net/ethernet/ti/cpsw_new.c:2004: undefined reference to `cpts_release'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_ndo_open':
+drivers/net/ethernet/ti/cpsw_new.c:874: undefined reference to `cpts_register'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o:(.debug_addr+0x38): undefined reference to `cpts_release'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o:(.debug_addr+0x158): undefined reference to `cpts_unregister'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o:(.debug_addr+0x2c4): undefined reference to `cpts_rx_timestamp'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o:(.debug_addr+0xa60): undefined reference to `cpts_register'
+make[1]: *** [vmlinux] Error 1
+make: *** [sub-make] Error 2
+--------------
 
-> And I did, Thomas. While I'm not intimately familiar with the code I
-> made sure that all the patches that came on top of the merged series
-> before it got reverted made it into this new series. However, more work
-> has happened here after the revert and I would expect that the code in
-> this new series will be different than the code you reverted last
-> year.
-
-It's obvious that it would be different from what was merged simply
-because the affected code has changed but not in substantial points like
-losing a kprobes protection by "simplifying" something which was
-carefully done in the first place.
-
-It's not your fault at all, you just happened to be the messanger. The
-people responsible for that mess owe you at least a beer.
-
->> - In paranoid_exit()
->>
->>-	TRACE_IRQS_IRETQ_DEBUG
->>+	TRACE_IRQS_OFF_DEBUG
->
-> (assuming we're looking at the same thing here, ) Changed in v8 of the
-> series.
-
-Sigh.
-
-> I'm a bit confused about the surprise here that v12 is different than
-> the reverted patches. There were multiple rounds of review which
-> resulted in the code being more than just a revert of the revert along
-> with a small fix.
->
->> > This looks unpleasant to review.  I wonder if it would be better to unrevert
->> > the reversion, merge up to Linus' tree or -tip, and then base the changes on
->> > top of that.
->>
->> I don't think that's a good idea. The old code is broken in several ways
->> and not bisectable. So we really better start from scratch.
->
-> And this is what we have here, a series that has more than trivial
-> differences from the revert, and is more of a pain to review. Look at
-> what you did with your 25 minutes: you've reverted the revert and went
-> on to apply fixes on top of it, exactly the thing you've asked
-> not to do a few months prior.
-
-I did that to analyse whether that new series has everything what was
-fixed back then and did not introduce new bugs. Mission accomplished.
-
-> No need to worry about me sending a new series, as I can't - I just
-> don't know what you want to see at this point: on one hand you're saying
-> "we really better start from scratch" and on the other hand "this
-> conditional irqsave gunk is clearly NOT what was in the tip tree before
-> it got reverted", you're making suggestions to change comments only to
-> later complain that "a gazillion of comment changes make reading the
-> diff harder". 
-
-Gah. That comment change thing was just an annoyance and I complained
-about it because I was already grumpy as hell.
-
-So what I meant is that the blind revert of the revert, i.e. just
-reapplying the previous stuff, is horrible. Simply because the reverted
-patches were already not bisectable. And then applying random changes on
-top does not make it any better.
-
-So yes, I would have done exactly where I started:
-
-   1) Extract the original patches from git
-
-   2) Apply them and fixup the rejects
-
-and on top of that:
-
-   3) Make them bisectable by folding back the fixes to the right place
-      and reordering them which creates a result which is equivalent to
-      'start from scratch' but without losing context and introducing
-      new bugs. Simply because it's trivial to diff against the state
-      before the revert.
-
-   4) Do the 'improvements' on top, discuss them and fold them back.
-
-For what you tried to do I would have omitted #4 completely and then
-did:
-
-   5) Rebase the latest Intel variant
-
-   6) Diff the results ideally step by step
-
-   7) Analyze the deltas carefully and if unsure about the result
-      ask.
-      
-   That way you really would have noticed that this helper patch is
-   substantially different and you would have noticed that the kprobes
-   protection is gone. Also that would have clearly shown you the IRQ
-   flag wreckage.
-
-So to go forward can you please just do #1 - #3 first?
-
-Vs. the s/GSBASE/GS base/g comment changes: I don't mind them per se,
-but they are incomplete because they just change it in the new code
-while there are still the original comments using GSBASE. So either we
-change it wholesale or not at all. If so, then this wants to be a
-separate patch right at the beginning of the new series which changes
-the existing comments before introducing a different variant.
-
-That "simplified" handling is going nowhere. That conditional irq
-disable and the redundant conditionals and the out of line invocation in
-switch_to() are just not going to happen.
-
-So when comparing it to the latest Intel trainwreck ignore that part
-completely,
-
-I've uploaded my quick shot with a few cleanups on top (folded back) for
-reference:
-
-  https://tglx.de/~tglx/patches-fsgs.tar
-
-Uncompiled and untested. I'm not claiming it's bug free either. If you
-find one, please keep it. Hope that helps.
-
-Thanks,
-
-        tglx
+Building arm:keystone_defconfig ... failed
+--------------
+Error log:
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/netcp_ethss.o: in function `gbe_rxtstamp':
+drivers/net/ethernet/ti/netcp_ethss.c:2595: undefined reference to `cpts_rx_timestamp'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/netcp_ethss.o: in function `gbe_probe':
+drivers/net/ethernet/ti/netcp_ethss.c:3719: undefined reference to `cpts_create'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/netcp_ethss.o: in function `gbe_remove':
+drivers/net/ethernet/ti/netcp_ethss.c:3812: undefined reference to `cpts_release'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/netcp_ethss.o: in function `gbe_unregister_cpts':
+drivers/net/ethernet/ti/netcp_ethss.c:2731: undefined reference to `cpts_unregister'
+arm-linux-gnueabi-ld: drivers/net/ethernet/ti/netcp_ethss.o: in function `gbe_register_cpts':
+drivers/net/ethernet/ti/netcp_ethss.c:2714: undefined reference to `cpts_register'
+make[1]: *** [vmlinux] Error 1
+make: *** [sub-make] Error 2
