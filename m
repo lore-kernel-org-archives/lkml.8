@@ -2,80 +2,112 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C58CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C5CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E60822065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C0720756
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:56:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XbERVnpP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H24gkmj4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgEROzh (ORCPT
+        id S1728060AbgERO4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:55:37 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23625 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727006AbgEROzg (ORCPT
+        Mon, 18 May 2020 10:56:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbgERO4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:55:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589813735;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4yAldgoyB3mAzWkQsju8c9s+EKf3cYLO77s6Z8Cfh+k=;
-        b=XbERVnpP9daDhTxIbiapWnw/nxvMBUc7S4fdxlm94pSXUY8wWywNaMeTVIDPHVBpKqgj/7
-        eljeTVdZlzGZoVYbTndRNPg0mUDn9Rs7TH6b2Pgz9pCHaWRkFR0ZciLD4PrHu8GqeIUKAv
-        7gisAhG2rCjm1XdDQiBJZZ8LKA6wAsE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-507-OQV_8YZ0Ow-v2Gx-1u1iwQ-1; Mon, 18 May 2020 10:55:34 -0400
-X-MC-Unique: OQV_8YZ0Ow-v2Gx-1u1iwQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07968800D24;
-        Mon, 18 May 2020 14:55:33 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3B9201944E;
-        Mon, 18 May 2020 14:55:30 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <367178.1589627756@turing-police>
-References: <367178.1589627756@turing-police>
-To:     =?us-ascii?Q?Valdis_=3D=3Futf-8=3FQ=3FKl=3Dc4=3D93tnieks=3F=3D?= 
-        <valdis.kletnieks@vt.edu>
-Cc:     dhowells@redhat.com, Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] watch_queue: sample: Update makefile to fix deprecated variables
+        Mon, 18 May 2020 10:56:03 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F24C061A0C;
+        Mon, 18 May 2020 07:56:03 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id 5so2137839pjd.0;
+        Mon, 18 May 2020 07:56:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j0vgPkzC0SrMw1LKftBMhKbRArXUYnbbA1/YhTB9uaQ=;
+        b=H24gkmj4DfDfuJCrO+06TCGDojdN1L9EUvpR5Ip3kE+bWfnp24rarC1anGDdbcKBM8
+         hDgd2N7B6rmEETzkobnuyliskxRCTQlzWNrzdQ+PsYY+Q9/zRy23jmiGPHREE1MM0NV/
+         yP2jVkjfW363I9E4dh+FK5deMTF+E5pXAlZ+D0N3ZDO8+wQ2ofNpPS5WNbOQV6zbfx2U
+         LQA+xrE7n3ZnbOLCtZV5e0shXEb4ctn9y91k8CDcZToocRNuweWiDt8nsacjdm8son3A
+         mPSrlUxJzdjMFPkm6wH+ZjHcd3LVWWTbGRdLxOl0fjfT6zRgnDvBBTDOf1gF8bt9auI2
+         zXVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j0vgPkzC0SrMw1LKftBMhKbRArXUYnbbA1/YhTB9uaQ=;
+        b=EdBiMPnk3SSVkr3YM9+sEVoanOs4IO4uhp0LNWSq8OkryJba2VvFlJA9J5b/v2bW0i
+         IZyNYWVdS8hGbUGjtbvb6iFfD9rLe1Y0qpeu7noMhF1GyAqMsi+UhzeX7Wk6BRLFeNwR
+         z+zRwWamhmrK7pWZQpoFN6V2wNofSD+QFY0gyovfBqpvloujyU13U0sfA7fsxro/RxWq
+         PsgOmG3uRHT+uHvmc0qlvOhoZlVEtwF+9J/312rGmx1epsEF/4JaesPfo8hl3UJQ404v
+         julLiSehGgwKEI6hWxH76GQ5ID0/CVqF9KHRrpB57iPSeVEjTyDI76wbCgNJK0MdzYsD
+         ix/g==
+X-Gm-Message-State: AOAM530Sc2U6VNVfKlD7nXpMxbnWhsDWeXUsJFgr6qTzKjDOX9+1uBBX
+        s40/KMg7FUhxcoBwZKuDlk8ElCqXTyPFgNEEHH8=
+X-Google-Smtp-Source: ABdhPJzz4iSJwpMHgi49aKOPdGMYFISG3X9YPDm7J/TYfsTMb/LHGyys39ppu1LINRhi2P3ZQj6t6s08ynYuAvMi11E=
+X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr15165549plt.18.1589813762929;
+ Mon, 18 May 2020 07:56:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 18 May 2020 15:55:30 +0100
-Message-ID: <919012.1589813730@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200518133645.19127-1-jonathan.albrieux@gmail.com> <20200518133645.19127-4-jonathan.albrieux@gmail.com>
+In-Reply-To: <20200518133645.19127-4-jonathan.albrieux@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 18 May 2020 17:55:51 +0300
+Message-ID: <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Valdis Kl=C4=93tnieks <valdis.kletnieks@vt.edu> wrote:
+On Mon, May 18, 2020 at 4:38 PM Jonathan Albrieux
+<jonathan.albrieux@gmail.com> wrote:
 
-> A recent commit started warning for deprecated makefile variables.
-> Turns out there was an in-tree user, so update it.
->=20
-> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+> +       gpiod_set_value_cansleep(data->reset_gpiod, 1);
 
-I've folded this in, thanks.
+(1)
 
-David
+...
 
+> +       /*
+> +        * If reset pin is provided then will be set to high on power on
+> +        * and to low on power off according to AK09911 datasheet
+> +        */
+
+Wording is confusing, perhaps you have to use 'asserted / deasserted'.
+
+Btw, in (1) it's also "high" (asserted). I barely understand how it's
+supposed to work in all cases?
+
+> +       reset_gpiod = devm_gpiod_get_optional(&client->dev,
+> +                                             "reset", GPIOD_OUT_HIGH);
+> +       if (IS_ERR(reset_gpiod))
+> +               return PTR_ERR(reset_gpiod);
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
