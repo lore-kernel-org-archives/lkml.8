@@ -2,93 +2,149 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26A692065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826394;
-	bh=Dy9+yzzQGv8TwSLbXo42Lz/TB6+TmkvJluwUjIXx7IM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0OIz4zuo/sWgn12T/HnlRfQv2e8oikg0U4FVvtYcq/GqmyH++l1+jgCgCnsuVrRCQ
-	 k1V9amda5itAA2DZVANKEwH+QDSx5KXteiB7EtemXepisdQfLfhEVwi6wJmhWDHjaj
-	 4yYgrG9GRA2t+KQFiLcr5oGl2AXBNusZl5wFS4q0=
+	by mail.kernel.org (Postfix) with ESMTP id EC12A20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729884AbgERRpM (ORCPT
+        id S2387851AbgERS0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:45:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43734 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:26:37 -0400
+Received: from mga01.intel.com ([192.55.52.88]:27641 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729829AbgERRpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:45:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C5E820715;
-        Mon, 18 May 2020 17:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823905;
-        bh=Dy9+yzzQGv8TwSLbXo42Lz/TB6+TmkvJluwUjIXx7IM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D9XSC8lbJPoROAda3dAkJBDPeAOLKDnfVlltEw4bm/dIFwcPwCYJNKc8Ig9UUkG/Q
-         c7P37hoeo8PPb8XvfKhBbDm0hsJ7Q5j98y7gbKi6ITJ2ZkeSUYO319mnVpZ4mLXXA1
-         I0a0PQxAjq7RC3JnTVrQ2Y+ozJ4V4XjgABpNfO2c=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.9 83/90] usb: gadget: audio: Fix a missing error return value in audio_bind()
-Date:   Mon, 18 May 2020 19:37:01 +0200
-Message-Id: <20200518173508.076631904@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
-References: <20200518173450.930655662@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728898AbgERS0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:26:32 -0400
+IronPort-SDR: JyuzkzXPtPV3syQh/yWxnhYEqHF7SJGBqxRYvbOghJiNPbW+8x92L0GfZfkoo0epadsVzxP2fP
+ yEMbiUVm27SQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:26:31 -0700
+IronPort-SDR: EiDGEjtD5niwotAU58G4e/Ralcrx0+UnsF4cgXMSm0BivSD302e9Yg0i9/0jjpwnbzMdw/5d0Y
+ pe1OKqDQvz/Q==
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="253135674"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:26:30 -0700
+Date:   Mon, 18 May 2020 11:26:29 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jue Wang <juew@google.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/mm: Don't try to change poison pages to uncacheable
+ in a guest
+Message-ID: <20200518182629.GA2957@agluck-desk2.amr.corp.intel.com>
+References: <20200516150229.GB19372@zn.tnic>
+ <8022D1E6-A8BC-4610-9F58-67A06B9A9575@intel.com>
+ <CAPcxDJ50pbuTbittyvPwKq1uUT8q8jJ+dHH8rCug8a1DDZXVYw@mail.gmail.com>
+ <CAPcxDJ6f3pBpwiR9nvXN_g_HBa1RAMG+aOmgfXLFT6aZ9HQn3w@mail.gmail.com>
+ <20200518134813.GC25034@zn.tnic>
+ <20200518153625.GA31444@agluck-desk2.amr.corp.intel.com>
+ <20200518165500.GD25034@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518165500.GD25034@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Mon, May 18, 2020 at 06:55:00PM +0200, Borislav Petkov wrote:
+> On Mon, May 18, 2020 at 08:36:25AM -0700, Luck, Tony wrote:
+> > The VMM gets the page fault (because the unmapping of the guest
+> > physical address is at the VMM EPT level).  The VMM can't map a new
+> > page into that guest physical address because it has no way to
+> > replace the contents of the old page.  The VMM could pass the #PF
+> > to the guest, but that would just confuse the guest (its page tables
+> > all say that the page is still valid). In this particular case the
+> > page is part of the 1:1 kernel map. So the kernel will OOPS (I think).
+> 
+> ...
+> 
+> > PLease explain how a guest (that doesn't even know that it is a guest)
+> > is going to figure out that the EPT tables (that it has no way to access)
+> > have marked this page invalid in guest physical address space.
+> 
+> So somewhere BUS_MCEERR_AR was mentioned. So I'm assuming the error
+> severity was "action required". What does happen in the kernel, on
+> baremetal, with an AR error in kernel space, i.e., kernel memory?
 
-commit 19b94c1f9c9a16d41a8de3ccbdb8536cf1aecdbf upstream.
+Outside of the now infamous memcpy_mcsafe() any kernel consumption
+of poison results in a panic as the mce_severity() code will trip
+this case:
 
-If 'usb_otg_descriptor_alloc()' fails, we must return an error code, not 0.
+        MCESEV(
+                PANIC, "Data load in unrecoverable area of kernel",
+                SER, MASK(MCI_STATUS_OVER|MCI_UC_SAR|MCI_ADDR|MCACOD, MCI_UC_SAR|MCI_ADDR|MCACOD_DATA),
+                KERNEL
+                ),
 
-Fixes: 56023ce0fd70 ("usb: gadget: audio: allocate and init otg descriptor by otg capabilities")
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> If we can't fixup the exception, we die.
+> 
+> So why should the guest behave any differently?
 
----
- drivers/usb/gadget/legacy/audio.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+We don't see this particular problem on baremetal because a CLFLUSH
+instruction isn't *consuming* data. It's just evicting things from
+the cache to memory. So we reference the virtual address, which works
+fine on baremetal because the kernel 1:1 map is still active. But in
+the guest case the guest physical address has gone away. So we trap
+to the VMM.
 
---- a/drivers/usb/gadget/legacy/audio.c
-+++ b/drivers/usb/gadget/legacy/audio.c
-@@ -249,8 +249,10 @@ static int audio_bind(struct usb_composi
- 		struct usb_descriptor_header *usb_desc;
- 
- 		usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
--		if (!usb_desc)
-+		if (!usb_desc) {
-+			status = -ENOMEM;
- 			goto fail;
-+		}
- 		usb_otg_descriptor_init(cdev->gadget, usb_desc);
- 		otg_desc[0] = usb_desc;
- 		otg_desc[1] = NULL;
+> Now, if you want for the guest to be more "robust" and handle that
+> thing, fine. But then you'd need an explicit way to tell the guest
+> kernel: "you've just had an MCE and I unmapped the page" so that the
+> guest kernel can figure out what do to. Even if it means, to panic.
+> 
+> I.e., signal in an explicit way that EPT violation Jue is talking about
+> in the other mail.
+> 
+> You can inject a #PF or better yet the *first* MCE which is being
+> injected should say with a bit somehwere "I unmapped the address in
+> m->addr". So that the guest kernel can handle that properly and know
+> what *exactly* it is getting an MCE for.
 
+That question only makes any sense if you know you are running as a
+guest and that someone else has unmapped the address. It's a meaningless
+question to ask if you are running bare metal. So we'd still have a check
+for FEATURE_HYPERVISOR
 
+> What I don't like is the "am I running as a guest" check. Because
+> someone else would come later and say, err, I'm not virtualizing this
+> portion of MCA either, lemme add another "am I guest" check.
+> 
+> Sure, it is a lot easier but when stuff like that starts spreading
+> around in the MCE code, then we can just as well disable MCE when
+> virtualized altogether. It would be a lot easier for everybody.
+
+Maybe it isn't pretty. But I don't see another practical solution.
+
+The VMM is doing exactly the right thing here. It should not trust
+that the guest will behave and not touch the poison location again.
+If/when the guest does touch the poison, the right action is
+for the VMM to fake a new machine check to the guest.
+
+Theoretlcally the VMM could decode the instruction that the guest
+was trying to use on the poison page and decide "oh, this is that
+weird case in Linux where it's just trying to CLFLUSH the page. I'll
+just step the return IP past the CLFLUSH and let the guest continue".
+
+But that doesn't sound at all reasonable to me (especially as the
+next step is to realize that Linux is going to repeat that for every
+cache line in the page, so you also want to VMM to fudge the register
+contents to skip to the end of the loop and avoid another 63 VMEXITs).
+
+N.B. Linux wants to switch the page to uncacheable so that in the
+persistant memory case the filesytem code can continue to access
+the other "blocks" in the page, rather than lose all of them. That's
+futile in the case where the VMM took the whole 4K away. Maybe Dan
+needs to think about the guest case too.
+
+-Tony
