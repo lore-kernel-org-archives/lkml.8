@@ -2,54 +2,56 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B50C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C662FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8C420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4655207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824434;
-	bh=aWNKYEvi4zIwEu5BpGs3Vn4GreSVeDHYt9+9/Nog1Dk=;
+	s=default; t=1589824437;
+	bh=e923IeQUkDFGtCFMSIPljVav9gG9Zf2cBBiEpAXaqGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fzk82x74VrZ7EXGgfI+jKMfaL1Up257iiV3yccUrfeippMUykOMqdjHVrkyv1MATE
-	 O2kGdTGOQu7EE1uL6UoIvWyeCrk/a9VWlqLzb01fFjKPdnm7WPkGQbKVw2S0j0MZhS
-	 eTAtVMeYcxlU/s4whvuSpXqKzkAawa+E7975etNE=
+	b=qZg8ft8C3ldRPYYZ5+bOfhbmX7SLSa7PYpzvFBYsTpAvXUEbuMEslt4RLvOpQjEZF
+	 sPBfnqVrXf+wLBCfseODtCwXuUOuSy1YMPdBocnE45OQd6PrTEd3cSehDf5j+IJGKX
+	 jEYyjQiQXnMjr9FmpCYrOwKMjK1+zK31qd8hh8xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731210AbgERRxx (ORCPT
+        id S1730419AbgERRx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:53:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58030 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:53:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731195AbgERRxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:53:48 -0400
+        id S1731195AbgERRxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:53:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C40820674;
-        Mon, 18 May 2020 17:53:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A2AF20715;
+        Mon, 18 May 2020 17:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824427;
-        bh=aWNKYEvi4zIwEu5BpGs3Vn4GreSVeDHYt9+9/Nog1Dk=;
+        s=default; t=1589824432;
+        bh=e923IeQUkDFGtCFMSIPljVav9gG9Zf2cBBiEpAXaqGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vxh/Sp933qoZ+QzXwD70cOhSQ4Pcuzd42y44OnE7es1QOQDfpQYZrJ9EpUtX1e7Lm
-         9zhUtXHKDP/T2rqZpqDbDQtdOOsP6mq+fxPXZ30501PILFsxSDOXsk4Skt5lBHehp0
-         SMYehiaU7MpD/4eKUVzISocofvn3TMy647PfioNM=
+        b=BMyKWB/qmGrpgNfHqpwXO87ICT86JvGrRISHUOAmzj9jwwnsrLnr9X25lI5qO5JGv
+         cZLGvFHPuVVA6ovYmoOeDdx1UWqMrcPCmSDpJz9tgDyhx3yTkKZLnMQekAR+i0ntAl
+         YvlMz5hWPdAKigmqv7+155bu3k7KbhQqVr05IzRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergei Trofimovich <slyfox@gentoo.org>,
-        Borislav Petkov <bp@suse.de>, Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 63/80] x86: Fix early boot crash on gcc-10, third try
-Date:   Mon, 18 May 2020 19:37:21 +0200
-Message-Id: <20200518173503.119342410@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 010/147] ftrace/selftests: workaround cgroup RT scheduling issues
+Date:   Mon, 18 May 2020 19:35:33 +0200
+Message-Id: <20200518173514.751474980@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
-References: <20200518173450.097837707@linuxfoundation.org>
+In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
+References: <20200518173513.009514388@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,141 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Alan Maguire <alan.maguire@oracle.com>
 
-commit a9a3ed1eff3601b63aea4fb462d8b3b92c7c1e7e upstream.
+[ Upstream commit 57c4cfd4a2eef8f94052bd7c0fce0981f74fb213 ]
 
-... or the odyssey of trying to disable the stack protector for the
-function which generates the stack canary value.
+wakeup_rt.tc and wakeup.tc tests in tracers/ subdirectory
+fail due to the chrt command returning:
 
-The whole story started with Sergei reporting a boot crash with a kernel
-built with gcc-10:
+ chrt: failed to set pid 0's policy: Operation not permitted.
 
-  Kernel panic — not syncing: stack-protector: Kernel stack is corrupted in: start_secondary
-  CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc5—00235—gfffb08b37df9 #139
-  Hardware name: Gigabyte Technology Co., Ltd. To be filled by O.E.M./H77M—D3H, BIOS F12 11/14/2013
-  Call Trace:
-    dump_stack
-    panic
-    ? start_secondary
-    __stack_chk_fail
-    start_secondary
-    secondary_startup_64
-  -—-[ end Kernel panic — not syncing: stack—protector: Kernel stack is corrupted in: start_secondary
+To work around this, temporarily disable grout RT scheduling
+during ftracetest execution.  Restore original value on
+test run completion.  With these changes in place, both
+tests consistently pass.
 
-This happens because gcc-10 tail-call optimizes the last function call
-in start_secondary() - cpu_startup_entry() - and thus emits a stack
-canary check which fails because the canary value changes after the
-boot_init_stack_canary() call.
-
-To fix that, the initial attempt was to mark the one function which
-generates the stack canary with:
-
-  __attribute__((optimize("-fno-stack-protector"))) ... start_secondary(void *unused)
-
-however, using the optimize attribute doesn't work cumulatively
-as the attribute does not add to but rather replaces previously
-supplied optimization options - roughly all -fxxx options.
-
-The key one among them being -fno-omit-frame-pointer and thus leading to
-not present frame pointer - frame pointer which the kernel needs.
-
-The next attempt to prevent compilers from tail-call optimizing
-the last function call cpu_startup_entry(), shy of carving out
-start_secondary() into a separate compilation unit and building it with
--fno-stack-protector, was to add an empty asm("").
-
-This current solution was short and sweet, and reportedly, is supported
-by both compilers but we didn't get very far this time: future (LTO?)
-optimization passes could potentially eliminate this, which leads us
-to the third attempt: having an actual memory barrier there which the
-compiler cannot ignore or move around etc.
-
-That should hold for a long time, but hey we said that about the other
-two solutions too so...
-
-Reported-by: Sergei Trofimovich <slyfox@gentoo.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Kalle Valo <kvalo@codeaurora.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200314164451.346497-1-slyfox@gentoo.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: c575dea2c1a5 ("selftests/ftrace: Add wakeup_rt tracer testcase")
+Fixes: c1edd060b413 ("selftests/ftrace: Add wakeup tracer testcase")
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/stackprotector.h |    7 ++++++-
- arch/x86/kernel/smpboot.c             |    8 ++++++++
- arch/x86/xen/smp_pv.c                 |    1 +
- include/linux/compiler.h              |    6 ++++++
- init/main.c                           |    2 ++
- 5 files changed, 23 insertions(+), 1 deletion(-)
+ tools/testing/selftests/ftrace/ftracetest | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
---- a/arch/x86/include/asm/stackprotector.h
-+++ b/arch/x86/include/asm/stackprotector.h
-@@ -55,8 +55,13 @@
- /*
-  * Initialize the stackprotector canary value.
-  *
-- * NOTE: this must only be called from functions that never return,
-+ * NOTE: this must only be called from functions that never return
-  * and it must always be inlined.
-+ *
-+ * In addition, it should be called from a compilation unit for which
-+ * stack protector is disabled. Alternatively, the caller should not end
-+ * with a function call which gets tail-call optimized as that would
-+ * lead to checking a modified canary value.
-  */
- static __always_inline void boot_init_stack_canary(void)
- {
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -269,6 +269,14 @@ static void notrace start_secondary(void
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+index 063ecb290a5a3..144308a757b70 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -29,8 +29,25 @@ err_ret=1
+ # kselftest skip code is 4
+ err_skip=4
  
- 	wmb();
- 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
++# cgroup RT scheduling prevents chrt commands from succeeding, which
++# induces failures in test wakeup tests.  Disable for the duration of
++# the tests.
 +
-+	/*
-+	 * Prevent tail call to cpu_startup_entry() because the stack protector
-+	 * guard has been changed a couple of function calls up, in
-+	 * boot_init_stack_canary() and must not be checked before tail calling
-+	 * another function.
-+	 */
-+	prevent_tail_call_optimization();
++readonly sched_rt_runtime=/proc/sys/kernel/sched_rt_runtime_us
++
++sched_rt_runtime_orig=$(cat $sched_rt_runtime)
++
++setup() {
++  echo -1 > $sched_rt_runtime
++}
++
++cleanup() {
++  echo $sched_rt_runtime_orig > $sched_rt_runtime
++}
++
+ errexit() { # message
+   echo "Error: $1" 1>&2
++  cleanup
+   exit $err_ret
  }
  
- /**
---- a/arch/x86/xen/smp_pv.c
-+++ b/arch/x86/xen/smp_pv.c
-@@ -89,6 +89,7 @@ asmlinkage __visible void cpu_bringup_an
- {
- 	cpu_bringup();
- 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
-+	prevent_tail_call_optimization();
- }
+@@ -39,6 +56,8 @@ if [ `id -u` -ne 0 ]; then
+   errexit "this must be run by root user"
+ fi
  
- void xen_smp_intr_free_pv(unsigned int cpu)
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -351,4 +351,10 @@ static inline void *offset_to_ptr(const
- 	compiletime_assert(__native_word(t),				\
- 		"Need native word sized stores/loads for atomicity.")
- 
-+/*
-+ * This is needed in functions which generate the stack canary, see
-+ * arch/x86/kernel/smpboot.c::start_secondary() for an example.
-+ */
-+#define prevent_tail_call_optimization()	mb()
++setup
 +
- #endif /* __LINUX_COMPILER_H */
---- a/init/main.c
-+++ b/init/main.c
-@@ -735,6 +735,8 @@ asmlinkage __visible void __init start_k
+ # Utilities
+ absdir() { # file_path
+   (cd `dirname $1`; pwd)
+@@ -235,6 +254,7 @@ TOTAL_RESULT=0
  
- 	/* Do the rest non-__init'ed, we're now alive */
- 	rest_init();
+ INSTANCE=
+ CASENO=0
 +
-+	prevent_tail_call_optimization();
- }
+ testcase() { # testfile
+   CASENO=$((CASENO+1))
+   desc=`grep "^#[ \t]*description:" $1 | cut -f2 -d:`
+@@ -406,5 +426,7 @@ prlog "# of unsupported: " `echo $UNSUPPORTED_CASES | wc -w`
+ prlog "# of xfailed: " `echo $XFAILED_CASES | wc -w`
+ prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
  
- /* Call all constructor functions linked into the kernel. */
++cleanup
++
+ # if no error, return 0
+ exit $TOTAL_RESULT
+-- 
+2.20.1
+
 
 
