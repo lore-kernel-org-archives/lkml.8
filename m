@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CF2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF3420715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F0E20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825606;
-	bh=a4vO50+AyM+E2Zmx3kYrvkyNEiyeQFXO02nvLaYmr1g=;
+	s=default; t=1589825614;
+	bh=NkGVLDt7e/D8KdRrZgwzwNyk2H8fpV+MMg/0WLe2bMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HLOiST+PkGi0uzB8OP9uX4HRbfFctRfMbksqV/1Kqhf6OYgLN9MYEOD+G8Q/IX1XP
-	 kISb7AOTbuA7pmiwMO4bGvaiplNe0hcJXooN1yVwSJvcXel/K33AaeeF2iTDnO1se6
-	 oLMZ0XmUhOqq+xMAxhohmpKmAsw8YsQ+J6zokr5o=
+	b=ksJMzIb4fNPthikdL+FuTc2LzZCHHIsiJ+1nZj8gtkTw7m65UbiOWiPkqtFvG/iHe
+	 hRsbTRIDzdLhuY5omRjkaaysS54CPG8BN/ihi1VmNVNtv+Gtj+DIZg99wWyl8HehIb
+	 XdODG32wNIYhACYajHDO6AVL9on9rYC9mZlcHYAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387412AbgERSNZ (ORCPT
+        id S2387641AbgERSNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:13:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45362 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:13:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729660AbgERSCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:02:10 -0400
+        id S1731641AbgERSBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:01:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1029B2086A;
-        Mon, 18 May 2020 18:02:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 936FA207D3;
+        Mon, 18 May 2020 18:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824929;
-        bh=a4vO50+AyM+E2Zmx3kYrvkyNEiyeQFXO02nvLaYmr1g=;
+        s=default; t=1589824914;
+        bh=NkGVLDt7e/D8KdRrZgwzwNyk2H8fpV+MMg/0WLe2bMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EFtaorcB8D/lHImM1u+Ok2/BDIRR3L40n4z/7POwagxx9hfrN7OnPKYvz5GjjREYZ
-         qyPX5xvvSVy6O9IDLBL1ZTUn8tciQCFze5UxV20SZRD+XRm3pAlx91LNS6zNRD7yKz
-         Pe3VqAe791f8pSsS5RnUAAUpbBWkB4q8TqNYqOMI=
+        b=ANFuMC9F39WnGq2cuqMWopUVoc1c3sQTXcGY3M5guJcufN+13Rs0ryCe29nPoPPUw
+         0qZ+/ZPwHEUid0ZrzkupMOll4NfwGqVPwQK/ZJy40bfttY//KfS0dnsn9rzHQzH1CM
+         OWNRgHQn/4JZ6407ozVcZoGH7kKUyQpCtNeShln4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Tiecheng Zhou <Tiecheng.Zhou@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 060/194] drm/amd/powerplay: avoid using pm_en before it is initialized revised
-Date:   Mon, 18 May 2020 19:35:50 +0200
-Message-Id: <20200518173536.724166974@linuxfoundation.org>
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 055/194] dmaengine: mmp_tdma: Reset channel error on release
+Date:   Mon, 18 May 2020 19:35:45 +0200
+Message-Id: <20200518173536.328744885@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -61,53 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit 690ae30be163d5262feae01335b2a6f30569e5aa ]
+[ Upstream commit 0c89446379218698189a47871336cb30286a7197 ]
 
-hwmgr->pm_en is initialized at hwmgr_hw_init.
+When a channel configuration fails, the status of the channel is set to
+DEV_ERROR so that an attempt to submit it fails. However, this status
+sticks until the heat end of the universe, making it impossible to
+recover from the error.
 
-during amdgpu_device_init, there is amdgpu_asic_reset that calls to
-soc15_asic_reset (for V320 usecase, Vega10 asic), in which:
-1) soc15_asic_reset_method calls to pp_get_asic_baco_capability (pm_en)
-2) soc15_asic_baco_reset calls to pp_set_asic_baco_state (pm_en)
+Let's reset it when the channel is released so that further use of the
+channel with correct configuration is not impacted.
 
-pm_en is used in the above two cases while it has not yet been initialized
-
-So avoid using pm_en in the above two functions for V320 passthrough.
-
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Link: https://lore.kernel.org/r/20200419164912.670973-5-lkundrak@v3.sk
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/amd_powerplay.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/dma/mmp_tdma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
-index c195575366a3b..e4e5a53b2b4ea 100644
---- a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
-+++ b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
-@@ -1435,7 +1435,8 @@ static int pp_get_asic_baco_capability(void *handle, bool *cap)
- 	if (!hwmgr)
- 		return -EINVAL;
+diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
+index 51e08c16756ae..d683232d7fea0 100644
+--- a/drivers/dma/mmp_tdma.c
++++ b/drivers/dma/mmp_tdma.c
+@@ -363,6 +363,8 @@ static void mmp_tdma_free_descriptor(struct mmp_tdma_chan *tdmac)
+ 		gen_pool_free(gpool, (unsigned long)tdmac->desc_arr,
+ 				size);
+ 	tdmac->desc_arr = NULL;
++	if (tdmac->status == DMA_ERROR)
++		tdmac->status = DMA_COMPLETE;
  
--	if (!hwmgr->pm_en || !hwmgr->hwmgr_func->get_asic_baco_capability)
-+	if (!(hwmgr->not_vf && amdgpu_dpm) ||
-+		!hwmgr->hwmgr_func->get_asic_baco_capability)
- 		return 0;
- 
- 	mutex_lock(&hwmgr->smu_lock);
-@@ -1469,7 +1470,8 @@ static int pp_set_asic_baco_state(void *handle, int state)
- 	if (!hwmgr)
- 		return -EINVAL;
- 
--	if (!hwmgr->pm_en || !hwmgr->hwmgr_func->set_asic_baco_state)
-+	if (!(hwmgr->not_vf && amdgpu_dpm) ||
-+		!hwmgr->hwmgr_func->set_asic_baco_state)
- 		return 0;
- 
- 	mutex_lock(&hwmgr->smu_lock);
+ 	return;
+ }
 -- 
 2.20.1
 
