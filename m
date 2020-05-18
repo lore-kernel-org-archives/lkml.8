@@ -2,240 +2,126 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25C7E20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6FC2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="bwhULTYe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDsKryn7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgERNUR (ORCPT
+        id S1728103AbgERNUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:20:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46744 "EHLO
+        Mon, 18 May 2020 09:20:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727917AbgERNUQ (ORCPT
+        with ESMTP id S1726999AbgERNUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:20:16 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F64C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:20:16 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Qfl1694vz9sTS;
-        Mon, 18 May 2020 23:20:13 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1589808015;
-        bh=RloeE0LdmqKAFSvpaXbVeVj8qQSByHsMtpiN5OEN8FA=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=bwhULTYedxiW3vCTcPq1HpvpTZ/liHivPDSALic6bvBzZec6hbQyS7NnzjoHOCG/I
-         3XFfQuQXNzQP02yVygvIzzynBObCLbOcNjLOdFMbdpHhjhAI/JcjWuJ/53kLefYZrU
-         pFoeXYTnLUYJEHbOzoEBNLL2Zl1sr5/AT5lbVwSI1cIIafoy3soMr0elcJiCf0mSkc
-         1lGqYgY1hWJxzONtuO8S2HH9K+79wds1tzyjnkngLz16OyXPJIqzITYyd7cAxVHBdE
-         VeQb7ldLtjKDQyZbe68K2osL/ckc8LgtrqiH1cTw/mGjH+ZJdepen5zpLGYKAnXOKK
-         vyU6PWLjzbhyg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Remove WALNUT hacks in serio/i8042 (was Re: ld.lld: error: undefined symbol: kb_cs)
-In-Reply-To: <20200514030149.GA1841966@ubuntu-s3-xlarge-x86>
-References: <202005140845.lthaPgxR%lkp@intel.com> <20200514030149.GA1841966@ubuntu-s3-xlarge-x86>
-Date:   Mon, 18 May 2020 23:20:30 +1000
-Message-ID: <87a7254bxd.fsf@mpe.ellerman.id.au>
+        Mon, 18 May 2020 09:20:22 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3E2C061A0C;
+        Mon, 18 May 2020 06:20:22 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x15so4944018pfa.1;
+        Mon, 18 May 2020 06:20:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VOhtb6aDUYF/bby4eFhEdjPKdJJNHZhrs2dy1zRqvRg=;
+        b=rDsKryn799wrGML6USURKvFtsAV/uzTijzNVu9hI6FTQEj3AFhZ911irHK3ovzhsUH
+         gY5LA7X6RURa29N0a9uH5OFLBvFxKgmCVL+S2LHar2ZloaGB+HW7AjVNvR4EFgCBxpsy
+         po8m+4EEsdKOq83PhP0pKwMOFemPBi2NghEI8xaASNmmmpuisFOXxp8CYt4r9RUzxxu1
+         M3GB8LGBpgcFswMHRmJSEf6wc8sgbA4QBO4WBLxXI/N36soCP3yyMdGiZf7r3pEYznqk
+         6vi0oRLO6oAzTU8/YQKG1+FHZVrR4xGNGcqOGbViiKsPYwbG3i5aRhnYKp6FmwbGWmsi
+         ut+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VOhtb6aDUYF/bby4eFhEdjPKdJJNHZhrs2dy1zRqvRg=;
+        b=pJgTHGpUWBLOfOik5MMvYbjSRYYfclikW/Zt/Fc9ihoEBjp0dW/S+idO8QiOxzCW47
+         jkqllKUN1lEmsJnN0et5DRfzQ4A3322qwcIgqG+jObqlzS6m1TIrlSYTEEQnjKUQIGfu
+         c64yCx/SNDD0SQ1ARGQK6XXDQ+HbowC7NLxv5hnthZhBDQvXjzhrJU+irFAg62ikEjWc
+         JJzH/UaPYhjhezCJsqqhgE2O/Jsz7LSdb6QTRgdKrDUHZlJWFf1fdqza/OqBXV8rfRts
+         6he309FNV049jSmnbK0fUoSW3j8dPkRYCZqLVXtVg3kAiRZmTVLuPVHlxmSNPON/6sio
+         JBbg==
+X-Gm-Message-State: AOAM5329nrl/7ygyMHDR6KSrNXHlF+NoxJ6CefEVF7ccDsJaweVIkelr
+        U/B8ar/rvMoqlsNsKIEyENYkvwyd6dTCQZsq0Fc=
+X-Google-Smtp-Source: ABdhPJxEWo37sbtLGrnXVQllcXNP02GCyiWRVMGVtQCaOaZDXATQdRF9Fzdajl4gBo0tRari+NEpX4OkjNg1wYKmxcw=
+X-Received: by 2002:a63:1c1:: with SMTP id 184mr15312040pgb.203.1589808022426;
+ Mon, 18 May 2020 06:20:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200515105537.4876-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <202005152142.AWvx4xc5%lkp@intel.com> <CAHp75Ven9q-6dDYtP_uXigeS_r2uvpUZVR5Mh0RdEd36MbTG+Q@mail.gmail.com>
+ <CAK8P3a3RKJo-C5=19oAppx212s7T8NdnKJVmkj+h=34a8aKMNA@mail.gmail.com>
+ <5180e734-ff56-db5a-ab49-8a55cfa2f2c0@linux.intel.com> <CAHp75Ve_XjvvGBEQyhy=qVVJMFS+18j3aKxNxSQpGK5qJmzfBg@mail.gmail.com>
+ <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
+In-Reply-To: <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 18 May 2020 16:20:10 +0300
+Message-ID: <CAHp75VfFsdjAT0P4m3O=VQ1e_L7cVyQx6HB7MCN+G_XcFisqZQ@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        kbuild test robot <lkp@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>, kbuild-all@lists.01.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        masonccyang@mxic.com.tw
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Cc += linuxppc-dev ]
-
-Nathan Chancellor <natechancellor@gmail.com> writes:
-> On Thu, May 14, 2020 at 08:13:48AM +0800, kbuild test robot wrote:
->> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->> head:   24085f70a6e1b0cb647ec92623284641d8270637
->> commit: 5990cdee689c6885b27c6d969a3d58b09002b0bc lib/mpi: Fix building for powerpc with clang
+On Mon, May 18, 2020 at 2:57 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Mon, May 18, 2020 at 1:43 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Mon, May 18, 2020 at 2:39 PM Ramuthevar, Vadivel MuruganX
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> > > On 15/5/2020 10:30 pm, Arnd Bergmann wrote:
+> > > > On Fri, May 15, 2020 at 4:25 PM Andy Shevchenko
+> > > > <andy.shevchenko@gmail.com> wrote:
+> > > >> On Fri, May 15, 2020 at 4:48 PM kbuild test robot <lkp@intel.com> wrote:
+> >
+> > > > iowrite_be32() is the correct way to store word into a big-endian mmio register,
+> > > > if that is the intention here.
+> > > Thank you for suggestions to use iowrite32be(), it suits exactly.
+> >
+> > Can you before doing this comment what is the real intention here?
+> >
+> > And note, if you are going to use iowrite*() / ioread*() in one place,
+> > you will probably need to replace all of the read*() / write*() to
+> > respective io* API.
 >
-> I am certain that this patch did nothing to cause this... Maybe exposed
-> it but not the root cause.
+> The way that ioread/iowrite are defined, they are required to be a superset
+> of what readl/writel do and can take __iomem pointers from either
+> ioremap() or ioport_map()/pci_iomap() style mappings, while readl/writel
+> are only required to work with ioremap().
 >
->> date:   3 weeks ago
->> config: powerpc-randconfig-r034-20200514 (attached as .config)
->> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 310d32cb80a611e6384a921e85607fea05841f26)
->> reproduce:
->>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>         chmod +x ~/bin/make.cross
->>         # install powerpc cross compiling tool for clang build
->>         # apt-get install binutils-powerpc-linux-gnu
->>         git checkout 5990cdee689c6885b27c6d969a3d58b09002b0bc
->>         # save the attached .config to linux build tree
->>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=powerpc 
->> 
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kbuild test robot <lkp@intel.com>
->> 
->> All errors (new ones prefixed by >>):
->> 
->> >> ld.lld: error: undefined symbol: kb_cs
->> >>> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
->> >>> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> >>> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
->> >>> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> >>> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
->> >>> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> >>> referenced 45 more times
->> --
->> >> ld.lld: error: undefined symbol: kb_data
->> >>> referenced by i8042.c:309 (drivers/input/serio/i8042.c:309)
->> >>> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> >>> referenced by i8042-ppcio.h:33 (drivers/input/serio/i8042-ppcio.h:33)
->> >>> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> >>> referenced by i8042.c:319 (drivers/input/serio/i8042.c:319)
->> >>> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> >>> referenced 15 more times
->
-> kb_cs and kb_data are declared as extern void pointers when
-> CONFIG_WALNUT is set, which this config does. However, it looks like
-> the definitions of these variables were removed in
-> commit  917f0af9e5a9 ("powerpc: Remove arch/ppc and include/asm-ppc"),
-> way back in 2.6.27-rc1... So presumably, this has been broken for 12
-> years and nobody noticed?
+> There is no technical requirement to stick to one set or the other for
+> ioremap(), but the overhead of ioread/iowrite is also small enough
+> that it generally does not hurt.
 
-Hmm, nice. 12 years is a pretty typical time frame for finding bugs in
-the powerpc tree ... o_O
+Right, my suggestion is solely for consistency. It would be a bit
+weird to see readl() along with ioread32() in the same driver (in case
+there are no differentiated callbacks specifically for different type
+of IP).
 
-Our ppc40x_defconfig has CONFIG_SERIO=m, but explicitly disables
-CONFIG_SERIO_I8042. And walnut_defconfig disables CONFIG_SERIO.
-
-So I guess it has a PS2 controller but most folks didn't use it?
-
-> Probably means there is a good amount of dead
-> code that can be removed, or we could just avoid ever selecting this
-> driver with CONFIG_WALNUT (if it does not actually work without the
-> special handling from i8042-ppcio.h) while removing the dead code.
-
-I'm inclined to let the driver be selected, rather than carry a wart for
-it. I doubt anyone will ever turn it on explicitly, and if they do they
-can have fun debugging it.
-
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 924c541a9260..59b2f655e39e 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -138,7 +138,7 @@ config PPC
->  	select ARCH_HAVE_NMI_SAFE_CMPXCHG
->  	select ARCH_KEEP_MEMBLOCK
->  	select ARCH_MIGHT_HAVE_PC_PARPORT
-> -	select ARCH_MIGHT_HAVE_PC_SERIO
-> +	select ARCH_MIGHT_HAVE_PC_SERIO if !WALNUT
->  	select ARCH_OPTIONAL_KERNEL_RWX		if ARCH_HAS_STRICT_KERNEL_RWX
->  	select ARCH_SUPPORTS_ATOMIC_RMW
->  	select ARCH_USE_BUILTIN_BSWAP
-
-So I'd drop this hunk.
-
-> diff --git a/drivers/input/serio/i8042-ppcio.h b/drivers/input/serio/i8042-ppcio.h
-> deleted file mode 100644
-> index 391f94d9e47d..000000000000
-> --- a/drivers/input/serio/i8042-ppcio.h
-> +++ /dev/null
-> @@ -1,57 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0-only */
-> -#ifndef _I8042_PPCIO_H
-> -#define _I8042_PPCIO_H
-> -
-> -
-> -#if defined(CONFIG_WALNUT)
-> -
-> -#define I8042_KBD_IRQ 25
-> -#define I8042_AUX_IRQ 26
-> -
-> -#define I8042_KBD_PHYS_DESC "walnutps2/serio0"
-> -#define I8042_AUX_PHYS_DESC "walnutps2/serio1"
-> -#define I8042_MUX_PHYS_DESC "walnutps2/serio%d"
-> -
-> -extern void *kb_cs;
-> -extern void *kb_data;
-> -
-> -#define I8042_COMMAND_REG (*(int *)kb_cs)
-> -#define I8042_DATA_REG (*(int *)kb_data)
-> -
-> -static inline int i8042_read_data(void)
-> -{
-> -	return readb(kb_data);
-> -}
-> -
-> -static inline int i8042_read_status(void)
-> -{
-> -	return readb(kb_cs);
-> -}
-> -
-> -static inline void i8042_write_data(int val)
-> -{
-> -	writeb(val, kb_data);
-> -}
-> -
-> -static inline void i8042_write_command(int val)
-> -{
-> -	writeb(val, kb_cs);
-> -}
-> -
-> -static inline int i8042_platform_init(void)
-> -{
-> -	i8042_reset = I8042_RESET_ALWAYS;
-> -	return 0;
-> -}
-> -
-> -static inline void i8042_platform_exit(void)
-> -{
-> -}
-> -
-> -#else
-> -
-> -#include "i8042-io.h"
-> -
-> -#endif
-> -
-> -#endif /* _I8042_PPCIO_H */
-> diff --git a/drivers/input/serio/i8042.h b/drivers/input/serio/i8042.h
-> index 38dc27ad3c18..eb376700dfff 100644
-> --- a/drivers/input/serio/i8042.h
-> +++ b/drivers/input/serio/i8042.h
-> @@ -17,8 +17,6 @@
->  #include "i8042-ip22io.h"
->  #elif defined(CONFIG_SNI_RM)
->  #include "i8042-snirm.h"
-> -#elif defined(CONFIG_PPC)
-> -#include "i8042-ppcio.h"
->  #elif defined(CONFIG_SPARC)
->  #include "i8042-sparcio.h"
->  #elif defined(CONFIG_X86) || defined(CONFIG_IA64)
-
-#elif defined(CONFIG_UNICORE32)
-#include "i8042-unicore32io.h"
-#else
-#include "i8042-io.h"
-#endif
-
-The rest of the context is ^
-
-Which makes it clear that your removal of the entire file results in no
-change when WALNUT=n.
-
-I'm not sure if anyone really maintains that code, but this is all PPC
-really so I think we could merge it.
-
-Do you want to send a proper SOB'ed patch?
-
-cheers
+-- 
+With Best Regards,
+Andy Shevchenko
