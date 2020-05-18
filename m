@@ -2,112 +2,198 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B779EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5468CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90ABE206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E5FF206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:43:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OU82ecs4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ic+l84u8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgERLnV (ORCPT
+        id S1726998AbgERLni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:43:21 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13725 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgERLnV (ORCPT
+        Mon, 18 May 2020 07:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59966 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgERLni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:43:21 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec274cc0000>; Mon, 18 May 2020 04:43:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 18 May 2020 04:43:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 18 May 2020 04:43:21 -0700
-Received: from [10.26.74.226] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
- 2020 11:43:18 +0000
-Subject: Re: [PATCH] dmaengine: tegra210-adma: Fix an error handling path in
- 'tegra_adma_probe()'
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        <ldewangan@nvidia.com>, <dan.j.williams@intel.com>,
-        <vkoul@kernel.org>, <thierry.reding@gmail.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-References: <20200516214205.276266-1-christophe.jaillet@wanadoo.fr>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <899a62c8-b4fa-b1cc-6e3a-bbfb680e5d41@nvidia.com>
-Date:   Mon, 18 May 2020 12:43:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 07:43:38 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 133ADC061A0C;
+        Mon, 18 May 2020 04:43:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=vqFtTJgrrYSVHcjYD6xL7NeKGj8OBrO9WYZrdZNFTPg=; b=Ic+l84u85aQa9NU4JISWSGcUT7
+        JspapLxIoUC4p2cSrnYXmwwkgCgvGxo0Q+bsGUzytgc0vP8MpdPy7S83x0dBTEMFz2XY3UuE8bSHJ
+        8YNjvaG19lKsoS5ccYJuzkZU/Q8pAsucYBHZGpqqZsXv5wE8fIZeKBYPQX9FO1L3Sec3P64yxzcm5
+        wGzdwYH7VrCpcu8J/EDmELUtDk50YDb3qAh+wlCRaDpqG2Iawy++/9E1zTsxRkYNmV+q5fpOzLUdq
+        ZvIuiYE8tnH0ZWhyDv8P5+OhRKNQtuu0b4ZEOGsp28K+uNyPmofy1h/Co0GLN1tYsOPL9Ib4ITumS
+        SL4VVMpw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jaeAx-0001CZ-0L; Mon, 18 May 2020 11:43:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0BCE03011E8;
+        Mon, 18 May 2020 13:43:14 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 066CB2B3D07AA; Mon, 18 May 2020 13:43:14 +0200 (CEST)
+Date:   Mon, 18 May 2020 13:43:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>, ak@linux.intel.com,
+        wei.w.wang@intel.com
+Subject: Re: [PATCH v11 04/11] perf/x86: Add constraint to create guest LBR
+ event without hw counter
+Message-ID: <20200518114313.GD277222@hirez.programming.kicks-ass.net>
+References: <20200514083054.62538-1-like.xu@linux.intel.com>
+ <20200514083054.62538-5-like.xu@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200516214205.276266-1-christophe.jaillet@wanadoo.fr>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589802188; bh=DzIgCyZcvN9rr4wBAYpZeYTa28sgNw2eUicDprROQHc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=OU82ecs4nx6r/Bhm6rWg7Ij3YNHy1BdCCslIYShViREuXGKDQrfsQaLZ/cn2XKssS
-         B5RFjpGeQL8GSFZ3chXe2/0LzC3LBkhkFIRjAmnsKSf39z3tKVHEAmNRi7OtQLwJIB
-         QNA9Hq2+CpjJuTtvKi3VzDIVpj0thoZdU1Eg3795DxpWI3nF0j9FRux3sE/hB3ZnWE
-         Voo62VH+eq60SIisbJ/MJRMWqWBqODPh84jNVbtilQGzNw71b9XYYcAdRAoCQTo8vS
-         jGmAvmuKuEIQXyGquQXBJmQj+sFfEcfEN3VAqMiqMELLkEaLrvOSiZMNp1hqb4eUIy
-         5DjRWhHPLk3Lw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514083054.62538-5-like.xu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 16/05/2020 22:42, Christophe JAILLET wrote:
-> Commit b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
-> has moved some code in the probe function and reordered the error handling
-> path accordingly.
-> However, a goto has been missed.
-> 
-> Fix it and goto the right label if 'dma_async_device_register()' fails, so
-> that all resources are released.
-> 
-> Fixes: b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/dma/tegra210-adma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-> index c4ce5dfb149b..db58d7e4f9fe 100644
-> --- a/drivers/dma/tegra210-adma.c
-> +++ b/drivers/dma/tegra210-adma.c
-> @@ -900,7 +900,7 @@ static int tegra_adma_probe(struct platform_device *pdev)
->  	ret = dma_async_device_register(&tdma->dma_dev);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "ADMA registration failed: %d\n", ret);
-> -		goto irq_dispose;
-> +		goto rpm_put;
->  	}
->  
->  	ret = of_dma_controller_register(pdev->dev.of_node,
+Subject: perf/x86: Add constraint to create guest LBR event without hw counter
+From: Like Xu <like.xu@linux.intel.com>
+Date: Thu, 14 May 2020 16:30:47 +0800
 
+From: Like Xu <like.xu@linux.intel.com>
 
-Thanks for fixing this!
+The hypervisor may request the perf subsystem to schedule a time window
+to directly access the LBR stack msrs for its own use. Normally, it would
+create a guest LBR event with callstack mode enabled, which is scheduled
+along with other ordinary LBR events on the host but in an exclusive way.
 
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+To avoid wasting a counter for the guest LBR event, the perf tracks it via
+needs_guest_lbr_without_counter() and assigns it with a fake VLBR counter
+with the help of new lbr_without_counter_constraint. As with the BTS event,
+there is actually no hardware counter assigned for the guest LBR event.
 
-Cheers
-Jon
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200514083054.62538-5-like.xu@linux.intel.com
+---
+ arch/x86/events/core.c            |    1 +
+ arch/x86/events/intel/core.c      |   18 ++++++++++++++++++
+ arch/x86/events/intel/lbr.c       |    4 ++++
+ arch/x86/events/perf_event.h      |    1 +
+ arch/x86/include/asm/perf_event.h |   22 +++++++++++++++++++++-
+ 5 files changed, 45 insertions(+), 1 deletion(-)
 
--- 
-nvpublic
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1104,6 +1104,7 @@ static inline void x86_assign_hw_event(s
+ 
+ 	switch (hwc->idx) {
+ 	case INTEL_PMC_IDX_FIXED_BTS:
++	case INTEL_PMC_IDX_FIXED_VLBR:
+ 		hwc->config_base = 0;
+ 		hwc->event_base	= 0;
+ 		break;
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2621,6 +2621,20 @@ intel_bts_constraints(struct perf_event
+ 	return NULL;
+ }
+ 
++/*
++ * Note: matches a fake event, like Fixed2.
++ */
++static struct event_constraint *
++intel_vlbr_constraints(struct perf_event *event)
++{
++	struct event_constraint *c = &vlbr_constraint;
++
++	if (unlikely(constraint_match(c, event->hw.config)))
++		return c;
++
++	return NULL;
++}
++
+ static int intel_alt_er(int idx, u64 config)
+ {
+ 	int alt_idx = idx;
+@@ -2811,6 +2825,10 @@ __intel_get_event_constraints(struct cpu
+ {
+ 	struct event_constraint *c;
+ 
++	c = intel_vlbr_constraints(event);
++	if (c)
++		return c;
++
+ 	c = intel_bts_constraints(event);
+ 	if (c)
+ 		return c;
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -1363,3 +1363,7 @@ int x86_perf_get_lbr(struct x86_pmu_lbr
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(x86_perf_get_lbr);
++
++struct event_constraint vlbr_constraint =
++	FIXED_EVENT_CONSTRAINT(INTEL_FIXED_VLBR_EVENT,
++			       (INTEL_PMC_IDX_FIXED_VLBR - INTEL_PMC_IDX_FIXED));
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -990,6 +990,7 @@ void release_ds_buffers(void);
+ void reserve_ds_buffers(void);
+ 
+ extern struct event_constraint bts_constraint;
++extern struct event_constraint vlbr_constraint;
+ 
+ void intel_pmu_enable_bts(u64 config);
+ 
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -192,10 +192,30 @@ struct x86_pmu_capability {
+ #define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
+ #define GLOBAL_STATUS_ASIF				BIT_ULL(60)
+ #define GLOBAL_STATUS_COUNTERS_FROZEN			BIT_ULL(59)
+-#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(58)
++#define GLOBAL_STATUS_LBRS_FROZEN_BIT			58
++#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
+ #define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(55)
+ 
+ /*
++ * We model guest LBR event tracing as another fixed-mode PMC like BTS.
++ *
++ * We choose bit 58 because it's used to indicate LBR stack frozen state
++ * for architectural perfmon v4, also we unconditionally mask that bit in
++ * the handle_pmi_common(), so it'll never be set in the overflow handling.
++ *
++ * With this fake counter assigned, the guest LBR event user (such as KVM),
++ * can program the LBR registers on its own, and we don't actually do anything
++ * with then in the host context.
++ */
++#define INTEL_PMC_IDX_FIXED_VLBR	(GLOBAL_STATUS_LBRS_FROZEN_BIT)
++
++/*
++ * Pseudo-encoding the guest LBR event as event=0x00,umask=0x1b,
++ * since it would claim bit 58 which is effectively Fixed26.
++ */
++#define INTEL_FIXED_VLBR_EVENT	0x1b00
++
++/*
+  * Adaptive PEBS v4
+  */
+ 
