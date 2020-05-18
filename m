@@ -2,156 +2,837 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F34C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84E1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A93D3207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:00:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PFwKy8Nf"
+	by mail.kernel.org (Postfix) with ESMTP id 801B9207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:03:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729579AbgERS7t (ORCPT
+        id S1726359AbgERTDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:59:49 -0400
-Received: from mail-am6eur05on2050.outbound.protection.outlook.com ([40.107.22.50]:37377
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728436AbgERS7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:59:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C64yOT3JWkxKpxgQ8GDcmReEDBlNEfLP1vo7iby32iLqfPBpsh7sJgv+YqQ53FfLAdtQt5+eKVzbdjxoGdmS2I20qiZkqIEJTpSNiYW6Re/YseSk9snkNMFmHZKABlDv+4RSuKTiMZN2zoOT3w09BnBmfwN0t+1on16kd6AGkaWt5yVvK7vE5OdDCDXEtbtKsT6uUi9QSANnE3Tm0af7d5GWywVMdYFzXZJ8mZxiGoVMpl+1SWnKbwlnQi1Hu9xEQ/50rlvjriHxHXI6FEirmj88SGZYc1LvbNF/kIDp4nZxaVdC04hQkdbOvbt2zP6XrXxLIEQzL7GXVcQjeTWtHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R0vLKOvf7n9zSXNZqc9CjLV8tzmGoLjxZu6uGCO+L4M=;
- b=gMD+fGo79BUZfRIreHEQTnNrqp41nGWLJvIjXxku8jC9EDf99XbZRUW3KSmh+j/JCXZhwHf8mXhs5acLeyOFZOomrQKA4S8Xa0FtFOe1oDJgj118Z84qyXzuo/gsgC5Ygkxo34gwzeSVJd/BxOtYl9VR5SH5QoKR3Q9XzEV66cquimg3eml8W6c1F/f+Aip3D+qzmRcBZJwSbR5SpnD1VNoCTfUEKKeU4KE5fn13RMf8FATgt+yDykwDkbaoU0VQwaj2qMF4sJoH/wLrRpO+rmY5w2aV/D5B9AoT7I3EH1w2Em1YfEdx/L/wRhaaM7GRkVfspO5zVdMHC5yps0bW8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R0vLKOvf7n9zSXNZqc9CjLV8tzmGoLjxZu6uGCO+L4M=;
- b=PFwKy8Nfbncc6O3exNkguL2qcx32qxNooObG2H1BFfS9NGxaeop0UU+d9/K8CRx4t/fMoMYSaCSmyC7zPpv4fb/AK9uvwJ5eqnnunxISbQecboi9fi49SDowqsQ160yn1OyLKc2hwNoKxu1lsOdrnyI/bSZff89M6NTdhmekKYU=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB4046.eurprd04.prod.outlook.com (2603:10a6:803:4d::29)
- by VI1SPR01MB0363.eurprd04.prod.outlook.com (2603:10a6:803:c9::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Mon, 18 May
- 2020 18:59:35 +0000
-Received: from VI1PR04MB4046.eurprd04.prod.outlook.com
- ([fe80::4cf0:3c9c:ed2:aacd]) by VI1PR04MB4046.eurprd04.prod.outlook.com
- ([fe80::4cf0:3c9c:ed2:aacd%4]) with mapi id 15.20.3000.033; Mon, 18 May 2020
- 18:59:35 +0000
-Subject: Re: [PATCH] crypto: caam - make soc match data optional
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-Cc:     Chris Healy <cphealy@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200516042303.6070-1-andrew.smirnov@gmail.com>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <befcc520-6556-b09b-0464-fe0b5f28cf1e@nxp.com>
-Date:   Mon, 18 May 2020 21:59:25 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200516042303.6070-1-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR10CA0102.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:e6::19) To VI1PR04MB4046.eurprd04.prod.outlook.com
- (2603:10a6:803:4d::29)
+        Mon, 18 May 2020 15:03:00 -0400
+Received: from mga17.intel.com ([192.55.52.151]:25620 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728402AbgERTCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 15:02:00 -0400
+IronPort-SDR: 2wEv3yJAFnCbRCzHjEB/ROQhwqo26beU34QtgJ2meQnKCf16zNplGAfz900b/I1s9JTwrJ5MJu
+ UYEewT+DgTog==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:53:58 -0700
+IronPort-SDR: aKkeBnIjeYAOXC8QGWPrj2eY8JsTai4dhrYAykQdvY2718yjfl/EiFiCCAmMhAXcJlCGiuouvu
+ SxSxZffLSj9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="465860947"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga006.fm.intel.com with ESMTP; 18 May 2020 11:53:57 -0700
+Subject: [PATCH v2 6/9] dmaengine: idxd: add shared workqueue support
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, arnd@arndb.de
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, dan.j.williams@intel.com, ashok.raj@intel.com,
+        fenghua.yu@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        sanjay.k.kumar@intel.com, dave.hansen@intel.com
+Date:   Mon, 18 May 2020 11:53:57 -0700
+Message-ID: <158982803718.37989.2521363223130749737.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
+References: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM0PR10CA0102.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:e6::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend Transport; Mon, 18 May 2020 18:59:34 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 45c46176-eced-4046-ccb1-08d7fb5d9b2f
-X-MS-TrafficTypeDiagnostic: VI1SPR01MB0363:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1SPR01MB03635821E0D5458F8361CC3A98B80@VI1SPR01MB0363.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:580;
-X-Forefront-PRVS: 04073E895A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5+nlIMLjL3LHI4530krvPJlgmoDJbM/X1iYfFRFCchV3QRPT7UDOXOv998VwyKBk6Wyg1BC1YDdIAgnGr7DvEduGIfEpO+QG3aMc74QsxdjoPfR+7xL9rin3ZOafhGQ4lNOv+kDTI1rs8Hn67HP44IRj7zdZtp4MxDNAKlCaPLUmDRLT8df+BExglgP3IMXVawb5emQ3Z4MCCEUNh6UtBXgf1lOl3QFVZ2swqYyW6IjYwPNE+gt3GgFLBV0RTLClX4hlOq79XnWStHVO6rXTYRpPcbxv2PzyE0FH2yAmD8+zd/1FsMHcK988CB8i+Z+mLiitZ0y4/dcWiIP2NDwm3T09qjKbJXD88UnCeCTVvp78TaYPoZEVuFy5xIpctqbbf/BR/3aBLyCiMgZFOW2MQZa38IyxSTYXKNan3AtsGmIM2oUeiUIbmRe0mfM8egYmvhOFMdN/4Yn0UBqCHXB5s9+oWlYYVv07RxLMvPdkM5cWUG6cRE4EJ6s3T4ACyLAF
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(346002)(366004)(136003)(39860400002)(66946007)(66556008)(478600001)(110136005)(5660300002)(2616005)(86362001)(26005)(6486002)(8676002)(54906003)(31696002)(6666004)(66476007)(31686004)(53546011)(8936002)(16526019)(4326008)(2906002)(36756003)(16576012)(186003)(52116002)(316002)(956004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: SrJa9gmPzBV9ZmEWkhkFuMu1ZmYNH3uEQRfb4fFBL1qXHmEHsWAgkWg3F/J9jvF8usX1ZeYXCYvWrdUwbI+qZHszz9QL6DTQl8FDj66g8HjQtWZ8vEa2ncf21nxH8ZEkoXoH+9TcAfbwXyjBV1JPoHfJZ6VHKEfX9t8LlY5rR6trHMO6+XYUUIh8U5CD6uKDOA01urQLDQZG1nUqZ9Y+Vp5ZpkcwQmZVPEICOhvwd9RcpGthVl3n+0ydziicxYQ45R9VoTblxTn3SUVYt2eR9GpWES0mydmniQ/MtHbZ34nJ32yvtoBQbL48mSXF6qo4TJCU2UtlB2/snC9sXXv5Nm9neAtqvE7ht4DKzgGTHFdlFll+W9vDoSc7RQPoedXBqx+lcPMfyPgx5zvTinWXmNQK6+1LXk/JSjPRiYWpPv8PUBCH7Xmw/Ky+BYcA7JSrh3HcjyfmoHH3Xrc1e6OoXluejxug7Bw6r+wRUd/EjDx1wOhBQrBT+oLkfjNljt/j
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45c46176-eced-4046-ccb1-08d7fb5d9b2f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2020 18:59:35.2464
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ik3HFR14vs9BGONf7FCqJq73q2KAwcva5cApnWefafEHoEn0aVM4RyE5ueMBpmdxsOcIcfPPVD8rOR+qOvA/ow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1SPR01MB0363
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/2020 7:23 AM, Andrey Smirnov wrote:
-> Vyrbrid devices don't have any clock that need to be taken care of, so
-> make clock data optional on i.MX.
-> 
-Vybrid Security RM states that IPG clock used by CAAM
-can be gated by CCM_CCGR11[CG176].
+Add shared workqueue support that includes the support of Shared Virtual
+memory (SVM) or in similar terms On Demand Paging (ODP). The shared
+workqueue uses the enqcmds command in kernel and will respond with retry if
+the workqueue is full. Shared workqueue only works when there is PASID
+support from the IOMMU.
 
-Clock driver needs to be updated accordingly,
-and so will CAAM driver and DT node.
-
-I don't have a board at hand, so patch below is not tested.
-
-Horia
-
------- >8 ------
-
-Subject: [PATCH] clk: imx: vf610: add CAAM clock
-
-According to Vybrid Security RM, CCM_CCGR11[CG176] can be used to
-gate CAAM ipg clock.
-
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/clk/imx/clk-vf610.c             | 2 ++
- include/dt-bindings/clock/vf610-clock.h | 3 ++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/dma/Kconfig          |   13 ++++
+ drivers/dma/idxd/cdev.c      |   37 ++++++++++++
+ drivers/dma/idxd/device.c    |   90 +++++++++++++++++++++++++++---
+ drivers/dma/idxd/dma.c       |    9 ---
+ drivers/dma/idxd/idxd.h      |   10 +++
+ drivers/dma/idxd/init.c      |   87 ++++++++++++++++++++++-------
+ drivers/dma/idxd/registers.h |   14 +++++
+ drivers/dma/idxd/submit.c    |   31 +++++++++-
+ drivers/dma/idxd/sysfs.c     |  128 ++++++++++++++++++++++++++++++++++++++++++
+ 9 files changed, 375 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
-index cd04e7dc1878..4f3066cf1b89 100644
---- a/drivers/clk/imx/clk-vf610.c
-+++ b/drivers/clk/imx/clk-vf610.c
-@@ -439,6 +439,8 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
-        clk[VF610_CLK_DAP] = imx_clk_gate("dap", "platform_bus", CCM_CCSR, 24);
-        clk[VF610_CLK_OCOTP] = imx_clk_gate("ocotp", "ipg_bus", CCM_CCGR6, CCM_CCGRx_CGn(5));
-
-+       clk[VF610_CLK_CAAM] = imx_clk_gate2("caam", "ipg_bus", CCM_CCGR11, CCM_CCGRx_CGn(0));
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index e817781b656a..21f5ddd06d17 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -294,6 +294,19 @@ config INTEL_IDXD
+ 
+ 	  If unsure, say N.
+ 
++# Config symbol that collects all the dependencies that's necessary to
++# support shared virtual memory for the devices supported by idxd.
++config INTEL_IDXD_SVM
++	bool "Accelerator Shared Virtual Memory Support"
++	depends on INTEL_IDXD
++	depends on INTEL_IOMMU_SVM
++	depends on PCI_PRI
++	depends on PCI_PASID
++	depends on PCI_IOV
 +
-        imx_check_clocks(clk, ARRAY_SIZE(clk));
++comment "SVM support not enabled for Intel Accelerator (see INTEL_IDXD_SVM)"
++	depends on INTEL_IDXD && !INTEL_IDXD_SVM
++
+ config INTEL_IOATDMA
+ 	tristate "Intel I/OAT DMA support"
+ 	depends on PCI && X86_64
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+index f9fc58966207..57079ea2d1cb 100644
+--- a/drivers/dma/idxd/cdev.c
++++ b/drivers/dma/idxd/cdev.c
+@@ -32,6 +32,7 @@ static struct idxd_cdev_context ictx[IDXD_TYPE_MAX] = {
+ struct idxd_user_context {
+ 	struct idxd_wq *wq;
+ 	struct task_struct *task;
++	int pasid;
+ 	unsigned int flags;
+ };
+ 
+@@ -74,6 +75,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+ 	struct idxd_device *idxd;
+ 	struct idxd_wq *wq;
+ 	struct device *dev;
++	int rc;
+ 
+ 	wq = inode_wq(inode);
+ 	idxd = wq->idxd;
+@@ -90,8 +92,30 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+ 
+ 	ctx->wq = wq;
+ 	filp->private_data = ctx;
++
++	if (idxd->pasid_enabled) {
++		rc = intel_svm_bind_mm(dev, &ctx->pasid, 0, NULL);
++		if (rc < 0) {
++			dev_err(dev, "pasid allocation failed: %d\n", rc);
++			goto failed;
++		}
++
++		if (wq_dedicated(wq)) {
++			rc = idxd_wq_set_pasid(wq, ctx->pasid);
++			if (rc < 0) {
++				intel_svm_unbind_mm(dev, ctx->pasid);
++				dev_err(dev, "wq set pasid failed: %d\n", rc);
++				goto failed;
++			}
++		}
++	}
++
+ 	idxd_wq_get(wq);
+ 	return 0;
++
++failed:
++	kfree(ctx);
++	return rc;
+ }
+ 
+ static int idxd_cdev_release(struct inode *node, struct file *filep)
+@@ -100,12 +124,23 @@ static int idxd_cdev_release(struct inode *node, struct file *filep)
+ 	struct idxd_wq *wq = ctx->wq;
+ 	struct idxd_device *idxd = wq->idxd;
+ 	struct device *dev = &idxd->pdev->dev;
++	int rc;
+ 
+ 	dev_dbg(dev, "%s called\n", __func__);
+ 	filep->private_data = NULL;
+ 
+ 	/* Wait for in-flight operations to complete. */
+-	idxd_wq_drain(wq);
++	if (!wq_dedicated(wq)) {
++		idxd_device_drain_pasid(idxd, ctx->pasid);
++		intel_svm_unbind_mm(&idxd->pdev->dev, ctx->pasid);
++	} else {
++		if (idxd->pasid_enabled) {
++			rc = idxd_wq_disable_pasid(wq);
++			if (rc < 0)
++				dev_err(dev, "wq disable pasid failed.\n");
++		}
++		idxd_wq_drain(wq);
++	}
+ 
+ 	kfree(ctx);
+ 	idxd_wq_put(wq);
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 95b8820ef087..836dd8bac6e0 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -305,10 +305,9 @@ int idxd_wq_map_portal(struct idxd_wq *wq)
+ 	start = pci_resource_start(pdev, IDXD_WQ_BAR);
+ 	start = start + wq->id * IDXD_PORTAL_SIZE;
+ 
+-	wq->dportal = devm_ioremap(dev, start, IDXD_PORTAL_SIZE);
+-	if (!wq->dportal)
++	wq->portal = devm_ioremap(dev, start, IDXD_PORTAL_SIZE);
++	if (!wq->portal)
+ 		return -ENOMEM;
+-	dev_dbg(dev, "wq %d portal mapped at %p\n", wq->id, wq->dportal);
+ 
+ 	return 0;
+ }
+@@ -317,7 +316,61 @@ void idxd_wq_unmap_portal(struct idxd_wq *wq)
+ {
+ 	struct device *dev = &wq->idxd->pdev->dev;
+ 
+-	devm_iounmap(dev, wq->dportal);
++	devm_iounmap(dev, wq->portal);
++}
++
++int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
++{
++	struct idxd_device *idxd = wq->idxd;
++	int rc;
++	union wqcfg wqcfg;
++	unsigned int offset;
++	unsigned long flags;
++
++	rc = idxd_wq_disable(wq);
++	if (rc < 0)
++		return rc;
++
++	offset = WQCFG_OFFSET(idxd, wq->id, 2);
++	spin_lock_irqsave(&idxd->dev_lock, flags);
++	wqcfg.bits[2] = ioread32(idxd->reg_base + offset);
++	wqcfg.pasid_en = 1;
++	wqcfg.pasid = pasid;
++	iowrite32(wqcfg.bits[2], idxd->reg_base + offset);
++	spin_unlock_irqrestore(&idxd->dev_lock, flags);
++
++	rc = idxd_wq_enable(wq);
++	if (rc < 0)
++		return rc;
++
++	return 0;
++}
++
++int idxd_wq_disable_pasid(struct idxd_wq *wq)
++{
++	struct idxd_device *idxd = wq->idxd;
++	int rc;
++	union wqcfg wqcfg;
++	unsigned int offset;
++	unsigned long flags;
++
++	rc = idxd_wq_disable(wq);
++	if (rc < 0)
++		return rc;
++
++	offset = idxd->wqcfg_offset + wq->id * sizeof(wqcfg);
++	spin_lock_irqsave(&idxd->dev_lock, flags);
++	wqcfg.bits[2] = ioread32(idxd->reg_base + offset);
++	wqcfg.pasid_en = 0;
++	wqcfg.pasid = 0;
++	iowrite32(wqcfg.bits[2], idxd->reg_base + offset);
++	spin_unlock_irqrestore(&idxd->dev_lock, flags);
++
++	rc = idxd_wq_enable(wq);
++	if (rc < 0)
++		return rc;
++
++	return 0;
+ }
+ 
+ void idxd_wq_disable_cleanup(struct idxd_wq *wq)
+@@ -469,6 +522,17 @@ void idxd_device_reset(struct idxd_device *idxd)
+ 	idxd_cmd_exec(idxd, IDXD_CMD_RESET_DEVICE, 0, NULL);
+ }
+ 
++void idxd_device_drain_pasid(struct idxd_device *idxd, int pasid)
++{
++	struct device *dev = &idxd->pdev->dev;
++	u32 operand;
++
++	operand = pasid;
++	dev_dbg(dev, "cmd: %u operand: %#x\n", IDXD_CMD_DRAIN_PASID, operand);
++	idxd_cmd_exec(idxd, IDXD_CMD_DRAIN_PASID, operand, NULL);
++	dev_dbg(dev, "pasid %d drained\n", pasid);
++}
++
+ /* Device configuration bits */
+ static void idxd_group_config_write(struct idxd_group *group)
+ {
+@@ -554,11 +618,21 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
+ 	wq->wqcfg.wq_thresh = wq->threshold;
+ 
+ 	/* byte 8-11 */
+-	wq->wqcfg.priv = !!(wq->type == IDXD_WQT_KERNEL);
+-	wq->wqcfg.mode = 1;
++	wq->wqcfg.priv = wq->type == IDXD_WQT_KERNEL ? 1 : 0;
++	if (wq_dedicated(wq))
++		wq->wqcfg.mode = 1;
++
++	if (idxd->pasid_enabled) {
++		wq->wqcfg.pasid_en = 1;
++		wq->wqcfg.pasid = idxd->pasid;
++	}
+ 
+ 	wq->wqcfg.priority = wq->priority;
+ 
++	if (idxd->hw.gen_cap.block_on_fault &&
++	    test_bit(WQ_FLAG_BLOCK_ON_FAULT, &wq->flags))
++		wq->wqcfg.bof = 1;
++
+ 	/* bytes 12-15 */
+ 	wq->wqcfg.max_xfer_shift = idxd->hw.gen_cap.max_xfer_shift;
+ 	wq->wqcfg.max_batch_shift = idxd->hw.gen_cap.max_batch_shift;
+@@ -666,8 +740,8 @@ static int idxd_wqs_setup(struct idxd_device *idxd)
+ 		if (!wq->size)
+ 			continue;
+ 
+-		if (!wq_dedicated(wq)) {
+-			dev_warn(dev, "No shared workqueue support.\n");
++		if (!wq_dedicated(wq) && !idxd->pasid_enabled) {
++			dev_warn(dev, "No shared wq support but configured.\n");
+ 			return -EINVAL;
+ 		}
+ 
+diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
+index 0c892cbd72e0..8ed2773d8285 100644
+--- a/drivers/dma/idxd/dma.c
++++ b/drivers/dma/idxd/dma.c
+@@ -61,8 +61,6 @@ static inline void idxd_prep_desc_common(struct idxd_wq *wq,
+ 					 u64 addr_f1, u64 addr_f2, u64 len,
+ 					 u64 compl, u32 flags)
+ {
+-	struct idxd_device *idxd = wq->idxd;
+-
+ 	hw->flags = flags;
+ 	hw->opcode = opcode;
+ 	hw->src_addr = addr_f1;
+@@ -70,13 +68,6 @@ static inline void idxd_prep_desc_common(struct idxd_wq *wq,
+ 	hw->xfer_size = len;
+ 	hw->priv = !!(wq->type == IDXD_WQT_KERNEL);
+ 	hw->completion_addr = compl;
+-
+-	/*
+-	 * Descriptor completion vectors are 1-8 for MSIX. We will round
+-	 * robin through the 8 vectors.
+-	 */
+-	wq->vec_ptr = (wq->vec_ptr % idxd->num_wq_irqs) + 1;
+-	hw->int_handle =  wq->vec_ptr;
+ }
+ 
+ static struct dma_async_tx_descriptor *
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index 0769354df4cf..41b973e3b781 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -59,6 +59,7 @@ enum idxd_wq_state {
+ 
+ enum idxd_wq_flag {
+ 	WQ_FLAG_DEDICATED = 0,
++	WQ_FLAG_BLOCK_ON_FAULT,
+ };
+ 
+ enum idxd_wq_type {
+@@ -86,10 +87,11 @@ enum idxd_op_type {
+ enum idxd_complete_type {
+ 	IDXD_COMPLETE_NORMAL = 0,
+ 	IDXD_COMPLETE_ABORT,
++	IDXD_COMPLETE_DEV_FAIL,
+ };
+ 
+ struct idxd_wq {
+-	void __iomem *dportal;
++	void __iomem *portal;
+ 	struct device conf_dev;
+ 	struct idxd_cdev idxd_cdev;
+ 	struct idxd_device *idxd;
+@@ -164,6 +166,9 @@ struct idxd_device {
+ 	struct idxd_wq *wqs;
+ 	struct idxd_engine *engines;
+ 
++	int pasid;
++	bool pasid_enabled;
++
+ 	int num_groups;
+ 
+ 	u32 msix_perm_offset;
+@@ -284,6 +289,7 @@ void idxd_device_reset(struct idxd_device *idxd);
+ void idxd_device_cleanup(struct idxd_device *idxd);
+ int idxd_device_config(struct idxd_device *idxd);
+ void idxd_device_wqs_clear_state(struct idxd_device *idxd);
++void idxd_device_drain_pasid(struct idxd_device *idxd, int pasid);
+ 
+ /* work queue control */
+ int idxd_wq_alloc_resources(struct idxd_wq *wq);
+@@ -294,6 +300,8 @@ void idxd_wq_drain(struct idxd_wq *wq);
+ int idxd_wq_map_portal(struct idxd_wq *wq);
+ void idxd_wq_unmap_portal(struct idxd_wq *wq);
+ void idxd_wq_disable_cleanup(struct idxd_wq *wq);
++int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid);
++int idxd_wq_disable_pasid(struct idxd_wq *wq);
+ 
+ /* submission */
+ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc);
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index c7c61974f20f..60da12fdd8c1 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -14,6 +14,7 @@
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/device.h>
+ #include <linux/idr.h>
++#include <linux/intel-svm.h>
+ #include <uapi/linux/idxd.h>
+ #include <linux/dmaengine.h>
+ #include "../dmaengine.h"
+@@ -53,6 +54,7 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
+ 	struct idxd_irq_entry *irq_entry;
+ 	int i, msixcnt;
+ 	int rc = 0;
++	union msix_perm mperm;
+ 
+ 	msixcnt = pci_msix_vec_count(pdev);
+ 	if (msixcnt < 0) {
+@@ -131,6 +133,14 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
+ 
+ 	idxd_unmask_error_interrupts(idxd);
+ 
++	/* Setup MSIX permission table */
++	mperm.bits = 0;
++	mperm.pasid = idxd->pasid;
++	mperm.pasid_en = idxd->pasid_enabled;
++	for (i = 1; i < msixcnt; i++)
++		iowrite32(mperm.bits, idxd->reg_base +
++				idxd->msix_perm_offset + i * 8);
++
+ 	return 0;
+ 
+  err_no_irq:
+@@ -258,8 +268,7 @@ static void idxd_read_caps(struct idxd_device *idxd)
+ 	}
+ }
+ 
+-static struct idxd_device *idxd_alloc(struct pci_dev *pdev,
+-				      void __iomem * const *iomap)
++static struct idxd_device *idxd_alloc(struct pci_dev *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct idxd_device *idxd;
+@@ -269,12 +278,43 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev,
+ 		return NULL;
+ 
+ 	idxd->pdev = pdev;
+-	idxd->reg_base = iomap[IDXD_MMIO_BAR];
+ 	spin_lock_init(&idxd->dev_lock);
+ 
+ 	return idxd;
+ }
+ 
++static int idxd_enable_system_pasid(struct idxd_device *idxd)
++{
++	int rc, flags, pasid;
++
++	flags = SVM_FLAG_SUPERVISOR_MODE;
++
++	rc = intel_svm_bind_mm(&idxd->pdev->dev, &pasid, flags, NULL);
++	if (rc < 0) {
++		dev_warn(&idxd->pdev->dev,
++			 "system pasid allocation failed: %d\n", rc);
++		return rc;
++	}
++
++	idxd->pasid = pasid;
++	dev_dbg(&idxd->pdev->dev, "system pasid: %d\n", pasid);
++	return 0;
++}
++
++static int idxd_disable_system_pasid(struct idxd_device *idxd)
++{
++	int rc;
++
++	rc = intel_svm_unbind_mm(&idxd->pdev->dev, idxd->pasid);
++	if (rc < 0) {
++		dev_warn(&idxd->pdev->dev,
++			 "system pasid unbind failed: %d\n", rc);
++		return rc;
++	}
++
++	return 0;
++}
++
+ static int idxd_probe(struct idxd_device *idxd)
+ {
+ 	struct pci_dev *pdev = idxd->pdev;
+@@ -285,6 +325,14 @@ static int idxd_probe(struct idxd_device *idxd)
+ 	idxd_device_init_reset(idxd);
+ 	dev_dbg(dev, "IDXD reset complete\n");
+ 
++	if (IS_ENABLED(CONFIG_INTEL_IDXD_SVM)) {
++		rc = idxd_enable_system_pasid(idxd);
++		if (rc < 0)
++			dev_warn(dev, "Failed to enable PASID. No SVA support.\n");
++		else
++			idxd->pasid_enabled = true;
++	}
++
+ 	idxd_read_caps(idxd);
+ 	idxd_read_table_offsets(idxd);
+ 
+@@ -315,29 +363,29 @@ static int idxd_probe(struct idxd_device *idxd)
+ 	idxd_mask_error_interrupts(idxd);
+ 	idxd_mask_msix_vectors(idxd);
+  err_setup:
++	if (idxd->pasid_enabled)
++		idxd_disable_system_pasid(idxd);
+ 	return rc;
+ }
+ 
+ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+-	void __iomem * const *iomap;
+ 	struct device *dev = &pdev->dev;
+ 	struct idxd_device *idxd;
+ 	int rc;
+-	unsigned int mask;
+ 
+ 	rc = pcim_enable_device(pdev);
+ 	if (rc)
+ 		return rc;
+ 
+-	dev_dbg(dev, "Mapping BARs\n");
+-	mask = (1 << IDXD_MMIO_BAR);
+-	rc = pcim_iomap_regions(pdev, mask, DRV_NAME);
+-	if (rc)
+-		return rc;
++	dev_dbg(dev, "Alloc IDXD context\n");
++	idxd = idxd_alloc(pdev);
++	if (!idxd)
++		return -ENOMEM;
+ 
+-	iomap = pcim_iomap_table(pdev);
+-	if (!iomap)
++	dev_dbg(dev, "Mapping BARs\n");
++	idxd->reg_base = pcim_iomap(pdev, IDXD_MMIO_BAR, 0);
++	if (!idxd->reg_base)
+ 		return -ENOMEM;
+ 
+ 	dev_dbg(dev, "Set DMA masks\n");
+@@ -353,11 +401,6 @@ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (rc)
+ 		return rc;
+ 
+-	dev_dbg(dev, "Alloc IDXD context\n");
+-	idxd = idxd_alloc(pdev, iomap);
+-	if (!idxd)
+-		return -ENOMEM;
+-
+ 	idxd_set_type(idxd);
+ 
+ 	dev_dbg(dev, "Set PCI master\n");
+@@ -445,6 +488,8 @@ static void idxd_remove(struct pci_dev *pdev)
+ 	dev_dbg(&pdev->dev, "%s called\n", __func__);
+ 	idxd_cleanup_sysfs(idxd);
+ 	idxd_shutdown(pdev);
++	if (idxd->pasid_enabled)
++		idxd_disable_system_pasid(idxd);
+ 	mutex_lock(&idxd_idr_lock);
+ 	idr_remove(&idxd_idrs[idxd->type], idxd->id);
+ 	mutex_unlock(&idxd_idr_lock);
+@@ -463,7 +508,7 @@ static int __init idxd_init_module(void)
+ 	int err, i;
+ 
+ 	/*
+-	 * If the CPU does not support write512, there's no point in
++	 * If the CPU does not support MOVDIR64B or ENQCMDS, there's no point in
+ 	 * enumerating the device. We can not utilize it.
+ 	 */
+ 	if (!boot_cpu_has(X86_FEATURE_MOVDIR64B)) {
+@@ -471,8 +516,10 @@ static int __init idxd_init_module(void)
+ 		return -ENODEV;
+ 	}
+ 
+-	pr_info("%s: Intel(R) Accelerator Devices Driver %s\n",
+-		DRV_NAME, IDXD_DRIVER_VERSION);
++	if (!boot_cpu_has(X86_FEATURE_ENQCMD)) {
++		pr_warn("Platform does not have ENQCMD(S) support.\n");
++		return -ENODEV;
++	}
+ 
+ 	mutex_init(&idxd_idr_lock);
+ 	for (i = 0; i < IDXD_TYPE_MAX; i++)
+diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
+index a39e7ae6b3d9..a0df4f3fe1fb 100644
+--- a/drivers/dma/idxd/registers.h
++++ b/drivers/dma/idxd/registers.h
+@@ -333,4 +333,18 @@ union wqcfg {
+ 	};
+ 	u32 bits[8];
+ } __packed;
++
++/*
++ * This macro calculates the offset into the WQCFG register
++ * idxd - struct idxd *
++ * n - wq id
++ * ofs - the index of the 32b dword for the config register
++ *
++ * The WQCFG register block is divided into groups per each wq. The n index
++ * allows us to move to the register group that's for that particular wq.
++ * Each register is 32bits. The ofs gives us the number of register to access.
++ */
++#define WQCFG_OFFSET(idxd_dev, n, ofs) ((idxd_dev)->wqcfg_offset +\
++					(n) * sizeof(union wqcfg) +\
++					sizeof(u32) * (ofs))
+ #endif
+diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
+index 156a1ee233aa..0cf20b10e64c 100644
+--- a/drivers/dma/idxd/submit.c
++++ b/drivers/dma/idxd/submit.c
+@@ -11,11 +11,19 @@
+ static struct idxd_desc *__get_desc(struct idxd_wq *wq, int idx, int cpu)
+ {
+ 	struct idxd_desc *desc;
++	struct idxd_device *idxd = wq->idxd;
+ 
+ 	desc = wq->descs[idx];
+ 	memset(desc->hw, 0, sizeof(struct dsa_hw_desc));
+ 	memset(desc->completion, 0, sizeof(struct dsa_completion_record));
+ 	desc->cpu = cpu;
++
++	/*
++	 * Descriptor completion vectors are 1-8 for MSIX. We will round
++	 * robin through the 8 vectors.
++	 */
++	wq->vec_ptr = (wq->vec_ptr % idxd->num_wq_irqs) + 1;
++	desc->hw->int_handle = wq->vec_ptr;
+ 	return desc;
+ }
+ 
+@@ -74,14 +82,27 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
+ 	if (idxd->state != IDXD_DEV_ENABLED)
+ 		return -EIO;
+ 
+-	portal = wq->dportal + idxd_get_wq_portal_offset(IDXD_PORTAL_UNLIMITED);
++	portal = wq->portal +
++		 idxd_get_wq_portal_offset(IDXD_PORTAL_UNLIMITED);
++
+ 	/*
+-	 * The wmb() flushes writes to coherent DMA data before possibly
+-	 * triggering a DMA read. The wmb() is necessary even on UP because
+-	 * the recipient is a device.
++	 * The wmb() flushes writes to coherent DMA data before
++	 * possibly triggering a DMA read. The wmb() is necessary
++	 * even on UP because the recipient is a device.
+ 	 */
+ 	wmb();
+-	iosubmit_cmds512(portal, desc->hw, 1);
++	if (wq_dedicated(wq)) {
++		iosubmit_cmds512(portal, desc->hw, 1);
++	} else {
++		/*
++		 * It's not likely that we would receive queue full rejection
++		 * since the descriptor allocation gates at wq size. If we
++		 * receive a 1, that means something went wrong such as the
++		 * device is not accepting descriptor at all.
++		 */
++		if (!enqcmds(portal, desc->hw))
++			return -ENXIO;
++	}
+ 
+ 	/*
+ 	 * Pending the descriptor to the lockless list for the irq_entry
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index dcba60953217..3d402570984c 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -175,6 +175,30 @@ static int idxd_config_bus_probe(struct device *dev)
+ 			return -EINVAL;
+ 		}
+ 
++		/* Shared WQ checks */
++		if (!wq_dedicated(wq)) {
++			if (!idxd->pasid_enabled) {
++				dev_warn(dev,
++					 "PASID not enabled and shared WQ.\n");
++				mutex_unlock(&wq->wq_lock);
++				return -ENXIO;
++			}
++			/*
++			 * Shared wq with the threshold set to 0 means the user
++			 * did not set the threshold or transitioned from a
++			 * dedicated wq but did not set threshold. A value
++			 * of 0 would effectively disable the shared wq. The
++			 * driver does not allow a value of 0 to be set for
++			 * threshold via sysfs.
++			 */
++			if (wq->threshold == 0) {
++				dev_warn(dev,
++					 "Shared WQ and threshold 0.\n");
++				mutex_unlock(&wq->wq_lock);
++				return -EINVAL;
++			}
++		}
++
+ 		rc = idxd_wq_alloc_resources(wq);
+ 		if (rc < 0) {
+ 			mutex_unlock(&wq->wq_lock);
+@@ -875,6 +899,8 @@ static ssize_t wq_mode_store(struct device *dev,
+ 	if (sysfs_streq(buf, "dedicated")) {
+ 		set_bit(WQ_FLAG_DEDICATED, &wq->flags);
+ 		wq->threshold = 0;
++	} else if (sysfs_streq(buf, "shared") && idxd->pasid_enabled) {
++		clear_bit(WQ_FLAG_DEDICATED, &wq->flags);
+ 	} else {
+ 		return -EINVAL;
+ 	}
+@@ -973,6 +999,87 @@ static ssize_t wq_priority_store(struct device *dev,
+ static struct device_attribute dev_attr_wq_priority =
+ 		__ATTR(priority, 0644, wq_priority_show, wq_priority_store);
+ 
++static ssize_t wq_block_on_fault_show(struct device *dev,
++				      struct device_attribute *attr, char *buf)
++{
++	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
++
++	return sprintf(buf, "%u\n",
++		       test_bit(WQ_FLAG_BLOCK_ON_FAULT, &wq->flags));
++}
++
++static ssize_t wq_block_on_fault_store(struct device *dev,
++				       struct device_attribute *attr,
++				       const char *buf, size_t count)
++{
++	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
++	struct idxd_device *idxd = wq->idxd;
++	bool bof;
++	int rc;
++
++	if (!test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
++		return -EPERM;
++
++	if (wq->state != IDXD_WQ_DISABLED)
++		return -ENXIO;
++
++	rc = kstrtobool(buf, &bof);
++	if (rc < 0)
++		return rc;
++
++	if (bof)
++		set_bit(WQ_FLAG_BLOCK_ON_FAULT, &wq->flags);
++	else
++		clear_bit(WQ_FLAG_BLOCK_ON_FAULT, &wq->flags);
++
++	return count;
++}
++
++static struct device_attribute dev_attr_wq_block_on_fault =
++		__ATTR(block_on_fault, 0644, wq_block_on_fault_show,
++		       wq_block_on_fault_store);
++
++static ssize_t wq_threshold_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
++{
++	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
++
++	return sprintf(buf, "%u\n", wq->threshold);
++}
++
++static ssize_t wq_threshold_store(struct device *dev,
++				  struct device_attribute *attr,
++				  const char *buf, size_t count)
++{
++	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
++	struct idxd_device *idxd = wq->idxd;
++	unsigned int val;
++	int rc;
++
++	rc = kstrtouint(buf, 0, &val);
++	if (rc < 0)
++		return -EINVAL;
++
++	if (val > wq->size || val <= 0)
++		return -EINVAL;
++
++	if (!test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
++		return -EPERM;
++
++	if (wq->state != IDXD_WQ_DISABLED)
++		return -ENXIO;
++
++	if (test_bit(WQ_FLAG_DEDICATED, &wq->flags))
++		return -EINVAL;
++
++	wq->threshold = val;
++
++	return count;
++}
++
++static struct device_attribute dev_attr_wq_threshold =
++		__ATTR(threshold, 0644, wq_threshold_show, wq_threshold_store);
++
+ static ssize_t wq_type_show(struct device *dev,
+ 			    struct device_attribute *attr, char *buf)
+ {
+@@ -1044,6 +1151,14 @@ static ssize_t wq_name_store(struct device *dev,
+ 	if (strlen(buf) > WQ_NAME_SIZE || strlen(buf) == 0)
+ 		return -EINVAL;
+ 
++	/*
++	 * This is temporarily placed here until we have SVM support for
++	 * dmaengine.
++	 */
++	if (wq->type == IDXD_WQT_KERNEL &&
++	    wq->idxd->pasid_enabled)
++		return -EOPNOTSUPP;
++
+ 	memset(wq->name, 0, WQ_NAME_SIZE + 1);
+ 	strncpy(wq->name, buf, WQ_NAME_SIZE);
+ 	strreplace(wq->name, '\n', '\0');
+@@ -1071,6 +1186,8 @@ static struct attribute *idxd_wq_attributes[] = {
+ 	&dev_attr_wq_mode.attr,
+ 	&dev_attr_wq_size.attr,
+ 	&dev_attr_wq_priority.attr,
++	&dev_attr_wq_block_on_fault.attr,
++	&dev_attr_wq_threshold.attr,
+ 	&dev_attr_wq_type.attr,
+ 	&dev_attr_wq_name.attr,
+ 	&dev_attr_wq_cdev_minor.attr,
+@@ -1220,6 +1337,16 @@ static ssize_t clients_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(clients);
+ 
++static ssize_t pasid_enabled_show(struct device *dev,
++				  struct device_attribute *attr, char *buf)
++{
++	struct idxd_device *idxd =
++		container_of(dev, struct idxd_device, conf_dev);
++
++	return sprintf(buf, "%u\n", idxd->pasid_enabled);
++}
++static DEVICE_ATTR_RO(pasid_enabled);
++
+ static ssize_t state_show(struct device *dev,
+ 			  struct device_attribute *attr, char *buf)
+ {
+@@ -1330,6 +1457,7 @@ static struct attribute *idxd_device_attributes[] = {
+ 	&dev_attr_gen_cap.attr,
+ 	&dev_attr_configurable.attr,
+ 	&dev_attr_clients.attr,
++	&dev_attr_pasid_enabled.attr,
+ 	&dev_attr_state.attr,
+ 	&dev_attr_errors.attr,
+ 	&dev_attr_max_tokens.attr,
 
-        clk_set_parent(clk[VF610_CLK_QSPI0_SEL], clk[VF610_CLK_PLL1_PFD4]);
-diff --git a/include/dt-bindings/clock/vf610-clock.h b/include/dt-bindings/clock/vf610-clock.h
-index 95394f35a74a..0f2d60e884dc 100644
---- a/include/dt-bindings/clock/vf610-clock.h
-+++ b/include/dt-bindings/clock/vf610-clock.h
-@@ -195,6 +195,7 @@
- #define VF610_CLK_WKPU                 186
- #define VF610_CLK_TCON0                        187
- #define VF610_CLK_TCON1                        188
--#define VF610_CLK_END                  189
-+#define VF610_CLK_CAAM                 189
-+#define VF610_CLK_END                  190
-
- #endif /* __DT_BINDINGS_CLOCK_VF610_H */
---
-2.17.1
