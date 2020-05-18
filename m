@@ -2,156 +2,109 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51466C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 600BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2CB207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:53:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XEsclj/A"
+	by mail.kernel.org (Postfix) with ESMTP id 41869207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:53:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgERHxN (ORCPT
+        id S1727805AbgERHxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 03:53:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgERHxN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 03:53:13 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B1FAC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 00:53:13 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id b12so3883741plz.13
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 00:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=H+nmyXbDTXJaw998d7ykbBQgRq7RD9hlm9DkRAd6Oi8=;
-        b=XEsclj/ATCKjjChaY7dp1vWB6dOCospxZ+RYHwj7BOG9gu2C8VLYpFsj/b9Yh60abK
-         Sh2tEsX9dA/ucWzJ1AEqUpUuFS06DoMcCQaZ+NJsR+/Wq2NLdJxOOa+PvtKJFNGFCTYi
-         ZS3HHLfN5UFx21uBY5KCKabCzkfJTlmoKqSgeIlCaoweaZcJ89GHRuQWRFqhrqLiw6VE
-         kcw0PQgMgo33VUislPbGaCOoCW0Hm8cSUEnePkBRdO+zUfOpbpn0swg2oSt61Oxx3nj5
-         MXtXVmMH3GXeFsn0n7gmZDfnNZA8JM0cCGhoraOfJu4b3UTrKdUG13K3I8E/LA7fqTWy
-         8W1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H+nmyXbDTXJaw998d7ykbBQgRq7RD9hlm9DkRAd6Oi8=;
-        b=GZ4uZENTSkl8bJUUsulLH3xgeoh9zKs72RNsBJ85uqvzI8miyDRtIMyYMUSpw7kLkO
-         kYs/7SEtQ1AidWVwdqpt6allERCDTl7nKZnkByPqcMO4v2RqC+EJU7KJ+FJ6OYpRklwT
-         8mLnz+mex2LSNw4MiNnsvRzhfkWm/xRUbEX3lfN3vWW19g7E7rm18nlTWVTFLP6gYYEe
-         gpiu5OP01nLkfnvVhsTO4N9TR4Kmb1BQDHvESLlgl5zB8+V4F4r0qqM5e4+68Fmy37fC
-         qYsaWTujUB1rVeiad8b+rEjcXGs6r2+NuMytdHbzWeoemqt6ciq2NA1njqNDMwoVTtPr
-         7EGQ==
-X-Gm-Message-State: AOAM530MgEnZBLCgLtFboT0C9GcqosV+6+BiTd8u7Khckt/Bzuqy9vZn
-        YkwPxfPKC9IF50kQ3/qPDzM9rw==
-X-Google-Smtp-Source: ABdhPJzZsQBojStaYWOlvkhb83DhqJGkkOJWtVW7yvxly47MohiSAENvpRiIsgnA+if2xPLVqJgcwg==
-X-Received: by 2002:a17:90a:7309:: with SMTP id m9mr17795943pjk.235.1589788392533;
-        Mon, 18 May 2020 00:53:12 -0700 (PDT)
-Received: from localhost ([122.167.130.103])
-        by smtp.gmail.com with ESMTPSA id y8sm8234037pfg.216.2020.05.18.00.53.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 May 2020 00:53:11 -0700 (PDT)
-Date:   Mon, 18 May 2020 13:23:09 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Souvik.Chakravarty@arm.com, Thanu.Rangarajan@arm.com,
-        Sudeep.Holla@arm.com, guohanjun@huawei.com, john.garry@huawei.com,
-        jonathan.cameron@huawei.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/3] cpufreq: Add SW BOOST support for drivers
- without frequency table
-Message-ID: <20200518075309.xoon4vyfjywmteww@vireshk-i7>
-References: <1588929064-30270-1-git-send-email-wangxiongfeng2@huawei.com>
- <1588929064-30270-3-git-send-email-wangxiongfeng2@huawei.com>
- <5858421.kfVlu25t0p@kreacher>
- <7325b64c-85f7-21fe-3860-faa10ab1cf21@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7325b64c-85f7-21fe-3860-faa10ab1cf21@huawei.com>
-User-Agent: NeoMutt/20180716-391-311a52
+        Mon, 18 May 2020 03:53:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52970 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726489AbgERHxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 03:53:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DE496AE67;
+        Mon, 18 May 2020 07:53:25 +0000 (UTC)
+Date:   Mon, 18 May 2020 09:53:21 +0200
+Message-ID: <s5hv9ktk7bi.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Brent Lu <brent.lu@intel.com>
+Cc:     <alsa-devel@alsa-project.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulhsia <paulhsia@chromium.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] ALSA: pcm: fix incorrect hw_base increase
+In-Reply-To: <1589776238-23877-1-git-send-email-brent.lu@intel.com>
+References: <1589776238-23877-1-git-send-email-brent.lu@intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for the delay from my side in replying to this thread.
-
-On 15-05-20, 09:49, Xiongfeng Wang wrote:
-> On 2020/5/14 22:16, Rafael J. Wysocki wrote:
-> > On Friday, May 8, 2020 11:11:03 AM CEST Xiongfeng Wang wrote:
-> >> Software-managed BOOST get the boost frequency by check the flag
-> >> CPUFREQ_BOOST_FREQ at driver's frequency table. But some cpufreq driver
-> >> don't have frequency table and use other methods to get the frequency
-> >> range, such CPPC cpufreq driver.
-> >>
-> >> To add SW BOOST support for drivers without frequency table, we add
-> >> members in 'cpufreq_policy.cpufreq_cpuinfo' to record the max frequency
-> >> of boost mode and non-boost mode. The cpufreq driver initialize these two
-> >> members when probing.
-> >>
-> >> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> >> ---
-> >>  drivers/cpufreq/cpufreq.c | 23 +++++++++++++++--------
-> >>  include/linux/cpufreq.h   |  2 ++
-> >>  2 files changed, 17 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> >> index 475fb1b..a299426 100644
-> >> --- a/drivers/cpufreq/cpufreq.c
-> >> +++ b/drivers/cpufreq/cpufreq.c
-> >> @@ -2508,15 +2508,22 @@ static int cpufreq_boost_set_sw(int state)
-> >>  	int ret = -EINVAL;
-> >>  
-> >>  	for_each_active_policy(policy) {
-> >> -		if (!policy->freq_table)
-> >> -			continue;
-> >> -
-> >> -		ret = cpufreq_frequency_table_cpuinfo(policy,
-> >> +		if (policy->freq_table) {
-> >> +			ret = cpufreq_frequency_table_cpuinfo(policy,
-> >>  						      policy->freq_table);
-> >> -		if (ret) {
-> >> -			pr_err("%s: Policy frequency update failed\n",
-> >> -			       __func__);
-> >> -			break;
-> >> +			if (ret) {
-> >> +				pr_err("%s: Policy frequency update failed\n",
-> >> +				       __func__);
-> >> +				break;
-> >> +			}
-> >> +		} else if (policy->cpuinfo.boost_max_freq) {
-> >> +			if (state)
-> >> +				policy->max = policy->cpuinfo.boost_max_freq;
-> >> +			else
-> >> +				policy->max = policy->cpuinfo.nonboost_max_freq;
-> >> +			policy->cpuinfo.max_freq = policy->max;
-> >> +		} else {
-> >> +			continue;
-> >>  		}
-> > 
-> > Why do you need to update this function?
+On Mon, 18 May 2020 06:30:38 +0200,
+Brent Lu wrote:
 > 
-> My original thought is to reuse the current SW BOOST code as possible, but this
-> seems to change the cpufreq core too much.
+> There is a corner case that ALSA keeps increasing the hw_ptr but DMA
+> already stop working/updating the position for a long time.
 > 
-> Thanks for your advice. This is better. I will provide a '->set_boost' callback
-> for CPPC driver. But I will need to export 'cpufreq_policy_list' and make the
-> macro 'for_each_active_policy' public.
+> In following log we can see the position returned from DMA driver does
+> not move at all but the hw_ptr got increased at some point of time so
+> snd_pcm_avail() will return a large number which seems to be a buffer
+> underrun event from user space program point of view. The program
+> thinks there is space in the buffer and fill more data.
+> 
+> [  418.510086] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
+> [  418.510149] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6910 avail 9554
+> ...
+> [  418.681052] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15102 avail 1362
+> [  418.681130] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+> [  418.726515] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 16464 avail 16368
+> 
+> This is because the hw_base will be increased by runtime->buffer_size
+> frames unconditionally if the hw_ptr is not updated for over half of
+> buffer time. As the hw_base increases, so does the hw_ptr increased
+> by the same number.
+> 
+> The avail value returned from snd_pcm_avail() could exceed the limit
+> (buffer_size) easily becase the hw_ptr itself got increased by same
+> buffer_size samples when the corner case happens. In following log,
+> the buffer_size is 16368 samples but the avail is 21810 samples so
+> CRAS server complains about it.
+> 
+> [  418.851755] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 27390 avail 5442
+> [  418.926491] sound pcmC0D5p: pos 96 hw_ptr 32832 appl_ptr 27390 avail 21810
+> 
+> cras_server[1907]: pcm_avail returned frames larger than buf_size:
+> sof-glkda7219max: :0,5: 21810 > 16368
+> 
+> By updating runtime->hw_ptr_jiffies each time the HWSYNC is called,
+> the hw_base will keep the same when buffer stall happens at long as
+> the interval between each HWSYNC call is shorter than half of buffer
+> time.
+> 
+> Following is a log captured by a patched kernel. The hw_base/hw_ptr
+> value is fixed in this corner case and user space program should be
+> aware of the buffer stall and handle it.
+> 
+> [  293.525543] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
+> [  293.525606] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6880 avail 9584
+> [  293.525975] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 10976 avail 5488
+> [  293.611178] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15072 avail 1392
+> [  293.696429] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+> ...
+> [  381.139517] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+> 
+> Signed-off-by: Brent Lu <brent.lu@intel.com>
 
-This can and should be avoided, I will rather move the for-each-policy
-loop in cpufreq_boost_trigger_state() and call ->set_boost() for each
-policy and pass policy as argument as well. You would be required to
-update existing users of sw boost.
+Thanks, applied now with Reviewed-by tag from Jaroslav.
+I also put Cc to stable, as it can fix the actual issues.
 
--- 
-viresh
+
+Takashi
