@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA907C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B49EF20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5209F20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826226;
-	bh=t67HidTyqvuTCFA1pM7lYbAAr9hS5Sny8fXHsx5iDYY=;
+	s=default; t=1589826233;
+	bh=e/IH5Ce3n1nTIjPjeRM0r54VhiqaeZ3w8gRLmUzzDOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ap2GB5SHf7jcGRkRMwl9d2InplFu2osXKkOYMf1A1X7YGXxKJf4C7Vbdu76CzKGAX
-	 JJwLYn0AAJln8thu2F98K9/ThRGaY3CmclN6EzFAplpUfoe49+n0JU+qZhoSdlUWCe
-	 lEnrY3MKc156YSV0swrtLtH8hYsjfjrGeiSV30QA=
+	b=o3e0GNlbpkzfkFchdO38jILfl1hzq2B1YYhsqeV2uBYj+hywyyHgX2mZV5QuHDZtm
+	 qvunf6GRBiQKlyffpfaS+jqVTaWWSi0C6jRE9TA8UQECi2nST71YxUJQNDhCwo66Pw
+	 zecL4BerozP/PAM5fWObuk/oAGYbeDQlMzdTpLck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387871AbgERSXp (ORCPT
+        id S2387878AbgERSXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:23:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50260 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:23:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730461AbgERRtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:49:00 -0400
+        id S1730432AbgERRsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:48:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5699520715;
-        Mon, 18 May 2020 17:48:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FDE420657;
+        Mon, 18 May 2020 17:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824139;
-        bh=t67HidTyqvuTCFA1pM7lYbAAr9hS5Sny8fXHsx5iDYY=;
+        s=default; t=1589824129;
+        bh=e/IH5Ce3n1nTIjPjeRM0r54VhiqaeZ3w8gRLmUzzDOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xBHhMa87zO9gGdOQLRfw3hbilIFEXtg9ZS9jtp8u1zfUDIF+IaYGHgC8O2dRqkP+4
-         DXmxyy0fx3h4MZDR9zKym0gNDzYJUnHer7B/kaxdX8gGn5zHJmCDLI5AZXUagBMR6C
-         H1CrU+8zs2tiWdjZXVnsvgiNQN1rViMYo9xE48II=
+        b=K+iJaA9795yuG6oin3vPJtPGS2FneYH4y42mu6v3o36mQc44yPkyaDPJyatmI1T9x
+         Bwwao4M4793O4llTN/KNX+Jqda4xhJ/i9Vc6/PGY8xmncReWtrcZtzs4OjLKrXpzo7
+         hvGI+gCltoCyL05E618MiYc69xX5woUhJK5bN36o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
-        Zefan Li <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 4.14 088/114] netprio_cgroup: Fix unlimited memory leak of v2 cgroups
-Date:   Mon, 18 May 2020 19:37:00 +0200
-Message-Id: <20200518173518.278476162@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Hannes Frederic Sowa <hannes@stressinduktion.org>,
+        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 084/114] Revert "ipv6: add mtu lock check in __ip6_rt_update_pmtu"
+Date:   Mon, 18 May 2020 19:36:56 +0200
+Message-Id: <20200518173517.498171027@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -60,50 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zefan Li <lizefan@huawei.com>
+From: "Maciej Żenczykowski" <maze@google.com>
 
-[ Upstream commit 090e28b229af92dc5b40786ca673999d59e73056 ]
+[ Upstream commit 09454fd0a4ce23cb3d8af65066c91a1bf27120dd ]
 
-If systemd is configured to use hybrid mode which enables the use of
-both cgroup v1 and v2, systemd will create new cgroup on both the default
-root (v2) and netprio_cgroup hierarchy (v1) for a new session and attach
-task to the two cgroups. If the task does some network thing then the v2
-cgroup can never be freed after the session exited.
+This reverts commit 19bda36c4299ce3d7e5bce10bebe01764a655a6d:
 
-One of our machines ran into OOM due to this memory leak.
+| ipv6: add mtu lock check in __ip6_rt_update_pmtu
+|
+| Prior to this patch, ipv6 didn't do mtu lock check in ip6_update_pmtu.
+| It leaded to that mtu lock doesn't really work when receiving the pkt
+| of ICMPV6_PKT_TOOBIG.
+|
+| This patch is to add mtu lock check in __ip6_rt_update_pmtu just as ipv4
+| did in __ip_rt_update_pmtu.
 
-In the scenario described above when sk_alloc() is called
-cgroup_sk_alloc() thought it's in v2 mode, so it stores
-the cgroup pointer in sk->sk_cgrp_data and increments
-the cgroup refcnt, but then sock_update_netprioidx()
-thought it's in v1 mode, so it stores netprioidx value
-in sk->sk_cgrp_data, so the cgroup refcnt will never be freed.
+The above reasoning is incorrect.  IPv6 *requires* icmp based pmtu to work.
+There's already a comment to this effect elsewhere in the kernel:
 
-Currently we do the mode switch when someone writes to the ifpriomap
-cgroup control file. The easiest fix is to also do the switch when
-a task is attached to a new cgroup.
+  $ git grep -p -B1 -A3 'RTAX_MTU lock'
+  net/ipv6/route.c=4813=
 
-Fixes: bd1060a1d671 ("sock, cgroup: add sock->sk_cgroup")
-Reported-by: Yang Yingliang <yangyingliang@huawei.com>
-Tested-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Zefan Li <lizefan@huawei.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+  static int rt6_mtu_change_route(struct fib6_info *f6i, void *p_arg)
+  ...
+    /* In IPv6 pmtu discovery is not optional,
+       so that RTAX_MTU lock cannot disable it.
+       We still use this lock to block changes
+       caused by addrconf/ndisc.
+    */
+
+This reverts to the pre-4.9 behaviour.
+
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Cc: Xin Long <lucien.xin@gmail.com>
+Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+Signed-off-by: Maciej Żenczykowski <maze@google.com>
+Fixes: 19bda36c4299 ("ipv6: add mtu lock check in __ip6_rt_update_pmtu")
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/netprio_cgroup.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv6/route.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/net/core/netprio_cgroup.c
-+++ b/net/core/netprio_cgroup.c
-@@ -241,6 +241,8 @@ static void net_prio_attach(struct cgrou
- 	struct task_struct *p;
- 	struct cgroup_subsys_state *css;
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -1479,8 +1479,10 @@ static void __ip6_rt_update_pmtu(struct
+ 	const struct in6_addr *daddr, *saddr;
+ 	struct rt6_info *rt6 = (struct rt6_info *)dst;
  
-+	cgroup_sk_alloc_disable();
-+
- 	cgroup_taskset_for_each(p, css, tset) {
- 		void *v = (void *)(unsigned long)css->cgroup->id;
+-	if (dst_metric_locked(dst, RTAX_MTU))
+-		return;
++	/* Note: do *NOT* check dst_metric_locked(dst, RTAX_MTU)
++	 * IPv6 pmtu discovery isn't optional, so 'mtu lock' cannot disable it.
++	 * [see also comment in rt6_mtu_change_route()]
++	 */
  
+ 	if (iph) {
+ 		daddr = &iph->daddr;
 
 
