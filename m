@@ -4,58 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A33FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27FF920835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC9520715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824009;
-	bh=jH7gTIliVxxfxhV+AmfMIuFNThbagTKS2LMc0asBq8c=;
+	s=default; t=1589824012;
+	bh=1IxgM8qSTOEdrK1L9TS8wCO2BnquIDeqgkd91GqoSFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1CXvtvEa4DBI9bPYRovpzqa70/MlU2/dIdTbHgb7Eo3MVYLt9c1+QM+WsmlrRGTTK
-	 a4sBsEcCrWTnl+WCI7PatIvhh0RL/X5Xbpi0BEZThvsHGlJNv/lRg2Xfg7RNLjED5i
-	 1AibIZiQ2+J6rwu4OHjaAQjMZMeqDjLCXvPmKCpY=
+	b=YFLN/62LYegUfwxQvdpo2i19Mpu9T+4aZXpzM9A989Zwj8ceiuMD9HNG5zbFGLu6m
+	 cvknU0k7lJ9HV5a9DHOHkJb8dTX2P0szrvAKtp8gr2lcVg+Bt49pxGgBqL7lTrT+Xf
+	 5/cv47oxUWAiCpNaFXEa+JU8TzaPFX0h+QYTyFks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbgERRqo (ORCPT
+        id S1729114AbgERRqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:46:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46382 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:46:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730110AbgERRqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:46:37 -0400
+        id S1730123AbgERRqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:46:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B64D20671;
-        Mon, 18 May 2020 17:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A1A120715;
+        Mon, 18 May 2020 17:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823996;
-        bh=jH7gTIliVxxfxhV+AmfMIuFNThbagTKS2LMc0asBq8c=;
+        s=default; t=1589824004;
+        bh=1IxgM8qSTOEdrK1L9TS8wCO2BnquIDeqgkd91GqoSFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aN1V0YWCFBUO38FDO++vfqYppTF1FBwHJCFb+Ufmzmdxh9MT7b6qyNTuqKxmJMH3+
-         9wH1scydWQFyAhaGAACc5KItE65KUiueqAD081szdIWY47AkA9hnfzKKE9+zZpAjNG
-         HZiEaMzQpsEc2+FKmR/fI+AFfaXK8Ytrfi1AdGyo=
+        b=xm6TcISxypH8/w75zPTNGTZEohsVw4/gKJz5i58314tmVyCh0ZeYu0bwh5MqYV8qO
+         xA67rFr07nO3uJyyBvrb7KNCI2CTsmnwuzO0UqqLg9cY2KfhWnD1BlZ7l+qywithdn
+         hjHVsKYcFiuzSlcqv5cw0s8HiGRbcGn1GhiT9rVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>,
-        Dave Jones <dsj@fb.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miroslav Benes <mbenes@suse.cz>,
+        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Jann Horn <jannh@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.14 029/114] x86/entry/64: Fix unwind hints in kernel exit path
-Date:   Mon, 18 May 2020 19:36:01 +0200
-Message-Id: <20200518173509.026210081@linuxfoundation.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>
+Subject: [PATCH 4.14 031/114] x86/unwind/orc: Dont skip the first frame for inactive tasks
+Date:   Mon, 18 May 2020 19:36:03 +0200
+Message-Id: <20200518173509.357209406@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -68,69 +65,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Miroslav Benes <mbenes@suse.cz>
 
-commit 1fb143634a38095b641a3a21220774799772dc4c upstream.
+commit f1d9a2abff66aa8156fbc1493abed468db63ea48 upstream.
 
-In swapgs_restore_regs_and_return_to_usermode, after the stack is
-switched to the trampoline stack, the existing UNWIND_HINT_REGS hint is
-no longer valid, which can result in the following ORC unwinder warning:
+When unwinding an inactive task, the ORC unwinder skips the first frame
+by default.  If both the 'regs' and 'first_frame' parameters of
+unwind_start() are NULL, 'state->sp' and 'first_frame' are later
+initialized to the same value for an inactive task.  Given there is a
+"less than or equal to" comparison used at the end of __unwind_start()
+for skipping stack frames, the first frame is skipped.
 
-  WARNING: can't dereference registers at 000000003aeb0cdd for ip swapgs_restore_regs_and_return_to_usermode+0x93/0xa0
+Drop the equal part of the comparison and make the behavior equivalent
+to the frame pointer unwinder.
 
-For full correctness, we could try to add complicated unwind hints so
-the unwinder could continue to find the registers, but when when it's
-this close to kernel exit, unwind hints aren't really needed anymore and
-it's fine to just use an empty hint which tells the unwinder to stop.
-
-For consistency, also move the UNWIND_HINT_EMPTY in
-entry_SYSCALL_64_after_hwframe to a similar location.
-
-Fixes: 3e3b9293d392 ("x86/entry/64: Return to userspace from the trampoline stack")
-Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-Reported-by: Dave Jones <dsj@fb.com>
-Reported-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
-Reported-by: Joe Mario <jmario@redhat.com>
-Reported-by: Jann Horn <jannh@google.com>
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Miroslav Benes <mbenes@suse.cz>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Jones <dsj@fb.com>
+Cc: Jann Horn <jannh@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/60ea8f562987ed2d9ace2977502fe481c0d7c9a0.1587808742.git.jpoimboe@redhat.com
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lore.kernel.org/r/7f08db872ab59e807016910acdbe82f744de7065.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/entry_64.S |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kernel/unwind_orc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -302,7 +302,6 @@ GLOBAL(entry_SYSCALL_64_after_hwframe)
- 	 */
- syscall_return_via_sysret:
- 	/* rcx and r11 are already restored (see code above) */
--	UNWIND_HINT_EMPTY
- 	POP_REGS pop_rdi=0 skip_r11rcx=1
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -574,7 +574,7 @@ void __unwind_start(struct unwind_state
+ 	/* Otherwise, skip ahead to the user-specified starting frame: */
+ 	while (!unwind_done(state) &&
+ 	       (!on_stack(&state->stack_info, first_frame, sizeof(long)) ||
+-			state->sp <= (unsigned long)first_frame))
++			state->sp < (unsigned long)first_frame))
+ 		unwind_next_frame(state);
  
- 	/*
-@@ -311,6 +310,7 @@ syscall_return_via_sysret:
- 	 */
- 	movq	%rsp, %rdi
- 	movq	PER_CPU_VAR(cpu_tss_rw + TSS_sp0), %rsp
-+	UNWIND_HINT_EMPTY
- 
- 	pushq	RSP-RDI(%rdi)	/* RSP */
- 	pushq	(%rdi)		/* RDI */
-@@ -606,6 +606,7 @@ GLOBAL(swapgs_restore_regs_and_return_to
- 	 */
- 	movq	%rsp, %rdi
- 	movq	PER_CPU_VAR(cpu_tss_rw + TSS_sp0), %rsp
-+	UNWIND_HINT_EMPTY
- 
- 	/* Copy the IRET frame to the trampoline stack. */
- 	pushq	6*8(%rdi)	/* SS */
+ 	return;
 
 
