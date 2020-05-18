@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43883C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 181B520671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1388D20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825148;
-	bh=Q6OxYPg+HEkGz2LIWB5H4R2fxd0AQ+iGVhEsHiX43Pk=;
+	s=default; t=1589825152;
+	bh=xQ6rsCzZqQTZ2g9SUkiO7LCrfHXHf9Hr1QRQfB9ELrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fCi7Bl7THzlr7P6tM/LM6rjSJjD1nVd4dVjAaNhKXOwlzYkVDckLK7Na5eEgoTIEN
-	 R5Bsw0oOxX+jUu6NZKnvCELHR2QlrmoQ8OIKemdTpoi7VX84FT+GFih/LuZN/ay9dv
-	 2yEese7MymgIV1rVKyIfyItsD4nVB7nX5FCZ6lWE=
+	b=mdfDgLMl3NY5cjPrao8r4wPgn/dsvgtEMGx0HeUg8gSo+FdO0YZ0+eBZM7x2y7+CO
+	 KNz+d6OwslF1BGnXXJy5oUfodG+GwbJyAMf6zc4ZlRMhHwLS3biSIT/J5EL03xH0yv
+	 RDb2gdFuiJvCCtnIn1b3So6L7yTu5/50+EkvJ4HU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733051AbgERSFr (ORCPT
+        id S1733079AbgERSFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53374 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:05:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731959AbgERSFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:05:41 -0400
+        id S1733030AbgERSFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:05:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8973420715;
-        Mon, 18 May 2020 18:05:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCEB820715;
+        Mon, 18 May 2020 18:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825140;
-        bh=Q6OxYPg+HEkGz2LIWB5H4R2fxd0AQ+iGVhEsHiX43Pk=;
+        s=default; t=1589825145;
+        bh=xQ6rsCzZqQTZ2g9SUkiO7LCrfHXHf9Hr1QRQfB9ELrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IKH3pr0s/QANThuXi9yON0GvCZ1jKhxuBdzgG3dHsJFPhdUHHZEnrwsGxiqZ1DvBs
-         8hFTeYMH0vKZ8K66gBXnwh4WBMI/qeywQ19aVi/H3caR4C8sG1dOz5nke283rqeGLy
-         Tt6xhyfbkDz90u8vQlDbmtpgStj0A/CQJPM3VE80=
+        b=Ibv0UFU1Nh2KMTCi0M7sRtNbQHxxjjpSwD5elyTmt09r6GLjr5MlPZzXv6eDIBsZs
+         qVm5Cwa0qLvxu3HzkaiSsCgbSwkSmIVd5coLhSnezm/9QPdaFb9a0JKwz1gZT2rEWN
+         lxe+Px6kFkI9EKYVZozQLFBPwyAocZDwuLTHcC6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyungtae Kim <kt0755@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.6 145/194] USB: gadget: fix illegal array access in binding with UDC
-Date:   Mon, 18 May 2020 19:37:15 +0200
-Message-Id: <20200518173543.348668217@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Jones <pjones@redhat.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>
+Subject: [PATCH 5.6 147/194] Make the "Reducing compressed framebufer size" message be DRM_INFO_ONCE()
+Date:   Mon, 18 May 2020 19:37:17 +0200
+Message-Id: <20200518173543.499889150@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,75 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kyungtae Kim <kt0755@gmail.com>
+From: Peter Jones <pjones@redhat.com>
 
-commit 15753588bcd4bbffae1cca33c8ced5722477fe1f upstream.
+commit 82152d424b6cb6fc1ede7d03d69c04e786688740 upstream.
 
-FuzzUSB (a variant of syzkaller) found an illegal array access
-using an incorrect index while binding a gadget with UDC.
+This was sort of annoying me:
 
-Reference: https://www.spinics.net/lists/linux-usb/msg194331.html
+random:~$ dmesg | tail -1
+[523884.039227] [drm] Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.
+random:~$ dmesg | grep -c "Reducing the compressed"
+47
 
-This bug occurs when a size variable used for a buffer
-is misused to access its strcpy-ed buffer.
-Given a buffer along with its size variable (taken from user input),
-from which, a new buffer is created using kstrdup().
-Due to the original buffer containing 0 value in the middle,
-the size of the kstrdup-ed buffer becomes smaller than that of the original.
-So accessing the kstrdup-ed buffer with the same size variable
-triggers memory access violation.
+This patch makes it DRM_INFO_ONCE() just like the similar message
+farther down in that function is pr_info_once().
 
-The fix makes sure no zero value in the buffer,
-by comparing the strlen() of the orignal buffer with the size variable,
-so that the access to the kstrdup-ed buffer is safe.
-
-BUG: KASAN: slab-out-of-bounds in gadget_dev_desc_UDC_store+0x1ba/0x200
-drivers/usb/gadget/configfs.c:266
-Read of size 1 at addr ffff88806a55dd7e by task syz-executor.0/17208
-
-CPU: 2 PID: 17208 Comm: syz-executor.0 Not tainted 5.6.8 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xce/0x128 lib/dump_stack.c:118
- print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
- __kasan_report+0x131/0x1b0 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:641
- __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
- gadget_dev_desc_UDC_store+0x1ba/0x200 drivers/usb/gadget/configfs.c:266
- flush_write_buffer fs/configfs/file.c:251 [inline]
- configfs_write_file+0x2f1/0x4c0 fs/configfs/file.c:283
- __vfs_write+0x85/0x110 fs/read_write.c:494
- vfs_write+0x1cd/0x510 fs/read_write.c:558
- ksys_write+0x18a/0x220 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write fs/read_write.c:620 [inline]
- __x64_sys_write+0x73/0xb0 fs/read_write.c:620
- do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Kyungtae Kim <kt0755@gmail.com>
-Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200510054326.GA19198@pizza01
+Cc: stable@vger.kernel.org
+Signed-off-by: Peter Jones <pjones@redhat.com>
+Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Closes: https://gitlab.freedesktop.org/drm/intel/-/issues/1745
+Link: https://patchwork.freedesktop.org/patch/msgid/20180706190424.29194-1-pjones@redhat.com
+[vsyrjala: Rebase due to per-device logging]
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+(cherry picked from commit 6b7fc6a3e6af4ff5773949d0fed70d8e7f68d5ce)
+[Rodrigo: port back to DRM_INFO_ONCE]
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/configfs.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/i915/display/intel_fbc.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/usb/gadget/configfs.c
-+++ b/drivers/usb/gadget/configfs.c
-@@ -260,6 +260,9 @@ static ssize_t gadget_dev_desc_UDC_store
- 	char *name;
- 	int ret;
+--- a/drivers/gpu/drm/i915/display/intel_fbc.c
++++ b/drivers/gpu/drm/i915/display/intel_fbc.c
+@@ -478,8 +478,7 @@ static int intel_fbc_alloc_cfb(struct dr
+ 	if (!ret)
+ 		goto err_llb;
+ 	else if (ret > 1) {
+-		DRM_INFO("Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.\n");
+-
++		DRM_INFO_ONCE("Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.\n");
+ 	}
  
-+	if (strlen(page) < len)
-+		return -EOVERFLOW;
-+
- 	name = kstrdup(page, GFP_KERNEL);
- 	if (!name)
- 		return -ENOMEM;
+ 	fbc->threshold = ret;
 
 
