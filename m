@@ -2,136 +2,123 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD8B920829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:22:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589840557;
-	bh=I48flygjIBp7uOnVnXDFpml1edpXtpsCjzT/57eK7CQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=CmYzjlUKnkQ0RlsGSa26RdC8pK//0AMdLU/sNK+ZV3dZl9K4aHPAWzD9b0VhC7ZTL
-	 ZaTMFItKFRIJ0Lj6Qh/KwleXQjlHGjR0GG4USBQrGcP/RgmSvIU61dHQ6MUsnBe0Ns
-	 rX1FjIozj1A62ym7FNHMlxO6RMMHLrhHULMHG40Y=
+	by mail.kernel.org (Postfix) with ESMTP id 0A65120715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:23:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="u+GyquKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbgERWWh (ORCPT
+        id S1728333AbgERWXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 18:22:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726386AbgERWWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 18:22:36 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 18 May 2020 18:23:51 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:35927 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726640AbgERWXv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 18:23:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589840630; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=4uj37Ad3nKYzs3LXbJ81SOQwegosH0es14ynx7mY9aM=; b=u+GyquKosCIO1tekayih+JWSnOrqTCPOyJtpcbttNPciuLpbcEsDG1fn9LkBquQq4Vpf8/H6
+ 5Hku7EibVl7HQox46KwRVMudnqWIjEy/s1+BogTZQ4nAm08+9OKMrltfS0+Xf/TmwVUItMtq
+ /IQBlo5EuesyAYAmgWWSsdHHyDY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ec30af5d915e862f6cb6c93 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 18 May 2020 22:23:49
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 11272C44788; Mon, 18 May 2020 22:23:49 +0000 (UTC)
+Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FDB620674;
-        Mon, 18 May 2020 22:22:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589840556;
-        bh=I48flygjIBp7uOnVnXDFpml1edpXtpsCjzT/57eK7CQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=r2Z4K0y2G8YiS1+K48wrTdZc8IcboE5EvkgJatVdyvfNLmOZ/GLIOr/AteenNbOBW
-         rRDXRtgGIto++cGMHN27fMO358VTGas/gXzeuSuxTaIUCBnRee0Fu3worwP9ddV5Jh
-         Eoyk06j6KCZ1MWUhrWx13BTFIGqueNItbI5JS1w8=
-Date:   Mon, 18 May 2020 17:27:22 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>
-Cc:     linux-acpi@vger.kernel.org, devel@acpica.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] ACPICA: Replace one-element array and use struct_size()
- helper
-Message-ID: <20200518222722.GA7791@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6A3A4C433D2;
+        Mon, 18 May 2020 22:23:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6A3A4C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+From:   Hemant Kumar <hemantk@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org,
+        Hemant Kumar <hemantk@codeaurora.org>
+Subject: [PATCH v1 1/3] bus: mhi: core: Add helper API to return number of free TREs
+Date:   Mon, 18 May 2020 15:23:37 -0700
+Message-Id: <1589840619-18520-2-git-send-email-hemantk@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1589840619-18520-1-git-send-email-hemantk@codeaurora.org>
+References: <1589840619-18520-1-git-send-email-hemantk@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of one-element arrays in the following
-form:
+Introduce mhi_get_no_free_descriptors() API to return number
+of TREs available to queue buffer. MHI clients can use this
+API to know before hand if ring is full without calling queue
+API.
 
-struct something {
-    int length;
-    u8 data[1];
-};
-
-struct something *instance;
-
-instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-instance->length = size;
-memcpy(instance->data, source, size);
-
-but the preferred mechanism to declare variable-length types such as
-these ones is a flexible array member[1][2], introduced in C99:
-
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, make use of the new struct_size() helper to properly calculate the
-size of struct acpi_pnp_device_id_list.
-
-This issue was found with the help of Coccinellea and, audited and
-fixed _manually_.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
 ---
- drivers/acpi/acpica/utids.c | 4 +---
- include/acpi/actypes.h      | 2 +-
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/bus/mhi/core/main.c | 12 ++++++++++++
+ include/linux/mhi.h         |  9 +++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/drivers/acpi/acpica/utids.c b/drivers/acpi/acpica/utids.c
-index 3bb06935a2ad3..c2f819a39424a 100644
---- a/drivers/acpi/acpica/utids.c
-+++ b/drivers/acpi/acpica/utids.c
-@@ -262,9 +262,7 @@ acpi_ut_execute_CID(struct acpi_namespace_node *device_node,
- 	 * 2) Size of the CID PNP_DEVICE_ID array +
- 	 * 3) Size of the actual CID strings
- 	 */
--	cid_list_size = sizeof(struct acpi_pnp_device_id_list) +
--	    ((count - 1) * sizeof(struct acpi_pnp_device_id)) +
--	    string_area_size;
-+	cid_list_size = struct_size(cid_list, ids, count) + string_area_size;
+diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+index feafc4d..cd1c4da 100644
+--- a/drivers/bus/mhi/core/main.c
++++ b/drivers/bus/mhi/core/main.c
+@@ -294,6 +294,18 @@ int mhi_destroy_device(struct device *dev, void *data)
+ 	return 0;
+ }
  
- 	cid_list = ACPI_ALLOCATE_ZEROED(cid_list_size);
- 	if (!cid_list) {
-diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
-index 4defed58ea338..c7bcda0ad366a 100644
---- a/include/acpi/actypes.h
-+++ b/include/acpi/actypes.h
-@@ -1145,7 +1145,7 @@ struct acpi_pnp_device_id {
- struct acpi_pnp_device_id_list {
- 	u32 count;		/* Number of IDs in Ids array */
- 	u32 list_size;		/* Size of list, including ID strings */
--	struct acpi_pnp_device_id ids[1];	/* ID array */
-+	struct acpi_pnp_device_id ids[];	/* ID array */
- };
++int mhi_get_no_free_descriptors(struct mhi_device *mhi_dev,
++				enum dma_data_direction dir)
++{
++	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
++	struct mhi_chan *mhi_chan = (dir == DMA_TO_DEVICE) ?
++		mhi_dev->ul_chan : mhi_dev->dl_chan;
++	struct mhi_ring *tre_ring = &mhi_chan->tre_ring;
++
++	return get_nr_avail_ring_elements(mhi_cntrl, tre_ring);
++}
++EXPORT_SYMBOL_GPL(mhi_get_no_free_descriptors);
++
+ void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason)
+ {
+ 	struct mhi_driver *mhi_drv;
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index 24a3dff..ac44326 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -620,6 +620,15 @@ void mhi_set_mhi_state(struct mhi_controller *mhi_cntrl,
+ void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason);
  
- /*
+ /**
++ * mhi_get_no_free_descriptors - Get transfer ring length
++ * Get # of TD available to queue buffers
++ * @mhi_dev: Device associated with the channels
++ * @dir: Direction of the channel
++ */
++int mhi_get_no_free_descriptors(struct mhi_device *mhi_dev,
++				enum dma_data_direction dir);
++
++/**
+  * mhi_prepare_for_power_up - Do pre-initialization before power up.
+  *                            This is optional, call this before power up if
+  *                            the controller does not want bus framework to
 -- 
-2.26.2
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
