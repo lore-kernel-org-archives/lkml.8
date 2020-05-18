@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59313C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A250320715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B55207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824754;
-	bh=ZHobTLHe8zeHCbBSAE8eFwEmwmHHNRo2N/t8g3ZARIA=;
+	s=default; t=1589824759;
+	bh=UbfeksTSL+z0wNvTmx3BLuXXAbmKMJLCP1x1BcvqVSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EoxsxlLh3mW0fGcl0/6UfomIEOZD5WycDi2xhc0UphCLjoa1wzjagZMVVsAQmJe1U
-	 AADRYTxa8RzvrdhwyVJaxQMQiscrNsemBd8LbKfzsMx8ZmVQxyiA6/ONv5y43WsvQp
-	 uXWvT4BIm1J64pDFngpO7j3nJTBc5F23+4AqryFI=
+	b=S1oGHiN845pOdpLOS2mpP8hLVOB0hLLUiSd98UTIbPZ4wGp015UrRp085bFt2j2fr
+	 K9qaAVFts/z2OcV47diCBtJ3jXSVBqstOp1Fnjc6tpr/rBkreMg/QpjKW+AsHDa4gF
+	 +Izeb2SJ173Jzfv2TtVHeN4lGpzdw0ErHiwWpMHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732019AbgERR7O (ORCPT
+        id S1732026AbgERR7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:59:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39368 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:59:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732014AbgERR7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:59:12 -0400
+        id S1732006AbgERR7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:59:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAEA0207D3;
-        Mon, 18 May 2020 17:59:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C518207C4;
+        Mon, 18 May 2020 17:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824752;
-        bh=ZHobTLHe8zeHCbBSAE8eFwEmwmHHNRo2N/t8g3ZARIA=;
+        s=default; t=1589824749;
+        bh=UbfeksTSL+z0wNvTmx3BLuXXAbmKMJLCP1x1BcvqVSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=URPEvkfHjU3yi62gkhA8H7aGKVRSua9Nkk3EsOZ2iUj9Zw0FfYfRgSCevr8rKCI0M
-         b2eBQFq5W1O9DxlaccRpnlVZICL5VMLCiA15ujz0S55ea2xvQCQzIDJ+TOboOrVV0J
-         hqzXOpcEkfDTJmlrrfh27UiMcM2I75ftOgIGMUAg=
+        b=gT3y2HTirBqKkytZTpdn1XHumiQFvNGO4nrW6baskChWlfWlOlpgxvlz006ky9D2F
+         n0czwt4CEFuPMlR61+NiXf0cZy1RiBMTyHIpSZMO8iWlG8+PPG7IytYZ5g25tmDNcM
+         kcNAwie1TQTtf+Gn8KG8oBnqmWhB1mS3rXNGGsvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.4 137/147] arm64: dts: imx8mn: Change SDMA1 ahb clock for imx8mn
-Date:   Mon, 18 May 2020 19:37:40 +0200
-Message-Id: <20200518173530.237924524@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 119/147] powerpc/32s: Fix build failure with CONFIG_PPC_KUAP_DEBUG
+Date:   Mon, 18 May 2020 19:37:22 +0200
+Message-Id: <20200518173527.836940374@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -59,34 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 15ddc3e17aec0de4c69d595b873e184432b9791d upstream.
+commit 4833ce06e6855d526234618b746ffb71d6612c9a upstream.
 
-Using SDMA1 with UART1 is causing a "Timeout waiting for CH0" error.
-This patch changes to ahb clock from SDMA1_ROOT to AHB which fixes the
-timeout error.
+gpr2 is not a parametre of kuap_check(), it doesn't exist.
 
-Fixes: 6c3debcbae47 ("arm64: dts: freescale: Add i.MX8MN dtsi support")
+Use gpr instead.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/ea599546f2a7771bde551393889e44e6b2632332.1587368807.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/freescale/imx8mn.dtsi |    2 +-
+ arch/powerpc/include/asm/book3s/32/kup.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -616,7 +616,7 @@
- 				reg = <0x30bd0000 0x10000>;
- 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MN_CLK_SDMA1_ROOT>,
--					 <&clk IMX8MN_CLK_SDMA1_ROOT>;
-+					 <&clk IMX8MN_CLK_AHB>;
- 				clock-names = "ipg", "ahb";
- 				#dma-cells = <3>;
- 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
+--- a/arch/powerpc/include/asm/book3s/32/kup.h
++++ b/arch/powerpc/include/asm/book3s/32/kup.h
+@@ -75,7 +75,7 @@
+ 
+ .macro kuap_check	current, gpr
+ #ifdef CONFIG_PPC_KUAP_DEBUG
+-	lwz	\gpr2, KUAP(thread)
++	lwz	\gpr, KUAP(thread)
+ 999:	twnei	\gpr, 0
+ 	EMIT_BUG_ENTRY 999b, __FILE__, __LINE__, (BUGFLAG_WARNING | BUGFLAG_ONCE)
+ #endif
 
 
