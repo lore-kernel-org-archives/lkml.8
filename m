@@ -2,111 +2,133 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F84C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA33207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:23:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589815406;
-	bh=yxtbYhqiBpX0vaCKJ8nincWDlOttWPQGQYeL0KqTH88=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vZCDnPs17SluHaKTbNT6/Afu+pp393pdE3D4gNJJPugdS/vAOGsO1IMq2QuLOnjtr
-	 p/obIgF+cmvUe1XyoYVBbrVk1I564CD/4UCxrVJnS41im+pSooJfXCjJafTzKeKQKf
-	 8DoTHiNOmOoyasmG6O2hONTuiDsp+ic0OGPodYHI=
+	by mail.kernel.org (Postfix) with ESMTP id 8BCFB20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:23:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALbu9AKM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgERPXZ (ORCPT
+        id S1728316AbgERPXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 11:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726918AbgERPXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 11:23:25 -0400
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AFF3207D8
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 15:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589815404;
-        bh=yxtbYhqiBpX0vaCKJ8nincWDlOttWPQGQYeL0KqTH88=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rejD3Cq3JkMBTzUozSEQ/NMDN4wNabDl16h10hnxRO/FeHWgmHuBR1gpptZvSLEmk
-         MerhXjFPxqumyVcS4pDPVo779TNtQyQiVWYUsMSyf/WgUSilWfXZfG2UVY6cyEzsRH
-         qEihdwS5ax4XJoPtGyu0LU44g3M2x4HNHH/cZuEo=
-Received: by mail-ej1-f47.google.com with SMTP id n24so1148652ejd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 08:23:24 -0700 (PDT)
-X-Gm-Message-State: AOAM532zXe9t0Si6vOa+QDwY02AGFjec2WbCeTS1FoHZ/qumgufp+13g
-        hkfXWzqAskpu94aIJ+srOn6AZvi9igBGsL2iyg==
-X-Google-Smtp-Source: ABdhPJx1xmRv1Gbqt6X2HaH4typf9wcXv81hsB28v44g5GQNU5bFmryX50AtKCXktDvePVh8ZZJSpwAS+KTHOyiTrIE=
-X-Received: by 2002:a17:906:924a:: with SMTP id c10mr10734314ejx.360.1589815402680;
- Mon, 18 May 2020 08:23:22 -0700 (PDT)
+        Mon, 18 May 2020 11:23:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbgERPXz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 11:23:55 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C96C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 08:23:55 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id fb16so4841559qvb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 08:23:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/HaS0VGvwKKZo+c1KgVtIA1x0dYcpqRG0Gw5Sc4Ij8I=;
+        b=ALbu9AKM9aD2Et0awLVWZ7YlF1bR0sagosp8l49E4A1HqakAGlNXhkID6Y0PSlGfmc
+         64zPOLjdI+IroAOHc78MfQmJf+9976TvBq9m4KworNNxGaz35grRGIK0OIGFyDBw8m//
+         lXAnFxj+/6fWlZo/N527HM9OGQ0DUbA4m8t3r9PLee8feaX7koPcRD5KYi4zUa487tFo
+         Hjtjoxxjw+FwGk6GO6lVk5Lwr+TuR/sQJ8m3rniQZi4ITXNgZMLjsYWGA//zWPtI9zMK
+         m0wM09PLiOvNcwRrlCTHSXFwSweL+uwigBnu5Su6woVU/JD4EPjdV2pdTP2F3S1/H2uT
+         rztg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/HaS0VGvwKKZo+c1KgVtIA1x0dYcpqRG0Gw5Sc4Ij8I=;
+        b=LugKD1Ntm4htXncvqypCONNH+2YL/p8767W82RBvWr8gGQUf5GunAZr6KcOzXGr8Wh
+         4RLKoB+sw+TlVt//k+ITh9LggGHAzoW5pWsBV34I2vVQxJPiNLqqlPdE9BuX70FjRyBt
+         5AbQ3e/MWpIxIET5JFJ4r1kL6FMK/x2CX4E5xoqrkDfcpdrHq+jsaKKw2xOBzfGOLsWt
+         +R5zInli1WJnF8ZKEBLqaIH7OyYY2tOTRN8Uo3Lko3DX8HeAP/UWHTH+S3Lesvx51juu
+         TCgE2kFplYtR5cgZlQNhISdKLVm/FcFm3CU5GLTF+9tOY2CDP0sfFZ3rQo09OWfJL4Z9
+         GGmA==
+X-Gm-Message-State: AOAM532IcH85OYdP+eZ7olpeorGBP1rCklne9DfDBGdfGwcG9rdW2HNV
+        eYHCXEJyd9mRqYuB68cjLLsw3tdOmE4=
+X-Google-Smtp-Source: ABdhPJxcmhgFiytTCNY1wCphE8NKrmwlKWLf934eRAUeadjjFLQpW4TM5N1yzSrqf5XQNsVpxlM3Kg==
+X-Received: by 2002:a0c:aed7:: with SMTP id n23mr10402724qvd.179.1589815434540;
+        Mon, 18 May 2020 08:23:54 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id d82sm8430176qke.81.2020.05.18.08.23.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 08:23:53 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F14C940AFD; Mon, 18 May 2020 12:23:51 -0300 (-03)
+Date:   Mon, 18 May 2020 12:23:51 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH] perf stat: Fix duration_time value for higher intervals
+Message-ID: <20200518152351.GD24211@kernel.org>
+References: <20200518131445.3745083-1-jolsa@kernel.org>
 MIME-Version: 1.0
-References: <20200518112254.23692-1-matthias.bgg@kernel.org>
-In-Reply-To: <20200518112254.23692-1-matthias.bgg@kernel.org>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Mon, 18 May 2020 23:23:09 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-kBsnBk3RRUb_ks96c1Cf6hJ+SeSE4T52Djoqjzxk3jA@mail.gmail.com>
-Message-ID: <CAAOTY_-kBsnBk3RRUb_ks96c1Cf6hJ+SeSE4T52Djoqjzxk3jA@mail.gmail.com>
-Subject: Re: [PATCH] drm/mediatek: Delete not used of_device_get_match_data
-To:     matthias.bgg@kernel.org
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518131445.3745083-1-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Matthias:
+Em Mon, May 18, 2020 at 03:14:45PM +0200, Jiri Olsa escreveu:
+> Joakim reported wrong duration_time value for interval bigger
+> than 4000 [1].
+> 
+> The problem is in the interval value we pass to update_stats
+> function, which is typed as 'unsigned int' and overflows when
+> we get over 2^32 (happens between intervals 4000 and 5000).
+> 
+> Retyping the passed value to unsigned long long.
 
-<matthias.bgg@kernel.org> =E6=96=BC 2020=E5=B9=B45=E6=9C=8818=E6=97=A5 =E9=
-=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=887:23=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> From: Matthias Brugger <matthias.bgg@gmail.com>
->
-> The driver will be loaded by via a platform device. So we
-> will need to get the device_node from the parent device.
-> Depending on this we will set the driver data.
-> As all this is done later already, just delete the call to
-> of_device_get_match_data.
->
+Thanks, applied and added this:
 
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Fixes: b90f1333ef08 ("perf stat: Update walltime_nsecs_stats in interval mode")
 
-> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Ok?
+
+- Arnaldo
+
+> [1] https://www.spinics.net/lists/linux-perf-users/msg11777.html
+> 
+> Reported-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/med=
-iatek/mtk_drm_drv.c
-> index e2bb0d19ef99..63ec92ba0e92 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> @@ -447,7 +447,6 @@ static int mtk_drm_probe(struct platform_device *pdev=
-)
->         if (!private)
->                 return -ENOMEM;
->
-> -       private->data =3D of_device_get_match_data(dev);
->         private->mmsys_dev =3D dev->parent;
->         if (!private->mmsys_dev) {
->                 dev_err(dev, "Failed to get MMSYS device\n");
-> --
-> 2.26.2
->
+>  tools/perf/builtin-stat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index e0c1ad23c768..4deb2d46a343 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -367,7 +367,7 @@ static void process_interval(void)
+>  	}
+>  
+>  	init_stats(&walltime_nsecs_stats);
+> -	update_stats(&walltime_nsecs_stats, stat_config.interval * 1000000);
+> +	update_stats(&walltime_nsecs_stats, stat_config.interval * 1000000ULL);
+>  	print_counters(&rs, 0, NULL);
+>  }
+>  
+> -- 
+> 2.25.4
+> 
+
+-- 
+
+- Arnaldo
