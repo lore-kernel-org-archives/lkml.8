@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F33F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFAFA20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA48520715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825992;
-	bh=PohRqmfAs2f/sUR7D6+FHLMFJ38MEbs5ngp267iS3Bg=;
+	s=default; t=1589825997;
+	bh=ZsJn7yzuxpLIcnmErC2GkQPXYoeEaR6UqPbjZR5fag4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OCqf8E5M5XgUeW7/Sx7rJXOXFNnj3SglxBBibaQbGqob961SrOQCTKWhhdFjQ1Rza
-	 DK5orNr6S5LcLkMjwzA7OixlVf75us4RfEHEHcAnVBKGGwz9A3ZMx+32Wa5I1C20at
-	 TFBcdqUePORl6fGYuoygUn2JGrBbgobwRFRtfSE4=
+	b=0pqJ/rY/JtbiPiYLHGEy9ueaHnuVvUFPHkzuWX4Ng7LXLEVgg7RNswmlOVfaqAGYq
+	 14CGeg3na5TvPXe12DGXW5w+V0lp9MKpBGyTC/1xHx8PUpY/wWWde+RZQ92Jmsk5kn
+	 YtIb9mDdhXRIYdBsUsZjLp9F9CMRNRzrnuYIgGlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731194AbgERRxr (ORCPT
+        id S2387758AbgERST5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:53:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57906 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:19:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731173AbgERRxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:53:43 -0400
+        id S1731158AbgERRxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:53:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76E07207F5;
-        Mon, 18 May 2020 17:53:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95A11207C4;
+        Mon, 18 May 2020 17:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824422;
-        bh=PohRqmfAs2f/sUR7D6+FHLMFJ38MEbs5ngp267iS3Bg=;
+        s=default; t=1589824413;
+        bh=ZsJn7yzuxpLIcnmErC2GkQPXYoeEaR6UqPbjZR5fag4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M/RJmV1ubnFkMlUxCVuq5OwFaKpjC2a61ySQxZNZZglGkPWxFidcC5AyDebljcoPr
-         ybJL8EfW8Co3ivblYnkfbypbZgrfHF8r8lRruJW2c2NszxO4YSY6NysBCJ5bW5wjz0
-         Ey/oP7CZ99D0CfToLawpWfi9y70/nQ2svVJ8kErs=
+        b=d7gvwFDN15uaK6L6tqI6KrQ9lJ8It6/JLke38W7VdwHJmRCn4FF1qZdAc3Q1qPjfm
+         tpHZCQZqrQWszAFMMB431WVETyvt6xtKR3WRiN7MEC4+g5BvRv7QAZhVr9jpqTBeS6
+         koBeK4hzm3Hk0vj6fQoDCw95gv+pU6mmfcIu1fJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.19 71/80] usb: gadget: legacy: fix error return code in cdc_bind()
-Date:   Mon, 18 May 2020 19:37:29 +0200
-Message-Id: <20200518173504.767281788@linuxfoundation.org>
+        stable@vger.kernel.org, YongQin Liu <yongqin.liu@linaro.org>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Yang Fei <fei.yang@intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Jack Pham <jackp@codeaurora.org>, Josh Gao <jmgao@google.com>,
+        Todd Kjos <tkjos@google.com>, Felipe Balbi <balbi@kernel.org>,
+        linux-usb@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 4.19 67/80] dwc3: Remove check for HWO flag in dwc3_gadget_ep_reclaim_trb_sg()
+Date:   Mon, 18 May 2020 19:37:25 +0200
+Message-Id: <20200518173503.872586878@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -60,36 +66,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: John Stultz <john.stultz@linaro.org>
 
-commit e8f7f9e3499a6d96f7f63a4818dc7d0f45a7783b upstream.
+commit 00e21763f2c8cab21b7befa52996d1b18bde5c42 upstream.
 
-If 'usb_otg_descriptor_alloc()' fails, we must return a
-negative error code -ENOMEM, not 0.
+The check for the HWO flag in dwc3_gadget_ep_reclaim_trb_sg()
+causes us to break out of the loop before we call
+dwc3_gadget_ep_reclaim_completed_trb(), which is what likely
+should be clearing the HWO flag.
 
-Fixes: ab6796ae9833 ("usb: gadget: cdc2: allocate and init otg descriptor by otg capabilities")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+This can cause odd behavior where we never reclaim all the trbs
+in the sg list, so we never call giveback on a usb req, and that
+will causes transfer stalls.
+
+This effectively resovles the adb stalls seen on HiKey960
+after userland changes started only using AIO in adbd.
+
+Cc: YongQin Liu <yongqin.liu@linaro.org>
+Cc: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Cc: Yang Fei <fei.yang@intel.com>
+Cc: Thinh Nguyen <thinhn@synopsys.com>
+Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
+Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: Josh Gao <jmgao@google.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org
+Cc: stable@vger.kernel.org #4.20+
+Signed-off-by: John Stultz <john.stultz@linaro.org>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/legacy/cdc2.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/dwc3/gadget.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/drivers/usb/gadget/legacy/cdc2.c
-+++ b/drivers/usb/gadget/legacy/cdc2.c
-@@ -179,8 +179,10 @@ static int cdc_bind(struct usb_composite
- 		struct usb_descriptor_header *usb_desc;
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2279,9 +2279,6 @@ static int dwc3_gadget_ep_reclaim_trb_sg
+ 	for_each_sg(sg, s, pending, i) {
+ 		trb = &dep->trb_pool[dep->trb_dequeue];
  
- 		usb_desc = usb_otg_descriptor_alloc(gadget);
--		if (!usb_desc)
-+		if (!usb_desc) {
-+			status = -ENOMEM;
- 			goto fail1;
-+		}
- 		usb_otg_descriptor_init(gadget, usb_desc);
- 		otg_desc[0] = usb_desc;
- 		otg_desc[1] = NULL;
+-		if (trb->ctrl & DWC3_TRB_CTRL_HWO)
+-			break;
+-
+ 		req->sg = sg_next(s);
+ 		req->num_pending_sgs--;
+ 
 
 
