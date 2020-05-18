@@ -2,90 +2,176 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 847E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A29BB20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F3C20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589825568;
+	bh=HzhzUmDKmEhn4BXR+WRZZo9dgSDG/SsJmeYNmu1EgwM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WGVuhYSwkA0izqoXgL1F6c4aL7kyWvvKYK2u1EFlTKFahGsRsRgGaoypd7OLM0fOX
+	 CwdxkicLiBi6GN7OUtk/HqNTIX6DEZqIbUY5o4eCNg/UefLUBh7sq1ED8QGfSx1I9Q
+	 iwMFzziMM17hyUAPCMWBe3Pgri3pXkBM89eP+KUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733041AbgERSMj (ORCPT
+        id S1732608AbgERSDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:12:39 -0400
-Received: from smtprelay0108.hostedemail.com ([216.40.44.108]:50162 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732632AbgERSDR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:03:17 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id BA469837F24C;
-        Mon, 18 May 2020 18:03:15 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: help47_9096ad8ae3547
-X-Filterd-Recvd-Size: 2150
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 18 May 2020 18:03:13 +0000 (UTC)
-Message-ID: <8007a07f354b9f5ff714914f3696e185078c27c3.camel@perches.com>
-Subject: Re: [PATCH] drm/exynos: Remove dev_err() on platform_get_irq()
- failure
-From:   Joe Perches <joe@perches.com>
-To:     Tamseel Shams <m.shams@samsung.com>, inki.dae@samsung.com,
-        jy0922.shim@samsung.com, sw0312.kim@samsung.com,
-        kyungmin.park@samsung.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shaik.ameer@samsung.com, krzk@kernel.org, alim.akhtar@samsung.com
-Date:   Mon, 18 May 2020 11:03:12 -0700
-In-Reply-To: <20200518172708.48600-1-m.shams@samsung.com>
-References: <CGME20200518174120epcas5p1fb5f832c7874a9d367eb9c9ea4e69d53@epcas5p1.samsung.com>
-         <20200518172708.48600-1-m.shams@samsung.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Mon, 18 May 2020 14:03:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732587AbgERSC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:02:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07891207D3;
+        Mon, 18 May 2020 18:02:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589824978;
+        bh=HzhzUmDKmEhn4BXR+WRZZo9dgSDG/SsJmeYNmu1EgwM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WJ7g5ldxt/hnmovrgxFJihEuQg0UvLwhT0cDjOAf5DfHLxlwta+elYKQXGDi6OJFi
+         +KO+BeJiJXWM6J/s0Ikcg2SzN3DR8F/JnuD6okHDYGZUhmSNtp5bVgaZ8uOAlm//9J
+         WWjKodPm2uPb3mLNH53kVAEeWo3Xw1y09inSrsns=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.6 042/194] hinic: fix a bug of ndo_stop
+Date:   Mon, 18 May 2020 19:35:32 +0200
+Message-Id: <20200518173535.263756891@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
+References: <20200518173531.455604187@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-18 at 22:57 +0530, Tamseel Shams wrote:
-> platform_get_irq() will call dev_err() itself on failure,
-> so there is no need for the driver to also do this.
-> This is detected by coccinelle.
+From: Luo bin <luobin9@huawei.com>
 
-trivia:
+[ Upstream commit e8a1b0efd632d1c9db7d4e93da66377c7b524862 ]
 
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-[]
-> @@ -1810,7 +1810,6 @@ static int exynos_dsi_probe(struct platform_device *pdev)
->  
->  	dsi->irq = platform_get_irq(pdev, 0);
->  	if (dsi->irq < 0) {
-> -		dev_err(dev, "failed to request dsi irq resource\n");
->  		return dsi->irq;
->  	}
+if some function in ndo_stop interface returns failure because of
+hardware fault, must go on excuting rest steps rather than return
+failure directly, otherwise will cause memory leak.And bump the
+timeout for SET_FUNC_STATE to ensure that cmd won't return failure
+when hw is busy. Otherwise hw may stomp host memory if we free
+memory regardless of the return value of SET_FUNC_STATE.
 
-You could also remove the now atypical braces
+Fixes: 51ba902a16e6 ("net-next/hinic: Initialize hw interface")
+Signed-off-by: Luo bin <luobin9@huawei.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c |   16 ++++++++++++----
+ drivers/net/ethernet/huawei/hinic/hinic_main.c    |   18 +++---------------
+ 2 files changed, 15 insertions(+), 19 deletions(-)
 
-	if (dsi->irq < 0)
-		return dsi->irq;
-
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_rotator.c b/drivers/gpu/drm/exynos/exynos_drm_rotator.c
-[]
-> @@ -294,7 +294,6 @@ static int rotator_probe(struct platform_device *pdev)
->  
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq < 0) {
-> -		dev_err(dev, "failed to get irq\n");
->  		return irq;
->  	}
-
-etc...
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
+@@ -45,6 +45,8 @@
+ 
+ #define MGMT_MSG_TIMEOUT                5000
+ 
++#define SET_FUNC_PORT_MGMT_TIMEOUT	25000
++
+ #define mgmt_to_pfhwdev(pf_mgmt)        \
+ 		container_of(pf_mgmt, struct hinic_pfhwdev, pf_to_mgmt)
+ 
+@@ -238,12 +240,13 @@ static int msg_to_mgmt_sync(struct hinic
+ 			    u8 *buf_in, u16 in_size,
+ 			    u8 *buf_out, u16 *out_size,
+ 			    enum mgmt_direction_type direction,
+-			    u16 resp_msg_id)
++			    u16 resp_msg_id, u32 timeout)
+ {
+ 	struct hinic_hwif *hwif = pf_to_mgmt->hwif;
+ 	struct pci_dev *pdev = hwif->pdev;
+ 	struct hinic_recv_msg *recv_msg;
+ 	struct completion *recv_done;
++	unsigned long timeo;
+ 	u16 msg_id;
+ 	int err;
+ 
+@@ -267,8 +270,9 @@ static int msg_to_mgmt_sync(struct hinic
+ 		goto unlock_sync_msg;
+ 	}
+ 
+-	if (!wait_for_completion_timeout(recv_done,
+-					 msecs_to_jiffies(MGMT_MSG_TIMEOUT))) {
++	timeo = msecs_to_jiffies(timeout ? timeout : MGMT_MSG_TIMEOUT);
++
++	if (!wait_for_completion_timeout(recv_done, timeo)) {
+ 		dev_err(&pdev->dev, "MGMT timeout, MSG id = %d\n", msg_id);
+ 		err = -ETIMEDOUT;
+ 		goto unlock_sync_msg;
+@@ -342,6 +346,7 @@ int hinic_msg_to_mgmt(struct hinic_pf_to
+ {
+ 	struct hinic_hwif *hwif = pf_to_mgmt->hwif;
+ 	struct pci_dev *pdev = hwif->pdev;
++	u32 timeout = 0;
+ 
+ 	if (sync != HINIC_MGMT_MSG_SYNC) {
+ 		dev_err(&pdev->dev, "Invalid MGMT msg type\n");
+@@ -353,9 +358,12 @@ int hinic_msg_to_mgmt(struct hinic_pf_to
+ 		return -EINVAL;
+ 	}
+ 
++	if (cmd == HINIC_PORT_CMD_SET_FUNC_STATE)
++		timeout = SET_FUNC_PORT_MGMT_TIMEOUT;
++
+ 	return msg_to_mgmt_sync(pf_to_mgmt, mod, cmd, buf_in, in_size,
+ 				buf_out, out_size, MGMT_DIRECT_SEND,
+-				MSG_NOT_RESP);
++				MSG_NOT_RESP, timeout);
+ }
+ 
+ /**
+--- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+@@ -483,7 +483,6 @@ static int hinic_close(struct net_device
+ {
+ 	struct hinic_dev *nic_dev = netdev_priv(netdev);
+ 	unsigned int flags;
+-	int err;
+ 
+ 	down(&nic_dev->mgmt_lock);
+ 
+@@ -497,20 +496,9 @@ static int hinic_close(struct net_device
+ 
+ 	up(&nic_dev->mgmt_lock);
+ 
+-	err = hinic_port_set_func_state(nic_dev, HINIC_FUNC_PORT_DISABLE);
+-	if (err) {
+-		netif_err(nic_dev, drv, netdev,
+-			  "Failed to set func port state\n");
+-		nic_dev->flags |= (flags & HINIC_INTF_UP);
+-		return err;
+-	}
+-
+-	err = hinic_port_set_state(nic_dev, HINIC_PORT_DISABLE);
+-	if (err) {
+-		netif_err(nic_dev, drv, netdev, "Failed to set port state\n");
+-		nic_dev->flags |= (flags & HINIC_INTF_UP);
+-		return err;
+-	}
++	hinic_port_set_state(nic_dev, HINIC_PORT_DISABLE);
++
++	hinic_port_set_func_state(nic_dev, HINIC_FUNC_PORT_DISABLE);
+ 
+ 	if (nic_dev->flags & HINIC_RSS_ENABLE) {
+ 		hinic_rss_deinit(nic_dev);
 
 
