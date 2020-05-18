@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F92C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E43120884
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3495320715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824963;
-	bh=PXKcnrdYSP9RGpx8YL6Ph46rp7ixJa2f5AWPppSHqVM=;
+	s=default; t=1589824965;
+	bh=HkR9eIszkiD1ualvNk8GTE0CLQxQ7QDWTDtJRxTZNl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hQfCS6SJJ70mpsg+jNFKx6zbZ7Sj55hht/wjr7mAH5m4KP2lHJrkf9au2SE5JlPmt
-	 MSAS1WOCPGSpDChjWgfN0TZ2aYzWCCWxS6I8peKMl3TLsYU0LVzdmNd5gbQOXywOMs
-	 v3qscuuP0x51lDUcWCbUNG0bgvOBmDYVidR57WUA=
+	b=tuPEpaed+ascNUi2OkvvHB6i9hJuSqPb3b1PsZjiIrMAUkmOK40aKZbiTW6lgKet7
+	 mK5NpRpabqmxQpdcg8dJJGyjJaQmN5sbLOMAcKxaVytwenNiRSdZF0ZvipRFTXPEVR
+	 kUTlGxcnRt1zro8/pvMktrhUV2VQGA19omPVo8VQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731787AbgERSCm (ORCPT
+        id S1732567AbgERSCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47232 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:02:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732537AbgERSCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:02:39 -0400
+        id S1732531AbgERSCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:02:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8290220884;
-        Mon, 18 May 2020 18:02:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AF372168B;
+        Mon, 18 May 2020 18:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824959;
-        bh=PXKcnrdYSP9RGpx8YL6Ph46rp7ixJa2f5AWPppSHqVM=;
+        s=default; t=1589824956;
+        bh=HkR9eIszkiD1ualvNk8GTE0CLQxQ7QDWTDtJRxTZNl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mguJ5S2OvLtrrQtdR2AOLFctH/I/2CF5AJsK3agOgA9o2kmCJwJCTh85EO3n/T3x2
-         Rf6EmwlFMiQAgnjiV6qKMLzAEC6jg2x2RollUzNFnSGIwrxb2BWCC1ES9CfFyc3ZZu
-         7+RmUuehroQz19nAcN9gTWvQPyY8JOIIoQPtn6Ss=
+        b=dtrWqtK/zvcz27wZjY8CWcg3wHbzV95UTo98n63CTuAafF6tGWVioHD+BxhKP/e+G
+         kjX8KPgcyEEuH08cC4QjC75/bEAuSYs+bYX6jstLKgUqCp+GbqVT7ZtqBGv5z6tac1
+         bXOUvKtuzDteh3CAAT4DLl2GcOOjBmt/JXh0mRvU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 071/194] gfs2: Another gfs2_walk_metadata fix
-Date:   Mon, 18 May 2020 19:36:01 +0200
-Message-Id: <20200518173537.694046759@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 070/194] ALSA: hda/realtek - Fix S3 pop noise on Dell Wyse
+Date:   Mon, 18 May 2020 19:36:00 +0200
+Message-Id: <20200518173537.596244733@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,75 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 566a2ab3c9005f62e784bd39022d58d34ef4365c ]
+[ Upstream commit 52e4e36807aeac1cdd07b14e509c8a64101e1a09 ]
 
-Make sure we don't walk past the end of the metadata in gfs2_walk_metadata: the
-inode holds fewer pointers than indirect blocks.
+Commit 317d9313925c ("ALSA: hda/realtek - Set default power save node to
+0") makes the ALC225 have pop noise on S3 resume and cold boot.
 
-Slightly clean up gfs2_iomap_get.
+The previous fix enable power save node universally for ALC225, however
+it makes some ALC225 systems unable to produce any sound.
 
-Fixes: a27a0c9b6a20 ("gfs2: gfs2_walk_metadata fix")
-Cc: stable@vger.kernel.org # v5.3+
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+So let's only enable power save node for the affected Dell Wyse
+platform.
+
+Fixes: 317d9313925c ("ALSA: hda/realtek - Set default power save node to 0")
+BugLink: https://bugs.launchpad.net/bugs/1866357
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200503152449.22761-2-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/bmap.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ sound/pci/hda/patch_realtek.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
-index 08f6fbb3655e2..31ed264356253 100644
---- a/fs/gfs2/bmap.c
-+++ b/fs/gfs2/bmap.c
-@@ -528,10 +528,12 @@ static int gfs2_walk_metadata(struct inode *inode, struct metapath *mp,
- 
- 		/* Advance in metadata tree. */
- 		(mp->mp_list[hgt])++;
--		if (mp->mp_list[hgt] >= sdp->sd_inptrs) {
--			if (!hgt)
-+		if (hgt) {
-+			if (mp->mp_list[hgt] >= sdp->sd_inptrs)
-+				goto lower_metapath;
-+		} else {
-+			if (mp->mp_list[hgt] >= sdp->sd_diptrs)
- 				break;
--			goto lower_metapath;
- 		}
- 
- fill_up_metapath:
-@@ -876,10 +878,9 @@ static int gfs2_iomap_get(struct inode *inode, loff_t pos, loff_t length,
- 					ret = -ENOENT;
- 					goto unlock;
- 				} else {
--					/* report a hole */
- 					iomap->offset = pos;
- 					iomap->length = length;
--					goto do_alloc;
-+					goto hole_found;
- 				}
- 			}
- 			iomap->length = size;
-@@ -933,8 +934,6 @@ static int gfs2_iomap_get(struct inode *inode, loff_t pos, loff_t length,
- 	return ret;
- 
- do_alloc:
--	iomap->addr = IOMAP_NULL_ADDR;
--	iomap->type = IOMAP_HOLE;
- 	if (flags & IOMAP_REPORT) {
- 		if (pos >= size)
- 			ret = -ENOENT;
-@@ -956,6 +955,9 @@ static int gfs2_iomap_get(struct inode *inode, loff_t pos, loff_t length,
- 		if (pos < size && height == ip->i_height)
- 			ret = gfs2_hole_size(inode, lblock, len, mp, iomap);
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index da4863d7f7f24..611498270c5e6 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5743,6 +5743,15 @@ static void alc233_alc662_fixup_lenovo_dual_codecs(struct hda_codec *codec,
  	}
-+hole_found:
-+	iomap->addr = IOMAP_NULL_ADDR;
-+	iomap->type = IOMAP_HOLE;
- 	goto out;
  }
  
++static void alc225_fixup_s3_pop_noise(struct hda_codec *codec,
++				      const struct hda_fixup *fix, int action)
++{
++	if (action != HDA_FIXUP_ACT_PRE_PROBE)
++		return;
++
++	codec->power_save_node = 1;
++}
++
+ /* Forcibly assign NID 0x03 to HP/LO while NID 0x02 to SPK for EQ */
+ static void alc274_fixup_bind_dacs(struct hda_codec *codec,
+ 				    const struct hda_fixup *fix, int action)
+@@ -5932,6 +5941,7 @@ enum {
+ 	ALC233_FIXUP_ACER_HEADSET_MIC,
+ 	ALC294_FIXUP_LENOVO_MIC_LOCATION,
+ 	ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE,
++	ALC225_FIXUP_S3_POP_NOISE,
+ 	ALC700_FIXUP_INTEL_REFERENCE,
+ 	ALC274_FIXUP_DELL_BIND_DACS,
+ 	ALC274_FIXUP_DELL_AIO_LINEOUT_VERB,
+@@ -6817,6 +6827,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 			{ }
+ 		},
+ 		.chained = true,
++		.chain_id = ALC225_FIXUP_S3_POP_NOISE
++	},
++	[ALC225_FIXUP_S3_POP_NOISE] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc225_fixup_s3_pop_noise,
++		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
+ 	},
+ 	[ALC700_FIXUP_INTEL_REFERENCE] = {
 -- 
 2.20.1
 
