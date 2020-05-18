@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA555C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C880C207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96AF020715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824716;
-	bh=7MdQddoJEFfGf81S5tG2f0tnk49guqQ1rC60ry4HOBg=;
+	s=default; t=1589824720;
+	bh=wjNCLJm8je2dfTo3Dnvetm+uHr8DjiIVmachTBfbvW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y+puGCzT2zWuz4JvHY/YmChokDNd+RUEayr8Wz6C/oRmgpsKP/5bFr/N6SRvPiXTT
-	 D94AXP0c7GZnpdgzpCLnF/0ryJLSPOLFv9eR+WAxtjNiH4jS4C39KkfTgLVwZ1Fk7S
-	 3UOoq0bC/WLph/AeJ/5xbNZz9NEEyD9EjDhl1AVk=
+	b=GAFnxrE+Ze36g8+fpHm0TG41/OCK4JfA69zZiRF0+ogYM74wPbondWPmm6aVdad8F
+	 lkll1OPH0sjlHldOUUn28pDZQZD4jh3NnQZlmuJcCzLw4UI2XBYi5bLvvZOmv34xch
+	 0Lt73ThCS5vwDWZMC9gCwX1lUGWbGzPY3EvadfPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731269AbgERR6g (ORCPT
+        id S1731932AbgERR6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:58:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38034 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:58:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731919AbgERR6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:58:32 -0400
+        id S1731922AbgERR6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:58:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B3FE20835;
-        Mon, 18 May 2020 17:58:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02FB520715;
+        Mon, 18 May 2020 17:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824712;
-        bh=7MdQddoJEFfGf81S5tG2f0tnk49guqQ1rC60ry4HOBg=;
+        s=default; t=1589824714;
+        bh=wjNCLJm8je2dfTo3Dnvetm+uHr8DjiIVmachTBfbvW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U6o+dlZmWxcn/xbvbgkcZljorkmYJMXaVYjQ/s+mcft5GRsF37j1Zd8lCeaBb9Szj
-         iscLL9ZXl6JtXm8w4dFC5e5d9L+3ibQdPIaF60Y94Y0Az881h3l8X3VediU5VI/1JF
-         cC8B+UsCeK6HpIrThO/uCCMmg8ws4ps6iYhDHOAw=
+        b=DsEeXzGMFvxKkYstGbRnUHKak6BA2vucTO+769vgqHKCREPblHrgJC+sIkMqh2xR3
+         lggPlX0vFYiEAHfpKfUQ1JHrD85gpCm/PAMh6Wl13pTGsxG8+tK8tY9V+0iL99+9K6
+         BrOXqo8nasGy/4IHcIpQlZ2DANLIaxKsfdpzjl1c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 083/147] netfilter: nft_set_rbtree: Add missing expired checks
-Date:   Mon, 18 May 2020 19:36:46 +0200
-Message-Id: <20200518173523.990186693@linuxfoundation.org>
+Subject: [PATCH 5.4 084/147] RDMA/rxe: Always return ERR_PTR from rxe_create_mmap_info()
+Date:   Mon, 18 May 2020 19:36:47 +0200
+Message-Id: <20200518173524.083777446@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -60,72 +62,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Sutter <phil@nwl.cc>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-[ Upstream commit 340eaff651160234bdbce07ef34b92a8e45cd540 ]
+[ Upstream commit bb43c8e382e5da0ee253e3105d4099820ff4d922 ]
 
-Expired intervals would still match and be dumped to user space until
-garbage collection wiped them out. Make sure they stop matching and
-disappear (from users' perspective) as soon as they expire.
+The commit below modified rxe_create_mmap_info() to return ERR_PTR's but
+didn't update the callers to handle them. Modify rxe_create_mmap_info() to
+only return ERR_PTR and fix all error checking after
+rxe_create_mmap_info() is called.
 
-Fixes: 8d8540c4f5e03 ("netfilter: nft_set_rbtree: add timeout support")
-Signed-off-by: Phil Sutter <phil@nwl.cc>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Ensure that all other exit paths properly set the error return.
+
+Fixes: ff23dfa13457 ("IB: Pass only ib_udata in function prototypes")
+Link: https://lore.kernel.org/r/20200425233545.17210-1-sudipm.mukherjee@gmail.com
+Link: https://lore.kernel.org/r/20200511183742.GB225608@mwanda
+Cc: stable@vger.kernel.org [5.4+]
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_set_rbtree.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/infiniband/sw/rxe/rxe_mmap.c  |  2 +-
+ drivers/infiniband/sw/rxe/rxe_queue.c | 11 +++++++----
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
-index 95fcba34bfd35..ee7c29e0a9d7b 100644
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -79,6 +79,10 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
- 				parent = rcu_dereference_raw(parent->rb_left);
- 				continue;
- 			}
-+
-+			if (nft_set_elem_expired(&rbe->ext))
-+				return false;
-+
- 			if (nft_rbtree_interval_end(rbe)) {
- 				if (nft_set_is_anonymous(set))
- 					return false;
-@@ -94,6 +98,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
+diff --git a/drivers/infiniband/sw/rxe/rxe_mmap.c b/drivers/infiniband/sw/rxe/rxe_mmap.c
+index 48f48122ddcb8..6a413d73b95dd 100644
+--- a/drivers/infiniband/sw/rxe/rxe_mmap.c
++++ b/drivers/infiniband/sw/rxe/rxe_mmap.c
+@@ -151,7 +151,7 @@ struct rxe_mmap_info *rxe_create_mmap_info(struct rxe_dev *rxe, u32 size,
  
- 	if (set->flags & NFT_SET_INTERVAL && interval != NULL &&
- 	    nft_set_elem_active(&interval->ext, genmask) &&
-+	    !nft_set_elem_expired(&interval->ext) &&
- 	    nft_rbtree_interval_start(interval)) {
- 		*ext = &interval->ext;
- 		return true;
-@@ -154,6 +159,9 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
- 				continue;
- 			}
+ 	ip = kmalloc(sizeof(*ip), GFP_KERNEL);
+ 	if (!ip)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
  
-+			if (nft_set_elem_expired(&rbe->ext))
-+				return false;
-+
- 			if (!nft_set_ext_exists(&rbe->ext, NFT_SET_EXT_FLAGS) ||
- 			    (*nft_set_ext_flags(&rbe->ext) & NFT_SET_ELEM_INTERVAL_END) ==
- 			    (flags & NFT_SET_ELEM_INTERVAL_END)) {
-@@ -170,6 +178,7 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
+ 	size = PAGE_ALIGN(size);
  
- 	if (set->flags & NFT_SET_INTERVAL && interval != NULL &&
- 	    nft_set_elem_active(&interval->ext, genmask) &&
-+	    !nft_set_elem_expired(&interval->ext) &&
- 	    ((!nft_rbtree_interval_end(interval) &&
- 	      !(flags & NFT_SET_ELEM_INTERVAL_END)) ||
- 	     (nft_rbtree_interval_end(interval) &&
-@@ -355,6 +364,8 @@ static void nft_rbtree_walk(const struct nft_ctx *ctx,
+diff --git a/drivers/infiniband/sw/rxe/rxe_queue.c b/drivers/infiniband/sw/rxe/rxe_queue.c
+index ff92704de32ff..245040c3a35d0 100644
+--- a/drivers/infiniband/sw/rxe/rxe_queue.c
++++ b/drivers/infiniband/sw/rxe/rxe_queue.c
+@@ -45,12 +45,15 @@ int do_mmap_info(struct rxe_dev *rxe, struct mminfo __user *outbuf,
  
- 		if (iter->count < iter->skip)
- 			goto cont;
-+		if (nft_set_elem_expired(&rbe->ext))
-+			goto cont;
- 		if (!nft_set_elem_active(&rbe->ext, iter->genmask))
- 			goto cont;
+ 	if (outbuf) {
+ 		ip = rxe_create_mmap_info(rxe, buf_size, udata, buf);
+-		if (!ip)
++		if (IS_ERR(ip)) {
++			err = PTR_ERR(ip);
+ 			goto err1;
++		}
  
+-		err = copy_to_user(outbuf, &ip->info, sizeof(ip->info));
+-		if (err)
++		if (copy_to_user(outbuf, &ip->info, sizeof(ip->info))) {
++			err = -EFAULT;
+ 			goto err2;
++		}
+ 
+ 		spin_lock_bh(&rxe->pending_lock);
+ 		list_add(&ip->pending_mmaps, &rxe->pending_mmaps);
+@@ -64,7 +67,7 @@ int do_mmap_info(struct rxe_dev *rxe, struct mminfo __user *outbuf,
+ err2:
+ 	kfree(ip);
+ err1:
+-	return -EINVAL;
++	return err;
+ }
+ 
+ inline void rxe_queue_reset(struct rxe_queue *q)
 -- 
 2.20.1
 
