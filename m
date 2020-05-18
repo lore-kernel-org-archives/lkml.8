@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0297BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C811720657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB14520657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824149;
-	bh=kPFn484w+BiSCbABNfwtu0OdzTQiYjUuJcyTIB6nJQo=;
+	s=default; t=1589824146;
+	bh=pd5YWyWFz+tsihJlMqRKZ21NLXrKyDUcvfBo3PqQ9Ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oU+YGANtaWpA527P/fKNL8svFAw3qT4fzE4A4+H2R/FH0iWYAmjXlj4uxxUZhLn4S
-	 lCfZjeN4ut5qAbbycAbtUEcHtd0D9955oHl4Lti1urj2v6e/QR8NFmdMGZOm29GezZ
-	 EYnc3XB3QRIfXKxD7YVhGHXyia3eY/xHbuXJMd4o=
+	b=jtuj/bZgTXOm1kEvc9lzDuzn3zl13czihBKJGnfSJyA4Qwx2Q0vvrkM+dU8cB3HZD
+	 LkX0zeD9XMVAgk6MT+eP2T1W0vxTNe5xw2X37N83lKtIX/2oCfSWbx6KKV3Xh/8Xn0
+	 htcAa4ADQV1hCyWzf0Ey6xFEzOL4tmGYw1BfHKZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730485AbgERRtJ (ORCPT
+        id S1730481AbgERRtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:49:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730476AbgERRtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 May 2020 13:49:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730010AbgERRtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:49:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89C3A20674;
-        Mon, 18 May 2020 17:49:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14DE020657;
+        Mon, 18 May 2020 17:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824145;
-        bh=kPFn484w+BiSCbABNfwtu0OdzTQiYjUuJcyTIB6nJQo=;
+        s=default; t=1589824142;
+        bh=pd5YWyWFz+tsihJlMqRKZ21NLXrKyDUcvfBo3PqQ9Ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ffQkrr1soomlnEfWYQtHXK9sqs9Ik/ohyi/okmxom1wUs0yYx+J3ZIa/VMK3z3mWv
-         eGmAsqofJAEbCIXYV/5Y+9PcSSkwBiXuyHeKjxnhRlwSZjewkxOdc1FebS9MwJY3EH
-         tKmWXXyPKSSSbi2ZEJYVPik2XqimBnaElr18gwOY=
+        b=WrdN0ehFoOA7fRHjgtNn5DFeA0Y4fQCSRh9Rwp0u6yJy3dDeKuIFMKLl9jJYJyHdg
+         eRvEoLdgay/7s04ZO+YPvk0d7Kj0zC1ChCE3fXzyxPfS2EPlJnm7tBLt5q05rRmRup
+         vR3qtruRGP2qnl/gffikCBLh0dybStNL+N1HFM9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 090/114] ALSA: hda/realtek - Limit int mic boost for Thinkpad T530
-Date:   Mon, 18 May 2020 19:37:02 +0200
-Message-Id: <20200518173518.490040347@linuxfoundation.org>
+        stable@vger.kernel.org, Iris Liu <iris@onechronos.com>,
+        Kelly Littlepage <kelly@onechronos.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 4.14 089/114] net: tcp: fix rx timestamp behavior for tcp_recvmsg
+Date:   Mon, 18 May 2020 19:37:01 +0200
+Message-Id: <20200518173518.386266386@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -58,66 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Kelly Littlepage <kelly@onechronos.com>
 
-commit b590b38ca305d6d7902ec7c4f7e273e0069f3bcc upstream.
+[ Upstream commit cc4de047b33be247f9c8150d3e496743a49642b8 ]
 
-Lenovo Thinkpad T530 seems to have a sensitive internal mic capture
-that needs to limit the mic boost like a few other Thinkpad models.
-Although we may change the quirk for ALC269_FIXUP_LENOVO_DOCK, this
-hits way too many other laptop models, so let's add a new fixup model
-that limits the internal mic boost on top of the existing quirk and
-apply to only T530.
+The stated intent of the original commit is to is to "return the timestamp
+corresponding to the highest sequence number data returned." The current
+implementation returns the timestamp for the last byte of the last fully
+read skb, which is not necessarily the last byte in the recv buffer. This
+patch converts behavior to the original definition, and to the behavior of
+the previous draft versions of commit 98aaa913b4ed ("tcp: Extend
+SOF_TIMESTAMPING_RX_SOFTWARE to TCP recvmsg") which also match this
+behavior.
 
-BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1171293
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200514160533.10337-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 98aaa913b4ed ("tcp: Extend SOF_TIMESTAMPING_RX_SOFTWARE to TCP recvmsg")
+Co-developed-by: Iris Liu <iris@onechronos.com>
+Signed-off-by: Iris Liu <iris@onechronos.com>
+Signed-off-by: Kelly Littlepage <kelly@onechronos.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/pci/hda/patch_realtek.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ net/ipv4/tcp.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5433,6 +5433,7 @@ enum {
- 	ALC269_FIXUP_HP_LINE1_MIC1_LED,
- 	ALC269_FIXUP_INV_DMIC,
- 	ALC269_FIXUP_LENOVO_DOCK,
-+	ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST,
- 	ALC269_FIXUP_NO_SHUTUP,
- 	ALC286_FIXUP_SONY_MIC_NO_PRESENCE,
- 	ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT,
-@@ -5726,6 +5727,12 @@ static const struct hda_fixup alc269_fix
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT
- 	},
-+	[ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc269_fixup_limit_int_mic_boost,
-+		.chained = true,
-+		.chain_id = ALC269_FIXUP_LENOVO_DOCK,
-+	},
- 	[ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc269_fixup_pincfg_no_hp_to_lineout,
-@@ -6612,7 +6619,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x17aa, 0x21b8, "Thinkpad Edge 14", ALC269_FIXUP_SKU_IGNORE),
- 	SND_PCI_QUIRK(0x17aa, 0x21ca, "Thinkpad L412", ALC269_FIXUP_SKU_IGNORE),
- 	SND_PCI_QUIRK(0x17aa, 0x21e9, "Thinkpad Edge 15", ALC269_FIXUP_SKU_IGNORE),
--	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK),
-+	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST),
- 	SND_PCI_QUIRK(0x17aa, 0x21fa, "Thinkpad X230", ALC269_FIXUP_LENOVO_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x21f3, "Thinkpad T430", ALC269_FIXUP_LENOVO_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x21fb, "Thinkpad T430s", ALC269_FIXUP_LENOVO_DOCK),
-@@ -6744,6 +6751,7 @@ static const struct hda_model_fixup alc2
- 	{.id = ALC269_FIXUP_HEADSET_MODE, .name = "headset-mode"},
- 	{.id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC, .name = "headset-mode-no-hp-mic"},
- 	{.id = ALC269_FIXUP_LENOVO_DOCK, .name = "lenovo-dock"},
-+	{.id = ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST, .name = "lenovo-dock-limit-boost"},
- 	{.id = ALC269_FIXUP_HP_GPIO_LED, .name = "hp-gpio-led"},
- 	{.id = ALC269_FIXUP_HP_DOCK_GPIO_MIC1_LED, .name = "hp-dock-gpio-mic1-led"},
- 	{.id = ALC269_FIXUP_DELL1_MIC_NO_PRESENCE, .name = "dell-headset-multi"},
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -1977,13 +1977,15 @@ skip_copy:
+ 			tp->urg_data = 0;
+ 			tcp_fast_path_check(sk);
+ 		}
+-		if (used + offset < skb->len)
+-			continue;
+ 
+ 		if (TCP_SKB_CB(skb)->has_rxtstamp) {
+ 			tcp_update_recv_tstamps(skb, &tss);
+ 			has_tss = true;
+ 		}
++
++		if (used + offset < skb->len)
++			continue;
++
+ 		if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN)
+ 			goto found_fin_ok;
+ 		if (!(flags & MSG_PEEK))
 
 
