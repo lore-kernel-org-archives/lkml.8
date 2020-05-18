@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB4AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80E8C2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9D4E20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825229;
-	bh=eV3kUzzlf5OSTxkiuVstu95fzxA6qQ/NqCtoRjvFgUE=;
+	s=default; t=1589825233;
+	bh=+DJRvLsHScqFOnj5mYwjkkqVw5v/93AebKkp5ibkL3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXr8fBdjTQwMiJx+rj4EdtXUK9ff0kJr8K09wQIJa1DJnJHNBPC046aOBtguWNvdj
-	 qt8jCK7eFg5LEjQ8b5qVCuE9RUKT/fAuehd9pKlOikPMI3DdNbl3hV6Hw9DCTVkj1f
-	 qUg1Ew50zpmf39tE4WUAMsZpew/c8yc8S6kFaQuk=
+	b=FJO1bZRc4bmxif0c9khIpaHKF7xORZ2j6B1DHCu+F31XL6pNbz4M+uI1Ys/1o/s2u
+	 /2j7EkVVh1Enjw07eWJAuholQKckDi8v2TV8+EVxPIxPtmx7mxV1vXWqZV98xALo12
+	 j+AMgOu/pVgVFZd5WEJMCA6PRZaHRGXG9C2JPWOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733264AbgERSHJ (ORCPT
+        id S1733279AbgERSHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:07:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55568 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:07:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733233AbgERSHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:07:02 -0400
+        id S1733244AbgERSHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:07:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEE0020671;
-        Mon, 18 May 2020 18:07:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B4D02083E;
+        Mon, 18 May 2020 18:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825222;
-        bh=eV3kUzzlf5OSTxkiuVstu95fzxA6qQ/NqCtoRjvFgUE=;
+        s=default; t=1589825225;
+        bh=+DJRvLsHScqFOnj5mYwjkkqVw5v/93AebKkp5ibkL3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1KjTbeW20ygQVbazpl8vJAhHcIA76rZ/7G54e8tT3T1s9SF6WqPd9MDnGZh1Ur1PK
-         OdGF3gMgIOAUllXAHCQ8DdzrrghJ/Iyx/9/MHtWowvcMTfl4DBr4mjgRYD8BKJVqho
-         AzIv6Wtn4gXPjM73nGnMAx5IF3RMxRgUSYLS4az4=
+        b=jpS8JEiCr1OWuh052La7ooLTPImvZzHhBIn1Ln3kU/MI5++VvcH/2f4Py53+7RE/D
+         FEIjCK2DmVm4NT0VkD/tdfkf0yIc6wP4LlGyDJStsypXqPfGx5JAYvuZKOm86qWMYI
+         SL7N0te8GFFkhIz0pjed10pCxQv/NrSNpg0k/aks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 5.6 179/194] ARM: dts: r8a73a4: Add missing CMT1 interrupts
-Date:   Mon, 18 May 2020 19:37:49 +0200
-Message-Id: <20200518173546.418161462@linuxfoundation.org>
+Subject: [PATCH 5.6 180/194] arm64: dts: renesas: r8a77980: Fix IPMMU VIP[01] nodes
+Date:   Mon, 18 May 2020 19:37:50 +0200
+Message-Id: <20200518173546.488386105@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,40 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-commit 0f739fdfe9e5ce668bd6d3210f310df282321837 upstream.
+commit f4d71c6ea9e58c07dd4d02d09c5dd9bb780ec4b1 upstream.
 
-The R-Mobile APE6 Compare Match Timer 1 generates 8 interrupts, one for
-each channel, but currently only 1 is described.
-Fix this by adding the missing interrupts.
+Missing the renesas,ipmmu-main property on ipmmu_vip[01] nodes.
 
-Fixes: f7b65230019b9dac ("ARM: shmobile: r8a73a4: Add CMT1 node")
+Fixes: 55697cbb44e4 ("arm64: dts: renesas: r8a779{65,80,90}: Add IPMMU devices nodes)
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1587108543-23786-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20200408090926.25201-1-geert+renesas@glider.be
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/r8a73a4.dtsi |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/renesas/r8a77980.dtsi |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/arm/boot/dts/r8a73a4.dtsi
-+++ b/arch/arm/boot/dts/r8a73a4.dtsi
-@@ -131,7 +131,14 @@
- 	cmt1: timer@e6130000 {
- 		compatible = "renesas,r8a73a4-cmt1", "renesas,rcar-gen2-cmt1";
- 		reg = <0 0xe6130000 0 0x1004>;
--		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp3_clks R8A73A4_CLK_CMT1>;
- 		clock-names = "fck";
- 		power-domains = <&pd_c5>;
+--- a/arch/arm64/boot/dts/renesas/r8a77980.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+@@ -1318,6 +1318,7 @@
+ 		ipmmu_vip0: mmu@e7b00000 {
+ 			compatible = "renesas,ipmmu-r8a77980";
+ 			reg = <0 0xe7b00000 0 0x1000>;
++			renesas,ipmmu-main = <&ipmmu_mm 4>;
+ 			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+ 			#iommu-cells = <1>;
+ 		};
+@@ -1325,6 +1326,7 @@
+ 		ipmmu_vip1: mmu@e7960000 {
+ 			compatible = "renesas,ipmmu-r8a77980";
+ 			reg = <0 0xe7960000 0 0x1000>;
++			renesas,ipmmu-main = <&ipmmu_mm 11>;
+ 			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+ 			#iommu-cells = <1>;
+ 		};
 
 
