@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D665C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 946F820671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43249207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825154;
-	bh=Dn46o8FNGNi9iQGafECaUOunAbyZTI/1mmcR33N+8Ms=;
+	s=default; t=1589825161;
+	bh=zer0Mc5CO845JMY0f/NI3pFp3JuFH8Aq0s6Pjo72w6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dTOlYalhGqGJonpS1ZDyLwTDFaEfU3lRUJM/Np5H54Bly9YyuRWVwQuQq1AEOiBj0
-	 kbGcwuI+5hlZ2W8oYM8SglxIkzVvbAlDT7rW94yJoB+P8d22MHT4GjX0tF0JWuiCTy
-	 DE3kp/ZCreXBdk5HlqaiHvi6Rnf0HzFszPR8BEfM=
+	b=zV/geH1Y1uADCOp1boVDRt1suZx44sSDL4pNc6/+W1O0jKFtzPFuNt2OPRstsm+0P
+	 tYhu1Zb8Yc1KLsBVCTTc8XqEvZBHeYRvZ3uPhbrKAvmT6Sa/4RJFfo+WI7bWfnT31Q
+	 FWXRSNQZvULn9WdEGTJBKz9AIIqqaMbA0n98WSKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733080AbgERSFx (ORCPT
+        id S1733096AbgERSGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:05:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53610 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:06:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733030AbgERSFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:05:51 -0400
+        id S1733030AbgERSFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:05:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C122820671;
-        Mon, 18 May 2020 18:05:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B58FE20853;
+        Mon, 18 May 2020 18:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825150;
-        bh=Dn46o8FNGNi9iQGafECaUOunAbyZTI/1mmcR33N+8Ms=;
+        s=default; t=1589825155;
+        bh=zer0Mc5CO845JMY0f/NI3pFp3JuFH8Aq0s6Pjo72w6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zhioVzri1i2pRYrYu3wpHsPPGqnNEpmakgvhhQcAETrvK5a9vg/YTXn9s/7BEXD1D
-         RZNSPjBcOR+yBIXhrtI77msYM/NExfoOMljd5QDq18gUJGhrBuJ52DedKoBAM6yFgy
-         SFfqCSFJfc2eYBZBnIpcL7+x8QCHARYHN0ypDFMQ=
+        b=2VAGBl0nrysYySEWjBwo/OvABpzSfVFeJBb1zbwON6FZZlYylhwPM4LLYpGws0sVn
+         9grxFaDiSvq1gqeSvLZ7SS5PoNyqBdAA6g9AszZrnz7s9RnOR+jEpuFhhmVYCNP/Pv
+         JVbFRQJpQpktOHwBRosCZgMIK6gvRZFy+aGqWpQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Stefan Riedmueller <s.riedmueller@phytec.de>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
         Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.6 149/194] ARM: dts: imx27-phytec-phycard-s-rdk: Fix the I2C1 pinctrl entries
-Date:   Mon, 18 May 2020 19:37:19 +0200
-Message-Id: <20200518173543.673488900@linuxfoundation.org>
+Subject: [PATCH 5.6 150/194] ARM: dts: imx6dl-yapp4: Fix Ursa board Ethernet connection
+Date:   Mon, 18 May 2020 19:37:20 +0200
+Message-Id: <20200518173543.752028151@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,43 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Michal Vokáč <michal.vokac@ysoft.com>
 
-commit 0caf34350a25907515d929a9c77b9b206aac6d1e upstream.
+commit cbe63a8358310244e6007398bd2c7c70c7fd51cd upstream.
 
-The I2C2 pins are already used and the following errors are seen:
+The Y Soft yapp4 platform supports up to two Ethernet ports.
+The Ursa board though has only one Ethernet port populated and that is
+the port@2. Since the introduction of this platform into mainline a wrong
+port was deleted and the Ethernet could never work. Fix this by deleting
+the correct port node.
 
-imx27-pinctrl 10015000.iomuxc: pin MX27_PAD_I2C2_SDA already requested by 10012000.i2c; cannot claim for 1001d000.i2c
-imx27-pinctrl 10015000.iomuxc: pin-69 (1001d000.i2c) status -22
-imx27-pinctrl 10015000.iomuxc: could not request pin 69 (MX27_PAD_I2C2_SDA) from group i2c2grp  on device 10015000.iomuxc
-imx-i2c 1001d000.i2c: Error applying setting, reverse things back
-imx-i2c: probe of 1001d000.i2c failed with error -22
-
-Fix it by adding the correct I2C1 IOMUX entries for the pinctrl_i2c1 group.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 61664d0b432a ("ARM: dts: imx27 phyCARD-S pinctrl")
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+Fixes: 87489ec3a77f ("ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa boards")
+Cc: stable@vger.kernel.org
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6dl-yapp4-ursa.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
-+++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
-@@ -75,8 +75,8 @@
- 	imx27-phycard-s-rdk {
- 		pinctrl_i2c1: i2c1grp {
- 			fsl,pins = <
--				MX27_PAD_I2C2_SDA__I2C2_SDA 0x0
--				MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
-+				MX27_PAD_I2C_DATA__I2C_DATA 0x0
-+				MX27_PAD_I2C_CLK__I2C_CLK 0x0
- 			>;
- 		};
+--- a/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
++++ b/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
+@@ -38,7 +38,7 @@
+ };
  
+ &switch_ports {
+-	/delete-node/ port@2;
++	/delete-node/ port@3;
+ };
+ 
+ &touchscreen {
 
 
