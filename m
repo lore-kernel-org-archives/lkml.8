@@ -2,56 +2,54 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D24CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E81820657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A63E20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826448;
-	bh=DA2Riofna2a6LVHWbQc8euvuKiv8rA6wkYpFEhamuDo=;
+	s=default; t=1589826451;
+	bh=zbwmqmbafc7t7/TiP/H/lC/ZbOKv4wTPOv7v8lKIcRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ed5lod0g815DICsJ0CoLhDAhUr9Il8hnnsHhvkavWR/cKvL25b9Oa15gD93sAjAFH
-	 9dO51iYwPUUFw1QfVtM9Amxlir5AFBZ08Zw5WrbNeyDaLbYRJrPQGQ8n86rz+zUKwe
-	 1ABpioEGNc0hj1rOBK8GjgKM6c71ZlT6Y2+pTS9o=
+	b=irc6FXFQcxg2p7mf9SLaW/bA1f7aR5yVjTu4xgtnQNqnxZeUp+1YQ0Wb1C61If9bO
+	 nXKmMFHZwlIzwB1h693BFwctKn9Z1mHzo3SCkiNOpqmZnYLv/ZzQHslsy1sfDkqagH
+	 LfkA1O54CPzN9tHAiwW5XY268scHP/whHTI7NkRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387397AbgERS11 (ORCPT
+        id S1730322AbgERS13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:27:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41974 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:27:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729072AbgERRn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:43:58 -0400
+        id S1729593AbgERRqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:46:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB56420835;
-        Mon, 18 May 2020 17:43:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4479720715;
+        Mon, 18 May 2020 17:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823838;
-        bh=DA2Riofna2a6LVHWbQc8euvuKiv8rA6wkYpFEhamuDo=;
+        s=default; t=1589824001;
+        bh=zbwmqmbafc7t7/TiP/H/lC/ZbOKv4wTPOv7v8lKIcRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b5kWiPBjkB00U0kE+0982zS/Rrja2BQfKTQs+cfqOrbdknaxriNYMgo3VyoYmk6p0
-         siaDP69X86hMf3pVw8NL2U/BcLbIr2gXjJzs2aREI3lRB+GHBmp78y+UpB5X8virvt
-         uEUSE1L6b2WvfsbIsg9BzLIDKtJLN3zqtqr3wjgo=
+        b=i6pMPpliPyAsYbXwAhKLUWljv6Zy5jKA4Tfa0HLU2Q6IEkKR+Z3DchzFGlEoipLEl
+         Q5RU40T48tcSxmVkmsZGSXLPRORRhXZWIjWP8rZ5vh1VGl5H6iyWWRTcgFbiNEcFIv
+         Wg3Kwv/dz/e3rGryKuklokYFdFiMU0KlF9W4I2EE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 55/90] i40iw: Fix error handling in i40iw_manage_arp_cache()
-Date:   Mon, 18 May 2020 19:36:33 +0200
-Message-Id: <20200518173502.315554109@linuxfoundation.org>
+        stable@vger.kernel.org, Scott Dial <scott@scottdial.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 004/114] net: macsec: preserve ingress frame ordering
+Date:   Mon, 18 May 2020 19:35:36 +0200
+Message-Id: <20200518173503.884772048@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
-References: <20200518173450.930655662@linuxfoundation.org>
+In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
+References: <20200518173503.033975649@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,38 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Scott Dial <scott@scottdial.com>
 
-[ Upstream commit 37e31d2d26a4124506c24e95434e9baf3405a23a ]
+[ Upstream commit ab046a5d4be4c90a3952a0eae75617b49c0cb01b ]
 
-The i40iw_arp_table() function can return -EOVERFLOW if
-i40iw_alloc_resource() fails so we can't just test for "== -1".
+MACsec decryption always occurs in a softirq context. Since
+the FPU may not be usable in the softirq context, the call to
+decrypt may be scheduled on the cryptd work queue. The cryptd
+work queue does not provide ordering guarantees. Therefore,
+preserving order requires masking out ASYNC implementations
+of gcm(aes).
 
-Fixes: 4e9042e647ff ("i40iw: add hw and utils files")
-Link: https://lore.kernel.org/r/20200422092211.GA195357@mwanda
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+For instance, an Intel CPU with AES-NI makes available the
+generic-gcm-aesni driver from the aesni_intel module to
+implement gcm(aes). However, this implementation requires
+the FPU, so it is not always available to use from a softirq
+context, and will fallback to the cryptd work queue, which
+does not preserve frame ordering. With this change, such a
+system would select gcm_base(ctr(aes-aesni),ghash-generic).
+While the aes-aesni implementation prefers to use the FPU, it
+will fallback to the aes-asm implementation if unavailable.
+
+By using a synchronous version of gcm(aes), the decryption
+will complete before returning from crypto_aead_decrypt().
+Therefore, the macsec_decrypt_done() callback will be called
+before returning from macsec_decrypt(). Thus, the order of
+calls to macsec_post_decrypt() for the frames is preserved.
+
+While it's presumable that the pure AES-NI version of gcm(aes)
+is more performant, the hybrid solution is capable of gigabit
+speeds on modest hardware. Regardless, preserving the order
+of frames is paramount for many network protocols (e.g.,
+triggering TCP retries). Within the MACsec driver itself, the
+replay protection is tripped by the out-of-order frames, and
+can cause frames to be dropped.
+
+This bug has been present in this code since it was added in
+v4.6, however it may not have been noticed since not all CPUs
+have FPU offload available. Additionally, the bug manifests
+as occasional out-of-order packets that are easily
+misattributed to other network phenomena.
+
+When this code was added in v4.6, the crypto/gcm.c code did
+not restrict selection of the ghash function based on the
+ASYNC flag. For instance, x86 CPUs with PCLMULQDQ would
+select the ghash-clmulni driver instead of ghash-generic,
+which submits to the cryptd work queue if the FPU is busy.
+However, this bug was was corrected in v4.8 by commit
+b30bdfa86431afbafe15284a3ad5ac19b49b88e3, and was backported
+all the way back to the v3.14 stable branch, so this patch
+should be applicable back to the v4.6 stable branch.
+
+Signed-off-by: Scott Dial <scott@scottdial.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/infiniband/hw/i40iw/i40iw_hw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/macsec.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_hw.c b/drivers/infiniband/hw/i40iw/i40iw_hw.c
-index 0c92a40b3e869..e4867d6de7893 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_hw.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_hw.c
-@@ -479,7 +479,7 @@ void i40iw_manage_arp_cache(struct i40iw_device *iwdev,
- 	int arp_index;
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1309,7 +1309,8 @@ static struct crypto_aead *macsec_alloc_
+ 	struct crypto_aead *tfm;
+ 	int ret;
  
- 	arp_index = i40iw_arp_table(iwdev, ip_addr, ipv4, mac_addr, action);
--	if (arp_index == -1)
-+	if (arp_index < 0)
- 		return;
- 	cqp_request = i40iw_get_cqp_request(&iwdev->cqp, false);
- 	if (!cqp_request)
--- 
-2.20.1
-
+-	tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
++	/* Pick a sync gcm(aes) cipher to ensure order is preserved. */
++	tfm = crypto_alloc_aead("gcm(aes)", 0, CRYPTO_ALG_ASYNC);
+ 
+ 	if (IS_ERR(tfm))
+ 		return tfm;
 
 
