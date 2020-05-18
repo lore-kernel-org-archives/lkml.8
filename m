@@ -2,204 +2,108 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B53BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1845CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0408320874
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3AB20849
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589823569;
+	bh=JcOJWFHBiOMUh474qYFCAv5ejV4BXihCIBZRpJjND1E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FzVD0seYYk62dXIaZNLiIrbZE01L8wSsRoPrhhD3HAvB38QOETwkanhRrDu/hZzTF
+	 DllkPxeFS6j6ZdZ27KdSvLYL3c9vBMZAOO0HmKT2jwhnSrWy8HrrlGVIuyiLffNji+
+	 wJdQG9QNeIXXzCnzjZdI2WXUQde2PvocsB5LgZm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbgERRjZ (ORCPT
+        id S1728802AbgERRj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:39:25 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42756 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbgERRjX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:39:23 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id C85AE2A0CAD
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>
-Cc:     narmstrong@baylibre.com, a.hajda@samsung.com,
-        boris.brezillon@collabora.com, laurent.pinchart@ideasonboard.com,
-        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [RESEND PATCH 2/3] drm/mediatek: mtk_dpi: Convert to bridge driver
-Date:   Mon, 18 May 2020 19:39:08 +0200
-Message-Id: <20200518173909.2259259-3-enric.balletbo@collabora.com>
+        Mon, 18 May 2020 13:39:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728747AbgERRjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:39:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1079B2086A;
+        Mon, 18 May 2020 17:39:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589823563;
+        bh=JcOJWFHBiOMUh474qYFCAv5ejV4BXihCIBZRpJjND1E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NFPlR1h8rnE+2Ku5/JrPqtuelxNEp4k1Cleu9yNqOa7cdXaBJQAFPmG6AktI7MsNZ
+         LPsC1gEiMQaZnfXwW2erjOa3f5p35kYwBsZXGqV+z+5ea3bohvGhqnGQ12LWDcBBaf
+         GlL7+p3Undm7xqquaG/oSSFb0OLjUMrqnPiJeHPc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.4 32/86] ptp: Fix pass zero to ERR_PTR() in ptp_clock_register
+Date:   Mon, 18 May 2020 19:36:03 +0200
+Message-Id: <20200518173457.047846228@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173909.2259259-1-enric.balletbo@collabora.com>
-References: <20200518173909.2259259-1-enric.balletbo@collabora.com>
+In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
+References: <20200518173450.254571947@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert mtk_dpi to a bridge driver with built-in encoder support for
-compatibility with existing component drivers.
+From: YueHaibing <yuehaibing@huawei.com>
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+commit aea0a897af9e44c258e8ab9296fad417f1bc063a upstream.
+
+Fix smatch warning:
+
+drivers/ptp/ptp_clock.c:298 ptp_clock_register() warn:
+ passing zero to 'ERR_PTR'
+
+'err' should be set while device_create_with_groups and
+pps_register_source fails
+
+Fixes: 85a66e550195 ("ptp: create "pins" together with the rest of attributes")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
+ drivers/ptp/ptp_clock.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
- drivers/gpu/drm/mediatek/mtk_dpi.c | 66 +++++++++++++++---------------
- 1 file changed, 34 insertions(+), 32 deletions(-)
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -222,8 +222,10 @@ struct ptp_clock *ptp_clock_register(str
+ 	ptp->dev = device_create_with_groups(ptp_class, parent, ptp->devid,
+ 					     ptp, ptp->pin_attr_groups,
+ 					     "ptp%d", ptp->index);
+-	if (IS_ERR(ptp->dev))
++	if (IS_ERR(ptp->dev)) {
++		err = PTR_ERR(ptp->dev);
+ 		goto no_device;
++	}
+ 
+ 	/* Register a new PPS source. */
+ 	if (info->pps) {
+@@ -234,6 +236,7 @@ struct ptp_clock *ptp_clock_register(str
+ 		pps.owner = info->owner;
+ 		ptp->pps_source = pps_register_source(&pps, PTP_PPS_DEFAULTS);
+ 		if (!ptp->pps_source) {
++			err = -EINVAL;
+ 			pr_err("failed to register pps source\n");
+ 			goto no_pps;
+ 		}
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index 7112125dc3d1..baad198c69eb 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -61,6 +61,7 @@ enum mtk_dpi_out_color_format {
- struct mtk_dpi {
- 	struct mtk_ddp_comp ddp_comp;
- 	struct drm_encoder encoder;
-+	struct drm_bridge bridge;
- 	struct drm_bridge *next_bridge;
- 	void __iomem *regs;
- 	struct device *dev;
-@@ -77,9 +78,9 @@ struct mtk_dpi {
- 	int refcount;
- };
- 
--static inline struct mtk_dpi *mtk_dpi_from_encoder(struct drm_encoder *e)
-+static inline struct mtk_dpi *bridge_to_dpi(struct drm_bridge *b)
- {
--	return container_of(e, struct mtk_dpi, encoder);
-+	return container_of(b, struct mtk_dpi, bridge);
- }
- 
- enum mtk_dpi_polarity {
-@@ -518,50 +519,44 @@ static const struct drm_encoder_funcs mtk_dpi_encoder_funcs = {
- 	.destroy = mtk_dpi_encoder_destroy,
- };
- 
--static bool mtk_dpi_encoder_mode_fixup(struct drm_encoder *encoder,
--				       const struct drm_display_mode *mode,
--				       struct drm_display_mode *adjusted_mode)
-+static int mtk_dpi_bridge_attach(struct drm_bridge *bridge,
-+				 enum drm_bridge_attach_flags flags)
- {
--	return true;
-+	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
-+
-+	return drm_bridge_attach(bridge->encoder, dpi->next_bridge,
-+				 &dpi->bridge, flags);
- }
- 
--static void mtk_dpi_encoder_mode_set(struct drm_encoder *encoder,
--				     struct drm_display_mode *mode,
--				     struct drm_display_mode *adjusted_mode)
-+static void mtk_dpi_bridge_mode_set(struct drm_bridge *bridge,
-+				const struct drm_display_mode *mode,
-+				const struct drm_display_mode *adjusted_mode)
- {
--	struct mtk_dpi *dpi = mtk_dpi_from_encoder(encoder);
-+	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
- 
- 	drm_mode_copy(&dpi->mode, adjusted_mode);
- }
- 
--static void mtk_dpi_encoder_disable(struct drm_encoder *encoder)
-+static void mtk_dpi_bridge_disable(struct drm_bridge *bridge)
- {
--	struct mtk_dpi *dpi = mtk_dpi_from_encoder(encoder);
-+	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
- 
- 	mtk_dpi_power_off(dpi);
- }
- 
--static void mtk_dpi_encoder_enable(struct drm_encoder *encoder)
-+static void mtk_dpi_bridge_enable(struct drm_bridge *bridge)
- {
--	struct mtk_dpi *dpi = mtk_dpi_from_encoder(encoder);
-+	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
- 
- 	mtk_dpi_power_on(dpi);
- 	mtk_dpi_set_display_mode(dpi, &dpi->mode);
- }
- 
--static int mtk_dpi_atomic_check(struct drm_encoder *encoder,
--				struct drm_crtc_state *crtc_state,
--				struct drm_connector_state *conn_state)
--{
--	return 0;
--}
--
--static const struct drm_encoder_helper_funcs mtk_dpi_encoder_helper_funcs = {
--	.mode_fixup = mtk_dpi_encoder_mode_fixup,
--	.mode_set = mtk_dpi_encoder_mode_set,
--	.disable = mtk_dpi_encoder_disable,
--	.enable = mtk_dpi_encoder_enable,
--	.atomic_check = mtk_dpi_atomic_check,
-+static const struct drm_bridge_funcs mtk_dpi_bridge_funcs = {
-+	.attach = mtk_dpi_bridge_attach,
-+	.mode_set = mtk_dpi_bridge_mode_set,
-+	.disable = mtk_dpi_bridge_disable,
-+	.enable = mtk_dpi_bridge_enable,
- };
- 
- static void mtk_dpi_start(struct mtk_ddp_comp *comp)
-@@ -602,16 +597,13 @@ static int mtk_dpi_bind(struct device *dev, struct device *master, void *data)
- 		dev_err(dev, "Failed to initialize decoder: %d\n", ret);
- 		goto err_unregister;
- 	}
--	drm_encoder_helper_add(&dpi->encoder, &mtk_dpi_encoder_helper_funcs);
- 
- 	/* Currently DPI0 is fixed to be driven by OVL1 */
- 	dpi->encoder.possible_crtcs = BIT(1);
- 
--	ret = drm_bridge_attach(&dpi->encoder, dpi->next_bridge, NULL, 0);
--	if (ret) {
--		dev_err(dev, "Failed to attach bridge: %d\n", ret);
-+	ret = drm_bridge_attach(&dpi->encoder, &dpi->bridge, NULL, 0);
-+	if (ret)
- 		goto err_cleanup;
--	}
- 
- 	dpi->bit_num = MTK_DPI_OUT_BIT_NUM_8BITS;
- 	dpi->channel_swap = MTK_DPI_OUT_CHANNEL_SWAP_RGB;
-@@ -768,8 +760,15 @@ static int mtk_dpi_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, dpi);
- 
-+	dpi->bridge.funcs = &mtk_dpi_bridge_funcs;
-+	dpi->bridge.of_node = dev->of_node;
-+	dpi->bridge.type = DRM_MODE_CONNECTOR_DPI;
-+
-+	drm_bridge_add(&dpi->bridge);
-+
- 	ret = component_add(dev, &mtk_dpi_component_ops);
- 	if (ret) {
-+		drm_bridge_remove(&dpi->bridge);
- 		dev_err(dev, "Failed to add component: %d\n", ret);
- 		return ret;
- 	}
-@@ -779,7 +778,10 @@ static int mtk_dpi_probe(struct platform_device *pdev)
- 
- static int mtk_dpi_remove(struct platform_device *pdev)
- {
-+	struct mtk_dpi *dpi = platform_get_drvdata(pdev);
-+
- 	component_del(&pdev->dev, &mtk_dpi_component_ops);
-+	drm_bridge_remove(&dpi->bridge);
- 
- 	return 0;
- }
--- 
-2.26.2
 
