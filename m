@@ -2,205 +2,236 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DDEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC67E207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E636D2081A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgERTLk (ORCPT
+        id S1727034AbgERTOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 15:11:40 -0400
-Received: from ja.ssi.bg ([178.16.129.10]:39614 "EHLO ja.ssi.bg"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726703AbgERTLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 15:11:39 -0400
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id 04IJAWNB007033;
-        Mon, 18 May 2020 22:10:33 +0300
-Date:   Mon, 18 May 2020 22:10:32 +0300 (EEST)
-From:   Julian Anastasov <ja@ssi.bg>
-To:     Andrew Sy Kim <kim.andrewsy@gmail.com>
-cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH] netfilter/ipvs: immediately expire UDP connections
- matching unavailable destination if expire_nodest_conn=1
-In-Reply-To: <20200517171654.8194-1-kim.andrewsy@gmail.com>
-Message-ID: <alpine.LFD.2.21.2005182027460.4524@ja.home.ssi.bg>
-References: <20200515013556.5582-1-kim.andrewsy@gmail.com> <20200517171654.8194-1-kim.andrewsy@gmail.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Mon, 18 May 2020 15:14:33 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:43503 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726640AbgERTOc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 15:14:32 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Mon, 18 May 2020 12:14:31 -0700
+Received: from localhost (unknown [10.200.192.41])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 4946440BF5;
+        Mon, 18 May 2020 12:14:32 -0700 (PDT)
+Date:   Mon, 18 May 2020 12:14:31 -0700
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC][PATCH 3/5] objtool: Add support for relocations without
+ addends
+Message-ID: <20200518191431.GO9040@rlwimi.vmware.com>
+Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <cover.1588888003.git.mhelsley@vmware.com>
+ <17ee3f6f2a246008aaae70f92df24ae92fa0e21e.1588888003.git.mhelsley@vmware.com>
+ <20200515203338.ehdgnvh7nqcczj4t@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200515203338.ehdgnvh7nqcczj4t@treble>
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-	Hello,
-
-On Sun, 17 May 2020, Andrew Sy Kim wrote:
-
-> If expire_nodest_conn=1 and a UDP destination is deleted, IPVS should
-> also expire all matching connections immiediately instead of waiting for
-> the next matching packet. This is particulary useful when there are a
-> lot of packets coming from a few number of clients. Those clients are
-> likely to match against existing entries if a source port in the
-> connection hash is reused. When the number of entries in the connection
-> tracker is large, we can significantly reduce the number of dropped
-> packets by expiring all connections upon deletion.
+On Fri, May 15, 2020 at 03:33:38PM -0500, Josh Poimboeuf wrote:
+> On Mon, May 11, 2020 at 10:35:11AM -0700, Matt Helsley wrote:
+> > Currently objtool only collects information about relocations with
+> > addends. In recordmcount, which we are about to merge into objtool,
+> > some supported architectures do not use rela relocations. Since
+> > object files use one or the other the list can be reused.
+> > 
+> > Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+> > ---
+> >  tools/objtool/elf.c | 55 ++++++++++++++++++++++++++++++++++++---------
+> >  tools/objtool/elf.h |  5 ++++-
+> >  2 files changed, 49 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+> > index c4857fa3f1d1..cd841e3df87d 100644
+> > --- a/tools/objtool/elf.c
+> > +++ b/tools/objtool/elf.c
+> > @@ -465,12 +465,14 @@ static int read_relas(struct elf *elf)
 > 
-> Signed-off-by: Andrew Sy Kim <kim.andrewsy@gmail.com>
-> ---
->  include/net/ip_vs.h             |  7 ++++++
->  net/netfilter/ipvs/ip_vs_conn.c | 38 +++++++++++++++++++++++++++++++++
->  net/netfilter/ipvs/ip_vs_core.c |  5 -----
->  net/netfilter/ipvs/ip_vs_ctl.c  |  9 ++++++++
->  4 files changed, 54 insertions(+), 5 deletions(-)
+> This should probably be called read_relocs() now.
+> 
+> And 'struct rela' should probably be 'struct reloc'.  And I hate to say
+> it but all the 'rela' based variable/function names should also probably
+> be changed...
+> 
+> All the renaming might be disruptive for backports, but still I think it
+> would be a good idea.  It probably belongs in its own commit.  If it can
+> be done programmatically with 'sed -i' or so, with the exact command in
+> the commit log, even better :-)
+> 
+> >  	unsigned long nr_rela, max_rela = 0, tot_rela = 0;
+> >  
+> >  	list_for_each_entry(sec, &elf->sections, list) {
+> > -		if (sec->sh.sh_type != SHT_RELA)
+> > +		if ((sec->sh.sh_type != SHT_RELA) &&
+> > +		     (sec->sh.sh_type != SHT_REL))
+> >  			continue;
+> 
+> The alignment is slightly off, should be:
+> 
+> 		if ((sec->sh.sh_type != SHT_RELA) &&
+> 		    (sec->sh.sh_type != SHT_REL))
+> 			continue;
+>
+
+Ack'd.
+
+> >  
+> > -		sec->base = find_section_by_name(elf, sec->name + 5);
+> > +		sec->base = find_section_by_name(elf, sec->name +
+> > +				((sec->sh.sh_type != SHT_REL) ? 5 : 4));
+> 
+> I think there's actually a cleaner way to do this, which we probably
+> should have been doing in the first place:
+> 
+> 		sec->base = find_section_by_index(elf, sec->sh.sh_info);
+> 
+> (completely not tested, btw)
 > 
 
-> diff --git a/net/netfilter/ipvs/ip_vs_conn.c b/net/netfilter/ipvs/ip_vs_conn.c
-> index 02f2f636798d..c69dfbbc3416 100644
-> --- a/net/netfilter/ipvs/ip_vs_conn.c
-> +++ b/net/netfilter/ipvs/ip_vs_conn.c
-> @@ -1366,6 +1366,44 @@ static void ip_vs_conn_flush(struct netns_ipvs *ipvs)
->  		goto flush_again;
->  	}
->  }
-> +
-> +/*	Flush all the connection entries in the ip_vs_conn_tab with a
-> + *	matching destination.
-> + */
-> +void ip_vs_conn_flush_dest(struct netns_ipvs *ipvs, struct ip_vs_dest *dest)
-> +{
-> +	int idx;
-> +	struct ip_vs_conn *cp, *cp_c;
-> +
-> +	rcu_read_lock();
-> +	for (idx = 0; idx < ip_vs_conn_tab_size; idx++) {
-> +		hlist_for_each_entry_rcu(cp, &ip_vs_conn_tab[idx], c_list) {
-> +			if (cp->ipvs != ipvs)
-> +				continue;
-> +
-> +			if (cp->dest != dest)
-> +				continue;
-> +
-> +			/* As timers are expired in LIFO order, restart
-> +			 * the timer of controlling connection first, so
-> +			 * that it is expired after us.
-> +			 */
-> +			cp_c = cp->control;
-> +			/* cp->control is valid only with reference to cp */
-> +			if (cp_c && __ip_vs_conn_get(cp)) {
-> +				IP_VS_DBG(4, "del controlling connection\n");
-> +				ip_vs_conn_expire_now(cp_c);
-> +				__ip_vs_conn_put(cp);
-> +			}
-> +			IP_VS_DBG(4, "del connection\n");
-> +			ip_vs_conn_expire_now(cp);
-> +		}
-> +		cond_resched_rcu();
+I can split that out as a separate patch so it's easy to test/drop.
 
-	Such kind of loop is correct if done in another context:
+> > @@ -486,13 +488,26 @@ static int read_relas(struct elf *elf)
+> >  			}
+> >  			memset(rela, 0, sizeof(*rela));
+> >  
+> > -			if (!gelf_getrela(sec->data, i, &rela->rela)) {
+> > -				WARN_ELF("gelf_getrela");
+> > -				return -1;
+> > +			switch(sec->sh.sh_type) {
+> > +			case SHT_REL:
+> > +				if (!gelf_getrel(sec->data, i, &rela->rel)) {
+> > +					WARN_ELF("gelf_getrel");
+> > +					return -1;
+> > +				}
+> > +				rela->addend = 0;
+> > +				break;
+> > +			case SHT_RELA:
+> > +				if (!gelf_getrela(sec->data, i, &rela->rela)) {
+> > +					WARN_ELF("gelf_getrela");
+> > +					return -1;
+> > +				}
+> > +				rela->addend = rela->rela.r_addend;
+> > +				break;
+> > +			default:
+> > +				break;
+> 
+> The default should never happen, but might as well return -1 for extra
+> robustness.
+> 
 
-1. kthread
-or
-2. delayed work: mod_delayed_work(system_long_wq, ...)
+Ack'd. See below...
 
-	Otherwise cond_resched_rcu() can schedule() while holding
-__ip_vs_mutex. Also, it will add long delay if many dests are
-removed.
+> > @@ -717,17 +732,27 @@ int elf_rebuild_rela_section(struct section *sec)
+> >  	struct rela *rela;
+> >  	int nr, idx = 0, size;
+> >  	GElf_Rela *relas;
+> > +	GElf_Rel *rels;
+> >  
+> >  	nr = 0;
+> >  	list_for_each_entry(rela, &sec->rela_list, list)
+> >  		nr++;
+> >  
+> > +	/*
+> > +	 * Allocate a buffer for relocations with addends but also use
+> > +	 * it for other relocations too. The section type determines
+> > +	 * the size of the section, the buffer used, and the entries.
+> > +	 */
+> >  	size = nr * sizeof(*relas);
+> >  	relas = malloc(size);
+> >  	if (!relas) {
+> >  		perror("malloc");
+> >  		return -1;
+> >  	}
+> > +	rels = (void *)relas;
+> > +	if (sec->sh.sh_type == SHT_REL) {
+> > +		size = nr * sizeof(*rels);
+> > +	}
+> >  
+> >  	sec->data->d_buf = relas;
+> >  	sec->data->d_size = size;
+> > @@ -736,9 +761,19 @@ int elf_rebuild_rela_section(struct section *sec)
+> >  
+> >  	idx = 0;
+> >  	list_for_each_entry(rela, &sec->rela_list, list) {
+> > -		relas[idx].r_offset = rela->offset;
+> > -		relas[idx].r_addend = rela->addend;
+> > -		relas[idx].r_info = GELF_R_INFO(rela->sym->idx, rela->type);
+> > +		switch(sec->sh.sh_type) {
+> > +		case SHT_REL:
+> > +			rels[idx].r_offset = rela->offset;
+> > +			rels[idx].r_info = GELF_R_INFO(rela->sym->idx, rela->type);
+> > +			break;
+> > +		case SHT_RELA:
+> > +			relas[idx].r_addend = rela->addend;
+> > +			relas[idx].r_offset = rela->offset;
+> > +			relas[idx].r_info = GELF_R_INFO(rela->sym->idx, rela->type);
+> > +			break;
+> > +		default:
+> > +			break;
+> > +		}
+> >  		idx++;
+> 
+> There's a lot of trickiness going on here, in a valiant attempt to share
+> code, but really most of the code ends up not being shared anyway.
+> 
+> I think it would be a lot cleaner to just create a new "rel" version of
+> this function.
+> 
+> Then there could be a top-level
+> 
+> 	elf_rebuild_reloc_section()
+> 
+> which calls the appropriate "rel" or "rela" variant.
 
-	If such loop analyzes instead all cp->dest for 
-IP_VS_DEST_F_AVAILABLE, it should be done after calling
-__ip_vs_conn_get().
+OK, that all makes sense to me.
 
->  static int sysctl_snat_reroute(struct netns_ipvs *ipvs) { return 0; }
-> diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-> index 8d14a1acbc37..f87c03622874 100644
-> --- a/net/netfilter/ipvs/ip_vs_ctl.c
-> +++ b/net/netfilter/ipvs/ip_vs_ctl.c
-> @@ -1225,6 +1225,15 @@ ip_vs_del_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
->  	 */
->  	__ip_vs_del_dest(svc->ipvs, dest, false);
->  
-> +	/*	If expire_nodest_conn is enabled and protocol is UDP,
-> +	 *	attempt best effort flush of all connections with this
-> +	 *	destination.
-> +	 */
-> +	if (sysctl_expire_nodest_conn(svc->ipvs) &&
-> +	    dest->protocol == IPPROTO_UDP) {
-> +		ip_vs_conn_flush_dest(svc->ipvs, dest);
+This can go after the multi-arch bits -- at the moment only recordmcount
+will use this, though it might be useful for other archs if check or other
+subcommands are made suitable for new archs before then.
 
-	Above work should be scheduled from __ip_vs_del_dest().
-Check for UDP is not needed, sysctl_expire_nodest_conn() is for
-all protocols.
+So I'll move all of that work to a follow-on set rather than include it
+in this multi-arch set. The next posting of this series will include all of
+the other changes discussed and rebase on tip/master (to get Peter's changes).
 
-	If the flushing is complex to implement, we can still allow
-rescheduling for unavailable dests:
+The follow-on set after multi-arch support can:
 
-- first we should move this block above the ip_vs_try_to_schedule() 
-block because:
+1) Split the sec->base change into a separate patch
+	(since it's untested)
 
-	1. the scheduling does not return unavailabel dests, even
-	for persistence, so no need to check new connections for
-	the flag
+2) Rename patch (roughly starting with: sed -i 's/\brela\b/reloc/g')
 
-	2. it will allow to create new connection if dest for
-	existing connection is unavailable
+3) Rebase this patch on top of that, making a new "reloc" version of
+	this function (rather than introduce something that needs
+	to be renamed)
 
-	if (cp && cp->dest && !(cp->dest->flags & IP_VS_DEST_F_AVAILABLE)) {
-		/* the destination server is not available */
-
-		if (sysctl_expire_nodest_conn(ipvs)) {
-			bool uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
-
-			ip_vs_conn_expire_now(cp);
-			__ip_vs_conn_put(cp);
-			if (uses_ct)
-				return NF_DROP;
-			cp = NULL;
-		} else {
-			__ip_vs_conn_put(cp);
-			return NF_DROP;
-		}
-	}
-
-	if (unlikely(!cp)) {
-		int v;
-
-		if (!ip_vs_try_to_schedule(ipvs, af, skb, pd, &v, &cp, &iph))
-			return v;
-	}
-
-	Before now, we always waited one jiffie connection to expire,
-now one packet will:
-
-- schedule expiration for existing connection with unavailable dest,
-as before
-
-- create new connection to available destination that will be found
-first in lists. But it can work only when sysctl var "conntrack" is 0,
-we do not want to create two netfilter conntracks to different
-real servers.
-
-	Note that we intentionally removed the timer_pending() check
-because we can not see existing ONE_PACKET connections in table.
-
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
+Cheers,
+	-Matt Helsley
