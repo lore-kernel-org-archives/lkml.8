@@ -2,224 +2,119 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0CFC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF072207F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:22:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sUjdtCUx"
+	by mail.kernel.org (Postfix) with ESMTP id 41A64207F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgERBWS (ORCPT
+        id S1727896AbgERBWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 21:22:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbgERBWG (ORCPT
+        Sun, 17 May 2020 21:22:22 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:41310 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727825AbgERBWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 21:22:06 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13037C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 18:22:06 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k19so3541553pll.9
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 18:22:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=m6uPPKA46HFm7qd/ohf4EnpdbNdhoH4yr+ZK/CbIpQY=;
-        b=sUjdtCUxRDga2htnkeilcDZoqmFmobZHCGxrgS0Br9In4PWlmf6Z/PFqIAzqH+seLk
-         rCS7fNPywxBVBEBaVHjrn9/pt04qc+meM+YkAa7XUMep4VxFc3L38bAddl/1N2O3BDtY
-         UAIKFCfHQ1PSXBcLD5m0osrPhTZ5a1Mo7W/vJSoFwftVaGUX1QFsQA8dshzv26YRnuD7
-         C4zzBKyR/uj6DajCgOwXgEMjx5VATdJGKi340F+FRjqud4sDvNqCFF8zmWtTNm0ptPMc
-         CBvcQtDgAHztV97n7f3wsubXb0aPjpNlegUUinn/QvXD8uGc8uZjR34WSau2nRW73S29
-         yQ7Q==
+        Sun, 17 May 2020 21:22:14 -0400
+Received: by mail-il1-f200.google.com with SMTP id f65so8389056ilh.8
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 18:22:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=m6uPPKA46HFm7qd/ohf4EnpdbNdhoH4yr+ZK/CbIpQY=;
-        b=MVuN0/+1V/k7gNTdp6FSyfz4lvQS7OiSq+M0t0Dmn0xxBFpqWZNimerlw4YftnKLO5
-         Z1lqyUrqXAPdzUOW3Mn6T0K+EBWWzu0qEC/73izuouHsbgkXAoeVHqtdqxYVYwsoMBV7
-         Iz1ilWDXMhKokzrhR+CfgpZ1uz9RnR9FP8GGFfhcEBJz1rmkDLgo2dxaAdlCPsOWjHb5
-         HPgDEX9ej/cQbYJfyV+vYZPnKtzrEthph7oul9a594aTbNRixhYpMcqx9zYavJoVRI6L
-         q8eZwkfNGFKBYgzAnCN0DRIGfk23/FeRoYkeQzR3Kz0M/2df8WMu2+eDoXVjzt5rzt3G
-         zNNg==
-X-Gm-Message-State: AOAM533RXs27Oiwmes63UgOd2dImFvUw1TDG0Vta4F7bSwlA5rzLRaEk
-        1DQ46tjRMQdfkKWPViQ68N4=
-X-Google-Smtp-Source: ABdhPJwcP/wE3o2VggFkMMVemZRp109/1GcCE7J6JTY4IKDn6RKA/YxRhsLiAM3v8mqflLnX8qexdw==
-X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr13714077plb.94.1589764925541;
-        Sun, 17 May 2020 18:22:05 -0700 (PDT)
-Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id fw4sm1544376pjb.31.2020.05.17.18.22.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 May 2020 18:22:05 -0700 (PDT)
-From:   js1304@gmail.com
-X-Google-Original-From: iamjoonsoo.kim@lge.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH 08/11] mm/migrate: make standard migration target allocation functions
-Date:   Mon, 18 May 2020 10:20:54 +0900
-Message-Id: <1589764857-6800-9-git-send-email-iamjoonsoo.kim@lge.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589764857-6800-1-git-send-email-iamjoonsoo.kim@lge.com>
-References: <1589764857-6800-1-git-send-email-iamjoonsoo.kim@lge.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ap8i6E0yrJQAtmU9MgshgOvQ1VBY3o/WHGCOKeuX4nc=;
+        b=E477BTiBmgC6fWyaB05QYJVHQTZP+9/l7P+e6nuCLnJbiCMTVEpsq96i3YnVAIJBQC
+         HgL1OTICsLPTSbiWTamAXvzIjbhA0/a7joqDMZB8ddhe7hdkDxwpPV/xqh8Pt/x4JuvN
+         z/UVhtNeYGkE4yMwMmlqClpzXsBcM2HEb+5S9e9txYR5KjQ5kjeLGiJctFj9UXfmzzjE
+         M4kQFFFpyARWlAirrLXLCYtVq47HvxPb5kx4BTgu7PwobcabTOsMNIYC3q+qEQf3aSAh
+         Glba0q4m9qr0WoqagyG/5ofeBl3QEr7UCcE9PC/bro0HTtds+iUF0Y7Ey4TqrvkupsPM
+         ZwYQ==
+X-Gm-Message-State: AOAM532uVN8b6PFXEMl00Z6sstyU055C/Cky1zquHMaMH70/n64ZkHXl
+        /zIIaPYwrh+KWRb99iYm/iJZWtwE4h4ijsDYEsojqZPvto8z
+X-Google-Smtp-Source: ABdhPJx3Rtos3rtwRka74QnG8oJkX6dZbfUmTZP+c6Q9rnRW8WUn6+HOHNDULTl1z0EQ9gaNdX3Rj6KcgInTcoBOQ8s9c7QPUizi
+MIME-Version: 1.0
+X-Received: by 2002:a92:1d49:: with SMTP id d70mr13345443ild.188.1589764933763;
+ Sun, 17 May 2020 18:22:13 -0700 (PDT)
+Date:   Sun, 17 May 2020 18:22:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002746f005a5e1fe6b@google.com>
+Subject: BUG: sleeping function called from invalid context in console_lock
+From:   syzbot <syzbot+f8589c355cdce42b2446@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Hello,
 
-There are some similar functions for migration target allocation. Since
-there is no fundamental difference, it's better to keep just one rather
-than keeping all variants. This patch implements base migration target
-allocation function. In the following patches, variants will be converted
-to use this function.
+syzbot found the following crash on:
 
-Note that PageHighmem() call in previous function is changed to open-code
-"is_highmem_idx()" since it provides more readability.
+HEAD commit:    3d1c1e59 Merge tag 'block-5.7-2020-05-16' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11a8d202100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c14212794ed9ad24
+dashboard link: https://syzkaller.appspot.com/bug?extid=f8589c355cdce42b2446
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
 
-Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f8589c355cdce42b2446@syzkaller.appspotmail.com
+
+BUG: sleeping function called from invalid context at kernel/printk/printk.c:2312
+in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 21174, name: syz-executor.5
+3 locks held by syz-executor.5/21174:
+ #0: ffff8880a965c098 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x22/0x80 drivers/tty/tty_ldisc.c:267
+ #1: ffff8880a965c3f8 (&tty->flow_lock){....}-{2:2}, at: spin_lock_irq include/linux/spinlock.h:378 [inline]
+ #1: ffff8880a965c3f8 (&tty->flow_lock){....}-{2:2}, at: n_tty_ioctl_helper drivers/tty/tty_ioctl.c:914 [inline]
+ #1: ffff8880a965c3f8 (&tty->flow_lock){....}-{2:2}, at: n_tty_ioctl_helper+0xcc/0x3b0 drivers/tty/tty_ioctl.c:894
+ #2: ffff8880a965c098 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref+0x1d/0x80 drivers/tty/tty_ldisc.c:288
+irq event stamp: 46
+hardirqs last  enabled at (45): [<ffffffff81b0ba8b>] kfree+0x1eb/0x2b0 mm/slab.c:3758
+hardirqs last disabled at (46): [<ffffffff87d08f35>] __raw_spin_lock_irq include/linux/spinlock_api_smp.h:126 [inline]
+hardirqs last disabled at (46): [<ffffffff87d08f35>] _raw_spin_lock_irq+0x35/0x80 kernel/locking/spinlock.c:167
+softirqs last  enabled at (0): [<ffffffff8143deb7>] copy_process+0x1ae7/0x7110 kernel/fork.c:2031
+softirqs last disabled at (0): [<0000000000000000>] 0x0
+Preemption disabled at:
+[<0000000000000000>] 0x0
+CPU: 0 PID: 21174 Comm: syz-executor.5 Not tainted 5.7.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ ___might_sleep.cold+0x1f4/0x23d kernel/sched/core.c:6801
+ console_lock+0x19/0x80 kernel/printk/printk.c:2312
+ do_con_write.part.0+0x95/0x1dc0 drivers/tty/vt/vt.c:2596
+ do_con_write drivers/tty/vt/vt.c:2593 [inline]
+ con_write+0x41/0xe0 drivers/tty/vt/vt.c:3159
+ n_hdlc_send_frames+0x22d/0x3d0 drivers/tty/n_hdlc.c:289
+ tty_wakeup+0xe1/0x120 drivers/tty/tty_io.c:536
+ __start_tty+0x5c/0x70 drivers/tty/tty_io.c:803
+ n_tty_ioctl_helper drivers/tty/tty_ioctl.c:917 [inline]
+ n_tty_ioctl_helper+0x34e/0x3b0 drivers/tty/tty_ioctl.c:894
+ n_hdlc_tty_ioctl+0xd3/0x2f0 drivers/tty/n_hdlc.c:615
+ tty_ioctl+0xf88/0x1440 drivers/tty/tty_io.c:2665
+ tty_compat_ioctl+0x2bf/0x410 drivers/tty/tty_io.c:2834
+ __do_compat_sys_ioctl fs/ioctl.c:865 [inline]
+ __se_compat_sys_ioctl fs/ioctl.c:816 [inline]
+ __ia32_compat_sys_ioctl+0x23d/0x2b0 fs/ioctl.c:816
+ do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+ do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
+ entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+
+
 ---
- include/linux/migrate.h |  6 +++---
- mm/memory-failure.c     |  3 ++-
- mm/memory_hotplug.c     |  3 ++-
- mm/migrate.c            | 26 +++++++++++++++-----------
- mm/page_isolation.c     |  3 ++-
- 5 files changed, 24 insertions(+), 17 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-index 923c4f3..abf09b3 100644
---- a/include/linux/migrate.h
-+++ b/include/linux/migrate.h
-@@ -40,8 +40,8 @@ extern int migrate_page(struct address_space *mapping,
- 			enum migrate_mode mode);
- extern int migrate_pages(struct list_head *l, new_page_t new, free_page_t free,
- 		struct alloc_control *ac, enum migrate_mode mode, int reason);
--extern struct page *new_page_nodemask(struct page *page,
--		struct alloc_control *ac);
-+extern struct page *alloc_migration_target(struct page *page,
-+					struct alloc_control *ac);
- extern int isolate_movable_page(struct page *page, isolate_mode_t mode);
- extern void putback_movable_page(struct page *page);
- 
-@@ -60,7 +60,7 @@ static inline int migrate_pages(struct list_head *l, new_page_t new,
- 			free_page_t free, struct alloc_control *ac,
- 			enum migrate_mode mode, int reason)
- 	{ return -ENOSYS; }
--static inline struct page *new_page_nodemask(struct page *page,
-+static inline struct page *alloc_migration_target(struct page *page,
- 		struct alloc_control *ac)
- 	{ return NULL; }
- static inline int isolate_movable_page(struct page *page, isolate_mode_t mode)
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 3f92e70..b400161 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1626,9 +1626,10 @@ static struct page *new_page(struct page *p, struct alloc_control *__ac)
- 	struct alloc_control ac = {
- 		.nid = page_to_nid(p),
- 		.nmask = &node_states[N_MEMORY],
-+		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
- 	};
- 
--	return new_page_nodemask(p, &ac);
-+	return alloc_migration_target(p, &ac);
- }
- 
- /*
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 89642f9..185f4c9 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1249,7 +1249,8 @@ static struct page *new_node_page(struct page *page, struct alloc_control *__ac)
- 
- 	ac.nid = nid;
- 	ac.nmask = &nmask;
--	return new_page_nodemask(page, &ac);
-+	ac.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL;
-+	return alloc_migration_target(page, &ac);
- }
- 
- static int
-diff --git a/mm/migrate.c b/mm/migrate.c
-index ba31153..029af0b 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1519,31 +1519,35 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
- 	return rc;
- }
- 
--struct page *new_page_nodemask(struct page *page, struct alloc_control *ac)
-+struct page *alloc_migration_target(struct page *page, struct alloc_control *ac)
- {
--	gfp_t gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL;
- 	unsigned int order = 0;
- 	struct page *new_page = NULL;
-+	int zidx;
- 
-+	/* hugetlb has it's own gfp handling logic */
- 	if (PageHuge(page)) {
- 		struct hstate *h = page_hstate(page);
--		struct alloc_control __ac = {
--			.nid = ac->nid,
--			.nmask = ac->nmask,
--		};
- 
--		return alloc_huge_page_nodemask(h, &__ac);
-+		return alloc_huge_page_nodemask(h, ac);
- 	}
- 
-+	ac->__gfp_mask = ac->gfp_mask;
- 	if (PageTransHuge(page)) {
--		gfp_mask |= GFP_TRANSHUGE;
-+		ac->__gfp_mask |= GFP_TRANSHUGE;
- 		order = HPAGE_PMD_ORDER;
- 	}
-+	zidx = zone_idx(page_zone(page));
-+	if (is_highmem_idx(zidx) || zidx == ZONE_MOVABLE)
-+		ac->__gfp_mask |= __GFP_HIGHMEM;
- 
--	if (PageHighMem(page) || (zone_idx(page_zone(page)) == ZONE_MOVABLE))
--		gfp_mask |= __GFP_HIGHMEM;
-+	if (ac->thisnode)
-+		ac->__gfp_mask |= __GFP_THISNODE;
-+	if (ac->skip_cma)
-+		ac->__gfp_mask &= ~__GFP_MOVABLE;
- 
--	new_page = __alloc_pages_nodemask(gfp_mask, order, ac->nid, ac->nmask);
-+	new_page = __alloc_pages_nodemask(ac->__gfp_mask, order,
-+					ac->nid, ac->nmask);
- 
- 	if (new_page && PageTransHuge(new_page))
- 		prep_transhuge_page(new_page);
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index 1e1828b..aba799d 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -303,7 +303,8 @@ struct page *alloc_migrate_target(struct page *page, struct alloc_control *__ac)
- 	struct alloc_control ac = {
- 		.nid = page_to_nid(page),
- 		.nmask = &node_states[N_MEMORY],
-+		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
- 	};
- 
--	return new_page_nodemask(page, &ac);
-+	return alloc_migration_target(page, &ac);
- }
--- 
-2.7.4
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
