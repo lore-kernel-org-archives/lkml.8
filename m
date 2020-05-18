@@ -2,57 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C56C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94258C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5D6A207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7713B20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824898;
-	bh=q8ZMBAb4Llu4GVHaTpArXUnY6o2YL79FpWPTzHjpttM=;
+	s=default; t=1589824906;
+	bh=YwR/IkxPnry38HzB6cCo5CFHREKB8qE6TIZ6NlKlKSM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uycom9v4KvvoiJj3NunWA9Qu79ysH/Wl8v/h2c/qc3BfvgDTDO344G/RYDI0chyZy
-	 RdWFErSeHRnjDDsydPmPHBobBb04gOd6Y4VazCx+R4DLdbVGVQaZ2zEC2adYht0fIt
-	 LkjNrP47IrmbtIkS7H4u/8U5ikrDim3+eDQTaOvU=
+	b=d6xOcaw9qMhdsSDVtzTrHixSwYSYjoIwUrfAWJ3kknQZCyWlXHxFpCyYgKbI7woIR
+	 U/0NuOgQO3ZLXIk+LXOIEGrbYr8o0fJC4SgKqQ4oqI9zzPubc0zBsndJFGFKO11tjU
+	 +TnHJyKm1iMSGbp7BsBuSdPPnLufYnLFHPKtcpsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732419AbgERSBh (ORCPT
+        id S1731630AbgERSBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:01:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43690 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:01:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732398AbgERSBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:01:24 -0400
+        id S1730723AbgERSBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:01:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92B3F207F5;
-        Mon, 18 May 2020 18:01:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18412207C4;
+        Mon, 18 May 2020 18:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824884;
-        bh=q8ZMBAb4Llu4GVHaTpArXUnY6o2YL79FpWPTzHjpttM=;
+        s=default; t=1589824891;
+        bh=YwR/IkxPnry38HzB6cCo5CFHREKB8qE6TIZ6NlKlKSM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wUE7amenrw8atbj8Yjq7SQ833+EI4MkcBvAMFbSKIL+eVVIx6RamcFRT9CTUAuXDW
-         4xYepLBRssVPs0Fv1D7pMV5amrOIxmSiso/0l7cfjTlx6HhPM5evqskcDKuA3NYayx
-         tGl01/Hr0Pl9rOUccP/ecQYWpJGj45hZ+zFp35KE=
+        b=mX+ny6wm+3BJP314AjyOcGw35PoysE4+2M/K3hrnohcUsy2XbjJoIXCvWqS3bBjnZ
+         Geq3l70VUc/iO1NcRom2j2SjTMEfKQFsBNYzBp+6HqYHmSnYLUKZ7PpULjngwpK0xx
+         VUzw98arvAGA9Ij8QkdsV8TFPidPIjOENpyXr+yM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com,
-        syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 008/194] shmem: fix possible deadlocks on shmlock_user_lock
-Date:   Mon, 18 May 2020 19:34:58 +0200
-Message-Id: <20200518173532.317490114@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 038/194] tcp: fix error recovery in tcp_zerocopy_receive()
+Date:   Mon, 18 May 2020 19:35:28 +0200
+Message-Id: <20200518173534.908155113@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -65,80 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit ea0dfeb4209b4eab954d6e00ed136bc6b48b380d ]
+[ Upstream commit e776af608f692a7a647455106295fa34469e7475 ]
 
-Recent commit 71725ed10c40 ("mm: huge tmpfs: try to split_huge_page()
-when punching hole") has allowed syzkaller to probe deeper, uncovering a
-long-standing lockdep issue between the irq-unsafe shmlock_user_lock,
-the irq-safe xa_lock on mapping->i_pages, and shmem inode's info->lock
-which nests inside xa_lock (or tree_lock) since 4.8's shmem_uncharge().
+If user provides wrong virtual address in TCP_ZEROCOPY_RECEIVE
+operation we want to return -EINVAL error.
 
-user_shm_lock(), servicing SysV shmctl(SHM_LOCK), wants
-shmlock_user_lock while its caller shmem_lock() holds info->lock with
-interrupts disabled; but hugetlbfs_file_setup() calls user_shm_lock()
-with interrupts enabled, and might be interrupted by a writeback endio
-wanting xa_lock on i_pages.
+But depending on zc->recv_skip_hint content, we might return
+-EIO error if the socket has SOCK_DONE set.
 
-This may not risk an actual deadlock, since shmem inodes do not take
-part in writeback accounting, but there are several easy ways to avoid
-it.
+Make sure to return -EINVAL in this case.
 
-Requiring interrupts disabled for shmlock_user_lock would be easy, but
-it's a high-level global lock for which that seems inappropriate.
-Instead, recall that the use of info->lock to guard info->flags in
-shmem_lock() dates from pre-3.1 days, when races with SHMEM_PAGEIN and
-SHMEM_TRUNCATE could occur: nowadays it serves no purpose, the only flag
-added or removed is VM_LOCKED itself, and calls to shmem_lock() an inode
-are already serialized by the caller.
+BUG: KMSAN: uninit-value in tcp_zerocopy_receive net/ipv4/tcp.c:1833 [inline]
+BUG: KMSAN: uninit-value in do_tcp_getsockopt+0x4494/0x6320 net/ipv4/tcp.c:3685
+CPU: 1 PID: 625 Comm: syz-executor.0 Not tainted 5.7.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ tcp_zerocopy_receive net/ipv4/tcp.c:1833 [inline]
+ do_tcp_getsockopt+0x4494/0x6320 net/ipv4/tcp.c:3685
+ tcp_getsockopt+0xf8/0x1f0 net/ipv4/tcp.c:3728
+ sock_common_getsockopt+0x13f/0x180 net/core/sock.c:3131
+ __sys_getsockopt+0x533/0x7b0 net/socket.c:2177
+ __do_sys_getsockopt net/socket.c:2192 [inline]
+ __se_sys_getsockopt+0xe1/0x100 net/socket.c:2189
+ __x64_sys_getsockopt+0x62/0x80 net/socket.c:2189
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:297
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45c829
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f1deeb72c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
+RAX: ffffffffffffffda RBX: 00000000004e01e0 RCX: 000000000045c829
+RDX: 0000000000000023 RSI: 0000000000000006 RDI: 0000000000000009
+RBP: 000000000078bf00 R08: 0000000020000200 R09: 0000000000000000
+R10: 00000000200001c0 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000001d8 R14: 00000000004d3038 R15: 00007f1deeb736d4
 
-Take info->lock out of the chain and the possibility of deadlock or
-lockdep warning goes away.
+Local variable ----zc@do_tcp_getsockopt created at:
+ do_tcp_getsockopt+0x1a74/0x6320 net/ipv4/tcp.c:3670
+ do_tcp_getsockopt+0x1a74/0x6320 net/ipv4/tcp.c:3670
 
-Fixes: 4595ef88d136 ("shmem: make shmem_inode_info::lock irq-safe")
-Reported-by: syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com
-Reported-by: syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2004161707410.16322@eggly.anvils
-Link: https://lore.kernel.org/lkml/000000000000e5838c05a3152f53@google.com/
-Link: https://lore.kernel.org/lkml/0000000000003712b305a331d3b1@google.com/
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 05255b823a61 ("tcp: add TCP_ZEROCOPY_RECEIVE support for zerocopy receive")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/shmem.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/ipv4/tcp.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 7406f91f8a528..153d889e32d1d 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2184,7 +2184,11 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
- 	struct shmem_inode_info *info = SHMEM_I(inode);
- 	int retval = -ENOMEM;
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -1756,10 +1756,11 @@ static int tcp_zerocopy_receive(struct s
  
--	spin_lock_irq(&info->lock);
-+	/*
-+	 * What serializes the accesses to info->flags?
-+	 * ipc_lock_object() when called from shmctl_do_lock(),
-+	 * no serialization needed when called from shm_destroy().
-+	 */
- 	if (lock && !(info->flags & VM_LOCKED)) {
- 		if (!user_shm_lock(inode->i_size, user))
- 			goto out_nomem;
-@@ -2199,7 +2203,6 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
- 	retval = 0;
+ 	down_read(&current->mm->mmap_sem);
  
- out_nomem:
--	spin_unlock_irq(&info->lock);
- 	return retval;
- }
+-	ret = -EINVAL;
+ 	vma = find_vma(current->mm, address);
+-	if (!vma || vma->vm_start > address || vma->vm_ops != &tcp_vm_ops)
+-		goto out;
++	if (!vma || vma->vm_start > address || vma->vm_ops != &tcp_vm_ops) {
++		up_read(&current->mm->mmap_sem);
++		return -EINVAL;
++	}
+ 	zc->length = min_t(unsigned long, zc->length, vma->vm_end - address);
  
--- 
-2.20.1
-
+ 	tp = tcp_sk(sk);
 
 
