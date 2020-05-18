@@ -2,143 +2,158 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD494C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0909AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD184207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:55:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P+oHmq9e"
+	by mail.kernel.org (Postfix) with ESMTP id DB6742084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgERKz7 (ORCPT
+        id S1726724AbgERK47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:55:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33899 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726388AbgERKz6 (ORCPT
+        Mon, 18 May 2020 06:56:59 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:46332 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgERK47 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:55:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589799356;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4qCPvl+Kzxwr6u2SnFhTAgqF+P+2b9DjFZ38t/g4QD4=;
-        b=P+oHmq9eLc3xlGGsiFlu6Lbbx2vl85GCJKXz4D7+IY9aPf1SXLf203a+hHFMu9bqWETF51
-        gC7xf3iGFdo26xdGRN4mcNgpDBNyKCjvN1MN6qVxVhDmQaxx+ig6erYsstFqKoijdOJklF
-        5yZ1vZcUlWOkKRSQ5Oc3tBHHAiUJiaQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-488-uX0bK0YwNFCwlvQUhBV1sw-1; Mon, 18 May 2020 06:55:55 -0400
-X-MC-Unique: uX0bK0YwNFCwlvQUhBV1sw-1
-Received: by mail-wr1-f71.google.com with SMTP id z16so5483463wrq.21
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 03:55:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4qCPvl+Kzxwr6u2SnFhTAgqF+P+2b9DjFZ38t/g4QD4=;
-        b=Oo8PR2YXgkJLbsqz1fTEvGs+/r4EWWEhP2sIvA/z6qWmyUb0InfC1itZHVIM+2i/53
-         BgpY3rguJodbEIYMqlaWJbjbjnBqGkoymz8TJWo73NPBwFplUBjrm4MNeampLNL3YRVN
-         nu2iGkgm1fnaMqdIe6L16LudfDjGpGXnmHoKuewmoD+3qzHHYqkJmBa977oNVVtAHat1
-         FPCb85ZHXw8jXIuVMjSLxWsZPv7t+SuraNrTJtfygqnMpSJdsgP4NSojtIHHqLEyzrEi
-         s3B2vn6kACem6A600I9HVe/mMFJrZ2EaSqOx41qSiLBDMoOug44nEJVtIN+3b5nOeACm
-         6tTg==
-X-Gm-Message-State: AOAM531fQYEaFMf7Xe6mbzwn8W58UbZQ+D9klwZbJdYnX+gPdjcSJwzq
-        vj/6nU5K6t/WP8ALPTiFLhI1pisIvAwAEW70f2sGOOoSADHuNAhZvnga+QwS8nNL0dCPdw6t/x+
-        7ixZZ7OD9Wrhak3EwgAih6oVm
-X-Received: by 2002:a1c:f312:: with SMTP id q18mr18869332wmq.175.1589799353627;
-        Mon, 18 May 2020 03:55:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwsnCM+6ovpWCbwXHDYfwN2IAiPYSCAAfCLhQaa+AbmlDlCkZMMg/BjMjagVdget3fEYHegKA==
-X-Received: by 2002:a1c:f312:: with SMTP id q18mr18869311wmq.175.1589799353431;
-        Mon, 18 May 2020 03:55:53 -0700 (PDT)
-Received: from [192.168.178.58] ([151.30.90.67])
-        by smtp.gmail.com with ESMTPSA id r3sm15448334wmh.48.2020.05.18.03.55.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 03:55:52 -0700 (PDT)
-Subject: Re: [PATCH] KVM: Fix the indentation to match coding style
-To:     Haiwei Li <lihaiwei.kernel@gmail.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>, wanpengli@tencent.com,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, hpa@zytor.com
-Cc:     "x86@kernel.org" <x86@kernel.org>, kvm@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <2f78457e-f3a7-3bc9-e237-3132ee87f71e@gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <b4443a42-bd06-4b67-64e6-6c636507713b@redhat.com>
-Date:   Mon, 18 May 2020 12:55:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 18 May 2020 06:56:59 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id B18DC8030875;
+        Mon, 18 May 2020 10:56:54 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 50YAqZGe6GZM; Mon, 18 May 2020 13:56:53 +0300 (MSK)
+Date:   Mon, 18 May 2020 13:56:49 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
+ setting
+Message-ID: <20200518105649.gcv22l253lsuje7y@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200518102415.k4c5qglodij5ac6h@vireshk-i7>
+ <20200518103102.t3a3g4uxeeuwsnix@mobilestation>
+ <5284478.EF2IWm2iUs@kreacher>
+ <20200518104602.mjh2p5iltf2x4wmq@mobilestation>
+ <CAJZ5v0imYcL3M80S1snJAqXQ=GsqbChij-6aWx=4L02TKVvrQg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <2f78457e-f3a7-3bc9-e237-3132ee87f71e@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0imYcL3M80S1snJAqXQ=GsqbChij-6aWx=4L02TKVvrQg@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/05/20 03:31, Haiwei Li wrote:
-> From: Haiwei Li <lihaiwei@tencent.com>
+On Mon, May 18, 2020 at 12:51:15PM +0200, Rafael J. Wysocki wrote:
+> On Mon, May 18, 2020 at 12:46 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> >
+> > On Mon, May 18, 2020 at 12:41:19PM +0200, Rafael J. Wysocki wrote:
+> > > On Monday, May 18, 2020 12:31:02 PM CEST Serge Semin wrote:
+> > > > On Mon, May 18, 2020 at 03:54:15PM +0530, Viresh Kumar wrote:
+> > > > > On 18-05-20, 12:22, Rafael J. Wysocki wrote:
+> > > > > > On Monday, May 18, 2020 12:11:09 PM CEST Viresh Kumar wrote:
+> > > > > > > On 18-05-20, 11:53, Rafael J. Wysocki wrote:
+> > > > > > > > That said if you really only want it to return 0 on success, you may as well
+> > > > > > > > add a ret = 0; statement (with a comment explaining why it is needed) after
+> > > > > > > > the last break in the loop.
+> > > > > > >
+> > > > > > > That can be done as well, but will be a bit less efficient as the loop
+> > > > > > > will execute once for each policy, and so the statement will run
+> > > > > > > multiple times. Though it isn't going to add any significant latency
+> > > > > > > in the code.
+> > > > > >
+> > > > > > Right.
+> > > > > >
+> > > > > > However, the logic in this entire function looks somewhat less than
+> > > > > > straightforward to me, because it looks like it should return an
+> > > > > > error on the first policy without a frequency table (having a frequency
+> > > > > > table depends on the driver and that is the same for all policies, so it
+> > > > > > is pointless to iterate any further in that case).
+> > > > > >
+> > > > > > Also, the error should not be -EINVAL, because that means "invalid
+> > > > > > argument" which would be the state value.
+> > > > > >
+> > > > > > So I would do something like this:
+> > > > > >
+> > > > > > ---
+> > > > > >  drivers/cpufreq/cpufreq.c |   11 ++++++-----
+> > > > > >  1 file changed, 6 insertions(+), 5 deletions(-)
+> > > > > >
+> > > > > > Index: linux-pm/drivers/cpufreq/cpufreq.c
+> > > > > > ===================================================================
+> > > > > > --- linux-pm.orig/drivers/cpufreq/cpufreq.c
+> > > > > > +++ linux-pm/drivers/cpufreq/cpufreq.c
+> > > > > > @@ -2535,26 +2535,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
+> > > > > >  static int cpufreq_boost_set_sw(int state)
+> > > > > >  {
+> > > > > >         struct cpufreq_policy *policy;
+> > > > > > -       int ret = -EINVAL;
+> > > > > >
+> > > > > >         for_each_active_policy(policy) {
+> > > > > > +               int ret;
+> > > > > > +
+> > > > > >                 if (!policy->freq_table)
+> > > > > > -                       continue;
+> > > > > > +                       return -ENXIO;
+> > > > > >
+> > > > > >                 ret = cpufreq_frequency_table_cpuinfo(policy,
+> > > > > >                                                       policy->freq_table);
+> > > > > >                 if (ret) {
+> > > > > >                         pr_err("%s: Policy frequency update failed\n",
+> > > > > >                                __func__);
+> > > > > > -                       break;
+> > > > > > +                       return ret;
+> > > > > >                 }
+> > > > > >
+> > > > > >                 ret = freq_qos_update_request(policy->max_freq_req, policy->max);
+> > > > > >                 if (ret < 0)
+> > > > > > -                       break;
+> > > > > > +                       return ret;
+> > > > > >         }
+> > > > > >
+> > > > > > -       return ret;
+> > > > > > +       return 0;
+> > > > > >  }
+> > > > > >
+> > > > > >  int cpufreq_boost_trigger_state(int state)
+> > > > >
+> > > > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > > >
+> > > > Ok. Thanks for the comments. Shall I resend the patch with update Rafael
+> > > > suggests or you'll merge the Rafael's fix in yourself?
+> > >
+> > > I'll apply the fix directly, thanks!
+> >
+> > Great. Is it going to be available in the repo:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/
+> > ?
 > 
-> There is a bad indentation in next&queue branch. The patch looks like
-> fixes nothing though it fixes the indentation.
-> 
-> Before fixing:
-> 
->                 if (!handle_fastpath_set_x2apic_icr_irqoff(vcpu, data)) {
->                         kvm_skip_emulated_instruction(vcpu);
->                         ret = EXIT_FASTPATH_EXIT_HANDLED;
->                }
->                 break;
->         case MSR_IA32_TSCDEADLINE:
-> 
-> After fixing:
-> 
->                 if (!handle_fastpath_set_x2apic_icr_irqoff(vcpu, data)) {
->                         kvm_skip_emulated_instruction(vcpu);
->                         ret = EXIT_FASTPATH_EXIT_HANDLED;
->                 }
->                 break;
->         case MSR_IA32_TSCDEADLINE:
-> 
-> 
-> Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
-> ---
->  arch/x86/kvm/x86.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 471fccf..446f747 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1631,7 +1631,7 @@ fastpath_t handle_fastpath_set_msr_irqoff(struct
-> kvm_vcpu *vcpu)
->                 if (!handle_fastpath_set_x2apic_icr_irqoff(vcpu, data)) {
->                         kvm_skip_emulated_instruction(vcpu);
->                         ret = EXIT_FASTPATH_EXIT_HANDLED;
-> -               }
-> +               }
->                 break;
->         case MSR_IA32_TSCDEADLINE:
->                 data = kvm_read_edx_eax(vcpu);
-> -- 
-> 1.8.3.1
-> 
+> Yes, it is.  Please see the bleeding-edge branch in there, thanks!
 
-Queued, thanks.
+No credits with at least Reported-by tag? That's sad.(
 
-Paolo
-
+-Sergey
