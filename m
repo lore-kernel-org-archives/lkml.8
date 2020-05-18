@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4950C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 083D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CEFF20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB1F20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824133;
-	bh=Jn+yjls3npzhmafHZuiUzqmvvWEAnI8achqTrDx62TM=;
+	s=default; t=1589824135;
+	bh=OEMasGLuz+c2UXS9PLCnzW0dw2a1bMpm1NDuXLWIZXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=StPEXHNencsoXjaytNLvwv8ZEDZDv5il2F2OCA+RG8G0OFZLYLWMPyQQXnbiOaJ+e
-	 YIJgMUi6L+IiD6s2k9NrOZAoEOvPS9EVbmehcAvfla93UMEv5K1XIPh9U/YXmfYViU
-	 +bdsJIqTCqEMM4Z6EjucNU2c9u4GbArqyqHlLGCc=
+	b=l2dwfhHzDKZMfDZWmZS7TaGDAd93uCsMxAYEvextLMrIsatQs/09eGZNKsDZ5UpVf
+	 FCRDV221aP2nnhdvVUlN6APZUTIxPhg8lGFPViHWoWUrKF9j2IGdg/HXvSndA/kTcz
+	 ElmEalhmiPbgx3Q+H3ZO706mW8tCEkGC2GUR6NZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730439AbgERRsx (ORCPT
+        id S1730448AbgERRsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:48:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49868 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:48:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728458AbgERRss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:48:48 -0400
+        id S1729933AbgERRsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:48:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E82C720657;
-        Mon, 18 May 2020 17:48:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D166320671;
+        Mon, 18 May 2020 17:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824127;
-        bh=Jn+yjls3npzhmafHZuiUzqmvvWEAnI8achqTrDx62TM=;
+        s=default; t=1589824132;
+        bh=OEMasGLuz+c2UXS9PLCnzW0dw2a1bMpm1NDuXLWIZXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v850nwLzCvZPE3jD9FYf580TfTDAv0uTytEF/DSBwmBLu9IcOHGU0hKTTLctLX1Xe
-         o5LnCDimXgol3evJrHs8r3otZaeRgWBkWVwX71BXgKMaAxKIzvx2MnrIxsm0ck2tBf
-         hKe3QCDSDZOKSP5RmHFz3syFzDWoavsm0ZrecwfA=
+        b=ZW5g3LGsZKQgujUxd2OsVmi3x6csOz0a0OKchEzMP2NqbA+Bf8gtruDgrlqR6QcV8
+         N0rqAnD7FoikwFGv7em/8b/BSqIVAHquzhL+UZlYKGYBAzrh12hEVGmHPb9T4O7exS
+         KA627pZbYRzUiSOoBcuMeIa/hgtzH9fQkbb+Xk/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 075/114] gcc-10: disable array-bounds warning for now
-Date:   Mon, 18 May 2020 19:36:47 +0200
-Message-Id: <20200518173516.353825776@linuxfoundation.org>
+        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 4.14 085/114] hinic: fix a bug of ndo_stop
+Date:   Mon, 18 May 2020 19:36:57 +0200
+Message-Id: <20200518173517.690851421@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -59,55 +59,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Luo bin <luobin9@huawei.com>
 
-commit 44720996e2d79e47d508b0abe99b931a726a3197 upstream.
+[ Upstream commit e8a1b0efd632d1c9db7d4e93da66377c7b524862 ]
 
-This is another fine warning, related to the 'zero-length-bounds' one,
-but hitting the same historical code in the kernel.
+if some function in ndo_stop interface returns failure because of
+hardware fault, must go on excuting rest steps rather than return
+failure directly, otherwise will cause memory leak.And bump the
+timeout for SET_FUNC_STATE to ensure that cmd won't return failure
+when hw is busy. Otherwise hw may stomp host memory if we free
+memory regardless of the return value of SET_FUNC_STATE.
 
-Because C didn't historically support flexible array members, we have
-code that instead uses a one-sized array, the same way we have cases of
-zero-sized arrays.
-
-The one-sized arrays come from either not wanting to use the gcc
-zero-sized array extension, or from a slight convenience-feature, where
-particularly for strings, the size of the structure now includes the
-allocation for the final NUL character.
-
-So with a "char name[1];" at the end of a structure, you can do things
-like
-
-       v = my_malloc(sizeof(struct vendor) + strlen(name));
-
-and avoid the "+1" for the terminator.
-
-Yes, the modern way to do that is with a flexible array, and using
-'offsetof()' instead of 'sizeof()', and adding the "+1" by hand.  That
-also technically gets the size "more correct" in that it avoids any
-alignment (and thus padding) issues, but this is another long-term
-cleanup thing that will not happen for 5.7.
-
-So disable the warning for now, even though it's potentially quite
-useful.  Having a slew of warnings that then hide more urgent new issues
-is not an improvement.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 51ba902a16e6 ("net-next/hinic: Initialize hw interface")
+Signed-off-by: Luo bin <luobin9@huawei.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- Makefile |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c |   16 ++++++++++++----
+ drivers/net/ethernet/huawei/hinic/hinic_main.c    |   18 +++---------------
+ 2 files changed, 15 insertions(+), 19 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -802,6 +802,7 @@ KBUILD_CFLAGS += $(call cc-disable-warni
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
+@@ -54,6 +54,8 @@
  
- # We'll want to enable this eventually, but it's not going away for 5.7 at least
- KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
-+KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
+ #define MGMT_MSG_TIMEOUT                5000
  
- # Enabled with W=2, disabled by default as noisy
- KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
++#define SET_FUNC_PORT_MGMT_TIMEOUT	25000
++
+ #define mgmt_to_pfhwdev(pf_mgmt)        \
+ 		container_of(pf_mgmt, struct hinic_pfhwdev, pf_to_mgmt)
+ 
+@@ -247,12 +249,13 @@ static int msg_to_mgmt_sync(struct hinic
+ 			    u8 *buf_in, u16 in_size,
+ 			    u8 *buf_out, u16 *out_size,
+ 			    enum mgmt_direction_type direction,
+-			    u16 resp_msg_id)
++			    u16 resp_msg_id, u32 timeout)
+ {
+ 	struct hinic_hwif *hwif = pf_to_mgmt->hwif;
+ 	struct pci_dev *pdev = hwif->pdev;
+ 	struct hinic_recv_msg *recv_msg;
+ 	struct completion *recv_done;
++	unsigned long timeo;
+ 	u16 msg_id;
+ 	int err;
+ 
+@@ -276,8 +279,9 @@ static int msg_to_mgmt_sync(struct hinic
+ 		goto unlock_sync_msg;
+ 	}
+ 
+-	if (!wait_for_completion_timeout(recv_done,
+-					 msecs_to_jiffies(MGMT_MSG_TIMEOUT))) {
++	timeo = msecs_to_jiffies(timeout ? timeout : MGMT_MSG_TIMEOUT);
++
++	if (!wait_for_completion_timeout(recv_done, timeo)) {
+ 		dev_err(&pdev->dev, "MGMT timeout, MSG id = %d\n", msg_id);
+ 		err = -ETIMEDOUT;
+ 		goto unlock_sync_msg;
+@@ -351,6 +355,7 @@ int hinic_msg_to_mgmt(struct hinic_pf_to
+ {
+ 	struct hinic_hwif *hwif = pf_to_mgmt->hwif;
+ 	struct pci_dev *pdev = hwif->pdev;
++	u32 timeout = 0;
+ 
+ 	if (sync != HINIC_MGMT_MSG_SYNC) {
+ 		dev_err(&pdev->dev, "Invalid MGMT msg type\n");
+@@ -362,9 +367,12 @@ int hinic_msg_to_mgmt(struct hinic_pf_to
+ 		return -EINVAL;
+ 	}
+ 
++	if (cmd == HINIC_PORT_CMD_SET_FUNC_STATE)
++		timeout = SET_FUNC_PORT_MGMT_TIMEOUT;
++
+ 	return msg_to_mgmt_sync(pf_to_mgmt, mod, cmd, buf_in, in_size,
+ 				buf_out, out_size, MGMT_DIRECT_SEND,
+-				MSG_NOT_RESP);
++				MSG_NOT_RESP, timeout);
+ }
+ 
+ /**
+--- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+@@ -473,7 +473,6 @@ static int hinic_close(struct net_device
+ {
+ 	struct hinic_dev *nic_dev = netdev_priv(netdev);
+ 	unsigned int flags;
+-	int err;
+ 
+ 	down(&nic_dev->mgmt_lock);
+ 
+@@ -487,20 +486,9 @@ static int hinic_close(struct net_device
+ 
+ 	up(&nic_dev->mgmt_lock);
+ 
+-	err = hinic_port_set_func_state(nic_dev, HINIC_FUNC_PORT_DISABLE);
+-	if (err) {
+-		netif_err(nic_dev, drv, netdev,
+-			  "Failed to set func port state\n");
+-		nic_dev->flags |= (flags & HINIC_INTF_UP);
+-		return err;
+-	}
+-
+-	err = hinic_port_set_state(nic_dev, HINIC_PORT_DISABLE);
+-	if (err) {
+-		netif_err(nic_dev, drv, netdev, "Failed to set port state\n");
+-		nic_dev->flags |= (flags & HINIC_INTF_UP);
+-		return err;
+-	}
++	hinic_port_set_state(nic_dev, HINIC_PORT_DISABLE);
++
++	hinic_port_set_func_state(nic_dev, HINIC_FUNC_PORT_DISABLE);
+ 
+ 	free_rxqs(nic_dev);
+ 	free_txqs(nic_dev);
 
 
