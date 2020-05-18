@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C14C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D462220715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395CD20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824840;
-	bh=SAfOCFHBexJBzEkBuz8E/9AxJgu9uGJhvz1+5p2MdQM=;
+	s=default; t=1589824846;
+	bh=LJUH6SI1WM2SUCEX/8syheNDQeQu0nGxG/o/Bs3whsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i72lFBtmQlqfwkaYeLVpwEeaQBLIqB+LHfAMWMpLxxK25uFz8skVGDlxmVOH6Fqp7
-	 JId6oVmsUfyuDV7X952bQ7yIcAq3+CsJ1A+qqKn6m6f6untTbHMcO6AG+2Fp8QJfzu
-	 gf9VXMnhVkM+psMfNT5lTPrnm0y3uve6ja0BaflQ=
+	b=a+26xTR7lC8TlOv5Y+GsCE6/oZepKHGmXyG9YoxLzAsX3NQA6dG1G/13+KDphZlQA
+	 G0oeLjtewefGmKBOlgHKbqnp3o9I6njWiANGpc6Xwph309z+K3vHHBZed801LFZH3p
+	 6iFsehN3B5RCuWyv7glNy6WprF/ZiCUK24eX24Rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732314AbgERSAk (ORCPT
+        id S1731809AbgERSAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:00:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42188 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:00:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732244AbgERSAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:00:34 -0400
+        id S1732313AbgERSAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:00:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD900207F5;
-        Mon, 18 May 2020 18:00:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B87AF20715;
+        Mon, 18 May 2020 18:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824834;
-        bh=SAfOCFHBexJBzEkBuz8E/9AxJgu9uGJhvz1+5p2MdQM=;
+        s=default; t=1589824839;
+        bh=LJUH6SI1WM2SUCEX/8syheNDQeQu0nGxG/o/Bs3whsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XqzJPjJH3vxr5kGAo3k0uT2FdW17dRWCOXeGlWvU5TKzzu6leTOMuVtDIZA3QuqvQ
-         rIrvE8KFXd57Ze1uEKwD7wfLFrdLfOE10THWI+RhGOBgrz/Pe9gVxQ6P5fM1MNdaGN
-         T19uxAE6HhggUoY5ltxelJij0A9vvYD+4lSswUgA=
+        b=y9guND0wTaEYePROwKTtPjnUmnwgV+9di3Fxlmy1HHMl7GJ7ViE4u+PLPbsR5Wf+g
+         kC48NOJcqAF6P1BzHP6Ee9rf3xVpct7lp2xo4qmdeTGOc49kRAmiOZyJuc3yBN6wIB
+         qQxe8nSIAGHmHGBj89fswfpQn35dvbWpxR5uKu3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 022/194] sun6i: dsi: fix gcc-4.8
-Date:   Mon, 18 May 2020 19:35:12 +0200
-Message-Id: <20200518173533.369441916@linuxfoundation.org>
+Subject: [PATCH 5.6 024/194] net: stmmac: gmac5+: fix potential integer overflow on 32 bit multiply
+Date:   Mon, 18 May 2020 19:35:14 +0200
+Message-Id: <20200518173533.549851591@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -62,44 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 3a3a71f97c30983f1627c2c550d43566e9b634d2 ]
+[ Upstream commit 44d95cc6b10ff7439d45839c96c581cb4368c088 ]
 
-Older compilers warn about initializers with incorrect curly
-braces:
+The multiplication of cfg->ctr[1] by 1000000000 is performed using a
+32 bit multiplication (since cfg->ctr[1] is a u32) and this can lead
+to a potential overflow. Fix this by making the constant a ULL to
+ensure a 64 bit multiply occurs.
 
-drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c: In function 'sun6i_dsi_encoder_enable':
-drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:720:8: error: missing braces around initializer [-Werror=missing-braces]
-  union phy_configure_opts opts = { 0 };
-        ^
-drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:720:8: error: (near initialization for 'opts.mipi_dphy') [-Werror=missing-braces]
-
-Use the GNU empty initializer extension to avoid this.
-
-Fixes: bb3b6fcb6849 ("sun6i: dsi: Convert to generic phy handling")
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200428215105.3928459-1-arnd@arndb.de
+Fixes: 504723af0d85 ("net: stmmac: Add basic EST support for GMAC5+")
+Addresses-Coverity: ("Unintentional integer overflow")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 2 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac5.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index a75fcb1131724..2b6d77ca3dfc2 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -719,7 +719,7 @@ static void sun6i_dsi_encoder_enable(struct drm_encoder *encoder)
- 	struct drm_display_mode *mode = &encoder->crtc->state->adjusted_mode;
- 	struct sun6i_dsi *dsi = encoder_to_sun6i_dsi(encoder);
- 	struct mipi_dsi_device *device = dsi->device;
--	union phy_configure_opts opts = { 0 };
-+	union phy_configure_opts opts = { };
- 	struct phy_configure_opts_mipi_dphy *cfg = &opts.mipi_dphy;
- 	u16 delay;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+index 494c859b4ade8..67ba67ed0cb99 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+@@ -624,7 +624,7 @@ int dwmac5_est_configure(void __iomem *ioaddr, struct stmmac_est *cfg,
+ 		total_offset += offset;
+ 	}
  
+-	total_ctr = cfg->ctr[0] + cfg->ctr[1] * 1000000000;
++	total_ctr = cfg->ctr[0] + cfg->ctr[1] * 1000000000ULL;
+ 	total_ctr += total_offset;
+ 
+ 	ctr_low = do_div(total_ctr, 1000000000);
 -- 
 2.20.1
 
