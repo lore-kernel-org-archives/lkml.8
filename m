@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFAD9207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E0E207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825194;
-	bh=UhPmA86skCTZ0I4hcyBv0aJ4L7RzqQ9W+BIRB10S1Bs=;
+	s=default; t=1589825198;
+	bh=994zIiEycYh7/lg/4+jHuKAIDN+NHXup24O6Vq+jURo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RkSvsvvrDE3zhzsDA+MpYGX1KGePEeKmXV0pNcRPBhR8i+SLKcvS2KkGJS+FhjMez
-	 Y6jKsnxLI3nXt5xaID1R5bEH6HZHzEJuQ+E9ViES49leUDwD5ta5ZN9Mq7hZyvsNUs
-	 wITo8Bi622JwZR47aMvj78/SJAkFkN3g/KSSMY58=
+	b=PYfDi6mtPicJo4sgmrxxt5v4YMztChUBTebJTBi12mFDurrHimU6GJfKtTTlFELaf
+	 ZkARuZvpa5R0c2WA368UqId9TjhaNJL5luCQTbsnlPFMzP2DliB2ir/FymnqHGXGJP
+	 efRo8jUsah6dv1yxp9RIUWi6bYjf7s7D5E1hD7Zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733179AbgERSGe (ORCPT
+        id S1733186AbgERSGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:06:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54306 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:06:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733111AbgERSGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:06:18 -0400
+        id S1733153AbgERSGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:06:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CB4F20715;
-        Mon, 18 May 2020 18:06:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A1A520715;
+        Mon, 18 May 2020 18:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825177;
-        bh=UhPmA86skCTZ0I4hcyBv0aJ4L7RzqQ9W+BIRB10S1Bs=;
+        s=default; t=1589825184;
+        bh=994zIiEycYh7/lg/4+jHuKAIDN+NHXup24O6Vq+jURo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rtTeBza3nHRbvgCPGMa9Ui1hol3LDG4Y4dSPvEFs/6kmdVWY/iHsBco8bReFucHGp
-         o3O9fmT8ks+3mJAY72yWDlDyZfW7bHKIC3RWOIH8qu7V26+rMG+eUe0Em3rAAFk465
-         sERL/KdOxoop1oUG0cE3UUwPQNIrbH7c9qXyLpWE=
+        b=nhWXk1mmS1Qu5HBLqqoTeHZ9vPn+utip6stYXiKhdRTPX5/Cs5RDluNl5QnIp1VEo
+         7Mf2BBRbiz5Sh+Cwb6XCAVT7PFbWIjKmAYMQdAcc1hrskdYm23glJlCmEoqKsVPNhT
+         2lV7oNvrsmOf0ieEpoRuZ2eThABJTTI9FpsjZ/9M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.6 159/194] x86/unwind/orc: Fix error handling in __unwind_start()
-Date:   Mon, 18 May 2020 19:37:29 +0200
-Message-Id: <20200518173544.427788088@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 125/194] net/rds: Use ERR_PTR for rds_message_alloc_sgs()
+Date:   Mon, 18 May 2020 19:36:55 +0200
+Message-Id: <20200518173541.956896644@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,81 +60,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit 71c95825289f585014fe9741b051d32a7a916680 upstream.
+commit 7dba92037baf3fa00b4880a31fd532542264994c upstream.
 
-The unwind_state 'error' field is used to inform the reliable unwinding
-code that the stack trace can't be trusted.  Set this field for all
-errors in __unwind_start().
+Returning the error code via a 'int *ret' when the function returns a
+pointer is very un-kernely and causes gcc 10's static analysis to choke:
 
-Also, move the zeroing out of the unwind_state struct to before the ORC
-table initialization check, to prevent the caller from reading
-uninitialized data if the ORC table is corrupted.
+net/rds/message.c: In function ‘rds_message_map_pages’:
+net/rds/message.c:358:10: warning: ‘ret’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  358 |   return ERR_PTR(ret);
 
-Fixes: af085d9084b4 ("stacktrace/x86: add function for detecting reliable stack traces")
-Fixes: d3a09104018c ("x86/unwinder/orc: Dont bail on stack overflow")
-Fixes: 98d0c8ebf77e ("x86/unwind/orc: Prevent unwinding before ORC initialization")
-Reported-by: Pavel Machek <pavel@denx.de>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/d6ac7215a84ca92b895fdd2e1aa546729417e6e6.1589487277.git.jpoimboe@redhat.com
+Use a typical ERR_PTR return instead.
+
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/unwind_orc.c |   16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ net/rds/message.c |   19 ++++++-------------
+ net/rds/rdma.c    |   12 ++++++++----
+ net/rds/rds.h     |    3 +--
+ net/rds/send.c    |    6 ++++--
+ 4 files changed, 19 insertions(+), 21 deletions(-)
 
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -611,23 +611,23 @@ EXPORT_SYMBOL_GPL(unwind_next_frame);
- void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 		    struct pt_regs *regs, unsigned long *first_frame)
+--- a/net/rds/message.c
++++ b/net/rds/message.c
+@@ -308,26 +308,20 @@ out:
+ /*
+  * RDS ops use this to grab SG entries from the rm's sg pool.
+  */
+-struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents,
+-					  int *ret)
++struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents)
  {
--	if (!orc_init)
--		goto done;
+ 	struct scatterlist *sg_first = (struct scatterlist *) &rm[1];
+ 	struct scatterlist *sg_ret;
+ 
+-	if (WARN_ON(!ret))
+-		return NULL;
 -
- 	memset(state, 0, sizeof(*state));
- 	state->task = task;
+ 	if (nents <= 0) {
+ 		pr_warn("rds: alloc sgs failed! nents <= 0\n");
+-		*ret = -EINVAL;
+-		return NULL;
++		return ERR_PTR(-EINVAL);
+ 	}
  
-+	if (!orc_init)
-+		goto err;
-+
- 	/*
- 	 * Refuse to unwind the stack of a task while it's executing on another
- 	 * CPU.  This check is racy, but that's ok: the unwinder has other
- 	 * checks to prevent it from going off the rails.
- 	 */
- 	if (task_on_another_cpu(task))
--		goto done;
-+		goto err;
+ 	if (rm->m_used_sgs + nents > rm->m_total_sgs) {
+ 		pr_warn("rds: alloc sgs failed! total %d used %d nents %d\n",
+ 			rm->m_total_sgs, rm->m_used_sgs, nents);
+-		*ret = -ENOMEM;
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 	}
  
- 	if (regs) {
- 		if (user_mode(regs))
--			goto done;
-+			goto the_end;
+ 	sg_ret = &sg_first[rm->m_used_sgs];
+@@ -343,7 +337,6 @@ struct rds_message *rds_message_map_page
+ 	unsigned int i;
+ 	int num_sgs = DIV_ROUND_UP(total_len, PAGE_SIZE);
+ 	int extra_bytes = num_sgs * sizeof(struct scatterlist);
+-	int ret;
  
- 		state->ip = regs->ip;
- 		state->sp = regs->sp;
-@@ -660,6 +660,7 @@ void __unwind_start(struct unwind_state
- 		 * generate some kind of backtrace if this happens.
- 		 */
- 		void *next_page = (void *)PAGE_ALIGN((unsigned long)state->sp);
-+		state->error = true;
- 		if (get_stack_info(next_page, state->task, &state->stack_info,
- 				   &state->stack_mask))
- 			return;
-@@ -685,8 +686,9 @@ void __unwind_start(struct unwind_state
+ 	rm = rds_message_alloc(extra_bytes, GFP_NOWAIT);
+ 	if (!rm)
+@@ -352,10 +345,10 @@ struct rds_message *rds_message_map_page
+ 	set_bit(RDS_MSG_PAGEVEC, &rm->m_flags);
+ 	rm->m_inc.i_hdr.h_len = cpu_to_be32(total_len);
+ 	rm->data.op_nents = DIV_ROUND_UP(total_len, PAGE_SIZE);
+-	rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs, &ret);
+-	if (!rm->data.op_sg) {
++	rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs);
++	if (IS_ERR(rm->data.op_sg)) {
+ 		rds_message_put(rm);
+-		return ERR_PTR(ret);
++		return ERR_CAST(rm->data.op_sg);
+ 	}
  
- 	return;
+ 	for (i = 0; i < rm->data.op_nents; ++i) {
+--- a/net/rds/rdma.c
++++ b/net/rds/rdma.c
+@@ -664,9 +664,11 @@ int rds_cmsg_rdma_args(struct rds_sock *
+ 	op->op_odp_mr = NULL;
  
--done:
-+err:
-+	state->error = true;
-+the_end:
- 	state->stack_info.type = STACK_TYPE_UNKNOWN;
--	return;
- }
- EXPORT_SYMBOL_GPL(__unwind_start);
+ 	WARN_ON(!nr_pages);
+-	op->op_sg = rds_message_alloc_sgs(rm, nr_pages, &ret);
+-	if (!op->op_sg)
++	op->op_sg = rds_message_alloc_sgs(rm, nr_pages);
++	if (IS_ERR(op->op_sg)) {
++		ret = PTR_ERR(op->op_sg);
+ 		goto out_pages;
++	}
+ 
+ 	if (op->op_notify || op->op_recverr) {
+ 		/* We allocate an uninitialized notifier here, because
+@@ -905,9 +907,11 @@ int rds_cmsg_atomic(struct rds_sock *rs,
+ 	rm->atomic.op_silent = !!(args->flags & RDS_RDMA_SILENT);
+ 	rm->atomic.op_active = 1;
+ 	rm->atomic.op_recverr = rs->rs_recverr;
+-	rm->atomic.op_sg = rds_message_alloc_sgs(rm, 1, &ret);
+-	if (!rm->atomic.op_sg)
++	rm->atomic.op_sg = rds_message_alloc_sgs(rm, 1);
++	if (IS_ERR(rm->atomic.op_sg)) {
++		ret = PTR_ERR(rm->atomic.op_sg);
+ 		goto err;
++	}
+ 
+ 	/* verify 8 byte-aligned */
+ 	if (args->local_addr & 0x7) {
+--- a/net/rds/rds.h
++++ b/net/rds/rds.h
+@@ -852,8 +852,7 @@ rds_conn_connecting(struct rds_connectio
+ 
+ /* message.c */
+ struct rds_message *rds_message_alloc(unsigned int nents, gfp_t gfp);
+-struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents,
+-					  int *ret);
++struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents);
+ int rds_message_copy_from_user(struct rds_message *rm, struct iov_iter *from,
+ 			       bool zcopy);
+ struct rds_message *rds_message_map_pages(unsigned long *page_addrs, unsigned int total_len);
+--- a/net/rds/send.c
++++ b/net/rds/send.c
+@@ -1274,9 +1274,11 @@ int rds_sendmsg(struct socket *sock, str
+ 
+ 	/* Attach data to the rm */
+ 	if (payload_len) {
+-		rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs, &ret);
+-		if (!rm->data.op_sg)
++		rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs);
++		if (IS_ERR(rm->data.op_sg)) {
++			ret = PTR_ERR(rm->data.op_sg);
+ 			goto out;
++		}
+ 		ret = rds_message_copy_from_user(rm, &msg->msg_iter, zcopy);
+ 		if (ret)
+ 			goto out;
 
 
