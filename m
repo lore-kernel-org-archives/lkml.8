@@ -2,55 +2,57 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 674D0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB6DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39957207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0E8207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824265;
-	bh=5QqJiQ40v8Ooe7yKSlu2SDUc4FBYOAphE52G5rzRf/U=;
+	s=default; t=1589824266;
+	bh=l42xB4oGlhaeR8PUztWRNqvqP554Gac2q5JPYzz4pVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ie1sLX6MRes7XiImdR6t+/eD3cyin9ETeDuVou5kOzv8QZVl+hEF+U0HshmjxfHir
-	 kw204XCJlRNTZxxjmOklYcJonVtul+zLVKxsjKuyEo32evMmH+qtXzj6Xp5+x/mJga
-	 ir7PTk3KCuGLo2fy+muyi91jYUQeJQZ2hheyTAfQ=
+	b=Lu4uHn04ViYFnT7wH19hEyW9eu6/o27I48BZJERbShLvuiN6h5p9iuO+AVFMbSeNT
+	 yZ5xhMfzHxQCFpo/STjOGFA1cVrOy8CJx8BfnPWUHBovoNswo6/xqQ32YAgdDsTexW
+	 5ma1TRdAi+7DavU4RL1EJzwNXqdfC0h2CO229ISQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730803AbgERRvE (ORCPT
+        id S1730813AbgERRvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:51:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53434 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730750AbgERRvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:51:00 -0400
+        id S1730768AbgERRu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:50:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79AAD20674;
-        Mon, 18 May 2020 17:50:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07342207C4;
+        Mon, 18 May 2020 17:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824259;
-        bh=5QqJiQ40v8Ooe7yKSlu2SDUc4FBYOAphE52G5rzRf/U=;
+        s=default; t=1589824257;
+        bh=l42xB4oGlhaeR8PUztWRNqvqP554Gac2q5JPYzz4pVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0BxU02qp07qKaeyVXDEK6UchxZhKqM94vPi1Zt1rbyHbZoW6H+JdCYVjIxl0TWEPw
-         FnZeQBJnPxlIVjTlzrsx21qGK7KTEQkO9y4isOGaJfNOo+F2OkefNdrN6upYkZY4LE
-         tytq1qFagrRkqYOj7kExQMDHvaMUhrAIWbp41Oso=
+        b=fsBpyGhMySQNvDGMZ2INmTu1rNIPRTxwCAyV2Yzq8P/rVBTWPCgh6hCLEWqeoh6e9
+         uRrIDch3E1Vuu8N/S99fVpTI1jqAMIBRk+ITX6xNfk5Ye4igiNGpgP+wauFRc1cT8G
+         MA9A3PAjClctQoTn+j/YPEPmzU/GUI8AT5XNzAgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Iris Liu <iris@onechronos.com>,
-        Kelly Littlepage <kelly@onechronos.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 4.19 20/80] net: tcp: fix rx timestamp behavior for tcp_recvmsg
-Date:   Mon, 18 May 2020 19:36:38 +0200
-Message-Id: <20200518173454.450998092@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com,
+        syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 02/80] shmem: fix possible deadlocks on shmlock_user_lock
+Date:   Mon, 18 May 2020 19:36:20 +0200
+Message-Id: <20200518173450.633393924@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -63,52 +65,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kelly Littlepage <kelly@onechronos.com>
+From: Hugh Dickins <hughd@google.com>
 
-[ Upstream commit cc4de047b33be247f9c8150d3e496743a49642b8 ]
+[ Upstream commit ea0dfeb4209b4eab954d6e00ed136bc6b48b380d ]
 
-The stated intent of the original commit is to is to "return the timestamp
-corresponding to the highest sequence number data returned." The current
-implementation returns the timestamp for the last byte of the last fully
-read skb, which is not necessarily the last byte in the recv buffer. This
-patch converts behavior to the original definition, and to the behavior of
-the previous draft versions of commit 98aaa913b4ed ("tcp: Extend
-SOF_TIMESTAMPING_RX_SOFTWARE to TCP recvmsg") which also match this
-behavior.
+Recent commit 71725ed10c40 ("mm: huge tmpfs: try to split_huge_page()
+when punching hole") has allowed syzkaller to probe deeper, uncovering a
+long-standing lockdep issue between the irq-unsafe shmlock_user_lock,
+the irq-safe xa_lock on mapping->i_pages, and shmem inode's info->lock
+which nests inside xa_lock (or tree_lock) since 4.8's shmem_uncharge().
 
-Fixes: 98aaa913b4ed ("tcp: Extend SOF_TIMESTAMPING_RX_SOFTWARE to TCP recvmsg")
-Co-developed-by: Iris Liu <iris@onechronos.com>
-Signed-off-by: Iris Liu <iris@onechronos.com>
-Signed-off-by: Kelly Littlepage <kelly@onechronos.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+user_shm_lock(), servicing SysV shmctl(SHM_LOCK), wants
+shmlock_user_lock while its caller shmem_lock() holds info->lock with
+interrupts disabled; but hugetlbfs_file_setup() calls user_shm_lock()
+with interrupts enabled, and might be interrupted by a writeback endio
+wanting xa_lock on i_pages.
+
+This may not risk an actual deadlock, since shmem inodes do not take
+part in writeback accounting, but there are several easy ways to avoid
+it.
+
+Requiring interrupts disabled for shmlock_user_lock would be easy, but
+it's a high-level global lock for which that seems inappropriate.
+Instead, recall that the use of info->lock to guard info->flags in
+shmem_lock() dates from pre-3.1 days, when races with SHMEM_PAGEIN and
+SHMEM_TRUNCATE could occur: nowadays it serves no purpose, the only flag
+added or removed is VM_LOCKED itself, and calls to shmem_lock() an inode
+are already serialized by the caller.
+
+Take info->lock out of the chain and the possibility of deadlock or
+lockdep warning goes away.
+
+Fixes: 4595ef88d136 ("shmem: make shmem_inode_info::lock irq-safe")
+Reported-by: syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com
+Reported-by: syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2004161707410.16322@eggly.anvils
+Link: https://lore.kernel.org/lkml/000000000000e5838c05a3152f53@google.com/
+Link: https://lore.kernel.org/lkml/0000000000003712b305a331d3b1@google.com/
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ mm/shmem.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2135,14 +2135,16 @@ skip_copy:
- 			tp->urg_data = 0;
- 			tcp_fast_path_check(sk);
- 		}
--		if (used + offset < skb->len)
--			continue;
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 0a2e1e7801d68..dea5120565d30 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2149,7 +2149,11 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
+ 	struct shmem_inode_info *info = SHMEM_I(inode);
+ 	int retval = -ENOMEM;
  
- 		if (TCP_SKB_CB(skb)->has_rxtstamp) {
- 			tcp_update_recv_tstamps(skb, &tss);
- 			has_tss = true;
- 			has_cmsg = true;
- 		}
-+
-+		if (used + offset < skb->len)
-+			continue;
-+
- 		if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN)
- 			goto found_fin_ok;
- 		if (!(flags & MSG_PEEK))
+-	spin_lock_irq(&info->lock);
++	/*
++	 * What serializes the accesses to info->flags?
++	 * ipc_lock_object() when called from shmctl_do_lock(),
++	 * no serialization needed when called from shm_destroy().
++	 */
+ 	if (lock && !(info->flags & VM_LOCKED)) {
+ 		if (!user_shm_lock(inode->i_size, user))
+ 			goto out_nomem;
+@@ -2164,7 +2168,6 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
+ 	retval = 0;
+ 
+ out_nomem:
+-	spin_unlock_irq(&info->lock);
+ 	return retval;
+ }
+ 
+-- 
+2.20.1
+
 
 
