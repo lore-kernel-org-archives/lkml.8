@@ -4,59 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D83C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F853C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7451207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B29A20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826554;
-	bh=qDmmf1H14DQGq38TlSbF7UeqBoaq2BFhXg9rvJ9XgF8=;
+	s=default; t=1589826563;
+	bh=f56+l4dwkKcFTQ+uEGhzoT9VkfwA/0IyYfCcohnFL9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pPDduCBaeNi2+Py0TjapLA0t+c7TbUTHEHybls33mSgQcQJAU4pRt766EMHFq/JDO
-	 G2oECJQr4FsKACwjDFJTf+vHR0rdS8ZFkgAJ3JEu2VWUBoTbo4D+N9UddM1JSLYGPA
-	 F4ZnMNRUyojPkE4KHQfnxr1YkKteX4dB8l3+JGpY=
+	b=mAQ0k73C1HgKdT/kqQAYAvl7TSAN5kOWv1oL9TRFOp6YyU2Zxlg2dwQFBb8+BGC07
+	 5Y0//rsTmW6Kbt9Bd3lamLgCCC8yy+n5Ut/ejBEUQMr1Vf4aLeUQASnfRtRbhKBW9V
+	 rQgomJ9b4VTQKQXHyxX6NoZNWDtT8hfOXRXvKp10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbgERS3O (ORCPT
+        id S1731258AbgERS3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:29:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39068 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:29:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729389AbgERRmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:42:12 -0400
+        id S1729345AbgERRlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:41:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4880C207C4;
-        Mon, 18 May 2020 17:42:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C115620829;
+        Mon, 18 May 2020 17:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823731;
-        bh=qDmmf1H14DQGq38TlSbF7UeqBoaq2BFhXg9rvJ9XgF8=;
+        s=default; t=1589823712;
+        bh=f56+l4dwkKcFTQ+uEGhzoT9VkfwA/0IyYfCcohnFL9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0fK8xP5eW+LHUZJCNnvBiJZmw/oeaBuzZetbWwEPMsoEWvnrnvV7OBb4GGb6U5Hko
-         tp2f5Yhde72eChXDyEPTn5CXEfObaLFrF38gZVQQJR9iC2NQgAEwEleLlTI+3F9vpy
-         PMqy7cEI6Eu+K6ajdrjfhhraNkxfTrjySjEF5/xs=
+        b=yvn8AhpWVGvssqSzIuZFfjRfBr0pmkKHRTIZyGX/FkfPOfSPKvT8iWvcj6VGcZox2
+         QBaQAcROn5krEuLkZj11ZldeJc4MNqMnyAu77ywkH6S98YSJzMX+ycnu2zsNOQ3ber
+         4pBMJrQPw+9t+JbUHP3kQ18GJqTScwK70Bdu3q2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Ali Saidi <alisaidi@amazon.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 14/90] binfmt_elf: move brk out of mmap when doing direct loader exec
-Date:   Mon, 18 May 2020 19:35:52 +0200
-Message-Id: <20200518173454.108423305@linuxfoundation.org>
+Subject: [PATCH 4.4 58/86] Stop the ad-hoc games with -Wno-maybe-initialized
+Date:   Mon, 18 May 2020 19:36:29 +0200
+Message-Id: <20200518173502.183017530@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
-References: <20200518173450.930655662@linuxfoundation.org>
+In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
+References: <20200518173450.254571947@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,105 +59,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit bbdc6076d2e5d07db44e74c11b01a3e27ab90b32 upstream.
+commit 78a5255ffb6a1af189a83e493d916ba1c54d8c75 upstream.
 
-Commmit eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE"),
-made changes in the rare case when the ELF loader was directly invoked
-(e.g to set a non-inheritable LD_LIBRARY_PATH, testing new versions of
-the loader), by moving into the mmap region to avoid both ET_EXEC and
-PIE binaries.  This had the effect of also moving the brk region into
-mmap, which could lead to the stack and brk being arbitrarily close to
-each other.  An unlucky process wouldn't get its requested stack size
-and stack allocations could end up scribbling on the heap.
+We have some rather random rules about when we accept the
+"maybe-initialized" warnings, and when we don't.
 
-This is illustrated here.  In the case of using the loader directly, brk
-(so helpfully identified as "[heap]") is allocated with the _loader_ not
-the binary.  For example, with ASLR entirely disabled, you can see this
-more clearly:
+For example, we consider it unreliable for gcc versions < 4.9, but also
+if -O3 is enabled, or if optimizing for size.  And then various kernel
+config options disabled it, because they know that they trigger that
+warning by confusing gcc sufficiently (ie PROFILE_ALL_BRANCHES).
 
-$ /bin/cat /proc/self/maps
-555555554000-55555555c000 r-xp 00000000 ... /bin/cat
-55555575b000-55555575c000 r--p 00007000 ... /bin/cat
-55555575c000-55555575d000 rw-p 00008000 ... /bin/cat
-55555575d000-55555577e000 rw-p 00000000 ... [heap]
-...
-7ffff7ff7000-7ffff7ffa000 r--p 00000000 ... [vvar]
-7ffff7ffa000-7ffff7ffc000 r-xp 00000000 ... [vdso]
-7ffff7ffc000-7ffff7ffd000 r--p 00027000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7ffd000-7ffff7ffe000 rw-p 00028000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7ffe000-7ffff7fff000 rw-p 00000000 ...
-7ffffffde000-7ffffffff000 rw-p 00000000 ... [stack]
+And now gcc-10 seems to be introducing a lot of those warnings too, so
+it falls under the same heading as 4.9 did.
 
-$ /lib/x86_64-linux-gnu/ld-2.27.so /bin/cat /proc/self/maps
-...
-7ffff7bcc000-7ffff7bd4000 r-xp 00000000 ... /bin/cat
-7ffff7bd4000-7ffff7dd3000 ---p 00008000 ... /bin/cat
-7ffff7dd3000-7ffff7dd4000 r--p 00007000 ... /bin/cat
-7ffff7dd4000-7ffff7dd5000 rw-p 00008000 ... /bin/cat
-7ffff7dd5000-7ffff7dfc000 r-xp 00000000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7fb2000-7ffff7fd6000 rw-p 00000000 ...
-7ffff7ff7000-7ffff7ffa000 r--p 00000000 ... [vvar]
-7ffff7ffa000-7ffff7ffc000 r-xp 00000000 ... [vdso]
-7ffff7ffc000-7ffff7ffd000 r--p 00027000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7ffd000-7ffff7ffe000 rw-p 00028000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7ffe000-7ffff8020000 rw-p 00000000 ... [heap]
-7ffffffde000-7ffffffff000 rw-p 00000000 ... [stack]
+At the same time, we have a very straightforward way to _enable_ that
+warning when wanted: use "W=2" to enable more warnings.
 
-The solution is to move brk out of mmap and into ELF_ET_DYN_BASE since
-nothing is there in the direct loader case (and ET_EXEC is still far
-away at 0x400000).  Anything that ran before should still work (i.e.
-the ultimately-launched binary already had the brk very far from its
-text, so this should be no different from a COMPAT_BRK standpoint).  The
-only risk I see here is that if someone started to suddenly depend on
-the entire memory space lower than the mmap region being available when
-launching binaries via a direct loader execs which seems highly
-unlikely, I'd hope: this would mean a binary would _not_ work when
-exec()ed normally.
+So stop playing these ad-hoc games, and just disable that warning by
+default, with the known and straight-forward "if you want to work on the
+extra compiler warnings, use W=123".
 
-(Note that this is only done under CONFIG_ARCH_HAS_ELF_RANDOMIZATION
-when randomization is turned on.)
+Would it be great to have code that is always so obvious that it never
+confuses the compiler whether a variable is used initialized or not?
+Yes, it would.  In a perfect world, the compilers would be smarter, and
+our source code would be simpler.
 
-Link: http://lkml.kernel.org/r/20190422225727.GA21011@beast
-Link: https://lkml.kernel.org/r/CAGXu5jJ5sj3emOT2QPxQkNQk0qbU6zEfu9=Omfhx_p0nCKPSjA@mail.gmail.com
-Fixes: eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reported-by: Ali Saidi <alisaidi@amazon.com>
-Cc: Ali Saidi <alisaidi@amazon.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jann Horn <jannh@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+That's currently not the world we live in, though.
+
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/binfmt_elf.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ Makefile             |    7 +++----
+ init/Kconfig         |   17 -----------------
+ kernel/trace/Kconfig |    1 -
+ 3 files changed, 3 insertions(+), 22 deletions(-)
 
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1100,6 +1100,17 @@ static int load_elf_binary(struct linux_
- 	current->mm->start_stack = bprm->p;
+--- a/Makefile
++++ b/Makefile
+@@ -648,10 +648,6 @@ KBUILD_CFLAGS   += -O2
+ endif
+ endif
  
- 	if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
-+		/*
-+		 * For architectures with ELF randomization, when executing
-+		 * a loader directly (i.e. no interpreter listed in ELF
-+		 * headers), move the brk area out of the mmap region
-+		 * (since it grows up, and may collide early with the stack
-+		 * growing down), and into the unused ELF_ET_DYN_BASE region.
-+		 */
-+		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) && !interpreter)
-+			current->mm->brk = current->mm->start_brk =
-+				ELF_ET_DYN_BASE;
+-ifdef CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED
+-KBUILD_CFLAGS   += -Wno-maybe-uninitialized
+-endif
+-
+ # Tell gcc to never replace conditional load with a non-conditional one
+ KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
+ 
+@@ -799,6 +795,9 @@ KBUILD_CFLAGS += $(call cc-disable-warni
+ # disable stringop warnings in gcc 8+
+ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+ 
++# Enabled with W=2, disabled by default as noisy
++KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
 +
- 		current->mm->brk = current->mm->start_brk =
- 			arch_randomize_brk(current->mm);
- #ifdef compat_brk_randomized
+ # disable invalid "can't wrap" optimizations for signed / pointers
+ KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
+ 
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -16,22 +16,6 @@ config DEFCONFIG_LIST
+ 	default "$ARCH_DEFCONFIG"
+ 	default "arch/$ARCH/defconfig"
+ 
+-config CC_HAS_WARN_MAYBE_UNINITIALIZED
+-	def_bool $(cc-option,-Wmaybe-uninitialized)
+-	help
+-	  GCC >= 4.7 supports this option.
+-
+-config CC_DISABLE_WARN_MAYBE_UNINITIALIZED
+-	bool
+-	depends on CC_HAS_WARN_MAYBE_UNINITIALIZED
+-	default CC_IS_GCC && GCC_VERSION < 40900  # unreliable for GCC < 4.9
+-	help
+-	  GCC's -Wmaybe-uninitialized is not reliable by definition.
+-	  Lots of false positive warnings are produced in some cases.
+-
+-	  If this option is enabled, -Wno-maybe-uninitialzed is passed
+-	  to the compiler to suppress maybe-uninitialized warnings.
+-
+ config CONSTRUCTORS
+ 	bool
+ 	depends on !UML
+@@ -1347,7 +1331,6 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
+ 
+ config CC_OPTIMIZE_FOR_SIZE
+ 	bool "Optimize for size"
+-	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ 	help
+ 	  Enabling this option will pass "-Os" instead of "-O2" to
+ 	  your compiler resulting in a smaller kernel.
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -312,7 +312,6 @@ config PROFILE_ANNOTATED_BRANCHES
+ config PROFILE_ALL_BRANCHES
+ 	bool "Profile all if conditionals"
+ 	select TRACE_BRANCH_PROFILING
+-	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ 	help
+ 	  This tracer profiles all branch conditions. Every if ()
+ 	  taken in the kernel is recorded whether it hit or miss.
 
 
