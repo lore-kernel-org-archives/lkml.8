@@ -2,106 +2,106 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B607C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82A5220709
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:35:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589801727;
-	bh=kIOjQClZFCknpL+ktt4kcO2VZmVtnmBE/zjeAxsdKIw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AxRKBEHo8ixqXStrlrDNcDjVaEdrgc5rJtj9wlU8yPjl0Lr2YnuicA7GvSLV9u1Q4
-	 pIt2hlfTwTGPGOIAf2pq0cW1x/ABP1idl4GlCyd4nIHMGIjXedYiFJ6RbARNMtjTAG
-	 QXR3/pNO7MEPss2Sjb8O/SAEyAd/oYdBmOwxOL9o=
+	by mail.kernel.org (Postfix) with ESMTP id EE7ED20756
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgERLf0 (ORCPT
+        id S1726800AbgERLhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:35:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbgERLfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:35:25 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82724206D4;
-        Mon, 18 May 2020 11:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589801724;
-        bh=kIOjQClZFCknpL+ktt4kcO2VZmVtnmBE/zjeAxsdKIw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qGkeY+bYTNbcRrGFooii/MMllRd+TSAyPQ7Hq4G+y8xqNAs3sJFfoAeUOCjDZ10IO
-         W/dKF/zFbiOI3lkIs6/mkmmF2mlTEctqKbUkIpNIK9Xa9dQZnmeiwG0IvryuQ7zgKp
-         4KCO8Gja6cG1/Uj19FTPxeP9rywlEPudXRJldGlg=
-Received: by pali.im (Postfix)
-        id 7AAE389D; Mon, 18 May 2020 13:35:22 +0200 (CEST)
-Date:   Mon, 18 May 2020 13:35:22 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: Missing CLOCK_BOOTTIME_RAW?
-Message-ID: <20200518113522.y6sj7ypunsu6pi3s@pali>
-References: <20200508213122.f7srcd2gnduamtvs@pali>
- <87zhah4evs.fsf@nanos.tec.linutronix.de>
- <20200518111103.sj73h5j3r75zv2wp@pali>
- <87ftbxxz55.fsf@nanos.tec.linutronix.de>
+        Mon, 18 May 2020 07:37:12 -0400
+Received: from mailgate1.rohmeurope.com ([87.129.152.131]:46884 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgERLhL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:37:11 -0400
+X-AuditID: c0a8fbf4-489ff70000004419-01-5ec273653295
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id C2.09.17433.56372CE5; Mon, 18 May 2020 13:37:10 +0200 (CEST)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0487.000; Mon, 18 May 2020 13:36:57 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "linux@roeck-us.net" <linux@roeck-us.net>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [not urgent] ROHM PMIC/Charger IC driver maintenance.
+Thread-Topic: [not urgent] ROHM PMIC/Charger IC driver maintenance.
+Thread-Index: AQHWLOdQMdOSpxREeE+Cws0ySbgdVKitgt4AgAATFoA=
+Date:   Mon, 18 May 2020 11:36:56 +0000
+Message-ID: <b08e5796b3d94b1add13e706f7acdc34c3a79e49.camel@fi.rohmeurope.com>
+References: <18838efd9341c953fb6aabe9536786de3f1150ae.camel@fi.rohmeurope.com>
+         <20200518102842.GB8699@sirena.org.uk>
+In-Reply-To: <20200518102842.GB8699@sirena.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.78.225.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DB3A4F354C80124FBEE95FAFF2F15820@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87ftbxxz55.fsf@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20180716
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDJsWRmVeSWpSXmKPExsVyYMXvjbppxYfiDKb0MlosuXiV3aL93TJ2
+        iy9zT7FYTH34hM3i/tejjBbfrnQwWUz5s5zJ4vKuOWwWTxaeYbKYs/QEi8XFU64WrXuPsFv8
+        u7aRxeL07hKLxy//MTvwe7y/0cruMW9NtcfOWXfZPTat6mTzuHNtD5vHyjVrWD12fm9g95g+
+        7yeTx+dNcgGcUdw2SYklZcGZ6Xn6dgncGUdn3WcvaOKvuNdziqmB8QJfFyMnh4SAicS2Z43M
+        XYxcHEIC1xglTt7eyg7hnGCUWPNzClMXIwcHm4CNRNdNdpAGEQFdiam/FrOB1DALXGCVOLul
+        HSwhLOAkceLOWWaIImeJ3+fegPWKCFhJzHtcARJmEVCVWPfwHVg5r4CfxJeTfxlBbCGBcokz
+        +/aBxTkFjCQeTrwANoZRQFais+EdE4jNLCAusenZd1aIowUkluw5zwxhi0q8fPwPKq4osf37
+        OhaQtcwCmhLrd+lDtDpI3Jn5gA3CVpSY0v0Q6gRBiZMzn7BMYBSbhWTDLITuWUi6ZyHpnoWk
+        ewEj6ypGidzEzJz0xJJUQ72i1FK9ovyMXCCVnJ+7iRGSGr7sYPx/yPMQIxMH4yFGSQ4mJVHe
+        Xv9DcUJ8SfkplRmJxRnxRaU5qcWHGCU4mJVEeCM/74sT4k1JrKxKLcqHSUlzsCiJ86o/nBgr
+        JACyKzs1tSC1CCYrw8GhJMHbWwA0VLAoNT21Ii0zpwQhzcTBCTKcS0qkODUvJbUosbQkIx6U
+        POKLgekDJMUDtDexEKidt7ggMRcoCtF6ilGbY8LLuYuYOY7MXbqIWYglLz8vVUqct6MIqFQA
+        pDSjNA9u0StGcQ5GJWHeDSCDeIBZAm7OK6AVTEArXC+CvFZckoiQkmpgjL6ZvvXyu8xjPyof
+        dgkHfN7ZsXd/oMyWtjczH8cbrdaxYuWsaT7HkRatLSTx9sotsbyjb/qUD5bO3PSAPUfYqiXu
+        QuRMDcu9cfsu3iyV4jZOPt7oozRDrWxz/I7UrqV3j34J9lsj8WJq5HwGvVl/PrwNldQL8pLZ
+        oWJ9LXursZJui83CXUZqSizFGYmGWsxFxYkASQaGbs8DAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 18 May 2020 13:26:14 Thomas Gleixner wrote:
-> Pali Rohár <pali@kernel.org> writes:
-> > On Saturday 09 May 2020 11:49:27 Thomas Gleixner wrote:
-> >> Sure, but what's the problem? The adjustemt is done to make the observed
-> >> time as correct as possible.
-> >
-> > Yes. But correction may take lot of time, e.g. also more then one day.
-> >
-> > So during this period when correction is in progress, measuring time
-> > difference via CLOCK_MONITONIC will have incorrect results.
-> >
-> > It already happened for me, system clock was shifted by one hour and
-> > chronyd started adjustment, it slow down system clock. 6 real hours
-> > passed and via system clock was measured time difference only about
-> > 5 hours and 20 minutes (correction was still in progress as system
-> > clock at that time was still shifted by about 20 minutes).
-> 
-> System clock shifted by one hour? You mean DST change?
-
-Yes, clock was shifted by one hour.
-
-> If chronyd
-> adjusts that by smoothing the frequency, that's just broken and really
-> not the kernel's problem.
-
-And what other can time synchronization daemon does?
-
-Well, I think this is not related to chronyd. Any userspace application
-may call adjtime(). It is not privilege that only chronyd is allowed to
-use that syscall.
-
-I agree that this is not a kernel problem.
-
-But I'm asking, how my userspace application can measure time difference?
-As I wrote CLOCK_MONITONIC is not suitable as it is affected by those
-NTP adjustments and that is why I thought that CLOCK_MONITONIC_RAW is
-better as it is not affected by these NTP problems.
-
-But CLOCK_MONITONIC_RAW has a problem that is stopped during system
-sleep and that is why I thought that CLOCK_BOOTTIME_RAW should be there.
-
-> Thanks,
-> 
->         tglx
+VGhhbmtzIGZvciByZXBseSBNYXJrLA0KDQpPbiBNb24sIDIwMjAtMDUtMTggYXQgMTE6MjggKzAx
+MDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+IE9uIE1vbiwgTWF5IDE4LCAyMDIwIGF0IDA3OjM4OjI1
+QU0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0dGkgd3JvdGU6DQo+IA0KPiA+IFdoYXQga2luZCBvZiBw
+YXJ0aWNpcGF0aW9uIHdvdWxkIHlvdSBleHBlY3QvYXBwcmVjaWF0ZSBmcm9tIG1lIGlmIEkNCj4g
+PiBhZGRlZCBteXNlbGYgaW4gTUFJTlRBSU5FUlMgZm9yIHRoZXNlIGRyaXZlcnMgSSBhdXRob3Jl
+ZD8gQW55DQo+IA0KPiBNYWlubHkganVzdCByZXZpZXdpbmcgcGF0Y2hlcy4NCg0KSSBjYW4gZG8g
+dGhhdCA6KQ0KDQo+IA0KPiA+IG9iamVjdGlvbnMgdG8gdGhhdD8gKEkgZG9uJ3QgcmVhbGx5IGtu
+b3cgaG93IE1BSU5UQUlORVJzIGVudHJpZXMNCj4gPiBzaG91bGQNCj4gPiBiZSBhZGRlZCAtIGFu
+ZCBJIGRpZG4ndCBbZWFzaWx5XSBmaW5kIHVwLXRvLWRhdGUgZXhwbGFuYXRpb24gdG8NCj4gPiB0
+aGF0KS4NCj4gDQo+IFNlbmQgYSBwYXRjaCwgb2Z0ZW4gYWxvbmcgd2l0aCBvdGhlciBzdHVmZiB0
+aGF0J3MgZ29pbmcgb24uICBJJ2QNCj4gZ3Vlc3MNCj4gTUZEIHdvdWxkIGJlIGFzIGdvb2QgYSB0
+cmVlIGFzIGFueSBmb3IgaXQgdG8gZ28gdmlhLg0KDQpBaCwgeWVzIDpdIEkgd2FzIGd1ZXNzaW5n
+IHRoaXMgaXMgdGhlIHRlY2huaWNhbCB3YXkgb2YgYWRkaW5nIHRoZQ0KZW50cnkuIEkgd2FzIG1v
+cmUgd29uZGVyaW5nIHdoYXQgaXMgZXhwZWN0ZWQgZnJvbSBtYWludGFpbmVyICh5b3UNCmFuc3dl
+cmVkIHRoYXQgYWJvdmUpIGFuZCB3aGV0aGVyIHRoZXJlIGlzIHNvbWUgY3JpdGVyaWEgYXMgdG8g
+d2hvIGNhbg0KYmUgYSBtYWludGFpbmVyLg0KDQpXaGlsZSB3ZSBhcmUgYXQgaXQgLSBNYXJrLCB3
+b3VsZCB5b3UgY29uc2lkZXIgZm9sbG93aW5nIHRvIGJlIGZ1bGx5DQppbmFwcHJvcHJpYXRlOg0K
+DQpMSU5FQVIgUkFOR0VTIEhFTFBFUlMNCk06ICAgICAgTWFyayBCcm93biA8YnJvb25pZUBrZXJu
+ZWwub3JnPg0KUjogICAgICBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2ht
+ZXVyb3BlLmNvbT4NCkY6ICAgICAgbGliL2xpbmVhcl9yYW5nZXMuYw0KRjogICAgICBsaWIvdGVz
+dF9saW5lYXJfcmFuZ2VzLmMNCkY6ICAgICAgaW5jbHVkZS9saW51eC9saW5lYXJfcmFuZ2UuaA0K
+DQpJIHRoaW5rIHRoYXQgcmVndWxhdG9ycyBiZWluZyB0aGUgbWFpbiB1c2VyIGZvciBsaW5lYXJf
+cmFuZ2VzIHRoZQ0KY2hhbmdlcyB0aGVyZSBzaG91bGQgZ28gaW4gdmlhIHlvdXIgdHJlZSAtIGFu
+ZCB5b3Ugc2hvdWxkIHByb2JhYmx5IGJlDQp3YXRjaGluZyBvdmVyIHRoZW0gYW55d2F5cyA6KQ0K
+DQpCZXN0IFJlZ2FyZHMNCglNYXR0aSBWYWl0dGluZW4NCg==
