@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1186DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1949207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBDD20809
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589801524;
-	bh=W0M3+xyBaxTwy0zGdlE42RieIIyYlAiumGMejijFZ2I=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=oUDKQQ+LvANjmnXtuQnOQEQVUm7Fl3gLVQMRZjqkITtfTxJwWPLDfLunVYPFnV0bH
-	 QH0wR/w87l+uxt3hIu4EW/KnlkkbhmeCNybKZ93otrLn3uWMKymBogaycHpPrgSGGW
-	 cSlb1hCQm4lsYP+Hy6DUAveUvdOvOyQ/Z0DOi2fo=
+	s=default; t=1589801529;
+	bh=/Pkmjq+5ukSwok7Q7uIT9FHmblCVRx0IEIFAGu4D80g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FIPU+bDjV2SYt6bsxP5+3H2fWsFVOsEYFMNHiiupw5okmfvDzYxkil2dWnGgg70m9
+	 k0RGth9eUI+zIJ7pR+H0IaY3QzlFbZ5Ms21eqaPmYjYPYDvuHgW8B28/ip220oeQZA
+	 7ZxiXXLQ3rosK3ZtMn6ouzK3mJl9bcgJ8EJAtTvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgERLcE (ORCPT
+        id S1727109AbgERLcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:32:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60146 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 07:32:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbgERLcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:32:04 -0400
+        id S1726585AbgERLcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:32:07 -0400
 Received: from ziggy.de (unknown [213.195.113.243])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9936A20756;
-        Mon, 18 May 2020 11:32:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0888D20758;
+        Mon, 18 May 2020 11:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589801523;
-        bh=W0M3+xyBaxTwy0zGdlE42RieIIyYlAiumGMejijFZ2I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TynRGxKUPnxFsPmEYL3HOL/z2OfQVadUTlvUnVKJ8E56OBT2YuMv1hOBp473Q0k7a
-         J1QOKpN/69wMSHM2YE+db2r4LnL6LA25krgG079T5vpB5iIMmI5KPzhxB+E82c78a0
-         PL/7RlGRJWspBIzeAQf5Sc3W5X5ofFXsFHdhOPhU=
+        s=default; t=1589801527;
+        bh=/Pkmjq+5ukSwok7Q7uIT9FHmblCVRx0IEIFAGu4D80g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UxUdicTOkvSNLnspCrQwKP/zaWN6QVAsPpDWThaRKjTlbE4xFDWrKeWCZaCLPf9ZQ
+         t4tG9qHyone9m+no43gSy/hOJd0TTRUZwiPgU8GbOJDOtzI4XvK2r9HDGFtL6p/j65
+         03fLDStbvepbgx3WahXjkGsoCP5iM0H/uUjW5YHg=
 From:   matthias.bgg@kernel.org
 To:     Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -50,11 +50,14 @@ Cc:     mtk01761 <wendell.lin@mediatek.com>, devicetree@vger.kernel.org,
         linux-mediatek@lists.infradead.org,
         Kate Stewart <kstewart@linuxfoundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 1/4] clk/soc: mediatek: mt8183: Bind clock driver from platform device
-Date:   Mon, 18 May 2020 13:31:53 +0200
-Message-Id: <20200518113156.25009-1-matthias.bgg@kernel.org>
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Richard Fontana <rfontana@redhat.com>
+Subject: [PATCH 2/4] clk/soc: mediatek: mt6797: Bind clock driver from platform device
+Date:   Mon, 18 May 2020 13:31:54 +0200
+Message-Id: <20200518113156.25009-2-matthias.bgg@kernel.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518113156.25009-1-matthias.bgg@kernel.org>
+References: <20200518113156.25009-1-matthias.bgg@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,68 +75,67 @@ therefor will errror out for now.
 Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
 
- drivers/clk/mediatek/clk-mt8183-mm.c | 9 ++-------
+ drivers/clk/mediatek/clk-mt6797-mm.c | 9 ++-------
  drivers/soc/mediatek/mtk-mmsys.c     | 8 ++++++++
  2 files changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/mediatek/clk-mt8183-mm.c b/drivers/clk/mediatek/clk-mt8183-mm.c
-index 720c696b506d..9d60e09619c1 100644
---- a/drivers/clk/mediatek/clk-mt8183-mm.c
-+++ b/drivers/clk/mediatek/clk-mt8183-mm.c
-@@ -84,8 +84,9 @@ static const struct mtk_gate mm_clks[] = {
+diff --git a/drivers/clk/mediatek/clk-mt6797-mm.c b/drivers/clk/mediatek/clk-mt6797-mm.c
+index 8f05653b387d..01fdce287247 100644
+--- a/drivers/clk/mediatek/clk-mt6797-mm.c
++++ b/drivers/clk/mediatek/clk-mt6797-mm.c
+@@ -92,16 +92,12 @@ static const struct mtk_gate mm_clks[] = {
+ 		 "clk26m", 3),
+ };
  
- static int clk_mt8183_mm_probe(struct platform_device *pdev)
+-static const struct of_device_id of_match_clk_mt6797_mm[] = {
+-	{ .compatible = "mediatek,mt6797-mmsys", },
+-	{}
+-};
+-
+ static int clk_mt6797_mm_probe(struct platform_device *pdev)
  {
 +	struct device *dev = &pdev->dev;
 +	struct device_node *node = dev->parent->of_node;
  	struct clk_onecell_data *clk_data;
+ 	int r;
 -	struct device_node *node = pdev->dev.of_node;
  
- 	clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
+ 	clk_data = mtk_alloc_clk_data(CLK_MM_NR);
  
-@@ -95,16 +96,10 @@ static int clk_mt8183_mm_probe(struct platform_device *pdev)
- 	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
- }
- 
--static const struct of_device_id of_match_clk_mt8183_mm[] = {
--	{ .compatible = "mediatek,mt8183-mmsys", },
--	{}
--};
--
- static struct platform_driver clk_mt8183_mm_drv = {
- 	.probe = clk_mt8183_mm_probe,
+@@ -121,7 +117,6 @@ static struct platform_driver clk_mt6797_mm_drv = {
+ 	.probe = clk_mt6797_mm_probe,
  	.driver = {
- 		.name = "clk-mt8183-mm",
--		.of_match_table = of_match_clk_mt8183_mm,
+ 		.name = "clk-mt6797-mm",
+-		.of_match_table = of_match_clk_mt6797_mm,
  	},
  };
  
 diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
-index cacafe23c823..783c3dd008b2 100644
+index 783c3dd008b2..fee64c8d3020 100644
 --- a/drivers/soc/mediatek/mtk-mmsys.c
 +++ b/drivers/soc/mediatek/mtk-mmsys.c
-@@ -92,6 +92,10 @@ static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
- 	.clk_driver = "clk-mt8173-mm",
+@@ -88,6 +88,10 @@ static const struct mtk_mmsys_driver_data mt2712_mmsys_driver_data = {
+ 	.clk_driver = "clk-mt2712-mm",
  };
  
-+static const struct mtk_mmsys_driver_data mt8183_mmsys_driver_data = {
-+	.clk_driver = "clk-mt8183-mm",
++static const struct mtk_mmsys_driver_data mt6797_mmsys_driver_data = {
++	.clk_driver = "clk-mt6797-mm",
 +};
 +
- static unsigned int mtk_mmsys_ddp_mout_en(enum mtk_ddp_comp_id cur,
- 					  enum mtk_ddp_comp_id next,
- 					  unsigned int *addr)
+ static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
+ 	.clk_driver = "clk-mt8173-mm",
+ };
 @@ -339,6 +343,10 @@ static const struct of_device_id of_match_mtk_mmsys[] = {
- 		.compatible = "mediatek,mt8173-mmsys",
- 		.data = &mt8173_mmsys_driver_data,
+ 		.compatible = "mediatek,mt2712-mmsys",
+ 		.data = &mt2712_mmsys_driver_data,
  	},
 +	{
-+		.compatible = "mediatek,mt8183-mmsys",
-+		.data = &mt8183_mmsys_driver_data,
++		.compatible = "mediatek,mt6797-mmsys",
++		.data = &mt6797_mmsys_driver_data,
 +	},
- 	{ }
- };
- 
+ 	{
+ 		.compatible = "mediatek,mt8173-mmsys",
+ 		.data = &mt8173_mmsys_driver_data,
 -- 
 2.26.2
 
