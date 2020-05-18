@@ -2,86 +2,95 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF177C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB32C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC2020674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57AC9207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:52:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589809955;
+	bh=FoiYOz4QyATjVtvdKit+fH6+X62jW8zsWpf3orvuR0o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hi9W8g5V2wlkCkpbbdn65vrvj8PL3QZuv9kzmUHBs11KB0NPHK676EafoR+2fQ6Mo
+	 9cNKUjL8Joh2EN12X+ZhlAPko4wKh+lHF0BKkYAHcX+qE2pfe/SvKbwAwCbufEuu7Y
+	 Dp11G0ItLEx/jQBHe56pQa1mUN693ppiMT7YqMiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgERNvP (ORCPT
+        id S1727831AbgERNwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:51:15 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33907 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbgERNvP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:51:15 -0400
-Received: from mail-ej1-f72.google.com ([209.85.218.72])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <guilherme.piccoli@canonical.com>)
-        id 1jagAj-0002Ma-3a
-        for linux-kernel@vger.kernel.org; Mon, 18 May 2020 13:51:13 +0000
-Received: by mail-ej1-f72.google.com with SMTP id u24so5279045ejg.9
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:51:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c7hu+iWhNpwsjT8JCVNUPdNUhRLVOPLZBCQR9T/nGBw=;
-        b=VnjWZq1Nc05jSNaYq72Fl1isA6NR1YAHk8vjyQW2eQtoGXbKm4gZCCVE24ZJTnz9gf
-         tjaUBy81yeSRGiVipZUMcJ0jmX9uAWWl6jzqgPoGxtlNgIgUTKH/C+SeQyeuo1UTgWmp
-         RkuFdSFrqaVY4nrlE1zSHYCg8v7aTMQOClUmoycaZEesnWRPDendKqWiQiPJrjtOdRbj
-         W5dbtJKzVQf9wIkpyq+iKf8PrsKGwlXh4vX1oBThPMaI9GRqvBt0m86tbx+nIyE34GaH
-         /f6YOWcC5lWFGZxCu2FfIYW2+3OZXTav9AVmMzLeITAd6JUmM/npQWlORvkc8Htd+ZfY
-         xfvA==
-X-Gm-Message-State: AOAM532OIUXcf6V11Dwx2TWhJ7ZbSq6mQ3pdS+EHd2BkCrSML90dnb8O
-        3Dk8r31Dnyxv0NS7IKKFURIi9n5FOvomVNTpoFR8kG1rDQE0HXmQNVx4sOLJBvkc6awqEHECAzX
-        iI02BTjO3tCkWzpRg40I9Ub5B88HANUpTWPrxBmitq72n3QydYyuPE74pjg==
-X-Received: by 2002:a50:dac4:: with SMTP id s4mr1154931edj.84.1589809872826;
-        Mon, 18 May 2020 06:51:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwgbq5M3t9GyFs8CX1A2dVN1oxIyEH0opyQqFB6u1APwAyHroua3cFI3LrqWIumMgzIw6tcjVsFSADLRenfwsY=
-X-Received: by 2002:a50:dac4:: with SMTP id s4mr1154911edj.84.1589809872621;
- Mon, 18 May 2020 06:51:12 -0700 (PDT)
+        Mon, 18 May 2020 09:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726800AbgERNwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 09:52:34 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 359B620674;
+        Mon, 18 May 2020 13:52:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589809953;
+        bh=FoiYOz4QyATjVtvdKit+fH6+X62jW8zsWpf3orvuR0o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TAlJYXMMZPIGoj5i+W8MUJP0XoNSSMUHGxPeM8QWX0jg1p1dZCt0MNfdW6ku7MAv8
+         y8r2GTZLOg48MhSu4Bag6l3x0GlK+TU0MFOj71N8O7J9FvkIYcM0H8NjXqv5qf2Tlp
+         uctkHwR5+RSeZrcCawxBQYukK+AmCsmSqTaLFkhE=
+Date:   Mon, 18 May 2020 14:52:29 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@am.com>,
+        Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
+Subject: Re: [PATCH 0/6] Clean up Shadow Call Stack patches for 5.8
+Message-ID: <20200518135228.GI32394@willie-the-truck>
+References: <20200515172756.27185-1-will@kernel.org>
+ <CABCJKucXmMD82mQ0rSMjfByXD42htTjkde3TsKTVP-jvuqkZwQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200507215946.22589-1-gpiccoli@canonical.com>
- <20200507160438.ed336a1e00c23c6863d75ae5@linux-foundation.org>
- <CALJn8nNDqWwanhmutCiP-WBLN1eSg2URrG2j5R4kzgHTYObs7Q@mail.gmail.com>
- <alpine.DEB.2.22.394.2005081129100.236131@chino.kir.corp.google.com>
- <CAHD1Q_wF6Mzf5JipXGZKvn2YDR+FQ6ePuKOe-1W-t_VapxMCxg@mail.gmail.com>
- <alpine.DEB.2.22.394.2005101821160.172131@chino.kir.corp.google.com>
- <CAHD1Q_zrQmUTRpdW3bZ0CRKuu2dKgueXUjqCNtC5oyZ67CGp2A@mail.gmail.com>
- <6bf5e178-f2c8-f453-9035-93e31995bb53@sony.com> <CAHD1Q_yk4GhUgTMc5KcvpaW-oMNEfvSj7vxOCOQGALs4qe8VUQ@mail.gmail.com>
- <cd43b4d6-7a2e-3e92-0a15-19597e9df4fd@sony.com>
-In-Reply-To: <cd43b4d6-7a2e-3e92-0a15-19597e9df4fd@sony.com>
-From:   Guilherme Piccoli <gpiccoli@canonical.com>
-Date:   Mon, 18 May 2020 10:50:36 -0300
-Message-ID: <CAHD1Q_wF_ZoS2xuiTJo5P4f1_1ZEyx3jY0bN+Qsm7rZo2x9C6Q@mail.gmail.com>
-Subject: Re: [PATCH] mm, compaction: Indicate when compaction is manually
- triggered by sysctl
-To:     "Enderborg, Peter" <Peter.Enderborg@sony.com>
-Cc:     David Rientjes <rientjes@google.com>,
-        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Gavin Guo <gavin.guo@canonical.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABCJKucXmMD82mQ0rSMjfByXD42htTjkde3TsKTVP-jvuqkZwQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 9:54 AM Enderborg, Peter
-<Peter.Enderborg@sony.com> wrote:
-> Usually change existing causes confusion. It should not be a problem but it happen.
->
+On Fri, May 15, 2020 at 01:42:40PM -0700, Sami Tolvanen wrote:
+> On Fri, May 15, 2020 at 10:28 AM Will Deacon <will@kernel.org> wrote:
+> > Will Deacon (6):
+> >   arm64: scs: Store absolute SCS stack pointer value in thread_info
+> >   scs: Move accounting into alloc/free functions
+> >   arm64: scs: Use 'scs_sp' register alias for x18
+> >   scs: Move scs_overflow_check() out of architecture code
+> >   scs: Remove references to asm/scs.h from core code
+> >   scs: Move DEFINE_SCS macro into core code
+> >
+> >  arch/Kconfig                         |  4 +--
+> >  arch/arm64/include/asm/scs.h         | 29 ++++------------
+> >  arch/arm64/include/asm/thread_info.h |  4 +--
+> >  arch/arm64/kernel/asm-offsets.c      |  2 +-
+> >  arch/arm64/kernel/entry.S            | 10 +++---
+> >  arch/arm64/kernel/head.S             |  2 +-
+> >  arch/arm64/kernel/process.c          |  2 --
+> >  arch/arm64/kernel/scs.c              |  6 +---
+> >  include/linux/scs.h                  | 16 +++++----
+> >  kernel/sched/core.c                  |  3 ++
+> >  kernel/scs.c                         | 52 +++++++++++++---------------
+> >  11 files changed, 55 insertions(+), 75 deletions(-)
+> >
+> > --
+> > 2.26.2.761.g0e0b3e54be-goog
+> 
+> Thanks, Will. I tested these on my SCS tree and didn't run into any
+> issues. Looks good to me.
 
-I am sorry, but I really didn't understand your statement, can you be
-more specific?
-Thanks again!
+Cheers, Sami. Can I add your 'Tested-by' to the patches, please?
+
+Will
