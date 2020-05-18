@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6553EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B40520643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4923720643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826130;
-	bh=fE4l/YiFzGqBGD1qlBVhUzgpbiM6XFdUJWqpCgy6Krk=;
+	s=default; t=1589826141;
+	bh=NBIKDTiQeAI7UtqVKPP26UgCJsIPKYa+MHApbtTnKFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OrGO6NNqjR/LNGix3RBs75BreX0QCmSKA6cI3hnrllYkO0sRLLyUImNoXXLt9Rnnk
-	 qhuPB0EJtyLx4i6Va+Jf//1WdGOgx0/5nRhmueRJP/TUlwQlVAbnVJMQgvx4hncT0a
-	 1f9LlPK0FBjBQiMg3sl1TWaEUrfEEfuJ0QBc5jMY=
+	b=u09KaZuCQAaHaixHnEEn84WcqSilcxcp7UfCT9+zYMB3j8ftZ9syr2H6jisXRf/Me
+	 X1X77q1TaW1nePlJJa4SED11vTFK56mFRRd3JR3JkkIT1s4B/kt9rftoK83KpfIeKs
+	 2O5kwJzFN2PZjcC8YtloZ5+O8IX58b4zf7wjo9co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732951AbgERSWJ (ORCPT
+        id S1730775AbgERRuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53252 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:50:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730721AbgERRux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:50:53 -0400
+        id S1730714AbgERRuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:50:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26FE120826;
-        Mon, 18 May 2020 17:50:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A7B320715;
+        Mon, 18 May 2020 17:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824252;
-        bh=fE4l/YiFzGqBGD1qlBVhUzgpbiM6XFdUJWqpCgy6Krk=;
+        s=default; t=1589824234;
+        bh=NBIKDTiQeAI7UtqVKPP26UgCJsIPKYa+MHApbtTnKFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dd7S/zyem6cQlEgG3GICtblWa3wrLNL3l7rMJ2VZRt0YP8GPS5sIzFHapJcTkd92X
-         8Uo4KL/k2j8u1FcbMYE4LfG39bQ3W8+JSZGQWaFYwzdDCSipsAu99nQQ35qRYAxriE
-         MaFVPL2/Una8lhul1G2LZmrY6IdgdPWfnMlyqG14=
+        b=Z5FeN9ogE1EpCINfP3fbOcsAF2zAzQvzEN9Lg9u+NWqChZRQNaeERwqW/brJ5jfAR
+         ekTkSl34qnYloPlTyj9PZ3I17IOIPKEirzA6gv7C6iB0+6fhDPLuTt9Mj35byeCNos
+         cBL2kYVYJhbzHXNUuKaiJUO4FOyBNVyeabyVdmQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Colin Walters <walters@redhat.com>
-Subject: [PATCH 4.19 18/80] net: ipv4: really enforce backoff for redirects
-Date:   Mon, 18 May 2020 19:36:36 +0200
-Message-Id: <20200518173454.103849772@linuxfoundation.org>
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 11/80] net: phy: fix aneg restart in phy_ethtool_set_eee
+Date:   Mon, 18 May 2020 19:36:29 +0200
+Message-Id: <20200518173452.573001655@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -60,48 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 57644431a6c2faac5d754ebd35780cf43a531b1a ]
+[ Upstream commit 9de5d235b60a7cdfcdd5461e70c5663e713fde87 ]
 
-In commit b406472b5ad7 ("net: ipv4: avoid mixed n_redirects and
-rate_tokens usage") I missed the fact that a 0 'rate_tokens' will
-bypass the backoff algorithm.
+phy_restart_aneg() enables aneg in the PHY. That's not what we want
+if phydev->autoneg is disabled. In this case still update EEE
+advertisement register, but don't enable aneg and don't trigger an
+aneg restart.
 
-Since rate_tokens is cleared after a redirect silence, and never
-incremented on redirects, if the host keeps receiving packets
-requiring redirect it will reply ignoring the backoff.
-
-Additionally, the 'rate_last' field will be updated with the
-cadence of the ingress packet requiring redirect. If that rate is
-high enough, that will prevent the host from generating any
-other kind of ICMP messages
-
-The check for a zero 'rate_tokens' value was likely a shortcut
-to avoid the more complex backoff algorithm after a redirect
-silence period. Address the issue checking for 'n_redirects'
-instead, which is incremented on successful redirect, and
-does not interfere with other ICMP replies.
-
-Fixes: b406472b5ad7 ("net: ipv4: avoid mixed n_redirects and rate_tokens usage")
-Reported-and-tested-by: Colin Walters <walters@redhat.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: f75abeb8338e ("net: phy: restart phy autonegotiation after EEE advertisment change")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/route.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/phy.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -906,7 +906,7 @@ void ip_rt_send_redirect(struct sk_buff
- 	/* Check for load limit; set rate_last to the latest sent
- 	 * redirect.
- 	 */
--	if (peer->rate_tokens == 0 ||
-+	if (peer->n_redirects == 0 ||
- 	    time_after(jiffies,
- 		       (peer->rate_last +
- 			(ip_rt_redirect_load << peer->n_redirects)))) {
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -1302,9 +1302,11 @@ int phy_ethtool_set_eee(struct phy_devic
+ 		/* Restart autonegotiation so the new modes get sent to the
+ 		 * link partner.
+ 		 */
+-		ret = phy_restart_aneg(phydev);
+-		if (ret < 0)
+-			return ret;
++		if (phydev->autoneg == AUTONEG_ENABLE) {
++			ret = phy_restart_aneg(phydev);
++			if (ret < 0)
++				return ret;
++		}
+ 	}
+ 
+ 	return 0;
 
 
