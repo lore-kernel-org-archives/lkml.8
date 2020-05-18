@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9368C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DDDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A648120657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44FC520657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826499;
-	bh=HTvCiCacoig81YMwJ45KDFRvX3U18f9IXR+DcRXlePE=;
+	s=default; t=1589826505;
+	bh=++6rxJ4KjRISx6k9lCyq8Zf09OyDNFQaezhXx9FQq6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ejWrMW3h2DvFMiGipy0L3FGfirc4buxhGdgUPjXlLHJGaRuz3pn4wTxbDjJc/zDW2
-	 Lvj6BpU8gA9BRrdFl78A4iz4Owcd4ufXw7a4xFlELWtLuQtvlhKosU9xuyduib64US
-	 Eg0vOq67sbd2tiiM6HkvLMnsOgK4GKPJcsdGlohc=
+	b=DdNnUEMliP0y1qxUrIq8Mdn4IPeofG22Uhb8WReBo4dtlDqQHkTCktVC/DTiJt+NU
+	 gF/uxudIAhg3OEhi2mFR4w74/xzqAZ3uBR+P/c+C6p5izLG2atylj+p42cNSQid5+2
+	 33wYESjo9FBj78K/srcmVTORJi/uXr+1+YtFXOYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387981AbgERS2S (ORCPT
+        id S2387988AbgERS2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:28:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40514 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:28:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729005AbgERRnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:43:11 -0400
+        id S1729520AbgERRnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:43:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81D8D20835;
-        Mon, 18 May 2020 17:43:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92DE020849;
+        Mon, 18 May 2020 17:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823791;
-        bh=HTvCiCacoig81YMwJ45KDFRvX3U18f9IXR+DcRXlePE=;
+        s=default; t=1589823786;
+        bh=++6rxJ4KjRISx6k9lCyq8Zf09OyDNFQaezhXx9FQq6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KO7KFgqJMillacUs/ajWS/N2JE4j7ktF9ElAgWQRVZ+Tl7h6+/DT5AEBG4XkgA/Xn
-         4vAKN/2r17DT8d6EfgLoEEo8jnSuyiL58TnVOetl4G/Lgv0MN/xb6cbtM8ZUAIviGk
-         UnnHITXK0McPFC+KNplQFHsSUrfIyyENpMWi96XY=
+        b=h+hRe3mouFVpZkkkuIOY+ADNVQ5vGhpkSUD7mspi6eN9I3aR1q96k95//MoXY+8ru
+         w6M53SQEyrsbWT7/XhAJNTN4pmthRv4YN5pD4xTDcK7FDOz8fVi6pmSrjPhKevEoc5
+         GCIexGQI7xo+fadVpi+T6qkN068v9p3w+i/u4cgI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Richard Cochran <richardcochran@gmail.com>,
+        stable@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 38/90] ptp: Fix pass zero to ERR_PTR() in ptp_clock_register
-Date:   Mon, 18 May 2020 19:36:16 +0200
-Message-Id: <20200518173458.838117489@linuxfoundation.org>
+Subject: [PATCH 4.9 36/90] ptp: create "pins" together with the rest of attributes
+Date:   Mon, 18 May 2020 19:36:14 +0200
+Message-Id: <20200518173458.426221453@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -62,52 +62,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit aea0a897af9e44c258e8ab9296fad417f1bc063a upstream.
+commit 85a66e55019583da1e0f18706b7a8281c9f6de5b upstream.
 
-Fix smatch warning:
+Let's switch to using device_create_with_groups(), which will allow us to
+create "pins" attribute group together with the rest of ptp device
+attributes, and before userspace gets notified about ptp device creation.
 
-drivers/ptp/ptp_clock.c:298 ptp_clock_register() warn:
- passing zero to 'ERR_PTR'
-
-'err' should be set while device_create_with_groups and
-pps_register_source fails
-
-Fixes: 85a66e550195 ("ptp: create "pins" together with the rest of attributes")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 4.9: adjust context]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ptp/ptp_clock.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/ptp/ptp_clock.c   | 20 +++++++++++---------
+ drivers/ptp/ptp_private.h |  7 ++++---
+ drivers/ptp/ptp_sysfs.c   | 39 +++++++++------------------------------
+ 3 files changed, 24 insertions(+), 42 deletions(-)
 
 diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
-index d5ac33350889e..b87b7b0867a4c 100644
+index 08f304b83ad13..d5ac33350889e 100644
 --- a/drivers/ptp/ptp_clock.c
 +++ b/drivers/ptp/ptp_clock.c
-@@ -222,8 +222,10 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
- 	ptp->dev = device_create_with_groups(ptp_class, parent, ptp->devid,
- 					     ptp, ptp->pin_attr_groups,
- 					     "ptp%d", ptp->index);
--	if (IS_ERR(ptp->dev))
-+	if (IS_ERR(ptp->dev)) {
-+		err = PTR_ERR(ptp->dev);
- 		goto no_device;
-+	}
+@@ -214,16 +214,17 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
+ 	mutex_init(&ptp->pincfg_mux);
+ 	init_waitqueue_head(&ptp->tsev_wq);
  
++	err = ptp_populate_pin_groups(ptp);
++	if (err)
++		goto no_pin_groups;
++
+ 	/* Create a new device in our class. */
+-	ptp->dev = device_create(ptp_class, parent, ptp->devid, ptp,
+-				 "ptp%d", ptp->index);
++	ptp->dev = device_create_with_groups(ptp_class, parent, ptp->devid,
++					     ptp, ptp->pin_attr_groups,
++					     "ptp%d", ptp->index);
+ 	if (IS_ERR(ptp->dev))
+ 		goto no_device;
+ 
+-	err = ptp_populate_sysfs(ptp);
+-	if (err)
+-		goto no_sysfs;
+-
  	/* Register a new PPS source. */
  	if (info->pps) {
-@@ -234,6 +236,7 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
- 		pps.owner = info->owner;
- 		ptp->pps_source = pps_register_source(&pps, PTP_PPS_DEFAULTS);
- 		if (!ptp->pps_source) {
-+			err = -EINVAL;
- 			pr_err("failed to register pps source\n");
- 			goto no_pps;
- 		}
+ 		struct pps_source_info pps;
+@@ -251,10 +252,10 @@ no_clock:
+ 	if (ptp->pps_source)
+ 		pps_unregister_source(ptp->pps_source);
+ no_pps:
+-	ptp_cleanup_sysfs(ptp);
+-no_sysfs:
+ 	device_destroy(ptp_class, ptp->devid);
+ no_device:
++	ptp_cleanup_pin_groups(ptp);
++no_pin_groups:
+ 	mutex_destroy(&ptp->tsevq_mux);
+ 	mutex_destroy(&ptp->pincfg_mux);
+ 	ida_simple_remove(&ptp_clocks_map, index);
+@@ -273,8 +274,9 @@ int ptp_clock_unregister(struct ptp_clock *ptp)
+ 	/* Release the clock's resources. */
+ 	if (ptp->pps_source)
+ 		pps_unregister_source(ptp->pps_source);
+-	ptp_cleanup_sysfs(ptp);
++
+ 	device_destroy(ptp_class, ptp->devid);
++	ptp_cleanup_pin_groups(ptp);
+ 
+ 	posix_clock_unregister(&ptp->clock);
+ 	return 0;
+diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
+index 9c5d41421b651..d95888974d0c6 100644
+--- a/drivers/ptp/ptp_private.h
++++ b/drivers/ptp/ptp_private.h
+@@ -54,6 +54,8 @@ struct ptp_clock {
+ 	struct device_attribute *pin_dev_attr;
+ 	struct attribute **pin_attr;
+ 	struct attribute_group pin_attr_group;
++	/* 1st entry is a pointer to the real group, 2nd is NULL terminator */
++	const struct attribute_group *pin_attr_groups[2];
+ };
+ 
+ /*
+@@ -94,8 +96,7 @@ uint ptp_poll(struct posix_clock *pc,
+ 
+ extern const struct attribute_group *ptp_groups[];
+ 
+-int ptp_cleanup_sysfs(struct ptp_clock *ptp);
+-
+-int ptp_populate_sysfs(struct ptp_clock *ptp);
++int ptp_populate_pin_groups(struct ptp_clock *ptp);
++void ptp_cleanup_pin_groups(struct ptp_clock *ptp);
+ 
+ #endif
+diff --git a/drivers/ptp/ptp_sysfs.c b/drivers/ptp/ptp_sysfs.c
+index a55a6eb4dfde9..731d0423c8aa7 100644
+--- a/drivers/ptp/ptp_sysfs.c
++++ b/drivers/ptp/ptp_sysfs.c
+@@ -268,25 +268,14 @@ static ssize_t ptp_pin_store(struct device *dev, struct device_attribute *attr,
+ 	return count;
+ }
+ 
+-int ptp_cleanup_sysfs(struct ptp_clock *ptp)
++int ptp_populate_pin_groups(struct ptp_clock *ptp)
+ {
+-	struct device *dev = ptp->dev;
+-	struct ptp_clock_info *info = ptp->info;
+-
+-	if (info->n_pins) {
+-		sysfs_remove_group(&dev->kobj, &ptp->pin_attr_group);
+-		kfree(ptp->pin_attr);
+-		kfree(ptp->pin_dev_attr);
+-	}
+-	return 0;
+-}
+-
+-static int ptp_populate_pins(struct ptp_clock *ptp)
+-{
+-	struct device *dev = ptp->dev;
+ 	struct ptp_clock_info *info = ptp->info;
+ 	int err = -ENOMEM, i, n_pins = info->n_pins;
+ 
++	if (!n_pins)
++		return 0;
++
+ 	ptp->pin_dev_attr = kzalloc(n_pins * sizeof(*ptp->pin_dev_attr),
+ 				    GFP_KERNEL);
+ 	if (!ptp->pin_dev_attr)
+@@ -310,28 +299,18 @@ static int ptp_populate_pins(struct ptp_clock *ptp)
+ 	ptp->pin_attr_group.name = "pins";
+ 	ptp->pin_attr_group.attrs = ptp->pin_attr;
+ 
+-	err = sysfs_create_group(&dev->kobj, &ptp->pin_attr_group);
+-	if (err)
+-		goto no_group;
++	ptp->pin_attr_groups[0] = &ptp->pin_attr_group;
++
+ 	return 0;
+ 
+-no_group:
+-	kfree(ptp->pin_attr);
+ no_pin_attr:
+ 	kfree(ptp->pin_dev_attr);
+ no_dev_attr:
+ 	return err;
+ }
+ 
+-int ptp_populate_sysfs(struct ptp_clock *ptp)
++void ptp_cleanup_pin_groups(struct ptp_clock *ptp)
+ {
+-	struct ptp_clock_info *info = ptp->info;
+-	int err;
+-
+-	if (info->n_pins) {
+-		err = ptp_populate_pins(ptp);
+-		if (err)
+-			return err;
+-	}
+-	return 0;
++	kfree(ptp->pin_attr);
++	kfree(ptp->pin_dev_attr);
+ }
 -- 
 2.20.1
 
