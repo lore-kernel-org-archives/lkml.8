@@ -2,251 +2,325 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4844C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C790C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE5FA20758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9A420758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:37:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oEcbu6d2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgERQfi (ORCPT
+        id S1728201AbgERQhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:35:38 -0400
-Received: from mga01.intel.com ([192.55.52.88]:16277 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgERQfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:35:30 -0400
-IronPort-SDR: pNJUqa/IyTSZA1GVXauOVkSYbsvHPDHnkWx33tSELr1TpUhXl1pxSKHUPCaBPL+675RldYOdKX
- 4GkwXWvS4ZIg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 09:35:29 -0700
-IronPort-SDR: k4sIEgfhvFAOrHywMGXRXwVV1pykLhdfkiAMz4XbojbBtDSuBhiAKzY/hpTLj42xPKgZGgBdZc
- jgeF0qLe5ofQ==
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="264014290"
-Received: from kharjox-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.180.35])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 09:35:29 -0700
-From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH V2 2/3] PCI: Add basic Compute eXpress Link DVSEC decode
-Date:   Mon, 18 May 2020 09:35:22 -0700
-Message-Id: <20200518163523.1225643-3-sean.v.kelley@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518163523.1225643-1-sean.v.kelley@linux.intel.com>
-References: <20200518163523.1225643-1-sean.v.kelley@linux.intel.com>
+        Mon, 18 May 2020 12:37:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgERQhK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 12:37:10 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903F1C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:37:10 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id m12so179820wmc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:37:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pLMq4RspN08+KBIf5NTfKFLAQklkEesZlECI7b39+ZA=;
+        b=oEcbu6d2WCURNEoZlq/I6NmJMWyx77Xioz7StSmvfmdArO0tS3v5pS6zHGro1UMusZ
+         bYJSYQ+ftdzCPig5Qns59upojnFw0d/MDpeRYSLCabH0tc97OMIulp2QZ8HUWEU0oX9X
+         IFU1z+bDUUAE3dPUoFrEMh9ItLMi26yGbIcYlXiSp7QDxz3EwbznqWkEl/PNTH9yEuPJ
+         31knCVqqLjH2yXk3k3P3L9ChIJ9M/NC7b7ZYHECKWTUbpPiYb7cVX7qrwLdHIgy+g5Gk
+         4hbgYzKYfBi0eGW6S/mYyROXxCdVmkOpz+7XT/bD+Y8Wb5ns5JViFGtJJKil1Mughg/b
+         qeug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pLMq4RspN08+KBIf5NTfKFLAQklkEesZlECI7b39+ZA=;
+        b=YuiTGKeKxa7WqESA/dmp9igT3ZVuObP5kVuGI5UGytJNoymXeK+Me0G4pO1BWJZo6f
+         G/9hIV4Oh/820GTrBNYw508qCepG2oNSLMM7z09wKGaNKnC0NCEfXT3vk6eQBsu4W/gd
+         6RgAzKQVOiSNBUOo33bTYtc3QuHDdy6N8JosAxHpb7bJqgexKjUEWgw3NdPKaCNHrlE4
+         +9X7DHSEMwhPL6tZ6MkwX3wa9CbWgwhgdbzugH6pDFLX5dnCuUsfWySpy02NqAd0yyX4
+         dlK1r9HAfObEnQ7EYzRCLX89w3RrptQ0y0OpXA1woCoHlGdz0ZB3WqMRgozWx1EdLAO2
+         2mvw==
+X-Gm-Message-State: AOAM5323xmLJISnt85zWxt0k9ulf8B9FRAraYltR3FBqTSTqdgN+K3yq
+        oGtXdSYLgjncjWYLPpfBS0oYnw==
+X-Google-Smtp-Source: ABdhPJz/aJ6qf6PRlMaevwKJ0gIq+PsCnaSXhMljluPkiaAEtVZ7lSL6yXJJy6fPr3o1cbISq0ODgg==
+X-Received: by 2002:a7b:cb86:: with SMTP id m6mr225202wmi.41.1589819829165;
+        Mon, 18 May 2020 09:37:09 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
+        by smtp.googlemail.com with ESMTPSA id 7sm17809954wra.50.2020.05.18.09.37.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 09:37:08 -0700 (PDT)
+Subject: Re: [RFC][PATCH 3/5] thermal: Add support for setting notification
+ thresholds
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com>
+ <20200504181616.175477-4-srinivas.pandruvada@linux.intel.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <a9af415d-9fd0-dcea-79ee-0fb90f45045e@linaro.org>
+Date:   Mon, 18 May 2020 18:37:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200504181616.175477-4-srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compute eXpress Link is a new CPU interconnect created with
-workload accelerators in mind. The interconnect relies on PCIe Electrical
-and Physical interconnect for communication. CXL devices enumerate to the
-OS as an ACPI-described PCIe Root Complex Integrated Endpoint.
+On 04/05/2020 20:16, Srinivas Pandruvada wrote:
+> Add new attributes in thermal syfs when a thermal drivers provides
+> callbacks for them and CONFIG_THERMAL_USER_EVENT_INTERFACE is defined.
+> 
+> These attribute allow user space to stop polling for temperature.
+> 
+> These attributes are:
+> - temp_thres_low: Specify a notification temperature for a low
+> temperature threshold event.
+> temp_thres_high: Specify a notification temperature for a high
+> temperature threshold event.
+> temp_thres_hyst: Specify a change in temperature to send notification
+> again.
+> 
+> This is implemented by adding additional sysfs attribute group. The
+> changes in this patch are trivial to add new attributes in thermal
+> sysfs as done for other attributes.
 
-This patch introduces the bare minimum support by simply looking for and
-caching the DVSEC CXL Extended Capability. Currently, only CXL.io (which
-is mandatory to be configured by BIOS) is enabled. In future, we will
-also add support for CXL.cache and CXL.mem.
+Isn't it duplicate with the trip point?
 
-DocLink: https://www.computeexpresslink.org/
 
-Originally-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
----
- drivers/pci/Kconfig  |  9 +++++
- drivers/pci/Makefile |  1 +
- drivers/pci/cxl.c    | 92 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h    |  7 ++++
- drivers/pci/probe.c  |  1 +
- include/linux/pci.h  |  3 ++
- 6 files changed, 113 insertions(+)
- create mode 100644 drivers/pci/cxl.c
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 4bef5c2bae9f..eafb200b320b 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -115,6 +115,15 @@ config XEN_PCIDEV_FRONTEND
- 	  The PCI device frontend driver allows the kernel to import arbitrary
- 	  PCI devices from a PCI backend to support PCI driver domains.
- 
-+config PCI_CXL
-+	bool "Enable PCI Compute eXpress Link"
-+	depends on PCI
-+	help
-+	  Say Y here if you want the PCI core to detect CXL devices, decode, and
-+	  cache the DVSEC CXL Extended Capability as configured by BIOS.
-+
-+	  When in doubt, say N.
-+
- config PCI_ATS
- 	bool
- 
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 522d2b974e91..465eee31e999 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -30,6 +30,7 @@ obj-$(CONFIG_PCI_PF_STUB)	+= pci-pf-stub.o
- obj-$(CONFIG_PCI_ECAM)		+= ecam.o
- obj-$(CONFIG_PCI_P2PDMA)	+= p2pdma.o
- obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
-+obj-$(CONFIG_PCI_CXL)		+= cxl.o
- 
- # Endpoint library must be initialized before its users
- obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
-diff --git a/drivers/pci/cxl.c b/drivers/pci/cxl.c
-new file mode 100644
-index 000000000000..4437ca69ad33
---- /dev/null
-+++ b/drivers/pci/cxl.c
-@@ -0,0 +1,92 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Compute eXpress Link Support
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/pci.h>
-+#include <linux/pci_regs.h>
-+
-+#define PCI_DVSEC_VENDOR_ID_CXL		0x1e98
-+#define PCI_DVSEC_ID_CXL_DEV		0x0
-+
-+#define PCI_CXL_CAP			0x0a
-+#define PCI_CXL_CTRL			0x0c
-+#define PCI_CXL_STS			0x0e
-+#define PCI_CXL_CTRL2			0x10
-+#define PCI_CXL_STS2			0x12
-+#define PCI_CXL_LOCK			0x14
-+
-+#define PCI_CXL_CACHE			BIT(0)
-+#define PCI_CXL_IO			BIT(1)
-+#define PCI_CXL_MEM			BIT(2)
-+#define PCI_CXL_HDM_COUNT(reg)		(((reg) & (3 << 4)) >> 4)
-+#define PCI_CXL_VIRAL			BIT(14)
-+
-+/*
-+ * pci_find_cxl_capability - Identify and return offset to Vendor-Specific
-+ * capabilities.
-+ *
-+ * CXL makes use of Designated Vendor-Specific Extended Capability (DVSEC)
-+ * to uniquely identify both DVSEC Vendor ID and DVSEC ID aligning with
-+ * PCIe r5.0, sec 7.9.6.2
-+ */
-+static int pci_find_cxl_capability(struct pci_dev *dev)
-+{
-+	u16 vendor, id;
-+	int pos = 0;
-+
-+	while ((pos = pci_find_next_ext_capability(dev, pos,
-+						   PCI_EXT_CAP_ID_DVSEC))) {
-+		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1,
-+				     &vendor);
-+		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &id);
-+		if (vendor == PCI_DVSEC_VENDOR_ID_CXL &&
-+		    id == PCI_DVSEC_ID_CXL_DEV)
-+			return pos;
-+	}
-+
-+	return 0;
-+}
-+
-+
-+#define FLAG(x, y)	(((x) & (y)) ? '+' : '-')
-+
-+void pci_cxl_init(struct pci_dev *dev)
-+{
-+	u16 cap, ctrl, status, ctrl2, status2, lock;
-+	int pos;
-+
-+	/* Only for PCIe */
-+	if (!pci_is_pcie(dev))
-+		return;
-+
-+	/* Only for Device 0 Function 0, Root Complex Integrated Endpoints */
-+	if (dev->devfn != 0 || (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END))
-+		return;
-+
-+	pos = pci_find_cxl_capability(dev);
-+	if (!pos)
-+		return;
-+
-+	dev->cxl_cap = pos;
-+
-+	pci_read_config_word(dev, pos + PCI_CXL_CAP, &cap);
-+	pci_read_config_word(dev, pos + PCI_CXL_CTRL, &ctrl);
-+	pci_read_config_word(dev, pos + PCI_CXL_STS, &status);
-+	pci_read_config_word(dev, pos + PCI_CXL_CTRL2, &ctrl2);
-+	pci_read_config_word(dev, pos + PCI_CXL_STS2, &status2);
-+	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
-+
-+	pci_info(dev, "CXL: Cache%c IO%c Mem%c Viral%c HDMCount %d\n",
-+		FLAG(cap, PCI_CXL_CACHE),
-+		FLAG(cap, PCI_CXL_IO),
-+		FLAG(cap, PCI_CXL_MEM),
-+		FLAG(cap, PCI_CXL_VIRAL),
-+		PCI_CXL_HDM_COUNT(cap));
-+
-+	pci_info(dev, "CXL: cap ctrl status ctrl2 status2 lock\n");
-+	pci_info(dev, "CXL: %04x %04x %04x %04x %04x %04x\n",
-+		 cap, ctrl, status, ctrl2, status2, lock);
-+}
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 6d3f75867106..d9905e2dee95 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -469,6 +469,13 @@ static inline void pci_ats_init(struct pci_dev *d) { }
- static inline void pci_restore_ats_state(struct pci_dev *dev) { }
- #endif /* CONFIG_PCI_ATS */
- 
-+#ifdef CONFIG_PCI_CXL
-+/* Compute eXpress Link */
-+void pci_cxl_init(struct pci_dev *dev);
-+#else
-+static inline void pci_cxl_init(struct pci_dev *dev) { }
-+#endif
-+
- #ifdef CONFIG_PCI_PRI
- void pci_pri_init(struct pci_dev *dev);
- void pci_restore_pri_state(struct pci_dev *pdev);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 77b8a145c39b..c55df0ae8f06 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2371,6 +2371,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_ptm_init(dev);		/* Precision Time Measurement */
- 	pci_aer_init(dev);		/* Advanced Error Reporting */
- 	pci_dpc_init(dev);		/* Downstream Port Containment */
-+	pci_cxl_init(dev);		/* Compute eXpress Link */
- 
- 	pcie_report_downtraining(dev);
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 83ce1cdf5676..9fd544f76447 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -314,6 +314,9 @@ struct pci_dev {
- #ifdef CONFIG_PCIEAER
- 	u16		aer_cap;	/* AER capability offset */
- 	struct aer_stats *aer_stats;	/* AER stats for this device */
-+#endif
-+#ifdef CONFIG_PCI_CXL
-+	u16		cxl_cap;	/* CXL capability offset */
- #endif
- 	u8		pcie_cap;	/* PCIe capability offset */
- 	u8		msi_cap;	/* MSI capability offset */
+
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  drivers/thermal/thermal_sysfs.c | 136 +++++++++++++++++++++++++++++++-
+>  include/linux/thermal.h         |  10 ++-
+>  2 files changed, 143 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+> index aa99edb4dff7..aa85424c3ac4 100644
+> --- a/drivers/thermal/thermal_sysfs.c
+> +++ b/drivers/thermal/thermal_sysfs.c
+> @@ -215,6 +215,125 @@ trip_point_hyst_show(struct device *dev, struct device_attribute *attr,
+>  	return ret ? ret : sprintf(buf, "%d\n", temperature);
+>  }
+>  
+> +#if IS_ENABLED(CONFIG_THERMAL_USER_EVENT_INTERFACE)
+> +
+> +#define create_thres_attr(name)					\
+> +	static ssize_t							\
+> +	name##_show(struct device *dev, struct device_attribute *devattr, \
+> +		char *buf)						\
+> +	{								\
+> +	struct thermal_zone_device *tz = to_thermal_zone(dev);	\
+> +	int temperature, ret;						\
+> +									\
+> +	ret = tz->ops->get_##name(tz, &temperature);			\
+> +									\
+> +	return ret ? ret : sprintf(buf, "%d\n", temperature);	\
+> +	}								\
+> +									\
+> +	static ssize_t							\
+> +	name##_store(struct device *dev, struct device_attribute *devattr, \
+> +		const char *buf, size_t count)				\
+> +	{								\
+> +		struct thermal_zone_device *tz = to_thermal_zone(dev);	\
+> +		int temperature, ret;					\
+> +									\
+> +		if (kstrtoint(buf, 10, &temperature))			\
+> +			return -EINVAL;				\
+> +									\
+> +		ret = tz->ops->set_##name(tz, temperature);		\
+> +		return ret ? ret : count;				\
+> +	}
+> +
+> +create_thres_attr(temp_thres_low);
+> +create_thres_attr(temp_thres_high);
+> +create_thres_attr(temp_thres_hyst);
+> +
+> +static int create_user_events_attrs(struct thermal_zone_device *tz)
+> +{
+> +	struct attribute **attrs;
+> +	int index = 0;
+> +
+> +	if (tz->ops->get_temp_thres_low)
+> +		++index;
+> +	if (tz->ops->get_temp_thres_high)
+> +		++index;
+> +	if (tz->ops->get_temp_thres_high)
+> +		++index;
+> +
+> +	/* One additional space for NULL */
+> +	attrs = kcalloc(index + 1, sizeof(*attrs), GFP_KERNEL);
+> +	if (!attrs)
+> +		return -ENOMEM;
+> +
+> +	tz->threshold_attrs = kcalloc(index, sizeof(*tz->threshold_attrs), GFP_KERNEL);
+> +	if (!tz->threshold_attrs) {
+> +		kfree(attrs);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	index = 0;
+> +
+> +	if (tz->ops->get_temp_thres_low) {
+> +		snprintf(tz->threshold_attrs[index].name, THERMAL_NAME_LENGTH,
+> +			 "temp_thres_low");
+> +
+> +		sysfs_attr_init(&tz->threshold_attrs[index].attr.attr);
+> +		tz->threshold_attrs[index].attr.attr.name =
+> +						tz->threshold_attrs[index].name;
+> +		tz->threshold_attrs[index].attr.attr.mode = S_IWUSR | S_IRUGO;
+> +		tz->threshold_attrs[index].attr.show = temp_thres_low_show;
+> +		tz->threshold_attrs[index].attr.store = temp_thres_low_store;
+> +		attrs[index] = &tz->threshold_attrs[index].attr.attr;
+> +		++index;
+> +	}
+> +	if (tz->ops->get_temp_thres_high) {
+> +		snprintf(tz->threshold_attrs[index].name, THERMAL_NAME_LENGTH,
+> +			 "temp_thres_high");
+> +
+> +		sysfs_attr_init(&tz->threshold_attrs[index].attr.attr);
+> +		tz->threshold_attrs[index].attr.attr.name =
+> +						tz->threshold_attrs[index].name;
+> +		tz->threshold_attrs[index].attr.attr.mode = S_IWUSR | S_IRUGO;
+> +		tz->threshold_attrs[index].attr.show = temp_thres_high_show;
+> +		tz->threshold_attrs[index].attr.store = temp_thres_high_store;
+> +		attrs[index] = &tz->threshold_attrs[index].attr.attr;
+> +		++index;
+> +	}
+> +	if (tz->ops->get_temp_thres_hyst) {
+> +		snprintf(tz->threshold_attrs[index].name, THERMAL_NAME_LENGTH,
+> +			 "temp_thres_hyst");
+> +
+> +		sysfs_attr_init(&tz->threshold_attrs[index].attr.attr);
+> +		tz->threshold_attrs[index].attr.attr.name =
+> +						tz->threshold_attrs[index].name;
+> +		tz->threshold_attrs[index].attr.attr.mode = S_IWUSR | S_IRUGO;
+> +		tz->threshold_attrs[index].attr.show = temp_thres_hyst_show;
+> +		tz->threshold_attrs[index].attr.store = temp_thres_hyst_store;
+> +		attrs[index] = &tz->threshold_attrs[index].attr.attr;
+> +		++index;
+> +	}
+> +	attrs[index] = NULL;
+> +	tz->threshold_attribute_group.attrs = attrs;
+> +
+> +	return 0;
+> +}
+> +
+> +static void delete_user_events_attrs(struct thermal_zone_device *tz)
+> +{
+> +	kfree(tz->threshold_attrs);
+> +	kfree(tz->threshold_attribute_group.attrs);
+> +}
+> +#else
+> +static int create_user_events_attrs(struct thermal_zone_device *tz)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static void delete_user_events_attrs(struct thermal_zone_device *tz)
+> +{
+> +}
+> +#endif
+> +
+>  static ssize_t
+>  passive_store(struct device *dev, struct device_attribute *attr,
+>  	      const char *buf, size_t count)
+> @@ -625,16 +744,27 @@ int thermal_zone_create_device_groups(struct thermal_zone_device *tz,
+>  {
+>  	const struct attribute_group **groups;
+>  	int i, size, result;
+> +	int start = 0;
+>  
+>  	/* we need one extra for trips and the NULL to terminate the array */
+>  	size = ARRAY_SIZE(thermal_zone_attribute_groups) + 2;
+> +
+> +	result = create_user_events_attrs(tz);
+> +	if (!result) {
+> +		++size;
+> +		++start;
+> +	}
+> +
+>  	/* This also takes care of API requirement to be NULL terminated */
+>  	groups = kcalloc(size, sizeof(*groups), GFP_KERNEL);
+>  	if (!groups)
+>  		return -ENOMEM;
+>  
+> -	for (i = 0; i < size - 2; i++)
+> -		groups[i] = thermal_zone_attribute_groups[i];
+> +	if (start)
+> +		groups[0] = &tz->threshold_attribute_group;
+> +
+> +	for (i = 0; i < size - 2 - start; i++)
+> +		groups[i + start] = thermal_zone_attribute_groups[i];
+>  
+>  	if (tz->trips) {
+>  		result = create_trip_attrs(tz, mask);
+> @@ -660,6 +790,8 @@ void thermal_zone_destroy_device_groups(struct thermal_zone_device *tz)
+>  	if (tz->trips)
+>  		destroy_trip_attrs(tz);
+>  
+> +	delete_user_events_attrs(tz);
+> +
+>  	kfree(tz->device.groups);
+>  }
+>  
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index f5e1e7c6a9a2..ee9d79ace7ce 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -102,6 +102,12 @@ struct thermal_zone_device_ops {
+>  			  enum thermal_trend *);
+>  	int (*notify) (struct thermal_zone_device *, int,
+>  		       enum thermal_trip_type);
+> +	int (*set_temp_thres_low)(struct thermal_zone_device *, int);
+> +	int (*set_temp_thres_high)(struct thermal_zone_device *, int);
+> +	int (*set_temp_thres_hyst)(struct thermal_zone_device *, int);
+> +	int (*get_temp_thres_low)(struct thermal_zone_device *, int *);
+> +	int (*get_temp_thres_high)(struct thermal_zone_device *, int *);
+> +	int (*get_temp_thres_hyst)(struct thermal_zone_device *, int *);
+>  };
+>  
+>  struct thermal_cooling_device_ops {
+> @@ -208,6 +214,8 @@ struct thermal_zone_device {
+>  	struct list_head node;
+>  	struct delayed_work poll_queue;
+>  	enum thermal_notify_event notify_event;
+> +	struct attribute_group threshold_attribute_group;
+> +	struct thermal_attr *threshold_attrs;
+>  };
+>  
+>  /**
+> @@ -558,7 +566,7 @@ enum thermal_device_events {
+>  	THERMAL_PERF_CHANGED,
+>  };
+>  
+> -#ifdef CONFIG_THERMAL_USER_EVENT_INTERFACE
+> +#if IS_ENABLED(CONFIG_THERMAL_USER_EVENT_INTERFACE)
+>  int thermal_dev_send_event(int zone_id, enum thermal_device_events event, u64 event_data);
+>  #else
+>  int thermal_dev_send_event(int zone_id, enum thermal_device_events event, u64 event_data)
+> 
+
+
 -- 
-2.26.2
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
