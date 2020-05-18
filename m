@@ -2,131 +2,119 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56035C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6722DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6202065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431002065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:00:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="D0rBGGhf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgERPAI (ORCPT
+        id S1728152AbgERPAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 11:00:08 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48704 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgERPAF (ORCPT
+        Mon, 18 May 2020 11:00:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbgERPAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 11:00:05 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B6998803080B;
-        Mon, 18 May 2020 15:00:00 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IRxMeP9Dze5J; Mon, 18 May 2020 18:00:00 +0300 (MSK)
-Date:   Mon, 18 May 2020 17:59:58 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Clement Leger <cleger@kalray.eu>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 10/19] spi: dw: Use DMA max burst to set the request
- thresholds
-Message-ID: <20200518145958.gb55qtrc6gdpq2d4@mobilestation>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-11-Sergey.Semin@baikalelectronics.ru>
- <20200515143842.GG1634618@smile.fi.intel.com>
- <20200516200133.wmaqnfjbr7234fzo@mobilestation>
- <20200518110343.GY1634618@smile.fi.intel.com>
- <20200518125253.r4fpr4mjflclqpym@mobilestation>
- <CAHp75VeMcv-hQViCANQARiNh0LwmugsDWk=MF1c5E3t7z5h02Q@mail.gmail.com>
- <20200518134306.7rvydoasv7pmxwxl@mobilestation>
- <20200518144834.GD1634618@smile.fi.intel.com>
+        Mon, 18 May 2020 11:00:32 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD5F4C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 08:00:32 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id 79so10908978iou.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 08:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ieee.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=St0XOfKMZeET6pBPld7O8v25pNt751gRsZIgxhPamRE=;
+        b=D0rBGGhfh9ddjRGJCC2WT/Lr+gAcswb1Vujpk1s2GtJU4tpOzz/uf+1y29I4c7JSOm
+         o71yfrfL66HnhUtyISXoym30FTrVyw4n5ZxzxUa7KgWbCElrCvwZpm5//zw984WX4nvH
+         p+hlf8rwQMU7aS7oNe3/pl/TCfc2s6gqGtflA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=St0XOfKMZeET6pBPld7O8v25pNt751gRsZIgxhPamRE=;
+        b=r8HJTr9TuZMUEOnP3kpcvuptgQ2sZZp293PvJJv4T31/jUbENYu+YOt9PktOyLrTmQ
+         cQU6NWicWIngk0Nk/IA3pxz8ZYMMY90OiZ5dDyNbPZ/qCtO7K4pzue+MJky3VyZEfmcS
+         nrETOXWI2kBEKHguJxYjCjuNF20PbRRsYMZetcKT1e8HV4yV9vPb3iyGZdtc+gQK5Hii
+         4fi2vU7UyW18qvET59k3hajkM+MkzjVU1fdiCnsFGkcPqMiq407dUhiLu0J2OiTkrcpG
+         KaCyzmfdJ8qK9Tp/VHBWymo2HxBSNOfhwjvfTrzHSqUlA+XS7wzTyc7AxpeMPBOxuTtL
+         riqg==
+X-Gm-Message-State: AOAM532tBg4bhAmXDiaOpFdevFxvMc6nsRqMCkpoOTCAhmL56p7a1jOk
+        2qz7J2GpZg2nGZ6t6mbYnA3s7QQ/vxs=
+X-Google-Smtp-Source: ABdhPJzDcfTOWmWKIJ6HodA4E+KpW3cEphwvAbx/tdc1Mem8F6bjZs2owKDuECxK1hEaGv/MLSlVcw==
+X-Received: by 2002:a02:7f42:: with SMTP id r63mr6649100jac.32.1589814031154;
+        Mon, 18 May 2020 08:00:31 -0700 (PDT)
+Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id l7sm4890345ilh.54.2020.05.18.08.00.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 08:00:29 -0700 (PDT)
+Subject: Re: [PATCH net-next] net: ipa: Remove ipa_endpoint_stop{,_rx_dma}
+ again
+To:     Jakub Kicinski <kuba@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Alex Elder <elder@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200508194132.3412384-1-natechancellor@gmail.com>
+ <20200508225213.5e109221@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Alex Elder <elder@ieee.org>
+Message-ID: <fdb0b789-bee0-e3a1-546f-24ff94da2dd2@ieee.org>
+Date:   Mon, 18 May 2020 10:00:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200518144834.GD1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200508225213.5e109221@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 05:48:34PM +0300, Andy Shevchenko wrote:
-> On Mon, May 18, 2020 at 04:43:06PM +0300, Serge Semin wrote:
-> > On Mon, May 18, 2020 at 04:25:20PM +0300, Andy Shevchenko wrote:
-> > > On Mon, May 18, 2020 at 3:53 PM Serge Semin
-> > > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > > On Mon, May 18, 2020 at 02:03:43PM +0300, Andy Shevchenko wrote:
-> > > > > On Sat, May 16, 2020 at 11:01:33PM +0300, Serge Semin wrote:
-> > > > > > On Fri, May 15, 2020 at 05:38:42PM +0300, Andy Shevchenko wrote:
-> > > > > > > On Fri, May 15, 2020 at 01:47:49PM +0300, Serge Semin wrote:
+On 5/9/20 12:52 AM, Jakub Kicinski wrote:
+> On Fri,  8 May 2020 12:41:33 -0700 Nathan Chancellor wrote:
+>> When building arm64 allyesconfig:
+>>
+>> drivers/net/ipa/ipa_endpoint.c: In function 'ipa_endpoint_stop_rx_dma':
+>> drivers/net/ipa/ipa_endpoint.c:1274:13: error: 'IPA_ENDPOINT_STOP_RX_SIZE' undeclared (first use in this function)
+>> drivers/net/ipa/ipa_endpoint.c:1274:13: note: each undeclared identifier is reported only once for each function it appears in
+>> drivers/net/ipa/ipa_endpoint.c:1289:2: error: implicit declaration of function 'ipa_cmd_dma_task_32b_addr_add' [-Werror=implicit-function-declaration]
+>> drivers/net/ipa/ipa_endpoint.c:1291:45: error: 'ENDPOINT_STOP_DMA_TIMEOUT' undeclared (first use in this function)
+>> drivers/net/ipa/ipa_endpoint.c: In function 'ipa_endpoint_stop':
+>> drivers/net/ipa/ipa_endpoint.c:1309:16: error: 'IPA_ENDPOINT_STOP_RX_RETRIES' undeclared (first use in this function)
+>>
+>> These functions were removed in a series, merged in as
+>> commit 33395f4a5c1b ("Merge branch 'net-ipa-kill-endpoint-stop-workaround'").
+>>
+>> Remove them again so that the build works properly.
+>>
+>> Fixes: 3793faad7b5b ("Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net")
+>> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 > 
-> ...
-> 
-> > > > > > It's not like anyone cared about padding in this structure in the first place)
-> > > > >
-> > > > > I think I have been caring (to some extend).
-> > > >
-> > > > Well, If you have then instead of asking to rearrange just two members (which
-> > > > by the way finely grouped by the Tx-Rx affiliation) why not sending a
-> > > > patch, which would refactor the whole structure so to be optimal for the x64
-> > > > platforms? I don't really see why this gets very important for you seeing
-> > > > Mark is Ok with this. My current commit follows the common driver design
-> > > > including the DW SSI data members grouping. On the second thought I'll leave
-> > > > it as is then.
-> > > 
-> > > Again same issue here. What is really easy to do for you here, will
-> > > become a burden and additional churn to anybody else.
-> > > So, why not to minimize it in the first place? Same with comma in
-> > > another patch. Sorry, I really don't get it.
-> > 
-> > If comma is more or less understandable (though adding it is absolutely
-> > redundant there and doesn't worth even a bit of time spending for the
-> > discussion), here you consider the patch from padding point of view.
-> > The driver developer didn't care about it, but did care about grouping the
-> > members in a corresponding way. The padding burden will be there anyway and
-> > should be fixed for the whole structure in an additional patch. Until then
-> > the way of grouping should be preserved.
-> 
-> Like you said, we spent already much more time than that simple change can be
-> satisfied. And like you said, "deleloper ... did care about groupping members
-> in a corresponding way". So, if we look at this in the original code, my
-> suggestion, besides padding benefit, is consistent with existing pattern in
-> that data structure.
+> Applied, thank you!
 
-What pattern do you mean? As I see it, my implementation is consistent with
-current structure structure, while yours is not.
+First, I want to apologize for not responding to this earlier.  There
+are some problems with my mail filters and am only now starting to go
+through some of these messages...
 
--Sergey
+Thank you Nathan for the fix and Arnd for the review, and Jakub for
+merging it.
 
-> 
-> Note, I agree on extern keyword change can be postponed (it was in the original
-> code), but here you introduce a new code...
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> I think I already said this, but would be great if IPA built on x86
+> with COMPILE_TEST..
+
+Yes I intend to add this but it was not as simple as I had hoped
+and other things have had priority; sorry about that.  Soon.
+
+					-Alex
+
