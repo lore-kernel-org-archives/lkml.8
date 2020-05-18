@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63073C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBF3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2780D20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C08B120643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826182;
-	bh=ofP+ox0i8hIBVUZOAQQWKyZiQX3MVp0DDqnhSr9Tdu8=;
+	s=default; t=1589826184;
+	bh=f4F3uV4QvBvJm9bSrk/LOTSX7ngNOjz9zlmIxqnCCb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FDRSTvvmCC6Sfbte1J/3y+xnPCPedLVaCwOTLsF1rswkmxpcsvlnCMpErzWRvQZ8S
-	 h16XI2/qK3a6GHZ5xl7j95FHUe2H1rnF22z2oYPGhvopojvhVaBcDiF3Wqtn+Hku4J
-	 sgoozntNJeXhW/AZwevd6JFScL/Ex8jgOcdpoYns=
+	b=2LAiZe8BrhpEy7uIXaUURlW1z7y80gvEOvsxeRJ7db1YO2f+mHsmSwMwBVNNJWZGj
+	 kfSZWvxwvCanUZ9bHX2jwmcjSCTfwurHfqjAG5S0wg8WvFRXWysRnjE+DF0Gl2Wfk3
+	 fNjGzvYdE49FT/3s5c0WdzuaYu/x+ZDLKuaK6lnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731149AbgERSXB (ORCPT
+        id S2387826AbgERSXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51574 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:23:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730100AbgERRts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:49:48 -0400
+        id S1730543AbgERRtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:49:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 182EA20671;
-        Mon, 18 May 2020 17:49:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB644207C4;
+        Mon, 18 May 2020 17:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824187;
-        bh=ofP+ox0i8hIBVUZOAQQWKyZiQX3MVp0DDqnhSr9Tdu8=;
+        s=default; t=1589824180;
+        bh=f4F3uV4QvBvJm9bSrk/LOTSX7ngNOjz9zlmIxqnCCb0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z7rlVuaZZVo4wNlDsU8/nz5NSzDTQBkMMJ9/pxbOWdkPDF1w5W8dLjRNygiM2hBwi
-         suViy9WqyOWjkOmvsR3wSP1azbUr77r9/KcSfFjILED1mFoqfE+xn3Fiej81qsSGm2
-         H7qtpIbxUVzZl31BZg6dwSa6UwfwyFog8XQJiVGQ=
+        b=mQqIVzX9GD3MA47cv1uCZEqWT9YXA+5ar8K0HBejqzBFt4L9MeX4v6oLZDULBtgOB
+         WkeKNhtNUJQCqniHBxOjmrZBOmTM1DYkIiYCMhNusHlbGAxHvS5pWx4KDTMXjZEoJX
+         RNxnYbf6DerhaQi4qe931NrS5CCI+rPzWizZrwGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.14 105/114] usb: gadget: audio: Fix a missing error return value in audio_bind()
-Date:   Mon, 18 May 2020 19:37:17 +0200
-Message-Id: <20200518173520.203720337@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Justin Swartz <justin.swartz@risingedge.co.za>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 4.14 103/114] clk: rockchip: fix incorrect configuration of rk3228 aclk_gpu* clocks
+Date:   Mon, 18 May 2020 19:37:15 +0200
+Message-Id: <20200518173519.965791731@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -60,35 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Justin Swartz <justin.swartz@risingedge.co.za>
 
-commit 19b94c1f9c9a16d41a8de3ccbdb8536cf1aecdbf upstream.
+commit cec9d101d70a3509da9bd2e601e0b242154ce616 upstream.
 
-If 'usb_otg_descriptor_alloc()' fails, we must return an error code, not 0.
+The following changes prevent the unrecoverable freezes and rcu_sched
+stall warnings experienced in each of my attempts to take advantage of
+lima.
 
-Fixes: 56023ce0fd70 ("usb: gadget: audio: allocate and init otg descriptor by otg capabilities")
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Replace the COMPOSITE_NOGATE definition of aclk_gpu_pre with a
+COMPOSITE that retains the selection of HDMIPHY as the PLL source, but
+instead makes uses of the aclk_gpu PLL source gate and parent names
+defined by mux_pll_src_4plls_p rather than mux_aclk_gpu_pre_p.
+
+Remove the now unused mux_aclk_gpu_pre_p and the four named but also
+unused definitions (cpll_gpu, gpll_gpu, hdmiphy_gpu and usb480m_gpu)
+of the aclk_gpu PLL source gate.
+
+Use the correct gate offset for aclk_gpu and aclk_gpu_noc.
+
+Fixes: 307a2e9ac524 ("clk: rockchip: add clock controller for rk3228")
+Cc: stable@vger.kernel.org
+Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+[double-checked against SoC manual and added fixes tag]
+Link: https://lore.kernel.org/r/20200114162503.7548-1-justin.swartz@risingedge.co.za
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/legacy/audio.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/rockchip/clk-rk3228.c |   17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
---- a/drivers/usb/gadget/legacy/audio.c
-+++ b/drivers/usb/gadget/legacy/audio.c
-@@ -303,8 +303,10 @@ static int audio_bind(struct usb_composi
- 		struct usb_descriptor_header *usb_desc;
+--- a/drivers/clk/rockchip/clk-rk3228.c
++++ b/drivers/clk/rockchip/clk-rk3228.c
+@@ -163,8 +163,6 @@ PNAME(mux_i2s_out_p)		= { "i2s1_pre", "x
+ PNAME(mux_i2s2_p)		= { "i2s2_src", "i2s2_frac", "xin12m" };
+ PNAME(mux_sclk_spdif_p)		= { "sclk_spdif_src", "spdif_frac", "xin12m" };
  
- 		usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
--		if (!usb_desc)
-+		if (!usb_desc) {
-+			status = -ENOMEM;
- 			goto fail;
-+		}
- 		usb_otg_descriptor_init(cdev->gadget, usb_desc);
- 		otg_desc[0] = usb_desc;
- 		otg_desc[1] = NULL;
+-PNAME(mux_aclk_gpu_pre_p)	= { "cpll_gpu", "gpll_gpu", "hdmiphy_gpu", "usb480m_gpu" };
+-
+ PNAME(mux_uart0_p)		= { "uart0_src", "uart0_frac", "xin24m" };
+ PNAME(mux_uart1_p)		= { "uart1_src", "uart1_frac", "xin24m" };
+ PNAME(mux_uart2_p)		= { "uart2_src", "uart2_frac", "xin24m" };
+@@ -475,16 +473,9 @@ static struct rockchip_clk_branch rk3228
+ 			RK2928_CLKSEL_CON(24), 6, 10, DFLAGS,
+ 			RK2928_CLKGATE_CON(2), 8, GFLAGS),
+ 
+-	GATE(0, "cpll_gpu", "cpll", 0,
+-			RK2928_CLKGATE_CON(3), 13, GFLAGS),
+-	GATE(0, "gpll_gpu", "gpll", 0,
+-			RK2928_CLKGATE_CON(3), 13, GFLAGS),
+-	GATE(0, "hdmiphy_gpu", "hdmiphy", 0,
+-			RK2928_CLKGATE_CON(3), 13, GFLAGS),
+-	GATE(0, "usb480m_gpu", "usb480m", 0,
++	COMPOSITE(0, "aclk_gpu_pre", mux_pll_src_4plls_p, 0,
++			RK2928_CLKSEL_CON(34), 5, 2, MFLAGS, 0, 5, DFLAGS,
+ 			RK2928_CLKGATE_CON(3), 13, GFLAGS),
+-	COMPOSITE_NOGATE(0, "aclk_gpu_pre", mux_aclk_gpu_pre_p, 0,
+-			RK2928_CLKSEL_CON(34), 5, 2, MFLAGS, 0, 5, DFLAGS),
+ 
+ 	COMPOSITE(SCLK_SPI0, "sclk_spi0", mux_pll_src_2plls_p, 0,
+ 			RK2928_CLKSEL_CON(25), 8, 1, MFLAGS, 0, 7, DFLAGS,
+@@ -589,8 +580,8 @@ static struct rockchip_clk_branch rk3228
+ 	GATE(0, "pclk_peri_noc", "pclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(12), 2, GFLAGS),
+ 
+ 	/* PD_GPU */
+-	GATE(ACLK_GPU, "aclk_gpu", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(13), 14, GFLAGS),
+-	GATE(0, "aclk_gpu_noc", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(13), 15, GFLAGS),
++	GATE(ACLK_GPU, "aclk_gpu", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(7), 14, GFLAGS),
++	GATE(0, "aclk_gpu_noc", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(7), 15, GFLAGS),
+ 
+ 	/* PD_BUS */
+ 	GATE(0, "sclk_initmem_mbist", "aclk_cpu", 0, RK2928_CLKGATE_CON(8), 1, GFLAGS),
 
 
