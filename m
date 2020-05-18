@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FCBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4422C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF94520829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E0732083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824512;
-	bh=81nyT0KGpUtnfpoIicYrfquw3UI9n/ITzuO8vjPDmWs=;
+	s=default; t=1589824513;
+	bh=gHAzTcQNhWWKJsrTJItnD8BgKlvf2dayT9uLs4pSLtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E6KFv/BQSgO90D6ygDyqTxHGFcSCDUF4d2QckZny+24GlFp9jmb+E/cpwMafWr664
-	 4OdRBwOLYILz2zx0GT771UxUIrNkeQNYzHUlebxJtCkVF1gubQA21q9AizpaAEz/Me
-	 EW/FmeqsIGsZHWkvvMFZp5DUdJhDlhXeea1T76Lo=
+	b=v71TyY3rPgyS0d0P+quSNPL0CXrjGDKHQqBVAstCeHaRk1upWy/dCHR+AtkwXc9dU
+	 mR7t8Mj+geESAXS3Zkbe4Rftwjj2lBs1xV2/ItcyZYUAIGWNSHeZ63uWrh4C9h27cL
+	 vQyNnQWBX6ytBX47VDvtck4s7fxzp9UesOj7iK9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731416AbgERRzK (ORCPT
+        id S1731419AbgERRzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:55:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60176 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:55:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728825AbgERRzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:55:04 -0400
+        id S1731412AbgERRzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:55:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 016D620674;
-        Mon, 18 May 2020 17:55:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3815207C4;
+        Mon, 18 May 2020 17:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824502;
-        bh=81nyT0KGpUtnfpoIicYrfquw3UI9n/ITzuO8vjPDmWs=;
+        s=default; t=1589824510;
+        bh=gHAzTcQNhWWKJsrTJItnD8BgKlvf2dayT9uLs4pSLtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NXF2MuxjjKlIzGm7eC7jvmcF3YwQ3gN0enwO9qHeuhR1o/u1BsOiW+/CWpUkdjeyF
-         LRhxXLkxUAQpEMvM5Z51IimOHiHes3Vcnqsfy1p/JjYnsC9dqGtBsc7ZqoOuGaDkqy
-         bqqGDL1rPCbd8E0s0AtYJJkQpRyByNi64oBorqSA=
+        b=Qd2NApknsXlz1+w7NhX0+EFAVYn7mHxYMGdhlPsUUqVxlpqcVPaqHl3IwsRbYYQce
+         Z8XtMdnSnY0dMRz+YrlDB7OeOQZsRjeAGsx+F8VxFtKhzVYfRHCOJgnLIYLURTqryk
+         QardOH8TTMOHytJJ1t419UQPOiq799QYU/ZJMJAA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julien Grall <julien@xen.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 004/147] KVM: arm: vgic: Synchronize the whole guest on GIC{D,R}_I{S,C}ACTIVER read
-Date:   Mon, 18 May 2020 19:35:27 +0200
-Message-Id: <20200518173513.680763880@linuxfoundation.org>
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 007/147] SUNRPC: Fix GSS privacy computation of auth->au_ralign
+Date:   Mon, 18 May 2020 19:35:30 +0200
+Message-Id: <20200518173514.209528043@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -60,252 +59,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 9a50ebbffa9862db7604345f5fd763122b0f6fed ]
+[ Upstream commit a7e429a6fa6d612d1dacde96c885dc1bb4a9f400 ]
 
-When a guest tries to read the active state of its interrupts,
-we currently just return whatever state we have in memory. This
-means that if such an interrupt lives in a List Register on another
-CPU, we fail to obsertve the latest active state for this interrupt.
+When the au_ralign field was added to gss_unwrap_resp_priv, the
+wrong calculation was used. Setting au_rslack == au_ralign is
+probably correct for kerberos_v1 privacy, but kerberos_v2 privacy
+adds additional GSS data after the clear text RPC message.
+au_ralign needs to be smaller than au_rslack in that fairly common
+case.
 
-In order to remedy this, stop all the other vcpus so that they exit
-and we can observe the most recent value for the state. This is
-similar to what we are doing for the write side of the same
-registers, and results in new MMIO handlers for userspace (which
-do not need to stop the guest, as it is supposed to be stopped
-already).
+When xdr_buf_trim() is restored to gss_unwrap_kerberos_v2(), it does
+exactly what I feared it would: it trims off part of the clear text
+RPC message. However, that's because rpc_prepare_reply_pages() does
+not set up the rq_rcv_buf's tail correctly because au_ralign is too
+large.
 
-Reported-by: Julien Grall <julien@xen.org>
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Fixing the au_ralign computation also corrects the alignment of
+rq_rcv_buf->pages so that the client does not have to shift reply
+data payloads after they are received.
+
+Fixes: 35e77d21baa0 ("SUNRPC: Add rpc_auth::au_ralign field")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/vgic/vgic-mmio-v2.c |   4 +-
- virt/kvm/arm/vgic/vgic-mmio-v3.c |  12 ++--
- virt/kvm/arm/vgic/vgic-mmio.c    | 100 ++++++++++++++++++++-----------
- virt/kvm/arm/vgic/vgic-mmio.h    |   3 +
- 4 files changed, 75 insertions(+), 44 deletions(-)
+ include/linux/sunrpc/gss_api.h      |  1 +
+ net/sunrpc/auth_gss/auth_gss.c      |  8 +++-----
+ net/sunrpc/auth_gss/gss_krb5_wrap.c | 19 +++++++++++++++----
+ 3 files changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/virt/kvm/arm/vgic/vgic-mmio-v2.c b/virt/kvm/arm/vgic/vgic-mmio-v2.c
-index 5945f062d7497..d63881f60e1a5 100644
---- a/virt/kvm/arm/vgic/vgic-mmio-v2.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio-v2.c
-@@ -422,11 +422,11 @@ static const struct vgic_register_region vgic_v2_dist_registers[] = {
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ(GIC_DIST_ACTIVE_SET,
- 		vgic_mmio_read_active, vgic_mmio_write_sactive,
--		NULL, vgic_mmio_uaccess_write_sactive, 1,
-+		vgic_uaccess_read_active, vgic_mmio_uaccess_write_sactive, 1,
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ(GIC_DIST_ACTIVE_CLEAR,
- 		vgic_mmio_read_active, vgic_mmio_write_cactive,
--		NULL, vgic_mmio_uaccess_write_cactive, 1,
-+		vgic_uaccess_read_active, vgic_mmio_uaccess_write_cactive, 1,
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ(GIC_DIST_PRI,
- 		vgic_mmio_read_priority, vgic_mmio_write_priority, NULL, NULL,
-diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-index 7dfd15dbb308e..4c5909e38f78a 100644
---- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-@@ -491,11 +491,11 @@ static const struct vgic_register_region vgic_v3_dist_registers[] = {
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ_SHARED(GICD_ISACTIVER,
- 		vgic_mmio_read_active, vgic_mmio_write_sactive,
--		NULL, vgic_mmio_uaccess_write_sactive, 1,
-+		vgic_uaccess_read_active, vgic_mmio_uaccess_write_sactive, 1,
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ_SHARED(GICD_ICACTIVER,
- 		vgic_mmio_read_active, vgic_mmio_write_cactive,
--		NULL, vgic_mmio_uaccess_write_cactive,
-+		vgic_uaccess_read_active, vgic_mmio_uaccess_write_cactive,
- 		1, VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ_SHARED(GICD_IPRIORITYR,
- 		vgic_mmio_read_priority, vgic_mmio_write_priority, NULL, NULL,
-@@ -563,12 +563,12 @@ static const struct vgic_register_region vgic_v3_rd_registers[] = {
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_LENGTH_UACCESS(SZ_64K + GICR_ISACTIVER0,
- 		vgic_mmio_read_active, vgic_mmio_write_sactive,
--		NULL, vgic_mmio_uaccess_write_sactive,
--		4, VGIC_ACCESS_32bit),
-+		vgic_uaccess_read_active, vgic_mmio_uaccess_write_sactive, 4,
-+		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_LENGTH_UACCESS(SZ_64K + GICR_ICACTIVER0,
- 		vgic_mmio_read_active, vgic_mmio_write_cactive,
--		NULL, vgic_mmio_uaccess_write_cactive,
--		4, VGIC_ACCESS_32bit),
-+		vgic_uaccess_read_active, vgic_mmio_uaccess_write_cactive, 4,
-+		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_LENGTH(SZ_64K + GICR_IPRIORITYR0,
- 		vgic_mmio_read_priority, vgic_mmio_write_priority, 32,
- 		VGIC_ACCESS_32bit | VGIC_ACCESS_8bit),
-diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
-index 7eacf00e5abeb..fb1dcd397b93a 100644
---- a/virt/kvm/arm/vgic/vgic-mmio.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio.c
-@@ -300,8 +300,39 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
+diff --git a/include/linux/sunrpc/gss_api.h b/include/linux/sunrpc/gss_api.h
+index d1c6f65de76e7..d4326d6662a44 100644
+--- a/include/linux/sunrpc/gss_api.h
++++ b/include/linux/sunrpc/gss_api.h
+@@ -22,6 +22,7 @@
+ struct gss_ctx {
+ 	struct gss_api_mech	*mech_type;
+ 	void			*internal_ctx_id;
++	unsigned int		slack, align;
+ };
+ 
+ #define GSS_C_NO_BUFFER		((struct xdr_netobj) 0)
+diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
+index c8782f4e20ec2..5fc6c028f89c0 100644
+--- a/net/sunrpc/auth_gss/auth_gss.c
++++ b/net/sunrpc/auth_gss/auth_gss.c
+@@ -2030,7 +2030,6 @@ gss_unwrap_resp_priv(struct rpc_task *task, struct rpc_cred *cred,
+ 	struct xdr_buf *rcv_buf = &rqstp->rq_rcv_buf;
+ 	struct kvec *head = rqstp->rq_rcv_buf.head;
+ 	struct rpc_auth *auth = cred->cr_auth;
+-	unsigned int savedlen = rcv_buf->len;
+ 	u32 offset, opaque_len, maj_stat;
+ 	__be32 *p;
+ 
+@@ -2057,10 +2056,9 @@ gss_unwrap_resp_priv(struct rpc_task *task, struct rpc_cred *cred,
+ 	 */
+ 	xdr_init_decode(xdr, rcv_buf, p, rqstp);
+ 
+-	auth->au_rslack = auth->au_verfsize + 2 +
+-			  XDR_QUADLEN(savedlen - rcv_buf->len);
+-	auth->au_ralign = auth->au_verfsize + 2 +
+-			  XDR_QUADLEN(savedlen - rcv_buf->len);
++	auth->au_rslack = auth->au_verfsize + 2 + ctx->gc_gss_ctx->slack;
++	auth->au_ralign = auth->au_verfsize + 2 + ctx->gc_gss_ctx->align;
++
+ 	return 0;
+ unwrap_failed:
+ 	trace_rpcgss_unwrap_failed(task);
+diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+index a7cafc29d61ee..644ecb26100aa 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
++++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+@@ -262,7 +262,8 @@ gss_wrap_kerberos_v1(struct krb5_ctx *kctx, int offset,
+ 
+ static u32
+ gss_unwrap_kerberos_v1(struct krb5_ctx *kctx, int offset, int len,
+-		       struct xdr_buf *buf)
++		       struct xdr_buf *buf, unsigned int *slack,
++		       unsigned int *align)
+ {
+ 	int			signalg;
+ 	int			sealalg;
+@@ -280,6 +281,7 @@ gss_unwrap_kerberos_v1(struct krb5_ctx *kctx, int offset, int len,
+ 	u32			conflen = kctx->gk5e->conflen;
+ 	int			crypt_offset;
+ 	u8			*cksumkey;
++	unsigned int		saved_len = buf->len;
+ 
+ 	dprintk("RPC:       gss_unwrap_kerberos\n");
+ 
+@@ -383,6 +385,10 @@ gss_unwrap_kerberos_v1(struct krb5_ctx *kctx, int offset, int len,
+ 	if (gss_krb5_remove_padding(buf, blocksize))
+ 		return GSS_S_DEFECTIVE_TOKEN;
+ 
++	/* slack must include room for krb5 padding */
++	*slack = XDR_QUADLEN(saved_len - buf->len);
++	/* The GSS blob always precedes the RPC message payload */
++	*align = *slack;
+ 	return GSS_S_COMPLETE;
+ }
+ 
+@@ -489,7 +495,8 @@ gss_wrap_kerberos_v2(struct krb5_ctx *kctx, u32 offset,
+ 
+ static u32
+ gss_unwrap_kerberos_v2(struct krb5_ctx *kctx, int offset, int len,
+-		       struct xdr_buf *buf)
++		       struct xdr_buf *buf, unsigned int *slack,
++		       unsigned int *align)
+ {
+ 	s32		now;
+ 	u8		*ptr;
+@@ -583,6 +590,8 @@ gss_unwrap_kerberos_v2(struct krb5_ctx *kctx, int offset, int len,
+ 	/* Trim off the trailing "extra count" and checksum blob */
+ 	buf->len -= ec + GSS_KRB5_TOK_HDR_LEN + tailskip;
+ 
++	*align = XDR_QUADLEN(GSS_KRB5_TOK_HDR_LEN + headskip);
++	*slack = *align + XDR_QUADLEN(ec + GSS_KRB5_TOK_HDR_LEN + tailskip);
+ 	return GSS_S_COMPLETE;
+ }
+ 
+@@ -617,9 +626,11 @@ gss_unwrap_kerberos(struct gss_ctx *gctx, int offset,
+ 	case ENCTYPE_DES_CBC_RAW:
+ 	case ENCTYPE_DES3_CBC_RAW:
+ 	case ENCTYPE_ARCFOUR_HMAC:
+-		return gss_unwrap_kerberos_v1(kctx, offset, len, buf);
++		return gss_unwrap_kerberos_v1(kctx, offset, len, buf,
++					      &gctx->slack, &gctx->align);
+ 	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+ 	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+-		return gss_unwrap_kerberos_v2(kctx, offset, len, buf);
++		return gss_unwrap_kerberos_v2(kctx, offset, len, buf,
++					      &gctx->slack, &gctx->align);
  	}
  }
- 
--unsigned long vgic_mmio_read_active(struct kvm_vcpu *vcpu,
--				    gpa_t addr, unsigned int len)
-+
-+/*
-+ * If we are fiddling with an IRQ's active state, we have to make sure the IRQ
-+ * is not queued on some running VCPU's LRs, because then the change to the
-+ * active state can be overwritten when the VCPU's state is synced coming back
-+ * from the guest.
-+ *
-+ * For shared interrupts as well as GICv3 private interrupts, we have to
-+ * stop all the VCPUs because interrupts can be migrated while we don't hold
-+ * the IRQ locks and we don't want to be chasing moving targets.
-+ *
-+ * For GICv2 private interrupts we don't have to do anything because
-+ * userspace accesses to the VGIC state already require all VCPUs to be
-+ * stopped, and only the VCPU itself can modify its private interrupts
-+ * active state, which guarantees that the VCPU is not running.
-+ */
-+static void vgic_access_active_prepare(struct kvm_vcpu *vcpu, u32 intid)
-+{
-+	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
-+	    intid >= VGIC_NR_PRIVATE_IRQS)
-+		kvm_arm_halt_guest(vcpu->kvm);
-+}
-+
-+/* See vgic_access_active_prepare */
-+static void vgic_access_active_finish(struct kvm_vcpu *vcpu, u32 intid)
-+{
-+	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
-+	    intid >= VGIC_NR_PRIVATE_IRQS)
-+		kvm_arm_resume_guest(vcpu->kvm);
-+}
-+
-+static unsigned long __vgic_mmio_read_active(struct kvm_vcpu *vcpu,
-+					     gpa_t addr, unsigned int len)
- {
- 	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
- 	u32 value = 0;
-@@ -311,6 +342,10 @@ unsigned long vgic_mmio_read_active(struct kvm_vcpu *vcpu,
- 	for (i = 0; i < len * 8; i++) {
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
- 
-+		/*
-+		 * Even for HW interrupts, don't evaluate the HW state as
-+		 * all the guest is interested in is the virtual state.
-+		 */
- 		if (irq->active)
- 			value |= (1U << i);
- 
-@@ -320,6 +355,29 @@ unsigned long vgic_mmio_read_active(struct kvm_vcpu *vcpu,
- 	return value;
- }
- 
-+unsigned long vgic_mmio_read_active(struct kvm_vcpu *vcpu,
-+				    gpa_t addr, unsigned int len)
-+{
-+	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
-+	u32 val;
-+
-+	mutex_lock(&vcpu->kvm->lock);
-+	vgic_access_active_prepare(vcpu, intid);
-+
-+	val = __vgic_mmio_read_active(vcpu, addr, len);
-+
-+	vgic_access_active_finish(vcpu, intid);
-+	mutex_unlock(&vcpu->kvm->lock);
-+
-+	return val;
-+}
-+
-+unsigned long vgic_uaccess_read_active(struct kvm_vcpu *vcpu,
-+				    gpa_t addr, unsigned int len)
-+{
-+	return __vgic_mmio_read_active(vcpu, addr, len);
-+}
-+
- /* Must be called with irq->irq_lock held */
- static void vgic_hw_irq_change_active(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
- 				      bool active, bool is_uaccess)
-@@ -371,36 +429,6 @@ static void vgic_mmio_change_active(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
- 		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
- }
- 
--/*
-- * If we are fiddling with an IRQ's active state, we have to make sure the IRQ
-- * is not queued on some running VCPU's LRs, because then the change to the
-- * active state can be overwritten when the VCPU's state is synced coming back
-- * from the guest.
-- *
-- * For shared interrupts, we have to stop all the VCPUs because interrupts can
-- * be migrated while we don't hold the IRQ locks and we don't want to be
-- * chasing moving targets.
-- *
-- * For private interrupts we don't have to do anything because userspace
-- * accesses to the VGIC state already require all VCPUs to be stopped, and
-- * only the VCPU itself can modify its private interrupts active state, which
-- * guarantees that the VCPU is not running.
-- */
--static void vgic_change_active_prepare(struct kvm_vcpu *vcpu, u32 intid)
--{
--	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
--	    intid >= VGIC_NR_PRIVATE_IRQS)
--		kvm_arm_halt_guest(vcpu->kvm);
--}
--
--/* See vgic_change_active_prepare */
--static void vgic_change_active_finish(struct kvm_vcpu *vcpu, u32 intid)
--{
--	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
--	    intid >= VGIC_NR_PRIVATE_IRQS)
--		kvm_arm_resume_guest(vcpu->kvm);
--}
--
- static void __vgic_mmio_write_cactive(struct kvm_vcpu *vcpu,
- 				      gpa_t addr, unsigned int len,
- 				      unsigned long val)
-@@ -422,11 +450,11 @@ void vgic_mmio_write_cactive(struct kvm_vcpu *vcpu,
- 	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
- 
- 	mutex_lock(&vcpu->kvm->lock);
--	vgic_change_active_prepare(vcpu, intid);
-+	vgic_access_active_prepare(vcpu, intid);
- 
- 	__vgic_mmio_write_cactive(vcpu, addr, len, val);
- 
--	vgic_change_active_finish(vcpu, intid);
-+	vgic_access_active_finish(vcpu, intid);
- 	mutex_unlock(&vcpu->kvm->lock);
- }
- 
-@@ -459,11 +487,11 @@ void vgic_mmio_write_sactive(struct kvm_vcpu *vcpu,
- 	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
- 
- 	mutex_lock(&vcpu->kvm->lock);
--	vgic_change_active_prepare(vcpu, intid);
-+	vgic_access_active_prepare(vcpu, intid);
- 
- 	__vgic_mmio_write_sactive(vcpu, addr, len, val);
- 
--	vgic_change_active_finish(vcpu, intid);
-+	vgic_access_active_finish(vcpu, intid);
- 	mutex_unlock(&vcpu->kvm->lock);
- }
- 
-diff --git a/virt/kvm/arm/vgic/vgic-mmio.h b/virt/kvm/arm/vgic/vgic-mmio.h
-index 836f418f1ee80..b6aff52524299 100644
---- a/virt/kvm/arm/vgic/vgic-mmio.h
-+++ b/virt/kvm/arm/vgic/vgic-mmio.h
-@@ -157,6 +157,9 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
- unsigned long vgic_mmio_read_active(struct kvm_vcpu *vcpu,
- 				    gpa_t addr, unsigned int len);
- 
-+unsigned long vgic_uaccess_read_active(struct kvm_vcpu *vcpu,
-+				    gpa_t addr, unsigned int len);
-+
- void vgic_mmio_write_cactive(struct kvm_vcpu *vcpu,
- 			     gpa_t addr, unsigned int len,
- 			     unsigned long val);
 -- 
 2.20.1
 
