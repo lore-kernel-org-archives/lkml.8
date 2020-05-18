@@ -2,51 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46322C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C25EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 248CA20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26BC20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824623;
-	bh=/yFRTgkjOjuakAcUHMYNBsrRG7i5WsGSgwVe2mmzVsQ=;
+	s=default; t=1589824626;
+	bh=ufo5PRm5Puk2XkNr55LexldSEveCWOY3kiHg8Rnqago=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N4RMG9vUcJc8l/Ipn2KN7OUv5g2+6gpSBCqmBfgkTaqGjL1s21w3OC3t7HjhrfIdl
-	 SUqzX+y0O6aA5mTh6fxVp1IWc7VNn11QmSJDn0K6yZ9pv/uLpahy2y12ZMQpOqPR1I
-	 I4jHAeaJRbEHpM4Z9jogrvpqpFNn3dpQKV0j9UQ0=
+	b=uxU91XfKbePjApqnZkN8WcHxGK42QCQ9XzGBgvCTF5FlwoYuDIddOBLsmxe7fvNAZ
+	 5aiHiDK/+dRLX7lTrt4RT/0exhqmSaXAoS/dxgH08THzMYyV1TDr6QTiIGTEQ/mafi
+	 +5QJr/IN8R1UhRZt5gG4OuOueZVCMRMoqLA1bFOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731727AbgERR5C (ORCPT
+        id S1731736AbgERR5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:57:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35234 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:57:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731722AbgERR46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:56:58 -0400
+        id S1730740AbgERR5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:57:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 460D520674;
-        Mon, 18 May 2020 17:56:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEC27207C4;
+        Mon, 18 May 2020 17:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824617;
-        bh=/yFRTgkjOjuakAcUHMYNBsrRG7i5WsGSgwVe2mmzVsQ=;
+        s=default; t=1589824620;
+        bh=ufo5PRm5Puk2XkNr55LexldSEveCWOY3kiHg8Rnqago=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JXZRYEWhr8KJ3mQh1BfLmnE1jiZJ+dAMYvGTNdOms8+6Vvu0+PQdsWKYpahireXc3
-         5syekWbpv3XVLG2A8RkxQFWu2ZEHE2CxMzvQDbCoDFCxtqZF0CCsik4jY2qw2MVowL
-         W0iKIWu0VzIj5rzQLSlkZXLRHlZ2ie4Scz8iY+I0=
+        b=0kp/Bw8/YZwyV9msykT3jSZRWD8G54i9e0Wv19pUjCnzZpxhDvvZFu3YlAAG6CObX
+         OHpDqtjQIZwcyHo32LH+msV5emY8LjLYBg22cn/67mcUQ2pKeRLzeAqluK3cXUJxk7
+         qM03OPGg63SpDZVwYL5edUoABdMc6B9SL0MWIXHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vincent Minet <v.minet@criteo.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.4 036/147] umh: fix memory leak on execve failure
-Date:   Mon, 18 May 2020 19:35:59 +0200
-Message-Id: <20200518173518.608541981@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 077/147] netfilter: conntrack: avoid gcc-10 zero-length-bounds warning
+Date:   Mon, 18 May 2020 19:36:40 +0200
+Message-Id: <20200518173523.395829052@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -59,40 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Minet <v.minet@criteo.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit db803036ada7d61d096783726f9771b3fc540370 ]
+[ Upstream commit 2c407aca64977ede9b9f35158e919773cae2082f ]
 
-If a UMH process created by fork_usermode_blob() fails to execute,
-a pair of struct file allocated by umh_pipe_setup() will leak.
+gcc-10 warns around a suspicious access to an empty struct member:
 
-Under normal conditions, the caller (like bpfilter) needs to manage the
-lifetime of the UMH and its two pipes. But when fork_usermode_blob()
-fails, the caller doesn't really have a way to know what needs to be
-done. It seems better to do the cleanup ourselves in this case.
+net/netfilter/nf_conntrack_core.c: In function '__nf_conntrack_alloc':
+net/netfilter/nf_conntrack_core.c:1522:9: warning: array subscript 0 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[0]'} [-Wzero-length-bounds]
+ 1522 |  memset(&ct->__nfct_init_offset[0], 0,
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from net/netfilter/nf_conntrack_core.c:37:
+include/net/netfilter/nf_conntrack.h:90:5: note: while referencing '__nfct_init_offset'
+   90 |  u8 __nfct_init_offset[0];
+      |     ^~~~~~~~~~~~~~~~~~
 
-Fixes: 449325b52b7a ("umh: introduce fork_usermode_blob() helper")
-Signed-off-by: Vincent Minet <v.minet@criteo.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The code is correct but a bit unusual. Rework it slightly in a way that
+does not trigger the warning, using an empty struct instead of an empty
+array. There are probably more elegant ways to do this, but this is the
+smallest change.
+
+Fixes: c41884ce0562 ("netfilter: conntrack: avoid zeroing timer")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/umh.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ include/net/netfilter/nf_conntrack.h | 2 +-
+ net/netfilter/nf_conntrack_core.c    | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/kernel/umh.c
-+++ b/kernel/umh.c
-@@ -475,6 +475,12 @@ static void umh_clean_and_save_pid(struc
- {
- 	struct umh_info *umh_info = info->data;
+diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
+index 9f551f3b69c65..90690e37a56f0 100644
+--- a/include/net/netfilter/nf_conntrack.h
++++ b/include/net/netfilter/nf_conntrack.h
+@@ -87,7 +87,7 @@ struct nf_conn {
+ 	struct hlist_node	nat_bysource;
+ #endif
+ 	/* all members below initialized via memset */
+-	u8 __nfct_init_offset[0];
++	struct { } __nfct_init_offset;
  
-+	/* cleanup if umh_pipe_setup() was successful but exec failed */
-+	if (info->pid && info->retval) {
-+		fput(umh_info->pipe_to_umh);
-+		fput(umh_info->pipe_from_umh);
-+	}
-+
- 	argv_free(info->argv);
- 	umh_info->pid = info->pid;
- }
+ 	/* If we were expected by an expectation, this will be it */
+ 	struct nf_conn *master;
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 5cd610b547e0d..c2ad462f33f1b 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -1381,9 +1381,9 @@ __nf_conntrack_alloc(struct net *net,
+ 	ct->status = 0;
+ 	ct->timeout = 0;
+ 	write_pnet(&ct->ct_net, net);
+-	memset(&ct->__nfct_init_offset[0], 0,
++	memset(&ct->__nfct_init_offset, 0,
+ 	       offsetof(struct nf_conn, proto) -
+-	       offsetof(struct nf_conn, __nfct_init_offset[0]));
++	       offsetof(struct nf_conn, __nfct_init_offset));
+ 
+ 	nf_ct_zone_add(ct, zone);
+ 
+-- 
+2.20.1
+
 
 
