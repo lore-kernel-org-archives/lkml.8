@@ -2,143 +2,137 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08180C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3AC720758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E085D207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:03:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MArjN6+o"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xANdb5EU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgERQCB (ORCPT
+        id S1728199AbgERQDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:02:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43988 "EHLO
+        Mon, 18 May 2020 12:03:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgERQCA (ORCPT
+        with ESMTP id S1726958AbgERQDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:02:00 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745C2C061A0C;
-        Mon, 18 May 2020 09:01:59 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id s8so12501818wrt.9;
-        Mon, 18 May 2020 09:01:59 -0700 (PDT)
+        Mon, 18 May 2020 12:03:05 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD2EC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:03:04 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id h4so45605wmb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:03:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9SSAcWWQEWD0r3Pko5lkNYBqf2cJb3ilW4xHvkzbc9I=;
-        b=MArjN6+oacAwZQGLd8doq6gdFJ0WT4Kb25b+spk8eQpNEELJfKBkAiwG9HaZYt3kfV
-         n5AZKmlkj/DXuI/Rc0m4dWo4+ZJKH2LZVXZuQbQ735O0LaMitBaRTdBV3Bd7Fkjw8HoR
-         oRAFfSozNAKRNaKSL+j2nIDT4rV0zp0IFfAgnr3Z6rO6qoVDjDcRDgpJVTwSf1WxUFHm
-         Kdx0yV0GVZI52ulLcFDWl7DU1qRHEoRbMugSprRMnJj2p5jM9INfkX8ZnDYDjqcKBuVk
-         MavDletV6NJe2uUYog3u/jaK+4wROkr7iDFVoOivj4Rf152ZddwNy7kbAK2qGrSKKmr6
-         TVzQ==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kHp1jqnjDYe5WVMr5QDuCWYGK2hgWg9rc5IEJIxKk3w=;
+        b=xANdb5EU+o0BhxfOF0MxnStOFmxwzeL5BktfbSReTzGwrOzIXZjmIPslw/JewW3qYs
+         GZI2mWcOSEeF+2mZTyMqjIOlw+VZvZ8/Ji78lNKTzDjakAKU9U3kGm6PxNUgpXWnzHOU
+         fBojVaPg9nMm1DEiexnfdG2wd6bPAlwO/8bjR10Z5fqdErSt9IZmLh6vVp1di0sbhw54
+         ecepgS7+UaoQr4TY6odYUi+/nVC8cZDxQ3ZhAwpsVKkH47PsrW8uGKfuKN73hzLzyY45
+         I74SZggJgEHtXLIHi0RwsXg7TZmuZsg+4rYqSbms8lcIgIodi5KRqEsIsrawKtqKTlXE
+         e8SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9SSAcWWQEWD0r3Pko5lkNYBqf2cJb3ilW4xHvkzbc9I=;
-        b=kwcyc+aff9wNLHOjU71gZzW7NA4JpBM4X8mplckvG+cwVtJiomBgtX8ujFqHLdSHdg
-         xrHuZqXaIIieY0xi9W1EGG6TrEhL2LtWCP085XMirkJ7Dov539gfV+tWr37b+lQWtQM9
-         HTLNB9jFpg5h0l96tRKCVTao5ha+7XC18lgAu1LQ67tOCrnL5+VME8ZmhxV8wmbP6k2G
-         tVqA/xNOanJaomG3GHWq1O2FgMbP9A6aNiIDMvPa2oeUqQI6iexI3MD1z800rTFFDATq
-         CivKJ0bhrk+sL26KZFBPJysl4HT4Tnp49gYzjFb9uPAiqb/5617coxMW8yJxOSLZRfV4
-         ERPQ==
-X-Gm-Message-State: AOAM533zfXtoREVUE3kGfUb47qd50xyuofyb+OfZ3FJFVW08foQpuosf
-        44nX1eLNiGjzRQi/NSPVjBg=
-X-Google-Smtp-Source: ABdhPJxlB/26iS1Qh1s66tzdQo+jkzTvK0fB4tNlbfmbOIrBYS3GZJGvXhEyqbh9cO61i0owgfIf9A==
-X-Received: by 2002:adf:e90b:: with SMTP id f11mr20601532wrm.364.1589817718065;
-        Mon, 18 May 2020 09:01:58 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id q5sm18237471wra.36.2020.05.18.09.01.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 May 2020 09:01:56 -0700 (PDT)
-Date:   Mon, 18 May 2020 18:01:20 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
-Message-ID: <20200518160120.GA21361@ict14-OptiPlex-980>
-References: <20200518133645.19127-1-jonathan.albrieux@gmail.com>
- <20200518133645.19127-4-jonathan.albrieux@gmail.com>
- <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kHp1jqnjDYe5WVMr5QDuCWYGK2hgWg9rc5IEJIxKk3w=;
+        b=pGf++vi86sMyxRrnv3uoOXIRatmygHSRePqIenPhlObNFuB2WPRctPMWmdJ4Kc3q+g
+         45uB5q42uTKzQ9ZQhXrZt+nXfGmFAOJxF8ga4VqthDjHeu4RWo3HFbDB3zhL/SRozT8c
+         WK+/MOLoE0Lju7FmMxLhWaEH+MN8aqyB67TgMqDB1Jl7NEHv5qLP9Fi8lfYh4m90Qb+V
+         hfPObZ33/+d34lf5mZ5kQVaAYvHcKjD2fjbiTZYIyhoH5MX/2uAvli7nYBUSbvTANG/o
+         pcW7nz1yq2wkUe7g9uvJsUrFcfa0P77hU1fZm7x/6KN12YnvFHV4K43Z3+Tbt4rNqeei
+         qvyQ==
+X-Gm-Message-State: AOAM531yE08L44jO0sQ4lOyh4FGPojqtLGAxgOPdoDdonz8brh44nYu0
+        lt/0XEBiCkouLtu8ppTkYO+Mlw==
+X-Google-Smtp-Source: ABdhPJz+tML2+MA0h6epElsjzpBYHR7aAK55wbLH9UOQc87ETu0yWvrF/5P42QSgZ1c73Yj5cn0Sqw==
+X-Received: by 2002:a1c:b354:: with SMTP id c81mr83974wmf.136.1589817782874;
+        Mon, 18 May 2020 09:03:02 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
+        by smtp.googlemail.com with ESMTPSA id w12sm19493wmk.12.2020.05.18.09.03.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 09:03:02 -0700 (PDT)
+Subject: Re: [PATCH v3 0/9] clocksource/drivers/timer-atmel-tcb: add sama5d2
+ support
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20200506080554.283177-1-alexandre.belloni@bootlin.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <f0feb409-11fb-08de-cc06-216a16de994a@linaro.org>
+Date:   Mon, 18 May 2020 18:03:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200506080554.283177-1-alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 05:55:51PM +0300, Andy Shevchenko wrote:
-> On Mon, May 18, 2020 at 4:38 PM Jonathan Albrieux
-> <jonathan.albrieux@gmail.com> wrote:
-> 
-> > +       gpiod_set_value_cansleep(data->reset_gpiod, 1);
-> 
-> (1)
-> 
-> ...
-> 
-> > +       /*
-> > +        * If reset pin is provided then will be set to high on power on
-> > +        * and to low on power off according to AK09911 datasheet
-> > +        */
-> 
-> Wording is confusing, perhaps you have to use 'asserted / deasserted'.
+Hi Alexandre,
 
-Thank you for the suggestion, I'll be working on rewording as soon as
-possible.
+I would like to take the whole series but I need Rob's blessing for the
+DT parts.
 
-> Btw, in (1) it's also "high" (asserted). I barely understand how it's
-> supposed to work in all cases?
+On 06/05/2020 10:05, Alexandre Belloni wrote:
+> This series mainly adds sama5d2 support where we need to avoid using
+> clock index 0 because that clock is never enabled by the driver.
 > 
-> > +       reset_gpiod = devm_gpiod_get_optional(&client->dev,
-> > +                                             "reset", GPIOD_OUT_HIGH);
-> > +       if (IS_ERR(reset_gpiod))
-> > +               return PTR_ERR(reset_gpiod);
+> There is also a rework of the 32khz clock handling so it is not used for
+> clockevents on 32 bit counter because the increased rate improves the
+> resolution and doesn't have any drawback with that counter width. This
+> replaces a patch that has been carried in the linux-rt tree for a while.
+> 
+> Changes in v3:
+>  - Moved the child node documentation to the parent documentation
+> 
+> Changes in v2:
+>  - Rebased on v5.7-rc1
+>  - Moved the binding documentation to its proper place
+>  - Added back the atmel,tcb-timer child node documentation
+> 
+> Alexandre Belloni (8):
+>   dt-bindings: atmel-tcb: convert bindings to json-schema
+>   dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
+>   ARM: dts: at91: sama5d2: add TCB GCLK
+>   clocksource/drivers/timer-atmel-tcb: rework 32khz clock selection
+>   clocksource/drivers/timer-atmel-tcb: fill tcb_config
+>   clocksource/drivers/timer-atmel-tcb: stop using the 32kHz for
+>     clockevents
+>   clocksource/drivers/timer-atmel-tcb: allow selecting first divider
+>   clocksource/drivers/timer-atmel-tcb: add sama5d2 support
+> 
+> Kamel Bouhara (1):
+>   ARM: at91: add atmel tcb capabilities
+> 
+>  .../devicetree/bindings/mfd/atmel-tcb.txt     |  56 -------
+>  .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 150 ++++++++++++++++++
+>  arch/arm/boot/dts/sama5d2.dtsi                |  12 +-
+>  drivers/clocksource/timer-atmel-tcb.c         | 101 +++++++-----
+>  include/soc/at91/atmel_tcb.h                  |   5 +
+>  5 files changed, 219 insertions(+), 105 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
 > 
 
-I'm sorry but I'm not sure about what you mean by saying all cases.
-Currently  I'm testing this driver on a msm8916 device having AK09911
-magnetometer. At the current stage the driver is failing on probe 
-because reset pin is not connected to VID (as datasheet requires in case
-of pin not being used). In case of reset pin not asserted, register's
-reset is triggered resulting in empty registers, leading to probe fail.
-For this reason pin is asserted during power on in order to have 
-informations in registers and deasserted before power off triggering
-a reset.
 
-A workaround that gets AK09911 working on device is by setting the
-reset pin always high on device tree. This way registers gets reset by
-a Power On Reset circuit autonomously and reset pin never triggers the
-reset.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-
-Hoping to having answered to your question,
-Best regards,
-Jonathan Albrieux
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
