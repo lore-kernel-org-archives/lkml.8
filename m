@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E99C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15EBA20826
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588B320715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825105;
-	bh=8kVMZVJ1E7gi76obbwwyWZArSsiPule4tEWDW6aO31s=;
+	s=default; t=1589825108;
+	bh=2UJASD75AzKHx+hT//aLKQOB869q/6fuShSvokpZhIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fib4WkmrDqyMLOFoa+ec8wzOPt0bb3XDFT0F033lVfV4+UblqapdLqRfaa4OYguFM
-	 DpXpuyNAkZe9Tmg6bt7ebZuXQ4awrX/xQ51Rh7poXWYPFJUOduZEvl8WoLBgqfojE2
-	 tEJBuCxemlh+VsIk/EElPM+xwwGGbgpP+yxGy6TQ=
+	b=YYyVoPEv3/jrHMfDbaiG4FdOVBKqDfLCHFo8AqDyWey8Rle4EujiEULCgiB+nb+iY
+	 rsV9bcHQWKhr7iUQurcH+lXVSOVTt4J55wLci+1MIzWz/6bjV0l0ivvwrg2Lzpf5ge
+	 a0SH5nbObBhfdFM/O0c7Df8ZKGkt2fOqHaP48bC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732884AbgERSFD (ORCPT
+        id S1732892AbgERSFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:05:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:05:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732857AbgERSEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:04:53 -0400
+        id S1732861AbgERSE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:04:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EACA20715;
-        Mon, 18 May 2020 18:04:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 156F420826;
+        Mon, 18 May 2020 18:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825093;
-        bh=8kVMZVJ1E7gi76obbwwyWZArSsiPule4tEWDW6aO31s=;
+        s=default; t=1589825095;
+        bh=2UJASD75AzKHx+hT//aLKQOB869q/6fuShSvokpZhIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dpcjh4JjN0zEsnktFu5yHuY+/Di2IYA9mNVJJtIwNS5bDU3n30NHDLSTV06B8Dg27
-         s43S4GV9rJuWWFmdJNuoH/Ygi7lCeuVy25r0PCrtH6NdLzqI702WSmg31Z8MbXPyIs
-         CgwYt9Dz56HVVf/dULHB/m/b9x+pjl5FyuOcxj8s=
+        b=VItrX3VB/ps+uleSYA4+hvZ3CuQpqqYRNoWkvY3ZGlEuyZ8uWF6nJClTtRdc28lM8
+         z8zHCUwMu2Z5EKMu48QS+1oAEs2Bh1fsMZL2CaZqYQPAT+Yb/EtZH6F1LJwJqa8tTY
+         mLvK0E5+0T+Sv158ADYh9pV+X7uLUq4qtq7+PxgQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Martin KaFai Lau <kafai@fb.com>,
+        stable@vger.kernel.org, Grace Kao <grace.kao@intel.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 087/194] bpf, sockmap: bpf_tcp_ingress needs to subtract bytes from sg.size
-Date:   Mon, 18 May 2020 19:36:17 +0200
-Message-Id: <20200518173538.924074160@linuxfoundation.org>
+Subject: [PATCH 5.6 078/194] pinctrl: cherryview: Add missing spinlock usage in chv_gpio_irq_handler
+Date:   Mon, 18 May 2020 19:36:08 +0200
+Message-Id: <20200518173538.289905215@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -62,78 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Fastabend <john.fastabend@gmail.com>
+From: Grace Kao <grace.kao@intel.com>
 
-[ Upstream commit 81aabbb9fb7b4b1efd073b62f0505d3adad442f3 ]
+[ Upstream commit 69388e15f5078c961b9e5319e22baea4c57deff1 ]
 
-In bpf_tcp_ingress we used apply_bytes to subtract bytes from sg.size
-which is used to track total bytes in a message. But this is not
-correct because apply_bytes is itself modified in the main loop doing
-the mem_charge.
+According to Braswell NDA Specification Update (#557593),
+concurrent read accesses may result in returning 0xffffffff and write
+instructions may be dropped. We have an established format for the
+commit references, i.e.
+cdca06e4e859 ("pinctrl: baytrail: Add missing spinlock usage in
+byt_gpio_irq_handler")
 
-Then at the end of this we have sg.size incorrectly set and out of
-sync with actual sk values. Then we can get a splat if we try to
-cork the data later and again try to redirect the msg to ingress. To
-fix instead of trying to track msg.size do the easy thing and include
-it as part of the sk_msg_xfer logic so that when the msg is moved the
-sg.size is always correct.
-
-To reproduce the below users will need ingress + cork and hit an
-error path that will then try to 'free' the skmsg.
-
-[  173.699981] BUG: KASAN: null-ptr-deref in sk_msg_free_elem+0xdd/0x120
-[  173.699987] Read of size 8 at addr 0000000000000008 by task test_sockmap/5317
-
-[  173.700000] CPU: 2 PID: 5317 Comm: test_sockmap Tainted: G          I       5.7.0-rc1+ #43
-[  173.700005] Hardware name: Dell Inc. Precision 5820 Tower/002KVM, BIOS 1.9.2 01/24/2019
-[  173.700009] Call Trace:
-[  173.700021]  dump_stack+0x8e/0xcb
-[  173.700029]  ? sk_msg_free_elem+0xdd/0x120
-[  173.700034]  ? sk_msg_free_elem+0xdd/0x120
-[  173.700042]  __kasan_report+0x102/0x15f
-[  173.700052]  ? sk_msg_free_elem+0xdd/0x120
-[  173.700060]  kasan_report+0x32/0x50
-[  173.700070]  sk_msg_free_elem+0xdd/0x120
-[  173.700080]  __sk_msg_free+0x87/0x150
-[  173.700094]  tcp_bpf_send_verdict+0x179/0x4f0
-[  173.700109]  tcp_bpf_sendpage+0x3ce/0x5d0
-
-Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Link: https://lore.kernel.org/bpf/158861290407.14306.5327773422227552482.stgit@john-Precision-5820-Tower
+Fixes: 0bd50d719b00 ("pinctrl: cherryview: prevent concurrent access to GPIO controllers")
+Signed-off-by: Grace Kao <grace.kao@intel.com>
+Reported-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/skmsg.h | 1 +
- net/ipv4/tcp_bpf.c    | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
-index 14d61bba0b79b..71db17927a9da 100644
---- a/include/linux/skmsg.h
-+++ b/include/linux/skmsg.h
-@@ -187,6 +187,7 @@ static inline void sk_msg_xfer(struct sk_msg *dst, struct sk_msg *src,
- 	dst->sg.data[which] = src->sg.data[which];
- 	dst->sg.data[which].length  = size;
- 	dst->sg.size		   += size;
-+	src->sg.size		   -= size;
- 	src->sg.data[which].length -= size;
- 	src->sg.data[which].offset += size;
- }
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index 8a01428f80c1c..19bd10e6ab830 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -200,7 +200,6 @@ static int bpf_tcp_ingress(struct sock *sk, struct sk_psock *psock,
+diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+index 4c74fdde576d0..1093a6105d40c 100644
+--- a/drivers/pinctrl/intel/pinctrl-cherryview.c
++++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+@@ -1479,11 +1479,15 @@ static void chv_gpio_irq_handler(struct irq_desc *desc)
+ 	struct chv_pinctrl *pctrl = gpiochip_get_data(gc);
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	unsigned long pending;
++	unsigned long flags;
+ 	u32 intr_line;
  
- 	if (!ret) {
- 		msg->sg.start = i;
--		msg->sg.size -= apply_bytes;
- 		sk_psock_queue_msg(psock, tmp);
- 		sk_psock_data_ready(sk, psock);
- 	} else {
+ 	chained_irq_enter(chip, desc);
+ 
++	raw_spin_lock_irqsave(&chv_lock, flags);
+ 	pending = readl(pctrl->regs + CHV_INTSTAT);
++	raw_spin_unlock_irqrestore(&chv_lock, flags);
++
+ 	for_each_set_bit(intr_line, &pending, pctrl->community->nirqs) {
+ 		unsigned int irq, offset;
+ 
 -- 
 2.20.1
 
