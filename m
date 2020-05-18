@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C74C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37894C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C67BC207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1896720829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824477;
-	bh=xURob6Yxsaifegk/rKDVTt3iGfWy/FpxpLBBuq79G/w=;
+	s=default; t=1589824482;
+	bh=/BcYTFxhp9faC8o2IxkdEy/uKhITvfBagAlcvm74Qdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yp9OsEafDHvUNOKtDMHcAwDdW7w+2Iytv2AwFcQpHb2Kjh51GbXXXydjhj2nTg9og
-	 /1NlpuLLH8GCqXHrdCvqWTgC6CKTlwt9jlDt+b8gErbddaax3mI4wan6RUtNPgVxtx
-	 m+l8HeaKIV1WcczW5sp4m3Tzrrm7nhNAMD/twzOo=
+	b=zJV0ZYA1ZIVo8lbNB2cYDxQFHUqQg2MRxAI44iaK5DOsI7YWshPIT37jjHOAz/4Tj
+	 1NHAxnwu1ZzW+3tyMFXj31LlZFt9k/FNAHJ8W4Zs7ejENjEO0CdD5UK9sRFhafp3Ev
+	 E3yMmCicGLzbgsA6kiYu1wpL0LjHl2KQT5BNsMNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729362AbgERRyg (ORCPT
+        id S1731333AbgERRyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:54:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59326 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:54:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731317AbgERRyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:54:33 -0400
+        id S1731322AbgERRyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:54:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61B7A207C4;
-        Mon, 18 May 2020 17:54:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6E0520829;
+        Mon, 18 May 2020 17:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824472;
-        bh=xURob6Yxsaifegk/rKDVTt3iGfWy/FpxpLBBuq79G/w=;
+        s=default; t=1589824475;
+        bh=/BcYTFxhp9faC8o2IxkdEy/uKhITvfBagAlcvm74Qdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EdX/mPRxpDylEb7KWoPODm70aDdHLYz2zrFgpVvV4QnrVOabIUAIdo9sNlUEqcpGi
-         X7XSCCV4B4kkwipz/LEJzMxErPaHpeuwrzlwgtanov8l59cjI88CjdHvxMnRPoL9zL
-         j0bJfxzDGA2UCh8qilQhcQq2Ad1vAHOGTmD3v9U8=
+        b=qBkeSgcB4ujzywdCOJyXoqUYlIAcFtx1kxPe7SE26Wb/rSdGddYI1BJ+6aVVN2iQG
+         Amenr+NIESasydMC5fBQb0f3ZronM1GOhc3gbgqPZAAwJmdxEVStxyDEmaQmFnANT3
+         ffjxxkJdo2gEwkAhad7G2LL5cJy1dne6FleMuXB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
         Soheil Hassas Yeganeh <soheil@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 025/147] tcp: fix error recovery in tcp_zerocopy_receive()
-Date:   Mon, 18 May 2020 19:35:48 +0200
-Message-Id: <20200518173516.952261293@linuxfoundation.org>
+Subject: [PATCH 5.4 026/147] tcp: fix SO_RCVLOWAT hangs with fat skbs
+Date:   Mon, 18 May 2020 19:35:49 +0200
+Message-Id: <20200518173517.069991648@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -63,74 +62,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit e776af608f692a7a647455106295fa34469e7475 ]
+[ Upstream commit 24adbc1676af4e134e709ddc7f34cf2adc2131e4 ]
 
-If user provides wrong virtual address in TCP_ZEROCOPY_RECEIVE
-operation we want to return -EINVAL error.
+We autotune rcvbuf whenever SO_RCVLOWAT is set to account for 100%
+overhead in tcp_set_rcvlowat()
 
-But depending on zc->recv_skip_hint content, we might return
--EIO error if the socket has SOCK_DONE set.
+This works well when skb->len/skb->truesize ratio is bigger than 0.5
 
-Make sure to return -EINVAL in this case.
+But if we receive packets with small MSS, we can end up in a situation
+where not enough bytes are available in the receive queue to satisfy
+RCVLOWAT setting.
+As our sk_rcvbuf limit is hit, we send zero windows in ACK packets,
+preventing remote peer from sending more data.
 
-BUG: KMSAN: uninit-value in tcp_zerocopy_receive net/ipv4/tcp.c:1833 [inline]
-BUG: KMSAN: uninit-value in do_tcp_getsockopt+0x4494/0x6320 net/ipv4/tcp.c:3685
-CPU: 1 PID: 625 Comm: syz-executor.0 Not tainted 5.7.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- tcp_zerocopy_receive net/ipv4/tcp.c:1833 [inline]
- do_tcp_getsockopt+0x4494/0x6320 net/ipv4/tcp.c:3685
- tcp_getsockopt+0xf8/0x1f0 net/ipv4/tcp.c:3728
- sock_common_getsockopt+0x13f/0x180 net/core/sock.c:3131
- __sys_getsockopt+0x533/0x7b0 net/socket.c:2177
- __do_sys_getsockopt net/socket.c:2192 [inline]
- __se_sys_getsockopt+0xe1/0x100 net/socket.c:2189
- __x64_sys_getsockopt+0x62/0x80 net/socket.c:2189
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:297
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c829
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f1deeb72c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
-RAX: ffffffffffffffda RBX: 00000000004e01e0 RCX: 000000000045c829
-RDX: 0000000000000023 RSI: 0000000000000006 RDI: 0000000000000009
-RBP: 000000000078bf00 R08: 0000000020000200 R09: 0000000000000000
-R10: 00000000200001c0 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000001d8 R14: 00000000004d3038 R15: 00007f1deeb736d4
+Even autotuning does not help, because it only triggers at the time
+user process drains the queue. If no EPOLLIN is generated, this
+can not happen.
 
-Local variable ----zc@do_tcp_getsockopt created at:
- do_tcp_getsockopt+0x1a74/0x6320 net/ipv4/tcp.c:3670
- do_tcp_getsockopt+0x1a74/0x6320 net/ipv4/tcp.c:3670
+Note poll() has a similar issue, after commit
+c7004482e8dc ("tcp: Respect SO_RCVLOWAT in tcp_poll().")
 
-Fixes: 05255b823a61 ("tcp: add TCP_ZEROCOPY_RECEIVE support for zerocopy receive")
+Fixes: 03f45c883c6f ("tcp: avoid extra wakeups for SO_RCVLOWAT users")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
 Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/net/tcp.h    |   13 +++++++++++++
+ net/ipv4/tcp.c       |   14 +++++++++++---
+ net/ipv4/tcp_input.c |    3 ++-
+ 3 files changed, 26 insertions(+), 4 deletions(-)
 
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1401,6 +1401,19 @@ static inline int tcp_full_space(const s
+ 	return tcp_win_from_space(sk, READ_ONCE(sk->sk_rcvbuf));
+ }
+ 
++/* We provision sk_rcvbuf around 200% of sk_rcvlowat.
++ * If 87.5 % (7/8) of the space has been consumed, we want to override
++ * SO_RCVLOWAT constraint, since we are receiving skbs with too small
++ * len/truesize ratio.
++ */
++static inline bool tcp_rmem_pressure(const struct sock *sk)
++{
++	int rcvbuf = READ_ONCE(sk->sk_rcvbuf);
++	int threshold = rcvbuf - (rcvbuf >> 3);
++
++	return atomic_read(&sk->sk_rmem_alloc) > threshold;
++}
++
+ extern void tcp_openreq_init_rwin(struct request_sock *req,
+ 				  const struct sock *sk_listener,
+ 				  const struct dst_entry *dst);
 --- a/net/ipv4/tcp.c
 +++ b/net/ipv4/tcp.c
-@@ -1757,10 +1757,11 @@ static int tcp_zerocopy_receive(struct s
- 
- 	down_read(&current->mm->mmap_sem);
- 
--	ret = -EINVAL;
- 	vma = find_vma(current->mm, address);
--	if (!vma || vma->vm_start > address || vma->vm_ops != &tcp_vm_ops)
--		goto out;
-+	if (!vma || vma->vm_start > address || vma->vm_ops != &tcp_vm_ops) {
-+		up_read(&current->mm->mmap_sem);
-+		return -EINVAL;
+@@ -477,9 +477,17 @@ static void tcp_tx_timestamp(struct sock
+ static inline bool tcp_stream_is_readable(const struct tcp_sock *tp,
+ 					  int target, struct sock *sk)
+ {
+-	return (READ_ONCE(tp->rcv_nxt) - READ_ONCE(tp->copied_seq) >= target) ||
+-		(sk->sk_prot->stream_memory_read ?
+-		sk->sk_prot->stream_memory_read(sk) : false);
++	int avail = READ_ONCE(tp->rcv_nxt) - READ_ONCE(tp->copied_seq);
++
++	if (avail > 0) {
++		if (avail >= target)
++			return true;
++		if (tcp_rmem_pressure(sk))
++			return true;
 +	}
- 	zc->length = min_t(unsigned long, zc->length, vma->vm_end - address);
++	if (sk->sk_prot->stream_memory_read)
++		return sk->sk_prot->stream_memory_read(sk);
++	return false;
+ }
  
- 	tp = tcp_sk(sk);
+ /*
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -4751,7 +4751,8 @@ void tcp_data_ready(struct sock *sk)
+ 	const struct tcp_sock *tp = tcp_sk(sk);
+ 	int avail = tp->rcv_nxt - tp->copied_seq;
+ 
+-	if (avail < sk->sk_rcvlowat && !sock_flag(sk, SOCK_DONE))
++	if (avail < sk->sk_rcvlowat && !tcp_rmem_pressure(sk) &&
++	    !sock_flag(sk, SOCK_DONE))
+ 		return;
+ 
+ 	sk->sk_data_ready(sk);
 
 
