@@ -2,192 +2,124 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6C3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6391C20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:11:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="SiF13+Od"
+	by mail.kernel.org (Postfix) with ESMTP id CDD9720825
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:12:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589800320;
+	bh=y5KEPZycp2oqOnuCY3zLjhziAEaTVxgXBZUxJmqtlGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kbVT85wO+smwd5jLoPWiyFfwAanY4RmnV938gfp2GkEGS9KID/LRld0QS/CCw3hUB
+	 ApcVh22LBe5Z7FQ/XrLaLU+0ZwSOeM+ax6jssacdKgl8kpbNWtci+bSTjlprXJoOG1
+	 +jFq/42io1g/z1zpJoD3t9kBCYjw8L89DbCNG+JE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgERLLx (ORCPT
+        id S1727940AbgERLMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:11:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgERLLx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:11:53 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA40C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 04:11:53 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 63so7666423oto.8
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 04:11:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WnW/FS5/y4iqPUCTNlQB9p3cf5TdTtltAqzqXbWyNfI=;
-        b=SiF13+OdH5oD2MsnF+14BeV0juhIGdHZwlgf9ugvpGzlkis+pc2aPv+YZhWio19ltD
-         1yYWHnvgi3l+QyHS+EEtuAvZezYgiTxH4nfAuK8o9vQqfz/RJLBu7R/P93N0N1EU6j3G
-         XX+zjrmZ8JIoQoXFWUCwtt86X2HyO+NpbkLrZYXKZiPQuU/NmiZveSsYEPi6GWVhIoYk
-         VvUgj3kcYR8dVVy6wjmLhHza8TVKI3hhiZJLeCG6eq4C45K0QLrxPBo5DltmQtRsYWPK
-         +8rhSmFQDmQBnjGfsBnbmqaJuXHRhiu2ASH6VXl3Xc4jMxEoAzihAzS5LakL7MrUsSMl
-         7drA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WnW/FS5/y4iqPUCTNlQB9p3cf5TdTtltAqzqXbWyNfI=;
-        b=ofJwjmSLLcu/saFuVFdYnvn1s5FERB8mlF8kNFKlQ1EVbH3aluyP6bZMaEdDla0sLy
-         vsFyzkxIR9TtT6TLKflEy59o3mUVgac9iFYcZm4R/7QL5lnKCr1fGBZdHcHIzRtdgUeh
-         CQ0zpy2JaMx0AMlkWMHF/dYIAw17bLI4FeGVXhDzOUOpeb8uYKkJlL98UVOLI89dZnJY
-         zMZ9VKUCIk2GRvBMBki2MfgGDkwxXmeZVQV/P4HHzsvD6fLN6gFIPR6BIu8GJfsEzypY
-         knH5lvjfo6QqbLfN8Jz57OLbiHHpwDPq85KqAqSPrpH6JDuM7LY2+JsAqECP86yFjrnz
-         tlzg==
-X-Gm-Message-State: AOAM530LSBzwH0gzaMb/qAG0Ztdx+8dCGw8p2uuu98jr4c6AMAz4GpZx
-        zg5ChzvLJtXI4aSHK5LxO3DcPq6kQxNMfpTGR3jGXA==
-X-Google-Smtp-Source: ABdhPJzWvG5+/mZbntvuQZrcmj5uN3TMQ1/8ZTeXO22o5c3VJZ54RceNb3EEyK68Aqyy1pe6SVztkskLFqAxY3YK/dI=
-X-Received: by 2002:a9d:6ac9:: with SMTP id m9mr12024444otq.33.1589800312261;
- Mon, 18 May 2020 04:11:52 -0700 (PDT)
+        Mon, 18 May 2020 07:12:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726585AbgERLL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:11:59 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F9752070A;
+        Mon, 18 May 2020 11:11:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589800318;
+        bh=y5KEPZycp2oqOnuCY3zLjhziAEaTVxgXBZUxJmqtlGY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ekps8lER8cGxo1U9Ib02aFnop4f+6JvNaLY30v7KoO6Qvs/xi4Cz1Wl4ZKEIDxfRf
+         h251C0uVoz8rrgQx3p1G25upPTqRClTJ0fZEpP33zbVSgiz9Q+QbOSQHttgaxm7z3O
+         leceqbuxoROcBvu97fh13ryAY53OfNuowzkvsoWY=
+Date:   Mon, 18 May 2020 12:11:56 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/19] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200518111156.GD8699@sirena.org.uk>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-3-Sergey.Semin@baikalelectronics.ru>
+ <20200515120111.GV185537@smile.fi.intel.com>
+ <20200515121815.GB5066@sirena.org.uk>
+ <20200515123702.GA185537@smile.fi.intel.com>
+ <20200515124131.GE5066@sirena.org.uk>
+ <20200515200250.zjsv5uaftwqcnwud@mobilestation>
+ <20200518105130.GC8699@sirena.org.uk>
+ <20200518110453.w3ko5a5yzwyr73ir@mobilestation>
 MIME-Version: 1.0
-References: <4502272.pByIgeXik9@kreacher> <CAJZ5v0j6S+we7tHeV9TM30LS+TO3zWigACe0ZUFfWphg2FBBZQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0j6S+we7tHeV9TM30LS+TO3zWigACe0ZUFfWphg2FBBZQ@mail.gmail.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Mon, 18 May 2020 19:11:41 +0800
-Message-ID: <CAB4CAwc4y7xitv9L9w61GKfBsbhHXuk+iM+QWKc2=0mks_fNFg@mail.gmail.com>
-Subject: Re: [PATCH[RFT]] ACPI: EC: s2idle: Avoid flushing EC work when EC GPE
- is inactive
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cHMo6Wbp1wrKhbfi"
+Content-Disposition: inline
+In-Reply-To: <20200518110453.w3ko5a5yzwyr73ir@mobilestation>
+X-Cookie: If in doubt, mumble.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 4:59 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, May 14, 2020 at 12:10 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Flushing the EC work while suspended to idle when the EC GPE status
-> > is not set causes some EC wakeup events (notably power button and
-> > lid ones) to be missed after a series of spurious wakeups on the Dell
-> > XPS13 9360 in my office.
-> >
-> > If that happens, the machine cannot be woken up from suspend-to-idle
-> > by a power button press or lid status change and it needs to be woken
-> > up in some other way (eg. by a key press).
-> >
-> > Flushing the EC work only after successful dispatching the EC GPE,
-> > which means that its status has been set, avoids the issue, so change
-> > the code in question accordingly.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >
-> > Hi Chris,
-> >
-> > Please check if the key press wakeup still works on your system with this patch
-> > applied (on top of https://patchwork.kernel.org/patch/11538065/).
->
-> Hi Chris,
->
-> Since I haven't heard back from you and the problem at hand is a
-> regression on the machine where it happens, I'm going to push this
-> patch for merging.
->
-> If it causes the key press wakeup issue to reappear on your machine,
-> I'm afraid that we'll need to quirk it in the EC driver.
->
-> Thanks!
 
-Hi Rafael,
-My laptop works w/o problem waking up from a keystroke with this patch
-on top of https://patchwork.kernel.org/patch/11538065/).
+--cHMo6Wbp1wrKhbfi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Chris
->
-> > ---
-> >  drivers/acpi/ec.c    |    6 +++++-
-> >  drivers/acpi/sleep.c |   15 ++++-----------
-> >  2 files changed, 9 insertions(+), 12 deletions(-)
-> >
-> > Index: linux-pm/drivers/acpi/ec.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/acpi/ec.c
-> > +++ linux-pm/drivers/acpi/ec.c
-> > @@ -2020,9 +2020,13 @@ bool acpi_ec_dispatch_gpe(void)
-> >          * to allow the caller to process events properly after that.
-> >          */
-> >         ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
-> > -       if (ret == ACPI_INTERRUPT_HANDLED)
-> > +       if (ret == ACPI_INTERRUPT_HANDLED) {
-> >                 pm_pr_dbg("EC GPE dispatched\n");
-> >
-> > +               /* Flush the event and query workqueues. */
-> > +               acpi_ec_flush_work();
-> > +       }
-> > +
-> >         return false;
-> >  }
-> >  #endif /* CONFIG_PM_SLEEP */
-> > Index: linux-pm/drivers/acpi/sleep.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/acpi/sleep.c
-> > +++ linux-pm/drivers/acpi/sleep.c
-> > @@ -980,13 +980,6 @@ static int acpi_s2idle_prepare_late(void
-> >         return 0;
-> >  }
-> >
-> > -static void acpi_s2idle_sync(void)
-> > -{
-> > -       /* The EC driver uses special workqueues that need to be flushed. */
-> > -       acpi_ec_flush_work();
-> > -       acpi_os_wait_events_complete(); /* synchronize Notify handling */
-> > -}
-> > -
-> >  static bool acpi_s2idle_wake(void)
-> >  {
-> >         if (!acpi_sci_irq_valid())
-> > @@ -1018,7 +1011,7 @@ static bool acpi_s2idle_wake(void)
-> >                         return true;
-> >
-> >                 /*
-> > -                * Cancel the wakeup and process all pending events in case
-> > +                * Cancel the SCI wakeup and process all pending events in case
-> >                  * there are any wakeup ones in there.
-> >                  *
-> >                  * Note that if any non-EC GPEs are active at this point, the
-> > @@ -1026,8 +1019,7 @@ static bool acpi_s2idle_wake(void)
-> >                  * should be missed by canceling the wakeup here.
-> >                  */
-> >                 pm_system_cancel_wakeup();
-> > -
-> > -               acpi_s2idle_sync();
-> > +               acpi_os_wait_events_complete();
-> >
-> >                 /*
-> >                  * The SCI is in the "suspended" state now and it cannot produce
-> > @@ -1060,7 +1052,8 @@ static void acpi_s2idle_restore(void)
-> >          * of GPEs.
-> >          */
-> >         acpi_os_wait_events_complete(); /* synchronize GPE processing */
-> > -       acpi_s2idle_sync();
-> > +       acpi_ec_flush_work(); /* flush the EC driver's workqueues */
-> > +       acpi_os_wait_events_complete(); /* synchronize Notify handling */
-> >
-> >         s2idle_wakeup = false;
-> >
-> >
-> >
-> >
+On Mon, May 18, 2020 at 02:04:53PM +0300, Serge Semin wrote:
+> On Mon, May 18, 2020 at 11:51:30AM +0100, Mark Brown wrote:
+
+> > > - semantically the xfer argument isn't optional and we can't fetch it that easy
+> > >   in the dmaengine completion callbacks.
+
+> > Not sure I follow this.
+
+> I mean is it Ok to call the spi_delay_exec like this: spi_delay_exec(delay, NULL),
+> with null passed instead of xfer pointer? Semantically the pointer is required only
+> if we'd need to calculate the SPI_DELAY_UNIT_SCK delay, but here we'll need
+> USECS and NSECS delays. So at the first glace there is no problem with passed
+> NULL instead of xfer. But doing so we'd rely on the semantic peculiarity, which
+> may seem a bit hackish.
+
+Yes, that should be fine if you don't specify a SCK delay.  There's no
+reason to be looking at that if the delay isn't specified in SCKs.
+
+--cHMo6Wbp1wrKhbfi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7CbXsACgkQJNaLcl1U
+h9Bchwf/XyAPpC0qyH8YKkXr5ojOu4mZYFgsks4BSiWD3oihJ+PHPPyadgcyk5Cy
+1Da3q89y/hcJIj6G0IBO+VN1/5XqjtuF3KGrac8JysLfV9nphim4QqyrlF91DrZb
+6Zx/kpjUVDEfbTi9KOfda0sYHeeU6ccd9/3QdmQS5yRR04lHA+7204ZINBZ+AHPu
+F9yZaAfv4OclT57cMEGGHjXs3lY+KmOa8n4TV58MiBm2fMJNlcrAQAK5zSmrvZqN
+ZgR87Oi21WPCxRVCz15wj4tuGKg38jUawie1GxD3pu1vf+gfc8DvlcmrKWBxs263
+k/W97ew0gHSbfy3VyyhMH+zISqRX8A==
+=YKl/
+-----END PGP SIGNATURE-----
+
+--cHMo6Wbp1wrKhbfi--
