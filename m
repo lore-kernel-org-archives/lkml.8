@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214E4C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF5EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EECB020671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6432320715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825570;
-	bh=cTsk6Vd1CBdbHwWM2rAQN9WqRfHIR5FG9DzF31Adokw=;
+	s=default; t=1589825574;
+	bh=xKyfeEiHGfJHW6bGppshms0IL7S4z485dpab60U8Bt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1QqgDvhoIJ9jiYKjz5JpFgnoEtkV/DuytL58Is+Oh90SnioR0VDf4j7G2bceW6cgs
-	 vDagYh2YJ48WkreAphdvhOJM3IEgtTjSepoARtqGiv8KdC8WIrnbHzLtDnsn5XfEip
-	 2wkaqi87jtSpVKNcf+MOyq5wYiVB6OKvBRNLPCVU=
+	b=gQ3LC2mp1nD3x1FaySr/iv7S2fDzg9jzZ/gjXv3h/oC18r80o5q9/GV6FzVnAZuVR
+	 i0IzD3y6vECtEedlFthWIbWpMqSnbTYx9poM2rwRZdLOIk+x9YMKlHGWbufTwuhRUl
+	 RgdihR4v1FK5QEQFLxC2361vTvjTmFNVSYD5NqaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732601AbgERSDD (ORCPT
+        id S1733115AbgERSMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:03:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47856 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:12:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731198AbgERSC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:02:56 -0400
+        id S1729199AbgERSCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:02:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4A8B207D3;
-        Mon, 18 May 2020 18:02:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FFCA20715;
+        Mon, 18 May 2020 18:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824976;
-        bh=cTsk6Vd1CBdbHwWM2rAQN9WqRfHIR5FG9DzF31Adokw=;
+        s=default; t=1589824968;
+        bh=xKyfeEiHGfJHW6bGppshms0IL7S4z485dpab60U8Bt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XV9cywZWMaW4eKwjpvgF4UuTVoim1bO3wRhKOdHg/GKmCBBv233lD1iTgZEq5ffNo
-         pisZ2u3u6ZfvsXyfBiQb9VvcYIFu8I5RATM9FHfGvU6BtuqoxdWGJujnv2H/BEW3Ue
-         yBx86eGvChaSnKGO81nwN8uqsSgihUv/ijIDqEm4=
+        b=BYzFPv3CrjJNGRrkwRrvRa+fzCVFs9RfmZbX+GBgGt3O4ugBas6NR4NQKjPpjV4GA
+         T9LMzupi6ulUmWE/vZvCpnzmnqbbn6cFlXDbug2t6ZjYwHL6URWgrnOwr2bXezpu+x
+         ONc4kJVOGY2847KguXoGEnv0k8NuMW3yw8IdUFR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ansuel Smith <ansuelsmth@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 077/194] pinctrl: qcom: fix wrong write in update_dual_edge
-Date:   Mon, 18 May 2020 19:36:07 +0200
-Message-Id: <20200518173538.215907782@linuxfoundation.org>
+Subject: [PATCH 5.6 075/194] pinctrl: sunrisepoint: Fix PAD lock register offset for SPT-H
+Date:   Mon, 18 May 2020 19:36:05 +0200
+Message-Id: <20200518173538.046214538@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -61,37 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ansuel Smith <ansuelsmth@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 90bcb0c3ca0809d1ed358bfbf838df4b3d4e58e0 ]
+[ Upstream commit 6b7275c87717652daace4c0b8131eb184c7d7516 ]
 
-Fix a typo in the readl/writel accessor conversion where val is used
-instead of pol changing the behavior of the original code.
+It appears that SPT-H variant has different offset for PAD locking registers.
+Fix it here.
 
-Cc: stable@vger.kernel.org
-Fixes: 6c73698904aa pinctrl: qcom: Introduce readl/writel accessors
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200414003726.25347-1-ansuelsmth@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 551fa5801ef1 ("pinctrl: intel: sunrisepoint: Add Intel Sunrisepoint-H support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/qcom/pinctrl-msm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/intel/pinctrl-sunrisepoint.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 1a948c3f54b7c..9f1c9951949ea 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -692,7 +692,7 @@ static void msm_gpio_update_dual_edge_pos(struct msm_pinctrl *pctrl,
+diff --git a/drivers/pinctrl/intel/pinctrl-sunrisepoint.c b/drivers/pinctrl/intel/pinctrl-sunrisepoint.c
+index 330c8f077b73a..4d7a86a5a37b0 100644
+--- a/drivers/pinctrl/intel/pinctrl-sunrisepoint.c
++++ b/drivers/pinctrl/intel/pinctrl-sunrisepoint.c
+@@ -15,17 +15,18 @@
  
- 		pol = msm_readl_intr_cfg(pctrl, g);
- 		pol ^= BIT(g->intr_polarity_bit);
--		msm_writel_intr_cfg(val, pctrl, g);
-+		msm_writel_intr_cfg(pol, pctrl, g);
+ #include "pinctrl-intel.h"
  
- 		val2 = msm_readl_io(pctrl, g) & BIT(g->in_bit);
- 		intstat = msm_readl_intr_status(pctrl, g);
+-#define SPT_PAD_OWN	0x020
+-#define SPT_PADCFGLOCK	0x0a0
+-#define SPT_HOSTSW_OWN	0x0d0
+-#define SPT_GPI_IS	0x100
+-#define SPT_GPI_IE	0x120
++#define SPT_PAD_OWN		0x020
++#define SPT_H_PADCFGLOCK	0x090
++#define SPT_LP_PADCFGLOCK	0x0a0
++#define SPT_HOSTSW_OWN		0x0d0
++#define SPT_GPI_IS		0x100
++#define SPT_GPI_IE		0x120
+ 
+ #define SPT_COMMUNITY(b, s, e)				\
+ 	{						\
+ 		.barno = (b),				\
+ 		.padown_offset = SPT_PAD_OWN,		\
+-		.padcfglock_offset = SPT_PADCFGLOCK,	\
++		.padcfglock_offset = SPT_LP_PADCFGLOCK,	\
+ 		.hostown_offset = SPT_HOSTSW_OWN,	\
+ 		.is_offset = SPT_GPI_IS,		\
+ 		.ie_offset = SPT_GPI_IE,		\
+@@ -47,7 +48,7 @@
+ 	{						\
+ 		.barno = (b),				\
+ 		.padown_offset = SPT_PAD_OWN,		\
+-		.padcfglock_offset = SPT_PADCFGLOCK,	\
++		.padcfglock_offset = SPT_H_PADCFGLOCK,	\
+ 		.hostown_offset = SPT_HOSTSW_OWN,	\
+ 		.is_offset = SPT_GPI_IS,		\
+ 		.ie_offset = SPT_GPI_IE,		\
 -- 
 2.20.1
 
