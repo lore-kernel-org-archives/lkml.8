@@ -7,47 +7,56 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B629C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4467C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33DD320671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8558B20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825914;
-	bh=1nnHsVdBrNbkfWBXxTVXXxkC6uk3Re/8JIIgBHmsfGw=;
+	s=default; t=1589825917;
+	bh=BEUWMUQxwatFeo/5l8VvlQUF3ITZ2kX7a3zK9Hqp7dw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sQO92JSMCBbN5/k9BgUesI9SfeImO4PEiNWlQBRGaHx7+T+sTsDghZBduFrVYIw+K
-	 HWpnPOcJ+7msSkwRRdrtQcWUUdXvD1dNeXdrpyZbWQo7VAoz3A6yI8qN8sr4wlqnK5
-	 nnijnGdVf2vs2SITtszinuj/6oVMT53k3z6JjjKE=
+	b=IbGb0Zp/A0xtWS+xqyl4XcY1W+lx7/Y50NXbPDkD2dePHYaOOebNIZToneGmKGuAJ
+	 71/F5/dPwEKnwbW3Tr+o0xqz3pu85SLyUoAtgxa54b5y0eeOLpLYoY6/8H13DqAGOi
+	 2jqsbJvo633D6E7tS91s+r19w5XDZ1hPGj6JfYSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731498AbgERRzw (ORCPT
+        id S1731541AbgERRzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:55:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33244 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:55:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731471AbgERRzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:55:48 -0400
+        id S1731454AbgERRzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:55:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40F1B20674;
-        Mon, 18 May 2020 17:55:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14FA3207C4;
+        Mon, 18 May 2020 17:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824547;
-        bh=1nnHsVdBrNbkfWBXxTVXXxkC6uk3Re/8JIIgBHmsfGw=;
+        s=default; t=1589824532;
+        bh=BEUWMUQxwatFeo/5l8VvlQUF3ITZ2kX7a3zK9Hqp7dw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=siygg+SbKtCVFo7VqU0fTZlIRng7hqpiB2mHCsQ+aSMccUy2odtS8RpQaFEYoR14g
-         PwD8aSF6Sh62BF8MdHw5BwelFS//XNmJ7zAItrcm28Dttr7URlpAskhSvBoZ7Iz2xa
-         Be8/2gYU0nbeSmhUVr+eWH0NiHOemGmatA3U1DE0=
+        b=N5tWIC67FPjwt1xw9fyhBcv4lGi5Etoza48WISMRGyZN8+KSVKig9k7eo5F9lssKh
+         3hdGv13IKYtnyMWEhKqqRBLDlMQuRrNBr6Q+dC/veOaw2Ow+GtAI/LLXWyF6nsZD5w
+         FZWuN5v3r8gty2pO0kHihu/bHTPGPFhzO8drWow8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 038/147] dmaengine: pch_dma.c: Avoid data race between probe and irq handler
-Date:   Mon, 18 May 2020 19:36:01 +0200
-Message-Id: <20200518173518.835907574@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Schwab <schwab@suse.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vasily Averin <vvs@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Waiman Long <longman@redhat.com>, NeilBrown <neilb@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 050/147] ipc/util.c: sysvipc_find_ipc() incorrectly updates position index
+Date:   Mon, 18 May 2020 19:36:13 +0200
+Message-Id: <20200518173520.206794779@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -60,45 +69,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 2e45676a4d33af47259fa186ea039122ce263ba9 ]
+[ Upstream commit 5e698222c70257d13ae0816720dde57c56f81e15 ]
 
-pd->dma.dev is read in irq handler pd_irq().
-However, it is set to pdev->dev after request_irq().
-Therefore, set pd->dma.dev to pdev->dev before request_irq() to
-avoid data race between pch_dma_probe() and pd_irq().
+Commit 89163f93c6f9 ("ipc/util.c: sysvipc_find_ipc() should increase
+position index") is causing this bug (seen on 5.6.8):
 
-Found by Linux Driver Verification project (linuxtesting.org).
+   # ipcs -q
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Link: https://lore.kernel.org/r/20200416062335.29223-1-madhuparnabhowmik10@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+   ------ Message Queues --------
+   key        msqid      owner      perms      used-bytes   messages
+
+   # ipcmk -Q
+   Message queue id: 0
+   # ipcs -q
+
+   ------ Message Queues --------
+   key        msqid      owner      perms      used-bytes   messages
+   0x82db8127 0          root       644        0            0
+
+   # ipcmk -Q
+   Message queue id: 1
+   # ipcs -q
+
+   ------ Message Queues --------
+   key        msqid      owner      perms      used-bytes   messages
+   0x82db8127 0          root       644        0            0
+   0x76d1fb2a 1          root       644        0            0
+
+   # ipcrm -q 0
+   # ipcs -q
+
+   ------ Message Queues --------
+   key        msqid      owner      perms      used-bytes   messages
+   0x76d1fb2a 1          root       644        0            0
+   0x76d1fb2a 1          root       644        0            0
+
+   # ipcmk -Q
+   Message queue id: 2
+   # ipcrm -q 2
+   # ipcs -q
+
+   ------ Message Queues --------
+   key        msqid      owner      perms      used-bytes   messages
+   0x76d1fb2a 1          root       644        0            0
+   0x76d1fb2a 1          root       644        0            0
+
+   # ipcmk -Q
+   Message queue id: 3
+   # ipcrm -q 1
+   # ipcs -q
+
+   ------ Message Queues --------
+   key        msqid      owner      perms      used-bytes   messages
+   0x7c982867 3          root       644        0            0
+   0x7c982867 3          root       644        0            0
+   0x7c982867 3          root       644        0            0
+   0x7c982867 3          root       644        0            0
+
+Whenever an IPC item with a low id is deleted, the items with higher ids
+are duplicated, as if filling a hole.
+
+new_pos should jump through hole of unused ids, pos can be updated
+inside "for" cycle.
+
+Fixes: 89163f93c6f9 ("ipc/util.c: sysvipc_find_ipc() should increase position index")
+Reported-by: Andreas Schwab <schwab@suse.de>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Waiman Long <longman@redhat.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/4921fe9b-9385-a2b4-1dc4-1099be6d2e39@virtuozzo.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/pch_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ ipc/util.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
-index 581e7a290d98e..a3b0b4c56a190 100644
---- a/drivers/dma/pch_dma.c
-+++ b/drivers/dma/pch_dma.c
-@@ -865,6 +865,7 @@ static int pch_dma_probe(struct pci_dev *pdev,
+diff --git a/ipc/util.c b/ipc/util.c
+index 594871610d454..1821b6386d3b4 100644
+--- a/ipc/util.c
++++ b/ipc/util.c
+@@ -764,21 +764,21 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
+ 			total++;
  	}
  
- 	pci_set_master(pdev);
-+	pd->dma.dev = &pdev->dev;
+-	*new_pos = pos + 1;
++	ipc = NULL;
+ 	if (total >= ids->in_use)
+-		return NULL;
++		goto out;
  
- 	err = request_irq(pdev->irq, pd_irq, IRQF_SHARED, DRV_NAME, pd);
- 	if (err) {
-@@ -880,7 +881,6 @@ static int pch_dma_probe(struct pci_dev *pdev,
- 		goto err_free_irq;
+ 	for (; pos < ipc_mni; pos++) {
+ 		ipc = idr_find(&ids->ipcs_idr, pos);
+ 		if (ipc != NULL) {
+ 			rcu_read_lock();
+ 			ipc_lock_object(ipc);
+-			return ipc;
++			break;
+ 		}
  	}
+-
+-	/* Out of range - return NULL to terminate iteration */
+-	return NULL;
++out:
++	*new_pos = pos + 1;
++	return ipc;
+ }
  
--	pd->dma.dev = &pdev->dev;
- 
- 	INIT_LIST_HEAD(&pd->dma.channels);
- 
+ static void *sysvipc_proc_next(struct seq_file *s, void *it, loff_t *pos)
 -- 
 2.20.1
 
