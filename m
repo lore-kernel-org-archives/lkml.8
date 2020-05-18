@@ -2,124 +2,124 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB86EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C05C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F524207D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54408207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DD4gCEFg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CxwDHCZ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgERH0D (ORCPT
+        id S1727798AbgERH04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 03:26:03 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:23056 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726872AbgERH0C (ORCPT
+        Mon, 18 May 2020 03:26:56 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56587 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726872AbgERH0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 03:26:02 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04I7MwVY000489;
-        Mon, 18 May 2020 09:25:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=96Qx9T4l9btbZlYCanjYMz8LWe4TWd5HlYaC0S7keCg=;
- b=DD4gCEFgAjLIf4Sdl2mn9FNSK0ht4/M3toLBzrVmSh+c/wn2sbrhNyuuouB5oe6xHr2D
- cwb64BE6kpGK8tDbyi4Caqw4baabKjaPGqfMWOABIOrR5/aH9PBQYXCIXtSWnBFwHBpZ
- MgIlR8EdstvmG4VKciLF65st+VguxD/4aos+MPgfLC4udP05rP2MDRx73m2MJbMmRvFZ
- CpwS53KCF2gkXYGZrlwfswGv5bbFnPLBH0mAheWn41DooCt6DXktVBSVaaLDgIMmlpaO
- YD+ytoJ5VCnvL7MqBB1pjpDGGdIY9tkM4urxlYIf2EZt/GodnLmq/N/5Om6qUeqvlpDy zg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3125xxj4ut-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 09:25:48 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D6AE310002A;
-        Mon, 18 May 2020 09:25:47 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C12FF2A759E;
-        Mon, 18 May 2020 09:25:47 +0200 (CEST)
-Received: from SFHDAG3NODE1.st.com (10.75.127.7) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
- 2020 09:25:47 +0200
-Received: from SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86]) by
- SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86%20]) with mapi id
- 15.00.1473.003; Mon, 18 May 2020 09:25:47 +0200
-From:   Erwan LE RAY <erwan.leray@st.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        "mani@kernel.org" <mani@kernel.org>
-CC:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [Linux-stm32] [PATCH v3 1/2] dt-bindings: serial: Document
- CTS/RTS gpios in STM32 UART
-Thread-Topic: [Linux-stm32] [PATCH v3 1/2] dt-bindings: serial: Document
- CTS/RTS gpios in STM32 UART
-Thread-Index: AQHWLOKqKuTyIkoopEKFBSTOruYjFqitT8sA
-Date:   Mon, 18 May 2020 07:25:47 +0000
-Message-ID: <4ff30338-e704-12bd-80fe-82b8c08e78d9@st.com>
-References: <20200420170204.24541-1-mani@kernel.org>
- <20200420170204.24541-2-mani@kernel.org>
- <CAMuHMdVGem_2BGQK4dqZQb3sOd0LZk+RS_z4SvSRcNECEJHdwA@mail.gmail.com>
-In-Reply-To: <CAMuHMdVGem_2BGQK4dqZQb3sOd0LZk+RS_z4SvSRcNECEJHdwA@mail.gmail.com>
-Accept-Language: en-US, fr-FR
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.49]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A9984B761F26544187A953C83E9086B0@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 18 May 2020 03:26:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589786814;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=b/DaoBS5+cv0POCp9ooXqRzsTuOXn2M8MJgW8T9wUD0=;
+        b=CxwDHCZ+31/rHf5KGQE7TxPXxDvXGm1R1Xh1RyIw78bafb9YU8sSe+1+HaB/DHMYyb6+Nu
+        L9j4BWqbC8FjhQ+wzMADqGbRzrWBhOFL4dt6vWguOP+HE5fACh+DgCqjXsxs247YT2qr0P
+        eEHsN1NZpYPwSu7sUltTD414IHUdZjM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-324-dXOuRvKLNjK0fPagzimQ0g-1; Mon, 18 May 2020 03:26:49 -0400
+X-MC-Unique: dXOuRvKLNjK0fPagzimQ0g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 771CA56C8E;
+        Mon, 18 May 2020 07:26:44 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-112-142.ams2.redhat.com [10.36.112.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C4A910013D9;
+        Mon, 18 May 2020 07:26:36 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Christian Heimes <christian@python.org>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        John Johansen <john.johansen@canonical.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        "Lev R. Oshvang ." <levonshe@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Subject: Re: How about just O_EXEC? (was Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec through O_MAYEXEC)
+References: <202005131525.D08BFB3@keescook> <202005132002.91B8B63@keescook>
+        <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
+        <202005140830.2475344F86@keescook>
+        <CAEjxPJ4R_juwvRbKiCg5OGuhAi1ZuVytK4fKCDT_kT6VKc8iRg@mail.gmail.com>
+        <b740d658-a2da-5773-7a10-59a0ca52ac6b@digikod.net>
+        <202005142343.D580850@keescook>
+        <87a729wpu1.fsf@oldenburg2.str.redhat.com>
+        <202005150732.17C5EE0@keescook>
+        <87r1vluuli.fsf@oldenburg2.str.redhat.com>
+        <202005150847.2B1ED8F81@keescook>
+Date:   Mon, 18 May 2020 09:26:34 +0200
+In-Reply-To: <202005150847.2B1ED8F81@keescook> (Kees Cook's message of "Fri,
+        15 May 2020 08:50:16 -0700")
+Message-ID: <87ftbxg0ut.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-18_02:2020-05-15,2020-05-18 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCg0KT24gNS8xOC8yMCA5OjA0IEFNLCBHZWVydCBVeXR0ZXJob2V2ZW4gd3Jv
-dGU6DQo+IEhpIE1hbmksDQo+DQo+IE9uIE1vbiwgQXByIDIwLCAyMDIwIGF0IDc6MDIgUE0gPG1h
-bmlAa2VybmVsLm9yZz4gd3JvdGU6DQo+PiBGcm9tOiBNYW5pdmFubmFuIFNhZGhhc2l2YW0gPG1h
-bmlAa2VybmVsLm9yZz4NCj4+DQo+PiBEb2N1bWVudCB0aGUgdXNlIG9mIENUUy9SVFMgZ3Bpb3Mg
-Zm9yIGZsb3cgY29udHJvbCBpbiBTVE0zMiBVQVJUDQo+PiBjb250cm9sbGVyLiBUaGVzZSBwcm9w
-ZXJ0aWVzIGNhbiBiZSB1c2VkIGluc3RlYWQgb2YgJ3N0LGh3LWZsb3ctY3RybCcNCj4+IGZvciBt
-YWtpbmcgdXNlIG9mIGFueSBncGlvIHBpbnMgZm9yIGZsb3cgY29udHJvbCBpbnN0ZWFkIG9mIGRl
-ZGljYXRlZA0KPj4gcGlucy4gSXQgc2hvdWxkIGJlIG5vdGVkIHRoYXQgYm90aCBDVFMvUlRTIGFu
-ZCAnc3QsaHctZmxvdy1jdHJsJw0KPj4gcHJvcGVydGllcyBjYW5ub3QgY28tZXhpc3QgaW4gYSBk
-ZXNpZ24uDQo+Pg0KPj4gUmV2aWV3ZWQtYnk6IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hl
-bmtvQGdtYWlsLmNvbT4NCj4+IFNpZ25lZC1vZmYtYnk6IE1hbml2YW5uYW4gU2FkaGFzaXZhbSA8
-bWFuaUBrZXJuZWwub3JnPg0KPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3NlcmlhbC9zdCxzdG0zMi11YXJ0LnlhbWwNCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9zZXJpYWwvc3Qsc3RtMzItdWFydC55YW1sDQo+PiBAQCAtNTUsNiAr
-NjEsMTQgQEAgcHJvcGVydGllczoNCj4+ICAgICBsaW51eCxyczQ4NS1lbmFibGVkLWF0LWJvb3Qt
-dGltZTogdHJ1ZQ0KPj4gICAgIHJzNDg1LXJ4LWR1cmluZy10eDogdHJ1ZQ0KPj4NCj4+ICtpZjoN
-Cj4+ICsgIHJlcXVpcmVkOg0KPj4gKyAgICAtIHN0LGh3LWZsb3ctY3RybA0KPiBQZXJoYXBzICJz
-dCxody1mbG93LWN0cmwiIHNob3VsZCBiZSBkZXByZWNhdGVkLCBpbiBmYXZvciBvZiB0aGUgc3Rh
-bmRhcmQNCj4gInVhcnQtaGFzLXJ0c2N0cyIgcHJvcGVydHk/DQo+IE9mIGNvdXJzZSB0aGUgZHJp
-dmVyIG5lZWRzIHRvIGdhaW4gc3VwcG9ydCBmb3IgdGhlIGxhdHRlciBmaXJzdC4NCg0KWW91J3Jl
-IGZ1bGx5IHJpZ2h0LCB0aGUgcGF0Y2ggdG8gZGVwcmVjYXRlICJzdCwgaHctZmxvdy1jdHJsIiBh
-bmQgDQppbnRyb2R1Y2UgZ2VuZXJpYyAidWFydC1oYXMtcnRzY3RzIiBwcm9wZXJ0eSBpbiB0aGUg
-ZHJpdmVyIGlzIHJlYWR5IGFuZCANCndpbGwgYmUgc2VudCB0aGlzIHdlZWsgb24gdG9wIG9mIE1h
-bmkgcGF0Y2guDQoNCg0KPg0KPj4gK3RoZW46DQo+PiArICBwcm9wZXJ0aWVzOg0KPj4gKyAgICBj
-dHMtZ3Bpb3M6IGZhbHNlDQo+PiArICAgIHJ0cy1ncGlvczogZmFsc2UNCj4+ICsNCj4+ICAgcmVx
-dWlyZWQ6DQo+PiAgICAgLSBjb21wYXRpYmxlDQo+PiAgICAgLSByZWcNCj4gR3J7b2V0amUsZWV0
-aW5nfXMsDQo+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPg==
+* Kees Cook:
+
+> I think I misunderstood what you meant (Micka=C3=83=C2=ABl got me sorted =
+out
+> now). If O_EXEC is already meant to be "EXEC and _not_ READ nor WRITE",
+> then yes, this new flag can't be O_EXEC. I was reading the glibc
+> documentation (which treats it as a permission bit flag, not POSIX,
+> which treats it as a complete mode description).
+
+I see.  I think this part of the manual is actually very Hurd-specific
+(before the O_ACCMODE description).  I'll see if I can make this clearer
+in the markup.
+
+Thanks,
+Florian
+
