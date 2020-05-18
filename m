@@ -2,118 +2,72 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CDEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26851C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D20E9207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050B3207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:00:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgERLAI (ORCPT
+        id S1726800AbgERLAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:00:08 -0400
-Received: from mga12.intel.com ([192.55.52.136]:2258 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726499AbgERLAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:00:07 -0400
-IronPort-SDR: D7O++Fu3RnV3NEH+9Wam9rpicUSEOjobnARVNMOq7FokPj5qEp2u+pudJVqj3oGmWfgoxbZSrq
- 8u2L+IqtKFoQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 04:00:07 -0700
-IronPort-SDR: aKcaZ1vbO9Y+Pw38A4DR+r+cMf54BrnU9FSzgbihFrsRh7ZSK3XynoJGRv7/lzlWh9TxWwR5Vp
- ReoEmWfYeYmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="254413961"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 18 May 2020 04:00:02 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jadV6-007PLQ-Tv; Mon, 18 May 2020 14:00:04 +0300
-Date:   Mon, 18 May 2020 14:00:04 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/19] spi: dw: Discard static DW DMA slave structures
-Message-ID: <20200518110004.GW1634618@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-7-Sergey.Semin@baikalelectronics.ru>
- <20200515123422.GZ185537@smile.fi.intel.com>
- <20200516142030.kburieaxjg4n7c42@mobilestation>
+        Mon, 18 May 2020 07:00:23 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:12202 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbgERLAW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:00:22 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.17]) by rmmx-syy-dmz-app11-12011 (RichMail) with SMTP id 2eeb5ec26ab0fe4-37700; Mon, 18 May 2020 19:00:00 +0800 (CST)
+X-RM-TRANSID: 2eeb5ec26ab0fe4-37700
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee95ec26aadd27-b87e8;
+        Mon, 18 May 2020 19:00:00 +0800 (CST)
+X-RM-TRANSID: 2ee95ec26aadd27-b87e8
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     broonie@kernel.org, timur@kernel.org, nicoleotsuka@gmail.com,
+        Xiubo.Lee@gmail.com, perex@perex.cz
+Cc:     alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH] ASoC: fsl_micfil: Fix unused assignment in fsl_set_clock_params()
+Date:   Mon, 18 May 2020 19:00:40 +0800
+Message-Id: <20200518110040.18036-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200516142030.kburieaxjg4n7c42@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 05:20:30PM +0300, Serge Semin wrote:
-> On Fri, May 15, 2020 at 03:34:22PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 15, 2020 at 01:47:45PM +0300, Serge Semin wrote:
-> > > Having them declared is redundant since each struct dw_dma_chan has
-> > > the same structure embedded and the structure from the passed dma_chan
-> > > private pointer will be copied there as a result of the next calls
-> > > chain:
-> > > dma_request_channel() -> find_candidate() -> dma_chan_get() ->
-> > > device_alloc_chan_resources() = dwc_alloc_chan_resources() ->
-> > > dw_dma_filter().
-> > > So just remove the static dw_dma_chan structures and use a locally
-> > > declared data instance with dst_id/src_id set to the same values as
-> > > the static copies used to have.
-> > 
-> > ...
-> > 
-> > > -static struct dw_dma_slave mid_dma_tx = { .dst_id = 1 };
-> > > -static struct dw_dma_slave mid_dma_rx = { .src_id = 0 };
-> > 
-> > > +	struct dw_dma_slave slave = {0};
-> > 
-> > I really would like to leave them separated and as in the original form, i.e.
-> > 
-> > 	struct dw_dma_slave tx = { .dst_id = 1 };
-> > 	struct dw_dma_slave rx = { .src_id = 0 };
-> > 
-> > those src and dst IDs are put in that form on purpose...
-> 
-> As long as you don't tell us what purpose it is, my position won't change.
+Delete unused initialized value of 'ret', because it will
+be assigned by the function fsl_micfil_set_mclk_rate().
 
-It's not the way when your changes makes this the older (upstreamed) stuff's
-issue, it's an opposite. But I will help you here...
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+ sound/soc/fsl/fsl_micfil.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> These structures declared here just hold the static memory and nothing
-> else. Allocating them on stack is better.
-
-I'm not talking about stack, it's fine for me, what I'm talking about is *how*
-they are being initialized. Read my message again carefully, please.
-
+diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
+index 79cf488fa..a7a6118be 100644
+--- a/sound/soc/fsl/fsl_micfil.c
++++ b/sound/soc/fsl/fsl_micfil.c
+@@ -295,7 +295,7 @@ static int fsl_set_clock_params(struct device *dev, unsigned int rate)
+ {
+ 	struct fsl_micfil *micfil = dev_get_drvdata(dev);
+ 	int clk_div;
+-	int ret = 0;
++	int ret;
+ 
+ 	ret = fsl_micfil_set_mclk_rate(micfil, rate);
+ 	if (ret < 0)
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1.windows.1
+
 
 
