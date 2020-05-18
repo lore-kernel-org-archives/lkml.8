@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 411E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 071F9207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAFE920674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824198;
-	bh=tyPWl9a+CQko/HHoUmFTcDmz8KlCfkitFMDU0Mrw2R0=;
+	s=default; t=1589824202;
+	bh=bpZJJ53Hdlnk4eaAmfNWc7QGpjuXH/AvDsxsd5CCyPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EbZKkPA2MX863HTmwfZ9llZHNeEfzM2tLOcvC1W0ipDu11Miypcu7QN5Tq5S2ccwR
-	 DK/W5tFynpHJKf0i7c8XloS8Zbibl8ujnX7eh7QpgYeXkkpYWa7qOCFEUM/ciL+DCp
-	 FREewG5wUFOLHq6Q3MJGe+RDJTRL9Wz6VDnNlVGs=
+	b=KhidSMDECpyYHU43KAf5DlraPf8T+yxEoiLVQtPw9WfKOuI/obNrXUZW1oFMobOLu
+	 hmi91E2fzchkI4ys8wY4wln6MBB40SF3YybLMI/uIZDb6Qi2EtfP/eEdUFeTPxHL5b
+	 pr4UyGLb3dn2WlD91YdmwMEZnv1/ZFW43Kh2P8JU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbgERRt5 (ORCPT
+        id S1730613AbgERRuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:49:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51682 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:50:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730589AbgERRtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:49:53 -0400
+        id S1730589AbgERRt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:49:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FA7B20671;
-        Mon, 18 May 2020 17:49:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DA5520671;
+        Mon, 18 May 2020 17:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824192;
-        bh=tyPWl9a+CQko/HHoUmFTcDmz8KlCfkitFMDU0Mrw2R0=;
+        s=default; t=1589824197;
+        bh=bpZJJ53Hdlnk4eaAmfNWc7QGpjuXH/AvDsxsd5CCyPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JEzz6OtLkxCc7p952xy+E47BzR00FJuj/pzJHmfyLlEasJlNsAVxyHNaFHUvgJBff
-         ai0ZCxAcV8Uz0s9W+oAViYO8Egur67TJQy4V3CpLCMvylBbV5P8+tcvvALiQI4r0R4
-         aINahnL55qOO+ahtCHixCJr2Y4vCKYCI9Q2JdUZ8=
+        b=1H+2KPzf5Q3OiccwHLHatADzgMw6x6+FukBr9Fo2v/WAxmqWlRmFD2ZEj6O+CoChP
+         6uXDEjPF2k0Qt7O/yr1MRju5ZPWS4KLDLbKd1HDMr3FSJJU0lZVk+/9wzRVv+8g4Uv
+         3CKVugnDJtX+ER144lEALGpLety8fpyuRio5riOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.14 107/114] usb: gadget: legacy: fix error return code in cdc_bind()
-Date:   Mon, 18 May 2020 19:37:19 +0200
-Message-Id: <20200518173520.469863861@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 4.14 109/114] arm64: dts: rockchip: Replace RK805 PMIC node name with "pmic" on rk3328 boards
+Date:   Mon, 18 May 2020 19:37:21 +0200
+Message-Id: <20200518173520.753471648@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -60,36 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-commit e8f7f9e3499a6d96f7f63a4818dc7d0f45a7783b upstream.
+commit 83b994129fb4c18a8460fd395864a28740e5e7fb upstream.
 
-If 'usb_otg_descriptor_alloc()' fails, we must return a
-negative error code -ENOMEM, not 0.
+In some board device tree files, "rk805" was used for the RK805 PMIC's
+node name. However the policy for device trees is that generic names
+should be used.
 
-Fixes: ab6796ae9833 ("usb: gadget: cdc2: allocate and init otg descriptor by otg capabilities")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Replace the "rk805" node name with the generic "pmic" name.
+
+Fixes: 1e28037ec88e ("arm64: dts: rockchip: add rk805 node for rk3328-evb")
+Fixes: 955bebde057e ("arm64: dts: rockchip: add rk3328-rock64 board")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Link: https://lore.kernel.org/r/20200327030414.5903-3-wens@kernel.org
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/legacy/cdc2.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts    |    2 +-
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/gadget/legacy/cdc2.c
-+++ b/drivers/usb/gadget/legacy/cdc2.c
-@@ -183,8 +183,10 @@ static int cdc_bind(struct usb_composite
- 		struct usb_descriptor_header *usb_desc;
+--- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+@@ -91,7 +91,7 @@
+ &i2c1 {
+ 	status = "okay";
  
- 		usb_desc = usb_otg_descriptor_alloc(gadget);
--		if (!usb_desc)
-+		if (!usb_desc) {
-+			status = -ENOMEM;
- 			goto fail1;
-+		}
- 		usb_otg_descriptor_init(gadget, usb_desc);
- 		otg_desc[0] = usb_desc;
- 		otg_desc[1] = NULL;
+-	rk805: rk805@18 {
++	rk805: pmic@18 {
+ 		compatible = "rockchip,rk805";
+ 		reg = <0x18>;
+ 		interrupt-parent = <&gpio2>;
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -149,7 +149,7 @@
+ &i2c1 {
+ 	status = "okay";
+ 
+-	rk805: rk805@18 {
++	rk805: pmic@18 {
+ 		compatible = "rockchip,rk805";
+ 		reg = <0x18>;
+ 		interrupt-parent = <&gpio2>;
 
 
