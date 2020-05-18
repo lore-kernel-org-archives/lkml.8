@@ -2,190 +2,158 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F11C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40B4F2081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:27:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M9jr7hXT"
+	by mail.kernel.org (Postfix) with ESMTP id 0A94120888
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgERV1i (ORCPT
+        id S1728113AbgERV2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 17:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgERV1i (ORCPT
+        Mon, 18 May 2020 17:28:48 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:49621 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgERV2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 17:27:38 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030D3C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 14:27:38 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id q16so4760338plr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 14:27:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4lLuwaV0OShIX6Y/zoqEkFMKTylODQnH9FgeQd+o814=;
-        b=M9jr7hXTvW2v4sSCa2jW8xiD3gYm71VLOVPBKJ78BgrECQee5RjkWlrvRQOdqXOStp
-         qlsB7Xb9reKMM+aC16CHv0U4CIU2yKHaRSA859xP/H9MsCQDtFRQbDYiV6YoF1Jdizd3
-         fXYNj13DWSkwOCKxYmtfg9od1CnULcsHEA6c6glQjpaK2Mo1CbDf44SKkMNov1Pwqta+
-         gdY8cDFN6PtRmrD+p51iGnMSnhFrp5xPzB4UGIYvbuRhWO1rQcQk9YPTBGqN7VJmMqdL
-         2z027QYnTwUhMnRss7ScklqL5+nR+dmJzNnhiGkcSgED9zqPaFfdhOX73kLJtDDxZojF
-         2ogA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4lLuwaV0OShIX6Y/zoqEkFMKTylODQnH9FgeQd+o814=;
-        b=LYDAiiOj2eK5gpzRAHHJAKcXkUmFYQcOfM4CdL4FCw0ULpgROXI1b6+1YrUZwn1U3/
-         Vlhm9eA7WawM97Gl4ZMXH+96lhaq1IGC1f+nd2/oXht1ANFGdLobcHz/W5P+uYbInK5v
-         InfXFCieUaFFuw4abqM+/UvY+6DMerMLMoU+n652gUBjK8rLFF3XE11ms4VGPJK8/8fP
-         9w6z/8N/sYcB0aFTcQ16DDoGcVVbtytHUmVdHSuBPNr8CANoAqzPZrXLcw9UPzKnrNwi
-         oHcFUS0jXkTa0cg7a96VRb1uglLjvpOYCFCaJb3dYq31iaUCPAikD31OvFSYBU8AJUHE
-         cK1Q==
-X-Gm-Message-State: AOAM532TRDLa07Ahde+SjEFsF/cA1dSZM9iTCtALjA2Rjv0h35RgeV+L
-        1M1T2O5pU80aL5xzvATqGqVIh7j58/bvlY/iu85jMw==
-X-Google-Smtp-Source: ABdhPJy6eVMmfgD+ND+/1gqtT8ctYqwt6Pdtw+ofr8oNoBLPynZ4K0QTCK/Y8rW0ZSlpaAsGC44e8xgfh3wT1WRqSMQ=
-X-Received: by 2002:a17:90b:19cc:: with SMTP id nm12mr1361091pjb.25.1589837257134;
- Mon, 18 May 2020 14:27:37 -0700 (PDT)
+        Mon, 18 May 2020 17:28:47 -0400
+X-Originating-IP: 90.65.91.255
+Received: from localhost (lfbn-lyo-1-1912-bdcst.w90-65.abo.wanadoo.fr [90.65.91.255])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 03753C000A;
+        Mon, 18 May 2020 21:28:44 +0000 (UTC)
+Date:   Mon, 18 May 2020 23:28:44 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+List-Id: <soc.lore.kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        arm@kernel.org, soc@kernel.org
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] ARM: at91: DT for 5.8
+Message-ID: <20200518212844.GA26356@piout.net>
 MIME-Version: 1.0
-References: <20200517152916.3146539-1-brgerst@gmail.com> <20200517152916.3146539-4-brgerst@gmail.com>
-In-Reply-To: <20200517152916.3146539-4-brgerst@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 18 May 2020 14:27:23 -0700
-Message-ID: <CAKwvOdk7dTndpMaVmEH874zfzLSK3DGGmfaEvaza=g6OwhX61g@mail.gmail.com>
-Subject: Re: [PATCH 3/7] x86/percpu: Clean up percpu_from_op()
-To:     Brian Gerst <brgerst@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 8:29 AM Brian Gerst <brgerst@gmail.com> wrote:
->
-> The core percpu macros already have a switch on the data size, so the switch
-> in the x86 code is redundant and produces more dead code.
->
-> Also use appropriate types for the width of the instructions.  This avoids
-> errors when compiling with Clang.
->
-> Signed-off-by: Brian Gerst <brgerst@gmail.com>
+Arnd, Olof,
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Despite a new evaluation board being added this cycle, the move of the
+flexcom nodes to the sama5d2 dtsi and the switch to the new PMC bindings
+result in the deletion of about 100 lines.
 
-> ---
->  arch/x86/include/asm/percpu.h | 50 +++++++++++------------------------
->  1 file changed, 15 insertions(+), 35 deletions(-)
->
-> diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-> index 233c7a78d1a6..93f33202492d 100644
-> --- a/arch/x86/include/asm/percpu.h
-> +++ b/arch/x86/include/asm/percpu.h
-> @@ -190,33 +190,13 @@ do {                                                                      \
->         }                                                               \
->  } while (0)
->
-> -#define percpu_from_op(qual, op, var)                  \
-> -({                                                     \
-> -       typeof(var) pfo_ret__;                          \
-> -       switch (sizeof(var)) {                          \
-> -       case 1:                                         \
-> -               asm qual (op "b "__percpu_arg(1)",%0"   \
-> -                   : "=q" (pfo_ret__)                  \
-> -                   : "m" (var));                       \
-> -               break;                                  \
-> -       case 2:                                         \
-> -               asm qual (op "w "__percpu_arg(1)",%0"   \
-> -                   : "=r" (pfo_ret__)                  \
-> -                   : "m" (var));                       \
-> -               break;                                  \
-> -       case 4:                                         \
-> -               asm qual (op "l "__percpu_arg(1)",%0"   \
-> -                   : "=r" (pfo_ret__)                  \
-> -                   : "m" (var));                       \
-> -               break;                                  \
-> -       case 8:                                         \
-> -               asm qual (op "q "__percpu_arg(1)",%0"   \
-> -                   : "=r" (pfo_ret__)                  \
-> -                   : "m" (var));                       \
-> -               break;                                  \
-> -       default: __bad_percpu_size();                   \
-> -       }                                               \
-> -       pfo_ret__;                                      \
-> +#define percpu_from_op(size, qual, op, _var)                           \
-> +({                                                                     \
-> +       __pcpu_type_##size pfo_val__;                                   \
-> +       asm qual (__pcpu_op2_##size(op, __percpu_arg([var]), "%[val]")  \
-> +           : [val] __pcpu_reg_##size("=", pfo_val__)                   \
-> +           : [var] "m" (_var));                                        \
-> +       (typeof(_var))(unsigned long) pfo_val__;                        \
->  })
->
->  #define percpu_stable_op(op, var)                      \
-> @@ -401,9 +381,9 @@ do {                                                                        \
->   */
->  #define this_cpu_read_stable(var)      percpu_stable_op("mov", var)
->
-> -#define raw_cpu_read_1(pcp)            percpu_from_op(, "mov", pcp)
-> -#define raw_cpu_read_2(pcp)            percpu_from_op(, "mov", pcp)
-> -#define raw_cpu_read_4(pcp)            percpu_from_op(, "mov", pcp)
-> +#define raw_cpu_read_1(pcp)            percpu_from_op(1, , "mov", pcp)
-> +#define raw_cpu_read_2(pcp)            percpu_from_op(2, , "mov", pcp)
-> +#define raw_cpu_read_4(pcp)            percpu_from_op(4, , "mov", pcp)
->
->  #define raw_cpu_write_1(pcp, val)      percpu_to_op(1, , "mov", (pcp), val)
->  #define raw_cpu_write_2(pcp, val)      percpu_to_op(2, , "mov", (pcp), val)
-> @@ -433,9 +413,9 @@ do {                                                                        \
->  #define raw_cpu_xchg_2(pcp, val)       raw_percpu_xchg_op(pcp, val)
->  #define raw_cpu_xchg_4(pcp, val)       raw_percpu_xchg_op(pcp, val)
->
-> -#define this_cpu_read_1(pcp)           percpu_from_op(volatile, "mov", pcp)
-> -#define this_cpu_read_2(pcp)           percpu_from_op(volatile, "mov", pcp)
-> -#define this_cpu_read_4(pcp)           percpu_from_op(volatile, "mov", pcp)
-> +#define this_cpu_read_1(pcp)           percpu_from_op(1, volatile, "mov", pcp)
-> +#define this_cpu_read_2(pcp)           percpu_from_op(2, volatile, "mov", pcp)
-> +#define this_cpu_read_4(pcp)           percpu_from_op(4, volatile, "mov", pcp)
->  #define this_cpu_write_1(pcp, val)     percpu_to_op(1, volatile, "mov", (pcp), val)
->  #define this_cpu_write_2(pcp, val)     percpu_to_op(2, volatile, "mov", (pcp), val)
->  #define this_cpu_write_4(pcp, val)     percpu_to_op(4, volatile, "mov", (pcp), val)
-> @@ -488,7 +468,7 @@ do {                                                                        \
->   * 32 bit must fall back to generic operations.
->   */
->  #ifdef CONFIG_X86_64
-> -#define raw_cpu_read_8(pcp)                    percpu_from_op(, "mov", pcp)
-> +#define raw_cpu_read_8(pcp)                    percpu_from_op(8, , "mov", pcp)
->  #define raw_cpu_write_8(pcp, val)              percpu_to_op(8, , "mov", (pcp), val)
->  #define raw_cpu_add_8(pcp, val)                        percpu_add_op(, (pcp), val)
->  #define raw_cpu_and_8(pcp, val)                        percpu_to_op(8, , "and", (pcp), val)
-> @@ -497,7 +477,7 @@ do {                                                                        \
->  #define raw_cpu_xchg_8(pcp, nval)              raw_percpu_xchg_op(pcp, nval)
->  #define raw_cpu_cmpxchg_8(pcp, oval, nval)     percpu_cmpxchg_op(, pcp, oval, nval)
->
-> -#define this_cpu_read_8(pcp)                   percpu_from_op(volatile, "mov", pcp)
-> +#define this_cpu_read_8(pcp)                   percpu_from_op(8, volatile, "mov", pcp)
->  #define this_cpu_write_8(pcp, val)             percpu_to_op(8, volatile, "mov", (pcp), val)
->  #define this_cpu_add_8(pcp, val)               percpu_add_op(volatile, (pcp), val)
->  #define this_cpu_and_8(pcp, val)               percpu_to_op(8, volatile, "and", (pcp), val)
-> --
-> 2.25.4
->
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.8-dt
+
+for you to fetch changes up to 88d801aec6e971c15a0bfb4d46d02476dde9e8aa:
+
+  ARM: dts: at91: sama5d2_xplained: Add aliases for the dedicated I2C IPs (2020-05-18 16:51:58 +0200)
+
+----------------------------------------------------------------
+AT91 DT for 5.8
+
+ - New board: Microchip SAMA5D2 Industrial Connectivity Platform
+ - All SoCs are now converted to the new PMC device tree binding
+ - sama5d2 flexcom nodes are now fully described in sama5d2.dtsi
+
+----------------------------------------------------------------
+Alexandre Belloni (4):
+      ARM: dts: at91: sama5d3: switch to new clock bindings
+      ARM: dts: at91: at91sam9n12: switch to new clock bindings
+      ARM: dts: at91: at91sam9g45: switch to new clock bindings
+      ARM: dts: at91: rm9200: switch to new clock bindings
+
+Claudiu Beznea (1):
+      ARM: dts: at91: sama5d27_som1: Add SPI NOR flash mapping
+
+Codrin Ciubotariu (2):
+      dt-bindings: ARM: Document SAMA5D2-ICP
+      ARM: dts: at91: Configure I2C SCL gpio as open drain
+
+Cristian Birsan (1):
+      ARM: dts: at91: sama5d2-icp: add SAMA5D2-ICP
+
+Cyrille Pitchen (1):
+      ARM: dts: at91: sama5d2_xplained: Add QSPI0 + SPI NOR memory nodes
+
+Ludovic Desroches (6):
+      ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node description
+      ARM: dts: at91: sama5d2_ptc_ek: fix vbus pin
+      ARM: dts: at91: sama5d2_ptc_ek: add PB_USER as wakeup source
+      ARM: dts: at91: sama5d27_som1_ek: enable i2c0
+      ARM: dts: at91: sama5d27_som1_ek: add an alias for i2c0
+      ARM: dts: at91: at91-sama5d27_som1: Enable eeprom device
+
+Tudor Ambarus (20):
+      ARM: dts: at91: sam9x60ek: Use quad mode in the spi-nor flash
+      ARM: dts: at91: sam9x60ek: Add sdmmc1 node
+      ARM: dts: at91: sama5d27_wlsom1: Add alias for i2c0
+      ARM: dts: at91: sama5d2: Fix the label numbering for flexcom functions
+      ARM: dts: at91: sama5d2: Move flx4 definitions in the SoC dtsi
+      ARM: dts: at91: sama5d2: Move flx3 definitions in the SoC dtsi
+      ARM: dts: at91: sama5d2: Move flx2 definitions in the SoC dtsi
+      ARM: dts: at91: sama5d2: Move flx1 definitions in the SoC dtsi
+      ARM: dts: at91: sama5d2: Move flx0 definitions in the SoC dtsi
+      ARM: dts: at91: sama5d2: Specify the FIFO size for the Flexcom UART
+      ARM: dts: at91: sama5d2: Add DMA bindings for the SPI and UART flx4 functions
+      ARM: dts: at91: sama5d2: Add DMA bindings for the flx3 SPI function
+      ARM: dts: at91: sama5d2: Add DMA bindings for the flx1 I2C function
+      ARM: dts: at91: sama5d2: Add DMA bindings for the SPI and I2C flx0 functions
+      ARM: dts: at91: sama5d2: Remove i2s and tcb aliases from SoC dtsi
+      ARM: dts: at91: sama5d2: Add missing flexcom definitions
+      ARM: dts: at91: sama5d2_xplained: Add alias for DBGU
+      ARM: dts: at91: sama5d2_ptc_ek: Add comments to describe the aliases
+      ARM: dts: at91: sama5d2_xplained: Describe the flx0 I2C function
+      ARM: dts: at91: sama5d2_xplained: Add aliases for the dedicated I2C IPs
+
+ .../devicetree/bindings/arm/atmel-at91.yaml        |   7 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/at91-dvk_su60_somc.dtsi          |   2 +-
+ arch/arm/boot/dts/at91-kizbox3-hs.dts              |   4 +-
+ arch/arm/boot/dts/at91-kizbox3_common.dtsi         |  48 +-
+ arch/arm/boot/dts/at91-sam9x60ek.dts               |  23 +
+ arch/arm/boot/dts/at91-sama5d27_som1.dtsi          |  54 ++
+ arch/arm/boot/dts/at91-sama5d27_som1_ek.dts        |  64 +-
+ arch/arm/boot/dts/at91-sama5d27_wlsom1.dtsi        |  16 +-
+ arch/arm/boot/dts/at91-sama5d27_wlsom1_ek.dts      |  12 -
+ arch/arm/boot/dts/at91-sama5d2_icp.dts             | 767 +++++++++++++++++++++
+ arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts          |  25 +-
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts        | 118 +++-
+ arch/arm/boot/dts/at91-wb50n.dtsi                  |   4 -
+ arch/arm/boot/dts/at91rm9200.dtsi                  | 296 +-------
+ arch/arm/boot/dts/at91sam9g45.dtsi                 | 338 +--------
+ arch/arm/boot/dts/at91sam9m10g45ek.dts             |   4 +-
+ arch/arm/boot/dts/at91sam9n12.dtsi                 | 324 +--------
+ arch/arm/boot/dts/at91sam9n12ek.dts                |   2 +-
+ arch/arm/boot/dts/sama5d2.dtsi                     | 295 +++++++-
+ arch/arm/boot/dts/sama5d3.dtsi                     | 430 ++----------
+ arch/arm/boot/dts/sama5d3_can.dtsi                 |  20 +-
+ arch/arm/boot/dts/sama5d3_emac.dtsi                |   8 +-
+ arch/arm/boot/dts/sama5d3_gmac.dtsi                |  11 +-
+ arch/arm/boot/dts/sama5d3_lcd.dtsi                 |  19 +-
+ arch/arm/boot/dts/sama5d3_mci2.dtsi                |  11 +-
+ arch/arm/boot/dts/sama5d3_tcb1.dtsi                |  12 +-
+ arch/arm/boot/dts/sama5d3_uart.dtsi                |  20 +-
+ arch/arm/boot/dts/sama5d3xmb.dtsi                  |   6 +-
+ arch/arm/boot/dts/sama5d3xmb_cmp.dtsi              |   6 +-
+ arch/arm/boot/dts/sama5d4.dtsi                     |   6 +-
+ 31 files changed, 1429 insertions(+), 1524 deletions(-)
+ create mode 100644 arch/arm/boot/dts/at91-sama5d2_icp.dts
 
 -- 
-Thanks,
-~Nick Desaulniers
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
