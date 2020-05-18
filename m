@@ -2,115 +2,196 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D4CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC2FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F325620657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:23:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCxeUuua"
+	by mail.kernel.org (Postfix) with ESMTP id 4DE79207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589819091;
+	bh=0eSPPEAjCLPYnEGtXgUooyUuIprRtFcZBFdRn/4jYLQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e7ffW8bevXq6/bdJ7DG0nM3IcI9rUUFxZ/Rf4bhSk9RtYtLiRmrhZcMBh2aiMnJ/f
+	 cyAGZunpVCjG63R8CHfHWV6WWHc5npmB6l5SSaU0TMTVFX9ZizEeBqeWHRg4Uu0Ugs
+	 8CmB2KUDeNxcOSSjFQRt51CDnCzcxV5lMzlbbIog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgERQXZ (ORCPT
+        id S1728276AbgERQYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:23:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727938AbgERQXY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:23:24 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DCF9C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:23:23 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t40so46199pjb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:23:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=K211i4h2u/TxQcxsieD51LxexrJexjO9Rx1FtdNootg=;
-        b=ZCxeUuuaf+obk5I3yVMAoO21FuFn9ZnaajU4+BOQ99SaS5pj2jagOJ/JOGl+8RsUII
-         rvwLVEZZIkzXNr6+b5GK8kBK5CwmCLz1LU0DPBurnFBaDT4RSxCswhVllgphaQG+aZjj
-         p/NUv/ujcSx2sF8dexJN5AdeFuomxgou0IRwg3hXoLKBdK/NS2+wU/KFY8//Q1WbOVzx
-         zSuZB4Bs5Z+jwykwSB4wAhMcLrvVt6iGZlNfPN/l6Rb1XTrVmBKIOUjCY/D2PWfPmFXt
-         /PzfwEXc5tl2MfRF3y+kOyECmkL7fRukDwcF+Ii3mXydS4jRBqnvfcTtirZxzQWmQRCT
-         0uRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=K211i4h2u/TxQcxsieD51LxexrJexjO9Rx1FtdNootg=;
-        b=Z3gfYKlW681vzUMJ78GNMQ9URF/Ltoruk+NtTo6FDFSRTfB06LOQFJD3gQcA2tXlRa
-         XymJEhXUUUf3QnDrdNXtq5SV45Oxe9Vvv5dQ2jLAwy9TP2o1eQNR6VMWnqKftJaj2L0B
-         +DLscpH4+XY7adh+obCbYBbWM4KRs/VtAW3aq5tpY+xTL5w/OZBHRONePLEdJWBQYZvk
-         pDff3enVBM7dH5vihNU8mQkKx3Y0mfZBPK+iuaF/or0DuUTgXtBtJ7hNq974K6sGMzGd
-         a4PEt7/qQJl+Gn3hgcPs15ncd9HJWksaFnfbVlH8e1hYWYh1ipenMORyV5CwIP7Fhdn5
-         EhZA==
-X-Gm-Message-State: AOAM531sjwA1GwSLkXnSKp0JIosldGi1U7S+YFDlw2ddktHxMpGw1pmk
-        tNyGus4J0jOl63hDgWhUSCSbMPYvo94=
-X-Google-Smtp-Source: ABdhPJwGk4vPSvK7vas58uw/Mle4Y1AUjToQolSEGddq1AGgxZx/L/rMqSj8a28neGfe3Hv0XNqxVw==
-X-Received: by 2002:a17:902:7587:: with SMTP id j7mr17207481pll.81.1589819002963;
-        Mon, 18 May 2020 09:23:22 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:418:e389:7149:74ab:b584:ecf8])
-        by smtp.gmail.com with ESMTPSA id s63sm44882pjj.16.2020.05.18.09.23.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 09:23:22 -0700 (PDT)
-From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-To:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     aishwaryarj100@gmail.com
-Subject: [PATCH] drm/amdkfd: Fix boolreturn.cocci warnings
-Date:   Mon, 18 May 2020 21:53:12 +0530
-Message-Id: <20200518162312.18059-1-aishwaryarj100@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 18 May 2020 12:24:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727036AbgERQYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 12:24:50 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD6F0207E8;
+        Mon, 18 May 2020 16:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589819089;
+        bh=0eSPPEAjCLPYnEGtXgUooyUuIprRtFcZBFdRn/4jYLQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LoNdkvwveHUdyHP1L3AV83UVBLbVdEmZxeGSfYdeWCDicAFHCe4Fm83h6/JS7S6Zw
+         gMONJdKZ1dMMz8bm/NLp/2WT6/PfemyDpxqtc8GJ3EhVNTUI9JA2e6QYD8FA5BmL5C
+         gilZu51VgeIcUkapOn4xFQvEn1Ka0Q9AX3tdAms0=
+Date:   Mon, 18 May 2020 09:24:47 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/9] fs/ext4: Disallow encryption if inode is DAX
+Message-ID: <20200518162447.GA954@sol.localdomain>
+References: <20200513054324.2138483-1-ira.weiny@intel.com>
+ <20200513054324.2138483-4-ira.weiny@intel.com>
+ <20200516020253.GG1009@sol.localdomain>
+ <20200518050315.GA3025231@iweiny-DESK2.sc.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518050315.GA3025231@iweiny-DESK2.sc.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return statements in functions returning bool should use
-true/false instead of 1/0.
+On Sun, May 17, 2020 at 10:03:15PM -0700, Ira Weiny wrote:
+> On Fri, May 15, 2020 at 07:02:53PM -0700, Eric Biggers wrote:
+> > On Tue, May 12, 2020 at 10:43:18PM -0700, ira.weiny@intel.com wrote:
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > Encryption and DAX are incompatible.  Changing the DAX mode due to a
+> > > change in Encryption mode is wrong without a corresponding
+> > > address_space_operations update.
+> > > 
+> > > Make the 2 options mutually exclusive by returning an error if DAX was
+> > > set first.
+> > > 
+> > > Furthermore, clarify the documentation of the exclusivity and how that
+> > > will work.
+> > > 
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > ---
+> > > Changes:
+> > > 	remove WARN_ON_ONCE
+> > > 	Add documentation to the encrypt doc WRT DAX
+> > > ---
+> > >  Documentation/filesystems/fscrypt.rst |  4 +++-
+> > >  fs/ext4/super.c                       | 10 +---------
+> > >  2 files changed, 4 insertions(+), 10 deletions(-)
+> > > 
+> > > diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
+> > > index aa072112cfff..1475b8d52fef 100644
+> > > --- a/Documentation/filesystems/fscrypt.rst
+> > > +++ b/Documentation/filesystems/fscrypt.rst
+> > > @@ -1038,7 +1038,9 @@ astute users may notice some differences in behavior:
+> > >  - The ext4 filesystem does not support data journaling with encrypted
+> > >    regular files.  It will fall back to ordered data mode instead.
+> > >  
+> > > -- DAX (Direct Access) is not supported on encrypted files.
+> > > +- DAX (Direct Access) is not supported on encrypted files.  Attempts to enable
+> > > +  DAX on an encrypted file will fail.  Mount options will _not_ enable DAX on
+> > > +  encrypted files.
+> > >  
+> > >  - The st_size of an encrypted symlink will not necessarily give the
+> > >    length of the symlink target as required by POSIX.  It will actually
+> > > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> > > index bf5fcb477f66..9873ab27e3fa 100644
+> > > --- a/fs/ext4/super.c
+> > > +++ b/fs/ext4/super.c
+> > > @@ -1320,7 +1320,7 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
+> > >  	if (inode->i_ino == EXT4_ROOT_INO)
+> > >  		return -EPERM;
+> > >  
+> > > -	if (WARN_ON_ONCE(IS_DAX(inode) && i_size_read(inode)))
+> > > +	if (IS_DAX(inode))
+> > >  		return -EINVAL;
+> > >  
+> > >  	res = ext4_convert_inline_data(inode);
+> > > @@ -1344,10 +1344,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
+> > >  			ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
+> > >  			ext4_clear_inode_state(inode,
+> > >  					EXT4_STATE_MAY_INLINE_DATA);
+> > > -			/*
+> > > -			 * Update inode->i_flags - S_ENCRYPTED will be enabled,
+> > > -			 * S_DAX may be disabled
+> > > -			 */
+> > >  			ext4_set_inode_flags(inode);
+> > >  		}
+> > >  		return res;
+> > > @@ -1371,10 +1367,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
+> > >  				    ctx, len, 0);
+> > >  	if (!res) {
+> > >  		ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
+> > > -		/*
+> > > -		 * Update inode->i_flags - S_ENCRYPTED will be enabled,
+> > > -		 * S_DAX may be disabled
+> > > -		 */
+> > >  		ext4_set_inode_flags(inode);
+> > >  		res = ext4_mark_inode_dirty(handle, inode);
+> > >  		if (res)
+> > 
+> > I'm confused by the ext4_set_context() change.
+> > 
+> > ext4_set_context() is only called when FS_IOC_SET_ENCRYPTION_POLICY sets an
+> > encryption policy on an empty directory, *or* when a new inode (regular, dir, or
+> > symlink) is created in an encrypted directory (thus inheriting encryption from
+> > its parent).
+> 
+> I don't see the check which prevents FS_IOC_SET_ENCRYPTION_POLICY on a file?
 
-drivers/gpu/drm/amd/amdkfd/kfd_int_process_v9.c:40:9-10:
-WARNING: return of 0/1 in function 'event_interrupt_isr_v9' with return type bool
+It's in fscrypt_ioctl_set_policy().
 
-Generated by: scripts/coccinelle/misc/boolreturn.cocci
+> 
+> On inode creation, encryption will always usurp S_DAX...
+> 
+> > 
+> > So when is it reachable when IS_DAX()?  Is the issue that the DAX flag can now
+> > be set on directories?  The commit message doesn't seem to be talking about
+> > directories.  Is the behavior we want is that on an (empty) directory with the
+> > DAX flag set, FS_IOC_SET_ENCRYPTION_POLICY should fail with EINVAL?
+> 
+> We would want that but AFIAK S_DAX is never set on directories.  Perhaps this
+> is another place where S_DAX needs to be changed to the new inode flag?
+> However, this would not be appropriate at this point in the series.  At this
+> point in the series S_DAX is still set based on the mount option and I'm 99%
+> sure that only happens on regular files, not directories.  So I'm confused now.
 
-Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
----
- drivers/gpu/drm/amd/amdkfd/kfd_int_process_v9.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+S_DAX is only set by ext4_set_inode_flags() which only sets it on regular files.
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_int_process_v9.c b/drivers/gpu/drm/amd/amdkfd/kfd_int_process_v9.c
-index e05d75ecda21..fce6ccabe38b 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_int_process_v9.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_int_process_v9.c
-@@ -37,7 +37,7 @@ static bool event_interrupt_isr_v9(struct kfd_dev *dev,
- 	vmid = SOC15_VMID_FROM_IH_ENTRY(ih_ring_entry);
- 	if (vmid < dev->vm_info.first_vmid_kfd ||
- 	    vmid > dev->vm_info.last_vmid_kfd)
--		return 0;
-+		return false;
- 
- 	source_id = SOC15_SOURCE_ID_FROM_IH_ENTRY(ih_ring_entry);
- 	client_id = SOC15_CLIENT_ID_FROM_IH_ENTRY(ih_ring_entry);
-@@ -69,7 +69,7 @@ static bool event_interrupt_isr_v9(struct kfd_dev *dev,
- 
- 	/* If there is no valid PASID, it's likely a bug */
- 	if (WARN_ONCE(pasid == 0, "Bug: No PASID in KFD interrupt"))
--		return 0;
-+		return false;
- 
- 	/* Interrupt types we care about: various signals and faults.
- 	 * They will be forwarded to a work queue (see below).
--- 
-2.17.1
+> 
+> This is, AFAICS, not going to affect correctness.  It will only be confusing
+> because the user will be able to set both DAX and encryption on the directory
+> but files there will only see encryption being used...  :-(
+> 
+> Assuming you are correct about this call path only being valid on directories.
+> It seems this IS_DAX() needs to be changed to check for EXT4_DAX_FL in
+> "fs/ext4: Introduce DAX inode flag"?  Then at that point we can prevent DAX and
+> encryption on a directory.  ...  and at this point IS_DAX() could be removed at
+> this point in the series???
 
+I haven't read the whole series, but if you are indeed trying to prevent a
+directory with EXT4_DAX_FL from being encrypted, then it does look like you'd
+need to check EXT4_DAX_FL, not S_DAX.
+
+The other question is what should happen when a file is created in an encrypted
+directory when the filesystem is mounted with -o dax.  Actually, I think I
+missed something there.  Currently (based on reading the code) the DAX flag will
+get set first, and then ext4_set_context() will see IS_DAX() && i_size == 0 and
+clear the DAX flag when setting the encrypt flag.  So, the i_size == 0 check is
+actually needed.  Your patch (AFAICS) just makes creating an encrypted file fail
+when '-o dax'.  Is that intended?  If not, maybe you should change it to check
+S_NEW instead of i_size == 0 to make it clearer?
+
+- Eric
