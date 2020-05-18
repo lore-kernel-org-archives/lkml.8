@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDEDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2C64207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAA1420715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825728;
-	bh=LobY6obmekHufQ60slCMcE6Y32ucOqOPVR7YPR8LAyw=;
+	s=default; t=1589825734;
+	bh=zC7WtYufx/aBvsGLXAfcPdRS54JeTpN1FQTW+VKOSAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nQm/QuJa7m6qp9+0nHkyY60rLNN9XDgxDFL4rOlNJT1E1LsvicwE9gZCYkq8tY0d/
-	 QyEoJR1/CLkB0iBPVrO1oqhhYe/65CEL2IWkx+tvFisVc3a6QKUCgxTAJD5X2Yieln
-	 FFGP3pn7Qfb4rA4zsTTBTDemxxV37vSRnDQ13FJM=
+	b=EBcF/l0qibJcEhVsfLtD4bmOCCLviSMpNW5yVb9jG3+PBWtQPBtZ9emqZlYfdGCTL
+	 w5NoBRJrLOlZuV1QTqxYQN2YL/iKe7an1a4q6TzX32knnOg2gr8iijT+rR6E3/wlaU
+	 J9EKaSztKA/O9iAFwnwkcCzIqHP90MXVh967YLsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387671AbgERSPZ (ORCPT
+        id S1732084AbgERR7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:15:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40406 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:59:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731609AbgERR7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:59:42 -0400
+        id S1732070AbgERR7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:59:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76102207C4;
-        Mon, 18 May 2020 17:59:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1F3420826;
+        Mon, 18 May 2020 17:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824781;
-        bh=LobY6obmekHufQ60slCMcE6Y32ucOqOPVR7YPR8LAyw=;
+        s=default; t=1589824772;
+        bh=zC7WtYufx/aBvsGLXAfcPdRS54JeTpN1FQTW+VKOSAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d4V8cD6YKaX04eYzQiiQ3aVDC9OgRtLUBw764/kpLDfdRaJN8P3mk79AWeAJeNiXd
-         R7ZNOlYSNXqwlRcik9GOXqlVLvBBBleByT5s3VLDCOrNTXqAEgapzVWo+Jn+c4MW3b
-         0k38q8VDfCCKrxDOcGv6enUHOJi64UVEze+srSmg=
+        b=mub2V2qBjTPkEtJuFXGRQ0B8UCaitCdSBiDQw09JPoryERXBGB/4z1VkWNgUjFveB
+         PEaO0Lef2PA9cHjEj9yb9ISNrgfGOy6p/maV12mv135wLz8wSRTLF2P27NPTyyYOGl
+         OXNkhSLExGqHuBLu3K8fQuTv/zc45pxz19fKwbbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergei Trofimovich <slyfox@gentoo.org>,
-        Borislav Petkov <bp@suse.de>, Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 121/147] x86: Fix early boot crash on gcc-10, third try
-Date:   Mon, 18 May 2020 19:37:24 +0200
-Message-Id: <20200518173528.047510098@linuxfoundation.org>
+        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 5.4 145/147] libbpf: Extract and generalize CPU mask parsing logic
+Date:   Mon, 18 May 2020 19:37:48 +0200
+Message-Id: <20200518173531.002979581@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -59,141 +59,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Andrii Nakryiko <andriin@fb.com>
 
-commit a9a3ed1eff3601b63aea4fb462d8b3b92c7c1e7e upstream.
+commit 6803ee25f0ead1e836808acb14396bb9a9849113 upstream.
 
-... or the odyssey of trying to disable the stack protector for the
-function which generates the stack canary value.
+This logic is re-used for parsing a set of online CPUs. Having it as an
+isolated piece of code working with input string makes it conveninent to test
+this logic as well. While refactoring, also improve the robustness of original
+implementation.
 
-The whole story started with Sergei reporting a boot crash with a kernel
-built with gcc-10:
-
-  Kernel panic — not syncing: stack-protector: Kernel stack is corrupted in: start_secondary
-  CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc5—00235—gfffb08b37df9 #139
-  Hardware name: Gigabyte Technology Co., Ltd. To be filled by O.E.M./H77M—D3H, BIOS F12 11/14/2013
-  Call Trace:
-    dump_stack
-    panic
-    ? start_secondary
-    __stack_chk_fail
-    start_secondary
-    secondary_startup_64
-  -—-[ end Kernel panic — not syncing: stack—protector: Kernel stack is corrupted in: start_secondary
-
-This happens because gcc-10 tail-call optimizes the last function call
-in start_secondary() - cpu_startup_entry() - and thus emits a stack
-canary check which fails because the canary value changes after the
-boot_init_stack_canary() call.
-
-To fix that, the initial attempt was to mark the one function which
-generates the stack canary with:
-
-  __attribute__((optimize("-fno-stack-protector"))) ... start_secondary(void *unused)
-
-however, using the optimize attribute doesn't work cumulatively
-as the attribute does not add to but rather replaces previously
-supplied optimization options - roughly all -fxxx options.
-
-The key one among them being -fno-omit-frame-pointer and thus leading to
-not present frame pointer - frame pointer which the kernel needs.
-
-The next attempt to prevent compilers from tail-call optimizing
-the last function call cpu_startup_entry(), shy of carving out
-start_secondary() into a separate compilation unit and building it with
--fno-stack-protector, was to add an empty asm("").
-
-This current solution was short and sweet, and reportedly, is supported
-by both compilers but we didn't get very far this time: future (LTO?)
-optimization passes could potentially eliminate this, which leads us
-to the third attempt: having an actual memory barrier there which the
-compiler cannot ignore or move around etc.
-
-That should hold for a long time, but hey we said that about the other
-two solutions too so...
-
-Reported-by: Sergei Trofimovich <slyfox@gentoo.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Kalle Valo <kvalo@codeaurora.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200314164451.346497-1-slyfox@gentoo.org
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20191212013548.1690564-1-andriin@fb.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/x86/include/asm/stackprotector.h |    7 ++++++-
- arch/x86/kernel/smpboot.c             |    8 ++++++++
- arch/x86/xen/smp_pv.c                 |    1 +
- include/linux/compiler.h              |    6 ++++++
- init/main.c                           |    2 ++
- 5 files changed, 23 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/stackprotector.h
-+++ b/arch/x86/include/asm/stackprotector.h
-@@ -55,8 +55,13 @@
- /*
-  * Initialize the stackprotector canary value.
-  *
-- * NOTE: this must only be called from functions that never return,
-+ * NOTE: this must only be called from functions that never return
-  * and it must always be inlined.
-+ *
-+ * In addition, it should be called from a compilation unit for which
-+ * stack protector is disabled. Alternatively, the caller should not end
-+ * with a function call which gets tail-call optimized as that would
-+ * lead to checking a modified canary value.
-  */
- static __always_inline void boot_init_stack_canary(void)
+---
+ tools/lib/bpf/libbpf.c          |  128 ++++++++++++++++++++++++++--------------
+ tools/lib/bpf/libbpf_internal.h |    2 
+ 2 files changed, 87 insertions(+), 43 deletions(-)
+
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -5905,62 +5905,104 @@ void bpf_program__bpil_offs_to_addr(stru
+ 	}
+ }
+ 
+-int libbpf_num_possible_cpus(void)
++int parse_cpu_mask_str(const char *s, bool **mask, int *mask_sz)
  {
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -262,6 +262,14 @@ static void notrace start_secondary(void
+-	static const char *fcpu = "/sys/devices/system/cpu/possible";
+-	int len = 0, n = 0, il = 0, ir = 0;
+-	unsigned int start = 0, end = 0;
+-	int tmp_cpus = 0;
+-	static int cpus;
+-	char buf[128];
+-	int error = 0;
+-	int fd = -1;
++	int err = 0, n, len, start, end = -1;
++	bool *tmp;
  
- 	wmb();
- 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+-	tmp_cpus = READ_ONCE(cpus);
+-	if (tmp_cpus > 0)
+-		return tmp_cpus;
++	*mask = NULL;
++	*mask_sz = 0;
 +
-+	/*
-+	 * Prevent tail call to cpu_startup_entry() because the stack protector
-+	 * guard has been changed a couple of function calls up, in
-+	 * boot_init_stack_canary() and must not be checked before tail calling
-+	 * another function.
-+	 */
-+	prevent_tail_call_optimization();
- }
- 
- /**
---- a/arch/x86/xen/smp_pv.c
-+++ b/arch/x86/xen/smp_pv.c
-@@ -92,6 +92,7 @@ asmlinkage __visible void cpu_bringup_an
- 	cpu_bringup();
- 	boot_init_stack_canary();
- 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
-+	prevent_tail_call_optimization();
- }
- 
- void xen_smp_intr_free_pv(unsigned int cpu)
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -356,4 +356,10 @@ static inline void *offset_to_ptr(const
- /* &a[0] degrades to a pointer: a different type from an array */
- #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
- 
-+/*
-+ * This is needed in functions which generate the stack canary, see
-+ * arch/x86/kernel/smpboot.c::start_secondary() for an example.
-+ */
-+#define prevent_tail_call_optimization()	mb()
++	/* Each sub string separated by ',' has format \d+-\d+ or \d+ */
++	while (*s) {
++		if (*s == ',' || *s == '\n') {
++			s++;
++			continue;
++		}
++		n = sscanf(s, "%d%n-%d%n", &start, &len, &end, &len);
++		if (n <= 0 || n > 2) {
++			pr_warning("Failed to get CPU range %s: %d\n", s, n);
++			err = -EINVAL;
++			goto cleanup;
++		} else if (n == 1) {
++			end = start;
++		}
++		if (start < 0 || start > end) {
++			pr_warning("Invalid CPU range [%d,%d] in %s\n",
++				   start, end, s);
++			err = -EINVAL;
++			goto cleanup;
++		}
++		tmp = realloc(*mask, end + 1);
++		if (!tmp) {
++			err = -ENOMEM;
++			goto cleanup;
++		}
++		*mask = tmp;
++		memset(tmp + *mask_sz, 0, start - *mask_sz);
++		memset(tmp + start, 1, end - start + 1);
++		*mask_sz = end + 1;
++		s += len;
++	}
++	if (!*mask_sz) {
++		pr_warning("Empty CPU range\n");
++		return -EINVAL;
++	}
++	return 0;
++cleanup:
++	free(*mask);
++	*mask = NULL;
++	return err;
++}
 +
- #endif /* __LINUX_COMPILER_H */
---- a/init/main.c
-+++ b/init/main.c
-@@ -782,6 +782,8 @@ asmlinkage __visible void __init start_k
++int parse_cpu_mask_file(const char *fcpu, bool **mask, int *mask_sz)
++{
++	int fd, err = 0, len;
++	char buf[128];
  
- 	/* Do the rest non-__init'ed, we're now alive */
- 	arch_call_rest_init();
+ 	fd = open(fcpu, O_RDONLY);
+ 	if (fd < 0) {
+-		error = errno;
+-		pr_warning("Failed to open file %s: %s\n",
+-			   fcpu, strerror(error));
+-		return -error;
++		err = -errno;
++		pr_warning("Failed to open cpu mask file %s: %d\n", fcpu, err);
++		return err;
+ 	}
+ 	len = read(fd, buf, sizeof(buf));
+ 	close(fd);
+ 	if (len <= 0) {
+-		error = len ? errno : EINVAL;
+-		pr_warning("Failed to read # of possible cpus from %s: %s\n",
+-			   fcpu, strerror(error));
+-		return -error;
+-	}
+-	if (len == sizeof(buf)) {
+-		pr_warning("File %s size overflow\n", fcpu);
+-		return -EOVERFLOW;
++		err = len ? -errno : -EINVAL;
++		pr_warning("Failed to read cpu mask from %s: %d\n", fcpu, err);
++		return err;
++	}
++	if (len >= sizeof(buf)) {
++		pr_warning("CPU mask is too big in file %s\n", fcpu);
++		return -E2BIG;
+ 	}
+ 	buf[len] = '\0';
+ 
+-	for (ir = 0, tmp_cpus = 0; ir <= len; ir++) {
+-		/* Each sub string separated by ',' has format \d+-\d+ or \d+ */
+-		if (buf[ir] == ',' || buf[ir] == '\0') {
+-			buf[ir] = '\0';
+-			n = sscanf(&buf[il], "%u-%u", &start, &end);
+-			if (n <= 0) {
+-				pr_warning("Failed to get # CPUs from %s\n",
+-					   &buf[il]);
+-				return -EINVAL;
+-			} else if (n == 1) {
+-				end = start;
+-			}
+-			tmp_cpus += end - start + 1;
+-			il = ir + 1;
+-		}
+-	}
+-	if (tmp_cpus <= 0) {
+-		pr_warning("Invalid #CPUs %d from %s\n", tmp_cpus, fcpu);
+-		return -EINVAL;
++	return parse_cpu_mask_str(buf, mask, mask_sz);
++}
 +
-+	prevent_tail_call_optimization();
- }
++int libbpf_num_possible_cpus(void)
++{
++	static const char *fcpu = "/sys/devices/system/cpu/possible";
++	static int cpus;
++	int err, n, i, tmp_cpus;
++	bool *mask;
++
++	tmp_cpus = READ_ONCE(cpus);
++	if (tmp_cpus > 0)
++		return tmp_cpus;
++
++	err = parse_cpu_mask_file(fcpu, &mask, &n);
++	if (err)
++		return err;
++
++	tmp_cpus = 0;
++	for (i = 0; i < n; i++) {
++		if (mask[i])
++			tmp_cpus++;
+ 	}
++	free(mask);
  
- /* Call all constructor functions linked into the kernel. */
+ 	WRITE_ONCE(cpus, tmp_cpus);
+ 	return tmp_cpus;
+--- a/tools/lib/bpf/libbpf_internal.h
++++ b/tools/lib/bpf/libbpf_internal.h
+@@ -63,6 +63,8 @@ do {				\
+ #define pr_info(fmt, ...)	__pr(LIBBPF_INFO, fmt, ##__VA_ARGS__)
+ #define pr_debug(fmt, ...)	__pr(LIBBPF_DEBUG, fmt, ##__VA_ARGS__)
+ 
++int parse_cpu_mask_str(const char *s, bool **mask, int *mask_sz);
++int parse_cpu_mask_file(const char *fcpu, bool **mask, int *mask_sz);
+ int libbpf__load_raw_btf(const char *raw_types, size_t types_len,
+ 			 const char *str_sec, size_t str_len);
+ 
 
 
