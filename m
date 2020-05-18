@@ -2,107 +2,83 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA35C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E5DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C65C20872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:01:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cVS7jAFa"
+	by mail.kernel.org (Postfix) with ESMTP id 089F0207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgERNBf (ORCPT
+        id S1727856AbgERNCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgERNBe (ORCPT
+        Mon, 18 May 2020 09:02:12 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:38741 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgERNCM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:01:34 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D20C061A0C;
-        Mon, 18 May 2020 06:01:34 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49QfKH5PKQz9sTY;
-        Mon, 18 May 2020 23:01:23 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589806885;
-        bh=X87x2O/NgHgg3pQpZtNm9qm3ZbblNwSzNsBmhoy99ww=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cVS7jAFaI3QUD3oMiUjV1oa9TRmDqjdksbhYdPw68gGZHUCID3kP5plttFCMHyPnz
-         GVJ6C430GOrSl0NeVfAXOPVrUUdSDVfN6BgLBQBGpak/QQIZZB4OZ01guSKg3Pz0oi
-         8/WM++ctW1HmwBKuNJ0IXtUoPISZlYV6PXTwtoa1fXOyozeuHapLfi+ha4IoUBh7PO
-         bKfHwIZmEiX2mnMN46SWyI9XauCqoI3DLNFIsR0Y01JHNNu2DLVYTlSILP23+kSyAE
-         6fXyuLGq1zM7kq1lJ4TCNnl3Dt/dNvbMgsxqXEs792FtkQbxVr2jxz4mdp3QdQPdmk
-         RmNHjPOHAVyJA==
-Date:   Mon, 18 May 2020 23:01:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        Wireless <linux-wireless@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Felix Fietkau <nbd@nbd.name>,
-        Soul Huang <Soul.Huang@mediatek.com>,
-        Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: linux-next: Fixes tag needs some work in the wireless-drivers-next
- tree
-Message-ID: <20200518230120.7b4c6074@canb.auug.org.au>
+        Mon, 18 May 2020 09:02:12 -0400
+X-Originating-IP: 84.210.220.251
+Received: from consensus.lan (cm-84.210.220.251.getinternet.no [84.210.220.251])
+        (Authenticated sender: fredrik@strupe.net)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 31480C0010;
+        Mon, 18 May 2020 13:01:58 +0000 (UTC)
+From:   Fredrik Strupe <fredrik@strupe.net>
+To:     Russell King <linux@armlinux.org.uk>, Rabin Vincent <rabin@rab.in>,
+        "David A . Long" <dave.long@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Fredrik Strupe <fredrik@strupe.net>
+Subject: [PATCH] arm: uprobes: Don't hook on thumb instructions
+Date:   Mon, 18 May 2020 14:59:48 +0200
+Message-Id: <20200518125948.25315-1-fredrik@strupe.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/dSih45EDoyKnaSCqCDR/H=S";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/dSih45EDoyKnaSCqCDR/H=S
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Since uprobes is not supported for thumb, check that the thumb bit is
+not set when matching the uprobes instruction hooks.
 
-Hi all,
+The Arm UDF instructions used for uprobes triggering
+(UPROBE_SWBP_ARM_INSN and UPROBE_SS_ARM_INSN) coincidentally share the
+same encoding as a pair of unallocated 32-bit thumb instructions (not
+UDF) when the condition code is 0b1111 (0xf). This in effect makes it
+possible to trigger the uprobes functionality from thumb, and at that
+using two unallocated instructions which are not permanently undefined.
 
-In commit
+Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
+Fixes: c7edc9e326d5 ("ARM: add uprobes support")
+---
+ arch/arm/probes/uprobes/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-  f8d6379932dd ("mt76: mt7663: fix the usage WoW with net detect support")
+diff --git a/arch/arm/probes/uprobes/core.c b/arch/arm/probes/uprobes/core.c
+index c4b49b322e8a..f5f790c6e5f8 100644
+--- a/arch/arm/probes/uprobes/core.c
++++ b/arch/arm/probes/uprobes/core.c
+@@ -204,7 +204,7 @@ unsigned long uprobe_get_swbp_addr(struct pt_regs *regs)
+ static struct undef_hook uprobes_arm_break_hook = {
+ 	.instr_mask	= 0x0fffffff,
+ 	.instr_val	= (UPROBE_SWBP_ARM_INSN & 0x0fffffff),
+-	.cpsr_mask	= MODE_MASK,
++	.cpsr_mask	= (PSR_T_BIT | MODE_MASK),
+ 	.cpsr_val	= USR_MODE,
+ 	.fn		= uprobe_trap_handler,
+ };
+@@ -212,7 +212,7 @@ static struct undef_hook uprobes_arm_break_hook = {
+ static struct undef_hook uprobes_arm_ss_hook = {
+ 	.instr_mask	= 0x0fffffff,
+ 	.instr_val	= (UPROBE_SS_ARM_INSN & 0x0fffffff),
+-	.cpsr_mask	= MODE_MASK,
++	.cpsr_mask	= (PSR_T_BIT | MODE_MASK),
+ 	.cpsr_val	= USR_MODE,
+ 	.fn		= uprobe_trap_handler,
+ };
+-- 
+2.20.1
 
-Fixes tag
-
-  Fixes: bd39bd2f00c3 ("mt76: mt7663: introduce WoW with net detect support=
-")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Maybe you meant
-
-Fixes: a72ad451e704 ("mt76: mt7663: introduce WoW with net detect support")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/dSih45EDoyKnaSCqCDR/H=S
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7ChyAACgkQAVBC80lX
-0GyYuAf/Q7gNlAhBoIJFTdZtFGN/5W95393jFP7jFdQh6WpjGZGxicr/sVpe+qSQ
-K2Wtj3elCW4rQsuEdTVSfOHCpwbw00niNP8krcc6Ktmv+XSmRiqVie/9Qqf+ATUG
-AfvWK2JYyQxZLUQZ1OsBW5Te2szDyCgewlNE5gl25gpBfTQhOAaY3qCdtSFkPaSI
-LPiXibm9hY8GwshznMH2FF/paZ03p9PGrN1buIuiMHzp/hA2DV/c2QIDwzdLLt5O
-VY/E//yuvfPuwJCe26MVJggv7JqaL7hQwsXGfM0GIVFLq6CaeKAIRDyamIqMv3Ef
-jtcXWkITe8UqFShODEdgKOXp4mGf7Q==
-=5c9u
------END PGP SIGNATURE-----
-
---Sig_/dSih45EDoyKnaSCqCDR/H=S--
