@@ -2,110 +2,125 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A02C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 369A3207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:42:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t5kbJ8vE"
+	by mail.kernel.org (Postfix) with ESMTP id 1952E20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgERQm6 (ORCPT
+        id S1728436AbgERQnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:42:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728127AbgERQm6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:42:58 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7A24C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:42:57 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id s8so12657169wrt.9
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:42:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=l7z6K0amO/UJk176kcJX4YeJlctfObnJzJsw8pKe4sQ=;
-        b=t5kbJ8vEQ29jXrypKtW3eJgqbsxD4z/bPK/nPLvx1ZJJGdVY79R33x66hal4j53Dr3
-         wfI41HluahUWCRhpDePMjy/Fmt7gXAHOX2Vj+m7i6uT7LNk1CW2NuqBhL2wnPWG8M/K6
-         ZfTiJ4TzIrY9qDOmQ6u+zRo0jx9Fz6R7MJeVPtAWDHtaQmY+j6ZA0GOIcc5EPHkRjJkv
-         hrsONuz0sTr4YL0NvVUVKzFickAjmDOkC5vxwPnkTV0clhri3E1bXds2SZq6FLpTAzK1
-         4wI1CT8Qwnamr/v2pa27pFL0xCHq5rDzQ0JNtjk1KZxr/ikAms2TvFDyiczEIdvmOlpT
-         M9eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=l7z6K0amO/UJk176kcJX4YeJlctfObnJzJsw8pKe4sQ=;
-        b=BTJW0Lh/gvN6/Yb8E++5XhKMZjM3JsmYbpu4SgmREagki6epLIDrmrzzLo4i0/LNoz
-         qlzA4aF5MEzoTGsGWtnFDCIxfna1el2NZlE8KALbm+ic/wYlsi3CFENWRqooY/5wq2Ng
-         UvIwwPV//viABWb28qLFqkFS/F00YAqieTZXLTjMutOxUoIOu3aM8V1a5yrnYPiDUQJV
-         8bgCBCjSn7/7oImB4Q7Gn8Awvuiz166igCa6t4gqPlPCaCW+a0fsPG8uwz/ZLAC1SeXq
-         1CVoHP4ka6JOJN437iTlBJmSM1B/2Ru8SxgSnt3JTYQUWv4ftFAqci2gvacjD99yDaH6
-         WRPw==
-X-Gm-Message-State: AOAM533G87KWQSU38DG8M/vS7NWAXCRNT8tjUUh/s2p3BE7kIhpwbbHm
-        cqE1/Em4Sau3tbuGI4QwdNP3lg==
-X-Google-Smtp-Source: ABdhPJx0XDQyf7zT0sv6Q3paDSxLsaxOBCpajY4Yvk08GG2KYWSgZT6Ac/ffdWmbevL3HdDikI5PEw==
-X-Received: by 2002:a05:6000:1252:: with SMTP id j18mr10965847wrx.3.1589820175994;
-        Mon, 18 May 2020 09:42:55 -0700 (PDT)
-Received: from dbrazdil-macbookpro.roam.corp.google.com ([2a01:4b00:8523:2d03:4431:2de6:16f:7f90])
-        by smtp.gmail.com with ESMTPSA id v24sm106645wmh.45.2020.05.18.09.42.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 09:42:55 -0700 (PDT)
-From:   David Brazdil <dbrazdil@google.com>
-X-Google-Original-From: David Brazdil <dbrazdil@dbrazdil-macbookpro.roam.corp.google.com>
-Date:   Mon, 18 May 2020 17:42:54 +0100
-To:     Andrew Scull <ascull@google.com>
-Cc:     David Brazdil <dbrazdil@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 04/14] arm64: kvm: Add build rules for separate nVHE
- object files
-Message-ID: <20200518164254.b26ankme6pb6ijqr@dbrazdil-macbookpro.roam.corp.google.com>
-References: <20200515105841.73532-1-dbrazdil@google.com>
- <20200515105841.73532-5-dbrazdil@google.com>
- <20200518155553.GB147668@google.com>
+        Mon, 18 May 2020 12:43:20 -0400
+Received: from mga09.intel.com ([134.134.136.24]:48761 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727020AbgERQnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 12:43:20 -0400
+IronPort-SDR: 0AHFgMZphkospxMAbe/8lyswVtAI8SxiTNhvSVk+vNF7UzvxfHM/xEx0CfgBVIOfCcBdLXd2OR
+ ZwVnfPt1ZdEg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 09:43:18 -0700
+IronPort-SDR: upDKlvNwBdsY1JUgaGgn7G2U8VVN5G1yPIetYSweB5w8b5sStOSfgYfh5535yban1X6ROWpjOW
+ Nd09R8pnrSMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="288632001"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 18 May 2020 09:43:15 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jairF-007TA1-UP; Mon, 18 May 2020 19:43:17 +0300
+Date:   Mon, 18 May 2020 19:43:17 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
+Message-ID: <20200518164317.GL1634618@smile.fi.intel.com>
+References: <20200518133645.19127-1-jonathan.albrieux@gmail.com>
+ <20200518133645.19127-4-jonathan.albrieux@gmail.com>
+ <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
+ <20200518160120.GA21361@ict14-OptiPlex-980>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200518155553.GB147668@google.com>
+In-Reply-To: <20200518160120.GA21361@ict14-OptiPlex-980>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 04:55:53PM +0100, Andrew Scull wrote:
-> On Fri, May 15, 2020 at 11:58:31AM +0100, David Brazdil wrote:
-> > diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-> > index 7f06ad93fc95..13850134fc28 100644
-> > --- a/arch/arm64/kernel/image-vars.h
-> > +++ b/arch/arm64/kernel/image-vars.h
-> > @@ -51,4 +51,16 @@ __efistub__ctype		= _ctype;
-> >  
-> >  #endif
-> >  
-> > +#ifdef CONFIG_KVM
-> > +
-> > +/*
-> > + * KVM nVHE code has its own symbol namespace prefixed by __hyp_text_, to
-> > + * isolate it from the kernel proper. The following symbols are legally
-> > + * accessed by it, therefore provide aliases to make them linkable.
-> > + * Do not include symbols which may not be safely accessed under hypervisor
-> > + * memory mappings.
-> > + */
+On Mon, May 18, 2020 at 06:01:20PM +0200, Jonathan Albrieux wrote:
+> On Mon, May 18, 2020 at 05:55:51PM +0300, Andy Shevchenko wrote:
+> > On Mon, May 18, 2020 at 4:38 PM Jonathan Albrieux
+> > <jonathan.albrieux@gmail.com> wrote:
+> > 
+> > > +       gpiod_set_value_cansleep(data->reset_gpiod, 1);
+> > 
+> > (1)
+> > 
+> > ...
+> > 
+> > > +       /*
+> > > +        * If reset pin is provided then will be set to high on power on
+> > > +        * and to low on power off according to AK09911 datasheet
+> > > +        */
+> > 
+> > Wording is confusing, perhaps you have to use 'asserted / deasserted'.
 > 
-> nit: the prefix is not '__kvm_nvhe_' rather than '__hyp_text_'
+> Thank you for the suggestion, I'll be working on rewording as soon as
+> possible.
+> 
+> > Btw, in (1) it's also "high" (asserted). I barely understand how it's
+> > supposed to work in all cases?
+> > 
+> > > +       reset_gpiod = devm_gpiod_get_optional(&client->dev,
+> > > +                                             "reset", GPIOD_OUT_HIGH);
+> > > +       if (IS_ERR(reset_gpiod))
+> > > +               return PTR_ERR(reset_gpiod);
+> > 
+> 
+> I'm sorry but I'm not sure about what you mean by saying all cases.
+> Currently  I'm testing this driver on a msm8916 device having AK09911
+> magnetometer. At the current stage the driver is failing on probe 
+> because reset pin is not connected to VID (as datasheet requires in case
+> of pin not being used). In case of reset pin not asserted, register's
+> reset is triggered resulting in empty registers, leading to probe fail.
+> For this reason pin is asserted during power on in order to have 
+> informations in registers and deasserted before power off triggering
+> a reset.
+> 
+> A workaround that gets AK09911 working on device is by setting the
+> reset pin always high on device tree. This way registers gets reset by
+> a Power On Reset circuit autonomously and reset pin never triggers the
+> reset.
 
-Thanks, will fix in v3.
+You need to distinguish electrical level from logical (GPIO flag defines
+logical). So, I'm talking about active-high vs. active-low case.
+
+Now I re-read above, and see that here you assert the reset signal. But where
+is desertion?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
