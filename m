@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61088C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4813BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36ACC20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190AC20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823679;
-	bh=bsCDHVysTRk/2H++MUm/dWsYevvXR/NMcYunC3JMh3c=;
+	s=default; t=1589823683;
+	bh=FbYVbW5S+MWJqqzX/D8J0938n0JU/xFXLAl/FccIewI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qbeww5GDYIuEhtvmSq2gu7kf8zE+CTEUcmthW9KTSUu2Zos0Vqgp9iuQLZdq7Wfx/
-	 N/nG5nj28DNh2XCrTF75wp/eb1ils9YBRz7OnLm8TXO/CBabfsxyBvyplJ9tGXeBpk
-	 HrxZGK9UMfSCZq+YqBXig9+/Z1hr9hnNrgTztuaY=
+	b=j7x7UCf1JSUnlDExX29VX9JG86XVEq9lS8gtUW25zVRbf2WTi/tjMhI5fBTklodfL
+	 rBwAwJwl7ZK9z3Wmc5RKmPCtiGXDd+cWxiLIN8l+hpXbFhrBBqMCeaYjwiKifRLp2e
+	 Tgi6P8iDoqShdhYvWevfd1N01amja4gQ7YiJjezY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbgERRlS (ORCPT
+        id S1727938AbgERRlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:41:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37092 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:41:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729193AbgERRlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:41:00 -0400
+        id S1729210AbgERRlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:41:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BB9120715;
-        Mon, 18 May 2020 17:40:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3882D20715;
+        Mon, 18 May 2020 17:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823660;
-        bh=bsCDHVysTRk/2H++MUm/dWsYevvXR/NMcYunC3JMh3c=;
+        s=default; t=1589823667;
+        bh=FbYVbW5S+MWJqqzX/D8J0938n0JU/xFXLAl/FccIewI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sr5Vvns/plnucgZH5LWvHYczLG3Aev/bXqPe5uCtXbgpLRyP7cwEz054YwB3dnDRm
-         PiXmrcDWLyetJZERR6rOhv9ORKYreAILiSopbIOq09OH49kEfiArgH+OPynNi7eZHr
-         +zCmkQ3Q4xP6AHMq/KExDDGge47uJOLplBuJeMN0=
+        b=E3f3KBso/yCpUWnm6JuHpu5qV0VYOsChBlxbyHJrtbyhLViiBttv+EwLE92R9yxbk
+         fwL5ziF1ABvABgHcdu3QsJECMDIPTeGutngq2N/tMHXL4qw50w8B59HBDG2dgI3kd9
+         zYuJ7Of/RaM0hGEdG0ThXkIuuJZdPiu+2MzvAano=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Sheets <matthew.sheets@gd-ms.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 71/86] netlabel: cope with NULL catmap
-Date:   Mon, 18 May 2020 19:36:42 +0200
-Message-Id: <20200518173504.834119661@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+194dffdb8b22fc5d207a@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 74/86] ALSA: rawmidi: Initialize allocated buffers
+Date:   Mon, 18 May 2020 19:36:45 +0200
+Message-Id: <20200518173505.468778017@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -61,71 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit eead1c2ea2509fd754c6da893a94f0e69e83ebe4 ]
+commit 5a7b44a8df822e0667fc76ed7130252523993bda upstream.
 
-The cipso and calipso code can set the MLS_CAT attribute on
-successful parsing, even if the corresponding catmap has
-not been allocated, as per current configuration and external
-input.
+syzbot reported the uninitialized value exposure in certain situations
+using virmidi loop.  It's likely a very small race at writing and
+reading, and the influence is almost negligible.  But it's safer to
+paper over this just by replacing the existing kvmalloc() with
+kvzalloc().
 
-Later, selinux code tries to access the catmap if the MLS_CAT flag
-is present via netlbl_catmap_getlong(). That may cause null ptr
-dereference while processing incoming network traffic.
-
-Address the issue setting the MLS_CAT flag only if the catmap is
-really allocated. Additionally let netlbl_catmap_getlong() cope
-with NULL catmap.
-
-Reported-by: Matthew Sheets <matthew.sheets@gd-ms.com>
-Fixes: 4b8feff251da ("netlabel: fix the horribly broken catmap functions")
-Fixes: ceba1832b1b2 ("calipso: Set the calipso socket label to match the secattr.")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: syzbot+194dffdb8b22fc5d207a@syzkaller.appspotmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/cipso_ipv4.c        |    6 ++++--
- net/netlabel/netlabel_kapi.c |    6 ++++++
- 2 files changed, 10 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/cipso_ipv4.c
-+++ b/net/ipv4/cipso_ipv4.c
-@@ -1343,7 +1343,8 @@ static int cipso_v4_parsetag_rbm(const s
- 			return ret_val;
- 		}
- 
--		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
-+		if (secattr->attr.mls.cat)
-+			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
+---
+ sound/core/rawmidi.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/sound/core/rawmidi.c
++++ b/sound/core/rawmidi.c
+@@ -136,7 +136,7 @@ static int snd_rawmidi_runtime_create(st
+ 		runtime->avail = 0;
+ 	else
+ 		runtime->avail = runtime->buffer_size;
+-	if ((runtime->buffer = kmalloc(runtime->buffer_size, GFP_KERNEL)) == NULL) {
++	if ((runtime->buffer = kzalloc(runtime->buffer_size, GFP_KERNEL)) == NULL) {
+ 		kfree(runtime);
+ 		return -ENOMEM;
  	}
- 
- 	return 0;
-@@ -1524,7 +1525,8 @@ static int cipso_v4_parsetag_rng(const s
- 			return ret_val;
- 		}
- 
--		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
-+		if (secattr->attr.mls.cat)
-+			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
- 	}
- 
- 	return 0;
---- a/net/netlabel/netlabel_kapi.c
-+++ b/net/netlabel/netlabel_kapi.c
-@@ -605,6 +605,12 @@ int netlbl_catmap_getlong(struct netlbl_
- 	if ((off & (BITS_PER_LONG - 1)) != 0)
+@@ -661,7 +661,7 @@ int snd_rawmidi_output_params(struct snd
  		return -EINVAL;
- 
-+	/* a null catmap is equivalent to an empty one */
-+	if (!catmap) {
-+		*offset = (u32)-1;
-+		return 0;
-+	}
-+
- 	if (off < catmap->startbit) {
- 		off = catmap->startbit;
- 		*offset = off;
+ 	}
+ 	if (params->buffer_size != runtime->buffer_size) {
+-		newbuf = kmalloc(params->buffer_size, GFP_KERNEL);
++		newbuf = kzalloc(params->buffer_size, GFP_KERNEL);
+ 		if (!newbuf)
+ 			return -ENOMEM;
+ 		spin_lock_irq(&runtime->lock);
 
 
