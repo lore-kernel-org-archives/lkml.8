@@ -2,110 +2,110 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9655CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B650C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAC220825
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642E1207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgERLBg (ORCPT
+        id S1726953AbgERLBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:01:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44308 "EHLO mx2.suse.de"
+        Mon, 18 May 2020 07:01:54 -0400
+Received: from mga01.intel.com ([192.55.52.88]:51126 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgERLBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:01:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B9328ABBD;
-        Mon, 18 May 2020 11:01:36 +0000 (UTC)
-Subject: Re: [PATCH v5.5 09/10] mmap locking API: add mmap_assert_locked() and
- mmap_assert_write_locked()
-To:     Michel Lespinasse <walken@google.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-References: <20200422001422.232330-1-walken@google.com>
- <20200422001422.232330-11-walken@google.com>
- <20200422015829.GR5820@bombadil.infradead.org>
- <CANN689EnGsJXA8n6JvTryQfkCtARPvtZbkH+9Dd2a4X+fvqU9g@mail.gmail.com>
- <20200423015917.GA13910@bombadil.infradead.org>
- <20200424012612.GA158937@google.com> <20200424013858.GB158937@google.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <fcf53ca7-d3a0-93e2-47af-7dd9b32b081a@suse.cz>
-Date:   Mon, 18 May 2020 13:01:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726279AbgERLBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:01:54 -0400
+IronPort-SDR: SO86lp8iWukT/WwInBfNlDfIRwQ/MshdUJHeor6AHGy+IWRxVMyNAmGveR2ruB+aQ0CE2H3jHY
+ 2WzTKf+A6NXA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 04:01:53 -0700
+IronPort-SDR: 3gUz7Y1e3P1D/HXW+7p6rvQVhAAsWMrOhnfmjtrQ09zy/EXx5p2f+mz47pOeHNs3cCYCWCELKX
+ /YLNrnvSL6vQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="299734767"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 18 May 2020 04:01:48 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jadWo-007PMV-PU; Mon, 18 May 2020 14:01:50 +0300
+Date:   Mon, 18 May 2020 14:01:50 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 09/19] spi: dw: Parameterize the DMA Rx/Tx burst length
+Message-ID: <20200518110150.GX1634618@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-10-Sergey.Semin@baikalelectronics.ru>
+ <20200515140129.GD1634618@smile.fi.intel.com>
+ <20200516143353.hw6nny5hbwgiyxfw@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <20200424013858.GB158937@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200516143353.hw6nny5hbwgiyxfw@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/20 3:38 AM, Michel Lespinasse wrote:
-> Add new APIs to assert that mmap_sem is held.
+On Sat, May 16, 2020 at 05:33:53PM +0300, Serge Semin wrote:
+> On Fri, May 15, 2020 at 05:01:29PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 15, 2020 at 01:47:48PM +0300, Serge Semin wrote:
+> > > It isn't good to have numeric literals in the code especially if there
+> > > are multiple of them and they are related. Moreover in current
+> > > implementation the Tx DMA transfer activation level isn't optimal,
+> > > since it's hardwired to be at 16-32 bytes level, while it's better
+> > > to keep the SPI FIFO buffer as full as possible until all available
+> > > data is submitted. So lets introduce the DMA burst level
+> > > parametrization macros with optimal values - issue Rx transfer if at
+> > > least 16 bytes are available in the buffer and execute Tx transaction
+> > > if at least 16 bytes room is opened in SPI Tx FIFO.
+> > 
+> > > -	dw_writel(dws, DW_SPI_DMARDLR, 0xf);
+> > > -	dw_writel(dws, DW_SPI_DMATDLR, 0x10);
+> > > +	dw_writel(dws, DW_SPI_DMARDLR, RX_BURST_LEVEL - 1);
+> > > +	dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - TX_BURST_LEVEL);
+> > 
+> > ...and if FIFO length is less than TX_BURST_LEVEL?
+> > 
+> > For the patch that introduces definitions, i.e. keeping the last line here as
+> > 
+> > 	dw_writel(dws, DW_SPI_DMATDLR, TX_BURST_LEVEL);
+> > 
+> > I'm good. You may put your tag in that case. For fifo_len case we need to
+> > discuss in separate patch, perhaps.
 > 
-> Using this instead of rwsem_is_locked and lockdep_assert_held[_write]
-> makes the assertions more tolerant of future changes to the lock type.
-> 
-> Signed-off-by: Michel Lespinasse <walken@google.com>
-> ---
->  arch/x86/events/core.c    |  2 +-
->  fs/userfaultfd.c          |  6 +++---
->  include/linux/mmap_lock.h | 14 ++++++++++++++
->  mm/gup.c                  |  2 +-
->  mm/hmm.c                  |  2 +-
->  mm/memory.c               |  2 +-
->  mm/mmu_notifier.c         |  6 +++---
->  mm/pagewalk.c             |  6 +++---
->  mm/util.c                 |  2 +-
->  9 files changed, 28 insertions(+), 14 deletions(-)
-> 
+> It's fixed in a consequent patch anyway. Though if v3 is required I'll remove
+> this change from here.
 
-...
+I consider that here you might have introduced a regression and actually doing
+two things in one patch. Why not to split?
 
-> @@ -73,4 +75,16 @@ static inline void mmap_read_unlock_non_owner(struct mm_struct *mm)
->  	up_read_non_owner(&mm->mmap_sem);
->  }
->  
-> +static inline void mmap_assert_locked(struct mm_struct *mm)
-> +{
-> +	VM_BUG_ON_MM(!lockdep_is_held_type(&mm->mmap_sem, -1), mm);
-> +	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
-> +}
-> +
-> +static inline void mmap_assert_write_locked(struct mm_struct *mm)
-> +{
-> +	VM_BUG_ON_MM(!lockdep_is_held_type(&mm->mmap_sem, 0), mm);
-> +	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
-> +}
+-- 
+With Best Regards,
+Andy Shevchenko
 
-I would remove VM_BUG_ON_MM() from the lockdep part. If kernel has lockdep
-enabled, it's already in heavy debugging mode enough so let's just use it and
-not depend on DEBUG_VM. Many sites you convert don't require DEBUG_VM for the
-lockdep checks.
 
-With that you can also use the standard lockdep_assert_held() and
-lockdep_assert_held_write() wrappers.
-
-If user has both lockdep and DEBUG_VM enabled, should we run both variants?
-Perhaps lockdep is enough as it's more comprehensive? Your initial v5 version
-was doing that.
