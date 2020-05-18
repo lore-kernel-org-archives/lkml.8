@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A31C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54D6620853
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60932083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825277;
-	bh=LKxni0uILG5TbrYILoYC0DaokGze+8/lhCaMHSWGj5E=;
+	s=default; t=1589825280;
+	bh=XdSVoiFRtf3cyz7ypktPW4mY6jLVSFfO5OzF2dGq2VA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XvDE1Dwe60V3OizM0mI882UWuJX/46X96xyrZCrLL2HugeoFtFVkvtODmHj2ezIkv
-	 bjaA1IYFmqKOnVM9kyUkgZFcCzveXBx6eTkQhe9JvRNmeylgZGBnBFNDXRC9YFhaqo
-	 ElgybVLbClZvmf5a3ZfGCu6JxznXM73JUwedmfhY=
+	b=cxhsDiniJpVpLLAwHCF0RtXT61VcvRexE3qTcRrBrUrTSdkVdhXah5Unc87bpgdXf
+	 FOkJUFOqDFdholPMOLPiWRW3rpn5/T5o/7gz1kPmMBVZWGKjxVdtxGgrNtUJv0qzWf
+	 He1oSbS5FmHQcck2rbKMw0eeg2OEa34am4p56mUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732271AbgERSH4 (ORCPT
+        id S2387463AbgERSH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:07:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56956 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:07:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387436AbgERSHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:07:47 -0400
+        id S2387453AbgERSHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:07:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A906220C09;
-        Mon, 18 May 2020 18:07:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4403720715;
+        Mon, 18 May 2020 18:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825267;
-        bh=LKxni0uILG5TbrYILoYC0DaokGze+8/lhCaMHSWGj5E=;
+        s=default; t=1589825274;
+        bh=XdSVoiFRtf3cyz7ypktPW4mY6jLVSFfO5OzF2dGq2VA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1PyirHsl7TmhFkNWdiy7zr5JVGKHYThIXfQlu1yVlkVld7tuns3gLQ4d9B70r+64y
-         9EclEndWW8wFEg1ZlSF3wUq+LiLSBWu/zuv6d8Qyk9jBIGqPDSisM53jdCyYKeIRhg
-         OXmhlUKEoowcYQBhKMLK0A/dyPAW3TIbmhdaLeHU=
+        b=lubQ/c4isrqLxTBAprtw6kF4g4HNrxUJMeNBsxFEpasCxpSn+/x+3BHLFqUbTx0C3
+         ssVwD+I257vyebV3+hsIiUVbpBcthL7Rr02rkDwloOs2p6frTrDDozFJqTxHEJwfS3
+         79bOW+mGRlBSg1RnyhazEPAwzKTOUegzTJb/9MI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
         Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.6 165/194] usb: gadget: tegra-xudc: Fix idle suspend/resume
-Date:   Mon, 18 May 2020 19:37:35 +0200
-Message-Id: <20200518173544.955691616@linuxfoundation.org>
+Subject: [PATCH 5.6 168/194] usb: gadget: legacy: fix error return code in gncm_bind()
+Date:   Mon, 18 May 2020 19:37:38 +0200
+Message-Id: <20200518173545.187850802@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,45 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit 0534d40160cb9505073b0ecf5e7210daee319a66 upstream.
+commit e27d4b30b71c66986196d8a1eb93cba9f602904a upstream.
 
-When the XUDC device is idle (i.e. powergated), care must be taken not
-to access any registers because that would lead to a crash.
+If 'usb_otg_descriptor_alloc()' fails, we must return a
+negative error code -ENOMEM, not 0.
 
-Move the call to tegra_xudc_device_mode_off() into the same conditional
-as the tegra_xudc_powergate() call to make sure we only force device
-mode off if the XUDC is actually powered up.
-
-Fixes: 49db427232fe ("usb: gadget: Add UDC driver for tegra XUSB device mode controller")
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: 1156e91dd7cc ("usb: gadget: ncm: allocate and init otg descriptor by otg capabilities")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/tegra-xudc.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/usb/gadget/legacy/ncm.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/gadget/udc/tegra-xudc.c
-+++ b/drivers/usb/gadget/udc/tegra-xudc.c
-@@ -3740,11 +3740,11 @@ static int __maybe_unused tegra_xudc_sus
+--- a/drivers/usb/gadget/legacy/ncm.c
++++ b/drivers/usb/gadget/legacy/ncm.c
+@@ -156,8 +156,10 @@ static int gncm_bind(struct usb_composit
+ 		struct usb_descriptor_header *usb_desc;
  
- 	flush_work(&xudc->usb_role_sw_work);
- 
--	/* Forcibly disconnect before powergating. */
--	tegra_xudc_device_mode_off(xudc);
--
--	if (!pm_runtime_status_suspended(dev))
-+	if (!pm_runtime_status_suspended(dev)) {
-+		/* Forcibly disconnect before powergating. */
-+		tegra_xudc_device_mode_off(xudc);
- 		tegra_xudc_powergate(xudc);
-+	}
- 
- 	pm_runtime_disable(dev);
- 
+ 		usb_desc = usb_otg_descriptor_alloc(gadget);
+-		if (!usb_desc)
++		if (!usb_desc) {
++			status = -ENOMEM;
+ 			goto fail;
++		}
+ 		usb_otg_descriptor_init(gadget, usb_desc);
+ 		otg_desc[0] = usb_desc;
+ 		otg_desc[1] = NULL;
 
 
