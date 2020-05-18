@@ -2,185 +2,94 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6322B2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA32207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:30:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qej/Jlqp"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Zw4ceQI4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgERG2k (ORCPT
+        id S1727775AbgERGaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 02:28:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbgERG2Y (ORCPT
+        Mon, 18 May 2020 02:30:24 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:55227 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726895AbgERGaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 02:28:24 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A00AC05BD09;
-        Sun, 17 May 2020 23:28:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=c5wsatICENlyCsJgfivR/6nhQ0cqkFP07PCjhwLOGkQ=; b=Qej/Jlqplqnd4I1ThHR3PGVwMW
-        BbOSsFxkRXIwK2oxYBs6rH5oe4h5e7hzpaB1eajkycwXgzpA93NyuQ5mk6eFY6MeqxtoPRGNH9Y0i
-        V1ps7DQQyCsgvgTKJaZ2allGp1qBrW0kFDJGl0POxy686wm9uCkeiG+bBnRYJVqj2zdtjcwYuO3ln
-        Pfw7y9BBJcbBJI+4+LWfMayJN/wVOnNhN7fEISEwex4u7vFDQ6fvBAu4D3YQ+rfdbHaq6BBZPXB13
-        D8ghd+STuIEW/WVlhGE5VhoPno+E0VflXPObbBPu5+Zij/VTRlIQa/1Da/uz4lEgz3oxBkSd8lxdR
-        2SxEPgEA==;
-Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jaZG2-0002Za-Kf; Mon, 18 May 2020 06:28:15 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/4] ipv6: lift copy_from_user out of ipv6_route_ioctl
-Date:   Mon, 18 May 2020 08:28:05 +0200
-Message-Id: <20200518062808.756610-2-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518062808.756610-1-hch@lst.de>
-References: <20200518062808.756610-1-hch@lst.de>
+        Mon, 18 May 2020 02:30:24 -0400
+X-UUID: 2489c0d6f6b64d0d9a8fce8d153f77fe-20200518
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=YlRyO64pnH8FZf+sdaf75snQYwi8eIDYf2MbHf8zjzk=;
+        b=Zw4ceQI4fkwRd/lVZVeswq+EIGM7t5YruYR0e9O4yR7VY3NULyfx5oW8ELZyRWBQzmqEd3zCV5q2c2MMdVIPZyswJ6KWVNFTdqF9Q5VFjHUK5W9k5dEgy3za62GXabDRkpetoal7co6vo4/g2hHuE7X2sIFFeWipNHr+CND46+o=;
+X-UUID: 2489c0d6f6b64d0d9a8fce8d153f77fe-20200518
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 482467777; Mon, 18 May 2020 14:30:20 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 18 May 2020 14:30:19 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 18 May 2020 14:30:17 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH v3 3/4] kasan: add tests for call_rcu stack recording
+Date:   Mon, 18 May 2020 14:30:17 +0800
+Message-ID: <20200518063017.4766-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prepare for better compat ioctl handling by moving the user copy out
-of ipv6_route_ioctl.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/net/ip6_route.h |  3 ++-
- net/ipv6/af_inet6.c     | 16 +++++++++------
- net/ipv6/route.c        | 44 +++++++++++++++--------------------------
- 3 files changed, 28 insertions(+), 35 deletions(-)
-
-diff --git a/include/net/ip6_route.h b/include/net/ip6_route.h
-index e525f003e6197..2a5277758379e 100644
---- a/include/net/ip6_route.h
-+++ b/include/net/ip6_route.h
-@@ -118,7 +118,8 @@ void ip6_route_init_special_entries(void);
- int ip6_route_init(void);
- void ip6_route_cleanup(void);
- 
--int ipv6_route_ioctl(struct net *net, unsigned int cmd, void __user *arg);
-+int ipv6_route_ioctl(struct net *net, unsigned int cmd,
-+		struct in6_rtmsg *rtmsg);
- 
- int ip6_route_add(struct fib6_config *cfg, gfp_t gfp_flags,
- 		  struct netlink_ext_ack *extack);
-diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
-index 771a462a8322b..a618beb9b6d54 100644
---- a/net/ipv6/af_inet6.c
-+++ b/net/ipv6/af_inet6.c
-@@ -542,21 +542,25 @@ EXPORT_SYMBOL(inet6_getname);
- 
- int inet6_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
- {
-+	void __user *argp = (void __user *)arg;
- 	struct sock *sk = sock->sk;
- 	struct net *net = sock_net(sk);
- 
- 	switch (cmd) {
- 	case SIOCADDRT:
--	case SIOCDELRT:
--
--		return ipv6_route_ioctl(net, cmd, (void __user *)arg);
-+	case SIOCDELRT: {
-+		struct in6_rtmsg rtmsg;
- 
-+		if (copy_from_user(&rtmsg, argp, sizeof(rtmsg)))
-+			return -EFAULT;
-+		return ipv6_route_ioctl(net, cmd, &rtmsg);
-+	}
- 	case SIOCSIFADDR:
--		return addrconf_add_ifaddr(net, (void __user *) arg);
-+		return addrconf_add_ifaddr(net, argp);
- 	case SIOCDIFADDR:
--		return addrconf_del_ifaddr(net, (void __user *) arg);
-+		return addrconf_del_ifaddr(net, argp);
- 	case SIOCSIFDSTADDR:
--		return addrconf_set_dstaddr(net, (void __user *) arg);
-+		return addrconf_set_dstaddr(net, argp);
- 	default:
- 		if (!sk->sk_prot->ioctl)
- 			return -ENOIOCTLCMD;
-diff --git a/net/ipv6/route.c b/net/ipv6/route.c
-index a8b4add0b5454..a52ec1b86432b 100644
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -4336,41 +4336,29 @@ static void rtmsg_to_fib6_config(struct net *net,
- 	};
- }
- 
--int ipv6_route_ioctl(struct net *net, unsigned int cmd, void __user *arg)
-+int ipv6_route_ioctl(struct net *net, unsigned int cmd, struct in6_rtmsg *rtmsg)
- {
- 	struct fib6_config cfg;
--	struct in6_rtmsg rtmsg;
- 	int err;
- 
--	switch (cmd) {
--	case SIOCADDRT:		/* Add a route */
--	case SIOCDELRT:		/* Delete a route */
--		if (!ns_capable(net->user_ns, CAP_NET_ADMIN))
--			return -EPERM;
--		err = copy_from_user(&rtmsg, arg,
--				     sizeof(struct in6_rtmsg));
--		if (err)
--			return -EFAULT;
-+	if (cmd != SIOCADDRT && cmd != SIOCDELRT)
-+		return -EINVAL;
-+	if (!ns_capable(net->user_ns, CAP_NET_ADMIN))
-+		return -EPERM;
- 
--		rtmsg_to_fib6_config(net, &rtmsg, &cfg);
-+	rtmsg_to_fib6_config(net, rtmsg, &cfg);
- 
--		rtnl_lock();
--		switch (cmd) {
--		case SIOCADDRT:
--			err = ip6_route_add(&cfg, GFP_KERNEL, NULL);
--			break;
--		case SIOCDELRT:
--			err = ip6_route_del(&cfg, NULL);
--			break;
--		default:
--			err = -EINVAL;
--		}
--		rtnl_unlock();
--
--		return err;
-+	rtnl_lock();
-+	switch (cmd) {
-+	case SIOCADDRT:
-+		err = ip6_route_add(&cfg, GFP_KERNEL, NULL);
-+		break;
-+	case SIOCDELRT:
-+		err = ip6_route_del(&cfg, NULL);
-+		break;
- 	}
--
--	return -EINVAL;
-+	rtnl_unlock();
-+	return err;
- }
- 
- /*
--- 
-2.26.2
+VGVzdCBjYWxsX3JjdSgpIGNhbGwgc3RhY2sgcmVjb3JkaW5nIHdoZXRoZXIgaXQgY29ycmVjdGx5
+IGlzIHByaW50ZWQNCmluIEtBU0FOIHJlcG9ydC4NCg0KU2lnbmVkLW9mZi1ieTogV2FsdGVyIFd1
+IDx3YWx0ZXItemgud3VAbWVkaWF0ZWsuY29tPg0KQ2M6IEFuZHJleSBSeWFiaW5pbiA8YXJ5YWJp
+bmluQHZpcnR1b3p6by5jb20+DQpDYzogRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29t
+Pg0KQ2M6IEFsZXhhbmRlciBQb3RhcGVua28gPGdsaWRlckBnb29nbGUuY29tPg0KQ2M6IE1hdHRo
+aWFzIEJydWdnZXIgPG1hdHRoaWFzLmJnZ0BnbWFpbC5jb20+DQotLS0NCiBsaWIvdGVzdF9rYXNh
+bi5jIHwgMzAgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQs
+IDMwIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2xpYi90ZXN0X2thc2FuLmMgYi9saWIv
+dGVzdF9rYXNhbi5jDQppbmRleCBlMzA4N2Q5MGUwMGQuLjBlOWZmMDJmMGE4YiAxMDA2NDQNCi0t
+LSBhL2xpYi90ZXN0X2thc2FuLmMNCisrKyBiL2xpYi90ZXN0X2thc2FuLmMNCkBAIC03OTIsNiAr
+NzkyLDM1IEBAIHN0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCB2bWFsbG9jX29vYih2b2lkKQ0K
+IHN0YXRpYyB2b2lkIF9faW5pdCB2bWFsbG9jX29vYih2b2lkKSB7fQ0KICNlbmRpZg0KIA0KK3N0
+YXRpYyBzdHJ1Y3Qga2FzYW5fcmN1X2luZm8gew0KKwlpbnQgaTsNCisJc3RydWN0IHJjdV9oZWFk
+IHJjdTsNCit9ICpnbG9iYWxfcHRyOw0KKw0KK3N0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBr
+YXNhbl9yY3VfcmVjbGFpbShzdHJ1Y3QgcmN1X2hlYWQgKnJwKQ0KK3sNCisJc3RydWN0IGthc2Fu
+X3JjdV9pbmZvICpmcCA9IGNvbnRhaW5lcl9vZihycCwNCisJCQkJCQlzdHJ1Y3Qga2FzYW5fcmN1
+X2luZm8sIHJjdSk7DQorDQorCWtmcmVlKGZwKTsNCisJZnAtPmkgPSAxOw0KK30NCisNCitzdGF0
+aWMgbm9pbmxpbmUgdm9pZCBfX2luaXQga2FzYW5fcmN1X3VhZih2b2lkKQ0KK3sNCisJc3RydWN0
+IGthc2FuX3JjdV9pbmZvICpwdHI7DQorDQorCXByX2luZm8oInVzZS1hZnRlci1mcmVlIGluIGth
+c2FuX3JjdV9yZWNsYWltXG4iKTsNCisJcHRyID0ga21hbGxvYyhzaXplb2Yoc3RydWN0IGthc2Fu
+X3JjdV9pbmZvKSwgR0ZQX0tFUk5FTCk7DQorCWlmICghcHRyKSB7DQorCQlwcl9lcnIoIkFsbG9j
+YXRpb24gZmFpbGVkXG4iKTsNCisJCXJldHVybjsNCisJfQ0KKw0KKwlnbG9iYWxfcHRyID0gcmN1
+X2RlcmVmZXJlbmNlX3Byb3RlY3RlZChwdHIsIE5VTEwpOw0KKwljYWxsX3JjdSgmZ2xvYmFsX3B0
+ci0+cmN1LCBrYXNhbl9yY3VfcmVjbGFpbSk7DQorfQ0KKw0KIHN0YXRpYyBpbnQgX19pbml0IGtt
+YWxsb2NfdGVzdHNfaW5pdCh2b2lkKQ0KIHsNCiAJLyoNCkBAIC04MzksNiArODY4LDcgQEAgc3Rh
+dGljIGludCBfX2luaXQga21hbGxvY190ZXN0c19pbml0KHZvaWQpDQogCWthc2FuX2JpdG9wcygp
+Ow0KIAlrbWFsbG9jX2RvdWJsZV9remZyZWUoKTsNCiAJdm1hbGxvY19vb2IoKTsNCisJa2FzYW5f
+cmN1X3VhZigpOw0KIA0KIAlrYXNhbl9yZXN0b3JlX211bHRpX3Nob3QobXVsdGlzaG90KTsNCiAN
+Ci0tIA0KMi4xOC4wDQo=
 
