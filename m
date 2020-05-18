@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAABC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65B1020715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9705020715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823959;
-	bh=hBjtYZJ5CvsH4u+wYPEqeBG0fOmlntBuMqfYioHyMZE=;
+	s=default; t=1589823962;
+	bh=OieQ1O9n5MvWlMhty8zIfO6HjQ6PPi8mI7Vrkk0pb68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MCldvm6kYNKQ0OQr7p8nplOu+91suQyKv7pOlQyCWt7JrHMOu4mNoKyvrTT97Oeod
-	 wfMw8OXbXpO2c5BpJ2VePNOT2zXn5ZmWwUSk7hoy8224t+eRE3Wbq2FLRuASOSumkV
-	 848x5UwID7/1Mm/ckueYUGEehfLkD1iI5qVEzr9g=
+	b=aTFLdNjczm1zDtN+4DuzBOC094wUQwGAdM8JRaTihpqXBA7jbHON+PxzLAZ6oN06U
+	 6Ct/fN8AdUJ0cKeecohme0LxJS2sY7mTmSTxgXFRwViPnR/hN1PrgJMGf6YqA8De3r
+	 rD6wipYwLwyfrVog63kRPsBYU4sfAA09B0BZmjAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbgERRp5 (ORCPT
+        id S1730019AbgERRqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:45:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45116 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:46:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730008AbgERRpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:45:52 -0400
+        id S1729998AbgERRp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:45:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8E5520674;
-        Mon, 18 May 2020 17:45:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E18EC20674;
+        Mon, 18 May 2020 17:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823952;
-        bh=hBjtYZJ5CvsH4u+wYPEqeBG0fOmlntBuMqfYioHyMZE=;
+        s=default; t=1589823957;
+        bh=OieQ1O9n5MvWlMhty8zIfO6HjQ6PPi8mI7Vrkk0pb68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dkEAskBWhbLOtMhAvchTayb/G26drV6wrobnmr77JYsOpbSqEG6gyLDqei0nrfl8C
-         erNM0AKXqCZU05U0M6iR7cI99Nv4PrpISBroo71RXFHqmKjsHVjmV5OPhcHjdkUg7k
-         BD2MIe0l5suo5mwWkfnlpzEzJmMWBkPAX696Q4kA=
+        b=ffQz3j4uj8ILsVIhEtarxS3GCz92Q0/qwzdUj+6PKxoGR2azv2MFx4foVmznIJ7U+
+         afu2pAI+GTuwWaaPNh4fGb72pcJ9YpsEL0wBbU4p16Q+Y4MoA2cGcuZsXL9rABZm5I
+         JLNzxxIQKAnu6RAAD3RPb0MD9b7IjVmjqXILo24Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 012/114] bnxt_en: Improve AER slot reset.
-Date:   Mon, 18 May 2020 19:35:44 +0200
-Message-Id: <20200518173505.705981494@linuxfoundation.org>
+Subject: [PATCH 4.14 014/114] net: stricter validation of untrusted gso packets
+Date:   Mon, 18 May 2020 19:35:46 +0200
+Message-Id: <20200518173506.216684812@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -59,46 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit bae361c54fb6ac6eba3b4762f49ce14beb73ef13 ]
+[ Upstream commit 9274124f023b5c56dc4326637d4f787968b03607 ]
 
-Improve the slot reset sequence by disabling the device to prevent bad
-DMAs if slot reset fails.  Return the proper result instead of always
-PCI_ERS_RESULT_RECOVERED to the caller.
+Syzkaller again found a path to a kernel crash through bad gso input:
+a packet with transport header extending beyond skb_headlen(skb).
 
-Fixes: 6316ea6db93d ("bnxt_en: Enable AER support.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Tighten validation at kernel entry:
+
+- Verify that the transport header lies within the linear section.
+
+    To avoid pulling linux/tcp.h, verify just sizeof tcphdr.
+    tcp_gso_segment will call pskb_may_pull (th->doff * 4) before use.
+
+- Match the gso_type against the ip_proto found by the flow dissector.
+
+Fixes: bfd5f4a3d605 ("packet: Add GSO/csum offload support.")
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ include/linux/virtio_net.h |   24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -8423,8 +8423,11 @@ static pci_ers_result_t bnxt_io_slot_res
+--- a/include/linux/virtio_net.h
++++ b/include/linux/virtio_net.h
+@@ -3,6 +3,8 @@
+ #define _LINUX_VIRTIO_NET_H
+ 
+ #include <linux/if_vlan.h>
++#include <uapi/linux/tcp.h>
++#include <uapi/linux/udp.h>
+ #include <uapi/linux/virtio_net.h>
+ 
+ static inline int virtio_net_hdr_set_proto(struct sk_buff *skb,
+@@ -28,17 +30,25 @@ static inline int virtio_net_hdr_to_skb(
+ 					bool little_endian)
+ {
+ 	unsigned int gso_type = 0;
++	unsigned int thlen = 0;
++	unsigned int ip_proto;
+ 
+ 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
+ 		switch (hdr->gso_type & ~VIRTIO_NET_HDR_GSO_ECN) {
+ 		case VIRTIO_NET_HDR_GSO_TCPV4:
+ 			gso_type = SKB_GSO_TCPV4;
++			ip_proto = IPPROTO_TCP;
++			thlen = sizeof(struct tcphdr);
+ 			break;
+ 		case VIRTIO_NET_HDR_GSO_TCPV6:
+ 			gso_type = SKB_GSO_TCPV6;
++			ip_proto = IPPROTO_TCP;
++			thlen = sizeof(struct tcphdr);
+ 			break;
+ 		case VIRTIO_NET_HDR_GSO_UDP:
+ 			gso_type = SKB_GSO_UDP;
++			ip_proto = IPPROTO_UDP;
++			thlen = sizeof(struct udphdr);
+ 			break;
+ 		default:
+ 			return -EINVAL;
+@@ -57,16 +67,20 @@ static inline int virtio_net_hdr_to_skb(
+ 
+ 		if (!skb_partial_csum_set(skb, start, off))
+ 			return -EINVAL;
++
++		if (skb_transport_offset(skb) + thlen > skb_headlen(skb))
++			return -EINVAL;
+ 	} else {
+ 		/* gso packets without NEEDS_CSUM do not set transport_offset.
+ 		 * probe and drop if does not match one of the above types.
+ 		 */
+ 		if (gso_type && skb->network_header) {
++			struct flow_keys keys;
++
+ 			if (!skb->protocol)
+ 				virtio_net_hdr_set_proto(skb, hdr);
+ retry:
+-			skb_probe_transport_header(skb, -1);
+-			if (!skb_transport_header_was_set(skb)) {
++			if (!skb_flow_dissect_flow_keys(skb, &keys, 0)) {
+ 				/* UFO does not specify ipv4 or 6: try both */
+ 				if (gso_type & SKB_GSO_UDP &&
+ 				    skb->protocol == htons(ETH_P_IP)) {
+@@ -75,6 +89,12 @@ retry:
+ 				}
+ 				return -EINVAL;
+ 			}
++
++			if (keys.control.thoff + thlen > skb_headlen(skb) ||
++			    keys.basic.ip_proto != ip_proto)
++				return -EINVAL;
++
++			skb_set_transport_header(skb, keys.control.thoff);
  		}
  	}
  
--	if (result != PCI_ERS_RESULT_RECOVERED && netif_running(netdev))
--		dev_close(netdev);
-+	if (result != PCI_ERS_RESULT_RECOVERED) {
-+		if (netif_running(netdev))
-+			dev_close(netdev);
-+		pci_disable_device(pdev);
-+	}
- 
- 	rtnl_unlock();
- 
-@@ -8435,7 +8438,7 @@ static pci_ers_result_t bnxt_io_slot_res
- 			 err); /* non-fatal, continue */
- 	}
- 
--	return PCI_ERS_RESULT_RECOVERED;
-+	return result;
- }
- 
- /**
 
 
