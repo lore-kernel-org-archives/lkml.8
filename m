@@ -2,133 +2,107 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE38C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABFEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D640E2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:02:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TMECPHCw"
+	by mail.kernel.org (Postfix) with ESMTP id 0AB8F20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbgERJCl (ORCPT
+        id S1726285AbgERJGx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:02:41 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:59866 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgERJCk (ORCPT
+        Mon, 18 May 2020 05:06:53 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53678 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgERJGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:02:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Ei2i021Oqr6dJFVTXCWHRag3lixtaMTRU/YlTdPchXM=; b=TMECPHCwQiRlSU3YGHH1wQxVPB
-        1AYaZwzglqQvHBBwEM5suKG8toOa+PYaWT4W3/naompx0HlCbBygTOCWSRkApjABQUoE8C6piN6D4
-        BDIKVxZM6DYd6leMlZv3Li++3zwBz9MYF8rcsuOYrroxn0lVTGE5YVPDih4kHHjN7K3t4oaLhSZav
-        UZpDLfYsvdv0wSWE3OP9JlfaCk4Sc1O6cQInHhnxPff3pogV+XHV7wIU6RHGxq65kkg+Sh4mBiN8A
-        93OPeFWfgcLVtOnnNuZojTM+9HwAVRe3zG71FEZLpdf5L0anFTcIXnGBXqcwT8IHuOS5/RokASgO4
-        yTK8Cj3g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jabb4-0004dp-7j; Mon, 18 May 2020 08:58:06 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D46E93011F0;
-        Mon, 18 May 2020 10:57:58 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B82EA20BE636D; Mon, 18 May 2020 10:57:58 +0200 (CEST)
-Date:   Mon, 18 May 2020 10:57:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        "Paul E . McKenney" <paulmck@kernel.org>, stable@kernel.org
-Subject: Re: [PATCH] tick/nohz: Narrow down noise while setting current
- task's tick dependency
-Message-ID: <20200518085758.GK2940@hirez.programming.kicks-ass.net>
-References: <20200515003429.4317-1-frederic@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515003429.4317-1-frederic@kernel.org>
+        Mon, 18 May 2020 05:06:52 -0400
+Received: from mail-pg1-f197.google.com ([209.85.215.197])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jabjW-0005dA-E9
+        for linux-kernel@vger.kernel.org; Mon, 18 May 2020 09:06:50 +0000
+Received: by mail-pg1-f197.google.com with SMTP id g1so7495918pgk.10
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 02:06:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=fv0kKG3R4oPc9uFx9caWNL7elOwRa1h8BPa4WaUkiiM=;
+        b=Ol3uHCvGNu2PMsZx56jvQxKg5IrxKVak2r4M6LXRVPWt1UI+hMd1rQOqEaVYaSYGzN
+         NCdS/HOh0TCMKQR0VCqGZ574qSbKelqqd0NTaCP8znKQ24IijdJR59A8ImwFG1ux2fPV
+         0u4hAS9v+3+5ItZs09wNyUBa1F+h7JP1N4TGWkBchAzANfwqOojt4z7id5vAUs9euRLN
+         5w7+pqHtqLR8lZFLo/H7IzmXrKgX4uFEBo4petqbEu6yQhtmVAEaoGVG7d6ehx72nqy6
+         jtymeZVhXS5KMyi+bhlcjLxNrPEtWLaQcB9QhMWnHE64+itnbTusgMm5oAgUkxLYaw3L
+         8MkA==
+X-Gm-Message-State: AOAM53309IKTgthF5GhbmrkhNiKZAMzQnO7WUqi55zVd19ca3MAKXABS
+        wbF/QxHVQSF76hKToy2BUcs7rxdi6knaKGZIgrwHEy4+k5K9YiHFrgZuI7vVXa2kCYLiO0HWoax
+        EXIjJrIgtvcAGxpqWVyFwGJ+AjQw5FVQ9CfaC6p4XpA==
+X-Received: by 2002:a63:ef09:: with SMTP id u9mr14812921pgh.406.1589792808677;
+        Mon, 18 May 2020 02:06:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxwRZ2pXW3DEvSMRoiu8LhnK3SCXnElDfQr9CARMhtvMOM3TQfOJr4A6y1/dCWHqF4xIEWWNg==
+X-Received: by 2002:a63:ef09:: with SMTP id u9mr14812892pgh.406.1589792808351;
+        Mon, 18 May 2020 02:06:48 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id z190sm8256455pfb.1.2020.05.18.02.06.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 May 2020 02:06:47 -0700 (PDT)
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: [Regression] "iommu/amd: Relax locking in dma_ops path" makes tg3
+ ethernet transmit queue timeout
+Message-Id: <4E9B03FB-9DA5-4831-B4CE-A0AA645D3F22@canonical.com>
+Date:   Mon, 18 May 2020 17:06:45 +0800
+Cc:     iommu@lists.linux-foundation.org,
+        open list <linux-kernel@vger.kernel.org>
+To:     jroedel@suse.de
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 02:34:29AM +0200, Frederic Weisbecker wrote:
-> So far setting a tick dependency on any task, including current, used to
-> trigger an IPI to all CPUs. That's of course suboptimal but it wasn't
-> an issue as long as it was only used by posix-cpu-timers on nohz_full,
-> a combo that nobody seemed to use in real life.
-> 
-> But RCU started to use task tick dependency on current task to fix
-> stall issues on callbacks processing. These trigger regular and
-> undesired system wide IPIs on nohz_full.
-> 
-> The fix is very easy while setting a tick dependency on the current
-> task, only its CPU needs an IPI.
-> 
-> Fixes: 6a949b7af82d (rcu: Force on tick when invoking lots of callbacks)
-> Reported-by: Matt Fleming <matt@codeblueprint.co.uk>
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> Cc: stable@kernel.org
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> ---
->  kernel/time/tick-sched.c | 22 +++++++++++++++-------
->  1 file changed, 15 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-> index 3e2dc9b8858c..f0199a4ba1ad 100644
-> --- a/kernel/time/tick-sched.c
-> +++ b/kernel/time/tick-sched.c
-> @@ -351,16 +351,24 @@ void tick_nohz_dep_clear_cpu(int cpu, enum tick_dep_bits bit)
->  EXPORT_SYMBOL_GPL(tick_nohz_dep_clear_cpu);
->  
->  /*
-> - * Set a per-task tick dependency. Posix CPU timers need this in order to elapse
-> - * per task timers.
-> + * Set a per-task tick dependency. RCU need this. Also posix CPU timers
-> + * in order to elapse per task timers.
->   */
->  void tick_nohz_dep_set_task(struct task_struct *tsk, enum tick_dep_bits bit)
->  {
-> -	/*
-> -	 * We could optimize this with just kicking the target running the task
-> -	 * if that noise matters for nohz full users.
-> -	 */
-> -	tick_nohz_dep_set_all(&tsk->tick_dep_mask, bit);
-> +	if (!atomic_fetch_or(BIT(bit), &tsk->tick_dep_mask)) {
+Hi,
 
-So why not simply:
+Broadcom ethernet tg3 unusable after commit 92d420ec028d ("iommu/amd: Relax locking in dma_ops path").
+After a short period it stops:
+[  122.717144] WARNING: CPU: 0 PID: 0 at net/sched/sch_generic.c:303 dev_watchdog+0x237/0x240()
+[  122.717152] NETDEV WATCHDOG: enp3s0 (tg3): transmit queue 0 timed out
 
-		tick_nohz_full_kick_cpu(task_cpu(tsk)); ?
+After testing the patch section by section, this is the part that caused the regression:
 
-If it got preempted, the scheduling involved would already have observed
-the bit we just set and kept the tick on anyway, same for migration.
+@@ -2578,19 +2580,8 @@ static dma_addr_t map_page(struct device *dev, struct page *page,
+ 
+        dma_mask = *dev->dma_mask;
+ 
+-       spin_lock_irqsave(&domain->lock, flags);
+-
+-       addr = __map_single(dev, domain->priv, paddr, size, dir, false,
++       return __map_single(dev, domain->priv, paddr, size, dir, false,
+                            dma_mask);
+-       if (addr == DMA_ERROR_CODE)
+-               goto out;
+-
+-       domain_flush_complete(domain);
+-
+-out:
+-       spin_unlock_irqrestore(&domain->lock, flags);
+-
+-       return addr;
+ }
 
-Or am I missing something?
+Particularly, as soon as the spinlock is removed, the issue can be reproduced.
+Function domain_flush_complete() doesn't seem to affect the status.
 
-> +		if (tsk == current) {
-> +			preempt_disable();
-> +			tick_nohz_full_kick();
-> +			preempt_enable();
-> +		} else {
-> +			/*
-> +			 * Some future tick_nohz_full_kick_task()
-> +			 * should optimize this.
-> +			 */
-> +			tick_nohz_full_kick_all();
-> +		}
-> +	}
+However, the .map_page callback was removed by be62dbf554c5 ("iommu/amd: Convert AMD iommu driver to the dma-iommu api"), so there's no easy revert for this issue.
 
+This is still reproducible as of today's mainline kernel, v5.7-rc6.
+
+Kai-Heng
