@@ -2,188 +2,108 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 155352065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C0402065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:03:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MULmkb7v"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ddgt4qxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgERL7X (ORCPT
+        id S1727020AbgERMDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:59:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbgERL7W (ORCPT
+        Mon, 18 May 2020 08:03:20 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:44846 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726557AbgERMDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:59:22 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8917C061A0C;
-        Mon, 18 May 2020 04:59:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=xQHGR34Vxc0nHTxCLtZHa0MSq+HYVOsVZrpYxr/SvNA=; b=MULmkb7vDN4xSvMBHhCvTm4ZO+
-        zp27RmBhA+ovcozX2ib0ljHRAJXdPC8ORH+hRPR/423fGfP/PrnbyGmXUwRXNEbsi4GLIkJ8iadTf
-        l7otTrMcuP+dLA6YfHArOtzbBXmZ4ZBhA6GrofVFrLijvBAW8NVWBvbBcTp3CdM6U5eOt2kg1t+JH
-        d4E2bKFlDOPddCr7Gagst2myRo73jpVphVVw3Y55n2zuVO7e3GDSCvHFHqMpQs0ekG+FHOziBqtz9
-        IjlQ2VuaftFlhFYJ+SJXXyebhJoQluOWLOnR772CmwxfWHNDa5ZdvtuF7Fp9veJ7jUjj5bulCFrKS
-        5CnyuDhg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jaeQJ-0002pe-1N; Mon, 18 May 2020 11:59:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AD3A83011F0;
-        Mon, 18 May 2020 13:59:08 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 984892B3D079C; Mon, 18 May 2020 13:59:08 +0200 (CEST)
-Date:   Mon, 18 May 2020 13:59:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>, ak@linux.intel.com,
-        wei.w.wang@intel.com
-Subject: Re: [PATCH v11 05/11] perf/x86: Keep LBR stack unchanged in host
- context for guest LBR event
-Message-ID: <20200518115908.GE277222@hirez.programming.kicks-ass.net>
-References: <20200514083054.62538-1-like.xu@linux.intel.com>
- <20200514083054.62538-6-like.xu@linux.intel.com>
+        Mon, 18 May 2020 08:03:19 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IC2rku010157;
+        Mon, 18 May 2020 14:02:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=tAbl2axdddZlaaXG2CNspEZUt31JN+F0gHWw9tO/rHM=;
+ b=ddgt4qxdT4oWVbfbhnLDLAFXbH9hijDV73qOYcZaPn45NL3bumpy8wLhX3mQ5Ty8Rnwe
+ Pw/wCLNK1hvokjk4gya24QRhEdq3qzzhUHo2amAWd+SCgiwsuoJWVOdlG/QND/4+sq3N
+ 5jLqzkCN4R7NsLwsozz2ISXgisXhvDnd/YfoWobYpTTwHGLE44CKN6D575ojATSSd8yh
+ bAPNfjZdCpCRfQQrS/5nnimfEQtpfn25tR48a6FX/1nC32MjP6wiP6KgKjuygx7erOLx
+ GvKmSrG19BHK8PrE2Aa0sR5sntD9/GrYvVY5vQspxGiw/RTUtF0Y+bIuCsta2yWpbh0n zg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3125n3bm24-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 14:02:54 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E74D810002A;
+        Mon, 18 May 2020 14:02:47 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag4node3.st.com [10.75.127.12])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CAC522BF9CF;
+        Mon, 18 May 2020 14:02:47 +0200 (CEST)
+Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG4NODE3.st.com
+ (10.75.127.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
+ 2020 14:02:47 +0200
+Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
+ SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
+ 15.00.1473.003; Mon, 18 May 2020 14:02:47 +0200
+From:   Christophe ROULLIER <christophe.roullier@st.com>
+To:     "robh@kernel.org" <robh@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "joabreu@synopsys.com" <joabreu@synopsys.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Peppe CAVALLARO <peppe.cavallaro@st.com>
+CC:     "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>
+Subject: Re: [PATCH v3 0/1] net: ethernet: stmmac: simplify phy modes
+ management for stm32
+Thread-Topic: [PATCH v3 0/1] net: ethernet: stmmac: simplify phy modes
+ management for stm32
+Thread-Index: AQHWHHq3aaIPOA/wFEi5Ev+u/GvPiaitvfmA
+Date:   Mon, 18 May 2020 12:02:47 +0000
+Message-ID: <3aaadf75-5399-4961-248a-c77c719155d4@st.com>
+References: <20200427100038.19252-1-christophe.roullier@st.com>
+In-Reply-To: <20200427100038.19252-1-christophe.roullier@st.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.47]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CD3A060E2D09364A9ED8F23EAD3F016B@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514083054.62538-6-like.xu@linux.intel.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-18_05:2020-05-15,2020-05-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Subject: perf/x86: Keep LBR stack unchanged in host context for guest LBR event
-From: Like Xu <like.xu@linux.intel.com>
-Date: Thu, 14 May 2020 16:30:48 +0800
-
-From: Like Xu <like.xu@linux.intel.com>
-
-When a guest wants to use the LBR stack, its hypervisor creates a guest
-LBR event and let host perf schedules it. A new 'int guest_lbr_enabled'
-field in the 'struct cpu_hw_events', is marked as true when perf adds
-a guest LBR event and marked as false on deletion.
-
-The LBR stack msrs are accessible to the guest when its guest LBR event
-is scheduled in by the perf subsystem. Before scheduling this event out,
-we should avoid host changes on IA32_DEBUGCTLMSR or LBR_SELECT.
-Otherwise, some unexpected branch operations may interfere with guest
-behavior, pollute LBR records, and even cause host branch data leakage.
-In addition, the intel_pmu_lbr_read() on the host is also avoidable.
-
-To ensure that guest LBR records are not lost during the context switch,
-the BRANCH_CALL_STACK flag should be configured in the 'branch_sample_type'
-for any guest LBR event because the callstack mode could save/restore guest
-unread LBR records with the help of intel_pmu_lbr_sched_task() naturally.
-
-However, the regular host LBR perf event doesn't save/restore LBR_SELECT,
-because it's configured in the LBR_enable() based on branch_sample_type.
-So when a guest LBR is running, the guest LBR_SELECT may changes for its
-own use and we have to support LBR_SELECT save/restore to ensure what the
-guest LBR_SELECT value doesn't get lost during the context switching.
-
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
-Signed-off-by: Wei Wang <wei.w.wang@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200514083054.62538-6-like.xu@linux.intel.com
----
- arch/x86/events/intel/lbr.c  |   16 ++++++++++++++--
- arch/x86/events/perf_event.h |    3 +++
- 2 files changed, 17 insertions(+), 2 deletions(-)
-
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -383,6 +383,9 @@ static void __intel_pmu_lbr_restore(stru
- 
- 	wrmsrl(x86_pmu.lbr_tos, tos);
- 	task_ctx->lbr_stack_state = LBR_NONE;
-+
-+	if (cpuc->lbr_select)
-+		wrmsrl(MSR_LBR_SELECT, task_ctx->lbr_sel);
- }
- 
- static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
-@@ -415,6 +418,9 @@ static void __intel_pmu_lbr_save(struct
- 
- 	cpuc->last_task_ctx = task_ctx;
- 	cpuc->last_log_id = ++task_ctx->log_id;
-+
-+	if (cpuc->lbr_select)
-+		rdmsrl(MSR_LBR_SELECT, task_ctx->lbr_sel);
- }
- 
- void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
-@@ -485,6 +491,9 @@ void intel_pmu_lbr_add(struct perf_event
- 	if (!x86_pmu.lbr_nr)
- 		return;
- 
-+	if (event->hw.flags & PERF_X86_EVENT_LBR_SELECT)
-+		cpuc->lbr_select = 1;
-+
- 	cpuc->br_sel = event->hw.branch_reg.reg;
- 
- 	if (branch_user_callstack(cpuc->br_sel) && event->ctx->task_ctx_data) {
-@@ -532,6 +541,9 @@ void intel_pmu_lbr_del(struct perf_event
- 		task_ctx->lbr_callstack_users--;
- 	}
- 
-+	if (event->hw.flags & PERF_X86_EVENT_LBR_SELECT)
-+		cpuc->lbr_select = 0;
-+
- 	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
- 		cpuc->lbr_pebs_users--;
- 	cpuc->lbr_users--;
-@@ -1365,5 +1377,5 @@ int x86_perf_get_lbr(struct x86_pmu_lbr
- EXPORT_SYMBOL_GPL(x86_perf_get_lbr);
- 
- struct event_constraint vlbr_constraint =
--	FIXED_EVENT_CONSTRAINT(INTEL_FIXED_VLBR_EVENT,
--			       (INTEL_PMC_IDX_FIXED_VLBR - INTEL_PMC_IDX_FIXED));
-+	__EVENT_CONSTRAINT(INTEL_FIXED_VLBR_EVENT, (1ULL << INTEL_PMC_IDX_FIXED_VLBR),
-+			  FIXED_EVENT_FLAGS, 1, 0, PERF_X86_EVENT_LBR_SELECT);
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -78,6 +78,7 @@ static inline bool constraint_match(stru
- #define PERF_X86_EVENT_LARGE_PEBS	0x0400 /* use large PEBS */
- #define PERF_X86_EVENT_PEBS_VIA_PT	0x0800 /* use PT buffer for PEBS */
- #define PERF_X86_EVENT_PAIR		0x1000 /* Large Increment per Cycle */
-+#define PERF_X86_EVENT_LBR_SELECT	0x2000 /* Save/Restore MSR_LBR_SELECT */
- 
- struct amd_nb {
- 	int nb_id;  /* NorthBridge id */
-@@ -237,6 +238,7 @@ struct cpu_hw_events {
- 	u64				br_sel;
- 	struct x86_perf_task_context	*last_task_ctx;
- 	int				last_log_id;
-+	int				lbr_select;
- 
- 	/*
- 	 * Intel host/guest exclude bits
-@@ -722,6 +724,7 @@ struct x86_perf_task_context {
- 	u64 lbr_from[MAX_LBR_ENTRIES];
- 	u64 lbr_to[MAX_LBR_ENTRIES];
- 	u64 lbr_info[MAX_LBR_ENTRIES];
-+	u64 lbr_sel;
- 	int tos;
- 	int valid_lbrs;
- 	int lbr_callstack_users;
+SGksDQoNCkp1c3QgYSAiZ2VudGxlbWFuIHBpbmciDQoNClJlZ2FyZHMsDQoNCkNocmlzdG9waGUu
+DQoNCk9uIDI3LzA0LzIwMjAgMTI6MDAsIENocmlzdG9waGUgUm91bGxpZXIgd3JvdGU6DQo+IE5v
+IG5ldyBmZWF0dXJlLCBqdXN0IHRvIHNpbXBsaWZ5IHN0bTMyIHBhcnQgdG8gYmUgZWFzaWVyIHRv
+IHVzZS4NCj4gQWRkIGJ5IGRlZmF1bHQgYWxsIEV0aGVybmV0IGNsb2NrcyBpbiBEVCwgYW5kIGFj
+dGl2YXRlIG9yIG5vdCBpbiBmdW5jdGlvbg0KPiBvZiBwaHkgbW9kZSwgY2xvY2sgZnJlcXVlbmN5
+LCBpZiBwcm9wZXJ0eSAic3QsZXh0LXBoeWNsayIgaXMgc2V0IG9yIG5vdC4NCj4gS2VlcCBiYWNr
+d2FyZCBjb21wYXRpYmlsaXR5DQo+DQo+IHZlcnNpb24gMzoNCj4gQWRkIGFja2VkIGZyb20gQWxl
+eGFuZHJlIFRvcmd1ZQ0KPiBSZWJhc2VkIG9uIHRvcCBvZiB2NS43LXJjMg0KPg0KPiBDaHJpc3Rv
+cGhlIFJvdWxsaWVyICgxKToNCj4gICAgbmV0OiBldGhlcm5ldDogc3RtbWFjOiBzaW1wbGlmeSBw
+aHkgbW9kZXMgbWFuYWdlbWVudCBmb3Igc3RtMzINCj4NCj4gICAuLi4vbmV0L2V0aGVybmV0L3N0
+bWljcm8vc3RtbWFjL2R3bWFjLXN0bTMyLmMgfCA3NCArKysrKysrKysrKy0tLS0tLS0tDQo+ICAg
+MSBmaWxlIGNoYW5nZWQsIDQ0IGluc2VydGlvbnMoKyksIDMwIGRlbGV0aW9ucygtKQ0KPg==
