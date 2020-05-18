@@ -2,143 +2,236 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451CBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C858C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B39320835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2B8207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:24:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IkJt5X4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbgERXS5 (ORCPT
+        id S1727941AbgERXYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 19:18:57 -0400
-Received: from mga04.intel.com ([192.55.52.120]:12670 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgERXS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 19:18:57 -0400
-IronPort-SDR: 1u9cZhhch1Y6umQdCf392RZVekuuXfeU8jcbqWu1Imdg+hooNh0UH8p2f8ifw07vUR9q9OHJ7f
- YHIwjlX84niQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 16:18:55 -0700
-IronPort-SDR: Do1n78TGn8syvfDXnMIWKqmnbacq1fJc9bPvbkRNxn0up6FAAzCafH/f2RxLcT++xRCGkAaBsp
- yZM5csWNFa6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,408,1583222400"; 
-   d="scan'208";a="465927983"
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by fmsmga006.fm.intel.com with ESMTP; 18 May 2020 16:18:55 -0700
-Received: from orsmsx109.amr.corp.intel.com ([169.254.11.125]) by
- ORSMSX108.amr.corp.intel.com ([169.254.2.68]) with mapi id 14.03.0439.000;
- Mon, 18 May 2020 16:18:54 -0700
-From:   "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
-To:     "matthewgarrett@google.com" <matthewgarrett@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "Zhang, Rui" <rui.zhang@intel.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "Aram, Nisha" <nisha.aram@intel.com>,
-        "mjg59@google.com" <mjg59@google.com>
-Subject: Re: [PATCH V2 1/3] thermal/int340x_thermal: Export GDDV
-Thread-Topic: [PATCH V2 1/3] thermal/int340x_thermal: Export GDDV
-Thread-Index: AQHWLWqyLmaGM0UKiEamDjfu32esnA==
-Date:   Mon, 18 May 2020 23:18:53 +0000
-Message-ID: <4c00e15c8d5e34a723896f132989edd581c6995e.camel@intel.com>
-References: <20200414020953.255364-1-matthewgarrett@google.com>
-In-Reply-To: <20200414020953.255364-1-matthewgarrett@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-x-originating-ip: [10.251.227.7]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A2D12CCD5DB97F49844C0FDF324CA1F5@intel.com>
-Content-Transfer-Encoding: base64
+        Mon, 18 May 2020 19:24:22 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39722 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbgERXYV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 19:24:21 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04INN66x022469;
+        Mon, 18 May 2020 23:24:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=WOQOuitc5s7ymPyD0TdTSCoVvlNo2C64vJokX/6G0mU=;
+ b=IkJt5X4k5HUEOfKoQBexKYIlRGOnooV44da9dUUGzcigfGDUVcy3q+ONLZmnMA/5K1Zm
+ xyFNiSQOLY9Q+JnNyNO0tlIHZ77EyylCVzPz2w0f1buJo0zOijqmvF5QqXtRdhoYg6ZJ
+ 59eE8ncFKDY/pS97DzufI7aJMIfjpgVfkE6cKD1CfLBpWyCVnpWtW/kY2D1dfF27Ip31
+ ED2gko7xhfQS+uO25NtZ8SBasOARBdGfqFyzDIMB0JpzX1vWMjCF4CFYOoda5G/Z315K
+ Pd7+WFrK7moHxzA6Xm4roudfKL+1/XDLSJoG8fUhIrz6+U3diLxp3KCzlXjrlN822Wxa cQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 3127kr20xd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 18 May 2020 23:24:12 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04INIL87074889;
+        Mon, 18 May 2020 23:22:12 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 312t3wn7tk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 May 2020 23:22:12 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04INMADT018217;
+        Mon, 18 May 2020 23:22:10 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 May 2020 16:22:09 -0700
+Subject: Re: kernel BUG at mm/hugetlb.c:LINE!
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Miklos Szeredi <mszeredi@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <000000000000b4684e05a2968ca6@google.com>
+ <aa7812b8-60ae-8578-40db-e71ad766b4d3@oracle.com>
+ <CAJfpegtVca6H1JPW00OF-7sCwpomMCo=A2qr5K=9uGKEGjEp3w@mail.gmail.com>
+ <d32b8579-04a3-2a9b-cd54-1d581c63332e@oracle.com>
+ <86c504b3-52c9-55f6-13db-ab55b2f6980e@oracle.com>
+ <CAJfpegsy5vzO5e3DJGTrpXoGRTzjegoLaDdzheDeQhw+uokYnQ@mail.gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <04a00e3b-539c-236f-e43b-0024ef94b7cb@oracle.com>
+Date:   Mon, 18 May 2020 16:22:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <CAJfpegsy5vzO5e3DJGTrpXoGRTzjegoLaDdzheDeQhw+uokYnQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9625 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
+ phishscore=0 bulkscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005180197
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9625 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
+ suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005180198
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA0LTEzIGF0IDE5OjA5IC0wNzAwLCBNYXR0aGV3IEdhcnJldHQgd3JvdGU6
-DQo+IEZyb206IE1hdHRoZXcgR2FycmV0dCA8bWpnNTlAZ29vZ2xlLmNvbT4NCj4gDQo+IEltcGxl
-bWVudGluZyBEUFRGIHByb3Blcmx5IHJlcXVpcmVzIG1ha2luZyB1c2Ugb2YgZmlybXdhcmUtcHJv
-dmlkZWQNCj4gaW5mb3JtYXRpb24gYXNzb2NpYXRlZCB3aXRoIHRoZSBJTlQzNDAwIGRldmljZS4g
-Q2FsbGluZyBHRERWIHByb3ZpZGVzDQo+IGENCj4gYnVmZmVyIG9mIGluZm9ybWF0aW9uIHdoaWNo
-IHVzZXJsYW5kIGNhbiB0aGVuIGludGVycHJldCB0byBkZXRlcm1pbmUNCj4gYXBwcm9wcmlhdGUg
-RFBURiBwb2xpY3kuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGV3IEdhcnJldHQgPG1qZzU5
-QGdvb2dsZS5jb20+DQpUZXN0ZWQtYnk6IFBhbmRydXZhZGEsIFNyaW5pdmFzIDxzcmluaXZhcy5w
-YW5kcnV2YWRhQGxpbnV4LmludGVsLmNvbT4NCg0KPiAtLS0NCj4gIC4uLi9pbnRlbC9pbnQzNDB4
-X3RoZXJtYWwvaW50MzQwMF90aGVybWFsLmMgICB8IDYwDQo+ICsrKysrKysrKysrKysrKysrKysN
-Cj4gIDEgZmlsZSBjaGFuZ2VkLCA2MCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy90aGVybWFsL2ludGVsL2ludDM0MHhfdGhlcm1hbC9pbnQzNDAwX3RoZXJtYWwuYw0K
-PiBiL2RyaXZlcnMvdGhlcm1hbC9pbnRlbC9pbnQzNDB4X3RoZXJtYWwvaW50MzQwMF90aGVybWFs
-LmMNCj4gaW5kZXggY2VlZjg5Yzk1NmJkNC4uMDBhNzczMjcyNGNkMCAxMDA2NDQNCj4gLS0tIGEv
-ZHJpdmVycy90aGVybWFsL2ludGVsL2ludDM0MHhfdGhlcm1hbC9pbnQzNDAwX3RoZXJtYWwuYw0K
-PiArKysgYi9kcml2ZXJzL3RoZXJtYWwvaW50ZWwvaW50MzQweF90aGVybWFsL2ludDM0MDBfdGhl
-cm1hbC5jDQo+IEBAIC01Miw2ICs1MiwyNSBAQCBzdHJ1Y3QgaW50MzQwMF90aGVybWFsX3ByaXYg
-ew0KPiAgCXU4IHV1aWRfYml0bWFwOw0KPiAgCWludCByZWxfbWlzY19kZXZfcmVzOw0KPiAgCWlu
-dCBjdXJyZW50X3V1aWRfaW5kZXg7DQo+ICsJY2hhciAqZGF0YV92YXVsdDsNCj4gK307DQo+ICsN
-Cj4gK3N0YXRpYyBzc2l6ZV90IGRhdGFfdmF1bHRfcmVhZChzdHJ1Y3QgZmlsZSAqZmlsZSwgc3Ry
-dWN0IGtvYmplY3QNCj4gKmtvYmosDQo+ICsJICAgICBzdHJ1Y3QgYmluX2F0dHJpYnV0ZSAqYXR0
-ciwgY2hhciAqYnVmLCBsb2ZmX3Qgb2ZmLCBzaXplX3QNCj4gY291bnQpDQo+ICt7DQo+ICsJbWVt
-Y3B5KGJ1ZiwgYXR0ci0+cHJpdmF0ZSArIG9mZiwgY291bnQpOw0KPiArCXJldHVybiBjb3VudDsN
-Cj4gK30NCj4gKw0KPiArc3RhdGljIEJJTl9BVFRSX1JPKGRhdGFfdmF1bHQsIDApOw0KPiArDQo+
-ICtzdGF0aWMgc3RydWN0IGJpbl9hdHRyaWJ1dGUgKmRhdGFfYXR0cmlidXRlc1tdID0gew0KPiAr
-CSZiaW5fYXR0cl9kYXRhX3ZhdWx0LA0KPiArCU5VTEwsDQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMg
-Y29uc3Qgc3RydWN0IGF0dHJpYnV0ZV9ncm91cCBkYXRhX2F0dHJpYnV0ZV9ncm91cCA9IHsNCj4g
-KwkuYmluX2F0dHJzID0gZGF0YV9hdHRyaWJ1dGVzLA0KPiAgfTsNCj4gIA0KPiAgc3RhdGljIHNz
-aXplX3QgYXZhaWxhYmxlX3V1aWRzX3Nob3coc3RydWN0IGRldmljZSAqZGV2LA0KPiBAQCAtMjc4
-LDYgKzI5NywzMiBAQCBzdGF0aWMgc3RydWN0IHRoZXJtYWxfem9uZV9wYXJhbXMNCj4gaW50MzQw
-MF90aGVybWFsX3BhcmFtcyA9IHsNCj4gIAkubm9faHdtb24gPSB0cnVlLA0KPiAgfTsNCj4gIA0K
-PiArc3RhdGljIHZvaWQgaW50MzQwMF9zZXR1cF9nZGR2KHN0cnVjdCBpbnQzNDAwX3RoZXJtYWxf
-cHJpdiAqcHJpdikNCj4gK3sNCj4gKwlzdHJ1Y3QgYWNwaV9idWZmZXIgYnVmZmVyID0geyBBQ1BJ
-X0FMTE9DQVRFX0JVRkZFUiwgTlVMTCB9Ow0KPiArCXVuaW9uIGFjcGlfb2JqZWN0ICpvYmo7DQo+
-ICsJYWNwaV9zdGF0dXMgc3RhdHVzOw0KPiArDQo+ICsJc3RhdHVzID0gYWNwaV9ldmFsdWF0ZV9v
-YmplY3QocHJpdi0+YWRldi0+aGFuZGxlLCAiR0REViIsIE5VTEwsDQo+ICsJCQkJICAgICAgJmJ1
-ZmZlcik7DQo+ICsJaWYgKEFDUElfRkFJTFVSRShzdGF0dXMpIHx8ICFidWZmZXIubGVuZ3RoKQ0K
-PiArCQlyZXR1cm47DQo+ICsNCj4gKwlvYmogPSBidWZmZXIucG9pbnRlcjsNCj4gKwlpZiAob2Jq
-LT50eXBlICE9IEFDUElfVFlQRV9QQUNLQUdFIHx8IG9iai0+cGFja2FnZS5jb3VudCAhPSAxDQo+
-ICsJICAgIHx8IG9iai0+cGFja2FnZS5lbGVtZW50c1swXS50eXBlICE9IEFDUElfVFlQRV9CVUZG
-RVIpIHsNCj4gKwkJa2ZyZWUoYnVmZmVyLnBvaW50ZXIpOw0KPiArCQlyZXR1cm47DQo+ICsJfQ0K
-PiArDQo+ICsJcHJpdi0+ZGF0YV92YXVsdCA9IGttZW1kdXAob2JqLQ0KPiA+cGFja2FnZS5lbGVt
-ZW50c1swXS5idWZmZXIucG9pbnRlciwNCj4gKwkJCQkgICBvYmotDQo+ID5wYWNrYWdlLmVsZW1l
-bnRzWzBdLmJ1ZmZlci5sZW5ndGgsDQo+ICsJCQkJICAgR0ZQX0tFUk5FTCk7DQo+ICsJYmluX2F0
-dHJfZGF0YV92YXVsdC5wcml2YXRlID0gcHJpdi0+ZGF0YV92YXVsdDsNCj4gKwliaW5fYXR0cl9k
-YXRhX3ZhdWx0LnNpemUgPSBvYmotDQo+ID5wYWNrYWdlLmVsZW1lbnRzWzBdLmJ1ZmZlci5sZW5n
-dGg7DQo+ICsJa2ZyZWUoYnVmZmVyLnBvaW50ZXIpOw0KPiArfQ0KPiArDQo+ICBzdGF0aWMgaW50
-IGludDM0MDBfdGhlcm1hbF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAg
-ew0KPiAgCXN0cnVjdCBhY3BpX2RldmljZSAqYWRldiA9IEFDUElfQ09NUEFOSU9OKCZwZGV2LT5k
-ZXYpOw0KPiBAQCAtMzA5LDYgKzM1NCw4IEBAIHN0YXRpYyBpbnQgaW50MzQwMF90aGVybWFsX3By
-b2JlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICANCj4gIAlwbGF0Zm9ybV9z
-ZXRfZHJ2ZGF0YShwZGV2LCBwcml2KTsNCj4gIA0KPiArCWludDM0MDBfc2V0dXBfZ2Rkdihwcml2
-KTsNCj4gKw0KPiAgCWludDM0MDBfdGhlcm1hbF9vcHMuZ2V0X21vZGUgPSBpbnQzNDAwX3RoZXJt
-YWxfZ2V0X21vZGU7DQo+ICAJaW50MzQwMF90aGVybWFsX29wcy5zZXRfbW9kZSA9IGludDM0MDBf
-dGhlcm1hbF9zZXRfbW9kZTsNCj4gIA0KPiBAQCAtMzI3LDYgKzM3NCwxMyBAQCBzdGF0aWMgaW50
-IGludDM0MDBfdGhlcm1hbF9wcm9iZShzdHJ1Y3QNCj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0K
-PiAgCWlmIChyZXN1bHQpDQo+ICAJCWdvdG8gZnJlZV9yZWxfbWlzYzsNCj4gIA0KPiArCWlmIChw
-cml2LT5kYXRhX3ZhdWx0KSB7DQo+ICsJCXJlc3VsdCA9IHN5c2ZzX2NyZWF0ZV9ncm91cCgmcGRl
-di0+ZGV2LmtvYmosDQo+ICsJCQkJCSAgICAmZGF0YV9hdHRyaWJ1dGVfZ3JvdXApOw0KPiArCQlp
-ZiAocmVzdWx0KQ0KPiArCQkJZ290byBmcmVlX3V1aWQ7DQo+ICsJfQ0KPiArDQo+ICAJcmVzdWx0
-ID0gYWNwaV9pbnN0YWxsX25vdGlmeV9oYW5kbGVyKA0KPiAgCQkJcHJpdi0+YWRldi0+aGFuZGxl
-LCBBQ1BJX0RFVklDRV9OT1RJRlksDQo+IGludDM0MDBfbm90aWZ5LA0KPiAgCQkJKHZvaWQgKilw
-cml2KTsNCj4gQEAgLTMzNiw2ICszOTAsOSBAQCBzdGF0aWMgaW50IGludDM0MDBfdGhlcm1hbF9w
-cm9iZShzdHJ1Y3QNCj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgCXJldHVybiAwOw0KPiAg
-DQo+ICBmcmVlX3N5c2ZzOg0KPiArCWlmIChwcml2LT5kYXRhX3ZhdWx0KQ0KPiArCQlzeXNmc19y
-ZW1vdmVfZ3JvdXAoJnBkZXYtPmRldi5rb2JqLA0KPiAmZGF0YV9hdHRyaWJ1dGVfZ3JvdXApOw0K
-PiArZnJlZV91dWlkOg0KPiAgCXN5c2ZzX3JlbW92ZV9ncm91cCgmcGRldi0+ZGV2LmtvYmosICZ1
-dWlkX2F0dHJpYnV0ZV9ncm91cCk7DQo+ICBmcmVlX3JlbF9taXNjOg0KPiAgCWlmICghcHJpdi0+
-cmVsX21pc2NfZGV2X3JlcykNCj4gQEAgLTM2MCw4ICs0MTcsMTEgQEAgc3RhdGljIGludCBpbnQz
-NDAwX3RoZXJtYWxfcmVtb3ZlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJ
-aWYgKCFwcml2LT5yZWxfbWlzY19kZXZfcmVzKQ0KPiAgCQlhY3BpX3RoZXJtYWxfcmVsX21pc2Nf
-ZGV2aWNlX3JlbW92ZShwcml2LT5hZGV2LQ0KPiA+aGFuZGxlKTsNCj4gIA0KPiArCWlmIChwcml2
-LT5kYXRhX3ZhdWx0KQ0KPiArCQlzeXNmc19yZW1vdmVfZ3JvdXAoJnBkZXYtPmRldi5rb2JqLA0K
-PiAmZGF0YV9hdHRyaWJ1dGVfZ3JvdXApOw0KPiAgCXN5c2ZzX3JlbW92ZV9ncm91cCgmcGRldi0+
-ZGV2LmtvYmosICZ1dWlkX2F0dHJpYnV0ZV9ncm91cCk7DQo+ICAJdGhlcm1hbF96b25lX2Rldmlj
-ZV91bnJlZ2lzdGVyKHByaXYtPnRoZXJtYWwpOw0KPiArCWtmcmVlKHByaXYtPmRhdGFfdmF1bHQp
-Ow0KPiAgCWtmcmVlKHByaXYtPnRydHMpOw0KPiAgCWtmcmVlKHByaXYtPmFydHMpOw0KPiAgCWtm
-cmVlKHByaXYpOw0K
+On 5/18/20 4:12 AM, Miklos Szeredi wrote:
+> On Sat, May 16, 2020 at 12:15 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>> Any suggestions on how to move forward?  It seems like there may be the
+>> need for a real_file() routine?  I see a d_real dentry_op was added to
+>> deal with this issue for dentries.  Might we need something similiar for
+>> files (f_real)?
+>>
+>> Looking for suggestions as I do not normally work with this code.
+> 
+> And I'm not so familiar with hugepages code.  I'd suggest moving
+> length alignment into f_op->get_unmapped_area() and cleaning up other
+> special casing of hugetlb mappings, but it's probably far from
+> trivial...
+> 
+> So yeah, that leaves a real_file() helper or something similar.
+> Unlike the example I gave first it actually needs to be recursive:
+> 
+> static inline struct file *real_file(struct file *file)
+> {
+>     whole (unlikely(file->f_op == ovl_file_operations))
+>         file = file->private_data;
+>     return file;
+> }
+
+If we add real_file(), then I think it only needs to be called in two
+places: is_file_hugepages() and core mmap code.  However, I could not
+think of a good place to put real_file().  Below is a patch which creates
+a new file <linux/overlayfs.h> for the routine.  It does solve this BUG
+and should fix any other issues with callers of is_file_hugepages().
+Let me know what you think.
+
+I add a 'Suggested-by:' for real_file, but am happy to change that to
+a 'Signed-off-by:' if you prefer.
+
+From ea6a96aa3f5365df39f7cf213f87abe336b43e71 Mon Sep 17 00:00:00 2001
+From: Mike Kravetz <mike.kravetz@oracle.com>
+Date: Mon, 18 May 2020 15:29:12 -0700
+Subject: [PATCH] ovl: provide real_file() for use by hugetlb and mmap
+
+If a file is on a union/overlay, then the 'struct file *' will have
+overlayfs file operations.  The routine is_file_hugepages() compares
+f->f_op to hugetlbfs_file_operations to determine if it is a hugetlbfs
+file.  If a hugetlbfs file is on a union/overlay, this comparison is
+false and is_file_hugepages() incorrectly indicates the underlying
+file is not hugetlbfs.  One result of this is a BUG as shown in [1].
+
+mmap uses is_file_hugepages() because hugetlbfs files have different
+alignment restrictions.  In addition, mmap code would like to use the
+filesystem specific get_unmapped_area() routine if one is defined.
+
+To address this issue, add a new routine real_file() which will return
+the underlying file.  Update is_file_hugepages and mmap code to get the
+real file.
+
+[1] https://lore.kernel.org/linux-mm/000000000000b4684e05a2968ca6@google.com/
+
+Reported-by: syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com
+Suggested-by: Miklos Szeredi <miklos@szeredi.hu>
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+---
+ include/linux/hugetlb.h   |  3 +++
+ include/linux/overlayfs.h | 27 +++++++++++++++++++++++++++
+ mm/mmap.c                 |  2 ++
+ 3 files changed, 32 insertions(+)
+ create mode 100644 include/linux/overlayfs.h
+
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 43a1cef8f0f1..fb22c0a7474a 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -9,6 +9,7 @@
+ #include <linux/cgroup.h>
+ #include <linux/list.h>
+ #include <linux/kref.h>
++#include <linux/overlayfs.h>
+ #include <asm/pgtable.h>
+ 
+ struct ctl_table;
+@@ -437,6 +438,8 @@ struct file *hugetlb_file_setup(const char *name, size_t size, vm_flags_t acct,
+ 
+ static inline bool is_file_hugepages(struct file *file)
+ {
++	file = real_file(file);
++
+ 	if (file->f_op == &hugetlbfs_file_operations)
+ 		return true;
+ 
+diff --git a/include/linux/overlayfs.h b/include/linux/overlayfs.h
+new file mode 100644
+index 000000000000..eecdfda0286f
+--- /dev/null
++++ b/include/linux/overlayfs.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_OVERLAYFS_H
++#define _LINUX_OVERLAYFS_H
++
++#include <linux/fs.h>
++
++extern const struct file_operations ovl_file_operations;
++
++#ifdef CONFIG_OVERLAY_FS
++/*
++ * If file is on a union/overlay, then return the underlying real file.
++ * Otherwise return the file itself.
++ */
++static inline struct file *real_file(struct file *file)
++{
++	while (unlikely(file->f_op == &ovl_file_operations))
++		file = file->private_data;
++	return file;
++}
++#else
++static inline struct file *real_file(struct file *file)
++{
++	return file;
++}
++#endif
++
++#endif /* _LINUX_OVERLAYFS_H */
+diff --git a/mm/mmap.c b/mm/mmap.c
+index f609e9ec4a25..7f45a4057a15 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -47,6 +47,7 @@
+ #include <linux/pkeys.h>
+ #include <linux/oom.h>
+ #include <linux/sched/mm.h>
++#include <linux/overlayfs.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/cacheflush.h>
+@@ -2203,6 +2204,7 @@ get_unmapped_area(struct file *file, unsigned long addr, unsigned long len,
+ 
+ 	get_area = current->mm->get_unmapped_area;
+ 	if (file) {
++		file = real_file(file);
+ 		if (file->f_op->get_unmapped_area)
+ 			get_area = file->f_op->get_unmapped_area;
+ 	} else if (flags & MAP_SHARED) {
+-- 
+2.25.4
+
