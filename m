@@ -2,143 +2,98 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C49592081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D0420829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589833539;
-	bh=n/AJNzIqOGK3k3i8uTfeOxcd4iC5EjLvpksE2xWdpO8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lQ5RZ/GsawBe1raZBQc+QLSslD0c+5wue+ggD27ZDqAOP9I5rECkRceLKvsu4fgNw
-	 NhlbW9BxGmE8CGCNV6ddQAs78Y+LieWrRFUYorMaQUdSdPsM5eiT46m9ZdWOBlaBc3
-	 gVH0ENH2zaG97sBNSrBZbZw958F49XRTFRGBbcek=
+	s=default; t=1589833715;
+	bh=SCI58Ehuhb/dq++jUy3yXw6n3N3jm3m5ZOFoUuWjP1s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cJDN+fxm/wu4ht+ouwbw2ESzJzyndOlaEdUfyI6fJgGdhJ6stq7JStQnb331IGSlw
+	 RWP4F4yD0gkGWm5z7EL/XggM1nbUti+NeuVeltV5dpOzuS+bSiElENg7Ew52pkT4Ol
+	 RhGcaOdVIMJnVKxjqdKYuKmY8s/6l/vxBXPq7nKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgERUZj (ORCPT
+        id S1726794AbgERU2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52012 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 16:28:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbgERUZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:25:38 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1726227AbgERU2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 16:28:33 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EBC820643;
-        Mon, 18 May 2020 20:25:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E620620643;
+        Mon, 18 May 2020 20:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589833537;
-        bh=n/AJNzIqOGK3k3i8uTfeOxcd4iC5EjLvpksE2xWdpO8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lDiYzOeGUtHXYfLGM6Jq7hHrE8CugUF3Qgi+hYePpg1is6oLCF36Lgh00jj3Z2KL7
-         LOY9+25077N8zIyF8zKSXMwVS7kTim5u4cuBcvLgFpNj7dfEMPotlQSLnRAQoXQYlW
-         hk5XD2Uv1AkxIYkwX0cmitFL2EIYlkc+YiYp0PZE=
-Date:   Mon, 18 May 2020 16:25:35 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Clay McClure <clay@daemons.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 5.6 019/194] net: Make PTP-specific drivers depend on
- PTP_1588_CLOCK
-Message-ID: <20200518202535.GE33628@sasha-vm>
-References: <20200518173531.455604187@linuxfoundation.org>
- <20200518173533.160651742@linuxfoundation.org>
- <05fd5be4-a969-2b7f-52e4-754d9651a280@ti.com>
+        s=default; t=1589833713;
+        bh=SCI58Ehuhb/dq++jUy3yXw6n3N3jm3m5ZOFoUuWjP1s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2YnI6fPN174NzUWIqK6Rfr4gXiGLwfbfXYDkqqPIkt3MdQgiAFGFknueo07/DgiPW
+         egTdf+xMzKGiDST81aiZlS7W+bXrfyx+HIBEGOPyJy705hOQdXqJkarhB/lqAs99ve
+         MXJLUSYJwCPlXfUHeoQf13kiLhMd83yAXMlyU3lM=
+Date:   Mon, 18 May 2020 13:28:28 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Steve deRosier <derosier@gmail.com>,
+        Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com,
+        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
+        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
+        daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        ath10k@lists.infradead.org
+Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
+Message-ID: <20200518132828.553159d9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <e3d978c8fa6a4075f12e843548d41e2c8ab537d1.camel@sipsolutions.net>
+References: <20200515212846.1347-1-mcgrof@kernel.org>
+        <20200515212846.1347-13-mcgrof@kernel.org>
+        <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
+        <20200518165154.GH11244@42.do-not-panic.com>
+        <4ad0668d-2de9-11d7-c3a1-ad2aedd0c02d@candelatech.com>
+        <20200518170934.GJ11244@42.do-not-panic.com>
+        <abf22ef3-93cb-61a4-0af2-43feac6d7930@candelatech.com>
+        <20200518171801.GL11244@42.do-not-panic.com>
+        <CALLGbR+ht2V3m5f-aUbdwEMOvbsX8ebmzdWgX4jyWTbpHrXZ0Q@mail.gmail.com>
+        <20200518190930.GO11244@42.do-not-panic.com>
+        <e3d978c8fa6a4075f12e843548d41e2c8ab537d1.camel@sipsolutions.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <05fd5be4-a969-2b7f-52e4-754d9651a280@ti.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 09:13:54PM +0300, Grygorii Strashko wrote:
->Hi Greg,
->
->On 18/05/2020 20:35, Greg Kroah-Hartman wrote:
->>From: Clay McClure <clay@daemons.net>
->>
->>[ Upstream commit b6d49cab44b567b3e0a5544b3d61e516a7355fad ]
->>
->>Commit d1cbfd771ce8 ("ptp_clock: Allow for it to be optional") changed
->>all PTP-capable Ethernet drivers from `select PTP_1588_CLOCK` to `imply
->>PTP_1588_CLOCK`, "in order to break the hard dependency between the PTP
->>clock subsystem and ethernet drivers capable of being clock providers."
->>As a result it is possible to build PTP-capable Ethernet drivers without
->>the PTP subsystem by deselecting PTP_1588_CLOCK. Drivers are required to
->>handle the missing dependency gracefully.
->>
->>Some PTP-capable Ethernet drivers (e.g., TI_CPSW) factor their PTP code
->>out into separate drivers (e.g., TI_CPTS_MOD). The above commit also
->>changed these PTP-specific drivers to `imply PTP_1588_CLOCK`, making it
->>possible to build them without the PTP subsystem. But as Grygorii
->>Strashko noted in [1]:
->>
->>On Wed, Apr 22, 2020 at 02:16:11PM +0300, Grygorii Strashko wrote:
->>
->>>Another question is that CPTS completely nonfunctional in this case and
->>>it was never expected that somebody will even try to use/run such
->>>configuration (except for random build purposes).
->>
->>In my view, enabling a PTP-specific driver without the PTP subsystem is
->>a configuration error made possible by the above commit. Kconfig should
->>not allow users to create a configuration with missing dependencies that
->>results in "completely nonfunctional" drivers.
->>
->>I audited all network drivers that call ptp_clock_register() but merely
->>`imply PTP_1588_CLOCK` and found five PTP-specific drivers that are
->>likely nonfunctional without PTP_1588_CLOCK:
->>
->>     NET_DSA_MV88E6XXX_PTP
->>     NET_DSA_SJA1105_PTP
->>     MACB_USE_HWSTAMP
->>     CAVIUM_PTP
->>     TI_CPTS_MOD
->>
->>Note how these symbols all reference PTP or timestamping in their name;
->>this is a clue that they depend on PTP_1588_CLOCK.
->>
->>Change them from `imply PTP_1588_CLOCK` [2] to `depends on PTP_1588_CLOCK`.
->>I'm not using `select PTP_1588_CLOCK` here because PTP_1588_CLOCK has
->>its own dependencies, which `select` would not transitively apply.
->>
->>Additionally, remove the `select NET_PTP_CLASSIFY` from CPTS_TI_MOD;
->>PTP_1588_CLOCK already selects that.
->>
->>[1]: https://lore.kernel.org/lkml/c04458ed-29ee-1797-3a11-7f3f560553e6@ti.com/
->>
->>[2]: NET_DSA_SJA1105_PTP had never declared any type of dependency on
->>PTP_1588_CLOCK (`imply` or otherwise); adding a `depends on PTP_1588_CLOCK`
->>here seems appropriate.
->>
->>Cc: Arnd Bergmann <arnd@arndb.de>
->>Cc: Richard Cochran <richardcochran@gmail.com>
->>Cc: Nicolas Pitre <nico@fluxnic.net>
->>Cc: Grygorii Strashko <grygorii.strashko@ti.com>
->>Cc: Geert Uytterhoeven <geert@linux-m68k.org>
->>Fixes: d1cbfd771ce8 ("ptp_clock: Allow for it to be optional")
->>Signed-off-by: Clay McClure <clay@daemons.net>
->>Signed-off-by: David S. Miller <davem@davemloft.net>
->>Signed-off-by: Sasha Levin <sashal@kernel.org>
->>---
->
->Could you drop this patch, pls?
->it's not for stable and can cause build failures.
+On Mon, 18 May 2020 21:25:09 +0200 Johannes Berg wrote:
+> It's pretty clear, but even then, first of all I doubt this is the case
+> for many of the places that you've sprinkled the annotation on, and
+> secondly it actually hides useful information.
+> 
+> Regardless of the support issue, I think this hiding of information is
+> also problematic.
+> 
+> I really think we'd all be better off if you just made a sysfs file (I
+> mistyped debugfs in some other email, sorry, apparently you didn't see
+> the correction in time) that listed which device(s) crashed and how many
+> times. That would actually be useful. Because honestly, if a random
+> device crashed for some random reason, that's pretty much a non-event.
+> If it keeps happening, then we might even want to know about it.
 
-My bad - now dropped. Sorry!
-
--- 
-Thanks,
-Sasha
+Johannes - have you seen devlink health? I think we should just use
+that interface, since it supports all the things you're requesting,
+rather than duplicate it in sysfs.
