@@ -2,102 +2,89 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E43C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF34E20671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98FCA20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:17:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ECOMsx1c"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ToKPJCJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgERMQy (ORCPT
+        id S1727943AbgERMRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:16:54 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34982 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgERMQx (ORCPT
+        Mon, 18 May 2020 08:17:48 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:38252 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726797AbgERMRp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:16:53 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04IC7O8c136864;
-        Mon, 18 May 2020 12:16:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=PA11GNuXBy9RL/56rySqViCyV7Jpit5qeutUc8R5BlQ=;
- b=ECOMsx1cknIujnLn6wnq5hPh6xlnKhUC5Yzfntt94B954sJh4D20vgAtC2ROeWT0f0xo
- fkFP4RV+cWmQfi5sMeW976x5yv2rpDEWqIFkwJzm2UW42gbHB1kzCmZgTy6CIJbfQgvI
- L/nR7G4EZkrl++tuJb7R5J3rReIKOcl56vL39vsnvP6qogx+dQSG2f2dSpiZdqJQDOUr
- hleYp0DVvGeoXJZTrJQB122Nl7H60VbjkI6rbJ7WWcyjX6hkUDlNxOr8FsMTIaplbu4l
- i3J2SV+xr7egwqcMR2j2fMVAZ3bsdN3IiUhlvLjjZo0WpHFMKypRjYYRw552PLQtmvtA yw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 3128tn6a0g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 May 2020 12:16:39 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04ICCTUC069018;
-        Mon, 18 May 2020 12:16:39 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 313ghyrdyh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 12:16:38 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04ICGYEr023418;
-        Mon, 18 May 2020 12:16:36 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 May 2020 05:16:34 -0700
-Date:   Mon, 18 May 2020 15:16:27 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Pascal Terjan <pterjan@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kbuild-all@lists.01.org
-Subject: Re: [RFC PATCH] staging: rtl8192u: indicate_packets() can be static
-Message-ID: <20200518121627.GG2078@kadam>
-References: <20200517165819.136715-1-pterjan@google.com>
- <20200517202216.GA24634@8c544063f25c>
- <ec2fa70939ab20dc7c454897b0b8ed08570dca80.camel@perches.com>
+        Mon, 18 May 2020 08:17:45 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589804265; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=gXT98i0A24jvgpR3VLzzjDcMw6z0mC5dHttghjpZqI0=;
+ b=ToKPJCJNdCQs+sMC3g+xXSNp5QQF6Fx84F6Jfzw7442UAITNTde+Rl8QCGqpHOJCalRGHzpK
+ 5X3pdKTQIlN9aUJLSt+qgyg1yuVB6ayGwb9R/EIjpas4Kc765MrqQBoiOlT1MHb1Z6J2Vzw+
+ nUFA2Vq2RNfFKht0/z+0h2X2sOU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec27ce7.7f97ccfd9730-smtp-out-n02;
+ Mon, 18 May 2020 12:17:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 20D94C43636; Mon, 18 May 2020 12:17:42 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CFB42C433F2;
+        Mon, 18 May 2020 12:17:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CFB42C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec2fa70939ab20dc7c454897b0b8ed08570dca80.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9624 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
- mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005180111
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9624 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 bulkscore=0 spamscore=0
- clxscore=1011 cotscore=-2147483648 suspectscore=0 lowpriorityscore=0
- adultscore=0 phishscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005180110
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] rtw88: 8723d: fix incorrect setting of ldo_pwr
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200514181329.16292-1-colin.king@canonical.com>
+References: <20200514181329.16292-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200518121742.20D94C43636@smtp.codeaurora.org>
+Date:   Mon, 18 May 2020 12:17:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 01:49:50PM -0700, Joe Perches wrote:
-> On Mon, 2020-05-18 at 04:22 +0800, kbuild test robot wrote:
-> > Signed-off-by: kbuild test robot <lkp@intel.com>
-> > ---
+Colin King <colin.king@canonical.com> wrote:
+
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> This doesn't apply on Linus' tree or -next so perhaps the
-> robot should put what tree and branch patches like these
-> are meant to be applied on after the --- line
+> Currently ldo_pwr has the LDO25 voltage bits set to zero and then
+> it is overwritten with the new voltage setting. The assignment
+> looks incorrect, it should be bit-wise or'ing in the new voltage
+> setting rather than a direct assignment.
 > 
+> Addresses-Coverity: ("Unused value")
+> Fixes: 1afb5eb7a00d ("rtw88: 8723d: Add cfg_ldo25 to control LDO25")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
 
-It's supposed to apply on top of the email which it is replying to.
+Patch applied to wireless-drivers-next.git, thanks.
 
-regards,
-dan carpenter
+c5457559b626 rtw88: 8723d: fix incorrect setting of ldo_pwr
 
+-- 
+https://patchwork.kernel.org/patch/11549469/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
