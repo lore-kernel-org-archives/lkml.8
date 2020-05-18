@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A35C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE25FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5127D20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B3120715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825488;
-	bh=vvO58edxBBfMDGU/CA+sbKPkuGmRSwNhdMK6PcSRDFk=;
+	s=default; t=1589825490;
+	bh=ez2yiaLPZoIhBALY+D2vaAgcAuhJq9y6IBu3Sg2n3zg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u8VixzQW5nPAqw+P7q3YMl+wWyXk70AIWunaKDYoaKU60sWXChsbbmJU2tBNR0ZEY
-	 lF98MsHH5pwOPfkkHGdBSYLPrm7yFGK2ZT+g98skwx3tH22qrZM8F1JY+DaD7giMP5
-	 bCtYwtjQm3RMW/3FGEFUS98nr3gMlAVRjEwjq32M=
+	b=Iww2HRuF+H6oVB7c4r5wBPsaWfo1F/9PSrygHlz8+gOF9jqOOE72KApiapd+7UQdR
+	 uVnge0//aGhWocl+h1DovVpV5hPI/0LZzo9DdgNwTkgbW3BbBHw2YMdHgNp2IgxPGe
+	 BD6vUvh8ok3zPc4KMgUAhWmOzbiSm7ueW/rJmvQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387451AbgERSL1 (ORCPT
+        id S1732823AbgERSEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:11:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51978 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732836AbgERSEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:04:46 -0400
+        id S1732335AbgERSE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:04:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6BDC20873;
-        Mon, 18 May 2020 18:04:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81378207D3;
+        Mon, 18 May 2020 18:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825085;
-        bh=vvO58edxBBfMDGU/CA+sbKPkuGmRSwNhdMK6PcSRDFk=;
+        s=default; t=1589825068;
+        bh=ez2yiaLPZoIhBALY+D2vaAgcAuhJq9y6IBu3Sg2n3zg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a+U4c8GWZe5nf2fMQRk6ZCbbrGV8V5HhQKDRIIu2C/zFiumNTqXzZufhgVQGJvvlH
-         U36W+grfU48WTOjeiN5RDfxRFyhZ/252vXAoPYRKZByV+XDY4cydxuUSQgowvsb/em
-         f8FYE8assUV78CxX95WkgShQsTLX64HcBVwaUw7U=
+        b=EUgxiOaJL6R4J/Clo0C2rf4btvpMb3XM8HT5WLNlj3hA+VkhU8sYN3xilt1u0RFBu
+         tw14MZiJd86ddnV9grnHNf06OWYnM+k9bKxmEXbSOXf5GHhLtrcJ4iJaaFP5VHn580
+         zqcRXmAnhqMlta58x+EU71HmJyx0hg89vXu3JrJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        stable@vger.kernel.org, Potnuri Bharat Teja <bharat@chelsio.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 084/194] drm/i915/gt: Make timeslicing an explicit engine property
-Date:   Mon, 18 May 2020 19:36:14 +0200
-Message-Id: <20200518173538.719488345@linuxfoundation.org>
+Subject: [PATCH 5.6 115/194] RDMA/iw_cxgb4: Fix incorrect function parameters
+Date:   Mon, 18 May 2020 19:36:45 +0200
+Message-Id: <20200518173541.287296912@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -61,101 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Potnuri Bharat Teja <bharat@chelsio.com>
 
-[ Upstream commit fe5a708267911d55cce42910d93e303924b088fd ]
+[ Upstream commit c8b1f340e54158662acfa41d6dee274846370282 ]
 
-In order to allow userspace to rely on timeslicing to reorder their
-batches, we must support preemption of those user batches. Declare
-timeslicing as an explicit property that is a combination of having the
-kernel support and HW support.
+While reading the TCB field in t4_tcb_get_field32() the wrong mask is
+passed as a parameter which leads the driver eventually to a kernel
+panic/app segfault from access to an illegal SRQ index while flushing the
+SRQ completions during connection teardown.
 
-Suggested-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Fixes: 8ee36e048c98 ("drm/i915/execlists: Minimalistic timeslicing")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200501122249.12417-1-chris@chris-wilson.co.uk
-(cherry picked from commit a211da9c771bf97395a3ced83a3aa383372b13a7)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Fixes: 11a27e2121a5 ("iw_cxgb4: complete the cached SRQ buffers")
+Link: https://lore.kernel.org/r/20200511185608.5202-1-bharat@chelsio.com
+Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/gt/intel_engine.h       |  9 ---------
- drivers/gpu/drm/i915/gt/intel_engine_types.h | 18 ++++++++++++++----
- drivers/gpu/drm/i915/gt/intel_lrc.c          |  5 ++++-
- 3 files changed, 18 insertions(+), 14 deletions(-)
+ drivers/infiniband/hw/cxgb4/cm.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/gt/intel_engine.h b/drivers/gpu/drm/i915/gt/intel_engine.h
-index 5df003061e442..beb3211a6249d 100644
---- a/drivers/gpu/drm/i915/gt/intel_engine.h
-+++ b/drivers/gpu/drm/i915/gt/intel_engine.h
-@@ -338,13 +338,4 @@ intel_engine_has_preempt_reset(const struct intel_engine_cs *engine)
- 	return intel_engine_has_preemption(engine);
- }
- 
--static inline bool
--intel_engine_has_timeslices(const struct intel_engine_cs *engine)
--{
--	if (!IS_ACTIVE(CONFIG_DRM_I915_TIMESLICE_DURATION))
--		return false;
--
--	return intel_engine_has_semaphores(engine);
--}
--
- #endif /* _INTEL_RINGBUFFER_H_ */
-diff --git a/drivers/gpu/drm/i915/gt/intel_engine_types.h b/drivers/gpu/drm/i915/gt/intel_engine_types.h
-index 92be41a6903c0..4ea067e1508a5 100644
---- a/drivers/gpu/drm/i915/gt/intel_engine_types.h
-+++ b/drivers/gpu/drm/i915/gt/intel_engine_types.h
-@@ -473,10 +473,11 @@ struct intel_engine_cs {
- #define I915_ENGINE_SUPPORTS_STATS   BIT(1)
- #define I915_ENGINE_HAS_PREEMPTION   BIT(2)
- #define I915_ENGINE_HAS_SEMAPHORES   BIT(3)
--#define I915_ENGINE_NEEDS_BREADCRUMB_TASKLET BIT(4)
--#define I915_ENGINE_IS_VIRTUAL       BIT(5)
--#define I915_ENGINE_HAS_RELATIVE_MMIO BIT(6)
--#define I915_ENGINE_REQUIRES_CMD_PARSER BIT(7)
-+#define I915_ENGINE_HAS_TIMESLICES   BIT(4)
-+#define I915_ENGINE_NEEDS_BREADCRUMB_TASKLET BIT(5)
-+#define I915_ENGINE_IS_VIRTUAL       BIT(6)
-+#define I915_ENGINE_HAS_RELATIVE_MMIO BIT(7)
-+#define I915_ENGINE_REQUIRES_CMD_PARSER BIT(8)
- 	unsigned int flags;
- 
- 	/*
-@@ -573,6 +574,15 @@ intel_engine_has_semaphores(const struct intel_engine_cs *engine)
- 	return engine->flags & I915_ENGINE_HAS_SEMAPHORES;
- }
- 
-+static inline bool
-+intel_engine_has_timeslices(const struct intel_engine_cs *engine)
-+{
-+	if (!IS_ACTIVE(CONFIG_DRM_I915_TIMESLICE_DURATION))
-+		return false;
-+
-+	return engine->flags & I915_ENGINE_HAS_TIMESLICES;
-+}
-+
- static inline bool
- intel_engine_needs_breadcrumb_tasklet(const struct intel_engine_cs *engine)
- {
-diff --git a/drivers/gpu/drm/i915/gt/intel_lrc.c b/drivers/gpu/drm/i915/gt/intel_lrc.c
-index 31455eceeb0c6..5bebda4a2d0b4 100644
---- a/drivers/gpu/drm/i915/gt/intel_lrc.c
-+++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
-@@ -4194,8 +4194,11 @@ void intel_execlists_set_default_submission(struct intel_engine_cs *engine)
- 	engine->flags |= I915_ENGINE_SUPPORTS_STATS;
- 	if (!intel_vgpu_active(engine->i915)) {
- 		engine->flags |= I915_ENGINE_HAS_SEMAPHORES;
--		if (HAS_LOGICAL_RING_PREEMPTION(engine->i915))
-+		if (HAS_LOGICAL_RING_PREEMPTION(engine->i915)) {
- 			engine->flags |= I915_ENGINE_HAS_PREEMPTION;
-+			if (IS_ACTIVE(CONFIG_DRM_I915_TIMESLICE_DURATION))
-+				engine->flags |= I915_ENGINE_HAS_TIMESLICES;
-+		}
+diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+index d69dece3b1d54..30e08bcc9afb5 100644
+--- a/drivers/infiniband/hw/cxgb4/cm.c
++++ b/drivers/infiniband/hw/cxgb4/cm.c
+@@ -2891,8 +2891,7 @@ static int peer_abort(struct c4iw_dev *dev, struct sk_buff *skb)
+ 			srqidx = ABORT_RSS_SRQIDX_G(
+ 					be32_to_cpu(req->srqidx_status));
+ 			if (srqidx) {
+-				complete_cached_srq_buffers(ep,
+-							    req->srqidx_status);
++				complete_cached_srq_buffers(ep, srqidx);
+ 			} else {
+ 				/* Hold ep ref until finish_peer_abort() */
+ 				c4iw_get_ep(&ep->com);
+@@ -3878,8 +3877,8 @@ static int read_tcb_rpl(struct c4iw_dev *dev, struct sk_buff *skb)
+ 		return 0;
  	}
  
- 	if (INTEL_GEN(engine->i915) >= 12)
+-	ep->srqe_idx = t4_tcb_get_field32(tcb, TCB_RQ_START_W, TCB_RQ_START_W,
+-			TCB_RQ_START_S);
++	ep->srqe_idx = t4_tcb_get_field32(tcb, TCB_RQ_START_W, TCB_RQ_START_M,
++					  TCB_RQ_START_S);
+ cleanup:
+ 	pr_debug("ep %p tid %u %016x\n", ep, ep->hwtid, ep->srqe_idx);
+ 
 -- 
 2.20.1
 
