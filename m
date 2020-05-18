@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79791C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C45BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AAF820715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7726207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824464;
-	bh=vJwxjENKjponhZzinjr7aum5pc/rXKXOdzUWMBC5U60=;
+	s=default; t=1589824468;
+	bh=n7nRvTCn9YchxNsik27yMI+NE74Rkr4uORdvsNKGRXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V4wmogfOIbiZC7kUqE3mSsjrEZSx5y+kjC8lFKjQN4eNYAsVUsmoRQohn/ELKvPB2
-	 Iv331tr5B2bmLVKoPD4x9PO93ti1TaDbz0Kd3BV723GDfL1xDC68YFQvGEVssAl8dD
-	 /CCcRdrVDTSgyIHz6RlZv7VU7Cdv5aYR4Ic6qDNg=
+	b=CV+F/O1x1XoS7njdHaFd6/eqVg4oSHElobiU9qh1bIpixXkvibDfy2QvFzR9hwWmF
+	 6F24UwUTC+XOyuXMfUeA9GlDQCjge/GGZGp6yuRLmeG8IZho+IXos1yWwZ0rg/Rmib
+	 tIN+X5O/eJLCMabu1epviV9DDbcI5I8fOfK3kZ0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731294AbgERRyX (ORCPT
+        id S1731302AbgERRy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:54:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58946 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:54:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731280AbgERRyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:54:20 -0400
+        id S1731293AbgERRyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:54:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5FF2207C4;
-        Mon, 18 May 2020 17:54:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A61E820826;
+        Mon, 18 May 2020 17:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824460;
-        bh=vJwxjENKjponhZzinjr7aum5pc/rXKXOdzUWMBC5U60=;
+        s=default; t=1589824463;
+        bh=n7nRvTCn9YchxNsik27yMI+NE74Rkr4uORdvsNKGRXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L7KoGMbvdggu90Akxl8kM6oYfnYs/HAbP2DZPOFP3fRw8lBVy40PmcNT6pxeirSeK
-         GNAb7au3Wb52kmrTnImbDNQ6Phv1UWK3ek7yI9lv4n6hUXpotpOueU6R/ZV7d4nkZv
-         VHRjiYaDf0uAbhb7V8M/aQHwbWyrQAFx394152wE=
+        b=wF/v9juL5GWThdsYluY/aG22RsI7xGzIN1QjBJhe1swEj+rNDvqsFMOTpAqIV+js4
+         VZ2gup8DnaNhctZmvaVR3U15VVVO7rkAEHiZkVT0MwfQdZRWElzGXZfeE0OV0xxqfP
+         Q5Vk7w9F/HfxjoAADTVDsf9wFUO2673V4Cb12RRw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Sheets <matthew.sheets@gd-ms.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 020/147] netlabel: cope with NULL catmap
-Date:   Mon, 18 May 2020 19:35:43 +0200
-Message-Id: <20200518173516.304392838@linuxfoundation.org>
+Subject: [PATCH 5.4 021/147] net: phy: fix aneg restart in phy_ethtool_set_eee
+Date:   Mon, 18 May 2020 19:35:44 +0200
+Message-Id: <20200518173516.450714019@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -61,84 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit eead1c2ea2509fd754c6da893a94f0e69e83ebe4 ]
+[ Upstream commit 9de5d235b60a7cdfcdd5461e70c5663e713fde87 ]
 
-The cipso and calipso code can set the MLS_CAT attribute on
-successful parsing, even if the corresponding catmap has
-not been allocated, as per current configuration and external
-input.
+phy_restart_aneg() enables aneg in the PHY. That's not what we want
+if phydev->autoneg is disabled. In this case still update EEE
+advertisement register, but don't enable aneg and don't trigger an
+aneg restart.
 
-Later, selinux code tries to access the catmap if the MLS_CAT flag
-is present via netlbl_catmap_getlong(). That may cause null ptr
-dereference while processing incoming network traffic.
-
-Address the issue setting the MLS_CAT flag only if the catmap is
-really allocated. Additionally let netlbl_catmap_getlong() cope
-with NULL catmap.
-
-Reported-by: Matthew Sheets <matthew.sheets@gd-ms.com>
-Fixes: 4b8feff251da ("netlabel: fix the horribly broken catmap functions")
-Fixes: ceba1832b1b2 ("calipso: Set the calipso socket label to match the secattr.")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Paul Moore <paul@paul-moore.com>
+Fixes: f75abeb8338e ("net: phy: restart phy autonegotiation after EEE advertisment change")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/cipso_ipv4.c        |    6 ++++--
- net/ipv6/calipso.c           |    3 ++-
- net/netlabel/netlabel_kapi.c |    6 ++++++
- 3 files changed, 12 insertions(+), 3 deletions(-)
+ drivers/net/phy/phy.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/net/ipv4/cipso_ipv4.c
-+++ b/net/ipv4/cipso_ipv4.c
-@@ -1258,7 +1258,8 @@ static int cipso_v4_parsetag_rbm(const s
- 			return ret_val;
- 		}
- 
--		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
-+		if (secattr->attr.mls.cat)
-+			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -1160,9 +1160,11 @@ int phy_ethtool_set_eee(struct phy_devic
+ 		/* Restart autonegotiation so the new modes get sent to the
+ 		 * link partner.
+ 		 */
+-		ret = phy_restart_aneg(phydev);
+-		if (ret < 0)
+-			return ret;
++		if (phydev->autoneg == AUTONEG_ENABLE) {
++			ret = phy_restart_aneg(phydev);
++			if (ret < 0)
++				return ret;
++		}
  	}
  
  	return 0;
-@@ -1439,7 +1440,8 @@ static int cipso_v4_parsetag_rng(const s
- 			return ret_val;
- 		}
- 
--		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
-+		if (secattr->attr.mls.cat)
-+			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
- 	}
- 
- 	return 0;
---- a/net/ipv6/calipso.c
-+++ b/net/ipv6/calipso.c
-@@ -1047,7 +1047,8 @@ static int calipso_opt_getattr(const uns
- 			goto getattr_return;
- 		}
- 
--		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
-+		if (secattr->attr.mls.cat)
-+			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
- 	}
- 
- 	secattr->type = NETLBL_NLTYPE_CALIPSO;
---- a/net/netlabel/netlabel_kapi.c
-+++ b/net/netlabel/netlabel_kapi.c
-@@ -734,6 +734,12 @@ int netlbl_catmap_getlong(struct netlbl_
- 	if ((off & (BITS_PER_LONG - 1)) != 0)
- 		return -EINVAL;
- 
-+	/* a null catmap is equivalent to an empty one */
-+	if (!catmap) {
-+		*offset = (u32)-1;
-+		return 0;
-+	}
-+
- 	if (off < catmap->startbit) {
- 		off = catmap->startbit;
- 		*offset = off;
 
 
