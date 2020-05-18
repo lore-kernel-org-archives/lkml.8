@@ -2,223 +2,101 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD42CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EA5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD2B520671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89CF20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825780;
-	bh=rklEIe+bxB4XBwVr/i372ZsSV2FvdkL5bZbWN5mWC+o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lep9R2dcYTTus5xtpmwgRg2zW+aj3D/BBuevCCmMjaoH5rKZ+Y3g+7D+z9kYWaxUa
-	 iz7mHIg8K80Ad9GLWipELtizRzJyvD+fo81qZZkfVPlq/m233cw795CvpPgm2f2Jjk
-	 jffBd7ztruCc6yO5ZS1TuH5++kEEHopaVBWyHMAI=
+	s=default; t=1589825784;
+	bh=Dn46o8FNGNi9iQGafECaUOunAbyZTI/1mmcR33N+8Ms=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kIPJbaWRjXxsBf97Osl0vQ3YWA5sOJMNm/Y6k/1OAKvJtDGHXx7yUbMqxwpf/iriR
+	 aRj/t2C8ECI8cLIECIxdmFrIdTfOyfxIiPiYS154eM3/vTSqUh1jYv8cE1PLJhfz+O
+	 Rle5LllSicZlaRDgjOwyZsV450llMGcrKhjlKnX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729765AbgERSQT (ORCPT
+        id S1731417AbgERR63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:16:19 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40973 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbgERSQL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:16:11 -0400
-Received: by mail-io1-f66.google.com with SMTP id o5so11639463iow.8;
-        Mon, 18 May 2020 11:16:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JxKTb/ih7EghROppADNjlOVB+kg2oy5PArakgj5co0c=;
-        b=b4pKtkyKuylJ172oadLkhVcZXgzemMtdsJWWEfLVoVM67jdOEWMMUsqpaa9TZJSnGr
-         W2x1/CvP5GjenbcGZ5DyizNDE/iaWoIeH62ZhWZNS82ibXmNPC7kcHPtvTO4SzET6naz
-         TcZT4E3mzUzmvzrdWEQkNki6YicmEhyvCCQp1eB0Leh7/cLFZyfX9OGFc7DbfUecj8Xn
-         A70eLDljCgSdOctTuhg19uyLfZDVsKkYA6L+xSyPUb6XuAWIjcr6aQ4yW8y/BI2183+d
-         vKhb7J39keJ96Oo5Ej7FVqURAZaMwQp3i6v/QrVFA3AhplszJKVtc8mHfAitpJdOKqZV
-         5i3Q==
-X-Gm-Message-State: AOAM533XMKwcjxAbOGFo+fTZN90jwiZZZfQMqCqBi4JXbBbB95IBKPMU
-        PZNl/TvXy6nhwyG6NsBJiA==
-X-Google-Smtp-Source: ABdhPJwaG2BHJYsZV6exPs1IolUMSH1wW79sjo0+RjhAoR1r4RC0RhVxxgFAh3EpsyttWNjrpD2baw==
-X-Received: by 2002:a02:7a1d:: with SMTP id a29mr16632302jac.3.1589825769856;
-        Mon, 18 May 2020 11:16:09 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id g65sm4585993ila.21.2020.05.18.11.16.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 11:16:08 -0700 (PDT)
-Received: (nullmailer pid 20581 invoked by uid 1000);
-        Mon, 18 May 2020 18:16:07 -0000
-Date:   Mon, 18 May 2020 12:16:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     jassisinghbrar@gmail.com, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: mailbox: Add devicetree binding for
- Qcom IPCC
-Message-ID: <20200518181607.GA15578@bogus>
-References: <20200508182703.29021-1-manivannan.sadhasivam@linaro.org>
- <20200508182703.29021-2-manivannan.sadhasivam@linaro.org>
+        Mon, 18 May 2020 13:58:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731896AbgERR6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:58:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47D65207C4;
+        Mon, 18 May 2020 17:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589824704;
+        bh=Dn46o8FNGNi9iQGafECaUOunAbyZTI/1mmcR33N+8Ms=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BkjLmEZoXANTP2FZI04C8thjsW1PaWzgtyxwdiIuwm0RdFiNb0sfBkXz2ELi3RgLH
+         HjuCunmHOr36RrzyBBPw9dbMeoxOJ7HoNM1Ve4rxhTRucG7Rw5o3YAQAxoNfOT9mES
+         g//0w+DPpMgsz1MD43QJdBduIeCrYOZ32KbNwCog=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Stefan Riedmueller <s.riedmueller@phytec.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.4 116/147] ARM: dts: imx27-phytec-phycard-s-rdk: Fix the I2C1 pinctrl entries
+Date:   Mon, 18 May 2020 19:37:19 +0200
+Message-Id: <20200518173527.477958876@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
+References: <20200518173513.009514388@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508182703.29021-2-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 11:57:01PM +0530, Manivannan Sadhasivam wrote:
-> Add devicetree YAML binding for Qualcomm Inter-Processor Communication
-> Controller (IPCC) block.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../bindings/mailbox/qcom-ipcc.yaml           | 77 +++++++++++++++++++
->  include/dt-bindings/mailbox/qcom-ipcc.h       | 33 ++++++++
->  2 files changed, 110 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
->  create mode 100644 include/dt-bindings/mailbox/qcom-ipcc.h
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml b/Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
-> new file mode 100644
-> index 000000000000..62e7bc8ceb0b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
-> @@ -0,0 +1,77 @@
-> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mailbox/qcom-ipcc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. Inter-Processor Communication Controller
-> +
-> +maintainers:
-> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +
-> +description:
-> +  The Inter-Processor Communication Controller (IPCC) is a centralized hardware
-> +  to route interrupts across various subsystems. It involves a three-level
-> +  addressing scheme called protocol, client and signal. For example, consider an
-> +  entity on the Application Processor Subsystem (APSS) that wants to listen to
-> +  Modem's interrupts via Shared Memory Point to Point (SMP2P) interface. In such
-> +  a case, the client would be Modem (client-id is 2) and the signal would be
-> +  SMP2P (signal-id is 2). The SMP2P itself falls under the Multiprocessor (MPROC)
-> +  protocol (protocol-id is 0). Refer include/dt-bindings/mailbox/qcom-ipcc.h
-> +  for the list of such IDs.
-> +
-> +properties:
-> +  compatible:
-> +    const: "qcom,ipcc"
+From: Fabio Estevam <festevam@gmail.com>
 
-Need SoC specific compatible(s).
+commit 0caf34350a25907515d929a9c77b9b206aac6d1e upstream.
 
-No need for quotes.
+The I2C2 pins are already used and the following errors are seen:
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 3
-> +    description:
-> +      The first cell is the client-id, the second cell is the signal-id and the
-> +      third cell is the interrupt type.
-> +
-> +  "#mbox-cells":
-> +    const: 2
-> +    description:
-> +      The first cell is the client-id, and the second cell is the signal-id.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +  - "#mbox-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +        #include <dt-bindings/mailbox/qcom-ipcc.h>
-> +
-> +        mailbox: qcom,ipcc@408000 {
+imx27-pinctrl 10015000.iomuxc: pin MX27_PAD_I2C2_SDA already requested by 10012000.i2c; cannot claim for 1001d000.i2c
+imx27-pinctrl 10015000.iomuxc: pin-69 (1001d000.i2c) status -22
+imx27-pinctrl 10015000.iomuxc: could not request pin 69 (MX27_PAD_I2C2_SDA) from group i2c2grp  on device 10015000.iomuxc
+imx-i2c 1001d000.i2c: Error applying setting, reverse things back
+imx-i2c: probe of 1001d000.i2c failed with error -22
 
-mailbox@408000
+Fix it by adding the correct I2C1 IOMUX entries for the pinctrl_i2c1 group.
 
-> +                compatible = "qcom,ipcc";
-> +                reg = <0x408000 0x1000>;
-> +                interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>;
-> +                interrupt-controller;
-> +                #interrupt-cells = <3>;
-> +                #mbox-cells = <2>;
-> +        };
-> +
-> +        smp2p-modem {
-> +                compatible = "qcom,smp2p";
-> +                interrupts-extended = <&ipcc_mproc IPCC_CLIENT_MPSS
-> +                                IPCC_MPROC_SIGNAL_SMP2P IRQ_TYPE_EDGE_RISING>;
-> +                mboxes = <&ipcc_mproc IPCC_CLIENT_MPSS IPCC_MPROC_SIGNAL_SMP2P>;
-> +
-> +                /* Other SMP2P fields */
-> +        };
-> diff --git a/include/dt-bindings/mailbox/qcom-ipcc.h b/include/dt-bindings/mailbox/qcom-ipcc.h
-> new file mode 100644
-> index 000000000000..b8c04f6df57c
-> --- /dev/null
-> +++ b/include/dt-bindings/mailbox/qcom-ipcc.h
-> @@ -0,0 +1,33 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
+Cc: <stable@vger.kernel.org>
+Fixes: 61664d0b432a ("ARM: dts: imx27 phyCARD-S pinctrl")
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Dual license please. I'm pretty sure your employer has an opinion on 
-this.
+---
+ arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +/*
-> + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_MAILBOX_IPCC_H
-> +#define __DT_BINDINGS_MAILBOX_IPCC_H
-> +
-> +/* Signal IDs for MPROC protocol */
-> +#define IPCC_MPROC_SIGNAL_GLINK_QMP	0
-> +#define IPCC_MPROC_SIGNAL_SMP2P		2
-> +#define IPCC_MPROC_SIGNAL_PING		3
-> +
-> +/* Client IDs */
-> +#define IPCC_CLIENT_AOP			0
-> +#define IPCC_CLIENT_TZ			1
-> +#define IPCC_CLIENT_MPSS		2
-> +#define IPCC_CLIENT_LPASS		3
-> +#define IPCC_CLIENT_SLPI		4
-> +#define IPCC_CLIENT_SDC			5
-> +#define IPCC_CLIENT_CDSP		6
-> +#define IPCC_CLIENT_NPU			7
-> +#define IPCC_CLIENT_APSS		8
-> +#define IPCC_CLIENT_GPU			9
-> +#define IPCC_CLIENT_CVP			10
-> +#define IPCC_CLIENT_CAM			11
-> +#define IPCC_CLIENT_VPU			12
-> +#define IPCC_CLIENT_PCIE0		13
-> +#define IPCC_CLIENT_PCIE1		14
-> +#define IPCC_CLIENT_PCIE2		15
-> +#define IPCC_CLIENT_SPSS		16
-> +
-> +#endif
-> -- 
-> 2.17.1
-> 
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
+@@ -75,8 +75,8 @@
+ 	imx27-phycard-s-rdk {
+ 		pinctrl_i2c1: i2c1grp {
+ 			fsl,pins = <
+-				MX27_PAD_I2C2_SDA__I2C2_SDA 0x0
+-				MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
++				MX27_PAD_I2C_DATA__I2C_DATA 0x0
++				MX27_PAD_I2C_CLK__I2C_CLK 0x0
+ 			>;
+ 		};
+ 
+
+
