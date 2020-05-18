@@ -2,53 +2,51 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EBAC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F2EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDD072087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AB120884
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824978;
-	bh=fBtYPBiiaYaYAc/F8IYIUGi4p1Lo/0SvUnhK2Fm8E+0=;
+	s=default; t=1589824981;
+	bh=eFQQvsJSP8uxgMOZ03eQ+NJeSwU57IPsCyxr1Z5fU5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MvejV6Wfy+eOOs+Gei0MXelyCD6sQAzD92o52Z6c1TnFOocroWpYyefobt94JbRyT
-	 cONveBUYpFc1l71zggZoVhH2rky/6dQ98AaHqu7BMl2vUbJ3Vvk0JQdO7E4ILZ6yQE
-	 E5CKPyUguamYbFOwjPlkD2Cmj86lqlzi52lAfL6s=
+	b=Rut9F+uMjokYRzxt4onVBgeoGGP82fGy1mmHJr80aJH00+PxpxZmylW6rIzybj74a
+	 dzHd3lw7gGo7q/JeC/5uzGg2Ic0rJFbWYN2IpuY1Lk1SCT73edIiCw1m+tADxAu+Eb
+	 fMzw7C6eHap1sxi0q6j6rcsj4Eq8x35Y8vR5uGG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732582AbgERSC4 (ORCPT
+        id S1732593AbgERSDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:02:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:03:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732577AbgERSCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:02:51 -0400
+        id S1732573AbgERSCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:02:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD8D8207D3;
-        Mon, 18 May 2020 18:02:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32E2B207D3;
+        Mon, 18 May 2020 18:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824971;
-        bh=fBtYPBiiaYaYAc/F8IYIUGi4p1Lo/0SvUnhK2Fm8E+0=;
+        s=default; t=1589824973;
+        bh=eFQQvsJSP8uxgMOZ03eQ+NJeSwU57IPsCyxr1Z5fU5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tIEKAHnH0WKWzqUg0VuQKlniqnRNlvT5W1b0HrlBgIvMey/Moww5Q5Rr0kLdd5gcn
-         U+zWiszFMsJ5WOFQhWBEM42CjNIDDT9mgqh8LQYXdDKhPr8kxFUhc1OiE2iKMzHPca
-         rZNOOnJQyg07Fq/LzXiZDiVHMmyetzn8bylHV3sE=
+        b=MwvlO635+yFOlZv0xsG30MZPhKG+xeeP4ipWeC2fuow/EEqJYCr3TdNC8nWo6ndj/
+         42H2FTPFnXhfRG5O65aYcKE7RQy81CH9tkB46Xxw/PGMTkjewQZjKafoY7hFKHH8MF
+         D3X5bEIPIdnQQe9plKnM5Xl2QWDLeIg3RBqvoKTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 076/194] pinctrl: baytrail: Enable pin configuration setting for GPIO chip
-Date:   Mon, 18 May 2020 19:36:06 +0200
-Message-Id: <20200518173538.122084927@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.6 041/194] dpaa2-eth: prevent array underflow in update_cls_rule()
+Date:   Mon, 18 May 2020 19:35:31 +0200
+Message-Id: <20200518173535.175349187@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -61,38 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ccd025eaddaeb99e982029446197c544252108e2 ]
+[ Upstream commit 6d32a5119811d2e9b5caa284181944c6f1f192ed ]
 
-It appears that pin configuration for GPIO chip hasn't been enabled yet
-due to absence of ->set_config() callback.
+The "location" is controlled by the user via the ethtool_set_rxnfc()
+function.  This update_cls_rule() function checks for array overflows
+but it doesn't check if the value is negative.  I have changed the type
+to unsigned to prevent array underflows.
 
-Enable it here for Intel Baytrail.
-
-Fixes: c501d0b149de ("pinctrl: baytrail: Add pin control operations")
-Depends-on: 2956b5d94a76 ("pinctrl / gpio: Introduce .set_config() callback for GPIO chips")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: afb90dbb5f78 ("dpaa2-eth: Add ethtool support for flow classification")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/pinctrl/intel/pinctrl-baytrail.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index b409642f168d6..9b821c9cbd16a 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -1286,6 +1286,7 @@ static const struct gpio_chip byt_gpio_chip = {
- 	.direction_output	= byt_gpio_direction_output,
- 	.get			= byt_gpio_get,
- 	.set			= byt_gpio_set,
-+	.set_config		= gpiochip_generic_config,
- 	.dbg_show		= byt_gpio_dbg_show,
- };
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c
+@@ -625,7 +625,7 @@ static int num_rules(struct dpaa2_eth_pr
  
--- 
-2.20.1
-
+ static int update_cls_rule(struct net_device *net_dev,
+ 			   struct ethtool_rx_flow_spec *new_fs,
+-			   int location)
++			   unsigned int location)
+ {
+ 	struct dpaa2_eth_priv *priv = netdev_priv(net_dev);
+ 	struct dpaa2_eth_cls_rule *rule;
 
 
