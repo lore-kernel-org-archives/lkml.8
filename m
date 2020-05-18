@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C45BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 394B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7726207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AA2320715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824468;
-	bh=n7nRvTCn9YchxNsik27yMI+NE74Rkr4uORdvsNKGRXI=;
+	s=default; t=1589824471;
+	bh=q+c7ReZyw8cKraevnY75es7TAUo/GWn3VMPlGiTmqps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CV+F/O1x1XoS7njdHaFd6/eqVg4oSHElobiU9qh1bIpixXkvibDfy2QvFzR9hwWmF
-	 6F24UwUTC+XOyuXMfUeA9GlDQCjge/GGZGp6yuRLmeG8IZho+IXos1yWwZ0rg/Rmib
-	 tIN+X5O/eJLCMabu1epviV9DDbcI5I8fOfK3kZ0Q=
+	b=ECEWOnpaIObxvYdVHmrNiqrbQAT3qSpcvnPFNKzbySyj2r1lOidgRWeA4LrU9lHIc
+	 ilAFKtJFQWFIDxYuW2JMJmraWtpF6F3JD1PPdKvXXokKrPRaVBT0alZzZ3/8sb5KsI
+	 h74lVcrOUvrTI3C0DGxtKAYyqbLw8mRI7ymgGaSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731302AbgERRy1 (ORCPT
+        id S1731310AbgERRya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:54:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59022 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:54:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731293AbgERRyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:54:23 -0400
+        id S1731296AbgERRyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:54:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A61E820826;
-        Mon, 18 May 2020 17:54:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 174AC20715;
+        Mon, 18 May 2020 17:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824463;
-        bh=n7nRvTCn9YchxNsik27yMI+NE74Rkr4uORdvsNKGRXI=;
+        s=default; t=1589824465;
+        bh=q+c7ReZyw8cKraevnY75es7TAUo/GWn3VMPlGiTmqps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wF/v9juL5GWThdsYluY/aG22RsI7xGzIN1QjBJhe1swEj+rNDvqsFMOTpAqIV+js4
-         VZ2gup8DnaNhctZmvaVR3U15VVVO7rkAEHiZkVT0MwfQdZRWElzGXZfeE0OV0xxqfP
-         Q5Vk7w9F/HfxjoAADTVDsf9wFUO2673V4Cb12RRw=
+        b=RKgVDkV3O6APrXrd6fKKy0pTdFYGSj1Rr61OuXT1dVfSNA0Z20T2w1xAN8I7KG/GF
+         rKxmSd8NZNkeYwllBV4gbXTuxs4V9nsVkiV7ILpRdqpyot0KzDpql21sLqVEafO9Fe
+         Z2PqHglsm5wQJ6ZRn3Ml+aMqm6C/zcV7FeZcnrYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        stable@vger.kernel.org,
+        Rahul Ankushrao Kawadgave <rahulak@qti.qualcomm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 021/147] net: phy: fix aneg restart in phy_ethtool_set_eee
-Date:   Mon, 18 May 2020 19:35:44 +0200
-Message-Id: <20200518173516.450714019@linuxfoundation.org>
+Subject: [PATCH 5.4 022/147] net: stmmac: fix num_por initialization
+Date:   Mon, 18 May 2020 19:35:45 +0200
+Message-Id: <20200518173516.584828161@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -59,39 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Vinod Koul <vkoul@kernel.org>
 
-[ Upstream commit 9de5d235b60a7cdfcdd5461e70c5663e713fde87 ]
+[ Upstream commit fd4a5177382230d39e0d95632d98103fb2938383 ]
 
-phy_restart_aneg() enables aneg in the PHY. That's not what we want
-if phydev->autoneg is disabled. In this case still update EEE
-advertisement register, but don't enable aneg and don't trigger an
-aneg restart.
+Driver missed initializing num_por which is one of the por values that
+driver configures to hardware. In order to get these values, add a new
+structure ethqos_emac_driver_data which holds por and num_por values
+and populate that in driver probe.
 
-Fixes: f75abeb8338e ("net: phy: restart phy autonegotiation after EEE advertisment change")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Fixes: a7c30e62d4b8 ("net: stmmac: Add driver for Qualcomm ethqos")
+Reported-by: Rahul Ankushrao Kawadgave <rahulak@qti.qualcomm.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/phy.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c |   17 ++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -1160,9 +1160,11 @@ int phy_ethtool_set_eee(struct phy_devic
- 		/* Restart autonegotiation so the new modes get sent to the
- 		 * link partner.
- 		 */
--		ret = phy_restart_aneg(phydev);
--		if (ret < 0)
--			return ret;
-+		if (phydev->autoneg == AUTONEG_ENABLE) {
-+			ret = phy_restart_aneg(phydev);
-+			if (ret < 0)
-+				return ret;
-+		}
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
+@@ -75,6 +75,11 @@ struct ethqos_emac_por {
+ 	unsigned int value;
+ };
+ 
++struct ethqos_emac_driver_data {
++	const struct ethqos_emac_por *por;
++	unsigned int num_por;
++};
++
+ struct qcom_ethqos {
+ 	struct platform_device *pdev;
+ 	void __iomem *rgmii_base;
+@@ -171,6 +176,11 @@ static const struct ethqos_emac_por emac
+ 	{ .offset = RGMII_IO_MACRO_CONFIG2,	.value = 0x00002060 },
+ };
+ 
++static const struct ethqos_emac_driver_data emac_v2_3_0_data = {
++	.por = emac_v2_3_0_por,
++	.num_por = ARRAY_SIZE(emac_v2_3_0_por),
++};
++
+ static int ethqos_dll_configure(struct qcom_ethqos *ethqos)
+ {
+ 	unsigned int val;
+@@ -442,6 +452,7 @@ static int qcom_ethqos_probe(struct plat
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct plat_stmmacenet_data *plat_dat;
+ 	struct stmmac_resources stmmac_res;
++	const struct ethqos_emac_driver_data *data;
+ 	struct qcom_ethqos *ethqos;
+ 	struct resource *res;
+ 	int ret;
+@@ -471,7 +482,9 @@ static int qcom_ethqos_probe(struct plat
+ 		goto err_mem;
  	}
  
- 	return 0;
+-	ethqos->por = of_device_get_match_data(&pdev->dev);
++	data = of_device_get_match_data(&pdev->dev);
++	ethqos->por = data->por;
++	ethqos->num_por = data->num_por;
+ 
+ 	ethqos->rgmii_clk = devm_clk_get(&pdev->dev, "rgmii");
+ 	if (IS_ERR(ethqos->rgmii_clk)) {
+@@ -526,7 +539,7 @@ static int qcom_ethqos_remove(struct pla
+ }
+ 
+ static const struct of_device_id qcom_ethqos_match[] = {
+-	{ .compatible = "qcom,qcs404-ethqos", .data = &emac_v2_3_0_por},
++	{ .compatible = "qcom,qcs404-ethqos", .data = &emac_v2_3_0_data},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, qcom_ethqos_match);
 
 
