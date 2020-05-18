@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF94C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5331C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49D8D2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71262083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823543;
-	bh=CIiBJb42S876a2czSAIfERN6Bj9wuc+r+jF8XajKrFM=;
+	s=default; t=1589823544;
+	bh=96uFTrB1wUL2K5VRxCTmC0WiSXnmT6PY0ZcORRRnhfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f8GQiDRbClkCa/z0vybl7hqtUmEtSaG5uqcyuZwrrjubKlfhbBYtDA3i8cCXZbhBo
-	 +2cZSYWWfj0SJ3ubp9DAn0jm9heKWr5UfFU0LHd1vF5DbXYC64h7ReeI625Ah7N0RD
-	 T5B9pNHFMPwAaZn3abS1qyU4OUI8WPOCCvBotbDE=
+	b=c/5nWm603NYKywN3qCmXRRKZJsej5+ZqalHXCt8Ki7C+CRiKTXTJJI27eQ+WeISGU
+	 OYojB8a7HAd7j6E477b0R62FTV9viIqFl7F7wdIqWJi5BXk94uRVnu+Zz1MTsp5Bmp
+	 POZAK1l/wnpdrlMCAND+CO8sERrqhN8B42wzjib4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbgERRi7 (ORCPT
+        id S1728690AbgERRjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:38:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33276 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:39:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728651AbgERRi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:38:56 -0400
+        id S1728657AbgERRjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:39:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 819852088E;
-        Mon, 18 May 2020 17:38:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D554020829;
+        Mon, 18 May 2020 17:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823536;
-        bh=CIiBJb42S876a2czSAIfERN6Bj9wuc+r+jF8XajKrFM=;
+        s=default; t=1589823541;
+        bh=96uFTrB1wUL2K5VRxCTmC0WiSXnmT6PY0ZcORRRnhfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P4CQW+GbpIlGwjvRTw4Utz3j93Ezi5WMcWlOsnbl7CxyBLj/g80u9JBJw9hGPN/09
-         AR5FegF1hglQXIsheSydbDNhUnD6H3vI4VjenuPf1TOnxvredjmUi8OqmpzhDPNYtm
-         /tA1NyqHrCuqO63G/3+wtFEd0hQqlqvtJ4jKv8oI=
+        b=2Hnkk3XdYoT1aw9tr75odNeZB1cHO8bAaP588ePGw/fo4PcSOeBxliUGM1jm+tlL9
+         2GTEWHkCi+eTBsuIufhLEe3HnZCR6DE3y7JyRqw9DbtBKc97Zx0opfgJeT1kJ2FSa/
+         BK8wmOd8Zimth7QziFRg992zwAlENSKyWEcePArw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Jens Axboe <axboe@kernel.dk>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 22/86] net: ipv6_stub: use ip6_dst_lookup_flow instead of ip6_dst_lookup
-Date:   Mon, 18 May 2020 19:35:53 +0200
-Message-Id: <20200518173454.956381951@linuxfoundation.org>
+Subject: [PATCH 4.4 24/86] blktrace: fix unlocked access to init/start-stop/teardown
+Date:   Mon, 18 May 2020 19:35:55 +0200
+Message-Id: <20200518173455.336819399@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -61,187 +60,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit 6c8991f41546c3c472503dff1ea9daaddf9331c2 upstream.
+commit 1f2cac107c591c24b60b115d6050adc213d10fc0 upstream.
 
-ipv6_stub uses the ip6_dst_lookup function to allow other modules to
-perform IPv6 lookups. However, this function skips the XFRM layer
-entirely.
+sg.c calls into the blktrace functions without holding the proper queue
+mutex for doing setup, start/stop, or teardown.
 
-All users of ipv6_stub->ip6_dst_lookup use ip_route_output_flow (via the
-ip_route_output_key and ip_route_output helpers) for their IPv4 lookups,
-which calls xfrm_lookup_route(). This patch fixes this inconsistent
-behavior by switching the stub to ip6_dst_lookup_flow, which also calls
-xfrm_lookup_route().
+Add internal unlocked variants, and export the ones that do the proper
+locking.
 
-This requires some changes in all the callers, as these two functions
-take different arguments and have different return types.
-
-Fixes: 5f81bd2e5d80 ("ipv6: export a stub for IPv6 symbols used by vxlan")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 4.4:
- - Drop changes in lwt_bpf.c, mlx5, and rxe
- - Adjust filename, context, indentation]
+Fixes: 6da127ad0918 ("blktrace: Add blktrace ioctls to SCSI generic devices")
+Tested-by: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/infiniband/core/addr.c |    6 +++---
- drivers/net/geneve.c           |    4 +++-
- drivers/net/vxlan.c            |   10 ++++------
- include/net/addrconf.h         |    6 ++++--
- net/ipv6/addrconf_core.c       |   11 ++++++-----
- net/ipv6/af_inet6.c            |    2 +-
- net/mpls/af_mpls.c             |    7 +++----
- net/tipc/udp_media.c           |    9 ++++++---
- 8 files changed, 30 insertions(+), 25 deletions(-)
+ kernel/trace/blktrace.c |   58 +++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 48 insertions(+), 10 deletions(-)
 
---- a/drivers/infiniband/core/addr.c
-+++ b/drivers/infiniband/core/addr.c
-@@ -293,9 +293,9 @@ static int addr6_resolve(struct sockaddr
- 	fl6.saddr = src_in->sin6_addr;
- 	fl6.flowi6_oif = addr->bound_dev_if;
- 
--	ret = ipv6_stub->ipv6_dst_lookup(addr->net, NULL, &dst, &fl6);
--	if (ret < 0)
--		goto put;
-+	dst = ipv6_stub->ipv6_dst_lookup_flow(addr->net, NULL, &fl6, NULL);
-+	if (IS_ERR(dst))
-+		return PTR_ERR(dst);
- 
- 	if (ipv6_addr_any(&fl6.saddr)) {
- 		ret = ipv6_dev_get_saddr(addr->net, ip6_dst_idev(dst)->dev,
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -781,7 +781,9 @@ static struct dst_entry *geneve_get_v6_d
- 		fl6->daddr = geneve->remote.sin6.sin6_addr;
- 	}
- 
--	if (ipv6_stub->ipv6_dst_lookup(geneve->net, gs6->sock->sk, &dst, fl6)) {
-+	dst = ipv6_stub->ipv6_dst_lookup_flow(geneve->net, gs6->sock->sk, fl6,
-+					      NULL);
-+	if (IS_ERR(dst)) {
- 		netdev_dbg(dev, "no route to %pI6\n", &fl6->daddr);
- 		return ERR_PTR(-ENETUNREACH);
- 	}
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -1864,7 +1864,6 @@ static struct dst_entry *vxlan6_get_rout
- {
- 	struct dst_entry *ndst;
- 	struct flowi6 fl6;
--	int err;
- 
- 	memset(&fl6, 0, sizeof(fl6));
- 	fl6.flowi6_oif = oif;
-@@ -1873,11 +1872,10 @@ static struct dst_entry *vxlan6_get_rout
- 	fl6.flowi6_mark = skb->mark;
- 	fl6.flowi6_proto = IPPROTO_UDP;
- 
--	err = ipv6_stub->ipv6_dst_lookup(vxlan->net,
--					 vxlan->vn6_sock->sock->sk,
--					 &ndst, &fl6);
--	if (err < 0)
--		return ERR_PTR(err);
-+	ndst = ipv6_stub->ipv6_dst_lookup_flow(vxlan->net, vxlan->vn6_sock->sock->sk,
-+					       &fl6, NULL);
-+	if (unlikely(IS_ERR(ndst)))
-+		return ERR_PTR(-ENETUNREACH);
- 
- 	*saddr = fl6.saddr;
- 	return ndst;
---- a/include/net/addrconf.h
-+++ b/include/net/addrconf.h
-@@ -192,8 +192,10 @@ struct ipv6_stub {
- 				 const struct in6_addr *addr);
- 	int (*ipv6_sock_mc_drop)(struct sock *sk, int ifindex,
- 				 const struct in6_addr *addr);
--	int (*ipv6_dst_lookup)(struct net *net, struct sock *sk,
--			       struct dst_entry **dst, struct flowi6 *fl6);
-+	struct dst_entry *(*ipv6_dst_lookup_flow)(struct net *net,
-+						  const struct sock *sk,
-+						  struct flowi6 *fl6,
-+						  const struct in6_addr *final_dst);
- 	void (*udpv6_encap_enable)(void);
- 	void (*ndisc_send_na)(struct net_device *dev, const struct in6_addr *daddr,
- 			      const struct in6_addr *solicited_addr,
---- a/net/ipv6/addrconf_core.c
-+++ b/net/ipv6/addrconf_core.c
-@@ -107,15 +107,16 @@ int inet6addr_notifier_call_chain(unsign
- }
- EXPORT_SYMBOL(inet6addr_notifier_call_chain);
- 
--static int eafnosupport_ipv6_dst_lookup(struct net *net, struct sock *u1,
--					struct dst_entry **u2,
--					struct flowi6 *u3)
-+static struct dst_entry *eafnosupport_ipv6_dst_lookup_flow(struct net *net,
-+							   const struct sock *sk,
-+							   struct flowi6 *fl6,
-+							   const struct in6_addr *final_dst)
- {
--	return -EAFNOSUPPORT;
-+	return ERR_PTR(-EAFNOSUPPORT);
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -323,7 +323,7 @@ static void blk_trace_cleanup(struct blk
+ 	put_probe_ref();
  }
  
- const struct ipv6_stub *ipv6_stub __read_mostly = &(struct ipv6_stub) {
--	.ipv6_dst_lookup = eafnosupport_ipv6_dst_lookup,
-+	.ipv6_dst_lookup_flow = eafnosupport_ipv6_dst_lookup_flow,
- };
- EXPORT_SYMBOL_GPL(ipv6_stub);
+-int blk_trace_remove(struct request_queue *q)
++static int __blk_trace_remove(struct request_queue *q)
+ {
+ 	struct blk_trace *bt;
  
---- a/net/ipv6/af_inet6.c
-+++ b/net/ipv6/af_inet6.c
-@@ -841,7 +841,7 @@ static struct pernet_operations inet6_ne
- static const struct ipv6_stub ipv6_stub_impl = {
- 	.ipv6_sock_mc_join = ipv6_sock_mc_join,
- 	.ipv6_sock_mc_drop = ipv6_sock_mc_drop,
--	.ipv6_dst_lookup = ip6_dst_lookup,
-+	.ipv6_dst_lookup_flow = ip6_dst_lookup_flow,
- 	.udpv6_encap_enable = udpv6_encap_enable,
- 	.ndisc_send_na = ndisc_send_na,
- 	.nd_tbl	= &nd_tbl,
---- a/net/mpls/af_mpls.c
-+++ b/net/mpls/af_mpls.c
-@@ -470,16 +470,15 @@ static struct net_device *inet6_fib_look
- 	struct net_device *dev;
- 	struct dst_entry *dst;
- 	struct flowi6 fl6;
--	int err;
+@@ -336,6 +336,17 @@ int blk_trace_remove(struct request_queu
  
- 	if (!ipv6_stub)
- 		return ERR_PTR(-EAFNOSUPPORT);
+ 	return 0;
+ }
++
++int blk_trace_remove(struct request_queue *q)
++{
++	int ret;
++
++	mutex_lock(&q->blk_trace_mutex);
++	ret = __blk_trace_remove(q);
++	mutex_unlock(&q->blk_trace_mutex);
++
++	return ret;
++}
+ EXPORT_SYMBOL_GPL(blk_trace_remove);
  
- 	memset(&fl6, 0, sizeof(fl6));
- 	memcpy(&fl6.daddr, addr, sizeof(struct in6_addr));
--	err = ipv6_stub->ipv6_dst_lookup(net, NULL, &dst, &fl6);
--	if (err)
--		return ERR_PTR(err);
-+	dst = ipv6_stub->ipv6_dst_lookup_flow(net, NULL, &fl6, NULL);
-+	if (IS_ERR(dst))
-+		return ERR_CAST(dst);
+ static ssize_t blk_dropped_read(struct file *filp, char __user *buffer,
+@@ -546,9 +557,8 @@ err:
+ 	return ret;
+ }
  
- 	dev = dst->dev;
- 	dev_hold(dev);
---- a/net/tipc/udp_media.c
-+++ b/net/tipc/udp_media.c
-@@ -200,10 +200,13 @@ static int tipc_udp_send_msg(struct net
- 			.saddr = src->ipv6,
- 			.flowi6_proto = IPPROTO_UDP
- 		};
--		err = ipv6_stub->ipv6_dst_lookup(net, ub->ubsock->sk, &ndst,
--						 &fl6);
--		if (err)
-+		ndst = ipv6_stub->ipv6_dst_lookup_flow(net,
-+						       ub->ubsock->sk,
-+						       &fl6, NULL);
-+		if (IS_ERR(ndst)) {
-+			err = PTR_ERR(ndst);
- 			goto tx_error;
-+		}
- 		ttl = ip6_dst_hoplimit(ndst);
- 		err = udp_tunnel6_xmit_skb(ndst, ub->ubsock->sk, skb,
- 					   ndst->dev, &src->ipv6,
+-int blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+-		    struct block_device *bdev,
+-		    char __user *arg)
++static int __blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
++			     struct block_device *bdev, char __user *arg)
+ {
+ 	struct blk_user_trace_setup buts;
+ 	int ret;
+@@ -567,6 +577,19 @@ int blk_trace_setup(struct request_queue
+ 	}
+ 	return 0;
+ }
++
++int blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
++		    struct block_device *bdev,
++		    char __user *arg)
++{
++	int ret;
++
++	mutex_lock(&q->blk_trace_mutex);
++	ret = __blk_trace_setup(q, name, dev, bdev, arg);
++	mutex_unlock(&q->blk_trace_mutex);
++
++	return ret;
++}
+ EXPORT_SYMBOL_GPL(blk_trace_setup);
+ 
+ #if defined(CONFIG_COMPAT) && defined(CONFIG_X86_64)
+@@ -603,7 +626,7 @@ static int compat_blk_trace_setup(struct
+ }
+ #endif
+ 
+-int blk_trace_startstop(struct request_queue *q, int start)
++static int __blk_trace_startstop(struct request_queue *q, int start)
+ {
+ 	int ret;
+ 	struct blk_trace *bt = q->blk_trace;
+@@ -642,6 +665,17 @@ int blk_trace_startstop(struct request_q
+ 
+ 	return ret;
+ }
++
++int blk_trace_startstop(struct request_queue *q, int start)
++{
++	int ret;
++
++	mutex_lock(&q->blk_trace_mutex);
++	ret = __blk_trace_startstop(q, start);
++	mutex_unlock(&q->blk_trace_mutex);
++
++	return ret;
++}
+ EXPORT_SYMBOL_GPL(blk_trace_startstop);
+ 
+ /*
+@@ -672,7 +706,7 @@ int blk_trace_ioctl(struct block_device
+ 	switch (cmd) {
+ 	case BLKTRACESETUP:
+ 		bdevname(bdev, b);
+-		ret = blk_trace_setup(q, b, bdev->bd_dev, bdev, arg);
++		ret = __blk_trace_setup(q, b, bdev->bd_dev, bdev, arg);
+ 		break;
+ #if defined(CONFIG_COMPAT) && defined(CONFIG_X86_64)
+ 	case BLKTRACESETUP32:
+@@ -683,10 +717,10 @@ int blk_trace_ioctl(struct block_device
+ 	case BLKTRACESTART:
+ 		start = 1;
+ 	case BLKTRACESTOP:
+-		ret = blk_trace_startstop(q, start);
++		ret = __blk_trace_startstop(q, start);
+ 		break;
+ 	case BLKTRACETEARDOWN:
+-		ret = blk_trace_remove(q);
++		ret = __blk_trace_remove(q);
+ 		break;
+ 	default:
+ 		ret = -ENOTTY;
+@@ -704,10 +738,14 @@ int blk_trace_ioctl(struct block_device
+  **/
+ void blk_trace_shutdown(struct request_queue *q)
+ {
++	mutex_lock(&q->blk_trace_mutex);
++
+ 	if (q->blk_trace) {
+-		blk_trace_startstop(q, 0);
+-		blk_trace_remove(q);
++		__blk_trace_startstop(q, 0);
++		__blk_trace_remove(q);
+ 	}
++
++	mutex_unlock(&q->blk_trace_mutex);
+ }
+ 
+ /*
 
 
