@@ -2,114 +2,68 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5A2C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8510620709
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D23206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:47:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589809668;
+	bh=OWTjpnAZkv7sUXgqDZ9dbdDlTjjTUSLdc+5YI8H9+UE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jXkLNNUTeLixb6H0HH7H89mJxokgJKeNuJBsuCQ613W8if1iAfwKClA8kAVBX4w35
+	 zrhqb4mgMJOuLrIJ+g2AT74TFISWOcK1PIFvYCdfvxO/Ln0M0lZ73yPASaTUZdCOb2
+	 XmB/o4Fw+fpg5wKhGE0QUw2rxmSGZqREzTTwXbQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgERNq2 (ORCPT
+        id S1727063AbgERNrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:46:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:41026 "EHLO foss.arm.com"
+        Mon, 18 May 2020 09:47:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726800AbgERNq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:46:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A160D101E;
-        Mon, 18 May 2020 06:46:27 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A48E43F52E;
-        Mon, 18 May 2020 06:46:25 -0700 (PDT)
-Date:   Mon, 18 May 2020 14:46:14 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
- Compex wifi cards
-Message-ID: <20200518134614.GA31554@e121166-lin.cambridge.arm.com>
-References: <20200430080625.26070-1-pali@kernel.org>
- <20200513135643.478ffbda@windsurf.home>
- <87pnb2h7w1.fsf@FE-laptop>
- <20200518103004.6tydnad3apkfn77y@pali>
+        id S1726800AbgERNrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 09:47:47 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4249220657;
+        Mon, 18 May 2020 13:47:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589809667;
+        bh=OWTjpnAZkv7sUXgqDZ9dbdDlTjjTUSLdc+5YI8H9+UE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sf1QAiTFSvJXJkMn5jRwradWooQaW1xX69MhjeMoAyGi/OaRVGC511vMbFHgmeTuw
+         F1bu8RCpTz/H2b+ugOc/MlFVZ8XJ/Tubkt3ccgsnPoG1bUU2Qa5aJQDrGzn4dj4Oh6
+         qQYG9kbTE01nA0am8NMbYygdIry9SQzDoXJqfYbo=
+Date:   Mon, 18 May 2020 14:47:43 +0100
+From:   Will Deacon <will@kernel.org>
+To:     =?utf-8?B?546L56iL5Yia?= <wangchenggang@vivo.com>
+Cc:     'Catalin Marinas' <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@vivo.com
+Subject: Re: [PATCH] arch/arm64: Enlarge arm64 command line length to 4096
+ bytes
+Message-ID: <20200518134742.GH32394@willie-the-truck>
+References: <00fc01d62d1a$35445a80$9fcd0f80$@vivo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200518103004.6tydnad3apkfn77y@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <00fc01d62d1a$35445a80$9fcd0f80$@vivo.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 12:30:04PM +0200, Pali Rohár wrote:
-> On Sunday 17 May 2020 17:57:02 Gregory CLEMENT wrote:
-> > Hello,
-> > 
-> > > Hello,
-> > >
-> > > On Thu, 30 Apr 2020 10:06:13 +0200
-> > > Pali Rohár <pali@kernel.org> wrote:
-> > >
-> > >> Marek Behún (5):
-> > >>   PCI: aardvark: Improve link training
-> > >>   PCI: aardvark: Add PHY support
-> > >>   dt-bindings: PCI: aardvark: Describe new properties
-> > >>   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
-> > >>   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
-> > >> 
-> > >> Pali Rohár (7):
-> > >>   PCI: aardvark: Train link immediately after enabling training
-> > >>   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
-> > >>     read-only register
-> > >>   PCI: of: Zero max-link-speed value is invalid
-> > >>   PCI: aardvark: Issue PERST via GPIO
-> > >>   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
-> > >>   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
-> > >>     macros
-> > >>   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
-> > >
-> > > Thanks a lot for this work. For a number of reasons, I'm less involved
-> > > in Marvell platform support in Linux, but I reviewed your series and
-> > > followed the discussions around it, and I'm happy to give my:
-> > >
-> > > Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> > 
-> > With this acked-by for the series, the reviewed-by from Rob on the
-> > binding and the tested-by, I am pretty confident so I applied the
-> > patches 10, 11 and 12 on mvebu/dt64.
-> > 
-> > Thanks,
-> > 
-> > Gregory
-> 
-> Thank you!
-> 
-> Lorenzo, would you now take remaining patches?
+On Mon, May 18, 2020 at 09:42:43PM +0800, çŽ‹ç¨‹åˆš wrote:
+> Now android use many long command line, and oem need append some command
+> line to debug boot, so 2048 bytes cannot able to meet the requirement.
+> Enlarge arm64's command line length to 4096 bytes.
 
-Yes - even though I have reservations about patch (5) and the
-problem is related to a complete lack of programming model for
-these host controllers and a clear separation between what's
-done in the OS vs bootloader, PERST handling in this host
-bridge is *really* a mess.
+I thought bootconfig was supposed to fix this sort of thing?
 
-I applied 1-9 to pci/aardvark.
-
-Lorenzo
+Will
