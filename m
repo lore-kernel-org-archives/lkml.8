@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE62C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3573520873
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A4620849
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824161;
-	bh=GT4WXSOw4+QI6BqNdM+u34S+tWwVn/JTGFbOfoE6UY4=;
+	s=default; t=1589824163;
+	bh=RfkX7dMrDN71LREFdUGr1HWXv6KFGxNUxXuzOej2pdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l1/xLjV3HEIuhUOY0LqJgAP04cc8luS5IhdUKOATYOB79kyaI/Hj++oh/8m9nJY2a
-	 uqaVRwUpOduygY9kxI2z9pJKdAe7qQKWQiKbYIpx+MKtvfThr4evTKa7+7lt7xIcfe
-	 Qc6KzO05sHXcFFobT+srM144h1AauCLJtmnmoGvI=
+	b=YFXP9m4ta/qm3NYhavd3f9d41LGtG7iriRWNRFbkRHLVanL+POuriPGmkbAUjBeQX
+	 jag2YsHrVm+XkEIbW4igTQRgMEZs1G8PJdF+JbDOtLerSEtFLYHhcQh1RYe9sKSCAH
+	 Z4eBRjjaAYE65yaZJJLuIKbxVHg5Efv4JHWh3GMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbgERRtQ (ORCPT
+        id S1730516AbgERRtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:49:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50654 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:49:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729669AbgERRtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:49:12 -0400
+        id S1730502AbgERRtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:49:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9AE920657;
-        Mon, 18 May 2020 17:49:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A78EF20657;
+        Mon, 18 May 2020 17:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824152;
-        bh=GT4WXSOw4+QI6BqNdM+u34S+tWwVn/JTGFbOfoE6UY4=;
+        s=default; t=1589824157;
+        bh=RfkX7dMrDN71LREFdUGr1HWXv6KFGxNUxXuzOej2pdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/8nrZxe9LkijW4EF0A1m8G8x4WujOSnETjYphcdfeNOQhCjjeurATVrsgmDfCyWh
-         dHcf/q7hkK2nOZ+KLVA/tC4c1zUkAGz3rJ+pX8X1ZwR59v+lrxysAfxFO4j2iWVb+z
-         ACPp2GgHsnuEDxI0BroOSijDZMWMT0Iwc6rKSiEw=
+        b=2qdPn0Puzd76fCcTso5pI4H9Yvxq39AtANxZx+EouSzYtNfS4fD1uW6nMZsLAOeXX
+         xqub2XnU90FqhKN8Nc8AHpvmh2RRBqqAW2FiB+r7Dy8/pvpsKrUN8lMFS7csqcPWu5
+         5pWVwMejyVoDG6ussceNilej+VKQhahvqyXw0Kj8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 4.14 093/114] ARM: dts: dra7: Fix bus_dma_limit for PCIe
-Date:   Mon, 18 May 2020 19:37:05 +0200
-Message-Id: <20200518173518.816338276@linuxfoundation.org>
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Stefan Riedmueller <s.riedmueller@phytec.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 4.14 094/114] ARM: dts: imx27-phytec-phycard-s-rdk: Fix the I2C1 pinctrl entries
+Date:   Mon, 18 May 2020 19:37:06 +0200
+Message-Id: <20200518173518.920548227@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -60,59 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-commit 90d4d3f4ea45370d482fa609dbae4d2281b4074f upstream.
+commit 0caf34350a25907515d929a9c77b9b206aac6d1e upstream.
 
-Even though commit cfb5d65f2595 ("ARM: dts: dra7: Add bus_dma_limit
-for L3 bus") added bus_dma_limit for L3 bus, the PCIe controller
-gets incorrect value of bus_dma_limit.
+The I2C2 pins are already used and the following errors are seen:
 
-Fix it by adding empty dma-ranges property to axi@0 and axi@1
-(parent device tree node of PCIe controller).
+imx27-pinctrl 10015000.iomuxc: pin MX27_PAD_I2C2_SDA already requested by 10012000.i2c; cannot claim for 1001d000.i2c
+imx27-pinctrl 10015000.iomuxc: pin-69 (1001d000.i2c) status -22
+imx27-pinctrl 10015000.iomuxc: could not request pin 69 (MX27_PAD_I2C2_SDA) from group i2c2grp  on device 10015000.iomuxc
+imx-i2c 1001d000.i2c: Error applying setting, reverse things back
+imx-i2c: probe of 1001d000.i2c failed with error -22
 
-Cc: stable@kernel.org
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fix it by adding the correct I2C1 IOMUX entries for the pinctrl_i2c1 group.
+
+Cc: <stable@vger.kernel.org>
+Fixes: 61664d0b432a ("ARM: dts: imx27 phyCARD-S pinctrl")
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/dra7.dtsi |    4 ++--
+ arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -289,6 +289,7 @@
- 			#address-cells = <1>;
- 			ranges = <0x51000000 0x51000000 0x3000
- 				  0x0	     0x20000000 0x10000000>;
-+			dma-ranges;
- 			/**
- 			 * To enable PCI endpoint mode, disable the pcie1_rc
- 			 * node and enable pcie1_ep mode.
-@@ -303,7 +304,6 @@
- 				device_type = "pci";
- 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
- 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
--				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
-@@ -347,6 +347,7 @@
- 			#address-cells = <1>;
- 			ranges = <0x51800000 0x51800000 0x3000
- 				  0x0	     0x30000000 0x10000000>;
-+			dma-ranges;
- 			status = "disabled";
- 			pcie@51800000 {
- 				compatible = "ti,dra7-pcie";
-@@ -358,7 +359,6 @@
- 				device_type = "pci";
- 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
- 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
--				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
+@@ -81,8 +81,8 @@
+ 	imx27-phycard-s-rdk {
+ 		pinctrl_i2c1: i2c1grp {
+ 			fsl,pins = <
+-				MX27_PAD_I2C2_SDA__I2C2_SDA 0x0
+-				MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
++				MX27_PAD_I2C_DATA__I2C_DATA 0x0
++				MX27_PAD_I2C_CLK__I2C_CLK 0x0
+ 			>;
+ 		};
+ 
 
 
