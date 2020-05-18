@@ -2,219 +2,150 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A42C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC8D207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cFWfBG1S"
+	by mail.kernel.org (Postfix) with ESMTP id 507EE207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589825503;
+	bh=xutSc8A9hRxcqC+TgUIwPgptzdazbIwaCkmPOPmLn6k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LoxfMf8fXKKTZZvEkCIKi6kx94QEv24QyPjPca458IP3TkyWJGa9C0gyYPwAM8+PJ
+	 V7K8PqE2Ok09a+xb/vLRrjvQGGQxGqKkOgYy9JIV+nri9i0jVh0quB6lhlMWChwHmk
+	 2nc4U7sKP36XVRU0VYum0ROQKj+8uu8zO04s/tug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387505AbgERSLi (ORCPT
+        id S2387586AbgERSLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:11:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36236 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729708AbgERSLf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:11:35 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C8C9C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:11:35 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id q16so4558100plr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:11:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=i5G455mDBJRreSbEvKINUvbESli0VTrS8lepcJ7Mbx4=;
-        b=cFWfBG1SDlsVh+fvyQBoiRzrRxskGzJNFyhmnh1UAN04m8JGcPGsAHhJn+ejKbm2cx
-         ZvwagzwHxiw+6RYpMK/+DhoODYrjw4wRKOkDLO9L8yAuT+696yxU4Jb65/T8ghzLZBAa
-         UtbOticWbi2JyQDjACVzbpfeq/hbpP3vJMbXKGLL8t8PXp/H4+SVruzTB4hNYFA3a85I
-         alRoXCs0U9v6WyFNwBT+keJmeltIrFe2CyWUzvhzVBNToc7Vk1AMdchM7qh4A+YLnMA9
-         TMinVjmJp6SLEXeyimd1RCSxiqe5P2h2fFyWjA6Ot5SdyLr1E011AqptXrr22jpiBy/T
-         b2gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i5G455mDBJRreSbEvKINUvbESli0VTrS8lepcJ7Mbx4=;
-        b=Rphkhxjkh5nEv03LPR1gdvaHiFWw/RkbxkhVamW4/KLRpXvJksU9GzcNnc3cA+2vwX
-         SSRd9R+KUS2tvm4ZjtvP6o9GJ63NXH7sLTU4jkAl5qeFYVb+Q2P6yAZcXiK6beiA6fgM
-         aatUTahe1gOqdk4tikYw56GK8y0IQYwpSwC/X6mCen0sfaqmxuAHF81I32DK7nYXrJzn
-         Hbk+z2pzruNjUpAhEyV+uU080zg+vt/oD6q8eVjPkuXSyP8jljCSBR1iuBvMK2kHg7Nc
-         HqB4nriaaDRk3F+0rBFpLpKlieYRU6IBdAIcP2W/F45tkndecAPliapBo4a0IHoqkdVs
-         fF/Q==
-X-Gm-Message-State: AOAM530WstQ/RbCQaueRSUK3efoZyZ0PUnOkYfekACN08VxVdqpBFggS
-        +hsuWbbG1tX6EqzdO0Y8WN1tubkCa7Y=
-X-Google-Smtp-Source: ABdhPJwyguEPoWOeDtJWN08rgkbQUT8OwmcHCds8zkRz995JQqY8Y5HP8JDIU14Z8JGNlBpUwJHXLg==
-X-Received: by 2002:a17:902:b114:: with SMTP id q20mr15989893plr.120.1589825494493;
-        Mon, 18 May 2020 11:11:34 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 14sm177190pjm.49.2020.05.18.11.11.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 11:11:33 -0700 (PDT)
-Date:   Mon, 18 May 2020 11:10:10 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Wang Wenhu <wenhu.wang@vivo.com>
-Cc:     Andy Gross <agross@kernel.org>, Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@vivo.com
-Subject: Re: [PATCH] soc: qmi: move tlv-micros to header file
-Message-ID: <20200518181010.GC2165@builder.lan>
-References: <20200413035758.60238-1-wenhu.wang@vivo.com>
+        Mon, 18 May 2020 14:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732806AbgERSEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:04:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25C6D2083E;
+        Mon, 18 May 2020 18:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589825075;
+        bh=xutSc8A9hRxcqC+TgUIwPgptzdazbIwaCkmPOPmLn6k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Z6KueulywNz+R1m9ffs+iCT7pRlCO9sgDl0+2+ezvA06uAVFiLufEqifkPttw1y+I
+         4J4nX3mDiPa/YtfHuDona3kiRLtujxA31VrkRlleNFU1xsrBlC8Xmh6i4ArVmBM6fC
+         baTsw4e/STIaTDthj/HutELKx1VMQ8pPpXlAHADU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Wysochanski <dwysocha@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 082/194] cachefiles: Fix corruption of the return value in cachefiles_read_or_alloc_pages()
+Date:   Mon, 18 May 2020 19:36:12 +0200
+Message-Id: <20200518173538.580068624@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
+References: <20200518173531.455604187@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413035758.60238-1-wenhu.wang@vivo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 12 Apr 20:57 PDT 2020, Wang Wenhu wrote:
+From: David Howells <dhowells@redhat.com>
 
-> It's highly helpful to move the definitions of TLV related micros
-> into header file for user reference. The OPTIONAL_TLV_TYPE_START
-> should be known to any user that might define messages containing
-> optional fields. SIZE fields are the same, for users to calculate
-> message buffer length.
-> 
-> While encoding messages, Type always occurs together with Length.
-> So the better way is to use TL_SIZE, rather than (T_SIZE + L_SIZE).
-> 
-> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
-> ---
->  drivers/soc/qcom/qmi_encdec.c | 28 ++++++++++++----------------
->  include/linux/soc/qcom/qmi.h  |  5 +++++
->  2 files changed, 17 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/soc/qcom/qmi_encdec.c b/drivers/soc/qcom/qmi_encdec.c
-> index 3aaab71d1b2c..a674c68efab2 100644
-> --- a/drivers/soc/qcom/qmi_encdec.c
-> +++ b/drivers/soc/qcom/qmi_encdec.c
-> @@ -53,10 +53,6 @@ do { \
->  	decoded_bytes += rc; \
->  } while (0)
->  
-> -#define TLV_LEN_SIZE sizeof(u16)
-> -#define TLV_TYPE_SIZE sizeof(u8)
+[ Upstream commit c5f9d9db83d9f84d2b4aae5a1b29d9b582ccff2f ]
 
-Sorry, but as far as I can tell these properties should be hidden from
-the clients by the encoder/decoder helpers. Can help me understand when
-these could be useful to have outside this file?
+The patch which changed cachefiles from calling ->bmap() to using the
+bmap() wrapper overwrote the running return value with the result of
+calling bmap().  This causes an assertion failure elsewhere in the code.
 
-> -#define OPTIONAL_TLV_TYPE_START 0x10
+Fix this by using ret2 rather than ret to hold the return value.
 
-This has some meaning outside, but whenever I've written (typically
-generated) qmi_elem_info arrays I just use the TVL TYPE as a number from
-the datasheets directly. Can you please give an example of when it's
-useful for a client to express a TLV relative to the "optional start"?
+The oops looks like:
 
-Thanks,
-Bjorn
+	kernel BUG at fs/nfs/fscache.c:468!
+	...
+	RIP: 0010:__nfs_readpages_from_fscache+0x18b/0x190 [nfs]
+	...
+	Call Trace:
+	 nfs_readpages+0xbf/0x1c0 [nfs]
+	 ? __alloc_pages_nodemask+0x16c/0x320
+	 read_pages+0x67/0x1a0
+	 __do_page_cache_readahead+0x1cf/0x1f0
+	 ondemand_readahead+0x172/0x2b0
+	 page_cache_async_readahead+0xaa/0xe0
+	 generic_file_buffered_read+0x852/0xd50
+	 ? mem_cgroup_commit_charge+0x6e/0x140
+	 ? nfs4_have_delegation+0x19/0x30 [nfsv4]
+	 generic_file_read_iter+0x100/0x140
+	 ? nfs_revalidate_mapping+0x176/0x2b0 [nfs]
+	 nfs_file_read+0x6d/0xc0 [nfs]
+	 new_sync_read+0x11a/0x1c0
+	 __vfs_read+0x29/0x40
+	 vfs_read+0x8e/0x140
+	 ksys_read+0x61/0xd0
+	 __x64_sys_read+0x1a/0x20
+	 do_syscall_64+0x60/0x1e0
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+	RIP: 0033:0x7f5d148267e0
 
-> -
->  static int qmi_encode(struct qmi_elem_info *ei_array, void *out_buf,
->  		      const void *in_c_struct, u32 out_buf_len,
->  		      int enc_level);
-> @@ -142,7 +138,7 @@ static int qmi_calc_min_msg_len(struct qmi_elem_info *ei_array,
->  		 * nested structure.
->  		 */
->  		if (level == 1)
-> -			min_msg_len += (TLV_TYPE_SIZE + TLV_LEN_SIZE);
-> +			min_msg_len += QMI_TLV_TL_SIZE;
->  	}
->  
->  	return min_msg_len;
-> @@ -253,8 +249,7 @@ static int qmi_encode_string_elem(struct qmi_elem_info *ei_array,
->  	}
->  
->  	if (enc_level == 1) {
-> -		if (string_len + TLV_LEN_SIZE + TLV_TYPE_SIZE >
-> -		    out_buf_len) {
-> +		if (string_len + QMI_TLV_TL_SIZE > out_buf_len) {
->  			pr_err("%s: Output len %d > Out Buf len %d\n",
->  			       __func__, string_len, out_buf_len);
->  			return -ETOOSMALL;
-> @@ -311,7 +306,7 @@ static int qmi_encode(struct qmi_elem_info *ei_array, void *out_buf,
->  	tlv_pointer = buf_dst;
->  	tlv_len = 0;
->  	if (enc_level == 1)
-> -		buf_dst = buf_dst + (TLV_LEN_SIZE + TLV_TYPE_SIZE);
-> +		buf_dst = buf_dst + QMI_TLV_TL_SIZE;
->  
->  	while (temp_ei->data_type != QMI_EOTI) {
->  		buf_src = in_c_struct + temp_ei->offset;
-> @@ -342,8 +337,8 @@ static int qmi_encode(struct qmi_elem_info *ei_array, void *out_buf,
->  			data_len_sz = temp_ei->elem_size == sizeof(u8) ?
->  					sizeof(u8) : sizeof(u16);
->  			/* Check to avoid out of range buffer access */
-> -			if ((data_len_sz + encoded_bytes + TLV_LEN_SIZE +
-> -			    TLV_TYPE_SIZE) > out_buf_len) {
-> +			if ((data_len_sz + encoded_bytes + QMI_TLV_TL_SIZE) >
-> +			    out_buf_len) {
->  				pr_err("%s: Too Small Buffer @DATA_LEN\n",
->  				       __func__);
->  				return -ETOOSMALL;
-> @@ -367,7 +362,7 @@ static int qmi_encode(struct qmi_elem_info *ei_array, void *out_buf,
->  		case QMI_SIGNED_4_BYTE_ENUM:
->  			/* Check to avoid out of range buffer access */
->  			if (((data_len_value * temp_ei->elem_size) +
-> -			    encoded_bytes + TLV_LEN_SIZE + TLV_TYPE_SIZE) >
-> +			    encoded_bytes + QMI_TLV_TL_SIZE) >
->  			    out_buf_len) {
->  				pr_err("%s: Too Small Buffer @data_type:%d\n",
->  				       __func__, temp_ei->data_type);
-> @@ -410,10 +405,10 @@ static int qmi_encode(struct qmi_elem_info *ei_array, void *out_buf,
->  
->  		if (encode_tlv && enc_level == 1) {
->  			QMI_ENCDEC_ENCODE_TLV(tlv_type, tlv_len, tlv_pointer);
-> -			encoded_bytes += (TLV_TYPE_SIZE + TLV_LEN_SIZE);
-> +			encoded_bytes += QMI_TLV_TL_SIZE;
->  			tlv_pointer = buf_dst;
->  			tlv_len = 0;
-> -			buf_dst = buf_dst + TLV_LEN_SIZE + TLV_TYPE_SIZE;
-> +			buf_dst = buf_dst + QMI_TLV_TL_SIZE;
->  			encode_tlv = 0;
->  		}
->  	}
-> @@ -613,10 +608,11 @@ static int qmi_decode(struct qmi_elem_info *ei_array, void *out_c_struct,
->  			tlv_pointer = buf_src;
->  			QMI_ENCDEC_DECODE_TLV(&tlv_type,
->  					      &tlv_len, tlv_pointer);
-> -			buf_src += (TLV_TYPE_SIZE + TLV_LEN_SIZE);
-> -			decoded_bytes += (TLV_TYPE_SIZE + TLV_LEN_SIZE);
-> +			buf_src += QMI_TLV_TL_SIZE;
-> +			decoded_bytes += QMI_TLV_TL_SIZE;
->  			temp_ei = find_ei(ei_array, tlv_type);
-> -			if (!temp_ei && tlv_type < OPTIONAL_TLV_TYPE_START) {
-> +			if (!temp_ei && tlv_type <
-> +			    QMI_OPTIONAL_TLV_TYPE_START) {
->  				pr_err("%s: Inval element info\n", __func__);
->  				return -EINVAL;
->  			} else if (!temp_ei) {
-> diff --git a/include/linux/soc/qcom/qmi.h b/include/linux/soc/qcom/qmi.h
-> index e712f94b89fc..eb53aebdf45e 100644
-> --- a/include/linux/soc/qcom/qmi.h
-> +++ b/include/linux/soc/qcom/qmi.h
-> @@ -34,6 +34,11 @@ struct qmi_header {
->  #define QMI_INDICATION	4
->  
->  #define QMI_COMMON_TLV_TYPE 0
-> +#define QMI_OPTIONAL_TLV_TYPE_START 0x10
-> +
-> +#define QMI_TLV_LEN_SIZE sizeof(u16)
-> +#define QMI_TLV_TYPE_SIZE sizeof(u8)
-> +#define QMI_TLV_TL_SIZE (QMI_TLV_LEN_SIZE + QMI_TLV_TYPE_SIZE)
->  
->  enum qmi_elem_type {
->  	QMI_EOTI,
-> -- 
-> 2.17.1
-> 
+Fixes: 10d83e11a582 ("cachefiles: drop direct usage of ->bmap method.")
+Reported-by: David Wysochanski <dwysocha@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Tested-by: David Wysochanski <dwysocha@redhat.com>
+cc: Carlos Maiolino <cmaiolino@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/cachefiles/rdwr.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/fs/cachefiles/rdwr.c b/fs/cachefiles/rdwr.c
+index 1dc97f2d62013..d3d78176b23ce 100644
+--- a/fs/cachefiles/rdwr.c
++++ b/fs/cachefiles/rdwr.c
+@@ -398,7 +398,7 @@ int cachefiles_read_or_alloc_page(struct fscache_retrieval *op,
+ 	struct inode *inode;
+ 	sector_t block;
+ 	unsigned shift;
+-	int ret;
++	int ret, ret2;
+ 
+ 	object = container_of(op->op.object,
+ 			      struct cachefiles_object, fscache);
+@@ -430,8 +430,8 @@ int cachefiles_read_or_alloc_page(struct fscache_retrieval *op,
+ 	block = page->index;
+ 	block <<= shift;
+ 
+-	ret = bmap(inode, &block);
+-	ASSERT(ret < 0);
++	ret2 = bmap(inode, &block);
++	ASSERT(ret2 == 0);
+ 
+ 	_debug("%llx -> %llx",
+ 	       (unsigned long long) (page->index << shift),
+@@ -739,8 +739,8 @@ int cachefiles_read_or_alloc_pages(struct fscache_retrieval *op,
+ 		block = page->index;
+ 		block <<= shift;
+ 
+-		ret = bmap(inode, &block);
+-		ASSERT(!ret);
++		ret2 = bmap(inode, &block);
++		ASSERT(ret2 == 0);
+ 
+ 		_debug("%llx -> %llx",
+ 		       (unsigned long long) (page->index << shift),
+-- 
+2.20.1
+
+
+
