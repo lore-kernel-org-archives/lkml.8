@@ -2,105 +2,136 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F8FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5505120671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080DC20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:18:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ng7kf9oZ"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="xj1It/WG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgERNQ6 (ORCPT
+        id S1727802AbgERNR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:16:58 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:36624 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726726AbgERNQ6 (ORCPT
+        Mon, 18 May 2020 09:17:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbgERNR5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:16:58 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589807817; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=uINdg6B01buhlCAC3xos5oZKi+SLgZfqfWsmUT0tazg=; b=Ng7kf9oZte0eA/CUaqkdzJF8uMtnv8gEw81on7UAI4UdrTeQ98ZGzlm2NKJhUTJG29fIlK+V
- 4OTI8mRiCY3nNNe6wy4P6OGqXBw5gEklsWgfT/tkP9UEmhdrXIPCkmjn3JU/AaVIE89ylxm1
- Ou06mqYIW79IXa5dQATjwO3B6B0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5ec28ac15d62762fd417f24b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 18 May 2020 13:16:49
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C430FC43637; Mon, 18 May 2020 13:16:48 +0000 (UTC)
-Received: from [192.168.0.11] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 420FBC433F2;
-        Mon, 18 May 2020 13:16:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 420FBC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V6 0/3] Convert QUP bindings to YAML and add ICC, pin swap
- doc
-To:     Stephen Boyd <swboyd@chromium.org>, gregkh@linuxfoundation.org,
-        robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        rojay@codeaurora.org, skakit@codeaurora.org, mka@chromium.org
-References: <1588863647-17240-1-git-send-email-akashast@codeaurora.org>
- <158942181222.215346.11981864062704009851@swboyd.mtv.corp.google.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <3b28ae06-3e4c-56dc-53d4-46515dfcbf7a@codeaurora.org>
-Date:   Mon, 18 May 2020 18:46:34 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Mon, 18 May 2020 09:17:57 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B046C05BD0B
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:17:56 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id b6so9830700ljj.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:17:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aaWFz8XM3lber/1QtUDkEYgUS7TEOfr3vPPMOdwLrk4=;
+        b=xj1It/WGw6ho2gXyehxm6yxVpJNgYenYhtlgl5YhWyN5asWO9hvDGHw8rwukxDXrfX
+         dXgMMo0ZAZFQ8mEccZQHf50PdHilbq4KXfNFMbIfNosARIoOPCtmETgBepVHiDoNsjuH
+         A83hapb8pSHGKAN1sMZb8UMxb3PPZOzXEJWGAalWbF/RLzFuG97AwGFScLZAvWV2/z3m
+         E/Vn9Ns9itIfGBr03TxabMBQ53aGb1nWX+LDlRj2KXVhwV6AGa+r/FR+aKeEIn1RKWYn
+         7KyBPmyJIMzxnGy/lCHE9zMxdtRAgWMjgnpmyJBjZvPKtk4iu86WCuyUFTFHGnO06xBX
+         pVAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aaWFz8XM3lber/1QtUDkEYgUS7TEOfr3vPPMOdwLrk4=;
+        b=d0YE8+uYP3vF/kDZ0RQghFHhfOVJypxN6Yq0qhTwjlfmj8y7v0/BPKi1HiXQtzmC3l
+         9WixgERZZDImHaTv2sRS9UzHXHFDvxtdSspLZySIaqrvlOYNd9lX/lVj2qpi5SDS5XTq
+         /B7ONj+KY5EJ5q33xcOIPxLaiXHKJ/0MM87QiCYInchqGh2/YPunNW2gsnDZUA36OiZ+
+         OalD2dxBJak4D8fMWwEdNLPcbaGp07XwIn3kmEFNjoxI2anlwv5mZqdsmXad0hfHxgOO
+         XhzUIUWiQHk8DOfPtkCV3Wxy2IgZd2xAZWGxAWURV0ps46N4Q+B0aVbGmEI9y/sIe3Sx
+         BSsg==
+X-Gm-Message-State: AOAM530cScFzQVjpfjNlfQzpHBKjdVUryVMvS41U0vEW5j+9iZKI7UY1
+        1k2Ydr9pKMfk99nvWQvY6G/q3w==
+X-Google-Smtp-Source: ABdhPJw19UGyEwWJ5Mq/Mme9WNx4l0h6pfEFIGaCERwgxusIQHdpFrVvwJLlfLQPp5MqmCtmQRT2Bg==
+X-Received: by 2002:a2e:9a82:: with SMTP id p2mr10501360lji.279.1589807874514;
+        Mon, 18 May 2020 06:17:54 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:484c:c9e:1c14:285d:1715:e170? ([2a00:1fa0:484c:c9e:1c14:285d:1715:e170])
+        by smtp.gmail.com with ESMTPSA id v10sm5486890lja.23.2020.05.18.06.17.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 06:17:52 -0700 (PDT)
+Subject: Re: [PATCH 17/17] ARM: dts: r8a7742: Add RWDT node
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
+References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1589555337-5498-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVV+2HsgmBytCOFg4pri4XinT_SPWT_Ac6n7FMZN3dR3w@mail.gmail.com>
+ <CA+V-a8tmG1LKYqbc7feGZQO2Tj5RCpNUHi9e19vPr+bED0KOyQ@mail.gmail.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <9ab946d2-1076-ed92-0a48-9a95d798d291@cogentembedded.com>
+Date:   Mon, 18 May 2020 16:17:46 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <158942181222.215346.11981864062704009851@swboyd.mtv.corp.google.com>
+In-Reply-To: <CA+V-a8tmG1LKYqbc7feGZQO2Tj5RCpNUHi9e19vPr+bED0KOyQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Hello!
 
-On 5/14/2020 7:33 AM, Stephen Boyd wrote:
-> Quoting Akash Asthana (2020-05-07 08:00:44)
->> Changes in V6:
->>   - As per Rob's suggestion moved pin swap documentation from QUP to
->>     serial.yaml file[PATCH V6 3/3].
+On 18.05.2020 15:27, Lad, Prabhakar wrote:
+
+>>> Add a device node for the Watchdog Timer (RWDT) controller on the Renesas
+>>> RZ/G1H (r8a7742) SoC.
+>>>
+>>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>>> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 >>
->> Changes in V4:
->>   - Add interconnect binding patch.
->>   - Add UART pin swap binding patch.
+>> Thanks for your patch!
 >>
->> Akash Asthana (3):
->>    dt-bindings: geni-se: Convert QUP geni-se bindings to YAML
->>    dt-bindings: geni-se: Add interconnect binding for GENI QUP
->>    dt-bindings: serial: Add binding for UART pin swap
+>>> --- a/arch/arm/boot/dts/r8a7742.dtsi
+>>> +++ b/arch/arm/boot/dts/r8a7742.dtsi
+>>> @@ -201,6 +201,16 @@
+>>>                  #size-cells = <2>;
+>>>                  ranges;
+>>>
+>>> +               rwdt: watchdog@e6020000 {
+>>> +                       compatible = "renesas,r8a7742-wdt",
+>>> +                                    "renesas,rcar-gen2-wdt";
+>>> +                       reg = <0 0xe6020000 0 0x0c>;
+>>> +                       clocks = <&cpg CPG_MOD 402>;
+>>> +                       power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
+>>> +                       resets = <&cpg 402>;
+>>> +                       status = "disabled";
 >>
-> Who do you intend to pick up these patches? Rob or Greg? I suppose if
-> it's all in bindings then maybe Rob can pick them up.
+>> Missing "interrupts" property.
+>>
+> "interrupts" property isn't used by rwdt driver  and can be dropped
+> from bindings file.
 
-I intended Rob to pick these patches but Greg is maintainer of 
-serial.yaml file so I send patches to him as well, I thought I would be 
-needing ack from him.
+    DT describes the hardware, not its driver's abilities.
 
-But from your reply it's clear that I should be sending to Rob only.
+> Cheers,
+> --Prabhakar
 
-Regards,
-
-Akash
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
-
+MBR, Sergei
