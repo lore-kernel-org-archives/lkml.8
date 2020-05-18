@@ -2,119 +2,134 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FD8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA2472065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FBA62087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgERPti (ORCPT
+        id S1728431AbgERPt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 11:49:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26990 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727007AbgERPti (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 11:49:38 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IFXR0E108670;
-        Mon, 18 May 2020 11:49:36 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 312c63f5ue-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 11:49:36 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04IFeoxh021224;
-        Mon, 18 May 2020 15:49:34 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma01fra.de.ibm.com with ESMTP id 3127t5hthp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 15:49:34 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04IFnWRS62324914
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 15:49:32 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3829052050;
-        Mon, 18 May 2020 15:49:32 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.145.145])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B351C52052;
-        Mon, 18 May 2020 15:49:31 +0000 (GMT)
-Message-ID: <1589816971.5111.113.camel@linux.ibm.com>
-Subject: [GIT PULL] integrity subsystem fixes for v5.7
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Mon, 18 May 2020 11:49:31 -0400
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-18_06:2020-05-15,2020-05-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 suspectscore=0 mlxlogscore=999 cotscore=-2147483648
- spamscore=0 priorityscore=1501 bulkscore=0 adultscore=0 phishscore=0
- mlxscore=0 lowpriorityscore=0 clxscore=1011 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005180131
+        Mon, 18 May 2020 11:49:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:43096 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728300AbgERPt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 11:49:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECD61101E;
+        Mon, 18 May 2020 08:49:55 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B78F43F52E;
+        Mon, 18 May 2020 08:49:54 -0700 (PDT)
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Oliver Neukum <oneukum@suse.de>,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RESEND] [PATCH v2 1/3] usb/ohci-platform: Fix a warning when hibernating
+Date:   Mon, 18 May 2020 16:49:29 +0100
+Message-Id: <20200518154931.6144-1-qais.yousef@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+The following warning was observed when attempting to suspend to disk
+using a USB flash as a swap device.
 
-Here are a couple of miscellaneous bug fixes for the integrity
-subsystem:
+[  111.779649] ------------[ cut here ]------------
+[  111.788382] URB (____ptrval____) submitted while active
+[  111.796646] WARNING: CPU: 3 PID: 365 at drivers/usb/core/urb.c:363 usb_submit_urb+0x3d8/0x590
+[  111.805417] Modules linked in:
+[  111.808584] CPU: 3 PID: 365 Comm: kworker/3:2 Not tainted 5.6.0-rc6-00002-gdfd1731f9a3e-dirty #545
+[  111.817796] Hardware name: ARM Juno development board (r2) (DT)
+[  111.823896] Workqueue: usb_hub_wq hub_event
+[  111.828217] pstate: 60000005 (nZCv daif -PAN -UAO)
+[  111.833156] pc : usb_submit_urb+0x3d8/0x590
+[  111.837471] lr : usb_submit_urb+0x3d8/0x590
+[  111.841783] sp : ffff800018de38b0
+[  111.845205] x29: ffff800018de38b0 x28: 0000000000000003
+[  111.850682] x27: ffff000970530b20 x26: ffff8000133fd000
+[  111.856159] x25: ffff8000133fd000 x24: ffff800018de3b38
+[  111.861635] x23: 0000000000000004 x22: 0000000000000c00
+[  111.867112] x21: 0000000000000000 x20: 00000000fffffff0
+[  111.872589] x19: ffff0009704e7a00 x18: ffffffffffffffff
+[  111.878065] x17: 00000000a7c8f4bc x16: 000000002af33de8
+[  111.883542] x15: ffff8000133fda88 x14: 0720072007200720
+[  111.889019] x13: 0720072007200720 x12: 0720072007200720
+[  111.894496] x11: 0000000000000000 x10: 00000000a5286134
+[  111.899973] x9 : 0000000000000002 x8 : ffff000970c837a0
+[  111.905449] x7 : 0000000000000000 x6 : ffff800018de3570
+[  111.910926] x5 : 0000000000000001 x4 : 0000000000000003
+[  111.916401] x3 : 0000000000000000 x2 : ffff800013427118
+[  111.921879] x1 : 9d4e965b4b7d7c00 x0 : 0000000000000000
+[  111.927356] Call trace:
+[  111.929892]  usb_submit_urb+0x3d8/0x590
+[  111.933852]  hub_activate+0x108/0x7f0
+[  111.937633]  hub_resume+0xac/0x148
+[  111.941149]  usb_resume_interface.isra.10+0x60/0x138
+[  111.946265]  usb_resume_both+0xe4/0x140
+[  111.950225]  usb_runtime_resume+0x24/0x30
+[  111.954365]  __rpm_callback+0xdc/0x138
+[  111.958236]  rpm_callback+0x34/0x98
+[  111.961841]  rpm_resume+0x4a8/0x720
+[  111.965445]  rpm_resume+0x50c/0x720
+[  111.969049]  __pm_runtime_resume+0x4c/0xb8
+[  111.973276]  usb_autopm_get_interface+0x28/0x60
+[  111.977948]  hub_event+0x80/0x16d8
+[  111.981466]  process_one_work+0x2a4/0x748
+[  111.985604]  worker_thread+0x48/0x498
+[  111.989387]  kthread+0x13c/0x140
+[  111.992725]  ret_from_fork+0x10/0x18
+[  111.996415] irq event stamp: 354
+[  111.999756] hardirqs last  enabled at (353): [<ffff80001019ea1c>] console_unlock+0x504/0x5b8
+[  112.008441] hardirqs last disabled at (354): [<ffff8000100a95d0>] do_debug_exception+0x1a8/0x258
+[  112.017479] softirqs last  enabled at (350): [<ffff8000100818a4>] __do_softirq+0x4bc/0x568
+[  112.025984] softirqs last disabled at (343): [<ffff8000101145a4>] irq_exit+0x144/0x150
+[  112.034129] ---[ end trace dc96030b9cf6c8a3 ]---
 
-IMA:
-- Properly modify the open flags in order to calculate the file hash.
-- On systems requiring the IMA policy to be signed, the policy is
-loaded differently.  Don't differentiate between "enforce" and either
-"log" or "fix" modes how the policy is loaded.
+The problem was tracked down to a missing call to
+pm_runtime_set_active() on resume in ohci-platform.
 
-EVM:
-- (2 patches) Fix an EVM race condition, normally the result of
-attempting to load an unsupported hash algorithm.
-- Use the lockless RCU version for walking an append only list.
+Link: https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+CC: Tony Prisk <linux@prisktech.co.nz>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Mathias Nyman <mathias.nyman@intel.com>
+CC: Oliver Neukum <oneukum@suse.de>
+CC: linux-arm-kernel@lists.infradead.org
+CC: linux-usb@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+---
+ drivers/usb/host/ohci-platform.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Mimi
+diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+index 7addfc2cbadc..4a8456f12a73 100644
+--- a/drivers/usb/host/ohci-platform.c
++++ b/drivers/usb/host/ohci-platform.c
+@@ -299,6 +299,11 @@ static int ohci_platform_resume(struct device *dev)
+ 	}
+ 
+ 	ohci_resume(hcd, false);
++
++	pm_runtime_disable(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++
+ 	return 0;
+ }
+ #endif /* CONFIG_PM_SLEEP */
+-- 
+2.17.1
 
-The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
-
-  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity.fixes
-
-for you to fetch changes up to 8433856947217ebb5697a8ff9c4c9cad4639a2cf:
-
-  evm: Fix a small race in init_desc() (2020-05-14 19:55:54 -0400)
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      evm: Fix a small race in init_desc()
-
-Madhuparna Bhowmik (1):
-      evm: Fix RCU list related warnings
-
-Roberto Sassu (3):
-      ima: Set file->f_mode instead of file->f_flags in ima_calc_file_hash()
-      evm: Check also if *tfm is an error pointer in init_desc()
-      ima: Fix return value of ima_write_policy()
-
- security/integrity/evm/evm_crypto.c | 46 ++++++++++++++++++-------------------
- security/integrity/evm/evm_main.c   |  4 ++--
- security/integrity/evm/evm_secfs.c  |  9 +++++++-
- security/integrity/ima/ima_crypto.c | 12 +++++-----
- security/integrity/ima/ima_fs.c     |  3 +--
- 5 files changed, 40 insertions(+), 34 deletions(-)
