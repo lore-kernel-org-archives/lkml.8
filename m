@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEECC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96DFA208FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC792088E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824941;
-	bh=dp7iFnJlTuXJo6yAkAJuyAMkJxYlx6hfOyDpFHMYqbg=;
+	s=default; t=1589824944;
+	bh=0zUgoL8zGPgVJ5XXJhZqITkeX4BLPqERLZPMDtUiQog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bDvJDgFp+tTgIeHjXsuSiTFIBBYgETC0eYRxNMBVqq4X0y1EIdXkVmbFHhT+Lenpg
-	 A6GLldAuNWI3zHAyf4vLcs/+eY8MQusxqaSP6EB7kCOPCMzYjx39uz8q80pmGwpAq3
-	 jAMZHu9Vd3FMuAnifBoJXwZhkGdsIC4OI68tWfgY=
+	b=vuI3UfKbMTYsOq7nnIExvTb4CVvNpuWj48BbNonAtL7nk6ehGZzdcXAqUDUht24qK
+	 9WSoZRpwEzmVvk2r2ct3O+n3BNaJhvsTIOdEPi/HIaFCPhQkOhZ1uIKLW27TkRlT1t
+	 5ucaZQSPcWTjTgi5dKRffJmXnIJHFaEBkHaoKOPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732496AbgERSCT (ORCPT
+        id S1732503AbgERSCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:02:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45648 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:02:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731959AbgERSCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:02:15 -0400
+        id S1732479AbgERSCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:02:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5283208B8;
-        Mon, 18 May 2020 18:02:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F16C20872;
+        Mon, 18 May 2020 18:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824934;
-        bh=dp7iFnJlTuXJo6yAkAJuyAMkJxYlx6hfOyDpFHMYqbg=;
+        s=default; t=1589824932;
+        bh=0zUgoL8zGPgVJ5XXJhZqITkeX4BLPqERLZPMDtUiQog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DFal+/jPjM6amy/YIdKFMWqvHB7L6odaChW4J1LB1piFUPQY0CApda25NLnSXhwK5
-         Z0NDRpYUIyWRKQ1qM/j5huHhi00/dP+iZfb7zrIfXzw/B4fYnhOODBhvgyV96LA49d
-         8p2yDAKbY8lpW135x8XAlykkeMMWs19rdhfRelVE=
+        b=NvJqWjw4dcVB25GrNXfzqUm9PY3ThlRmBMbyO02dlVNBHLKSX3QA6i4SyfcLUIK21
+         AJu7VXZXypiYuB0A8USMDsjA3TvaktPMWyDjNbqGRk0rYOgM7zYOe0tyvPXmz4vB8N
+         xN+lDVOsIF28bnlsc/fBMqF8u+1kF8FvyCNDmSoI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Eric Bernstein <Eric.Bernstein@amd.com>,
-        Aurabindo Pillai <aurabindo.pillai@amd.com>,
+        =?UTF-8?q?Marek=20Ol=C5=A1=C3=A1k?= <marek.olsak@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 062/194] drm/amd/display: check if REFCLK_CNTL register is present
-Date:   Mon, 18 May 2020 19:35:52 +0200
-Message-Id: <20200518173536.875799772@linuxfoundation.org>
+Subject: [PATCH 5.6 061/194] drm/amdgpu: bump version for invalidate L2 before SDMA IBs
+Date:   Mon, 18 May 2020 19:35:51 +0200
+Message-Id: <20200518173536.800109596@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -63,36 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+From: Marek Olšák <marek.olsak@amd.com>
 
-[ Upstream commit 3159d41db3a04330c31ece32f8b29752fc114848 ]
+[ Upstream commit 9017a4897a20658f010bebea825262963c10afa6 ]
 
-Check before programming the register since it isn't present on
-all IPs using this code.
+This fixes GPU hangs due to cache coherency issues.
+Bump the driver version. Split out from the original patch.
 
-Signed-off-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
-Reviewed-by: Eric Bernstein <Eric.Bernstein@amd.com>
-Acked-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Marek Olšák <marek.olsak@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Tested-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c | 3 ++-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-index a444fed941849..ad422e00f9fec 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-@@ -2306,7 +2306,8 @@ void dcn20_fpga_init_hw(struct dc *dc)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+index 42f4febe24c6d..8d45a2b662aeb 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+@@ -85,9 +85,10 @@
+  * - 3.34.0 - Non-DC can flip correctly between buffers with different pitches
+  * - 3.35.0 - Add drm_amdgpu_info_device::tcc_disabled_mask
+  * - 3.36.0 - Allow reading more status registers on si/cik
++ * - 3.37.0 - L2 is invalidated before SDMA IBs, needed for correctness
+  */
+ #define KMS_DRIVER_MAJOR	3
+-#define KMS_DRIVER_MINOR	36
++#define KMS_DRIVER_MINOR	37
+ #define KMS_DRIVER_PATCHLEVEL	0
  
- 	REG_UPDATE(DCHUBBUB_GLOBAL_TIMER_CNTL, DCHUBBUB_GLOBAL_TIMER_REFDIV, 2);
- 	REG_UPDATE(DCHUBBUB_GLOBAL_TIMER_CNTL, DCHUBBUB_GLOBAL_TIMER_ENABLE, 1);
--	REG_WRITE(REFCLK_CNTL, 0);
-+	if (REG(REFCLK_CNTL))
-+		REG_WRITE(REFCLK_CNTL, 0);
- 	//
- 
- 
+ int amdgpu_vram_limit = 0;
 -- 
 2.20.1
 
