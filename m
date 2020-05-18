@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE399C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8464C207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E47207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824382;
-	bh=GbpSiMG/QbFnfn4dJDJoLRmBqopDdpnZg3qrxmblx/A=;
+	s=default; t=1589824385;
+	bh=LITUiDanmyPNVVRug+i/F4XppzmpAHindcAVfWDej58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iclRVC62zexVPDSWAZoXg+aFosWbF4ufW1o6O+8XhVgDV4EKzcb5N2P+LYDt9YLG2
-	 BAXbqr9sla1LMfyzglQbxewSQelJiTTlfZWRglscW/hzbdAgi8UaTUrLP8EcxsonUN
-	 pXQn+LdXRuXtWzxnDH8wDxc6ckXJrLjAkGMphbIs=
+	b=1yNa4sxQb0E48D1q/j1sTJig4e1M1aID6ovDb6dbqAqnWuOi0egRcH92DDGNY/Q6L
+	 9IIehJVdtdJNhQw1OWt5/4AghA/z4J2DWrUCbb//YoUINUuGidOCyFZWH8vgEuCfTi
+	 NEPBMGsNTpbmtOc7YS2PATIJS60upBxGwLKPstaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731078AbgERRxC (ORCPT
+        id S1731086AbgERRxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:53:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:53:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731067AbgERRw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:52:58 -0400
+        id S1731073AbgERRxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:53:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13E422083E;
-        Mon, 18 May 2020 17:52:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C98E20674;
+        Mon, 18 May 2020 17:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824378;
-        bh=GbpSiMG/QbFnfn4dJDJoLRmBqopDdpnZg3qrxmblx/A=;
+        s=default; t=1589824381;
+        bh=LITUiDanmyPNVVRug+i/F4XppzmpAHindcAVfWDej58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GK0gcGp8CvDwmNwktydY6vTyYwDRRAyj3qDcHg32GUzrmv03sAPx5atjgxaBesGTW
-         iLxVRFBqxBZS1ipgT0qhEPCEC6Yr/b16pK+k3APSszvZc1UniOaOH8r9MChbv27zt4
-         OZILlwa2BOf/3ZMnGx912orL3Z7DKVgwF42IghWU=
+        b=VLPzbXB1jzCMf5zrcf1WOP+02c6RXl/gMRpOH2EXExYUVYlbvcFzc8hwxrZDb7rdC
+         oh5YuIn03UaEqG68tQwpq6njEykMBFTFqLJLhUWky9A9Qg2nLR8egTCzJVIIiC87P5
+         YbMVCcQqUvClsjNb8GG15uUTLjUJmhLUs00fSHoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Grace Kao <grace.kao@intel.com>,
+        Brian Norris <briannorris@chromium.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 31/80] pinctrl: baytrail: Enable pin configuration setting for GPIO chip
-Date:   Mon, 18 May 2020 19:36:49 +0200
-Message-Id: <20200518173456.718913464@linuxfoundation.org>
+Subject: [PATCH 4.19 32/80] pinctrl: cherryview: Add missing spinlock usage in chv_gpio_irq_handler
+Date:   Mon, 18 May 2020 19:36:50 +0200
+Message-Id: <20200518173456.941785811@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -61,35 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Grace Kao <grace.kao@intel.com>
 
-[ Upstream commit ccd025eaddaeb99e982029446197c544252108e2 ]
+[ Upstream commit 69388e15f5078c961b9e5319e22baea4c57deff1 ]
 
-It appears that pin configuration for GPIO chip hasn't been enabled yet
-due to absence of ->set_config() callback.
+According to Braswell NDA Specification Update (#557593),
+concurrent read accesses may result in returning 0xffffffff and write
+instructions may be dropped. We have an established format for the
+commit references, i.e.
+cdca06e4e859 ("pinctrl: baytrail: Add missing spinlock usage in
+byt_gpio_irq_handler")
 
-Enable it here for Intel Baytrail.
-
-Fixes: c501d0b149de ("pinctrl: baytrail: Add pin control operations")
-Depends-on: 2956b5d94a76 ("pinctrl / gpio: Introduce .set_config() callback for GPIO chips")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 0bd50d719b00 ("pinctrl: cherryview: prevent concurrent access to GPIO controllers")
+Signed-off-by: Grace Kao <grace.kao@intel.com>
+Reported-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Brian Norris <briannorris@chromium.org>
 Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/intel/pinctrl-baytrail.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index a760d8bda0af7..acb02a7aa9496 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -1495,6 +1495,7 @@ static const struct gpio_chip byt_gpio_chip = {
- 	.direction_output	= byt_gpio_direction_output,
- 	.get			= byt_gpio_get,
- 	.set			= byt_gpio_set,
-+	.set_config		= gpiochip_generic_config,
- 	.dbg_show		= byt_gpio_dbg_show,
- };
+diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+index f16baf9b86962..25932d2a71547 100644
+--- a/drivers/pinctrl/intel/pinctrl-cherryview.c
++++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+@@ -1485,11 +1485,15 @@ static void chv_gpio_irq_handler(struct irq_desc *desc)
+ 	struct chv_pinctrl *pctrl = gpiochip_get_data(gc);
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	unsigned long pending;
++	unsigned long flags;
+ 	u32 intr_line;
+ 
+ 	chained_irq_enter(chip, desc);
+ 
++	raw_spin_lock_irqsave(&chv_lock, flags);
+ 	pending = readl(pctrl->regs + CHV_INTSTAT);
++	raw_spin_unlock_irqrestore(&chv_lock, flags);
++
+ 	for_each_set_bit(intr_line, &pending, pctrl->community->nirqs) {
+ 		unsigned irq, offset;
  
 -- 
 2.20.1
