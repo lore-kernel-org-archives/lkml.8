@@ -5,53 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB86C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D5CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08263207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B77207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824602;
-	bh=tOhJ7Y7k8Jo1/Yno477+qyRM5DCvsvpxc1mxNnflTwI=;
+	s=default; t=1589824605;
+	bh=s5dKiON6sWwu8xyTCzaIeRFcTC0uj7VFpLEAgChKdtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CC09EQD/kvnRBdZfaf/4U06Y796WhhNGe062NbKDXQjCK6cnFZCVrrgLNU88a5dEJ
-	 i2sCsDJlXKYQLUoUZgcwLYVIs9MeMemh0HG56uSpDfbosjEYK9QMoOqtNQqd78fjCM
-	 o1h5JDYBH+3gciNgXv9ZpXu73zsTAWfbt9UsHCuU=
+	b=n7jp8XSC364gZuuy1WAxoLm27kwvPx/RI2HRzJb6+onRFlCCAFPrqwiSSgiYaNHqy
+	 I72TnOWgJR+5OssHki5BjdLjIZB4/pIUMRnWeGRkOc9qngNr45CdP+DBtuXpOHYrzU
+	 2Q8Pf1d6OwDZtm1FVTbi35wt+Akucg4Oh4QQY13s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731664AbgERR4l (ORCPT
+        id S1731675AbgERR4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34526 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:56:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731643AbgERR4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:56:33 -0400
+        id S1731662AbgERR4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:56:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30BF7207C4;
-        Mon, 18 May 2020 17:56:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 951AD20674;
+        Mon, 18 May 2020 17:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824592;
-        bh=tOhJ7Y7k8Jo1/Yno477+qyRM5DCvsvpxc1mxNnflTwI=;
+        s=default; t=1589824600;
+        bh=s5dKiON6sWwu8xyTCzaIeRFcTC0uj7VFpLEAgChKdtk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uHRRej780coL35tnhT3BOXsHinuSx4LqRX3h7JLgdFBa78Egvyjs+DsqqoWMi7ivY
-         jDgbJJeg7ff9FS5jeLmryFU6XVsBCHuOv4nplFPLVI8MWUoBkCMfOoXQogw3DciXXT
-         7Q9qAWRr4LZVr9QKMrcFnbYrCau3Y9Y/DQhVk7Uw=
+        b=twqQYhmIQTcewPapN4H5SgKYXo7LJYNdddEtO5jgv5TuQadJSNLf2eNzFq3YghYeK
+         AFCgJemwORzD0jO2YSoboQRFfM+xkS6kDjDo/Ds7jiHZKJXHzGtqGblHBsPQ8lnhgY
+         4YBs47Nm0QYIKa8o47+GJA9iFOTrJlyEAz2Oc4H8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Stancek <jstancek@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andreas Schwab <schwab@linux-m68k.org>,
-        Florian Weimer <fw@deneb.enyo.de>, libc-alpha@sourceware.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 072/147] fork: prevent accidental access to clone3 features
-Date:   Mon, 18 May 2020 19:36:35 +0200
-Message-Id: <20200518173522.933366374@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 075/147] nfs: fscache: use timespec64 in inode auxdata
+Date:   Mon, 18 May 2020 19:36:38 +0200
+Message-Id: <20200518173523.209431838@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -64,131 +59,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 3f2c788a13143620c5471ac96ac4f033fc9ac3f3 ]
+[ Upstream commit 6e31ded6895adfca97211118cc9b72236e8f6d53 ]
 
-Jan reported an issue where an interaction between sign-extending clone's
-flag argument on ppc64le and the new CLONE_INTO_CGROUP feature causes
-clone() to consistently fail with EBADF.
+nfs currently behaves differently on 32-bit and 64-bit kernels regarding
+the on-disk format of nfs_fscache_inode_auxdata.
 
-The whole story is a little longer. The legacy clone() syscall is odd in a
-bunch of ways and here two things interact. First, legacy clone's flag
-argument is word-size dependent, i.e. it's an unsigned long whereas most
-system calls with flag arguments use int or unsigned int. Second, legacy
-clone() ignores unknown and deprecated flags. The two of them taken
-together means that users on 64bit systems can pass garbage for the upper
-32bit of the clone() syscall since forever and things would just work fine.
-Just try this on a 64bit kernel prior to v5.7-rc1 where this will succeed
-and on v5.7-rc1 where this will fail with EBADF:
+That format should really be the same on any kernel, and we should avoid
+the 'timespec' type in order to remove that from the kernel later on.
 
-int main(int argc, char *argv[])
-{
-        pid_t pid;
+Using plain 'timespec64' would not be good here, since that includes
+implied padding and would possibly leak kernel stack data to the on-disk
+format on 32-bit architectures.
 
-        /* Note that legacy clone() has different argument ordering on
-         * different architectures so this won't work everywhere.
-         *
-         * Only set the upper 32 bits.
-         */
-        pid = syscall(__NR_clone, 0xffffffff00000000 | SIGCHLD,
-                      NULL, NULL, NULL, NULL);
-        if (pid < 0)
-                exit(EXIT_FAILURE);
-        if (pid == 0)
-                exit(EXIT_SUCCESS);
-        if (wait(NULL) != pid)
-                exit(EXIT_FAILURE);
+struct __kernel_timespec would work as a replacement, but open-coding
+the two struct members in nfs_fscache_inode_auxdata makes it more
+obvious what's going on here, and keeps the current format for 64-bit
+architectures.
 
-        exit(EXIT_SUCCESS);
-}
-
-Since legacy clone() couldn't be extended this was not a problem so far and
-nobody really noticed or cared since nothing in the kernel ever bothered to
-look at the upper 32 bits.
-
-But once we introduced clone3() and expanded the flag argument in struct
-clone_args to 64 bit we opened this can of worms. With the first flag-based
-extension to clone3() making use of the upper 32 bits of the flag argument
-we've effectively made it possible for the legacy clone() syscall to reach
-clone3() only flags. The sign extension scenario is just the odd
-corner-case that we needed to figure this out.
-
-The reason we just realized this now and not already when we introduced
-CLONE_CLEAR_SIGHAND was that CLONE_INTO_CGROUP assumes that a valid cgroup
-file descriptor has been given. So the sign extension (or the user
-accidently passing garbage for the upper 32 bits) caused the
-CLONE_INTO_CGROUP bit to be raised and the kernel to error out when it
-didn't find a valid cgroup file descriptor.
-
-Let's fix this by always capping the upper 32 bits for all codepaths that
-are not aware of clone3() features. This ensures that we can't reach
-clone3() only features by accident via legacy clone as with the sign
-extension case and also that legacy clone() works exactly like before, i.e.
-ignoring any unknown flags.  This solution risks no regressions and is also
-pretty clean.
-
-Fixes: 7f192e3cd316 ("fork: add clone3")
-Fixes: ef2c41cf38a7 ("clone3: allow spawning processes into cgroups")
-Reported-by: Jan Stancek <jstancek@redhat.com>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Dmitry V. Levin <ldv@altlinux.org>
-Cc: Andreas Schwab <schwab@linux-m68k.org>
-Cc: Florian Weimer <fw@deneb.enyo.de>
-Cc: libc-alpha@sourceware.org
-Cc: stable@vger.kernel.org # 5.3+
-Link: https://sourceware.org/pipermail/libc-alpha/2020-May/113596.html
-Link: https://lore.kernel.org/r/20200507103214.77218-1-christian.brauner@ubuntu.com
+Cc: David Howells <dhowells@redhat.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/fork.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ fs/nfs/fscache-index.c |  6 ++++--
+ fs/nfs/fscache.c       | 18 ++++++++++++------
+ fs/nfs/fscache.h       |  8 +++++---
+ 3 files changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 27c0ef30002e2..9180f4416dbab 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2412,11 +2412,11 @@ long do_fork(unsigned long clone_flags,
- 	      int __user *child_tidptr)
- {
- 	struct kernel_clone_args args = {
--		.flags		= (clone_flags & ~CSIGNAL),
-+		.flags		= (lower_32_bits(clone_flags) & ~CSIGNAL),
- 		.pidfd		= parent_tidptr,
- 		.child_tid	= child_tidptr,
- 		.parent_tid	= parent_tidptr,
--		.exit_signal	= (clone_flags & CSIGNAL),
-+		.exit_signal	= (lower_32_bits(clone_flags) & CSIGNAL),
- 		.stack		= stack_start,
- 		.stack_size	= stack_size,
- 	};
-@@ -2434,8 +2434,9 @@ long do_fork(unsigned long clone_flags,
- pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
- {
- 	struct kernel_clone_args args = {
--		.flags		= ((flags | CLONE_VM | CLONE_UNTRACED) & ~CSIGNAL),
--		.exit_signal	= (flags & CSIGNAL),
-+		.flags		= ((lower_32_bits(flags) | CLONE_VM |
-+				    CLONE_UNTRACED) & ~CSIGNAL),
-+		.exit_signal	= (lower_32_bits(flags) & CSIGNAL),
- 		.stack		= (unsigned long)fn,
- 		.stack_size	= (unsigned long)arg,
- 	};
-@@ -2496,11 +2497,11 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
- #endif
- {
- 	struct kernel_clone_args args = {
--		.flags		= (clone_flags & ~CSIGNAL),
-+		.flags		= (lower_32_bits(clone_flags) & ~CSIGNAL),
- 		.pidfd		= parent_tidptr,
- 		.child_tid	= child_tidptr,
- 		.parent_tid	= parent_tidptr,
--		.exit_signal	= (clone_flags & CSIGNAL),
-+		.exit_signal	= (lower_32_bits(clone_flags) & CSIGNAL),
- 		.stack		= newsp,
- 		.tls		= tls,
- 	};
+diff --git a/fs/nfs/fscache-index.c b/fs/nfs/fscache-index.c
+index 15f271401dcca..573b1da9342c1 100644
+--- a/fs/nfs/fscache-index.c
++++ b/fs/nfs/fscache-index.c
+@@ -84,8 +84,10 @@ enum fscache_checkaux nfs_fscache_inode_check_aux(void *cookie_netfs_data,
+ 		return FSCACHE_CHECKAUX_OBSOLETE;
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 
+ 	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
+ 		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index 3184063322d48..d0c629f97789e 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -241,8 +241,10 @@ void nfs_fscache_init_inode(struct inode *inode)
+ 		return;
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 
+ 	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
+ 		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
+@@ -266,8 +268,10 @@ void nfs_fscache_clear_inode(struct inode *inode)
+ 	dfprintk(FSCACHE, "NFS: clear cookie (0x%p/0x%p)\n", nfsi, cookie);
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 	fscache_relinquish_cookie(cookie, &auxdata, false);
+ 	nfsi->fscache = NULL;
+ }
+@@ -308,8 +312,10 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
+ 		return;
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 
+ 	if (inode_is_open_for_write(inode)) {
+ 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);
+diff --git a/fs/nfs/fscache.h b/fs/nfs/fscache.h
+index ad041cfbf9ec0..6754c8607230b 100644
+--- a/fs/nfs/fscache.h
++++ b/fs/nfs/fscache.h
+@@ -62,9 +62,11 @@ struct nfs_fscache_key {
+  * cache object.
+  */
+ struct nfs_fscache_inode_auxdata {
+-	struct timespec	mtime;
+-	struct timespec	ctime;
+-	u64		change_attr;
++	s64	mtime_sec;
++	s64	mtime_nsec;
++	s64	ctime_sec;
++	s64	ctime_nsec;
++	u64	change_attr;
+ };
+ 
+ /*
 -- 
 2.20.1
 
