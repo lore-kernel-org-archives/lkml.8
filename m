@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C08E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A363F207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8464C207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824379;
-	bh=ZqwXHEyM8qmNlA+ZRLn8Pt8SwMb5n38j5x6Rsej8ekw=;
+	s=default; t=1589824382;
+	bh=GbpSiMG/QbFnfn4dJDJoLRmBqopDdpnZg3qrxmblx/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HF86mEXaZneJMgVmSij7TspOGNvgaA1mDg2GXb5QQv7laIpzWFCMasVeQFx4mC3+B
-	 OaiGfxiPoDjM00cLF8Bb85oUMapb2vho0wpJn+sPfuzU7NYWsdEWjSqmaazFmGHe0s
-	 Q2TFWORm5z5n/5tNvotWwrgXlV3oc0S4YiT3u1hI=
+	b=iclRVC62zexVPDSWAZoXg+aFosWbF4ufW1o6O+8XhVgDV4EKzcb5N2P+LYDt9YLG2
+	 BAXbqr9sla1LMfyzglQbxewSQelJiTTlfZWRglscW/hzbdAgi8UaTUrLP8EcxsonUN
+	 pXQn+LdXRuXtWzxnDH8wDxc6ckXJrLjAkGMphbIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731068AbgERRw6 (ORCPT
+        id S1731078AbgERRxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:52:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56524 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:53:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731055AbgERRwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:52:54 -0400
+        id S1731067AbgERRw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:52:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EE24207F5;
-        Mon, 18 May 2020 17:52:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13E422083E;
+        Mon, 18 May 2020 17:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824373;
-        bh=ZqwXHEyM8qmNlA+ZRLn8Pt8SwMb5n38j5x6Rsej8ekw=;
+        s=default; t=1589824378;
+        bh=GbpSiMG/QbFnfn4dJDJoLRmBqopDdpnZg3qrxmblx/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EdVZDTnXLSi6UVG06Bl7wGiXpJbNXZxazPWNRM/XTaCsdATrioSi/oJQ98R/6RzEV
-         cD25ptoR0u/Y1EBd4q03evAFFBjXNS0YpPorCYXRdvLENGsJY45Th+GTo1+tDYdieB
-         4Fos1+HRPi3xqCehqVPCpV3ZmVj0HLHf5EsUIzxM=
+        b=GK0gcGp8CvDwmNwktydY6vTyYwDRRAyj3qDcHg32GUzrmv03sAPx5atjgxaBesGTW
+         iLxVRFBqxBZS1ipgT0qhEPCEC6Yr/b16pK+k3APSszvZc1UniOaOH8r9MChbv27zt4
+         OZILlwa2BOf/3ZMnGx912orL3Z7DKVgwF42IghWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 29/80] ALSA: hda/realtek - Fix S3 pop noise on Dell Wyse
-Date:   Mon, 18 May 2020 19:36:47 +0200
-Message-Id: <20200518173456.284179648@linuxfoundation.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 31/80] pinctrl: baytrail: Enable pin configuration setting for GPIO chip
+Date:   Mon, 18 May 2020 19:36:49 +0200
+Message-Id: <20200518173456.718913464@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -60,70 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 52e4e36807aeac1cdd07b14e509c8a64101e1a09 ]
+[ Upstream commit ccd025eaddaeb99e982029446197c544252108e2 ]
 
-Commit 317d9313925c ("ALSA: hda/realtek - Set default power save node to
-0") makes the ALC225 have pop noise on S3 resume and cold boot.
+It appears that pin configuration for GPIO chip hasn't been enabled yet
+due to absence of ->set_config() callback.
 
-The previous fix enable power save node universally for ALC225, however
-it makes some ALC225 systems unable to produce any sound.
+Enable it here for Intel Baytrail.
 
-So let's only enable power save node for the affected Dell Wyse
-platform.
-
-Fixes: 317d9313925c ("ALSA: hda/realtek - Set default power save node to 0")
-BugLink: https://bugs.launchpad.net/bugs/1866357
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Link: https://lore.kernel.org/r/20200503152449.22761-2-kai.heng.feng@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: c501d0b149de ("pinctrl: baytrail: Add pin control operations")
+Depends-on: 2956b5d94a76 ("pinctrl / gpio: Introduce .set_config() callback for GPIO chips")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index fc39550f6c5d5..cf2889f3da41f 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5524,6 +5524,15 @@ static void alc233_alc662_fixup_lenovo_dual_codecs(struct hda_codec *codec,
- 	}
- }
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index a760d8bda0af7..acb02a7aa9496 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -1495,6 +1495,7 @@ static const struct gpio_chip byt_gpio_chip = {
+ 	.direction_output	= byt_gpio_direction_output,
+ 	.get			= byt_gpio_get,
+ 	.set			= byt_gpio_set,
++	.set_config		= gpiochip_generic_config,
+ 	.dbg_show		= byt_gpio_dbg_show,
+ };
  
-+static void alc225_fixup_s3_pop_noise(struct hda_codec *codec,
-+				      const struct hda_fixup *fix, int action)
-+{
-+	if (action != HDA_FIXUP_ACT_PRE_PROBE)
-+		return;
-+
-+	codec->power_save_node = 1;
-+}
-+
- /* Forcibly assign NID 0x03 to HP/LO while NID 0x02 to SPK for EQ */
- static void alc274_fixup_bind_dacs(struct hda_codec *codec,
- 				    const struct hda_fixup *fix, int action)
-@@ -5690,6 +5699,7 @@ enum {
- 	ALC233_FIXUP_ACER_HEADSET_MIC,
- 	ALC294_FIXUP_LENOVO_MIC_LOCATION,
- 	ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE,
-+	ALC225_FIXUP_S3_POP_NOISE,
- 	ALC700_FIXUP_INTEL_REFERENCE,
- 	ALC274_FIXUP_DELL_BIND_DACS,
- 	ALC274_FIXUP_DELL_AIO_LINEOUT_VERB,
-@@ -6546,6 +6556,12 @@ static const struct hda_fixup alc269_fixups[] = {
- 			{ }
- 		},
- 		.chained = true,
-+		.chain_id = ALC225_FIXUP_S3_POP_NOISE
-+	},
-+	[ALC225_FIXUP_S3_POP_NOISE] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc225_fixup_s3_pop_noise,
-+		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
- 	},
- 	[ALC700_FIXUP_INTEL_REFERENCE] = {
 -- 
 2.20.1
 
