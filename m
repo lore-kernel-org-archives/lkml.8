@@ -2,196 +2,146 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CE4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A52C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36379207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCCE42081A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dyfhdYXm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a84EmTd7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgERSwu (ORCPT
+        id S1729461AbgERSxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:52:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42688 "EHLO
+        Mon, 18 May 2020 14:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728402AbgERSwt (ORCPT
+        with ESMTP id S1728402AbgERSw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:52:49 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A29DC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:52:49 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id v63so5370476pfb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:52:48 -0700 (PDT)
+        Mon, 18 May 2020 14:52:59 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B3CC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:52:59 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id q16so4608305plr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:52:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NHsRyL8eiYlYHJa5uCVqQW9LciNEIDRKfuP+gda9x1Y=;
-        b=dyfhdYXm4n0gy9np+W03BFusRSTd7VtjW+8PkcdsGSxtJz4guXAz37sSB8hMWjUGph
-         zbDr6UdFU/HTP8pjg+drIGkkBBSVOQ37ReH9JLvb9yONunabVH65e6e23eGbkbGY19v9
-         GYZEQHhy/JoXqdeSmftdi3L9aSvvTfzlZU/fAwO9dwPfGvDv9hafxxBGfPN/fWmMfVyh
-         82VnVi2KZXkHpXzaJ4jUl/VE7wzOAmR4MdKOPCVflq5/SJemnEyWcSTYPEHQLslG6Lz+
-         Z3ZA3TnxdgplAbEzKzHTm3aKJd+81u90aL+aUWFoGVkXrG15xE7IVQKaOjYT7wydzKos
-         k4pg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dFak8/mdn0uAmUBsx2tXCAV4WCKdaMa+D5ub/JVb32o=;
+        b=a84EmTd7Tp4Pbn+CkrTqRzCc9g1R2avRZs0ToXDlNwKWovnLKeUoMqxYCcT8OdRnuh
+         kOexfXAYAL+KHDoNg7U20KPSIBzA7Szr/zYqZk1ERuAOfOViF2O7TKSEJZZqdJwAqpMN
+         pI1+wDVlgTDzs3nwvN48hyGtwiD0oVtj8Cg4xsl5LUKsSYlK0UH7lmURJ9Ao5E+OATu9
+         oQ1HjwsSWFFBUt+Zj9fNShLRAvZ5wlViWzQB7myPFPyLnjeEwlkv4uf7wdZsiL36p4ml
+         9qY4OUM1FPwT2O/LdnL4yLpeaTnE0+TzO8IB3pjzuc9XPDH3J+9XYVdd/oCQ87bBMjz9
+         Tn4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NHsRyL8eiYlYHJa5uCVqQW9LciNEIDRKfuP+gda9x1Y=;
-        b=lKVGHYhPJxd+5BlDGRYpynBfNnqJRcfbHW72k1mzPprUIfKuq/s15p//WGHVNKdt4C
-         mT8kgasuX6lKAVrTDIRBOVg7nVx3HlqvnLa5Zlo3yUaBk7QnvLrX5kgND04IHFOAlAiM
-         7Vi8KbXpnMNkUwkTbllaSvYbIlIguL2yfS8QrFFTZDlNqB0yHfeu9Nrgjxhy+Z1wFr87
-         +nMjHSVbtu3n+078d5w+e0geNeiS6HcU6bEfESUmVI11jbUaUtx7QKHR4BvcgSIsVx7g
-         wbgLC4ILD08fZRe7BMQyou/Y2n9Gpnjx9xVEP6KYEjqw+zTZLrap0FjqFW1Js0abddSx
-         8n+g==
-X-Gm-Message-State: AOAM531CD6PGfjgoqm43Q8fRbmoLbokQ6qiZbiYGo0SAcPPgxWyzpYf9
-        5Ok6GhcAWqrZ8F9YovUDWyd5xg==
-X-Google-Smtp-Source: ABdhPJwuOK5f/6WvkScgGfZPG6iAsM8lfv6feBqqP52/8AtflODCDgQ3dim7PNYVoCPioH3FmWoAqg==
-X-Received: by 2002:a63:f70e:: with SMTP id x14mr15583487pgh.394.1589827968132;
-        Mon, 18 May 2020 11:52:48 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 3sm9698235pfo.27.2020.05.18.11.52.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 11:52:47 -0700 (PDT)
-Date:   Mon, 18 May 2020 11:51:24 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc7180: Support ETMv4 power
- management
-Message-ID: <20200518185124.GG2165@builder.lan>
-References: <cover.1589539293.git.saiprakash.ranjan@codeaurora.org>
- <b0a2ac4ffefe7d3e216a83ab56867620f120ff08.1589539293.git.saiprakash.ranjan@codeaurora.org>
- <56a5563205da61c47eb4f8bbf6120e28@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dFak8/mdn0uAmUBsx2tXCAV4WCKdaMa+D5ub/JVb32o=;
+        b=DL8G1TupOgJdkQVj3BaLOAZIAwhYW7u3QxBQghdahHX184/X7dcUynxe0Y/tyuy2Rr
+         VGtDwm+ew4gvb22/FNQpae1n8BqwyUXgoyANiQ4ANniG3fR4y67WwYYWQ8gEA+7XGSnj
+         GtL6n9SIqJiadrSPvGWJfdNKjMEBPtRkdwmpcLqFUdMUSddGUVa7UFdRbEkgvlcBBGwY
+         BPkOgzFJJklXnhpvZuwzIS22mtqHKgQ+77AJdyQvWtjt8iru089f0I4YYqD2OaLrr3za
+         J16rQpfC9+KiDYXSJ+GHP/y7lawdqslA9OoBSVsUqHqMGqkCDfctafUZNQYjiMiBGocs
+         0Qdg==
+X-Gm-Message-State: AOAM533hhNPXeRe4+VvHYGaq0tt1i4LvYSl5ZRtpu2ku0UsQTgau7hYJ
+        Wn1mdvbn3n7k99TSM0Jc4Pbxkn4EFg14blDfplrobg==
+X-Google-Smtp-Source: ABdhPJwD4+q9rE52VUN1KmW84Ac+bxZIw4F46mR/IkVNPqXIvZlTgE2/S2ihGw8kx4s+4gkQ/0I9rnCcyC4gaCDzGIc=
+X-Received: by 2002:a17:902:82c9:: with SMTP id u9mr6715535plz.179.1589827978379;
+ Mon, 18 May 2020 11:52:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <56a5563205da61c47eb4f8bbf6120e28@codeaurora.org>
+References: <20200408205323.44490-1-natechancellor@gmail.com> <20200518093117.GA719849@ubuntu-s3-xlarge-x86>
+In-Reply-To: <20200518093117.GA719849@ubuntu-s3-xlarge-x86>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 18 May 2020 11:52:47 -0700
+Message-ID: <CAKwvOdmXgYThHRDpt5dFZy5T1zS6MYQhcBNcq6-rsuc5fjiE6Q@mail.gmail.com>
+Subject: Re: [PATCH] x86: mmiotrace: Use cpumask_available for cpumask_var_t variables
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Karol Herbst <karolherbst@gmail.com>,
+        Pekka Paalanen <ppaalanen@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        nouveau@lists.freedesktop.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 15 May 03:55 PDT 2020, Sai Prakash Ranjan wrote:
+On Mon, May 18, 2020 at 2:31 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Wed, Apr 08, 2020 at 01:53:23PM -0700, Nathan Chancellor wrote:
+> > When building with Clang + -Wtautological-compare and
+> > CONFIG_CPUMASK_OFFSTACK unset:
+> >
+> > arch/x86/mm/mmio-mod.c:375:6: warning: comparison of array 'downed_cpus'
+> > equal to a null pointer is always false [-Wtautological-pointer-compare]
+> >         if (downed_cpus == NULL &&
+> >             ^~~~~~~~~~~    ~~~~
+> > arch/x86/mm/mmio-mod.c:405:6: warning: comparison of array 'downed_cpus'
+> > equal to a null pointer is always false [-Wtautological-pointer-compare]
+> >         if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
+> >             ^~~~~~~~~~~    ~~~~
+> > 2 warnings generated.
+> >
+> > Commit f7e30f01a9e2 ("cpumask: Add helper cpumask_available()") added
+> > cpumask_available to fix warnings of this nature. Use that here so that
+> > clang does not warn regardless of CONFIG_CPUMASK_OFFSTACK's value.
+> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/982
+> > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-> Hi Bjorn,
-> 
+Thanks for the patch, sorry I'm falling behind on code review!
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Hi Sai,
-
-> On 2020-05-15 16:21, Sai Prakash Ranjan wrote:
-> > Now that deep idle states are properly supported on SC7180,
-> > we need to add "coresight-loses-context-with-cpu" property
-> > to avoid failure of trace session because of losing context
-> > on entering deep idle states.
-> > 
-> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > > ---
-> > 
-> > Resending this because the last patch sent here -
-> > https://lore.kernel.org/patchwork/patch/1230367/
-> > seems to have added "coresight-loses-context-with-cpu" to
-> > replicator node instead of etm7 node.
-> > 
-> > ---
-> >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > index 4069bb1c93af..8b3707347547 100644
-> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > @@ -1656,6 +1656,7 @@
-> > 
-> >  			clocks = <&aoss_qmp>;
-> >  			clock-names = "apb_pclk";
-> > +			arm,coresight-loses-context-with-cpu;
-> > 
-> >  			out-ports {
-> >  				port {
-> > @@ -1674,6 +1675,7 @@
-> > 
-> >  			clocks = <&aoss_qmp>;
-> >  			clock-names = "apb_pclk";
-> > +			arm,coresight-loses-context-with-cpu;
-> > 
-> >  			out-ports {
-> >  				port {
-> > @@ -1692,6 +1694,7 @@
-> > 
-> >  			clocks = <&aoss_qmp>;
-> >  			clock-names = "apb_pclk";
-> > +			arm,coresight-loses-context-with-cpu;
-> > 
-> >  			out-ports {
-> >  				port {
-> > @@ -1710,6 +1713,7 @@
-> > 
-> >  			clocks = <&aoss_qmp>;
-> >  			clock-names = "apb_pclk";
-> > +			arm,coresight-loses-context-with-cpu;
-> > 
-> >  			out-ports {
-> >  				port {
-> > @@ -1728,6 +1732,7 @@
-> > 
-> >  			clocks = <&aoss_qmp>;
-> >  			clock-names = "apb_pclk";
-> > +			arm,coresight-loses-context-with-cpu;
-> > 
-> >  			out-ports {
-> >  				port {
-> > @@ -1746,6 +1751,7 @@
-> > 
-> >  			clocks = <&aoss_qmp>;
-> >  			clock-names = "apb_pclk";
-> > +			arm,coresight-loses-context-with-cpu;
-> > 
-> >  			out-ports {
-> >  				port {
-> > @@ -1764,6 +1770,7 @@
-> > 
-> >  			clocks = <&aoss_qmp>;
-> >  			clock-names = "apb_pclk";
-> > +			arm,coresight-loses-context-with-cpu;
-> > 
-> >  			out-ports {
-> >  				port {
-> > @@ -1782,6 +1789,7 @@
-> > 
-> >  			clocks = <&aoss_qmp>;
-> >  			clock-names = "apb_pclk";
-> > +			arm,coresight-loses-context-with-cpu;
-> > 
-> >  			out-ports {
-> >  				port {
-> 
-> 
-> The previous version of this patch in QCOM tree seems to have added the
-> property to replicator node instead of etm7 node, can you please drop
-> that from the tree and apply this one?
-> 
+> >  arch/x86/mm/mmio-mod.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
+> > index 109325d77b3e..43fd19b3f118 100644
+> > --- a/arch/x86/mm/mmio-mod.c
+> > +++ b/arch/x86/mm/mmio-mod.c
+> > @@ -372,7 +372,7 @@ static void enter_uniprocessor(void)
+> >       int cpu;
+> >       int err;
+> >
+> > -     if (downed_cpus == NULL &&
+> > +     if (!cpumask_available(downed_cpus) &&
+> >           !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
+> >               pr_notice("Failed to allocate mask\n");
+> >               goto out;
+> > @@ -402,7 +402,7 @@ static void leave_uniprocessor(void)
+> >       int cpu;
+> >       int err;
+> >
+> > -     if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
+> > +     if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
+> >               return;
+> >       pr_notice("Re-enabling CPUs...\n");
+> >       for_each_cpu(cpu, downed_cpus) {
+> >
+> > base-commit: ae46d2aa6a7fbe8ca0946f24b061b6ccdc6c3f25
+> > --
+> > 2.26.0
+> >
+>
+> Gentle ping for acceptance, I am not sure who should take this.
 
-I'm not able to replace the old commit without rewriting the history of
-the branch. So I've applied a patch ontop of the branch to fix this up
-instead.
+Looks like Steven or Ingo are the listed maintainers for MMIOTRACE?
 
-Please review the branch and let me know if there's any issues.
-
-Regards,
-Bjorn
+-- 
+Thanks,
+~Nick Desaulniers
