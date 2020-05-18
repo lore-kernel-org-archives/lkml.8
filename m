@@ -2,124 +2,68 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7919C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 255E7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDB3207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:03:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589807023;
-	bh=cqBFppFXywtZsKM/FNOE0/NVU4loKWJIwGTdFBK4NK4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IRcUv+3CZ6sDlqcTrh6wx8jdEZqfTkbLQhRrBhCIlpBuZ0UYAByMDTNme+NJD1vEL
-	 iWvZwxCVcEM9YXmqVPywECudnYSsidxb6Aho/OkQTLv7FNJyAcsdSmXTjK1Hze4260
-	 jlcqcxC1e9iW5Fgp3X2zfiTWpn35q0/6Tr0FZuSs=
+	by mail.kernel.org (Postfix) with ESMTP id 0F7FC207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgERNDm (ORCPT
+        id S1727933AbgERNEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:03:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46768 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 09:04:04 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:40766 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbgERNDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:03:42 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5893B207D3;
-        Mon, 18 May 2020 13:03:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589807022;
-        bh=cqBFppFXywtZsKM/FNOE0/NVU4loKWJIwGTdFBK4NK4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AQzs1Mwk69tSsp5qxInzTbdXkv04DyufsIs1+gjF3sXZ9S60tnJpxVJ7p0o34FOVa
-         0UDle+HFNXG2qYLjQrqK2hI0w2jrwrTjxLLvyI2MTmKnJRaV/nZ3Qi4Lg3FNyK9O2D
-         MfKT2JzwFunN6II9sHmMU3UzvAPLXEJaYoucP8vI=
-Date:   Mon, 18 May 2020 14:03:36 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
-Subject: Re: [PATCH 3/6] arm64: scs: Use 'scs_sp' register alias for x18
-Message-ID: <20200518130335.GC32394@willie-the-truck>
-References: <20200515172756.27185-1-will@kernel.org>
- <20200515172756.27185-4-will@kernel.org>
- <20200518115547.GC1957@C02TD0UTHF1T.local>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518115547.GC1957@C02TD0UTHF1T.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726726AbgERNED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 09:04:03 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 37AF81A02E9;
+        Mon, 18 May 2020 15:04:02 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5C89A1A0AFE;
+        Mon, 18 May 2020 15:03:58 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 518EF402A8;
+        Mon, 18 May 2020 21:03:53 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/2] ARM: dts: imx50: Add src node interrupt
+Date:   Mon, 18 May 2020 20:54:19 +0800
+Message-Id: <1589806460-19592-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 12:55:47PM +0100, Mark Rutland wrote:
-> On Fri, May 15, 2020 at 06:27:53PM +0100, Will Deacon wrote:
-> > x18 holds the SCS stack pointer value, so introduce a register alias to
-> > make this easier to read in assembly code.
-> > 
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> 
-> I scanned through arm64 for all instances of x18, and it looks like
-> you've covered all the relevant uses here. In kvm we save/restore x18 a
-> bunch becasue it might be a platform register, but we do that
-> unconditionally and without knowledge of what it contains, so I think
-> that's fine to leave as-is. Therefore:
-> 
-> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> 
-> As an aside, the comment in entry-ftrace.S is now stale where it says
-> that x18 is safe to clobber. I can send a patch to clean that up, unless
-> you want to do that yourself.
+Interrupt is a required property according to SRC binding, add
+it for SRC node.
 
-Thanks, I'll fix that up (see below). Also, apologies for typo'ing your
-email address when I sent this out on Friday.
-
-Will
-
---->8
-
-From 7e86208cd6541c1229bc1fcd206596308d1727f8 Mon Sep 17 00:00:00 2001
-From: Will Deacon <will@kernel.org>
-Date: Mon, 18 May 2020 14:01:01 +0100
-Subject: [PATCH] arm64: entry-ftrace.S: Update comment to indicate that x18 is
- live
-
-The Shadow Call Stack pointer is held in x18, so update the ftrace
-entry comment to indicate that it cannot be safely clobbered.
-
-Reported-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm64/kernel/entry-ftrace.S | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx50.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
-index 833d48c9acb5..a338f40e64d3 100644
---- a/arch/arm64/kernel/entry-ftrace.S
-+++ b/arch/arm64/kernel/entry-ftrace.S
-@@ -23,8 +23,9 @@
-  *
-  * ... where <entry> is either ftrace_caller or ftrace_regs_caller.
-  *
-- * Each instrumented function follows the AAPCS, so here x0-x8 and x19-x30 are
-- * live, and x9-x18 are safe to clobber.
-+ * Each instrumented function follows the AAPCS, so here x0-x8 and x18-x30 are
-+ * live (x18 holds the Shadow Call Stack pointer), and x9-x17 are safe to
-+ * clobber.
-  *
-  * We save the callsite's context into a pt_regs before invoking any ftrace
-  * callbacks. So that we can get a sensible backtrace, we create a stack record
+diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
+index d325658..567dcc5 100644
+--- a/arch/arm/boot/dts/imx50.dtsi
++++ b/arch/arm/boot/dts/imx50.dtsi
+@@ -336,6 +336,7 @@
+ 			src: src@53fd0000 {
+ 				compatible = "fsl,imx50-src", "fsl,imx51-src";
+ 				reg = <0x53fd0000 0x4000>;
++				interrupts = <75>;
+ 				#reset-cells = <1>;
+ 			};
+ 
 -- 
-2.26.2.761.g0e0b3e54be-goog
+2.7.4
+
