@@ -2,52 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E3BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4614C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B60AC21534
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C0C2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824954;
-	bh=MnVZ8YB95EmxBqxmwt11FwSNiLoPIlEMw9ZmUH95iPU=;
+	s=default; t=1589824956;
+	bh=iMihi8owIMhhtIY0aZ2L0HimIy2ey9tF7Onc9PxSMck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q+TBbr34+sfg8qGSn4tbOUHSRc0FPLRI/UxfiAcMqNH9I0e6ilvgPKJVXrLD4+COb
-	 6UKs4QvojiwKsjkpsm9fPLuw5BiqGElHGMARHzBXBmPIUN5NMyd1UeH7S5G4Xh74aP
-	 iUhSPaAYPf4dH33q+IQ+09PzGk/7glV3Z3a09z3s=
+	b=dEWw5VxTppzsrKol84sYg7HQzs/Cw9CU2qJ8BAqn7nOfFlyCWPXBi/NW/XBk34EuB
+	 C92KoPRWT11Fwcf40lQCT+WYNDKcGt1CtrTPSwgHJlxeL49NY/GY6OpAlfeUEAsdOO
+	 D43/KlXExAj0zdLYmNaFhzdty7DDmzk/xvDKaypE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732545AbgERSCe (ORCPT
+        id S1732536AbgERSCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:02:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46618 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:02:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732531AbgERSCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:02:30 -0400
+        id S1732517AbgERSC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:02:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6FD020826;
-        Mon, 18 May 2020 18:02:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18A3C21531;
+        Mon, 18 May 2020 18:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824949;
-        bh=MnVZ8YB95EmxBqxmwt11FwSNiLoPIlEMw9ZmUH95iPU=;
+        s=default; t=1589824946;
+        bh=iMihi8owIMhhtIY0aZ2L0HimIy2ey9tF7Onc9PxSMck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RxutOka6SeVHp3vguSYoZ7+oH6OPfb6wDI8GUBal7E9DV8zXfMSdEDhWlh8q7jftn
-         KEslEUhlMhB0o2jNIXz/Uvvyu0Q290i5qtawD1bsJuMZ2WLfffcazZYhUpSMMVvyEA
-         wwkdT89V9X1rsSJj02BrC9rb1EzOu32dnprUHTGU=
+        b=AdJ8fe9Qx7ZRLxQsQ6gLfdVdQMfGxKbRoaVy+/Fgbhcc6Op1VBL5sJEEMu66i7HBc
+         myczJR/fyiCRF4Eful6EqxhVrQCTsLc1kMac+em5CA49IAi7EBUapmsxEgF9RCkDod
+         siUI85bA1r676GMNReCmsgHBeG6spjrhtvVgGpUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 067/194] io_uring: use cond_resched() in io_ring_ctx_wait_and_kill()
-Date:   Mon, 18 May 2020 19:35:57 +0200
-Message-Id: <20200518173537.317015147@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 040/194] virtio_net: fix lockdep warning on 32 bit
+Date:   Mon, 18 May 2020 19:35:30 +0200
+Message-Id: <20200518173535.083722916@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,47 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
+From: "Michael S. Tsirkin" <mst@redhat.com>
 
-[ Upstream commit 3fd44c86711f71156b586c22b0495c58f69358bb ]
+[ Upstream commit 01c3259818a11f3cc3cd767adbae6b45849c03c1 ]
 
-While working on to make io_uring sqpoll mode support syscalls that need
-struct files_struct, I got cpu soft lockup in io_ring_ctx_wait_and_kill(),
+When we fill up a receive VQ, try_fill_recv currently tries to count
+kicks using a 64 bit stats counter. Turns out, on a 32 bit kernel that
+uses a seqcount. sequence counts are "lock" constructs where you need to
+make sure that writers are serialized.
 
-    while (ctx->sqo_thread && !wq_has_sleeper(&ctx->sqo_wait))
-        cpu_relax();
+In turn, this means that we mustn't run two try_fill_recv concurrently.
+Which of course we don't. We do run try_fill_recv sometimes from a
+softirq napi context, and sometimes from a fully preemptible context,
+but the later always runs with napi disabled.
 
-above loop never has an chance to exit, it's because preempt isn't enabled
-in the kernel, and the context calling io_ring_ctx_wait_and_kill() and
-io_sq_thread() run in the same cpu, if io_sq_thread calls a cond_resched()
-yield cpu and another context enters above loop, then io_sq_thread() will
-always in runqueue and never exit.
+However, when it comes to the seqcount, lockdep is trying to enforce the
+rule that the same lock isn't accessed from preemptible and softirq
+context - it doesn't know about napi being enabled/disabled. This causes
+a false-positive warning:
 
-Use cond_resched() can fix this issue.
+WARNING: inconsistent lock state
+...
+inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
 
- Reported-by: syzbot+66243bb7126c410cefe6@syzkaller.appspotmail.com
-Signed-off-by: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+As a work around, shut down the warning by switching
+to u64_stats_update_begin_irqsave - that works by disabling
+interrupts on 32 bit only, is a NOP on 64 bit.
+
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/io_uring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/virtio_net.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 9690c845a3e4b..01f71b9efb88f 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -6451,7 +6451,7 @@ static void io_ring_ctx_wait_and_kill(struct io_ring_ctx *ctx)
- 	 * it could cause shutdown to hang.
- 	 */
- 	while (ctx->sqo_thread && !wq_has_sleeper(&ctx->sqo_wait))
--		cpu_relax();
-+		cond_resched();
+--- a/drivers/net/virtio_net.c
++++ b/drivers/net/virtio_net.c
+@@ -1231,9 +1231,11 @@ static bool try_fill_recv(struct virtnet
+ 			break;
+ 	} while (rq->vq->num_free);
+ 	if (virtqueue_kick_prepare(rq->vq) && virtqueue_notify(rq->vq)) {
+-		u64_stats_update_begin(&rq->stats.syncp);
++		unsigned long flags;
++
++		flags = u64_stats_update_begin_irqsave(&rq->stats.syncp);
+ 		rq->stats.kicks++;
+-		u64_stats_update_end(&rq->stats.syncp);
++		u64_stats_update_end_irqrestore(&rq->stats.syncp, flags);
+ 	}
  
- 	io_kill_timeouts(ctx);
- 	io_poll_remove_all(ctx);
--- 
-2.20.1
-
+ 	return !oom;
 
 
