@@ -2,115 +2,361 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFA7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFDC920809
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB462207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:46:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h1Hrako9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wWxkOguP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgERQo6 (ORCPT
+        id S1728142AbgERQqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:44:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37279 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728519AbgERQo5 (ORCPT
+        Mon, 18 May 2020 12:46:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbgERQqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:44:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589820296;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HmKG2XSLE3/J68hgnuYjwER/7zsYr5OkD9knzKGzUfo=;
-        b=h1Hrako95ydeUJYJU2z8aYgKAVidahc1fJH3QdqX9l/vLN0bM5vvi8g6i9b9lmU/odSNRO
-        OqgYlbrkCSdk9GNpu58HEmOe8BOCpsilpd9nHIRkonBRMb4c/OmesScfWZ90oTkdPJiVeJ
-        UYp4fOdL1x596SYSm0MjU95uOFk1Z+U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-5-b7jxYptWP_K2nQ2-TGriEg-1; Mon, 18 May 2020 12:44:54 -0400
-X-MC-Unique: b7jxYptWP_K2nQ2-TGriEg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6410C100A8ED;
-        Mon, 18 May 2020 16:44:53 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 65435797E9;
-        Mon, 18 May 2020 16:44:50 +0000 (UTC)
-Date:   Mon, 18 May 2020 12:44:49 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com,
+        Mon, 18 May 2020 12:46:19 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D04DC05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:46:19 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id z72so248136wmc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:46:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XaV24d+FGuXsoW+r6zmum6BrLxcP3ZeN2pwU+1ivQEw=;
+        b=wWxkOguPoVnStzrTdelQewSeyBV1QqIvNe/mvsavT8Pb1KrmxevazXje/h6LxNByaJ
+         fnzOwnY4gm/kks+YfSM1/1rIh8VvOAvB8wWkH5E/ljWI/Zhvf3s0R3/ANKmH138lKTO7
+         PNDcyJrK5DRbmfKoORdcOl5C+YI9wR2ga5eWq8kQvuscuObfSC1b4zlFeuYNc5Igs/1L
+         9s8OhLXB+CcvtpazUXSRgojMi0JMiCfSu/y5NpJ18ASHBuHaSddyxdjWOiFtwUkCEX2F
+         gHkKK9td1Y+P5TqZFGD2xwFYw1pusMTuGMCZKpaUwRJVycV7YEDI5Akm/qAPEkFw9GW2
+         /OFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XaV24d+FGuXsoW+r6zmum6BrLxcP3ZeN2pwU+1ivQEw=;
+        b=s+zLPCri8GN3j9KkO315djP+le1hN90rTk/E1AoPvbBtyAeoj1Kat//US0KBY/B2qL
+         1jNx8r50hXQvbdRs85Iums4qqJd0txyzYkLOM/cI3oKwEb4LaUWklcG5v5YZqG3sDoNS
+         iYsvoft5PRrza0rFC6s/QgQWL92qwqMfwUsYLnBj2cXfyPwL75/fz0vQfAbNHCwby5GP
+         TUUwEFbGDU8VNPmnZ9xzCO1LFBXqvL8Qnnp6Qnf0pPAOn9M0BvCa9+DUVGwTUJaelWid
+         kcvp6wxirpLv9ggMJ2obcxNqD05PTWGbldvBIv6cDAvnsaQ3eBUlKsMaxgnK+hCFi7YS
+         /IXQ==
+X-Gm-Message-State: AOAM531CjjCJp+hS7eQYXjn/+UYFI44AVihCLYfETkFd2cL1S1TuMgZ3
+        P1a0C/PomP3gewoaAy7RCuyRIA==
+X-Google-Smtp-Source: ABdhPJwKKpy9a5SB5stq/XXQkZqXfBSB6qShBoxgisxe8Pehf0STyszhmyKrLjtnSxt+2Hoe9cgxaA==
+X-Received: by 2002:a1c:19c1:: with SMTP id 184mr237914wmz.29.1589820377683;
+        Mon, 18 May 2020 09:46:17 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id r2sm17523254wrg.84.2020.05.18.09.46.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 09:46:17 -0700 (PDT)
+Date:   Mon, 18 May 2020 17:46:15 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     jason.wessel@windriver.com, gregkh@linuxfoundation.org,
+        corbet@lwn.net, frowand.list@gmail.com, bjorn.andersson@linaro.org,
+        linux-serial@vger.kernel.org, mingo@redhat.com, hpa@zytor.com,
+        jslaby@suse.com, kgdb-bugreport@lists.sourceforge.net,
+        sumit.garg@linaro.org, will@kernel.org, tglx@linutronix.de,
+        agross@kernel.org, catalin.marinas@arm.com, bp@alien8.de,
         linux-kernel@vger.kernel.org
-Subject: Re: next-20200514 - build issue in drivers/md/dm-zoned-target.c
-Message-ID: <20200518164449.GA24518@redhat.com>
-References: <367320.1589627953@turing-police>
- <7bb0d1c8-b164-d5f3-0218-5c71047c3a8c@suse.de>
+Subject: Re: [PATCH v4 03/12] kgdboc: Use a platform device to handle tty
+ drivers showing up late
+Message-ID: <20200518164615.xeqjvlg27evajzdx@holly.lan>
+References: <20200507200850.60646-1-dianders@chromium.org>
+ <20200507130644.v4.3.I4a493cfb0f9f740ce8fd2ab58e62dc92d18fed30@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7bb0d1c8-b164-d5f3-0218-5c71047c3a8c@suse.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200507130644.v4.3.I4a493cfb0f9f740ce8fd2ab58e62dc92d18fed30@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18 2020 at  2:25am -0400,
-Hannes Reinecke <hare@suse.de> wrote:
+On Thu, May 07, 2020 at 01:08:41PM -0700, Douglas Anderson wrote:
+> If you build CONFIG_KGDB_SERIAL_CONSOLE into the kernel then you
+> should be able to have KGDB init itself at bootup by specifying the
+> "kgdboc=..." kernel command line parameter.  This has worked OK for me
+> for many years, but on a new device I switched to it stopped working.
+> 
+> The problem is that on this new device the serial driver gets its
+> probe deferred.  Now when kgdb initializes it can't find the tty
+> driver and when it gives up it never tries again.
+> 
+> We could try to find ways to move up the initialization of the serial
+> driver and such a thing might be worthwhile, but it's nice to be
+> robust against serial drivers that load late.  We could move kgdb to
+> init itself later but that penalizes our ability to debug early boot
+> code on systems where the driver inits early.  We could roll our own
+> system of detecting when new tty drivers get loaded and then use that
+> to figure out when kgdb can init, but that's ugly.
+> 
+> Instead, let's jump on the -EPROBE_DEFER bandwagon.  We'll create a
+> singleton instance of a "kgdboc" platform device.  If we can't find
+> our tty device when the singleton "kgdboc" probes we'll return
+> -EPROBE_DEFER which means that the system will call us back later to
+> try again when the tty device might be there.
+> 
+> We won't fully transition all of the kgdboc to a platform device
+> because early kgdb initialization (via the "ekgdboc" kernel command
+> line parameter) still runs before the platform device has been
+> created.  The kgdb platform device is merely used as a convenient way
+> to hook into the system's normal probe deferral mechanisms.
+> 
+> As part of this, we'll ever-so-slightly change how the "kgdboc=..."
+> kernel command line parameter works.  Previously if you booted up and
+> kgdb couldn't find the tty driver then later reading
+> '/sys/module/kgdboc/parameters/kgdboc' would return a blank string.
+> Now kgdb will keep track of the string that came as part of the
+> command line and give it back to you.  It's expected that this should
+> be an OK change.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> ---
+> 
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  drivers/tty/serial/kgdboc.c | 126 +++++++++++++++++++++++++++++-------
+>  1 file changed, 101 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
+> index 8a1a4d1b6768..519d8cfbfbed 100644
+> --- a/drivers/tty/serial/kgdboc.c
+> +++ b/drivers/tty/serial/kgdboc.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/vt_kern.h>
+>  #include <linux/input.h>
+>  #include <linux/module.h>
+> +#include <linux/platform_device.h>
+>  
+>  #define MAX_CONFIG_LEN		40
+>  
+> @@ -27,6 +28,7 @@ static struct kgdb_io		kgdboc_io_ops;
+>  
+>  /* -1 = init not run yet, 0 = unconfigured, 1 = configured. */
+>  static int configured		= -1;
+> +DEFINE_MUTEX(config_mutex);
 
-> On 5/16/20 1:19 PM, Valdis Klētnieks wrote:
-> >Am seeing a build error in next-0514.  -0420 built OK.
-> >building a 'make allmodconfig' on a RPi4 in 32-bit mode.
-> >
-> >   MODPOST 7575 modules
-> >ERROR: modpost: "__aeabi_uldivmod" [drivers/md/dm-zoned.ko] undefined!
-> >
-> >objdump and 'make drivers/md/dm-zoned-target.s' tells
-> >me that the problem is in function dmz_fixup_devices(), near here:
-> >
-> >@ drivers/md/dm-zoned-target.c:806:             reg_dev->nr_zones = DIV_ROUND_UP(reg_dev->capacity,
-> >         ldr     r0, [r6, #56]   @ reg_dev_166->capacity, reg_dev_166->capacity
-> >         adds    r1, r3, r1      @ tmp316, _227, reg_dev_166->capacity
-> >         adc     r0, r2, r0      @ tmp315, _227, reg_dev_166->capacity
-> >         subs    r1, r1, #1      @, tmp316,
-> >@ drivers/md/dm-zoned-target.c:805:             reg_dev->zone_nr_sectors = zoned_dev->zone_nr_sectors;
-> >         strd    r2, [r6, #80]   @, reg_dev,
-> >@ drivers/md/dm-zoned-target.c:806:             reg_dev->nr_zones = DIV_ROUND_UP(reg_dev->capacity,
-> >         sbc     r0, r0, #0      @, tmp315,
-> >         bl      __aeabi_uldivmod                @
-> >@ drivers/md/dm-zoned-target.c:806:             reg_dev->nr_zones = DIV_ROUND_UP(reg_dev->capacity,
-> >         str     r1, [r6, #64]   @ tmp306, reg_dev_166->nr_zones
-> >
-> >git blame points at this commit:
-> >
-> >commit 70978208ec91d798066f4c291bc98ff914bea222
-> >Author: Hannes Reinecke <hare@suse.de>
-> >Date:   Mon May 11 10:24:30 2020 +0200
-> >
-> >     dm zoned: metadata version 2
-> >
-> >Reverting that commit lets the build complete.
-> >
-> >
-> I thought I've send a patch to fix that up; DIV_ROUND_UP() needs to
-> be changed to DIV_ROUND_UP_ULL().
-> I'll be checking and will be sending a patch if necessary.
-
-Unless I'm missing something it was fixed up with this commit last
-wednesday (13th):
-
-https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.8&id=81a3a1453ec4e5da081e1395732801a600feb352
+Sparse gently pointed out to me that this should be static. Don't
+worry about it though... I will fixup.
 
 
+Daniel.
+
+>  
+>  static char config[MAX_CONFIG_LEN];
+>  static struct kparam_string kps = {
+> @@ -38,6 +40,8 @@ static int kgdboc_use_kms;  /* 1 if we use kernel mode switching */
+>  static struct tty_driver	*kgdb_tty_driver;
+>  static int			kgdb_tty_line;
+>  
+> +static struct platform_device *kgdboc_pdev;
+> +
+>  #ifdef CONFIG_KDB_KEYBOARD
+>  static int kgdboc_reset_connect(struct input_handler *handler,
+>  				struct input_dev *dev,
+> @@ -133,11 +137,13 @@ static void kgdboc_unregister_kbd(void)
+>  
+>  static void cleanup_kgdboc(void)
+>  {
+> +	if (configured != 1)
+> +		return;
+> +
+>  	if (kgdb_unregister_nmi_console())
+>  		return;
+>  	kgdboc_unregister_kbd();
+> -	if (configured == 1)
+> -		kgdb_unregister_io_module(&kgdboc_io_ops);
+> +	kgdb_unregister_io_module(&kgdboc_io_ops);
+>  }
+>  
+>  static int configure_kgdboc(void)
+> @@ -198,20 +204,79 @@ static int configure_kgdboc(void)
+>  	kgdb_unregister_io_module(&kgdboc_io_ops);
+>  noconfig:
+>  	kgdboc_unregister_kbd();
+> -	config[0] = 0;
+>  	configured = 0;
+> -	cleanup_kgdboc();
+>  
+>  	return err;
+>  }
+>  
+> +static int kgdboc_probe(struct platform_device *pdev)
+> +{
+> +	int ret = 0;
+> +
+> +	mutex_lock(&config_mutex);
+> +	if (configured != 1) {
+> +		ret = configure_kgdboc();
+> +
+> +		/* Convert "no device" to "defer" so we'll keep trying */
+> +		if (ret == -ENODEV)
+> +			ret = -EPROBE_DEFER;
+> +	}
+> +	mutex_unlock(&config_mutex);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver kgdboc_platform_driver = {
+> +	.probe = kgdboc_probe,
+> +	.driver = {
+> +		.name = "kgdboc",
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +
+>  static int __init init_kgdboc(void)
+>  {
+> -	/* Already configured? */
+> -	if (configured == 1)
+> +	int ret;
+> +
+> +	/*
+> +	 * kgdboc is a little bit of an odd "platform_driver".  It can be
+> +	 * up and running long before the platform_driver object is
+> +	 * created and thus doesn't actually store anything in it.  There's
+> +	 * only one instance of kgdb so anything is stored as global state.
+> +	 * The platform_driver is only created so that we can leverage the
+> +	 * kernel's mechanisms (like -EPROBE_DEFER) to call us when our
+> +	 * underlying tty is ready.  Here we init our platform driver and
+> +	 * then create the single kgdboc instance.
+> +	 */
+> +	ret = platform_driver_register(&kgdboc_platform_driver);
+> +	if (ret)
+> +		return ret;
+> +
+> +	kgdboc_pdev = platform_device_alloc("kgdboc", PLATFORM_DEVID_NONE);
+> +	if (!kgdboc_pdev) {
+> +		ret = -ENOMEM;
+> +		goto err_did_register;
+> +	}
+> +
+> +	ret = platform_device_add(kgdboc_pdev);
+> +	if (!ret)
+>  		return 0;
+>  
+> -	return configure_kgdboc();
+> +	platform_device_put(kgdboc_pdev);
+> +
+> +err_did_register:
+> +	platform_driver_unregister(&kgdboc_platform_driver);
+> +	return ret;
+> +}
+> +
+> +static void exit_kgdboc(void)
+> +{
+> +	mutex_lock(&config_mutex);
+> +	cleanup_kgdboc();
+> +	mutex_unlock(&config_mutex);
+> +
+> +	platform_device_unregister(kgdboc_pdev);
+> +	platform_driver_unregister(&kgdboc_platform_driver);
+>  }
+>  
+>  static int kgdboc_get_char(void)
+> @@ -234,24 +299,20 @@ static int param_set_kgdboc_var(const char *kmessage,
+>  				const struct kernel_param *kp)
+>  {
+>  	size_t len = strlen(kmessage);
+> +	int ret = 0;
+>  
+>  	if (len >= MAX_CONFIG_LEN) {
+>  		pr_err("config string too long\n");
+>  		return -ENOSPC;
+>  	}
+>  
+> -	/* Only copy in the string if the init function has not run yet */
+> -	if (configured < 0) {
+> -		strcpy(config, kmessage);
+> -		return 0;
+> -	}
+> -
+>  	if (kgdb_connected) {
+>  		pr_err("Cannot reconfigure while KGDB is connected.\n");
+> -
+>  		return -EBUSY;
+>  	}
+>  
+> +	mutex_lock(&config_mutex);
+> +
+>  	strcpy(config, kmessage);
+>  	/* Chop out \n char as a result of echo */
+>  	if (len && config[len - 1] == '\n')
+> @@ -260,8 +321,30 @@ static int param_set_kgdboc_var(const char *kmessage,
+>  	if (configured == 1)
+>  		cleanup_kgdboc();
+>  
+> -	/* Go and configure with the new params. */
+> -	return configure_kgdboc();
+> +	/*
+> +	 * Configure with the new params as long as init already ran.
+> +	 * Note that we can get called before init if someone loads us
+> +	 * with "modprobe kgdboc kgdboc=..." or if they happen to use the
+> +	 * the odd syntax of "kgdboc.kgdboc=..." on the kernel command.
+> +	 */
+> +	if (configured >= 0)
+> +		ret = configure_kgdboc();
+> +
+> +	/*
+> +	 * If we couldn't configure then clear out the config.  Note that
+> +	 * specifying an invalid config on the kernel command line vs.
+> +	 * through sysfs have slightly different behaviors.  If we fail
+> +	 * to configure what was specified on the kernel command line
+> +	 * we'll leave it in the 'config' and return -EPROBE_DEFER from
+> +	 * our probe.  When specified through sysfs userspace is
+> +	 * responsible for loading the tty driver before setting up.
+> +	 */
+> +	if (ret)
+> +		config[0] = '\0';
+> +
+> +	mutex_unlock(&config_mutex);
+> +
+> +	return ret;
+>  }
+>  
+>  static int dbg_restore_graphics;
+> @@ -320,15 +403,8 @@ __setup("kgdboc=", kgdboc_option_setup);
+>  /* This is only available if kgdboc is a built in for early debugging */
+>  static int __init kgdboc_early_init(char *opt)
+>  {
+> -	/* save the first character of the config string because the
+> -	 * init routine can destroy it.
+> -	 */
+> -	char save_ch;
+> -
+>  	kgdboc_option_setup(opt);
+> -	save_ch = config[0];
+> -	init_kgdboc();
+> -	config[0] = save_ch;
+> +	configure_kgdboc();
+>  	return 0;
+>  }
+>  
+> @@ -336,7 +412,7 @@ early_param("ekgdboc", kgdboc_early_init);
+>  #endif /* CONFIG_KGDB_SERIAL_CONSOLE */
+>  
+>  module_init(init_kgdboc);
+> -module_exit(cleanup_kgdboc);
+> +module_exit(exit_kgdboc);
+>  module_param_call(kgdboc, param_set_kgdboc_var, param_get_string, &kps, 0644);
+>  MODULE_PARM_DESC(kgdboc, "<serial_device>[,baud]");
+>  MODULE_DESCRIPTION("KGDB Console TTY Driver");
+> -- 
+> 2.26.2.645.ge9eca65c58-goog
+> 
