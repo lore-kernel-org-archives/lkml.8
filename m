@@ -2,398 +2,72 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FEAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9D2206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:46:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sr4+Msp3"
+	by mail.kernel.org (Postfix) with ESMTP id 7FC2D207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgEROqb (ORCPT
+        id S1728188AbgEROqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:46:31 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:37886 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726958AbgEROqa (ORCPT
+        Mon, 18 May 2020 10:46:38 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36220 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgEROqh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:46:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589813188; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=p5BjWiibjDX8jS5VnNz5ZiS87itwWoidnp54Cdhw4RY=; b=sr4+Msp3fXn9xEhJY6nmPRtquLGlBsEI6Iz7BlCdU4W/yMHIJYBmEUcoj5BPZrwUde1fLOi6
- pRtK8gV2HehV9UbFWbj7x/NMD/Ce+Gvi2r59h5s7rwYPUtSkTtAXl+o9ZkKk7QS9wZd+l6WY
- kbuyLPxfcAKThk+HQKWBZWCGFlA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec29fb6.7f608a4fa420-smtp-out-n04;
- Mon, 18 May 2020 14:46:14 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C944FC4478F; Mon, 18 May 2020 14:46:14 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0B665C433D2;
-        Mon, 18 May 2020 14:46:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0B665C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 18 May 2020 08:46:10 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 7/9] drm/msm/a6xx: update pdc/rscc GMU registers for
- A640/A650
-Message-ID: <20200518144610.GE3915@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
-        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200423210946.28867-1-jonathan@marek.ca>
- <20200423210946.28867-8-jonathan@marek.ca>
+        Mon, 18 May 2020 10:46:37 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jah2B-0007Aj-Ri; Mon, 18 May 2020 14:46:28 +0000
+Date:   Mon, 18 May 2020 16:46:27 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] exec: Change uselib(2) IS_SREG() failure to EACCES
+Message-ID: <20200518144627.sv5nesysvtgxwkp7@wittgenstein>
+References: <20200518055457.12302-1-keescook@chromium.org>
+ <20200518055457.12302-2-keescook@chromium.org>
+ <20200518130251.zih2s32q2rxhxg6f@wittgenstein>
+ <CAG48ez1FspvvypJSO6badG7Vb84KtudqjRk1D7VyHRm06AiEbQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200423210946.28867-8-jonathan@marek.ca>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAG48ez1FspvvypJSO6badG7Vb84KtudqjRk1D7VyHRm06AiEbQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 05:09:19PM -0400, Jonathan Marek wrote:
-> Update the gmu_pdc registers for A640 and A650.
+On Mon, May 18, 2020 at 04:43:20PM +0200, Jann Horn wrote:
+> On Mon, May 18, 2020 at 3:03 PM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> > Also - gulp (puts on flame proof suit) - may I suggest we check if there
+> > are any distros out there that still set CONFIG_USELIB=y
 > 
-> Some of the RSCC registers on A650 are in a separate region.
+> Debian seems to have it enabled on x86...
 > 
-> Note this also changes the address of these registers:
+> https://salsa.debian.org/kernel-team/linux/-/blob/master/debian/config/kernelarch-x86/config#L1896
 > 
-> RSCC_TCS1_DRV0_STATUS
-> RSCC_TCS2_DRV0_STATUS
-> RSCC_TCS3_DRV0_STATUS
-> 
-> Based on the values in msm-4.14 and msm-4.19 kernels.
-> 
-> v3: replaced adreno_is_a650 around ->rscc with checks for "rscc" resource
+> A random Ubuntu 19.10 VM I have here has it enabled, too.
 
-This is one of the most frustrating bits about the different GMU flavors. There
-is simply no way to make this code elegant.
+I wonder if there's any program - apart from _ancient_ glibc out there
+that actually use it...
+I looked at uselib in codsearch but the results were quite unspecific
+but I didn't look too close.
 
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c     | 90 ++++++++++++++---------
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.h     | 10 +++
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h | 38 +++++-----
->  3 files changed, 85 insertions(+), 53 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index 988575fc8e71..c6fce994194d 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> @@ -421,7 +421,7 @@ static int a6xx_rpmh_start(struct a6xx_gmu *gmu)
->  		return ret;
->  	}
->  
-> -	ret = gmu_poll_timeout(gmu, REG_A6XX_RSCC_SEQ_BUSY_DRV0, val,
-> +	ret = gmu_poll_timeout_rscc(gmu, REG_A6XX_RSCC_SEQ_BUSY_DRV0, val,
->  		!val, 100, 10000);
->  
->  	if (ret) {
-> @@ -447,7 +447,7 @@ static void a6xx_rpmh_stop(struct a6xx_gmu *gmu)
->  
->  	gmu_write(gmu, REG_A6XX_GMU_RSCC_CONTROL_REQ, 1);
->  
-> -	ret = gmu_poll_timeout(gmu, REG_A6XX_GPU_RSCC_RSC_STATUS0_DRV0,
-> +	ret = gmu_poll_timeout_rscc(gmu, REG_A6XX_GPU_RSCC_RSC_STATUS0_DRV0,
->  		val, val & (1 << 16), 100, 10000);
->  	if (ret)
->  		DRM_DEV_ERROR(gmu->dev, "Unable to power off the GPU RSC\n");
-> @@ -470,32 +470,48 @@ static void a6xx_gmu_rpmh_init(struct a6xx_gmu *gmu)
->  	struct platform_device *pdev = to_platform_device(gmu->dev);
->  	void __iomem *pdcptr = a6xx_gmu_get_mmio(pdev, "gmu_pdc");
->  	void __iomem *seqptr = a6xx_gmu_get_mmio(pdev, "gmu_pdc_seq");
-> +	uint32_t pdc_address_offset;
->  
->  	if (!pdcptr || !seqptr)
->  		goto err;
->  
-> +	if (adreno_is_a618(adreno_gpu) || adreno_is_a640(adreno_gpu))
-> +		pdc_address_offset = 0x30090;
-> +	else if (adreno_is_a650(adreno_gpu))
-> +		pdc_address_offset = 0x300a0;
-> +	else
-> +		pdc_address_offset = 0x30080;
-> +
->  	/* Disable SDE clock gating */
-> -	gmu_write(gmu, REG_A6XX_GPU_RSCC_RSC_STATUS0_DRV0, BIT(24));
-> +	gmu_write_rscc(gmu, REG_A6XX_GPU_RSCC_RSC_STATUS0_DRV0, BIT(24));
->  
->  	/* Setup RSC PDC handshake for sleep and wakeup */
-> -	gmu_write(gmu, REG_A6XX_RSCC_PDC_SLAVE_ID_DRV0, 1);
-> -	gmu_write(gmu, REG_A6XX_RSCC_HIDDEN_TCS_CMD0_DATA, 0);
-> -	gmu_write(gmu, REG_A6XX_RSCC_HIDDEN_TCS_CMD0_ADDR, 0);
-> -	gmu_write(gmu, REG_A6XX_RSCC_HIDDEN_TCS_CMD0_DATA + 2, 0);
-> -	gmu_write(gmu, REG_A6XX_RSCC_HIDDEN_TCS_CMD0_ADDR + 2, 0);
-> -	gmu_write(gmu, REG_A6XX_RSCC_HIDDEN_TCS_CMD0_DATA + 4, 0x80000000);
-> -	gmu_write(gmu, REG_A6XX_RSCC_HIDDEN_TCS_CMD0_ADDR + 4, 0);
-> -	gmu_write(gmu, REG_A6XX_RSCC_OVERRIDE_START_ADDR, 0);
-> -	gmu_write(gmu, REG_A6XX_RSCC_PDC_SEQ_START_ADDR, 0x4520);
-> -	gmu_write(gmu, REG_A6XX_RSCC_PDC_MATCH_VALUE_LO, 0x4510);
-> -	gmu_write(gmu, REG_A6XX_RSCC_PDC_MATCH_VALUE_HI, 0x4514);
-> +	gmu_write_rscc(gmu, REG_A6XX_RSCC_PDC_SLAVE_ID_DRV0, 1);
-> +	gmu_write_rscc(gmu, REG_A6XX_RSCC_HIDDEN_TCS_CMD0_DATA, 0);
-> +	gmu_write_rscc(gmu, REG_A6XX_RSCC_HIDDEN_TCS_CMD0_ADDR, 0);
-> +	gmu_write_rscc(gmu, REG_A6XX_RSCC_HIDDEN_TCS_CMD0_DATA + 2, 0);
-> +	gmu_write_rscc(gmu, REG_A6XX_RSCC_HIDDEN_TCS_CMD0_ADDR + 2, 0);
-> +	gmu_write_rscc(gmu, REG_A6XX_RSCC_HIDDEN_TCS_CMD0_DATA + 4, 0x80000000);
-> +	gmu_write_rscc(gmu, REG_A6XX_RSCC_HIDDEN_TCS_CMD0_ADDR + 4, 0);
-> +	gmu_write_rscc(gmu, REG_A6XX_RSCC_OVERRIDE_START_ADDR, 0);
-> +	gmu_write_rscc(gmu, REG_A6XX_RSCC_PDC_SEQ_START_ADDR, 0x4520);
-> +	gmu_write_rscc(gmu, REG_A6XX_RSCC_PDC_MATCH_VALUE_LO, 0x4510);
-> +	gmu_write_rscc(gmu, REG_A6XX_RSCC_PDC_MATCH_VALUE_HI, 0x4514);
->  
->  	/* Load RSC sequencer uCode for sleep and wakeup */
-> -	gmu_write(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0, 0xa7a506a0);
-> -	gmu_write(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0 + 1, 0xa1e6a6e7);
-> -	gmu_write(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0 + 2, 0xa2e081e1);
-> -	gmu_write(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0 + 3, 0xe9a982e2);
-> -	gmu_write(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0 + 4, 0x0020e8a8);
-> +	if (adreno_is_a650(adreno_gpu)) {
-> +		gmu_write_rscc(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0, 0xeaaae5a0);
-> +		gmu_write_rscc(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0 + 1, 0xe1a1ebab);
-> +		gmu_write_rscc(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0 + 2, 0xa2e0a581);
-> +		gmu_write_rscc(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0 + 3, 0xecac82e2);
-> +		gmu_write_rscc(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0 + 4, 0x0020edad);
-> +	} else {
-> +		gmu_write_rscc(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0, 0xa7a506a0);
-> +		gmu_write_rscc(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0 + 1, 0xa1e6a6e7);
-> +		gmu_write_rscc(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0 + 2, 0xa2e081e1);
-> +		gmu_write_rscc(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0 + 3, 0xe9a982e2);
-> +		gmu_write_rscc(gmu, REG_A6XX_RSCC_SEQ_MEM_0_DRV0 + 4, 0x0020e8a8);
-> +	}
->  
->  	/* Load PDC sequencer uCode for power up and power down sequence */
->  	pdc_write(seqptr, REG_A6XX_PDC_GPU_SEQ_MEM_0, 0xfebea1e1);
-> @@ -516,10 +532,7 @@ static void a6xx_gmu_rpmh_init(struct a6xx_gmu *gmu)
->  	pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS1_CMD0_DATA + 4, 0x0);
->  
->  	pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS1_CMD0_MSGID + 8, 0x10108);
-> -	if (adreno_is_a618(adreno_gpu))
-> -		pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS1_CMD0_ADDR + 8, 0x30090);
-> -	else
-> -		pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS1_CMD0_ADDR + 8, 0x30080);
-> +	pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS1_CMD0_ADDR + 8, pdc_address_offset);
->  	pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS1_CMD0_DATA + 8, 0x0);
->  
->  	pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS3_CMD_ENABLE_BANK, 7);
-> @@ -531,17 +544,12 @@ static void a6xx_gmu_rpmh_init(struct a6xx_gmu *gmu)
->  
->  	pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS3_CMD0_MSGID + 4, 0x10108);
->  	pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS3_CMD0_ADDR + 4, 0x30000);
-> -	if (adreno_is_a618(adreno_gpu))
-> +	if (adreno_is_a618(adreno_gpu) || adreno_is_a650(adreno_gpu))
->  		pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS3_CMD0_DATA + 4, 0x2);
->  	else
->  		pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS3_CMD0_DATA + 4, 0x3);
-> -
-> -
->  	pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS3_CMD0_MSGID + 8, 0x10108);
-> -	if (adreno_is_a618(adreno_gpu))
-> -		pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS3_CMD0_ADDR + 8, 0x30090);
-> -	else
-> -		pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS3_CMD0_ADDR + 8, 0x30080);
-> +	pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS3_CMD0_ADDR + 8, pdc_address_offset);
->  	pdc_write(pdcptr, REG_A6XX_PDC_GPU_TCS3_CMD0_DATA + 8, 0x3);
->  
->  	/* Setup GPU PDC */
-> @@ -788,13 +796,13 @@ static void a6xx_gmu_rpmh_off(struct a6xx_gmu *gmu)
->  	u32 val;
->  
->  	/* Make sure there are no outstanding RPMh votes */
-> -	gmu_poll_timeout(gmu, REG_A6XX_RSCC_TCS0_DRV0_STATUS, val,
-> +	gmu_poll_timeout_rscc(gmu, REG_A6XX_RSCC_TCS0_DRV0_STATUS, val,
->  		(val & 1), 100, 10000);
-> -	gmu_poll_timeout(gmu, REG_A6XX_RSCC_TCS1_DRV0_STATUS, val,
-> +	gmu_poll_timeout_rscc(gmu, REG_A6XX_RSCC_TCS1_DRV0_STATUS, val,
->  		(val & 1), 100, 10000);
-> -	gmu_poll_timeout(gmu, REG_A6XX_RSCC_TCS2_DRV0_STATUS, val,
-> +	gmu_poll_timeout_rscc(gmu, REG_A6XX_RSCC_TCS2_DRV0_STATUS, val,
->  		(val & 1), 100, 10000);
-> -	gmu_poll_timeout(gmu, REG_A6XX_RSCC_TCS3_DRV0_STATUS, val,
-> +	gmu_poll_timeout_rscc(gmu, REG_A6XX_RSCC_TCS3_DRV0_STATUS, val,
->  		(val & 1), 100, 1000);
->  }
->  
-> @@ -1353,6 +1361,7 @@ static int a6xx_gmu_get_irq(struct a6xx_gmu *gmu, struct platform_device *pdev,
->  void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
->  {
->  	struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
-> +	struct platform_device *pdev = to_platform_device(gmu->dev);
->  
->  	if (!gmu->initialized)
->  		return;
-> @@ -1365,7 +1374,10 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
->  	}
->  
->  	iounmap(gmu->mmio);
-> +	if (platform_get_resource_byname(pdev, IORESOURCE_MEM, "rscc"))
-> +		iounmap(gmu->rscc);
->  	gmu->mmio = NULL;
-> +	gmu->rscc = NULL;
->  
->  	a6xx_gmu_memory_free(gmu);
->  
-> @@ -1448,6 +1460,14 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
->  		goto err_memory;
->  	}
->  
-> +	if (adreno_is_a650(adreno_gpu)) {
-> +		gmu->rscc = a6xx_gmu_get_mmio(pdev, "rscc");
-> +		if (IS_ERR(gmu->rscc))
-> +			goto err_mmio;
-> +	} else {
-> +		gmu->rscc = gmu->mmio + 0x23000;
-> +	}
-> +
->  	/* Get the HFI and GMU interrupts */
->  	gmu->hfi_irq = a6xx_gmu_get_irq(gmu, pdev, "hfi", a6xx_hfi_irq);
->  	gmu->gmu_irq = a6xx_gmu_get_irq(gmu, pdev, "gmu", a6xx_gmu_irq);
-> @@ -1473,6 +1493,8 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
->  
->  err_mmio:
->  	iounmap(gmu->mmio);
-> +	if (platform_get_resource_byname(pdev, IORESOURCE_MEM, "rscc"))
-> +		iounmap(gmu->rscc);
->  	free_irq(gmu->gmu_irq, gmu);
->  	free_irq(gmu->hfi_irq, gmu);
->  
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> index c6d8c0d1f90b..e16c16bb65bf 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> @@ -47,6 +47,7 @@ struct a6xx_gmu {
->  	struct msm_gem_address_space *aspace;
->  
->  	void * __iomem mmio;
-> +	void * __iomem rscc;
->  
->  	int hfi_irq;
->  	int gmu_irq;
-> @@ -125,6 +126,15 @@ static inline u64 gmu_read64(struct a6xx_gmu *gmu, u32 lo, u32 hi)
->  	readl_poll_timeout((gmu)->mmio + ((addr) << 2), val, cond, \
->  		interval, timeout)
->  
-> +static inline void gmu_write_rscc(struct a6xx_gmu *gmu, u32 offset, u32 value)
-> +{
-> +	return msm_writel(value, gmu->rscc + (offset << 2));
-> +}
-> +
-> +#define gmu_poll_timeout_rscc(gmu, addr, val, cond, interval, timeout) \
-> +	readl_poll_timeout((gmu)->rscc + ((addr) << 2), val, cond, \
-> +		interval, timeout)
-> +
->  /*
->   * These are the available OOB (out of band requests) to the GMU where "out of
->   * band" means that the CPU talks to the GMU directly and not through HFI.
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
-> index eb2cd41dae6e..b4357ea550ec 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
-> @@ -336,8 +336,6 @@ static inline uint32_t A6XX_GMU_GPU_NAP_CTRL_SID(uint32_t val)
->  
->  #define REG_A6XX_GMU_AO_SPARE_CNTL				0x00009316
->  
-> -#define REG_A6XX_GPU_RSCC_RSC_STATUS0_DRV0			0x00008c04
-> -
->  #define REG_A6XX_GMU_RSCC_CONTROL_REQ				0x00009307
->  
->  #define REG_A6XX_GMU_RSCC_CONTROL_ACK				0x00009308
-> @@ -350,39 +348,41 @@ static inline uint32_t A6XX_GMU_GPU_NAP_CTRL_SID(uint32_t val)
->  
->  #define REG_A6XX_GPU_CC_GX_DOMAIN_MISC				0x00009d42
->  
-> -#define REG_A6XX_RSCC_PDC_SEQ_START_ADDR			0x00008c08
-> +#define REG_A6XX_GPU_RSCC_RSC_STATUS0_DRV0			0x00000004
-> +
-> +#define REG_A6XX_RSCC_PDC_SEQ_START_ADDR			0x00000008
->  
-> -#define REG_A6XX_RSCC_PDC_MATCH_VALUE_LO			0x00008c09
-> +#define REG_A6XX_RSCC_PDC_MATCH_VALUE_LO			0x00000009
->  
-> -#define REG_A6XX_RSCC_PDC_MATCH_VALUE_HI			0x00008c0a
-> +#define REG_A6XX_RSCC_PDC_MATCH_VALUE_HI			0x0000000a
->  
-> -#define REG_A6XX_RSCC_PDC_SLAVE_ID_DRV0				0x00008c0b
-> +#define REG_A6XX_RSCC_PDC_SLAVE_ID_DRV0				0x0000000b
->  
-> -#define REG_A6XX_RSCC_HIDDEN_TCS_CMD0_ADDR			0x00008c0d
-> +#define REG_A6XX_RSCC_HIDDEN_TCS_CMD0_ADDR			0x0000000d
->  
-> -#define REG_A6XX_RSCC_HIDDEN_TCS_CMD0_DATA			0x00008c0e
-> +#define REG_A6XX_RSCC_HIDDEN_TCS_CMD0_DATA			0x0000000e
->  
-> -#define REG_A6XX_RSCC_TIMESTAMP_UNIT0_TIMESTAMP_L_DRV0		0x00008c82
-> +#define REG_A6XX_RSCC_TIMESTAMP_UNIT0_TIMESTAMP_L_DRV0		0x00000082
->  
-> -#define REG_A6XX_RSCC_TIMESTAMP_UNIT0_TIMESTAMP_H_DRV0		0x00008c83
-> +#define REG_A6XX_RSCC_TIMESTAMP_UNIT0_TIMESTAMP_H_DRV0		0x00000083
->  
-> -#define REG_A6XX_RSCC_TIMESTAMP_UNIT1_EN_DRV0			0x00008c89
-> +#define REG_A6XX_RSCC_TIMESTAMP_UNIT1_EN_DRV0			0x00000089
->  
-> -#define REG_A6XX_RSCC_TIMESTAMP_UNIT1_OUTPUT_DRV0		0x00008c8c
-> +#define REG_A6XX_RSCC_TIMESTAMP_UNIT1_OUTPUT_DRV0		0x0000008c
->  
-> -#define REG_A6XX_RSCC_OVERRIDE_START_ADDR			0x00008d00
-> +#define REG_A6XX_RSCC_OVERRIDE_START_ADDR			0x00000100
->  
-> -#define REG_A6XX_RSCC_SEQ_BUSY_DRV0				0x00008d01
-> +#define REG_A6XX_RSCC_SEQ_BUSY_DRV0				0x00000101
->  
-> -#define REG_A6XX_RSCC_SEQ_MEM_0_DRV0				0x00008d80
-> +#define REG_A6XX_RSCC_SEQ_MEM_0_DRV0				0x00000180
->  
-> -#define REG_A6XX_RSCC_TCS0_DRV0_STATUS				0x00008f46
-> +#define REG_A6XX_RSCC_TCS0_DRV0_STATUS				0x00000346
->  
-> -#define REG_A6XX_RSCC_TCS1_DRV0_STATUS				0x000090ae
-> +#define REG_A6XX_RSCC_TCS1_DRV0_STATUS				0x000003ee
->  
-> -#define REG_A6XX_RSCC_TCS2_DRV0_STATUS				0x00009216
-> +#define REG_A6XX_RSCC_TCS2_DRV0_STATUS				0x00000496
->  
-> -#define REG_A6XX_RSCC_TCS3_DRV0_STATUS				0x0000937e
-> +#define REG_A6XX_RSCC_TCS3_DRV0_STATUS				0x0000053e
->  
->  
->  #endif /* A6XX_GMU_XML */
-> -- 
-> 2.26.1
-> 
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Christian
