@@ -2,83 +2,136 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E178C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 731DC2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8B920829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:22:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589840557;
+	bh=I48flygjIBp7uOnVnXDFpml1edpXtpsCjzT/57eK7CQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=CmYzjlUKnkQ0RlsGSa26RdC8pK//0AMdLU/sNK+ZV3dZl9K4aHPAWzD9b0VhC7ZTL
+	 ZaTMFItKFRIJ0Lj6Qh/KwleXQjlHGjR0GG4USBQrGcP/RgmSvIU61dHQ6MUsnBe0Ns
+	 rX1FjIozj1A62ym7FNHMlxO6RMMHLrhHULMHG40Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgERWUS (ORCPT
+        id S1728201AbgERWWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 18:20:18 -0400
-Received: from mga01.intel.com ([192.55.52.88]:47013 "EHLO mga01.intel.com"
+        Mon, 18 May 2020 18:22:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726386AbgERWUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 18:20:18 -0400
-IronPort-SDR: nPtcy3ktJ2Aa5zGV7ptvVTd1UTnMi7Hrg/UVpVlvIkvekMpoaYEnStfvwwCu+nqE5xqg9Afcvu
- MfWRPWqXxUDg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 15:20:18 -0700
-IronPort-SDR: bunCAUpkQe5rEtfhlNJhPWAzLxi8Vq+VFArHQiuw64K4VzT++yLn9vczgTv1L+qSPLrskSpF0b
- V0DPyg0vOPhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="267675369"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga006.jf.intel.com with ESMTP; 18 May 2020 15:20:17 -0700
-Date:   Mon, 18 May 2020 15:20:37 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 1/2] x86, sched: Prevent divisions by zero in frequency
- invariant accounting
-Message-ID: <20200518222037.GA14829@ranerica-svr.sc.intel.com>
-References: <20200428132450.24901-1-ggherdovich@suse.cz>
- <20200428132450.24901-2-ggherdovich@suse.cz>
- <20200501133042.GE3762@hirez.programming.kicks-ass.net>
- <1588429500.8505.29.camel@suse.cz>
+        id S1726386AbgERWWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 18:22:36 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FDB620674;
+        Mon, 18 May 2020 22:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589840556;
+        bh=I48flygjIBp7uOnVnXDFpml1edpXtpsCjzT/57eK7CQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=r2Z4K0y2G8YiS1+K48wrTdZc8IcboE5EvkgJatVdyvfNLmOZ/GLIOr/AteenNbOBW
+         rRDXRtgGIto++cGMHN27fMO358VTGas/gXzeuSuxTaIUCBnRee0Fu3worwP9ddV5Jh
+         Eoyk06j6KCZ1MWUhrWx13BTFIGqueNItbI5JS1w8=
+Date:   Mon, 18 May 2020 17:27:22 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>
+Cc:     linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] ACPICA: Replace one-element array and use struct_size()
+ helper
+Message-ID: <20200518222722.GA7791@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588429500.8505.29.camel@suse.cz>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 02, 2020 at 04:25:00PM +0200, Giovanni Gherdovich wrote:
-> > 
-> > I've changed the patch like so.. OK?
-> > 
-> > (ok, perhaps I went a little overboard with the paranoia ;-)
-> 
-> Right, I wasn't really checking for overflow, only for when the product
-> "mcnt * arch_max_freq_ratio" becomes zero.
-> 
-> Thanks for your edit (I took note of the macros check_*_overflow, didn't know
-> them). I fully subscribe to the paranoid approach.
-> 
-> I understand you've already edited the patches in your tree, so I am not
-> resending, just confirming my
-> 
-> Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+The current codebase makes use of one-element arrays in the following
+form:
 
-Hi, have these changes been merged? I still don't see them in the tip or
-Linus' tree.
+struct something {
+    int length;
+    u8 data[1];
+};
 
-Thanks and BR,
-Ricardo
+struct something *instance;
+
+instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+instance->length = size;
+memcpy(instance->data, source, size);
+
+but the preferred mechanism to declare variable-length types such as
+these ones is a flexible array member[1][2], introduced in C99:
+
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
+
+Also, make use of the new struct_size() helper to properly calculate the
+size of struct acpi_pnp_device_id_list.
+
+This issue was found with the help of Coccinellea and, audited and
+fixed _manually_.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/acpi/acpica/utids.c | 4 +---
+ include/acpi/actypes.h      | 2 +-
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/acpi/acpica/utids.c b/drivers/acpi/acpica/utids.c
+index 3bb06935a2ad3..c2f819a39424a 100644
+--- a/drivers/acpi/acpica/utids.c
++++ b/drivers/acpi/acpica/utids.c
+@@ -262,9 +262,7 @@ acpi_ut_execute_CID(struct acpi_namespace_node *device_node,
+ 	 * 2) Size of the CID PNP_DEVICE_ID array +
+ 	 * 3) Size of the actual CID strings
+ 	 */
+-	cid_list_size = sizeof(struct acpi_pnp_device_id_list) +
+-	    ((count - 1) * sizeof(struct acpi_pnp_device_id)) +
+-	    string_area_size;
++	cid_list_size = struct_size(cid_list, ids, count) + string_area_size;
+ 
+ 	cid_list = ACPI_ALLOCATE_ZEROED(cid_list_size);
+ 	if (!cid_list) {
+diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
+index 4defed58ea338..c7bcda0ad366a 100644
+--- a/include/acpi/actypes.h
++++ b/include/acpi/actypes.h
+@@ -1145,7 +1145,7 @@ struct acpi_pnp_device_id {
+ struct acpi_pnp_device_id_list {
+ 	u32 count;		/* Number of IDs in Ids array */
+ 	u32 list_size;		/* Size of list, including ID strings */
+-	struct acpi_pnp_device_id ids[1];	/* ID array */
++	struct acpi_pnp_device_id ids[];	/* ID array */
+ };
+ 
+ /*
+-- 
+2.26.2
+
