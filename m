@@ -2,98 +2,124 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC571C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD67920643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2734620643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:47:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oBUdzRHM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbgERTqK (ORCPT
+        id S1728481AbgERTrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 15:46:10 -0400
-Received: from 7.mo4.mail-out.ovh.net ([178.33.253.54]:50751 "EHLO
-        7.mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728418AbgERTqJ (ORCPT
+        Mon, 18 May 2020 15:47:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728464AbgERTrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 15:46:09 -0400
-X-Greylist: delayed 8400 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 May 2020 15:46:08 EDT
-Received: from player787.ha.ovh.net (unknown [10.108.54.74])
-        by mo4.mail-out.ovh.net (Postfix) with ESMTP id 5A770236BC6
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 17:00:13 +0200 (CEST)
-Received: from RCM-web9.webmail.mail.ovh.net (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player787.ha.ovh.net (Postfix) with ESMTPSA id 7EA9612A9ADCD;
-        Mon, 18 May 2020 15:00:04 +0000 (UTC)
+        Mon, 18 May 2020 15:47:40 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3062C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:47:38 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id f18so5081313otq.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:47:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bBFO4lwxkSc+LH1NOlFaVaJnTNT/AhBja3Nhpq3LMZo=;
+        b=oBUdzRHMNHiLmelW0hosDtypTPyHRt493bdqwDjTFRuvIEWwISb1RnL8axaggTtTqh
+         uNNejrq0cHOKB0cY9oe8iXdVYImLfNBqR97BqDlUqRc9A4xVS2Go+uk0yk6IfaCjB/Dk
+         NnXVFTY2FJQCghGW+vh68cb/zoYHMBeOkAJXuhM9Kh/Uxc50ivmv/wEIaBzochvN9QXN
+         hi4qwhUKQOUIMzLPRjkhb0MSeYAIlJbNznsXC4wQSy63wT8Mc4TEwYMm2r8Cb8d34DFs
+         R131G7BdD20iNUnBj9YD+NssbMfazxN/NYwO3/g249tzyLl0e+tAaDkFGdRTlPlS4oHv
+         aQiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bBFO4lwxkSc+LH1NOlFaVaJnTNT/AhBja3Nhpq3LMZo=;
+        b=akXa8d3c0rpdG3QxwkPa6/MMD/1A9wnB+YPjdI45L8XxmB8YneSi9JS8RQqdzxvJYZ
+         9KoVl9Mzj1+YYcVHoL0QOKKVO3j9/66gV3Mf/MG6N8d4QLRJn8O2MxqvQuliAB9Zrgln
+         uMayTavBtE0p5jJskJ6dMbuLJwQASshi6YdPqSW/TK/vYFm8lmLJqiGEPDHxV8gZC8ql
+         nsUfv9dKhuO5Rl02UmoSIDXDp1lp1vYQQaA4wXviz/veed4Eg9H0hHY+Tdg5rWVk0PDY
+         lfgr2f13jA1Blk6LWxeOtYmQmhmV0mcpIxA+3v+8xWtwWTA1R7TR2LJUfuaRd4IF4Ulc
+         6+xQ==
+X-Gm-Message-State: AOAM5331Ecqu2j6T33ZB0JEAWRp9WEASXmA1C2WI3xklBBZ+brG+hYE9
+        c9G1xZb4efEtqyhkcLVvDu6DeT/5cx5JnjvickYl6w==
+X-Google-Smtp-Source: ABdhPJx+S+VGxK4icqY0mL6oiXyHIyaFLh5EyrnOy//4cOukH88/sp+o301KYy7kjzDc53ynlcWC/sXZqozFE+cmDBc=
+X-Received: by 2002:a9d:2622:: with SMTP id a31mr14506353otb.231.1589831257541;
+ Mon, 18 May 2020 12:47:37 -0700 (PDT)
 MIME-Version: 1.0
-Date:   Mon, 18 May 2020 17:00:04 +0200
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: linux-next: manual merge of the jc_docs tree with the vfs and
- net-next trees
-In-Reply-To: <20200518062253.24709cec@lwn.net>
-References: <20200518123013.6e4cb3cc@canb.auug.org.au>
- <20200518062253.24709cec@lwn.net>
-User-Agent: Roundcube Webmail/1.4.3
-Message-ID: <6db686525ee6e1eeda0201efc61d361f@sk2.org>
-X-Sender: steve@sk2.org
-X-Originating-IP: 82.65.25.201
-X-Webmail-UserID: steve@sk2.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 11744543403692084613
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedruddthedgkedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggffhffvufgjfhgfkfigihgtgfesthekjhdttderjeenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecuggftrfgrthhtvghrnhepheeftedvhfevuedthedthfektdelleegtdevfeetveefhfekgedttdefgfetgfeunecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejkeejrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+References: <20200516080718.166676-1-saravanak@google.com> <CAGETcx8Ro_tsmYEQwzZKsm2xzimw=MBcChbSW5Nx9arUni53wQ@mail.gmail.com>
+ <20200518080327.GA3126260@kroah.com>
+In-Reply-To: <20200518080327.GA3126260@kroah.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 18 May 2020 12:47:01 -0700
+Message-ID: <CAGETcx9gUG-0GW8trnC-xm5DPfXkVjgdzBg0-M+tRWhyz8fgQw@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: Fix memory leak when adding
+ SYNC_STATE_ONLY device links
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 18/05/2020 14:22, Jonathan Corbet a écrit :
-> On Mon, 18 May 2020 12:30:13 +1000
-> Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> 
->> Today's linux-next merge of the jc_docs tree got a conflict in:
->> 
->>   kernel/sysctl.c
->> 
->> between commit:
->> 
->>   f461d2dcd511 ("sysctl: avoid forward declarations")
->> 
->> from the vfs tree and commit:
->> 
->>   2f4c33063ad7 ("docs: sysctl/kernel: document ngroups_max")
->> 
->> from the jc_docs tree.
-> 
-> Hmm...that's somewhat messy.  I somehow managed to miss the change to
-> kernel/sysctl.c that doesn't have much to do with documentation.  
-> Stephen
-> (Kitt): I've reverted that change for now.  Could I ask you to resubmit 
-> it
-> as two different patches?  I'll happily take the actual docs change; 
-> the
-> sysctl change can be sent to the VFS tree on top of the changes there.
+On Mon, May 18, 2020 at 1:03 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, May 18, 2020 at 12:48:42AM -0700, Saravana Kannan wrote:
+> > On Sat, May 16, 2020 at 1:07 AM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
+> > > core: Add device link support for SYNC_STATE_ONLY flag"),
+> > > device_link_add() incorrectly skipped adding the new SYNC_STATE_ONLY
+> > > device link to the supplier's and consumer's "device link" list. So the
+> > > "device link" is lost forever from driver core if the caller didn't keep
+> > > track of it (typically isn't expected to).
+> > >
+> > > If the same SYNC_STATE_ONLY device link is created again using
+> > > device_link_add(), instead of returning the pointer to the previously
+> > > created device link, a new device link is created and returned. This can
+> > > cause memory leaks in conjunction with fw_devlinks.
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> >
+> > Greg/Rafael,
+> >
+> > This patch causes a warning for SYNC_STATE_ONLY links because they
+> > allow consumers to probe before suppliers but the device link
+> > status/state change code wasn't written with that possibility in mind.
+> > So I need to fix up that warning or state change code.
+>
+> What type of warning happens?
 
-Done, thanks.
+The WARN_ON(link->status != DL_STATE_CONSUMER_PROBE); inside
+device_links_driver_bound().
 
-> In general we really don't want to mix unrelated changes like this.
+>
+> > Depending on how urgent you think memory leak fixes are, you can take
+> > it as is for now and I can send a separate patch to fix the
+> > warning/state change code later. Or if we can sit on this memory leak
+> > for a week, I might be able to fix the warning before then.
+>
+> memory leaks are not ok, but neither is adding runtime warnings.  Any
+> chance we can't just get a fix for both?  :)
 
-Noted, I’ll avoid mixing changes in future.
+Don't pick up this patch. I think I have a fix that fixes the memory
+leak without warnings that also coincidentally frees up some memory.
+Testing it.
 
-Regards,
-
-Stephen
+-Saravana
