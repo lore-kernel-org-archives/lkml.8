@@ -2,52 +2,51 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38532C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01D5620674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC5D20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824652;
-	bh=u9Dmuq/K6ryDJMtzgJQEABHCn0tfGryZO0R5fm4zHtk=;
+	s=default; t=1589824656;
+	bh=3rJdlKPl8wLgn6izT/OQntL7glddycl6v36dvt8Vq/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MiUYY6na2kdNUNoTZuSO7MR8EAcF9FHODwQJA7blEsTBKt5a9/qqcnlzfFuRk9g+2
-	 XWtQ4DrTXj6CHc4NBBRZ2+ofLG6DzuxYIukk3PWfiNEzy47Woz74MVM6i8ZZtW3Ow4
-	 rgWYkYDIj075Ca2X8lVMM0vBTgzJQ2CT7DroLlqs=
+	b=CSPQfSo+WGkk+rxdhEzRxdgwP4FG0DPQY5xKTOhBoasDEidGvus/jU/D/o2WiJzvC
+	 nemf6YQJpgz3XjE7RRnoIxSsFQiffLg4Yt6qBTjfsK9YcVvTTYqDKrxO+c3ZQwPmoa
+	 rVv6pq7rE/F0np22k4PjEzte1I7X9l3qFF+wbvF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731102AbgERR5b (ORCPT
+        id S1731813AbgERR5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:57:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36098 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:57:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731791AbgERR52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:57:28 -0400
+        id S1731803AbgERR5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:57:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E76B20674;
-        Mon, 18 May 2020 17:57:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A10C20715;
+        Mon, 18 May 2020 17:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824647;
-        bh=u9Dmuq/K6ryDJMtzgJQEABHCn0tfGryZO0R5fm4zHtk=;
+        s=default; t=1589824650;
+        bh=3rJdlKPl8wLgn6izT/OQntL7glddycl6v36dvt8Vq/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bl+bgb47g1si813xS79UDlBTQmwDHNmKeqUNMmzdp79NfWXE54TK4K74lRFAfBEV6
-         Mj11z2oC4e/3YnrCFKk5xjqJQadQTsZDfbscsRdw4G6idXnC048/lyYQ0+Whk/nZRd
-         v0iMOMQx+EsO3Q96jNzUtJLO8gdtZ7czTlXNzJC0=
+        b=zMN5Ng+mX3TrgWR0hSulH/ubEwpSJCEFsNxOZUZuSd9rll69IdKKKx5XmcSbs8uyb
+         DnaH07HvCpwORoorruiTjpoqm2JvOpDXGwIj9SwY7QczoGTNHEKV/rIcwGKfMJ34Br
+         FvGgcWv8ccSWSeWYVYYdYC/8KFxfFiyZ5DtoCK2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiong Zhang <xiong.y.zhang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 078/147] drm/i915/gvt: Fix kernel oops for 3-level ppgtt guest
-Date:   Mon, 18 May 2020 19:36:41 +0200
-Message-Id: <20200518173523.488172832@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 096/147] gcc-10: disable zero-length-bounds warning for now
+Date:   Mon, 18 May 2020 19:36:59 +0200
+Message-Id: <20200518173525.468110406@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -60,47 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenyu Wang <zhenyuw@linux.intel.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 72a7a9925e2beea09b109dffb3384c9bf920d9da ]
+commit 5c45de21a2223fe46cf9488c99a7fbcf01527670 upstream.
 
-As i915 won't allocate extra PDP for current default PML4 table,
-so for 3-level ppgtt guest, we would hit kernel pointer access
-failure on extra PDP pointers. So this trys to bypass that now.
-It won't impact real shadow PPGTT setup, so guest context still
-works.
+This is a fine warning, but we still have a number of zero-length arrays
+in the kernel that come from the traditional gcc extension.  Yes, they
+are getting converted to flexible arrays, but in the meantime the gcc-10
+warning about zero-length bounds is very verbose, and is hiding other
+issues.
 
-This is verified on 4.15 guest kernel with i915.enable_ppgtt=1
-to force on old aliasing ppgtt behavior.
+I missed one actual build failure because it was hidden among hundreds
+of lines of warning.  Thankfully I caught it on the second go before
+pushing things out, but it convinced me that I really need to disable
+the new warnings for now.
 
-Fixes: 4f15665ccbba ("drm/i915: Add ppgtt to GVT GEM context")
-Reviewed-by: Xiong Zhang <xiong.y.zhang@intel.com>
-Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20200506095918.124913-1-zhenyuw@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+We'll hopefully be all done with our conversion to flexible arrays in
+the not too distant future, and we can then re-enable this warning.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/i915/gvt/scheduler.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ Makefile |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/i915/gvt/scheduler.c b/drivers/gpu/drm/i915/gvt/scheduler.c
-index 6c79d16b381ea..058dcd5416440 100644
---- a/drivers/gpu/drm/i915/gvt/scheduler.c
-+++ b/drivers/gpu/drm/i915/gvt/scheduler.c
-@@ -374,7 +374,11 @@ static void set_context_ppgtt_from_shadow(struct intel_vgpu_workload *workload,
- 		for (i = 0; i < GVT_RING_CTX_NR_PDPS; i++) {
- 			struct i915_page_directory * const pd =
- 				i915_pd_entry(ppgtt->pd, i);
--
-+			/* skip now as current i915 ppgtt alloc won't allocate
-+			   top level pdp for non 4-level table, won't impact
-+			   shadow ppgtt. */
-+			if (!pd)
-+				break;
- 			px_dma(pd) = mm->ppgtt_mm.shadow_pdps[i];
- 		}
- 	}
--- 
-2.20.1
-
+--- a/Makefile
++++ b/Makefile
+@@ -856,6 +856,9 @@ KBUILD_CFLAGS += -Wno-pointer-sign
+ # disable stringop warnings in gcc 8+
+ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+ 
++# We'll want to enable this eventually, but it's not going away for 5.7 at least
++KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
++
+ # Enabled with W=2, disabled by default as noisy
+ KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
+ 
 
 
