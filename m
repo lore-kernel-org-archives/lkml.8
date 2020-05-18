@@ -2,152 +2,142 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D335C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A7AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4AA2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:20:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="JLuJ5EyJ"
+	by mail.kernel.org (Postfix) with ESMTP id EF36E2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgERNUl (ORCPT
+        id S1728126AbgERNVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:20:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbgERNUk (ORCPT
+        Mon, 18 May 2020 09:21:32 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30868 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726726AbgERNVb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:20:40 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D9D6C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:20:40 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id e8so9739119ilm.7
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:20:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fgpdOynF6cHr+f7BfLRTcoqsZLiHJjSZb3oyMsov/Ak=;
-        b=JLuJ5EyJnmImXOc3M2tKKSPI6B+PcA3dWkQ4oWB1yJLUGsMbea2I99AQvsy6jxwBcQ
-         qNVhv6uqiP7/IC/qmcMSzpxqKau1sUzKlPuU+R9xvDB32WwKbCBYIXx2Uui6PbMev5m+
-         Qv9O7KKI4REUBmO8NdXYlPh3q0kt6I64aefaM6irfkREpk1yB85ScH3gsX/icETPRC9S
-         8R27qEENMhVWyXW0HjAvVl2VcYhagtg31vqk1rp3KgZ86NCcF5PjCSwKYR8a1VnZM0ax
-         hhjfEaxGek1yFrzCSuPtOnTSkK4AN0ImEr3mGaeQJ83SsDA88BOOID+LscKjXhkE5ksB
-         Nd/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fgpdOynF6cHr+f7BfLRTcoqsZLiHJjSZb3oyMsov/Ak=;
-        b=X5d/++Bi+f0W/Ubf8Kcu0k/TtcGnEazLuTaEoSq8ZNinxZzo4+Z2vMpqnaSKEY+Trk
-         +yLQdAbehBD9msFae3F0S9mRltQbF2JYbJHqhNbq1rT1+kxejTcLqRswRYxhIjSZ9HZr
-         faD+7bu+01RUdSTFfViST2TSqoBZjv0IFpr/29qpqbNnrdtZVU6SEWYiYQTtF2m/Edmu
-         rcZvgUKWBq5Cyl9DhcfWx3Ski770TxpXss9beQUpazX7iWMGYPmwFD6oWToxsYifKfK6
-         OBTxquuvuwQ/DjcsHn3Y5vF0zxQJNw9RNUq06irZh9wq5umIVUhcidA+ZZjRg2N9xgZN
-         OOJA==
-X-Gm-Message-State: AOAM531KgTsXFa4r5PYhg7GmwvBLa3E01MVZmrf0vY/rXYavYAtWN0yw
-        baucpFEzdItXYpTGEAjicmnxFg==
-X-Google-Smtp-Source: ABdhPJyWutT81wIg9rwCkewuHKPqF07LUmx39cfM8OceBawpWLgFLbl7IiIAzFVfr8YTYknhJn3+Jg==
-X-Received: by 2002:a92:507:: with SMTP id q7mr15605515ile.150.1589808039529;
-        Mon, 18 May 2020 06:20:39 -0700 (PDT)
-Received: from cisco ([2601:282:b02:8120:6155:7c8c:3dc0:c56e])
-        by smtp.gmail.com with ESMTPSA id y12sm2715736ilk.16.2020.05.18.06.20.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 06:20:38 -0700 (PDT)
-Date:   Mon, 18 May 2020 07:20:38 -0600
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Aleksa Sarai <asarai@suse.de>, Kees Cook <keescook@chromium.org>,
-        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
-Message-ID: <20200518132038.GA2405879@cisco>
-References: <20200515234005.32370-1-sargun@sargun.me>
- <202005162344.74A02C2D@keescook>
- <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
- <20200517112156.cphs2h33hx2wfcs4@yavin.dot.cyphar.com>
- <20200517142316.GA1996744@cisco>
- <20200517143311.fmxaf3pnopuaezl4@wittgenstein>
- <20200517144603.GD1996744@cisco>
- <20200517150215.GE1996744@cisco>
- <20200518125325.l2lpixp3ch7zuiwx@wittgenstein>
+        Mon, 18 May 2020 09:21:31 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04ID4iQv155963;
+        Mon, 18 May 2020 09:20:53 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312cp7s457-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 09:20:53 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04IDCPGj001629;
+        Mon, 18 May 2020 09:20:53 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312cp7s44f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 09:20:53 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04IDFJWB030967;
+        Mon, 18 May 2020 13:20:50 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 3127t5m6g7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 13:20:50 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04IDKmUJ65143146
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 May 2020 13:20:48 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6705842045;
+        Mon, 18 May 2020 13:20:48 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7873C4203F;
+        Mon, 18 May 2020 13:20:47 +0000 (GMT)
+Received: from pomme.local (unknown [9.145.67.24])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 18 May 2020 13:20:47 +0000 (GMT)
+Subject: Re: [PATCH v5 03/10] DMA reservations: use the new mmap locking API
+To:     Michel Lespinasse <walken@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+References: <20200422001422.232330-1-walken@google.com>
+ <20200422001422.232330-4-walken@google.com>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Message-ID: <714ddb85-f2f7-af77-70ac-fff2bb1b80a1@linux.ibm.com>
+Date:   Mon, 18 May 2020 15:20:47 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518125325.l2lpixp3ch7zuiwx@wittgenstein>
+In-Reply-To: <20200422001422.232330-4-walken@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-18_05:2020-05-15,2020-05-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 bulkscore=0 cotscore=-2147483648
+ priorityscore=1501 malwarescore=0 clxscore=1015 phishscore=0
+ impostorscore=0 lowpriorityscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005180114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 02:53:25PM +0200, Christian Brauner wrote:
-> On Sun, May 17, 2020 at 09:02:15AM -0600, Tycho Andersen wrote:
-> > On Sun, May 17, 2020 at 08:46:03AM -0600, Tycho Andersen wrote:
-> > > On Sun, May 17, 2020 at 04:33:11PM +0200, Christian Brauner wrote:
-> > > > struct seccomp_notif2 {
-> > > > 	__u32 notif_size;
-> > > > 	__u64 id;
-> > > > 	__u32 pid;
-> > > > 	__u32 flags;
-> > > > 	struct seccomp_data data;
-> > > > 	__u32 data_size;
-> > > > };
-> > > 
-> > > I guess you need to put data_size before data, otherwise old userspace
-> > > with a smaller struct seccomp_data will look in the wrong place.
-> > > 
-> > > But yes, that'll work if you put two sizes in, which is probably
-> > > reasonable since we're talking about two structs.
-> > 
-> > Well, no, it doesn't either. Suppose we add a new field first to
-> > struct seccomp_notif2:
-> > 
-> > struct seccomp_notif2 {
-> >     __u32 notif_size;
-> >     __u64 id;
-> >     __u32 pid;
-> >     __u32 flags;
-> >     struct seccomp_data data;
-> >     __u32 data_size;
-> >     __u32 new_field;
-> > };
-> > 
-> > And next we add a new field to struct secccomp_data. When a userspace
-> > compiled with just the new seccomp_notif2 field does:
-> > 
-> > seccomp_notif2.new_field = ...;
-> > 
-> > the compiler will put it in the wrong place for the kernel with the
-> > new seccomp_data field too.
-> > 
-> > Sort of feels like we should do:
-> > 
-> > struct seccomp_notif2 {
-> >     struct seccomp_notif *notif;
-> >     struct seccomp_data *data;
-> > };
-> > 
-> > ?
+Le 22/04/2020 à 02:14, Michel Lespinasse a écrit :
+> This use is converted manually ahead of the next patch in the series,
+> as it requires including a new header which the automated conversion
+> would miss.
 > 
-> Oh yes of course, sorry that was my stupid typo. I meant:
-> 
-> struct seccomp_notif2 {
->     __u32 notif_size;
->     __u64 id;
->     __u32 pid;
->     __u32 flags;
->     struct seccomp_data *data;
->     __u32 data_size;
->     __u32 new_field;
-> }
-> 
-> at which point things should just work imho.
+> Signed-off-by: Michel Lespinasse <walken@google.com>
+> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-Are you saying that data_size is an input? Because I don't think they
-Just Work otherwise.
+Reviewed-by: Laurent Dufour <ldufour@linux.ibm.com>
 
-Tycho
+> ---
+>   drivers/dma-buf/dma-resv.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
+> index 4264e64788c4..b45f8514dc82 100644
+> --- a/drivers/dma-buf/dma-resv.c
+> +++ b/drivers/dma-buf/dma-resv.c
+> @@ -34,6 +34,7 @@
+>   
+>   #include <linux/dma-resv.h>
+>   #include <linux/export.h>
+> +#include <linux/mm.h>
+>   #include <linux/sched/mm.h>
+>   
+>   /**
+> @@ -109,7 +110,7 @@ static int __init dma_resv_lockdep(void)
+>   
+>   	dma_resv_init(&obj);
+>   
+> -	down_read(&mm->mmap_sem);
+> +	mmap_read_lock(mm);
+>   	ww_acquire_init(&ctx, &reservation_ww_class);
+>   	ret = dma_resv_lock(&obj, &ctx);
+>   	if (ret == -EDEADLK)
+> @@ -118,7 +119,7 @@ static int __init dma_resv_lockdep(void)
+>   	fs_reclaim_release(GFP_KERNEL);
+>   	ww_mutex_unlock(&obj.lock);
+>   	ww_acquire_fini(&ctx);
+> -	up_read(&mm->mmap_sem);
+> +	mmap_read_unlock(mm);
+>   	
+>   	mmput(mm);
+>   
+> 
+
