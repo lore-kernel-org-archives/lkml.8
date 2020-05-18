@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC06C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A97BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7A4207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3A8C20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824364;
-	bh=Q6OxYPg+HEkGz2LIWB5H4R2fxd0AQ+iGVhEsHiX43Pk=;
+	s=default; t=1589824368;
+	bh=hs2nE6Wrb7NabB66Yo0yGF0wfgyhxK7+lzV506mq0DU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oxuc/HQUSRwcZrXcf+g/q+am4qL6OpM4TNhjQllJM0UCrBENV7IguYTOL5QuftjqX
-	 KqC9EmCeGo6oC3aC8QKR2wt8CLiXO6wJsMR8dFB/x3k+5eorq0s6rSt5/DHWOYj7Ip
-	 rr/3z08aUCnZVORsWWRaFYW8ShGGC8p60CO/PreI=
+	b=pb2gDIt0N07D/nvuuBfDwntkTOEdRYUO52GUA4M3mAqsgfCNjzmmNIK3qry8oXI7f
+	 x5EIh5WuJeVl5TL+ymsvUrFvnvL41ptwTDwNMqCmvWuoRjjfDtutpcgmiu92ENFzLP
+	 1dGnaUUkH5fvpW+hGhS65s/EWgk7jYZF4eeIrEEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731026AbgERRwn (ORCPT
+        id S1731035AbgERRwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:52:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55948 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:52:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730986AbgERRwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:52:37 -0400
+        id S1729079AbgERRwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:52:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AE5F20715;
-        Mon, 18 May 2020 17:52:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2436207C4;
+        Mon, 18 May 2020 17:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824356;
-        bh=Q6OxYPg+HEkGz2LIWB5H4R2fxd0AQ+iGVhEsHiX43Pk=;
+        s=default; t=1589824361;
+        bh=hs2nE6Wrb7NabB66Yo0yGF0wfgyhxK7+lzV506mq0DU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WlHQj6qE1iVYmd1gTu6D1qlzVr76YnHW/oy8PT5qON+D74maPoF3+o40fnjmPjW24
-         scYBfwdPxnsmz01Az2ZAAHtjnEAYUt1L88zpjQ1Nc9BQmzuNxBYLrAx5fkBpGtIv7o
-         5odfmNbUFolMKcz206eYg1m8URAbYxUMpoqD90+Q=
+        b=uMM1qV+AuyJr8L9O5Q3qEcUcng1LbEjDMToEemQUXP9qmVwC6wHZ3MkQQ+BTRnMq7
+         6jB9aFG1Hiu99eUMox4PJTcfGv9n1xdglc4eHkquA/ox5k++W29D+KNk7tav3T3k7v
+         mw5FWx1HDFvx/6IGlaidLhaddOSrBepzz3so38iw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyungtae Kim <kt0755@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.19 58/80] USB: gadget: fix illegal array access in binding with UDC
-Date:   Mon, 18 May 2020 19:37:16 +0200
-Message-Id: <20200518173502.171120453@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 4.19 60/80] ARM: dts: dra7: Fix bus_dma_limit for PCIe
+Date:   Mon, 18 May 2020 19:37:18 +0200
+Message-Id: <20200518173502.552525229@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -59,75 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kyungtae Kim <kt0755@gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-commit 15753588bcd4bbffae1cca33c8ced5722477fe1f upstream.
+commit 90d4d3f4ea45370d482fa609dbae4d2281b4074f upstream.
 
-FuzzUSB (a variant of syzkaller) found an illegal array access
-using an incorrect index while binding a gadget with UDC.
+Even though commit cfb5d65f2595 ("ARM: dts: dra7: Add bus_dma_limit
+for L3 bus") added bus_dma_limit for L3 bus, the PCIe controller
+gets incorrect value of bus_dma_limit.
 
-Reference: https://www.spinics.net/lists/linux-usb/msg194331.html
+Fix it by adding empty dma-ranges property to axi@0 and axi@1
+(parent device tree node of PCIe controller).
 
-This bug occurs when a size variable used for a buffer
-is misused to access its strcpy-ed buffer.
-Given a buffer along with its size variable (taken from user input),
-from which, a new buffer is created using kstrdup().
-Due to the original buffer containing 0 value in the middle,
-the size of the kstrdup-ed buffer becomes smaller than that of the original.
-So accessing the kstrdup-ed buffer with the same size variable
-triggers memory access violation.
-
-The fix makes sure no zero value in the buffer,
-by comparing the strlen() of the orignal buffer with the size variable,
-so that the access to the kstrdup-ed buffer is safe.
-
-BUG: KASAN: slab-out-of-bounds in gadget_dev_desc_UDC_store+0x1ba/0x200
-drivers/usb/gadget/configfs.c:266
-Read of size 1 at addr ffff88806a55dd7e by task syz-executor.0/17208
-
-CPU: 2 PID: 17208 Comm: syz-executor.0 Not tainted 5.6.8 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xce/0x128 lib/dump_stack.c:118
- print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
- __kasan_report+0x131/0x1b0 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:641
- __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
- gadget_dev_desc_UDC_store+0x1ba/0x200 drivers/usb/gadget/configfs.c:266
- flush_write_buffer fs/configfs/file.c:251 [inline]
- configfs_write_file+0x2f1/0x4c0 fs/configfs/file.c:283
- __vfs_write+0x85/0x110 fs/read_write.c:494
- vfs_write+0x1cd/0x510 fs/read_write.c:558
- ksys_write+0x18a/0x220 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write fs/read_write.c:620 [inline]
- __x64_sys_write+0x73/0xb0 fs/read_write.c:620
- do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Kyungtae Kim <kt0755@gmail.com>
-Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200510054326.GA19198@pizza01
+Cc: stable@kernel.org
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/configfs.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/dra7.dtsi |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/gadget/configfs.c
-+++ b/drivers/usb/gadget/configfs.c
-@@ -260,6 +260,9 @@ static ssize_t gadget_dev_desc_UDC_store
- 	char *name;
- 	int ret;
- 
-+	if (strlen(page) < len)
-+		return -EOVERFLOW;
-+
- 	name = kstrdup(page, GFP_KERNEL);
- 	if (!name)
- 		return -ENOMEM;
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -312,6 +312,7 @@
+ 			#address-cells = <1>;
+ 			ranges = <0x51000000 0x51000000 0x3000
+ 				  0x0	     0x20000000 0x10000000>;
++			dma-ranges;
+ 			/**
+ 			 * To enable PCI endpoint mode, disable the pcie1_rc
+ 			 * node and enable pcie1_ep mode.
+@@ -325,7 +326,6 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
+-				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+@@ -368,6 +368,7 @@
+ 			#address-cells = <1>;
+ 			ranges = <0x51800000 0x51800000 0x3000
+ 				  0x0	     0x30000000 0x10000000>;
++			dma-ranges;
+ 			status = "disabled";
+ 			pcie2_rc: pcie@51800000 {
+ 				reg = <0x51800000 0x2000>, <0x51802000 0x14c>, <0x1000 0x2000>;
+@@ -378,7 +379,6 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
+-				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
 
 
