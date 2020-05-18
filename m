@@ -2,181 +2,96 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D79C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5F620674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B73F20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589824225;
+	bh=bBVMQUF4qeXU5bRiE5oJQwrq4XxQsC6kpd+/+5KYOCw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v1ZmPP1y9tb7gzL9IaCCPOcM0BnXUNRCT9HcLelfxqg/obP2SQi5edOaYHgggEc6i
+	 oNnQtycny2r9eeio1sEs4yUVUCQVOmNIjrgqFxblmmkIW0hEhZ9YxW3seSObgB6vIb
+	 WEaDWISR48FDoyrqMVlgDH5lsNzyarnTEhMxA1PE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbgERRuW (ORCPT
+        id S1728639AbgERRuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:50:22 -0400
-Received: from smtprelay0091.hostedemail.com ([216.40.44.91]:47570 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730659AbgERRuS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:50:18 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id C5566837F24C;
-        Mon, 18 May 2020 17:50:17 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: pies21_1f8ccfdebe71f
-X-Filterd-Recvd-Size: 4208
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 18 May 2020 17:50:16 +0000 (UTC)
-Message-ID: <c28e8b2f987d94a95b6405b881f791858793709b.camel@perches.com>
-Subject: [PATCH] tty: n_gsm: gsm_print_packet: use scnprintf to avoid pr_cont
-From:   Joe Perches <joe@perches.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Date:   Mon, 18 May 2020 10:50:15 -0700
-In-Reply-To: <20200518074803.GA3095136@kroah.com>
-References: <20200512115323.1447922-1-gregory.clement@bootlin.com>
-         <20200512115323.1447922-2-gregory.clement@bootlin.com>
-         <f957eb74-cdbe-848f-b345-7c9fb3d7b1e6@suse.com> <87tv0dg0ii.fsf@FE-laptop>
-         <20200518073829.GA3055513@kroah.com> <87o8qlg00b.fsf@FE-laptop>
-         <20200518074803.GA3095136@kroah.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Mon, 18 May 2020 13:50:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730668AbgERRuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:50:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A47320674;
+        Mon, 18 May 2020 17:50:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589824219;
+        bh=bBVMQUF4qeXU5bRiE5oJQwrq4XxQsC6kpd+/+5KYOCw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1MLF3oNas6zsbnUfLJCgORRvneE3bYELL8//0flNFKtFEcgmYk+uzf9HZuaM6ZUfG
+         ko3z+3DZWeQwxyHBnyg+tFv2ARkcCH0tc0v6xxWsBp0TLUsFZn5NZPM8ZF7YnpPzpG
+         zW+7zcqWeVS11jkrhy8OI4IEoXa26mI4iXsAHVL4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 083/114] net: phy: fix aneg restart in phy_ethtool_set_eee
+Date:   Mon, 18 May 2020 19:36:55 +0200
+Message-Id: <20200518173517.367144093@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
+References: <20200518173503.033975649@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a temporary buffer to avoid multiple pr_cont uses.
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-Signed-off-by: Joe Perches <joe@perches.com>
+[ Upstream commit 9de5d235b60a7cdfcdd5461e70c5663e713fde87 ]
+
+phy_restart_aneg() enables aneg in the PHY. That's not what we want
+if phydev->autoneg is disabled. In this case still update EEE
+advertisement register, but don't enable aneg and don't trigger an
+aneg restart.
+
+Fixes: f75abeb8338e ("net: phy: restart phy autonegotiation after EEE advertisment change")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
+ drivers/net/phy/phy.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-> > > Ugh, as I already applied this series, should I just revert them all, or
-> > > are you going to send fix-ups on top of what I have applied instead?
-> > 
-> > I was about to send a new series, but I can just send fix-ups. It's up
-> > to you.
-> 
-> fix-ups are less work for me :)
-
-Perhaps use something like this instead?
-
-It does increase object size a tiny bit.
-
- drivers/tty/n_gsm.c | 71 +++++++++++++++++++++++++++++++----------------------
- 1 file changed, 42 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index 69200bd411f7..7d7820aeb57b 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -454,58 +454,71 @@ static u8 gsm_encode_modem(const struct gsm_dlci *dlci)
-  */
- 
- static void gsm_print_packet(const char *hdr, int addr, int cr,
--					u8 control, const u8 *data, int dlen)
-+			     u8 control, const u8 *data, int dlen)
- {
-+	char buf[100];
-+	char *p;
-+	char *type;
-+
- 	if (!(debug & 1))
- 		return;
- 
--	pr_info("%s %d) %c: ", hdr, addr, "RC"[cr]);
-+	p = buf;
-+	p += scnprintf(p, buf - p, "%s %d) %c: ", hdr, addr, "RC"[cr]);
- 
- 	switch (control & ~PF) {
- 	case SABM:
--		pr_cont("SABM");
-+		type = "SABM";
- 		break;
- 	case UA:
--		pr_cont("UA");
-+		type = "UA";
- 		break;
- 	case DISC:
--		pr_cont("DISC");
-+		type = "DISC";
- 		break;
- 	case DM:
--		pr_cont("DM");
-+		type = "DM";
- 		break;
- 	case UI:
--		pr_cont("UI");
-+		type = "UI";
- 		break;
- 	case UIH:
--		pr_cont("UIH");
-+		type = "UIH";
- 		break;
- 	default:
--		if (!(control & 0x01)) {
--			pr_cont("I N(S)%d N(R)%d",
--				(control & 0x0E) >> 1, (control & 0xE0) >> 5);
--		} else switch (control & 0x0F) {
--			case RR:
--				pr_cont("RR(%d)", (control & 0xE0) >> 5);
--				break;
--			case RNR:
--				pr_cont("RNR(%d)", (control & 0xE0) >> 5);
--				break;
--			case REJ:
--				pr_cont("REJ(%d)", (control & 0xE0) >> 5);
--				break;
--			default:
--				pr_cont("[%02X]", control);
-+		type = NULL;
-+		break;
-+	}
-+
-+	if (type) {
-+		p += scnprintf(p, buf - p, "%s", type);
-+	} else if (!(control & 0x01)) {
-+		p += scnprintf(p, buf - p, "I N(S)%d N(R)%d",
-+			       (control & 0x0E) >> 1, (control & 0xE0) >> 5);
-+	} else {
-+		switch (control & 0x0F) {
-+		case RR:
-+			p += scnprintf(p, buf - p, "RR(%d)",
-+				       (control & 0xE0) >> 5);
-+			break;
-+		case RNR:
-+			p += scnprintf(p, buf - p, "RNR(%d)",
-+				       (control & 0xE0) >> 5);
-+			break;
-+		case REJ:
-+			p += scnprintf(p, buf - p, "REJ(%d)",
-+				       (control & 0xE0) >> 5);
-+			break;
-+		default:
-+			p += scnprintf(p, buf - p, "[%02X]", control);
-+			break;
- 		}
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -1257,9 +1257,11 @@ int phy_ethtool_set_eee(struct phy_devic
+ 		/* Restart autonegotiation so the new modes get sent to the
+ 		 * link partner.
+ 		 */
+-		ret = phy_restart_aneg(phydev);
+-		if (ret < 0)
+-			return ret;
++		if (phydev->autoneg == AUTONEG_ENABLE) {
++			ret = phy_restart_aneg(phydev);
++			if (ret < 0)
++				return ret;
++		}
  	}
  
--	if (control & PF)
--		pr_cont("(P)");
--	else
--		pr_cont("(F)");
-+	p += scnprintf(p, buf - p, "(%c)", control & PF ? 'P' : 'F');
- 
--	if (dlen)
--		print_hex_dump_bytes("", DUMP_PREFIX_NONE, data, dlen);
-+	pr_info("%s\n", buf);
-+	print_hex_dump_bytes("", DUMP_PREFIX_NONE, data, dlen);
- }
- 
- 
+ 	return 0;
 
 
