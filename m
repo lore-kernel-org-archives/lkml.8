@@ -2,93 +2,107 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98859C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 673D720715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:10:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gAXE4XpV"
+	by mail.kernel.org (Postfix) with ESMTP id E9190207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:13:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgERVKk (ORCPT
+        id S1726721AbgERVNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 17:10:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgERVKk (ORCPT
+        Mon, 18 May 2020 17:13:33 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:39506 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgERVNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 17:10:40 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1EBC05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 14:10:39 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x2so5526663pfx.7
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 14:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=02zTdmWvuhMAmu2ssQyvw6TTLQFpo9NVSwY+R1u73VY=;
-        b=gAXE4XpV+CS3MUzPaSu04TFze1uh9z13q7TUdzdjq1D07GUaXHKHaUQzff7/WhoD6l
-         WxQ0PBeQoQd7DpwoLKG/0/No4/eSeR/EDgWDAJfgU9GbwOZRQRI+DM/veXDczDNtmx5a
-         roH9kSmO5mV1oQYZqA7gfZXVpkGae1YKks7Xo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=02zTdmWvuhMAmu2ssQyvw6TTLQFpo9NVSwY+R1u73VY=;
-        b=lbAXoxIb/ZQCtLstxUOP9pF7kMjsquN17P7Ret88GmQGrOJUO22wIIitngTRMLo9sM
-         EkQcBh9Di4f6hqMenyTF3Et/H4QETSAVernPbepJNBtNKXzwUmKsqe6qU840gAVlM/Cm
-         1sI6BBjrs4fKgdEhbmniuiTniyDZbOe7Zz39iG148KqlySH5sJTHGfK+794Wi0JqFwDz
-         2gAquzqDb4v9tewiKbB8XScSmJ/l9hRaBDOa3Nl+rRYHWIQ/ru+Zut2WwSTbpnuJ6zMj
-         F0mbUH6fCzH+dQAm2ruJdy7mJnOvGLh3rzSxWNXFvXuiC5/I2JXk+HcsK9DDE5EMXz0X
-         HssA==
-X-Gm-Message-State: AOAM533P4efSAoIXwMf4h4Lqq9NQhzWP9BISp2EIpknYKFNHadyepx/w
-        J3cozhTUpu72INq0MPjau9D4sA==
-X-Google-Smtp-Source: ABdhPJwgyL7qadxNPz/Mn0mpWZEUmq5QEMkziZLtBB2Ei8yrQXRte4glp9kkv3QgQOWsAPUrHLt90A==
-X-Received: by 2002:a63:6f4c:: with SMTP id k73mr16449725pgc.241.1589836238493;
-        Mon, 18 May 2020 14:10:38 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o190sm9514518pfb.178.2020.05.18.14.10.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 14:10:37 -0700 (PDT)
-Date:   Mon, 18 May 2020 14:10:36 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Aleksa Sarai <asarai@suse.de>, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
-Message-ID: <202005181405.AF40001D@keescook>
-References: <20200515234005.32370-1-sargun@sargun.me>
- <202005162344.74A02C2D@keescook>
- <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
- <20200517112156.cphs2h33hx2wfcs4@yavin.dot.cyphar.com>
- <20200517142316.GA1996744@cisco>
- <20200517143311.fmxaf3pnopuaezl4@wittgenstein>
- <20200517144603.GD1996744@cisco>
- <20200517150215.GE1996744@cisco>
- <202005171428.68F30AA0@keescook>
+        Mon, 18 May 2020 17:13:33 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 8B42D1C025E; Mon, 18 May 2020 23:13:31 +0200 (CEST)
+Date:   Mon, 18 May 2020 23:13:30 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com,
+        syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 02/80] shmem: fix possible deadlocks on
+ shmlock_user_lock
+Message-ID: <20200518211330.GA25576@amd>
+References: <20200518173450.097837707@linuxfoundation.org>
+ <20200518173450.633393924@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="8t9RHnE3ZwKMSgU+"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202005171428.68F30AA0@keescook>
+In-Reply-To: <20200518173450.633393924@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 02:30:57PM -0700, Kees Cook wrote:
-> Anyway, it's very related to this, so, yeah, probably we need a v2 of the
-> notif API, but I'll try to get all the ideas here collected in one place.
 
-For future thread archæologists, I put my thoughts here:
-https://lore.kernel.org/lkml/202005181120.971232B7B@keescook/
+--8t9RHnE3ZwKMSgU+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Kees Cook
+Hi!
+
+> This may not risk an actual deadlock, since shmem inodes do not take
+> part in writeback accounting, but there are several easy ways to avoid
+> it.
+
+=2E..
+
+> Take info->lock out of the chain and the possibility of deadlock or
+> lockdep warning goes away.
+
+It is unclear to me if actual possibility of deadlock exists or not,
+but anyway:
+
+>  	int retval =3D -ENOMEM;
+> =20
+> -	spin_lock_irq(&info->lock);
+> +	/*
+> +	 * What serializes the accesses to info->flags?
+> +	 * ipc_lock_object() when called from shmctl_do_lock(),
+> +	 * no serialization needed when called from shm_destroy().
+> +	 */
+>  	if (lock && !(info->flags & VM_LOCKED)) {
+>  		if (!user_shm_lock(inode->i_size, user))
+>  			goto out_nomem;
+
+Should we have READ_ONCE() here? If it is okay, are concurency
+sanitizers smart enough to realize that it is okay? Replacing warning
+with different one would not be exactly a win...
+
+Best regards,
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--8t9RHnE3ZwKMSgU+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7C+noACgkQMOfwapXb+vIp4QCeOHGsBJ1v5LOYIQ5B6hvE0DCT
+6KEAn02mxYUIBMKxf6gx/Zb4s1ygGl9Z
+=HaBo
+-----END PGP SIGNATURE-----
+
+--8t9RHnE3ZwKMSgU+--
