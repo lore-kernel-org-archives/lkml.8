@@ -2,89 +2,254 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B18C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC24C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B025F2081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63963207FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="T5KMEfAY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ArinD1zH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgERTVQ (ORCPT
+        id S1728019AbgERTXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 15:21:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47174 "EHLO
+        Mon, 18 May 2020 15:23:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727942AbgERTVN (ORCPT
+        with ESMTP id S1727856AbgERTXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 15:21:13 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECBFEC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:21:11 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id z5so9780321ejb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:21:11 -0700 (PDT)
+        Mon, 18 May 2020 15:23:09 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2775C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:23:08 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id y13so6309345vsk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:23:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8NCtLMQj4bd2e3c2bHF+/O8J9nt2Ds2pK8CiLeSB8n0=;
-        b=T5KMEfAY6vCFd6N5Kx0NVes4X6Q7ceE8/KLOzPFTAQ+GkwYT9S/SpLB4pNPQnjowkJ
-         CbCiZfwOlTyQiJB+e/DHqeaoM2w/5uknnHaHMT2nG6iUEIGoU/vj/vOD8wHOLr1H25Ks
-         jre48/UL+cra9yG4+JTg6MNvAynGFFoWDDr0Ke+ETW68ZWsmO8VtHAdEufFARE/0AD6G
-         1vBaZK7PKNYcMg2dLZWNq4yLlWd2TcICJpkI2HalSNiiTUXmNQQEcGUMRJr4o/S+9dq3
-         55yjq0I2/mslD4FGfU8OpQTCETGlya80rexHHt7bctlq3GhikIaXE+Qtl2lLopaOmXpk
-         7PJg==
+        bh=f3ILiyk30wRbfK23dh/O9xFsFphYtNDbVYfVZgp73Oc=;
+        b=ArinD1zH1rcDoD3eiWAyIe2Q8HfWaY+YmTtTgigWn7pciUtEgLRFTDSawEinY3f1nN
+         xZhZxUiZXPT2usRKyRNF3hC0LmKdyukGGtkPwogqkCY2DZnD974VBZuJNfzTSbn+Cm+P
+         8ztyv1L7mnw/E2+5qty9azyOElIkgEY9hr0g7cmXvZtYE2gWUUBbRJ0optWiBxptKwFf
+         mc/zbsIdcaW4V/4P59+fMlSPgWvLUhA3WdIOzan5elDVqy6tUSDUQOkpemo/AWTCcbJr
+         Tka2KsAzTztWVAJFwqnVxia8oin4uiGg/nGkuvNPuWjIXwPG0PdVpxKRCbiSpNuzv9ej
+         n66g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8NCtLMQj4bd2e3c2bHF+/O8J9nt2Ds2pK8CiLeSB8n0=;
-        b=jzIFayUJbwO5W9mEi7i5RF1OrXqYkSp0U+PZ1RVRBW4LAlTBPAu3f1vt8hFYJX6MH0
-         TGn6ywfyfY6XERf8/3njK0Wau51LHYY/ADwWbwa8n5Rbtfk9Yfilad7v2QZwH2ixQAb4
-         zRMepyp67vSMRR27cOu6tYp8wwYfkyfdo6MvTTYZyuGLxt+WTFNQJF7yo5ybcfaQptMc
-         93RKcC1Y0NDKGZcE5XCH66iN/+Dv3YysCgZTVXOQWWqG4QL+kwe05aEPuS3B52sBK3vj
-         rX7gI3vTaPmo89Whkr4b8iS0PZfxExf0ZYoMRIKeDz2pKdBXfwwd03cCYY6i0aIaj3Oq
-         yxEg==
-X-Gm-Message-State: AOAM531xbxy4jS7fRKBox70NVY0olxaBjqkP8fKQnM8UMVLycU4lkxU2
-        49GAjbeQMugx5wG/wdQpwA5awagahWy9KOO3E/JB/Q==
-X-Google-Smtp-Source: ABdhPJzd7dkJtQhZKZrnZAYQVrril33taRNEhq4HfjmcahS4WFjiDUaOSfR6v4zAJibJEOPuxLCA5yHtrrOjAp//Bgs=
-X-Received: by 2002:a17:906:528e:: with SMTP id c14mr15831151ejm.123.1589829670561;
- Mon, 18 May 2020 12:21:10 -0700 (PDT)
+        bh=f3ILiyk30wRbfK23dh/O9xFsFphYtNDbVYfVZgp73Oc=;
+        b=l/3alzlWoe5BWwDPyO91Pm1Y5W8uaMLWo/X7t7cp/hGrcyeVcHLd/K8h1fSauuCuK1
+         m8Z2gsipHqJsVnpVPHtnIsFgZoK6zkkGo9gBF+XS6rxAn7QjjqUILcS7JGOpHx5YU+tx
+         OX0hLU7Z/yB3IN5ciceEqMFwl+pAd3EuinF2MeIYW1+JNtoujjpcZ8PYnK/06DnpzvM4
+         H8FwfGY41tCKWaI3m+82/ngw8duuzmusbk8wTG0T2EvdrZRTqyK9zHBgM7K1kBNnQMqU
+         iJoNxO4xTE1zEjm//9df/OxPlL9mwTmRnhZQmyPc+DniSGrMuRxc/awtOwr7EOoCpS5t
+         gAvg==
+X-Gm-Message-State: AOAM532P1zKkVYvkiZzrFh9lGxzmqXR1SMc3xXM/3oEcJ8oZ0OxQMdb+
+        Am2hAsWdF5Q8/xu/3AAgmfJYumFsGwmfMmB/jt+Vsw==
+X-Google-Smtp-Source: ABdhPJxDL/9YgOnqV3iWJOuJCL8QuNnztjnS6s28kHehJj8idXehTbtn/Sfp0ou+w9qe7XSEVPhnR2x3JXc5/5UqawY=
+X-Received: by 2002:a67:f883:: with SMTP id h3mr7772716vso.239.1589829787468;
+ Mon, 18 May 2020 12:23:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200516150229.GB19372@zn.tnic> <8022D1E6-A8BC-4610-9F58-67A06B9A9575@intel.com>
- <CAPcxDJ50pbuTbittyvPwKq1uUT8q8jJ+dHH8rCug8a1DDZXVYw@mail.gmail.com>
- <CAPcxDJ6f3pBpwiR9nvXN_g_HBa1RAMG+aOmgfXLFT6aZ9HQn3w@mail.gmail.com>
- <20200518134813.GC25034@zn.tnic> <20200518153625.GA31444@agluck-desk2.amr.corp.intel.com>
- <20200518165500.GD25034@zn.tnic> <20200518182629.GA2957@agluck-desk2.amr.corp.intel.com>
-In-Reply-To: <20200518182629.GA2957@agluck-desk2.amr.corp.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 18 May 2020 12:20:59 -0700
-Message-ID: <CAPcyv4iLMzGJUgjG9kxuuH65mYbqJ0+oHd4DbD1Kc6p9J14F0g@mail.gmail.com>
-Subject: Re: [PATCH] x86/mm: Don't try to change poison pages to uncacheable
- in a guest
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Jue Wang <juew@google.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200516012055.126205-1-minchan@kernel.org>
+In-Reply-To: <20200516012055.126205-1-minchan@kernel.org>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Mon, 18 May 2020 12:22:56 -0700
+Message-ID: <CAJuCfpGbPUpWLDgwt5ZP4Uf8fp6ht_6eqUypMVYYh3btJdz_8Q@mail.gmail.com>
+Subject: Re: [PATCH] mm: use only pidfd for process_madvise syscall
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com,
+        SeongJae Park <sjpark@amazon.com>,
+        David Rientjes <rientjes@google.com>,
+        Arjun Roy <arjunroy@google.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 11:26 AM Luck, Tony <tony.luck@intel.com> wrote:
-[..]
-> N.B. Linux wants to switch the page to uncacheable so that in the
-> persistant memory case the filesytem code can continue to access
-> the other "blocks" in the page, rather than lose all of them. That's
-> futile in the case where the VMM took the whole 4K away. Maybe Dan
-> needs to think about the guest case too.
+On Fri, May 15, 2020 at 6:21 PM Minchan Kim <minchan@kernel.org> wrote:
+>
+> Based on discussion[1], people didn't feel we need to support both
+> pid and pidfd for every new coming API[2] so this patch keeps only
+> pidfd. This patch also changes flags's type with "unsigned int".
+> So finally, the API is as follows,
+>
+>       ssize_t process_madvise(int pidfd, const struct iovec *iovec,
+>                 unsigned long vlen, int advice, unsigned int flags);
+>
+>     DESCRIPTION
+>       The process_madvise() system call is used to give advice or directions
+>       to the kernel about the address ranges from external process as well as
+>       local process. It provides the advice to address ranges of process
+>       described by iovec and vlen. The goal of such advice is to improve system
+>       or application performance.
+>
+>       The pidfd selects the process referred to by the PID file descriptor
+>       specified in pidfd. (See pidofd_open(2) for further information)
+>
+>       The pointer iovec points to an array of iovec structures, defined in
+>       <sys/uio.h> as:
+>
+>         struct iovec {
+>             void *iov_base;         /* starting address */
+>             size_t iov_len;         /* number of bytes to be advised */
+>         };
+>
+>       The iovec describes address ranges beginning at address(iov_base)
+>       and with size length of bytes(iov_len).
+>
+>       The vlen represents the number of elements in iovec.
+>
+>       The advice is indicated in the advice argument, which is one of the
+>       following at this moment if the target process specified by idtype and
 
-I think increasing the blast-radius to 4K is the best we can do
-without a paravirt mechanism to coordinate errors. There's also the
-existing problem that set_mce_nospec() fails on pmem due to the
-memtype lookup.
+There is no idtype parameter anymore, so maybe just "if the target
+process is external"?
+
+>       id is external.
+>
+>         MADV_COLD
+>         MADV_PAGEOUT
+>         MADV_MERGEABLE
+>         MADV_UNMERGEABLE
+>
+>       Permission to provide a hint to external process is governed by a
+>       ptrace access mode PTRACE_MODE_ATTACH_FSCREDS check; see ptrace(2).
+>
+>       The process_madvise supports every advice madvise(2) has if target
+>       process is in same thread group with calling process so user could
+>       use process_madvise(2) to extend existing madvise(2) to support
+>       vector address ranges.
+>
+>     RETURN VALUE
+>       On success, process_madvise() returns the number of bytes advised.
+>       This return value may be less than the total number of requested
+>       bytes, if an error occurred. The caller should check return value
+>       to determine whether a partial advice occurred.
+>
+> [1] https://lore.kernel.org/linux-mm/20200509124817.xmrvsrq3mla6b76k@wittgenstein/
+> [2] https://lore.kernel.org/linux-mm/9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com/
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
+> ---
+>  mm/madvise.c | 42 +++++++++++++-----------------------------
+>  1 file changed, 13 insertions(+), 29 deletions(-)
+>
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index d3fbbe52d230..35c9b220146a 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -1229,8 +1229,8 @@ static int process_madvise_vec(struct task_struct *target_task,
+>         return ret;
+>  }
+>
+> -static ssize_t do_process_madvise(int which, pid_t upid, struct iov_iter *iter,
+> -                                      int behavior, unsigned long flags)
+> +static ssize_t do_process_madvise(int pidfd, struct iov_iter *iter,
+> +                               int behavior, unsigned int flags)
+>  {
+>         ssize_t ret;
+>         struct pid *pid;
+> @@ -1241,26 +1241,12 @@ static ssize_t do_process_madvise(int which, pid_t upid, struct iov_iter *iter,
+>         if (flags != 0)
+>                 return -EINVAL;
+>
+> -       switch (which) {
+> -       case P_PID:
+> -               if (upid <= 0)
+> -                       return -EINVAL;
+> -
+> -               pid = find_get_pid(upid);
+> -               if (!pid)
+> -                       return -ESRCH;
+> -               break;
+> -       case P_PIDFD:
+> -               if (upid < 0)
+> -                       return -EINVAL;
+> -
+> -               pid = pidfd_get_pid(upid);
+> -               if (IS_ERR(pid))
+> -                       return PTR_ERR(pid);
+> -               break;
+> -       default:
+> +       if (pidfd < 0)
+>                 return -EINVAL;
+> -       }
+> +
+> +       pid = pidfd_get_pid(pidfd);
+> +       if (IS_ERR(pid))
+> +               return PTR_ERR(pid);
+>
+>         task = get_pid_task(pid, PIDTYPE_PID);
+>         if (!task) {
+> @@ -1292,9 +1278,8 @@ static ssize_t do_process_madvise(int which, pid_t upid, struct iov_iter *iter,
+>         return ret;
+>  }
+>
+> -SYSCALL_DEFINE6(process_madvise, int, which, pid_t, upid,
+> -               const struct iovec __user *, vec, unsigned long, vlen,
+> -               int, behavior, unsigned long, flags)
+> +SYSCALL_DEFINE5(process_madvise, int, pidfd, const struct iovec __user *, vec,
+> +               unsigned long, vlen, int, behavior, unsigned int, flags)
+>  {
+>         ssize_t ret;
+>         struct iovec iovstack[UIO_FASTIOV];
+> @@ -1303,19 +1288,18 @@ SYSCALL_DEFINE6(process_madvise, int, which, pid_t, upid,
+>
+>         ret = import_iovec(READ, vec, vlen, ARRAY_SIZE(iovstack), &iov, &iter);
+>         if (ret >= 0) {
+> -               ret = do_process_madvise(which, upid, &iter, behavior, flags);
+> +               ret = do_process_madvise(pidfd, &iter, behavior, flags);
+>                 kfree(iov);
+>         }
+>         return ret;
+>  }
+>
+>  #ifdef CONFIG_COMPAT
+> -COMPAT_SYSCALL_DEFINE6(process_madvise, compat_int_t, which,
+> -                       compat_pid_t, upid,
+> +COMPAT_SYSCALL_DEFINE5(process_madvise, compat_int_t, pidfd,
+>                         const struct compat_iovec __user *, vec,
+>                         compat_ulong_t, vlen,
+>                         compat_int_t, behavior,
+> -                       compat_ulong_t, flags)
+> +                       compat_int_t, flags)
+>
+>  {
+>         ssize_t ret;
+> @@ -1326,7 +1310,7 @@ COMPAT_SYSCALL_DEFINE6(process_madvise, compat_int_t, which,
+>         ret = compat_import_iovec(READ, vec, vlen, ARRAY_SIZE(iovstack),
+>                                 &iov, &iter);
+>         if (ret >= 0) {
+> -               ret = do_process_madvise(which, upid, &iter, behavior, flags);
+> +               ret = do_process_madvise(pidfd, &iter, behavior, flags);
+>                 kfree(iov);
+>         }
+>         return ret;
+> --
+> 2.26.2.761.g0e0b3e54be-goog
+>
+
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
