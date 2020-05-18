@@ -2,243 +2,306 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBCBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C275920801
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387AE20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="qi5k2t8L"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XrEl9sHF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgERKUG (ORCPT
+        id S1726522AbgERKVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46896 "EHLO
+        Mon, 18 May 2020 06:21:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgERKUB (ORCPT
+        with ESMTP id S1726127AbgERKVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:20:01 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39614C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 03:19:59 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id k5so2635105lji.11
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 03:19:59 -0700 (PDT)
+        Mon, 18 May 2020 06:21:32 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AB61C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 03:21:32 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id z9so4393535qvi.12
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 03:21:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AzjL3p/BvzHlVXprUWbCowIgGmkmjiRNGTrRwb+GdTg=;
-        b=qi5k2t8LZtRfJenKjX9w1rR7uPAqwaAOHnmytsUg1s9RIysAuNmUO/mHN7a5zFbNA9
-         Tp7b5M3/UIUTgKQs+cQcOJ7L4bgM9Rd2bFRGRZyYr4xQFNVImTKYf76xklaL7w8XckVt
-         3A6Zru7ZRy3uluONdfd6456qCN1IbQTTPlXrz1GfQRzYgWrsk2B9gspvqCrrSWG4tpz5
-         eKBobb9Ym3RhoLh2pUamo+fNIZWney8s/G9rIr/s8fJdhSHuKx7kLZQgf6p7oiNzeZ38
-         FA5ksfrt8bv+VpSwJkuRlC5L8NsW5OVyPf0W9bHRPiwwR1O/YVyfg743MRz4prBDMECt
-         mYPw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4UrcruNgjCGo7KZXCgHiav/SoRCLnqO+sVxO468jQxk=;
+        b=XrEl9sHFgivtGiowFoKRu5yIVdUWcaZJdjFIXahTi0v6zxZopJjqS+otsRjUQ0uzI0
+         UaQVSNdIw3+kjD3YpjRPmBQ3TqveF6YF10CWA1br/+YLHZ4FSfqHDm1qF1SqIYC0IqFI
+         ElcZCUsjbZ1RguikKV5X9z2YWiX3+pnPfuj2GvmcKjtUXFaR2VpOseS/LbtDHhpoCAoW
+         dbN+WMRk18FgeQfVgc1G/WSgpNq9Tg4rc5pANHZKRGc2Pz80r1PBGmJ1HsTSr4LOd4/M
+         vwhHbgQaKqW3bkoFhCqMbZygOJJ28YHvnNkBkja+Lhl+p+4jPBJFFk0kTLQthpdoqHHc
+         Ltaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AzjL3p/BvzHlVXprUWbCowIgGmkmjiRNGTrRwb+GdTg=;
-        b=ScztclOKb2zzoA4TubpHkpA1CP1hs10lfBykTu7xlOLm7GjOKSv17w4P6ybTdk8hm2
-         uN/o2V52zVkzB4NqN49NnWq4FW8fzMrsmnM1r9uge6gzcWrMaIetR3DriMDm5AfDD2p9
-         XJwdX37bMSaAigcIwqA+YQQ0CXFe3iiFnL1RuX7iR3T3WEJLJ9Dm4ChfWF0OXxeWZvKf
-         344j9aZEjED6RO2mijbA8OqAKdwAnBZdtFL0tAXMRyNvgb4hWLTzMQx/NIXiwwBPVEt5
-         oxF/7HjzTEBnhIE5vxt6sA7ntS64P2bYOlnIA1aiKx4d5wsquPcyncV44AXqC2E0BGHk
-         xUmQ==
-X-Gm-Message-State: AOAM533UAYhZD1uzArcJkgmCe9WowkAv7R2M6fKcJBhc/DOUl6UNvncj
-        p45i6omx/QS++v5IBZW0XcWS0WybBm8dIw==
-X-Google-Smtp-Source: ABdhPJzIp00u8O2R/6wsTJh30xOnE4/cNiKf/Hz4v9HyEB/sZLHjWFwJM/grwc5U5vQWt9RByBWB2w==
-X-Received: by 2002:a2e:9d5:: with SMTP id 204mr8766076ljj.168.1589797197625;
-        Mon, 18 May 2020 03:19:57 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id k22sm6775308lfg.69.2020.05.18.03.19.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 03:19:56 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 3AA07101C74; Mon, 18 May 2020 13:19:56 +0300 (+03)
-Date:   Mon, 18 May 2020 13:19:56 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     kirill.shutemov@linux.intel.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC linux-next PATCH] mm: khugepaged: remove error message when
- checking external pins
-Message-ID: <20200518101956.z6wwjyhv2oxfsqf6@box>
-References: <1589317383-9595-1-git-send-email-yang.shi@linux.alibaba.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4UrcruNgjCGo7KZXCgHiav/SoRCLnqO+sVxO468jQxk=;
+        b=P9VkrAUOhE4uA3AcHbbj0+xFV49zssKyfdSMCieUXHITvwvtBHtmDQ9EHr6BuCLTgM
+         6GbJ+LzaVoqQ3FoS9p0+W8C3luCxETBU3m8ge2o70UILzxijjsZu6V+ribzNTshQ7pp1
+         KN7fQLOLDZvznR0ho2Z5YwPdXu5IfHVZe4kHoGlHbqwAOiDCmkfkeyW1hfXbT/YF7JqF
+         M4+Go/+u/gjggNM/0qUqbGUhnaEB92mLrUVnuQ0APS63xnqaw2tEM/N8JwPlzRaNf8xX
+         hp1874yjsAXaT2Mkn2GEHZlR9W0ygEXhqnadzP/fSlQGc5AbA2i3+3A4ER+dDLR5s0F6
+         lSRg==
+X-Gm-Message-State: AOAM530GrZu8ygXMtXmXAlM9kSYf8jNetZ6U5U1/KaMpQ0nogkL0hpxk
+        7lKJ858o1tbRGBgcVM20ZSqdzjxmtPkyQCfpoWwqEw==
+X-Google-Smtp-Source: ABdhPJyNyqADDvdIZsxbu7Busv3cV/81dNCg8TDFn1vl3XaGowalaeZmbhQgFSNC5s7z33HHXZTX/YiuAZGYuQ18zkc=
+X-Received: by 2002:a0c:db03:: with SMTP id d3mr15524799qvk.80.1589797291392;
+ Mon, 18 May 2020 03:21:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589317383-9595-1-git-send-email-yang.shi@linux.alibaba.com>
+References: <20200518062603.4570-1-walter-zh.wu@mediatek.com>
+In-Reply-To: <20200518062603.4570-1-walter-zh.wu@mediatek.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 18 May 2020 12:21:19 +0200
+Message-ID: <CACT4Y+aSmcoSeC7J7RgoVV8CanwCrEz=zNZYG=_8KX3U-57A5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] rcu/kasan: record and print call_rcu() call stack
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 05:03:03AM +0800, Yang Shi wrote:
-> When running khugepaged with higher frequency (for example, set
-> scan_sleep_millisecs to 0), the below error message was reported:
-> 
-> khugepaged: expected_refcount (1024) > refcount (512)
-> page:ffffd75784258000 count:511 mapcount:1 mapping:ffff968de06c7421 index:0x7fa288600
->  compound_mapcount: 0
->  flags: 0x17fffc00009003c(uptodate|dirty|lru|active|head|swapbacked)
->  raw: 017fffc00009003c ffffd7578ba70788 ffffd7578bdb5148 ffff968de06c7421
->  raw: 00000007fa288600 0000000000000000 000001ff00000000 ffff968e5e7d6000
->  page dumped because: Unexpected refcount
->  page->mem_cgroup:ffff968e5e7d6000
-> 
-> This is introduced by allowing collapsing fork shared and PTE-mapped
-> THPs.  The check may run into the below race:
-> 
-> Assuming parent process forked child process, then they do
-> 
-> 	CPU A		CPU B			CPU C
-> 	-----		-----			-----
-> Parent			Child			khugepaged
-> 
-> MADV_DONTNEED
->   split huge pmd
->   Double mapped
-> 			MADV_DONTNEED
-> 			  zap_huge_pmd
-> 			    remove_page_rmap
-> 			      Clear double map
-> 						khugepaged_scan_pmd(parent)
-> 						  check mapcount and refcount
-> 						  --> total_mapcount > refcount
-> 			      dec mapcount
-> 
-> The issue can be reproduced by the below test program.
-
-Good catch! Thanks. And the fix looks reasnable.
-
-We might want to have a similar debug check in near !is_refcount_suitable()
-case in __collapse_huge_page_isolate(). The function is called with
-anon_vma lock taken on write and it should prevent the false-positive.
-
-Anyway:
-
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-
-> 
-> ---8<---
-> void main()
-> {
->         void *addr;
->         int ret;
->         pid_t pid;
-> 
->         addr = memalign(ALIGN, 2 * 1024 * 1024);
->         if (!addr) {
->                 printf("malloc failed\n");
->                 return;
->         }
-> 
->         ret = madvise(addr, 2 * 1024 * 1024, MADV_HUGEPAGE);
->         if (ret < 0) {
->                 printf("madvise failed\n");
->                 return;
->         }
-> 
->         memset(addr, 0xdeadbeef, 2 * 1024 * 1024);
-> 
->         pid = fork();
-> 
->         if (pid == 0) {
->                 /* Child process */
->                 ret = madvise(addr + (2 * 1024 * 1024) - 4096, 4096, MADV_DONTNEED);
->                 if (ret < 0) {
->                         printf("madvise failed in child\n");
->                         return;
->                 }
->                 sleep(120);
->         } else if (pid > 0) {
->                 sleep(5);
->                 /* Parent process */
->                 ret = madvise(addr, 2 * 1024 * 1024, MADV_DONTNEED);
->                 if (ret < 0) {
->                         printf("madvise failed in parent\n");
->                         return;
->                 }
->         } else {
->                 printf("fork failed\n");
->                 return;
->         }
-> 
->         sleep(120);
-> }
-> ---8<---
-> 
-> So, total_mapcount > refcount seems not unexpected due to the inherent
-> race.  Removed the error message even though it is protected by
-> CONFIG_VM_DEBUG since we have to live with the race and AFAIK some
-> distros may have CONFIG_VM_DEBUG enabled dy default.
-> 
-> Since such case is ephemeral we could always try collapse the area again
-> later, so it sounds not harmful.  But, it might report false positive if
-> the page has excessive GUP pins (i.e. 512), however it might be not that
-> bad since the same check will be done later.  I didn't figure out a
-> simple way to prevent the false positive.
-> 
-> Added some notes to elaborate the race and the consequence as well.
-> 
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+On Mon, May 18, 2020 at 8:26 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+>
+> This feature will record the last two call_rcu() call stack and
+> prints up to 2 call_rcu() call stacks in KASAN report.
+>
+> When call_rcu() is called, we store the call_rcu() call stack into
+> slub alloc meta-data, so that the KASAN report can print rcu stack.
+>
+> [1]https://bugzilla.kernel.org/show_bug.cgi?id=198437
+> [2]https://groups.google.com/forum/#!searchin/kasan-dev/better$20stack$20traces$20for$20rcu%7Csort:date/kasan-dev/KQsjT_88hDE/7rNUZprRBgAJ
+>
+> Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> Suggested-by: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Josh Triplett <josh@joshtriplett.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+> Cc: Joel Fernandes <joel@joelfernandes.org>
 > ---
->  mm/khugepaged.c | 24 +++++++++++++++++-------
->  1 file changed, 17 insertions(+), 7 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 1fdd677..048f5d4 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -602,12 +602,6 @@ static bool is_refcount_suitable(struct page *page)
->  	if (PageSwapCache(page))
->  		expected_refcount += compound_nr(page);
->  
-> -	if (IS_ENABLED(CONFIG_DEBUG_VM) && expected_refcount > refcount) {
-> -		pr_err("expected_refcount (%d) > refcount (%d)\n",
-> -				expected_refcount, refcount);
-> -		dump_page(page, "Unexpected refcount");
-> -	}
-> -
->  	return page_count(page) == expected_refcount;
+>  include/linux/kasan.h |  2 ++
+>  kernel/rcu/tree.c     |  2 ++
+>  lib/Kconfig.kasan     |  2 ++
+>  mm/kasan/common.c     |  4 ++--
+>  mm/kasan/generic.c    | 20 ++++++++++++++++++++
+>  mm/kasan/kasan.h      | 10 ++++++++++
+>  mm/kasan/report.c     | 24 ++++++++++++++++++++++++
+>  7 files changed, 62 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> index 31314ca7c635..23b7ee00572d 100644
+> --- a/include/linux/kasan.h
+> +++ b/include/linux/kasan.h
+> @@ -174,11 +174,13 @@ static inline size_t kasan_metadata_size(struct kmem_cache *cache) { return 0; }
+>
+>  void kasan_cache_shrink(struct kmem_cache *cache);
+>  void kasan_cache_shutdown(struct kmem_cache *cache);
+> +void kasan_record_aux_stack(void *ptr);
+>
+>  #else /* CONFIG_KASAN_GENERIC */
+>
+>  static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
+>  static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
+> +static inline void kasan_record_aux_stack(void *ptr) {}
+>
+>  #endif /* CONFIG_KASAN_GENERIC */
+>
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 06548e2ebb72..36a4ff7f320b 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -57,6 +57,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/sched/isolation.h>
+>  #include <linux/sched/clock.h>
+> +#include <linux/kasan.h>
+>  #include "../time/tick-internal.h"
+>
+>  #include "tree.h"
+> @@ -2668,6 +2669,7 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
+>         head->func = func;
+>         head->next = NULL;
+>         local_irq_save(flags);
+> +       kasan_record_aux_stack(head);
+>         rdp = this_cpu_ptr(&rcu_data);
+>
+>         /* Add the callback to our list. */
+> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> index 81f5464ea9e1..4e83cf6e3caa 100644
+> --- a/lib/Kconfig.kasan
+> +++ b/lib/Kconfig.kasan
+> @@ -58,6 +58,8 @@ config KASAN_GENERIC
+>           For better error detection enable CONFIG_STACKTRACE.
+>           Currently CONFIG_KASAN_GENERIC doesn't work with CONFIG_DEBUG_SLAB
+>           (the resulting kernel does not boot).
+> +         In generic mode KASAN prints the last two call_rcu() call stacks in
+> +         reports.
+>
+>  config KASAN_SW_TAGS
+>         bool "Software tag-based mode"
+> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> index 2906358e42f0..8bc618289bb1 100644
+> --- a/mm/kasan/common.c
+> +++ b/mm/kasan/common.c
+> @@ -41,7 +41,7 @@
+>  #include "kasan.h"
+>  #include "../slab.h"
+>
+> -static inline depot_stack_handle_t save_stack(gfp_t flags)
+> +depot_stack_handle_t kasan_save_stack(gfp_t flags)
+>  {
+>         unsigned long entries[KASAN_STACK_DEPTH];
+>         unsigned int nr_entries;
+> @@ -54,7 +54,7 @@ static inline depot_stack_handle_t save_stack(gfp_t flags)
+>  static inline void set_track(struct kasan_track *track, gfp_t flags)
+>  {
+>         track->pid = current->pid;
+> -       track->stack = save_stack(flags);
+> +       track->stack = kasan_save_stack(flags);
 >  }
->  
-> @@ -1341,7 +1335,23 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
->  			goto out_unmap;
->  		}
->  
-> -		/* Check if the page has any GUP (or other external) pins */
-> +		/*
-> +		 * Check if the page has any GUP (or other external) pins.
-> +		 *
-> +		 * Here the check is racy it may see totmal_mapcount > refcount
-> +		 * in some cases.
-> +		 * For example, one process with one forked child process.
-> +		 * The parent has the PMD split due to MADV_DONTNEED, then
-> +		 * the child is trying unmap the whole PMD, but khugepaged
-> +		 * may be scanning the parent between the child has
-> +		 * PageDoubleMap flag cleared and dec the mapcount.  So
-> +		 * khugepaged may see total_mapcount > refcount.
-> +		 *
-> +		 * But such case is ephemeral we could always retry collapse
-> +		 * later.  However it may report false positive if the page
-> +		 * has excessive GUP pins (i.e. 512).  Anyway the same check
-> +		 * will be done again later the risk seems low.
-> +		 */
->  		if (!is_refcount_suitable(page)) {
->  			result = SCAN_PAGE_COUNT;
->  			goto out_unmap;
-> -- 
-> 1.8.3.1
-> 
-> 
+>
+>  void kasan_enable_current(void)
+> diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+> index 56ff8885fe2e..78d8e0a75a8a 100644
+> --- a/mm/kasan/generic.c
+> +++ b/mm/kasan/generic.c
+> @@ -325,3 +325,23 @@ DEFINE_ASAN_SET_SHADOW(f2);
+>  DEFINE_ASAN_SET_SHADOW(f3);
+>  DEFINE_ASAN_SET_SHADOW(f5);
+>  DEFINE_ASAN_SET_SHADOW(f8);
+> +
+> +void kasan_record_aux_stack(void *addr)
+> +{
+> +       struct page *page = kasan_addr_to_page(addr);
+> +       struct kmem_cache *cache;
+> +       struct kasan_alloc_meta *alloc_info;
+> +       void *object;
+> +
+> +       if (!(page && PageSlab(page)))
+> +               return;
+> +
+> +       cache = page->slab_cache;
+> +       object = nearest_obj(cache, page, addr);
+> +       alloc_info = get_alloc_info(cache, object);
+> +
+> +       /* record last two call_rcu() call stacks */
+> +       if (alloc_info->rcu_stack[0])
 
--- 
- Kirill A. Shutemov
+Do we need this if?
+
+If we do "alloc_info->rcu_stack[1] = alloc_info->rcu_stack[0]"
+unconditionally, then we will just move 0 from [0] to [1], which
+should be 0 at this point anyway.
+
+I think it will be more reasonable to rename rcu_stack to aux_stack,
+the function that stores the stacks is kasan_record_aux_stack.
+
+> +               alloc_info->rcu_stack[1] = alloc_info->rcu_stack[0];
+> +       alloc_info->rcu_stack[0] = kasan_save_stack(GFP_NOWAIT);
+> +}
+> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+> index e8f37199d885..870c5dd07756 100644
+> --- a/mm/kasan/kasan.h
+> +++ b/mm/kasan/kasan.h
+> @@ -104,7 +104,15 @@ struct kasan_track {
+>
+>  struct kasan_alloc_meta {
+>         struct kasan_track alloc_track;
+> +#ifdef CONFIG_KASAN_GENERIC
+> +       /*
+> +        * call_rcu() call stack is stored into struct kasan_alloc_meta.
+> +        * The free stack is stored into struct kasan_free_meta.
+> +        */
+> +       depot_stack_handle_t rcu_stack[2];
+> +#else
+>         struct kasan_track free_track[KASAN_NR_FREE_STACKS];
+> +#endif
+>  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+>         u8 free_pointer_tag[KASAN_NR_FREE_STACKS];
+>         u8 free_track_idx;
+> @@ -159,6 +167,8 @@ void kasan_report_invalid_free(void *object, unsigned long ip);
+>
+>  struct page *kasan_addr_to_page(const void *addr);
+>
+> +depot_stack_handle_t kasan_save_stack(gfp_t flags);
+> +
+>  #if defined(CONFIG_KASAN_GENERIC) && \
+>         (defined(CONFIG_SLAB) || defined(CONFIG_SLUB))
+>  void quarantine_put(struct kasan_free_meta *info, struct kmem_cache *cache);
+> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> index 80f23c9da6b0..5ee66cf7e27c 100644
+> --- a/mm/kasan/report.c
+> +++ b/mm/kasan/report.c
+> @@ -179,6 +179,17 @@ static struct kasan_track *kasan_get_free_track(struct kmem_cache *cache,
+>         return &alloc_meta->free_track[i];
+>  }
+>
+> +#ifdef CONFIG_KASAN_GENERIC
+> +static void print_stack(depot_stack_handle_t stack)
+> +{
+> +       unsigned long *entries;
+> +       unsigned int nr_entries;
+> +
+> +       nr_entries = stack_depot_fetch(stack, &entries);
+> +       stack_trace_print(entries, nr_entries, 0);
+> +}
+> +#endif
+> +
+>  static void describe_object(struct kmem_cache *cache, void *object,
+>                                 const void *addr, u8 tag)
+>  {
+> @@ -192,6 +203,19 @@ static void describe_object(struct kmem_cache *cache, void *object,
+>                 free_track = kasan_get_free_track(cache, object, tag);
+>                 print_track(free_track, "Freed");
+>                 pr_err("\n");
+> +
+> +#ifdef CONFIG_KASAN_GENERIC
+> +               if (alloc_info->rcu_stack[0]) {
+> +                       pr_err("Last one call_rcu() call stack:\n");
+> +                       print_stack(alloc_info->rcu_stack[0]);
+> +                       pr_err("\n");
+> +               }
+> +               if (alloc_info->rcu_stack[1]) {
+> +                       pr_err("Second to last call_rcu() call stack:\n");
+> +                       print_stack(alloc_info->rcu_stack[1]);
+> +                       pr_err("\n");
+> +               }
+> +#endif
+>         }
+>
+>         describe_object_addr(cache, object, addr);
+> --
+> 2.18.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200518062603.4570-1-walter-zh.wu%40mediatek.com.
