@@ -2,80 +2,147 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45505C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D27EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 318A120657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E98020853
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589826438;
+	bh=J3IsPnupG1bprp4tyhjpuDkdCJ3abZNdijJ9J9kjQPw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fZ0d7a7YsLIicQz5qBvoN+jGI2KnQ+PlnzlJYkk7wWV/LUKJ5fDT+rhfi9+S1b7Vx
+	 2gefAHZBszgGlNgimUxWVGqZxsPyu82IKc6B1GT1rtJhs+qn57owFK3LTdrm+oW+KL
+	 EgrYognYFE7El9s5Uxzp05P2hrIWIabwlI9f8Gvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387782AbgERS1N (ORCPT
+        id S1729692AbgERRoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:27:13 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42900 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729729AbgERRoV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:44:21 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id D2B0B2A1089
-Subject: Re: [PATCH] drm/mediatek: Delete not used of_device_get_match_data
-To:     matthias.bgg@kernel.org, chunkuang.hu@kernel.org,
-        p.zabel@pengutronix.de, airlied@linux.ie, daniel@ffwll.ch
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200518112254.23692-1-matthias.bgg@kernel.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <0b80dd39-a1b8-48db-61a6-631de41ad293@collabora.com>
-Date:   Mon, 18 May 2020 19:44:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 13:44:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42148 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729680AbgERRoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:44:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19FB52083E;
+        Mon, 18 May 2020 17:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589823845;
+        bh=J3IsPnupG1bprp4tyhjpuDkdCJ3abZNdijJ9J9kjQPw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HodCwC4k44W3WJa013Q+LdSQekngSTdfidAfd+FKUk8Nm6OOVyNbwZFbryDv59mtD
+         MWkT2rFKVmseDfkRe1q0if63HQ7du83BzIGaF9AY+98y8lw5fV5Q6/hcgiHgS/RRgz
+         VeJL/ycNGaIojTvXQrii9Vx1C3IN6hJiOjYKxZsE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.9 58/90] pnp: Use list_for_each_entry() instead of open coding
+Date:   Mon, 18 May 2020 19:36:36 +0200
+Message-Id: <20200518173502.918228186@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
+References: <20200518173450.930655662@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200518112254.23692-1-matthias.bgg@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-On 18/5/20 13:22, matthias.bgg@kernel.org wrote:
-> From: Matthias Brugger <matthias.bgg@gmail.com>
-> 
-> The driver will be loaded by via a platform device. So we
-> will need to get the device_node from the parent device.
-> Depending on this we will set the driver data.
-> As all this is done later already, just delete the call to
-> of_device_get_match_data.
-> 
-> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+commit 01b2bafe57b19d9119413f138765ef57990921ce upstream.
 
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Aside from good practice, this avoids a warning from gcc 10:
 
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> index e2bb0d19ef99..63ec92ba0e92 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> @@ -447,7 +447,6 @@ static int mtk_drm_probe(struct platform_device *pdev)
->  	if (!private)
->  		return -ENOMEM;
->  
-> -	private->data = of_device_get_match_data(dev);
->  	private->mmsys_dev = dev->parent;
->  	if (!private->mmsys_dev) {
->  		dev_err(dev, "Failed to get MMSYS device\n");
-> 
+./include/linux/kernel.h:997:3: warning: array subscript -31 is outside array bounds of ‘struct list_head[1]’ [-Warray-bounds]
+  997 |  ((type *)(__mptr - offsetof(type, member))); })
+      |  ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/list.h:493:2: note: in expansion of macro ‘container_of’
+  493 |  container_of(ptr, type, member)
+      |  ^~~~~~~~~~~~
+./include/linux/pnp.h:275:30: note: in expansion of macro ‘list_entry’
+  275 | #define global_to_pnp_dev(n) list_entry(n, struct pnp_dev, global_list)
+      |                              ^~~~~~~~~~
+./include/linux/pnp.h:281:11: note: in expansion of macro ‘global_to_pnp_dev’
+  281 |  (dev) != global_to_pnp_dev(&pnp_global); \
+      |           ^~~~~~~~~~~~~~~~~
+arch/x86/kernel/rtc.c:189:2: note: in expansion of macro ‘pnp_for_each_dev’
+  189 |  pnp_for_each_dev(dev) {
+
+Because the common code doesn't cast the starting list_head to the
+containing struct.
+
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+[ rjw: Whitespace adjustments ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ include/linux/pnp.h |   29 +++++++++--------------------
+ 1 file changed, 9 insertions(+), 20 deletions(-)
+
+--- a/include/linux/pnp.h
++++ b/include/linux/pnp.h
+@@ -219,10 +219,8 @@ struct pnp_card {
+ #define global_to_pnp_card(n) list_entry(n, struct pnp_card, global_list)
+ #define protocol_to_pnp_card(n) list_entry(n, struct pnp_card, protocol_list)
+ #define to_pnp_card(n) container_of(n, struct pnp_card, dev)
+-#define pnp_for_each_card(card) \
+-	for((card) = global_to_pnp_card(pnp_cards.next); \
+-	(card) != global_to_pnp_card(&pnp_cards); \
+-	(card) = global_to_pnp_card((card)->global_list.next))
++#define pnp_for_each_card(card)	\
++	list_for_each_entry(card, &pnp_cards, global_list)
+ 
+ struct pnp_card_link {
+ 	struct pnp_card *card;
+@@ -275,14 +273,9 @@ struct pnp_dev {
+ #define card_to_pnp_dev(n) list_entry(n, struct pnp_dev, card_list)
+ #define protocol_to_pnp_dev(n) list_entry(n, struct pnp_dev, protocol_list)
+ #define	to_pnp_dev(n) container_of(n, struct pnp_dev, dev)
+-#define pnp_for_each_dev(dev) \
+-	for((dev) = global_to_pnp_dev(pnp_global.next); \
+-	(dev) != global_to_pnp_dev(&pnp_global); \
+-	(dev) = global_to_pnp_dev((dev)->global_list.next))
+-#define card_for_each_dev(card,dev) \
+-	for((dev) = card_to_pnp_dev((card)->devices.next); \
+-	(dev) != card_to_pnp_dev(&(card)->devices); \
+-	(dev) = card_to_pnp_dev((dev)->card_list.next))
++#define pnp_for_each_dev(dev) list_for_each_entry(dev, &pnp_global, global_list)
++#define card_for_each_dev(card, dev)	\
++	list_for_each_entry(dev, &(card)->devices, card_list)
+ #define pnp_dev_name(dev) (dev)->name
+ 
+ static inline void *pnp_get_drvdata(struct pnp_dev *pdev)
+@@ -436,14 +429,10 @@ struct pnp_protocol {
+ };
+ 
+ #define to_pnp_protocol(n) list_entry(n, struct pnp_protocol, protocol_list)
+-#define protocol_for_each_card(protocol,card) \
+-	for((card) = protocol_to_pnp_card((protocol)->cards.next); \
+-	(card) != protocol_to_pnp_card(&(protocol)->cards); \
+-	(card) = protocol_to_pnp_card((card)->protocol_list.next))
+-#define protocol_for_each_dev(protocol,dev) \
+-	for((dev) = protocol_to_pnp_dev((protocol)->devices.next); \
+-	(dev) != protocol_to_pnp_dev(&(protocol)->devices); \
+-	(dev) = protocol_to_pnp_dev((dev)->protocol_list.next))
++#define protocol_for_each_card(protocol, card)	\
++	list_for_each_entry(card, &(protocol)->cards, protocol_list)
++#define protocol_for_each_dev(protocol, dev)	\
++	list_for_each_entry(dev, &(protocol)->devices, protocol_list)
+ 
+ extern struct bus_type pnp_bus_type;
+ 
+
+
