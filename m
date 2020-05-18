@@ -2,105 +2,108 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA907C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA4520643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B49EF20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589826226;
+	bh=t67HidTyqvuTCFA1pM7lYbAAr9hS5Sny8fXHsx5iDYY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ap2GB5SHf7jcGRkRMwl9d2InplFu2osXKkOYMf1A1X7YGXxKJf4C7Vbdu76CzKGAX
+	 JJwLYn0AAJln8thu2F98K9/ThRGaY3CmclN6EzFAplpUfoe49+n0JU+qZhoSdlUWCe
+	 lEnrY3MKc156YSV0swrtLtH8hYsjfjrGeiSV30QA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731433AbgERSXi (ORCPT
+        id S2387871AbgERSXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:23:38 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:33279 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730523AbgERSXT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:23:19 -0400
-Received: by mail-il1-f198.google.com with SMTP id b29so10765361ilb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:23:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5GDXvHftE40qhmbLit/31FtiAnQnj7YGrZQtgyNVNzo=;
-        b=mhPzZwW/DpfF0SB+f2bN0TYQF6m6eWyUGzHgfOPIxvEQE2wugUN2hCubgcJGEi7ta4
-         /xcPil9AUV1g5uTffB468oN8xwqBXK730qqABjx/JPxYA0OnazwmTPWB9TIvcBQ0PV2U
-         eXEtRkt8lSuL0mvSPSOeEqH6e7jmdNJ87htn95dMe9qqaXTEWaq5hjfgpYSlWWUW+YO+
-         A7p1PGEA/SVdymEX1Mj90Cy15lWP4Is/OPTGY/ASlDuZFFNWG8xY7PMUrZZZB9Uhscr6
-         ujzm/m6u7WHyTIbnlcZ85BaXK/0DUCKceVPEr+S2NwJlelwxuko4EslbdrASPEMnb1Hw
-         k23w==
-X-Gm-Message-State: AOAM533awAMSBq4Qt7r5E92lU6ziX8VnwV5haLfwkxqfm8SJ40KLdOk6
-        zNTk5QK/qnktapOLkgdm/WQmVQzE97YM0dadOrVhAyaSlw7n
-X-Google-Smtp-Source: ABdhPJz6jvTBhzuO2kUg4MtSU0NvJqHYnHhWe7phBqOIpbNawC/RTHy4kiwFQGpTluxeMeHx/JQvrVWZmg3jKp6cwrUtABmOoCbp
+        Mon, 18 May 2020 14:23:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730461AbgERRtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:49:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5699520715;
+        Mon, 18 May 2020 17:48:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589824139;
+        bh=t67HidTyqvuTCFA1pM7lYbAAr9hS5Sny8fXHsx5iDYY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xBHhMa87zO9gGdOQLRfw3hbilIFEXtg9ZS9jtp8u1zfUDIF+IaYGHgC8O2dRqkP+4
+         DXmxyy0fx3h4MZDR9zKym0gNDzYJUnHer7B/kaxdX8gGn5zHJmCDLI5AZXUagBMR6C
+         H1CrU+8zs2tiWdjZXVnsvgiNQN1rViMYo9xE48II=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
+        Zefan Li <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 4.14 088/114] netprio_cgroup: Fix unlimited memory leak of v2 cgroups
+Date:   Mon, 18 May 2020 19:37:00 +0200
+Message-Id: <20200518173518.278476162@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
+References: <20200518173503.033975649@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-Received: by 2002:a02:77c7:: with SMTP id g190mr16476344jac.14.1589826198161;
- Mon, 18 May 2020 11:23:18 -0700 (PDT)
-Date:   Mon, 18 May 2020 11:23:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cbcdae05a5f041db@google.com>
-Subject: INFO: trying to register non-static key in clear_inode
-From:   syzbot <syzbot+78cf4962d1cf5f23a0c9@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Zefan Li <lizefan@huawei.com>
 
-syzbot found the following crash on:
+[ Upstream commit 090e28b229af92dc5b40786ca673999d59e73056 ]
 
-HEAD commit:    5a9ffb95 Merge tag '5.7-rc5-smb3-fixes' of git://git.samba..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=175e90d6100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c14212794ed9ad24
-dashboard link: https://syzkaller.appspot.com/bug?extid=78cf4962d1cf5f23a0c9
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+If systemd is configured to use hybrid mode which enables the use of
+both cgroup v1 and v2, systemd will create new cgroup on both the default
+root (v2) and netprio_cgroup hierarchy (v1) for a new session and attach
+task to the two cgroups. If the task does some network thing then the v2
+cgroup can never be freed after the session exited.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+One of our machines ran into OOM due to this memory leak.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+78cf4962d1cf5f23a0c9@syzkaller.appspotmail.com
+In the scenario described above when sk_alloc() is called
+cgroup_sk_alloc() thought it's in v2 mode, so it stores
+the cgroup pointer in sk->sk_cgrp_data and increments
+the cgroup refcnt, but then sock_update_netprioidx()
+thought it's in v1 mode, so it stores netprioidx value
+in sk->sk_cgrp_data, so the cgroup refcnt will never be freed.
 
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 1 PID: 235 Comm: kworker/u4:5 Not tainted 5.7.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: krdsd rds_tcp_accept_worker
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- assign_lock_key kernel/locking/lockdep.c:913 [inline]
- register_lock_class+0x1664/0x1760 kernel/locking/lockdep.c:1225
- __lock_acquire+0x104/0x4c50 kernel/locking/lockdep.c:4234
- lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4934
- __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
- _raw_spin_lock_irq+0x5b/0x80 kernel/locking/spinlock.c:167
- spin_lock_irq include/linux/spinlock.h:378 [inline]
- clear_inode+0x1b/0x1e0 fs/inode.c:529
- evict+0x4ee/0x650 fs/inode.c:579
- iput_final fs/inode.c:1572 [inline]
- iput+0x536/0x8c0 fs/inode.c:1598
- __sock_release+0x20c/0x280 net/socket.c:617
- rds_tcp_accept_one+0x582/0xb70 net/rds/tcp_listen.c:251
- rds_tcp_accept_worker+0x50/0x80 net/rds/tcp.c:525
- process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
- worker_thread+0x96/0xe20 kernel/workqueue.c:2414
- kthread+0x388/0x470 kernel/kthread.c:268
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+Currently we do the mode switch when someone writes to the ifpriomap
+cgroup control file. The easiest fix is to also do the switch when
+a task is attached to a new cgroup.
 
-
+Fixes: bd1060a1d671 ("sock, cgroup: add sock->sk_cgroup")
+Reported-by: Yang Yingliang <yangyingliang@huawei.com>
+Tested-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Zefan Li <lizefan@huawei.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ net/core/netprio_cgroup.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+--- a/net/core/netprio_cgroup.c
++++ b/net/core/netprio_cgroup.c
+@@ -241,6 +241,8 @@ static void net_prio_attach(struct cgrou
+ 	struct task_struct *p;
+ 	struct cgroup_subsys_state *css;
+ 
++	cgroup_sk_alloc_disable();
++
+ 	cgroup_taskset_for_each(p, css, tset) {
+ 		void *v = (void *)(unsigned long)css->cgroup->id;
+ 
+
+
