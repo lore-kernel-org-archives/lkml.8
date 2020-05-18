@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A527C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13D38207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FF020884
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824531;
-	bh=Uegwi40m6VKoo3qYz46wXwuY83tyEhWX7RHlaRpzbXs=;
+	s=default; t=1589824536;
+	bh=ojTCDQRwP9wu3Su04Ln7NJUNO3cMlEDTawPCWWCKniU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2jziwqd9yN3rehVvDL+Q7IwqO+yX2T//NQ36sR+3mxQ3msycP3T50wbH77RcVWFL+
-	 SXE1VIQiGKTW47kA+p3Ay/S/2+g6/rfFTuI9IwEPqrirXYObHQ/gw1KpeynjrcZPV0
-	 HR6SwH8AVCIn8A+Q+rjlD4X61bs0/xD9AAY9X5/Q=
+	b=wPufRUFnG1TAWNO3UnX0pyN+rDdVyZFo49AoEaAETMhnIHCWtPEY4rSQmxOl1mmGO
+	 r+Q7qoE3vMsEH5Ljp7PQ+lw25IgIQKnlGjSYTv//UdxmV19n4nPfNK6stpMvjtARbU
+	 mrGZ7jeAyQ6GET8gQycdbqFnRBiW4CFmN7kCnHoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730949AbgERRz3 (ORCPT
+        id S1731470AbgERRzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:55:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60818 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:55:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731449AbgERRzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:55:25 -0400
+        id S1731453AbgERRz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:55:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA44D20674;
-        Mon, 18 May 2020 17:55:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 521F8207C4;
+        Mon, 18 May 2020 17:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824525;
-        bh=Uegwi40m6VKoo3qYz46wXwuY83tyEhWX7RHlaRpzbXs=;
+        s=default; t=1589824527;
+        bh=ojTCDQRwP9wu3Su04Ln7NJUNO3cMlEDTawPCWWCKniU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHKnrTSUuAyt7eA483qY2y+4TD6lxER/C7fwojWs1UXPDRPeZA1t+b+o+XJndIEXD
-         oW2U3575Ocr6aDZi8Wi7ahs4W1p2xKnUK0dZsFkLW9F3XqfQMdwnI5cVMdgO8iokHF
-         qar9S5b0K7X8ExinbHmSPG2FKxGcgRbsU0hDK7b0=
+        b=lzJHkVty7INZWdfBDMTkR6QrqWjA9pvm/BkMR0qa2SZ6waS/BXg1H3hGNiicASkTC
+         /3GDmboHAM/xyC+V+N39vRyDmFxgr9l3Z+unlxjKORgnfTDPzvRF7vrkaqvWG/jG7/
+         GhMO6X5x0h1nX40GaiuruWO9XNd60Odqnh76YO+U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
+        stable@vger.kernel.org, Luben Tuikov <luben.tuikov@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 047/147] drm/qxl: lost qxl_bo_kunmap_atomic_page in qxl_image_init_helper()
-Date:   Mon, 18 May 2020 19:36:10 +0200
-Message-Id: <20200518173519.868875398@linuxfoundation.org>
+Subject: [PATCH 5.4 048/147] drm/amdgpu: simplify padding calculations (v2)
+Date:   Mon, 18 May 2020 19:36:11 +0200
+Message-Id: <20200518173519.982019557@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -60,34 +61,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Luben Tuikov <luben.tuikov@amd.com>
 
-[ Upstream commit 5b5703dbafae74adfbe298a56a81694172caf5e6 ]
+[ Upstream commit ce73516d42c9ab011fad498168b892d28e181db4 ]
 
-v2: removed TODO reminder
+Simplify padding calculations.
 
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/a4e0ae09-a73c-1c62-04ef-3f990d41bea9@virtuozzo.com
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+v2: Comment update and spacing.
+
+Signed-off-by: Luben Tuikov <luben.tuikov@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/qxl/qxl_image.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/cik_sdma.c  |  4 ++--
+ drivers/gpu/drm/amd/amdgpu/sdma_v2_4.c |  4 ++--
+ drivers/gpu/drm/amd/amdgpu/sdma_v3_0.c |  4 ++--
+ drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c |  4 ++--
+ drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c | 17 ++++++++++++-----
+ 5 files changed, 20 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/qxl/qxl_image.c b/drivers/gpu/drm/qxl/qxl_image.c
-index 43688ecdd8a04..60ab7151b84dc 100644
---- a/drivers/gpu/drm/qxl/qxl_image.c
-+++ b/drivers/gpu/drm/qxl/qxl_image.c
-@@ -212,7 +212,8 @@ qxl_image_init_helper(struct qxl_device *qdev,
- 		break;
- 	default:
- 		DRM_ERROR("unsupported image bit depth\n");
--		return -EINVAL; /* TODO: cleanup */
-+		qxl_bo_kunmap_atomic_page(qdev, image_bo, ptr);
-+		return -EINVAL;
- 	}
- 	image->u.bitmap.flags = QXL_BITMAP_TOP_DOWN;
- 	image->u.bitmap.x = width;
+diff --git a/drivers/gpu/drm/amd/amdgpu/cik_sdma.c b/drivers/gpu/drm/amd/amdgpu/cik_sdma.c
+index c45304f1047c5..4af9acc2dc4f9 100644
+--- a/drivers/gpu/drm/amd/amdgpu/cik_sdma.c
++++ b/drivers/gpu/drm/amd/amdgpu/cik_sdma.c
+@@ -228,7 +228,7 @@ static void cik_sdma_ring_emit_ib(struct amdgpu_ring *ring,
+ 	u32 extra_bits = vmid & 0xf;
+ 
+ 	/* IB packet must end on a 8 DW boundary */
+-	cik_sdma_ring_insert_nop(ring, (12 - (lower_32_bits(ring->wptr) & 7)) % 8);
++	cik_sdma_ring_insert_nop(ring, (4 - lower_32_bits(ring->wptr)) & 7);
+ 
+ 	amdgpu_ring_write(ring, SDMA_PACKET(SDMA_OPCODE_INDIRECT_BUFFER, 0, extra_bits));
+ 	amdgpu_ring_write(ring, ib->gpu_addr & 0xffffffe0); /* base must be 32 byte aligned */
+@@ -811,7 +811,7 @@ static void cik_sdma_ring_pad_ib(struct amdgpu_ring *ring, struct amdgpu_ib *ib)
+ 	u32 pad_count;
+ 	int i;
+ 
+-	pad_count = (8 - (ib->length_dw & 0x7)) % 8;
++	pad_count = (-ib->length_dw) & 7;
+ 	for (i = 0; i < pad_count; i++)
+ 		if (sdma && sdma->burst_nop && (i == 0))
+ 			ib->ptr[ib->length_dw++] =
+diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v2_4.c b/drivers/gpu/drm/amd/amdgpu/sdma_v2_4.c
+index a101758380130..b6af67f6f2149 100644
+--- a/drivers/gpu/drm/amd/amdgpu/sdma_v2_4.c
++++ b/drivers/gpu/drm/amd/amdgpu/sdma_v2_4.c
+@@ -255,7 +255,7 @@ static void sdma_v2_4_ring_emit_ib(struct amdgpu_ring *ring,
+ 	unsigned vmid = AMDGPU_JOB_GET_VMID(job);
+ 
+ 	/* IB packet must end on a 8 DW boundary */
+-	sdma_v2_4_ring_insert_nop(ring, (10 - (lower_32_bits(ring->wptr) & 7)) % 8);
++	sdma_v2_4_ring_insert_nop(ring, (2 - lower_32_bits(ring->wptr)) & 7);
+ 
+ 	amdgpu_ring_write(ring, SDMA_PKT_HEADER_OP(SDMA_OP_INDIRECT) |
+ 			  SDMA_PKT_INDIRECT_HEADER_VMID(vmid & 0xf));
+@@ -750,7 +750,7 @@ static void sdma_v2_4_ring_pad_ib(struct amdgpu_ring *ring, struct amdgpu_ib *ib
+ 	u32 pad_count;
+ 	int i;
+ 
+-	pad_count = (8 - (ib->length_dw & 0x7)) % 8;
++	pad_count = (-ib->length_dw) & 7;
+ 	for (i = 0; i < pad_count; i++)
+ 		if (sdma && sdma->burst_nop && (i == 0))
+ 			ib->ptr[ib->length_dw++] =
+diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v3_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v3_0.c
+index 5f4e2c616241f..cd3ebed46d05f 100644
+--- a/drivers/gpu/drm/amd/amdgpu/sdma_v3_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/sdma_v3_0.c
+@@ -429,7 +429,7 @@ static void sdma_v3_0_ring_emit_ib(struct amdgpu_ring *ring,
+ 	unsigned vmid = AMDGPU_JOB_GET_VMID(job);
+ 
+ 	/* IB packet must end on a 8 DW boundary */
+-	sdma_v3_0_ring_insert_nop(ring, (10 - (lower_32_bits(ring->wptr) & 7)) % 8);
++	sdma_v3_0_ring_insert_nop(ring, (2 - lower_32_bits(ring->wptr)) & 7);
+ 
+ 	amdgpu_ring_write(ring, SDMA_PKT_HEADER_OP(SDMA_OP_INDIRECT) |
+ 			  SDMA_PKT_INDIRECT_HEADER_VMID(vmid & 0xf));
+@@ -1021,7 +1021,7 @@ static void sdma_v3_0_ring_pad_ib(struct amdgpu_ring *ring, struct amdgpu_ib *ib
+ 	u32 pad_count;
+ 	int i;
+ 
+-	pad_count = (8 - (ib->length_dw & 0x7)) % 8;
++	pad_count = (-ib->length_dw) & 7;
+ 	for (i = 0; i < pad_count; i++)
+ 		if (sdma && sdma->burst_nop && (i == 0))
+ 			ib->ptr[ib->length_dw++] =
+diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
+index 4554e72c83786..23de332f3c6ed 100644
+--- a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
+@@ -698,7 +698,7 @@ static void sdma_v4_0_ring_emit_ib(struct amdgpu_ring *ring,
+ 	unsigned vmid = AMDGPU_JOB_GET_VMID(job);
+ 
+ 	/* IB packet must end on a 8 DW boundary */
+-	sdma_v4_0_ring_insert_nop(ring, (10 - (lower_32_bits(ring->wptr) & 7)) % 8);
++	sdma_v4_0_ring_insert_nop(ring, (2 - lower_32_bits(ring->wptr)) & 7);
+ 
+ 	amdgpu_ring_write(ring, SDMA_PKT_HEADER_OP(SDMA_OP_INDIRECT) |
+ 			  SDMA_PKT_INDIRECT_HEADER_VMID(vmid & 0xf));
+@@ -1579,7 +1579,7 @@ static void sdma_v4_0_ring_pad_ib(struct amdgpu_ring *ring, struct amdgpu_ib *ib
+ 	u32 pad_count;
+ 	int i;
+ 
+-	pad_count = (8 - (ib->length_dw & 0x7)) % 8;
++	pad_count = (-ib->length_dw) & 7;
+ 	for (i = 0; i < pad_count; i++)
+ 		if (sdma && sdma->burst_nop && (i == 0))
+ 			ib->ptr[ib->length_dw++] =
+diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
+index 8493bfbbc1484..2a792d7abe007 100644
+--- a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
+@@ -382,8 +382,15 @@ static void sdma_v5_0_ring_emit_ib(struct amdgpu_ring *ring,
+ 	unsigned vmid = AMDGPU_JOB_GET_VMID(job);
+ 	uint64_t csa_mc_addr = amdgpu_sdma_get_csa_mc_addr(ring, vmid);
+ 
+-	/* IB packet must end on a 8 DW boundary */
+-	sdma_v5_0_ring_insert_nop(ring, (10 - (lower_32_bits(ring->wptr) & 7)) % 8);
++	/* An IB packet must end on a 8 DW boundary--the next dword
++	 * must be on a 8-dword boundary. Our IB packet below is 6
++	 * dwords long, thus add x number of NOPs, such that, in
++	 * modular arithmetic,
++	 * wptr + 6 + x = 8k, k >= 0, which in C is,
++	 * (wptr + 6 + x) % 8 = 0.
++	 * The expression below, is a solution of x.
++	 */
++	sdma_v5_0_ring_insert_nop(ring, (2 - lower_32_bits(ring->wptr)) & 7);
+ 
+ 	amdgpu_ring_write(ring, SDMA_PKT_HEADER_OP(SDMA_OP_INDIRECT) |
+ 			  SDMA_PKT_INDIRECT_HEADER_VMID(vmid & 0xf));
+@@ -1086,10 +1093,10 @@ static void sdma_v5_0_vm_set_pte_pde(struct amdgpu_ib *ib,
+ }
+ 
+ /**
+- * sdma_v5_0_ring_pad_ib - pad the IB to the required number of dw
+- *
++ * sdma_v5_0_ring_pad_ib - pad the IB
+  * @ib: indirect buffer to fill with padding
+  *
++ * Pad the IB with NOPs to a boundary multiple of 8.
+  */
+ static void sdma_v5_0_ring_pad_ib(struct amdgpu_ring *ring, struct amdgpu_ib *ib)
+ {
+@@ -1097,7 +1104,7 @@ static void sdma_v5_0_ring_pad_ib(struct amdgpu_ring *ring, struct amdgpu_ib *ib
+ 	u32 pad_count;
+ 	int i;
+ 
+-	pad_count = (8 - (ib->length_dw & 0x7)) % 8;
++	pad_count = (-ib->length_dw) & 0x7;
+ 	for (i = 0; i < pad_count; i++)
+ 		if (sdma && sdma->burst_nop && (i == 0))
+ 			ib->ptr[ib->length_dw++] =
 -- 
 2.20.1
 
