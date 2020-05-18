@@ -2,73 +2,80 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50693C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 378052070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FFAB2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:16:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgERHMo (ORCPT
+        id S1726939AbgERHQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 03:12:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51962 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgERHMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 03:12:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 81EEEAC52;
-        Mon, 18 May 2020 07:12:45 +0000 (UTC)
-Date:   Mon, 18 May 2020 09:12:34 +0200
-From:   Borislav Petkov <bp@suse.de>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the tip tree with Linus' tree
-Message-ID: <20200518071234.GA24692@zn.tnic>
-References: <20200518151032.57d57052@canb.auug.org.au>
+        Mon, 18 May 2020 03:16:46 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4810 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726729AbgERHQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 03:16:46 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DF2C3410768E010C9926;
+        Mon, 18 May 2020 15:16:43 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 18 May 2020 15:16:33 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <Souvik.Chakravarty@arm.com>, <Thanu.Rangarajan@arm.com>
+CC:     <Sudeep.Holla@arm.com>, <guohanjun@huawei.com>,
+        <john.garry@huawei.com>, <jonathan.cameron@huawei.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <wangxiongfeng2@huawei.com>
+Subject: [RFC PATCH v2 0/3] add SW BOOST support for CPPC
+Date:   Mon, 18 May 2020 15:10:05 +0800
+Message-ID: <1589785808-12138-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200518151032.57d57052@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 03:10:32PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the tip tree got a conflict in:
-> 
->   include/linux/compiler.h
-> 
-> between commit:
-> 
->   a9a3ed1eff36 ("x86: Fix early boot crash on gcc-10, third try")
-> 
-> from Linus' tree and commit:
-> 
->   f670269a42bf ("x86: Fix early boot crash on gcc-10, next try")
-> 
-> from the tip tree.
+ACPI spec 6.2 section 8.4.7.1 provide the following two CPC registers.
 
-That commit is gone in the meantime so you won't have the merge conflict
-anymore once tip/master is regenerated.
+"Highest performance is the absolute maximum performance an individual
+processor may reach, assuming ideal conditions. This performance level
+may not be sustainable for long durations, and may only be achievable if
+other platform components are in a specific state; for example, it may
+require other processors be in an idle state.
 
-Thx.
+Nominal Performance is the maximum sustained performance level of the
+processor, assuming ideal operating conditions. In absence of an
+external constraint (power, thermal, etc.) this is the performance level
+the platform is expected to be able to maintain continuously. All
+processors are expected to be able to sustain their nominal performance
+state simultaneously."
+
+We can use Highest Performance as the max performance in boost mode and
+Nomial Performance as the max performance in non-boost mode. If the
+Highest Performance is greater than the Nominal Performance, we assume
+SW BOOST is supported.
+
+Xiongfeng Wang (3):
+  cpufreq: handle the return value of '.set_boost()' properly
+  cpufreq: export 'cpufreq_policy_list' and make macro
+    'for_each_*_policy' public
+  CPPC: add support for SW BOOST
+
+ drivers/cpufreq/cppc_cpufreq.c | 42 ++++++++++++++++++++++++++++++++++++++++--
+ drivers/cpufreq/cpufreq.c      | 21 ++++++---------------
+ include/linux/cpufreq.h        | 14 ++++++++++++++
+ 3 files changed, 60 insertions(+), 17 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+1.7.12.4
 
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
