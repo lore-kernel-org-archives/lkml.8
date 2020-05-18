@@ -2,47 +2,47 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B7FC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB34EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69EA720758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F78206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:04:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ab68/ohI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jMGzTdoP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgERUER (ORCPT
+        id S1727995AbgERUEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:04:17 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:56036 "EHLO
+        Mon, 18 May 2020 16:04:23 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15375 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727837AbgERUEN (ORCPT
+        by vger.kernel.org with ESMTP id S1727831AbgERUEO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:04:13 -0400
+        Mon, 18 May 2020 16:04:14 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589832252; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1589832253; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=M/rimLZ9072yv+rzqmHvJnR79FljZfewZOntJCZMjaA=; b=Ab68/ohIuMg8+mbj0yfil6faDt7oMUE+3gDC89ci7k6++imGXCoqUOx/w+rQIMKMDUJ8isOE
- Tpx/zLolWzmXPFavUybQy1d6JbnKbWMlGbzlpt8Lw0tnxiYSl0JxGGfalL1mDnvDFuOjX52l
- N95QY1phipD3BOYfszOa+Xkclis=
+ bh=j1u5QBULuJKFUyNxaQAkdzuQVerFj62srXNJ8V0Lrak=; b=jMGzTdoPje8wGew7bm3jFE21UTNOJeliCb/dAgOUxvLmS5o6fU762XeWWC5UzrxFZzHOfzGz
+ m/drCBzh116QRoS+6A+Ky9Sk9wg1CEfoiT6+5+U9X/vyk6saU7Vf9GLmL4Uz1MqNWDd44agy
+ DA5/tmy7DRNdaXlaZz5T0fqrKvk=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec2ea3c.7fbc62209bc8-smtp-out-n05;
- Mon, 18 May 2020 20:04:12 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5ec2ea38.7efd1e647110-smtp-out-n02;
+ Mon, 18 May 2020 20:04:08 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 132BFC432C2; Mon, 18 May 2020 20:04:12 +0000 (UTC)
+        id 0B1C6C433D2; Mon, 18 May 2020 20:04:08 +0000 (UTC)
 Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16052C433F2;
-        Mon, 18 May 2020 20:04:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 16052C433F2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 656E0C433F2;
+        Mon, 18 May 2020 20:04:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 656E0C433F2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
@@ -50,9 +50,9 @@ To:     manivannan.sadhasivam@linaro.org
 Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
         jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v3 7/7] bus: mhi: core: Introduce sysfs entries for MHI
-Date:   Mon, 18 May 2020 13:04:01 -0700
-Message-Id: <1589832241-13867-8-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v3 1/7] bus: mhi: core: Abort suspends due to outgoing pending packets
+Date:   Mon, 18 May 2020 13:03:55 -0700
+Message-Id: <1589832241-13867-2-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1589832241-13867-1-git-send-email-bbhatt@codeaurora.org>
 References: <1589832241-13867-1-git-send-email-bbhatt@codeaurora.org>
@@ -61,142 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce sysfs entries to enable userspace clients the ability to read
-the serial number and the OEM PK Hash values obtained from BHI. OEMs
-need to read these device-specific hardware information values through
-userspace for factory testing purposes and cannot be exposed via degbufs
-as it may remain disabled for performance reasons. Also, update the
-documentation for ABI to include these entries.
+Add the missing check to abort suspends if a client has pending outgoing
+packets to send to the device. This allows better utilization of the MHI
+bus wherein clients on the host are not left waiting for longer suspend
+or resume cycles to finish for data transfers.
 
 Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 ---
- Documentation/ABI/stable/sysfs-bus-mhi | 25 ++++++++++++++++
- MAINTAINERS                            |  1 +
- drivers/bus/mhi/core/init.c            | 53 ++++++++++++++++++++++++++++++++++
- 3 files changed, 79 insertions(+)
- create mode 100644 Documentation/ABI/stable/sysfs-bus-mhi
+ drivers/bus/mhi/core/pm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/ABI/stable/sysfs-bus-mhi b/Documentation/ABI/stable/sysfs-bus-mhi
-new file mode 100644
-index 0000000..65ef711
---- /dev/null
-+++ b/Documentation/ABI/stable/sysfs-bus-mhi
-@@ -0,0 +1,25 @@
-+What:		/sys/bus/mhi/devices/.../serialnumber
-+Date:		May 2020
-+KernelVersion:  5.8
-+Contact:	Bhaumik Bhatt <bbhatt@codeaurora.org>
-+Description:
-+		The file holds the serial number of the endpoint device obtained
-+		using a BHI (Boot Host Interface) register read after at least
-+		one attempt to power up the device has been done. If read
-+		without having the device power on at least once, the file will
-+		read all 0's.
-+Users:		Any userspace application or clients interested in the device
-+		hardware information.
-+
-+What:		/sys/bus/mhi/devices/.../oem_pk_hash
-+Date:		May 2020
-+KernelVersion:  5.8
-+Contact:	Bhaumik Bhatt <bbhatt@codeaurora.org>
-+Description:
-+		The file holds the OEM PK Hash value of the endpoint device
-+		obtained using a BHI (Boot Host Interface) register read after
-+		at least one attempt to power up the device has been done. If
-+		read without having the device power on at least once, the file
-+		will read all 0's.
-+Users:		Any userspace application or clients interested in the device
-+		hardware information.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e64e5db..5e49316 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11018,6 +11018,7 @@ M:	Hemant Kumar <hemantk@codeaurora.org>
- L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mani/mhi.git
-+F:	Documentation/ABI/stable/sysfs-bus-mhi
- F:	Documentation/mhi/
- F:	drivers/bus/mhi/
- F:	include/linux/mhi.h
-diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-index 83ad544..9b6a5173 100644
---- a/drivers/bus/mhi/core/init.c
-+++ b/drivers/bus/mhi/core/init.c
-@@ -76,6 +76,56 @@ const char *to_mhi_pm_state_str(enum mhi_pm_state state)
- 	return mhi_pm_state_str[index];
- }
+diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+index 7960980..661d704 100644
+--- a/drivers/bus/mhi/core/pm.c
++++ b/drivers/bus/mhi/core/pm.c
+@@ -686,7 +686,8 @@ int mhi_pm_suspend(struct mhi_controller *mhi_cntrl)
+ 		return -EIO;
  
-+static ssize_t serial_number_show(struct device *dev,
-+				  struct device_attribute *attr,
-+				  char *buf)
-+{
-+	struct mhi_device *mhi_dev = to_mhi_device(dev);
-+	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-+
-+	return snprintf(buf, PAGE_SIZE, "Serial Number:%u\n",
-+			mhi_cntrl->serial_number);
-+}
-+static DEVICE_ATTR_RO(serial_number);
-+
-+static ssize_t oem_pk_hash_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct mhi_device *mhi_dev = to_mhi_device(dev);
-+	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-+	int i, cnt = 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(mhi_cntrl->oem_pk_hash); i++)
-+		cnt += snprintf(buf + cnt, PAGE_SIZE - cnt,
-+				"OEMPKHASH[%d]:0x%x\n", i,
-+				mhi_cntrl->oem_pk_hash[i]);
-+
-+	return cnt;
-+}
-+static DEVICE_ATTR_RO(oem_pk_hash);
-+
-+static struct attribute *mhi_sysfs_attrs[] = {
-+	&dev_attr_serial_number.attr,
-+	&dev_attr_oem_pk_hash.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group mhi_sysfs_group = {
-+	.attrs = mhi_sysfs_attrs,
-+};
-+
-+static int mhi_create_sysfs(struct mhi_controller *mhi_cntrl)
-+{
-+	return sysfs_create_group(&mhi_cntrl->mhi_dev->dev.kobj,
-+				  &mhi_sysfs_group);
-+}
-+
-+static void mhi_destroy_sysfs(struct mhi_controller *mhi_cntrl)
-+{
-+	sysfs_remove_group(&mhi_cntrl->mhi_dev->dev.kobj, &mhi_sysfs_group);
-+}
-+
- /* MHI protocol requires the transfer ring to be aligned with ring length */
- static int mhi_alloc_aligned_ring(struct mhi_controller *mhi_cntrl,
- 				  struct mhi_ring *ring,
-@@ -917,6 +967,8 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
- 	mhi_cntrl->mhi_dev = mhi_dev;
+ 	/* Return busy if there are any pending resources */
+-	if (atomic_read(&mhi_cntrl->dev_wake))
++	if (atomic_read(&mhi_cntrl->dev_wake) ||
++	    atomic_read(&mhi_cntrl->pending_pkts))
+ 		return -EBUSY;
  
- 	mhi_create_debugfs(mhi_cntrl);
-+	if (mhi_create_sysfs(mhi_cntrl))
-+		dev_err(mhi_cntrl->cntrl_dev, "Failed to create sysfs entries\n");
+ 	/* Take MHI out of M2 state */
+@@ -712,7 +713,8 @@ int mhi_pm_suspend(struct mhi_controller *mhi_cntrl)
  
- 	return 0;
+ 	write_lock_irq(&mhi_cntrl->pm_lock);
  
-@@ -940,6 +992,7 @@ void mhi_unregister_controller(struct mhi_controller *mhi_cntrl)
- 	struct mhi_chan *mhi_chan = mhi_cntrl->mhi_chan;
- 	unsigned int i;
- 
-+	mhi_destroy_sysfs(mhi_cntrl);
- 	mhi_destroy_debugfs(mhi_cntrl);
- 
- 	kfree(mhi_cntrl->mhi_cmd);
+-	if (atomic_read(&mhi_cntrl->dev_wake)) {
++	if (atomic_read(&mhi_cntrl->dev_wake) ||
++	    atomic_read(&mhi_cntrl->pending_pkts)) {
+ 		write_unlock_irq(&mhi_cntrl->pm_lock);
+ 		return -EBUSY;
+ 	}
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
