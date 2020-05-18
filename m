@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC028C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FABD20809
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3AA1207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:47:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wef4mbks"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YWaIC1jS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgERLrU (ORCPT
+        id S1727801AbgERLrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:47:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60558 "EHLO
+        Mon, 18 May 2020 07:47:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgERLrR (ORCPT
+        with ESMTP id S1726726AbgERLrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:47:17 -0400
+        Mon, 18 May 2020 07:47:16 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A466C05BD0B;
-        Mon, 18 May 2020 04:47:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68F29C05BD09;
+        Mon, 18 May 2020 04:47:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=EkXzTLPOr+6GnzCHQiliWbXKTGGj3a80vBWO+YwLdEQ=; b=Wef4mbksZS5bULRfM7BOYwDLTz
-        Gab1p1EBoQFhXTntW2fji48lKQU6WdIdL98rTw2h5OcZi5dO36+uzBp0ehFDKCt2XV9A6Iq2KNML0
-        jmxEL7jCfq4VTfn/4t4ULWGUBFyWP59k55sFJKdIqblUBNjzelHoTASUZSgaJWCMdIOHYDmOv5ol9
-        13ldGtDJ+Z6gfadSGAeeO5t9Z3XYowvYlzEY5EhKQ5CI2Sp/XP+3ovDp3Z2Yf7r0nhxJ7LTXT6jfm
-        37wMtphG0jFC8dFsUbpcRtaFfljGCvy65rfSEB8Jom35l9ObDikmJUW7hDAztaim2UnhzaYcVpStD
-        QNLMb8TA==;
+        bh=6MCEXCuyQ19zofaOQkoasXyj8+vdtyHO059Nwuls9kQ=; b=YWaIC1jSxLFmVUgP8VzngFKSka
+        4Ume2ZHHUVUKxG4/P/m4UzRlZrZtDCCvHTlaWU9T1HCahZPDFhIhc1V4psuJVoC+7vF9o6PETi7Se
+        l3ixZ0SgToQrazDhPS4U3/RjeCxSgxmGFZ1ZXrvc7EGV9FTcR0UnTtMALSho/XDl1xF9GGsj66/7K
+        3klRhofRJTG9Nq4nXVn+dmDeqya20XraqzI0IMHK5ZVMURysBN5u3EwKWcj2YrnLqSbdlM9Wh8gFy
+        IZ4rSfopcuNP9H4+bm319HKigKysJEWI/gNATquWBSMVo68aP61+iVYVNsF2UHV+XrQSRK7nCYd6m
+        ndiiV27g==;
 Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jaeEb-0004Nu-Vt; Mon, 18 May 2020 11:47:06 +0000
+        id 1jaeEW-0004NS-Uw; Mon, 18 May 2020 11:47:01 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -47,9 +47,9 @@ Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/9] net: add a new ndo_tunnel_ioctl method
-Date:   Mon, 18 May 2020 13:46:49 +0200
-Message-Id: <20200518114655.987760-4-hch@lst.de>
+Subject: [PATCH 1/9] ipv4: streamline ipmr_new_tunnel
+Date:   Mon, 18 May 2020 13:46:47 +0200
+Message-Id: <20200518114655.987760-2-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518114655.987760-1-hch@lst.de>
 References: <20200518114655.987760-1-hch@lst.de>
@@ -61,300 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This method is used to properly allow kernel callers of the IPv4 route
-management ioctls.  The exsting ip_tunnel_ioctl helper is renamed to
-ip_tunnel_ctl to better reflect that it doesn't directly implement ioctls
-touching user memory, and is used for the guts of ndo_tunnel_ctl
-implementations. A new ip_tunnel_ioctl helper is added that can be wired
-up directly to the ndo_do_ioctl method and takes care of the copy to and
-from userspace.
+Reduce a few level of indentation to simplify the function.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/linux/netdevice.h |  6 ++++++
- include/net/ip_tunnels.h  |  3 ++-
- net/ipv4/ip_gre.c         | 35 ++++++++++++++---------------------
- net/ipv4/ip_tunnel.c      | 16 +++++++++++++++-
- net/ipv4/ip_vti.c         | 32 +++++++++++++-------------------
- net/ipv4/ipip.c           | 30 +++++++++---------------------
- 6 files changed, 59 insertions(+), 63 deletions(-)
+ net/ipv4/ipmr.c | 73 ++++++++++++++++++++++++-------------------------
+ 1 file changed, 36 insertions(+), 37 deletions(-)
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 6a8f8daef09df..a18f8fdf4260a 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -53,6 +53,7 @@ struct netpoll_info;
- struct device;
- struct phy_device;
- struct dsa_port;
-+struct ip_tunnel_parm;
- struct macsec_context;
- struct macsec_ops;
+diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+index 5c218db2dede7..a1169b6941134 100644
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -471,50 +471,49 @@ static bool ipmr_init_vif_indev(const struct net_device *dev)
  
-@@ -1274,6 +1275,9 @@ struct netdev_net_notifier {
-  *	Get devlink port instance associated with a given netdev.
-  *	Called with a reference on the netdevice and devlink locks only,
-  *	rtnl_lock is not held.
-+ * int (*ndo_tunnel_ctl)(struct net_device *dev, struct ip_tunnel_parm *p,
-+ *			 int cmd);
-+ *	Add, change, delete or get information on an IPv4 tunnel.
-  */
- struct net_device_ops {
- 	int			(*ndo_init)(struct net_device *dev);
-@@ -1479,6 +1483,8 @@ struct net_device_ops {
- 	int			(*ndo_xsk_wakeup)(struct net_device *dev,
- 						  u32 queue_id, u32 flags);
- 	struct devlink_port *	(*ndo_get_devlink_port)(struct net_device *dev);
-+	int			(*ndo_tunnel_ctl)(struct net_device *dev,
-+						  struct ip_tunnel_parm *p, int cmd);
- };
- 
- /**
-diff --git a/include/net/ip_tunnels.h b/include/net/ip_tunnels.h
-index 236503a50759a..076e5d7db7d3c 100644
---- a/include/net/ip_tunnels.h
-+++ b/include/net/ip_tunnels.h
-@@ -269,7 +269,8 @@ void ip_tunnel_xmit(struct sk_buff *skb, struct net_device *dev,
- 		    const struct iphdr *tnl_params, const u8 protocol);
- void ip_md_tunnel_xmit(struct sk_buff *skb, struct net_device *dev,
- 		       const u8 proto, int tunnel_hlen);
--int ip_tunnel_ioctl(struct net_device *dev, struct ip_tunnel_parm *p, int cmd);
-+int ip_tunnel_ctl(struct net_device *dev, struct ip_tunnel_parm *p, int cmd);
-+int ip_tunnel_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd);
- int __ip_tunnel_change_mtu(struct net_device *dev, int new_mtu, bool strict);
- int ip_tunnel_change_mtu(struct net_device *dev, int new_mtu);
- 
-diff --git a/net/ipv4/ip_gre.c b/net/ipv4/ip_gre.c
-index 0ce9b91ff55c0..4e31f23e4117e 100644
---- a/net/ipv4/ip_gre.c
-+++ b/net/ipv4/ip_gre.c
-@@ -768,45 +768,37 @@ static void ipgre_link_update(struct net_device *dev, bool set_mtu)
- 	}
- }
- 
--static int ipgre_tunnel_ioctl(struct net_device *dev,
--			      struct ifreq *ifr, int cmd)
-+static int ipgre_tunnel_ctl(struct net_device *dev, struct ip_tunnel_parm *p,
-+			    int cmd)
+ static struct net_device *ipmr_new_tunnel(struct net *net, struct vifctl *v)
  {
--	struct ip_tunnel_parm p;
- 	int err;
- 
--	if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
--		return -EFAULT;
--
- 	if (cmd == SIOCADDTUNNEL || cmd == SIOCCHGTUNNEL) {
--		if (p.iph.version != 4 || p.iph.protocol != IPPROTO_GRE ||
--		    p.iph.ihl != 5 || (p.iph.frag_off & htons(~IP_DF)) ||
--		    ((p.i_flags | p.o_flags) & (GRE_VERSION | GRE_ROUTING)))
-+		if (p->iph.version != 4 || p->iph.protocol != IPPROTO_GRE ||
-+		    p->iph.ihl != 5 || (p->iph.frag_off & htons(~IP_DF)) ||
-+		    ((p->i_flags | p->o_flags) & (GRE_VERSION | GRE_ROUTING)))
- 			return -EINVAL;
- 	}
- 
--	p.i_flags = gre_flags_to_tnl_flags(p.i_flags);
--	p.o_flags = gre_flags_to_tnl_flags(p.o_flags);
-+	p->i_flags = gre_flags_to_tnl_flags(p->i_flags);
-+	p->o_flags = gre_flags_to_tnl_flags(p->o_flags);
- 
--	err = ip_tunnel_ioctl(dev, &p, cmd);
-+	err = ip_tunnel_ctl(dev, p, cmd);
- 	if (err)
- 		return err;
- 
- 	if (cmd == SIOCCHGTUNNEL) {
- 		struct ip_tunnel *t = netdev_priv(dev);
- 
--		t->parms.i_flags = p.i_flags;
--		t->parms.o_flags = p.o_flags;
-+		t->parms.i_flags = p->i_flags;
-+		t->parms.o_flags = p->o_flags;
- 
- 		if (strcmp(dev->rtnl_link_ops->kind, "erspan"))
- 			ipgre_link_update(dev, true);
- 	}
- 
--	p.i_flags = gre_tnl_flags_to_gre_flags(p.i_flags);
--	p.o_flags = gre_tnl_flags_to_gre_flags(p.o_flags);
--
--	if (copy_to_user(ifr->ifr_ifru.ifru_data, &p, sizeof(p)))
--		return -EFAULT;
--
-+	p->i_flags = gre_tnl_flags_to_gre_flags(p->i_flags);
-+	p->o_flags = gre_tnl_flags_to_gre_flags(p->o_flags);
- 	return 0;
- }
- 
-@@ -924,10 +916,11 @@ static const struct net_device_ops ipgre_netdev_ops = {
- 	.ndo_stop		= ipgre_close,
- #endif
- 	.ndo_start_xmit		= ipgre_xmit,
--	.ndo_do_ioctl		= ipgre_tunnel_ioctl,
-+	.ndo_do_ioctl		= ip_tunnel_ioctl,
- 	.ndo_change_mtu		= ip_tunnel_change_mtu,
- 	.ndo_get_stats64	= ip_tunnel_get_stats64,
- 	.ndo_get_iflink		= ip_tunnel_get_iflink,
-+	.ndo_tunnel_ctl		= ipgre_tunnel_ctl,
- };
- 
- #define GRE_FEATURES (NETIF_F_SG |		\
-diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
-index cd4b84310d929..f4f1d11eab502 100644
---- a/net/ipv4/ip_tunnel.c
-+++ b/net/ipv4/ip_tunnel.c
-@@ -860,7 +860,7 @@ static void ip_tunnel_update(struct ip_tunnel_net *itn,
- 	netdev_state_change(dev);
- }
- 
--int ip_tunnel_ioctl(struct net_device *dev, struct ip_tunnel_parm *p, int cmd)
-+int ip_tunnel_ctl(struct net_device *dev, struct ip_tunnel_parm *p, int cmd)
- {
- 	int err = 0;
- 	struct ip_tunnel *t = netdev_priv(dev);
-@@ -960,6 +960,20 @@ int ip_tunnel_ioctl(struct net_device *dev, struct ip_tunnel_parm *p, int cmd)
- done:
- 	return err;
- }
-+EXPORT_SYMBOL_GPL(ip_tunnel_ctl);
-+
-+int ip_tunnel_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
-+{
-+	struct ip_tunnel_parm p;
+-	struct net_device  *dev;
++	struct net_device *tunnel_dev, *new_dev;
++	struct ip_tunnel_parm p = { };
++	mm_segment_t oldfs = get_fs();
++	struct ifreq ifr;
 +	int err;
-+
-+	if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
-+		return -EFAULT;
-+	err = dev->netdev_ops->ndo_tunnel_ctl(dev, &p, cmd);
-+	if (!err && copy_to_user(ifr->ifr_ifru.ifru_data, &p, sizeof(p)))
-+		return -EFAULT;
-+	return err;
-+}
- EXPORT_SYMBOL_GPL(ip_tunnel_ioctl);
  
- int __ip_tunnel_change_mtu(struct net_device *dev, int new_mtu, bool strict)
-diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
-index 1b4e6f298648d..c8974360a99f4 100644
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -378,38 +378,31 @@ static int vti4_err(struct sk_buff *skb, u32 info)
+-	dev = __dev_get_by_name(net, "tunl0");
++	tunnel_dev = __dev_get_by_name(net, "tunl0");
++	if (!tunnel_dev)
++		goto out;
+ 
+-	if (dev) {
+-		const struct net_device_ops *ops = dev->netdev_ops;
+-		int err;
+-		struct ifreq ifr;
+-		struct ip_tunnel_parm p;
++	p.iph.daddr = v->vifc_rmt_addr.s_addr;
++	p.iph.saddr = v->vifc_lcl_addr.s_addr;
++	p.iph.version = 4;
++	p.iph.ihl = 5;
++	p.iph.protocol = IPPROTO_IPIP;
++	sprintf(p.name, "dvmrp%d", v->vifc_vifi);
++	ifr.ifr_ifru.ifru_data = (__force void __user *)&p;
+ 
+-		memset(&p, 0, sizeof(p));
+-		p.iph.daddr = v->vifc_rmt_addr.s_addr;
+-		p.iph.saddr = v->vifc_lcl_addr.s_addr;
+-		p.iph.version = 4;
+-		p.iph.ihl = 5;
+-		p.iph.protocol = IPPROTO_IPIP;
+-		sprintf(p.name, "dvmrp%d", v->vifc_vifi);
+-		ifr.ifr_ifru.ifru_data = (__force void __user *)&p;
++	if (!tunnel_dev->netdev_ops->ndo_do_ioctl)
++		goto out;
+ 
+-		if (ops->ndo_do_ioctl) {
+-			mm_segment_t oldfs = get_fs();
++	set_fs(KERNEL_DS);
++	err = tunnel_dev->netdev_ops->ndo_do_ioctl(tunnel_dev, &ifr,
++			SIOCADDTUNNEL);
++	set_fs(oldfs);
++	if (err)
++		goto out;
+ 
+-			set_fs(KERNEL_DS);
+-			err = ops->ndo_do_ioctl(dev, &ifr, SIOCADDTUNNEL);
+-			set_fs(oldfs);
+-		} else {
+-			err = -EOPNOTSUPP;
+-		}
+-		dev = NULL;
++	new_dev = __dev_get_by_name(net, p.name);
++	if (!new_dev)
++		goto out;
+ 
+-		if (err == 0 &&
+-		    (dev = __dev_get_by_name(net, p.name)) != NULL) {
+-			dev->flags |= IFF_MULTICAST;
+-			if (!ipmr_init_vif_indev(dev))
+-				goto failure;
+-			if (dev_open(dev, NULL))
+-				goto failure;
+-			dev_hold(dev);
+-		}
+-	}
+-	return dev;
++	new_dev->flags |= IFF_MULTICAST;
++	if (!ipmr_init_vif_indev(new_dev))
++		goto out_unregister;
++	if (dev_open(new_dev, NULL))
++		goto out_unregister;
++	dev_hold(new_dev);
++	return new_dev;
+ 
+-failure:
+-	unregister_netdevice(dev);
++out_unregister:
++	unregister_netdevice(new_dev);
++out:
+ 	return NULL;
  }
  
- static int
--vti_tunnel_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
-+vti_tunnel_ctl(struct net_device *dev, struct ip_tunnel_parm *p, int cmd)
- {
- 	int err = 0;
--	struct ip_tunnel_parm p;
--
--	if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
--		return -EFAULT;
- 
- 	if (cmd == SIOCADDTUNNEL || cmd == SIOCCHGTUNNEL) {
--		if (p.iph.version != 4 || p.iph.protocol != IPPROTO_IPIP ||
--		    p.iph.ihl != 5)
-+		if (p->iph.version != 4 || p->iph.protocol != IPPROTO_IPIP ||
-+		    p->iph.ihl != 5)
- 			return -EINVAL;
- 	}
- 
--	if (!(p.i_flags & GRE_KEY))
--		p.i_key = 0;
--	if (!(p.o_flags & GRE_KEY))
--		p.o_key = 0;
-+	if (!(p->i_flags & GRE_KEY))
-+		p->i_key = 0;
-+	if (!(p->o_flags & GRE_KEY))
-+		p->o_key = 0;
- 
--	p.i_flags = VTI_ISVTI;
-+	p->i_flags = VTI_ISVTI;
- 
--	err = ip_tunnel_ioctl(dev, &p, cmd);
-+	err = ip_tunnel_ctl(dev, p, cmd);
- 	if (err)
- 		return err;
- 
- 	if (cmd != SIOCDELTUNNEL) {
--		p.i_flags |= GRE_KEY;
--		p.o_flags |= GRE_KEY;
-+		p->i_flags |= GRE_KEY;
-+		p->o_flags |= GRE_KEY;
- 	}
--
--	if (copy_to_user(ifr->ifr_ifru.ifru_data, &p, sizeof(p)))
--		return -EFAULT;
- 	return 0;
- }
- 
-@@ -417,10 +410,11 @@ static const struct net_device_ops vti_netdev_ops = {
- 	.ndo_init	= vti_tunnel_init,
- 	.ndo_uninit	= ip_tunnel_uninit,
- 	.ndo_start_xmit	= vti_tunnel_xmit,
--	.ndo_do_ioctl	= vti_tunnel_ioctl,
-+	.ndo_do_ioctl	= ip_tunnel_ioctl,
- 	.ndo_change_mtu	= ip_tunnel_change_mtu,
- 	.ndo_get_stats64 = ip_tunnel_get_stats64,
- 	.ndo_get_iflink = ip_tunnel_get_iflink,
-+	.ndo_tunnel_ctl	= vti_tunnel_ctl,
- };
- 
- static void vti_tunnel_setup(struct net_device *dev)
-diff --git a/net/ipv4/ipip.c b/net/ipv4/ipip.c
-index 2f01cf6fa0def..df663baf2516a 100644
---- a/net/ipv4/ipip.c
-+++ b/net/ipv4/ipip.c
-@@ -327,41 +327,29 @@ static bool ipip_tunnel_ioctl_verify_protocol(u8 ipproto)
- }
- 
- static int
--ipip_tunnel_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
-+ipip_tunnel_ctl(struct net_device *dev, struct ip_tunnel_parm *p, int cmd)
- {
--	int err = 0;
--	struct ip_tunnel_parm p;
--
--	if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
--		return -EFAULT;
--
- 	if (cmd == SIOCADDTUNNEL || cmd == SIOCCHGTUNNEL) {
--		if (p.iph.version != 4 ||
--		    !ipip_tunnel_ioctl_verify_protocol(p.iph.protocol) ||
--		    p.iph.ihl != 5 || (p.iph.frag_off&htons(~IP_DF)))
-+		if (p->iph.version != 4 ||
-+		    !ipip_tunnel_ioctl_verify_protocol(p->iph.protocol) ||
-+		    p->iph.ihl != 5 || (p->iph.frag_off & htons(~IP_DF)))
- 			return -EINVAL;
- 	}
- 
--	p.i_key = p.o_key = 0;
--	p.i_flags = p.o_flags = 0;
--	err = ip_tunnel_ioctl(dev, &p, cmd);
--	if (err)
--		return err;
--
--	if (copy_to_user(ifr->ifr_ifru.ifru_data, &p, sizeof(p)))
--		return -EFAULT;
--
--	return 0;
-+	p->i_key = p->o_key = 0;
-+	p->i_flags = p->o_flags = 0;
-+	return ip_tunnel_ctl(dev, p, cmd);
- }
- 
- static const struct net_device_ops ipip_netdev_ops = {
- 	.ndo_init       = ipip_tunnel_init,
- 	.ndo_uninit     = ip_tunnel_uninit,
- 	.ndo_start_xmit	= ipip_tunnel_xmit,
--	.ndo_do_ioctl	= ipip_tunnel_ioctl,
-+	.ndo_do_ioctl	= ip_tunnel_ioctl,
- 	.ndo_change_mtu = ip_tunnel_change_mtu,
- 	.ndo_get_stats64 = ip_tunnel_get_stats64,
- 	.ndo_get_iflink = ip_tunnel_get_iflink,
-+	.ndo_tunnel_ctl	= ipip_tunnel_ctl,
- };
- 
- #define IPIP_FEATURES (NETIF_F_SG |		\
 -- 
 2.26.2
 
