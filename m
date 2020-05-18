@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A01520671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 672F920671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823915;
-	bh=tyPWl9a+CQko/HHoUmFTcDmz8KlCfkitFMDU0Mrw2R0=;
+	s=default; t=1589823918;
+	bh=RGT0VjGe9TRQuJHjMcP/kiurgPyuxbygJwlZVLInTgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EacgaH8deXdlnUGPm8EEcTdYMwgLQDM4G6814fFARne06boBBUzyyMpyVCeCN1tvY
-	 Pb3s5hclEiqJBHb7RjNK1zD1C6olj6KmekmM3DzjTxNf5bUkgJWZEwe2+a4EPddc8I
-	 3mIr/9Q2NRHbDgtyAyudAyBl6xiumOz9z+7M9IpY=
+	b=ILhyHo4OD26DKynWulZQ6u3RM9nZ++9IVsDlgcjr1H2J8QMf/3CkAei3j/YHtM2/1
+	 B81e14hgAg/bUbOANDK1YjA3MqDHGGNSf/fttpEl0Nv/nz19BtUDOWjUIUyv0tGej2
+	 zXmEzkTNhjSo0y8544vbwtXy9yE9nw0RVsz8wx94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbgERRpO (ORCPT
+        id S1729903AbgERRpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43858 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:45:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729876AbgERRpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:45:10 -0400
+        id S1729829AbgERRpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:45:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F14BF20715;
-        Mon, 18 May 2020 17:45:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75B4B207C4;
+        Mon, 18 May 2020 17:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823910;
-        bh=tyPWl9a+CQko/HHoUmFTcDmz8KlCfkitFMDU0Mrw2R0=;
+        s=default; t=1589823912;
+        bh=RGT0VjGe9TRQuJHjMcP/kiurgPyuxbygJwlZVLInTgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IUYnUxNKrj//z+TEHdWoDbR+6w0y8vrs3Uru+VFrpPBuciiC/Q91pyCzLd5w7xVra
-         dJCtrqtrg1q9OkgB7uHFjjzgdJRmYmrR2HDv8eEEudYLu/zqutnWnDcyzV1pDBzSHU
-         0jkuokhSKG3SOmjk4QbC+e4Ngm2tDEdL2DoOguJ0=
+        b=RitQpEmRdA6Hjs6OAf2UcpktsdHqCdyW5nrRDRUJ7EV67d6pzG4STChfVZOQq7ZBZ
+         u4QQMiMflB5q7mEN61B6Rq57CKVM7y2EWjXiOEvvRZIOcWwq22tnnhCU8im2O64yWk
+         irkVM30/pVakzX9cWNwRAsL9dKHEe0hNZmGew/HI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.9 85/90] usb: gadget: legacy: fix error return code in cdc_bind()
-Date:   Mon, 18 May 2020 19:37:03 +0200
-Message-Id: <20200518173508.417541477@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 86/90] Revert "ALSA: hda/realtek: Fix pop noise on ALC225"
+Date:   Mon, 18 May 2020 19:37:04 +0200
+Message-Id: <20200518173508.600506560@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -60,36 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit e8f7f9e3499a6d96f7f63a4818dc7d0f45a7783b upstream.
+commit f41224efcf8aafe80ea47ac870c5e32f3209ffc8 upstream.
 
-If 'usb_otg_descriptor_alloc()' fails, we must return a
-negative error code -ENOMEM, not 0.
+This reverts commit 3b36b13d5e69d6f51ff1c55d1b404a74646c9757.
 
-Fixes: ab6796ae9833 ("usb: gadget: cdc2: allocate and init otg descriptor by otg capabilities")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Enable power save node breaks some systems with ACL225. Revert the patch
+and use a platform specific quirk for the original issue isntead.
+
+Fixes: 3b36b13d5e69 ("ALSA: hda/realtek: Fix pop noise on ALC225")
+BugLink: https://bugs.launchpad.net/bugs/1875916
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200503152449.22761-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/legacy/cdc2.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/usb/gadget/legacy/cdc2.c
-+++ b/drivers/usb/gadget/legacy/cdc2.c
-@@ -183,8 +183,10 @@ static int cdc_bind(struct usb_composite
- 		struct usb_descriptor_header *usb_desc;
- 
- 		usb_desc = usb_otg_descriptor_alloc(gadget);
--		if (!usb_desc)
-+		if (!usb_desc) {
-+			status = -ENOMEM;
- 			goto fail1;
-+		}
- 		usb_otg_descriptor_init(gadget, usb_desc);
- 		otg_desc[0] = usb_desc;
- 		otg_desc[1] = NULL;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -4212,8 +4212,6 @@ static void alc_determine_headset_type(s
+ 		is_ctia = (val & 0x1c02) == 0x1c02;
+ 		break;
+ 	case 0x10ec0225:
+-		codec->power_save_node = 1;
+-		/* fall through */
+ 	case 0x10ec0295:
+ 	case 0x10ec0299:
+ 		alc_process_coef_fw(codec, coef0225);
 
 
