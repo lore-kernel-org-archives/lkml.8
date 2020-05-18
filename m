@@ -2,124 +2,122 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A07FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 019F0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EAE020758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589821019;
-	bh=+KYcccEm2hXuqS6L5O67oRhsNURWPvKavmosickM3sQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A+qIdfulI4YvZ2m1gwtHob5A3rvYDw0Tw2vyYSR7LJtn4kFi5RVULsfFkfmBWu7ZB
-	 3W3srEXGQZUJI3CdmM2XA0rHBRWUZEi2So38ZndwIY6ZFsSCM88eyGmyaqWxaJ0QDh
-	 1ahV9S2OrqOvGEToEWdv6YS16rTZAOq4Gv81SmDI=
+	by mail.kernel.org (Postfix) with ESMTP id D519720758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:58:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NwBu0r7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgERQ46 (ORCPT
+        id S1728295AbgERQ6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:56:58 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33799 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727020AbgERQ46 (ORCPT
+        Mon, 18 May 2020 12:58:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbgERQ6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:56:58 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x15so5239894pfa.1;
-        Mon, 18 May 2020 09:56:57 -0700 (PDT)
+        Mon, 18 May 2020 12:58:32 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F64DC05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:58:32 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id 50so12669078wrc.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:58:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7UrsBklbWEQlXSIzoleVC5S+OEDveOLRjfhFBfKj/1U=;
+        b=NwBu0r7wl1gpM7daM6EL/QGiMubgwQrMS7DCx8+Wm8Lyg+2vJddtUQcJeERAwQZJL5
+         fPsxNVWNDou4B0PGdUAVuryOhMY0JAn5H7lujgsQObRDL1W/aBlkfInsKn6+u8uvDosc
+         qozNeuLAP3u48HfASCRiEDkctG8WgFnHziKs14NtB8EJyIfB9hPN8qYfBhk5ijnxF764
+         W0k7+ogDFppnKzURVA2wi86cCUAs2twWBridx7yCjgdykjs8UuHNecYybeC2X0kHut/Z
+         p+J/s8zIvyXlFlnM5w4aqPbHCk/waq1N9OgYU74c8WHzHYe28XBAi3kpKL/8WQYf2EWM
+         JpnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fadZDuoe+7AVNrQLbu4k5XSzeRSuXHu/qP/CkwjvY9U=;
-        b=ltleHC7sDLueZH7UCGKE7a6xITuEBDiKNv5xn/BDzDet979eC0epmkq16zdN1zcTEY
-         oqkN8E8a5ENgUShuZAerj7JuU3n46eX4FdOAwTa4AhlSoqOdKYJtBidZ6aeV68vHaZ/6
-         0kCzdRFWECTzov1ztDFUcbz8vOe8x5ujwu100SQCtwZeZYDfzNxoEpr8b7HjrYXNFagr
-         /32WwKoJsuA98TGbPiHFDuPkxabC6ho8FohzdCgveqjfsCxXQrXP9XP+kI0V0fM4ZgWZ
-         Mf9t4+/QBsNV2cVe2EzhTgMwag9JrgmAHiNor6el/6kmYSMUgMrw9kEOIViQLpxzk5hH
-         soeg==
-X-Gm-Message-State: AOAM531GSW2dg2RMk/2b/GKcw77LV601geONNxtlnrGsuuAjnYTx/D5o
-        eyuHLAyD/AvkG73vsYhSfxU=
-X-Google-Smtp-Source: ABdhPJy1SvMSYcbQtF+WbvyuU0bth54j13rmWQ4x/1qKYO9fVM8DA3PZp2Z8WiQfvW2V1CXjHF+MFw==
-X-Received: by 2002:a63:444a:: with SMTP id t10mr2296637pgk.149.1589821017135;
-        Mon, 18 May 2020 09:56:57 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id y5sm3561281pff.150.2020.05.18.09.56.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 09:56:56 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 5D7F7404B0; Mon, 18 May 2020 16:56:55 +0000 (UTC)
-Date:   Mon, 18 May 2020 16:56:55 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
-        rostedt@goodmis.org, mingo@redhat.com, aquini@redhat.com,
-        cai@lca.pw, dyoung@redhat.com, bhe@redhat.com,
-        peterz@infradead.org, tglx@linutronix.de, gpiccoli@canonical.com,
-        pmladek@suse.com, tiwai@suse.de, schlad@suse.de,
-        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
-        daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath10k@lists.infradead.org
-Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
-Message-ID: <20200518165655.GI11244@42.do-not-panic.com>
-References: <20200515212846.1347-1-mcgrof@kernel.org>
- <20200515212846.1347-13-mcgrof@kernel.org>
- <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
- <7306323c35e6f44d7c569e689b48f380f80da5e5.camel@sipsolutions.net>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7UrsBklbWEQlXSIzoleVC5S+OEDveOLRjfhFBfKj/1U=;
+        b=gSOjNC3Yo9b6NppyUA5yIRW30IE9KCtvvwTIBxcYsailGV7KRXLeRmXje2Z8wKWJ4T
+         cJlhbFmfllsnzhVfCZFzeRdBEDSg+zsdunHR2lRYvbHSiOqX7udcRwzzR1raPgeEzb7u
+         8zSszQMmHR/eDZr18h4+vXTkJ+Q6KjpL2Jx86MgFIyt+rg/feU141H8FXtsiDhnjOnnA
+         F5PhwPkScjMvJ7j8ygpM1YQ/wNGcgejQeZ4aG5ohvwG09qu4oZCsCggGmR5weY9BKrpa
+         8t7zo4WDesKfg5ryO+71XAyPhK/Qy9wb7CdiOmJwUksZeQgfZU1XXlMFIfUBWsXT1cRB
+         X/Qw==
+X-Gm-Message-State: AOAM5337tBlZ1fqUjJOc6jGLdInbaVglF/ziguERCXguCPRiqtRkToeD
+        0Zd+2l+xAH4buQT4/Sga0QCaNg==
+X-Google-Smtp-Source: ABdhPJyz8YyWk+tq57qcErRl35YmZbUh3jm8IYRNJPP4QVZjm2zuQSf2e2RY9yuWYPSrTDhi0GW0MQ==
+X-Received: by 2002:adf:e985:: with SMTP id h5mr21630490wrm.239.1589821111188;
+        Mon, 18 May 2020 09:58:31 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
+        by smtp.googlemail.com with ESMTPSA id j190sm193855wmb.33.2020.05.18.09.58.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 09:58:30 -0700 (PDT)
+Subject: Re: [PATCHv3 00/14] Update omaps to use drivers/clocksource timers
+To:     Tony Lindgren <tony@atomide.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Brian Hutchinson <b.hutchman@gmail.com>,
+        Graeme Smecher <gsmecher@threespeedlogic.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org
+References: <20200507172330.18679-1-tony@atomide.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <340cdd4a-d996-073f-127d-89ce6c05f221@linaro.org>
+Date:   Mon, 18 May 2020 18:58:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7306323c35e6f44d7c569e689b48f380f80da5e5.camel@sipsolutions.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200507172330.18679-1-tony@atomide.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 03:50:55PM +0200, Johannes Berg wrote:
-> On Sat, 2020-05-16 at 15:24 +0200, Johannes Berg wrote:
-> 
-> > Instead of the kernel taint, IMHO you should provide an annotation in
-> > sysfs (or somewhere else) for the *struct device* that had its firmware
-> > crash. Or maybe, if it's too complex to walk the entire hierarchy
-> > checking for that, have a uevent, or add the ability for the kernel to
-> > print out elsewhere in debugfs the list of devices that crashed at some
-> 
-> I mean sysfs, oops.
-> 
-> 
-> In addition, look what we have in iwl_trans_pcie_removal_wk(). If we
-> detect that the device is really wedged enough that the only way we can
-> still try to recover is by completely unbinding the driver from it, then
-> we give userspace a uevent for that.
 
-Nice! Indeed a uevent is in order for these sorts of things, and I'd
-argue that it begs the question if we should even uevent for any taint
-as well. Today these are silent. If the kernel crashes, today we only
-give userspace a log.
+Hi Tony,
 
-> I don't remember exactly how and
-> where that gets used (ChromeOS) though, but it'd be nice to have that
-> sort of thing as part of the infrastructure, in a sort of two-level
-> notification?
+On 07/05/2020 19:23, Tony Lindgren wrote:
+> Hi all,
 > 
-> Level 1: firmware crashed, but we're recovering, at least mostly, and
-> it's more informational
+> Here's v3 series to udpate omaps to use drivers/clocksource timers for
+> the 32k counter and dmtimer, and to remove the old legacy platform code.
+> Please review and test.
 > 
-> Level 2: device is wedged, going to try to recover by some more forceful
-> means (perhaps some devices can be power-cycled? etc.) but (more) state
-> would be lost in these cases?
+> I've updated the timer-ti-dm-systimer.c patch based on the comments from
+> Daniel and Rob, and added support for selecting the preferred timers to
+> use.
+> 
+> Then for merging when folks are happy with this series, Daniel if you
+> can please apply the first three patches into an immutable branch it
+> would be great.
 
-I agree that *all* this would be ideal. I don't see this as mutually
-exclusive with a taint on the kernel and module for the device.
+so the clk patch also ?
 
-> Still don't think a kernel taint is appropriate for either of these.
+[ ... ]
 
-From a support perspective, I do think it is vital quick information.
 
-  Luis
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
