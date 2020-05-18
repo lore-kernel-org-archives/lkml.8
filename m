@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 885F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57B1920715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65AB820826
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825365;
-	bh=jEGs5cCX+TotOoxBhZ01jg/PVeC8CitSbGIkzwa184g=;
+	s=default; t=1589825376;
+	bh=M9XhHl33YZ6sKbCBzyoU1iRxB+7oyUhrZghe6cO4qUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XQM9y8nTlObPXzj7Ah0Cz5gzaDDXQnASXY2rX6CtIXWYuBFBKzlperZaVnBqxFSgR
-	 pY3u31ATr3JeweNfnb03PeNLCOAhR4g7p7l1vrGkw6yZUnlhb8yuxqYXVh3mbj2/dL
-	 Z0H1mZl589YYB1GTlE7UPSNgCo6YceLOgSM5xfMg=
+	b=JXVBC2lgo65ZaOrCL08rt4pQW18ZBw8tJ4iJB1VQ1xL4c15PM21lXqDEcUkrEta4v
+	 cXWX+wtmD2MJ3B7mripcIbU1Yifssnmz5zRSUSUKN7m2apQpr/pYAgl6KqR2J9xTy4
+	 GxQno5SlHRU8pPgnDSh0xTsCzO8PLdGJMpLqWci4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733310AbgERSJY (ORCPT
+        id S1732750AbgERSJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:09:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54900 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:09:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733195AbgERSGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:06:40 -0400
+        id S1733161AbgERSG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:06:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17850207D3;
-        Mon, 18 May 2020 18:06:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6F6F207D3;
+        Mon, 18 May 2020 18:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825199;
-        bh=jEGs5cCX+TotOoxBhZ01jg/PVeC8CitSbGIkzwa184g=;
+        s=default; t=1589825187;
+        bh=M9XhHl33YZ6sKbCBzyoU1iRxB+7oyUhrZghe6cO4qUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BNtWEXTIPo4iiRQsaWAtNGLWcMeho4DRvxnwhKc7/UwToTYCwo3zArAUsBIBFPNik
-         1mR91hWEQwCskoU+ZYSauI9JPxcJyCzamiq+ET1O7hq610I2C6g6F46TX4t2QCjTFN
-         UUy2VYJku+awP6nBfOGxwourHtp1qI3+RLTgwQVc=
+        b=A5xbJOtOoApPqcjB+7q/TfgqxISVYhh1rj6ANJRU1ObhRNtoH9mktD/nPkcdBzmH6
+         7Tyf8HvR6ZotbHPrB1CbZEI5tUHChdkeNsB5EB3HYFS6/ZmXlug5mOJM/miXdeJ9em
+         3f7S/NFs1WTQQ3YVHQPMXJTUF4Ula3IoSGF/yYd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YongQin Liu <yongqin.liu@linaro.org>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Yang Fei <fei.yang@intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Jack Pham <jackp@codeaurora.org>, Josh Gao <jmgao@google.com>,
-        Todd Kjos <tkjos@google.com>, Felipe Balbi <balbi@kernel.org>,
-        linux-usb@vger.kernel.org, John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 5.6 162/194] dwc3: Remove check for HWO flag in dwc3_gadget_ep_reclaim_trb_sg()
-Date:   Mon, 18 May 2020 19:37:32 +0200
-Message-Id: <20200518173544.709413214@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 126/194] Stop the ad-hoc games with -Wno-maybe-initialized
+Date:   Mon, 18 May 2020 19:36:56 +0200
+Message-Id: <20200518173542.024910927@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -66,54 +59,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Stultz <john.stultz@linaro.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 00e21763f2c8cab21b7befa52996d1b18bde5c42 upstream.
+commit 78a5255ffb6a1af189a83e493d916ba1c54d8c75 upstream.
 
-The check for the HWO flag in dwc3_gadget_ep_reclaim_trb_sg()
-causes us to break out of the loop before we call
-dwc3_gadget_ep_reclaim_completed_trb(), which is what likely
-should be clearing the HWO flag.
+We have some rather random rules about when we accept the
+"maybe-initialized" warnings, and when we don't.
 
-This can cause odd behavior where we never reclaim all the trbs
-in the sg list, so we never call giveback on a usb req, and that
-will causes transfer stalls.
+For example, we consider it unreliable for gcc versions < 4.9, but also
+if -O3 is enabled, or if optimizing for size.  And then various kernel
+config options disabled it, because they know that they trigger that
+warning by confusing gcc sufficiently (ie PROFILE_ALL_BRANCHES).
 
-This effectively resovles the adb stalls seen on HiKey960
-after userland changes started only using AIO in adbd.
+And now gcc-10 seems to be introducing a lot of those warnings too, so
+it falls under the same heading as 4.9 did.
 
-Cc: YongQin Liu <yongqin.liu@linaro.org>
-Cc: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Cc: Yang Fei <fei.yang@intel.com>
-Cc: Thinh Nguyen <thinhn@synopsys.com>
-Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
-Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: Josh Gao <jmgao@google.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org
-Cc: stable@vger.kernel.org #4.20+
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+At the same time, we have a very straightforward way to _enable_ that
+warning when wanted: use "W=2" to enable more warnings.
+
+So stop playing these ad-hoc games, and just disable that warning by
+default, with the known and straight-forward "if you want to work on the
+extra compiler warnings, use W=123".
+
+Would it be great to have code that is always so obvious that it never
+confuses the compiler whether a variable is used initialized or not?
+Yes, it would.  In a perfect world, the compilers would be smarter, and
+our source code would be simpler.
+
+That's currently not the world we live in, though.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/gadget.c |    3 ---
- 1 file changed, 3 deletions(-)
+ Makefile             |    7 +++----
+ init/Kconfig         |   18 ------------------
+ kernel/trace/Kconfig |    1 -
+ 3 files changed, 3 insertions(+), 23 deletions(-)
 
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2483,9 +2483,6 @@ static int dwc3_gadget_ep_reclaim_trb_sg
- 	for_each_sg(sg, s, pending, i) {
- 		trb = &dep->trb_pool[dep->trb_dequeue];
+--- a/Makefile
++++ b/Makefile
+@@ -708,10 +708,6 @@ else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+ KBUILD_CFLAGS += -Os
+ endif
  
--		if (trb->ctrl & DWC3_TRB_CTRL_HWO)
--			break;
+-ifdef CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED
+-KBUILD_CFLAGS   += -Wno-maybe-uninitialized
+-endif
 -
- 		req->sg = sg_next(s);
- 		req->num_pending_sgs--;
+ # Tell gcc to never replace conditional load with a non-conditional one
+ KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
  
+@@ -861,6 +857,9 @@ KBUILD_CFLAGS += -Wno-pointer-sign
+ # disable stringop warnings in gcc 8+
+ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+ 
++# Enabled with W=2, disabled by default as noisy
++KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
++
+ # disable invalid "can't wrap" optimizations for signed / pointers
+ KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
+ 
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -36,22 +36,6 @@ config TOOLS_SUPPORT_RELR
+ config CC_HAS_ASM_INLINE
+ 	def_bool $(success,echo 'void foo(void) { asm inline (""); }' | $(CC) -x c - -c -o /dev/null)
+ 
+-config CC_HAS_WARN_MAYBE_UNINITIALIZED
+-	def_bool $(cc-option,-Wmaybe-uninitialized)
+-	help
+-	  GCC >= 4.7 supports this option.
+-
+-config CC_DISABLE_WARN_MAYBE_UNINITIALIZED
+-	bool
+-	depends on CC_HAS_WARN_MAYBE_UNINITIALIZED
+-	default CC_IS_GCC && GCC_VERSION < 40900  # unreliable for GCC < 4.9
+-	help
+-	  GCC's -Wmaybe-uninitialized is not reliable by definition.
+-	  Lots of false positive warnings are produced in some cases.
+-
+-	  If this option is enabled, -Wno-maybe-uninitialzed is passed
+-	  to the compiler to suppress maybe-uninitialized warnings.
+-
+ config CONSTRUCTORS
+ 	bool
+ 	depends on !UML
+@@ -1249,14 +1233,12 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
+ config CC_OPTIMIZE_FOR_PERFORMANCE_O3
+ 	bool "Optimize more for performance (-O3)"
+ 	depends on ARC
+-	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ 	help
+ 	  Choosing this option will pass "-O3" to your compiler to optimize
+ 	  the kernel yet more for performance.
+ 
+ config CC_OPTIMIZE_FOR_SIZE
+ 	bool "Optimize for size (-Os)"
+-	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ 	help
+ 	  Choosing this option will pass "-Os" to your compiler resulting
+ 	  in a smaller kernel.
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -466,7 +466,6 @@ config PROFILE_ANNOTATED_BRANCHES
+ config PROFILE_ALL_BRANCHES
+ 	bool "Profile all if conditionals" if !FORTIFY_SOURCE
+ 	select TRACE_BRANCH_PROFILING
+-	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ 	help
+ 	  This tracer profiles all branch conditions. Every if ()
+ 	  taken in the kernel is recorded whether it hit or miss.
 
 
