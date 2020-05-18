@@ -2,122 +2,88 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E9AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F900C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBDFE20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:20:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lzCxMPIm"
+	by mail.kernel.org (Postfix) with ESMTP id 1701320674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgERIUY (ORCPT
+        id S1726632AbgERIUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 04:20:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbgERIUX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 04:20:23 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79BA8C05BD0B
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 01:20:23 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id f18so8819953lja.13
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 01:20:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cWBQhzz5kxNoR9BFp0TP6Ch5JEPPhK+boe7luhQX8WE=;
-        b=lzCxMPImw8Rt7qwkKQvXvs4yHXPUCBcSFgZgVKQ1O//DYIZLFdU0vSKui/Goai4MKT
-         xzGOdXpFC6fBYraQ5/bglOKFm4zvdR+GQlFCVvUpk2HQXfwDAcFh1u70fVOJ6VXLasU+
-         yjC4ArpFTAt05MznUJpxxFnr4qaGbzevmpirg+pnHZQf3hyxYA50KaYPvFy8M4Ix9Vsw
-         7CmNiCNqtZExlHmmBkup0WtdyjuF+RwTNb9qxejk1O74cyIWT47Mx0yUrBpBhB0w0N/p
-         7DpB2eYveOkZ4EyHcs+xZJHU8763ij0ME6GnBRSzZ8iCJ3Xg9989Oe0v34IPE6J4mp6U
-         wGAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cWBQhzz5kxNoR9BFp0TP6Ch5JEPPhK+boe7luhQX8WE=;
-        b=CQ8daCIQpy/Y3ArC27pccMCsuKfVrwOplaFZNm3Tu6CrtJ4h/F1aISPXXFIk+TPRfs
-         oJMN6KfGDB6tpDqHhGUyCAIsb22XBaFCUy4oNuidnV196qKVEX2irQr/k+Ojy6vSIaDz
-         CtgpFei3dgK3veS0KeB4gY87tOD4Kjmop+AWBPU6x+uV5rLOBWXRkrSaT98OzlL0if0S
-         Zjk66C2Eol6GEx314wW21Ms3Q5bN+h/bg66TxAiDnjeAh2WIeAoF8/Z8tIDbH/ymdOnj
-         grLaY1y2OQ4yK/k714ghabaRrGuZWCLsN63k7o0MLdEOcWvbIGjfPKTox5Ja0MDHEdC+
-         y5aQ==
-X-Gm-Message-State: AOAM531nxHFo9wjhvkr7cMtEYc5fBHYmf9naC5p9fi70jv4KJkPk9RS6
-        K3/eN4Y4OihE+B1HJCAXyxyJ2VewqVpSJhsu/ACuUw==
-X-Google-Smtp-Source: ABdhPJy23lR0seQjYixD1vitkrbudfUoFZ0cFs0uEBn+vezhL4JCCG9kC3sBTizi/2x2WCOoPPUTf8nffzPSq1nM6JE=
-X-Received: by 2002:a2e:a209:: with SMTP id h9mr10157090ljm.39.1589790021698;
- Mon, 18 May 2020 01:20:21 -0700 (PDT)
+        Mon, 18 May 2020 04:20:41 -0400
+Received: from elvis.franken.de ([193.175.24.41]:57600 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbgERIUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 04:20:40 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jab0k-0002ih-00; Mon, 18 May 2020 10:20:34 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 804ADC00F7; Mon, 18 May 2020 09:50:17 +0200 (CEST)
+Date:   Mon, 18 May 2020 09:50:17 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v2] MIPS: Loongson: Enable devicetree based probing for
+ 8250 ports in defconfig
+Message-ID: <20200518075017.GA7697@alpha.franken.de>
+References: <1589767861-9784-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-References: <20200511145257.22970-1-geert+renesas@glider.be> <20200511145257.22970-4-geert+renesas@glider.be>
-In-Reply-To: <20200511145257.22970-4-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 May 2020 10:20:10 +0200
-Message-ID: <CACRpkdaqSQ4++mhR03pqi0i=uhSyf51WhtE5VOobGNEcMmf09g@mail.gmail.com>
-Subject: Re: [PATCH v7 3/6] gpiolib: Add support for GPIO lookup by line name
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589767861-9784-1-git-send-email-yangtiezhu@loongson.cn>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 4:53 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-
-> Currently a GPIO lookup table can only refer to a specific GPIO by a
-> tuple, consisting of a GPIO controller label and a GPIO offset inside
-> the controller.
->
-> However, a GPIO may also carry a line name, defined by DT or ACPI.
-> If present, the line name is the most use-centric way to refer to a
-> GPIO.  Hence add support for looking up GPIOs by line name.
-> Note that there is no guarantee that GPIO line names are globally
-> unique, so this will use the first match found.
->
-> Implement this by reusing the existing gpiod_lookup infrastructure.
-> Rename gpiod_lookup.chip_label to gpiod_lookup.key, to make it clear
-> that this field can have two meanings, and update the kerneldoc and
-> GPIO_LOOKUP*() macros.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-> Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+On Mon, May 18, 2020 at 10:11:01AM +0800, Tiezhu Yang wrote:
+> After commit 87fcfa7b7fe6 ("MIPS: Loongson64: Add generic dts"),
+> there already exists the node and property of Loongson CPU UART0
+> in loongson3-package.dtsi:
+> 
+> cpu_uart0: serial@1fe001e0 {
+>         compatible = "ns16550a";
+>         reg = <0 0x1fe001e0 0x8>;
+>         clock-frequency = <33000000>;
+>         interrupt-parent = <&liointc>;
+>         interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+>         no-loopback-test;
+> };
+> 
+> In order to support for serial console on the Loongson platform,
+> add CONFIG_SERIAL_OF_PLATFORM=y to loongson3_defconfig.
+> 
+> With this patch, we can see the following boot messages:
+> 
+> [    1.877745] printk: console [ttyS0] disabled
+> [    1.881979] 1fe001e0.serial: ttyS0 at MMIO 0x1fe001e0 (irq = 16, base_baud = 2062500) is a 16550A
+> [    1.890838] printk: console [ttyS0] enabled
+> 
+> And also, we can login normally from the serial console.
+> 
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
-> v7:
->   - Document non-uniqueness of line names,
->   - Rebase on top of commit a0b66a73785ccc8f ("gpio: Rename variable in
+> 
+> v2:
+>   - Modify the patch subject
+> 
+>  arch/mips/configs/loongson3_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-This is likely the most controversial patch of this series but since
-noone seems to be especially upset, I think I just accept this
-heuristic.
+applied to mips-next.
 
-It is pretty clearly cut I think, and fits very well with the
-aggregator use case, which is an important one.
+Thomas.
 
-Yours,
-Linus Walleij
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
