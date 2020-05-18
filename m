@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57788C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ACBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26FD120835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B92C32083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824064;
-	bh=mR3ZUFwRrS+NDGgVw/89s9D33YVvx+Ef+5iNUudGRGM=;
+	s=default; t=1589824066;
+	bh=HmyanbqIU+mg0HbgtYSUBECyKESgiVSnXXzJzAHboeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MYKvh6XkwgEY8iAJ20rR0IRD3rx54kAkKAtCrgD2hGFA2SUy2FTyijZw4/aB91VUu
-	 PSVJVkvGvGxQbin7uDItdWw40KREKdy3MM7W6rjWJFj77egbFxihGeAPHzPHwH6emV
-	 AfoBpAnYU5uuCpC8E0JFWoHokry2ekyIJzxXa8H0=
+	b=svawvXHo0VFtC2RwMHPbM8XBAXpy7343QeggyjmdpBWaX0sSQFibpLanb7M9dj023
+	 drH/iO61fFjK1y8SGJRS++j8720w+pgmAjB7KFoBQXnURoh70I/PJZTLlUJLHSm6Th
+	 GZJFE+OqceFVOCMo4BIxUoCbiKT6OdseQl/V8Ac8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbgERRrn (ORCPT
+        id S1730262AbgERRrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:47:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48070 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:47:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729938AbgERRri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:47:38 -0400
+        id S1730249AbgERRrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:47:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4F202083E;
-        Mon, 18 May 2020 17:47:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76E6C20657;
+        Mon, 18 May 2020 17:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824058;
-        bh=mR3ZUFwRrS+NDGgVw/89s9D33YVvx+Ef+5iNUudGRGM=;
+        s=default; t=1589824063;
+        bh=HmyanbqIU+mg0HbgtYSUBECyKESgiVSnXXzJzAHboeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQu6bZeyWW28lYvFwRz7UWGH8DYkajMZoQU7jr52d9AmOFJ2BO0Bl6tufhIhulNW8
-         GYmgNw6rwtv6JtRf74k1a5URoDOw9+iovk3AbVuUjrmZpb5gWqqR+jrE7R6y2lMrpa
-         rqguyP6Q9CxeSeCoWPGPBKKszHMVyXmpolhhOXng=
+        b=yrD2Md7UVEIsKIHbqL856NTgxRBJa9l24f6vTyITe7EHXQBcpH5uz1VLJQtg2R3Q4
+         mkMc7NTfGmNzlYgmRzofWJn/bYMhWIwnMXGwwabu3TH8qf9vQcViKCgFAoCNL9fAi9
+         tNcs8o1SojSHpQ3k8DdV8QRi4uPFjb8SofYFanu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 055/114] dmaengine: pch_dma.c: Avoid data race between probe and irq handler
-Date:   Mon, 18 May 2020 19:36:27 +0200
-Message-Id: <20200518173513.173629443@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 057/114] cpufreq: intel_pstate: Only mention the BIOS disabling turbo mode once
+Date:   Mon, 18 May 2020 19:36:29 +0200
+Message-Id: <20200518173513.479980002@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -60,45 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 2e45676a4d33af47259fa186ea039122ce263ba9 ]
+[ Upstream commit 8c539776ac83c0857395e1ccc9c6b516521a2d32 ]
 
-pd->dma.dev is read in irq handler pd_irq().
-However, it is set to pdev->dev after request_irq().
-Therefore, set pd->dma.dev to pdev->dev before request_irq() to
-avoid data race between pch_dma_probe() and pd_irq().
+Make a note of the first time we discover the turbo mode has been
+disabled by the BIOS, as otherwise we complain every time we try to
+update the mode.
 
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Link: https://lore.kernel.org/r/20200416062335.29223-1-madhuparnabhowmik10@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/pch_dma.c | 2 +-
+ drivers/cpufreq/intel_pstate.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
-index f9028e9d0dfc2..d6af2d439b979 100644
---- a/drivers/dma/pch_dma.c
-+++ b/drivers/dma/pch_dma.c
-@@ -873,6 +873,7 @@ static int pch_dma_probe(struct pci_dev *pdev,
- 	}
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 7a5662425b291..1aa0b05c8cbdf 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -935,7 +935,7 @@ static ssize_t store_no_turbo(struct kobject *a, struct kobj_attribute *b,
  
- 	pci_set_master(pdev);
-+	pd->dma.dev = &pdev->dev;
- 
- 	err = request_irq(pdev->irq, pd_irq, IRQF_SHARED, DRV_NAME, pd);
- 	if (err) {
-@@ -888,7 +889,6 @@ static int pch_dma_probe(struct pci_dev *pdev,
- 		goto err_free_irq;
- 	}
- 
--	pd->dma.dev = &pdev->dev;
- 
- 	INIT_LIST_HEAD(&pd->dma.channels);
- 
+ 	update_turbo_state();
+ 	if (global.turbo_disabled) {
+-		pr_warn("Turbo disabled by BIOS or unavailable on processor\n");
++		pr_notice_once("Turbo disabled by BIOS or unavailable on processor\n");
+ 		mutex_unlock(&intel_pstate_limits_lock);
+ 		mutex_unlock(&intel_pstate_driver_lock);
+ 		return -EPERM;
 -- 
 2.20.1
 
