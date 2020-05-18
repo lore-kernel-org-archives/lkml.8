@@ -2,149 +2,139 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0381C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB99A207F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:38:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UIrEiBCK"
+	by mail.kernel.org (Postfix) with ESMTP id C553F207F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:38:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589841507;
+	bh=Sd5ezXE7qYEtfRiNzmhu3tUhZvaqR/4PPRmzDGYu5Ws=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JcOQcWOIU8K81jfTHvNaftfQ6XGMRCTZ2M+tlFTH4F0V2ApkkyjGn3FusOvaMe+wh
+	 msAn+DgsPxfMel5vug65ARXfLFPJKmeDchd8B5ONVnsja+0QNJ7L3Qtte8GeJffhBl
+	 uSVG29X6Soyr1pVi3unxtZiYKv7bw4vdfjbDNGqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbgERWiA (ORCPT
+        id S1728436AbgERWi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 18:38:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbgERWh7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 18:37:59 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46496C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 15:37:59 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id x27so9394130lfg.9
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 15:37:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3YtOhWL2mmndh/B9O7jrraNl2K/LA7+g4gZiQi5QFWM=;
-        b=UIrEiBCKjPEaHs9txQcJ4eYhQI5sBomEmfBF7lM8+4ODX8H7kImazReFdDZPb6jRA8
-         46zgv7vOXYfK2uUj+LDkTzmLnBI6s/w6LwSrBSF/EGXFeVPktTKh2v1R+HvhZOu59kwj
-         Ms7G1pG73g6eV5WYOi96KodmwBO3O/GtXVg82eTTUv/uoe6isX6pTnC1wfRKc5cSEq/i
-         WM8Fg6Mxh9J6zV+wDO+SlMtpysc0SVTRk1Wu+tftmK8rtq4v33UgfBVfrhw5Y6uhPiJw
-         dkOOTXjjTOFYlmLr8SOU0XBViuKFdYnckxg10s8olqKMGjwzkEvng66SXZIuqCWNRXBz
-         tvvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3YtOhWL2mmndh/B9O7jrraNl2K/LA7+g4gZiQi5QFWM=;
-        b=OtE5AzD9PTvkqNSBZSUI57iIWDxmQ8fq7k66ZC7t8ShrVEFbgasmiJuxJZ5WiSVLGk
-         7N+5EjsfP5gHTPt8RoO9Iv6CU+M8xDhg6ocIODXD86GXnss8TRJ9LgKMoxt5XXYT26nb
-         ooQLzmSzZaANRPs26FmDgs0HhUekmKlsMEDxUk4t2yAze2jtcGs6lHjT5aGBk4Si+laC
-         H6IJuX453m88oXpCjghlM14gpjGVpV30crGvKyUA5fISmUDljDLPjcRHVnPexasEbwcd
-         Ly+KQALUUpItOPS169Qsf7qLEjWXBV3frKiuHZfSVRTJ5mQNAZmu/ruLV+kPYhUC7z2w
-         LGQg==
-X-Gm-Message-State: AOAM533RX1inFqM+MJgyCoyBzQ29tKKjo4fkPoGxh91mKT3FFsfqn6/2
-        EwgW0LO1fECAB1Sjuunwq2K0NYqcrlRCR3OIYdoASg==
-X-Google-Smtp-Source: ABdhPJwb6U3jnJRIW7JhMTzGBAIw19BG57A3U2BbspTLo+5uOMelKG0XdG075NTiAHcpifPysnd42K5ti/+xxng0WvE=
-X-Received: by 2002:a05:6512:1047:: with SMTP id c7mr6310853lfb.12.1589841477683;
- Mon, 18 May 2020 15:37:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200506060025.1535960-1-vkoul@kernel.org> <20200506060025.1535960-4-vkoul@kernel.org>
- <CADYN=9JLeWHODRWDEcTE_6iZ3TX-E4yyx3OwqzK-H-ytLAmQUg@mail.gmail.com> <20200518195719.GG374218@vkoul-mobl.Dlink>
-In-Reply-To: <20200518195719.GG374218@vkoul-mobl.Dlink>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Tue, 19 May 2020 00:37:46 +0200
-Message-ID: <CADYN=9+VuTwVk32hQXAAeDyErMn7D4Y+Gzdehy_=c8fBeU23jA@mail.gmail.com>
-Subject: Re: [PATCH v13 3/5] usb: xhci: Add support for Renesas controller
- with memory
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        =?UTF-8?Q?Andreas_B=C3=B6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 18 May 2020 18:38:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728248AbgERWi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 18:38:26 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D63A2075F;
+        Mon, 18 May 2020 22:38:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589841505;
+        bh=Sd5ezXE7qYEtfRiNzmhu3tUhZvaqR/4PPRmzDGYu5Ws=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=okjC93SPhXqlfE2cPpgu+8/zjH2CSFa7zpgRSSymDQGvYbn3J11Qud0fdC/Gi+2xJ
+         HK4aT+bUN4P6Egn1DpDqPUS7UurC04TtA/ZNXtlEoGi8Flak8fH9QxWnmWgd7SLJ8V
+         eZSlOZkxAjWY5WGl3br278Q61PyPtim2AXI8jeCA=
+Date:   Mon, 18 May 2020 15:38:24 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>, andi.kleen@intel.com,
+        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] mm: adjust vm_committed_as_batch according to vm
+ overcommit policy
+Message-Id: <20200518153824.e4e57a651c6ca69fb8776dbc@linux-foundation.org>
+In-Reply-To: <1589611660-89854-4-git-send-email-feng.tang@intel.com>
+References: <1589611660-89854-1-git-send-email-feng.tang@intel.com>
+        <1589611660-89854-4-git-send-email-feng.tang@intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 at 21:57, Vinod Koul <vkoul@kernel.org> wrote:
->
-> Hi Anders,
+On Sat, 16 May 2020 14:47:40 +0800 Feng Tang <feng.tang@intel.com> wrote:
 
-Hi Vinod,
+> When checking a performance change for will-it-scale scalability
+> mmap test [1], we found very high lock contention for spinlock of
+> percpu counter 'vm_committed_as':
+> 
+>     94.14%     0.35%  [kernel.kallsyms]         [k] _raw_spin_lock_irqsave
+>     48.21% _raw_spin_lock_irqsave;percpu_counter_add_batch;__vm_enough_memory;mmap_region;do_mmap;
+>     45.91% _raw_spin_lock_irqsave;percpu_counter_add_batch;__do_munmap;
+> 
+> Actually this heavy lock contention is not always necessary. The
+> 'vm_committed_as' needs to be very precise when the strict
+> OVERCOMMIT_NEVER policy is set, which requires a rather small batch
+> number for the percpu counter.
+> 
+> So keep 'batch' number unchanged for strict OVERCOMMIT_NEVER policy,
+> and lift it to 64X for OVERCOMMIT_ALWAYS and OVERCOMMIT_GUESS policies.
+> Also add a sysctl handler to adjust it when the policy is reconfigured.
+> 
+> Benchmark with the same testcase in [1] shows 53% improvement on a
+> 8C/16T desktop, and 2097%(20X) on a 4S/72C/144T server. We tested
+> with test platforms in 0day (server, desktop and laptop), and 80%+
+> platforms shows improvements with that test. And whether it shows
+> improvements depends on if the test mmap size is bigger than the
+> batch number computed.
+> 
+> And if the lift is 16X, 1/3 of the platforms will show improvements,
+> though it should help the mmap/unmap usage generally, as Michal Hocko
+> mentioned:
+> "
+> I believe that there are non-synthetic worklaods which would benefit
+> from a larger batch. E.g. large in memory databases which do large
+> mmaps during startups from multiple threads.
+> "
+> 
 
->
-> On 18-05-20, 19:53, Anders Roxell wrote:
-> > On Wed, 6 May 2020 at 08:01, Vinod Koul <vkoul@kernel.org> wrote:
-> > >
-> > > Some rensas controller like uPD720201 and uPD720202 need firmware to be
-> > > loaded. Add these devices in pci table and invoke renesas firmware loader
-> > > functions to check and load the firmware into device memory when
-> > > required.
-> > >
-> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> >
-> > Hi, I got a build error when I built an arm64 allmodconfig kernel.
->
-> Thanks for this. This is happening as we have default y for USB_XHCI_PCI
-> and then we make USB_XHCI_PCI_RENESAS=m. That should be not allowed as
-> we export as symbol so both can be inbuilt or modules but USB_XHCI_PCI=y
-> and USB_XHCI_PCI_RENESAS=m cant. While it is valid that USB_XHCI_PCI=y|m
-> and USB_XHCI_PCI_RENESAS=n
->
-> So this seems to get fixed by below for me. I have tested with
->  - both y and m (easy)
->  - make USB_XHCI_PCI_RENESAS=n, USB_XHCI_PCI=y|m works
->  - try making USB_XHCI_PCI=y and USB_XHCI_PCI_RENESAS=m, then
->    USB_XHCI_PCI=m by kbuild :)
->  - try making USB_XHCI_PCI=m and USB_XHCI_PCI_RENESAS=y, kbuild gives
->    error prompt that it will be m due to depends
->
-> Thanks to all the fixes done by Arnd which pointed me to this. Pls
-> verify
+This needed some adjustments to overcommit_policy_handler() after
+linux-next's 32927393dc1c ("sysctl: pass kernel pointers to
+->proc_handler").  Relevant parts are below.
 
-I was able to build an arm64 allmodconfig kernel with this change.
+--- a/include/linux/mm.h~mm-adjust-vm_committed_as_batch-according-to-vm-overcommit-policy
++++ a/include/linux/mm.h
+@@ -205,6 +205,8 @@ int overcommit_ratio_handler(struct ctl_
+ 		loff_t *);
+ int overcommit_kbytes_handler(struct ctl_table *, int, void *, size_t *,
+ 		loff_t *);
++int overcommit_policy_handler(struct ctl_table *, int, void *, size_t *,
++		loff_t *);
+ 
+ #define nth_page(page,n) pfn_to_page(page_to_pfn((page)) + (n))
+ 
 
-Cheers,
-Anders
+--- a/mm/util.c~mm-adjust-vm_committed_as_batch-according-to-vm-overcommit-policy
++++ a/mm/util.c
+@@ -746,6 +746,18 @@ int overcommit_ratio_handler(struct ctl_
+ 	return ret;
+ }
+ 
++int overcommit_policy_handler(struct ctl_table *table, int write, void *buffer,
++		size_t *lenp, loff_t *ppos)
++{
++	int ret;
++
++	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
++	if (ret == 0 && write)
++		mm_compute_batch();
++
++	return ret;
++}
++
+ int overcommit_kbytes_handler(struct ctl_table *table, int write, void *buffer,
+ 		size_t *lenp, loff_t *ppos)
+ {
+_
 
-> and I will send the fix with you as reported :)
->
-> ---- >8 ----
->
-> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> index b5c542d6a1c5..92783d175b3f 100644
-> --- a/drivers/usb/host/Kconfig
-> +++ b/drivers/usb/host/Kconfig
-> @@ -40,11 +40,11 @@ config USB_XHCI_DBGCAP
->  config USB_XHCI_PCI
->         tristate
->         depends on USB_PCI
-> +       depends on USB_XHCI_PCI_RENESAS || !USB_XHCI_PCI_RENESAS
->         default y
->
->  config USB_XHCI_PCI_RENESAS
->         tristate "Support for additional Renesas xHCI controller with firwmare"
-> -       depends on USB_XHCI_PCI
->         ---help---
->           Say 'Y' to enable the support for the Renesas xHCI controller with
->           firwmare. Make sure you have the firwmare for the device and
->
-> --
-> ~Vinod
