@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D728C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0548C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00735206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C63E206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:47:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fp14o64Z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fKEIar/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgERLr1 (ORCPT
+        id S1728068AbgERLr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60574 "EHLO
+        Mon, 18 May 2020 07:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727940AbgERLrV (ORCPT
+        with ESMTP id S1727981AbgERLrY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:47:21 -0400
+        Mon, 18 May 2020 07:47:24 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 944BCC061A0C;
-        Mon, 18 May 2020 04:47:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CB4AC061A0C;
+        Mon, 18 May 2020 04:47:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=ztGaRGjmnfTDhAKwb1uAT+sXQk1EV/hKojrYxDtc3CE=; b=Fp14o64Z/CJWKLmMlRtEC3HPc9
-        T77pwgekM0h9mdHlFmziuIfO9LP+RsgT+EPPPO1VhagZIUfFuaBYsei7fsLcgZhag39354IxAQziD
-        JDV12RNE4MB0Tur/wheuBhEV/j5o/QyK6tdN99YaLu/VtDBf25u9Qwlg2DVRzYZk+dozaIHPx7vhO
-        jWsxBLoTzfMpwHlZBKqRV2eN7IiUZxg6UuB/T6TJmaaS/hBoHiSAiduGZcj7fM9J/uL43WIhPEXT5
-        qGBv+BCveSAKhjZeB4jeVsunjjKud7r3hhUvgSpVxu25TvIvvZkPZ++rOpfA9opC+cMRkfMct1Flk
-        9iguvSPA==;
+        bh=vbZ3Gk3U+uf9dFZUpTloiSgwD+BngwLojurLSGg3KgY=; b=fKEIar/65McHGvCOqw7+0riAkY
+        x0Yv2OX3nt1H76Riz+J+hemJFksyKj3N2DDTn2h9qCWWRZE2jdQEqM+EPjnTKp8BxG552nYsZfi/H
+        f5qlLEMaVEhW6/KpdYnJkNg6s1W4NBQHylarcMiJs5lW3yWECWdK16KzR3cAx8s9L9twYl1PCu36H
+        He6MoFfkkxYZSn7qTfYnVteIBB2zShc9C9qQOrhVlE2c1aRKgyy+d5bnojbBUFISW553mIYUfwsbt
+        8BoDYZ9eS4b9/dhBCS/lAj/CQCS88NkSuMxoQGuA1pr21HHMgFPPmdxQ2VeOoCsK4EHEScyDtgB+R
+        ul4JotKw==;
 Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jaeEm-0004P2-6i; Mon, 18 May 2020 11:47:16 +0000
+        id 1jaeEo-0004Po-Lm; Mon, 18 May 2020 11:47:19 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -47,9 +47,9 @@ Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 7/9] ipv6: stub out even more of addrconf_set_dstaddr if SIT is disabled
-Date:   Mon, 18 May 2020 13:46:53 +0200
-Message-Id: <20200518114655.987760-8-hch@lst.de>
+Subject: [PATCH 8/9] ipv6: streamline addrconf_set_dstaddr
+Date:   Mon, 18 May 2020 13:46:54 +0200
+Message-Id: <20200518114655.987760-9-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518114655.987760-1-hch@lst.de>
 References: <20200518114655.987760-1-hch@lst.de>
@@ -61,45 +61,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no point in copying the structure from userspace or looking up
-a device if SIT support is not disabled and we'll eventually return
--ENODEV anyway.
+Factor out a addrconf_set_sit_dstaddr helper for the actual work if we
+found a SIT device, and only hold the rtnl lock around the device lookup
+and that new helper, as there is no point in holding it over a
+copy_from_user call.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- net/ipv6/addrconf.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/ipv6/addrconf.c | 87 ++++++++++++++++++++-------------------------
+ 1 file changed, 38 insertions(+), 49 deletions(-)
 
 diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
-index ab7e839753aed..8300176f91e74 100644
+index 8300176f91e74..c827edf877414 100644
 --- a/net/ipv6/addrconf.c
 +++ b/net/ipv6/addrconf.c
-@@ -2794,6 +2794,9 @@ int addrconf_set_dstaddr(struct net *net, void __user *arg)
- 	struct net_device *dev;
- 	int err = -EINVAL;
+@@ -2783,6 +2783,38 @@ void addrconf_prefix_rcv(struct net_device *dev, u8 *opt, int len, bool sllao)
+ 	in6_dev_put(in6_dev);
+ }
  
-+	if (!IS_ENABLED(CONFIG_IPV6_SIT))
-+		return -ENODEV;
++static int addrconf_set_sit_dstaddr(struct net *net, struct net_device *dev,
++		struct in6_ifreq *ireq)
++{
++	struct ip_tunnel_parm p = { };
++	mm_segment_t oldfs = get_fs();
++	struct ifreq ifr;
++	int err;
 +
- 	rtnl_lock();
++	if (!(ipv6_addr_type(&ireq->ifr6_addr) & IPV6_ADDR_COMPATv4))
++		return -EADDRNOTAVAIL;
++
++	p.iph.daddr = ireq->ifr6_addr.s6_addr32[3];
++	p.iph.version = 4;
++	p.iph.ihl = 5;
++	p.iph.protocol = IPPROTO_IPV6;
++	p.iph.ttl = 64;
++	ifr.ifr_ifru.ifru_data = (__force void __user *)&p;
++
++	if (!dev->netdev_ops->ndo_do_ioctl)
++		return -EOPNOTSUPP;
++	set_fs(KERNEL_DS);
++	err = dev->netdev_ops->ndo_do_ioctl(dev, &ifr, SIOCADDTUNNEL);
++	set_fs(oldfs);
++	if (err)
++		return err;
++
++	dev = __dev_get_by_name(net, p.name);
++	if (!dev)
++		return -ENOBUFS;
++	return dev_open(dev, NULL);
++}
++
+ /*
+  *	Set destination address.
+  *	Special case for SIT interfaces where we create a new "virtual"
+@@ -2790,62 +2822,19 @@ void addrconf_prefix_rcv(struct net_device *dev, u8 *opt, int len, bool sllao)
+  */
+ int addrconf_set_dstaddr(struct net *net, void __user *arg)
+ {
+-	struct in6_ifreq ireq;
+ 	struct net_device *dev;
+-	int err = -EINVAL;
++	struct in6_ifreq ireq;
++	int err = -ENODEV;
  
- 	err = -EFAULT;
-@@ -2806,7 +2809,6 @@ int addrconf_set_dstaddr(struct net *net, void __user *arg)
- 	if (!dev)
- 		goto err_exit;
+ 	if (!IS_ENABLED(CONFIG_IPV6_SIT))
+ 		return -ENODEV;
+-
+-	rtnl_lock();
+-
+-	err = -EFAULT;
+ 	if (copy_from_user(&ireq, arg, sizeof(struct in6_ifreq)))
+-		goto err_exit;
++		return -EFAULT;
  
--#if IS_ENABLED(CONFIG_IPV6_SIT)
- 	if (dev->type == ARPHRD_SIT) {
- 		const struct net_device_ops *ops = dev->netdev_ops;
- 		struct ifreq ifr;
-@@ -2842,7 +2844,6 @@ int addrconf_set_dstaddr(struct net *net, void __user *arg)
- 			err = dev_open(dev, NULL);
- 		}
- 	}
--#endif
- 
- err_exit:
++	rtnl_lock();
+ 	dev = __dev_get_by_index(net, ireq.ifr6_ifindex);
+-
+-	err = -ENODEV;
+-	if (!dev)
+-		goto err_exit;
+-
+-	if (dev->type == ARPHRD_SIT) {
+-		const struct net_device_ops *ops = dev->netdev_ops;
+-		struct ifreq ifr;
+-		struct ip_tunnel_parm p;
+-
+-		err = -EADDRNOTAVAIL;
+-		if (!(ipv6_addr_type(&ireq.ifr6_addr) & IPV6_ADDR_COMPATv4))
+-			goto err_exit;
+-
+-		memset(&p, 0, sizeof(p));
+-		p.iph.daddr = ireq.ifr6_addr.s6_addr32[3];
+-		p.iph.saddr = 0;
+-		p.iph.version = 4;
+-		p.iph.ihl = 5;
+-		p.iph.protocol = IPPROTO_IPV6;
+-		p.iph.ttl = 64;
+-		ifr.ifr_ifru.ifru_data = (__force void __user *)&p;
+-
+-		if (ops->ndo_do_ioctl) {
+-			mm_segment_t oldfs = get_fs();
+-
+-			set_fs(KERNEL_DS);
+-			err = ops->ndo_do_ioctl(dev, &ifr, SIOCADDTUNNEL);
+-			set_fs(oldfs);
+-		} else
+-			err = -EOPNOTSUPP;
+-
+-		if (err == 0) {
+-			err = -ENOBUFS;
+-			dev = __dev_get_by_name(net, p.name);
+-			if (!dev)
+-				goto err_exit;
+-			err = dev_open(dev, NULL);
+-		}
+-	}
+-
+-err_exit:
++	if (dev && dev->type == ARPHRD_SIT)
++		err = addrconf_set_sit_dstaddr(net, dev, &ireq);
  	rtnl_unlock();
+ 	return err;
+ }
 -- 
 2.26.2
 
