@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC98C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BCBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3F4520671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D48F920835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824024;
-	bh=sYrDc6GAC47/RF3m0aWBOQNtFs0dz+smkd8+AU7MabU=;
+	s=default; t=1589824025;
+	bh=IFCeppPC26RAzOEVU6L8uY75dIAak+crugsixldxpko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A9AUA6yGdiO5eO7eMXwZszpKKeT0dgLDqId367dEqxUre6hWlpDELyPH2JaShfSeq
-	 yIqj6ouhQ+/MJCwUiAJPFG9VTkoK1/hUD7bsK8/mpmt5JS8cvfQH62hreCl0GXQXCl
-	 KPHXJLFX+SvCirCi56qVhJLMt0S0J6VsfL52LC9s=
+	b=TFKxUKzPk80ShR55FNTtxK2jhIVf+1hwwCSsrbAzBzzNklkNLl3wfhA3b3guwBygP
+	 9mYhCmvqJPwkqWAbJhIKaz+H1WzeQwsBK4txXpRJM46YBM7nD1HDg0SD6Sn4pga6gE
+	 PksxlctjVjaVmvreGvretc1IMuPA3JspvQeaph+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730170AbgERRrC (ORCPT
+        id S1730178AbgERRrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:47:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47022 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:47:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730157AbgERRq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:46:57 -0400
+        id S1730168AbgERRrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:47:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CAED20671;
-        Mon, 18 May 2020 17:46:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE38B20671;
+        Mon, 18 May 2020 17:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824016;
-        bh=sYrDc6GAC47/RF3m0aWBOQNtFs0dz+smkd8+AU7MabU=;
+        s=default; t=1589824021;
+        bh=IFCeppPC26RAzOEVU6L8uY75dIAak+crugsixldxpko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oXvstLnMwui0X9RMDkiyewmjkVN+Fc5zMRFi4bdi+1GI/2C7KVqXjtnIYPi2zxC9Y
-         sqPA4FsdlbrvAXrQhloAJIVHLHq5eXQ75/GVe2Lo7ZAZRkg0NgXN4Gwwot6NszwVQU
-         ydwZ4jMa66Qj177+cfzqmgTEILKLSZcuQ2kk529g=
+        b=CSQxeD3CMCdqJ0NilANcRiQy2OMF6eXpvkIDcYJxWZL+HNSgPBmPxU7TUbrlnRZU/
+         ytCfEIm2/8Ftf8llhAeKr9xybkL2mpC4xAjqrOSjl0v7ucWuCtCzngqLzQjLurfEv6
+         0EI7HPy7siIyXC0QKI+Q5ndk0SYhhN7k9ybyJam4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ivan Delalande <colona@arista.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 036/114] scripts/decodecode: fix trapping instruction formatting
-Date:   Mon, 18 May 2020 19:36:08 +0200
-Message-Id: <20200518173510.136019397@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 005/114] net/mlx4_core: Fix use of ENOSPC around mlx4_counter_alloc()
+Date:   Mon, 18 May 2020 19:35:37 +0200
+Message-Id: <20200518173504.087563815@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -61,46 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Delalande <colona@arista.com>
+From: Tariq Toukan <tariqt@mellanox.com>
 
-commit e08df079b23e2e982df15aa340bfbaf50f297504 upstream.
+[ Upstream commit 40e473071dbad04316ddc3613c3a3d1c75458299 ]
 
-If the trapping instruction contains a ':', for a memory access through
-segment registers for example, the sed substitution will insert the '*'
-marker in the middle of the instruction instead of the line address:
+When ENOSPC is set the idx is still valid and gets set to the global
+MLX4_SINK_COUNTER_INDEX.  However gcc's static analysis cannot tell that
+ENOSPC is impossible from mlx4_cmd_imm() and gives this warning:
 
-	2b:   65 48 0f c7 0f          cmpxchg16b %gs:*(%rdi)          <-- trapping instruction
+drivers/net/ethernet/mellanox/mlx4/main.c:2552:28: warning: 'idx' may be
+used uninitialized in this function [-Wmaybe-uninitialized]
+ 2552 |    priv->def_counter[port] = idx;
 
-I started to think I had forgotten some quirk of the assembly syntax
-before noticing that it was actually coming from the script.  Fix it to
-add the address marker at the right place for these instructions:
+Also, when ENOSPC is returned mlx4_allocate_default_counters should not
+fail.
 
-	28:   49 8b 06                mov    (%r14),%rax
-	2b:*  65 48 0f c7 0f          cmpxchg16b %gs:(%rdi)           <-- trapping instruction
-	30:   0f 94 c0                sete   %al
-
-Fixes: 18ff44b189e2 ("scripts/decodecode: make faulting insn ptr more robust")
-Signed-off-by: Ivan Delalande <colona@arista.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Link: http://lkml.kernel.org/r/20200419223653.GA31248@visor
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 6de5f7f6a1fa ("net/mlx4_core: Allocate default counter per port")
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- scripts/decodecode |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx4/main.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/scripts/decodecode
-+++ b/scripts/decodecode
-@@ -99,7 +99,7 @@ faultlinenum=$(( $(wc -l $T.oo  | cut -d
- faultline=`cat $T.dis | head -1 | cut -d":" -f2-`
- faultline=`echo "$faultline" | sed -e 's/\[/\\\[/g; s/\]/\\\]/g'`
+--- a/drivers/net/ethernet/mellanox/mlx4/main.c
++++ b/drivers/net/ethernet/mellanox/mlx4/main.c
+@@ -2503,6 +2503,7 @@ static int mlx4_allocate_default_counter
  
--cat $T.oo | sed -e "${faultlinenum}s/^\(.*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
-+cat $T.oo | sed -e "${faultlinenum}s/^\([^:]*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
- echo
- cat $T.aa
- cleanup
+ 		if (!err || err == -ENOSPC) {
+ 			priv->def_counter[port] = idx;
++			err = 0;
+ 		} else if (err == -ENOENT) {
+ 			err = 0;
+ 			continue;
+@@ -2553,7 +2554,8 @@ int mlx4_counter_alloc(struct mlx4_dev *
+ 				   MLX4_CMD_TIME_CLASS_A, MLX4_CMD_WRAPPED);
+ 		if (!err)
+ 			*idx = get_param_l(&out_param);
+-
++		if (WARN_ON(err == -ENOSPC))
++			err = -EINVAL;
+ 		return err;
+ 	}
+ 	return __mlx4_counter_alloc(dev, idx);
 
 
