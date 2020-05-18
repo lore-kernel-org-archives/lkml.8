@@ -7,46 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F26C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA06520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC74C20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823938;
-	bh=fSRau1pAiWHNJbmlUH/uhaszxFG174FpSD9tnHCsz6Y=;
+	s=default; t=1589823940;
+	bh=SxwLSk3uZevJ8oYo9YJfEefOaMoVzDApfnytjn6DlrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v6YL2BtOQFah634cOeSdWpmeTG4zGaG6QaCwbdMbrp4nhVcX+4xZUBlI9NSdVYlLy
-	 HG7fhoGp791i3TkpRG4txe4sqf/+dQf6VhEYiHxsFrMb1nNHJJLGuwoyLVJlqZIWBY
-	 s6IsGL9DlEzla6L2KIOJRpgS5xWFUycuArt4Kwto=
+	b=AdBIdMqqTAR7nhXoDw/U/8km0kOh2v2gvShzKGvM0J85+lk4I6l8927IZdRI7yyJ2
+	 0CfWyh+h95A1c+4DexOiCniaWUbQNKxUZiUFDEcqH9DTWQFkS6hySRIDkgiSiumYDu
+	 nG7szlztwPNun7+dUG16Yx5LP8fIzFwmGTfMQe1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbgERRph (ORCPT
+        id S1729981AbgERRpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:45:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44284 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729926AbgERRp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:45:28 -0400
+        id S1729930AbgERRpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:45:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D8EC20674;
-        Mon, 18 May 2020 17:45:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 744BB20657;
+        Mon, 18 May 2020 17:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823927;
-        bh=fSRau1pAiWHNJbmlUH/uhaszxFG174FpSD9tnHCsz6Y=;
+        s=default; t=1589823930;
+        bh=SxwLSk3uZevJ8oYo9YJfEefOaMoVzDApfnytjn6DlrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uWFwuKQTfTGhSuTDM4cJLNl4DkviQDsovAnMBu7gA/WMYVTmT67FaXyFmz9GeFh1W
-         Po0/mgCs7H509nJ/ruVL+TfS2h+iJvuKYhhxGI1SDDnao0Sly04CxeMzmuo63FYCYy
-         8B6lYQ9pS1vKVed19N0D56NEtMs83VU1kokpMYo0=
+        b=g9f8ix8ZVivIeXYRcTjCL2ltB9IgnooaPe/tidA5oOPtkQyQpsr6myeZAEMdnrEH/
+         +lZpeDX6tBfCbI7wSZfWvMKqjpyZkIOAg/kLOCLOApgmbG2GaEgQ1id5xeAakB0cxO
+         FxIC2i+L0rXoS7LPNhGYj7+oQVRALFnNFqJW28pA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 67/90] gcc-10: disable restrict warning for now
-Date:   Mon, 18 May 2020 19:36:45 +0200
-Message-Id: <20200518173504.854092505@linuxfoundation.org>
+        syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com,
+        syzbot+c2fb6f9ddcea95ba49b5@syzkaller.appspotmail.com,
+        Jarod Wilson <jarod@redhat.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 68/90] net: fix a potential recursive NETDEV_FEAT_CHANGE
+Date:   Mon, 18 May 2020 19:36:46 +0200
+Message-Id: <20200518173505.049325848@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -59,66 +67,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit adc71920969870dfa54e8f40dac8616284832d02 upstream.
+[ Upstream commit dd912306ff008891c82cd9f63e8181e47a9cb2fb ]
 
-gcc-10 now warns about passing aliasing pointers to functions that take
-restricted pointers.
+syzbot managed to trigger a recursive NETDEV_FEAT_CHANGE event
+between bonding master and slave. I managed to find a reproducer
+for this:
 
-That's actually a great warning, and if we ever start using 'restrict'
-in the kernel, it might be quite useful.  But right now we don't, and it
-turns out that the only thing this warns about is an idiom where we have
-declared a few functions to be "printf-like" (which seems to make gcc
-pick up the restricted pointer thing), and then we print to the same
-buffer that we also use as an input.
+  ip li set bond0 up
+  ifenslave bond0 eth0
+  brctl addbr br0
+  ethtool -K eth0 lro off
+  brctl addif br0 bond0
+  ip li set br0 up
 
-And people do that as an odd concatenation pattern, with code like this:
+When a NETDEV_FEAT_CHANGE event is triggered on a bonding slave,
+it captures this and calls bond_compute_features() to fixup its
+master's and other slaves' features. However, when syncing with
+its lower devices by netdev_sync_lower_features() this event is
+triggered again on slaves when the LRO feature fails to change,
+so it goes back and forth recursively until the kernel stack is
+exhausted.
 
-    #define sysfs_show_gen_prop(buffer, fmt, ...) \
-        snprintf(buffer, PAGE_SIZE, "%s"fmt, buffer, __VA_ARGS__)
+Commit 17b85d29e82c intentionally lets __netdev_update_features()
+return -1 for such a failure case, so we have to just rely on
+the existing check inside netdev_sync_lower_features() and skip
+NETDEV_FEAT_CHANGE event only for this specific failure case.
 
-where we have 'buffer' as both the destination of the final result, and
-as the initial argument.
-
-Yes, it's a bit questionable.  And outside of the kernel, people do have
-standard declarations like
-
-    int snprintf( char *restrict buffer, size_t bufsz,
-                  const char *restrict format, ... );
-
-where that output buffer is marked as a restrict pointer that cannot
-alias with any other arguments.
-
-But in the context of the kernel, that 'use snprintf() to concatenate to
-the end result' does work, and the pattern shows up in multiple places.
-And we have not marked our own version of snprintf() as taking restrict
-pointers, so the warning is incorrect for now, and gcc picks it up on
-its own.
-
-If we do start using 'restrict' in the kernel (and it might be a good
-idea if people find places where it matters), we'll need to figure out
-how to avoid this issue for snprintf and friends.  But in the meantime,
-this warning is not useful.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: fd867d51f889 ("net/core: generic support for disabling netdev features down stack")
+Reported-by: syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com
+Reported-by: syzbot+c2fb6f9ddcea95ba49b5@syzkaller.appspotmail.com
+Cc: Jarod Wilson <jarod@redhat.com>
+Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Reviewed-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- Makefile |    3 +++
- 1 file changed, 3 insertions(+)
+ net/core/dev.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -802,6 +802,9 @@ KBUILD_CFLAGS += $(call cc-disable-warni
- KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
- KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -6939,11 +6939,13 @@ static void netdev_sync_lower_features(s
+ 			netdev_dbg(upper, "Disabling feature %pNF on lower dev %s.\n",
+ 				   &feature, lower->name);
+ 			lower->wanted_features &= ~feature;
+-			netdev_update_features(lower);
++			__netdev_update_features(lower);
  
-+# Another good warning that we'll want to enable eventually
-+KBUILD_CFLAGS += $(call cc-disable-warning, restrict)
-+
- # Enabled with W=2, disabled by default as noisy
- KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
- 
+ 			if (unlikely(lower->features & feature))
+ 				netdev_WARN(upper, "failed to disable %pNF on %s!\n",
+ 					    &feature, lower->name);
++			else
++				netdev_features_change(lower);
+ 		}
+ 	}
+ }
 
 
