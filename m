@@ -2,57 +2,50 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B32C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71BE420835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDCD20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823889;
-	bh=W9pZaL+dU6ZVtxRB9KnoZBqbow8gSrBZ3FEwNa25IwQ=;
+	s=default; t=1589823891;
+	bh=7Rk3dkiwRft2E+yMeP72ukGIM/B290+0Kj4EJOs1NUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i2GqBw7By75soX8RCaPdLxc4N03uNnqlOK7jYymSmj3ty+Bxb38oho7aNfQKc4Xey
-	 x/JIRY/aE8ZK+HIiQpvpRTTMUlnS1RfjWJx5BsBQMJM9q/jR4npSmOxbhloVDi8Mth
-	 CHZVD59yzTaqBQnawXeigbhtJo4UkVKpY7FQ0I5k=
+	b=Y4gChlAok8xunG75q70QH15FDm78vz7iOaLlD/xc522HwC+Vag0yOkiSeYhcbjVsu
+	 Q3AT6hkgG2fcMuOID6zL9gtNECpZrYl3qspVQ7gQYVIKRpXv89kE/I8b1mfvPtwdzo
+	 3hFlCln/T5CBvnNKICQ+tsPcq5e8C0hB1yZU6bx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbgERRos (ORCPT
+        id S1729812AbgERRou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:44:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42832 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:44:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729760AbgERRoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:44:32 -0400
+        id S1729773AbgERRoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:44:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED53520849;
-        Mon, 18 May 2020 17:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86E5120829;
+        Mon, 18 May 2020 17:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823870;
-        bh=W9pZaL+dU6ZVtxRB9KnoZBqbow8gSrBZ3FEwNa25IwQ=;
+        s=default; t=1589823878;
+        bh=7Rk3dkiwRft2E+yMeP72ukGIM/B290+0Kj4EJOs1NUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KqW2fe3GTcohkOolPDAaj845UchCpdhB5v3W2cs6MJnkU84Q7eWlKpxT2FNXvoISR
-         qDohIOBiRVikQkdoAPTCUOSYXURzb6XD6g5/Ve0Ua2ahLVHMcZbH1p9bC/H/YVVvYN
-         9lw9OeuVzMO5eVUiy39Oq2ShvVbbV+L8RpaX04OI=
+        b=ekT/dYTIWaYLsqRH2fDgWoVGGco3gM+xvkxVwqgOhGycseu7qhU52XQQi9hYWyDRd
+         nv1+W+CyuO/wzPIt1lUTZ3sWX3bCmX0xOqg0Xt9mw0+XI6PKKVIK6aGLsozQrtGDZG
+         gRiFCVdkh+McWsrGPL5dyfGI5SYagaMQaC2673pQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tristan Madani <tristmd@gmail.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 32/90] blktrace: Protect q->blk_trace with RCU
-Date:   Mon, 18 May 2020 19:36:10 +0200
-Message-Id: <20200518173457.700027112@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 73/90] ALSA: hda/realtek - Limit int mic boost for Thinkpad T530
+Date:   Mon, 18 May 2020 19:36:51 +0200
+Message-Id: <20200518173506.169552391@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -65,422 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit c780e86dd48ef6467a1146cf7d0fe1e05a635039 upstream.
+commit b590b38ca305d6d7902ec7c4f7e273e0069f3bcc upstream.
 
-KASAN is reporting that __blk_add_trace() has a use-after-free issue
-when accessing q->blk_trace. Indeed the switching of block tracing (and
-thus eventual freeing of q->blk_trace) is completely unsynchronized with
-the currently running tracing and thus it can happen that the blk_trace
-structure is being freed just while __blk_add_trace() works on it.
-Protect accesses to q->blk_trace by RCU during tracing and make sure we
-wait for the end of RCU grace period when shutting down tracing. Luckily
-that is rare enough event that we can afford that. Note that postponing
-the freeing of blk_trace to an RCU callback should better be avoided as
-it could have unexpected user visible side-effects as debugfs files
-would be still existing for a short while block tracing has been shut
-down.
+Lenovo Thinkpad T530 seems to have a sensitive internal mic capture
+that needs to limit the mic boost like a few other Thinkpad models.
+Although we may change the quirk for ALC269_FIXUP_LENOVO_DOCK, this
+hits way too many other laptop models, so let's add a new fixup model
+that limits the internal mic boost on top of the existing quirk and
+apply to only T530.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205711
-CC: stable@vger.kernel.org
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Tested-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reported-by: Tristan Madani <tristmd@gmail.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-[bwh: Backported to 4.9: adjust context]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1171293
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200514160533.10337-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/blkdev.h       |   2 +-
- include/linux/blktrace_api.h |  18 ++++--
- kernel/trace/blktrace.c      | 110 +++++++++++++++++++++++++----------
- 3 files changed, 94 insertions(+), 36 deletions(-)
+ sound/pci/hda/patch_realtek.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index a8dfbad42d1b0..060881478e59e 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -445,7 +445,7 @@ struct request_queue {
- 	unsigned int		sg_reserved_size;
- 	int			node;
- #ifdef CONFIG_BLK_DEV_IO_TRACE
--	struct blk_trace	*blk_trace;
-+	struct blk_trace __rcu	*blk_trace;
- 	struct mutex		blk_trace_mutex;
- #endif
- 	/*
-diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
-index cceb72f9e29f5..45fb00427306f 100644
---- a/include/linux/blktrace_api.h
-+++ b/include/linux/blktrace_api.h
-@@ -51,18 +51,26 @@ void __trace_note_message(struct blk_trace *, const char *fmt, ...);
-  **/
- #define blk_add_trace_msg(q, fmt, ...)					\
- 	do {								\
--		struct blk_trace *bt = (q)->blk_trace;			\
-+		struct blk_trace *bt;					\
-+									\
-+		rcu_read_lock();					\
-+		bt = rcu_dereference((q)->blk_trace);			\
- 		if (unlikely(bt))					\
- 			__trace_note_message(bt, fmt, ##__VA_ARGS__);	\
-+		rcu_read_unlock();					\
- 	} while (0)
- #define BLK_TN_MAX_MSG		128
- 
- static inline bool blk_trace_note_message_enabled(struct request_queue *q)
- {
--	struct blk_trace *bt = q->blk_trace;
--	if (likely(!bt))
--		return false;
--	return bt->act_mask & BLK_TC_NOTIFY;
-+	struct blk_trace *bt;
-+	bool ret;
-+
-+	rcu_read_lock();
-+	bt = rcu_dereference(q->blk_trace);
-+	ret = bt && (bt->act_mask & BLK_TC_NOTIFY);
-+	rcu_read_unlock();
-+	return ret;
- }
- 
- extern void blk_add_driver_data(struct request_queue *q, struct request *rq,
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index a88e677c74f31..78a896acd21ac 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -325,6 +325,7 @@ static void put_probe_ref(void)
- 
- static void blk_trace_cleanup(struct blk_trace *bt)
- {
-+	synchronize_rcu();
- 	blk_trace_free(bt);
- 	put_probe_ref();
- }
-@@ -629,8 +630,10 @@ static int compat_blk_trace_setup(struct request_queue *q, char *name,
- static int __blk_trace_startstop(struct request_queue *q, int start)
- {
- 	int ret;
--	struct blk_trace *bt = q->blk_trace;
-+	struct blk_trace *bt;
- 
-+	bt = rcu_dereference_protected(q->blk_trace,
-+				       lockdep_is_held(&q->blk_trace_mutex));
- 	if (bt == NULL)
- 		return -EINVAL;
- 
-@@ -739,8 +742,8 @@ int blk_trace_ioctl(struct block_device *bdev, unsigned cmd, char __user *arg)
- void blk_trace_shutdown(struct request_queue *q)
- {
- 	mutex_lock(&q->blk_trace_mutex);
--
--	if (q->blk_trace) {
-+	if (rcu_dereference_protected(q->blk_trace,
-+				      lockdep_is_held(&q->blk_trace_mutex))) {
- 		__blk_trace_startstop(q, 0);
- 		__blk_trace_remove(q);
- 	}
-@@ -766,10 +769,14 @@ void blk_trace_shutdown(struct request_queue *q)
- static void blk_add_trace_rq(struct request_queue *q, struct request *rq,
- 			     unsigned int nr_bytes, u32 what)
- {
--	struct blk_trace *bt = q->blk_trace;
-+	struct blk_trace *bt;
- 
--	if (likely(!bt))
-+	rcu_read_lock();
-+	bt = rcu_dereference(q->blk_trace);
-+	if (likely(!bt)) {
-+		rcu_read_unlock();
- 		return;
-+	}
- 
- 	if (rq->cmd_type == REQ_TYPE_BLOCK_PC) {
- 		what |= BLK_TC_ACT(BLK_TC_PC);
-@@ -780,6 +787,7 @@ static void blk_add_trace_rq(struct request_queue *q, struct request *rq,
- 		__blk_add_trace(bt, blk_rq_pos(rq), nr_bytes, req_op(rq),
- 				rq->cmd_flags, what, rq->errors, 0, NULL);
- 	}
-+	rcu_read_unlock();
- }
- 
- static void blk_add_trace_rq_abort(void *ignore,
-@@ -829,13 +837,18 @@ static void blk_add_trace_rq_complete(void *ignore,
- static void blk_add_trace_bio(struct request_queue *q, struct bio *bio,
- 			      u32 what, int error)
- {
--	struct blk_trace *bt = q->blk_trace;
-+	struct blk_trace *bt;
- 
--	if (likely(!bt))
-+	rcu_read_lock();
-+	bt = rcu_dereference(q->blk_trace);
-+	if (likely(!bt)) {
-+		rcu_read_unlock();
- 		return;
-+	}
- 
- 	__blk_add_trace(bt, bio->bi_iter.bi_sector, bio->bi_iter.bi_size,
- 			bio_op(bio), bio->bi_opf, what, error, 0, NULL);
-+	rcu_read_unlock();
- }
- 
- static void blk_add_trace_bio_bounce(void *ignore,
-@@ -880,11 +893,14 @@ static void blk_add_trace_getrq(void *ignore,
- 	if (bio)
- 		blk_add_trace_bio(q, bio, BLK_TA_GETRQ, 0);
- 	else {
--		struct blk_trace *bt = q->blk_trace;
-+		struct blk_trace *bt;
- 
-+		rcu_read_lock();
-+		bt = rcu_dereference(q->blk_trace);
- 		if (bt)
- 			__blk_add_trace(bt, 0, 0, rw, 0, BLK_TA_GETRQ, 0, 0,
- 					NULL);
-+		rcu_read_unlock();
- 	}
- }
- 
-@@ -896,27 +912,35 @@ static void blk_add_trace_sleeprq(void *ignore,
- 	if (bio)
- 		blk_add_trace_bio(q, bio, BLK_TA_SLEEPRQ, 0);
- 	else {
--		struct blk_trace *bt = q->blk_trace;
-+		struct blk_trace *bt;
- 
-+		rcu_read_lock();
-+		bt = rcu_dereference(q->blk_trace);
- 		if (bt)
- 			__blk_add_trace(bt, 0, 0, rw, 0, BLK_TA_SLEEPRQ,
- 					0, 0, NULL);
-+		rcu_read_unlock();
- 	}
- }
- 
- static void blk_add_trace_plug(void *ignore, struct request_queue *q)
- {
--	struct blk_trace *bt = q->blk_trace;
-+	struct blk_trace *bt;
- 
-+	rcu_read_lock();
-+	bt = rcu_dereference(q->blk_trace);
- 	if (bt)
- 		__blk_add_trace(bt, 0, 0, 0, 0, BLK_TA_PLUG, 0, 0, NULL);
-+	rcu_read_unlock();
- }
- 
- static void blk_add_trace_unplug(void *ignore, struct request_queue *q,
- 				    unsigned int depth, bool explicit)
- {
--	struct blk_trace *bt = q->blk_trace;
-+	struct blk_trace *bt;
- 
-+	rcu_read_lock();
-+	bt = rcu_dereference(q->blk_trace);
- 	if (bt) {
- 		__be64 rpdu = cpu_to_be64(depth);
- 		u32 what;
-@@ -928,14 +952,17 @@ static void blk_add_trace_unplug(void *ignore, struct request_queue *q,
- 
- 		__blk_add_trace(bt, 0, 0, 0, 0, what, 0, sizeof(rpdu), &rpdu);
- 	}
-+	rcu_read_unlock();
- }
- 
- static void blk_add_trace_split(void *ignore,
- 				struct request_queue *q, struct bio *bio,
- 				unsigned int pdu)
- {
--	struct blk_trace *bt = q->blk_trace;
-+	struct blk_trace *bt;
- 
-+	rcu_read_lock();
-+	bt = rcu_dereference(q->blk_trace);
- 	if (bt) {
- 		__be64 rpdu = cpu_to_be64(pdu);
- 
-@@ -944,6 +971,7 @@ static void blk_add_trace_split(void *ignore,
- 				BLK_TA_SPLIT, bio->bi_error, sizeof(rpdu),
- 				&rpdu);
- 	}
-+	rcu_read_unlock();
- }
- 
- /**
-@@ -963,11 +991,15 @@ static void blk_add_trace_bio_remap(void *ignore,
- 				    struct request_queue *q, struct bio *bio,
- 				    dev_t dev, sector_t from)
- {
--	struct blk_trace *bt = q->blk_trace;
-+	struct blk_trace *bt;
- 	struct blk_io_trace_remap r;
- 
--	if (likely(!bt))
-+	rcu_read_lock();
-+	bt = rcu_dereference(q->blk_trace);
-+	if (likely(!bt)) {
-+		rcu_read_unlock();
- 		return;
-+	}
- 
- 	r.device_from = cpu_to_be32(dev);
- 	r.device_to   = cpu_to_be32(bio->bi_bdev->bd_dev);
-@@ -976,6 +1008,7 @@ static void blk_add_trace_bio_remap(void *ignore,
- 	__blk_add_trace(bt, bio->bi_iter.bi_sector, bio->bi_iter.bi_size,
- 			bio_op(bio), bio->bi_opf, BLK_TA_REMAP, bio->bi_error,
- 			sizeof(r), &r);
-+	rcu_read_unlock();
- }
- 
- /**
-@@ -996,11 +1029,15 @@ static void blk_add_trace_rq_remap(void *ignore,
- 				   struct request *rq, dev_t dev,
- 				   sector_t from)
- {
--	struct blk_trace *bt = q->blk_trace;
-+	struct blk_trace *bt;
- 	struct blk_io_trace_remap r;
- 
--	if (likely(!bt))
-+	rcu_read_lock();
-+	bt = rcu_dereference(q->blk_trace);
-+	if (likely(!bt)) {
-+		rcu_read_unlock();
- 		return;
-+	}
- 
- 	r.device_from = cpu_to_be32(dev);
- 	r.device_to   = cpu_to_be32(disk_devt(rq->rq_disk));
-@@ -1009,6 +1046,7 @@ static void blk_add_trace_rq_remap(void *ignore,
- 	__blk_add_trace(bt, blk_rq_pos(rq), blk_rq_bytes(rq),
- 			rq_data_dir(rq), 0, BLK_TA_REMAP, !!rq->errors,
- 			sizeof(r), &r);
-+	rcu_read_unlock();
- }
- 
- /**
-@@ -1026,10 +1064,14 @@ void blk_add_driver_data(struct request_queue *q,
- 			 struct request *rq,
- 			 void *data, size_t len)
- {
--	struct blk_trace *bt = q->blk_trace;
-+	struct blk_trace *bt;
- 
--	if (likely(!bt))
-+	rcu_read_lock();
-+	bt = rcu_dereference(q->blk_trace);
-+	if (likely(!bt)) {
-+		rcu_read_unlock();
- 		return;
-+	}
- 
- 	if (rq->cmd_type == REQ_TYPE_BLOCK_PC)
- 		__blk_add_trace(bt, 0, blk_rq_bytes(rq), 0, 0,
-@@ -1037,6 +1079,7 @@ void blk_add_driver_data(struct request_queue *q,
- 	else
- 		__blk_add_trace(bt, blk_rq_pos(rq), blk_rq_bytes(rq), 0, 0,
- 				BLK_TA_DRV_DATA, rq->errors, len, data);
-+	rcu_read_unlock();
- }
- EXPORT_SYMBOL_GPL(blk_add_driver_data);
- 
-@@ -1529,6 +1572,7 @@ static int blk_trace_remove_queue(struct request_queue *q)
- 		return -EINVAL;
- 
- 	put_probe_ref();
-+	synchronize_rcu();
- 	blk_trace_free(bt);
- 	return 0;
- }
-@@ -1690,6 +1734,7 @@ static ssize_t sysfs_blk_trace_attr_show(struct device *dev,
- 	struct hd_struct *p = dev_to_part(dev);
- 	struct request_queue *q;
- 	struct block_device *bdev;
-+	struct blk_trace *bt;
- 	ssize_t ret = -ENXIO;
- 
- 	bdev = bdget(part_devt(p));
-@@ -1702,21 +1747,23 @@ static ssize_t sysfs_blk_trace_attr_show(struct device *dev,
- 
- 	mutex_lock(&q->blk_trace_mutex);
- 
-+	bt = rcu_dereference_protected(q->blk_trace,
-+				       lockdep_is_held(&q->blk_trace_mutex));
- 	if (attr == &dev_attr_enable) {
--		ret = sprintf(buf, "%u\n", !!q->blk_trace);
-+		ret = sprintf(buf, "%u\n", !!bt);
- 		goto out_unlock_bdev;
- 	}
- 
--	if (q->blk_trace == NULL)
-+	if (bt == NULL)
- 		ret = sprintf(buf, "disabled\n");
- 	else if (attr == &dev_attr_act_mask)
--		ret = blk_trace_mask2str(buf, q->blk_trace->act_mask);
-+		ret = blk_trace_mask2str(buf, bt->act_mask);
- 	else if (attr == &dev_attr_pid)
--		ret = sprintf(buf, "%u\n", q->blk_trace->pid);
-+		ret = sprintf(buf, "%u\n", bt->pid);
- 	else if (attr == &dev_attr_start_lba)
--		ret = sprintf(buf, "%llu\n", q->blk_trace->start_lba);
-+		ret = sprintf(buf, "%llu\n", bt->start_lba);
- 	else if (attr == &dev_attr_end_lba)
--		ret = sprintf(buf, "%llu\n", q->blk_trace->end_lba);
-+		ret = sprintf(buf, "%llu\n", bt->end_lba);
- 
- out_unlock_bdev:
- 	mutex_unlock(&q->blk_trace_mutex);
-@@ -1733,6 +1780,7 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
- 	struct block_device *bdev;
- 	struct request_queue *q;
- 	struct hd_struct *p;
-+	struct blk_trace *bt;
- 	u64 value;
- 	ssize_t ret = -EINVAL;
- 
-@@ -1763,8 +1811,10 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
- 
- 	mutex_lock(&q->blk_trace_mutex);
- 
-+	bt = rcu_dereference_protected(q->blk_trace,
-+				       lockdep_is_held(&q->blk_trace_mutex));
- 	if (attr == &dev_attr_enable) {
--		if (!!value == !!q->blk_trace) {
-+		if (!!value == !!bt) {
- 			ret = 0;
- 			goto out_unlock_bdev;
- 		}
-@@ -1776,18 +1826,18 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
- 	}
- 
- 	ret = 0;
--	if (q->blk_trace == NULL)
-+	if (bt == NULL)
- 		ret = blk_trace_setup_queue(q, bdev);
- 
- 	if (ret == 0) {
- 		if (attr == &dev_attr_act_mask)
--			q->blk_trace->act_mask = value;
-+			bt->act_mask = value;
- 		else if (attr == &dev_attr_pid)
--			q->blk_trace->pid = value;
-+			bt->pid = value;
- 		else if (attr == &dev_attr_start_lba)
--			q->blk_trace->start_lba = value;
-+			bt->start_lba = value;
- 		else if (attr == &dev_attr_end_lba)
--			q->blk_trace->end_lba = value;
-+			bt->end_lba = value;
- 	}
- 
- out_unlock_bdev:
--- 
-2.20.1
-
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -4890,6 +4890,7 @@ enum {
+ 	ALC269_FIXUP_HP_LINE1_MIC1_LED,
+ 	ALC269_FIXUP_INV_DMIC,
+ 	ALC269_FIXUP_LENOVO_DOCK,
++	ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST,
+ 	ALC269_FIXUP_NO_SHUTUP,
+ 	ALC286_FIXUP_SONY_MIC_NO_PRESENCE,
+ 	ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT,
+@@ -5157,6 +5158,12 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT
+ 	},
++	[ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc269_fixup_limit_int_mic_boost,
++		.chained = true,
++		.chain_id = ALC269_FIXUP_LENOVO_DOCK,
++	},
+ 	[ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc269_fixup_pincfg_no_hp_to_lineout,
+@@ -5820,7 +5827,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x17aa, 0x21b8, "Thinkpad Edge 14", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x21ca, "Thinkpad L412", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x21e9, "Thinkpad Edge 15", ALC269_FIXUP_SKU_IGNORE),
+-	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK),
++	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST),
+ 	SND_PCI_QUIRK(0x17aa, 0x21fa, "Thinkpad X230", ALC269_FIXUP_LENOVO_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x21f3, "Thinkpad T430", ALC269_FIXUP_LENOVO_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x21fb, "Thinkpad T430s", ALC269_FIXUP_LENOVO_DOCK),
+@@ -5945,6 +5952,7 @@ static const struct hda_model_fixup alc2
+ 	{.id = ALC269_FIXUP_HEADSET_MODE, .name = "headset-mode"},
+ 	{.id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC, .name = "headset-mode-no-hp-mic"},
+ 	{.id = ALC269_FIXUP_LENOVO_DOCK, .name = "lenovo-dock"},
++	{.id = ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST, .name = "lenovo-dock-limit-boost"},
+ 	{.id = ALC269_FIXUP_HP_GPIO_LED, .name = "hp-gpio-led"},
+ 	{.id = ALC269_FIXUP_HP_DOCK_GPIO_MIC1_LED, .name = "hp-dock-gpio-mic1-led"},
+ 	{.id = ALC269_FIXUP_DELL1_MIC_NO_PRESENCE, .name = "dell-headset-multi"},
 
 
