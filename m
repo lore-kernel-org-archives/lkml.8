@@ -2,89 +2,89 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 174FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F37C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02D1820835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D14E20829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589823650;
+	bh=hvR9PGMW0+0i+AIKy5t6gOSeg6h2dDfOUwDLAe8jPwI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=e6KsD3Ni4xUnWRFG27ngP543wrFczN94EqtXjkW3DmdAhGHSgueY5w87wJEDllzGc
+	 8ejIar4VZ4zjH7blOUB834ld9kWg/51ikFakJvFcaaBuY4tuKv14G95s+WO8nyaOUM
+	 WHCTJoBjqXBl1e2midlCEeZV/7DxlUcsQQ863SZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgERRkq (ORCPT
+        id S1729161AbgERRkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:40:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729083AbgERRkb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:40:31 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CCDEC061A0C;
-        Mon, 18 May 2020 10:40:31 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id BBB782A0C9C
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        gustavo.padovan@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v4 1/3] media: rkvdec: Fix .buf_prepare
-Date:   Mon, 18 May 2020 14:40:09 -0300
-Message-Id: <20200518174011.15543-2-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200518174011.15543-1-ezequiel@collabora.com>
-References: <20200518174011.15543-1-ezequiel@collabora.com>
+        Mon, 18 May 2020 13:40:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728456AbgERRkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:40:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93CF2207C4;
+        Mon, 18 May 2020 17:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589823633;
+        bh=hvR9PGMW0+0i+AIKy5t6gOSeg6h2dDfOUwDLAe8jPwI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hGI1tppAZd2xFXVw7junM8PrjDY9KCrbLSEPFMR5NVnCllXAzRkOcqOa1bdribgZ6
+         et2WHEi2Pu1POCLlvFt6pLIJIkuAGBPyE57KV7d1muJyt6lHR3qd3H68PsQoaCOhqM
+         T8jMyN2+gD/a7wrcJoIUf7HaUbaxu4Pkc7FS/rd8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 61/86] gcc-10: disable stringop-overflow warning for now
+Date:   Mon, 18 May 2020 19:36:32 +0200
+Message-Id: <20200518173502.783417822@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
+References: <20200518173450.254571947@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver should only set the payload on .buf_prepare
-if the buffer is CAPTURE type, or if an OUTPUT buffer
-has a zeroed payload.
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-Fix it.
+commit 5a76021c2eff7fcf2f0918a08fd8a37ce7922921 upstream.
 
-Fixes: cd33c830448ba ("media: rkvdec: Add the rkvdec driver")
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+This is the final array bounds warning removal for gcc-10 for now.
+
+Again, the warning is good, and we should re-enable all these warnings
+when we have converted all the legacy array declaration cases to
+flexible arrays. But in the meantime, it's just noise.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/staging/media/rkvdec/rkvdec.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ Makefile |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-index 225eeca73356..4df2a248ab96 100644
---- a/drivers/staging/media/rkvdec/rkvdec.c
-+++ b/drivers/staging/media/rkvdec/rkvdec.c
-@@ -456,7 +456,15 @@ static int rkvdec_buf_prepare(struct vb2_buffer *vb)
- 		if (vb2_plane_size(vb, i) < sizeimage)
- 			return -EINVAL;
- 	}
--	vb2_set_plane_payload(vb, 0, f->fmt.pix_mp.plane_fmt[0].sizeimage);
-+
-+	/*
-+	 * Buffer's bytesused is written by the driver for CAPTURE buffers,
-+	 * or if the application passed zero bytesused on an OUTPUT buffer.
-+	 */
-+	if (!V4L2_TYPE_IS_OUTPUT(vq->type) ||
-+	    (V4L2_TYPE_IS_OUTPUT(vq->type) && !vb2_get_plane_payload(vb, 0)))
-+		vb2_set_plane_payload(vb, 0,
-+				      f->fmt.pix_mp.plane_fmt[0].sizeimage);
- 	return 0;
- }
+--- a/Makefile
++++ b/Makefile
+@@ -798,6 +798,7 @@ KBUILD_CFLAGS += $(call cc-disable-warni
+ # We'll want to enable this eventually, but it's not going away for 5.7 at least
+ KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
+ KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
++KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
  
--- 
-2.26.0.rc2
+ # Enabled with W=2, disabled by default as noisy
+ KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
+
 
