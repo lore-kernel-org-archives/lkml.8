@@ -2,371 +2,140 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23BA620756
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qrZhuRM8"
+	by mail.kernel.org (Postfix) with ESMTP id 38579207D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgEROpL (ORCPT
+        id S1728149AbgEROp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:45:11 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46996 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728149AbgEROpK (ORCPT
+        Mon, 18 May 2020 10:45:58 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48416 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgEROp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:45:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589813109; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=3tDq+jKnVYb0dPQHWxScs1oepBrcNz/o2eMIFpFznZ4=; b=qrZhuRM8B1SAc2y5VznEteDpX6Cv1P14galSOYLrumIFuZrp3fW0v/K3I4hWjMDzSFV2JaPa
- y52U4MExZZmJ3XxrElslQsk9pCBivX3wDR4hfVxbJaMr1Rh7kj4kKAGe4wKoT9IXnvhJAwGJ
- WgdtbHOHrURhziHrNIgUNvb6ckY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5ec29f61d915e862f6e2330f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 18 May 2020 14:44:49
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 709AEC433F2; Mon, 18 May 2020 14:44:47 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0A52AC433F2;
-        Mon, 18 May 2020 14:44:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0A52AC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 18 May 2020 08:44:43 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 6/9] drm/msm/a6xx: A640/A650 GMU firmware path
-Message-ID: <20200518144443.GD3915@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
-        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200423210946.28867-1-jonathan@marek.ca>
- <20200423210946.28867-7-jonathan@marek.ca>
+        Mon, 18 May 2020 10:45:58 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A64258030875;
+        Mon, 18 May 2020 14:45:54 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CMo5xIvaMlt2; Mon, 18 May 2020 17:45:53 +0300 (MSK)
+Date:   Mon, 18 May 2020 17:45:52 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 7/7] clocksource: mips-gic-timer: Set limitations on
+ clocksource/sched-clocks usage
+Message-ID: <20200518144552.bjlddhuospgmer4j@mobilestation>
+References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-8-Sergey.Semin@baikalelectronics.ru>
+ <20200515171004.GA760381@linaro.org>
+ <20200516121647.g6jua35kkihmw5r6@mobilestation>
+ <4c723219-62f8-be6a-47ea-a586859d832d@linaro.org>
+ <20200518144045.v56fajrhbnnrzbpf@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20200423210946.28867-7-jonathan@marek.ca>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200518144045.v56fajrhbnnrzbpf@mobilestation>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 05:09:18PM -0400, Jonathan Marek wrote:
-> Newer GPUs have different GMU firmware path.
+On Mon, May 18, 2020 at 05:40:46PM +0300, Serge Semin wrote:
+> Daniel,
 > 
-> v3: updated a6xx_gmu_fw_load based on feedback, including gmu_write_bulk,
-> and removed extra whitespace change
-
-I'm not sure if you sent the XML updates to Rob yet, but don't forget to do that
-so we don't accidentally lose the registers if we do a refresh.
-
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c     | 138 +++++++++++++++++++---
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.h     |  10 ++
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h |   6 +
->  3 files changed, 138 insertions(+), 16 deletions(-)
+> On Mon, May 18, 2020 at 03:59:16PM +0200, Daniel Lezcano wrote:
+> > On 16/05/2020 14:16, Serge Semin wrote:
+> > > Hello Daniel,
+> > > 
+> > > Thanks for your comment. My response is below.
+> > > 
+> > > On Fri, May 15, 2020 at 07:10:04PM +0200, Daniel Lezcano wrote:
+> > >> On Thu, May 07, 2020 at 12:41:07AM +0300, Serge Semin wrote:
+> > >>> Currently neither clocksource nor scheduler clock kernel framework
+> > >>> support the clocks with variable frequency. Needless to say how many
+> > >>> problems may cause the sudden base clocks frequency change. In a
+> > >>> simplest case the system time will either slow down or speed up.
+> > >>> Since on CM2.5 and earlier MIPS GIC timer is synchronously clocked
+> > >>> with CPU we must set some limitations on using it for these frameworks
+> > >>> if CPU frequency may change. First of all it's not safe to have the
+> > >>> MIPS GIC used for scheduler timings. So we shouldn't proceed with
+> > >>> the clocks registration in the sched-subsystem. Secondly we must
+> > >>> significantly decrease the MIPS GIC clocksource rating. This will let
+> > >>> the system to use it only as a last resort.
+> > >>>
+> > >>> Note CM3.x-based systems may also experience the problems with MIPS GIC
+> > >>> if the CPU-frequency change is activated for the whole CPU cluster
+> > >>> instead of using the individual CPC core clocks divider.
+> > >>
+> > >> May be there is no alternative but the code looks a bit hacksih. Isn't possible
+> > >> to do something with the sched_mark_unstable?
+> > >>
+> > >> Or just not use the timer at all ?
+> > > 
+> > > Not using the timer might be better, but not that good alternative either
+> > > especially in our case due to very slow external timer. Me and Thomas
+> > > Bogendoerfer discussed the similar commit I've provided to the csrc-r4k driver
+> > > available on MIPS:
+> > > https://lkml.org/lkml/2020/5/11/576
+> > > 
+> > > To cut it short, you are right. The solution with using clocksource_mark_unstable()
+> > > is better alternative spied up in x86 tsc implementation. I'll use a similar
+> > > approach here and submit the updated patch in v3.
+> > > 
+> > > Could you please proceed with the rest of the series review? I'd like to send
+> > > the next version with as many comments taken into account as possible. The
+> > > patchset has been submitted a while ago, but except Rob noone have had any
+> > > comments.(
+> > 
+> > For me other patches are ok.
+> > 
+> > I can apply patches 1, 2, 4, 5, 6
+> > 
+> > Will remain patches 3 et 7
 > 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index b22a69e2f4b0..988575fc8e71 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> @@ -571,6 +571,8 @@ static void a6xx_gmu_power_config(struct a6xx_gmu *gmu)
->  {
->  	/* Disable GMU WB/RB buffer */
->  	gmu_write(gmu, REG_A6XX_GMU_SYS_BUS_CONFIG, 0x1);
-> +	gmu_write(gmu, REG_A6XX_GMU_ICACHE_CONFIG, 0x1);
-> +	gmu_write(gmu, REG_A6XX_GMU_DCACHE_CONFIG, 0x1);
->  
->  	gmu_write(gmu, REG_A6XX_GMU_PWR_COL_INTER_FRAME_CTRL, 0x9c40400);
->  
-> @@ -600,14 +602,95 @@ static void a6xx_gmu_power_config(struct a6xx_gmu *gmu)
->  		A6XX_GMU_RPMH_CTRL_GFX_VOTE_ENABLE);
->  }
->  
-> +struct block_header {
-> +	u32 addr;
-> +	u32 size;
-> +	u32 type;
-> +	u32 value;
-> +	u32 data[];
-> +};
-> +
-> +/* this should be a general kernel helper */
-> +static int in_range(u32 addr, u32 start, u32 size)
-> +{
-> +	return addr >= start && addr < start + size;
-> +}
-> +
-> +static bool fw_block_mem(struct a6xx_gmu_bo *bo, const struct block_header *blk)
-> +{
-> +	if (!in_range(blk->addr, bo->iova, bo->size))
-> +		return false;
-> +
-> +	memcpy(bo->virt + blk->addr - bo->iova, blk->data, blk->size);
-> +	return true;
-> +}
-> +
-> +static int a6xx_gmu_fw_load(struct a6xx_gmu *gmu)
-> +{
-> +	struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
-> +	struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
-> +	const struct firmware *fw_image = adreno_gpu->fw[ADRENO_FW_GMU];
-> +	const struct block_header *blk;
-> +	u32 reg_offset;
-> +
-> +	u32 itcm_base = 0x00000000;
-> +	u32 dtcm_base = 0x00040000;
-> +
-> +	if (adreno_is_a650(adreno_gpu))
-> +		dtcm_base = 0x10004000;
-> +
-> +	if (gmu->legacy) {
-> +		/* Sanity check the size of the firmware that was loaded */
-> +		if (fw_image->size > 0x8000) {
-> +			DRM_DEV_ERROR(gmu->dev,
-> +				"GMU firmware is bigger than the available region\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		gmu_write_bulk(gmu, REG_A6XX_GMU_CM3_ITCM_START,
-> +			       (u32*) fw_image->data, fw_image->size);
-> +		return 0;
-> +	}
-> +
-> +
-> +	for (blk = (const struct block_header *) fw_image->data;
-> +	     (const u8*) blk < fw_image->data + fw_image->size;
-> +	     blk = (const struct block_header *) &blk->data[blk->size >> 2]) {
-> +		if (blk->size == 0)
-> +			continue;
-> +
-> +		if (in_range(blk->addr, itcm_base, SZ_16K)) {
-> +			reg_offset = (blk->addr - itcm_base) >> 2;
-> +			gmu_write_bulk(gmu,
-> +				REG_A6XX_GMU_CM3_ITCM_START + reg_offset,
-> +				blk->data, blk->size);
-> +		} else if (in_range(blk->addr, dtcm_base, SZ_16K)) {
-> +			reg_offset = (blk->addr - dtcm_base) >> 2;
-> +			gmu_write_bulk(gmu,
-> +				REG_A6XX_GMU_CM3_DTCM_START + reg_offset,
-> +				blk->data, blk->size);
-> +		} else if (!fw_block_mem(&gmu->icache, blk) &&
-> +			   !fw_block_mem(&gmu->dcache, blk) &&
-> +			   !fw_block_mem(&gmu->dummy, blk)) {
-> +			DRM_DEV_ERROR(gmu->dev,
-> +				"failed to match fw block (addr=%.8x size=%d data[0]=%.8x)\n",
-> +				blk->addr, blk->size, blk->data[0]);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, unsigned int state)
->  {
->  	static bool rpmh_init;
->  	struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
->  	struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
-> -	int i, ret;
-> +	int ret;
->  	u32 chipid;
-> -	u32 *image;
-> +
-> +	if (adreno_is_a650(adreno_gpu))
-> +		gmu_write(gmu, REG_A6XX_GPU_GMU_CX_GMU_CX_FAL_INTF, 1);
->  
->  	if (state == GMU_WARM_BOOT) {
->  		ret = a6xx_rpmh_start(gmu);
-> @@ -618,13 +701,6 @@ static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, unsigned int state)
->  			"GMU firmware is not loaded\n"))
->  			return -ENOENT;
->  
-> -		/* Sanity check the size of the firmware that was loaded */
-> -		if (adreno_gpu->fw[ADRENO_FW_GMU]->size > 0x8000) {
-> -			DRM_DEV_ERROR(gmu->dev,
-> -				"GMU firmware is bigger than the available region\n");
-> -			return -EINVAL;
-> -		}
-> -
->  		/* Turn on register retention */
->  		gmu_write(gmu, REG_A6XX_GMU_GENERAL_7, 1);
->  
-> @@ -638,11 +714,9 @@ static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, unsigned int state)
->  				return ret;
->  		}
->  
-> -		image = (u32 *) adreno_gpu->fw[ADRENO_FW_GMU]->data;
-> -
-> -		for (i = 0; i < adreno_gpu->fw[ADRENO_FW_GMU]->size >> 2; i++)
-> -			gmu_write(gmu, REG_A6XX_GMU_CM3_ITCM_START + i,
-> -				image[i]);
-> +		ret = a6xx_gmu_fw_load(gmu);
-> +		if (ret)
-> +			return ret;
->  	}
->  
->  	gmu_write(gmu, REG_A6XX_GMU_CM3_FW_INIT_RESULT, 0);
-> @@ -775,6 +849,13 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
->  	status = gmu_read(gmu, REG_A6XX_GMU_GENERAL_7) == 1 ?
->  		GMU_WARM_BOOT : GMU_COLD_BOOT;
->  
-> +	/*
-> +	 * Warm boot path does not work on newer GPUs
-> +	 * Presumably this is because icache/dcache regions must be restored
-> +	 */
-> +	if (!gmu->legacy)
-> +		status = GMU_COLD_BOOT;
-> +
->  	ret = a6xx_gmu_fw_start(gmu, status);
->  	if (ret)
->  		goto out;
-> @@ -957,6 +1038,9 @@ static void a6xx_gmu_memory_free(struct a6xx_gmu *gmu)
->  {
->  	msm_gem_kernel_put(gmu->hfi.obj, gmu->aspace, false);
->  	msm_gem_kernel_put(gmu->debug.obj, gmu->aspace, false);
-> +	msm_gem_kernel_put(gmu->icache.obj, gmu->aspace, false);
-> +	msm_gem_kernel_put(gmu->dcache.obj, gmu->aspace, false);
-> +	msm_gem_kernel_put(gmu->dummy.obj, gmu->aspace, false);
->  
->  	gmu->aspace->mmu->funcs->detach(gmu->aspace->mmu);
->  	msm_gem_address_space_put(gmu->aspace);
-> @@ -974,12 +1058,14 @@ static int a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu, struct a6xx_gmu_bo *bo,
->  	size = PAGE_ALIGN(size);
->  	if (!iova) {
->  		/* no fixed address - use GMU's uncached range */
-> -		range_start = 0x60000000;
-> +		range_start = 0x60000000 + PAGE_SIZE; /* skip dummy page */
->  		range_end = 0x80000000;
->  	} else {
->  		/* range for fixed address */
->  		range_start = iova;
->  		range_end = iova + size;
-> +		/* use IOMMU_PRIV for icache/dcache */
-> +		flags |= MSM_BO_MAP_PRIV;
->  	}
->  
->  	bo->obj = msm_gem_new(dev, size, flags);
-> @@ -1320,7 +1406,27 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
->  	if (ret)
->  		goto err_put_device;
->  
-> -	if (!adreno_is_a640(adreno_gpu) && !adreno_is_a650(adreno_gpu)) {
-> +	/* Allocate memory for the GMU dummy page */
-> +	ret = a6xx_gmu_memory_alloc(gmu, &gmu->dummy, SZ_4K, 0x60000000);
-> +	if (ret)
-> +		goto err_memory;
-> +
-> +	if (adreno_is_a650(adreno_gpu)) {
-> +		ret = a6xx_gmu_memory_alloc(gmu, &gmu->icache,
-> +			SZ_16M - SZ_16K, 0x04000);
-> +		if (ret)
-> +			goto err_memory;
-> +	} else if (adreno_is_a640(adreno_gpu)) {
-> +		ret = a6xx_gmu_memory_alloc(gmu, &gmu->icache,
-> +			SZ_256K - SZ_16K, 0x04000);
-> +		if (ret)
-> +			goto err_memory;
-> +
-> +		ret = a6xx_gmu_memory_alloc(gmu, &gmu->dcache,
-> +			SZ_256K - SZ_16K, 0x44000);
-> +		if (ret)
-> +			goto err_memory;
-> +	} else {
->  		/* HFI v1, has sptprac */
->  		gmu->legacy = true;
->  
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> index 463e2d5f2bb9..c6d8c0d1f90b 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> @@ -57,6 +57,9 @@ struct a6xx_gmu {
->  
->  	struct a6xx_gmu_bo hfi;
->  	struct a6xx_gmu_bo debug;
-> +	struct a6xx_gmu_bo icache;
-> +	struct a6xx_gmu_bo dcache;
-> +	struct a6xx_gmu_bo dummy;
->  
->  	int nr_clocks;
->  	struct clk_bulk_data *clocks;
-> @@ -92,6 +95,13 @@ static inline void gmu_write(struct a6xx_gmu *gmu, u32 offset, u32 value)
->  	return msm_writel(value, gmu->mmio + (offset << 2));
->  }
->  
-> +static inline void
-> +gmu_write_bulk(struct a6xx_gmu *gmu, u32 offset, const u32 *data, u32 size)
-> +{
-> +	memcpy_toio(gmu->mmio + (offset << 2), data, size);
-> +	wmb();
-> +}
-> +
->  static inline void gmu_rmw(struct a6xx_gmu *gmu, u32 reg, u32 mask, u32 or)
->  {
->  	u32 val = gmu_read(gmu, reg);
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
-> index 1cc1c135236b..eb2cd41dae6e 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
-> @@ -101,6 +101,10 @@ static inline uint32_t A6XX_HFI_IRQ_OOB_MASK(uint32_t val)
->  
->  #define REG_A6XX_GMU_DCVS_RETURN				0x000023ff
->  
-> +#define REG_A6XX_GMU_ICACHE_CONFIG				0x00004c00
-> +
-> +#define REG_A6XX_GMU_DCACHE_CONFIG				0x00004c01
-> +
->  #define REG_A6XX_GMU_SYS_BUS_CONFIG				0x00004c0f
->  
->  #define REG_A6XX_GMU_CM3_SYSRESET				0x00005000
-> @@ -199,6 +203,8 @@ static inline uint32_t A6XX_GMU_GPU_NAP_CTRL_SID(uint32_t val)
->  
->  #define REG_A6XX_GPU_GMU_CX_GMU_RPMH_POWER_STATE		0x000050ec
->  
-> +#define REG_A6XX_GPU_GMU_CX_GMU_CX_FAL_INTF			0x000050f0
-> +
->  #define REG_A6XX_GMU_BOOT_KMD_LM_HANDSHAKE			0x000051f0
->  
->  #define REG_A6XX_GMU_LLM_GLM_SLEEP_CTRL				0x00005157
-> -- 
-> 2.26.1
-> 
+> That's be great! Thanks. Is patch 3 supposed to be merged in by Rob or by you?
+> I don't see one being in the Rob's repo. He might be waiting for you
+> acknowledgment or something.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Ah, it's about the MIPS GIC IRQchip bindings conversion. No questions tabout
+patch 3then. I'll ask Thomas about that patch status.
+
+-Sergey 
+
+> 
+> I'll send the updated patch 3 shortly today.
+> 
+> -Sergey
+> 
+> > 
+> > 
+> > -- 
+> > <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> > 
+> > Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> > <http://twitter.com/#!/linaroorg> Twitter |
+> > <http://www.linaro.org/linaro-blog/> Blog
