@@ -2,105 +2,145 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEE6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3C5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E37E2075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:46:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589834808;
-	bh=6/VqxVcF/eBMEiGqW5lrFQdbgd19nfTpUOXb5ymbNhM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WsdxB7etlmVEpfEX8+uwkkuc5u/brdJHeUI8ijGlohyinrZ99pdp/dXMuRBRYnSGL
-	 d0TWk12OzMgcDDYhOTDhZTauaUx0TB4sGgFIv+6LOqfV8R4NdGDxQ+lrXsOsNhF2Lg
-	 tGCLcTel7uIFmvQ3LeW3qWlYK8iuzstcO4e1QESE=
+	by mail.kernel.org (Postfix) with ESMTP id 122272075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:50:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="dgaHF1YO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgERUqr (ORCPT
+        id S1726763AbgERUuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:46:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbgERUqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:46:46 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D87B420756;
-        Mon, 18 May 2020 20:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589834806;
-        bh=6/VqxVcF/eBMEiGqW5lrFQdbgd19nfTpUOXb5ymbNhM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DsmPLLdF8iyoK3doOUyzI8Q/z79p2b5CVpiLKw71ZAflO+M0fF/EpmqH3+/AmZYmN
-         1MOfOMtfx589oKthcSfovPOYhC+VVIY2ur11x1zWmmNKkqZ0C/V5s6cGI4/FZitYmL
-         PGFbnH2QwjtaaHiu/WatJ4eLvtBA+XtC8KCuWcFY=
-Date:   Mon, 18 May 2020 13:46:43 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Steve deRosier <derosier@gmail.com>,
-        Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com,
-        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
-        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
-        daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        ath10k@lists.infradead.org
-Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
-Message-ID: <20200518134643.685fcb0e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <d81601b17065d7dc3b78bf8d68faf0fbfdb8c936.camel@sipsolutions.net>
-References: <20200515212846.1347-1-mcgrof@kernel.org>
-        <20200515212846.1347-13-mcgrof@kernel.org>
-        <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
-        <20200518165154.GH11244@42.do-not-panic.com>
-        <4ad0668d-2de9-11d7-c3a1-ad2aedd0c02d@candelatech.com>
-        <20200518170934.GJ11244@42.do-not-panic.com>
-        <abf22ef3-93cb-61a4-0af2-43feac6d7930@candelatech.com>
-        <20200518171801.GL11244@42.do-not-panic.com>
-        <CALLGbR+ht2V3m5f-aUbdwEMOvbsX8ebmzdWgX4jyWTbpHrXZ0Q@mail.gmail.com>
-        <20200518190930.GO11244@42.do-not-panic.com>
-        <e3d978c8fa6a4075f12e843548d41e2c8ab537d1.camel@sipsolutions.net>
-        <20200518132828.553159d9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <8d7a3bed242ac9d3ec55a4c97e008081230f1f6d.camel@sipsolutions.net>
-        <20200518133521.6052042e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <d81601b17065d7dc3b78bf8d68faf0fbfdb8c936.camel@sipsolutions.net>
+        Mon, 18 May 2020 16:50:01 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:21974 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgERUuB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 16:50:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589835000; x=1621371000;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=p0UV94Wfg4Hsk7gV7KfpL3Af6oDCzE1nvORnnmrZVjQ=;
+  b=dgaHF1YOhiuxFtp8aNO8V0tLzFVD3tfJoFsX/ZPZON0YmmT2bBhqw1In
+   z8OthfF4UnMRh2fIh2FmMU9Pm0UE/fDIja/Vc5lvaDRnTIlPtL1KDYR3Y
+   YnE8jMgB/u5iWdPoij1WT5ugIZvoZ+gX+xEdWECVeaxizEc0wun1pKpgm
+   vwytFw/aF9EaoLC3Zql9LyQC47nO44sMNidQjUA6gqmw8S/m9qBMsFOHC
+   0gBcOX95B9igx3HVFk3IefyU5Dr/VA52AYH2Rh4Z9+A+NNgmLvb9UmuQ2
+   N930LuiESJUsht4JaUZyW5z9wOfOS75Gnh4jgjPc/mWC0NflDLM3XlQwS
+   g==;
+IronPort-SDR: XK4Y3Cpypu+/lG6igc25WaLSMNHfNiJU8wcvIUd22VrAzGtyAbepys2YnUOt7tXVe9MRiUBOcN
+ 10TdXQlx0YZLYcDxmvF2U+wORsVU6HdcRsRjH4/aLQ0v72QTa1xldQ8H72kTJhbjWh03hvN+76
+ 2Hx89f/nIXp5W+0PeeA2W3KznJjcXS/uhVEEqLSnSuGkS8qYj6Kc1RaeeUsjWzyMxLiGukFEbf
+ IJ9ZAyEVbUHLyccLNsdjhz4vexVk6o8gXIFG1gQumVu+bogcb8869N3ULiUlBXuaaT4qAn4okY
+ /fM=
+X-IronPort-AV: E=Sophos;i="5.73,407,1583218800"; 
+   d="scan'208";a="77082876"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 May 2020 13:50:00 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 18 May 2020 13:49:59 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 18 May 2020 13:49:57 -0700
+References: <20200513141134.25819-1-lars.povlsen@microchip.com> <20200513141134.25819-2-lars.povlsen@microchip.com> <CACRpkdZa7OM3bqB+zRprEQ3M4m9hG3uPCoYxrdH_O=oxD8zi8Q@mail.gmail.com>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        SoC Team <soc@kernel.org>, "Rob Herring" <robh+dt@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for mscc,ocelot-sgpio
+In-Reply-To: <CACRpkdZa7OM3bqB+zRprEQ3M4m9hG3uPCoYxrdH_O=oxD8zi8Q@mail.gmail.com>
+Date:   Mon, 18 May 2020 22:49:56 +0200
+Message-ID: <87pnb1nf2j.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 22:41:48 +0200 Johannes Berg wrote:
-> On Mon, 2020-05-18 at 13:35 -0700, Jakub Kicinski wrote:
-> > It's intended to be a generic netlink channel for configuring devices.
-> > 
-> > All the firmware-related interfaces have no dependencies on netdevs,
-> > in fact that's one of the reasons we moved to devlink - we don't want
-> > to hold rtnl lock just for talking to device firmware.  
-> 
-> Sounds good :)
-> 
-> So I guess Luis just has to add some way in devlink to hook up devlink
-> health in a simple way to drivers, perhaps? I mean, many drivers won't
-> really want to use devlink for anything else, so I guess it should be as
-> simple as the API that Luis proposed ("firmware crashed for this struct
-> device"), if nothing more interesting is done with devlink?
-> 
-> Dunno. But anyway sounds like it should somehow integrate there rather
-> than the way this patchset proposed?
 
-Right, that'd be great. Simple API to register a devlink instance with
-whatever number of reporters the device would need. I'm happy to help.
+Linus Walleij writes:
+
+> On Wed, May 13, 2020 at 4:11 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+>> This adds DT bindings for the Microsemi SGPIO controller, bindings
+>> mscc,ocelot-sgpio and mscc,luton-sgpio.
+>>
+>> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>
+>> +  microchip,sgpio-ports:
+>> +    description: This is a 32-bit bitmask, configuring whether a
+>> +      particular port in the controller is enabled or not. This allows
+>> +      unused ports to be removed from the bitstream and reduce latency.
+>> +    $ref: "/schemas/types.yaml#/definitions/uint32"
+>
+> I don't know about this.
+>
+> You are saying this pin controller can have up to 32 GPIO "ports"
+> (also known as banks).
+>
+> Why can't you just represent each such port as a separate GPIO
+> node:
+>
+> pinctrl@nnn {
+>     gpio@0 {
+>         ....
+>     };
+>     gpio@1 {
+>         ....
+>     };
+>     ....
+>     gpio@31 {
+>         ....
+>     };
+> };
+>
+> Then if some of them are unused just set it to status = "disabled";
+>
+> This also makes your Linux driver simpler because each GPIO port
+> just becomes a set of 32bit registers and you can use
+> select GPIO_GENERIC and bgpio_init() and save a whole
+> slew of standard stock code.
+>
+
+Linus, thank you for your input.
+
+The controller handles an array of 32*n signals, where n >= 1 && n <=
+4.
+
+The problem with the above approach is that the ports are disabled
+*port*-wise - so they remove all (upto) 4 bits. That would be across the
+banks.
+
+You could of course have the "implied" semantics that a disabled port at
+any bit position disabled all (bit positions for the same port).
+
+But I don't know if this would be easier to understand, DT-wise.
+
+What do you think...?
+
+> Yours,
+> Linus Walleij
+
+-- 
+Lars Povlsen,
+Microchip
