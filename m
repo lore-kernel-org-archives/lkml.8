@@ -2,99 +2,104 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F325C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C829320758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:39:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="wMsHcUTN"
+	by mail.kernel.org (Postfix) with ESMTP id 5E293207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589820069;
+	bh=jRbpGL6pqSTPo5yiSCfss3nZLr8Rmj8NTRgHNTYXRHU=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=LuUBzezh9whG+xaTeoEUT/b5a4GwQpNHxqr6FzYsTn7f487PeAG5DWrvAqxfhvXtY
+	 l0Ty22sB1Couw0RKPAYNzv89gGMTR3zrEBal+9SgEf44K0USODcnqBRFJNNI+haE7h
+	 tD3YgMjT71qDGN2aSVaCb3QZuwD8bOUjBbAPCsbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgERQjy (ORCPT
+        id S1728139AbgERQlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:39:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgERQjx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:39:53 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFCCC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:39:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uxUQwkSwUxkH3FLsgT0bH6KrkNI2haRpYKPWpkc6Sm0=; b=wMsHcUTNr7cX72TtW/aR6d3qj
-        sihvtTWT36DNfWX5S+rgkZi5x2OmVjlYn09iqSnfgWCgsXKj9Q90D1n9zohsc8wWkYi2ZOb1NaDXL
-        UkTtzBicoI80s3K3Jx8i/1JLt3v/Kpa5GurNrhh91TLfXG1/ihRNzVkNVLbj8rUUwdv5gnbwhYKn5
-        4tYOOUYw+n0G81FnfFRb5peB1d+Fmbo36CCdfnz4o2JUbw+1t5DGmLX9Csfila13MnaorGmSwpnBC
-        HPfO3Hc/KS7dvjpA6piFC6LOOb64J3M85unRJS3HR8LACMiDhSJWH77FBZd4VnNtUleK2czCaUMog
-        mGDYYZFHQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:59612)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jainm-0002s0-FB; Mon, 18 May 2020 17:39:42 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jaink-0004qr-NU; Mon, 18 May 2020 17:39:40 +0100
-Date:   Mon, 18 May 2020 17:39:40 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Fredrik Strupe <fredrik@strupe.net>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PING] [PATCH v2] arm: ptrace: Fix mask for thumb breakpoint hook
-Message-ID: <20200518163940.GW1551@shell.armlinux.org.uk>
-References: <20200413173841.29651-1-fredrik@strupe.net>
- <d7381f90-f597-2a9c-4387-5714b41e02e6@strupe.net>
- <20200518141858.GV1551@shell.armlinux.org.uk>
- <0afefde9-f121-c88c-2ceb-7c02f7561979@strupe.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0afefde9-f121-c88c-2ceb-7c02f7561979@strupe.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 18 May 2020 12:41:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726958AbgERQlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 12:41:08 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F08B4207D8;
+        Mon, 18 May 2020 16:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589820067;
+        bh=jRbpGL6pqSTPo5yiSCfss3nZLr8Rmj8NTRgHNTYXRHU=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=2LIzKnkEMKZvLrbEbUuIWtqnqk64hhSkpe0BUbMyiZR9SvmbOkGkGnZCAA2hScimr
+         o/wDOKDVMRlCbALLIUoVB+3SUnXEc6eAOzKlICpHnx/w0dJ9mADeSA2ESYcg2B3LUM
+         Kzt66ANlAtSjIVLQCjr1YycUeDHF+P/CjzGOrMGw=
+Date:   Mon, 18 May 2020 17:41:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     Takashi Iwai <tiwai@suse.com>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+In-Reply-To: <20200518043913.40646-1-akshu.agrawal@amd.com>
+References: <20200518043913.40646-1-akshu.agrawal@amd.com>
+Subject: Re: [PATCH] ASoC: amd: raven: Make the driver name consistent across files
+Message-Id: <158982005877.28736.13490689793680227152.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 05:02:27PM +0200, Fredrik Strupe wrote:
-> On 18.05.2020 16:18, Russell King - ARM Linux admin wrote:
-> > On Mon, May 18, 2020 at 03:12:06PM +0200, Fredrik Strupe wrote:
-> >> call_undef_hook() in traps.c applies the same instr_mask for both 16-bit
-> >> and 32-bit thumb instructions. If instr_mask then is only 16 bits wide
-> >> (0xffff as opposed to 0xffffffff), the first half-word of 32-bit thumb
-> >> instructions will be masked out. This makes the function match 32-bit
-> >> thumb instructions where the second half-word is equal to instr_val,
-> >> regardless of the first half-word.
-> >>
-> >> The result in this case is that all undefined 32-bit thumb instructions
-> >> with the second half-word equal to de01 (udf #1) work as breakpoints
-> >> and will raise a SIGTRAP instead of a SIGILL, instead of just the one
-> >> intended 16-bit instruction. An example of such an instruction is
-> >> eaa0b650, which is unallocated according to Arm ARM and should raise a
-> >> SIGILL, but instead raises a SIGTRAP.
-> >
-> > How can 0xeaa0b650 match 0xde01 when masked with 0xffff ?
-> >
+On Mon, 18 May 2020 10:09:05 +0530, Akshu Agrawal wrote:
+> This fixes the issue of driver not getting auto loaded with
+> MODULE_ALIAS.
 > 
-> Sorry, that is a typo; it should say 0xeaa0de01.
-> 
-> For reference, this is similar to the problem with SETEND emulation that
-> was fixed in commit fc2266011acc in the mainline kernel
-> (or as discussed here: https://lkml.org/lkml/2020/4/8/274).
+> With this patch:
+> $find /sys/devices -name modalias -print0 | xargs -0 grep -i acp3x
+> /sys/devices/pci0000:00/0000:00:08.1/0000:03:00.5/acp3x_i2s_playcap.2/
+> modalias:platform:acp3x_i2s_playcap
+> /sys/devices/pci0000:00/0000:00:08.1/0000:03:00.5/acp3x_i2s_playcap.0/
+> modalias:platform:acp3x_i2s_playcap
+> /sys/devices/pci0000:00/0000:00:08.1/0000:03:00.5/acp3x_rv_i2s_dma.0/
+> modalias:platform:acp3x_rv_i2s_dma
+> /sys/devices/pci0000:00/0000:00:08.1/0000:03:00.5/acp3x_i2s_playcap.1/
+> modalias:platform:acp3x_i2s_playcap
 
-Thanks for the clarification.  Please update the patch description and
-put it in the patch system, thanks.
+Applied to
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
+
+Thanks!
+
+[1/1] ASoC: amd: raven: Make the driver name consistent across files
+      commit: f0a77d2b0e1ccad7e4086094f67d138e8c3050a2
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
