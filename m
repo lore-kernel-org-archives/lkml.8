@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98254C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E11CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7123320715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3788C2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825041;
-	bh=lnTYBwmGRW6zLfxTDwTanKR3Xyf16ZPytlVLC9crZzU=;
+	s=default; t=1589825044;
+	bh=Id37jZ/rUFD+T0Ow/Ky5h9rjLEn8tPMh9o/bRa7KCOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=udOINN2KWa1BNwbUIZlmEEVpn+r3kt57rYR1WuW2g/S5+BNIhCEIXBeHNin9MLmaQ
-	 0PhGBVfxpSIt7Z7t5jpVVGn8A3+ishKfA70iJiWotYPvoquNp/7j9rFaJ5w7UPBvpi
-	 Y39BSduMpaKxmoXDgS1+SJktHD6vu5H3g/nxkdxQ=
+	b=P9le/6sPBBCEWQmjji95XLFp9l1K8cgnm5/yrBUluRT5Ynp1X3pCdvH6fSuLunJZQ
+	 EXUkvukr4bazr/uarVJbSJDXl7AZZNmzPpCTspdLo6P4Vcz1s9X4Vjy5lXm1apHf6Z
+	 VwJ1plnBvSDerzDRry87tVB5ZuyvzxtxDRSz1ya8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732720AbgERSEA (ORCPT
+        id S1732727AbgERSED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:04:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49724 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:04:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732707AbgERSDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:03:55 -0400
+        id S1732701AbgERSDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:03:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDCC720826;
-        Mon, 18 May 2020 18:03:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F4B3207D3;
+        Mon, 18 May 2020 18:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825035;
-        bh=lnTYBwmGRW6zLfxTDwTanKR3Xyf16ZPytlVLC9crZzU=;
+        s=default; t=1589825033;
+        bh=Id37jZ/rUFD+T0Ow/Ky5h9rjLEn8tPMh9o/bRa7KCOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cpb1+lF3c9Dpe82WfR/12czlyETwuE81RiluzBWyvXZ2gN2UxZ54i6V/3hjDdmlrI
-         8dDbLZaqZTQNiJ5tDEApwJc6fosuAUNBXVkGnVax/tr5Stlin06h97JBxvtF3+i6y5
-         WO17pOfOxmg/ULfo6GmXh2B9Bpu3enW1yF+1QDvg=
+        b=wEqphfhSS0FnOreU3Wob0PEJbTCAsbNgGlX+7pnpSMdnypPxEQygQjB4ZMw/iHVt5
+         mdalxNfvtP/5wMn4ocNzOrhFYRUUC9rMBnhCFdZ5izBEzu95158Pv2CVMWGnZhtSH/
+         KlHl7Fe7yRLGgcSnaMrECT+ptqQV/d8dZBi/BRzs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Xiong Zhang <xiong.y.zhang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 103/194] arm64: fix the flush_icache_range arguments in machine_kexec
-Date:   Mon, 18 May 2020 19:36:33 +0200
-Message-Id: <20200518173540.492399985@linuxfoundation.org>
+Subject: [PATCH 5.6 102/194] drm/i915/gvt: Fix kernel oops for 3-level ppgtt guest
+Date:   Mon, 18 May 2020 19:36:32 +0200
+Message-Id: <20200518173540.417177322@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,33 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Zhenyu Wang <zhenyuw@linux.intel.com>
 
-[ Upstream commit d51c214541c5154dda3037289ee895ea3ded5ebd ]
+[ Upstream commit 72a7a9925e2beea09b109dffb3384c9bf920d9da ]
 
-The second argument is the end "pointer", not the length.
+As i915 won't allocate extra PDP for current default PML4 table,
+so for 3-level ppgtt guest, we would hit kernel pointer access
+failure on extra PDP pointers. So this trys to bypass that now.
+It won't impact real shadow PPGTT setup, so guest context still
+works.
 
-Fixes: d28f6df1305a ("arm64/kexec: Add core kexec support")
-Cc: <stable@vger.kernel.org> # 4.8.x-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+This is verified on 4.15 guest kernel with i915.enable_ppgtt=1
+to force on old aliasing ppgtt behavior.
+
+Fixes: 4f15665ccbba ("drm/i915: Add ppgtt to GVT GEM context")
+Reviewed-by: Xiong Zhang <xiong.y.zhang@intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200506095918.124913-1-zhenyuw@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/machine_kexec.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/i915/gvt/scheduler.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 8e9c924423b4e..a0b144cfaea71 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -177,6 +177,7 @@ void machine_kexec(struct kimage *kimage)
- 	 * the offline CPUs. Therefore, we must use the __* variant here.
- 	 */
- 	__flush_icache_range((uintptr_t)reboot_code_buffer,
-+			     (uintptr_t)reboot_code_buffer +
- 			     arm64_relocate_new_kernel_size);
- 
- 	/* Flush the kimage list and its buffers. */
+diff --git a/drivers/gpu/drm/i915/gvt/scheduler.c b/drivers/gpu/drm/i915/gvt/scheduler.c
+index 685d1e04a5ff6..709ad181bc94a 100644
+--- a/drivers/gpu/drm/i915/gvt/scheduler.c
++++ b/drivers/gpu/drm/i915/gvt/scheduler.c
+@@ -375,7 +375,11 @@ static void set_context_ppgtt_from_shadow(struct intel_vgpu_workload *workload,
+ 		for (i = 0; i < GVT_RING_CTX_NR_PDPS; i++) {
+ 			struct i915_page_directory * const pd =
+ 				i915_pd_entry(ppgtt->pd, i);
+-
++			/* skip now as current i915 ppgtt alloc won't allocate
++			   top level pdp for non 4-level table, won't impact
++			   shadow ppgtt. */
++			if (!pd)
++				break;
+ 			px_dma(pd) = mm->ppgtt_mm.shadow_pdps[i];
+ 		}
+ 	}
 -- 
 2.20.1
 
