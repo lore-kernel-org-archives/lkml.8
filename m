@@ -2,99 +2,90 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42624C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5066420643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E32B20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:14:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DRn/c/Y/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgERMNy convert rfc822-to-8bit (ORCPT
+        id S1727046AbgERMOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:13:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbgERMNv (ORCPT
+        Mon, 18 May 2020 08:14:41 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44144 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgERMOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:13:51 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD63C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 05:13:51 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jaeeT-000112-1Z; Mon, 18 May 2020 14:13:49 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 215E4100606; Mon, 18 May 2020 14:13:48 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: Missing CLOCK_BOOTTIME_RAW?
-In-Reply-To: <20200518113522.y6sj7ypunsu6pi3s@pali>
-References: <20200508213122.f7srcd2gnduamtvs@pali> <87zhah4evs.fsf@nanos.tec.linutronix.de> <20200518111103.sj73h5j3r75zv2wp@pali> <87ftbxxz55.fsf@nanos.tec.linutronix.de> <20200518113522.y6sj7ypunsu6pi3s@pali>
-Date:   Mon, 18 May 2020 14:13:48 +0200
-Message-ID: <87d071xwxv.fsf@nanos.tec.linutronix.de>
+        Mon, 18 May 2020 08:14:40 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04ICEcv7003007;
+        Mon, 18 May 2020 07:14:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589804078;
+        bh=19wKfYL2K+Jv8klgnAl+ycEXDoL29eF4u3UVJLxwajc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=DRn/c/Y/a5UvpW+C8iJcNoBRH38lPa97/NOrDirQk/qywerat2dBqNHe0HEQ/ebd5
+         cw1Ofb3nt+aObN0aZm6Rxpx7QdnzGUp+R2Y/OuVp3vRVnqDZDo/0Tq0gfJPAKtm/9+
+         N4kyJ2GFzoHebz3HyT+0kqUd+6sv/upZ43fKIfJQ=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04ICEc2W125821;
+        Mon, 18 May 2020 07:14:38 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 18
+ May 2020 07:14:38 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 18 May 2020 07:14:38 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04ICEaDi089857;
+        Mon, 18 May 2020 07:14:36 -0500
+Subject: Re: [PATCH 0/3] phy: broadcom: Constify structs
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>, <vkoul@kernel.org>,
+        <alcooperx@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <bcm-kernel-feedback-list@broadcom.com>
+References: <20200516120441.7627-1-rikard.falkeborn@gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <e14a36fc-c37a-203c-2312-c2798ffbe00b@ti.com>
+Date:   Mon, 18 May 2020 17:44:35 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200516120441.7627-1-rikard.falkeborn@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pali Rohár <pali@kernel.org> writes:
-> On Monday 18 May 2020 13:26:14 Thomas Gleixner wrote:
->> System clock shifted by one hour? You mean DST change?
->
-> Yes, clock was shifted by one hour.
->
->> If chronyd
->> adjusts that by smoothing the frequency, that's just broken and really
->> not the kernel's problem.
->
-> And what other can time synchronization daemon does?
 
-DST switching is a matter of switching time zones and has absolutely
-nothing to do with frequencies. In fact smearing DST is a blantant
-violation of the timekeeping guarantees.
 
-I've never heard about that before. All I know is that chronyd can be
-configured to smear leap seconds, but that doesn't take 6 hours and does
-not screw with the time accuracy in the range of 20 minutes.
+On 5/16/2020 5:34 PM, Rikard Falkeborn wrote:
+> A small series adding const to a few static structs. Each patch can be
+> applied separately.
 
-> Well, I think this is not related to chronyd. Any userspace application
-> may call adjtime(). It is not privilege that only chronyd is allowed to
-> use that syscall.
+merged, thanks!
 
-Of course not, but the kernel relies on that application behaving
-sanely. If it does not then the time stamps you are complaining about
-are the least of your worries.
-
-> I agree that this is not a kernel problem.
->
-> But I'm asking, how my userspace application can measure time difference?
-> As I wrote CLOCK_MONITONIC is not suitable as it is affected by those
-> NTP adjustments and that is why I thought that CLOCK_MONITONIC_RAW is
-> better as it is not affected by these NTP problems.
->
-> But CLOCK_MONITONIC_RAW has a problem that is stopped during system
-> sleep and that is why I thought that CLOCK_BOOTTIME_RAW should be there.
-
-And how do you make CLOCK_BOOTTIME_RAW accurate? The clock hardware
-can stop accross suspend/resume and the kernel then uses RTC or some
-other hardware to inject the sleep time. That injection is not and
-cannot be correct vs. the raw clock.
-
-So exposing CLOCK_BOOTTIME_RAW would just provide yet another illusion
-of time.
-
-Thanks,
-
-        tglx
+-Kishon
+> 
+> Rikard Falkeborn (3):
+>   phy: phy-bcm-ns2-usbdrd: Constify phy_ops
+>   phy: sr-usb: Constify phy_ops
+>   phy: phy-brcm-usb: Constify static structs
+> 
+>  drivers/phy/broadcom/phy-bcm-ns2-usbdrd.c |  2 +-
+>  drivers/phy/broadcom/phy-bcm-sr-usb.c     |  2 +-
+>  drivers/phy/broadcom/phy-brcm-usb.c       | 16 ++++++++--------
+>  3 files changed, 10 insertions(+), 10 deletions(-)
+> 
