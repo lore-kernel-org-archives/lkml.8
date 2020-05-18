@@ -2,196 +2,139 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4395C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE79207ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589819091;
-	bh=0eSPPEAjCLPYnEGtXgUooyUuIprRtFcZBFdRn/4jYLQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e7ffW8bevXq6/bdJ7DG0nM3IcI9rUUFxZ/Rf4bhSk9RtYtLiRmrhZcMBh2aiMnJ/f
-	 cyAGZunpVCjG63R8CHfHWV6WWHc5npmB6l5SSaU0TMTVFX9ZizEeBqeWHRg4Uu0Ugs
-	 8CmB2KUDeNxcOSSjFQRt51CDnCzcxV5lMzlbbIog=
+	by mail.kernel.org (Postfix) with ESMTP id A5DE120671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:25:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mk9a0EE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgERQYu (ORCPT
+        id S1728376AbgERQZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:24:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727036AbgERQYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:24:50 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD6F0207E8;
-        Mon, 18 May 2020 16:24:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589819089;
-        bh=0eSPPEAjCLPYnEGtXgUooyUuIprRtFcZBFdRn/4jYLQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LoNdkvwveHUdyHP1L3AV83UVBLbVdEmZxeGSfYdeWCDicAFHCe4Fm83h6/JS7S6Zw
-         gMONJdKZ1dMMz8bm/NLp/2WT6/PfemyDpxqtc8GJ3EhVNTUI9JA2e6QYD8FA5BmL5C
-         gilZu51VgeIcUkapOn4xFQvEn1Ka0Q9AX3tdAms0=
-Date:   Mon, 18 May 2020 09:24:47 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/9] fs/ext4: Disallow encryption if inode is DAX
-Message-ID: <20200518162447.GA954@sol.localdomain>
-References: <20200513054324.2138483-1-ira.weiny@intel.com>
- <20200513054324.2138483-4-ira.weiny@intel.com>
- <20200516020253.GG1009@sol.localdomain>
- <20200518050315.GA3025231@iweiny-DESK2.sc.intel.com>
+        Mon, 18 May 2020 12:25:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbgERQZX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 12:25:23 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE94C05BD09;
+        Mon, 18 May 2020 09:25:23 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id be9so4810706edb.2;
+        Mon, 18 May 2020 09:25:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=C9o4dW1opf6PK9dDJU+olx6LivIhnF/LUajcX/auTKM=;
+        b=mk9a0EE30LQPszKX5ot6/btd4Lvv+bgSkXNddm9G/X4xPGhTcYfGn9iToM4kQPb/aU
+         bCDe3NfgCGMurJGVDAnSpPBLaTOXEd/bT2NFKE/v4MuX2/c2VqGk+EFAfp7T2o2JYqMA
+         zsJwIKhZtvZ7nq9HWgQl35cR3+Ew4PlBMq6VU8M0Ii/nrjhC4DWDeqVzm5wmoA02AZHy
+         aHi0JKC+zVh29NEUQL+FyqnIzfROsHeli2W1Lc2Lop/O2qTCY5exQhzQXiRDVaqnRNKF
+         nC62vqaYbx5FkbjCkN6dXtoAEhJxwRuhHYF2cCsn1WJ6lfpVyExb4l1U+fIwjAg1W4AN
+         GfMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=C9o4dW1opf6PK9dDJU+olx6LivIhnF/LUajcX/auTKM=;
+        b=M1zNNeqSHzaJHlA8Ygw1NXYyDMeK8r2DA7jEs2ykoCWjJ0BimjqxJrHO8P/+HWuxuI
+         4AulfHf379MAOT2zt2/B8mqdsjOZpa88XgOHvrvtTI87cYhk31REH7uhPtdDESizq9bW
+         KS6n+8cmH+oqu2Nu9eu0RcpPfINX48Rf6btD/5NyLDUZnAMtXJQfQMXv5anx8pgsOH+y
+         30dYhUQJ53itOhS6tEWmgXI4krT/1vfwfcJ8fis5TgTUxwDQN03+lrvik0k/+VN3EzQG
+         bj4gbxZj1+O4BCcOTYxy3A8wV7RaiU4WpYo3PekQWNMeb3U3QW1mUk/5s9hNCrI9v57E
+         nJfw==
+X-Gm-Message-State: AOAM533rI4c+hclhXg4kVpSFlJDT/+DbhrTYxLwnenoX4K9gbNoDvKC9
+        E3adgO174xa5kDtjjcWE0ejpe3/8E5gZytcLFo0=
+X-Google-Smtp-Source: ABdhPJwYjoPZytoziRsU8pzisjXxK0MKS7CxJZXMVVTHEUikl7yW7jJlqgckmGbHBkbra1XtkUxs8t43eY3HhJcYOUQ=
+X-Received: by 2002:a05:6402:1a29:: with SMTP id be9mr7821163edb.70.1589819121915;
+ Mon, 18 May 2020 09:25:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518050315.GA3025231@iweiny-DESK2.sc.intel.com>
+References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
+ <1589453659-27581-6-git-send-email-smasetty@codeaurora.org> <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com>
+In-Reply-To: <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 18 May 2020 09:25:41 -0700
+Message-ID: <CAF6AEGtoNwUGX-r7QytGn5hSU-VD4RJZyhcb3WdgAgAFR5BK4A@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH 5/6] drm: msm: a6xx: use dev_pm_opp_set_bw to
+ set DDR bandwidth
+To:     Sharat Masetty <smasetty@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 10:03:15PM -0700, Ira Weiny wrote:
-> On Fri, May 15, 2020 at 07:02:53PM -0700, Eric Biggers wrote:
-> > On Tue, May 12, 2020 at 10:43:18PM -0700, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > Encryption and DAX are incompatible.  Changing the DAX mode due to a
-> > > change in Encryption mode is wrong without a corresponding
-> > > address_space_operations update.
-> > > 
-> > > Make the 2 options mutually exclusive by returning an error if DAX was
-> > > set first.
-> > > 
-> > > Furthermore, clarify the documentation of the exclusivity and how that
-> > > will work.
-> > > 
-> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > ---
-> > > Changes:
-> > > 	remove WARN_ON_ONCE
-> > > 	Add documentation to the encrypt doc WRT DAX
-> > > ---
-> > >  Documentation/filesystems/fscrypt.rst |  4 +++-
-> > >  fs/ext4/super.c                       | 10 +---------
-> > >  2 files changed, 4 insertions(+), 10 deletions(-)
-> > > 
-> > > diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
-> > > index aa072112cfff..1475b8d52fef 100644
-> > > --- a/Documentation/filesystems/fscrypt.rst
-> > > +++ b/Documentation/filesystems/fscrypt.rst
-> > > @@ -1038,7 +1038,9 @@ astute users may notice some differences in behavior:
-> > >  - The ext4 filesystem does not support data journaling with encrypted
-> > >    regular files.  It will fall back to ordered data mode instead.
-> > >  
-> > > -- DAX (Direct Access) is not supported on encrypted files.
-> > > +- DAX (Direct Access) is not supported on encrypted files.  Attempts to enable
-> > > +  DAX on an encrypted file will fail.  Mount options will _not_ enable DAX on
-> > > +  encrypted files.
-> > >  
-> > >  - The st_size of an encrypted symlink will not necessarily give the
-> > >    length of the symlink target as required by POSIX.  It will actually
-> > > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> > > index bf5fcb477f66..9873ab27e3fa 100644
-> > > --- a/fs/ext4/super.c
-> > > +++ b/fs/ext4/super.c
-> > > @@ -1320,7 +1320,7 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
-> > >  	if (inode->i_ino == EXT4_ROOT_INO)
-> > >  		return -EPERM;
-> > >  
-> > > -	if (WARN_ON_ONCE(IS_DAX(inode) && i_size_read(inode)))
-> > > +	if (IS_DAX(inode))
-> > >  		return -EINVAL;
-> > >  
-> > >  	res = ext4_convert_inline_data(inode);
-> > > @@ -1344,10 +1344,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
-> > >  			ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
-> > >  			ext4_clear_inode_state(inode,
-> > >  					EXT4_STATE_MAY_INLINE_DATA);
-> > > -			/*
-> > > -			 * Update inode->i_flags - S_ENCRYPTED will be enabled,
-> > > -			 * S_DAX may be disabled
-> > > -			 */
-> > >  			ext4_set_inode_flags(inode);
-> > >  		}
-> > >  		return res;
-> > > @@ -1371,10 +1367,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
-> > >  				    ctx, len, 0);
-> > >  	if (!res) {
-> > >  		ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
-> > > -		/*
-> > > -		 * Update inode->i_flags - S_ENCRYPTED will be enabled,
-> > > -		 * S_DAX may be disabled
-> > > -		 */
-> > >  		ext4_set_inode_flags(inode);
-> > >  		res = ext4_mark_inode_dirty(handle, inode);
-> > >  		if (res)
-> > 
-> > I'm confused by the ext4_set_context() change.
-> > 
-> > ext4_set_context() is only called when FS_IOC_SET_ENCRYPTION_POLICY sets an
-> > encryption policy on an empty directory, *or* when a new inode (regular, dir, or
-> > symlink) is created in an encrypted directory (thus inheriting encryption from
-> > its parent).
-> 
-> I don't see the check which prevents FS_IOC_SET_ENCRYPTION_POLICY on a file?
+On Mon, May 18, 2020 at 7:23 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> On Thu, May 14, 2020 at 04:24:18PM +0530, Sharat Masetty wrote:
+> > This patches replaces the previously used static DDR vote and uses
+> > dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
+> > GPU frequency.
+> >
+> > Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> > ---
+> >  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 6 +-----
+> >  1 file changed, 1 insertion(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> > index 2d8124b..79433d3 100644
+> > --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> > @@ -141,11 +141,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+> >
+> >       gmu->freq = gmu->gpu_freqs[perf_index];
+> >
+> > -     /*
+> > -      * Eventually we will want to scale the path vote with the frequency but
+> > -      * for now leave it at max so that the performance is nominal.
+> > -      */
+> > -     icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+> > +     dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
+> >  }
+>
+> This adds an implicit requirement that all targets need bandwidth settings
+> defined in the OPP or they won't get a bus vote at all. I would prefer that
+> there be an default escape valve but if not you'll need to add
+> bandwidth values for the sdm845 OPP that target doesn't regress.
+>
 
-It's in fscrypt_ioctl_set_policy().
+it looks like we could maybe do something like:
 
-> 
-> On inode creation, encryption will always usurp S_DAX...
-> 
-> > 
-> > So when is it reachable when IS_DAX()?  Is the issue that the DAX flag can now
-> > be set on directories?  The commit message doesn't seem to be talking about
-> > directories.  Is the behavior we want is that on an (empty) directory with the
-> > DAX flag set, FS_IOC_SET_ENCRYPTION_POLICY should fail with EINVAL?
-> 
-> We would want that but AFIAK S_DAX is never set on directories.  Perhaps this
-> is another place where S_DAX needs to be changed to the new inode flag?
-> However, this would not be appropriate at this point in the series.  At this
-> point in the series S_DAX is still set based on the mount option and I'm 99%
-> sure that only happens on regular files, not directories.  So I'm confused now.
+  ret = dev_pm_opp_set_bw(...);
+  if (ret) {
+      dev_warn_once(dev, "no bandwidth settings");
+      icc_set_bw(...);
+  }
 
-S_DAX is only set by ext4_set_inode_flags() which only sets it on regular files.
+?
 
-> 
-> This is, AFAICS, not going to affect correctness.  It will only be confusing
-> because the user will be able to set both DAX and encryption on the directory
-> but files there will only see encryption being used...  :-(
-> 
-> Assuming you are correct about this call path only being valid on directories.
-> It seems this IS_DAX() needs to be changed to check for EXT4_DAX_FL in
-> "fs/ext4: Introduce DAX inode flag"?  Then at that point we can prevent DAX and
-> encryption on a directory.  ...  and at this point IS_DAX() could be removed at
-> this point in the series???
+BR,
+-R
 
-I haven't read the whole series, but if you are indeed trying to prevent a
-directory with EXT4_DAX_FL from being encrypted, then it does look like you'd
-need to check EXT4_DAX_FL, not S_DAX.
-
-The other question is what should happen when a file is created in an encrypted
-directory when the filesystem is mounted with -o dax.  Actually, I think I
-missed something there.  Currently (based on reading the code) the DAX flag will
-get set first, and then ext4_set_context() will see IS_DAX() && i_size == 0 and
-clear the DAX flag when setting the encrypt flag.  So, the i_size == 0 check is
-actually needed.  Your patch (AFAICS) just makes creating an encrypted file fail
-when '-o dax'.  Is that intended?  If not, maybe you should change it to check
-S_NEW instead of i_size == 0 to make it clearer?
-
-- Eric
+> Jordan
+>
+> >  unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
+> > --
+> > 2.7.4
+> >
+>
+> --
+> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
