@@ -2,101 +2,108 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A8FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CC2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19F4220657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826611;
-	bh=RfkX7dMrDN71LREFdUGr1HWXv6KFGxNUxXuzOej2pdg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y0u920q4wTB8taDaObphXwmeCfJdYbFXsG7sKKQTVY4q2/tSn5Wyjg+r3GdcDiqzX
-	 KzQBLlmngQ1XTo1XbTzmfJgHag74ZbWj7VKnMaQFeJAwiBVjFwjYOLrH/+Bv7q7sqa
-	 jl2k3iT37L4cC/D1258b3zU4PhB4MwpiHI5PQBME=
+	by mail.kernel.org (Postfix) with ESMTP id 9E67E207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BbisGLjf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388051AbgERSaK (ORCPT
+        id S2388055AbgERSaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:30:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729228AbgERRlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:41:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 196D920657;
-        Mon, 18 May 2020 17:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823672;
-        bh=RfkX7dMrDN71LREFdUGr1HWXv6KFGxNUxXuzOej2pdg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=syjtT1JeLuhp0njdGEFQ6IZGYVbOdRswrxKiDCOBvw47bAUqmy+qYdz0AgR9Wb1cj
-         yyxHZjzXFAYOEEJ4kqbDkehjPgy7c2bM227jrl5nHGjrCQnTchuf7SoDeoLb9FieIq
-         yXXHLOtRwFO1D99/DWoJfJD5DTgqXbttIH2WkX7E=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 4.4 76/86] ARM: dts: imx27-phytec-phycard-s-rdk: Fix the I2C1 pinctrl entries
-Date:   Mon, 18 May 2020 19:36:47 +0200
-Message-Id: <20200518173505.951987286@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
-References: <20200518173450.254571947@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 18 May 2020 14:30:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729240AbgERSaH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:30:07 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44465C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:30:07 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id b8so5222419pgi.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:30:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=66BENZkKJdscrKXw0ODwzFcr1IXdRBxhdFQSFMOWssw=;
+        b=BbisGLjf3FNDMjbQcmYHxKKASqShM9Q38fh+ZAm2fNnRRbEZE92f5+zgkfkWsT6lzP
+         Y6UYWsK2IzFEBWi0s8uR39LnFO7d6cgo+9iao9K8JC9jHGO0f5tSauFodWvkfSjYOpST
+         bff0D8UDAWveJEHNLUFT1N2rh+cvyKIZNzXVg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=66BENZkKJdscrKXw0ODwzFcr1IXdRBxhdFQSFMOWssw=;
+        b=Ye0+2SQ8+n95Yju5FnwufOkjddCK8bOgaE8jBDaiOeaDcbBki0sjXW/fA5+l2PbQRT
+         DJZ07jKjTchwjBt0xqzBSgcygZCsk9qy4vcMxLn4Lfw317K5F3n6BylWQDhKUtvcIBuf
+         p0RpfrDzfun5XdE6xYONMyjoxMo62yGLNpTPJ5ipJVsRJVZOzZfHQGefdiZgdIpOpwTX
+         SJLDwNQ0h3HF8PPdqZWI8ZW8JdJ8f9GKVj06eR9s2L33Q/88cVkfMgZ7WX1kWrMEjIA3
+         +C7DXegSUXJXjIAqfr58+EzOFqIQsCTdA1svI5dKdXEDH7Yrjn8Kymri4MDGIwhC6mJl
+         nqHQ==
+X-Gm-Message-State: AOAM530QvbPbLrv5lBnsvRTUO0Zi56RAo56zr5eOpmRClpmwkseuzZ8T
+        rPwngNpoMd2SoV/4nlW5IPzU/RgP/rg=
+X-Google-Smtp-Source: ABdhPJzck1NyP/ujlthN1xTgEpPDHl6SqkzLwawIouGGPku0X6jcedoebsr/OYB2YsfNZ8LwxDgm/w==
+X-Received: by 2002:a65:40c5:: with SMTP id u5mr15791324pgp.425.1589826606534;
+        Mon, 18 May 2020 11:30:06 -0700 (PDT)
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com. [209.85.214.180])
+        by smtp.gmail.com with ESMTPSA id s102sm198758pjb.57.2020.05.18.11.30.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 11:30:06 -0700 (PDT)
+Received: by mail-pl1-f180.google.com with SMTP id f15so4580059plr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:30:06 -0700 (PDT)
+X-Received: by 2002:a67:e952:: with SMTP id p18mr5212098vso.73.1589826235405;
+ Mon, 18 May 2020 11:23:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200504213225.1.I21646c7c37ff63f52ae6cdccc9bc829fbc3d9424@changeid>
+ <CAF6AEGs0qpzgGW8rYdmFqKW=QBbRxxzCWjO0LXsbm6hA0AJNyQ@mail.gmail.com>
+In-Reply-To: <CAF6AEGs0qpzgGW8rYdmFqKW=QBbRxxzCWjO0LXsbm6hA0AJNyQ@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 18 May 2020 11:23:44 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WQ2HtnWFyhachm9QyhkXVhMzRoiR=rWbmukmVYciL3Gw@mail.gmail.com>
+Message-ID: <CAD=FV=WQ2HtnWFyhachm9QyhkXVhMzRoiR=rWbmukmVYciL3Gw@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: Fix off-by-one error in clock choice
+To:     Rob Clark <robdclark@gmail.com>, Sam Ravnborg <sam@ravnborg.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+Sam,
 
-commit 0caf34350a25907515d929a9c77b9b206aac6d1e upstream.
+On Fri, May 15, 2020 at 2:49 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Mon, May 4, 2020 at 9:32 PM Douglas Anderson <dianders@chromium.org> wrote:
+> >
+> > If the rate in our table is _equal_ to the rate we want then it's OK
+> > to pick it.  It doesn't need to be greater than the one we want.
+> >
+> > Fixes: a095f15c00e2 ("drm/bridge: add support for sn65dsi86 bridge driver")
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>
+> Reviewed-by: Rob Clark <robdclark@gmail.com>
 
-The I2C2 pins are already used and the following errors are seen:
+...and I think this is the last of the patches I stupidly didn't CC
+you on that's ready to go.
 
-imx27-pinctrl 10015000.iomuxc: pin MX27_PAD_I2C2_SDA already requested by 10012000.i2c; cannot claim for 1001d000.i2c
-imx27-pinctrl 10015000.iomuxc: pin-69 (1001d000.i2c) status -22
-imx27-pinctrl 10015000.iomuxc: could not request pin 69 (MX27_PAD_I2C2_SDA) from group i2c2grp  on device 10015000.iomuxc
-imx-i2c 1001d000.i2c: Error applying setting, reverse things back
-imx-i2c: probe of 1001d000.i2c failed with error -22
-
-Fix it by adding the correct I2C1 IOMUX entries for the pinctrl_i2c1 group.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 61664d0b432a ("ARM: dts: imx27 phyCARD-S pinctrl")
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
-+++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
-@@ -81,8 +81,8 @@
- 	imx27-phycard-s-rdk {
- 		pinctrl_i2c1: i2c1grp {
- 			fsl,pins = <
--				MX27_PAD_I2C2_SDA__I2C2_SDA 0x0
--				MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
-+				MX27_PAD_I2C_DATA__I2C_DATA 0x0
-+				MX27_PAD_I2C_CLK__I2C_CLK 0x0
- 			>;
- 		};
- 
-
-
+-Doug
