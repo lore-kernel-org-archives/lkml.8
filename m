@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF651C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB68C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA52B20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA7A20826
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824582;
-	bh=ciG8w8cKxIJSo6VsQnYjbuVR9juBWq8ObAuDUIa5xhs=;
+	s=default; t=1589824585;
+	bh=qPiPvnOGJzhRxWccUafyKknE9pRDCl2DUrjtZb6VY4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ktpTRs7NQXsm1hhlw5MOcYtxxtzHq2W8+vIehBdnovm8/W7GKm64uXX2//ldgGMJk
-	 vj4Xt2GYLNQsLvzkB/3Pby2eS6niRNqiIL7IVrEulwoYaEOBL8ouTMmjPNlTGINmWQ
-	 lC3y3eGT7mm/L+ZtKoO52/C/y8F6Furg/UoGiCO4=
+	b=UHODiMC9LS6mchXGU55dVjwnFDHtZnzm05zdxePPybdq7WgOivXIG2CtvEGHCqMHG
+	 voGMaVOf8zOX0wE1DfnJTlE/L3AE3X12yE44k0rT6bDp4fVPewgLateGxqB2BQz3Y+
+	 IkE3ZjYTXAAzca0P3IdVcJFc7Jhdigx9/RWOsCmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731619AbgERR4V (ORCPT
+        id S1731629AbgERR4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:56:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33968 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731064AbgERR4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:56:13 -0400
+        id S1730827AbgERR4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:56:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B0FA20715;
-        Mon, 18 May 2020 17:56:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B412207C4;
+        Mon, 18 May 2020 17:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824572;
-        bh=ciG8w8cKxIJSo6VsQnYjbuVR9juBWq8ObAuDUIa5xhs=;
+        s=default; t=1589824579;
+        bh=qPiPvnOGJzhRxWccUafyKknE9pRDCl2DUrjtZb6VY4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vaOymP2lL4jeOjWs3JUPBPncKo60RJL4hyH0FAvcB9kL9mVlRBgr24rYhTWZE5Noe
-         8ZN8FE3Awzb8aVjnlTmtk52JrkCE5JajC7CDma8hiQpeSXceHo5uCMvw2Qk9Uc1+y8
-         9aGUKbsr3jXbGMYnsPA+wvAQp2YfIVhC6w/tybrI=
+        b=jubR3iFZ18W8xBdy2fBzQMKcLKN+5w9nfi0Iba2DsN6xaT6EFgvLIXNSirOMWpBoe
+         a+ADFBYDBE8lV/+HdVKJmj5viyWXrWOHlq2yfb9dwJ4POwQ79dWH1EntFsSe7fVStq
+         jx7pLf1gb6W25PYafnGykmVqo9tgApX66fDHEgsE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Martin KaFai Lau <kafai@fb.com>,
+        stable@vger.kernel.org, Grzegorz Kowal <custos.mentis@gmail.com>,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 065/147] bpf, sockmap: bpf_tcp_ingress needs to subtract bytes from sg.size
-Date:   Mon, 18 May 2020 19:36:28 +0200
-Message-Id: <20200518173522.152559254@linuxfoundation.org>
+Subject: [PATCH 5.4 067/147] mmc: sdhci-pci-gli: Fix can not access GL9750 after reboot from Windows 10
+Date:   Mon, 18 May 2020 19:36:30 +0200
+Message-Id: <20200518173522.359872335@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -62,78 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Fastabend <john.fastabend@gmail.com>
+From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 
-[ Upstream commit 81aabbb9fb7b4b1efd073b62f0505d3adad442f3 ]
+[ Upstream commit b56ff195c317ad28c05d354aeecbb9995b8e08c1 ]
 
-In bpf_tcp_ingress we used apply_bytes to subtract bytes from sg.size
-which is used to track total bytes in a message. But this is not
-correct because apply_bytes is itself modified in the main loop doing
-the mem_charge.
+Need to clear some bits in a vendor-defined register after reboot from
+Windows 10.
 
-Then at the end of this we have sg.size incorrectly set and out of
-sync with actual sk values. Then we can get a splat if we try to
-cork the data later and again try to redirect the msg to ingress. To
-fix instead of trying to track msg.size do the easy thing and include
-it as part of the sk_msg_xfer logic so that when the msg is moved the
-sg.size is always correct.
-
-To reproduce the below users will need ingress + cork and hit an
-error path that will then try to 'free' the skmsg.
-
-[  173.699981] BUG: KASAN: null-ptr-deref in sk_msg_free_elem+0xdd/0x120
-[  173.699987] Read of size 8 at addr 0000000000000008 by task test_sockmap/5317
-
-[  173.700000] CPU: 2 PID: 5317 Comm: test_sockmap Tainted: G          I       5.7.0-rc1+ #43
-[  173.700005] Hardware name: Dell Inc. Precision 5820 Tower/002KVM, BIOS 1.9.2 01/24/2019
-[  173.700009] Call Trace:
-[  173.700021]  dump_stack+0x8e/0xcb
-[  173.700029]  ? sk_msg_free_elem+0xdd/0x120
-[  173.700034]  ? sk_msg_free_elem+0xdd/0x120
-[  173.700042]  __kasan_report+0x102/0x15f
-[  173.700052]  ? sk_msg_free_elem+0xdd/0x120
-[  173.700060]  kasan_report+0x32/0x50
-[  173.700070]  sk_msg_free_elem+0xdd/0x120
-[  173.700080]  __sk_msg_free+0x87/0x150
-[  173.700094]  tcp_bpf_send_verdict+0x179/0x4f0
-[  173.700109]  tcp_bpf_sendpage+0x3ce/0x5d0
-
-Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Link: https://lore.kernel.org/bpf/158861290407.14306.5327773422227552482.stgit@john-Precision-5820-Tower
+Fixes: e51df6ce668a ("mmc: host: sdhci-pci: Add Genesys Logic GL975x support")
+Reported-by: Grzegorz Kowal <custos.mentis@gmail.com>
+Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Tested-by: Grzegorz Kowal <custos.mentis@gmail.com>
+Link: https://lore.kernel.org/r/20200504063957.6638-1-benchuanggli@gmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/skmsg.h | 1 +
- net/ipv4/tcp_bpf.c    | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-pci-gli.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
-index 7eb6a8754f19a..a3adbe593505d 100644
---- a/include/linux/skmsg.h
-+++ b/include/linux/skmsg.h
-@@ -186,6 +186,7 @@ static inline void sk_msg_xfer(struct sk_msg *dst, struct sk_msg *src,
- 	dst->sg.data[which] = src->sg.data[which];
- 	dst->sg.data[which].length  = size;
- 	dst->sg.size		   += size;
-+	src->sg.size		   -= size;
- 	src->sg.data[which].length -= size;
- 	src->sg.data[which].offset += size;
- }
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index 8a01428f80c1c..19bd10e6ab830 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -200,7 +200,6 @@ static int bpf_tcp_ingress(struct sock *sk, struct sk_psock *psock,
+diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
+index ff39d81a5742c..fd76aa672e020 100644
+--- a/drivers/mmc/host/sdhci-pci-gli.c
++++ b/drivers/mmc/host/sdhci-pci-gli.c
+@@ -26,6 +26,9 @@
+ #define   SDHCI_GLI_9750_DRIVING_2    GENMASK(27, 26)
+ #define   GLI_9750_DRIVING_1_VALUE    0xFFF
+ #define   GLI_9750_DRIVING_2_VALUE    0x3
++#define   SDHCI_GLI_9750_SEL_1        BIT(29)
++#define   SDHCI_GLI_9750_SEL_2        BIT(31)
++#define   SDHCI_GLI_9750_ALL_RST      (BIT(24)|BIT(25)|BIT(28)|BIT(30))
  
- 	if (!ret) {
- 		msg->sg.start = i;
--		msg->sg.size -= apply_bytes;
- 		sk_psock_queue_msg(psock, tmp);
- 		sk_psock_data_ready(sk, psock);
- 	} else {
+ #define SDHCI_GLI_9750_PLL	      0x864
+ #define   SDHCI_GLI_9750_PLL_TX2_INV    BIT(23)
+@@ -122,6 +125,8 @@ static void gli_set_9750(struct sdhci_host *host)
+ 				    GLI_9750_DRIVING_1_VALUE);
+ 	driving_value |= FIELD_PREP(SDHCI_GLI_9750_DRIVING_2,
+ 				    GLI_9750_DRIVING_2_VALUE);
++	driving_value &= ~(SDHCI_GLI_9750_SEL_1|SDHCI_GLI_9750_SEL_2|SDHCI_GLI_9750_ALL_RST);
++	driving_value |= SDHCI_GLI_9750_SEL_2;
+ 	sdhci_writel(host, driving_value, SDHCI_GLI_9750_DRIVING);
+ 
+ 	sw_ctrl_value &= ~SDHCI_GLI_9750_SW_CTRL_4;
 -- 
 2.20.1
 
