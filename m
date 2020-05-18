@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22B77207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC27207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824605;
-	bh=s5dKiON6sWwu8xyTCzaIeRFcTC0uj7VFpLEAgChKdtk=;
+	s=default; t=1589824608;
+	bh=MKIyheyNGViV/MgpHcPvLYxIi6TdIFMAtGgTC0w2VSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n7jp8XSC364gZuuy1WAxoLm27kwvPx/RI2HRzJb6+onRFlCCAFPrqwiSSgiYaNHqy
-	 I72TnOWgJR+5OssHki5BjdLjIZB4/pIUMRnWeGRkOc9qngNr45CdP+DBtuXpOHYrzU
-	 2Q8Pf1d6OwDZtm1FVTbi35wt+Akucg4Oh4QQY13s=
+	b=MoL8k48f36IlyWT6UHH3XaJpj5nJhQfPTlqh4Jn9g/jpTy5fZNcHYEdgRRZ/wI5OM
+	 u+3SGrMdrwMQ4Bvq8+GfU+5kfE76zvp2Vx+OqikVIcEJGhd59S5nsn1+WBXHAiH3Oz
+	 Q5HFZJubSNQ1fY6h8gZS9hOHDc6PvxIYGbeajaaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731675AbgERR4o (ORCPT
+        id S1731683AbgERR4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:56:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34722 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:56:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731662AbgERR4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:56:41 -0400
+        id S1730672AbgERR4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:56:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 951AD20674;
-        Mon, 18 May 2020 17:56:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05E4B20715;
+        Mon, 18 May 2020 17:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824600;
-        bh=s5dKiON6sWwu8xyTCzaIeRFcTC0uj7VFpLEAgChKdtk=;
+        s=default; t=1589824602;
+        bh=MKIyheyNGViV/MgpHcPvLYxIi6TdIFMAtGgTC0w2VSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=twqQYhmIQTcewPapN4H5SgKYXo7LJYNdddEtO5jgv5TuQadJSNLf2eNzFq3YghYeK
-         AFCgJemwORzD0jO2YSoboQRFfM+xkS6kDjDo/Ds7jiHZKJXHzGtqGblHBsPQ8lnhgY
-         4YBs47Nm0QYIKa8o47+GJA9iFOTrJlyEAz2Oc4H8=
+        b=ASSkrb5wi/g8lMhbgXywFaSmmuOLSuxkCSfXq6EurrEIJ5fY7D9NHiGJcNzliBWR5
+         cijE6R/KLLcRgB7rAYjwRPi3MsQ59fKeILt9MkSpkoaf4u5v5d4q695EV1eQ5Ps2fa
+         MpNmmlDhrW2Pjv5Bk5QO7OUo/38+/RM/IVbDEnrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 075/147] nfs: fscache: use timespec64 in inode auxdata
-Date:   Mon, 18 May 2020 19:36:38 +0200
-Message-Id: <20200518173523.209431838@linuxfoundation.org>
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 040/147] dmaengine: mmp_tdma: Reset channel error on release
+Date:   Mon, 18 May 2020 19:36:03 +0200
+Message-Id: <20200518173519.070973682@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -59,113 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit 6e31ded6895adfca97211118cc9b72236e8f6d53 ]
+[ Upstream commit 0c89446379218698189a47871336cb30286a7197 ]
 
-nfs currently behaves differently on 32-bit and 64-bit kernels regarding
-the on-disk format of nfs_fscache_inode_auxdata.
+When a channel configuration fails, the status of the channel is set to
+DEV_ERROR so that an attempt to submit it fails. However, this status
+sticks until the heat end of the universe, making it impossible to
+recover from the error.
 
-That format should really be the same on any kernel, and we should avoid
-the 'timespec' type in order to remove that from the kernel later on.
+Let's reset it when the channel is released so that further use of the
+channel with correct configuration is not impacted.
 
-Using plain 'timespec64' would not be good here, since that includes
-implied padding and would possibly leak kernel stack data to the on-disk
-format on 32-bit architectures.
-
-struct __kernel_timespec would work as a replacement, but open-coding
-the two struct members in nfs_fscache_inode_auxdata makes it more
-obvious what's going on here, and keeps the current format for 64-bit
-architectures.
-
-Cc: David Howells <dhowells@redhat.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Link: https://lore.kernel.org/r/20200419164912.670973-5-lkundrak@v3.sk
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/fscache-index.c |  6 ++++--
- fs/nfs/fscache.c       | 18 ++++++++++++------
- fs/nfs/fscache.h       |  8 +++++---
- 3 files changed, 21 insertions(+), 11 deletions(-)
+ drivers/dma/mmp_tdma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfs/fscache-index.c b/fs/nfs/fscache-index.c
-index 15f271401dcca..573b1da9342c1 100644
---- a/fs/nfs/fscache-index.c
-+++ b/fs/nfs/fscache-index.c
-@@ -84,8 +84,10 @@ enum fscache_checkaux nfs_fscache_inode_check_aux(void *cookie_netfs_data,
- 		return FSCACHE_CHECKAUX_OBSOLETE;
+diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
+index 4d5b987e4841a..89d90c456c0ce 100644
+--- a/drivers/dma/mmp_tdma.c
++++ b/drivers/dma/mmp_tdma.c
+@@ -363,6 +363,8 @@ static void mmp_tdma_free_descriptor(struct mmp_tdma_chan *tdmac)
+ 		gen_pool_free(gpool, (unsigned long)tdmac->desc_arr,
+ 				size);
+ 	tdmac->desc_arr = NULL;
++	if (tdmac->status == DMA_ERROR)
++		tdmac->status = DMA_COMPLETE;
  
- 	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
--	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
-+	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
-+	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
-+	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
-+	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
- 
- 	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
- 		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index 3184063322d48..d0c629f97789e 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -241,8 +241,10 @@ void nfs_fscache_init_inode(struct inode *inode)
- 		return;
- 
- 	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
--	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
-+	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
-+	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
-+	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
-+	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
- 
- 	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
- 		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
-@@ -266,8 +268,10 @@ void nfs_fscache_clear_inode(struct inode *inode)
- 	dfprintk(FSCACHE, "NFS: clear cookie (0x%p/0x%p)\n", nfsi, cookie);
- 
- 	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
--	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
-+	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
-+	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
-+	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
-+	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
- 	fscache_relinquish_cookie(cookie, &auxdata, false);
- 	nfsi->fscache = NULL;
+ 	return;
  }
-@@ -308,8 +312,10 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
- 		return;
- 
- 	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
--	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
-+	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
-+	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
-+	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
-+	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
- 
- 	if (inode_is_open_for_write(inode)) {
- 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);
-diff --git a/fs/nfs/fscache.h b/fs/nfs/fscache.h
-index ad041cfbf9ec0..6754c8607230b 100644
---- a/fs/nfs/fscache.h
-+++ b/fs/nfs/fscache.h
-@@ -62,9 +62,11 @@ struct nfs_fscache_key {
-  * cache object.
-  */
- struct nfs_fscache_inode_auxdata {
--	struct timespec	mtime;
--	struct timespec	ctime;
--	u64		change_attr;
-+	s64	mtime_sec;
-+	s64	mtime_nsec;
-+	s64	ctime_sec;
-+	s64	ctime_nsec;
-+	u64	change_attr;
- };
- 
- /*
 -- 
 2.20.1
 
