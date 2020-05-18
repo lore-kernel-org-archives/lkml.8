@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2092520715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D6D20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825548;
-	bh=3cejQLR6s/MHvNqorv02wywqqGCjS/IN8aTKYh+lnJE=;
+	s=default; t=1589825551;
+	bh=lVcD8Iglm5L3dUlMBoeQCYLzsmbVnShCoMIN3gjOd98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1DFHSOmhRNLwomOWmw8pdL/DZLhS0MYyhmXBOQVVb03OriRGPZ0YsFthTA7B9+iax
-	 Yypzo/8iYg0za7OMJRgAqzbHq1RLNHalaxngPR7kXGI/5Q6JSB2+Odz/GK/CptnK1A
-	 JHrZUNUjNZM8WEJPhmSazkmr+dATVErvKxG3wuGI=
+	b=hpSPxQVlEukfPJT+hPJ3p09qw/KdUPMKNYEvw26lsYLBHpvev9wPni9UO+Tu0q2Pq
+	 dBd7y6l9zZ/9UpQGwCwAY+nvaGIZa7pUlx9AdX9MgRJy6ICJT/aC6CT722lXatT2+M
+	 TUEICuIkrGWh4htaqpjy8k3S5DeoRDmfW5janj8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387593AbgERSM1 (ORCPT
+        id S1732662AbgERSDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:12:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49278 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:03:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732675AbgERSDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:03:38 -0400
+        id S1732636AbgERSDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:03:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C102D207F5;
-        Mon, 18 May 2020 18:03:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D93A2207F5;
+        Mon, 18 May 2020 18:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825018;
-        bh=3cejQLR6s/MHvNqorv02wywqqGCjS/IN8aTKYh+lnJE=;
+        s=default; t=1589824998;
+        bh=lVcD8Iglm5L3dUlMBoeQCYLzsmbVnShCoMIN3gjOd98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mxi7zRfgwwuXLFvEeTdu3gdvjaKJBgNPOdkUFLIwLH8jqkE35qQjv2SfZZvXs+bXW
-         kIMu0m84bFXJ9nLZ0njjkaOLqdX/0kg4jYrHNW2m8F+xAq3bR6tVMANOeNmHWoeDBr
-         ZlCSKGl4jZtMKzb6d5nhFnc7ABdk7bgf2Kt8W9I4=
+        b=elUqaXpWf1IdypHceBIspo+L+fUJLKmrHh+GOHnj9TN5sFswNbd6X7jCF3WSjna3W
+         TPRlT2SdOCnDDFZv6w2+NbvhyHR/waLoP3IqT/hUpR53JoIThG8wsA5yahKyVtIclY
+         9rm6UiJ3oR+JgGo7wa0NKx7gcJ/rU2GmligDi+Kg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>,
-        David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 097/194] NFS: Fix fscache super_cookie index_key from changing after umount
-Date:   Mon, 18 May 2020 19:36:27 +0200
-Message-Id: <20200518173540.126001999@linuxfoundation.org>
+Subject: [PATCH 5.6 089/194] mmc: alcor: Fix a resource leak in the error path for ->probe()
+Date:   Mon, 18 May 2020 19:36:19 +0200
+Message-Id: <20200518173539.059404611@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,69 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Wysochanski <dwysocha@redhat.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit d9bfced1fbcb35b28d8fbed4e785d2807055ed2b ]
+[ Upstream commit 7c277dd2b0ff6a16f1732a66c2c52a29f067163e ]
 
-Commit 402cb8dda949 ("fscache: Attach the index key and aux data to
-the cookie") added the index_key and index_key_len parameters to
-fscache_acquire_cookie(), and updated the callers in the NFS client.
-One of the callers was inside nfs_fscache_get_super_cookie()
-and was changed to use the full struct nfs_fscache_key as the
-index_key.  However, a couple members of this structure contain
-pointers and thus will change each time the same NFS share is
-remounted.  Since index_key is used for fscache_cookie->key_hash
-and this subsequently is used to compare cookies, the effectiveness
-of fscache with NFS is reduced to the point at which a umount
-occurs.   Any subsequent remount of the same share will cause a
-unique NFS super_block index_key and key_hash to be generated for
-the same data, rendering any prior fscache data unable to be
-found.  A simple reproducer demonstrates the problem.
+If devm_request_threaded_irq() fails, the allocated struct mmc_host needs
+to be freed via calling mmc_free_host(), so let's do that.
 
-1. Mount share with 'fsc', create a file, drop page cache
-systemctl start cachefilesd
-mount -o vers=3,fsc 127.0.0.1:/export /mnt
-dd if=/dev/zero of=/mnt/file1.bin bs=4096 count=1
-echo 3 > /proc/sys/vm/drop_caches
-
-2. Read file into page cache and fscache, then unmount
-dd if=/mnt/file1.bin of=/dev/null bs=4096 count=1
-umount /mnt
-
-3. Remount and re-read which should come from fscache
-mount -o vers=3,fsc 127.0.0.1:/export /mnt
-echo 3 > /proc/sys/vm/drop_caches
-dd if=/mnt/file1.bin of=/dev/null bs=4096 count=1
-
-4. Check for READ ops in mountstats - there should be none
-grep READ: /proc/self/mountstats
-
-Looking at the history and the removed function, nfs_super_get_key(),
-we should only use nfs_fscache_key.key plus any uniquifier, for
-the fscache index_key.
-
-Fixes: 402cb8dda949 ("fscache: Attach the index key and aux data to the cookie")
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: c5413ad815a6 ("mmc: add new Alcor Micro Cardreader SD/MMC driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/20200426202355.43055-1-christophe.jaillet@wanadoo.fr
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/fscache.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/mmc/host/alcor.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index 1abf126c2df45..8eff1fd806b1c 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -188,7 +188,8 @@ void nfs_fscache_get_super_cookie(struct super_block *sb, const char *uniq, int
- 	/* create a cache index for looking up filehandles */
- 	nfss->fscache = fscache_acquire_cookie(nfss->nfs_client->fscache,
- 					       &nfs_fscache_super_index_def,
--					       key, sizeof(*key) + ulen,
-+					       &key->key,
-+					       sizeof(key->key) + ulen,
- 					       NULL, 0,
- 					       nfss, 0, true);
- 	dfprintk(FSCACHE, "NFS: get superblock cookie (0x%p/0x%p)\n",
+diff --git a/drivers/mmc/host/alcor.c b/drivers/mmc/host/alcor.c
+index 1aee485d56d4c..026ca9194ce5b 100644
+--- a/drivers/mmc/host/alcor.c
++++ b/drivers/mmc/host/alcor.c
+@@ -1104,7 +1104,7 @@ static int alcor_pci_sdmmc_drv_probe(struct platform_device *pdev)
+ 
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to get irq for data line\n");
+-		return ret;
++		goto free_host;
+ 	}
+ 
+ 	mutex_init(&host->cmd_mutex);
+@@ -1116,6 +1116,10 @@ static int alcor_pci_sdmmc_drv_probe(struct platform_device *pdev)
+ 	dev_set_drvdata(&pdev->dev, host);
+ 	mmc_add_host(mmc);
+ 	return 0;
++
++free_host:
++	mmc_free_host(mmc);
++	return ret;
+ }
+ 
+ static int alcor_pci_sdmmc_drv_remove(struct platform_device *pdev)
 -- 
 2.20.1
 
