@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B858C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFD4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3308720853
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F34D208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825166;
-	bh=p5LJN2BL+X8BsZ7djLn9xQKn454AbYO/tQ1JYNNEhuA=;
+	s=default; t=1589825175;
+	bh=FgZLxAPgb7DLaY9FCyci9lQV4m8kCQb9DxJA1gfHYXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iPX8eCGvYfe62bi3IGOCWMC5PAz8LYSfTCz3ypYuvKqtOxgmtQTdk5jmW6fvkRaF2
-	 o6Boj+mj9ORSg0+Ykh2LADZ0Qyd2+SYuV9BSK4pNMvh6TaPZpuzvBCKB210fxPwopo
-	 J8myzePI5btldHX1sSJTF+VLzrAztFwqid8+M+sk=
+	b=A5pLFz4stEY58Eku96tp1e2FMy4ZxECORaw/lZo9pz5LrYhfkq7P01BlN8naSMcmQ
+	 vGMxB1mvPjM+tiOF5AT9Ddh5dXMX1xlXGINVw73ULa7pZwJq7tAnwYAxGk32JWvHP8
+	 QOad3fhtwzwjxUQ/jI8hKru5W+5K9/4mK7yWVDaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733105AbgERSGF (ORCPT
+        id S1733134AbgERSGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:06:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53870 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:06:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733094AbgERSGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:06:00 -0400
+        id S1733104AbgERSGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:06:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EC8D20671;
-        Mon, 18 May 2020 18:05:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5CEA20671;
+        Mon, 18 May 2020 18:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825160;
-        bh=p5LJN2BL+X8BsZ7djLn9xQKn454AbYO/tQ1JYNNEhuA=;
+        s=default; t=1589825165;
+        bh=FgZLxAPgb7DLaY9FCyci9lQV4m8kCQb9DxJA1gfHYXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zu5ZZ1Tmj9xukLgjTq+lSvaPkwMJD4tsvKeJBl0Vj4s+yyRqujyvqxhrOjyD4k8aN
-         GnNarVwtWEhLEKUo85BTgID/v/8/plbe/6HuEn3XnX7x1Ih6T51YlZY/VSfI5MTICr
-         GLeOlD2EmC2gayW48vF2XaeSmMncI1DOIWthBKsk=
+        b=jqcBcTHO2+E+bHJEDvYMipN+bI7QsGu8B18jqlkWoPR5o2MGRtw2plGy2mIr7evU3
+         1OWkpND9DExi/v8L9K9qHghWqGDFcJZ4yWRugxWpuqo8x5KeNp//+HN8gPs4rmy/pg
+         LQIvRiBhXkYkalhTvmrBHqwR2YA4aOyliBeiFXBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom St Denis <tom.stdenis@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.6 152/194] drm/amd/amdgpu: add raven1 part to the gfxoff quirk list
-Date:   Mon, 18 May 2020 19:37:22 +0200
-Message-Id: <20200518173543.902086334@linuxfoundation.org>
+        stable@vger.kernel.org, Aurelien Jarno <aurelien@aurel32.net>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.6 154/194] powerpc/vdso32: Fallback on getres syscall when clock is unknown
+Date:   Mon, 18 May 2020 19:37:24 +0200
+Message-Id: <20200518173544.061842259@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,35 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom St Denis <tom.stdenis@amd.com>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-commit 975f543e7522e17b8a4bf34d7daeac44819aee5a upstream.
+commit e963b7a28b2bf2416304e1a15df967fcf662aff5 upstream.
 
-On my raven1 system (rev c6) with VBIOS 113-RAVEN-114 GFXOFF is
-not stable (resulting in large block tiling noise in some applications).
+There are other clocks than the standard ones, for instance
+per process clocks. Therefore, being above the last standard clock
+doesn't mean it is a bad clock. So, fallback to syscall instead
+of returning -EINVAL inconditionaly.
 
-Disabling GFXOFF via the quirk list fixes the problems for me.
-
-Signed-off-by: Tom St Denis <tom.stdenis@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Fixes: e33ffc956b08 ("powerpc/vdso32: implement clock_getres entirely")
+Cc: stable@vger.kernel.org # v5.6+
+Reported-by: Aurelien Jarno <aurelien@aurel32.net>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Tested-by: Aurelien Jarno <aurelien@aurel32.net>
+Link: https://lore.kernel.org/r/7316a9e2c0c2517923eb4b0411c4a08d15e675a4.1589017281.git.christophe.leroy@csgroup.eu
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/kernel/vdso32/gettimeofday.S |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -1177,6 +1177,8 @@ static const struct amdgpu_gfxoff_quirk
- 	{ 0x1002, 0x15dd, 0x1002, 0x15dd, 0xc8 },
- 	/* https://bugzilla.kernel.org/show_bug.cgi?id=207171 */
- 	{ 0x1002, 0x15dd, 0x103c, 0x83e7, 0xd3 },
-+	/* GFXOFF is unstable on C6 parts with a VBIOS 113-RAVEN-114 */
-+	{ 0x1002, 0x15dd, 0x1002, 0x15dd, 0xc6 },
- 	{ 0, 0, 0, 0, 0 },
- };
+--- a/arch/powerpc/kernel/vdso32/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+@@ -218,11 +218,11 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
+ 	blr
  
+ 	/*
+-	 * invalid clock
++	 * syscall fallback
+ 	 */
+ 99:
+-	li	r3, EINVAL
+-	crset	so
++	li	r0,__NR_clock_getres
++	sc
+ 	blr
+   .cfi_endproc
+ V_FUNCTION_END(__kernel_clock_getres)
 
 
