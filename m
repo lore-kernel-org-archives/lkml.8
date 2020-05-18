@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DECC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6567EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCAA720671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41BE4207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825535;
-	bh=DAqFb2at6gzjG5aQG5qxZP41nD3lsCEFZqbFHAwqhUc=;
+	s=default; t=1589825539;
+	bh=mlbO5mkj8hkwmhIlSyW83zoCEI0BCQ9bqtui9lyhn44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AoGHloKNfiJJ2tuw/0CBIZGH24lfyTi55rL/HEGi3kjgpSrwWlKARs/yWRA2vNt9e
-	 YK+on4xV5aCohAlQ8P/dFqIyfNieCjmoaRHTqSJ6Z7+VSzJDIBKATPLpvqAHXX6FW5
-	 W116zkzrBcciG7s8HkdYPsyQJhut4TBHVStSz3Ko=
+	b=2TNCLeiMijx/H96oobqqF3yk/0Hw7GImrFPm6HaOpuWiSR6svtNZ1BDAe6oqt+s6L
+	 eyPc7Q3AL+SUqUJDnJ5c/hCljDHzHhdsIKoTXM+QmBtbZe7yddoyZl1w7AIE6ykin0
+	 dc8Kc5z3y75lOAoK1YBFbZyzYL37IN2aVka3Au2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387577AbgERSMP (ORCPT
+        id S2387582AbgERSMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49528 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:12:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732695AbgERSDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:03:48 -0400
+        id S1732691AbgERSDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:03:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A82DB20873;
-        Mon, 18 May 2020 18:03:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41A8F2083E;
+        Mon, 18 May 2020 18:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825028;
-        bh=DAqFb2at6gzjG5aQG5qxZP41nD3lsCEFZqbFHAwqhUc=;
+        s=default; t=1589825025;
+        bh=mlbO5mkj8hkwmhIlSyW83zoCEI0BCQ9bqtui9lyhn44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XayakXkVRD04H0TkwmXY9m9/WoSnZ6JCar3ti+DOzp6F9NWGLN3Gsydyyf3oEJSNZ
-         sAKZegGox7ft+qY38knPQrVnQtbZXhl2QmP2E85QnZ/ffx1T6unkYu+yK8j9S/Ptwc
-         /MGb7EJBUoHvqkC0wU+b0YT8DKbicJfDrjgw+1/E=
+        b=cd5rAHFeboe26Gn9iRxSatHL2mwQL+G86YheF8/R8Qgr1SFsyNounPi0tWpSUlWH/
+         sl8p2z5yenX7M3gFNavvnScHABoluzSGjErknqzGlpI80Vwzr6Suyh9MC9b/XXHnfM
+         QMXKA1uzODhMSFAv+Bo9CThAPA2E6zzQdjumJJCw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>,
+        David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 100/194] hwmon: (drivetemp) Fix SCT support if SCT data tables are not supported
-Date:   Mon, 18 May 2020 19:36:30 +0200
-Message-Id: <20200518173540.286482871@linuxfoundation.org>
+Subject: [PATCH 5.6 099/194] NFSv4: Fix fscache cookie aux_data to ensure change_attr is included
+Date:   Mon, 18 May 2020 19:36:29 +0200
+Message-Id: <20200518173540.233891908@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,34 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Dave Wysochanski <dwysocha@redhat.com>
 
-[ Upstream commit bcb543cc3d4034da3f3fd8bc4296a26dfeadf47d ]
+[ Upstream commit 50eaa652b54df1e2b48dc398d9e6114c9ed080eb ]
 
-If SCT is supported but SCT data tables are not, the driver unnecessarily
-tries to fall back to SMART. Use SCT without data tables instead in this
-situation.
+Commit 402cb8dda949 ("fscache: Attach the index key and aux data to
+the cookie") added the aux_data and aux_data_len to parameters to
+fscache_acquire_cookie(), and updated the callers in the NFS client.
+In the process it modified the aux_data to include the change_attr,
+but missed adding change_attr to a couple places where aux_data was
+used.  Specifically, when opening a file and the change_attr is not
+added, the following attempt to lookup an object will fail inside
+cachefiles_check_object_xattr() = -116 due to
+nfs_fscache_inode_check_aux() failing memcmp on auxdata and returning
+FSCACHE_CHECKAUX_OBSOLETE.
 
-Fixes: 5b46903d8bf3 ("hwmon: Driver for disk and solid state drives with temperature sensors")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fix this by adding nfs_fscache_update_auxdata() to set the auxdata
+from all relevant fields in the inode, including the change_attr.
+
+Fixes: 402cb8dda949 ("fscache: Attach the index key and aux data to the cookie")
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/drivetemp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/fscache.c | 34 ++++++++++++++++------------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/hwmon/drivetemp.c b/drivers/hwmon/drivetemp.c
-index 9179460c2d9d5..0d4f3d97ffc61 100644
---- a/drivers/hwmon/drivetemp.c
-+++ b/drivers/hwmon/drivetemp.c
-@@ -346,7 +346,7 @@ static int drivetemp_identify_sata(struct drivetemp_data *st)
- 	st->have_temp_highest = temp_is_valid(buf[SCT_STATUS_TEMP_HIGHEST]);
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index f517184156068..a60df88efc404 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -225,6 +225,19 @@ void nfs_fscache_release_super_cookie(struct super_block *sb)
+ 	}
+ }
  
- 	if (!have_sct_data_table)
--		goto skip_sct;
-+		goto skip_sct_data;
++static void nfs_fscache_update_auxdata(struct nfs_fscache_inode_auxdata *auxdata,
++				  struct nfs_inode *nfsi)
++{
++	memset(auxdata, 0, sizeof(*auxdata));
++	auxdata->mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata->mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata->ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata->ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
++
++	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
++		auxdata->change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
++}
++
+ /*
+  * Initialise the per-inode cache cookie pointer for an NFS inode.
+  */
+@@ -238,14 +251,7 @@ void nfs_fscache_init_inode(struct inode *inode)
+ 	if (!(nfss->fscache && S_ISREG(inode->i_mode)))
+ 		return;
  
- 	/* Request and read temperature history table */
- 	memset(buf, '\0', sizeof(st->smartdata));
+-	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
+-	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
+-	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
+-	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+-
+-	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
+-		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
++	nfs_fscache_update_auxdata(&auxdata, nfsi);
+ 
+ 	nfsi->fscache = fscache_acquire_cookie(NFS_SB(inode->i_sb)->fscache,
+ 					       &nfs_fscache_inode_object_def,
+@@ -265,11 +271,7 @@ void nfs_fscache_clear_inode(struct inode *inode)
+ 
+ 	dfprintk(FSCACHE, "NFS: clear cookie (0x%p/0x%p)\n", nfsi, cookie);
+ 
+-	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
+-	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
+-	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
+-	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
++	nfs_fscache_update_auxdata(&auxdata, nfsi);
+ 	fscache_relinquish_cookie(cookie, &auxdata, false);
+ 	nfsi->fscache = NULL;
+ }
+@@ -309,11 +311,7 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
+ 	if (!fscache_cookie_valid(cookie))
+ 		return;
+ 
+-	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
+-	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
+-	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
+-	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
++	nfs_fscache_update_auxdata(&auxdata, nfsi);
+ 
+ 	if (inode_is_open_for_write(inode)) {
+ 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);
 -- 
 2.20.1
 
