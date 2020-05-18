@@ -2,131 +2,152 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C9FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDAD20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD4D20709
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:59:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qjxhrtzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgERNzG (ORCPT
+        id S1727782AbgERN7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:55:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52182 "EHLO
+        Mon, 18 May 2020 09:59:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgERNzF (ORCPT
+        with ESMTP id S1727007AbgERN7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:55:05 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6279DC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:55:05 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 10B08386; Mon, 18 May 2020 15:55:04 +0200 (CEST)
-Date:   Mon, 18 May 2020 15:55:02 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Joerg Roedel <jroedel@suse.de>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2 23/33] iommu/mediatek-v1 Convert to
- probe/release_device() call-backs
-Message-ID: <20200518135502.GE18353@8bytes.org>
-References: <20200414131542.25608-1-joro@8bytes.org>
- <20200414131542.25608-24-joro@8bytes.org>
- <1589528699.26119.9.camel@mhfsdcap03>
- <20200515100718.GS18353@8bytes.org>
- <1589784680.15083.19.camel@mhfsdcap03>
+        Mon, 18 May 2020 09:59:20 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0AABC05BD0B
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:59:20 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l17so12009794wrr.4
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:59:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Qp3KMqm4FQRyseSw00gSsB5YgPJWvTQnwqqnC4fzNYk=;
+        b=QjxhrtzgoF4UOeAXmKcLvcQXo3nn09VjgwT3pzwmtMt4UHCM4eXIyEKiKQGvfl5PYd
+         5ar6mXkoazv5YLYLkuuFoqM7DPXWgD7ewwKfXdzkrxtG05ZLxLdzDKiUxTAigwZxaN6W
+         DCxDQ7qCjJMugmdWYRpb/+ZQU15iI+b20wQTP/582ApRzoBNgp7xJgDuueFczjwl/B5S
+         +lXXf0JtBQxyRcf4B9w6JvcBfeyoANEdWihQWeYg83qiDyAGSY6akppZPl435dwpHUTG
+         qP5b7zXt1QKCU8HTi0cCR6OrHAFRhKpCb+eBTnR9gr0ARNNFX8JuN7Q9bLHW3k/YYzNF
+         XcuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Qp3KMqm4FQRyseSw00gSsB5YgPJWvTQnwqqnC4fzNYk=;
+        b=SKcYxPVSeojrkIHkE+bfQUhYfFguKYnoWgSFAm/6dEzK1UQzOS4ak9QQHe4kJedmk4
+         3hHS6tfjIXnsR5Qh5idjwyGjQbpSfHbUWiEZmEnssek+96tFmexXh+P2JbOBnTEExNCe
+         igWtd1XtaIp8QON7swLDuDDw1OwkZ7dmjDmhXV6Yep17FuQ5b/lrpUoTS3awt0875AbN
+         3kvzbkE1ssEIk4LZX/2BHnZNsqvRDBatnxpHQY61+/b6GvXXU9wbDgQs8lUQCbk3ildm
+         YyOHJxeeV6NFl1oajj8cm3E5DMc0/RZYzmHgXdFQzqhbl+zmSEPjPUqFATmdAFNUe7cJ
+         Zm7A==
+X-Gm-Message-State: AOAM532w8uULq9LNPCJMVMbWiW9+R07fsIteTQGaNxSW4PuKfS6SsdBv
+        bKS+LVJTqlhdohIIwf6QqmIUaX2HnhA=
+X-Google-Smtp-Source: ABdhPJy7x6BVz0Xb+O2uc1Xy1BGI6onEzzHz8JHpWyLqk248mRHXNwXCml8Ac0UNNl6/MtBOQHjuxg==
+X-Received: by 2002:adf:e80e:: with SMTP id o14mr17715940wrm.307.1589810358929;
+        Mon, 18 May 2020 06:59:18 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
+        by smtp.googlemail.com with ESMTPSA id 5sm17082716wmd.19.2020.05.18.06.59.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 06:59:18 -0700 (PDT)
+Subject: Re: [PATCH v3 7/7] clocksource: mips-gic-timer: Set limitations on
+ clocksource/sched-clocks usage
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-8-Sergey.Semin@baikalelectronics.ru>
+ <20200515171004.GA760381@linaro.org>
+ <20200516121647.g6jua35kkihmw5r6@mobilestation>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <4c723219-62f8-be6a-47ea-a586859d832d@linaro.org>
+Date:   Mon, 18 May 2020 15:59:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589784680.15083.19.camel@mhfsdcap03>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200516121647.g6jua35kkihmw5r6@mobilestation>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, May 18, 2020 at 02:51:20PM +0800, Yong Wu wrote:
-> below is my local patch. split "dma_attach" to attach_device and
-> probe_finalize. About attach_device, Use the existed
-> __iommu_attach_group instead. Then rename from the "dma_attach" to
-> "probe_finalize" to do the probe_finalize job. And move it outside of
-> the mutex_unlock.
+On 16/05/2020 14:16, Serge Semin wrote:
+> Hello Daniel,
 > 
-> I'm not sure if it is right. and of course I will test if you have any
-> other solution. Thanks.
+> Thanks for your comment. My response is below.
 > 
+> On Fri, May 15, 2020 at 07:10:04PM +0200, Daniel Lezcano wrote:
+>> On Thu, May 07, 2020 at 12:41:07AM +0300, Serge Semin wrote:
+>>> Currently neither clocksource nor scheduler clock kernel framework
+>>> support the clocks with variable frequency. Needless to say how many
+>>> problems may cause the sudden base clocks frequency change. In a
+>>> simplest case the system time will either slow down or speed up.
+>>> Since on CM2.5 and earlier MIPS GIC timer is synchronously clocked
+>>> with CPU we must set some limitations on using it for these frameworks
+>>> if CPU frequency may change. First of all it's not safe to have the
+>>> MIPS GIC used for scheduler timings. So we shouldn't proceed with
+>>> the clocks registration in the sched-subsystem. Secondly we must
+>>> significantly decrease the MIPS GIC clocksource rating. This will let
+>>> the system to use it only as a last resort.
+>>>
+>>> Note CM3.x-based systems may also experience the problems with MIPS GIC
+>>> if the CPU-frequency change is activated for the whole CPU cluster
+>>> instead of using the individual CPC core clocks divider.
+>>
+>> May be there is no alternative but the code looks a bit hacksih. Isn't possible
+>> to do something with the sched_mark_unstable?
+>>
+>> Or just not use the timer at all ?
 > 
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -1665,26 +1665,20 @@ static void probe_alloc_default_domain(struct
-> bus_type *bus,
->  
->  }
->  
-> -static int iommu_group_do_dma_attach(struct device *dev, void *data)
-> +static int iommu_group_do_probe_finalize(struct device *dev, void
-> *data)
->  {
->  	struct iommu_domain *domain = data;
-> -	const struct iommu_ops *ops;
-> -	int ret;
-> -
-> -	ret = __iommu_attach_device(domain, dev);
-> -
-> -	ops = domain->ops;
-> +	const struct iommu_ops *ops = domain->ops;
->  
-> -	if (ret == 0 && ops->probe_finalize)
-> +	if (ops->probe_finalize)
->  		ops->probe_finalize(dev);
-> -
-> -	return ret;
-> +	return 0;
->  }
->  
-> -static int __iommu_group_dma_attach(struct iommu_group *group)
-> +static int iommu_group_probe_finalize(struct iommu_group *group)
->  {
->  	return __iommu_group_for_each_dev(group, group->default_domain,
-> -					  iommu_group_do_dma_attach);
-> +					  iommu_group_do_probe_finalize);
->  }
->  
->  static int iommu_do_create_direct_mappings(struct device *dev, void
-> *data)
-> @@ -1731,12 +1725,14 @@ int bus_iommu_probe(struct bus_type *bus)
->  
->  		iommu_group_create_direct_mappings(group);
->  
-> -		ret = __iommu_group_dma_attach(group);
-> +		ret = __iommu_attach_group(group->default_domain, group);
->  
->  		mutex_unlock(&group->mutex);
->  
->  		if (ret)
->  			break;
-> +
-> +		iommu_group_probe_finalize(group);
->  	}
->  
->  	return ret;
-> -- 
+> Not using the timer might be better, but not that good alternative either
+> especially in our case due to very slow external timer. Me and Thomas
+> Bogendoerfer discussed the similar commit I've provided to the csrc-r4k driver
+> available on MIPS:
+> https://lkml.org/lkml/2020/5/11/576
+> 
+> To cut it short, you are right. The solution with using clocksource_mark_unstable()
+> is better alternative spied up in x86 tsc implementation. I'll use a similar
+> approach here and submit the updated patch in v3.
+> 
+> Could you please proceed with the rest of the series review? I'd like to send
+> the next version with as many comments taken into account as possible. The
+> patchset has been submitted a while ago, but except Rob noone have had any
+> comments.(
 
-Yes, I think moving the probe_finalize call out of the group->mutex
-section is the right fix for this issue.
+For me other patches are ok.
 
-Thanks for reporting it and working on a fix.
+I can apply patches 1, 2, 4, 5, 6
+
+Will remain patches 3 et 7
 
 
-Regards,
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-	Joerg
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
