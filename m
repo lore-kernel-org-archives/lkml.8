@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 090A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D628C20829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1A420853
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823739;
-	bh=kSGimb+ixLcWpqRq3vja2t1RahAYDLXqog2awjJRwbs=;
+	s=default; t=1589823742;
+	bh=Rb7UxkR8SUT5Bw8UAQG6g2rq3U0rT6XFV6zgMx0mh2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cFqRpd/1HnPVBzncvW7kR+HC4K8QXszSd2ok2UzEHVgguCwby/f1vOe8dBK6Pkwby
-	 JuPGKN7VvpQVy3O/Me7SqSI0/72PZdCPePtW6maS/+y2JnJixrLUbavDgZhC4RA9Si
-	 ToGAbSmXKLHzwML/vXzeQKIEeOs5cw7YQCk/RwrI=
+	b=ngyF7bQdhvF9UjLwhaRpzCz7dN4dtWMLK6psbNokJcj06Il4JgOAmiLQBCHNu+qe2
+	 qYIX0wGjk+nrYRjcauDv3gbz2n6zH+JYs6o5RGSMf9PXBdypBJnCZvF44FFKticB35
+	 9MXFpUhNUvfcwtT9RB5TqqKOQUnbl1/sr26Sv0N4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbgERRmS (ORCPT
+        id S1729411AbgERRmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:42:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38852 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:42:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729370AbgERRmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:42:04 -0400
+        id S1729376AbgERRmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:42:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0269020715;
-        Mon, 18 May 2020 17:42:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F1F8207C4;
+        Mon, 18 May 2020 17:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823724;
-        bh=kSGimb+ixLcWpqRq3vja2t1RahAYDLXqog2awjJRwbs=;
+        s=default; t=1589823726;
+        bh=Rb7UxkR8SUT5Bw8UAQG6g2rq3U0rT6XFV6zgMx0mh2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gbV44PJeS1VDm59EZHgGwnV0s62e3FZjaPdkNZvOWRvNM1UxSYKrz4yABmpDXoaXe
-         ZJxdbwgG6M47G2BvbmCxBI6Xk+xYLzdPAutNiIuLDUE1wiOr5WSKofc1oywAOmoNiw
-         a/gaWZxPk60d4N/CCBIoIP91xwLwt6FBAE5U0z8k=
+        b=QCiyrKRKz+NazSHenuN755lfMi2REW1ZV3UobIqw8BqaeGo37xlIBfLWJSBulyys4
+         M2fsGxuwy+AgoxzuVeFwZLciuRdlXxX8JFMU2rFsQpPWsw9GO3bJq23Yx9ycHiA6QY
+         b/7ucnELhaz31rcbWn2Ag8jm2HzLsAAVbw2o73/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.9 11/90] net/mlx5: Fix command entry leak in Internal Error State
-Date:   Mon, 18 May 2020 19:35:49 +0200
-Message-Id: <20200518173453.520115348@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 12/90] bnxt_en: Improve AER slot reset.
+Date:   Mon, 18 May 2020 19:35:50 +0200
+Message-Id: <20200518173453.713553654@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -60,36 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moshe Shemesh <moshe@mellanox.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit cece6f432cca9f18900463ed01b97a152a03600a ]
+[ Upstream commit bae361c54fb6ac6eba3b4762f49ce14beb73ef13 ]
 
-Processing commands by cmd_work_handler() while already in Internal
-Error State will result in entry leak, since the handler process force
-completion without doorbell. Forced completion doesn't release the entry
-and event completion will never arrive, so entry should be released.
+Improve the slot reset sequence by disabling the device to prevent bad
+DMAs if slot reset fails.  Return the proper result instead of always
+PCI_ERS_RESULT_RECOVERED to the caller.
 
-Fixes: 73dd3a4839c1 ("net/mlx5: Avoid using pending command interface slots")
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 6316ea6db93d ("bnxt_en: Enable AER support.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-@@ -847,6 +847,10 @@ static void cmd_work_handler(struct work
- 		MLX5_SET(mbox_out, ent->out, syndrome, drv_synd);
- 
- 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
-+		/* no doorbell, no need to keep the entry */
-+		free_ent(cmd, ent->idx);
-+		if (ent->callback)
-+			free_cmd(ent);
- 		return;
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -7166,8 +7166,11 @@ static pci_ers_result_t bnxt_io_slot_res
+ 			result = PCI_ERS_RESULT_RECOVERED;
  	}
  
+-	if (result != PCI_ERS_RESULT_RECOVERED && netif_running(netdev))
+-		dev_close(netdev);
++	if (result != PCI_ERS_RESULT_RECOVERED) {
++		if (netif_running(netdev))
++			dev_close(netdev);
++		pci_disable_device(pdev);
++	}
+ 
+ 	rtnl_unlock();
+ 
+@@ -7178,7 +7181,7 @@ static pci_ers_result_t bnxt_io_slot_res
+ 			 err); /* non-fatal, continue */
+ 	}
+ 
+-	return PCI_ERS_RESULT_RECOVERED;
++	return result;
+ }
+ 
+ /**
 
 
