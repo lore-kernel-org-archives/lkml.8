@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C627C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ED0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBB9420671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC5120671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825952;
-	bh=HzhzUmDKmEhn4BXR+WRZZo9dgSDG/SsJmeYNmu1EgwM=;
+	s=default; t=1589825960;
+	bh=rzC9MGi2S9HCI1wE1EFNRig2v1+cv7Lofvm0RsNonKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EOI74GSsV8JRh3MWL2OKNCpFxSghxY94da65FOA7Wrskzjs5KVY00Q7itg8M/NxCI
-	 0VySFrosN2kNvawzZ5ahXn5a0SaweDCzvX2EiSMmfIEm1eXiy/7qcn6D+5azYKBnPs
-	 6fpfoWBz3w48/N6JH8vAQHrTx9umkWX+rrV212cM=
+	b=rnR+Ugi5DqsJK21mRnO3Xkb/O2HdzxBLVneL3AU4ONyI5Rm6GrKDf2FSoCZpdLC8G
+	 ACfyw/9Z0eDK4rGzMi3iVKR2Vijb4hyfOoEpy8ETdx2Iz+hDIFcag3LnQsUY8A9xY6
+	 Ig2EyBNZ7lOld21CmaahQcLh04b1JT+e/BvivZUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387426AbgERSTL (ORCPT
+        id S2387543AbgERSTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:19:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59638 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:19:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731342AbgERRyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:54:43 -0400
+        id S1731311AbgERRyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:54:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AB8A2086A;
-        Mon, 18 May 2020 17:54:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E81CF207F5;
+        Mon, 18 May 2020 17:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824482;
-        bh=HzhzUmDKmEhn4BXR+WRZZo9dgSDG/SsJmeYNmu1EgwM=;
+        s=default; t=1589824470;
+        bh=rzC9MGi2S9HCI1wE1EFNRig2v1+cv7Lofvm0RsNonKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XdfiAXjkR1E0XEamQ94l4o/P/tgro+WJxgKMmQM6aGsEVzNIR5gnsZeq7lb+G+sge
-         m4RanXMgFbYw67sxiBw6UzXg/AoopXJXl8Ylm/+KPfX6MRcRySeYbdKVtiX2UXXST4
-         3KQk3gPmKlQ90P07fBZMndXDkYi8U631TGLjQ9q8=
+        b=FUsLEwERB1bU9hy+ZotabFhp+qCiXwi+tqvudxhK/TLIAhM8rkWdAL0jouWA0MIK9
+         8oIEqwrrNPGjB7YmqAy+BTjVv3mihIrLzDScZTrFSKlEzvhKDFeM3+fH/kZZMPeCqQ
+         Kn5GdzhjWe5fo+0f371SLj7z8fsoqkcSSFrR63y0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.4 029/147] hinic: fix a bug of ndo_stop
-Date:   Mon, 18 May 2020 19:35:52 +0200
-Message-Id: <20200518173517.473748026@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Hannes Frederic Sowa <hannes@stressinduktion.org>,
+        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 024/147] Revert "ipv6: add mtu lock check in __ip6_rt_update_pmtu"
+Date:   Mon, 18 May 2020 19:35:47 +0200
+Message-Id: <20200518173516.836413313@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -59,119 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
+From: "Maciej Żenczykowski" <maze@google.com>
 
-[ Upstream commit e8a1b0efd632d1c9db7d4e93da66377c7b524862 ]
+[ Upstream commit 09454fd0a4ce23cb3d8af65066c91a1bf27120dd ]
 
-if some function in ndo_stop interface returns failure because of
-hardware fault, must go on excuting rest steps rather than return
-failure directly, otherwise will cause memory leak.And bump the
-timeout for SET_FUNC_STATE to ensure that cmd won't return failure
-when hw is busy. Otherwise hw may stomp host memory if we free
-memory regardless of the return value of SET_FUNC_STATE.
+This reverts commit 19bda36c4299ce3d7e5bce10bebe01764a655a6d:
 
-Fixes: 51ba902a16e6 ("net-next/hinic: Initialize hw interface")
-Signed-off-by: Luo bin <luobin9@huawei.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+| ipv6: add mtu lock check in __ip6_rt_update_pmtu
+|
+| Prior to this patch, ipv6 didn't do mtu lock check in ip6_update_pmtu.
+| It leaded to that mtu lock doesn't really work when receiving the pkt
+| of ICMPV6_PKT_TOOBIG.
+|
+| This patch is to add mtu lock check in __ip6_rt_update_pmtu just as ipv4
+| did in __ip_rt_update_pmtu.
+
+The above reasoning is incorrect.  IPv6 *requires* icmp based pmtu to work.
+There's already a comment to this effect elsewhere in the kernel:
+
+  $ git grep -p -B1 -A3 'RTAX_MTU lock'
+  net/ipv6/route.c=4813=
+
+  static int rt6_mtu_change_route(struct fib6_info *f6i, void *p_arg)
+  ...
+    /* In IPv6 pmtu discovery is not optional,
+       so that RTAX_MTU lock cannot disable it.
+       We still use this lock to block changes
+       caused by addrconf/ndisc.
+    */
+
+This reverts to the pre-4.9 behaviour.
+
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Cc: Xin Long <lucien.xin@gmail.com>
+Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+Signed-off-by: Maciej Żenczykowski <maze@google.com>
+Fixes: 19bda36c4299 ("ipv6: add mtu lock check in __ip6_rt_update_pmtu")
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c |   16 ++++++++++++----
- drivers/net/ethernet/huawei/hinic/hinic_main.c    |   18 +++---------------
- 2 files changed, 15 insertions(+), 19 deletions(-)
+ net/ipv6/route.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-@@ -45,6 +45,8 @@
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -2728,8 +2728,10 @@ static void __ip6_rt_update_pmtu(struct
+ 	const struct in6_addr *daddr, *saddr;
+ 	struct rt6_info *rt6 = (struct rt6_info *)dst;
  
- #define MGMT_MSG_TIMEOUT                5000
+-	if (dst_metric_locked(dst, RTAX_MTU))
+-		return;
++	/* Note: do *NOT* check dst_metric_locked(dst, RTAX_MTU)
++	 * IPv6 pmtu discovery isn't optional, so 'mtu lock' cannot disable it.
++	 * [see also comment in rt6_mtu_change_route()]
++	 */
  
-+#define SET_FUNC_PORT_MGMT_TIMEOUT	25000
-+
- #define mgmt_to_pfhwdev(pf_mgmt)        \
- 		container_of(pf_mgmt, struct hinic_pfhwdev, pf_to_mgmt)
- 
-@@ -238,12 +240,13 @@ static int msg_to_mgmt_sync(struct hinic
- 			    u8 *buf_in, u16 in_size,
- 			    u8 *buf_out, u16 *out_size,
- 			    enum mgmt_direction_type direction,
--			    u16 resp_msg_id)
-+			    u16 resp_msg_id, u32 timeout)
- {
- 	struct hinic_hwif *hwif = pf_to_mgmt->hwif;
- 	struct pci_dev *pdev = hwif->pdev;
- 	struct hinic_recv_msg *recv_msg;
- 	struct completion *recv_done;
-+	unsigned long timeo;
- 	u16 msg_id;
- 	int err;
- 
-@@ -267,8 +270,9 @@ static int msg_to_mgmt_sync(struct hinic
- 		goto unlock_sync_msg;
- 	}
- 
--	if (!wait_for_completion_timeout(recv_done,
--					 msecs_to_jiffies(MGMT_MSG_TIMEOUT))) {
-+	timeo = msecs_to_jiffies(timeout ? timeout : MGMT_MSG_TIMEOUT);
-+
-+	if (!wait_for_completion_timeout(recv_done, timeo)) {
- 		dev_err(&pdev->dev, "MGMT timeout, MSG id = %d\n", msg_id);
- 		err = -ETIMEDOUT;
- 		goto unlock_sync_msg;
-@@ -342,6 +346,7 @@ int hinic_msg_to_mgmt(struct hinic_pf_to
- {
- 	struct hinic_hwif *hwif = pf_to_mgmt->hwif;
- 	struct pci_dev *pdev = hwif->pdev;
-+	u32 timeout = 0;
- 
- 	if (sync != HINIC_MGMT_MSG_SYNC) {
- 		dev_err(&pdev->dev, "Invalid MGMT msg type\n");
-@@ -353,9 +358,12 @@ int hinic_msg_to_mgmt(struct hinic_pf_to
- 		return -EINVAL;
- 	}
- 
-+	if (cmd == HINIC_PORT_CMD_SET_FUNC_STATE)
-+		timeout = SET_FUNC_PORT_MGMT_TIMEOUT;
-+
- 	return msg_to_mgmt_sync(pf_to_mgmt, mod, cmd, buf_in, in_size,
- 				buf_out, out_size, MGMT_DIRECT_SEND,
--				MSG_NOT_RESP);
-+				MSG_NOT_RESP, timeout);
- }
- 
- /**
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -483,7 +483,6 @@ static int hinic_close(struct net_device
- {
- 	struct hinic_dev *nic_dev = netdev_priv(netdev);
- 	unsigned int flags;
--	int err;
- 
- 	down(&nic_dev->mgmt_lock);
- 
-@@ -497,20 +496,9 @@ static int hinic_close(struct net_device
- 
- 	up(&nic_dev->mgmt_lock);
- 
--	err = hinic_port_set_func_state(nic_dev, HINIC_FUNC_PORT_DISABLE);
--	if (err) {
--		netif_err(nic_dev, drv, netdev,
--			  "Failed to set func port state\n");
--		nic_dev->flags |= (flags & HINIC_INTF_UP);
--		return err;
--	}
--
--	err = hinic_port_set_state(nic_dev, HINIC_PORT_DISABLE);
--	if (err) {
--		netif_err(nic_dev, drv, netdev, "Failed to set port state\n");
--		nic_dev->flags |= (flags & HINIC_INTF_UP);
--		return err;
--	}
-+	hinic_port_set_state(nic_dev, HINIC_PORT_DISABLE);
-+
-+	hinic_port_set_func_state(nic_dev, HINIC_FUNC_PORT_DISABLE);
- 
- 	if (nic_dev->flags & HINIC_RSS_ENABLE) {
- 		hinic_rss_deinit(nic_dev);
+ 	if (iph) {
+ 		daddr = &iph->daddr;
 
 
