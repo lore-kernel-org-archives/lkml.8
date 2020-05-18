@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FEBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB7DC20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 566D020715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825317;
-	bh=F4Q7GLdIdRElMbXOmwNR/YQ1sfbeM3UBi5JtX1D5sPc=;
+	s=default; t=1589825321;
+	bh=5RVUNeeq1bOhBax5PxSgXQk4pY6uDomCG0Yjuq6vgiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SrruS7OzAmWF3kQz3np5Gjz8mjfIq4MMR64Vltx+kkVzeMQvz/V/Y8CM+avgUxLtF
-	 vRWzFiu8cYzUvuoG269IAXHsmu9R0A8jVhaadklK0jd5+JlCCfPfJAddOGcKcDz8wH
-	 H5SorfLax5uWkvrQ9fZNijrW4X063ROA1axYvrLo=
+	b=JTUdx2NzLzNf7giMGU3B9DnfJg4akk4CkfbW9O/EDJH7aSrAsSkeKBDfsEvaz0Gk7
+	 f8PBSwlH0/YQNlxNxyDGWZTjSR07cEhZvfysuz6B0mRCZPBiNqedk0zWpvqD66ehFB
+	 hHJulsdaoBn0iMG68dMi47EmcV/MMPE6lmhSs7mE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733065AbgERSHm (ORCPT
+        id S2387442AbgERSIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:07:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56400 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:08:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387415AbgERSHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:07:32 -0400
+        id S2387433AbgERSHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:07:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7885207D3;
-        Mon, 18 May 2020 18:07:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F2BB20715;
+        Mon, 18 May 2020 18:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825252;
-        bh=F4Q7GLdIdRElMbXOmwNR/YQ1sfbeM3UBi5JtX1D5sPc=;
+        s=default; t=1589825259;
+        bh=5RVUNeeq1bOhBax5PxSgXQk4pY6uDomCG0Yjuq6vgiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SJujb9Bh5K2nLi/X2bjKTX7F2Uo578ifUiIDp8kTDOGwncvqZ/vETGNmbHLfvWKNs
-         nxip5yufopBxRVyq/NgKb5klmkkUVf83Xsj9+Wom9TzxPlYdO8NyBvjMbqEnXTL38w
-         2oJy2oXB6Xw9rjqNt1Z0cGwtqPKeqrwV/tzDPF+Y=
+        b=BgaNQk0UGcUYtLBqrbVvvlF9L7VFZiGe5hJxlxp/igFwItS6GEiJAO+kz9f0sM+CI
+         woHEFo6axsx1wxpkKKsPf9AMJjkvBI4v2wxZybAxz7m58+OV8uIUdaJPdlpsJE4+8R
+         1Jatnp0xLxWX8/Y8Y26wHFH1O9GLl1WlxpCOmuik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jue Wang <juew@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Shier <pshier@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.6 190/194] KVM: x86: Fix off-by-one error in kvm_vcpu_ioctl_x86_setup_mce
-Date:   Mon, 18 May 2020 19:38:00 +0200
-Message-Id: <20200518173547.237107348@linuxfoundation.org>
+        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: [PATCH 5.6 192/194] selftests/bpf: Enforce returning 0 for fentry/fexit programs
+Date:   Mon, 18 May 2020 19:38:02 +0200
+Message-Id: <20200518173547.378254492@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -62,37 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
+From: Yonghong Song <yhs@fb.com>
 
-commit c4e0e4ab4cf3ec2b3f0b628ead108d677644ebd9 upstream.
+commit 6d74f64b922b8394dccc52576659cb0dc0a1da7b upstream.
 
-Bank_num is a one-based count of banks, not a zero-based index. It
-overflows the allocated space only when strictly greater than
-KVM_MAX_MCE_BANKS.
+There are a few fentry/fexit programs returning non-0.
+The tests with these programs will break with the previous
+patch which enfoced return-0 rules. Fix them properly.
 
-Fixes: a9e38c3e01ad ("KVM: x86: Catch potential overrun in MCE setup")
-Signed-off-by: Jue Wang <juew@google.com>
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Peter Shier <pshier@google.com>
-Message-Id: <20200511225616.19557-1-jmattson@google.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: ac065870d928 ("selftests/bpf: Add BPF_PROG, BPF_KPROBE, and BPF_KRETPROBE macros")
+Signed-off-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200514053207.1298479-1-yhs@fb.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/bpf/progs/test_overhead.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3739,7 +3739,7 @@ static int kvm_vcpu_ioctl_x86_setup_mce(
- 	unsigned bank_num = mcg_cap & 0xff, bank;
+--- a/tools/testing/selftests/bpf/progs/test_overhead.c
++++ b/tools/testing/selftests/bpf/progs/test_overhead.c
+@@ -33,13 +33,13 @@ int prog3(struct bpf_raw_tracepoint_args
+ SEC("fentry/__set_task_comm")
+ int BPF_PROG(prog4, struct task_struct *tsk, const char *buf, bool exec)
+ {
+-	return !tsk;
++	return 0;
+ }
  
- 	r = -EINVAL;
--	if (!bank_num || bank_num >= KVM_MAX_MCE_BANKS)
-+	if (!bank_num || bank_num > KVM_MAX_MCE_BANKS)
- 		goto out;
- 	if (mcg_cap & ~(kvm_mce_cap_supported | 0xff | 0xff0000))
- 		goto out;
+ SEC("fexit/__set_task_comm")
+ int BPF_PROG(prog5, struct task_struct *tsk, const char *buf, bool exec)
+ {
+-	return !tsk;
++	return 0;
+ }
+ 
+ char _license[] SEC("license") = "GPL";
 
 
