@@ -2,51 +2,51 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E605C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DDFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E518207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5659207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824212;
-	bh=m45JaHwCAEG1YWYob+PENkUlEKbfP0kHp+PbPhsBbHc=;
+	s=default; t=1589824215;
+	bh=hLhqsgP2gFprrbBxfiRlmxjjwHYIN6WgwIWxOuIPfX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fmYukskZ98Rzysa4Fxo0gZ8aMo6t+Ke5jx63oGi4noWwraq2T77OetYiNPcyCI60i
-	 YNlh88WiofVNIL9NT9BK5OSUXZ6xN76cR2F7SrFKiZv11BbjplXLV1F24Oly4iHMcR
-	 bHF6m3t1wbfnS8097OOvtGmDqIMAQV5mh9aZ3s08=
+	b=nYXIkuqwl6k9QqmZU7zwm1DtP26dvglZEA9a64mCrFv9783x8b6ANIsacRKCZ92Wt
+	 Sbg0gTQSNkEAacZ84jwHP+3dQWpgqZ3IWZRtEhOso8bh+PDQfTGuvppyseQhur1s6O
+	 Hm42yEP14cvAAyBPye6M3FQgpmXQAwb054Q95rMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728908AbgERRuL (ORCPT
+        id S1730159AbgERRuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:50:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:50:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730635AbgERRuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:50:08 -0400
+        id S1730640AbgERRuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:50:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13FD9207C4;
-        Mon, 18 May 2020 17:50:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80CA520674;
+        Mon, 18 May 2020 17:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824207;
-        bh=m45JaHwCAEG1YWYob+PENkUlEKbfP0kHp+PbPhsBbHc=;
+        s=default; t=1589824210;
+        bh=hLhqsgP2gFprrbBxfiRlmxjjwHYIN6WgwIWxOuIPfX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N5KWhhGMdt0dEC2tfk4meyK2KMMAyNCzb4ysFcK+D0hXe7Mrwujum5sF5Qt9rvJoG
-         58owWG9ST/iNCuqfLjMtksUAHg5TtjtgyqbbWZCYQbLE3pHlJzrHLAEwuh0wiN8URD
-         Zx2WpaW2Gvv8tPUth8YnBv/dC/dbClsvh06bNJ20=
+        b=sjcmFmc1D8aN0wewImAUKg5x48hg67yVo4yND1KLOVwEQIipkcwUelDZu31k12RXh
+         FfK/c77+a+0Ib15zeUcGAdvWg1RWHotCzgSC0zTJeWF6/kNHw7uVSRgHlgdi+fmrDn
+         gbKtFOB8lmoQqdcXm5Ol/05/Kc5V2x0J5AkPnDTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 078/114] gcc-10: avoid shadowing standard library free() in crypto
-Date:   Mon, 18 May 2020 19:36:50 +0200
-Message-Id: <20200518173516.758791300@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 079/114] x86/asm: Add instruction suffixes to bitops
+Date:   Mon, 18 May 2020 19:36:51 +0200
+Message-Id: <20200518173516.883086422@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -59,84 +59,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Jan Beulich <JBeulich@suse.com>
 
-commit 1a263ae60b04de959d9ce9caea4889385eefcc7b upstream.
+commit 22636f8c9511245cb3c8412039f1dd95afb3aa59 upstream.
 
-gcc-10 has started warning about conflicting types for a few new
-built-in functions, particularly 'free()'.
+Omitting suffixes from instructions in AT&T mode is bad practice when
+operand size cannot be determined by the assembler from register
+operands, and is likely going to be warned about by upstream gas in the
+future (mine does already). Add the missing suffixes here. Note that for
+64-bit this means some operations change from being 32-bit to 64-bit.
 
-This results in warnings like:
-
-   crypto/xts.c:325:13: warning: conflicting types for built-in function ‘free’; expected ‘void(void *)’ [-Wbuiltin-declaration-mismatch]
-
-because the crypto layer had its local freeing functions called
-'free()'.
-
-Gcc-10 is in the wrong here, since that function is marked 'static', and
-thus there is no chance of confusion with any standard library function
-namespace.
-
-But the simplest thing to do is to just use a different name here, and
-avoid this gcc mis-feature.
-
-[ Side note: gcc knowing about 'free()' is in itself not the
-  mis-feature: the semantics of 'free()' are special enough that a
-  compiler can validly do special things when seeing it.
-
-  So the mis-feature here is that gcc thinks that 'free()' is some
-  restricted name, and you can't shadow it as a local static function.
-
-  Making the special 'free()' semantics be a function attribute rather
-  than tied to the name would be the much better model ]
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Jan Beulich <jbeulich@suse.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/5A93F98702000078001ABACC@prv-mh.provo.novell.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/lrw.c |    4 ++--
- crypto/xts.c |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/bitops.h |   29 ++++++++++++++++-------------
+ arch/x86/include/asm/percpu.h |    2 +-
+ 2 files changed, 17 insertions(+), 14 deletions(-)
 
---- a/crypto/lrw.c
-+++ b/crypto/lrw.c
-@@ -531,7 +531,7 @@ static void exit_tfm(struct crypto_skcip
- 	crypto_free_skcipher(ctx->child);
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -78,7 +78,7 @@ set_bit(long nr, volatile unsigned long
+ 			: "iq" ((u8)CONST_MASK(nr))
+ 			: "memory");
+ 	} else {
+-		asm volatile(LOCK_PREFIX "bts %1,%0"
++		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+ 			: BITOP_ADDR(addr) : "Ir" (nr) : "memory");
+ 	}
+ }
+@@ -94,7 +94,7 @@ set_bit(long nr, volatile unsigned long
+  */
+ static __always_inline void __set_bit(long nr, volatile unsigned long *addr)
+ {
+-	asm volatile("bts %1,%0" : ADDR : "Ir" (nr) : "memory");
++	asm volatile(__ASM_SIZE(bts) " %1,%0" : ADDR : "Ir" (nr) : "memory");
  }
  
--static void free(struct skcipher_instance *inst)
-+static void free_inst(struct skcipher_instance *inst)
+ /**
+@@ -115,7 +115,7 @@ clear_bit(long nr, volatile unsigned lon
+ 			: CONST_MASK_ADDR(nr, addr)
+ 			: "iq" ((u8)~CONST_MASK(nr)));
+ 	} else {
+-		asm volatile(LOCK_PREFIX "btr %1,%0"
++		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+ 			: BITOP_ADDR(addr)
+ 			: "Ir" (nr));
+ 	}
+@@ -137,7 +137,7 @@ static __always_inline void clear_bit_un
+ 
+ static __always_inline void __clear_bit(long nr, volatile unsigned long *addr)
  {
- 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
- 	kfree(inst);
-@@ -642,7 +642,7 @@ static int create(struct crypto_template
- 	inst->alg.encrypt = encrypt;
- 	inst->alg.decrypt = decrypt;
- 
--	inst->free = free;
-+	inst->free = free_inst;
- 
- 	err = skcipher_register_instance(tmpl, inst);
- 	if (err)
---- a/crypto/xts.c
-+++ b/crypto/xts.c
-@@ -469,7 +469,7 @@ static void exit_tfm(struct crypto_skcip
- 	crypto_free_cipher(ctx->tweak);
+-	asm volatile("btr %1,%0" : ADDR : "Ir" (nr));
++	asm volatile(__ASM_SIZE(btr) " %1,%0" : ADDR : "Ir" (nr));
  }
  
--static void free(struct skcipher_instance *inst)
-+static void free_inst(struct skcipher_instance *inst)
+ static __always_inline bool clear_bit_unlock_is_negative_byte(long nr, volatile unsigned long *addr)
+@@ -182,7 +182,7 @@ static __always_inline void __clear_bit_
+  */
+ static __always_inline void __change_bit(long nr, volatile unsigned long *addr)
  {
- 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
- 	kfree(inst);
-@@ -580,7 +580,7 @@ static int create(struct crypto_template
- 	inst->alg.encrypt = encrypt;
- 	inst->alg.decrypt = decrypt;
+-	asm volatile("btc %1,%0" : ADDR : "Ir" (nr));
++	asm volatile(__ASM_SIZE(btc) " %1,%0" : ADDR : "Ir" (nr));
+ }
  
--	inst->free = free;
-+	inst->free = free_inst;
+ /**
+@@ -201,7 +201,7 @@ static __always_inline void change_bit(l
+ 			: CONST_MASK_ADDR(nr, addr)
+ 			: "iq" ((u8)CONST_MASK(nr)));
+ 	} else {
+-		asm volatile(LOCK_PREFIX "btc %1,%0"
++		asm volatile(LOCK_PREFIX __ASM_SIZE(btc) " %1,%0"
+ 			: BITOP_ADDR(addr)
+ 			: "Ir" (nr));
+ 	}
+@@ -217,7 +217,8 @@ static __always_inline void change_bit(l
+  */
+ static __always_inline bool test_and_set_bit(long nr, volatile unsigned long *addr)
+ {
+-	GEN_BINARY_RMWcc(LOCK_PREFIX "bts", *addr, "Ir", nr, "%0", c);
++	GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(bts),
++	                 *addr, "Ir", nr, "%0", c);
+ }
  
- 	err = skcipher_register_instance(tmpl, inst);
- 	if (err)
+ /**
+@@ -246,7 +247,7 @@ static __always_inline bool __test_and_s
+ {
+ 	bool oldbit;
+ 
+-	asm("bts %2,%1"
++	asm(__ASM_SIZE(bts) " %2,%1"
+ 	    CC_SET(c)
+ 	    : CC_OUT(c) (oldbit), ADDR
+ 	    : "Ir" (nr));
+@@ -263,7 +264,8 @@ static __always_inline bool __test_and_s
+  */
+ static __always_inline bool test_and_clear_bit(long nr, volatile unsigned long *addr)
+ {
+-	GEN_BINARY_RMWcc(LOCK_PREFIX "btr", *addr, "Ir", nr, "%0", c);
++	GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btr),
++	                 *addr, "Ir", nr, "%0", c);
+ }
+ 
+ /**
+@@ -286,7 +288,7 @@ static __always_inline bool __test_and_c
+ {
+ 	bool oldbit;
+ 
+-	asm volatile("btr %2,%1"
++	asm volatile(__ASM_SIZE(btr) " %2,%1"
+ 		     CC_SET(c)
+ 		     : CC_OUT(c) (oldbit), ADDR
+ 		     : "Ir" (nr));
+@@ -298,7 +300,7 @@ static __always_inline bool __test_and_c
+ {
+ 	bool oldbit;
+ 
+-	asm volatile("btc %2,%1"
++	asm volatile(__ASM_SIZE(btc) " %2,%1"
+ 		     CC_SET(c)
+ 		     : CC_OUT(c) (oldbit), ADDR
+ 		     : "Ir" (nr) : "memory");
+@@ -316,7 +318,8 @@ static __always_inline bool __test_and_c
+  */
+ static __always_inline bool test_and_change_bit(long nr, volatile unsigned long *addr)
+ {
+-	GEN_BINARY_RMWcc(LOCK_PREFIX "btc", *addr, "Ir", nr, "%0", c);
++	GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btc),
++	                 *addr, "Ir", nr, "%0", c);
+ }
+ 
+ static __always_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
+@@ -329,7 +332,7 @@ static __always_inline bool variable_tes
+ {
+ 	bool oldbit;
+ 
+-	asm volatile("bt %2,%1"
++	asm volatile(__ASM_SIZE(bt) " %2,%1"
+ 		     CC_SET(c)
+ 		     : CC_OUT(c) (oldbit)
+ 		     : "m" (*(unsigned long *)addr), "Ir" (nr));
+--- a/arch/x86/include/asm/percpu.h
++++ b/arch/x86/include/asm/percpu.h
+@@ -526,7 +526,7 @@ static inline bool x86_this_cpu_variable
+ {
+ 	bool oldbit;
+ 
+-	asm volatile("bt "__percpu_arg(2)",%1"
++	asm volatile("btl "__percpu_arg(2)",%1"
+ 			CC_SET(c)
+ 			: CC_OUT(c) (oldbit)
+ 			: "m" (*(unsigned long __percpu *)addr), "Ir" (nr));
 
 
