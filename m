@@ -2,114 +2,127 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E52C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF648206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:49:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VCHeNapr"
+	by mail.kernel.org (Postfix) with ESMTP id A8DC2207FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:50:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgERNtq (ORCPT
+        id S1727936AbgERNuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:49:46 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40954 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbgERNtp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:49:45 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04IDnbe5096804;
-        Mon, 18 May 2020 08:49:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589809777;
-        bh=GwQF3k6O8rIzhSQ8vh0/BGxUXW9aYuYmfPlGt47XLWE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VCHeNaprJpzW3fNJuEpINNJ8qSs3LKApqpvpKoEtIcXdV4DqdJvnSr/RKu5gLOLWf
-         gN2/OAJX27+MJgfvK09sskNhrsriORYC0LKY4LNDruVdkVy4Wmu1dgEv7bXa8y2sL+
-         D57a0HTQjBnZtIX5dpyUKLjfW93NaWENPC5fckH4=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04IDnbQN130491;
-        Mon, 18 May 2020 08:49:37 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 18
- May 2020 08:49:36 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 18 May 2020 08:49:36 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04IDnXZX048504;
-        Mon, 18 May 2020 08:49:34 -0500
-Subject: Re: [RESEND PATCH v8 0/3] Add Intel ComboPhy driver
-To:     Dilip Kota <eswara.kota@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <vkoul@kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <robh@kernel.org>, <andriy.shevchenko@intel.com>,
-        <cheol.yong.kim@intel.com>, <chuanhua.lei@linux.intel.com>,
-        <qi-ming.wu@intel.com>, <yixin.zhu@intel.com>
-References: <cover.1589530082.git.eswara.kota@linux.intel.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <1d58e6e6-4860-dbde-1b9e-e0804180cddb@ti.com>
-Date:   Mon, 18 May 2020 19:19:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 09:50:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:41130 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726918AbgERNuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 09:50:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3AEF101E;
+        Mon, 18 May 2020 06:50:09 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 782F53F52E;
+        Mon, 18 May 2020 06:50:08 -0700 (PDT)
+Date:   Mon, 18 May 2020 14:50:06 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     robh+dt@kernel.org, amurray@thegoodpenguin.co.uk,
+        bhelgaas@google.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V2] arm64: tegra: Fix flag for 64-bit resources in
+ 'ranges' property
+Message-ID: <20200518135006.GB31554@e121166-lin.cambridge.arm.com>
+References: <20200513191627.8533-1-vidyas@nvidia.com>
+ <20200514135437.29814-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <cover.1589530082.git.eswara.kota@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514135437.29814-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dilip,
-
-On 5/15/2020 1:43 PM, Dilip Kota wrote:
-> This patch series adds Intel ComboPhy driver, respective yaml schemas
+On Thu, May 14, 2020 at 07:24:37PM +0530, Vidya Sagar wrote:
+> Fix flag in PCIe controllers device-tree nodes 'ranges' property to correctly
+> represent 64-bit resources.
 > 
-> Changes on v8:
->   As per PHY Maintainer's request add description in comments for doing
->   register access through register map framework.
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V2:
+> * Extended the change to cover other controllers as well
 > 
-> Changes on v7:
->   As per System control driver maintainer's inputs remove
->     fwnode_to_regmap() definition and use device_node_get_regmap()
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 
-Can you fix this warning and resend the patch?
-drivers/phy/intel/phy-intel-combo.c:229:6: warning: ‘cb_mode’ may be used
-uninitialized in this function [-Wmaybe-uninitialized]
-  ret = regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
-  ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/phy/intel/phy-intel-combo.c:204:24: note: ‘cb_mode’ was declared here
-  enum intel_combo_mode cb_mode;
-                        ^~~~~~~
+We don't apply DTS patches - so no need to CC linux-pci from now
+onwards on these. Marked as not-applicable.
 
-Thanks
-Kishon
->     
-> Changes on v6:
->   Rebase patches on the latest maintainer's branch
->   https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/?h=phy-for-5.7
-> Dilip Kota (3):
->   dt-bindings: phy: Add PHY_TYPE_XPCS definition
->   dt-bindings: phy: Add YAML schemas for Intel ComboPhy
->   phy: intel: Add driver support for ComboPhy
-> 
->  .../devicetree/bindings/phy/intel,combo-phy.yaml   | 101 ++++
->  drivers/phy/intel/Kconfig                          |  14 +
->  drivers/phy/intel/Makefile                         |   1 +
->  drivers/phy/intel/phy-intel-combo.c                | 632 +++++++++++++++++++++
->  include/dt-bindings/phy/phy.h                      |   1 +
->  5 files changed, 749 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
->  create mode 100644 drivers/phy/intel/phy-intel-combo.c
+Lorenzo
+
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> index e1ae01c2d039..4bc187a4eacd 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> @@ -1405,7 +1405,7 @@
+>  
+>  		bus-range = <0x0 0xff>;
+>  		ranges = <0x81000000 0x0  0x30100000 0x0  0x30100000 0x0 0x00100000   /* downstream I/O (1MB) */
+> -			  0xc2000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+> +			  0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+>  			  0x82000000 0x0  0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+>  	};
+>  
+> @@ -1450,7 +1450,7 @@
+>  
+>  		bus-range = <0x0 0xff>;
+>  		ranges = <0x81000000 0x0  0x32100000 0x0  0x32100000 0x0 0x00100000   /* downstream I/O (1MB) */
+> -			  0xc2000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+> +			  0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+>  			  0x82000000 0x0  0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+>  	};
+>  
+> @@ -1495,7 +1495,7 @@
+>  
+>  		bus-range = <0x0 0xff>;
+>  		ranges = <0x81000000 0x0  0x34100000 0x0  0x34100000 0x0 0x00100000   /* downstream I/O (1MB) */
+> -			  0xc2000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+> +			  0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+>  			  0x82000000 0x0  0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+>  	};
+>  
+> @@ -1540,7 +1540,7 @@
+>  
+>  		bus-range = <0x0 0xff>;
+>  		ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
+> -			  0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+> +			  0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+>  			  0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+>  	};
+>  
+> @@ -1585,7 +1585,7 @@
+>  
+>  		bus-range = <0x0 0xff>;
+>  		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
+> -			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+> +			  0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+>  			  0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+>  	};
+>  
+> @@ -1634,7 +1634,7 @@
+>  
+>  		bus-range = <0x0 0xff>;
+>  		ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
+> -			  0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+> +			  0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+>  			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+>  	};
+>  
+> -- 
+> 2.17.1
 > 
