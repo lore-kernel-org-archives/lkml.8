@@ -2,123 +2,84 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFA2C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AFFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CEF820835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:43:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="N/Mo9gOd"
+	by mail.kernel.org (Postfix) with ESMTP id 32E56207D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgERHn0 (ORCPT
+        id S1727772AbgERHo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 03:43:26 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:25993 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgERHnZ (ORCPT
+        Mon, 18 May 2020 03:44:26 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:3529 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbgERHo0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 03:43:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589787804; x=1621323804;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=FKJAh1HkVv8d/p5YjXylM2nem6uVcaMiV5E5Xj3YJxg=;
-  b=N/Mo9gOdr8dLG92VO2vspqYTdC6ybwy06MNDNqrb1h5K4v4ruEkCkND2
-   cu0mZo4ozsdylQg/voj7wziwalD74fTzC4IMIyACbyyecFeOtwRyzEi9N
-   KbyGKXlPtFU3qM/y/WdEUaYyGmmDr6Vcw7og6K3x+WYJugwkF/lFSPCPo
-   Zk5f8N1qrsFCjQf0gcqKGCriHJFBmulpA103J1MKUZDHkpXSJEv83QGGr
-   z9bZiF3T8i7eiR5uFXkifdto6TQIulSIllcLw45pcNZvW2MQdntXxG7Av
-   CJddKWzosR+z76xtTrSM9/5AZKAj3T4CtK1+RkmYrl/GSBabx5+Cvrwq2
-   A==;
-IronPort-SDR: 9nIYTc6j7tSmHkUO/HDAiU7Hl4ptKImLP7FdPLXeUtwqYerLqPzqdExoE6E93pFxzBah3KHWWG
- Q9JPG+I2MEL3gHJXGrutIvVYPjZUo1UEB3ylMVbpbguzVvgclguDsT6B3iZUd/aTMSYKFy83vM
- CmUy67KdBD33r96EVfEhNlaspRBqwP35OdPswMyZsL8Gqtsd2knoZobWdvb4W8vZXCFq31c9xV
- fWceeyx3oQjJyQHT8TKz77OVnpKjLO40OSg3akb7hIM2OYZrCRcRG94HfDVpY9JW6g17CLZwRG
- ScA=
-X-IronPort-AV: E=Sophos;i="5.73,406,1583218800"; 
-   d="scan'208";a="73738900"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 May 2020 00:43:22 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 18 May 2020 00:43:22 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 18 May 2020 00:43:17 -0700
-References: <20200513125532.24585-1-lars.povlsen@microchip.com> <20200513125532.24585-7-lars.povlsen@microchip.com> <2d230dab95ee96727a42f9c242c93c18@misterjones.org> <871rnlp740.fsf@soft-dev15.microsemi.net> <18c0d9ef-9a2b-31d0-b317-f051bb26a907@arm.com>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Marc Zyngier <maz@misterjones.org>,
-        <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, SoC Team <soc@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Olof Johansson" <olof@lixom.net>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>
-Subject: Re: [PATCH 06/14] arm64: dts: sparx5: Add basic cpu support
-In-Reply-To: <18c0d9ef-9a2b-31d0-b317-f051bb26a907@arm.com>
-Date:   Mon, 18 May 2020 09:43:16 +0200
-Message-ID: <87wo59ofhn.fsf@soft-dev15.microsemi.net>
+        Mon, 18 May 2020 03:44:26 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.5]) by rmmx-syy-dmz-app01-12001 (RichMail) with SMTP id 2ee15ec23ca1a69-30e3d; Mon, 18 May 2020 15:43:29 +0800 (CST)
+X-RM-TRANSID: 2ee15ec23ca1a69-30e3d
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee35ec23c9ef8a-3723f;
+        Mon, 18 May 2020 15:43:29 +0800 (CST)
+X-RM-TRANSID: 2ee35ec23c9ef8a-3723f
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     broonie@kernel.org, timur@kernel.org, nicoleotsuka@gmail.com,
+        Xiubo.Lee@gmail.com, perex@perex.cz
+Cc:     alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH] ASoC: fsl_micfil: Fix format and unused assignment
+Date:   Mon, 18 May 2020 15:44:05 +0800
+Message-Id: <20200518074405.14880-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In the function fsl_micfil_startup(), the two lines of dev_err()
+can be shortened to one line. And delete unused initialized value
+of 'ret', because it will be assigned by the function
+fsl_micfil_set_mclk_rate().
 
-Robin Murphy writes:
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+ sound/soc/fsl/fsl_micfil.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->
-> On 2020-05-15 16:09, Lars Povlsen wrote:
-> [...]
->>>> +             cpu0: cpu@0 {
->>>> +                     compatible = "arm,cortex-a53", "arm,armv8";
->
-> Side note: only one compatible string for the real CPU please, running a
-> DT bindings check should complain about that.
->
-
-I'll change this.
-
->>>> +                     device_type = "cpu";
->>>> +                     reg = <0x0 0x0>;
->>>> +                     enable-method = "spin-table";
->>>
->>> Really? This is 2020, not 2012 any more. Surely a new platform
->>> boots using PSCI, and not *this*.
->>>
->>
->> We don't currently support PSCI. The platform does not have TrustZone,
->> hence we don't use ATF.
-> AIUI, part of the purpose of ATF is to provide a nice standardised
-> platform interface regardless of whether you care about Secure software
-> or not. It shouldn't take much to knock up a trivial ATF port that just
-> uses an internal spin-table for its PSCI backend - in fact I suspect
-> that's probably just a copy-paste from the RPi3 port ;)
->
-
-I'll change this to PSCI if that's whats expected these days. We
-actually already have an ATF port. I fully understand the desire to
-standardize on PSCI.
-
-> Robin.
-
+diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
+index f7f2d29f1..a7a6118be 100644
+--- a/sound/soc/fsl/fsl_micfil.c
++++ b/sound/soc/fsl/fsl_micfil.c
+@@ -217,8 +217,7 @@ static int fsl_micfil_startup(struct snd_pcm_substream *substream,
+ 	struct fsl_micfil *micfil = snd_soc_dai_get_drvdata(dai);
+ 
+ 	if (!micfil) {
+-		dev_err(dai->dev,
+-			"micfil dai priv_data not set\n");
++		dev_err(dai->dev, "micfil dai priv_data not set\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -296,7 +295,7 @@ static int fsl_set_clock_params(struct device *dev, unsigned int rate)
+ {
+ 	struct fsl_micfil *micfil = dev_get_drvdata(dev);
+ 	int clk_div;
+-	int ret = 0;
++	int ret;
+ 
+ 	ret = fsl_micfil_set_mclk_rate(micfil, rate);
+ 	if (ret < 0)
 -- 
-Lars Povlsen,
-Microchip
+2.20.1.windows.1
+
+
+
