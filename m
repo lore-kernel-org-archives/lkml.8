@@ -2,52 +2,51 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C14C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C442C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 395CD20835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17069207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824846;
-	bh=LJUH6SI1WM2SUCEX/8syheNDQeQu0nGxG/o/Bs3whsA=;
+	s=default; t=1589824850;
+	bh=bilQRGimaC9QS9pokQ0sfLWFm5nTVThenmiGeoSWa9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a+26xTR7lC8TlOv5Y+GsCE6/oZepKHGmXyG9YoxLzAsX3NQA6dG1G/13+KDphZlQA
-	 G0oeLjtewefGmKBOlgHKbqnp3o9I6njWiANGpc6Xwph309z+K3vHHBZed801LFZH3p
-	 6iFsehN3B5RCuWyv7glNy6WprF/ZiCUK24eX24Rc=
+	b=DV1CJqqUkqS0nunzIPiBFsSSLTxavuL1trm4+PurEZr1RbLWDEn5gAn5zXv2aNgGw
+	 tkGeT/941ZOnyDvUf2cxGppYMYsKrgqYzmr1y/SNgFUCEYKmyzwjU8znxaXJgysqsE
+	 dwIZOAT09JMbyuOxLobxyw5dQi5Faf9et4gPSY0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731809AbgERSAp (ORCPT
+        id S1732300AbgERSAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:00:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42328 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:00:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732313AbgERSAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:00:39 -0400
+        id S1731464AbgERSAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:00:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B87AF20715;
-        Mon, 18 May 2020 18:00:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0076220715;
+        Mon, 18 May 2020 18:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824839;
-        bh=LJUH6SI1WM2SUCEX/8syheNDQeQu0nGxG/o/Bs3whsA=;
+        s=default; t=1589824844;
+        bh=bilQRGimaC9QS9pokQ0sfLWFm5nTVThenmiGeoSWa9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y9guND0wTaEYePROwKTtPjnUmnwgV+9di3Fxlmy1HHMl7GJ7ViE4u+PLPbsR5Wf+g
-         kC48NOJcqAF6P1BzHP6Ee9rf3xVpct7lp2xo4qmdeTGOc49kRAmiOZyJuc3yBN6wIB
-         qQxe8nSIAGHmHGBj89fswfpQn35dvbWpxR5uKu3A=
+        b=dBAPjxQ3xQdO4WbwFZvXV6bEeq5TZy+6uZDsAc/MTeFPwaDuHnw806OMwUl1HLvkT
+         H8/HHCifNcrj/Ddh7ZRUinW5r4ijF6qdHJ6r/dgbBfRzBpJW/m3mB9wc1FMfauUkV6
+         ZRIVf0G7nHYunLqaARQY/6Zdam8or/px6EvwuoiM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 024/194] net: stmmac: gmac5+: fix potential integer overflow on 32 bit multiply
-Date:   Mon, 18 May 2020 19:35:14 +0200
-Message-Id: <20200518173533.549851591@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 026/194] iommu/amd: Update Device Table in increase_address_space()
+Date:   Mon, 18 May 2020 19:35:16 +0200
+Message-Id: <20200518173533.708889920@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,37 +59,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit 44d95cc6b10ff7439d45839c96c581cb4368c088 ]
+[ Upstream commit 19c6978fba68a2cdedee7d55fb8c3063d47982d9 ]
 
-The multiplication of cfg->ctr[1] by 1000000000 is performed using a
-32 bit multiplication (since cfg->ctr[1] is a u32) and this can lead
-to a potential overflow. Fix this by making the constant a ULL to
-ensure a 64 bit multiply occurs.
+The Device Table needs to be updated before the new page-table root
+can be published in domain->pt_root. Otherwise a concurrent call to
+fetch_pte might fetch a PTE which is not reachable through the Device
+Table Entry.
 
-Fixes: 504723af0d85 ("net: stmmac: Add basic EST support for GMAC5+")
-Addresses-Coverity: ("Unintentional integer overflow")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 92d420ec028d ("iommu/amd: Relax locking in dma_ops path")
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Tested-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/20200504125413.16798-5-joro@8bytes.org
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac5.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/amd_iommu.c | 49 ++++++++++++++++++++++++++++-----------
+ 1 file changed, 36 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-index 494c859b4ade8..67ba67ed0cb99 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-@@ -624,7 +624,7 @@ int dwmac5_est_configure(void __iomem *ioaddr, struct stmmac_est *cfg,
- 		total_offset += offset;
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 28229a38af4d2..500d0a8c966fc 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -101,6 +101,8 @@ struct kmem_cache *amd_iommu_irq_cache;
+ static void update_domain(struct protection_domain *domain);
+ static int protection_domain_init(struct protection_domain *domain);
+ static void detach_device(struct device *dev);
++static void update_and_flush_device_table(struct protection_domain *domain,
++					  struct domain_pgtable *pgtable);
+ 
+ /****************************************************************************
+  *
+@@ -1461,8 +1463,16 @@ static bool increase_address_space(struct protection_domain *domain,
+ 
+ 	*pte = PM_LEVEL_PDE(pgtable.mode, iommu_virt_to_phys(pgtable.root));
+ 
+-	root = amd_iommu_domain_encode_pgtable(pte, pgtable.mode + 1);
++	pgtable.root  = pte;
++	pgtable.mode += 1;
++	update_and_flush_device_table(domain, &pgtable);
++	domain_flush_complete(domain);
+ 
++	/*
++	 * Device Table needs to be updated and flushed before the new root can
++	 * be published.
++	 */
++	root = amd_iommu_domain_encode_pgtable(pte, pgtable.mode);
+ 	atomic64_set(&domain->pt_root, root);
+ 
+ 	ret = true;
+@@ -1882,19 +1892,17 @@ static bool dma_ops_domain(struct protection_domain *domain)
+ }
+ 
+ static void set_dte_entry(u16 devid, struct protection_domain *domain,
++			  struct domain_pgtable *pgtable,
+ 			  bool ats, bool ppr)
+ {
+-	struct domain_pgtable pgtable;
+ 	u64 pte_root = 0;
+ 	u64 flags = 0;
+ 	u32 old_domid;
+ 
+-	amd_iommu_domain_get_pgtable(domain, &pgtable);
++	if (pgtable->mode != PAGE_MODE_NONE)
++		pte_root = iommu_virt_to_phys(pgtable->root);
+ 
+-	if (pgtable.mode != PAGE_MODE_NONE)
+-		pte_root = iommu_virt_to_phys(pgtable.root);
+-
+-	pte_root |= (pgtable.mode & DEV_ENTRY_MODE_MASK)
++	pte_root |= (pgtable->mode & DEV_ENTRY_MODE_MASK)
+ 		    << DEV_ENTRY_MODE_SHIFT;
+ 	pte_root |= DTE_FLAG_IR | DTE_FLAG_IW | DTE_FLAG_V | DTE_FLAG_TV;
+ 
+@@ -1967,6 +1975,7 @@ static void clear_dte_entry(u16 devid)
+ static void do_attach(struct iommu_dev_data *dev_data,
+ 		      struct protection_domain *domain)
+ {
++	struct domain_pgtable pgtable;
+ 	struct amd_iommu *iommu;
+ 	bool ats;
+ 
+@@ -1982,7 +1991,9 @@ static void do_attach(struct iommu_dev_data *dev_data,
+ 	domain->dev_cnt                 += 1;
+ 
+ 	/* Update device table */
+-	set_dte_entry(dev_data->devid, domain, ats, dev_data->iommu_v2);
++	amd_iommu_domain_get_pgtable(domain, &pgtable);
++	set_dte_entry(dev_data->devid, domain, &pgtable,
++		      ats, dev_data->iommu_v2);
+ 	clone_aliases(dev_data->pdev);
+ 
+ 	device_flush_dte(dev_data);
+@@ -2293,22 +2304,34 @@ static int amd_iommu_domain_get_attr(struct iommu_domain *domain,
+  *
+  *****************************************************************************/
+ 
+-static void update_device_table(struct protection_domain *domain)
++static void update_device_table(struct protection_domain *domain,
++				struct domain_pgtable *pgtable)
+ {
+ 	struct iommu_dev_data *dev_data;
+ 
+ 	list_for_each_entry(dev_data, &domain->dev_list, list) {
+-		set_dte_entry(dev_data->devid, domain, dev_data->ats.enabled,
+-			      dev_data->iommu_v2);
++		set_dte_entry(dev_data->devid, domain, pgtable,
++			      dev_data->ats.enabled, dev_data->iommu_v2);
+ 		clone_aliases(dev_data->pdev);
  	}
+ }
  
--	total_ctr = cfg->ctr[0] + cfg->ctr[1] * 1000000000;
-+	total_ctr = cfg->ctr[0] + cfg->ctr[1] * 1000000000ULL;
- 	total_ctr += total_offset;
++static void update_and_flush_device_table(struct protection_domain *domain,
++					  struct domain_pgtable *pgtable)
++{
++	update_device_table(domain, pgtable);
++	domain_flush_devices(domain);
++}
++
+ static void update_domain(struct protection_domain *domain)
+ {
+-	update_device_table(domain);
++	struct domain_pgtable pgtable;
  
- 	ctr_low = do_div(total_ctr, 1000000000);
+-	domain_flush_devices(domain);
++	/* Update device table */
++	amd_iommu_domain_get_pgtable(domain, &pgtable);
++	update_and_flush_device_table(domain, &pgtable);
++
++	/* Flush domain TLB(s) and wait for completion */
+ 	domain_flush_tlb_pde(domain);
+ }
+ 
 -- 
 2.20.1
 
