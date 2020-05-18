@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE495C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD408C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C462920671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F9D20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825890;
-	bh=lVcD8Iglm5L3dUlMBoeQCYLzsmbVnShCoMIN3gjOd98=;
+	s=default; t=1589825896;
+	bh=PL0ZmeWqc8FMIxU1IoNlidUEHrZGToEEtWQh6ygb26A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p69pRGNpdkLMkKyVMSOb98SGAE7gTUFF6XmCWW4leobsN0V5QRjokIXTohYjVnRKG
-	 Rx95K4ndHMFCOLn8pyezs3QL+DsJJ638FdmdiRKJ6MlqQu5K8ZVIydOm86xuMjL7Xu
-	 FS64+xbOF9owgmLgbo2FXggqTFVxjWBTzRG2QPPU=
+	b=ICroXSWU6+kc/xV1mEzKfSysw/5gXeGCMlPdF/AwzhjkMYn3RVtsqYU0vfsaqUAT9
+	 XBxjycF43DMxM2MYclWHJeJXvMApuz24p93XXdhUbO8f99+bE+SYvWXOgg5NHVilp7
+	 61/RUoLrYEhNj1wzCd+BBBJ1O/nWcUx/1RZWs83U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387714AbgERSSJ (ORCPT
+        id S1731587AbgERR4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:18:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34096 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:56:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731610AbgERR4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:56:17 -0400
+        id S1730533AbgERR4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:56:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0044520826;
-        Mon, 18 May 2020 17:56:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ED0520674;
+        Mon, 18 May 2020 17:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824577;
-        bh=lVcD8Iglm5L3dUlMBoeQCYLzsmbVnShCoMIN3gjOd98=;
+        s=default; t=1589824562;
+        bh=PL0ZmeWqc8FMIxU1IoNlidUEHrZGToEEtWQh6ygb26A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RdbK2iYSf66R+UNsN406tSwf+sJ8nYJ3Rp8hhS5Dt5POz9Gj5tz5GmqxSXeQk+JND
-         tdNFN8MI5iCtYU6TEq2IS91/NwQ7ZRQLnDsaCMuai6Q7/N2O4M5YV87kRSP7oVs8Ko
-         EN4qaJGfa8V7yEAA0E9wUnX+Zm2IYD2fadEx6DGI=
+        b=LQTkzqr9z8kScq169296mnCLEYDi5RYKfaG0SxXqwF+esk7Of1phDCOAbAtn8kNpk
+         MLkq3tP/TtxYtsTvMokKQ3KQdzY0MECzazyfMPx/SE/QKxGRyEsBq0jGXg3SWbVL2H
+         uIytfMY9fXw97Xwn923bZOXDye+Os3XqD/Imc69o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 066/147] mmc: alcor: Fix a resource leak in the error path for ->probe()
-Date:   Mon, 18 May 2020 19:36:29 +0200
-Message-Id: <20200518173522.255300152@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 061/147] ALSA: firewire-lib: fix function sizeof not defined error of tracepoints format
+Date:   Mon, 18 May 2020 19:36:24 +0200
+Message-Id: <20200518173521.629862027@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -61,47 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit 7c277dd2b0ff6a16f1732a66c2c52a29f067163e ]
+[ Upstream commit 1034872123a06b759aba772b1c99612ccb8e632a ]
 
-If devm_request_threaded_irq() fails, the allocated struct mmc_host needs
-to be freed via calling mmc_free_host(), so let's do that.
+The snd-firewire-lib.ko has 'amdtp-packet' event of tracepoints. Current
+printk format for the event includes 'sizeof(u8)' macro expected to be
+extended in compilation time. However, this is not done. As a result,
+perf tools cannot parse the event for printing:
 
-Fixes: c5413ad815a6 ("mmc: add new Alcor Micro Cardreader SD/MMC driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/20200426202355.43055-1-christophe.jaillet@wanadoo.fr
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+$ mount -l -t debugfs
+debugfs on /sys/kernel/debug type debugfs (rw,nosuid,nodev,noexec,relatime)
+$ cat /sys/kernel/debug/tracing/events/snd_firewire_lib/amdtp_packet/format
+...
+print fmt: "%02u %04u %04x %04x %02d %03u %02u %03u %02u %01u %02u %s",
+  REC->second, REC->cycle, REC->src, REC->dest, REC->channel,
+  REC->payload_quadlets, REC->data_blocks, REC->data_block_counter,
+  REC->packet_index, REC->irq, REC->index,
+  __print_array(__get_dynamic_array(cip_header),
+                __get_dynamic_array_len(cip_header),
+                sizeof(u8))
+
+$ sudo perf record -e snd_firewire_lib:amdtp_packet
+  [snd_firewire_lib:amdtp_packet] function sizeof not defined
+  Error: expected type 5 but read 0
+
+This commit fixes it by obsoleting the macro with actual size.
+
+Cc: <stable@vger.kernel.org>
+Fixes: bde2bbdb307a ("ALSA: firewire-lib: use dynamic array for CIP header of tracing events")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20200503045718.86337-1-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/alcor.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ sound/firewire/amdtp-stream-trace.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/alcor.c b/drivers/mmc/host/alcor.c
-index 1aee485d56d4c..026ca9194ce5b 100644
---- a/drivers/mmc/host/alcor.c
-+++ b/drivers/mmc/host/alcor.c
-@@ -1104,7 +1104,7 @@ static int alcor_pci_sdmmc_drv_probe(struct platform_device *pdev)
+diff --git a/sound/firewire/amdtp-stream-trace.h b/sound/firewire/amdtp-stream-trace.h
+index 16c7f6605511e..26e7cb555d3c5 100644
+--- a/sound/firewire/amdtp-stream-trace.h
++++ b/sound/firewire/amdtp-stream-trace.h
+@@ -66,8 +66,7 @@ TRACE_EVENT(amdtp_packet,
+ 		__entry->irq,
+ 		__entry->index,
+ 		__print_array(__get_dynamic_array(cip_header),
+-			      __get_dynamic_array_len(cip_header),
+-			      sizeof(u8)))
++			      __get_dynamic_array_len(cip_header), 1))
+ );
  
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to get irq for data line\n");
--		return ret;
-+		goto free_host;
- 	}
- 
- 	mutex_init(&host->cmd_mutex);
-@@ -1116,6 +1116,10 @@ static int alcor_pci_sdmmc_drv_probe(struct platform_device *pdev)
- 	dev_set_drvdata(&pdev->dev, host);
- 	mmc_add_host(mmc);
- 	return 0;
-+
-+free_host:
-+	mmc_free_host(mmc);
-+	return ret;
- }
- 
- static int alcor_pci_sdmmc_drv_remove(struct platform_device *pdev)
+ #endif
 -- 
 2.20.1
 
