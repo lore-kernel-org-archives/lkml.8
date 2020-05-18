@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B7BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAC3A20888
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645FE207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824547;
-	bh=K9sOYabv7aBb7ZHiBg2GiocuIAbCVTcXXK9GiqX+y08=;
+	s=default; t=1589824550;
+	bh=xqU7XTG8IrFP4wWzrQNI/Jhvc1jweG7tHLqA+M523ms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0dOt39B5PWIptbx0OWxKW9a5GcuEqhDFAFjUFhnMNvKwRr1uWGpg4zaLvh6zFUBz8
-	 KSCpmn+KtmYCuNG69Zy6Xr3WNaCXiLRXAWi7hOYQEj9vnqNx9o5oIKyovbIwt+ATLg
-	 ujH2glgXxgAeCj5mc/PoPwgGvMsPasZ/H3G9XQbE=
+	b=r4wxW+mYsL6n/uPlTt418+bSlkSI3GTYh6EGo5thIEHhGwxTNAsPTNLx9ALVqnIVK
+	 svnMXzCVDRCStcCZn1lQHwaHIsnky02sAwrOl472uQl9vNVX6ze1gH0JvzDU7zqh5L
+	 sU8RLasdx+2V7IXXa3MX8Nxy17+ZOA2B2ZUPVDDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731551AbgERRzn (ORCPT
+        id S1731474AbgERRzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32982 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:55:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730501AbgERRzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:55:38 -0400
+        id S1731476AbgERRzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:55:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E87520674;
-        Mon, 18 May 2020 17:55:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D070220715;
+        Mon, 18 May 2020 17:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824537;
-        bh=K9sOYabv7aBb7ZHiBg2GiocuIAbCVTcXXK9GiqX+y08=;
+        s=default; t=1589824545;
+        bh=xqU7XTG8IrFP4wWzrQNI/Jhvc1jweG7tHLqA+M523ms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z76dSyrW5hp5xsdmi40Qd+Vjpul9l5KJphVSbBGvqXkAbZ4fTnafoBINg1sxywoCb
-         3dJbwOxQN4W6n+oQnO163GWlo5Yl2O/lNUYBvq1KGaILBmxr6dVL5aMNO6r97BWsBj
-         jBhZdqB6INP2VuLRYJR/5EByjZfd3maFTwJsLEvE=
+        b=R03FpKkX9qpBy3enh30mbmZgxDvfpJLOMqKo6+HcRpXTo1u2RNc4/PRvbC7LnY6tl
+         Uk/4pPB3nAhLMreNu5jbaQ8hc6XomL0BOnxMgdpswo0hFIbMnC3RL2ezwFmXAMi8qa
+         hMFgpICHStmg3Sy8eqqqdlnJlyrOB+7biexXVudA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>,
+        stable@vger.kernel.org,
+        Todd Brandt <todd.e.brandt@linux.intel.com>,
+        Chris Chiu <chiu@endlessm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 052/147] gfs2: Another gfs2_walk_metadata fix
-Date:   Mon, 18 May 2020 19:36:15 +0200
-Message-Id: <20200518173520.446979306@linuxfoundation.org>
+Subject: [PATCH 5.4 055/147] ACPI: EC: PM: Avoid premature returns from acpi_s2idle_wake()
+Date:   Mon, 18 May 2020 19:36:18 +0200
+Message-Id: <20200518173520.835382245@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -60,75 +62,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 566a2ab3c9005f62e784bd39022d58d34ef4365c ]
+[ Upstream commit 7b301750f7f8f6503e11f1af4a03832525f58c66 ]
 
-Make sure we don't walk past the end of the metadata in gfs2_walk_metadata: the
-inode holds fewer pointers than indirect blocks.
+If the EC GPE status is not set after checking all of the other GPEs,
+acpi_s2idle_wake() returns 'false', to indicate that the SCI event
+that has just triggered is not a system wakeup one, but it does that
+without canceling the pending wakeup and re-arming the SCI for system
+wakeup which is a mistake, because it may cause s2idle_loop() to busy
+spin until the next valid wakeup event.  [If that happens, the first
+spurious wakeup is still pending after acpi_s2idle_wake() has
+returned, so s2idle_enter() does nothing, acpi_s2idle_wake()
+is called again and it sees that the SCI has triggered, but no GPEs
+are active, so 'false' is returned again, and so on.]
 
-Slightly clean up gfs2_iomap_get.
+Fix that by moving all of the GPE checking logic from
+acpi_s2idle_wake() to acpi_ec_dispatch_gpe() and making the
+latter return 'true' only if a non-EC GPE has triggered and
+'false' otherwise, which will cause acpi_s2idle_wake() to
+cancel the pending SCI wakeup and re-arm the SCI for system
+wakeup regardless of the EC GPE status.
 
-Fixes: a27a0c9b6a20 ("gfs2: gfs2_walk_metadata fix")
-Cc: stable@vger.kernel.org # v5.3+
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+This also addresses a lockup observed on an Elitegroup EF20EA laptop
+after attempting to wake it up from suspend-to-idle by a key press.
+
+Fixes: d5406284ff80 ("ACPI: PM: s2idle: Refine active GPEs check")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=207603
+Reported-by: Todd Brandt <todd.e.brandt@linux.intel.com>
+Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+Link: https://lore.kernel.org/linux-acpi/CAB4CAwdqo7=MvyG_PE+PGVfeA17AHF5i5JucgaKqqMX6mjArbQ@mail.gmail.com/
+Reported-by: Chris Chiu <chiu@endlessm.com>
+Tested-by: Chris Chiu <chiu@endlessm.com>
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/bmap.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/acpi/ec.c       | 24 ++++++++++++++++--------
+ drivers/acpi/internal.h |  1 -
+ drivers/acpi/sleep.c    | 14 ++------------
+ 3 files changed, 18 insertions(+), 21 deletions(-)
 
-diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
-index f63df54a08c6c..adbb8fef22162 100644
---- a/fs/gfs2/bmap.c
-+++ b/fs/gfs2/bmap.c
-@@ -528,10 +528,12 @@ static int gfs2_walk_metadata(struct inode *inode, struct metapath *mp,
- 
- 		/* Advance in metadata tree. */
- 		(mp->mp_list[hgt])++;
--		if (mp->mp_list[hgt] >= sdp->sd_inptrs) {
--			if (!hgt)
-+		if (hgt) {
-+			if (mp->mp_list[hgt] >= sdp->sd_inptrs)
-+				goto lower_metapath;
-+		} else {
-+			if (mp->mp_list[hgt] >= sdp->sd_diptrs)
- 				break;
--			goto lower_metapath;
- 		}
- 
- fill_up_metapath:
-@@ -876,10 +878,9 @@ static int gfs2_iomap_get(struct inode *inode, loff_t pos, loff_t length,
- 					ret = -ENOENT;
- 					goto unlock;
- 				} else {
--					/* report a hole */
- 					iomap->offset = pos;
- 					iomap->length = length;
--					goto do_alloc;
-+					goto hole_found;
- 				}
- 			}
- 			iomap->length = size;
-@@ -933,8 +934,6 @@ static int gfs2_iomap_get(struct inode *inode, loff_t pos, loff_t length,
- 	return ret;
- 
- do_alloc:
--	iomap->addr = IOMAP_NULL_ADDR;
--	iomap->type = IOMAP_HOLE;
- 	if (flags & IOMAP_REPORT) {
- 		if (pos >= size)
- 			ret = -ENOENT;
-@@ -956,6 +955,9 @@ static int gfs2_iomap_get(struct inode *inode, loff_t pos, loff_t length,
- 		if (pos < size && height == ip->i_height)
- 			ret = gfs2_hole_size(inode, lblock, len, mp, iomap);
- 	}
-+hole_found:
-+	iomap->addr = IOMAP_NULL_ADDR;
-+	iomap->type = IOMAP_HOLE;
- 	goto out;
+diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+index 5e6c8bfc66125..5b53a66d403df 100644
+--- a/drivers/acpi/ec.c
++++ b/drivers/acpi/ec.c
+@@ -1962,23 +1962,31 @@ void acpi_ec_set_gpe_wake_mask(u8 action)
+ 		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
  }
  
+-bool acpi_ec_other_gpes_active(void)
+-{
+-	return acpi_any_gpe_status_set(first_ec ? first_ec->gpe : U32_MAX);
+-}
+-
+ bool acpi_ec_dispatch_gpe(void)
+ {
+ 	u32 ret;
+ 
+ 	if (!first_ec)
++		return acpi_any_gpe_status_set(U32_MAX);
++
++	/*
++	 * Report wakeup if the status bit is set for any enabled GPE other
++	 * than the EC one.
++	 */
++	if (acpi_any_gpe_status_set(first_ec->gpe))
++		return true;
++
++	if (ec_no_wakeup)
+ 		return false;
+ 
++	/*
++	 * Dispatch the EC GPE in-band, but do not report wakeup in any case
++	 * to allow the caller to process events properly after that.
++	 */
+ 	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
+-	if (ret == ACPI_INTERRUPT_HANDLED) {
++	if (ret == ACPI_INTERRUPT_HANDLED)
+ 		pm_pr_dbg("EC GPE dispatched\n");
+-		return true;
+-	}
++
+ 	return false;
+ }
+ #endif /* CONFIG_PM_SLEEP */
+diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
+index cbf7f34c3ce76..afe6636f9ad39 100644
+--- a/drivers/acpi/internal.h
++++ b/drivers/acpi/internal.h
+@@ -201,7 +201,6 @@ void acpi_ec_remove_query_handler(struct acpi_ec *ec, u8 query_bit);
+ 
+ #ifdef CONFIG_PM_SLEEP
+ void acpi_ec_flush_work(void);
+-bool acpi_ec_other_gpes_active(void);
+ bool acpi_ec_dispatch_gpe(void);
+ #endif
+ 
+diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+index edad89e58c580..85514c0f3aa53 100644
+--- a/drivers/acpi/sleep.c
++++ b/drivers/acpi/sleep.c
+@@ -1010,20 +1010,10 @@ static bool acpi_s2idle_wake(void)
+ 		if (acpi_check_wakeup_handlers())
+ 			return true;
+ 
+-		/*
+-		 * If the status bit is set for any enabled GPE other than the
+-		 * EC one, the wakeup is regarded as a genuine one.
+-		 */
+-		if (acpi_ec_other_gpes_active())
++		/* Check non-EC GPE wakeups and dispatch the EC GPE. */
++		if (acpi_ec_dispatch_gpe())
+ 			return true;
+ 
+-		/*
+-		 * If the EC GPE status bit has not been set, the wakeup is
+-		 * regarded as a spurious one.
+-		 */
+-		if (!acpi_ec_dispatch_gpe())
+-			return false;
+-
+ 		/*
+ 		 * Cancel the wakeup and process all pending events in case
+ 		 * there are any wakeup ones in there.
 -- 
 2.20.1
 
