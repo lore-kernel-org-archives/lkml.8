@@ -2,132 +2,99 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6125DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38C66207D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:44:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CE/lKTEp"
+	by mail.kernel.org (Postfix) with ESMTP id DE5FD20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:44:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589805874;
+	bh=xjt8SYpCaF9HcJR74gTd+H/T5qtnboYe7TcBeFf+TAs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=PM9453MeUCsvw5yyei+U9sDDmACQd2hEAysafz7TT7Yk1lqzrls9quVBbMRbM4VEw
+	 qGYOMWVjRmtG+QvQDNHuJ+nLl6luHTEEpMsU8JdTcQPDxjAZd8CCMyyXgy1kX0DcA0
+	 /9AGeIsAD4v7rqsK1oAR4FH0LvVoxriPrQHAeLOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgERMo2 (ORCPT
+        id S1727869AbgERMod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:44:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbgERMo0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:44:26 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA18C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 05:44:25 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id c3so7847783otr.12
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 05:44:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mTr78JEsRcOgBqxtDKga7we0yjXSTYq9V0GCD/PQUyg=;
-        b=CE/lKTEpgYM+eYNrcA3Ul2PeORNYAihMtIUSAUQzxTlgCD13y2KcsoH6GD5VjDKKNR
-         Ody6r93SEfNyo5hY140gdOHy4FqjrYIbdQ8hMEY6vtZs6N7SsSER9uPCGE/yE922OQCD
-         ZF/ppEjVO7h0GHNRPGcvLt8407BUq3nCM6m7w9Lb9r1rZZjNMnhnRgA38osD5gY4DlBW
-         x6LZZogX9Y20y0SekHeIVXr2MlweNiNCFTUfGK4jpMipRHNCSnKZupnd9ji6JX179tie
-         Q6nOTKxIOeoap5TYYHhoTBQZQ4oWvssd/SVXkRhmkid/u1F//otjI0LuWfrpamEcBmmX
-         Y+gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mTr78JEsRcOgBqxtDKga7we0yjXSTYq9V0GCD/PQUyg=;
-        b=BciJx+mfv1ZflDvZte6YUmk4oMEx9M+PjrvvhNu2hE+/dTZdmGzofoDncJPnByGvh0
-         QYqCmtJ/tbgB/HAsFebzpEW+YZ4H6WVgGwCo3K8i05oqL2tmyQ6Tc76UtLx67X9Ln4W7
-         mcCs88nu+QC0Bf4qI4BbrtMdy7OpjBi32eFWI1CoWWU+YH9gQA+MozUQCAuB13ATleCi
-         fND1oSgDlxQ428F9GOG89KKie9worTiSWOU8h2ZdwnhFnTjBN0rmWqDar/f18xgehohs
-         2Mb9Y+8l+cxryp1GiGe7xHEtMw7ehBnVttvkrYOXCDfn5OYhGPgdRFg7JqvALpkePmAK
-         RUKA==
-X-Gm-Message-State: AOAM532ONM/1vOUTAcFdE/UzLiW47HdVmhyb6iocXtptm7dZEY46QjlS
-        F8PW0WzV5gVBZ80b9yj8BqQwhpRXI5meRqNqZp2S0w==
-X-Google-Smtp-Source: ABdhPJwPvMfYvq+F8WYaycOD8ztBRh6nouC6YLOhckJHzcj/zHjFs5D9P695EYaTVOD9n7NlLvtY4uqWYhuUFB5kdYA=
-X-Received: by 2002:a9d:7608:: with SMTP id k8mr12982752otl.233.1589805865139;
- Mon, 18 May 2020 05:44:25 -0700 (PDT)
+        Mon, 18 May 2020 08:44:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727831AbgERMoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:44:32 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4152D2067D;
+        Mon, 18 May 2020 12:44:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589805872;
+        bh=xjt8SYpCaF9HcJR74gTd+H/T5qtnboYe7TcBeFf+TAs=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=PoKtGx9Ml3dl752X/l1tSDCh6MTYfxD8pi4oil1Tg54xVScdSVjVkbmrn5QmwZ+wA
+         fcGdQPoGA4MAU5nmms60TNtypEjMCknHsWbrk3yj4jcjChAnwe1i/29MMZijGCDlBm
+         Oc6/Fdk87ffARy9pAZ14sB6s0W2/lsSuxFKITtdU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id F383035232C9; Mon, 18 May 2020 05:44:31 -0700 (PDT)
+Date:   Mon, 18 May 2020 05:44:31 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Rong Chen <rong.a.chen@intel.com>
+Cc:     Qian Cai <cai@lca.pw>, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Amol Grover <frextrite@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>, philip.li@intel.com,
+        lkp@intel.com, fengguang.wu@intel.com
+Subject: Re: Default enable RCU list lockdep debugging with PROVE_RCU
+Message-ID: <20200518124431.GU2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200514181305.GT2869@paulmck-ThinkPad-P72>
+ <CA610F47-290E-4826-B1D9-7CE09D7CEA6D@lca.pw>
+ <20200517214716.GT2869@paulmck-ThinkPad-P72>
+ <659206f4-d326-4fd6-3091-085c7eabf280@intel.com>
 MIME-Version: 1.0
-References: <20200517011732.GE24705@shao2-debian> <20200517034739.GO2869@paulmck-ThinkPad-P72>
- <CANpmjNNj37=mgrZpzX7joAwnYk-GsuiE8oOm13r48FYAK0gSQw@mail.gmail.com>
-In-Reply-To: <CANpmjNNj37=mgrZpzX7joAwnYk-GsuiE8oOm13r48FYAK0gSQw@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 18 May 2020 14:44:13 +0200
-Message-ID: <CANpmjNMx0+=Cac=WvHuzKb2zJvgNVvVxjo_W1wYWztywxDKeCQ@mail.gmail.com>
-Subject: Re: [rcu] 2f08469563: BUG:kernel_reboot-without-warning_in_boot_stage
-To:     "Paul E. McKenney" <paulmck@kernel.org>, kan.liang@linux.intel.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, LKP <lkp@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <659206f4-d326-4fd6-3091-085c7eabf280@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+Cc clang-built-linux FYI]
+On Mon, May 18, 2020 at 01:54:13PM +0800, Rong Chen wrote:
+> 
+> 
+> On 5/18/20 5:47 AM, Paul E. McKenney wrote:
+> > On Fri, May 15, 2020 at 02:36:26PM -0400, Qian Cai wrote:
+> > > 
+> > > > On May 14, 2020, at 2:13 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > > 
+> > > > Fair enough!  And yes, the Linux kernel is quite large, so I certainly am
+> > > > not asking you to test the whole thing yourself.
+> > > Ok, I saw 0day bot also started to report those which is good. For example,
+> > > 
+> > > lkml.org/lkml/2020/5/12/1358
+> > > 
+> > > which so far is nit blocking 0day on linux-next since it does not use panic_on_warn yet (while syzbot does).
+> > > 
+> > > Thus, I am more convinced that we should not revert the commit just for syzbot until someone could also convince 0day to select RCU_EXPERT and then DEBUG_RCU_LIST?
+> > Let's ask the 0day people, now CCed, if they would be willing to
+> > build with CONFIG_RCU_EXPERT=y and CONFIG_DEBUG_RCU_LIST=y on some
+> > fraction of their testing.  ;-)
+> > 
+> > 							Thanx, Paul
+> 
+> Hi,
+> 
+> Thanks for your advice, we'll support it in the near future.
 
-On Mon, 18 May 2020 at 12:11, Marco Elver <elver@google.com> wrote:
->
-> On Sun, 17 May 2020 at 05:47, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Sun, May 17, 2020 at 09:17:32AM +0800, kernel test robot wrote:
-> > > Greeting,
-> > >
-> > > FYI, we noticed the following commit (built with clang-11):
-> > >
-> > > commit: 2f08469563550d15cb08a60898d3549720600eee ("rcu: Mark rcu_state.ncpus to detect concurrent writes")
-> > > https://git.kernel.org/cgit/linux/kernel/git/paulmck/linux-rcu.git dev.2020.05.14c
-> > >
-> > > in testcase: boot
-> > >
-> > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> > >
-> > > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> > >
-> > >
-> > >
-> > >
-> > > If you fix the issue, kindly add following tag
-> > > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> > >
-> > >
-> > > [    0.054943] BRK [0x05204000, 0x05204fff] PGTABLE
-> > > [    0.061181] BRK [0x05205000, 0x05205fff] PGTABLE
-> > > [    0.062403] BRK [0x05206000, 0x05206fff] PGTABLE
-> > > [    0.065200] RAMDISK: [mem 0x7a247000-0x7fffffff]
-> > > [    0.067344] ACPI: Early table checksum verification disabled
-> > > BUG: kernel reboot-without-warning in boot stage
-> >
-> > I am having some difficulty believing that this commit is at fault given
-> > that the .config does not list CONFIG_KCSAN=y, but CCing Marco Elver
-> > for his thoughts.  Especially given that I have never built with clang-11.
-> >
-> > But this does invoke ASSERT_EXCLUSIVE_WRITER() in early boot from
-> > rcu_init().  Might clang-11 have objections to early use of this macro?
->
-> The macro is a noop without KCSAN. I think the bisection went wrong.
->
-> I am able to reproduce a reboot-without-warning when building with
-> Clang 11 and the provided config. I did a bisect, starting with v5.6
-> (good), and found this:
-> - Since v5.6, first bad commit is
-> 20e2aa812620439d010a3f78ba4e05bc0b3e2861 (Merge tag
-> 'perf-urgent-2020-04-12' of
-> git://git.kernel.org/pub/scm/linux/kernel//git/tip/tip)
-> - The actual commit that introduced the problem is
-> 2b3b76b5ec67568da4bb475d3ce8a92ef494b5de (perf/x86/intel/uncore: Add
-> Ice Lake server uncore support) -- reverting it fixes the problem.
->
-> Thanks,
-> -- Marco
+Thank you very much!
+
+							Thanx, Paul
