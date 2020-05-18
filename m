@@ -2,142 +2,91 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F83C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76195C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7DE2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:25:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Heon1BcT"
+	by mail.kernel.org (Postfix) with ESMTP id 572222070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:25:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgERGY7 (ORCPT
+        id S1726925AbgERGZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 02:24:59 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15809 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbgERGY7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 02:24:59 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec229ae0000>; Sun, 17 May 2020 23:22:38 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 17 May 2020 23:24:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 17 May 2020 23:24:59 -0700
-Received: from [10.2.48.175] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
- 2020 06:24:58 +0000
-Subject: Re: [PATCH] orangefs: convert get_user_pages() --> pin_user_pages()
-To:     LKML <linux-kernel@vger.kernel.org>
-CC:     Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        <devel@lists.orangefs.org>
-References: <20200518060139.2828423-1-jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <582e6272-ca21-6300-19dd-7776e21ce002@nvidia.com>
-Date:   Sun, 17 May 2020 23:24:58 -0700
+        Mon, 18 May 2020 02:25:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52482 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726378AbgERGZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 02:25:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 33E34AC49;
+        Mon, 18 May 2020 06:25:17 +0000 (UTC)
+Subject: Re: next-20200514 - build issue in drivers/md/dm-zoned-target.c
+To:     =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org
+References: <367320.1589627953@turing-police>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <7bb0d1c8-b164-d5f3-0218-5c71047c3a8c@suse.de>
+Date:   Mon, 18 May 2020 08:25:13 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200518060139.2828423-1-jhubbard@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <367320.1589627953@turing-police>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589782958; bh=l/FdtWfrvi/C3me9+/gpM2PcBKmwGcSy8/CNv2P2SqA=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Heon1BcT9rnkVW92QlNOPPn9x8Si22vngp1+Xyj+o00ULC/EeCq8F7ZPhZi+SdQ/h
-         q5ExPUV9SalajhkZ0ljXnbddbI4qkwzNowCn5IW/PcG8ZVwxnTP044fA5vnspN8KuQ
-         G9m6D/T+6+Ghpcmq7lF8eOUPdr/bYEJjIiR7lPX91erq1f4DcISSmawpSH528UP5Lj
-         DNy3LYzB2zVIASX/vkheEADYTUJuhhTHPLfT7AWwO8/0vaLdVZJ+iwoWQPExK1Lzob
-         ezE1OlpMc1xo4W0daQH8vPEK8xJkBQ/XV3HU9UjGRtFGGKnB4359emQdNp577gJQdT
-         cSDQKoAjD8hdQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-17 23:01, John Hubbard wrote:
-> This code was using get_user_pages*(), in a "Case 2" scenario
-> (DMA/RDMA), using the categorization from [1]. That means that it's
-> time to convert the get_user_pages*() + put_page() calls to
-> pin_user_pages*() + unpin_user_pages() calls.
+On 5/16/20 1:19 PM, Valdis Klētnieks wrote:
+> Am seeing a build error in next-0514.  -0420 built OK.
+> building a 'make allmodconfig' on a RPi4 in 32-bit mode.
+> 
+>    MODPOST 7575 modules
+> ERROR: modpost: "__aeabi_uldivmod" [drivers/md/dm-zoned.ko] undefined!
+> 
+> objdump and 'make drivers/md/dm-zoned-target.s' tells
+> me that the problem is in function dmz_fixup_devices(), near here:
+> 
+> @ drivers/md/dm-zoned-target.c:806:             reg_dev->nr_zones = DIV_ROUND_UP(reg_dev->capacity,
+>          ldr     r0, [r6, #56]   @ reg_dev_166->capacity, reg_dev_166->capacity
+>          adds    r1, r3, r1      @ tmp316, _227, reg_dev_166->capacity
+>          adc     r0, r2, r0      @ tmp315, _227, reg_dev_166->capacity
+>          subs    r1, r1, #1      @, tmp316,
+> @ drivers/md/dm-zoned-target.c:805:             reg_dev->zone_nr_sectors = zoned_dev->zone_nr_sectors;
+>          strd    r2, [r6, #80]   @, reg_dev,
+> @ drivers/md/dm-zoned-target.c:806:             reg_dev->nr_zones = DIV_ROUND_UP(reg_dev->capacity,
+>          sbc     r0, r0, #0      @, tmp315,
+>          bl      __aeabi_uldivmod                @
+> @ drivers/md/dm-zoned-target.c:806:             reg_dev->nr_zones = DIV_ROUND_UP(reg_dev->capacity,
+>          str     r1, [r6, #64]   @ tmp306, reg_dev_166->nr_zones
+> 
+> git blame points at this commit:
+> 
+> commit 70978208ec91d798066f4c291bc98ff914bea222
+> Author: Hannes Reinecke <hare@suse.de>
+> Date:   Mon May 11 10:24:30 2020 +0200
+> 
+>      dm zoned: metadata version 2
+> 
+> Reverting that commit lets the build complete.
+> 
+> 
+I thought I've send a patch to fix that up; DIV_ROUND_UP() needs to be 
+changed to DIV_ROUND_UP_ULL().
+I'll be checking and will be sending a patch if necessary.
 
-Oops, actually, maybe that description is wrong. This is probably
-closer to "Case 1: Direct IO"...right? I don't see an O_DIRECT
-anywhere, but there is an ioctl to do ORANGEFS_DEV_MAP, which seems
-like effectively it's doing Direct IO.
+Cheers,
 
-(I got lulled into commit log complacency, due to sending quite a few
-non-filesystem patches that were Case 2.)
-
-
-thanks,
+Hannes
 -- 
-John Hubbard
-NVIDIA
-
-> 
-> There is some helpful background in [2]: basically, this is a small
-> part of fixing a long-standing disconnect between pinning pages, and
-> file systems' use of those pages.
-> 
-> [1] Documentation/core-api/pin_user_pages.rst
-> 
-> [2] "Explicit pinning of user-space pages":
->      https://lwn.net/Articles/807108/
-> 
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
-> 
->   fs/orangefs/orangefs-bufmap.c | 9 +++------
->   1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/orangefs/orangefs-bufmap.c b/fs/orangefs/orangefs-bufmap.c
-> index 2bb916d68576..538e839590ef 100644
-> --- a/fs/orangefs/orangefs-bufmap.c
-> +++ b/fs/orangefs/orangefs-bufmap.c
-> @@ -168,10 +168,7 @@ static DEFINE_SPINLOCK(orangefs_bufmap_lock);
->   static void
->   orangefs_bufmap_unmap(struct orangefs_bufmap *bufmap)
->   {
-> -	int i;
-> -
-> -	for (i = 0; i < bufmap->page_count; i++)
-> -		put_page(bufmap->page_array[i]);
-> +	unpin_user_pages(bufmap->page_array, bufmap->page_count);
->   }
->   
->   static void
-> @@ -268,7 +265,7 @@ orangefs_bufmap_map(struct orangefs_bufmap *bufmap,
->   	int offset = 0, ret, i;
->   
->   	/* map the pages */
-> -	ret = get_user_pages_fast((unsigned long)user_desc->ptr,
-> +	ret = pin_user_pages_fast((unsigned long)user_desc->ptr,
->   			     bufmap->page_count, FOLL_WRITE, bufmap->page_array);
->   
->   	if (ret < 0)
-> @@ -280,7 +277,7 @@ orangefs_bufmap_map(struct orangefs_bufmap *bufmap,
->   
->   		for (i = 0; i < ret; i++) {
->   			SetPageError(bufmap->page_array[i]);
-> -			put_page(bufmap->page_array[i]);
-> +			unpin_user_page(bufmap->page_array[i]);
->   		}
->   		return -ENOMEM;
->   	}
-> 
+Dr. Hannes Reinecke            Teamlead Storage & Networking
+hare@suse.de                               +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
