@@ -2,110 +2,116 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB46C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E13C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07887207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E549207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:18:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eUW46T93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgERLS1 (ORCPT
+        id S1727975AbgERLSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:18:27 -0400
-Received: from mga11.intel.com ([192.55.52.93]:31081 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbgERLS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:18:27 -0400
-IronPort-SDR: AotbJhRsatfmKi4p1KuIVrK8XtNcDS1qtyFx6IgnkcNXeiOawKAYCU/xtiojuw3IYkAGr3SLKK
- TIB/MTLXCYzQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 04:18:26 -0700
-IronPort-SDR: 6WbUkiHD0hd1SSca3ZnjyexwPggRAgn8KcKwNsrDMbmn7V3bn8X+TCkIXafQl/Py9R1y+Bhzud
- ogcI0sbA2v7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="281939008"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 18 May 2020 04:18:20 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jadmo-007PXE-Hs; Mon, 18 May 2020 14:18:22 +0300
-Date:   Mon, 18 May 2020 14:18:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Clement Leger <cleger@kalray.eu>,
-        "wuxu.wu" <wuxu.wu@huawei.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
+        Mon, 18 May 2020 07:18:31 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57800 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726511AbgERLS3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:18:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589800707;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dxiBECMHFAplzz2KB29O/LRSLdFzNsUzEToTKNWFHYs=;
+        b=eUW46T93VkiC7R+amKrbtMahqRVngVEEy7NCjcLTwIaFF6hl3o/muVUkrQWm/PWGAE5Rat
+        0rntisd6pV10bmYbtUTI2DhJn4M/OGlTg6C7UPFbgOS10N6zHoYxoD4A/UKmaRV0BhJB3E
+        IdXMtTdeV/w0239qat405Y+OIXuFA3k=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-168-lkLFea2iO5awSQ3VwJLJOw-1; Mon, 18 May 2020 07:18:26 -0400
+X-MC-Unique: lkLFea2iO5awSQ3VwJLJOw-1
+Received: by mail-wm1-f72.google.com with SMTP id o8so2180411wmd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 04:18:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dxiBECMHFAplzz2KB29O/LRSLdFzNsUzEToTKNWFHYs=;
+        b=Jn+JaMb74FIsArLATj7GEnjl5qDNObIcGcqws6cG7HKT4n1V9oDiAzrAhfAoqaejOP
+         XlvbgjeYAF4MMHN1Mj8DlLxYnw9RkqT0VeoW8PkJvYMvmOE9lnJwxELa+IGjpktmiQJf
+         mBiQaJxEYvAIH+SmdFeaMUEDCRR2TfyQbf1FAy0eG539G8Sh78ZsFRyk0/O+416GMfNU
+         nFTYLTUhDZrVj3JNXZMNZjvLmgcFCZbddsd//VaCI15L2xJulJ9bKvLcq+BTsGb90htf
+         J07qmbZJ5DY2u6EqpmpRVU78hHGjRGnYQHGnh5/ii348kyQeK6U18gEuBFStdIYjmE49
+         FtLg==
+X-Gm-Message-State: AOAM533ttQdBwddjVbzA35zzHIS8uVEgQLwyf2uxCT28faBtmKo2Khn+
+        0pBfEpJoyvJlnOlSNRqcPOa03zTEc+Gj5S0c8KALwoJKwgfw2C9h+U5C5imSWxDWgt5bJ6eeO7v
+        EqAv5HrcXhHRA6EP9QJTOTO4R
+X-Received: by 2002:adf:f786:: with SMTP id q6mr19058401wrp.120.1589800705063;
+        Mon, 18 May 2020 04:18:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwNLwMrbe3B5c0qaCQ/YjHTYYnwcj/Jnv2tH5S7lfJMD5adLyh8g16sr+0JKvnyuDSUcvQdGA==
+X-Received: by 2002:adf:f786:: with SMTP id q6mr19058368wrp.120.1589800704864;
+        Mon, 18 May 2020 04:18:24 -0700 (PDT)
+Received: from [192.168.178.58] ([151.30.90.67])
+        by smtp.gmail.com with ESMTPSA id r2sm16417514wrg.84.2020.05.18.04.18.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 04:18:24 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Expose KVM API to Linux Kernel
+To:     Anastassios Nanos <ananos@nubificus.co.uk>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 18/19] spi: dw: Use regset32 DebugFS method to create
- regdump file
-Message-ID: <20200518111822.GZ1634618@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-19-Sergey.Semin@baikalelectronics.ru>
- <20200515151056.GQ1634618@smile.fi.intel.com>
- <20200516204634.td52orxfnh7iewg6@mobilestation>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+References: <cover.1589784221.git.ananos@nubificus.co.uk>
+ <c1124c27293769f8e4836fb8fdbd5adf@kernel.org>
+ <CALRTab90UyMq2hMxCdCmC3GwPWFn2tK_uKMYQP2YBRcHwzkEUQ@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <760e0927-d3a7-a8c6-b769-55f43a65e095@redhat.com>
+Date:   Mon, 18 May 2020 13:18:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200516204634.td52orxfnh7iewg6@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CALRTab90UyMq2hMxCdCmC3GwPWFn2tK_uKMYQP2YBRcHwzkEUQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 11:46:34PM +0300, Serge Semin wrote:
-> On Fri, May 15, 2020 at 06:10:56PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 15, 2020 at 01:47:57PM +0300, Serge Semin wrote:
-> > > DebugFS kernel interface provides a dedicated method to create the
-> > > registers dump file. Use it instead of creating a generic DebugFS
-> > > file with manually written read callback function.
+On 18/05/20 10:45, Anastassios Nanos wrote:
+> Being in the kernel saves us from doing unneccessary mode switches.
+> Of course there are optimizations for handling I/O on QEMU/KVM VMs
+> (virtio/vhost), but essentially what happens is removing mode-switches (and
+> exits) for I/O operations -- is there a good reason not to address that
+> directly? a guest running in the kernel exits because of an I/O request,
+> which gets processed and forwarded directly to the relevant subsystem *in*
+> the kernel (net/block etc.).
 
-> > With below nit addressed,
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+In high-performance configurations, most of the time virtio devices are
+processed in another thread that polls on the virtio rings.  In this
+setup, the rings are configured to not cause a vmexit at all; this has
+much smaller latency than even a lightweight (kernel-only) vmexit,
+basically corresponding to writing an L1 cache line back to L2.
 
-> > > +#define DW_SPI_DBGFS_REG(_name, _off)	\
-> > > +{					\
-> > > +	.name = _name,			\
-> > 
-> > > +	.offset = _off			\
-> > 
-> > As previously discussed (did I miss your answer?) the comma at the end leaves
-> > better pattern for maintenance prospective.
-> 
-> Ah, sorry. Missed that. This comma is hardly needed seeing the structure
-> consists of just two elements. So I'd rather leave it as is.
-
-While it's a really small thing, I consider that it's not good to make
-someone's else problem what can be done here. So, please, consider to add a
-comma. Look at the other drivers and code in the kernel. This is at least
-defacto preferred style.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Paolo
 
