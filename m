@@ -2,115 +2,175 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C530C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BBC2207D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:59:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUwzz0rr"
+	by mail.kernel.org (Postfix) with ESMTP id 4E1AB207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:59:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589792378;
+	bh=JXz1r4o+jfEzwqjT6DSqj5aar1E/kG33pPxwpvv/4Ok=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MZZoaQbABmCz44oqhzj09GIoKu+wcDccBI9d53BD1mCWY7owdyGzvM+JYiiWeDk8N
+	 ITSBO+m5T4MWYe9b9sGGpUpGtcXu0J5/zXl2xV9QIeW/2eiQTXLk1ROjFUbQMq9EhK
+	 NUWP/hN5ibY4DGdMxWgBiNXWkHSsnf0BomlL0weg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgERI70 (ORCPT
+        id S1726876AbgERI7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 04:59:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgERI7Y (ORCPT
+        Mon, 18 May 2020 04:59:36 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42602 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgERI7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 04:59:24 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B02EAC061A0C;
-        Mon, 18 May 2020 01:59:24 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id l6so2485574oic.9;
-        Mon, 18 May 2020 01:59:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LYV5EXh8n5rFl/NTMi7Ga5qcFteCzV/5Bynz9/j/gws=;
-        b=JUwzz0rrL4NlaPHDGnOL5OqO9C4s6vqDx6DD7xWQcMzu0te7kTNTmH3ttNmPdTU1Ad
-         1YCOXlK95i1Wkry3f946HZmHLu4pIxHK1m0dFLdhBbXiV4mOgqLY7uht6OjBH5jcdLni
-         s0oVIEc+rGoTG4C0ARpq7T5ZydTTubYgGXaoSuTXL5IiVDsr+5Mw6/N5DVKpLCJYy+6I
-         J3xSSiyMSb4BVy7fCBzvEb0om2pF1v91PQpcbGrYyhfmwKlZT8MzpukS3lwdyNhBBBGf
-         FGYV0MtyHMOPQtoHXB3qIUwEngtXD6dR2O6h0R4JyqiNPNtFc0uuSQ95r8ntCOCpEX9o
-         5DMQ==
+        Mon, 18 May 2020 04:59:33 -0400
+Received: by mail-ot1-f65.google.com with SMTP id z3so5745900otp.9;
+        Mon, 18 May 2020 01:59:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LYV5EXh8n5rFl/NTMi7Ga5qcFteCzV/5Bynz9/j/gws=;
-        b=Q5HX5Cpgxqvwn9PUCedBcLK1VJ6AcHLaYv18RTZTuLjybFaY+Hm2vdc/wMMGW+0Qku
-         FXfP1j1DGdEOH/D+K+PqnlQW9pdKgCtLRmM4XoZtl3QGE0c/3FgEWOPGbEiVfxnR7kh3
-         zpcPfZyblXh3Vj3M7LI/eRymM9kdCzawiC5HJHhNSDXrBoxfW8IJtk27jBlK5Im3vIf4
-         WPn2wlWt6BG3YkzhQ4bZHEUE4U8RvTGp7+kr2EMdp7NidKEBm/mMg6Yvp8iQp53/6Utf
-         3Vyxm+TuIFEX3vv+URLwAkVFN8V/w5OeyxJjLt7DgMYxxVJnS02VU3k6iD/o7w/ZboS/
-         GULg==
-X-Gm-Message-State: AOAM532erRGuLLUQQHDzmWnq5ldlBSaRWBnQ39LcGoodIpsWucDbVVoV
-        Cil4pZH0gyp04P2nEEUx91L1PnOnY6rftWP50Sc=
-X-Google-Smtp-Source: ABdhPJwuIyJOLz2e50Yb4QdqqIwLF4pHQVzO5AcIThkrk7hdw9v+MTXkyCY4cka5nwu5504APsj8MpP7w418Dex33Y4=
-X-Received: by 2002:aca:f550:: with SMTP id t77mr9597289oih.8.1589792364142;
- Mon, 18 May 2020 01:59:24 -0700 (PDT)
+        bh=HcC5d0dkGCVtIC0H6I2J3H5klgnWGhpsgSC2d3NhmtY=;
+        b=dSe7x6Xn0/BmroqGeGszSIzWEqOWDMRGKr5R6+cSXqDzT9w5YGci0RMxs8wZhgU/Ww
+         U+lWGTkdPWeHqcvV9ZwSsgSuG2gT1kuvxKyqcWGuMMmkuYmxX5etXrS0p8IduyJYp8db
+         fTEaD7dZq5C2VCjLoyY4cv1WPSYOfyzn1hZtaG9YwZ18oXDXFvb8OWd+BAcJJCOm4PdK
+         kwd/NPCvsraafwYZTyT+NTIG+Uwc/tGy0CcO8s5Q6rSbAiPvMUzJ3aNW9QN6JOpQL/3N
+         G989r1evWT1lwwxyv0wbLCCXhVgGl2Yz05qmxD4yJAxg8IxQnRb+mxmgQ+cl5J5hJDcJ
+         DNJw==
+X-Gm-Message-State: AOAM531p+VO33VxRkjTBDKtNH1mwgiLV48J3GELhUOA6iW3moefGdXWO
+        rPRh5oezuxvqMw+7+6gvIJ0tmPRsO4EptcNB7Gg=
+X-Google-Smtp-Source: ABdhPJzHU/Z1F5YsgIDVwxzd5lXbIG4cpPdzQkCfjzP+lYB0PuTC/2UalzJ4qHxT8jZN0CA1Ix7+aLSUeVJU7LdzUGI=
+X-Received: by 2002:a9d:3d05:: with SMTP id a5mr426572otc.262.1589792372469;
+ Mon, 18 May 2020 01:59:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200515171031.GB19423@ninjato>
-In-Reply-To: <20200515171031.GB19423@ninjato>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 18 May 2020 09:58:57 +0100
-Message-ID: <CA+V-a8t6rPs4s8uMCpBQEAUvwsVn7Cte-vX3z2atWRhy_RFLQw@mail.gmail.com>
-Subject: Re: [PATCH 03/17] ARM: dts: r8a7742: Add I2C and IIC support
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-i2c@vger.kernel.org,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org
+References: <4502272.pByIgeXik9@kreacher>
+In-Reply-To: <4502272.pByIgeXik9@kreacher>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 18 May 2020 10:59:17 +0200
+Message-ID: <CAJZ5v0j6S+we7tHeV9TM30LS+TO3zWigACe0ZUFfWphg2FBBZQ@mail.gmail.com>
+Subject: Re: [PATCH[RFT]] ACPI: EC: s2idle: Avoid flushing EC work when EC GPE
+ is inactive
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+On Thu, May 14, 2020 at 12:10 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Flushing the EC work while suspended to idle when the EC GPE status
+> is not set causes some EC wakeup events (notably power button and
+> lid ones) to be missed after a series of spurious wakeups on the Dell
+> XPS13 9360 in my office.
+>
+> If that happens, the machine cannot be woken up from suspend-to-idle
+> by a power button press or lid status change and it needs to be woken
+> up in some other way (eg. by a key press).
+>
+> Flushing the EC work only after successful dispatching the EC GPE,
+> which means that its status has been set, avoids the issue, so change
+> the code in question accordingly.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>
+> Hi Chris,
+>
+> Please check if the key press wakeup still works on your system with this patch
+> applied (on top of https://patchwork.kernel.org/patch/11538065/).
 
-Thank for the review.
+Hi Chris,
 
-On Fri, May 15, 2020 at 6:10 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
-> On Fri, May 15, 2020 at 04:08:43PM +0100, Lad Prabhakar wrote:
-> > Add the I2C[0-3] and IIC[0-3] devices nodes to the R8A7742 device tree.
-> >
-> > Automatic transmission for PMIC control is not available on IIC3 hence
-> > compatible string "renesas,rcar-gen2-iic" and "renesas,rmobile-iic" is
-> > not added to iic3 node.
->
-> Makes sense.
->
-> However, both versions (with and without automatic transmission) are
-> described with the same "renesas,iic-r8a7742" compatible. Is it possible
-> to detect the reduced variant at runtime somehow?
->
-I couldn't find anything the manual that would be useful to detect at runtime.
+Since I haven't heard back from you and the problem at hand is a
+regression on the machine where it happens, I'm going to push this
+patch for merging.
 
-> My concern is that the peculiarity of this SoC might be forgotten if we
-> describe it like this and ever add "automatic transmissions" somewhen.
->
-Agreed.
+If it causes the key press wakeup issue to reappear on your machine,
+I'm afraid that we'll need to quirk it in the EC driver.
 
-Cheers,
---Prabhakar
+Thanks!
+
+> ---
+>  drivers/acpi/ec.c    |    6 +++++-
+>  drivers/acpi/sleep.c |   15 ++++-----------
+>  2 files changed, 9 insertions(+), 12 deletions(-)
+>
+> Index: linux-pm/drivers/acpi/ec.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/ec.c
+> +++ linux-pm/drivers/acpi/ec.c
+> @@ -2020,9 +2020,13 @@ bool acpi_ec_dispatch_gpe(void)
+>          * to allow the caller to process events properly after that.
+>          */
+>         ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
+> -       if (ret == ACPI_INTERRUPT_HANDLED)
+> +       if (ret == ACPI_INTERRUPT_HANDLED) {
+>                 pm_pr_dbg("EC GPE dispatched\n");
+>
+> +               /* Flush the event and query workqueues. */
+> +               acpi_ec_flush_work();
+> +       }
+> +
+>         return false;
+>  }
+>  #endif /* CONFIG_PM_SLEEP */
+> Index: linux-pm/drivers/acpi/sleep.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/sleep.c
+> +++ linux-pm/drivers/acpi/sleep.c
+> @@ -980,13 +980,6 @@ static int acpi_s2idle_prepare_late(void
+>         return 0;
+>  }
+>
+> -static void acpi_s2idle_sync(void)
+> -{
+> -       /* The EC driver uses special workqueues that need to be flushed. */
+> -       acpi_ec_flush_work();
+> -       acpi_os_wait_events_complete(); /* synchronize Notify handling */
+> -}
+> -
+>  static bool acpi_s2idle_wake(void)
+>  {
+>         if (!acpi_sci_irq_valid())
+> @@ -1018,7 +1011,7 @@ static bool acpi_s2idle_wake(void)
+>                         return true;
+>
+>                 /*
+> -                * Cancel the wakeup and process all pending events in case
+> +                * Cancel the SCI wakeup and process all pending events in case
+>                  * there are any wakeup ones in there.
+>                  *
+>                  * Note that if any non-EC GPEs are active at this point, the
+> @@ -1026,8 +1019,7 @@ static bool acpi_s2idle_wake(void)
+>                  * should be missed by canceling the wakeup here.
+>                  */
+>                 pm_system_cancel_wakeup();
+> -
+> -               acpi_s2idle_sync();
+> +               acpi_os_wait_events_complete();
+>
+>                 /*
+>                  * The SCI is in the "suspended" state now and it cannot produce
+> @@ -1060,7 +1052,8 @@ static void acpi_s2idle_restore(void)
+>          * of GPEs.
+>          */
+>         acpi_os_wait_events_complete(); /* synchronize GPE processing */
+> -       acpi_s2idle_sync();
+> +       acpi_ec_flush_work(); /* flush the EC driver's workqueues */
+> +       acpi_os_wait_events_complete(); /* synchronize Notify handling */
+>
+>         s2idle_wakeup = false;
+>
+>
+>
+>
