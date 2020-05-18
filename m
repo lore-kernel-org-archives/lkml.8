@@ -2,732 +2,1898 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF15C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 00:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 00:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E17C420758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 00:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD4D20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 00:51:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=maximintegrated.onmicrosoft.com header.i=@maximintegrated.onmicrosoft.com header.b="hWV5aOpN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgERAvf (ORCPT
+        id S1726970AbgERAvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 20:51:35 -0400
-Received: from mga04.intel.com ([192.55.52.120]:60557 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbgERAve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 20:51:34 -0400
-IronPort-SDR: 3pCQMc90A0W72HSEeoYYi6lDIOjliEDTfVd5h2zCFz1rONp1VUIyws1YLY9E++b8hLPdg+SjUw
- tlxaU5Qxp6Yg==
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 17:50:57 -0700
-IronPort-SDR: WgBrB8SC47haG5uU5S8dQB0Rf08UZgHhKkuVW3SNSumYCsALwBOR+6srRnU0KrxwOSkF8o41Ys
- mgE3sckxkDFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,405,1583222400"; 
-   d="gz'50?scan'50,208,50";a="252728972"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
-  by orsmga007.jf.intel.com with ESMTP; 17 May 2020 17:50:55 -0700
-Date:   Mon, 18 May 2020 08:49:34 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Paul Burton <paulburton@kernel.org>
-Subject: arch/mips/kernel/signal.c:141: undefined reference to
- `_restore_fp_context'
-Message-ID: <20200518004934.GD4344@intel.com>
-Reply-To: kbuild test robot <lkp@intel.com>
+        Sun, 17 May 2020 20:51:52 -0400
+Received: from mail-bn8nam11on2106.outbound.protection.outlook.com ([40.107.236.106]:7265
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726675AbgERAvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 20:51:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gbSSHUWfsPGYs+lHlQ3zAw7PA+2Q0K4Hm64XuT8G285PRAmBRVk62U0iXz46Cz8wUayIf8+kFhcmkAfqfM/4e+HnLUMCIEaX54fz2DyqAp3Gc83xp9Al9tkNTkejka2b9FhvoEShzjWKKlxTTdnV/OoMqaZLi8DZGfJ++mubeO8kOUdK0v8nQicl86jGaOcHIetPpYERZokmBsKrbtRpREjryg7jG97zMLq774kLwvQG81dBBmsDvEreNRpfly5ZOK1/K+Xvh8A8sBqGTkGDV8HlcQod5jRj4Q6P5kiNn3fHD5Hw3C2OLJFLaKCfO9qCCPBy3MhvTaTQUluX2GrTAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jYb/ioHt13fYd8L/uMhoyE56YeNl4vnNxBnN8ts0gsQ=;
+ b=gkxMa5DGmQqsiaL7wFz+0Q9KTkxIwfkkDFkSnVPxGaXwkS6j9PPkcDf8CUeF8MqQ7h0RKDqy0la9cQpUnlPEUu3jC8cwvpkturoEPmtzmzwKrwzig9A21zGsdtbAcNyDvryI3rT1i5IkHiOcjYiOOVHUolzQ3KOmUqHoXf3Qd+UNU+a/hFjsbfyGs6EjoIdO6bSzTYr318y6H8cBWaDz+hIBa+7A7ySFDxEpEkqj7QYEuH1ml6inp7LMXvrsOEcUE56JCXujbWv3saZB2GmoUaZ8GGr724ALv7v7DUIWB1fHBqZFuRZrLrUPyTqyPsyrXEzAehBBeKWZbtb2ZGOKvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=maximintegrated.com; dmarc=pass action=none
+ header.from=maximintegrated.com; dkim=pass header.d=maximintegrated.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=maximintegrated.onmicrosoft.com;
+ s=selector2-maximintegrated-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jYb/ioHt13fYd8L/uMhoyE56YeNl4vnNxBnN8ts0gsQ=;
+ b=hWV5aOpNhgNbNWu+t+BG/bH7eoYO59spySezUHkO2l+WXqd1ptx8sTyNFTefJsOgzld/q18cToZCcK4mJMvEkCjPyMIMMd3j217hM2u7uubrHCT7N3Edlf9f5qbuE1LoD3ScIMpf5qMHh96Ve6oqS1iX8BErkkVM27+q1U7/vjQ=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none
+ header.from=maximintegrated.com;
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12)
+ by MWHPR11MB1518.namprd11.prod.outlook.com (2603:10b6:301:c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Mon, 18 May
+ 2020 00:51:34 +0000
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::994e:6a48:f660:f363]) by MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::994e:6a48:f660:f363%5]) with mapi id 15.20.3000.033; Mon, 18 May 2020
+ 00:51:34 +0000
+From:   Steve Lee <steves.lee@maximintegrated.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, ckeepax@opensource.cirrus.com,
+        geert@linux-m68k.org, rf@opensource.wolfsonmicro.com,
+        shumingf@realtek.com, srinivas.kandagatla@linaro.org,
+        krzk@kernel.org, dmurphy@ti.com, jack.yu@realtek.com,
+        nuno.sa@analog.com, steves.lee@maximintegrated.com,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com
+Subject: [RESEND][V5 PATCH 2/2] ASoC: max98390: Added Amplifier Driver
+Date:   Mon, 18 May 2020 09:50:38 +0900
+Message-Id: <20200518005038.21074-1-steves.lee@maximintegrated.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SLXP216CA0004.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:100:6::14) To MWHPR11MB2047.namprd11.prod.outlook.com
+ (2603:10b6:300:2a::12)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="/e2eDi0V/xtL+Mc8"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (2001:2d8:e88d:1f5a:d5fe:3ea6:5791:c8e8) by SLXP216CA0004.KORP216.PROD.OUTLOOK.COM (2603:1096:100:6::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24 via Frontend Transport; Mon, 18 May 2020 00:51:29 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [2001:2d8:e88d:1f5a:d5fe:3ea6:5791:c8e8]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fc10b374-d046-43aa-a15d-08d7fac59c43
+X-MS-TrafficTypeDiagnostic: MWHPR11MB1518:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR11MB15187FAE07651ED23576968592B80@MWHPR11MB1518.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:628;
+X-Forefront-PRVS: 04073E895A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UsKbEovARsHoWDc6pM23HK7hD+TWvhkIqIqeauppUgkoDDEr5LdZT5PvdCunoKzJ8tVNQPuEIkFAgTa8bmMnV+hQgjWaJLgOyKYeKMGgxEqYBhEe9Rjq/EN4xLK54wzFZN3xCXzvaPEGKxXAfaEE8pyhkngtGHDhV7oHlyDU6LQc1n/YopOeNRfR0Me3NyhgIg8we4Y3yljRdeU3UMevlc7D+1vQhctX3nUOB1lxsLUVcbp8EifCSUSknCxvIUpBjmrzUqGqCa09qiDg5LMJUqrRCMm70rnpPthlfNBSe5eTRJ0HBpSe1Ktb6Ql9YsGD6FmsHZ033eU4WbUPbr+p7vDw6gapfpm8Q1M3nz44Mn70KeB+tn9bRzzQinUOBwPM5xfILyMmHqFgr2KnPjccGL7l9hGcWu8NAsyfupp7qmU1rZ3p5rUQXVwZJz39UMg9Ea6z1W3z0d0uh5QD+9CWD/oPxhe8vMdMIjKQ+IdTajW+D3ZLZTgxOdzcE46Q3SznMC0J682sL6oVueGRE3tSxw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB2047.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(376002)(39860400002)(396003)(16526019)(8676002)(66476007)(66946007)(66556008)(6486002)(2906002)(6512007)(478600001)(6666004)(52116002)(1076003)(36756003)(86362001)(7416002)(107886003)(316002)(2616005)(6506007)(186003)(69590400007)(4326008)(8936002)(30864003)(5660300002)(921003)(559001)(579004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 8SnaFzfdE9/anWVl0k2wMafSMNPpwc0tR5Nu5WChwf/kF3S++d5KouEDjyJZ+2XinGzgtph+IlLf9wzmIXhw5p+d1kCSD67Ukla5qC4lwc1u1bapooKvtjgkSqe6IFIH/P5FUxTG07xis9c/TU+IXy2VuF257IqCoMuEtEvwXu17iN6TVrc9GQPCl4pa+d1iSR8AmNtGMEbL/dd3ns8aMFu6WED0uHg4gozbwCr8vPHplJQDEbw6DSsas7fWsMCf2op7pxyXPHAR6Wgu8/ING0v3Jc2OCmbWvhA4xh/g6hIpk7U2Hr6wPlTaB2kt+wD/CtZ6unrA88g2K47g8lxxb3r4HN0K/DZ1Wgdqt5X3xzlNdBz5PWtxrQSwxJtQASAu3UTDW9AORGXqyPuhqEc7OPKYSYcF+wx94Y7BQFJdwWj7yVGLxyomWtTLF6iRKPoPKPHlSzKewXrNRvUi7uUkljhASY3FzhAZF5rrKvN5wlv88FUQDAqF7G3w5WU4SUi2HwuXzNuVKiBz+18ygMVuRVE9KyGqcwuGnghx86iSMEc=
+X-OriginatorOrg: maximintegrated.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc10b374-d046-43aa-a15d-08d7fac59c43
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2020 00:51:33.9351
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd909df-ea69-4788-a554-f24b7854ad03
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZQxkN2qRFFIWkeRgnHaij0MIBdE8yRIMvXuP+ZJZMKF1sBADerqfgYKddG8MVTA0piUx3tTGnzdrJ3pmxpVmialdrpE9L8SUvr6BTdVrH64=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1518
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is the initial amplifier driver for max98390.
 
---/e2eDi0V/xtL+Mc8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   3d1c1e5931ce45b3a3f309385bbc00c78e9951c6
-commit: 7505576d1c1ac0cfe85fdf90999433dd8b673012 MIPS: add support for SGI Octane (IP30)
-date:   7 months ago
-config: mips-randconfig-r011-20200517 (attached as .config)
-compiler: mips64-linux-gcc (GCC) 9.3.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git checkout 7505576d1c1ac0cfe85fdf90999433dd8b673012
-        # save the attached .config to linux build tree
-        COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=mips 
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
-mips64-linux-ld: arch/mips/kernel/signal.o: in function `restore_hw_fp_context':
->> arch/mips/kernel/signal.c:141: undefined reference to `_restore_fp_context'
-mips64-linux-ld: arch/mips/kernel/signal.o: in function `save_hw_fp_context':
->> arch/mips/kernel/signal.c:132: undefined reference to `_save_fp_context'
-mips64-linux-ld: arch/mips/kernel/traps.o: in function `trap_init':
->> arch/mips/kernel/traps.c:2408: undefined reference to `handle_fpe'
->> mips64-linux-ld: arch/mips/kernel/traps.c:2412: undefined reference to `handle_fpe'
->> mips64-linux-ld: arch/mips/kernel/traps.c:2412: undefined reference to `handle_fpe'
-
-vim +141 arch/mips/kernel/signal.c
-
-4eec81d7d8b212 Paul Burton 2018-11-07  122  
-2db9ca0a355100 Paul Burton 2015-07-27  123  /*
-2db9ca0a355100 Paul Burton 2015-07-27  124   * Wrappers for the assembly _{save,restore}_fp_context functions.
-2db9ca0a355100 Paul Burton 2015-07-27  125   */
-2db9ca0a355100 Paul Burton 2015-07-27  126  static int save_hw_fp_context(void __user *sc)
-2db9ca0a355100 Paul Burton 2015-07-27  127  {
-2db9ca0a355100 Paul Burton 2015-07-27  128  	struct mips_abi *abi = current->thread.abi;
-2db9ca0a355100 Paul Burton 2015-07-27  129  	uint64_t __user *fpregs = sc + abi->off_sc_fpregs;
-2db9ca0a355100 Paul Burton 2015-07-27  130  	uint32_t __user *csr = sc + abi->off_sc_fpc_csr;
-2db9ca0a355100 Paul Burton 2015-07-27  131  
-2db9ca0a355100 Paul Burton 2015-07-27 @132  	return _save_fp_context(fpregs, csr);
-2db9ca0a355100 Paul Burton 2015-07-27  133  }
-2db9ca0a355100 Paul Burton 2015-07-27  134  
-2db9ca0a355100 Paul Burton 2015-07-27  135  static int restore_hw_fp_context(void __user *sc)
-2db9ca0a355100 Paul Burton 2015-07-27  136  {
-2db9ca0a355100 Paul Burton 2015-07-27  137  	struct mips_abi *abi = current->thread.abi;
-2db9ca0a355100 Paul Burton 2015-07-27  138  	uint64_t __user *fpregs = sc + abi->off_sc_fpregs;
-2db9ca0a355100 Paul Burton 2015-07-27  139  	uint32_t __user *csr = sc + abi->off_sc_fpc_csr;
-2db9ca0a355100 Paul Burton 2015-07-27  140  
-2db9ca0a355100 Paul Burton 2015-07-27 @141  	return _restore_fp_context(fpregs, csr);
-2db9ca0a355100 Paul Burton 2015-07-27  142  }
-2db9ca0a355100 Paul Burton 2015-07-27  143  
-
-:::::: The code at line 141 was first introduced by commit
-:::::: 2db9ca0a355100c40d1bef2aae3b9d9cf199cd04 MIPS: Use struct mips_abi offsets to save FP context
-
-:::::: TO: Paul Burton <paul.burton@imgtec.com>
-:::::: CC: Ralf Baechle <ralf@linux-mips.org>
-
+Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
---/e2eDi0V/xtL+Mc8
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+Changes since V4:
+	* Revert return calibration status in max98390_dsm_calib_get:
+		There is no need to return calibration status in get function 
+		because there is mixer control lock protecting mixer control access.
+		And set function of DSM calib finishes calibration synchronously.
+	* Fix sprintf in max98390_dsm_init func:
+		Use snprintf to avoid any unreasonable value from DMI.
+Changes since V3:
+	* Add operation at max98390_dsm_calib_get:
+		Add cal_running variable at max98390_priv structure
+		Add return cal_running at max98390_dsm_calib_get
+		Update cal_running value during calibration
+	* Update max98390_dsm_init func
+		Add dsm_param bin name can select upon vendor and product name.
+Changes since V2:
+	* Removed warn massage in max98390_dsm_calib_get func 
+	  and add comment.
+Changes since V1:
+	* Updated according to Mark's comments.
+	* Updated according to Tzung-Bi's comments.
+	* Removed Enum structure and use TLV data for Volume control
 
-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
-62sCV7I4wZ1vH3b7y2oJAgA=
+ sound/soc/codecs/Kconfig    |    5 +
+ sound/soc/codecs/Makefile   |    2 +
+ sound/soc/codecs/max98390.c | 1040 +++++++++++++++++++++++++++++++++++
+ sound/soc/codecs/max98390.h |  663 ++++++++++++++++++++++
+ 4 files changed, 1710 insertions(+)
+ create mode 100644 sound/soc/codecs/max98390.c
+ create mode 100644 sound/soc/codecs/max98390.h
 
---/e2eDi0V/xtL+Mc8--
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index e60e0b6a689c..93f88cd9970a 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -116,6 +116,7 @@ config SND_SOC_ALL_CODECS
+ 	imply SND_SOC_MAX98926
+ 	imply SND_SOC_MAX98927
+ 	imply SND_SOC_MAX98373
++	imply SND_SOC_MAX98390
+ 	imply SND_SOC_MAX9850
+ 	imply SND_SOC_MAX9860
+ 	imply SND_SOC_MAX9759
+@@ -867,6 +868,10 @@ config SND_SOC_MAX98373
+ 	tristate "Maxim Integrated MAX98373 Speaker Amplifier"
+ 	depends on I2C
+ 
++config SND_SOC_MAX98390
++	tristate "Maxim Integrated MAX98390 Speaker Amplifier"
++	depends on I2C
++
+ config SND_SOC_MAX9850
+ 	tristate
+ 	depends on I2C
+diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+index 03533157cda6..e7c17f701529 100644
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
+@@ -115,6 +115,7 @@ snd-soc-max98925-objs := max98925.o
+ snd-soc-max98926-objs := max98926.o
+ snd-soc-max98927-objs := max98927.o
+ snd-soc-max98373-objs := max98373.o
++snd-soc-max98390-objs := max98390.o
+ snd-soc-max9850-objs := max9850.o
+ snd-soc-max9860-objs := max9860.o
+ snd-soc-mc13783-objs := mc13783.o
+@@ -415,6 +416,7 @@ obj-$(CONFIG_SND_SOC_MAX98925)	+= snd-soc-max98925.o
+ obj-$(CONFIG_SND_SOC_MAX98926)	+= snd-soc-max98926.o
+ obj-$(CONFIG_SND_SOC_MAX98927)	+= snd-soc-max98927.o
+ obj-$(CONFIG_SND_SOC_MAX98373)	+= snd-soc-max98373.o
++obj-$(CONFIG_SND_SOC_MAX98390)	+= snd-soc-max98390.o
+ obj-$(CONFIG_SND_SOC_MAX9850)	+= snd-soc-max9850.o
+ obj-$(CONFIG_SND_SOC_MAX9860)	+= snd-soc-max9860.o
+ obj-$(CONFIG_SND_SOC_MC13783)	+= snd-soc-mc13783.o
+diff --git a/sound/soc/codecs/max98390.c b/sound/soc/codecs/max98390.c
+new file mode 100644
+index 000000000000..b9ce44dda886
+--- /dev/null
++++ b/sound/soc/codecs/max98390.c
+@@ -0,0 +1,1040 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * max98390.c  --  MAX98390 ALSA Soc Audio driver
++ *
++ * Copyright (C) 2020 Maxim Integrated Products
++ *
++ */
++
++#include <linux/acpi.h>
++#include <linux/cdev.h>
++#include <linux/dmi.h>
++#include <linux/firmware.h>
++#include <linux/gpio.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/of_gpio.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/time.h>
++#include <sound/pcm.h>
++#include <sound/pcm_params.h>
++#include <sound/soc.h>
++#include <sound/tlv.h>
++
++#include "max98390.h"
++
++static struct reg_default max98390_reg_defaults[] = {
++	{MAX98390_INT_EN1, 0xf0},
++	{MAX98390_INT_EN2, 0x00},
++	{MAX98390_INT_EN3, 0x00},
++	{MAX98390_INT_FLAG_CLR1, 0x00},
++	{MAX98390_INT_FLAG_CLR2, 0x00},
++	{MAX98390_INT_FLAG_CLR3, 0x00},
++	{MAX98390_IRQ_CTRL, 0x01},
++	{MAX98390_CLK_MON, 0x6d},
++	{MAX98390_DAT_MON, 0x03},
++	{MAX98390_WDOG_CTRL, 0x00},
++	{MAX98390_WDOG_RST, 0x00},
++	{MAX98390_MEAS_ADC_THERM_WARN_THRESH, 0x75},
++	{MAX98390_MEAS_ADC_THERM_SHDN_THRESH, 0x8c},
++	{MAX98390_MEAS_ADC_THERM_HYSTERESIS, 0x08},
++	{MAX98390_PIN_CFG, 0x55},
++	{MAX98390_PCM_RX_EN_A, 0x00},
++	{MAX98390_PCM_RX_EN_B, 0x00},
++	{MAX98390_PCM_TX_EN_A, 0x00},
++	{MAX98390_PCM_TX_EN_B, 0x00},
++	{MAX98390_PCM_TX_HIZ_CTRL_A, 0xff},
++	{MAX98390_PCM_TX_HIZ_CTRL_B, 0xff},
++	{MAX98390_PCM_CH_SRC_1, 0x00},
++	{MAX98390_PCM_CH_SRC_2, 0x00},
++	{MAX98390_PCM_CH_SRC_3, 0x00},
++	{MAX98390_PCM_MODE_CFG, 0xc0},
++	{MAX98390_PCM_MASTER_MODE, 0x1c},
++	{MAX98390_PCM_CLK_SETUP, 0x44},
++	{MAX98390_PCM_SR_SETUP, 0x08},
++	{MAX98390_ICC_RX_EN_A, 0x00},
++	{MAX98390_ICC_RX_EN_B, 0x00},
++	{MAX98390_ICC_TX_EN_A, 0x00},
++	{MAX98390_ICC_TX_EN_B, 0x00},
++	{MAX98390_ICC_HIZ_MANUAL_MODE, 0x00},
++	{MAX98390_ICC_TX_HIZ_EN_A, 0x00},
++	{MAX98390_ICC_TX_HIZ_EN_B, 0x00},
++	{MAX98390_ICC_LNK_EN, 0x00},
++	{MAX98390_R2039_AMP_DSP_CFG, 0x0f},
++	{MAX98390_R203A_AMP_EN, 0x81},
++	{MAX98390_TONE_GEN_DC_CFG, 0x00},
++	{MAX98390_SPK_SRC_SEL, 0x00},
++	{MAX98390_SSM_CFG, 0x85},
++	{MAX98390_MEAS_EN, 0x03},
++	{MAX98390_MEAS_DSP_CFG, 0x0f},
++	{MAX98390_BOOST_CTRL0, 0x1c},
++	{MAX98390_BOOST_CTRL3, 0x01},
++	{MAX98390_BOOST_CTRL1, 0x40},
++	{MAX98390_MEAS_ADC_CFG, 0x07},
++	{MAX98390_MEAS_ADC_BASE_MSB, 0x00},
++	{MAX98390_MEAS_ADC_BASE_LSB, 0x23},
++	{MAX98390_ADC_CH0_DIVIDE, 0x00},
++	{MAX98390_ADC_CH1_DIVIDE, 0x00},
++	{MAX98390_ADC_CH2_DIVIDE, 0x00},
++	{MAX98390_ADC_CH0_FILT_CFG, 0x00},
++	{MAX98390_ADC_CH1_FILT_CFG, 0x00},
++	{MAX98390_ADC_CH2_FILT_CFG, 0x00},
++	{MAX98390_PWR_GATE_CTL, 0x2c},
++	{MAX98390_BROWNOUT_EN, 0x00},
++	{MAX98390_BROWNOUT_INFINITE_HOLD, 0x00},
++	{MAX98390_BROWNOUT_INFINITE_HOLD_CLR, 0x00},
++	{MAX98390_BROWNOUT_LVL_HOLD, 0x00},
++	{MAX98390_BROWNOUT_LVL1_THRESH, 0x00},
++	{MAX98390_BROWNOUT_LVL2_THRESH, 0x00},
++	{MAX98390_BROWNOUT_LVL3_THRESH, 0x00},
++	{MAX98390_BROWNOUT_LVL4_THRESH, 0x00},
++	{MAX98390_BROWNOUT_THRESH_HYSTERYSIS, 0x00},
++	{MAX98390_BROWNOUT_AMP_LIMITER_ATK_REL, 0x1f},
++	{MAX98390_BROWNOUT_AMP_GAIN_ATK_REL, 0x00},
++	{MAX98390_BROWNOUT_AMP1_CLIP_MODE, 0x00},
++	{MAX98390_BROWNOUT_LVL1_CUR_LIMIT, 0x00},
++	{MAX98390_BROWNOUT_LVL1_AMP1_CTRL1, 0x00},
++	{MAX98390_BROWNOUT_LVL1_AMP1_CTRL2, 0x00},
++	{MAX98390_BROWNOUT_LVL1_AMP1_CTRL3, 0x00},
++	{MAX98390_BROWNOUT_LVL2_CUR_LIMIT, 0x00},
++	{MAX98390_BROWNOUT_LVL2_AMP1_CTRL1, 0x00},
++	{MAX98390_BROWNOUT_LVL2_AMP1_CTRL2, 0x00},
++	{MAX98390_BROWNOUT_LVL2_AMP1_CTRL3, 0x00},
++	{MAX98390_BROWNOUT_LVL3_CUR_LIMIT, 0x00},
++	{MAX98390_BROWNOUT_LVL3_AMP1_CTRL1, 0x00},
++	{MAX98390_BROWNOUT_LVL3_AMP1_CTRL2, 0x00},
++	{MAX98390_BROWNOUT_LVL3_AMP1_CTRL3, 0x00},
++	{MAX98390_BROWNOUT_LVL4_CUR_LIMIT, 0x00},
++	{MAX98390_BROWNOUT_LVL4_AMP1_CTRL1, 0x00},
++	{MAX98390_BROWNOUT_LVL4_AMP1_CTRL2, 0x00},
++	{MAX98390_BROWNOUT_LVL4_AMP1_CTRL3, 0x00},
++	{MAX98390_BROWNOUT_ILIM_HLD, 0x00},
++	{MAX98390_BROWNOUT_LIM_HLD, 0x00},
++	{MAX98390_BROWNOUT_CLIP_HLD, 0x00},
++	{MAX98390_BROWNOUT_GAIN_HLD, 0x00},
++	{MAX98390_ENV_TRACK_VOUT_HEADROOM, 0x0f},
++	{MAX98390_ENV_TRACK_BOOST_VOUT_DELAY, 0x80},
++	{MAX98390_ENV_TRACK_REL_RATE, 0x07},
++	{MAX98390_ENV_TRACK_HOLD_RATE, 0x07},
++	{MAX98390_ENV_TRACK_CTRL, 0x01},
++	{MAX98390_BOOST_BYPASS1, 0x49},
++	{MAX98390_BOOST_BYPASS2, 0x2b},
++	{MAX98390_BOOST_BYPASS3, 0x08},
++	{MAX98390_FET_SCALING1, 0x00},
++	{MAX98390_FET_SCALING2, 0x03},
++	{MAX98390_FET_SCALING3, 0x00},
++	{MAX98390_FET_SCALING4, 0x07},
++	{MAX98390_SPK_SPEEDUP, 0x00},
++	{DSMIG_WB_DRC_RELEASE_TIME_1, 0x00},
++	{DSMIG_WB_DRC_RELEASE_TIME_2, 0x00},
++	{DSMIG_WB_DRC_ATTACK_TIME_1, 0x00},
++	{DSMIG_WB_DRC_ATTACK_TIME_2, 0x00},
++	{DSMIG_WB_DRC_COMPRESSION_RATIO, 0x00},
++	{DSMIG_WB_DRC_COMPRESSION_THRESHOLD, 0x00},
++	{DSMIG_WB_DRC_MAKEUPGAIN, 0x00},
++	{DSMIG_WB_DRC_NOISE_GATE_THRESHOLD, 0x00},
++	{DSMIG_WBDRC_HPF_ENABLE, 0x00},
++	{DSMIG_WB_DRC_TEST_SMOOTHER_OUT_EN, 0x00},
++	{DSMIG_PPR_THRESHOLD, 0x00},
++	{DSM_STEREO_BASS_CHANNEL_SELECT, 0x00},
++	{DSM_TPROT_THRESHOLD_BYTE0, 0x00},
++	{DSM_TPROT_THRESHOLD_BYTE1, 0x00},
++	{DSM_TPROT_ROOM_TEMPERATURE_BYTE0, 0x00},
++	{DSM_TPROT_ROOM_TEMPERATURE_BYTE1, 0x00},
++	{DSM_TPROT_RECIP_RDC_ROOM_BYTE0, 0x00},
++	{DSM_TPROT_RECIP_RDC_ROOM_BYTE1, 0x00},
++	{DSM_TPROT_RECIP_RDC_ROOM_BYTE2, 0x00},
++	{DSM_TPROT_RECIP_TCONST_BYTE0, 0x00},
++	{DSM_TPROT_RECIP_TCONST_BYTE1, 0x00},
++	{DSM_TPROT_RECIP_TCONST_BYTE2, 0x00},
++	{DSM_THERMAL_ATTENUATION_SETTINGS, 0x00},
++	{DSM_THERMAL_PILOT_TONE_ATTENUATION, 0x00},
++	{DSM_TPROT_PG_TEMP_THRESH_BYTE0, 0x00},
++	{DSM_TPROT_PG_TEMP_THRESH_BYTE1, 0x00},
++	{DSMIG_DEBUZZER_THRESHOLD, 0x00},
++	{DSMIG_DEBUZZER_ALPHA_COEF_TEST_ONLY, 0x08},
++	{DSM_VOL_ENA, 0x20},
++	{DSM_VOL_CTRL, 0xa0},
++	{DSMIG_EN, 0x00},
++	{MAX98390_R23E1_DSP_GLOBAL_EN, 0x00},
++	{MAX98390_R23FF_GLOBAL_EN, 0x00},
++};
++
++static int max98390_dsm_calibrate(struct snd_soc_component *component);
++
++static int max98390_dai_set_fmt(struct snd_soc_dai *codec_dai, unsigned int fmt)
++{
++	struct snd_soc_component *component = codec_dai->component;
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++	unsigned int mode;
++	unsigned int format;
++	unsigned int invert = 0;
++
++	dev_dbg(component->dev, "%s: fmt 0x%08X\n", __func__, fmt);
++
++	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
++	case SND_SOC_DAIFMT_CBS_CFS:
++		mode = MAX98390_PCM_MASTER_MODE_SLAVE;
++		break;
++	case SND_SOC_DAIFMT_CBM_CFM:
++		max98390->master = true;
++		mode = MAX98390_PCM_MASTER_MODE_MASTER;
++		break;
++	default:
++		dev_err(component->dev, "DAI clock mode unsupported\n");
++		return -EINVAL;
++	}
++
++	regmap_update_bits(max98390->regmap,
++		MAX98390_PCM_MASTER_MODE,
++		MAX98390_PCM_MASTER_MODE_MASK,
++		mode);
++
++	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
++	case SND_SOC_DAIFMT_NB_NF:
++		break;
++	case SND_SOC_DAIFMT_IB_NF:
++		invert = MAX98390_PCM_MODE_CFG_PCM_BCLKEDGE;
++		break;
++	default:
++		dev_err(component->dev, "DAI invert mode unsupported\n");
++		return -EINVAL;
++	}
++
++	regmap_update_bits(max98390->regmap,
++		MAX98390_PCM_MODE_CFG,
++		MAX98390_PCM_MODE_CFG_PCM_BCLKEDGE,
++		invert);
++
++	/* interface format */
++	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
++	case SND_SOC_DAIFMT_I2S:
++		format = MAX98390_PCM_FORMAT_I2S;
++		break;
++	case SND_SOC_DAIFMT_LEFT_J:
++		format = MAX98390_PCM_FORMAT_LJ;
++		break;
++	case SND_SOC_DAIFMT_DSP_A:
++		format = MAX98390_PCM_FORMAT_TDM_MODE1;
++		break;
++	case SND_SOC_DAIFMT_DSP_B:
++		format = MAX98390_PCM_FORMAT_TDM_MODE0;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	regmap_update_bits(max98390->regmap,
++		MAX98390_PCM_MODE_CFG,
++		MAX98390_PCM_MODE_CFG_FORMAT_MASK,
++		format << MAX98390_PCM_MODE_CFG_FORMAT_SHIFT);
++
++	return 0;
++}
++
++static int max98390_get_bclk_sel(int bclk)
++{
++	int i;
++	/* BCLKs per LRCLK */
++	static int bclk_sel_table[] = {
++		32, 48, 64, 96, 128, 192, 256, 320, 384, 512,
++	};
++	/* match BCLKs per LRCLK */
++	for (i = 0; i < ARRAY_SIZE(bclk_sel_table); i++) {
++		if (bclk_sel_table[i] == bclk)
++			return i + 2;
++	}
++	return 0;
++}
++
++static int max98390_set_clock(struct snd_soc_component *component,
++		struct snd_pcm_hw_params *params)
++{
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++	/* codec MCLK rate in master mode */
++	static int rate_table[] = {
++		5644800, 6000000, 6144000, 6500000,
++		9600000, 11289600, 12000000, 12288000,
++		13000000, 19200000,
++	};
++	/* BCLK/LRCLK ratio calculation */
++	int blr_clk_ratio = params_channels(params)
++		* snd_pcm_format_width(params_format(params));
++	int value;
++
++	if (max98390->master) {
++		int i;
++		/* match rate to closest value */
++		for (i = 0; i < ARRAY_SIZE(rate_table); i++) {
++			if (rate_table[i] >= max98390->sysclk)
++				break;
++		}
++		if (i == ARRAY_SIZE(rate_table)) {
++			dev_err(component->dev, "failed to find proper clock rate.\n");
++			return -EINVAL;
++		}
++
++		regmap_update_bits(max98390->regmap,
++			MAX98390_PCM_MASTER_MODE,
++			MAX98390_PCM_MASTER_MODE_MCLK_MASK,
++			i << MAX98390_PCM_MASTER_MODE_MCLK_RATE_SHIFT);
++	}
++
++	if (!max98390->tdm_mode) {
++		/* BCLK configuration */
++		value = max98390_get_bclk_sel(blr_clk_ratio);
++		if (!value) {
++			dev_err(component->dev, "format unsupported %d\n",
++				params_format(params));
++			return -EINVAL;
++		}
++
++		regmap_update_bits(max98390->regmap,
++			MAX98390_PCM_CLK_SETUP,
++			MAX98390_PCM_CLK_SETUP_BSEL_MASK,
++			value);
++	}
++	return 0;
++}
++
++static int max98390_dai_hw_params(struct snd_pcm_substream *substream,
++		struct snd_pcm_hw_params *params,
++		struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component =
++		dai->component;
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++
++	unsigned int sampling_rate;
++	unsigned int chan_sz;
++
++	/* pcm mode configuration */
++	switch (snd_pcm_format_width(params_format(params))) {
++	case 16:
++		chan_sz = MAX98390_PCM_MODE_CFG_CHANSZ_16;
++		break;
++	case 24:
++		chan_sz = MAX98390_PCM_MODE_CFG_CHANSZ_24;
++		break;
++	case 32:
++		chan_sz = MAX98390_PCM_MODE_CFG_CHANSZ_32;
++		break;
++	default:
++		dev_err(component->dev, "format unsupported %d\n",
++			params_format(params));
++		goto err;
++	}
++
++	regmap_update_bits(max98390->regmap,
++		MAX98390_PCM_MODE_CFG,
++		MAX98390_PCM_MODE_CFG_CHANSZ_MASK, chan_sz);
++
++	dev_dbg(component->dev, "format supported %d",
++		params_format(params));
++
++	/* sampling rate configuration */
++	switch (params_rate(params)) {
++	case 8000:
++		sampling_rate = MAX98390_PCM_SR_SET1_SR_8000;
++		break;
++	case 11025:
++		sampling_rate = MAX98390_PCM_SR_SET1_SR_11025;
++		break;
++	case 12000:
++		sampling_rate = MAX98390_PCM_SR_SET1_SR_12000;
++		break;
++	case 16000:
++		sampling_rate = MAX98390_PCM_SR_SET1_SR_16000;
++		break;
++	case 22050:
++		sampling_rate = MAX98390_PCM_SR_SET1_SR_22050;
++		break;
++	case 24000:
++		sampling_rate = MAX98390_PCM_SR_SET1_SR_24000;
++		break;
++	case 32000:
++		sampling_rate = MAX98390_PCM_SR_SET1_SR_32000;
++		break;
++	case 44100:
++		sampling_rate = MAX98390_PCM_SR_SET1_SR_44100;
++		break;
++	case 48000:
++		sampling_rate = MAX98390_PCM_SR_SET1_SR_48000;
++		break;
++	default:
++		dev_err(component->dev, "rate %d not supported\n",
++			params_rate(params));
++		goto err;
++	}
++
++	/* set DAI_SR to correct LRCLK frequency */
++	regmap_update_bits(max98390->regmap,
++		MAX98390_PCM_SR_SETUP,
++		MAX98390_PCM_SR_SET1_SR_MASK,
++		sampling_rate);
++
++	return max98390_set_clock(component, params);
++err:
++	return -EINVAL;
++}
++
++static int max98390_dai_tdm_slot(struct snd_soc_dai *dai,
++		unsigned int tx_mask, unsigned int rx_mask,
++		int slots, int slot_width)
++{
++	struct snd_soc_component *component = dai->component;
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++
++	int bsel;
++	unsigned int chan_sz;
++
++	if (!tx_mask && !rx_mask && !slots && !slot_width)
++		max98390->tdm_mode = false;
++	else
++		max98390->tdm_mode = true;
++
++	dev_dbg(component->dev,
++		"Tdm mode : %d\n", max98390->tdm_mode);
++
++	/* BCLK configuration */
++	bsel = max98390_get_bclk_sel(slots * slot_width);
++	if (!bsel) {
++		dev_err(component->dev, "BCLK %d not supported\n",
++			slots * slot_width);
++		return -EINVAL;
++	}
++
++	regmap_update_bits(max98390->regmap,
++		MAX98390_PCM_CLK_SETUP,
++		MAX98390_PCM_CLK_SETUP_BSEL_MASK,
++		bsel);
++
++	/* Channel size configuration */
++	switch (slot_width) {
++	case 16:
++		chan_sz = MAX98390_PCM_MODE_CFG_CHANSZ_16;
++		break;
++	case 24:
++		chan_sz = MAX98390_PCM_MODE_CFG_CHANSZ_24;
++		break;
++	case 32:
++		chan_sz = MAX98390_PCM_MODE_CFG_CHANSZ_32;
++		break;
++	default:
++		dev_err(component->dev, "format unsupported %d\n",
++			slot_width);
++		return -EINVAL;
++	}
++
++	regmap_update_bits(max98390->regmap,
++		MAX98390_PCM_MODE_CFG,
++		MAX98390_PCM_MODE_CFG_CHANSZ_MASK, chan_sz);
++
++	/* Rx slot configuration */
++	regmap_write(max98390->regmap,
++		MAX98390_PCM_RX_EN_A,
++		rx_mask & 0xFF);
++	regmap_write(max98390->regmap,
++		MAX98390_PCM_RX_EN_B,
++		(rx_mask & 0xFF00) >> 8);
++
++	/* Tx slot Hi-Z configuration */
++	regmap_write(max98390->regmap,
++		MAX98390_PCM_TX_HIZ_CTRL_A,
++		~tx_mask & 0xFF);
++	regmap_write(max98390->regmap,
++		MAX98390_PCM_TX_HIZ_CTRL_B,
++		(~tx_mask & 0xFF00) >> 8);
++
++	return 0;
++}
++
++static int max98390_dai_set_sysclk(struct snd_soc_dai *dai,
++		int clk_id, unsigned int freq, int dir)
++{
++	struct snd_soc_component *component = dai->component;
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++
++	max98390->sysclk = freq;
++	return 0;
++}
++
++static const struct snd_soc_dai_ops max98390_dai_ops = {
++	.set_sysclk = max98390_dai_set_sysclk,
++	.set_fmt = max98390_dai_set_fmt,
++	.hw_params = max98390_dai_hw_params,
++	.set_tdm_slot = max98390_dai_tdm_slot,
++};
++
++static int max98390_dac_event(struct snd_soc_dapm_widget *w,
++		struct snd_kcontrol *kcontrol, int event)
++{
++	struct snd_soc_component *component =
++		snd_soc_dapm_to_component(w->dapm);
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++
++	switch (event) {
++	case SND_SOC_DAPM_POST_PMU:
++		regmap_update_bits(max98390->regmap,
++			MAX98390_R203A_AMP_EN,
++			MAX98390_AMP_EN_MASK, 1);
++		regmap_update_bits(max98390->regmap,
++			MAX98390_R23FF_GLOBAL_EN,
++			MAX98390_GLOBAL_EN_MASK, 1);
++		break;
++	case SND_SOC_DAPM_POST_PMD:
++		regmap_update_bits(max98390->regmap,
++			MAX98390_R23FF_GLOBAL_EN,
++			MAX98390_GLOBAL_EN_MASK, 0);
++		regmap_update_bits(max98390->regmap,
++			MAX98390_R203A_AMP_EN,
++			MAX98390_AMP_EN_MASK, 0);
++		break;
++	}
++	return 0;
++}
++
++static const char * const max98390_switch_text[] = {
++	"Left", "Right", "LeftRight"};
++
++static const char * const max98390_boost_voltage_text[] = {
++	"6.5V", "6.625V", "6.75V", "6.875V", "7V", "7.125V", "7.25V", "7.375V",
++	"7.5V", "7.625V", "7.75V", "7.875V", "8V", "8.125V", "8.25V", "8.375V",
++	"8.5V", "8.625V", "8.75V", "8.875V", "9V", "9.125V", "9.25V", "9.375V",
++	"9.5V", "9.625V", "9.75V", "9.875V", "10V"
++};
++
++static SOC_ENUM_SINGLE_DECL(max98390_boost_voltage,
++		MAX98390_BOOST_CTRL0, 0,
++		max98390_boost_voltage_text);
++
++static DECLARE_TLV_DB_SCALE(max98390_spk_tlv, 300, 300, 0);
++static DECLARE_TLV_DB_SCALE(max98390_digital_tlv, -8000, 50, 0);
++
++static const char * const max98390_current_limit_text[] = {
++	"0.00A", "0.50A", "1.00A", "1.05A", "1.10A", "1.15A", "1.20A", "1.25A",
++	"1.30A", "1.35A", "1.40A", "1.45A", "1.50A", "1.55A", "1.60A", "1.65A",
++	"1.70A", "1.75A", "1.80A", "1.85A", "1.90A", "1.95A", "2.00A", "2.05A",
++	"2.10A", "2.15A", "2.20A", "2.25A", "2.30A", "2.35A", "2.40A", "2.45A",
++	"2.50A", "2.55A", "2.60A", "2.65A", "2.70A", "2.75A", "2.80A", "2.85A",
++	"2.90A", "2.95A", "3.00A", "3.05A", "3.10A", "3.15A", "3.20A", "3.25A",
++	"3.30A", "3.35A", "3.40A", "3.45A", "3.50A", "3.55A", "3.60A", "3.65A",
++	"3.70A", "3.75A", "3.80A", "3.85A", "3.90A", "3.95A", "4.00A", "4.05A",
++	"4.10A"
++};
++
++static SOC_ENUM_SINGLE_DECL(max98390_current_limit,
++		MAX98390_BOOST_CTRL1, 0,
++		max98390_current_limit_text);
++
++static int max98390_ref_rdc_put(struct snd_kcontrol *kcontrol,
++		struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++		snd_soc_kcontrol_component(kcontrol);
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++
++	max98390->ref_rdc_value = ucontrol->value.integer.value[0];
++
++	regmap_write(max98390->regmap, DSM_TPROT_RECIP_RDC_ROOM_BYTE0,
++		max98390->ref_rdc_value & 0x000000ff);
++	regmap_write(max98390->regmap, DSM_TPROT_RECIP_RDC_ROOM_BYTE1,
++		(max98390->ref_rdc_value >> 8) & 0x000000ff);
++	regmap_write(max98390->regmap, DSM_TPROT_RECIP_RDC_ROOM_BYTE2,
++		(max98390->ref_rdc_value >> 16) & 0x000000ff);
++
++	return 0;
++}
++
++static int max98390_ref_rdc_get(struct snd_kcontrol *kcontrol,
++		struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++		snd_soc_kcontrol_component(kcontrol);
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++
++	ucontrol->value.integer.value[0] = max98390->ref_rdc_value;
++
++	return 0;
++}
++
++static int max98390_ambient_temp_put(struct snd_kcontrol *kcontrol,
++		struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++		snd_soc_kcontrol_component(kcontrol);
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++
++	max98390->ambient_temp_value = ucontrol->value.integer.value[0];
++
++	regmap_write(max98390->regmap, DSM_TPROT_ROOM_TEMPERATURE_BYTE1,
++		(max98390->ambient_temp_value >> 8) & 0x000000ff);
++	regmap_write(max98390->regmap, DSM_TPROT_ROOM_TEMPERATURE_BYTE0,
++		(max98390->ambient_temp_value) & 0x000000ff);
++
++	return 0;
++}
++
++static int max98390_ambient_temp_get(struct snd_kcontrol *kcontrol,
++		struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++		snd_soc_kcontrol_component(kcontrol);
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++
++	ucontrol->value.integer.value[0] = max98390->ambient_temp_value;
++
++	return 0;
++}
++
++static int max98390_adaptive_rdc_put(struct snd_kcontrol *kcontrol,
++		struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++		snd_soc_kcontrol_component(kcontrol);
++
++	dev_warn(component->dev, "Put adaptive rdc not supported\n");
++
++	return 0;
++}
++
++static int max98390_adaptive_rdc_get(struct snd_kcontrol *kcontrol,
++		struct snd_ctl_elem_value *ucontrol)
++{
++	int rdc, rdc0;
++	struct snd_soc_component *component =
++		snd_soc_kcontrol_component(kcontrol);
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++
++	regmap_read(max98390->regmap, THERMAL_RDC_RD_BACK_BYTE1, &rdc);
++	regmap_read(max98390->regmap, THERMAL_RDC_RD_BACK_BYTE0, &rdc0);
++	ucontrol->value.integer.value[0] = rdc0 | rdc << 8;
++
++	return 0;
++}
++
++static int max98390_dsm_calib_get(struct snd_kcontrol *kcontrol,
++		struct snd_ctl_elem_value *ucontrol)
++{
++	/* Do nothing */
++	return 0;
++}
++
++static int max98390_dsm_calib_put(struct snd_kcontrol *kcontrol,
++		struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++		snd_soc_kcontrol_component(kcontrol);
++
++	max98390_dsm_calibrate(component);
++
++	return 0;
++}
++
++static const struct snd_kcontrol_new max98390_snd_controls[] = {
++	SOC_SINGLE_TLV("Digital Volume", DSM_VOL_CTRL,
++		0, 184, 0,
++		max98390_digital_tlv),
++	SOC_SINGLE_TLV("Speaker Volume", MAX98390_R203D_SPK_GAIN,
++		0, 6, 0,
++		max98390_spk_tlv),
++	SOC_SINGLE("Ramp Up Bypass Switch", MAX98390_R2039_AMP_DSP_CFG,
++		MAX98390_AMP_DSP_CFG_RMP_UP_SHIFT, 1, 0),
++	SOC_SINGLE("Ramp Down Bypass Switch", MAX98390_R2039_AMP_DSP_CFG,
++		MAX98390_AMP_DSP_CFG_RMP_DN_SHIFT, 1, 0),
++	SOC_SINGLE("Boost Clock Phase", MAX98390_BOOST_CTRL3,
++		MAX98390_BOOST_CLK_PHASE_CFG_SHIFT, 3, 0),
++	SOC_ENUM("Boost Output Voltage", max98390_boost_voltage),
++	SOC_ENUM("Current Limit", max98390_current_limit),
++	SOC_SINGLE_EXT("DSM Rdc", SND_SOC_NOPM, 0, 0xffffff, 0,
++		max98390_ref_rdc_get, max98390_ref_rdc_put),
++	SOC_SINGLE_EXT("DSM Ambient Temp", SND_SOC_NOPM, 0, 0xffff, 0,
++		max98390_ambient_temp_get, max98390_ambient_temp_put),
++	SOC_SINGLE_EXT("DSM Adaptive Rdc", SND_SOC_NOPM, 0, 0xffff, 0,
++		max98390_adaptive_rdc_get, max98390_adaptive_rdc_put),
++	SOC_SINGLE_EXT("DSM Calibration", SND_SOC_NOPM, 0, 1, 0,
++		max98390_dsm_calib_get, max98390_dsm_calib_put),
++};
++
++static const struct soc_enum dai_sel_enum =
++	SOC_ENUM_SINGLE(MAX98390_PCM_CH_SRC_1,
++		MAX98390_PCM_RX_CH_SRC_SHIFT,
++		3, max98390_switch_text);
++
++static const struct snd_kcontrol_new max98390_dai_controls =
++	SOC_DAPM_ENUM("DAI Sel", dai_sel_enum);
++
++static const struct snd_soc_dapm_widget max98390_dapm_widgets[] = {
++	SND_SOC_DAPM_DAC_E("Amp Enable", "HiFi Playback",
++		MAX98390_R203A_AMP_EN, 0, 0, max98390_dac_event,
++		SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
++	SND_SOC_DAPM_MUX("DAI Sel Mux", SND_SOC_NOPM, 0, 0,
++		&max98390_dai_controls),
++	SND_SOC_DAPM_OUTPUT("BE_OUT"),
++};
++
++static const struct snd_soc_dapm_route max98390_audio_map[] = {
++	/* Plabyack */
++	{"DAI Sel Mux", "Left", "Amp Enable"},
++	{"DAI Sel Mux", "Right", "Amp Enable"},
++	{"DAI Sel Mux", "LeftRight", "Amp Enable"},
++	{"BE_OUT", NULL, "DAI Sel Mux"},
++};
++
++static bool max98390_readable_register(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case MAX98390_SOFTWARE_RESET ... MAX98390_INT_EN3:
++	case MAX98390_IRQ_CTRL ... MAX98390_WDOG_CTRL:
++	case MAX98390_MEAS_ADC_THERM_WARN_THRESH
++		... MAX98390_BROWNOUT_INFINITE_HOLD:
++	case MAX98390_BROWNOUT_LVL_HOLD ... THERMAL_COILTEMP_RD_BACK_BYTE0:
++	case DSMIG_DEBUZZER_THRESHOLD ... MAX98390_R24FF_REV_ID:
++		return true;
++	default:
++		return false;
++	}
++};
++
++static bool max98390_volatile_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case MAX98390_SOFTWARE_RESET ... MAX98390_INT_EN3:
++	case MAX98390_MEAS_ADC_CH0_READ ... MAX98390_MEAS_ADC_CH2_READ:
++	case MAX98390_PWR_GATE_STATUS ... MAX98390_BROWNOUT_STATUS:
++	case MAX98390_BROWNOUT_LOWEST_STATUS:
++	case MAX98390_ENV_TRACK_BOOST_VOUT_READ:
++	case DSM_STBASS_HPF_B0_BYTE0 ... DSM_DEBUZZER_ATTACK_TIME_BYTE2:
++	case THERMAL_RDC_RD_BACK_BYTE1 ... THERMAL_COILTEMP_RD_BACK_BYTE0:
++	case DSM_THERMAL_GAIN ... DSM_WBDRC_GAIN:
++		return true;
++	default:
++		return false;
++	}
++}
++
++#define MAX98390_RATES SNDRV_PCM_RATE_8000_48000
++
++#define MAX98390_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | \
++	SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE)
++
++static struct snd_soc_dai_driver max98390_dai[] = {
++	{
++		.name = "max98390-aif1",
++		.playback = {
++			.stream_name = "HiFi Playback",
++			.channels_min = 1,
++			.channels_max = 2,
++			.rates = MAX98390_RATES,
++			.formats = MAX98390_FORMATS,
++		},
++		.capture = {
++			.stream_name = "HiFi Capture",
++			.channels_min = 1,
++			.channels_max = 2,
++			.rates = MAX98390_RATES,
++			.formats = MAX98390_FORMATS,
++		},
++		.ops = &max98390_dai_ops,
++	}
++};
++
++static int max98390_dsm_init(struct snd_soc_component *component)
++{
++	int ret;
++	char filename[128];
++	const char *vendor, *product;
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++	const struct firmware *fw;
++	char *dsm_param;
++
++	vendor = dmi_get_system_info(DMI_SYS_VENDOR);
++	product = dmi_get_system_info(DMI_PRODUCT_NAME);
++
++	if (vendor && product) {
++		snprintf(filename, sizeof(filename), "dsm_param_%s_%s.bin",
++			vendor, product);
++	} else {
++		sprintf(filename, "dsm_param.bin");
++	}
++	ret = request_firmware(&fw, filename, component->dev);
++	if (ret) {
++		ret = request_firmware(&fw, "dsm_param.bin", component->dev);
++		if (ret)
++			goto err;
++	}
++
++	dev_dbg(component->dev,
++		"max98390: param fw size %ld\n",
++		fw->size);
++	dsm_param = (char *)fw->data;
++	dsm_param += MAX98390_DSM_PAYLOAD_OFFSET;
++	regmap_bulk_write(max98390->regmap, DSM_EQ_BQ1_B0_BYTE0,
++		dsm_param,
++		fw->size - MAX98390_DSM_PAYLOAD_OFFSET);
++	release_firmware(fw);
++	regmap_write(max98390->regmap, MAX98390_R23E1_DSP_GLOBAL_EN, 0x01);
++
++err:
++	return ret;
++}
++
++static int max98390_dsm_calibrate(struct snd_soc_component *component)
++{
++	unsigned int rdc, rdc_cal_result, temp;
++	unsigned int rdc_integer, rdc_factor;
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++
++	regmap_write(max98390->regmap, MAX98390_R203A_AMP_EN, 0x81);
++	regmap_write(max98390->regmap, MAX98390_R23FF_GLOBAL_EN, 0x01);
++
++	regmap_read(max98390->regmap,
++		THERMAL_RDC_RD_BACK_BYTE1, &rdc);
++	regmap_read(max98390->regmap,
++		THERMAL_RDC_RD_BACK_BYTE0, &rdc_cal_result);
++	rdc_cal_result |= (rdc << 8) & 0x0000FFFF;
++	if (rdc_cal_result)
++		max98390->ref_rdc_value = 268435456U / rdc_cal_result;
++
++	regmap_read(max98390->regmap, MAX98390_MEAS_ADC_CH2_READ, &temp);
++	max98390->ambient_temp_value = temp * 52 - 1188;
++
++	rdc_integer =  rdc_cal_result * 937  / 65536;
++	rdc_factor = ((rdc_cal_result * 937 * 100) / 65536)
++					- (rdc_integer * 100);
++
++	dev_info(component->dev, "rdc resistance about %d.%02d ohm, reg=0x%X temp reg=0x%X\n",
++		 rdc_integer, rdc_factor, rdc_cal_result, temp);
++
++	regmap_write(max98390->regmap, MAX98390_R23FF_GLOBAL_EN, 0x00);
++	regmap_write(max98390->regmap, MAX98390_R203A_AMP_EN, 0x80);
++
++	return 0;
++}
++
++static int max98390_probe(struct snd_soc_component *component)
++{
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++
++	regmap_write(max98390->regmap, MAX98390_SOFTWARE_RESET, 0x01);
++	/* Sleep reset settle time */
++	msleep(20);
++	/* Update dsm bin param */
++	max98390_dsm_init(component);
++
++	/* Amp Setting */
++	regmap_write(max98390->regmap, MAX98390_CLK_MON, 0x6f);
++	regmap_write(max98390->regmap, MAX98390_PCM_RX_EN_A, 0x03);
++	regmap_write(max98390->regmap, MAX98390_PWR_GATE_CTL, 0x2d);
++	regmap_write(max98390->regmap, MAX98390_ENV_TRACK_VOUT_HEADROOM, 0x0e);
++	regmap_write(max98390->regmap, MAX98390_BOOST_BYPASS1, 0x46);
++	regmap_write(max98390->regmap, MAX98390_FET_SCALING3, 0x03);
++
++	/* Dsm Setting */
++	regmap_write(max98390->regmap, DSM_VOL_CTRL, 0x94);
++	regmap_write(max98390->regmap, DSMIG_EN, 0x19);
++	regmap_write(max98390->regmap, MAX98390_R203A_AMP_EN, 0x80);
++	if (max98390->ref_rdc_value) {
++		regmap_write(max98390->regmap, DSM_TPROT_RECIP_RDC_ROOM_BYTE0,
++			max98390->ref_rdc_value & 0x000000ff);
++		regmap_write(max98390->regmap, DSM_TPROT_RECIP_RDC_ROOM_BYTE1,
++			(max98390->ref_rdc_value >> 8) & 0x000000ff);
++		regmap_write(max98390->regmap, DSM_TPROT_RECIP_RDC_ROOM_BYTE2,
++			(max98390->ref_rdc_value >> 16) & 0x000000ff);
++	}
++	if (max98390->ambient_temp_value) {
++		regmap_write(max98390->regmap, DSM_TPROT_ROOM_TEMPERATURE_BYTE1,
++			(max98390->ambient_temp_value >> 8) & 0x000000ff);
++		regmap_write(max98390->regmap, DSM_TPROT_ROOM_TEMPERATURE_BYTE0,
++			(max98390->ambient_temp_value) & 0x000000ff);
++	}
++
++	return 0;
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int max98390_suspend(struct device *dev)
++{
++	struct max98390_priv *max98390 = dev_get_drvdata(dev);
++
++	dev_dbg(dev, "%s:Enter\n", __func__);
++
++	regcache_cache_only(max98390->regmap, true);
++	regcache_mark_dirty(max98390->regmap);
++
++	return 0;
++}
++
++static int max98390_resume(struct device *dev)
++{
++	struct max98390_priv *max98390 = dev_get_drvdata(dev);
++
++	dev_dbg(dev, "%s:Enter\n", __func__);
++
++	regcache_cache_only(max98390->regmap, false);
++	regcache_sync(max98390->regmap);
++
++	return 0;
++}
++#endif
++
++static const struct dev_pm_ops max98390_pm = {
++	SET_SYSTEM_SLEEP_PM_OPS(max98390_suspend, max98390_resume)
++};
++
++static const struct snd_soc_component_driver soc_codec_dev_max98390 = {
++	.probe			= max98390_probe,
++	.controls		= max98390_snd_controls,
++	.num_controls		= ARRAY_SIZE(max98390_snd_controls),
++	.dapm_widgets		= max98390_dapm_widgets,
++	.num_dapm_widgets	= ARRAY_SIZE(max98390_dapm_widgets),
++	.dapm_routes		= max98390_audio_map,
++	.num_dapm_routes	= ARRAY_SIZE(max98390_audio_map),
++	.idle_bias_on		= 1,
++	.use_pmdown_time	= 1,
++	.endianness		= 1,
++	.non_legacy_dai_naming	= 1,
++};
++
++static const struct regmap_config max98390_regmap = {
++	.reg_bits         = 16,
++	.val_bits         = 8,
++	.max_register     = MAX98390_R24FF_REV_ID,
++	.reg_defaults     = max98390_reg_defaults,
++	.num_reg_defaults = ARRAY_SIZE(max98390_reg_defaults),
++	.readable_reg	  = max98390_readable_register,
++	.volatile_reg	  = max98390_volatile_reg,
++	.cache_type       = REGCACHE_RBTREE,
++};
++
++#ifdef CONFIG_OF
++static const struct of_device_id max98390_dt_ids[] = {
++	{ .compatible = "maxim,max98390", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, max98390_dt_ids);
++#endif
++
++static int max98390_i2c_probe(struct i2c_client *i2c,
++		const struct i2c_device_id *id)
++{
++	int ret = 0;
++	int reg = 0;
++
++	struct max98390_priv *max98390 = NULL;
++	struct i2c_adapter *adapter = to_i2c_adapter(i2c->dev.parent);
++
++	ret = i2c_check_functionality(adapter,
++		I2C_FUNC_SMBUS_BYTE
++		| I2C_FUNC_SMBUS_BYTE_DATA);
++	if (!ret) {
++		dev_err(&i2c->dev, "I2C check functionality failed\n");
++		return -ENXIO;
++	}
++
++	max98390 = devm_kzalloc(&i2c->dev, sizeof(*max98390), GFP_KERNEL);
++	if (!max98390) {
++		ret = -ENOMEM;
++		return ret;
++	}
++	i2c_set_clientdata(i2c, max98390);
++
++	ret = device_property_read_u32(&i2c->dev, "maxim,temperature_calib",
++				       &max98390->ambient_temp_value);
++	if (ret) {
++		dev_info(&i2c->dev,
++			 "no optional property 'temperature_calib' found, default:\n");
++	}
++	ret = device_property_read_u32(&i2c->dev, "maxim,r0_calib",
++				       &max98390->ref_rdc_value);
++	if (ret) {
++		dev_info(&i2c->dev,
++			 "no optional property 'r0_calib' found, default:\n");
++	}
++
++	dev_info(&i2c->dev,
++		"%s: r0_calib: 0x%x,temperature_calib: 0x%x",
++		__func__, max98390->ref_rdc_value,
++		max98390->ambient_temp_value);
++
++	/* regmap initialization */
++	max98390->regmap = devm_regmap_init_i2c(i2c, &max98390_regmap);
++	if (IS_ERR(max98390->regmap)) {
++		ret = PTR_ERR(max98390->regmap);
++		dev_err(&i2c->dev,
++			"Failed to allocate regmap: %d\n", ret);
++		return ret;
++	}
++
++	/* Check Revision ID */
++	ret = regmap_read(max98390->regmap,
++		MAX98390_R24FF_REV_ID, &reg);
++	if (ret) {
++		dev_err(&i2c->dev,
++			"ret=%d, Failed to read: 0x%02X\n",
++			ret, MAX98390_R24FF_REV_ID);
++		return ret;
++	}
++	dev_info(&i2c->dev, "MAX98390 revisionID: 0x%02X\n", reg);
++
++	ret = devm_snd_soc_register_component(&i2c->dev,
++			&soc_codec_dev_max98390,
++			max98390_dai, ARRAY_SIZE(max98390_dai));
++
++	return ret;
++}
++
++static const struct i2c_device_id max98390_i2c_id[] = {
++	{ "max98390", 0},
++	{},
++};
++
++MODULE_DEVICE_TABLE(i2c, max98390_i2c_id);
++
++#if defined(CONFIG_OF)
++static const struct of_device_id max98390_of_match[] = {
++	{ .compatible = "maxim,max98390", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, max98390_of_match);
++#endif
++
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id max98390_acpi_match[] = {
++	{ "MX98390", 0 },
++	{},
++};
++MODULE_DEVICE_TABLE(acpi, max98390_acpi_match);
++#endif
++
++static struct i2c_driver max98390_i2c_driver = {
++	.driver = {
++		.name = "max98390",
++		.of_match_table = of_match_ptr(max98390_of_match),
++		.acpi_match_table = ACPI_PTR(max98390_acpi_match),
++		.pm = &max98390_pm,
++	},
++	.probe = max98390_i2c_probe,
++	.id_table = max98390_i2c_id,
++};
++
++module_i2c_driver(max98390_i2c_driver)
++
++MODULE_DESCRIPTION("ALSA SoC MAX98390 driver");
++MODULE_AUTHOR("Steve Lee <steves.lee@maximintegrated.com>");
++MODULE_LICENSE("GPL");
+diff --git a/sound/soc/codecs/max98390.h b/sound/soc/codecs/max98390.h
+new file mode 100644
+index 000000000000..f59cb114d957
+--- /dev/null
++++ b/sound/soc/codecs/max98390.h
+@@ -0,0 +1,663 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2020, Maxim Integrated.
++ */
++
++#ifndef _MAX98390_H
++#define _MAX98390_H
++
++/* MAX98390 Register Address */
++#define MAX98390_SOFTWARE_RESET 0x2000
++#define MAX98390_INT_RAW1 0x2002
++#define MAX98390_INT_RAW2 0x2003
++#define MAX98390_INT_RAW3 0x2004
++#define MAX98390_INT_STATE1 0x2005
++#define MAX98390_INT_STATE2 0x2006
++#define MAX98390_INT_STATE3 0x2007
++#define MAX98390_INT_FLAG1 0x2008
++#define MAX98390_INT_FLAG2 0x2009
++#define MAX98390_INT_FLAG3 0x200a
++#define MAX98390_INT_EN1 0x200b
++#define MAX98390_INT_EN2 0x200c
++#define MAX98390_INT_EN3 0x200d
++#define MAX98390_INT_FLAG_CLR1 0x200e
++#define MAX98390_INT_FLAG_CLR2 0x200f
++#define MAX98390_INT_FLAG_CLR3 0x2010
++#define MAX98390_IRQ_CTRL 0x2011
++#define MAX98390_CLK_MON 0x2012
++#define MAX98390_DAT_MON 0x2014
++#define MAX98390_WDOG_CTRL 0x2015
++#define MAX98390_WDOG_RST 0x2016
++#define MAX98390_MEAS_ADC_THERM_WARN_THRESH 0x2017
++#define MAX98390_MEAS_ADC_THERM_SHDN_THRESH 0x2018
++#define MAX98390_MEAS_ADC_THERM_HYSTERESIS 0x2019
++#define MAX98390_PIN_CFG 0x201a
++#define MAX98390_PCM_RX_EN_A 0x201b
++#define MAX98390_PCM_RX_EN_B 0x201c
++#define MAX98390_PCM_TX_EN_A 0x201d
++#define MAX98390_PCM_TX_EN_B 0x201e
++#define MAX98390_PCM_TX_HIZ_CTRL_A 0x201f
++#define MAX98390_PCM_TX_HIZ_CTRL_B 0x2020
++#define MAX98390_PCM_CH_SRC_1 0x2021
++#define MAX98390_PCM_CH_SRC_2 0x2022
++#define MAX98390_PCM_CH_SRC_3 0x2023
++#define MAX98390_PCM_MODE_CFG 0x2024
++#define MAX98390_PCM_MASTER_MODE 0x2025
++#define MAX98390_PCM_CLK_SETUP 0x2026
++#define MAX98390_PCM_SR_SETUP 0x2027
++#define MAX98390_ICC_RX_EN_A 0x202c
++#define MAX98390_ICC_RX_EN_B 0x202d
++#define MAX98390_ICC_TX_EN_A 0x202e
++#define MAX98390_ICC_TX_EN_B 0x202f
++#define MAX98390_ICC_HIZ_MANUAL_MODE 0x2030
++#define MAX98390_ICC_TX_HIZ_EN_A 0x2031
++#define MAX98390_ICC_TX_HIZ_EN_B 0x2032
++#define MAX98390_ICC_LNK_EN 0x2033
++#define MAX98390_R2039_AMP_DSP_CFG 0x2039
++#define MAX98390_R203A_AMP_EN 0x203a
++#define MAX98390_TONE_GEN_DC_CFG 0x203b
++#define MAX98390_SPK_SRC_SEL 0x203c
++#define MAX98390_R203D_SPK_GAIN 0x203d
++#define MAX98390_SSM_CFG 0x203e
++#define MAX98390_MEAS_EN 0x203f
++#define MAX98390_MEAS_DSP_CFG 0x2040
++#define MAX98390_BOOST_CTRL0 0x2041
++#define MAX98390_BOOST_CTRL3 0x2042
++#define MAX98390_BOOST_CTRL1 0x2043
++#define MAX98390_MEAS_ADC_CFG 0x2044
++#define MAX98390_MEAS_ADC_BASE_MSB 0x2045
++#define MAX98390_MEAS_ADC_BASE_LSB 0x2046
++#define MAX98390_ADC_CH0_DIVIDE 0x2047
++#define MAX98390_ADC_CH1_DIVIDE 0x2048
++#define MAX98390_ADC_CH2_DIVIDE 0x2049
++#define MAX98390_ADC_CH0_FILT_CFG 0x204a
++#define MAX98390_ADC_CH1_FILT_CFG 0x204b
++#define MAX98390_ADC_CH2_FILT_CFG 0x204c
++#define MAX98390_MEAS_ADC_CH0_READ 0x204d
++#define MAX98390_MEAS_ADC_CH1_READ 0x204e
++#define MAX98390_MEAS_ADC_CH2_READ 0x204f
++#define MAX98390_PWR_GATE_CTL 0x2050
++#define MAX98390_PWR_GATE_STATUS 0x2051
++#define MAX98390_VBAT_LOW_STATUS 0x2052
++#define MAX98390_PVDD_LOW_STATUS 0x2053
++#define MAX98390_BROWNOUT_STATUS 0x2054
++#define MAX98390_BROWNOUT_EN 0x2055
++#define MAX98390_BROWNOUT_INFINITE_HOLD 0x2056
++#define MAX98390_BROWNOUT_INFINITE_HOLD_CLR 0x2057
++#define MAX98390_BROWNOUT_LVL_HOLD 0x2058
++#define MAX98390_BROWNOUT_LVL1_THRESH 0x2059
++#define MAX98390_BROWNOUT_LVL2_THRESH 0x205a
++#define MAX98390_BROWNOUT_LVL3_THRESH 0x205b
++#define MAX98390_BROWNOUT_LVL4_THRESH 0x205c
++#define MAX98390_BROWNOUT_THRESH_HYSTERYSIS 0x205d
++#define MAX98390_BROWNOUT_AMP_LIMITER_ATK_REL 0x205e
++#define MAX98390_BROWNOUT_AMP_GAIN_ATK_REL 0x205f
++#define MAX98390_BROWNOUT_AMP1_CLIP_MODE 0x2060
++#define MAX98390_BROWNOUT_LVL1_CUR_LIMIT 0x2061
++#define MAX98390_BROWNOUT_LVL1_AMP1_CTRL1 0x2062
++#define MAX98390_BROWNOUT_LVL1_AMP1_CTRL2 0x2063
++#define MAX98390_BROWNOUT_LVL1_AMP1_CTRL3 0x2064
++#define MAX98390_BROWNOUT_LVL2_CUR_LIMIT 0x2065
++#define MAX98390_BROWNOUT_LVL2_AMP1_CTRL1 0x2066
++#define MAX98390_BROWNOUT_LVL2_AMP1_CTRL2 0x2067
++#define MAX98390_BROWNOUT_LVL2_AMP1_CTRL3 0x2068
++#define MAX98390_BROWNOUT_LVL3_CUR_LIMIT 0x2069
++#define MAX98390_BROWNOUT_LVL3_AMP1_CTRL1 0x206a
++#define MAX98390_BROWNOUT_LVL3_AMP1_CTRL2 0x206b
++#define MAX98390_BROWNOUT_LVL3_AMP1_CTRL3 0x206c
++#define MAX98390_BROWNOUT_LVL4_CUR_LIMIT 0x206d
++#define MAX98390_BROWNOUT_LVL4_AMP1_CTRL1 0x206e
++#define MAX98390_BROWNOUT_LVL4_AMP1_CTRL2 0x206f
++#define MAX98390_BROWNOUT_LVL4_AMP1_CTRL3 0x2070
++#define MAX98390_BROWNOUT_LOWEST_STATUS 0x2071
++#define MAX98390_BROWNOUT_ILIM_HLD 0x2072
++#define MAX98390_BROWNOUT_LIM_HLD 0x2073
++#define MAX98390_BROWNOUT_CLIP_HLD 0x2074
++#define MAX98390_BROWNOUT_GAIN_HLD 0x2075
++#define MAX98390_ENV_TRACK_VOUT_HEADROOM 0x2076
++#define MAX98390_ENV_TRACK_BOOST_VOUT_DELAY 0x2077
++#define MAX98390_ENV_TRACK_REL_RATE 0x2078
++#define MAX98390_ENV_TRACK_HOLD_RATE 0x2079
++#define MAX98390_ENV_TRACK_CTRL 0x207a
++#define MAX98390_ENV_TRACK_BOOST_VOUT_READ 0x207b
++#define MAX98390_BOOST_BYPASS1 0x207c
++#define MAX98390_BOOST_BYPASS2 0x207d
++#define MAX98390_BOOST_BYPASS3 0x207e
++#define MAX98390_FET_SCALING1 0x207f
++#define MAX98390_FET_SCALING2 0x2080
++#define MAX98390_FET_SCALING3 0x2081
++#define MAX98390_FET_SCALING4 0x2082
++#define MAX98390_SPK_SPEEDUP 0x2084
++
++#define DSM_STBASS_HPF_B0_BYTE0 0x2101
++#define DSM_STBASS_HPF_B0_BYTE1 0x2102
++#define DSM_STBASS_HPF_B0_BYTE2 0x2103
++#define DSM_STBASS_HPF_B1_BYTE0 0x2105
++#define DSM_STBASS_HPF_B1_BYTE1 0x2106
++#define DSM_STBASS_HPF_B1_BYTE2 0x2107
++#define DSM_STBASS_HPF_B2_BYTE0 0x2109
++#define DSM_STBASS_HPF_B2_BYTE1 0x210a
++#define DSM_STBASS_HPF_B2_BYTE2 0x210b
++#define DSM_STBASS_HPF_A1_BYTE0 0x210d
++#define DSM_STBASS_HPF_A1_BYTE1 0x210e
++#define DSM_STBASS_HPF_A1_BYTE2 0x210f
++#define DSM_STBASS_HPF_A2_BYTE0 0x2111
++#define DSM_STBASS_HPF_A2_BYTE1 0x2112
++#define DSM_STBASS_HPF_A2_BYTE2 0x2113
++#define DSM_STBASS_LPF_B0_BYTE0 0x2115
++#define DSM_STBASS_LPF_B0_BYTE1 0x2116
++#define DSM_STBASS_LPF_B0_BYTE2 0x2117
++#define DSM_STBASS_LPF_B1_BYTE0 0x2119
++#define DSM_STBASS_LPF_B1_BYTE1 0x211a
++#define DSM_STBASS_LPF_B1_BYTE2 0x211b
++#define DSM_STBASS_LPF_B2_BYTE0 0x211d
++#define DSM_STBASS_LPF_B2_BYTE1 0x211e
++#define DSM_STBASS_LPF_B2_BYTE2 0x211f
++#define DSM_STBASS_LPF_A1_BYTE0 0x2121
++#define DSM_STBASS_LPF_A1_BYTE1 0x2122
++#define DSM_STBASS_LPF_A1_BYTE2 0x2123
++#define DSM_STBASS_LPF_A2_BYTE0 0x2125
++#define DSM_STBASS_LPF_A2_BYTE1 0x2126
++#define DSM_STBASS_LPF_A2_BYTE2 0x2127
++#define DSM_EQ_BQ1_B0_BYTE0 0x2129
++#define DSM_EQ_BQ1_B0_BYTE1 0x212a
++#define DSM_EQ_BQ1_B0_BYTE2 0x212b
++#define DSM_EQ_BQ1_B1_BYTE0 0x212d
++#define DSM_EQ_BQ1_B1_BYTE1 0x212e
++#define DSM_EQ_BQ1_B1_BYTE2 0x212f
++#define DSM_EQ_BQ1_B2_BYTE0 0x2131
++#define DSM_EQ_BQ1_B2_BYTE1 0x2132
++#define DSM_EQ_BQ1_B2_BYTE2 0x2133
++#define DSM_EQ_BQ1_A1_BYTE0 0x2135
++#define DSM_EQ_BQ1_A1_BYTE1 0x2136
++#define DSM_EQ_BQ1_A1_BYTE2 0x2137
++#define DSM_EQ_BQ1_A2_BYTE0 0x2139
++#define DSM_EQ_BQ1_A2_BYTE1 0x213a
++#define DSM_EQ_BQ1_A2_BYTE2 0x213b
++#define DSM_EQ_BQ2_B0_BYTE0 0x213d
++#define DSM_EQ_BQ2_B0_BYTE1 0x213e
++#define DSM_EQ_BQ2_B0_BYTE2 0x213f
++#define DSM_EQ_BQ2_B1_BYTE0 0x2141
++#define DSM_EQ_BQ2_B1_BYTE1 0x2142
++#define DSM_EQ_BQ2_B1_BYTE2 0x2143
++#define DSM_EQ_BQ2_B2_BYTE0 0x2145
++#define DSM_EQ_BQ2_B2_BYTE1 0x2146
++#define DSM_EQ_BQ2_B2_BYTE2 0x2147
++#define DSM_EQ_BQ2_A1_BYTE0 0x2149
++#define DSM_EQ_BQ2_A1_BYTE1 0x214a
++#define DSM_EQ_BQ2_A1_BYTE2 0x214b
++#define DSM_EQ_BQ2_A2_BYTE0 0x214d
++#define DSM_EQ_BQ2_A2_BYTE1 0x214e
++#define DSM_EQ_BQ2_A2_BYTE2 0x214f
++#define DSM_EQ_BQ3_B0_BYTE0 0x2151
++#define DSM_EQ_BQ3_B0_BYTE1 0x2152
++#define DSM_EQ_BQ3_B0_BYTE2 0x2153
++#define DSM_EQ_BQ3_B1_BYTE0 0x2155
++#define DSM_EQ_BQ3_B1_BYTE1 0x2156
++#define DSM_EQ_BQ3_B1_BYTE2 0x2157
++#define DSM_EQ_BQ3_B2_BYTE0 0x2159
++#define DSM_EQ_BQ3_B2_BYTE1 0x215a
++#define DSM_EQ_BQ3_B2_BYTE2 0x215b
++#define DSM_EQ_BQ3_A1_BYTE0 0x215d
++#define DSM_EQ_BQ3_A1_BYTE1 0x215e
++#define DSM_EQ_BQ3_A1_BYTE2 0x215f
++#define DSM_EQ_BQ3_A2_BYTE0 0x2161
++#define DSM_EQ_BQ3_A2_BYTE1 0x2162
++#define DSM_EQ_BQ3_A2_BYTE2 0x2163
++#define DSM_EQ_BQ4_B0_BYTE0 0x2165
++#define DSM_EQ_BQ4_B0_BYTE1 0x2166
++#define DSM_EQ_BQ4_B0_BYTE2 0x2167
++#define DSM_EQ_BQ4_B1_BYTE0 0x2169
++#define DSM_EQ_BQ4_B1_BYTE1 0x216a
++#define DSM_EQ_BQ4_B1_BYTE2 0x216b
++#define DSM_EQ_BQ4_B2_BYTE0 0x216d
++#define DSM_EQ_BQ4_B2_BYTE1 0x216e
++#define DSM_EQ_BQ4_B2_BYTE2 0x216f
++#define DSM_EQ_BQ4_A1_BYTE0 0x2171
++#define DSM_EQ_BQ4_A1_BYTE1 0x2172
++#define DSM_EQ_BQ4_A1_BYTE2 0x2173
++#define DSM_EQ_BQ4_A2_BYTE0 0x2175
++#define DSM_EQ_BQ4_A2_BYTE1 0x2176
++#define DSM_EQ_BQ4_A2_BYTE2 0x2177
++#define DSM_EQ_BQ5_B0_BYTE0 0x2179
++#define DSM_EQ_BQ5_B0_BYTE1 0x217a
++#define DSM_EQ_BQ5_B0_BYTE2 0x217b
++#define DSM_EQ_BQ5_B1_BYTE0 0x217d
++#define DSM_EQ_BQ5_B1_BYTE1 0x217e
++#define DSM_EQ_BQ5_B1_BYTE2 0x217f
++#define DSM_EQ_BQ5_B2_BYTE0 0x2181
++#define DSM_EQ_BQ5_B2_BYTE1 0x2182
++#define DSM_EQ_BQ5_B2_BYTE2 0x2183
++#define DSM_EQ_BQ5_A1_BYTE0 0x2185
++#define DSM_EQ_BQ5_A1_BYTE1 0x2186
++#define DSM_EQ_BQ5_A1_BYTE2 0x2187
++#define DSM_EQ_BQ5_A2_BYTE0 0x2189
++#define DSM_EQ_BQ5_A2_BYTE1 0x218a
++#define DSM_EQ_BQ5_A2_BYTE2 0x218b
++#define DSM_EQ_BQ6_B0_BYTE0 0x218d
++#define DSM_EQ_BQ6_B0_BYTE1 0x218e
++#define DSM_EQ_BQ6_B0_BYTE2 0x218f
++#define DSM_EQ_BQ6_B1_BYTE0 0x2191
++#define DSM_EQ_BQ6_B1_BYTE1 0x2192
++#define DSM_EQ_BQ6_B1_BYTE2 0x2193
++#define DSM_EQ_BQ6_B2_BYTE0 0x2195
++#define DSM_EQ_BQ6_B2_BYTE1 0x2196
++#define DSM_EQ_BQ6_B2_BYTE2 0x2197
++#define DSM_EQ_BQ6_A1_BYTE0 0x2199
++#define DSM_EQ_BQ6_A1_BYTE1 0x219a
++#define DSM_EQ_BQ6_A1_BYTE2 0x219b
++#define DSM_EQ_BQ6_A2_BYTE0 0x219d
++#define DSM_EQ_BQ6_A2_BYTE1 0x219e
++#define DSM_EQ_BQ6_A2_BYTE2 0x219f
++#define DSM_EQ_BQ7_B0_BYTE0 0x21a1
++#define DSM_EQ_BQ7_B0_BYTE1 0x21a2
++#define DSM_EQ_BQ7_B0_BYTE2 0x21a3
++#define DSM_EQ_BQ7_B1_BYTE0 0x21a5
++#define DSM_EQ_BQ7_B1_BYTE1 0x21a6
++#define DSM_EQ_BQ7_B1_BYTE2 0x21a7
++#define DSM_EQ_BQ7_B2_BYTE0 0x21a9
++#define DSM_EQ_BQ7_B2_BYTE1 0x21aa
++#define DSM_EQ_BQ7_B2_BYTE2 0x21ab
++#define DSM_EQ_BQ7_A1_BYTE0 0x21ad
++#define DSM_EQ_BQ7_A1_BYTE1 0x21ae
++#define DSM_EQ_BQ7_A1_BYTE2 0x21af
++#define DSM_EQ_BQ7_A2_BYTE0 0x21b1
++#define DSM_EQ_BQ7_A2_BYTE1 0x21b2
++#define DSM_EQ_BQ7_A2_BYTE2 0x21b3
++#define DSM_EQ_BQ8_B0_BYTE0 0x21b5
++#define DSM_EQ_BQ8_B0_BYTE1 0x21b6
++#define DSM_EQ_BQ8_B0_BYTE2 0x21b7
++#define DSM_EQ_BQ8_B1_BYTE0 0x21b9
++#define DSM_EQ_BQ8_B1_BYTE1 0x21ba
++#define DSM_EQ_BQ8_B1_BYTE2 0x21bb
++#define DSM_EQ_BQ8_B2_BYTE0 0x21bd
++#define DSM_EQ_BQ8_B2_BYTE1 0x21be
++#define DSM_EQ_BQ8_B2_BYTE2 0x21bf
++#define DSM_EQ_BQ8_A1_BYTE0 0x21c1
++#define DSM_EQ_BQ8_A1_BYTE1 0x21c2
++#define DSM_EQ_BQ8_A1_BYTE2 0x21c3
++#define DSM_EQ_BQ8_A2_BYTE0 0x21c5
++#define DSM_EQ_BQ8_A2_BYTE1 0x21c6
++#define DSM_EQ_BQ8_A2_BYTE2 0x21c7
++#define DSM_LFX_BQ_B0_BYTE0 0x21c9
++#define DSM_LFX_BQ_B0_BYTE1 0x21ca
++#define DSM_LFX_BQ_B0_BYTE2 0x21cb
++#define DSM_LFX_BQ_B1_BYTE0 0x21cd
++#define DSM_LFX_BQ_B1_BYTE1 0x21ce
++#define DSM_LFX_BQ_B1_BYTE2 0x21cf
++#define DSM_LFX_BQ_B2_BYTE0 0x21d1
++#define DSM_LFX_BQ_B2_BYTE1 0x21d2
++#define DSM_LFX_BQ_B2_BYTE2 0x21d3
++#define DSM_LFX_BQ_A1_BYTE0 0x21d5
++#define DSM_LFX_BQ_A1_BYTE1 0x21d6
++#define DSM_LFX_BQ_A1_BYTE2 0x21d7
++#define DSM_LFX_BQ_A2_BYTE0 0x21d9
++#define DSM_LFX_BQ_A2_BYTE1 0x21da
++#define DSM_LFX_BQ_A2_BYTE2 0x21db
++#define DSM_PPR_HPF_B0_BYTE0 0x21dd
++#define DSM_PPR_HPF_B0_BYTE1 0x21de
++#define DSM_PPR_HPF_B0_BYTE2 0x21df
++#define DSM_PPR_HPF_B1_BYTE0 0x21e1
++#define DSM_PPR_HPF_B1_BYTE1 0x21e2
++#define DSM_PPR_HPF_B1_BYTE2 0x21e3
++#define DSM_PPR_HPF_B2_BYTE0 0x21e5
++#define DSM_PPR_HPF_B2_BYTE1 0x21e6
++#define DSM_PPR_HPF_B2_BYTE2 0x21e7
++#define DSM_PPR_HPF_A1_BYTE0 0x21e9
++#define DSM_PPR_HPF_A1_BYTE1 0x21ea
++#define DSM_PPR_HPF_A1_BYTE2 0x21eb
++#define DSM_PPR_HPF_A2_BYTE0 0x21ed
++#define DSM_PPR_HPF_A2_BYTE1 0x21ee
++#define DSM_PPR_HPF_A2_BYTE2 0x21ef
++#define DSM_PPR_LPF_B0_BYTE0 0x21f1
++#define DSM_PPR_LPF_B0_BYTE1 0x21f2
++#define DSM_PPR_LPF_B0_BYTE2 0x21f3
++#define DSM_PPR_LPF_B1_BYTE0 0x21f5
++#define DSM_PPR_LPF_B1_BYTE1 0x21f6
++#define DSM_PPR_LPF_B1_BYTE2 0x21f7
++#define DSM_PPR_LPF_B2_BYTE0 0x21f9
++#define DSM_PPR_LPF_B2_BYTE1 0x21fa
++#define DSM_PPR_LPF_B2_BYTE2 0x21fb
++#define DSM_PPR_LPF_A1_BYTE0 0x21fd
++#define DSM_PPR_LPF_A1_BYTE1 0x21fe
++#define DSM_PPR_LPF_A1_BYTE2 0x21ff
++#define DSM_PPR_LPF_A2_BYTE0 0x2201
++#define DSM_PPR_LPF_A2_BYTE1 0x2202
++#define DSM_PPR_LPF_A2_BYTE2 0x2203
++#define DSM_SPL_BQ_B0_BYTE0 0x2205
++#define DSM_SPL_BQ_B0_BYTE1 0x2206
++#define DSM_SPL_BQ_B0_BYTE2 0x2207
++#define DSM_SPL_BQ_B1_BYTE0 0x2209
++#define DSM_SPL_BQ_B1_BYTE1 0x220a
++#define DSM_SPL_BQ_B1_BYTE2 0x220b
++#define DSM_SPL_BQ_B2_BYTE0 0x220d
++#define DSM_SPL_BQ_B2_BYTE1 0x220e
++#define DSM_SPL_BQ_B2_BYTE2 0x220f
++#define DSM_SPL_BQ_A1_BYTE0 0x2211
++#define DSM_SPL_BQ_A1_BYTE1 0x2212
++#define DSM_SPL_BQ_A1_BYTE2 0x2213
++#define DSM_SPL_BQ_A2_BYTE0 0x2215
++#define DSM_SPL_BQ_A2_BYTE1 0x2216
++#define DSM_SPL_BQ_A2_BYTE2 0x2217
++#define DSM_EXCUR_BQ_B0_BYTE0 0x2219
++#define DSM_EXCUR_BQ_B0_BYTE1 0x221a
++#define DSM_EXCUR_BQ_B0_BYTE2 0x221b
++#define DSM_EXCUR_BQ_B1_BYTE0 0x221d
++#define DSM_EXCUR_BQ_B1_BYTE1 0x221e
++#define DSM_EXCUR_BQ_B1_BYTE2 0x221f
++#define DSM_EXCUR_BQ_B2_BYTE0 0x2221
++#define DSM_EXCUR_BQ_B2_BYTE1 0x2222
++#define DSM_EXCUR_BQ_B2_BYTE2 0x2223
++#define DSM_EXCUR_BQ_A1_BYTE0 0x2225
++#define DSM_EXCUR_BQ_A1_BYTE1 0x2226
++#define DSM_EXCUR_BQ_A1_BYTE2 0x2227
++#define DSM_EXCUR_BQ_A2_BYTE0 0x2229
++#define DSM_EXCUR_BQ_A2_BYTE1 0x222a
++#define DSM_EXCUR_BQ_A2_BYTE2 0x222b
++#define DSM_EXCPROT_HPF1_B0_BYTE0 0x222d
++#define DSM_EXCPROT_HPF1_B0_BYTE1 0x222e
++#define DSM_EXCPROT_HPF1_B0_BYTE2 0x222f
++#define DSM_EXCPROT_HPF1_B1_BYTE0 0x2231
++#define DSM_EXCPROT_HPF1_B1_BYTE1 0x2232
++#define DSM_EXCPROT_HPF1_B1_BYTE2 0x2233
++#define DSM_EXCPROT_HPF1_B2_BYTE0 0x2235
++#define DSM_EXCPROT_HPF1_B2_BYTE1 0x2236
++#define DSM_EXCPROT_HPF1_B2_BYTE2 0x2237
++#define DSM_EXCPROT_HPF1_A1_BYTE0 0x2239
++#define DSM_EXCPROT_HPF1_A1_BYTE1 0x223a
++#define DSM_EXCPROT_HPF1_A1_BYTE2 0x223b
++#define DSM_EXCPROT_HPF1_A2_BYTE0 0x223d
++#define DSM_EXCPROT_HPF1_A2_BYTE1 0x223e
++#define DSM_EXCPROT_HPF1_A2_BYTE2 0x223f
++#define DSM_EXCPROT_HPF2_B0_BYTE0 0x2241
++#define DSM_EXCPROT_HPF2_B0_BYTE1 0x2242
++#define DSM_EXCPROT_HPF2_B0_BYTE2 0x2243
++#define DSM_EXCPROT_HPF2_B1_BYTE0 0x2245
++#define DSM_EXCPROT_HPF2_B1_BYTE1 0x2246
++#define DSM_EXCPROT_HPF2_B1_BYTE2 0x2247
++#define DSM_EXCPROT_HPF2_B2_BYTE0 0x2249
++#define DSM_EXCPROT_HPF2_B2_BYTE1 0x224a
++#define DSM_EXCPROT_HPF2_B2_BYTE2 0x224b
++#define DSM_EXCPROT_HPF2_A1_BYTE0 0x224d
++#define DSM_EXCPROT_HPF2_A1_BYTE1 0x224e
++#define DSM_EXCPROT_HPF2_A1_BYTE2 0x224f
++#define DSM_EXCPROT_HPF2_A2_BYTE0 0x2251
++#define DSM_EXCPROT_HPF2_A2_BYTE1 0x2252
++#define DSM_EXCPROT_HPF2_A2_BYTE2 0x2253
++#define DSM_EXCPROT_HPF3_B0_BYTE0 0x2255
++#define DSM_EXCPROT_HPF3_B0_BYTE1 0x2256
++#define DSM_EXCPROT_HPF3_B0_BYTE2 0x2257
++#define DSM_EXCPROT_HPF3_B1_BYTE0 0x2259
++#define DSM_EXCPROT_HPF3_B1_BYTE1 0x225a
++#define DSM_EXCPROT_HPF3_B1_BYTE2 0x225b
++#define DSM_EXCPROT_HPF3_B2_BYTE0 0x225d
++#define DSM_EXCPROT_HPF3_B2_BYTE1 0x225e
++#define DSM_EXCPROT_HPF3_B2_BYTE2 0x225f
++#define DSM_EXCPROT_HPF3_A1_BYTE0 0x2261
++#define DSM_EXCPROT_HPF3_A1_BYTE1 0x2262
++#define DSM_EXCPROT_HPF3_A1_BYTE2 0x2263
++#define DSM_EXCPROT_HPF3_A2_BYTE0 0x2265
++#define DSM_EXCPROT_HPF3_A2_BYTE1 0x2266
++#define DSM_EXCPROT_HPF3_A2_BYTE2 0x2267
++#define DSM_EXCPROT_HPF4_B0_BYTE0 0x2269
++#define DSM_EXCPROT_HPF4_B0_BYTE1 0x226a
++#define DSM_EXCPROT_HPF4_B0_BYTE2 0x226b
++#define DSM_EXCPROT_HPF4_B1_BYTE0 0x226d
++#define DSM_EXCPROT_HPF4_B1_BYTE1 0x226e
++#define DSM_EXCPROT_HPF4_B1_BYTE2 0x226f
++#define DSM_EXCPROT_HPF4_B2_BYTE0 0x2271
++#define DSM_EXCPROT_HPF4_B2_BYTE1 0x2272
++#define DSM_EXCPROT_HPF4_B2_BYTE2 0x2273
++#define DSM_EXCPROT_HPF4_A1_BYTE0 0x2275
++#define DSM_EXCPROT_HPF4_A1_BYTE1 0x2276
++#define DSM_EXCPROT_HPF4_A1_BYTE2 0x2277
++#define DSM_EXCPROT_HPF4_A2_BYTE0 0x2279
++#define DSM_EXCPROT_HPF4_A2_BYTE1 0x227a
++#define DSM_EXCPROT_HPF4_A2_BYTE2 0x227b
++#define DSM_EXCPROT_HPF5_B0_BYTE0 0x227d
++#define DSM_EXCPROT_HPF5_B0_BYTE1 0x227e
++#define DSM_EXCPROT_HPF5_B0_BYTE2 0x227f
++#define DSM_EXCPROT_HPF5_B1_BYTE0 0x2281
++#define DSM_EXCPROT_HPF5_B1_BYTE1 0x2282
++#define DSM_EXCPROT_HPF5_B1_BYTE2 0x2283
++#define DSM_EXCPROT_HPF5_B2_BYTE0 0x2285
++#define DSM_EXCPROT_HPF5_B2_BYTE1 0x2286
++#define DSM_EXCPROT_HPF5_B2_BYTE2 0x2287
++#define DSM_EXCPROT_HPF5_A1_BYTE0 0x2289
++#define DSM_EXCPROT_HPF5_A1_BYTE1 0x228a
++#define DSM_EXCPROT_HPF5_A1_BYTE2 0x228b
++#define DSM_EXCPROT_HPF5_A2_BYTE0 0x228d
++#define DSM_EXCPROT_HPF5_A2_BYTE1 0x228e
++#define DSM_EXCPROT_HPF5_A2_BYTE2 0x228f
++#define DSM_DEBUZZ_BPF_B0_BYTE0 0x2291
++#define DSM_DEBUZZ_BPF_B0_BYTE1 0x2292
++#define DSM_DEBUZZ_BPF_B0_BYTE2 0x2293
++#define DSM_DEBUZZ_BPF_B1_BYTE0 0x2295
++#define DSM_DEBUZZ_BPF_B1_BYTE1 0x2296
++#define DSM_DEBUZZ_BPF_B1_BYTE2 0x2297
++#define DSM_DEBUZZ_BPF_B2_BYTE0 0x2299
++#define DSM_DEBUZZ_BPF_B2_BYTE1 0x229a
++#define DSM_DEBUZZ_BPF_B2_BYTE2 0x229b
++#define DSM_DEBUZZ_BPF_A1_BYTE0 0x229d
++#define DSM_DEBUZZ_BPF_A1_BYTE1 0x229e
++#define DSM_DEBUZZ_BPF_A1_BYTE2 0x229f
++#define DSM_DEBUZZ_BPF_A2_BYTE0 0x22a1
++#define DSM_DEBUZZ_BPF_A2_BYTE1 0x22a2
++#define DSM_DEBUZZ_BPF_A2_BYTE2 0x22a3
++#define DSM_DEBUZZ_PORT_B0_BYTE0 0x22a5
++#define DSM_DEBUZZ_PORT_B0_BYTE1 0x22a6
++#define DSM_DEBUZZ_PORT_B0_BYTE2 0x22a7
++#define DSM_DEBUZZ_PORT_B1_BYTE0 0x22a9
++#define DSM_DEBUZZ_PORT_B1_BYTE1 0x22aa
++#define DSM_DEBUZZ_PORT_B1_BYTE2 0x22ab
++#define DSM_DEBUZZ_PORT_B2_BYTE0 0x22ad
++#define DSM_DEBUZZ_PORT_B2_BYTE1 0x22ae
++#define DSM_DEBUZZ_PORT_B2_BYTE2 0x22af
++#define DSM_DEBUZZ_PORT_A1_BYTE0 0x22b1
++#define DSM_DEBUZZ_PORT_A1_BYTE1 0x22b2
++#define DSM_DEBUZZ_PORT_A1_BYTE2 0x22b3
++#define DSM_DEBUZZ_PORT_A2_BYTE0 0x22b5
++#define DSM_DEBUZZ_PORT_A2_BYTE1 0x22b6
++#define DSM_DEBUZZ_PORT_A2_BYTE2 0x22b7
++#define DSM_DEBUZZ_NOTCH_B0_BYTE0 0x22b9
++#define DSM_DEBUZZ_NOTCH_B0_BYTE1 0x22ba
++#define DSM_DEBUZZ_NOTCH_B0_BYTE2 0x22bb
++#define DSM_DEBUZZ_NOTCH_B1_BYTE0 0x22bd
++#define DSM_DEBUZZ_NOTCH_B1_BYTE1 0x22be
++#define DSM_DEBUZZ_NOTCH_B1_BYTE2 0x22bf
++#define DSM_DEBUZZ_NOTCH_B2_BYTE0 0x22c1
++#define DSM_DEBUZZ_NOTCH_B2_BYTE1 0x22c2
++#define DSM_DEBUZZ_NOTCH_B2_BYTE2 0x22c3
++#define DSM_DEBUZZ_NOTCH_A1_BYTE0 0x22c5
++#define DSM_DEBUZZ_NOTCH_A1_BYTE1 0x22c6
++#define DSM_DEBUZZ_NOTCH_A1_BYTE2 0x22c7
++#define DSM_DEBUZZ_NOTCH_A2_BYTE0 0x22c9
++#define DSM_DEBUZZ_NOTCH_A2_BYTE1 0x22ca
++#define DSM_DEBUZZ_NOTCH_A2_BYTE2 0x22cb
++#define DSM_THERMAL_BQ_B0_BYTE0 0x22cd
++#define DSM_THERMAL_BQ_B0_BYTE1 0x22ce
++#define DSM_THERMAL_BQ_B0_BYTE2 0x22cf
++#define DSM_THERMAL_BQ_B1_BYTE0 0x22d1
++#define DSM_THERMAL_BQ_B1_BYTE1 0x22d2
++#define DSM_THERMAL_BQ_B1_BYTE2 0x22d3
++#define DSM_THERMAL_BQ_B2_BYTE0 0x22d5
++#define DSM_THERMAL_BQ_B2_BYTE1 0x22d6
++#define DSM_THERMAL_BQ_B2_BYTE2 0x22d7
++#define DSM_THERMAL_BQ_A1_BYTE0 0x22d9
++#define DSM_THERMAL_BQ_A1_BYTE1 0x22da
++#define DSM_THERMAL_BQ_A1_BYTE2 0x22db
++#define DSM_THERMAL_BQ_A2_BYTE0 0x22dd
++#define DSM_THERMAL_BQ_A2_BYTE1 0x22de
++#define DSM_THERMAL_BQ_A2_BYTE2 0x22df
++#define DSM_WBDRC_FILT1_B0_BYTE0 0x22e1
++#define DSM_WBDRC_FILT1_B0_BYTE1 0x22e2
++#define DSM_WBDRC_FILT1_B0_BYTE2 0x22e3
++#define DSM_WBDRC_FILT1_B1_BYTE0 0x22e5
++#define DSM_WBDRC_FILT1_B1_BYTE1 0x22e6
++#define DSM_WBDRC_FILT1_B1_BYTE2 0x22e7
++#define DSM_WBDRC_FILT1_B2_BYTE0 0x22e9
++#define DSM_WBDRC_FILT1_B2_BYTE1 0x22ea
++#define DSM_WBDRC_FILT1_B2_BYTE2 0x22eb
++#define DSM_WBDRC_FILT1_A1_BYTE0 0x22ed
++#define DSM_WBDRC_FILT1_A1_BYTE1 0x22ee
++#define DSM_WBDRC_FILT1_A1_BYTE2 0x22ef
++#define DSM_WBDRC_FILT1_A2_BYTE0 0x22f1
++#define DSM_WBDRC_FILT1_A2_BYTE1 0x22f2
++#define DSM_WBDRC_FILT1_A2_BYTE2 0x22f3
++#define DSM_WBDRC_FILT2_B0_BYTE0 0x22f5
++#define DSM_WBDRC_FILT2_B0_BYTE1 0x22f6
++#define DSM_WBDRC_FILT2_B0_BYTE2 0x22f7
++#define DSM_WBDRC_FILT2_B1_BYTE0 0x22f9
++#define DSM_WBDRC_FILT2_B1_BYTE1 0x22fa
++#define DSM_WBDRC_FILT2_B1_BYTE2 0x22fb
++#define DSM_WBDRC_FILT2_B2_BYTE0 0x22fd
++#define DSM_WBDRC_FILT2_B2_BYTE1 0x22fe
++#define DSM_WBDRC_FILT2_B2_BYTE2 0x22ff
++#define DSM_WBDRC_FILT2_A1_BYTE0 0x2301
++#define DSM_WBDRC_FILT2_A1_BYTE1 0x2302
++#define DSM_WBDRC_FILT2_A1_BYTE2 0x2303
++#define DSM_WBDRC_FILT2_A2_BYTE0 0x2305
++#define DSM_WBDRC_FILT2_A2_BYTE1 0x2306
++#define DSM_WBDRC_FILT2_A2_BYTE2 0x2307
++#define DSM_PPR_RELEASE_TIME_BYTE0 0x2309
++#define DSM_PPR_RELEASE_TIME_BYTE1 0x230a
++#define DSM_PPR_RELEASE_TIME_BYTE2 0x230b
++#define DSM_PPR_ATTACK_TIME_BYTE0 0x230d
++#define DSM_PPR_ATTACK_TIME_BYTE1 0x230e
++#define DSM_PPR_ATTACK_TIME_BYTE2 0x230f
++#define DSM_DEBUZZER_RELEASE_TIME_BYTE0 0x2311
++#define DSM_DEBUZZER_RELEASE_TIME_BYTE1 0x2312
++#define DSM_DEBUZZER_RELEASE_TIME_BYTE2 0x2313
++#define DSM_DEBUZZER_ATTACK_TIME_BYTE0 0x2315
++#define DSM_DEBUZZER_ATTACK_TIME_BYTE1 0x2316
++#define DSM_DEBUZZER_ATTACK_TIME_BYTE2 0x2317
++
++#define DSMIG_WB_DRC_RELEASE_TIME_1 0x2380
++#define DSMIG_WB_DRC_RELEASE_TIME_2 0x2381
++#define DSMIG_WB_DRC_ATTACK_TIME_1 0x2382
++#define DSMIG_WB_DRC_ATTACK_TIME_2 0x2383
++#define DSMIG_WB_DRC_COMPRESSION_RATIO 0x2384
++#define DSMIG_WB_DRC_COMPRESSION_THRESHOLD 0x2385
++#define DSMIG_WB_DRC_MAKEUPGAIN 0x2386
++#define DSMIG_WB_DRC_NOISE_GATE_THRESHOLD 0x2387
++#define DSMIG_WBDRC_HPF_ENABLE 0x2388
++#define DSMIG_WB_DRC_TEST_SMOOTHER_OUT_EN 0x2389
++#define DSMIG_PPR_THRESHOLD 0x238b
++#define DSM_STEREO_BASS_CHANNEL_SELECT 0x238d
++#define DSM_TPROT_THRESHOLD_BYTE0 0x238e
++#define DSM_TPROT_THRESHOLD_BYTE1 0x238f
++#define DSM_TPROT_ROOM_TEMPERATURE_BYTE0 0x2390
++#define DSM_TPROT_ROOM_TEMPERATURE_BYTE1 0x2391
++#define DSM_TPROT_RECIP_RDC_ROOM_BYTE0 0x2392
++#define DSM_TPROT_RECIP_RDC_ROOM_BYTE1 0x2393
++#define DSM_TPROT_RECIP_RDC_ROOM_BYTE2 0x2394
++#define DSM_TPROT_RECIP_TCONST_BYTE0 0x2395
++#define DSM_TPROT_RECIP_TCONST_BYTE1 0x2396
++#define DSM_TPROT_RECIP_TCONST_BYTE2 0x2397
++#define DSM_THERMAL_ATTENUATION_SETTINGS 0x2398
++#define DSM_THERMAL_PILOT_TONE_ATTENUATION 0x2399
++#define DSM_TPROT_PG_TEMP_THRESH_BYTE0 0x239a
++#define DSM_TPROT_PG_TEMP_THRESH_BYTE1 0x239b
++
++#define THERMAL_RDC_RD_BACK_BYTE1 0x239c
++#define THERMAL_RDC_RD_BACK_BYTE0 0x239d
++#define THERMAL_COILTEMP_RD_BACK_BYTE1 0x239e
++#define THERMAL_COILTEMP_RD_BACK_BYTE0 0x239f
++
++#define DSMIG_DEBUZZER_THRESHOLD 0x23b5
++#define DSMIG_DEBUZZER_ALPHA_COEF_TEST_ONLY 0x23b6
++#define DSM_VOL_ENA 0x23b9
++#define DSM_VOL_CTRL 0x23ba
++
++#define DSMIG_EN 0x23e0
++#define MAX98390_R23E1_DSP_GLOBAL_EN 0x23e1
++
++#define DSM_THERMAL_GAIN 0x23f0
++#define DSM_PPR_GAIN 0x23f1
++#define DSM_DBZ_GAIN 0x23f2
++#define DSM_WBDRC_GAIN 0x23f3
++
++#define MAX98390_R23FF_GLOBAL_EN 0x23FF
++#define MAX98390_R24FF_REV_ID 0x24FF
++
++/* MAX98390_R2021_PCM_RX_SRC_1 */
++#define MAX98390_PCM_RX_CH_SRC_SHIFT (0)
++#define MAX98390_PCM_RX_CH_SRC_BASS_SHIFT (4)
++
++/* MAX98390_R2022_PCM_TX_SRC_1 */
++#define MAX98390_PCM_TX_CH_SRC_A_V_SHIFT (0)
++#define MAX98390_PCM_TX_CH_SRC_A_I_SHIFT (4)
++
++/* MAX98390_R2024_PCM_DATA_FMT_CFG */
++#define MAX98390_PCM_MODE_CFG_FORMAT_MASK (0x7 << 3)
++#define MAX98390_PCM_MODE_CFG_FORMAT_SHIFT (3)
++#define MAX98390_PCM_TX_CH_INTERLEAVE_MASK (0x1 << 2)
++#define MAX98390_PCM_FORMAT_I2S (0x0 << 0)
++#define MAX98390_PCM_FORMAT_LJ (0x1 << 0)
++#define MAX98390_PCM_FORMAT_TDM_MODE0 (0x3 << 0)
++#define MAX98390_PCM_FORMAT_TDM_MODE1 (0x4 << 0)
++#define MAX98390_PCM_FORMAT_TDM_MODE2 (0x5 << 0)
++#define MAX98390_PCM_MODE_CFG_CHANSZ_MASK (0x3 << 6)
++#define MAX98390_PCM_MODE_CFG_CHANSZ_16 (0x1 << 6)
++#define MAX98390_PCM_MODE_CFG_CHANSZ_24 (0x2 << 6)
++#define MAX98390_PCM_MODE_CFG_CHANSZ_32 (0x3 << 6)
++
++/* MAX98390_R2039_AMP_DSP_CFG */
++#define MAX98390_AMP_DSP_CFG_RMP_UP_SHIFT (4)
++#define MAX98390_AMP_DSP_CFG_RMP_DN_SHIFT (5)
++
++/* MAX98390_R203A_AMP_EN */
++#define MAX98390_R203A_AMP_EN_SHIFT (0)
++
++/* MAX98390_PCM_MASTER_MODE */
++#define MAX98390_PCM_MASTER_MODE_MASK (0x3 << 0)
++#define MAX98390_PCM_MASTER_MODE_SLAVE (0x0 << 0)
++#define MAX98390_PCM_MASTER_MODE_MASTER (0x3 << 0)
++
++#define MAX98390_PCM_MASTER_MODE_MCLK_MASK (0xF << 2)
++#define MAX98390_PCM_MASTER_MODE_MCLK_RATE_SHIFT (2)
++
++/* PCM_CLK_SETUP */
++#define MAX98390_PCM_MODE_CFG_PCM_BCLKEDGE (0x1 << 2)
++#define MAX98390_PCM_CLK_SETUP_BSEL_MASK (0xF << 0)
++
++/* PCM_SR_SETUP */
++#define MAX98390_PCM_SR_SET1_SR_MASK (0xF << 0)
++#define MAX98390_PCM_SR_SET1_SR_8000 (0x0 << 0)
++#define MAX98390_PCM_SR_SET1_SR_11025 (0x1 << 0)
++#define MAX98390_PCM_SR_SET1_SR_12000 (0x2 << 0)
++#define MAX98390_PCM_SR_SET1_SR_16000 (0x3 << 0)
++#define MAX98390_PCM_SR_SET1_SR_22050 (0x4 << 0)
++#define MAX98390_PCM_SR_SET1_SR_24000 (0x5 << 0)
++#define MAX98390_PCM_SR_SET1_SR_32000 (0x6 << 0)
++#define MAX98390_PCM_SR_SET1_SR_44100 (0x7 << 0)
++#define MAX98390_PCM_SR_SET1_SR_48000 (0x8 << 0)
++
++/* PCM_TO_SPK_MONO_MIX_1 */
++#define MAX98390_PCM_TO_SPK_MONOMIX_CFG_MASK (0x3 << 6)
++#define MAX98390_PCM_TO_SPK_MONOMIX_CFG_SHIFT (6)
++#define MAX98390_PCM_TO_SPK_CH0_SRC_MASK (0xF << 0)
++#define MAX98390_PCM_TO_SPK_CH1_SRC_MASK (0xF << 4)
++
++/* MAX98390_BOOST_CTRL3 */
++#define MAX98390_BOOST_CLK_PHASE_CFG_SHIFT (2)
++
++/* SOFT_RESET */
++#define MAX98390_SOFT_RESET_MASK (0x1 << 0)
++
++#define MAX98390_GLOBAL_EN_MASK (0x1 << 0)
++#define MAX98390_AMP_EN_MASK (0x1 << 0)
++
++/* DSM register offset */
++#define MAX98390_DSM_PAYLOAD_OFFSET 16
++#define MAX98390_DSM_PAYLOAD_OFFSET_2 495
++
++struct max98390_priv {
++	struct regmap *regmap;
++	unsigned int sysclk;
++	unsigned int master;
++	unsigned int tdm_mode;
++	unsigned int ref_rdc_value;
++	unsigned int ambient_temp_value;
++};
++#endif
+-- 
+2.17.1
+
