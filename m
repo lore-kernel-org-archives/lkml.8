@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57336C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDDC2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C1F20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824257;
-	bh=zvL4WUKqUr4egYTxLwiT19jrJbcEYPSa8vWOmxhsTdY=;
+	s=default; t=1589824260;
+	bh=/Ua9XrqbJSoRkQyQ+LB68APHpv44F3/AJIASOFivlPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bhRzfBt0w5uCCtJXzGXjxxBjQIdthEVhzYjUkaEZa3cZGq7/3g4EzLOHfBpzdQRqX
-	 SvBsUBOkGMpz9On9KGG5CnUlNxGdGXI5+Lctr3nwBMIiKNbRkgo1O6WmPidFP5S7ow
-	 1PwHMwhPWCfppateLhjdG0Ktr0YY/221K7odYHbc=
+	b=Tpvh1nP9Zpb76ZCMQS3dx+CvgEs3h7k0VY974a4zWPCTGHq52/Ci6h4LF6GRpsI+r
+	 gmYwpr4bACqitJKN3uef1aG2RCOKpGdRcTMGIL6gBZYHPaIkzSu3+B1xAPqYX7oJOh
+	 TyipqWS1qoBCf/m+bBg0LgoUJtWJb2kDR713aBUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbgERRu4 (ORCPT
+        id S1730793AbgERRu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:50:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53194 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:50:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730715AbgERRuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:50:50 -0400
+        id S1730750AbgERRuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:50:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A688F20826;
-        Mon, 18 May 2020 17:50:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9438A20715;
+        Mon, 18 May 2020 17:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824250;
-        bh=zvL4WUKqUr4egYTxLwiT19jrJbcEYPSa8vWOmxhsTdY=;
+        s=default; t=1589824255;
+        bh=/Ua9XrqbJSoRkQyQ+LB68APHpv44F3/AJIASOFivlPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KBz3WnlUPPm+IMrlR5LhELc5h81+ARmHafzQ7mkGP2CoTxFyVjH0GdbAYFrFHGIKN
-         ORUyw+0Tnl6A8CGx10qzzF98As7NbqhHbil5W3+34g0uE+lMws3RpbPS0Z+VJcOE0A
-         FZ5ruk5VDJKanUt/GD2Qsl4kM3sd5i9HKejQXYrA=
+        b=DnZun8pf8svNKPtm/zW1dSfgfnRHyr3NlHrGDkK4p3Oj9phAW2xkz4sQBpqmhFWJN
+         wOE3SUirB7m4uiQbKtsbfXrARld6ToZL1iHmztPhi2kogLDr/z2HPY61rrUyD652GX
+         z3wMJo3UacJfcqnx5qxQe6nF/SWnL23HvOWMPS00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
+        Zefan Li <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 4.19 17/80] net: dsa: loop: Add module soft dependency
-Date:   Mon, 18 May 2020 19:36:35 +0200
-Message-Id: <20200518173453.904987186@linuxfoundation.org>
+Subject: [PATCH 4.19 19/80] netprio_cgroup: Fix unlimited memory leak of v2 cgroups
+Date:   Mon, 18 May 2020 19:36:37 +0200
+Message-Id: <20200518173454.260324438@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -59,32 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Zefan Li <lizefan@huawei.com>
 
-[ Upstream commit 3047211ca11bf77b3ecbce045c0aa544d934b945 ]
+[ Upstream commit 090e28b229af92dc5b40786ca673999d59e73056 ]
 
-There is a soft dependency against dsa_loop_bdinfo.ko which sets up the
-MDIO device registration, since there are no symbols referenced by
-dsa_loop.ko, there is no automatic loading of dsa_loop_bdinfo.ko which
-is needed.
+If systemd is configured to use hybrid mode which enables the use of
+both cgroup v1 and v2, systemd will create new cgroup on both the default
+root (v2) and netprio_cgroup hierarchy (v1) for a new session and attach
+task to the two cgroups. If the task does some network thing then the v2
+cgroup can never be freed after the session exited.
 
-Fixes: 98cd1552ea27 ("net: dsa: Mock-up driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+One of our machines ran into OOM due to this memory leak.
+
+In the scenario described above when sk_alloc() is called
+cgroup_sk_alloc() thought it's in v2 mode, so it stores
+the cgroup pointer in sk->sk_cgrp_data and increments
+the cgroup refcnt, but then sock_update_netprioidx()
+thought it's in v1 mode, so it stores netprioidx value
+in sk->sk_cgrp_data, so the cgroup refcnt will never be freed.
+
+Currently we do the mode switch when someone writes to the ifpriomap
+cgroup control file. The easiest fix is to also do the switch when
+a task is attached to a new cgroup.
+
+Fixes: bd1060a1d671 ("sock, cgroup: add sock->sk_cgroup")
+Reported-by: Yang Yingliang <yangyingliang@huawei.com>
+Tested-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Zefan Li <lizefan@huawei.com>
+Acked-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/dsa_loop.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/core/netprio_cgroup.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/dsa/dsa_loop.c
-+++ b/drivers/net/dsa/dsa_loop.c
-@@ -360,6 +360,7 @@ static void __exit dsa_loop_exit(void)
- }
- module_exit(dsa_loop_exit);
+--- a/net/core/netprio_cgroup.c
++++ b/net/core/netprio_cgroup.c
+@@ -240,6 +240,8 @@ static void net_prio_attach(struct cgrou
+ 	struct task_struct *p;
+ 	struct cgroup_subsys_state *css;
  
-+MODULE_SOFTDEP("pre: dsa_loop_bdinfo");
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Florian Fainelli");
- MODULE_DESCRIPTION("DSA loopback driver");
++	cgroup_sk_alloc_disable();
++
+ 	cgroup_taskset_for_each(p, css, tset) {
+ 		void *v = (void *)(unsigned long)css->cgroup->id;
+ 
 
 
