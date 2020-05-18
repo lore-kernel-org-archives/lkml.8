@@ -2,275 +2,107 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CC1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40600C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2C520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826508;
-	bh=WUEUGB2ztG/wBFWKvIh0YzlNR0DI/wK08Ilpm3Lx+Gc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=czWy/VrwGxhk8CL5FhYcWsevSjU/HPwFGKc80wwywwiV0FtlNf2TpXEXIcsSUCnso
-	 TegyakEmbf0nxV/6ZZHQO8ULPc2cTHJsQDEUc8LdvUphyskqWEq1barwW8qOBaSveI
-	 cKRrTnroFcSJSjx9yJeD3tGDCmiuwjLVIaGff8fc=
+	by mail.kernel.org (Postfix) with ESMTP id 25AE720657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732172AbgERS21 (ORCPT
+        id S2387990AbgERS2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:28:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728986AbgERRnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:43:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Mon, 18 May 2020 14:28:35 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:44046 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728986AbgERS2d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:28:33 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D67320829;
-        Mon, 18 May 2020 17:43:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823783;
-        bh=WUEUGB2ztG/wBFWKvIh0YzlNR0DI/wK08Ilpm3Lx+Gc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y7ePXNlKrCVoAsAyzlS8v4bg3j4CH+y9BI9foFQsbCG1dClTDGTS3+zWGbTVMxhL7
-         uM3+GFUkCV29awvfFDTgInSq5A0i/FYPLt0mQZfo1Sdl0kn49CCPxNBfuV/5NJGGM3
-         AHKgOosAi/e+NHtlyM2uNlBaVH9JCbmi3uOzQsUU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 35/90] ptp: use is_visible method to hide unused attributes
-Date:   Mon, 18 May 2020 19:36:13 +0200
-Message-Id: <20200518173458.246665640@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
-References: <20200518173450.930655662@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 4C81380674;
+        Mon, 18 May 2020 20:28:27 +0200 (CEST)
+Date:   Mon, 18 May 2020 20:28:25 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     LinusW <linus.walleij@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 0/6] drm: Prepare to use a GPIO on ti-sn65dsi86 for
+ Hot Plug Detect
+Message-ID: <20200518182825.GA862982@ravnborg.org>
+References: <20200507213500.241695-1-dianders@chromium.org>
+ <20200509201511.GD30802@ravnborg.org>
+ <CAD=FV=VBU7JmTdvgWjyj_ytrFmz6Gkx2OjVr1FxLh9DBG_jN6w@mail.gmail.com>
+ <CAD=FV=UNuwb+YYJKw9+HNMKUNfuNFxj+Gr+yB9tXANbXAvDgCg@mail.gmail.com>
+ <20200518175939.GA770425@ravnborg.org>
+ <CAD=FV=XmUrF3nCZF4dDom5RrWrdVe-iJocenU3cJEDx-gGkDRA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=XmUrF3nCZF4dDom5RrWrdVe-iJocenU3cJEDx-gGkDRA@mail.gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8
+        a=hm5wBbS1sMirQhL_k6wA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Hi Douglas,
+On Mon, May 18, 2020 at 11:05:58AM -0700, Doug Anderson wrote:
+> Sam,
+> 
+> On Mon, May 18, 2020 at 10:59 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> >
+> > Hi Douglas.
+> >
+> > > > Given the previous feedback from Linus W, Stephen, and Laurent I
+> > > > expect things are good enough to land now, but it'd be good to get
+> > > > confirmation (I removed some of the previous tags just to get
+> > > > confirmation).  If we can get review tags early next week maybe it'll
+> > > > still be in time to land for 5.8?
+> > >
+> > > I think all the others have reviews now.  Is there anything blocking
+> > > them from getting applied?
+> > Applied, including the small fix pointed out by Linus.
+> 
+> Thanks!  Ugh, I just realized what the problem was.  I posted a v6
+> with this fix but insanely somehow didn't CC you (!!!).  It was here:
+> 
+> https://lore.kernel.org/r/20200513215902.261547-1-dianders@chromium.org
+> 
+> I'm super sorry about that and thanks for fixing the nit.  That was
+> the only difference between v5 and v6.  I just checked what you pushed
+> and it looks great, thank you.
+No worries as long as what hits drm-misc-next is OK, which it was in
+this case.
 
-commit af59e717d5ff9c8dbf9bcc581c0dfb3b2a9c9030 upstream.
-
-Instead of creating selected attributes after the device is created (and
-after userspace potentially seen uevent), lets use attribute group
-is_visible() method to control which attributes are shown. This will allow
-us to create all attributes (except "pins" group, which will be taken care
-of later) before userspace gets notified about new ptp class device.
-
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/ptp/ptp_sysfs.c | 125 ++++++++++++++++++----------------------
- 1 file changed, 55 insertions(+), 70 deletions(-)
-
-diff --git a/drivers/ptp/ptp_sysfs.c b/drivers/ptp/ptp_sysfs.c
-index 302e626fe6b01..a55a6eb4dfde9 100644
---- a/drivers/ptp/ptp_sysfs.c
-+++ b/drivers/ptp/ptp_sysfs.c
-@@ -46,27 +46,6 @@ PTP_SHOW_INT(n_periodic_outputs, n_per_out);
- PTP_SHOW_INT(n_programmable_pins, n_pins);
- PTP_SHOW_INT(pps_available, pps);
- 
--static struct attribute *ptp_attrs[] = {
--	&dev_attr_clock_name.attr,
--	&dev_attr_max_adjustment.attr,
--	&dev_attr_n_alarms.attr,
--	&dev_attr_n_external_timestamps.attr,
--	&dev_attr_n_periodic_outputs.attr,
--	&dev_attr_n_programmable_pins.attr,
--	&dev_attr_pps_available.attr,
--	NULL,
--};
--
--static const struct attribute_group ptp_group = {
--	.attrs = ptp_attrs,
--};
--
--const struct attribute_group *ptp_groups[] = {
--	&ptp_group,
--	NULL,
--};
--
--
- static ssize_t extts_enable_store(struct device *dev,
- 				  struct device_attribute *attr,
- 				  const char *buf, size_t count)
-@@ -91,6 +70,7 @@ static ssize_t extts_enable_store(struct device *dev,
- out:
- 	return err;
- }
-+static DEVICE_ATTR(extts_enable, 0220, NULL, extts_enable_store);
- 
- static ssize_t extts_fifo_show(struct device *dev,
- 			       struct device_attribute *attr, char *page)
-@@ -124,6 +104,7 @@ out:
- 	mutex_unlock(&ptp->tsevq_mux);
- 	return cnt;
- }
-+static DEVICE_ATTR(fifo, 0444, extts_fifo_show, NULL);
- 
- static ssize_t period_store(struct device *dev,
- 			    struct device_attribute *attr,
-@@ -151,6 +132,7 @@ static ssize_t period_store(struct device *dev,
- out:
- 	return err;
- }
-+static DEVICE_ATTR(period, 0220, NULL, period_store);
- 
- static ssize_t pps_enable_store(struct device *dev,
- 				struct device_attribute *attr,
-@@ -177,6 +159,57 @@ static ssize_t pps_enable_store(struct device *dev,
- out:
- 	return err;
- }
-+static DEVICE_ATTR(pps_enable, 0220, NULL, pps_enable_store);
-+
-+static struct attribute *ptp_attrs[] = {
-+	&dev_attr_clock_name.attr,
-+
-+	&dev_attr_max_adjustment.attr,
-+	&dev_attr_n_alarms.attr,
-+	&dev_attr_n_external_timestamps.attr,
-+	&dev_attr_n_periodic_outputs.attr,
-+	&dev_attr_n_programmable_pins.attr,
-+	&dev_attr_pps_available.attr,
-+
-+	&dev_attr_extts_enable.attr,
-+	&dev_attr_fifo.attr,
-+	&dev_attr_period.attr,
-+	&dev_attr_pps_enable.attr,
-+	NULL
-+};
-+
-+static umode_t ptp_is_attribute_visible(struct kobject *kobj,
-+					struct attribute *attr, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct ptp_clock *ptp = dev_get_drvdata(dev);
-+	struct ptp_clock_info *info = ptp->info;
-+	umode_t mode = attr->mode;
-+
-+	if (attr == &dev_attr_extts_enable.attr ||
-+	    attr == &dev_attr_fifo.attr) {
-+		if (!info->n_ext_ts)
-+			mode = 0;
-+	} else if (attr == &dev_attr_period.attr) {
-+		if (!info->n_per_out)
-+			mode = 0;
-+	} else if (attr == &dev_attr_pps_enable.attr) {
-+		if (!info->pps)
-+			mode = 0;
-+	}
-+
-+	return mode;
-+}
-+
-+static const struct attribute_group ptp_group = {
-+	.is_visible	= ptp_is_attribute_visible,
-+	.attrs		= ptp_attrs,
-+};
-+
-+const struct attribute_group *ptp_groups[] = {
-+	&ptp_group,
-+	NULL
-+};
- 
- static int ptp_pin_name2index(struct ptp_clock *ptp, const char *name)
- {
-@@ -235,26 +268,11 @@ static ssize_t ptp_pin_store(struct device *dev, struct device_attribute *attr,
- 	return count;
- }
- 
--static DEVICE_ATTR(extts_enable, 0220, NULL, extts_enable_store);
--static DEVICE_ATTR(fifo,         0444, extts_fifo_show, NULL);
--static DEVICE_ATTR(period,       0220, NULL, period_store);
--static DEVICE_ATTR(pps_enable,   0220, NULL, pps_enable_store);
--
- int ptp_cleanup_sysfs(struct ptp_clock *ptp)
- {
- 	struct device *dev = ptp->dev;
- 	struct ptp_clock_info *info = ptp->info;
- 
--	if (info->n_ext_ts) {
--		device_remove_file(dev, &dev_attr_extts_enable);
--		device_remove_file(dev, &dev_attr_fifo);
--	}
--	if (info->n_per_out)
--		device_remove_file(dev, &dev_attr_period);
--
--	if (info->pps)
--		device_remove_file(dev, &dev_attr_pps_enable);
--
- 	if (info->n_pins) {
- 		sysfs_remove_group(&dev->kobj, &ptp->pin_attr_group);
- 		kfree(ptp->pin_attr);
-@@ -307,46 +325,13 @@ no_dev_attr:
- 
- int ptp_populate_sysfs(struct ptp_clock *ptp)
- {
--	struct device *dev = ptp->dev;
- 	struct ptp_clock_info *info = ptp->info;
- 	int err;
- 
--	if (info->n_ext_ts) {
--		err = device_create_file(dev, &dev_attr_extts_enable);
--		if (err)
--			goto out1;
--		err = device_create_file(dev, &dev_attr_fifo);
--		if (err)
--			goto out2;
--	}
--	if (info->n_per_out) {
--		err = device_create_file(dev, &dev_attr_period);
--		if (err)
--			goto out3;
--	}
--	if (info->pps) {
--		err = device_create_file(dev, &dev_attr_pps_enable);
--		if (err)
--			goto out4;
--	}
- 	if (info->n_pins) {
- 		err = ptp_populate_pins(ptp);
- 		if (err)
--			goto out5;
-+			return err;
- 	}
- 	return 0;
--out5:
--	if (info->pps)
--		device_remove_file(dev, &dev_attr_pps_enable);
--out4:
--	if (info->n_per_out)
--		device_remove_file(dev, &dev_attr_period);
--out3:
--	if (info->n_ext_ts)
--		device_remove_file(dev, &dev_attr_fifo);
--out2:
--	if (info->n_ext_ts)
--		device_remove_file(dev, &dev_attr_extts_enable);
--out1:
--	return err;
- }
--- 
-2.20.1
-
-
-
+	Sam
