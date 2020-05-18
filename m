@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CF2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1954720829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF3420715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825601;
-	bh=Uegwi40m6VKoo3qYz46wXwuY83tyEhWX7RHlaRpzbXs=;
+	s=default; t=1589825606;
+	bh=a4vO50+AyM+E2Zmx3kYrvkyNEiyeQFXO02nvLaYmr1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HgSnvG5FmFOV1AV3XOp36le8M7G8LTUu0095o6uMQfQ7E0H4pmzTHAt4WAFah5Y+n
-	 yNniAgFGYpeynJqghJ+VTWLwK68RVsgrxzvIdxx6K2orrbSnWUxXpC3j9tmuQTvI9e
-	 SNQpivPFdwoXoG5O5fPfWwbsCCE3AubWwg8Npb+o=
+	b=HLOiST+PkGi0uzB8OP9uX4HRbfFctRfMbksqV/1Kqhf6OYgLN9MYEOD+G8Q/IX1XP
+	 kISb7AOTbuA7pmiwMO4bGvaiplNe0hcJXooN1yVwSJvcXel/K33AaeeF2iTDnO1se6
+	 oLMZ0XmUhOqq+xMAxhohmpKmAsw8YsQ+J6zokr5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387632AbgERSNT (ORCPT
+        id S2387412AbgERSNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:13:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46094 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:13:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732498AbgERSCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:02:22 -0400
+        id S1729660AbgERSCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:02:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35D862086A;
-        Mon, 18 May 2020 18:02:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1029B2086A;
+        Mon, 18 May 2020 18:02:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824941;
-        bh=Uegwi40m6VKoo3qYz46wXwuY83tyEhWX7RHlaRpzbXs=;
+        s=default; t=1589824929;
+        bh=a4vO50+AyM+E2Zmx3kYrvkyNEiyeQFXO02nvLaYmr1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zfBff8ZEQg1QohqnCS7yWAtSILvFmsPMWXArok+l6meqeMr+Q0x96O0rOOxf9Lj4d
-         iyGq2WLK4D3ZiBDCM8ZkoXozgoLYtTed5ryKTvEBTgc9okzczruvJoRlzUTXpbEWnv
-         mmAtJAta05eKToveP7C85axeVPxHiJgh5lEE5e6I=
+        b=EFtaorcB8D/lHImM1u+Ok2/BDIRR3L40n4z/7POwagxx9hfrN7OnPKYvz5GjjREYZ
+         qyPX5xvvSVy6O9IDLBL1ZTUn8tciQCFze5UxV20SZRD+XRm3pAlx91LNS6zNRD7yKz
+         Pe3VqAe791f8pSsS5RnUAAUpbBWkB4q8TqNYqOMI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Tiecheng Zhou <Tiecheng.Zhou@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 065/194] drm/qxl: lost qxl_bo_kunmap_atomic_page in qxl_image_init_helper()
-Date:   Mon, 18 May 2020 19:35:55 +0200
-Message-Id: <20200518173537.137141979@linuxfoundation.org>
+Subject: [PATCH 5.6 060/194] drm/amd/powerplay: avoid using pm_en before it is initialized revised
+Date:   Mon, 18 May 2020 19:35:50 +0200
+Message-Id: <20200518173536.724166974@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,34 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
 
-[ Upstream commit 5b5703dbafae74adfbe298a56a81694172caf5e6 ]
+[ Upstream commit 690ae30be163d5262feae01335b2a6f30569e5aa ]
 
-v2: removed TODO reminder
+hwmgr->pm_en is initialized at hwmgr_hw_init.
 
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/a4e0ae09-a73c-1c62-04ef-3f990d41bea9@virtuozzo.com
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+during amdgpu_device_init, there is amdgpu_asic_reset that calls to
+soc15_asic_reset (for V320 usecase, Vega10 asic), in which:
+1) soc15_asic_reset_method calls to pp_get_asic_baco_capability (pm_en)
+2) soc15_asic_baco_reset calls to pp_set_asic_baco_state (pm_en)
+
+pm_en is used in the above two cases while it has not yet been initialized
+
+So avoid using pm_en in the above two functions for V320 passthrough.
+
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/qxl/qxl_image.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/powerplay/amd_powerplay.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/qxl/qxl_image.c b/drivers/gpu/drm/qxl/qxl_image.c
-index 43688ecdd8a04..60ab7151b84dc 100644
---- a/drivers/gpu/drm/qxl/qxl_image.c
-+++ b/drivers/gpu/drm/qxl/qxl_image.c
-@@ -212,7 +212,8 @@ qxl_image_init_helper(struct qxl_device *qdev,
- 		break;
- 	default:
- 		DRM_ERROR("unsupported image bit depth\n");
--		return -EINVAL; /* TODO: cleanup */
-+		qxl_bo_kunmap_atomic_page(qdev, image_bo, ptr);
-+		return -EINVAL;
- 	}
- 	image->u.bitmap.flags = QXL_BITMAP_TOP_DOWN;
- 	image->u.bitmap.x = width;
+diff --git a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
+index c195575366a3b..e4e5a53b2b4ea 100644
+--- a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
++++ b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
+@@ -1435,7 +1435,8 @@ static int pp_get_asic_baco_capability(void *handle, bool *cap)
+ 	if (!hwmgr)
+ 		return -EINVAL;
+ 
+-	if (!hwmgr->pm_en || !hwmgr->hwmgr_func->get_asic_baco_capability)
++	if (!(hwmgr->not_vf && amdgpu_dpm) ||
++		!hwmgr->hwmgr_func->get_asic_baco_capability)
+ 		return 0;
+ 
+ 	mutex_lock(&hwmgr->smu_lock);
+@@ -1469,7 +1470,8 @@ static int pp_set_asic_baco_state(void *handle, int state)
+ 	if (!hwmgr)
+ 		return -EINVAL;
+ 
+-	if (!hwmgr->pm_en || !hwmgr->hwmgr_func->set_asic_baco_state)
++	if (!(hwmgr->not_vf && amdgpu_dpm) ||
++		!hwmgr->hwmgr_func->set_asic_baco_state)
+ 		return 0;
+ 
+ 	mutex_lock(&hwmgr->smu_lock);
 -- 
 2.20.1
 
