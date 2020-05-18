@@ -2,124 +2,91 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 092A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93222C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9193207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826540;
-	bh=TMnk9m68iVlJ4LzBplDanu5lel2viDBbZ466dVlUj3U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J9wvYtwJqaehZfGz5pSxc4StnNB8Wxa4/tQSPWRLJ8zO2FS25VdVVXWD2N+I6hTG4
-	 OpL+BiSSfdVDg1a7MuuGYjRPwbzgbXwZWYDuyHvKOOD5SJ96Hd1hNUfDP79RofzR6t
-	 pGp6YfjGMSA29QnNDsWQRVOoWQ3dxAdcVcPpp+WY=
+	by mail.kernel.org (Postfix) with ESMTP id 6AE83207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388006AbgERS27 (ORCPT
+        id S2388022AbgERS3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:28:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728841AbgERRmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:42:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FD292083E;
-        Mon, 18 May 2020 17:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823743;
-        bh=TMnk9m68iVlJ4LzBplDanu5lel2viDBbZ466dVlUj3U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=09C5N90MAzevv7L/QRZCwXvWGZLP+qzfWbABcuI/PutWPf3VyHV8RiQdQrfjLsCNv
-         2aR3MIoqXNw39RMMwTGwlE2gZjRfrc4sEyvGZZBe8dhHO1ZrvcnJnsqhBG9J9bDNqj
-         56nFP/8hvDeG6JgKvtj/4c8NGat9i1alWc1ZcD+0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, George Spelvin <lkml@sdf.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.9 19/90] batman-adv: fix batadv_nc_random_weight_tq
-Date:   Mon, 18 May 2020 19:35:57 +0200
-Message-Id: <20200518173455.116745688@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
-References: <20200518173450.930655662@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 18 May 2020 14:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388013AbgERS3B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:29:01 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BF7DC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:29:01 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jakVO-0001gb-TK; Mon, 18 May 2020 20:28:51 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 3A905100606; Mon, 18 May 2020 20:28:50 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, bp@alien8.de, luto@kernel.org,
+        hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
+        ak@linux.intel.com, ravi.v.shankar@intel.com,
+        chang.seok.bae@intel.com
+Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
+In-Reply-To: <20200518151604.GC33628@sasha-vm>
+References: <20200511045311.4785-1-sashal@kernel.org> <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com> <20200515164013.GF29995@sasha-vm> <87o8qly3jo.fsf@nanos.tec.linutronix.de> <20200518151604.GC33628@sasha-vm>
+Date:   Mon, 18 May 2020 20:28:50 +0200
+Message-ID: <87sgfxw10d.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Spelvin <lkml@sdf.org>
+Sasha Levin <sashal@kernel.org> writes:
+> On Mon, May 18, 2020 at 11:51:07AM +0200, Thomas Gleixner wrote:
+>>Sasha Levin <sashal@kernel.org> writes:
+>>> On Fri, May 15, 2020 at 12:24:14PM +0300, Jarkko Sakkinen wrote:
+>>>>
+>>>>Can you put me to the CC-loop for this patches. Some SGX-enabled
+>>>>frameworks such as Graphene use out-of-tree changes to achieve this.
+>>>>That's where the interest to possibly test this comes from.
+>>>
+>>> Indeed, we've seen a few hacks that basically just enable FSGSBASE:
+>>>
+>>>  - https://github.com/oscarlab/graphene-sgx-driver
+>>>  - https://github.com/occlum/enable_rdfsbase
+>>
+>>I'm really amazed by all these security experts enabling a full root
+>>hole. It clearly puts the SGX hypocrisy into perspective.
+>
+> We can bash Intel all we want here, but sadly there are users in the
 
-commit fd0c42c4dea54335967c5a86f15fc064235a2797 upstream.
+This is not about bashing Intel.
 
-and change to pseudorandom numbers, as this is a traffic dithering
-operation that doesn't need crypto-grade.
+> "wild" who just enable these root holes thinking they're secure, and
+> those users are the ones running very sensitive workloads. Here's an
+> example from a book called "Responsible Genomic Data Sharing":
+>
+> 	https://books.google.com/books?id=y6zWDwAAQBAJ&pg=PA184#v=onepage&q&f=false
+>
+> That explains how to use Graphene-SGX which just enables FSGSBASE with
+> root holes.
 
-The previous code operated in 4 steps:
+It's about these SGX promoting security experts which try to tell
+everyone else that he has no clue about security.
 
-1. Generate a random byte 0 <= rand_tq <= 255
-2. Multiply it by BATADV_TQ_MAX_VALUE - tq
-3. Divide by 255 (= BATADV_TQ_MAX_VALUE)
-4. Return BATADV_TQ_MAX_VALUE - rand_tq
+Thanks,
 
-This would apperar to scale (BATADV_TQ_MAX_VALUE - tq) by a random
-value between 0/255 and 255/255.
-
-But!  The intermediate value between steps 3 and 4 is stored in a u8
-variable.  So it's truncated, and most of the time, is less than 255, after
-which the division produces 0.  Specifically, if tq is odd, the product is
-always even, and can never be 255.  If tq is even, there's exactly one
-random byte value that will produce a product byte of 255.
-
-Thus, the return value is 255 (511/512 of the time) or 254 (1/512
-of the time).
-
-If we assume that the truncation is a bug, and the code is meant to scale
-the input, a simpler way of looking at it is that it's returning a random
-value between tq and BATADV_TQ_MAX_VALUE, inclusive.
-
-Well, we have an optimized function for doing just that.
-
-Fixes: 3c12de9a5c75 ("batman-adv: network coding - code and transmit packets if possible")
-Signed-off-by: George Spelvin <lkml@sdf.org>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- net/batman-adv/network-coding.c |    9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
-
---- a/net/batman-adv/network-coding.c
-+++ b/net/batman-adv/network-coding.c
-@@ -1012,15 +1012,8 @@ static struct batadv_nc_path *batadv_nc_
-  */
- static u8 batadv_nc_random_weight_tq(u8 tq)
- {
--	u8 rand_val, rand_tq;
--
--	get_random_bytes(&rand_val, sizeof(rand_val));
--
- 	/* randomize the estimated packet loss (max TQ - estimated TQ) */
--	rand_tq = rand_val * (BATADV_TQ_MAX_VALUE - tq);
--
--	/* normalize the randomized packet loss */
--	rand_tq /= BATADV_TQ_MAX_VALUE;
-+	u8 rand_tq = prandom_u32_max(BATADV_TQ_MAX_VALUE + 1 - tq);
- 
- 	/* convert to (randomized) estimated tq again */
- 	return BATADV_TQ_MAX_VALUE - rand_tq;
+        tglx
 
 
