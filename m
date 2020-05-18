@@ -2,136 +2,124 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E148BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC3FB20825
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:41:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589787713;
-	bh=eZnFuYYyPmvrr3tdg9h+knOZFa/PBdnftNG94u6XzeQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DSVm38mThomRK7R3pwN53dxgGoaALCmGbRbKKZViHzrtlH/3D8xnIJk8VBUs1vl9g
-	 w8OoYyAPdMmDTtz+63IzVk6B4xb0UkX3nPwAHRzFF90XCJWlEsZ/FjNOTM8f+FESAU
-	 AAPeNTlG3ikeaaX/c91lrBqpwVhfHOY9B4fMoIQI=
+	by mail.kernel.org (Postfix) with ESMTP id DCA2A207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgERHlw (ORCPT
+        id S1727831AbgERHmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 03:41:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbgERHlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 03:41:51 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18311207D4;
-        Mon, 18 May 2020 07:41:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589787710;
-        bh=eZnFuYYyPmvrr3tdg9h+knOZFa/PBdnftNG94u6XzeQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IphAvfkgCBgfqc9vaFcSMYFB8uUZ/vcDxWqucwuujWu0tuCIy916EzUa3QELsAq40
-         vxGZz7AZgReTXGedcdeeF6cDxFvJNkiVcjZiUM2h0k6EtmFfes0XieR42j9T8Y3p1A
-         buuDrASbT1N/9MVFiAQqG1XXs7B1p4JzGSl59FRE=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jaaPE-00DB3j-5a; Mon, 18 May 2020 08:41:48 +0100
+        Mon, 18 May 2020 03:42:14 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:41433 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgERHmO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 03:42:14 -0400
+X-Originating-IP: 91.175.115.186
+Received: from localhost (91-175-115-186.subs.proxad.net [91.175.115.186])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 02E53FF80F;
+        Mon, 18 May 2020 07:42:11 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Jiri Slaby <jslaby@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 3/3] tty: n_gsm: Fix waking up upper tty layer when room available
+In-Reply-To: <4d3863a3-4c82-797f-6c20-b74e61a11724@suse.cz>
+References: <20200512115323.1447922-1-gregory.clement@bootlin.com> <20200512115323.1447922-4-gregory.clement@bootlin.com> <4d3863a3-4c82-797f-6c20-b74e61a11724@suse.cz>
+Date:   Mon, 18 May 2020 09:42:11 +0200
+Message-ID: <87r1vhg04s.fsf@FE-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 18 May 2020 08:41:47 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Anastassios Nanos <ananos@nubificus.co.uk>
-Cc:     kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH 1/2] KVMM: export needed symbols
-In-Reply-To: <33dddce13cd34448620b95db80a28b7b0bb906ad.1589784221.git.ananos@nubificus.co.uk>
-References: <cover.1589784221.git.ananos@nubificus.co.uk>
- <33dddce13cd34448620b95db80a28b7b0bb906ad.1589784221.git.ananos@nubificus.co.uk>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <4de58dad6d27aa35fd967d1d77133e55@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: ananos@nubificus.co.uk, kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org, pbonzini@redhat.com, sean.j.christopherson@intel.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-18 07:58, Anastassios Nanos wrote:
-> Expose a set of KVM functions to the kernel, in order to be
-> able to spawn a VM instance without assistance from user-space.
-> To handle a guest instance, the system needs access to the following
-> functions:
-> 
->     kvm_arch_vcpu_run_map_fp
->     kvm_arch_vcpu_ioctl_get_regs
->     kvm_arch_vcpu_ioctl_set_regs
->     kvm_arm_get_reg
->     kvm_arm_set_reg
->     kvm_arch_vcpu_ioctl_get_sregs
->     kvm_arch_vcpu_ioctl_set_sregs
->     kvm_vcpu_preferred_target
->     kvm_vcpu_ioctl_set_cpuid2
->     kvm_vcpu_ioctl_get_cpuid2
->     kvm_dev_ioctl_get_cpuid
->     kvm_arch_vcpu_ioctl_run
->     kvm_arch_vcpu_ioctl_get_regs
->     kvm_arch_vcpu_ioctl_set_regs
->     kvm_arch_vcpu_ioctl_get_sregs
->     kvm_arch_vcpu_ioctl_set_sregs
->     kvm_vcpu_initialized
->     kvm_arch_vcpu_ioctl_run
->     kvm_arch_vcpu_ioctl_vcpu_init
->     kvm_coalesced_mmio_init
->     kvm_create_vm
->     kvm_destroy_vm
->     kvm_vm_ioctl_set_memory_region
->     kvm_vm_ioctl_create_vcpu
-> 
-> Signed-off-by: Anastassios Nanos <ananos@nubificus.co.uk>
-> Signed-off-by: Charalampos Mainas <cmainas@nubificus.co.uk>
-> Signed-off-by: Konstantinos Papazafeiropoulos <kostis@nubificus.co.uk>
-> Signed-off-by: Stratos Psomadakis <psomas@nubificus.co.uk>
-> ---
->  arch/arm64/include/asm/kvm_host.h |  6 ++++
->  arch/arm64/kvm/fpsimd.c           |  6 ++++
->  arch/arm64/kvm/guest.c            | 48 +++++++++++++++++++++++++++++++
->  arch/x86/kvm/cpuid.c              | 25 ++++++++++++++++
->  arch/x86/kvm/x86.c                | 31 ++++++++++++++++++++
->  include/linux/kvm_host.h          | 24 ++++++++++++++++
->  virt/kvm/arm/arm.c                | 18 ++++++++++++
->  virt/kvm/coalesced_mmio.c         |  6 ++++
->  virt/kvm/kvm_main.c               | 23 +++++++++++++++
->  9 files changed, 187 insertions(+)
+Hi Jiri,
 
-In general, we don't export synbols without a user in the tree.
-And if/when we do, the sensible thing to do would be to export
-them as GPL only.
+> On 12. 05. 20, 13:53, Gregory CLEMENT wrote:
+>> Warn the upper layer when n_gms is ready to receive data
+>> again. Without this the associated virtual tty remains blocked
+>> indefinitely.
+>> 
+>> Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+>> ---
+>>  drivers/tty/n_gsm.c | 26 ++++++++++++++++++++++----
+>>  1 file changed, 22 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+>> index d8d196645500..69200bd411f7 100644
+>> --- a/drivers/tty/n_gsm.c
+>> +++ b/drivers/tty/n_gsm.c
+>> @@ -663,7 +663,7 @@ static struct gsm_msg *gsm_data_alloc(struct gsm_mux *gsm, u8 addr, int len,
+>>   *	FIXME: lock against link layer control transmissions
+>>   */
+>>  
+>> -static void gsm_data_kick(struct gsm_mux *gsm)
+>> +static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
+>>  {
+>>  	struct gsm_msg *msg, *nmsg;
+>>  	int len;
+>> @@ -695,6 +695,24 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+>>  
+>>  		list_del(&msg->list);
+>>  		kfree(msg);
+>> +
+>> +		if (dlci) {
+>> +			tty_port_tty_wakeup(&dlci->port);
+>> +		} else {
+>> +			int i = 0;
+>> +
+>> +			for (i = 0; i < NUM_DLCI; i++) {
+>> +				struct gsm_dlci *dlci;
+>> +
+>> +				dlci = gsm->dlci[i];
+>> +				if (dlci == NULL) {
+>> +					i++;
+>
+> This "i++" looks bogus here.
 
-         M.
+You're right!
+Sorry for this.
+
+>
+>> +					continue;
+>> +				}
+>> +
+>> +				tty_port_tty_wakeup(&dlci->port);
+>
+>
+> So simply:
+> for (i = 0; i < NUM_DLCI; i++) {
+>   struct gsm_dlci *dlci = gsm->dlci[i];
+>   if (dlci)
+>     tty_port_tty_wakeup(&dlci->port);
+> }
+>
+> ? Or even maybe directly:
+> for (i = 0; i < NUM_DLCI; i++)
+>   if (gsm->dlci[i])
+>     tty_port_tty_wakeup(&gsm->dlci[i]->port);
+
+I will do this, thanks,
+
+Gregory
+
+>
+> thanks,
+> -- 
+> js
+> suse labs
+
 -- 
-Jazz is not dead. It just smells funny...
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
