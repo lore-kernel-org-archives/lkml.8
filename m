@@ -2,261 +2,99 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D401C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0082C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B88720820
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A55220787
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:39:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YoRq20ed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbgERDdg (ORCPT
+        id S1727098AbgERDj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 23:33:36 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:44026 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726696AbgERDdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 23:33:36 -0400
-Received: from [10.20.42.25] (unknown [10.20.42.25])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn2oFAsJeS+81AA--.22S3;
-        Mon, 18 May 2020 11:33:26 +0800 (CST)
-Subject: Re: mm/memory.c: Add update local tlb for smp race
-To:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <1589439021-17005-1-git-send-email-maobibo@loongson.cn>
- <c86a9a0d-3975-adbe-d97b-deceb566786e@redhat.com>
- <df1ab51c-810a-f7ce-e591-d4fbbed95dab@loongson.cn>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-From:   maobibo <maobibo@loongson.cn>
-Message-ID: <c5cec2be-c6ae-3c1f-d3b5-2e5e68e2dc2b@loongson.cn>
-Date:   Mon, 18 May 2020 11:33:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Sun, 17 May 2020 23:39:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726680AbgERDj0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 23:39:26 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CED0C061A0C;
+        Sun, 17 May 2020 20:39:26 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t40so4357049pjb.3;
+        Sun, 17 May 2020 20:39:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=PHljqotmW4wPYcBu/r9JWz/UBbu2L8eBjX96rTATEJ4=;
+        b=YoRq20ed3pwtzr1fKO2bSRcr1UvkRWvSHRtdMPt59Kz3arg8STYBQ5jJBTffXbRf3+
+         Fpl+HQdqHEatNgJB18UQlj7MGgRGhIfhZJu8jcnSwCvS7jXfyNDc6GdlP7ZPLoIid4ll
+         14sqKghmbiGYeeyVtfdudejk8SYK3zVIZTOts5ftLO4VktIqOCuQ/DwYu+BF+Z7nChMR
+         vpmNY8SQGRtTQlaY0QGQT0fkfPpv2/Olr75zH/7c+tFUq/dOn1BAjol8lfsth8lri7cq
+         bzHGEVIZ7myA2B33l7hQCzj0JWY6ebyefSZVVQQOkFmeTTv08q3o1RAS1AosVJHFb4/+
+         gdqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=PHljqotmW4wPYcBu/r9JWz/UBbu2L8eBjX96rTATEJ4=;
+        b=hpY3xuenaG8FxJyRiUEqVCNLVv6UUvi2UjT5stZ7FXDUxlnjVU8tj4PW2rzXfbcrM0
+         STSBm4TytJaMqhcmt2i792EQfz7A4kr4sv1DkJ+xFiMaDga69dVR38/oc/jT6ejOvWmN
+         zVW8Q8N0z+IUHhEP9s/RblwAlX8lsIVGqOIMDoaYa2848GKvXGRH7wtdlU8qksl/dBXx
+         UGIu2xKfkaj8r7LzpT86TM3UKrASnGsN8QKkpcosOIxlTx9gs75UkgH7w/XJPzJvwuyi
+         GgPuiByNXrCmC342EqUq1/tdRWHmYsqvR/Vc9H6NerC2gSzBMTlxf6qijA7aSkAhUwhb
+         k+pw==
+X-Gm-Message-State: AOAM531PERwgtwTjPtmwpFM/vVjI0iN1ndibDm+zhMpgCyniiPZv512A
+        npPMOibTJGAAdqqYTknlYV8=
+X-Google-Smtp-Source: ABdhPJxcxbLPQMbvWD5dxgUG97H4+60P+TcweqH9FcDCHFCkqqN3k4y3GrgAkJ5WMv/l19eiGi/Y7w==
+X-Received: by 2002:a17:90a:ba18:: with SMTP id s24mr18066235pjr.192.1589773165676;
+        Sun, 17 May 2020 20:39:25 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id y5sm472981pjp.27.2020.05.17.20.39.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 20:39:25 -0700 (PDT)
+Date:   Sun, 17 May 2020 20:39:23 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     David Heidelberg <david@ixit.cz>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 03/10] input: elants: remove unused axes
+Message-ID: <20200518033923.GM89269@dtor-ws>
+References: <cover.1587923061.git.mirq-linux@rere.qmqm.pl>
+ <d5eee8cd305adb144a11264d70da94f7b6570366.1587923061.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-In-Reply-To: <df1ab51c-810a-f7ce-e591-d4fbbed95dab@loongson.cn>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxn2oFAsJeS+81AA--.22S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxKw4xKFW8AFW7ur1xWFWktFb_yoWxurW7pF
-        93GanFqFs7Xr1UCr4Iqw1qvr1Sva4rKFyUJry3K3WFy3srtr1fKay5G3yF9FWkArn3Gwsr
-        JF4jgF43uayrZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkmb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
-        vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-        Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
-        W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG
-        8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
-        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
-        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-        IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUgg_TUUUUU
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d5eee8cd305adb144a11264d70da94f7b6570366.1587923061.git.mirq-linux@rere.qmqm.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Apr 26, 2020 at 07:47:50PM +0200, Michał Mirosław wrote:
+> Driver only ever reports MT events and input_mt_init_slots() sets up
+> emulated axes already.  Clear the capabilities not generated directly
+> and move MT axes setup, so they are visible by input_mt_init_slots().
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Tested-by: Dmitry Osipenko <digetx@gmail.com>
 
+Applied, thank you.
 
-On 05/16/2020 05:34 PM, maobibo wrote:
-> 
-> 
-> On 05/15/2020 09:50 PM, David Hildenbrand wrote:
->> On 14.05.20 08:50, Bibo Mao wrote:
->>> If there are two threads hitting page fault at the address, one
->>> thread updates pte entry and local tlb, the other thread can update
->>> local tlb also, rather than give up and let page fault happening
->>> again.
->>
->> Let me suggest
->>
->> "mm/memory: optimize concurrent page faults at same address
->>
->> If two threads concurrently fault at the same address, the thread that
->> won the race updates the PTE and its local TLB. For now, the other
->> thread gives up, simply does nothing, and continues.
->>
->> It could happen that this second thread triggers another fault, whereby
->> it only updates its local TLB while handling the fault. Instead of
->> triggering another fault, let's directly update the local TLB of the
->> second thread.
->> "
->>
->> If I got the intention of this patch correctly.
->>
->> Are there any performance numbers to support this patch?
->>
->> (I can't say too much about the correctness and/or usefulness of this patch)
-> 
-> yes, that is the situation. On MIPS platform software can update TLB,
-> so update_mmu_cache is used here. This does not happen frequently, and with the three series patches in later mail. I test lat_pagefault in lmbench, here is is result:
-> 
-> with these three series patches, 
-> # ./lat_pagefault  -N 10  /tmp/1 
-> Pagefaults on /tmp/1: 1.4973 microseconds
-> # ./lat_pagefault -P 4 -N 10  /tmp/1 
-> Pagefaults on /tmp/1: 1.5716 microseconds
-> 
-> original version, without these three series patch
-> #  ./lat_pagefault  -N 10  /tmp/1 
-> Pagefaults on /tmp/1: 1.6489 microseconds
-> # ./lat_pagefault -P 4 -N 10  /tmp/1
-> Pagefaults on /tmp/1: 1.7214 microseconds
-> 
-
-I tested the three patches one by one, there is no obvious improvement with
-lat_pagefault case, I guess that it happens seldom where multiple threads access
-the same page at the same time. 
-
-The improvement is because of another modification where pte_mkyoung is added
-to get readable privilege on MIPS system.
-
-regards
-bibo, mao
-
->>>
->>> 	modified:   mm/memory.c
->>
->> This does not belong into a patch description.
-> 
-> well, I will modify the patch description.
-> 
-> regards
-> bibo,mao
-> 
-> 
->>
->>
->>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>> ---
->>>  mm/memory.c | 30 ++++++++++++++++++++++--------
->>>  1 file changed, 22 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/mm/memory.c b/mm/memory.c
->>> index f703fe8..3a741ce 100644
->>> --- a/mm/memory.c
->>> +++ b/mm/memory.c
->>> @@ -2436,11 +2436,10 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
->>>  		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
->>>  			/*
->>>  			 * Other thread has already handled the fault
->>> -			 * and we don't need to do anything. If it's
->>> -			 * not the case, the fault will be triggered
->>> -			 * again on the same address.
->>> +			 * and update local tlb only
->>>  			 */
->>>  			ret = false;
->>> +			update_mmu_cache(vma, addr, vmf->pte);
->>>  			goto pte_unlock;
->>>  		}
->>>  
->>> @@ -2463,8 +2462,9 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
->>>  		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
->>>  		locked = true;
->>>  		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
->>> -			/* The PTE changed under us. Retry page fault. */
->>> +			/* The PTE changed under us. update local tlb */
->>>  			ret = false;
->>> +			update_mmu_cache(vma, addr, vmf->pte);
->>>  			goto pte_unlock;
->>>  		}
->>>  
->>> @@ -2704,6 +2704,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
->>>  		}
->>>  		flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
->>>  		entry = mk_pte(new_page, vma->vm_page_prot);
->>> +		entry = pte_mkyoung(entry);
->>>  		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
->>>  		/*
->>>  		 * Clear the pte entry and flush it first, before updating the
->>> @@ -2752,6 +2753,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
->>>  		new_page = old_page;
->>>  		page_copied = 1;
->>>  	} else {
->>> +		update_mmu_cache(vma, vmf->address, vmf->pte);
->>>  		mem_cgroup_cancel_charge(new_page, memcg, false);
->>>  	}
->>>  
->>> @@ -2812,6 +2814,7 @@ vm_fault_t finish_mkwrite_fault(struct vm_fault *vmf)
->>>  	 * pte_offset_map_lock.
->>>  	 */
->>>  	if (!pte_same(*vmf->pte, vmf->orig_pte)) {
->>> +		update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
->>>  		pte_unmap_unlock(vmf->pte, vmf->ptl);
->>>  		return VM_FAULT_NOPAGE;
->>>  	}
->>> @@ -2936,6 +2939,7 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
->>>  			vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
->>>  					vmf->address, &vmf->ptl);
->>>  			if (!pte_same(*vmf->pte, vmf->orig_pte)) {
->>> +				update_mmu_cache(vma, vmf->address, vmf->pte);
->>>  				unlock_page(vmf->page);
->>>  				pte_unmap_unlock(vmf->pte, vmf->ptl);
->>>  				put_page(vmf->page);
->>> @@ -3341,8 +3345,10 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
->>>  						vma->vm_page_prot));
->>>  		vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
->>>  				vmf->address, &vmf->ptl);
->>> -		if (!pte_none(*vmf->pte))
->>> +		if (!pte_none(*vmf->pte)) {
->>> +			update_mmu_cache(vma, vmf->address, vmf->pte);
->>>  			goto unlock;
->>> +		}
->>>  		ret = check_stable_address_space(vma->vm_mm);
->>>  		if (ret)
->>>  			goto unlock;
->>> @@ -3373,13 +3379,16 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
->>>  	__SetPageUptodate(page);
->>>  
->>>  	entry = mk_pte(page, vma->vm_page_prot);
->>> +	entry = pte_mkyoung(entry);
->>>  	if (vma->vm_flags & VM_WRITE)
->>>  		entry = pte_mkwrite(pte_mkdirty(entry));
->>>  
->>>  	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
->>>  			&vmf->ptl);
->>> -	if (!pte_none(*vmf->pte))
->>> +	if (!pte_none(*vmf->pte)) {
->>> +		update_mmu_cache(vma, vmf->address, vmf->pte);
->>>  		goto release;
->>> +	}
->>>  
->>>  	ret = check_stable_address_space(vma->vm_mm);
->>>  	if (ret)
->>> @@ -3646,11 +3655,14 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
->>>  	}
->>>  
->>>  	/* Re-check under ptl */
->>> -	if (unlikely(!pte_none(*vmf->pte)))
->>> +	if (unlikely(!pte_none(*vmf->pte))) {
->>> +		update_mmu_cache(vma, vmf->address, vmf->pte);
->>>  		return VM_FAULT_NOPAGE;
->>> +	}
->>>  
->>>  	flush_icache_page(vma, page);
->>>  	entry = mk_pte(page, vma->vm_page_prot);
->>> +	entry = pte_mkyoung(entry);
->>>  	if (write)
->>>  		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
->>>  	/* copy-on-write page */
->>> @@ -4224,8 +4236,10 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
->>>  	vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
->>>  	spin_lock(vmf->ptl);
->>>  	entry = vmf->orig_pte;
->>> -	if (unlikely(!pte_same(*vmf->pte, entry)))
->>> +	if (unlikely(!pte_same(*vmf->pte, entry))) {
->>> +		update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
->>>  		goto unlock;
->>> +	}
->>>  	if (vmf->flags & FAULT_FLAG_WRITE) {
->>>  		if (!pte_write(entry))
->>>  			return do_wp_page(vmf);
->>>
->>
->>
-
+-- 
+Dmitry
