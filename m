@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33580C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3064C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 132E8207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76AC220853
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825075;
-	bh=GhLdtHMBcvlMn7X3EK7g3WCOLHNCezwRMq8pXYaFogg=;
+	s=default; t=1589825076;
+	bh=tJRGNk7SX8eNPltUjlQO5LmafLOMsO6yY9TLKgqoxrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vphzk41GsA0nN0dvXOkp3ceVlCOEnKEWN1hnB0FZk9A5lys+N3H39jirsqBU3r/zb
-	 kXLO1LLB4K9JxP+F5/6EFeCee30RYhNqBjjEsxp2I3VRYxv7FL3a5eFPAksEsA3wR2
-	 uIXIA/Y7xcbCuwzAhs8NGllL+wUQlD7ZWOX4761A=
+	b=j4KauFeSdUCEkilj6As/s1M3TJnXVPbijfDBMBGQMrrkox0FnPZOACYz++KPvb1yU
+	 UFbY8/5oO5swMvoMcOrxMy5z9XTcUKWbdyQRjuzxtVBlhETuIGgyWKK1+YlaeRyreb
+	 SLWjjT3B+KUuJXKq5CtKsPvzE7NnmyoYmgPIqFmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732798AbgERSEe (ORCPT
+        id S1732808AbgERSEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:04:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51338 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:04:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732316AbgERSEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:04:21 -0400
+        id S1732257AbgERSEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:04:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1022207D3;
-        Mon, 18 May 2020 18:04:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50FBA20715;
+        Mon, 18 May 2020 18:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825060;
-        bh=GhLdtHMBcvlMn7X3EK7g3WCOLHNCezwRMq8pXYaFogg=;
+        s=default; t=1589825062;
+        bh=tJRGNk7SX8eNPltUjlQO5LmafLOMsO6yY9TLKgqoxrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YcloXx2IufP1YycrYEUNTgQ1yI+P0+q7ZK3kQu3Mzl67/Qw/mr0RJkSx5gyYT9Nrd
-         F6iO9Xz+EqOAEH447zbqLU6L83dKaaRqyuCVLZzTFEd6rCI5e7OLTdU3WPQcsEagtC
-         uymiiNUYt4H30JCrKz9DBDG5ThyHSAhYjnNY7N1Y=
+        b=ZJgIgzYzkSLqQB2QmeXxGewdgCZ1pRg6k/ki4PiCElySSyd+W8g/lUOOPrVrUAG8A
+         k7kLa6zjLyB3EHNiYxMsPsP68uiowd18P7js4UohZaIU647ZYKRXy7Ac2L4gkQroOK
+         SfiUw3iGg6IE9W1lde1tJPalBlPVu9L8ZuMLon6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 112/194] IB/mlx4: Test return value of calls to ib_get_cached_pkey
-Date:   Mon, 18 May 2020 19:36:42 +0200
-Message-Id: <20200518173541.087790530@linuxfoundation.org>
+Subject: [PATCH 5.6 113/194] IB/core: Fix potential NULL pointer dereference in pkey cache
+Date:   Mon, 18 May 2020 19:36:43 +0200
+Message-Id: <20200518173541.154322083@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -64,64 +64,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit 6693ca95bd4330a0ad7326967e1f9bcedd6b0800 ]
+[ Upstream commit 1901b91f99821955eac2bd48fe25ee983385dc00 ]
 
-In the mlx4_ib_post_send() flow, some functions call ib_get_cached_pkey()
-without checking its return value. If ib_get_cached_pkey() returns an
-error code, these functions should return failure.
+The IB core pkey cache is populated by procedure ib_cache_update().
+Initially, the pkey cache pointer is NULL. ib_cache_update allocates a
+buffer and populates it with the device's pkeys, via repeated calls to
+procedure ib_query_pkey().
 
-Fixes: 1ffeb2eb8be9 ("IB/mlx4: SR-IOV IB context objects and proxy/tunnel SQP support")
-Fixes: 225c7b1feef1 ("IB/mlx4: Add a driver Mellanox ConnectX InfiniBand adapters")
-Fixes: e622f2f4ad21 ("IB: split struct ib_send_wr")
-Link: https://lore.kernel.org/r/20200426075921.130074-1-leon@kernel.org
+If there is a failure in populating the pkey buffer via ib_query_pkey(),
+ib_cache_update does not replace the old pkey buffer cache with the
+updated one -- it leaves the old cache as is.
+
+Since initially the pkey buffer cache is NULL, when calling
+ib_cache_update the first time, a failure in ib_query_pkey() will cause
+the pkey buffer cache pointer to remain NULL.
+
+In this situation, any calls subsequent to ib_get_cached_pkey(),
+ib_find_cached_pkey(), or ib_find_cached_pkey_exact() will try to
+dereference the NULL pkey cache pointer, causing a kernel panic.
+
+Fix this by checking the ib_cache_update() return value.
+
+Fixes: 8faea9fd4a39 ("RDMA/cache: Move the cache per-port data into the main ib_port_data")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Link: https://lore.kernel.org/r/20200507071012.100594-1-leon@kernel.org
 Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
 Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/qp.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/infiniband/core/cache.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/qp.c b/drivers/infiniband/hw/mlx4/qp.c
-index 26425dd2d960f..a2b1f6af5ba3f 100644
---- a/drivers/infiniband/hw/mlx4/qp.c
-+++ b/drivers/infiniband/hw/mlx4/qp.c
-@@ -2891,6 +2891,7 @@ static int build_sriov_qp0_header(struct mlx4_ib_sqp *sqp,
- 	int send_size;
- 	int header_size;
- 	int spc;
-+	int err;
- 	int i;
+diff --git a/drivers/infiniband/core/cache.c b/drivers/infiniband/core/cache.c
+index 17bfedd24cc34..4619629b958cd 100644
+--- a/drivers/infiniband/core/cache.c
++++ b/drivers/infiniband/core/cache.c
+@@ -1536,8 +1536,11 @@ int ib_cache_setup_one(struct ib_device *device)
+ 	if (err)
+ 		return err;
  
- 	if (wr->wr.opcode != IB_WR_SEND)
-@@ -2925,7 +2926,9 @@ static int build_sriov_qp0_header(struct mlx4_ib_sqp *sqp,
+-	rdma_for_each_port (device, p)
+-		ib_cache_update(device, p, true);
++	rdma_for_each_port (device, p) {
++		err = ib_cache_update(device, p, true);
++		if (err)
++			return err;
++	}
  
- 	sqp->ud_header.lrh.virtual_lane    = 0;
- 	sqp->ud_header.bth.solicited_event = !!(wr->wr.send_flags & IB_SEND_SOLICITED);
--	ib_get_cached_pkey(ib_dev, sqp->qp.port, 0, &pkey);
-+	err = ib_get_cached_pkey(ib_dev, sqp->qp.port, 0, &pkey);
-+	if (err)
-+		return err;
- 	sqp->ud_header.bth.pkey = cpu_to_be16(pkey);
- 	if (sqp->qp.mlx4_ib_qp_type == MLX4_IB_QPT_TUN_SMI_OWNER)
- 		sqp->ud_header.bth.destination_qpn = cpu_to_be32(wr->remote_qpn);
-@@ -3212,9 +3215,14 @@ static int build_mlx_header(struct mlx4_ib_sqp *sqp, const struct ib_ud_wr *wr,
- 	}
- 	sqp->ud_header.bth.solicited_event = !!(wr->wr.send_flags & IB_SEND_SOLICITED);
- 	if (!sqp->qp.ibqp.qp_num)
--		ib_get_cached_pkey(ib_dev, sqp->qp.port, sqp->pkey_index, &pkey);
-+		err = ib_get_cached_pkey(ib_dev, sqp->qp.port, sqp->pkey_index,
-+					 &pkey);
- 	else
--		ib_get_cached_pkey(ib_dev, sqp->qp.port, wr->pkey_index, &pkey);
-+		err = ib_get_cached_pkey(ib_dev, sqp->qp.port, wr->pkey_index,
-+					 &pkey);
-+	if (err)
-+		return err;
-+
- 	sqp->ud_header.bth.pkey = cpu_to_be16(pkey);
- 	sqp->ud_header.bth.destination_qpn = cpu_to_be32(wr->remote_qpn);
- 	sqp->ud_header.bth.psn = cpu_to_be32((sqp->send_psn++) & ((1 << 24) - 1));
+ 	return 0;
+ }
 -- 
 2.20.1
 
