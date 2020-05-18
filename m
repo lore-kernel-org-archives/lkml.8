@@ -2,138 +2,107 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF0CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E48D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0113207ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:15:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="EahJ6nXo"
+	by mail.kernel.org (Postfix) with ESMTP id BB833207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589822166;
+	bh=pVOSaluuYwIYnxfRZiDeGnvPZDVK2kglDb70XF77EyQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YvIbMkEe5OlunVac22f/KexsLe5CjciJufNO5K5I2BMW3kl7wuNIkQd5xEFYReoMU
+	 haEukaywOlqxMPJGAY8hr6E66NPCh/9pzu4+MtzAROCtJTY7/4yC+3mOba0Wp8RLFM
+	 25RyM2OA420iu91QI5hwJZKHYriyTGmUFPlrWuBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbgERRPu (ORCPT
+        id S1728372AbgERRQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:15:50 -0400
-Received: from mail2.candelatech.com ([208.74.158.173]:35378 "EHLO
-        mail3.candelatech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgERRPu (ORCPT
+        Mon, 18 May 2020 13:16:06 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45064 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgERRQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:15:50 -0400
-Received: from [192.168.254.4] (unknown [50.34.197.93])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail3.candelatech.com (Postfix) with ESMTPSA id B2CEA13C2B0;
-        Mon, 18 May 2020 10:15:45 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com B2CEA13C2B0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
-        s=default; t=1589822148;
-        bh=NyVoTLXcAUhrdBxNZ3ByqbNgi3//xvQrJFVw1pieP30=;
-        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
-        b=EahJ6nXo7xZTcMND2RMRA4QyfxAc1FQKjY8+FPeO8oUKOR2i3l0nqdyxzv7gU4Vv6
-         5YMXtFaxixJ0wrNqx15kMIf2rnfeEAq4VgGmvyoEbOYlayENNUB0xWSlLypTcHncK4
-         xjQhLdCQM5BreEQPEobOFdGqMe+Wa4cHXg9HoiiE=
-Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
-To:     Luis Chamberlain <mcgrof@kernel.org>
-References: <20200515212846.1347-1-mcgrof@kernel.org>
- <20200515212846.1347-13-mcgrof@kernel.org>
- <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
- <20200518165154.GH11244@42.do-not-panic.com>
- <4ad0668d-2de9-11d7-c3a1-ad2aedd0c02d@candelatech.com>
- <20200518170934.GJ11244@42.do-not-panic.com>
-Cc:     Johannes Berg <johannes@sipsolutions.net>, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath10k@lists.infradead.org
-From:   Ben Greear <greearb@candelatech.com>
-Message-ID: <abf22ef3-93cb-61a4-0af2-43feac6d7930@candelatech.com>
-Date:   Mon, 18 May 2020 10:15:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        Mon, 18 May 2020 13:16:05 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z26so5119893pfk.12;
+        Mon, 18 May 2020 10:16:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oSxgBphvkiJdu6V2dtQBN/0DGb4vzo835la/M2fjiy8=;
+        b=tshHZE1aMxmYZm7w2jyAWilxOJJw9JNrvWFgvWCZuK/RNkyhAFGlLRhN/h3dB0Eate
+         Rvn7ARQ9ZYFGrYlKdpyMhgxkuT3JpExfGWfBbdoELtGquSWlhyzMylRJkOcui4VxiapH
+         hhWAnzvLHSVg/bISyS3eKKD8MuxXr89oTY8xqfcX5KJmhgjkU4Xp5foNHYIhzCm+6RSU
+         5mdHgINu+MXzkG6VioYMeZgtoCZF+svkfQ/bK9fzbSmYvOTWfY/sM4akI1dCc2TGdi1r
+         O+GukjhC20FpCES+bTYARBgUIBbUQoFdCKJOFBYZ0SEIDf5pSe2ji/KtUfBOIoOH9MYA
+         sBqQ==
+X-Gm-Message-State: AOAM532gaQ/tQYwm9EaaAj6bns8mnIT1dc1qDFZAJfqErbF9RmSuc8jv
+        OD6lcmUlnjHnYpwFVvU1JzU=
+X-Google-Smtp-Source: ABdhPJyAshFHOjZ/KBTljVH5Y/wZaJfQQJBDG8ktwGBNfOC7BLDqNWjToZdGNvIsJHsELXZqITgg1g==
+X-Received: by 2002:a65:62d6:: with SMTP id m22mr16290471pgv.314.1589822164760;
+        Mon, 18 May 2020 10:16:04 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id h7sm3412336pgn.60.2020.05.18.10.16.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 10:16:03 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id DE896404B0; Mon, 18 May 2020 17:16:02 +0000 (UTC)
+Date:   Mon, 18 May 2020 17:16:02 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     keescook@chromium.org, yzaikin@google.com, adobriyan@gmail.com,
+        patrick.bellasi@arm.com, mingo@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, gregkh@linuxfoundation.org,
+        Jisheng.Zhang@synaptics.com, bigeasy@linutronix.de,
+        pmladek@suse.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        wangle6@huawei.com, alex.huangjianhui@huawei.com
+Subject: Re: [PATCH v3 0/4] cleaning up the sysctls table (hung_task watchdog)
+Message-ID: <20200518171602.GK11244@42.do-not-panic.com>
+References: <1589774397-42485-1-git-send-email-nixiaoming@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200518170934.GJ11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589774397-42485-1-git-send-email-nixiaoming@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 18, 2020 at 11:59:53AM +0800, Xiaoming Ni wrote:
+> Kernel/sysctl.c contains more than 190 interface files, and there are a 
+> large number of config macro controls. When modifying the sysctl 
+> interface directly in kernel/sysctl.c, conflicts are very easy to occur.
+> E.g: https://lkml.org/lkml/2020/5/10/413.
 
+FWIW un the future please avoid using lkmk.org and instead use
+https://lkml.kernel.org/r/<MESSAGE-ID> for references.
 
-On 05/18/2020 10:09 AM, Luis Chamberlain wrote:
-> On Mon, May 18, 2020 at 09:58:53AM -0700, Ben Greear wrote:
->>
->>
->> On 05/18/2020 09:51 AM, Luis Chamberlain wrote:
->>> On Sat, May 16, 2020 at 03:24:01PM +0200, Johannes Berg wrote:
->>>> On Fri, 2020-05-15 at 21:28 +0000, Luis Chamberlain wrote:> module_firmware_crashed
->>>>
->>>> You didn't CC me or the wireless list on the rest of the patches, so I'm
->>>> replying to a random one, but ...
->>>>
->>>> What is the point here?
->>>>
->>>> This should in no way affect the integrity of the system/kernel, for
->>>> most devices anyway.
->>>
->>> Keyword you used here is "most device". And in the worst case, *who*
->>> knows what other odd things may happen afterwards.
->>>
->>>> So what if ath10k's firmware crashes? If there's a driver bug it will
->>>> not handle it right (and probably crash, WARN_ON, or something else),
->>>> but if the driver is working right then that will not affect the kernel
->>>> at all.
->>>
->>> Sometimes the device can go into a state which requires driver removal
->>> and addition to get things back up.
->>
->> It would be lovely to be able to detect this case in the driver/system
->> somehow!  I haven't seen any such cases recently,
->
-> I assure you that I have run into it. Once it does again I'll report
-> the crash, but the problem with some of this is that unless you scrape
-> the log you won't know. Eventually, a uevent would indeed tell inform
-> me.
->
->> but in case there is
->> some common case you see, maybe we can think of a way to detect it?
->
-> ath10k is just one case, this patch series addresses a simple way to
-> annotate this tree-wide.
->
->>>> So maybe I can understand that maybe you want an easy way to discover -
->>>> per device - that the firmware crashed, but that still doesn't warrant a
->>>> complete kernel taint.
->>>
->>> That is one reason, another is that a taint helps support cases *fast*
->>> easily detect if the issue was a firmware crash, instead of scraping
->>> logs for driver specific ways to say the firmware has crashed.
->>
->> You can listen for udev events (I think that is the right term),
->> and find crashes that way.  You get the actual crash info as well.
->
-> My follow up to this was to add uevent to add_taint() as well, this way
-> these could generically be processed by userspace.
+> Use register_sysctl() to register the sysctl interface to avoid
+> merge conflicts when different features modify sysctl.c at the same time.
+> 
+> So consider cleaning up the sysctls table, details are in:
+> 	https://kernelnewbies.org/KernelProjects/proc
+> 	https://lkml.org/lkml/2020/5/13/990
+> 
+> The current patch set extracts register_sysctl_init and some sysctl_vals
+> variables, and clears the interface of hung_task and watchdog in sysctl.c.
+> 
+> The current patch set is based on commit b9bbe6ed63b2b9 ("Linux 5.7-rc6"),
+> which conflicts with the latest branch of linux-next:
+> 	9b4caf6941fc41d ("kernel / hung_task.c: introduce sysctl to print
+> all traces when a hung task is detected")
+> 
+> Should I modify to make patch based on the "linux-next" branch to avoid
+> conflicts, or other branches?
 
-I'm not opposed to the taint, though I have not thought much on it.
+If you can do that, that would be appreciated. I have a sysctl fs cleanup
+stuff, so I can take your patches, and put my work ont op of yours and
+then send this to Andrew once done.
 
-But, if you can already get the crash info from uevent, and it automatically
-comes without polling or scraping logs, then what benefit beyond that does
-the taint give you?
-
-Thanks,
-Ben
-
--- 
-Ben Greear <greearb@candelatech.com>
-Candela Technologies Inc  http://www.candelatech.com
+  Luis
