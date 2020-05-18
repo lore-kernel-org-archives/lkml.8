@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F617C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8192C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 456CE2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCAE2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824182;
-	bh=2qitLLezr2UjIB2vLsXLPOmzr97R3cyIBcTQTL+j+xg=;
+	s=default; t=1589824184;
+	bh=uTBIJlybcM3W1oW3VUQHvQu5bP/hn68P7BCE1Var7H4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dw5xQ/k1kCfNihEc52X234Hc4Lrn06XA6lv1L8Opy/r+ZnyAez8bhaVMv4KwP6Z3Y
-	 GmFGMsvvmg99tVOOKRYUg3M00lOfWlcva/ZYqKIt1mMmR1QizrH4f2b4zt1T7LYjT3
-	 Pp1+zk2TyXmMrQ4b3NmdTXf8s5ypGV78Md3unR48=
+	b=bgIwA5MKOvbv9qiQnegX9yH6pWwQyD020pm/ZF3aJt7OmlgURVBZqGfJQpfEIfsY8
+	 CbUNtwQopVgASlRiOybxwIVwBwi/1e8+Q5fzJV7Y2shT4yNvBqtxRoX5kpRFPc4xpu
+	 MisFfp+XGd7LzWEEOFz9/FlmK9hUmBJ97aVyfG0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730554AbgERRth (ORCPT
+        id S1730574AbgERRtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:49:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51258 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:49:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729029AbgERRtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:49:35 -0400
+        id S1730557AbgERRti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:49:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C976320657;
-        Mon, 18 May 2020 17:49:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A01620715;
+        Mon, 18 May 2020 17:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824175;
-        bh=2qitLLezr2UjIB2vLsXLPOmzr97R3cyIBcTQTL+j+xg=;
+        s=default; t=1589824177;
+        bh=uTBIJlybcM3W1oW3VUQHvQu5bP/hn68P7BCE1Var7H4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gWy+gCZjG3l6rxBk16FAhpGhMdDVSxOBU6OG46qFOydY55ySdf0nJVqLZCA8krNoB
-         ofNX+fCnJegvFYMG/1t5VHD+G//qRSmD0Le4zqVRUlu9jL+LJvWjrVw0BJw1TvfexO
-         BULywGBYUPKGUtgsgbE0DAp12SUJtifKNfgqZVCU=
+        b=ZHy2jgk5DjR5iWUlj3EvnGeZkSy5U5lTpBU1DR/PqE5UMlx5GENggZe0Y35OkZeiA
+         Z2HpNWtW3YF3vqRJSqudRMGMaoDh2i/XCSo3pvK/DvYS22K+A65t2MufycGzRQGs8D
+         w4sniTW0FCYYzRVcjfAsCN7j1voh+7rSWhLgy0IQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 4.14 101/114] x86/unwind/orc: Fix error handling in __unwind_start()
-Date:   Mon, 18 May 2020 19:37:13 +0200
-Message-Id: <20200518173519.747046062@linuxfoundation.org>
+        stable@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 4.14 102/114] exec: Move would_dump into flush_old_exec
+Date:   Mon, 18 May 2020 19:37:14 +0200
+Message-Id: <20200518173519.856865511@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -60,81 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Eric W. Biederman <ebiederm@xmission.com>
 
-commit 71c95825289f585014fe9741b051d32a7a916680 upstream.
+commit f87d1c9559164294040e58f5e3b74a162bf7c6e8 upstream.
 
-The unwind_state 'error' field is used to inform the reliable unwinding
-code that the stack trace can't be trusted.  Set this field for all
-errors in __unwind_start().
+I goofed when I added mm->user_ns support to would_dump.  I missed the
+fact that in the case of binfmt_loader, binfmt_em86, binfmt_misc, and
+binfmt_script bprm->file is reassigned.  Which made the move of
+would_dump from setup_new_exec to __do_execve_file before exec_binprm
+incorrect as it can result in would_dump running on the script instead
+of the interpreter of the script.
 
-Also, move the zeroing out of the unwind_state struct to before the ORC
-table initialization check, to prevent the caller from reading
-uninitialized data if the ORC table is corrupted.
+The net result is that the code stopped making unreadable interpreters
+undumpable.  Which allows them to be ptraced and written to disk
+without special permissions.  Oops.
 
-Fixes: af085d9084b4 ("stacktrace/x86: add function for detecting reliable stack traces")
-Fixes: d3a09104018c ("x86/unwinder/orc: Dont bail on stack overflow")
-Fixes: 98d0c8ebf77e ("x86/unwind/orc: Prevent unwinding before ORC initialization")
-Reported-by: Pavel Machek <pavel@denx.de>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/d6ac7215a84ca92b895fdd2e1aa546729417e6e6.1589487277.git.jpoimboe@redhat.com
+The move was necessary because the call in set_new_exec was after
+bprm->mm was no longer valid.
+
+To correct this mistake move the misplaced would_dump from
+__do_execve_file into flos_old_exec, before exec_mmap is called.
+
+I tested and confirmed that without this fix I can attach with gdb to
+a script with an unreadable interpreter, and with this fix I can not.
+
+Cc: stable@vger.kernel.org
+Fixes: f84df2a6f268 ("exec: Ensure mm->user_ns contains the execed files")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/unwind_orc.c |   16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ fs/exec.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -505,23 +505,23 @@ EXPORT_SYMBOL_GPL(unwind_next_frame);
- void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 		    struct pt_regs *regs, unsigned long *first_frame)
- {
--	if (!orc_init)
--		goto done;
--
- 	memset(state, 0, sizeof(*state));
- 	state->task = task;
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1264,6 +1264,8 @@ int flush_old_exec(struct linux_binprm *
+ 	 */
+ 	set_mm_exe_file(bprm->mm, bprm->file);
  
-+	if (!orc_init)
-+		goto err;
++	would_dump(bprm, bprm->file);
 +
  	/*
- 	 * Refuse to unwind the stack of a task while it's executing on another
- 	 * CPU.  This check is racy, but that's ok: the unwinder has other
- 	 * checks to prevent it from going off the rails.
+ 	 * Release all of the old mmap stuff
  	 */
- 	if (task_on_another_cpu(task))
--		goto done;
-+		goto err;
+@@ -1797,8 +1799,6 @@ static int do_execveat_common(int fd, st
+ 	if (retval < 0)
+ 		goto out;
  
- 	if (regs) {
- 		if (user_mode(regs))
--			goto done;
-+			goto the_end;
- 
- 		state->ip = regs->ip;
- 		state->sp = kernel_stack_pointer(regs);
-@@ -554,6 +554,7 @@ void __unwind_start(struct unwind_state
- 		 * generate some kind of backtrace if this happens.
- 		 */
- 		void *next_page = (void *)PAGE_ALIGN((unsigned long)state->sp);
-+		state->error = true;
- 		if (get_stack_info(next_page, state->task, &state->stack_info,
- 				   &state->stack_mask))
- 			return;
-@@ -579,8 +580,9 @@ void __unwind_start(struct unwind_state
- 
- 	return;
- 
--done:
-+err:
-+	state->error = true;
-+the_end:
- 	state->stack_info.type = STACK_TYPE_UNKNOWN;
--	return;
- }
- EXPORT_SYMBOL_GPL(__unwind_start);
+-	would_dump(bprm, bprm->file);
+-
+ 	retval = exec_binprm(bprm);
+ 	if (retval < 0)
+ 		goto out;
 
 
