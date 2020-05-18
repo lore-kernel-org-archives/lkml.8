@@ -2,553 +2,833 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68023C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 00:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE05C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 00:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3492067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 00:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3899D2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 00:07:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589760446;
+	bh=kjhM5BheSvedaYy3VgkyfJs7Sb67iaOlCkY8OegqRRk=;
+	h=From:Date:Subject:To:List-ID:From;
+	b=r/KrI2ceIMyO5LgnWY8YhPE0gs40ZFmHxZffb3z5eudeOOBjlCbI4wbnZsEGbYwrD
+	 pdXoQprkkOV49f8yUN+QWPQzGlOIP4N+fXszoG65IXmVcfbHOdLPt9S0hpZU1rASn+
+	 BxXyTDDBtRAkUzpM+zIqDrQ6IfIHZAq4vpZDUUp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgERAF4 (ORCPT
+        id S1726779AbgERAHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 20:05:56 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:43746 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgERAFz (ORCPT
+        Sun, 17 May 2020 20:07:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbgERAHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 20:05:55 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 06E488030802;
-        Mon, 18 May 2020 00:05:46 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id XBFMYiXA6VTe; Mon, 18 May 2020 03:05:44 +0300 (MSK)
-Date:   Mon, 18 May 2020 03:05:42 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>
-Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-Message-ID: <20200518000542.ohtpem3lo2pbixbu@mobilestation>
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
- <20200508113751.GD4820@sirena.org.uk>
- <20200510002039.hwahqasnnceowskz@mobilestation>
- <20200511212506.GA23852@sirena.org.uk>
+        Sun, 17 May 2020 20:07:25 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D812C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 17:07:24 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id c21so6479224lfb.3
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 17:07:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=fOAh3KP3hpjyDcDybSKWL8QnXIdN2DuNC939V8b6chU=;
+        b=IJhn76jZc5YcG2Kx4R8CaFpqBORnHL8dS+4hEhsBmGN1ViI2C6G7pBhBqxzhs5uhGG
+         BjwnEF6KFCHrD+fcluBH0sGveVuuPUBBH2Q51l66SwWwy+zYNC1x2VjySZbD7I/fCn50
+         +0PANtdYJcqMpLFiBEUmkks544GIUffFep5iI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=fOAh3KP3hpjyDcDybSKWL8QnXIdN2DuNC939V8b6chU=;
+        b=skPxNv4YOUB45ihn9LCblOw5vlVom/BTT4EO/ajZSPBMoej8PbCBvYPaqx0FI1OU5H
+         4ykRoUSOHFERsLl4MiOUXeqD5erpNYQoG25L8p6xkdMYN+WlLYtGC5xmYzhEmuc9czfx
+         VUYcyv5iQkV19JJIS6fp9OToT6pTT53EWrZBsi8DObd33bhGjD2olCAhE8U+aEYzrZAI
+         Udm3UnuDGdW8QTETvel6WF+VGufC2SJM5j+QnOVMWagMT1noBbT3Y9PXaA0f3LrKNszq
+         Va7MFZGvDeZYl2oZNonyXBcyiePai/xgj8faYzfWB5jcgOZHX0BoX8rKkNxBUxMLgrqC
+         drrA==
+X-Gm-Message-State: AOAM532KELPntI7DgZw5fJhfEk/HYRAdHkqWmIBpkMLEHJwKH0+PECVF
+        oXo9Izam3CDWKzENaEX7YIgI9IIUS6o=
+X-Google-Smtp-Source: ABdhPJwTTiGM9/nH7OamJFfR4hSbiFlgiVbhcSjrVxgd1cpIO8yjYbe0Zn5Oj3HoPigUV1E7TPN7FA==
+X-Received: by 2002:a19:be11:: with SMTP id o17mr9422131lff.187.1589760442006;
+        Sun, 17 May 2020 17:07:22 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id b28sm4856780ljo.1.2020.05.17.17.07.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 May 2020 17:07:21 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id b6so7974511ljj.1
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 17:07:21 -0700 (PDT)
+X-Received: by 2002:a2e:87d9:: with SMTP id v25mr8531664ljj.241.1589760440362;
+ Sun, 17 May 2020 17:07:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200511212506.GA23852@sirena.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 17 May 2020 17:07:03 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjP9eOr2GEpgtcpN4Hqve6YRiyEF5Pq6ZsKFKHZ_v5Bwg@mail.gmail.com>
+Message-ID: <CAHk-=wjP9eOr2GEpgtcpN4Hqve6YRiyEF5Pq6ZsKFKHZ_v5Bwg@mail.gmail.com>
+Subject: Linux 5.7-rc6
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark,
-I give up.) I'll try to integrate what I've done here in the generic DW APB SSI
-driver framework. Then add some hooks so to support our specific DW APB SSI
-controller. The I create a glue-layer for it. My answers to you comments are
-below.
+Another week, another rc.
 
-On Mon, May 11, 2020 at 10:25:06PM +0100, Mark Brown wrote:
-> On Sun, May 10, 2020 at 03:20:39AM +0300, Serge Semin wrote:
-> > On Fri, May 08, 2020 at 12:37:51PM +0100, Mark Brown wrote:
-> 
-> > > Your CC list on this series is *very* wide - are you sure that this is
-> > > relevant to everyone you're sending things to?  Kernel developers often
-> > > get a lot of mail meaning that extra mail can become a bit overwhelming
-> > > and cause things to get lost in the noise.
-> 
-> > MIPS folks are here since Baikal-T1 is a MIPS-based chip and this patchset
-> > is a part of the campaign of integrating the SoC support into the kernel.
-> > With Lee and Miquel we discussed the dirmap support in the framework of another
-> > patchset. Rob and devicetree-list are CC'ed due to having the bindings tree
-> > updated. Then a series of folks who recently submitted the biggest updates into
-> > the spi subsystems so might have valuable comments for this driver as well. So
-> > yes, I am sure.
-> 
-> I think you've got too many people who've been contributing to the
-> subsystem here at least - it looks like you picked up some people who
-> recently wrote drivers but haven't been doing a lot of review for
-> example for example.
-> 
-> > Anyway ok. I'll fix it. Is it ok to have the C-style comments in the header
-> > file?
-> > * It isn't included by any assembly so from this point of view C++ style
-> > * shall also work there.
-> 
-> The SPDX stuff requires C style comments in headers so yes.
-> 
-> > Secondly the message of that commit states "Devices with chip selects driven
-> > via GPIO are not compatible with the spi-mem operations." I find this statement
-> > questionable, because for instance this device supports memory operations with
-> > GPIO-driven CS. Though in current implementation the driver fallback to using normal
-> > push-pull IO mode if GPIO CS is utilized as safer one. But even in this case
-> > it's better than splitting the memory operations up into the transfers, which is
-> > developed in the spi_mem_exec_op() method.
-> 
-> > So in this matter my question is: how to modify the SPI-mem interface so the
-> > SPI-memory operations would also work with GPIO driven CS? Some additional flag
-> > might work...
-> 
+Last weekend, we had a larger-than-usual rc5, which I expected because
+rc4 had been small and so there was some pent-up fixing work that
+ended up in rc5.
 
-> Yes, some flags should work here - the issue was that at least some
-> controllers may end up trying to do multiple SPI operations for one
-> spi-mem thing which will break if the chip select doesn't get changed to
-> correspond with what's going on.
+This weekend, we had an even bigger rc6, and I really hoped we were in
+the calming down period.
 
-Ok. New SPI flag it is then. It will be something like this:
-+ #define SPI_CONTROLLER_FLASH_SS		BIT(6)
+So I'm not entirely happy about this. That said, there's nothing
+particularly scary in here, and it's not like this rc6 is outrageously
+big or out of control. I was just hoping for less.
 
-Then we have to convert spi_set_cs() method to be non-static in the spi.c
-to be used in the spi-mem.c to properly select slaves
+About a quarter of this is arch updates (arm[64], csky, x86, powerpc,
+risc-v) with an additional 5% being some x86 kvm selftests.
 
-Then the spi_mem_access_start() and spi_mem_access_stop() of spi-mem.c should be
-updated in the following way:
---- spi_mem_access_start()
-+++ spi_mem_access_start()
- 
- 	mutex_lock(&ctlr->bus_lock_mutex);
- 	mutex_lock(&ctlr->io_mutex);
-+
-+	if (ctlr->flags & SPI_CONTROLLER_FLASH_SS)
-+		spi_set_cs(mem->spi, true);
- 
- 	return 0;
- }
---- spi_mem_access_end()
-+++ spi_mem_access_end()
- static void spi_mem_access_end(struct spi_mem *mem)
- {
- 	struct spi_controller *ctlr = mem->spi->controller;
-+
-+	if (ctlr->flags & SPI_CONTROLLER_FLASH_SS)
-+		spi_set_cs(mem->spi, false);
- 
- 	mutex_unlock(&ctlr->io_mutex);
- 	mutex_unlock(&ctlr->bus_lock_mutex);
+The rest is mostly driver updates (gpu, usb, networking, rmda, clk)
+with a random mix of other stuff (filesystem updates, tracing, mm, and
+core networking).
+
+Nothing really stands out, but let's hope things calm down now.
+
+                 Linus
+
+PS. On a personal note, my middle daughter graduated college
+yesterday. Congrats to her - and to me. Two down, one to go!
+
 ---
 
-Method spi_mem_exec_op() shall also make sure that even if GPIO-driven CS is
-utilized the normal mem-op is executed. Something like this should do this:
---- spi_mem_exec_op()
-+++ spi_mem_exec_op()
- 	if (!spi_mem_internal_supports_op(mem, op))
- 		return -ENOTSUPP;
- 
--	if (ctlr->mem_ops && !mem->spi->cs_gpiod) {
-+	if (ctlr->mem_ops &&
-+	    (!mem->spi->cs_gpiod || (ctlr->flags & SPI_CONTROLLER_FLASH_SS))) {
- 		ret = spi_mem_access_start(mem);
- 		if (ret)
- 			return ret;
----
+Adam Ford (2):
+      arm64: dts: imx8mn: Change SDMA1 ahb clock for imx8mn
+      gpio: pca953x: Fix pca953x_gpio_set_config
 
-So, what do you think?
+Adam McCoy (1):
+      cifs: fix leaked reference on requeued write
 
-> 
-> > Thirdly what about dirmap operations? If we got a GPIO driven CS then due to
-> > lacking any CS manipulation in spi_mem_dirmap_read() method we wouldn't have
-> > been able to make the direct mapping working without manual setting the GPIO.
-> > So the same question here. How to work this around and justify your requirement?
-> > Until the question is answered and we come up with reasonable solution in order
-> > to have the SPI-mem/dirmap interface working together with GPIO CS support I have
-> > to leave the manual GPIO manipulation.
-> 
-> If the issue with ensuring that chip select is managed appropriately for
-> transfers can be resolved then push that stuff up to the framework.  If
-> not then it's not clear that the open coded version can work well
-> with GPIO chip selects either.
+Adrian Hunter (1):
+      mmc: block: Fix request completion in the CQE timeout path
 
-See the comment above.
+Ahmad Fatoum (1):
+      ARM: imx: provide v7_cpu_resume() only on ARM_CPU_SUSPEND=3Dy
 
-> 
-> > > > +static void bs_update_cfg(struct bt1_spi *bs, struct spi_transfer *xfer)
-> > > > +{
-> 
-> > > This has exactly one caller, perhaps it could just be inlined there?  I
-> > > think this applies to some of the other internal functions.
-> 
-> > I don't want to inline methods just because they are used in a single place. This
-> > might worsen readability and in this case it will. Currently the transfer_one()
-> > method is consistent with self-explanatory methods: update config, push-pull
-> > bytes/words, check status. This also applies to the rest of the code. I can
-> > consider some improvements/optimizations in this matter though, but embedding
-> > the functions isn't one of them. Moreover the compiler does the static
-> > methods inlining automatically as soon as it sees they are called just once.
-> 
-> One of the things that creating internal APIs like this does is that it
-> adds another layer of structure to the driver, making it a bit harder to
-> follow that it's following the usual structures of a Linux driver
-> (especially noticable here given the open coding).  It creates the
-> impression of the platform portability layers that people sometimes try
-> to build.
+Al Viro (1):
+      csky: Fixup raw_copy_from_user()
 
-Let's stop this discussion.) Since I am going to integrate this patch into the
-generic DW APB SSI driver, I will have to follow that driver design anyway. So
-most likely I won't implement a new handy abstraction.
+Alex Deucher (2):
+      drm/amdgpu: force fbdev into vram
+      drm/amdgpu: implement soft_recovery for gfx10
 
-> 
-> > > > +static int bs_check_status(struct bt1_spi *bs)
-> > > > +{
-> 
-> > > It's not obvious from the name that this function will busy wait rather
-> > > than just reading some status registers.
-> 
-> > What do you suggest then? Renaming? Splitting up? If renaming, then what name do
-> > you prefer? Something like bs_check_completion()?
-> 
-> wait_for_completion() or something else that mentions that it will wait
-> for completion rather than just looking to see if the operation has
-> completed.
+Alex Elder (2):
+      net: ipa: set DMA length in gsi_trans_cmd_add()
+      net: ipa: use tag process on modem crash
 
-Ok. If it will be still applicable.
+Amit Singh Tomar (1):
+      pinctrl: actions: fix function group name for i2c0_group
 
-> 
-> > > > +static int bs_exec_mem_op(struct spi_mem *mem,
-> > > > +			  const struct spi_mem_op *op)
-> > > > +{
-> 
-> > > It's not clear to me that this hardware actually supports spi_mem in
-> > > hardware?
-> 
-> > SPI-mem operations are implemented by means of the EEPROM-read and Tx-only
-> > modes of the controller.
-> 
-> Sure, but those seem like normal SPI-level things rather than cases
-> where the hardware understands that it has a flash attached and is doing
-> flash specific things.
+Amol Grover (2):
+      ipmr: Fix RCU list debugging warning
+      ipmr: Add lockdep expression to ipmr_for_each_table macro
 
-No, hardware can't detect whether the flash is attached. This must be defined by
-the platform, like based on the DT sub-nodes.
+Amy Shih (2):
+      hwmon: (nct7904) Read all SMI status registers in probe function
+      hwmon: (nct7904) Fix incorrect range of temperature limit registers
 
-> A very common case for this stuff is that
-> controllers have acceleration blocks for read and fall back on normal
-> SPI for writes and erases, that sounds like what's going on here.
+Anders Roxell (1):
+      security: Fix the default value of secid_to_secctx hook
 
-Well, yeah, they do provide some acceleration. EEPROM-read provides automatic
-write-cmd-dummy-data-then-read operations. But in this case the only thing we
-have to push into the SPI Tx FIFO is command and dummy bytes. The read operation
-will be performed automatically. So the only thing the driver has to do is to
-keep up with Rx FIFO data pulling out before it's overflown. Similarly Tx-only
-mode is used to perform the Flash write/erase commands. The driver has to keep up
-with pushing data into the Tx FIFO before it gets emptied and CS is de-asserted.
-Using these operations is mandatory in case if there is no GPIO-driven CS is
-utilized, since native CS is automatically asserted during the whole EEPROM-read
-or Tx-only mode executed.
+Andreas Gruenbacher (3):
+      gfs2: Another gfs2_walk_metadata fix
+      gfs2: More gfs2_find_jhead fixes
+      gfs2: Grab glock reference sooner in gfs2_add_revoke
 
-As I also said such operations are very useful, since minimize IO operations
-performed over the APB bus. By doing so we can support higher SPI bus
-frequencies.
+Andrew Oakley (1):
+      ALSA: usb-audio: add mapping for ASRock TRX40 Creator
 
-> 
-> > > > +	if (!bs->cfg.cs_gpiod) {
-> > > > +		bs_push_bytes(bs, cmd, len);
-> > > > +
-> > > > +		if (op->data.dir == SPI_MEM_DATA_IN)
-> > > > +			ret = bs_pull_bytes(bs, op->data.buf.in,
-> > > > +					    op->data.nbytes);
-> > > > +	} else {
-> > > > +		bs_pp_bytes(bs, cmd, NULL, len);
-> > > > +
-> > > > +		if (op->data.dir == SPI_MEM_DATA_IN)
-> > > > +			bs_pp_bytes(bs, NULL, op->data.buf.in,
-> > > > +				    op->data.nbytes);
-> > > > +	}
-> > > 
-> 
-> > > The actual transfers here are done using the same PIO functions as
-> > > everything else as far as I can see which makes me wonder what this
-> > > spi_mem implementation is adding over the standard SPI flash support.
-> 
-> > No, if no GPIO CS is supplied the memory read operation is performed by means of
-> > the EEPROM-read mode of the DW SSI controller (Write command is written to the
-> > Tx FIFO and read data length - to the CTRLR1 register). The memory write
-> 
-> So EEPROM read mode is a combined write/read - is that somehow less
-> performant or something than separate opeations so there's a reason not
-> to use it except in this special circumstance?
+Andrey Konovalov (8):
+      usb: raw-gadget: fix return value of ep read ioctls
+      usb: raw-gadget: improve uapi headers comments
+      usb: raw-gadget: fix gadget endpoint selection
+      usb: raw-gadget: support stalling/halting/wedging endpoints
+      usb: raw-gadget: documentation updates
+      usb: raw-gadget: fix null-ptr-deref when reenabling endpoints
+      kasan: consistently disable debugging features
+      kasan: add missing functions declarations to kasan.h
 
-Actually It's more performant (less APB-bus MMIO operations required to perform
-the transfers) and safer in case of Native CS-driven slave devices. In case of
-GPIO-driven CS EEPROM and Tx-only are still more performant modes, but less safe
-than normal synchronous SPI Tx/Rx mode.
+Andrii Nakryiko (1):
+      bpf: Fix bug in mmap() implementation for BPF array map
 
-I'll explain it one more time to logically continue this discussion. In general
-the DW APB SSI controller may be utilized on two types of platform setups:
+Andy Shevchenko (3):
+      pinctrl: sunrisepoint: Fix PAD lock register offset for SPT-H
+      pinctrl: baytrail: Enable pin configuration setting for GPIO chip
+      usb: dwc3: pci: Enable extcon driver for Intel Merrifield
 
-1) A slave device is selected by the DW APB SSI Native CS lane only.
+Ansuel Smith (1):
+      pinctrl: qcom: fix wrong write in update_dual_edge
 
-You know, that Dw APB SSI native chip select is automatically asserted by the
-SPI controller during a transfer being executed. As soon as there is no data in
-the Tx FIFO to transfer (Tx-only or Tx-Rx modes) or there is no data left to
-receive (EEPROM-read or Rx-only mode), the native CS will be automatically
-de-asserted.
+Arnd Bergmann (4):
+      net: bareudp: avoid uninitialized variable warning
+      usb: dwc3: select USB_ROLE_SWITCH
+      net: freescale: select CONFIG_FIXED_PHY where needed
+      netfilter: conntrack: avoid gcc-10 zero-length-bounds warning
 
-If we decided not to implement the mem-ops in the driver, then we'd have to:
-for flash-write operation: analyze the passed message ahead, merge the Tx-only
-operations and atomically execute them after activating Tx-only mode;
-for flash-read operation: analyze the passed message ahead, merge Tx-only
-operations, combine it with Rx-only tail part and atomically execute them all
-after activating the EEPROM-read mode. Well, what we've done here is basically
-a reverse operation performed by the spi_exec_mem_op(), which just split the
-spi_mem_op structure up into a set of spi_transfer's. Why would we need to do
-this, while we could just use the already provided perfectly suitable spi_mem_op
-data structure for our needs? Especially seeing our controller supports the
-operations like Tx-only and EEPROM-read specifically provided for the cases
-of flash-device write/read operations. Isn't that a reason of claiming that it
-supports mem-ops?
+Babu Moger (1):
+      KVM: x86: Fix pkru save/restore when guest CR4.PKE=3D0, move it to x8=
+6.c
 
-If we decided to implement the mem-ops in the driver (as it's done in this
-patch), then the only thing we'd need to do is to enable the corresponding DW APB
-SSI controller mode and push or push/pull spi_mem_op data on time. That's it.
-No remapping, no data analyzing, no merging. Yes, the hardware doesn't provide
-that much acceleration than normal Flash-capable SPI controllers, but still
-it's better than handling standard transfers.
+Bartosz Golaszewski (2):
+      gpiolib: improve the robustness of watch/unwatch ioctl()
+      gpiolib: don't call sleeping functions with a spinlock taken
 
-You'd say why remapping, analyzing and merging? Just use the normal SPI
-synchronous Tx/Rx mode and push dummy zeros or ignore incoming data. The answer
-is performance. Well, this might be good solution if the APB bus was fast enough.
-If it's not, then we have to minimize the IO operations with Dw APB SSI
-registers. This can be only done by using the EEPROM-read and Tx-only mode utilized. 
+Ben Chuang (2):
+      mmc: sdhci-pci-gli: Fix no irq handler from suspend
+      mmc: sdhci-pci-gli: Fix can not access GL9750 after reboot from Windo=
+ws 10
 
-Note, all the operations described above MUST be executed in the atomic context,
-so the data push/pull algorithms would keep up with keeping the Tx FIFO
-non-empty and preventing the Rx FIFO overflown by automatically incoming data.
-If either for a reason of IRQ or another task preemption or due to the slow APB
-bus we get the Tx FIFO emptied, then the native CS will be de-asserted. If for
-the same reason we get the Rx FIFO overflown, then we'll loose data.
+Bernard Zhao (1):
+      drm/meson: pm resume add return errno branch
 
-2) A slave is selected by GPIO CS.
+Bjorn Andersson (1):
+      arm64: dts: qcom: msm8996: Reduce vdd_apc voltage
 
-Well, TBH in this case it's still more performant to use the Tx-only and
-EEPROM-read modes for communications (because we need less APB bus activity),
-but these modes mandate the IRQs disabling since data is automatically
-received. Since in this case the problem with automatic CS de-assertion doesn't
-exist (we can manually set and clear GPIO CS), it is safe to use the normal
-synchronous SPI Tx/Rx mode and avoid IRQs disabling. Though in case if better
-performance is required then mem-ops should be utilized.
+Bob Peterson (11):
+      gfs2: fix withdraw sequence deadlock
+      gfs2: Fix error exit in do_xmote
+      gfs2: Fix BUG during unmount after file system withdraw
+      gfs2: Fix use-after-free in gfs2_logd after withdraw
+      gfs2: Fix problems regarding gfs2_qa_get and _put
+      gfs2: Change BUG_ON to an assert_withdraw in gfs2_quota_change
+      gfs2: remove check for quotas on in gfs2_quota_check
+      gfs2: move privileged user check to gfs2_quota_lock_check
+      gfs2: don't call quota_unhold if quotas are not locked
+      gfs2: If go_sync returns error, withdraw but skip invalidate
+      Revert "gfs2: Don't demote a glock until its revokes are written"
 
+Borislav Petkov (1):
+      x86: Fix early boot crash on gcc-10, third try
 
-Note using Tx-only and EEPROM-read operations is more performant than
-normal synchronous SPI Tx-Rx mode because it causes less APB bus activity.
-In addition we need less data analyzing and mapping for spi-mem operations.
-In our case both of these factors are very important due to slow APB bus.
+Brian Geffon (1):
+      userfaultfd: fix remap event with MREMAP_DONTUNMAP
 
-(See further comment for details of what I can port from this driver to the
-generic DW APB SSI core.)
+Chen-Yu Tsai (5):
+      arm64: dts: rockchip: Replace RK805 PMIC node name with "pmic"
+on rk3328 boards
+      arm64: dts: rockchip: drop non-existent gmac2phy pinmux options
+from rk3328
+      arm64: dts: rockchip: drop #address-cells, #size-cells from
+rk3328 grf node
+      arm64: dts: rockchip: drop #address-cells, #size-cells from
+rk3399 pmugrf node
+      arm64: dts: rockchip: Rename dwc3 device nodes on rk3399 to make dtc =
+happy
 
-> 
-> > operation utilizes the Tx-only mode (just push data to the Tx FIFO, controller
-> > discards all incoming data). See bs_set_cfg() for details.
-> 
-> That's not super illuminating on this issue?
-> 
-> > If GPIO CS is utilized then we fallback to the normal push-pull methods because
-> > first it's safer this way, second it's still better than handling multiple SPI
-> > transfers.
-> 
-> > BTW The EEPROM/Tx-only modes are required to be utilized for the controller on
-> > our SoC in order to support the SPI bus operations with highest frequencies.
-> > Due to relatively slow APB bus performance we have to minimize MMIO operation
-> > per a single byte read/write. This is another reason why we had to create a
-> > dedicated driver for this controller.
-> 
-> If the controller has support for TX only mode that seems like a good
-> thing to have in the generic driver - for TX only transfers that's less
-> bus I/O.  The EEPROM mode potentially also, I'm less clear on what
-> exactly it is but it sounds potentially useful for common cases with
-> register operations.  Perhaps other systems might have similarly slow
-> buses and get noticable performance benefits from using these modes.
+Chris Chiu (1):
+      ALSA: hda/realtek - Enable headset mic of ASUS GL503VM with ALC295
 
-See my comments above. I gave up and will try to merge my driver into the
-generic Dw APB SSI framework.
+Chris Wilson (10):
+      drm/i915: Avoid dereferencing a dead context
+      drm/i915/gt: Make timeslicing an explicit engine property
+      drm/i915: Check current i915_vma.pin_count status first on unbind
+      drm/i915/gt: Yield the timeslice if caught waiting on a user semaphor=
+e
+      drm/i915/gem: Remove object_is_locked assertion from
+unpin_from_display_plane
+      drm/i915/execlists: Avoid reusing the same logical CCID
+      drm/i915/execlists: Track inflight CCID
+      drm/i915: Propagate error from completed fences
+      drm/i915: Mark concurrent submissions with a weak-dependency
+      drm/i915: Handle idling during i915_gem_evict_something busy loops
 
-> 
-> > > > +static void bs_copy_from_map(void *to, void __iomem *from, size_t len)
-> > > > +{
-> > > > +	size_t shift, chunk;
-> > > > +	u32 data;
-> 
-> > > This feels like something that is likely to be suitable for a generic
-> > > implementation?  Indeed I'd kind of expect that the architecture
-> > > memcpy_to/fromio() would try to copy aligned blocks since it's usually
-> > > going to perform better (which I assume is why this function is doing
-> > > it).
-> 
-> > MIPS memcpy_to/fromio don't do this. They expect the MMIO space can be read in
-> > a same way as normal memory space. It's our controller "feature", that MMIO can
-> > be only accessible by lw/sw instructions. So I had no choice but to implement the
-> > aligned read/write operations by myself here. AFAICS this won't be suitable for
-> > the generic implementation due to the alignment restriction and the controller
-> > setups, which are supposed to be performed before accessing the dirmap MMIO.
-> 
-> You should document this in the driver so nobody comes along and does
-> the refactoring as a cleanup, it looks like duplicated or redundant code.
+Christian Brauner (1):
+      fork: prevent accidental access to clone3 features
 
-Ok.
+Christoph Hellwig (1):
+      arm64: fix the flush_icache_range arguments in machine_kexec
 
-> 
-> > > This seems a bit much - we can validate that the message doesn't contain
-> > > any delays (which is going to be the overwhelming majority of devices)
-> > > or multiple transfers and reject just those transfers we can't support.
-> > > Multiple transfers are an issue with this hardware but you could
-> > > implement support in the core for coalescing them into single transfers,
-> > > this isn't the only hardware with automatic chip select handling that
-> > > can't cope with scatter/gather so it would be a useful thing to have.
-> 
-> > As I said in the commit message to the binding this controller is nearly always
-> > connected to an external SPI flash (I'd say always, because Baikal-T1 is fully
-> > functional only when initially booted from an SPI flash). At least I don't know
-> > any hardware using this interface differently (I've worked with all devices with
-> > Baikal-T1 SoC on board). In current driver implementation the SPI-mem operations
-> > covers the native CS case while the prepare_message()/transfer_one()/unprepare_message()
-> > are used when GPIO-driven CS is available (due to the commit 05766050d5bd I had
-> > to implement it). So I didn't want to over-complicate the driver just to support
-> > some virtual hardware before it's really necessary.
-> 
-> Aside from the issue of tempting fate in board designs this circles back
-> to the open coding of the bits of the spi-mem stuff that aren't really
-> offloaded by the hardware - the driver would look a lot more standard
-> (and be closer to spi-dw I guess) if it only implemented the bits that
-> are offloaded and this interface was available.  Having the normal
-> SPI message interface would not only support non-flash hardware, it'd
-> also enable the use of more of the generic SPI flash code like other
-> similar controllers.
+Christoph Paasch (1):
+      mptcp: Initialize map_seq upon subflow establishment
 
-See my comment above, why it's necessary to have the spi-mem implemented for
-the case of native CS. If GPIO-driven CS is utilized, then generic (synchronous
-SPI Tx/Rx mode) but poll-based (since there is no IRQ provided for our controller)
-algorithm can be utilized. If native CS is only available, then the safest way
-is to have the atomic context by disabling the interrupts. This can be easily
-done for the spi-mem interface, but nearly impossible for the generic
-spi_transfer_one_message()-based IO. The only alternative is to implement the
-device-specific transfer_one_message() callback, analyze SPI transfers,
-merge them up, execute in the atomic context. Needless to say, that such approach
-is only applicable for the IRQless controllers. If IRQ is available for the
-controller, then using Native CS is still unsafe.
+Christophe JAILLET (4):
+      mmc: alcor: Fix a resource leak in the error path for ->probe()
+      usb: gadget: audio: Fix a missing error return value in audio_bind()
+      usb: phy: twl6030-usb: Fix a resource leak in an error handling
+path in 'twl6030_usb_probe()'
+      usb: gadget: net2272: Fix a memory leak in an error handling
+path in 'net2272_plat_probe()'
 
-To sum up what approaches are better in what configurations if IRQ-less DW APB
-SSI controller is available:
-1) Flash/spi-mem + Native CS => EEPROM-read/Tx-only + atomic context - disable IRQs.
-2) Flash/spi-mem + GPIO CS   => normal synchronous SPI Tx/Rx mode (currently this
-                                will fallback to 4) because spi_mem_exec_op()
-                                implementation, probably for good).
-3) SPI msg + Native CS => reimplement transfer_one_message() + merge transfers
-                          if possible otherwise use normal Tx+Rx mode + atomic
-                          context - disabling IRQs during the whole message.
-4) SPI msg + GPIO CS   => normal synchronous SPI Tx/Rx mode.
+Christophe Leroy (3):
+      powerpc/32s: Fix build failure with CONFIG_PPC_KUAP_DEBUG
+      powerpc/vdso32: Fallback on getres syscall when clock is unknown
+      powerpc/40x: Make more space for system call exception
 
-For the Dw APB SSI controller with IRQ the 2) and 4) items are the same. 1) and
-3) can't be safely implemented due to possible concurrent IRQs.
+Chuck Lever (4):
+      SUNRPC: Add "@len" parameter to gss_unwrap()
+      SUNRPC: Fix GSS privacy computation of auth->au_ralign
+      SUNRPC: Revert 241b1f419f0e ("SUNRPC: Remove xdr_buf_trim()")
+      SUNRPC: Signalled ASYNC tasks need to exit
 
-Item 4) is already available in the current spi-dw.c driver, although the poll-mode
-has been recently removed (I'll have to get it back). From this patch I can port the
-items 1) and 2) to the generic version of the DW APB SSI driver. I won't spend
-my time for 3) because first I've already spent a lot of it on implementing this
-driver, second I don't need such functionality on our platforms. If someone ever
-needs it, I'll assist with an advice of how to do this.
+Chuhong Yuan (1):
+      net: microchip: encx24j600: add missed kthread_stop
 
-So, what do you think?
+Clay McClure (1):
+      net: ethernet: ti: Remove TI_CPTS_MOD workaround
 
-> 
-> > > > +static int bs_transfer_one(struct spi_controller *ctrl, struct spi_device *spi,
-> > > > +			   struct spi_transfer *xfer)
-> > > > +{
-> > > > +	struct bt1_spi *bs = spi_controller_get_devdata(ctrl);
-> > > > +
-> > > > +	bs_update_cfg(bs, xfer);
-> > > > +
-> > > > +	if (bs->cfg.dfs <= 8)
-> > > > +		bs_pp_bytes(bs, xfer->tx_buf, xfer->rx_buf, xfer->len);
-> > > > +	else
-> > > > +		bs_pp_words(bs, xfer->tx_buf, xfer->rx_buf, xfer->len / 2);
-> > > 
-> > > This will have issues with transfers with an odd number of bytes won't
-> > > it?
-> 
-> > No, it won't. Transfers with bits per word greater than 8 should have even
-> > number of bytes seeing the len field is supposed to have the buffers length in
-> > bytes:
-> 
-> So dfs is bits per word?  This is one of those things where the internal
-> APIs make things harder to follow.
-> 
-> > > Perhaps consider regmap_mmio?
-> 
-> > For multiple reasons no. First of all I need a direct access to the DR register
-> > and I need to do this as fast as possible due to relatively slow APB
-> > bus. The same concern is regarding the controller configs setting. Secondly
-> > everywhere in the driver I use the normal read/write methods and there is no
-> > need in even a basic regmap-update function. So an additional abstraction like
-> > regmap would be unnecessary complication. Thirdly the access to the registers
-> 
-> That comment was more due to writing debug infrastructure than stuff
-> like update_bits - the main reason regmap-mmio exists is for the debug
-> and cache features.  If the performance is too marginal to allow any
-> overhead then fine.  There's nothing stopping you combining regmap and
-> non-regmap on the same device if you exclude the more sensitive
-> registers from regmap with the access operations but it's not exactly
-> nice.
-> 
-> > > > +	if (!ret) {
-> > > > +		mutex_lock(&bs->ctrl->io_mutex);
-> 
-> > > Holding a mutex over the entire time that a file is open is not good,
-> > > it's also not clear to me what this mutex is supposed to be protecting
-> > > given that it's only referenced in these debugfs functions.
-> 
-> > Hm, it's io_mutex protecting the SPI IO operation to be thread-safe. See:
-> > spi_mem_access_start()/spi_mem_access_end();
-> > __spi_pump_messages();
-> 
-> > By locking the mutex here I make sure the DebugFS registers dump operation won't
-> > interfere the IO operations like dirmap, which make the registers unavailable
-> > for normal MMIO-based access.
-> 
-> Oh, it's the SPI level mutex...  that is a bit icky, and it does let
-> userspace code block the bus fairly easily which could be problematic
-> but I guess it's debugfs so meh.
+Colin Xu (1):
+      drm/i915/gvt: Init DPLL/DDI vreg for virtual display instead of
+inheritance.
 
-Ok.
+Cong Wang (1):
+      net: fix a potential recursive NETDEV_FEAT_CHANGE
 
-> 
-> > > > +		writel(BC_CSR_SPI_RDA, bs->regs + BC_CSR);
-> 
-> > > Whatever this write is doing we never seem to undo it?
-> 
-> > Here I switch on the DW APB SSI registers to be available for normal
-> > readl/writel accesses. It's not a problem to leave the mode on, since
-> > bs_set_cfg() will do a proper config anyway.
-> 
-> A comment would help here, the fact that it's not undone looks like a
-> bug.
+Dan Carpenter (2):
+      i40iw: Fix error handling in i40iw_manage_arp_cache()
+      dpaa2-eth: prevent array underflow in update_cls_rule()
 
-Ok.
+Daniel Borkmann (3):
+      bpf: Restrict bpf_probe_read{, str}() only to archs where they work
+      bpf: Add bpf_probe_read_{user, kernel}_str() to do_refine_retval_rang=
+e
+      bpf: Restrict bpf_trace_printk()'s %s usage and add %pks, %pus specif=
+ier
 
--Sergey
+Dave Wysochanski (3):
+      NFS: Fix fscache super_cookie index_key from changing after umount
+      NFS: Fix fscache super_cookie allocation
+      NFSv4: Fix fscache cookie aux_data to ensure change_attr is included
+
+David Gow (1):
+      gpio: of: Build fails if CONFIG_OF_DYNAMIC enabled without CONFIG_OF_=
+GPIO
+
+David Howells (1):
+      cachefiles: Fix corruption of the return value in
+cachefiles_read_or_alloc_pages()
+
+David S. Miller (2):
+      MAINTAINERS: Add Jakub to networking drivers.
+      MAINTAINERS: Mark networking drivers as Maintained.
+
+Denis V. Lunev (1):
+      IB/i40iw: Remove bogus call to netdev_master_upper_dev_get()
+
+Eric Dumazet (2):
+      tcp: fix SO_RCVLOWAT hangs with fat skbs
+      tcp: fix error recovery in tcp_zerocopy_receive()
+
+Eric W. Biederman (1):
+      exec: Move would_dump into flush_old_exec
+
+Eugeniu Rosca (1):
+      usb: core: hub: limit HUB_QUIRK_DISABLE_AUTOSUSPEND to USB5534B
+
+Evan Quan (4):
+      drm/amdgpu: disable MGCG/MGLS also on gfx CG ungate
+      drm/amdgpu: drop unnecessary cancel_delayed_work_sync on PG ungate
+      drm/amd/powerplay: perform PG ungate prior to CG ungate
+      drm/amdgpu: enable hibernate support on Navi1X
+
+Fabio Estevam (2):
+      ARM: dts: imx27-phytec-phycard-s-rdk: Fix the I2C1 pinctrl entries
+      arm64: dts: imx8m: Fix AIPS reg properties
+
+Faiz Abbas (1):
+      ARM: dts: am574x-idk: Disable m_can node
+
+Felix Kuehling (1):
+      drm/amdgpu: Use GEM obj reference for KFD BOs
+
+Florian Fainelli (2):
+      net: dsa: loop: Add module soft dependency
+      net: broadcom: Select BROADCOM_PHY for BCMGENET
+
+Florian Westphal (1):
+      netfilter: conntrack: fix infinite loop on rmmod
+
+Geert Uytterhoeven (5):
+      ARM: dts: r8a73a4: Add missing CMT1 interrupts
+      ARM: dts: r7s9210: Remove bogus clock-names from OSTM nodes
+      CIFS: Spelling s/EACCESS/EACCES/
+      net: hisilicon: Make CONFIG_HNS invisible
+      ARM: dts: r8a7740: Add missing extal2 to CPG node
+
+Grace Kao (1):
+      pinctrl: cherryview: Add missing spinlock usage in chv_gpio_irq_handl=
+er
+
+Greg Kroah-Hartman (1):
+      USB: usbfs: fix mmap dma mismatch
+
+Guenter Roeck (1):
+      hwmon: (drivetemp) Fix SCT support if SCT data tables are not support=
+ed
+
+Guillaume Nault (1):
+      pppoe: only process PADT targeted at local interfaces
+
+Guo Ren (6):
+      csky/ftrace: Fixup error when disable CONFIG_DYNAMIC_FTRACE
+      csky: Fixup compile error for abiv1 entry.S
+      csky: Fixup perf probe -x hungup
+      csky: Fixup calltrace panic
+      csky: Fixup remove unnecessary save/restore PSR code
+      csky: Fixup gdbmacros.txt with name sp in thread_struct
+
+Gustavo A. R. Silva (1):
+      tools/testing: Replace zero-length array with flexible-array
+
+Heiner Kallweit (2):
+      r8169: re-establish support for RTL8401 chip version
+      net: phy: fix aneg restart in phy_ethtool_set_eee
+
+Imre Deak (1):
+      drm/i915/tgl+: Fix interrupt handling for DP AUX transactions
+
+Ioana Ciornei (1):
+      dpaa2-eth: properly handle buffer size restrictions
+
+J. Bruce Fields (2):
+      nfs: fix NULL deference in nfs4_get_valid_delegation
+      SUNRPC: 'Directory with parent 'rpc_clnt' already present!'
+
+Jack Morgenstein (2):
+      IB/mlx4: Test return value of calls to ib_get_cached_pkey
+      IB/core: Fix potential NULL pointer dereference in pkey cache
+
+Jacob Keller (1):
+      ptp: fix struct member comment for do_aux_work
+
+Jason Gunthorpe (2):
+      RDMA/uverbs: Do not discard the IB_EVENT_DEVICE_FATAL event
+      RDMA/uverbs: Move IB_EVENT_DEVICE_FATAL to destroy_uobj
+
+Jason Yan (1):
+      usb: cdns3: gadget: make a bunch of functions static
+
+Jens Axboe (1):
+      io_uring: polled fixed file must go through free iteration
+
+Jesus Ramos (1):
+      ALSA: usb-audio: Add control message quirk delay for Kingston
+HyperX headset
+
+Jian-Hong Pan (2):
+      ALSA: hda/realtek - Enable headset mic of ASUS UX550GE with ALC295
+      ALSA: hda/realtek: Enable headset mic of ASUS UX581LV with ALC295
+
+Jim Mattson (1):
+      KVM: x86: Fix off-by-one error in kvm_vcpu_ioctl_x86_setup_mce
+
+Johan Jonker (7):
+      ARM: dts: rockchip: fix phy nodename for rk3228-evb
+      ARM: dts: rockchip: fix phy nodename for rk3229-xms6
+      arm64: dts: rockchip: remove extra assigned-clocks property from
+&gmac2phy node in rk3328-evb.dts
+      arm64: dts: rockchip: fix status for &gmac2phy in rk3328-evb.dts
+      arm64: dts: rockchip: swap interrupts interrupt-names rk3399 gpu node
+      ARM: dts: rockchip: swap clock-names of gpu nodes
+      ARM: dts: rockchip: fix pinctrl sub nodename for spi in rk322x.dtsi
+
+John Fastabend (2):
+      bpf, sockmap: msg_pop_data can incorrecty set an sge length
+      bpf, sockmap: bpf_tcp_ingress needs to subtract bytes from sg.size
+
+John Stultz (2):
+      kselftests: dmabuf-heaps: Fix confused return value on expected
+error testing
+      dwc3: Remove check for HWO flag in dwc3_gadget_ep_reclaim_trb_sg()
+
+Jon Hunter (1):
+      arm64: defconfig: Re-enable Tegra PCIe host driver
+
+Josh Poimboeuf (1):
+      x86/unwind/orc: Fix error handling in __unwind_start()
+
+Justin Swartz (1):
+      clk: rockchip: fix incorrect configuration of rk3228 aclk_gpu* clocks
+
+Kai-Heng Feng (2):
+      Revert "ALSA: hda/realtek: Fix pop noise on ALC225"
+      ALSA: hda/realtek - Fix S3 pop noise on Dell Wyse
+
+Kefeng Wang (9):
+      riscv: perf_event: Make some funciton static
+      riscv: perf: RISCV_BASE_PMU should be independent
+      riscv: Fix unmet direct dependencies built based on SOC_VIRT
+      riscv: stacktrace: Fix undefined reference to `walk_stackframe'
+      riscv: Add pgprot_writecombine/device and PAGE_SHARED defination if N=
+OMMU
+      riscv: Disable ARCH_HAS_DEBUG_VIRTUAL if NOMMU
+      riscv: Make SYS_SUPPORTS_HUGETLBFS depends on MMU
+      riscv: pgtable: Fix __kernel_map_pages build error if NOMMU
+      riscv: mmiowb: Fix implicit declaration of function 'smp_processor_id=
+'
+
+Keith Busch (1):
+      nvme-pci: dma read memory barrier for completions
+
+Kelly Littlepage (1):
+      net: tcp: fix rx timestamp behavior for tcp_recvmsg
+
+Kevin Lo (1):
+      net: phy: broadcom: fix BCM54XX_SHD_SCR3_TRDDAPD value for BCM54810
+
+Kishon Vijay Abraham I (1):
+      ARM: dts: dra7: Fix bus_dma_limit for PCIe
+
+Kyungtae Kim (1):
+      USB: gadget: fix illegal array access in binding with UDC
+
+Lei Xue (1):
+      cachefiles: Fix race between read_waiter and read_copier
+involving op->to_do
+
+Leo (Hanghong) Ma (1):
+      drm/amd/amdgpu: Update update_config() logic
+
+Li Jun (1):
+      usb: host: xhci-plat: keep runtime active when removing host
+
+Light Hsieh (1):
+      pinctrl: mediatek: remove shadow variable declaration
+
+Linus Torvalds (2):
+      drm: fix trivial field description cut-and-paste error
+      Linux 5.7-rc6
+
+Linus Walleij (1):
+      clk: impd1: Look up clock-output-names
+
+Liu Yibin (2):
+      csky: Fixup msa highest 3 bits mask
+      csky: Fixup remove duplicate irq_disable
+
+Luo bin (1):
+      hinic: fix a bug of ndo_stop
+
+Ma Feng (1):
+      ARM: oxnas: make ox820_boot_secondary static
+
+Maciej =C5=BBenczykowski (2):
+      net: remove spurious declaration of tcp_default_init_rwnd()
+      Revert "ipv6: add mtu lock check in __ip6_rt_update_pmtu"
+
+Madhuparna Bhowmik (1):
+      drivers: net: hamradio: Fix suspicious RCU usage warning in bpqether.=
+c
+
+Mao Han (1):
+      csky: Fixup perf callchain unwind
+
+Maor Gottlieb (1):
+      RDMA/core: Fix double put of resource
+
+Marc Zyngier (1):
+      clk: Unlink clock if failed to prepare or enable
+
+Masahiro Yamada (1):
+      usb: gadget: legacy: fix redundant initialization warnings
+
+Masami Hiramatsu (1):
+      bootconfig: Fix to prevent warning message if no bootconfig option
+
+Matteo Croce (1):
+      samples: bpf: Fix build error
+
+Matthieu Baerts (1):
+      selftests: mptcp: pm: rm the right tmp file
+
+Max Krummenacher (4):
+      arm64: defconfig: DRM_DUMB_VGA_DAC: follow changed config symbol name
+      arm64: defconfig: add DRM_DISPLAY_CONNECTOR
+      arm64: defconfig: ARCH_R8A7795: follow changed config symbol name
+      arm64: defconfig: add MEDIA_PLATFORM_SUPPORT
+
+Michael Ellerman (3):
+      powerpc/64s: Fix unrecoverable SLB crashes due to preemption check
+      selftests/lkdtm: Don't clear dmesg when running tests
+      selftests/lkdtm: Use grep -E instead of egrep
+
+Michael S. Tsirkin (1):
+      virtio_net: fix lockdep warning on 32 bit
+
+Michael Walle (2):
+      dt-bindings: dma: fsl-edma: fix ls1028a-edma compatible
+      arm64: dts: ls1028a: add "fsl,vf610-edma" compatible
+
+Michal Vok=C3=A1=C4=8D (1):
+      ARM: dts: imx6dl-yapp4: Fix Ursa board Ethernet connection
+
+Mike Marciniszyn (1):
+      IB/hfi1: Fix another case where pq is left on waitlist
+
+Mike Pozulp (1):
+      ALSA: hda/realtek: Add quirk for Samsung Notebook
+
+Nayna Jain (1):
+      powerpc/ima: Fix secure boot rules in ima arch policy
+
+Neil Armstrong (4):
+      arm64: dts: meson-g12b-ugoos-am6: fix usb vbus-supply
+      arm64: dts: meson-g12-common: fix dwc2 clock names
+      arm64: dts: meson-g12b-khadas-vim3: add missing frddr_a status proper=
+ty
+      arm64: dts: meson-g12: remove spurious blank line
+
+NeilBrown (1):
+      SUNRPC: fix use-after-free in rpc_free_client_work()
+
+Nicholas Kazlauskas (1):
+      drm/amd/display: Fix vblank and pageflip event handling for FreeSync
+
+Nicholas Piggin (4):
+      powerpc/uaccess: Evaluate macro arguments once, before user
+access is allowed
+      powerpc/64/kuap: Move kuap checks out of MSR[RI]=3D0 regions of exit =
+code
+      powerpc/64s/kuap: Restore AMR in system reset exception
+      powerpc/64s/kuap: Restore AMR in fast_interrupt_return
+
+Olga Kornievskaia (1):
+      NFSv3: fix rpc receive buffer size for MOUNT call
+
+Oliver Neukum (1):
+      usb: hso: correct debug message
+
+Pablo Neira Ayuso (1):
+      netfilter: flowtable: set NF_FLOW_TEARDOWN flag on entry expiration
+
+Paolo Abeni (3):
+      mptcp: set correct vfs info for subflows
+      net: ipv4: really enforce backoff for redirects
+      netlabel: cope with NULL catmap
+
+Paolo Bonzini (5):
+      KVM: x86: fix DR6 delivery for various cases of #DB injection
+      KVM: nSVM: trap #DB and #BP to userspace if guest debugging is on
+      KVM: SVM: keep DR6 synchronized with vcpu->arch.dr6
+      KVM: x86, SVM: isolate vcpu->arch.dr6 from vmcb->save.dr6
+      KVM: VMX: pass correct DR6 for GD userspace exit
+
+Paul Blakey (1):
+      netfilter: flowtable: Add pending bit for offload work
+
+Pavel Begunkov (1):
+      io_uring: fix zero len do_splice()
+
+Peter Chen (1):
+      usb: cdns3: gadget: prev_req->trb is NULL for ep0
+
+Peter Jones (1):
+      Make the "Reducing compressed framebufer size" message be DRM_INFO_ON=
+CE()
+
+Peter Xu (5):
+      KVM: X86: Declare KVM_CAP_SET_GUEST_DEBUG properly
+      KVM: X86: Set RTM for DB_VECTOR too for KVM_EXIT_DEBUG
+      KVM: X86: Fix single-step with KVM_SET_GUEST_DEBUG
+      KVM: selftests: Add KVM_SET_GUEST_DEBUG test
+      mm/gup: fix fixup_user_fault() on multiple retries
+
+Phil Sutter (1):
+      netfilter: nft_set_rbtree: Add missing expired checks
+
+Po-Hsu Lin (1):
+      selftests/ftrace: mark irqsoff_tracer.tc test as unresolved if
+the test module does not exist
+
+Potnuri Bharat Teja (1):
+      RDMA/iw_cxgb4: Fix incorrect function parameters
+
+Prashant Malani (1):
+      usb: typec: mux: intel: Fix DP_HPD_LVL bit field
+
+Rafael J. Wysocki (1):
+      ACPI: EC: PM: Avoid premature returns from acpi_s2idle_wake()
+
+Raul E Rangel (1):
+      mmc: sdhci-acpi: Add SDHCI_QUIRK2_BROKEN_64_BIT_DMA for AMDI0040
+
+Ricardo Ca=C3=B1uelo (3):
+      arm64: dts: renesas: Make hdmi encoder nodes compliant with DT bindin=
+gs
+      ARM: dts: renesas: Make hdmi encoder nodes compliant with DT bindings
+      ARM: dts: iwg20d-q7-dbcm-ca: Remove unneeded properties in hdmi@39
+
+Rikard Falkeborn (1):
+      usb: mtu3: constify struct debugfs_reg32
+
+Robin Murphy (2):
+      arm64: dts: rockchip: Correct PMU compatibles for PX30 and RK3308
+      arm64: dts: rockchip: Fix Pinebook Pro FUSB302 interrupt
+
+Roi Dayan (1):
+      netfilter: flowtable: Remove WQ_MEM_RECLAIM from workqueue
+
+Roman Penyaev (1):
+      epoll: call final ep_events_available() check under the lock
+
+Samu Nuutamo (1):
+      hwmon: (da9052) Synchronize access with mfd
+
+Samuel Holland (2):
+      arm64: dts: allwinner: a64: pinetab: Fix cpvdd supply name
+      arm64: dts: allwinner: a64: Remove unused SPDIF sound card
+
+Samuel Zou (1):
+      usb: gadget: udc: atmel: Make some symbols static
+
+Sarthak Garg (1):
+      mmc: core: Fix recursive locking issue in CQE recovery path
+
+Shannon Nelson (2):
+      ionic: leave netdev mac alone after fw-upgrade
+      ionic: call ionic_port_init after fw-upgrade
+
+Shengjiu Wang (1):
+      arm64: dts: freescale: imx8mp: update input_val for AUDIOMIX_BIT_STRE=
+AM
+
+Simon Ser (1):
+      drm/amd/display: add basic atomic check for cursor plane
+
+Sriharsha Allenki (1):
+      usb: xhci: Fix NULL pointer dereference when enqueuing trbs from
+urb sg list
+
+Srinivas Kandagatla (3):
+      arm64: qcom: c630: fix asm dai setup
+      arm64: dts: qcom: db845c: fix asm dai setup
+      arm64: dts: qcom: db820c: fix audio configuration
+
+Stephen Warren (1):
+      gpio: tegra: mask GPIO IRQs during IRQ shutdown
+
+Steve French (1):
+      cifs: Fix null pointer check in cifs_read
+
+Steven Rostedt (VMware) (5):
+      tools/bootconfig: Fix apply_xbc() to return zero on success
+      tracing: Wait for preempt irq delay thread to execute
+      x86/ftrace: Have ftrace trampolines turn read-only at the end of
+system boot up
+      ring-buffer: Don't deactivate the ring buffer on failed iterator read=
+s
+      ring-buffer: Remove all BUG() calls
+
+Sudip Mukherjee (1):
+      RDMA/rxe: Always return ERR_PTR from rxe_create_mmap_info()
+
+Sultan Alsawaf (1):
+      drm/i915: Don't enable WaIncreaseLatencyIPCEnabled when IPC is disabl=
+ed
+
+Sumanth Korikkar (1):
+      libbpf: Fix register naming in PT_REGS s390 macros
+
+Suravee Suthikulpanit (2):
+      KVM: Introduce kvm_make_all_cpus_request_except()
+      KVM: SVM: Disable AVIC before setting V_IRQ
+
+Takashi Iwai (3):
+      ALSA: rawmidi: Fix racy buffer resize under concurrent accesses
+      ALSA: hda/realtek - Add COEF workaround for ASUS ZenBook UX431DA
+      ALSA: hda/realtek - Limit int mic boost for Thinkpad T530
+
+Takashi Sakamoto (1):
+      ALSA: firewire-lib: fix 'function sizeof not defined' error of
+tracepoints format
+
+Tero Kristo (3):
+      clk: ti: clkctrl: Fix Bad of_node_put within clkctrl_get_name
+      clk: ti: am33xx: fix RTC clock parent
+      clk: ti: clkctrl: convert subclocks to use proper names also
+
+Thierry Reding (4):
+      drm/tegra: Fix SMMU support on Tegra124 and Tegra210
+      gpu: host1x: Use SMMU on Tegra124 and Tegra210
+      usb: gadget: tegra-xudc: Fix idle suspend/resume
+      clk: tegra: Fix initial rate for pll_a on Tegra124
+
+Tobias Schramm (2):
+      arm64: dts: rockchip: fix inverted headphone detection on Pinebook Pr=
+o
+      arm64: dts: rockchip: enable DC charger detection pullup on Pinebook =
+Pro
+
+Tom St Denis (1):
+      drm/amd/amdgpu: add raven1 part to the gfxoff quirk list
+
+Tony Lindgren (2):
+      ARM: dts: omap4-droid4: Fix flakey wlan by disabling internal
+pull for gpio
+      ARM: dts: omap4-droid4: Fix occasional lost wakeirq for uart1
+
+Trond Myklebust (2):
+      NFS: Don't use RPC_TASK_CRED_NOREF with delegreturn
+      NFS/pnfs: Don't use RPC_TASK_CRED_NOREF with pnfs
+
+Tuong Lien (3):
+      tipc: fix large latency in smart Nagle streaming
+      tipc: fix memory leak in service subscripting
+      tipc: fix failed service subscription deletion
+
+Ursula Braun (2):
+      MAINTAINERS: add Karsten Graul as S390 NETWORK DRIVERS maintainer
+      MAINTAINERS: another add of Karsten Graul for S390 networking
+
+Vasily Averin (1):
+      ipc/util.c: sysvipc_find_ipc() incorrectly updates position index
+
+Veerabhadrarao Badiganti (1):
+      mmc: core: Check request type before completing the request
+
+Venkata Narendra Kumar Gutta (1):
+      pinctrl: qcom: Add affinity callbacks to msmgpio IRQ chip
+
+Vincent Minet (1):
+      umh: fix memory leak on execve failure
+
+Vinod Koul (1):
+      net: stmmac: fix num_por initialization
+
+Wang Wenhu (1):
+      drivers: ipa: fix typos for ipa_smp2p structure doc
+
+Wei Yongjun (6):
+      bpf: Fix error return code in map_lookup_and_delete_elem()
+      nfp: abm: fix error return code in nfp_abm_vnic_alloc()
+      octeontx2-vf: Fix error return code in otx2vf_probe()
+      usb: gadget: legacy: fix error return code in cdc_bind()
+      usb: gadget: legacy: fix error return code in gncm_bind()
+      s390/ism: fix error return code in ism_probe()
+
+Wolfram Sang (1):
+      char: ipmi: convert to use i2c_new_client_device()
+
+Xiyu Yang (1):
+      bpf: Fix sk_psock refcnt leak when receiving message
+
+Yafang Shao (1):
+      mm, memcg: fix inconsistent oom event behavior
+
+Yonghong Song (2):
+      bpf: Enforce returning 0 for fentry/fexit progs
+      selftests/bpf: Enforce returning 0 for fentry/fexit programs
+
+Yoshihiro Shimoda (1):
+      arm64: dts: renesas: r8a77980: Fix IPMMU VIP[01] nodes
+
+Zefan Li (1):
+      netprio_cgroup: Fix unlimited memory leak of v2 cgroups
+
+Zhenyu Wang (1):
+      drm/i915/gvt: Fix kernel oops for 3-level ppgtt guest
