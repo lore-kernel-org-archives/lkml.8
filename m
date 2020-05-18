@@ -2,53 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF3CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6989EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D04920890
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42588207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823535;
-	bh=K0nTKFYR4erZ7CrFK5RO8VsqlyURu8lK5DXwvEtK5Ag=;
+	s=default; t=1589823537;
+	bh=+DhRDDaqz+WFGKxK71hc3s0l/CkV/hBF2GDGz5ad0IE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iEJ0wzwnLB+qVJc3g6x/BlUTa0UIPpLQ6ZiUvLSFkW8vluVFmDsXsSrtlDMK2BogP
-	 tSSD8uzN9UwPrbTIZdyyzjEbayxs+V8/MTI0NaIgwJV2TKyXR5lSNDUjzoVa86jsL6
-	 d6uWrxRu2PoVjLQ/NVwq2aMzJAoDjQFtzOV+DYTE=
+	b=YrUbGN24XZGM4zlknHLj6a3cGdZA15IR4GgQUykSYzLfGjexwOb1tru5v0iIUS0xZ
+	 QFlRk3kLBZlum3yjT4Y2m2Z1Jac8s5k5thlsclzTY+rNYoTFZdVIiMw98bFAKVc6sU
+	 Kk+j/8O2tfYn3xXnOXWa+FUB6nzplfAAt4W/gdD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgERRiy (ORCPT
+        id S1728654AbgERRi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:38:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33168 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:38:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728621AbgERRiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:38:51 -0400
+        id S1728635AbgERRiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:38:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC66820874;
-        Mon, 18 May 2020 17:38:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ADC020888;
+        Mon, 18 May 2020 17:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823531;
-        bh=K0nTKFYR4erZ7CrFK5RO8VsqlyURu8lK5DXwvEtK5Ag=;
+        s=default; t=1589823533;
+        bh=+DhRDDaqz+WFGKxK71hc3s0l/CkV/hBF2GDGz5ad0IE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BsYlhIuXDQVb9gDe7UIT6IxhiXTcih3wr5I4Odzq4zcG4PqknwmJ6LYhY4JLQ6nMO
-         JGt5YRJBkwqSGKaOI/+8qORN5btfMsp8jfSlvXFbDMbSj+OCHX86a5cxAkT0wVGqIN
-         zqGpMPDlY9bTk44TCgOA8d0Fvue41QeeayRwzIWQ=
+        b=IlDusEBOWSG5l6hDtVLQ2rwA+Fl/iZeV540OEznTIpG9xJgDoYbQB2wA2TVKaVOH9
+         jnhyxIxAqCAvzuyqV2DBIc8PbtLLLksEXPo9Wbdut/ZJ9YDvNpU4o78BHY2DOodlyz
+         QcknyRtewI8s5R9Df2dX7uJi0CRMvS6P34V7Dfwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Shijie Luo <luoshijie1@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org,
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        "David S. Miller" <davem@davemloft.net>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 20/86] ext4: add cond_resched() to ext4_protect_reserved_inode
-Date:   Mon, 18 May 2020 19:35:51 +0200
-Message-Id: <20200518173454.557562877@linuxfoundation.org>
+Subject: [PATCH 4.4 21/86] net: ipv6: add net argument to ip6_dst_lookup_flow
+Date:   Mon, 18 May 2020 19:35:52 +0200
+Message-Id: <20200518173454.753308245@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -61,64 +60,224 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shijie Luo <luoshijie1@huawei.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-commit af133ade9a40794a37104ecbcc2827c0ea373a3c upstream.
+commit c4e85f73afb6384123e5ef1bba3315b2e3ad031e upstream.
 
-When journal size is set too big by "mkfs.ext4 -J size=", or when
-we mount a crafted image to make journal inode->i_size too big,
-the loop, "while (i < num)", holds cpu too long. This could cause
-soft lockup.
+This will be used in the conversion of ipv6_stub to ip6_dst_lookup_flow,
+as some modules currently pass a net argument without a socket to
+ip6_dst_lookup. This is equivalent to commit 343d60aada5a ("ipv6: change
+ipv6_stub_impl.ipv6_dst_lookup to take net argument").
 
-[  529.357541] Call trace:
-[  529.357551]  dump_backtrace+0x0/0x198
-[  529.357555]  show_stack+0x24/0x30
-[  529.357562]  dump_stack+0xa4/0xcc
-[  529.357568]  watchdog_timer_fn+0x300/0x3e8
-[  529.357574]  __hrtimer_run_queues+0x114/0x358
-[  529.357576]  hrtimer_interrupt+0x104/0x2d8
-[  529.357580]  arch_timer_handler_virt+0x38/0x58
-[  529.357584]  handle_percpu_devid_irq+0x90/0x248
-[  529.357588]  generic_handle_irq+0x34/0x50
-[  529.357590]  __handle_domain_irq+0x68/0xc0
-[  529.357593]  gic_handle_irq+0x6c/0x150
-[  529.357595]  el1_irq+0xb8/0x140
-[  529.357599]  __ll_sc_atomic_add_return_acquire+0x14/0x20
-[  529.357668]  ext4_map_blocks+0x64/0x5c0 [ext4]
-[  529.357693]  ext4_setup_system_zone+0x330/0x458 [ext4]
-[  529.357717]  ext4_fill_super+0x2170/0x2ba8 [ext4]
-[  529.357722]  mount_bdev+0x1a8/0x1e8
-[  529.357746]  ext4_mount+0x44/0x58 [ext4]
-[  529.357748]  mount_fs+0x50/0x170
-[  529.357752]  vfs_kern_mount.part.9+0x54/0x188
-[  529.357755]  do_mount+0x5ac/0xd78
-[  529.357758]  ksys_mount+0x9c/0x118
-[  529.357760]  __arm64_sys_mount+0x28/0x38
-[  529.357764]  el0_svc_common+0x78/0x130
-[  529.357766]  el0_svc_handler+0x38/0x78
-[  529.357769]  el0_svc+0x8/0xc
-[  541.356516] watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [mount:18674]
-
-Link: https://lore.kernel.org/r/20200211011752.29242-1-luoshijie1@huawei.com
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Shijie Luo <luoshijie1@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 4.4: adjust context]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/ext4/block_validity.c |    1 +
- 1 file changed, 1 insertion(+)
+ include/net/ipv6.h               |    2 +-
+ net/dccp/ipv6.c                  |    6 +++---
+ net/ipv6/af_inet6.c              |    2 +-
+ net/ipv6/datagram.c              |    2 +-
+ net/ipv6/inet6_connection_sock.c |    4 ++--
+ net/ipv6/ip6_output.c            |    8 ++++----
+ net/ipv6/raw.c                   |    2 +-
+ net/ipv6/syncookies.c            |    2 +-
+ net/ipv6/tcp_ipv6.c              |    4 ++--
+ net/l2tp/l2tp_ip6.c              |    2 +-
+ net/sctp/ipv6.c                  |    4 ++--
+ 11 files changed, 19 insertions(+), 19 deletions(-)
 
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -152,6 +152,7 @@ static int ext4_protect_reserved_inode(s
- 		return PTR_ERR(inode);
- 	num = (inode->i_size + sb->s_blocksize - 1) >> sb->s_blocksize_bits;
- 	while (i < num) {
-+		cond_resched();
- 		map.m_lblk = i;
- 		map.m_len = num - i;
- 		n = ext4_map_blocks(NULL, inode, &map, 0);
+--- a/include/net/ipv6.h
++++ b/include/net/ipv6.h
+@@ -853,7 +853,7 @@ static inline struct sk_buff *ip6_finish
+ 
+ int ip6_dst_lookup(struct net *net, struct sock *sk, struct dst_entry **dst,
+ 		   struct flowi6 *fl6);
+-struct dst_entry *ip6_dst_lookup_flow(const struct sock *sk, struct flowi6 *fl6,
++struct dst_entry *ip6_dst_lookup_flow(struct net *net, const struct sock *sk, struct flowi6 *fl6,
+ 				      const struct in6_addr *final_dst);
+ struct dst_entry *ip6_sk_dst_lookup_flow(struct sock *sk, struct flowi6 *fl6,
+ 					 const struct in6_addr *final_dst);
+--- a/net/dccp/ipv6.c
++++ b/net/dccp/ipv6.c
+@@ -209,7 +209,7 @@ static int dccp_v6_send_response(const s
+ 	final_p = fl6_update_dst(&fl6, rcu_dereference(np->opt), &final);
+ 	rcu_read_unlock();
+ 
+-	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 	if (IS_ERR(dst)) {
+ 		err = PTR_ERR(dst);
+ 		dst = NULL;
+@@ -276,7 +276,7 @@ static void dccp_v6_ctl_send_reset(const
+ 	security_skb_classify_flow(rxskb, flowi6_to_flowi(&fl6));
+ 
+ 	/* sk = NULL, but it is safe for now. RST socket required. */
+-	dst = ip6_dst_lookup_flow(ctl_sk, &fl6, NULL);
++	dst = ip6_dst_lookup_flow(sock_net(ctl_sk), ctl_sk, &fl6, NULL);
+ 	if (!IS_ERR(dst)) {
+ 		skb_dst_set(skb, dst);
+ 		ip6_xmit(ctl_sk, skb, &fl6, NULL, 0);
+@@ -879,7 +879,7 @@ static int dccp_v6_connect(struct sock *
+ 	opt = rcu_dereference_protected(np->opt, sock_owned_by_user(sk));
+ 	final_p = fl6_update_dst(&fl6, opt, &final);
+ 
+-	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 	if (IS_ERR(dst)) {
+ 		err = PTR_ERR(dst);
+ 		goto failure;
+--- a/net/ipv6/af_inet6.c
++++ b/net/ipv6/af_inet6.c
+@@ -683,7 +683,7 @@ int inet6_sk_rebuild_header(struct sock
+ 					 &final);
+ 		rcu_read_unlock();
+ 
+-		dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++		dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 		if (IS_ERR(dst)) {
+ 			sk->sk_route_caps = 0;
+ 			sk->sk_err_soft = -PTR_ERR(dst);
+--- a/net/ipv6/datagram.c
++++ b/net/ipv6/datagram.c
+@@ -179,7 +179,7 @@ ipv4_connected:
+ 	final_p = fl6_update_dst(&fl6, opt, &final);
+ 	rcu_read_unlock();
+ 
+-	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 	err = 0;
+ 	if (IS_ERR(dst)) {
+ 		err = PTR_ERR(dst);
+--- a/net/ipv6/inet6_connection_sock.c
++++ b/net/ipv6/inet6_connection_sock.c
+@@ -88,7 +88,7 @@ struct dst_entry *inet6_csk_route_req(co
+ 	fl6->fl6_sport = htons(ireq->ir_num);
+ 	security_req_classify_flow(req, flowi6_to_flowi(fl6));
+ 
+-	dst = ip6_dst_lookup_flow(sk, fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_p);
+ 	if (IS_ERR(dst))
+ 		return NULL;
+ 
+@@ -142,7 +142,7 @@ static struct dst_entry *inet6_csk_route
+ 
+ 	dst = __inet6_csk_dst_check(sk, np->dst_cookie);
+ 	if (!dst) {
+-		dst = ip6_dst_lookup_flow(sk, fl6, final_p);
++		dst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_p);
+ 
+ 		if (!IS_ERR(dst))
+ 			ip6_dst_store(sk, dst, NULL, NULL);
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -1057,13 +1057,13 @@ EXPORT_SYMBOL_GPL(ip6_dst_lookup);
+  *	It returns a valid dst pointer on success, or a pointer encoded
+  *	error code.
+  */
+-struct dst_entry *ip6_dst_lookup_flow(const struct sock *sk, struct flowi6 *fl6,
++struct dst_entry *ip6_dst_lookup_flow(struct net *net, const struct sock *sk, struct flowi6 *fl6,
+ 				      const struct in6_addr *final_dst)
+ {
+ 	struct dst_entry *dst = NULL;
+ 	int err;
+ 
+-	err = ip6_dst_lookup_tail(sock_net(sk), sk, &dst, fl6);
++	err = ip6_dst_lookup_tail(net, sk, &dst, fl6);
+ 	if (err)
+ 		return ERR_PTR(err);
+ 	if (final_dst)
+@@ -1071,7 +1071,7 @@ struct dst_entry *ip6_dst_lookup_flow(co
+ 	if (!fl6->flowi6_oif)
+ 		fl6->flowi6_oif = l3mdev_fib_oif(dst->dev);
+ 
+-	return xfrm_lookup_route(sock_net(sk), dst, flowi6_to_flowi(fl6), sk, 0);
++	return xfrm_lookup_route(net, dst, flowi6_to_flowi(fl6), sk, 0);
+ }
+ EXPORT_SYMBOL_GPL(ip6_dst_lookup_flow);
+ 
+@@ -1096,7 +1096,7 @@ struct dst_entry *ip6_sk_dst_lookup_flow
+ 
+ 	dst = ip6_sk_dst_check(sk, dst, fl6);
+ 	if (!dst)
+-		dst = ip6_dst_lookup_flow(sk, fl6, final_dst);
++		dst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_dst);
+ 
+ 	return dst;
+ }
+--- a/net/ipv6/raw.c
++++ b/net/ipv6/raw.c
+@@ -889,7 +889,7 @@ static int rawv6_sendmsg(struct sock *sk
+ 	if (hdrincl)
+ 		fl6.flowi6_flags |= FLOWI_FLAG_KNOWN_NH;
+ 
+-	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 	if (IS_ERR(dst)) {
+ 		err = PTR_ERR(dst);
+ 		goto out;
+--- a/net/ipv6/syncookies.c
++++ b/net/ipv6/syncookies.c
+@@ -231,7 +231,7 @@ struct sock *cookie_v6_check(struct sock
+ 		fl6.fl6_sport = inet_sk(sk)->inet_sport;
+ 		security_req_classify_flow(req, flowi6_to_flowi(&fl6));
+ 
+-		dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++		dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 		if (IS_ERR(dst))
+ 			goto out_free;
+ 	}
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -245,7 +245,7 @@ static int tcp_v6_connect(struct sock *s
+ 
+ 	security_sk_classify_flow(sk, flowi6_to_flowi(&fl6));
+ 
+-	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 	if (IS_ERR(dst)) {
+ 		err = PTR_ERR(dst);
+ 		goto failure;
+@@ -831,7 +831,7 @@ static void tcp_v6_send_response(const s
+ 	 * Underlying function will use this to retrieve the network
+ 	 * namespace
+ 	 */
+-	dst = ip6_dst_lookup_flow(ctl_sk, &fl6, NULL);
++	dst = ip6_dst_lookup_flow(sock_net(ctl_sk), ctl_sk, &fl6, NULL);
+ 	if (!IS_ERR(dst)) {
+ 		skb_dst_set(buff, dst);
+ 		ip6_xmit(ctl_sk, buff, &fl6, NULL, tclass);
+--- a/net/l2tp/l2tp_ip6.c
++++ b/net/l2tp/l2tp_ip6.c
+@@ -619,7 +619,7 @@ static int l2tp_ip6_sendmsg(struct sock
+ 
+ 	security_sk_classify_flow(sk, flowi6_to_flowi(&fl6));
+ 
+-	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 	if (IS_ERR(dst)) {
+ 		err = PTR_ERR(dst);
+ 		goto out;
+--- a/net/sctp/ipv6.c
++++ b/net/sctp/ipv6.c
+@@ -268,7 +268,7 @@ static void sctp_v6_get_dst(struct sctp_
+ 	final_p = fl6_update_dst(fl6, rcu_dereference(np->opt), &final);
+ 	rcu_read_unlock();
+ 
+-	dst = ip6_dst_lookup_flow(sk, fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_p);
+ 	if (!asoc || saddr) {
+ 		t->dst = dst;
+ 		memcpy(fl, &_fl, sizeof(_fl));
+@@ -326,7 +326,7 @@ static void sctp_v6_get_dst(struct sctp_
+ 		fl6->saddr = laddr->a.v6.sin6_addr;
+ 		fl6->fl6_sport = laddr->a.v6.sin6_port;
+ 		final_p = fl6_update_dst(fl6, rcu_dereference(np->opt), &final);
+-		bdst = ip6_dst_lookup_flow(sk, fl6, final_p);
++		bdst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_p);
+ 
+ 		if (IS_ERR(bdst))
+ 			continue;
 
 
