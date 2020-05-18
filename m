@@ -2,108 +2,150 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E21C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7671C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D39B207D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B974207D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:48:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m4ug2w6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgERXri (ORCPT
+        id S1727083AbgERXsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 19:47:38 -0400
-Received: from mga18.intel.com ([134.134.136.126]:49255 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727835AbgERXri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 19:47:38 -0400
-IronPort-SDR: sdB39/SxIwmCj0lrIELXnAJyDmcHZEW8sGjT43CYpRS/MTS4xgZc80KHh8vP4NK3CC9t5wMHUS
- EQYv6v5DgXtA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 16:47:37 -0700
-IronPort-SDR: a/75CUBbMjozD92kCKohOYbINuo8CpBIovvYrJRyaHfmqmEieFFfsnNKlLmvQ6DkoJxMpBNBZm
- naLb/0VGqWXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,408,1583222400"; 
-   d="scan'208";a="342962843"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga001.jf.intel.com with ESMTP; 18 May 2020 16:47:36 -0700
-Message-ID: <075c5757d6c4d3813f7ae45288b765d76de8b6fc.camel@intel.com>
-Subject: Re: [PATCH v10 01/26] Documentation/x86: Add CET description
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Date:   Mon, 18 May 2020 16:47:42 -0700
-In-Reply-To: <0f751be6d25364c25ee4bddc425b61e626dcd942.camel@intel.com>
-References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
-         <20200429220732.31602-2-yu-cheng.yu@intel.com>
-         <b5197a8d-5d8b-e1f7-68d4-58d80261904c@intel.com>
-         <dd5b9bab31ecf247a0b4890e22bfbb486ff52001.camel@intel.com>
-         <5cc163ff9058d1b27778e5f0a016c88a3b1a1598.camel@intel.com>
-         <b0581ddc-0d99-cbcf-278e-0be55ba939a0@intel.com>
-         <44c055342bda4fb4730703f987ae35195d1d0c38.camel@intel.com>
-         <32235ffc-6e6c-fb3d-80c4-a0478e2d0e0f@intel.com>
-         <b09658f92eb66c1d1be509813939b9ed827f9cf0.camel@intel.com>
-         <631f071c-c755-a818-6a97-b333eb1fe21c@intel.com>
-         <0f751be6d25364c25ee4bddc425b61e626dcd942.camel@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Mon, 18 May 2020 19:48:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgERXsi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 19:48:38 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD2B3C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 16:48:37 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y198so4106844pfb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 16:48:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H4fzbBElXtTIr3PNPe3azlCL8R6APe5mvo9mrWeA9Ko=;
+        b=m4ug2w6HCsqkksGMVsGJZw+uKYrQYSthKHp4BL86VeRz22B2+vswCFEnaUlMDaf0ps
+         du31l4Y9wsY2zQNJgjPVkLxrOSzFiIGNbenQTiTscVKW6ZxkDvLLt3rdFq58S9DOZG89
+         SIUN9tia1+ik34l8S3fpMXgKHOis0SXrXGfyGNiLqFhWNmF8XfqEr4en7mn9YByW9deC
+         6mmLkNewqNGLdLopeMwkzGs7mzEOKf4fQQPpS7YSHe9TOhHZEL4/9S6c2mCi9XTjh8wh
+         g949a7aKhwwH6zZy8Gyq9jHQSq0fY3c/uGP2A/vM2Rc9obzsw1agauW9+qwD6efS7aAs
+         +bMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H4fzbBElXtTIr3PNPe3azlCL8R6APe5mvo9mrWeA9Ko=;
+        b=Kj0b9fs/xEUZSDKh+BtGnpJCOJ2gdGJiVgY/s7m2biksSKyFDqA4Hn2F/PkfY5H9YC
+         o9PdLrbcoSEtJGIgeDpnlmxC03qf44fngRsPoIWWlKwAW30jOcYDmkGe7EPu/ZdVZ44n
+         FxazZwijX/xksO6GEdYjvVfrj3B+7QZVE9D3dnb9vtKsy7o5s02Kbyz8wlE0nGf6/qK/
+         am77Jtai3sMV/mgYLbf26GcNJl/XofJ8XBR6I1oVWmSTdY9zFaEOAFGX1S4KPkt6mDEj
+         L2u1wpxU+CY1fLYdRpbZCaAeHAXYyUgQkcdulKWTFhyjsud8zsSYGv8L8gM14p7YUEov
+         eLGQ==
+X-Gm-Message-State: AOAM5324T9/0ktX96q3sJQjErQTu7GUINqKaizmd7iI+ksb5/uWydzI4
+        E8fo+Xwk4fSQ0LbgWVYKZV7+nFG93sKFpE+a7wsJbEXdO0s=
+X-Google-Smtp-Source: ABdhPJxdFqqXKu4BYgg/5aC2aMFOT9/yeJFsvOvYECyCq2IGjvT/ZhnBiHq2d71hY38X7l7MZxIXWOEyG7NQUcsRXtQ=
+X-Received: by 2002:a63:d010:: with SMTP id z16mr7045649pgf.381.1589845717162;
+ Mon, 18 May 2020 16:48:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200517152916.3146539-1-brgerst@gmail.com> <20200517152916.3146539-2-brgerst@gmail.com>
+In-Reply-To: <20200517152916.3146539-2-brgerst@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 18 May 2020 16:48:23 -0700
+Message-ID: <CAKwvOdmq5A-X-u7_=RGCjf6BAd=4n0B2x8H64nu5TTyze3V06w@mail.gmail.com>
+Subject: Re: [PATCH 1/7] x86/percpu: Introduce size abstraction macros
+To:     Brian Gerst <brgerst@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-15 at 19:53 -0700, Yu-cheng Yu wrote:
-> On Fri, 2020-05-15 at 16:56 -0700, Dave Hansen wrote:
-> > On 5/15/20 4:29 PM, Yu-cheng Yu wrote:
-> > > [...]
-> > > I have run them with CET enabled.  All of them pass, except for the following:
-> > > Sigreturn from 64-bit to 32-bit fails, because shadow stack is at a 64-bit
-> > > address.  This is understandable.
-> > [...]
-> > One a separate topic: You ran the selftests and one failed.  This is a
-> > *MASSIVE* warning sign.  It should minimally be described in your cover
-> > letter, and accompanied by a fix to the test case.  It is absolutely
-> > unacceptable to introduce a kernel feature that causes a test to fail.
-> > You must either fix your kernel feature or you fix the test.
-> > 
-> > This code can not be accepted until this selftests issue is rectified.
+On Sun, May 17, 2020 at 8:29 AM Brian Gerst <brgerst@gmail.com> wrote:
+>
+> In preparation for cleaning up the percpu operations, define macros for
+> abstraction based on the width of the operation.
+>
+> Signed-off-by: Brian Gerst <brgerst@gmail.com>
+> ---
+>  arch/x86/include/asm/percpu.h | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>
+> diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+> index 2278797c769d..89f918a3e99b 100644
+> --- a/arch/x86/include/asm/percpu.h
+> +++ b/arch/x86/include/asm/percpu.h
+> @@ -87,6 +87,36 @@
+>   * don't give an lvalue though). */
+>  extern void __bad_percpu_size(void);
+>
+> +#define __pcpu_type_1 u8
+> +#define __pcpu_type_2 u16
+> +#define __pcpu_type_4 u32
+> +#define __pcpu_type_8 u64
+> +
+> +#define __pcpu_cast_1(val) ((u8)((unsigned long) val))
+> +#define __pcpu_cast_2(val) ((u16)((unsigned long) val))
+> +#define __pcpu_cast_4(val) ((u32)((unsigned long) val))
+> +#define __pcpu_cast_8(val) ((u64)(val))
+> +
+> +#define __pcpu_op1_1(op, dst) op "b " dst
+> +#define __pcpu_op1_2(op, dst) op "w " dst
+> +#define __pcpu_op1_4(op, dst) op "l " dst
+> +#define __pcpu_op1_8(op, dst) op "q " dst
+> +
+> +#define __pcpu_op2_1(op, src, dst) op "b " src ", " dst
+> +#define __pcpu_op2_2(op, src, dst) op "w " src ", " dst
+> +#define __pcpu_op2_4(op, src, dst) op "l " src ", " dst
+> +#define __pcpu_op2_8(op, src, dst) op "q " src ", " dst
 
-The x86/sigreturn test constructs 32-bit ldt entries, and does sigreturn from
-64-bit to 32-bit context.  We do not have a way to construct a static 32-bit
-shadow stack.  Why do we want that?  I think we can simply run the test with CET
-disabled.
+`op1` and `op2` aren't the most descriptive, though we kind of would
+like terseness here.  I guess "op1"s have 1 operand, and "op2"s have 2
+operands.
 
-Yu-cheng
+> +
+> +#define __pcpu_reg_1(out, x) out "q" (x)
+> +#define __pcpu_reg_2(out, x) out "r" (x)
+> +#define __pcpu_reg_4(out, x) out "r" (x)
+> +#define __pcpu_reg_8(out, x) out "r" (x)
+
+I think `mod` is more descriptive than `out`, as there are modifiers.
+https://gcc.gnu.org/onlinedocs/gcc/Modifiers.html#Modifiers
+
+I don't want to bikeshed, since the naming changes potentially mean
+touching each patch.  Just food for thought in case other reviewers
+agree/disagree.  So I'll just add:
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+> +
+> +#define __pcpu_reg_imm_1(x) "qi" (x)
+> +#define __pcpu_reg_imm_2(x) "ri" (x)
+> +#define __pcpu_reg_imm_4(x) "ri" (x)
+> +#define __pcpu_reg_imm_8(x) "re" (x)
+> +
+>  #define percpu_to_op(qual, op, var, val)               \
+>  do {                                                   \
+>         typedef typeof(var) pto_T__;                    \
+> --
+> 2.25.4
+>
 
 
+-- 
+Thanks,
+~Nick Desaulniers
