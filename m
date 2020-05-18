@@ -2,161 +2,132 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCBDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A01C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF83720715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VZ/6zRNA"
+	by mail.kernel.org (Postfix) with ESMTP id 31E4C20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589824176;
+	bh=urpJaHN2EIxnumCX9RaMskzOc4V4jk6eMrt58IG4yMo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wGzuyDtZ8I2pBgapY542XMCh/hxNZx5dZgtTf9hiOHU5Dpz3zqy5TWmqAKtHPqzUk
+	 dBwY/VtZLTDaHBR2p8JO9kI3cAKuaBYOxJ3QYKyOleiITnWWhOmqVufBJma3Yv/FyR
+	 M4pq7a4rZgVgMWnNr107h7Lu3PBq68wtL55yun1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbgERRt2 (ORCPT
+        id S1729752AbgERRte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:49:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60946 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729506AbgERRtU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:49:20 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15AEEC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 10:49:20 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id r10so5175030pgv.8
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 10:49:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mBq4CNh2SzaiNVBNhEkzgkxU7yRKv+pxY1QX3ny6bNo=;
-        b=VZ/6zRNAtX7ZLlIID1QWRgdZtiIeGPTy6KpLomMn7JqqlM9TYujBoe1ZNgZVDIwquw
-         ALYqr3PEcui0ZwjYYSnWjyK6pf8VE9zmUuIuAtQFogiF0ec5vn+LTgNNgZabT18V1qGp
-         fYcHYtQePf5E8AdCeKiarqvj8k7FWkDfvIqOafYwf4u6ghZ2Va4dEK/DOYyuzoIGIp1x
-         nyn618v+L6curDrasU9mH0v11URYueVTIs5e7vyBLELrRyQyH/ZtAOW6OdrFc6E8HS/r
-         1d9QyjXSKUzE6Hd43GT/swjkdoEgDK36woYmEOjAy3Wzbmc580F9wlAufVZmlJCooCER
-         ygQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mBq4CNh2SzaiNVBNhEkzgkxU7yRKv+pxY1QX3ny6bNo=;
-        b=qazfvMXltUb9TmOO9QYMhrVUe1iU1FAF2by0XXLu7wHcCUCchx3CJSp0Zn5mIcrWdW
-         zj4Gg+fvHXFLIZyvmfz3BKa8AotZ+xL1xjXQ7jeugkrgWUadjgApEqR+ZTkp/KzlQTzU
-         5RkcyqeUY+5QhZl1ngS/SVL9ILH9i+/8I+EM5JT4BNbHFBZd4LEf0+Fqe6wHOceXNnLv
-         myvDCw+IaWM9LkwF/NAUG8g84F/3oOFCICSVmQizKrjT4HzuKoeX8By/7eY7MWgTHkOO
-         Sf+4SRzpBhPu7XSVN7W7oVKgupKOUREcZf1PFnLgBu1m84owpGYi+eE4i0jijkmJ6w5J
-         ZeMw==
-X-Gm-Message-State: AOAM531jqbf4OWiuOXJqT+4wV6xAT0AnGN4JA5pUgAu3P+ppBrdeoIww
-        3Hgt9fu4gbmv02zD3nG6zqi1qbqntrDsPsGYhZEjaQ==
-X-Google-Smtp-Source: ABdhPJxRHZLfRdK8uwwpMwsbOhVoF9vG5SJy734z8XHqMzN8eGkBO6NS7OWznhB++dzCLKoA34gxjZ8Pn9+T4BRCXLE=
-X-Received: by 2002:a63:d010:: with SMTP id z16mr5906980pgf.381.1589824159213;
- Mon, 18 May 2020 10:49:19 -0700 (PDT)
+        Mon, 18 May 2020 13:49:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729029AbgERRtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:49:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2C4620715;
+        Mon, 18 May 2020 17:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589824170;
+        bh=urpJaHN2EIxnumCX9RaMskzOc4V4jk6eMrt58IG4yMo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ffCRWEBDR/XqpQWxpIrVIRSnTMoGpdaUHkh1hFdh3D1AKs0GmYK9IGmwWCiud+C0S
+         5o8e+W5U9y8cbarROzmyr5y4ucT7jHoJl+A5yRs9EUxbijpdCzREwBQG1wMct5Rzol
+         xPKzBSayQe0RKDkfyGoUGSrvuZI1uvKbCE00dDFw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kyungtae Kim <kt0755@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 4.14 099/114] USB: gadget: fix illegal array access in binding with UDC
+Date:   Mon, 18 May 2020 19:37:11 +0200
+Message-Id: <20200518173519.497282885@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
+References: <20200518173503.033975649@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200517011732.GE24705@shao2-debian> <20200517034739.GO2869@paulmck-ThinkPad-P72>
- <CANpmjNNj37=mgrZpzX7joAwnYk-GsuiE8oOm13r48FYAK0gSQw@mail.gmail.com>
- <CANpmjNMx0+=Cac=WvHuzKb2zJvgNVvVxjo_W1wYWztywxDKeCQ@mail.gmail.com> <CANpmjNPcOHAE5d=gaD327HqxTBegf75qeN_pjoszahdk6_i5=Q@mail.gmail.com>
-In-Reply-To: <CANpmjNPcOHAE5d=gaD327HqxTBegf75qeN_pjoszahdk6_i5=Q@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 18 May 2020 10:49:08 -0700
-Message-ID: <CAKwvOd=Gi2z_NjRfpTigCCcV5kUWU7Bm7h1eHLeQ6DZCmrsR8w@mail.gmail.com>
-Subject: Re: [rcu] 2f08469563: BUG:kernel_reboot-without-warning_in_boot_stage
-To:     Marco Elver <elver@google.com>
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, LKP <lkp@lists.01.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 7:34 AM Marco Elver <elver@google.com> wrote:
->
-> On Mon, 18 May 2020 at 14:44, Marco Elver <elver@google.com> wrote:
-> >
-> > [+Cc clang-built-linux FYI]
-> >
-> > On Mon, 18 May 2020 at 12:11, Marco Elver <elver@google.com> wrote:
-> > >
-> > > On Sun, 17 May 2020 at 05:47, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > >
-> > > > On Sun, May 17, 2020 at 09:17:32AM +0800, kernel test robot wrote:
-> > > > > Greeting,
-> > > > >
-> > > > > FYI, we noticed the following commit (built with clang-11):
-> > > > >
-> > > > > commit: 2f08469563550d15cb08a60898d3549720600eee ("rcu: Mark rcu_state.ncpus to detect concurrent writes")
-> > > > > https://git.kernel.org/cgit/linux/kernel/git/paulmck/linux-rcu.git dev.2020.05.14c
-> > > > >
-> > > > > in testcase: boot
-> > > > >
-> > > > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> > > > >
-> > > > > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> > > > >
-> > > > >
-> > > > >
-> > > > >
-> > > > > If you fix the issue, kindly add following tag
-> > > > > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> > > > >
-> > > > >
-> > > > > [    0.054943] BRK [0x05204000, 0x05204fff] PGTABLE
-> > > > > [    0.061181] BRK [0x05205000, 0x05205fff] PGTABLE
-> > > > > [    0.062403] BRK [0x05206000, 0x05206fff] PGTABLE
-> > > > > [    0.065200] RAMDISK: [mem 0x7a247000-0x7fffffff]
-> > > > > [    0.067344] ACPI: Early table checksum verification disabled
-> > > > > BUG: kernel reboot-without-warning in boot stage
-> > > >
-> > > > I am having some difficulty believing that this commit is at fault given
-> > > > that the .config does not list CONFIG_KCSAN=y, but CCing Marco Elver
-> > > > for his thoughts.  Especially given that I have never built with clang-11.
-> > > >
-> > > > But this does invoke ASSERT_EXCLUSIVE_WRITER() in early boot from
-> > > > rcu_init().  Might clang-11 have objections to early use of this macro?
-> > >
-> > > The macro is a noop without KCSAN. I think the bisection went wrong.
-> > >
-> > > I am able to reproduce a reboot-without-warning when building with
-> > > Clang 11 and the provided config. I did a bisect, starting with v5.6
-> > > (good), and found this:
-> > > - Since v5.6, first bad commit is
-> > > 20e2aa812620439d010a3f78ba4e05bc0b3e2861 (Merge tag
-> > > 'perf-urgent-2020-04-12' of
-> > > git://git.kernel.org/pub/scm/linux/kernel//git/tip/tip)
-> > > - The actual commit that introduced the problem is
-> > > 2b3b76b5ec67568da4bb475d3ce8a92ef494b5de (perf/x86/intel/uncore: Add
-> > > Ice Lake server uncore support) -- reverting it fixes the problem.
->
-> Some more clues:
->
-> 1. I should have noticed that this uses CONFIG_KASAN=y.
+From: Kyungtae Kim <kt0755@gmail.com>
 
-Thanks for the report, testing, and bisection.  I don't see any
-smoking gun in the code.
-https://godbolt.org/z/qbK26r
+commit 15753588bcd4bbffae1cca33c8ced5722477fe1f upstream.
 
->
-> 2. Something about function icx_uncore_mmio_init(). Making it a noop
-> also makes the issue go away.
->
-> 3. Leaving icx_uncore_mmio_init() a noop but removing the 'static'
-> from icx_mmio_uncores also presents the issue. So this seems to be
-> something about how/where icx_mmio_uncores is allocated.
+FuzzUSB (a variant of syzkaller) found an illegal array access
+using an incorrect index while binding a gadget with UDC.
 
-Can you share the disassembly of icx_uncore_mmio_init() in the given
-configuration?
--- 
-Thanks,
-~Nick Desaulniers
+Reference: https://www.spinics.net/lists/linux-usb/msg194331.html
+
+This bug occurs when a size variable used for a buffer
+is misused to access its strcpy-ed buffer.
+Given a buffer along with its size variable (taken from user input),
+from which, a new buffer is created using kstrdup().
+Due to the original buffer containing 0 value in the middle,
+the size of the kstrdup-ed buffer becomes smaller than that of the original.
+So accessing the kstrdup-ed buffer with the same size variable
+triggers memory access violation.
+
+The fix makes sure no zero value in the buffer,
+by comparing the strlen() of the orignal buffer with the size variable,
+so that the access to the kstrdup-ed buffer is safe.
+
+BUG: KASAN: slab-out-of-bounds in gadget_dev_desc_UDC_store+0x1ba/0x200
+drivers/usb/gadget/configfs.c:266
+Read of size 1 at addr ffff88806a55dd7e by task syz-executor.0/17208
+
+CPU: 2 PID: 17208 Comm: syz-executor.0 Not tainted 5.6.8 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
+ __kasan_report+0x131/0x1b0 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+ gadget_dev_desc_UDC_store+0x1ba/0x200 drivers/usb/gadget/configfs.c:266
+ flush_write_buffer fs/configfs/file.c:251 [inline]
+ configfs_write_file+0x2f1/0x4c0 fs/configfs/file.c:283
+ __vfs_write+0x85/0x110 fs/read_write.c:494
+ vfs_write+0x1cd/0x510 fs/read_write.c:558
+ ksys_write+0x18a/0x220 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+ do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Signed-off-by: Kyungtae Kim <kt0755@gmail.com>
+Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200510054326.GA19198@pizza01
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/gadget/configfs.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/drivers/usb/gadget/configfs.c
++++ b/drivers/usb/gadget/configfs.c
+@@ -259,6 +259,9 @@ static ssize_t gadget_dev_desc_UDC_store
+ 	char *name;
+ 	int ret;
+ 
++	if (strlen(page) < len)
++		return -EOVERFLOW;
++
+ 	name = kstrdup(page, GFP_KERNEL);
+ 	if (!name)
+ 		return -ENOMEM;
+
+
