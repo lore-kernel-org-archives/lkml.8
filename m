@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C250C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB73C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37A320657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5AC92065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826480;
-	bh=WdLbPh1jVdQM0eslIz62960jia9I6v4aRFvUL1SGIvA=;
+	s=default; t=1589826482;
+	bh=tW5Leq1Qq6QR+j8XMpLk7wPERRod4XTAdx7n1DmgJq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tYDWZ2a/+4PqHT/YO4AxK8JcgU9U5yyxzbBSh5Nu4r+7dq5Bd9uixvml2ZYGV8frm
-	 2U6/oX5/OBVe4R8QVc9DJ+rl6Qv6UoqTwKw9KN/HD2hPW0f9sAUTu8j2ZLdo0WCGpA
-	 NJ54RgyfN9yW4z3Kl1SvnXMzVSTjWnANTQDR8P7U=
+	b=d0wjBhaLbc+Zf/YhW2LL20nOqdV848odKfS/SakXnhvWSJE9jGCKJ30jAKjPNwza8
+	 MYqc07Td7zzL1a6jym0GtnNQ1tU8WD6VQ0r811FAAOfwapUh5Zfi3TMtDV0bfpIkIJ
+	 pGGkzHnlJTZh9Apt3bsjoYJfCofAeRN2jdkxObVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387967AbgERS17 (ORCPT
+        id S1729555AbgERRnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:27:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41042 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:43:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729576AbgERRn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:43:26 -0400
+        id S1729510AbgERRnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:43:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4D7320657;
-        Mon, 18 May 2020 17:43:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F50520872;
+        Mon, 18 May 2020 17:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823806;
-        bh=WdLbPh1jVdQM0eslIz62960jia9I6v4aRFvUL1SGIvA=;
+        s=default; t=1589823781;
+        bh=tW5Leq1Qq6QR+j8XMpLk7wPERRod4XTAdx7n1DmgJq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a/8xBhhhxTE0JOz41GxIEzYHvZGXsEMgOkj6rgFlNsz/AdCS2BZHNbvweZKNvJ9eu
-         tq7240sr1uBmzp7e0H94ToHCgyibz5JN0Y6SOibsDePw4LyQ2c0PqAxGRgLgRBEyXV
-         T1suOf5TV0KIo0ovmBFAbqVF+UM1IC8O1aK7W0DI=
+        b=IIMNAKIUbIm3DrvN+Jse21ieZGef/zuRkvnBSUqS2qlOp52HlppvQjezmt6RzfNX1
+         boEcJuXHsBvYHuOBY/y3S497sWLLj5Utx5FmvOdwWSiYqMVfjQvWyb9HH2W8bqskJ2
+         8k25rtQg/5rafxk3QSTl1iXsMuFTMMUrhBVXPDxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        stable@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 43/90] net: moxa: Fix a potential double free_irq()
-Date:   Mon, 18 May 2020 19:36:21 +0200
-Message-Id: <20200518173500.040306716@linuxfoundation.org>
+Subject: [PATCH 4.9 34/90] ptp: do not explicitly set drvdata in ptp_clock_register()
+Date:   Mon, 18 May 2020 19:36:12 +0200
+Message-Id: <20200518173458.048509640@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -61,34 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit ee8d2267f0e39a1bfd95532da3a6405004114b27 ]
+commit 882f312dc0751c973db26478f07f082c584d16aa upstream.
 
-Should an irq requested with 'devm_request_irq' be released explicitly,
-it should be done by 'devm_free_irq()', not 'free_irq()'.
+We do not need explicitly call dev_set_drvdata(), as it is done for us by
+device_create().
 
-Fixes: 6c821bd9edc9 ("net: Add MOXA ART SoCs ethernet driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/moxa/moxart_ether.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ptp/ptp_clock.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/moxa/moxart_ether.c b/drivers/net/ethernet/moxa/moxart_ether.c
-index 0622fd03941b8..6fe61d9343cb8 100644
---- a/drivers/net/ethernet/moxa/moxart_ether.c
-+++ b/drivers/net/ethernet/moxa/moxart_ether.c
-@@ -571,7 +571,7 @@ static int moxart_remove(struct platform_device *pdev)
- 	struct net_device *ndev = platform_get_drvdata(pdev);
+diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
+index 2aa5b37cc6d24..08f304b83ad13 100644
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -220,8 +220,6 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
+ 	if (IS_ERR(ptp->dev))
+ 		goto no_device;
  
- 	unregister_netdev(ndev);
--	free_irq(ndev->irq, ndev);
-+	devm_free_irq(&pdev->dev, ndev->irq, ndev);
- 	moxart_mac_free_memory(ndev);
- 	free_netdev(ndev);
- 
+-	dev_set_drvdata(ptp->dev, ptp);
+-
+ 	err = ptp_populate_sysfs(ptp);
+ 	if (err)
+ 		goto no_sysfs;
 -- 
 2.20.1
 
