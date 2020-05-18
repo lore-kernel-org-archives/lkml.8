@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3ABFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64875C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2A9620671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F1D20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825341;
-	bh=Fgeb+u4i6DCoFrOwLCfwV3SRX91iUUYUiUQXuTT70DE=;
+	s=default; t=1589825347;
+	bh=+DcNASjsA2v1ITdZ/hawtXHmtd2lUeMmvAxI3Pnpl5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KWdhVrkf+wVd9myWUpZKoREJrRnzNWWjdaAe0adMcNXs7XQOMestZYCG7NHJdNkQe
-	 6/E/Pcsu+NEZIp8bkus//tpR8BuOhkmwdfnBGvc6AmUxwu80D4Y1pAINqCR0NiV7fg
-	 nXLG7Q9Z7w9M/2Sz7H57Y6fRwIYvX1hINnJHuSg0=
+	b=eDUdk+6RlF1KA4+uxLQfrUTlqs7GmOJCspcrtJlv8Yr8hTt3GdHT8yfozl0Jn6qbA
+	 PlTP0FaoZ0h+Rwp26uCSVUU7Eru9X1CzLeZ/irPNqnILpqRgRzXKU/ZdoOkDX9mwhb
+	 k57rY3In3Amlvie03a5V0r3YUvg7LLRUm6OQFnwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732928AbgERSJB (ORCPT
+        id S1731867AbgERSHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:09:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55716 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:07:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733260AbgERSHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:07:08 -0400
+        id S1733238AbgERSHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:07:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BEE820671;
-        Mon, 18 May 2020 18:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DBBE20897;
+        Mon, 18 May 2020 18:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825227;
-        bh=Fgeb+u4i6DCoFrOwLCfwV3SRX91iUUYUiUQXuTT70DE=;
+        s=default; t=1589825220;
+        bh=+DcNASjsA2v1ITdZ/hawtXHmtd2lUeMmvAxI3Pnpl5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aQDOAQfKUWZcU1HotGkPVhmPl1d3I5nBEVc/8ij+JPk4yUhYfA+ak0nVOf3GLoeAd
-         mZUqegeqzH0jQCT+gGwZdbhlb6eh6VlHB3u492XMngPKYrTyb4ijU8cdwTniRw7qeq
-         hsNHazrCLyErnFd13Vs8Dc/AUaFp24+o4U8A9MSw=
+        b=BlLNgPgDMAreHEUipj0yck+HJN72Wm4YQ+pbevm5dXIMXFzXc4TJXKPoC1xWjECz6
+         p8oBBTwsZhpL27p1Jv/pUyb5Cf145C/b4hmmdm83fFoqPxqGknmrcl/Q64IlBV9T9f
+         4l8Vbzh4zCCjOfPnY/xCclyMM0BwnHGSUyNVS2II=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Jan Kara <jack@suse.cz>, Rachel Sibley <rasibley@redhat.com>
-Subject: [PATCH 5.6 163/194] fanotify: fix merging marks masks with FAN_ONDIR
-Date:   Mon, 18 May 2020 19:37:33 +0200
-Message-Id: <20200518173544.796166856@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.6 178/194] arm64: dts: imx8mn: Change SDMA1 ahb clock for imx8mn
+Date:   Mon, 18 May 2020 19:37:48 +0200
+Message-Id: <20200518173546.353447019@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,67 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Adam Ford <aford173@gmail.com>
 
-commit 55bf882c7f13dda8bbe624040c6d5b4fbb812d16 upstream.
+commit 15ddc3e17aec0de4c69d595b873e184432b9791d upstream.
 
-Change the logic of FAN_ONDIR in two ways that are similar to the logic
-of FAN_EVENT_ON_CHILD, that was fixed in commit 54a307ba8d3c ("fanotify:
-fix logic of events on child"):
+Using SDMA1 with UART1 is causing a "Timeout waiting for CH0" error.
+This patch changes to ahb clock from SDMA1_ROOT to AHB which fixes the
+timeout error.
 
-1. The flag is meaningless in ignore mask
-2. The flag refers only to events in the mask of the mark where it is set
+Fixes: 6c3debcbae47 ("arm64: dts: freescale: Add i.MX8MN dtsi support")
 
-This is what the fanotify_mark.2 man page says about FAN_ONDIR:
-"Without this flag, only events for files are created."  It doesn't
-say anything about setting this flag in ignore mask to stop getting
-events on directories nor can I think of any setup where this capability
-would be useful.
-
-Currently, when marks masks are merged, the FAN_ONDIR flag set in one
-mark affects the events that are set in another mark's mask and this
-behavior causes unexpected results.  For example, a user adds a mark on a
-directory with mask FAN_ATTRIB | FAN_ONDIR and a mount mark with mask
-FAN_OPEN (without FAN_ONDIR).  An opendir() of that directory (which is
-inside that mount) generates a FAN_OPEN event even though neither of the
-marks requested to get open events on directories.
-
-Link: https://lore.kernel.org/r/20200319151022.31456-10-amir73il@gmail.com
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Cc: Rachel Sibley <rasibley@redhat.com>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/notify/fanotify/fanotify.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/notify/fanotify/fanotify.c
-+++ b/fs/notify/fanotify/fanotify.c
-@@ -172,6 +172,13 @@ static u32 fanotify_group_event_mask(str
- 			continue;
- 		mark = iter_info->marks[type];
- 		/*
-+		 * If the event is on dir and this mark doesn't care about
-+		 * events on dir, don't send it!
-+		 */
-+		if (event_mask & FS_ISDIR && !(mark->mask & FS_ISDIR))
-+			continue;
-+
-+		/*
- 		 * If the event is for a child and this mark doesn't care about
- 		 * events on a child, don't send it!
- 		 */
-@@ -203,10 +210,6 @@ static u32 fanotify_group_event_mask(str
- 		user_mask &= ~FAN_ONDIR;
- 	}
- 
--	if (event_mask & FS_ISDIR &&
--	    !(marks_mask & FS_ISDIR & ~marks_ignored_mask))
--		return 0;
--
- 	return test_mask & user_mask;
- }
- 
+--- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+@@ -661,7 +661,7 @@
+ 				reg = <0x30bd0000 0x10000>;
+ 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clk IMX8MN_CLK_SDMA1_ROOT>,
+-					 <&clk IMX8MN_CLK_SDMA1_ROOT>;
++					 <&clk IMX8MN_CLK_AHB>;
+ 				clock-names = "ipg", "ahb";
+ 				#dma-cells = <3>;
+ 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
 
 
