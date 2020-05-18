@@ -2,151 +2,114 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 686B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEC9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5295020715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E8920715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589825477;
+	bh=apGMZq366a0oOF8+eEi0umUJZjbbxo91gheL+SKekas=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Fmb46IZcQ2SiivQJvRPUQNxlKHCqZtLtrGGuAI5Q8RoMyH/B7djTNnL3gz4KCZKHd
+	 uWSBIUPzKOabcvbaVN1zFgdy3clzfOHZBSBfQsZ/SRtBBMQWnKlqklrwNU6V3dZkHS
+	 UuKtnBly85IE95RXjn9m/MiNPIsi8+AnNEytzAWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387445AbgERSLN (ORCPT
+        id S1732876AbgERSFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:11:13 -0400
-Received: from mga04.intel.com ([192.55.52.120]:52500 "EHLO mga04.intel.com"
+        Mon, 18 May 2020 14:05:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728606AbgERSLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:11:08 -0400
-IronPort-SDR: MEihRUQKPD9yLYzUOyQEKFWM725X5E1TW5wxJL26f7d7grexz9Y/SMaIpHJZCs3EXY9zAUzGC1
- OcI675kOf6IQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:11:08 -0700
-IronPort-SDR: 4PTj0JCNuHA2KBITWxMsHBG0lvanYZRK6CkXelcZuJd9rLLbOv9o5Xe4vuYLc2cXwOltPBKNMq
- LeWae4iARKuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="308177709"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 May 2020 11:11:08 -0700
-Date:   Mon, 18 May 2020 11:11:08 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH V3 07/15] arch/kunmap_atomic: Consolidate duplicate code
-Message-ID: <20200518181107.GC3025231@iweiny-DESK2.sc.intel.com>
-References: <20200507150004.1423069-1-ira.weiny@intel.com>
- <20200507150004.1423069-8-ira.weiny@intel.com>
- <20200516223306.GA161252@roeck-us.net>
- <20200518034938.GA3023182@iweiny-DESK2.sc.intel.com>
- <20200518042932.GA59205@roeck-us.net>
+        id S1732850AbgERSEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:04:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C26E4208B6;
+        Mon, 18 May 2020 18:04:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589825090;
+        bh=apGMZq366a0oOF8+eEi0umUJZjbbxo91gheL+SKekas=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BBVs4hOgG2DkT2xTV3D1pfoaGEOwXn2vxUYC+ZNCas9zwf9O0VX3zsJBwcs8OBidF
+         ++fjh8yRuo/3EnyCNi74TiZA711mf+Jq93PkrcyrqfHjNLgQWrqK5Wn1bNPrBr8Oq1
+         gdXPAo/JgBhjmEBwAVueASaxgLLEvR2WzOrPE9wE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 086/194] bpf, sockmap: msg_pop_data can incorrecty set an sge length
+Date:   Mon, 18 May 2020 19:36:16 +0200
+Message-Id: <20200518173538.855990598@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
+References: <20200518173531.455604187@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518042932.GA59205@roeck-us.net>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 09:29:32PM -0700, Guenter Roeck wrote:
-> On Sun, May 17, 2020 at 08:49:39PM -0700, Ira Weiny wrote:
-> > On Sat, May 16, 2020 at 03:33:06PM -0700, Guenter Roeck wrote:
-> > > On Thu, May 07, 2020 at 07:59:55AM -0700, ira.weiny@intel.com wrote:
-> > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > 
-> > > > Every single architecture (including !CONFIG_HIGHMEM) calls...
-> > > > 
-> > > > 	pagefault_enable();
-> > > > 	preempt_enable();
-> > > > 
-> > > > ... before returning from __kunmap_atomic().  Lift this code into the
-> > > > kunmap_atomic() macro.
-> > > > 
-> > > > While we are at it rename __kunmap_atomic() to kunmap_atomic_high() to
-> > > > be consistent.
-> > > > 
-> > > > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > This patch results in:
-> > > 
-> > > Starting init: /bin/sh exists but couldn't execute it (error -14)
-> > > 
-> > > when trying to boot microblazeel:petalogix-ml605 in qemu.
-> > 
-> > Thanks for the report.  I'm not readily seeing the issue.
-> > 
-> > Do you have a kernel config?  Specifically is CONFIG_HIGHMEM set?
-> > 
-> See below. Yes, CONFIG_HIGHMEM is set.
-> 
-> The scripts used to build and boot the image are at:
-> 
-> https://github.com/groeck/linux-build-test/tree/master/rootfs/microblazeel
-> 
-> Hope this helps,
+From: John Fastabend <john.fastabend@gmail.com>
 
-Thank you ...
+[ Upstream commit 3e104c23816220919ea1b3fd93fabe363c67c484 ]
 
-Could you try the following patch?
+When sk_msg_pop() is called where the pop operation is working on
+the end of a sge element and there is no additional trailing data
+and there _is_ data in front of pop, like the following case,
 
+   |____________a_____________|__pop__|
 
-commit 82c284b2bb74ca195dfcd35b70a175f010b9fd46 (HEAD -> lm-kmap17)
-Author: Ira Weiny <ira.weiny@intel.com>
-Date:   Mon May 18 11:01:10 2020 -0700
+We have out of order operations where we incorrectly set the pop
+variable so that instead of zero'ing pop we incorrectly leave it
+untouched, effectively. This can cause later logic to shift the
+buffers around believing it should pop extra space. The result is
+we have 'popped' more data then we expected potentially breaking
+program logic.
 
-    microblaze/kmap: Don't enable pagefault/preempt twice
-    
-    The kunmap_atomic clean up failed to remove the pagefault/preempt
-    enables on this path.
-    
-    Fixes: bee2128a09e6 ("arch/kunmap_atomic: consolidate duplicate code")
-    Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+It took us a while to hit this case because typically we pop headers
+which seem to rarely be at the end of a scatterlist elements but
+we can't rely on this.
 
-diff --git a/arch/microblaze/mm/highmem.c b/arch/microblaze/mm/highmem.c
-index ee8a422b2b76..92e0890416c9 100644
---- a/arch/microblaze/mm/highmem.c
-+++ b/arch/microblaze/mm/highmem.c
-@@ -57,11 +57,8 @@ void kunmap_atomic_high(void *kvaddr)
-        int type;
-        unsigned int idx;
+Fixes: 7246d8ed4dcce ("bpf: helper to pop data from messages")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/158861288359.14306.7654891716919968144.stgit@john-Precision-5820-Tower
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/core/filter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/core/filter.c b/net/core/filter.c
+index c180871e606d8..083fbe92662ec 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -2590,8 +2590,8 @@ BPF_CALL_4(bpf_msg_pop_data, struct sk_msg *, msg, u32, start,
+ 			}
+ 			pop = 0;
+ 		} else if (pop >= sge->length - a) {
+-			sge->length = a;
+ 			pop -= (sge->length - a);
++			sge->length = a;
+ 		}
+ 	}
  
--       if (vaddr < __fix_to_virt(FIX_KMAP_END)) {
--               pagefault_enable();
--               preempt_enable();
-+       if (vaddr < __fix_to_virt(FIX_KMAP_END))
-                return;
--       }
- 
-        type = kmap_atomic_idx();
- 
+-- 
+2.20.1
+
+
+
