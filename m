@@ -6,148 +6,169 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29689C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9067BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEEAC20756
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725E82075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:30:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgERT0k (ORCPT
+        id S1728182AbgERTaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 15:26:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727987AbgERT0j (ORCPT
+        Mon, 18 May 2020 15:30:55 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49884 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728131AbgERTaz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 15:26:39 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C924C061A0C;
-        Mon, 18 May 2020 12:26:39 -0700 (PDT)
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.93)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1jalNw-00Fhxr-7e; Mon, 18 May 2020 21:25:14 +0200
-Message-ID: <e3d978c8fa6a4075f12e843548d41e2c8ab537d1.camel@sipsolutions.net>
-Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Steve deRosier <derosier@gmail.com>
-Cc:     Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com,
-        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
-        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
-        daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        ath10k@lists.infradead.org
-Date:   Mon, 18 May 2020 21:25:09 +0200
-In-Reply-To: <20200518190930.GO11244@42.do-not-panic.com> (sfid-20200518_210935_354047_0199DB8F)
-References: <20200515212846.1347-1-mcgrof@kernel.org>
-         <20200515212846.1347-13-mcgrof@kernel.org>
-         <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
-         <20200518165154.GH11244@42.do-not-panic.com>
-         <4ad0668d-2de9-11d7-c3a1-ad2aedd0c02d@candelatech.com>
-         <20200518170934.GJ11244@42.do-not-panic.com>
-         <abf22ef3-93cb-61a4-0af2-43feac6d7930@candelatech.com>
-         <20200518171801.GL11244@42.do-not-panic.com>
-         <CALLGbR+ht2V3m5f-aUbdwEMOvbsX8ebmzdWgX4jyWTbpHrXZ0Q@mail.gmail.com>
-         <20200518190930.GO11244@42.do-not-panic.com>
-         (sfid-20200518_210935_354047_0199DB8F)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Mon, 18 May 2020 15:30:55 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 24F10803080B;
+        Mon, 18 May 2020 19:30:48 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Er_X0I5c0BGq; Mon, 18 May 2020 22:30:47 +0300 (MSK)
+Date:   Mon, 18 May 2020 22:30:46 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <linux-mips@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
+ length property
+Message-ID: <20200518193046.tud4x7i3mv44rejy@mobilestation>
+References: <20200511213531.wnywlljiulvndx6s@mobilestation>
+ <20200512090804.GR185537@smile.fi.intel.com>
+ <20200512114946.x777yb6bhe22ccn5@mobilestation>
+ <20200512123840.GY185537@smile.fi.intel.com>
+ <20200515060911.GF333670@vkoul-mobl>
+ <20200515105137.GK185537@smile.fi.intel.com>
+ <20200515105658.GR333670@vkoul-mobl>
+ <20200515111112.4umynrpgzjnca223@mobilestation>
+ <20200517174739.uis3wfievdcmtsxj@mobilestation>
+ <20200518173003.GA13764@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200518173003.GA13764@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-18 at 19:09 +0000, Luis Chamberlain wrote:
-
-> > Unfortunately a "taint" is interpreted by many users as: "your kernel
-> > is really F#*D up, you better do something about it right now."
-> > Assuming they're paying attention at all in the first place of course.
+On Mon, May 18, 2020 at 11:30:03AM -0600, Rob Herring wrote:
+> On Sun, May 17, 2020 at 08:47:39PM +0300, Serge Semin wrote:
+> > On Fri, May 15, 2020 at 02:11:13PM +0300, Serge Semin wrote:
+> > > On Fri, May 15, 2020 at 04:26:58PM +0530, Vinod Koul wrote:
+> > > > On 15-05-20, 13:51, Andy Shevchenko wrote:
+> > > > > On Fri, May 15, 2020 at 11:39:11AM +0530, Vinod Koul wrote:
+> > > > > > On 12-05-20, 15:38, Andy Shevchenko wrote:
+> > > > > > > On Tue, May 12, 2020 at 02:49:46PM +0300, Serge Semin wrote:
+> > > > > > > > On Tue, May 12, 2020 at 12:08:04PM +0300, Andy Shevchenko wrote:
+> > > > > > > > > On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
+> > > > > > > > > > On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
+> > > > > > > > > > > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
+> > > > > > > > > > > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
+> > > > > > > > > > > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
+> > > > > 
+> > > > > ...
+> > > > > 
+> > > > > > > I leave it to Rob and Vinod.
+> > > > > > > It won't break our case, so, feel free with your approach.
+> > > > > > 
+> > > > > > I agree the DT is about describing the hardware and looks like value of
+> > > > > > 1 is not allowed. If allowed it should be added..
+> > > > > 
+> > > > > It's allowed at *run time*, it's illegal in *pre-silicon stage* when
+> > > > > synthesizing the IP.
+> > > > 
+> > > > Then it should be added ..
+> > > 
+> > > Vinod, max-burst-len is "MAXimum" burst length not "run-time or current or any
+> > > other" burst length. It's a constant defined at the IP-core synthesis stage and
+> > > according to the Data Book, MAX burst length can't be 1. The allowed values are
+> > > exactly as I described in the binding [4, 8, 16, 32, ...]. MAX burst length
+> > > defines the upper limit of the run-time burst length. So setting it to 1 isn't
+> > > about describing a hardware, but using DT for the software convenience.
+> > > 
+> > > -Sergey
+> > 
+> > Vinod, to make this completely clear. According to the DW DMAC data book:
+> > - In general, run-time parameter of the DMA transaction burst length (set in
+> >   the SRC_MSIZE/DST_MSIZE fields of the channel control register) may belong
+> >   to the set [1, 4, 8, 16, 32, 64, 128, 256].
+> > - Actual upper limit of the burst length run-time parameter is limited by a
+> >   constant defined at the IP-synthesize stage (it's called DMAH_CHx_MAX_MULT_SIZE)
+> >   and this constant belongs to the set [4, 8, 16, 32, 64, 128, 256]. (See, no 1
+> >   in this set).
+> > 
+> > So the run-time burst length in a case of particular DW DMA controller belongs
+> > to the range:
+> > 1 <= SRC_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
+> > and
+> > 1 <= DST_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
+> > 
+> > See. No mater which DW DMA controller we get each of them will at least support
+> > the burst length of 1 and 4 transfer words. This is determined by design of the
+> > DW DMA controller IP since DMAH_CHx_MAX_MULT_SIZE constant set starts with 4.
+> > 
+> > In this patch I suggest to add the max-burst-len property, which specifies
+> > the upper limit for the run-time burst length. Since the maximum burst length
+> > capable to be set to the SRC_MSIZE/DST_MSIZE fields of the DMA channel control
+> > register is determined by the DMAH_CHx_MAX_MULT_SIZE constant (which can't be 1
+> > by the DW DMA IP design), max-burst-len property as being also responsible for
+> > the maximum burst length setting should be associated with DMAH_CHx_MAX_MULT_SIZE
+> > thus should belong to the same set [4, 8, 16, 32, 64, 128, 256].
+> > 
+> > So 1 shouldn't be in the enum of the max-burst-len property constraint, because
+> > hardware doesn't support such limitation by design, while setting 1 as
+> > max-burst-len would mean incorrect description of the DMA controller.
+> > 
+> > Vinod, could you take a look at the info I provided above and say your final word
+> > whether 1 should be really allowed to be in the max-burst-len enum constraints?
+> > I'll do as you say in the next version of the patchset.
 > 
-> Taint historically has been used and still is today to help rule out
-> whether or not you get support, or how you get support.
+> I generally think the synthesis time IP configuration should be implied 
+> by the compatible string which is why we have SoC specific compatible 
+> strings (Of course I dream for IP vendors to make all that discoverable 
+> which is only occasionally the case). There are exceptions to this. If 
+> one SoC has the same IP configured in different ways, then we'd probably 
+> have properties for the differences.
+
+Hm, AFAIU from what you said the IP configuration specific to a particular
+SoC must be determined by the compatible string and that configuration parameters
+should be hidden somewhere in the driver internals for instance in the platform
+data structure. In case if there are several versions of the same IP are embedded
+into the SoC, then the differences can be described by the DT properties. Right?
+If I am right, then that's weird. A lot of the currently available platforms (and
+drivers) don't follow that rule and just specify the generic IP compatible string
+and describe their IP synthesis parameters by the DT properties.
+
 > 
-> For instance, a staging driver is not supported by some upstream
-> developers, but it will be by those who help staging and Greg. TAINT_CRAP
-> cannot be even more clear.
+> As to whether h/w configuration is okay in DT, the answer is yes. The 
+> question is whether it is determined by SoC, board, OS and also who 
+> would set it and how often. Something tuned per board and independent of 
+> the OS/user is the ideal example.
+
+So does this mean that I have to allow the max-burst-len property to be 1 even
+though in accordance with the DW DMA Data Book the upper limit of the
+burst-length will never be 1, but will always start with 4? By allowing the
+upper limit to be 1 we wouldn't provide the h/w configuration (hardware has
+already been configured with maximum burst length parameter DMAH_CHx_MAX_MULT_SIZE
+on the IP synthesis stage), but would setup an artificial constraints on the
+maximum allowed burst length. Are you ok with this and 1 should be permitted
+anyway?
+
+-Sergey
+
 > 
-> So, no, it is not just about "hey your kernel is messed up", there are
-> clear support boundaries being drawn.
-
-Err, no. Those two are most definitely related. Have you looked at (most
-or some or whatever) staging drivers recently? Those contain all kinds
-of garbage that might do whatever with your kernel.
-
-Of course that's not a completely clear boundary, maybe you can find a
-driver in staging that's perfect code just not written to kernel style?
-But I find that hard to believe, in most cases.
-
-So no, it's really not about "[a] staging driver is not supported" vs.
-"your kernel is messed up". The very fact that you loaded one of those
-things might very well have messed up your kernel entirely.
-
-> These days though, I think we all admit, that firmware crashes can use
-> a better generic infrastructure for ensuring that clearly affecting-user
-> experience issues. This patch is about that *when and if these happen*,
-> we annotate it in the kernel for support pursposes.
-
-That's all fine, I just don't think it's appropriate to pretend that
-your kernel is now 'tainted' (think about the meaning of that word) when
-the firmware of some random device crashed. Heck, that could have been a
-USB device that was since unplugged. Unless the driver is complete
-garbage (hello staging again?) that really should have no lasting effect
-on the system itself.
-
-> Recovery without affecting user experience would be great, the taint is
-> *not* for those cases. The taint definition has:
-> 
-> + 18) ``Q`` used by device drivers to annotate that the device driver's firmware
-> +     has crashed and the device's operation has been severely affected. The    
-> +     device may be left in a crippled state, requiring full driver removal /   
-> +     addition, system reboot, or it is unclear how long recovery will take.
-> 
-> Let me know if this is not clear.
-
-It's pretty clear, but even then, first of all I doubt this is the case
-for many of the places that you've sprinkled the annotation on, and
-secondly it actually hides useful information.
-
-Regardless of the support issue, I think this hiding of information is
-also problematic.
-
-I really think we'd all be better off if you just made a sysfs file (I
-mistyped debugfs in some other email, sorry, apparently you didn't see
-the correction in time) that listed which device(s) crashed and how many
-times. That would actually be useful. Because honestly, if a random
-device crashed for some random reason, that's pretty much a non-event.
-If it keeps happening, then we might even want to know about it.
-
-You can obviously save the contents of this file into your bug reports
-automatically and act accordingly, but I think you'll find that this is
-far more useful than saying "TAINT_FIRMWARE_CRASHED" so I'll ignore this
-report. Yeah, that might be reasonable thing if the bug report is about
-slow wifi *and* you see that ath10k firmware crashed every 10 seconds,
-but if it just crashed once a few days earlier it's of no importance to
-the system anymore ... And certainly a reasonable driver (which I
-believe ath10k to be) would _not_ randomly start corrupting memory
-because its firmware crashed. Which really is what tainting the kernel
-is about.
-
-So no, even with all that, I still really believe you're solving the
-wrong problem. Having information about firmware crashes, preferably
-with some kind of frequency information attached, and *clearly* with
-information about which device attached would be _great_. Munging it all
-into one bit is actively harmful, IMO.
-
-johannes
-
+> Rob
