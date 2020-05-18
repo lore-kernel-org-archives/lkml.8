@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5542AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DB4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314BD207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458ED20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823768;
-	bh=CGePmMPwwQSqI/UZxuTkF09HS53/qmzLh96HTTGfteM=;
+	s=default; t=1589823771;
+	bh=eRR5JLpyGQWbddfqfgr7COthF+C/JL4OZYqmjDeULOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iwWiUCsCXesW34RZIJlFE4z7LamglFC/q2rPM1LZ7IbaUwO/VF/CBUJ9VyeCmaYEA
-	 k+euAjE2C2Qs4e8QA8w/fBJ0SbZefQ2936sjOeFOHSOY3zKYSRzyO8oSDg3f+3XcSm
-	 mOaieIeEgu5Nasmtzry9q1KfymCk/RduEKTrJIZc=
+	b=CgJcWrXWJ2jFOdcZrBjEIInQ84gBHHU/tuRobN6Wp41XF0EJUOeDPE+8WG9oMjaga
+	 w4q/3abNQcmGxMQypyFS053suYpdkHfr0PlXklJN9PAjOKOeh5ZreuE5GJfI30SDYU
+	 XyUWNmhJUeeXiibq+ivKMfwr1hxUKKOYpTvThw9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbgERRmr (ORCPT
+        id S1729480AbgERRmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:42:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39530 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:42:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729434AbgERRmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:42:32 -0400
+        id S1729456AbgERRmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:42:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F317E20829;
-        Mon, 18 May 2020 17:42:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37AF8207C4;
+        Mon, 18 May 2020 17:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823751;
-        bh=CGePmMPwwQSqI/UZxuTkF09HS53/qmzLh96HTTGfteM=;
+        s=default; t=1589823758;
+        bh=eRR5JLpyGQWbddfqfgr7COthF+C/JL4OZYqmjDeULOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wtmTlDSG+6XslL/3dlLRHK+uSsVlG03jUaueAY8h/b5sUQ2AVvxjMy2WLvNfAeZhi
-         lDeM33wYQIrryt8vDH3SbhuM4/IiJKOOErsdyWgQXZwgQ/t4THFjItzblechVg4m1H
-         3kBZATRbTYxHgdSz0TUVeBEPHF4fJc8tdjsnGv5g=
+        b=IAHbCaLYC6aOsjE/M0VshmOAOhDjOGcUEkolOhvnR9kC28iZP6en1eE2dgavQwcG5
+         AEezsiR98KvW36ytguNlFcpSOpsUiIz0k42YWhBCyYrqfzOmsR3HcGpTjMtnU/kkQ6
+         w0Q888U9zA0YRU+F4F5/UK2CQVT7U7MV3/aj8Bzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.9 21/90] batman-adv: Fix refcnt leak in batadv_store_throughput_override
-Date:   Mon, 18 May 2020 19:35:59 +0200
-Message-Id: <20200518173455.473188193@linuxfoundation.org>
+        stable@vger.kernel.org, Scott Dial <scott@scottdial.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 04/90] net: macsec: preserve ingress frame ordering
+Date:   Mon, 18 May 2020 19:35:42 +0200
+Message-Id: <20200518173451.911405640@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -61,46 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Scott Dial <scott@scottdial.com>
 
-commit 6107c5da0fca8b50b4d3215e94d619d38cc4a18c upstream.
+[ Upstream commit ab046a5d4be4c90a3952a0eae75617b49c0cb01b ]
 
-batadv_show_throughput_override() invokes batadv_hardif_get_by_netdev(),
-which gets a batadv_hard_iface object from net_dev with increased refcnt
-and its reference is assigned to a local pointer 'hard_iface'.
+MACsec decryption always occurs in a softirq context. Since
+the FPU may not be usable in the softirq context, the call to
+decrypt may be scheduled on the cryptd work queue. The cryptd
+work queue does not provide ordering guarantees. Therefore,
+preserving order requires masking out ASYNC implementations
+of gcm(aes).
 
-When batadv_store_throughput_override() returns, "hard_iface" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
+For instance, an Intel CPU with AES-NI makes available the
+generic-gcm-aesni driver from the aesni_intel module to
+implement gcm(aes). However, this implementation requires
+the FPU, so it is not always available to use from a softirq
+context, and will fallback to the cryptd work queue, which
+does not preserve frame ordering. With this change, such a
+system would select gcm_base(ctr(aes-aesni),ghash-generic).
+While the aes-aesni implementation prefers to use the FPU, it
+will fallback to the aes-asm implementation if unavailable.
 
-The issue happens in one error path of
-batadv_store_throughput_override(). When batadv_parse_throughput()
-returns NULL, the refcnt increased by batadv_hardif_get_by_netdev() is
-not decreased, causing a refcnt leak.
+By using a synchronous version of gcm(aes), the decryption
+will complete before returning from crypto_aead_decrypt().
+Therefore, the macsec_decrypt_done() callback will be called
+before returning from macsec_decrypt(). Thus, the order of
+calls to macsec_post_decrypt() for the frames is preserved.
 
-Fix this issue by jumping to "out" label when batadv_parse_throughput()
-returns NULL.
+While it's presumable that the pure AES-NI version of gcm(aes)
+is more performant, the hybrid solution is capable of gigabit
+speeds on modest hardware. Regardless, preserving the order
+of frames is paramount for many network protocols (e.g.,
+triggering TCP retries). Within the MACsec driver itself, the
+replay protection is tripped by the out-of-order frames, and
+can cause frames to be dropped.
 
-Fixes: 0b5ecc6811bd ("batman-adv: add throughput override attribute to hard_ifaces")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+This bug has been present in this code since it was added in
+v4.6, however it may not have been noticed since not all CPUs
+have FPU offload available. Additionally, the bug manifests
+as occasional out-of-order packets that are easily
+misattributed to other network phenomena.
+
+When this code was added in v4.6, the crypto/gcm.c code did
+not restrict selection of the ghash function based on the
+ASYNC flag. For instance, x86 CPUs with PCLMULQDQ would
+select the ghash-clmulni driver instead of ghash-generic,
+which submits to the cryptd work queue if the FPU is busy.
+However, this bug was was corrected in v4.8 by commit
+b30bdfa86431afbafe15284a3ad5ac19b49b88e3, and was backported
+all the way back to the v3.14 stable branch, so this patch
+should be applicable back to the v4.6 stable branch.
+
+Signed-off-by: Scott Dial <scott@scottdial.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/batman-adv/sysfs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/macsec.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/batman-adv/sysfs.c
-+++ b/net/batman-adv/sysfs.c
-@@ -1087,7 +1087,7 @@ static ssize_t batadv_store_throughput_o
- 	ret = batadv_parse_throughput(net_dev, buff, "throughput_override",
- 				      &tp_override);
- 	if (!ret)
--		return count;
-+		goto out;
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1315,7 +1315,8 @@ static struct crypto_aead *macsec_alloc_
+ 	struct crypto_aead *tfm;
+ 	int ret;
  
- 	old_tp_override = atomic_read(&hard_iface->bat_v.throughput_override);
- 	if (old_tp_override == tp_override)
+-	tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
++	/* Pick a sync gcm(aes) cipher to ensure order is preserved. */
++	tfm = crypto_alloc_aead("gcm(aes)", 0, CRYPTO_ALG_ASYNC);
+ 
+ 	if (IS_ERR(tfm))
+ 		return tfm;
 
 
