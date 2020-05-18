@@ -2,139 +2,104 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB45C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B30C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E84C20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B91020657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826660;
-	bh=VgB+B0Gdlag8jOFRayjeRepY0r8rjjvg0pgak1xnbZI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=egwPDdlGvDH8yVlnz+Z7zc7xAlGhZPK6ZX0uVI99pLkVATULv9u6ImwdcZeR66HH7
-	 ZwA+fEZsbEmM/fh++XSQWzigSIe/mSNUicqYQXThOVy18Zlul35Kxy9Di/TYHjxNTC
-	 RJn/hN7mgRxGWYFVh0WpS5jZh7ABlsVb3YNF5f8k=
+	s=default; t=1589826665;
+	bh=SE1tukxQxUPoeD0v8ExDP7qUXqal/fKrpfg46v1AdTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nBTr1xLOQJAskx/8cyvjogzxlSiUpdQib8aj4XODMp7r0SaK3Z3nvKSBKKq3F02Yi
+	 eecNykTmpQV8DNTsGE1kQCHAE8rvfPwOiJ42lAyRto9N6+f5woNBRWkFjNOF+zBpgB
+	 5nZTcDv2IbkEYiL+Zpddf0L0hy6r53W17KnXYjMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbgERRkL (ORCPT
+        id S1730653AbgERSbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:40:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728954AbgERRkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:40:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86EA32083E;
-        Mon, 18 May 2020 17:40:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823603;
-        bh=VgB+B0Gdlag8jOFRayjeRepY0r8rjjvg0pgak1xnbZI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LVNNFESfFE7JB5ojVm2aXYPERfhyuxzZFa3jPW+ueS0UDqbXz4fl8EYp82Bdpfvly
-         VwVXUg4G3ftNM2hdhn6aV0SLaHhGiUoLOBHsAojhWL9A+xfqUDFhIe8KgXFOU3pHJC
-         c08HLq0rgo/N1jB9m7U7WOiYYVyV825aHqojQWD8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Hurley <john.hurley@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Pravin B Shelar <pshelar@ovn.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 47/86] net: openvswitch: fix csum updates for MPLS actions
-Date:   Mon, 18 May 2020 19:36:18 +0200
-Message-Id: <20200518173500.146019004@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
-References: <20200518173450.254571947@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 18 May 2020 14:31:03 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41153 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729437AbgERSa5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:30:57 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 23so5343701pfy.8;
+        Mon, 18 May 2020 11:30:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MNvGxXH70pUk2rUMUm7OX5VYVn/vSKKSqC8ibxkcQ+c=;
+        b=LkgTRMtFHTuflen9VfDx0gPUZ9vaone1bh8mAUpu1gCsvBMvO7vynQe5RiwSNx4uL4
+         Y/+KW7FeLOehpsAxoQ7jetQPVmJe9YkEJgIYpzthLIkEkmuraEsGm31hy+g/Tp7A+VtA
+         6T8GMFygIOGfB47pjBC9E3AU6eGuwd9bJFQAy68qFT+bjSfT8OSK5ko2y0MW8VlTCXQB
+         vyBrc0oZcMTXVQUFZrtNlEAi69UaIPvrRuyspeWQs4MBPerj05vKyomXYM2z5MwkOVVE
+         gTse/ka6xx3uoQk9O6R6ATUtwG7fad5SvTSvFV68xtLUZ+WK98eUtitPeg0Cib6cTmAC
+         JI0w==
+X-Gm-Message-State: AOAM531/5eBfGFBw4+M5mS9nbkTzVs0wB4QmCQc0KAZBs2NgR58ymepJ
+        It5tidZ9VAPV5uvINJ/Y5cI=
+X-Google-Smtp-Source: ABdhPJxbvrW+K08SVhBUxVXXcUph4FjFiKVCfMGxgL5mBKoSOvhTiXC3EzL18F1ArNzKTIDwUMUidQ==
+X-Received: by 2002:a63:3d7:: with SMTP id 206mr16076823pgd.45.1589826657018;
+        Mon, 18 May 2020 11:30:57 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id gt10sm204901pjb.30.2020.05.18.11.30.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 11:30:56 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 3B5A8404B0; Mon, 18 May 2020 18:30:55 +0000 (UTC)
+Date:   Mon, 18 May 2020 18:30:55 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Xiaoming Ni <nixiaoming@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Kitt <steve@sk2.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sysctl: const-ify ngroups_max
+Message-ID: <20200518183055.GN11244@42.do-not-panic.com>
+References: <20200518155727.10514-1-steve@sk2.org>
+ <202005180908.C016C44D2@keescook>
+ <20200518172509.GM11244@42.do-not-panic.com>
+ <202005181117.BB74974@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202005181117.BB74974@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hurley <john.hurley@netronome.com>
+On Mon, May 18, 2020 at 11:17:47AM -0700, Kees Cook wrote:
+> On Mon, May 18, 2020 at 05:25:09PM +0000, Luis Chamberlain wrote:
+> > On Mon, May 18, 2020 at 09:08:22AM -0700, Kees Cook wrote:
+> > > On Mon, May 18, 2020 at 05:57:27PM +0200, Stephen Kitt wrote:
+> > > > ngroups_max is a read-only sysctl entry, reflecting NGROUPS_MAX. Make
+> > > > it const, in the same way as cap_last_cap.
+> > > > 
+> > > > Signed-off-by: Stephen Kitt <steve@sk2.org>
+> > > 
+> > > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > 
+> > Kees, since there is quite a bit of sysctl cleanup stuff going on and I
+> > have a fs sysctl kitchen cleanup, are you alright if I carry this in a
+> > tree and send this to Andrew once done? This would hopefully avoid
+> > merge conflicts between these patches.
+> > 
+> > I have to still re-spin my fs sysctl stuff, but will wait to do that
+> > once Xiaoming bases his series on linux-next.
+> 
+> Yeah, totally. I don't technically have a sysctl tree (I've always just
+> had akpm take stuff), so go for it. I'm just doing reviews. :)
 
-[ Upstream commit 0e3183cd2a64843a95b62f8bd4a83605a4cf0615 ]
+Oh, I don't want a tree either, it was just that I can imagine these
+series can easily create conflcits, so I wanted to avoid that before
+passing them on to Andrew.
 
-Skbs may have their checksum value populated by HW. If this is a checksum
-calculated over the entire packet then the CHECKSUM_COMPLETE field is
-marked. Changes to the data pointer on the skb throughout the network
-stack still try to maintain this complete csum value if it is required
-through functions such as skb_postpush_rcsum.
-
-The MPLS actions in Open vSwitch modify a CHECKSUM_COMPLETE value when
-changes are made to packet data without a push or a pull. This occurs when
-the ethertype of the MAC header is changed or when MPLS lse fields are
-modified.
-
-The modification is carried out using the csum_partial function to get the
-csum of a buffer and add it into the larger checksum. The buffer is an
-inversion of the data to be removed followed by the new data. Because the
-csum is calculated over 16 bits and these values align with 16 bits, the
-effect is the removal of the old value from the CHECKSUM_COMPLETE and
-addition of the new value.
-
-However, the csum fed into the function and the outcome of the
-calculation are also inverted. This would only make sense if it was the
-new value rather than the old that was inverted in the input buffer.
-
-Fix the issue by removing the bit inverts in the csum_partial calculation.
-
-The bug was verified and the fix tested by comparing the folded value of
-the updated CHECKSUM_COMPLETE value with the folded value of a full
-software checksum calculation (reset skb->csum to 0 and run
-skb_checksum_complete(skb)). Prior to the fix the outcomes differed but
-after they produce the same result.
-
-Fixes: 25cd9ba0abc0 ("openvswitch: Add basic MPLS support to kernel")
-Fixes: bc7cc5999fd3 ("openvswitch: update checksum in {push,pop}_mpls")
-Signed-off-by: John Hurley <john.hurley@netronome.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Acked-by: Pravin B Shelar <pshelar@ovn.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/openvswitch/actions.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-index fd6c587b6a040..828fdced4ecd8 100644
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -143,8 +143,7 @@ static void update_ethertype(struct sk_buff *skb, struct ethhdr *hdr,
- 	if (skb->ip_summed == CHECKSUM_COMPLETE) {
- 		__be16 diff[] = { ~(hdr->h_proto), ethertype };
- 
--		skb->csum = ~csum_partial((char *)diff, sizeof(diff),
--					~skb->csum);
-+		skb->csum = csum_partial((char *)diff, sizeof(diff), skb->csum);
- 	}
- 
- 	hdr->h_proto = ethertype;
-@@ -227,8 +226,7 @@ static int set_mpls(struct sk_buff *skb, struct sw_flow_key *flow_key,
- 	if (skb->ip_summed == CHECKSUM_COMPLETE) {
- 		__be32 diff[] = { ~(*stack), lse };
- 
--		skb->csum = ~csum_partial((char *)diff, sizeof(diff),
--					  ~skb->csum);
-+		skb->csum = csum_partial((char *)diff, sizeof(diff), skb->csum);
- 	}
- 
- 	*stack = lse;
--- 
-2.20.1
-
-
-
+  Luis
