@@ -2,155 +2,205 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B328FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DDEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA00207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:10:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cHuezSmh"
+	by mail.kernel.org (Postfix) with ESMTP id EC67E207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgERTKZ (ORCPT
+        id S1726985AbgERTLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 15:10:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgERTKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 15:10:24 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98ABFC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:10:24 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id u35so5278259pgk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B9WsWP6dnEY5vCfQiuvwQaqKnNQto5CQpnFS4KzI7DY=;
-        b=cHuezSmhHKbWR5zfm6IDklGMDHYGApFLx8L38GBmK/KvWwczsIOz9r+mKvBfs74RJL
-         BAdZjB2n9mgd6yvaDhrjqZ5OzERYPrwQRDjO4L5+8q4x+FBbqU90q7KDbMF84tMYo8UH
-         A4MeUZpi6YBF/ipNi/Ecf5Yif0+t9MsPIyZGE+NxT+n1l+2thrQrMtx98GajwAdSOCDo
-         WE5mm3O+JkATr0nxhhWtk6YUmP+nv6DlZVrEjkzyjT8ZzE/87cmXLsc6HPdCVmHmnV+J
-         X2hEd+Htukvq2JyEZHSWZq9BBB3qEUG/cE5YgTgYcZyQMDrnwcEdrXpCGPYy29m2d//2
-         4Y2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B9WsWP6dnEY5vCfQiuvwQaqKnNQto5CQpnFS4KzI7DY=;
-        b=BwkZqyQ+NVH0YHy9uUyTgQUgcEsuiGkRrm42VP9oWjPdO6LGiud3UzYhMHSO62MZ1c
-         jYQvJzdlx81oDoKZUrQR7ihQJiFkdIcqt6r2KkX6uV+fRsnnhsA2G/VQwcHqT4Y6LIgX
-         +mb6L+ssYJ4LIGqHTTbCD6mBMMOEljZ08c7nRqu3U0E51Of9zUK3sligHEL+zljwqr4A
-         pwheYREjA/lLRbmXaizaJkOfaJ0nFbJuGZuMCQG51CHkg0SOAmKVmmnIgrlCyQdDE507
-         t1hB2n+CaAABsfT4Ke5y7Nat/XcNE4ycX1QznWlf8yTSrGaTCSrkWjLIKtvPoeX63P2i
-         nuag==
-X-Gm-Message-State: AOAM533J4U652vtSiC0TdbzpPxJOmdWg143uLp2zKfs8mxY1/w56k+36
-        mCNKxy3tBpxi1F7pymHS1U9ux3Xx9fo/p0F0Qr8XZw==
-X-Google-Smtp-Source: ABdhPJwVs+bkA/SMoonauhT/XHbckONFweCmjLOjou4EBg9G3HuFvPZv0+B6H6ynL3uGpPCZh4nTajwUuK6Ghq7ZKJA=
-X-Received: by 2002:a63:4f09:: with SMTP id d9mr3246799pgb.10.1589829023749;
- Mon, 18 May 2020 12:10:23 -0700 (PDT)
+        Mon, 18 May 2020 15:11:40 -0400
+Received: from ja.ssi.bg ([178.16.129.10]:39614 "EHLO ja.ssi.bg"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726703AbgERTLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 15:11:39 -0400
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id 04IJAWNB007033;
+        Mon, 18 May 2020 22:10:33 +0300
+Date:   Mon, 18 May 2020 22:10:32 +0300 (EEST)
+From:   Julian Anastasov <ja@ssi.bg>
+To:     Andrew Sy Kim <kim.andrewsy@gmail.com>
+cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH] netfilter/ipvs: immediately expire UDP connections
+ matching unavailable destination if expire_nodest_conn=1
+In-Reply-To: <20200517171654.8194-1-kim.andrewsy@gmail.com>
+Message-ID: <alpine.LFD.2.21.2005182027460.4524@ja.home.ssi.bg>
+References: <20200515013556.5582-1-kim.andrewsy@gmail.com> <20200517171654.8194-1-kim.andrewsy@gmail.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200501084215.242-1-dima@golovin.in> <20200515185051.GC19017@zn.tnic>
- <602331589572661@mail.yandex.ru> <20200517194429.scwhfr4l4bv4h3ux@google.com> <20200517202527.GA2563549@rani.riverdale.lan>
-In-Reply-To: <20200517202527.GA2563549@rani.riverdale.lan>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 18 May 2020 12:10:11 -0700
-Message-ID: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
-Subject: Re: [PATCH] x86/boot: allow a relocatable kernel to be linked with lld
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Borislav Petkov <bp@alien8.de>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 1:25 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Sun, May 17, 2020 at 12:44:29PM -0700, Fangrui Song wrote:
-> > On 2020-05-16, Dmitry Golovin wrote:
-> > >15.05.2020, 21:50, "Borislav Petkov" <bp@alien8.de>:
-> > >>
-> > >> I need more info here about which segment is read-only?
-> > >>
-> > >> Is this something LLD does by default or what's happening?
-> > >>
-> > >
-> > >Probably should have quoted the original error message:
-> > >
-> > >    ld.lld: error: can't create dynamic relocation R_386_32 against
-> > >    symbol: _bss in readonly segment; recompile object files with -fPIC
-> > >    or pass '-Wl,-z,notext' to allow text relocations in the output
-> >
-> > Do we know where do these R_386_32 come from?
-> >
-> > When linking in -shared mode, the linker assumes the image is a shared
-> > object and has undetermined image base at runtime. An absolute
-> > relocation needs a text relocation (a relocation against a readonly
-> > segment).
-> >
-> > When neither -z notext nor -z text is specified, GNU ld is in an
-> > indefinite state where it will enable text relocations (DT_TEXTREL
-> > DF_TEXTREL) on demand. It is not considered a good practice for
-> > userspace applications to do this.
-> >
-> > Of course the kernel is different....... I know little about the kernel,
-> > but if there is a way to make the sections containing R_386_32
-> > relocations writable (SHF_WRITE), that will be a better solution to me.
-> > In LLD, -z notext is like making every section SHF_WRITE.
->
-> The assembly files head_32.S and head_64.S in arch/x86/boot/compressed
-> create bogus relocations in .head.text and .text.
->
-> This is the source of the common warning when using the bfd linker, for
-> eg on 64-bit:
->   LD      arch/x86/boot/compressed/vmlinux
->   ld: arch/x86/boot/compressed/head_64.o: warning: relocation in read-only section `.head.text'
->   ld: warning: creating a DT_TEXTREL in object
->
-> These relocations are "bogus", i.e. they're unwanted and the kernel
-> won't actually boot if anything were to perform those relocations before
-> running it. They're also the cause of the 64-bit kernel requiring linker
-> support for the -z noreloc-overflow option to link it as PIE.
->
-> From arch/x86/boot/compressed/Makefile:
->
-> # To build 64-bit compressed kernel as PIE, we disable relocation
-> # overflow check to avoid relocation overflow error with a new linker
-> # command-line option, -z noreloc-overflow.
-> KBUILD_LDFLAGS += $(shell $(LD) --help 2>&1 | grep -q "\-z
-> noreloc-overflow" \
->         && echo "-z noreloc-overflow -pie --no-dynamic-linker")
->
-> The relocations come from code like
->         leal    gdt(%ebp), %eax
-> which should really be
->         leal    (gdt-startup_32)(%ebp), %eax
-> to be technically correct.
->
-> I've played around with fixing the head code to avoid creating the
-> relocations in the first place, but never got around to submitting
-> anything: if there is interest in this, I can polish it up and send it
-> around.
 
-We'd be happy to help test and review. :)
--- 
-Thanks,
-~Nick Desaulniers
+	Hello,
+
+On Sun, 17 May 2020, Andrew Sy Kim wrote:
+
+> If expire_nodest_conn=1 and a UDP destination is deleted, IPVS should
+> also expire all matching connections immiediately instead of waiting for
+> the next matching packet. This is particulary useful when there are a
+> lot of packets coming from a few number of clients. Those clients are
+> likely to match against existing entries if a source port in the
+> connection hash is reused. When the number of entries in the connection
+> tracker is large, we can significantly reduce the number of dropped
+> packets by expiring all connections upon deletion.
+> 
+> Signed-off-by: Andrew Sy Kim <kim.andrewsy@gmail.com>
+> ---
+>  include/net/ip_vs.h             |  7 ++++++
+>  net/netfilter/ipvs/ip_vs_conn.c | 38 +++++++++++++++++++++++++++++++++
+>  net/netfilter/ipvs/ip_vs_core.c |  5 -----
+>  net/netfilter/ipvs/ip_vs_ctl.c  |  9 ++++++++
+>  4 files changed, 54 insertions(+), 5 deletions(-)
+> 
+
+> diff --git a/net/netfilter/ipvs/ip_vs_conn.c b/net/netfilter/ipvs/ip_vs_conn.c
+> index 02f2f636798d..c69dfbbc3416 100644
+> --- a/net/netfilter/ipvs/ip_vs_conn.c
+> +++ b/net/netfilter/ipvs/ip_vs_conn.c
+> @@ -1366,6 +1366,44 @@ static void ip_vs_conn_flush(struct netns_ipvs *ipvs)
+>  		goto flush_again;
+>  	}
+>  }
+> +
+> +/*	Flush all the connection entries in the ip_vs_conn_tab with a
+> + *	matching destination.
+> + */
+> +void ip_vs_conn_flush_dest(struct netns_ipvs *ipvs, struct ip_vs_dest *dest)
+> +{
+> +	int idx;
+> +	struct ip_vs_conn *cp, *cp_c;
+> +
+> +	rcu_read_lock();
+> +	for (idx = 0; idx < ip_vs_conn_tab_size; idx++) {
+> +		hlist_for_each_entry_rcu(cp, &ip_vs_conn_tab[idx], c_list) {
+> +			if (cp->ipvs != ipvs)
+> +				continue;
+> +
+> +			if (cp->dest != dest)
+> +				continue;
+> +
+> +			/* As timers are expired in LIFO order, restart
+> +			 * the timer of controlling connection first, so
+> +			 * that it is expired after us.
+> +			 */
+> +			cp_c = cp->control;
+> +			/* cp->control is valid only with reference to cp */
+> +			if (cp_c && __ip_vs_conn_get(cp)) {
+> +				IP_VS_DBG(4, "del controlling connection\n");
+> +				ip_vs_conn_expire_now(cp_c);
+> +				__ip_vs_conn_put(cp);
+> +			}
+> +			IP_VS_DBG(4, "del connection\n");
+> +			ip_vs_conn_expire_now(cp);
+> +		}
+> +		cond_resched_rcu();
+
+	Such kind of loop is correct if done in another context:
+
+1. kthread
+or
+2. delayed work: mod_delayed_work(system_long_wq, ...)
+
+	Otherwise cond_resched_rcu() can schedule() while holding
+__ip_vs_mutex. Also, it will add long delay if many dests are
+removed.
+
+	If such loop analyzes instead all cp->dest for 
+IP_VS_DEST_F_AVAILABLE, it should be done after calling
+__ip_vs_conn_get().
+
+>  static int sysctl_snat_reroute(struct netns_ipvs *ipvs) { return 0; }
+> diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+> index 8d14a1acbc37..f87c03622874 100644
+> --- a/net/netfilter/ipvs/ip_vs_ctl.c
+> +++ b/net/netfilter/ipvs/ip_vs_ctl.c
+> @@ -1225,6 +1225,15 @@ ip_vs_del_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
+>  	 */
+>  	__ip_vs_del_dest(svc->ipvs, dest, false);
+>  
+> +	/*	If expire_nodest_conn is enabled and protocol is UDP,
+> +	 *	attempt best effort flush of all connections with this
+> +	 *	destination.
+> +	 */
+> +	if (sysctl_expire_nodest_conn(svc->ipvs) &&
+> +	    dest->protocol == IPPROTO_UDP) {
+> +		ip_vs_conn_flush_dest(svc->ipvs, dest);
+
+	Above work should be scheduled from __ip_vs_del_dest().
+Check for UDP is not needed, sysctl_expire_nodest_conn() is for
+all protocols.
+
+	If the flushing is complex to implement, we can still allow
+rescheduling for unavailable dests:
+
+- first we should move this block above the ip_vs_try_to_schedule() 
+block because:
+
+	1. the scheduling does not return unavailabel dests, even
+	for persistence, so no need to check new connections for
+	the flag
+
+	2. it will allow to create new connection if dest for
+	existing connection is unavailable
+
+	if (cp && cp->dest && !(cp->dest->flags & IP_VS_DEST_F_AVAILABLE)) {
+		/* the destination server is not available */
+
+		if (sysctl_expire_nodest_conn(ipvs)) {
+			bool uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
+
+			ip_vs_conn_expire_now(cp);
+			__ip_vs_conn_put(cp);
+			if (uses_ct)
+				return NF_DROP;
+			cp = NULL;
+		} else {
+			__ip_vs_conn_put(cp);
+			return NF_DROP;
+		}
+	}
+
+	if (unlikely(!cp)) {
+		int v;
+
+		if (!ip_vs_try_to_schedule(ipvs, af, skb, pd, &v, &cp, &iph))
+			return v;
+	}
+
+	Before now, we always waited one jiffie connection to expire,
+now one packet will:
+
+- schedule expiration for existing connection with unavailable dest,
+as before
+
+- create new connection to available destination that will be found
+first in lists. But it can work only when sysctl var "conntrack" is 0,
+we do not want to create two netfilter conntracks to different
+real servers.
+
+	Note that we intentionally removed the timer_pending() check
+because we can not see existing ONE_PACKET connections in table.
+
+Regards
+
+--
+Julian Anastasov <ja@ssi.bg>
