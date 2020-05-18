@@ -2,122 +2,124 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A116FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8049C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77A4820758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:07:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OWE5M8ba"
+	by mail.kernel.org (Postfix) with ESMTP id B50F620758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgERUHl (ORCPT
+        id S1726775AbgERUIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:07:41 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51138 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgERUHl (ORCPT
+        Mon, 18 May 2020 16:08:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgERUIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:07:41 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04IK764u085239;
-        Mon, 18 May 2020 20:07:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=WbuNkJM/yx6OUy86ccwTxQwFAWolA1yJS4SlSBW0iVI=;
- b=OWE5M8baMSxLadkHPIDA1fFulA0kt6ZrWUNADTSOouokIQOCf2UcqSa9ATiL1D/ndlQ2
- zW8oiXV4YUEP626zXyG//3/JEvyWCseS0dXwfkyH2K4eItlCOibAJu/O9xLPaGrFRKh9
- BL3RWI926GmO7ZTplFs6RvBUqWFScTuVjlzRW7jBLUZbHkkb3jbiXrsdzsJkAAql4O4D
- Npp58qoH39XT5HFKoWIIkFkw77SAE0GgMiFWMVrrFZ+pAEqr6AcvRW/ijDQ/D75WfvLt
- 2iYnij3DIZbKE3fmnAlws947YoWwQYiTNrmXgzEQ56CCqwNyLZIfO9b+MCnGocKQe5at Lw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 3127kr1axb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 May 2020 20:07:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04IJwwUl037826;
-        Mon, 18 May 2020 20:07:35 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 312t31y9q9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 20:07:35 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04IK7XTR009061;
-        Mon, 18 May 2020 20:07:33 GMT
-Received: from localhost.localdomain (/10.159.148.153)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 May 2020 13:07:33 -0700
-Subject: Re: [PATCH 0/7] KVM: SVM: baby steps towards nested state migration
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Cathy Avery <cavery@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Jim Mattson <jmattson@google.com>
-References: <20200515174144.1727-1-pbonzini@redhat.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <27c7526c-4d02-c9ba-7d3b-7416dbe4cdbb@oracle.com>
-Date:   Mon, 18 May 2020 13:07:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 18 May 2020 16:08:53 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E1ACC061A0C;
+        Mon, 18 May 2020 13:08:53 -0700 (PDT)
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1jam3D-00FjeM-Ku; Mon, 18 May 2020 22:07:51 +0200
+Message-ID: <bb0b9a2da99c16a28c1dbee93d08abfa2aecdc8b.camel@sipsolutions.net>
+Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Steve deRosier <derosier@gmail.com>,
+        Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com,
+        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
+        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
+        daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        ath10k@lists.infradead.org
+Date:   Mon, 18 May 2020 22:07:49 +0200
+In-Reply-To: <20200518195950.GP11244@42.do-not-panic.com> (sfid-20200518_215954_551733_20DE2085)
+References: <20200515212846.1347-13-mcgrof@kernel.org>
+         <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
+         <20200518165154.GH11244@42.do-not-panic.com>
+         <4ad0668d-2de9-11d7-c3a1-ad2aedd0c02d@candelatech.com>
+         <20200518170934.GJ11244@42.do-not-panic.com>
+         <abf22ef3-93cb-61a4-0af2-43feac6d7930@candelatech.com>
+         <20200518171801.GL11244@42.do-not-panic.com>
+         <CALLGbR+ht2V3m5f-aUbdwEMOvbsX8ebmzdWgX4jyWTbpHrXZ0Q@mail.gmail.com>
+         <20200518190930.GO11244@42.do-not-panic.com>
+         <e3d978c8fa6a4075f12e843548d41e2c8ab537d1.camel@sipsolutions.net>
+         <20200518195950.GP11244@42.do-not-panic.com>
+         (sfid-20200518_215954_551733_20DE2085)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-In-Reply-To: <20200515174144.1727-1-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9625 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005180170
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9625 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005180171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2020-05-18 at 19:59 +0000, Luis Chamberlain wrote:
 
-On 5/15/20 10:41 AM, Paolo Bonzini wrote:
-> Here are some refactorings to prepare for an SVM implementation of
-> KVM_SET_NESTED_STATE.  It's a prerequisite for that to eliminate
-> exit_required, moving exceptions to svm_check_nested_events.  However:
->
-> - I might work on that soon, because it's needed to handle RSM when
-> the L1 hypervisor wants to get it from #UD rather than the specific
-> RSM intercept
->
-> - this should be enough to get a quick prototype, that I need in order to
-> debug a particularly crazy bug and figure out its reproducibility.
->
-> So, I am getting these patches out of my todo list for now.
->
-> Thanks,
->
-> Paolo
->
-> Paolo Bonzini (7):
->    KVM: SVM: move map argument out of enter_svm_guest_mode
->    KVM: SVM: extract load_nested_vmcb_control
->    KVM: SVM: extract preparation of VMCB for nested run
->    KVM: SVM: save all control fields in svm->nested
->    KVM: nSVM: remove HF_VINTR_MASK
->    KVM: nSVM: do not reload pause filter fields from VMCB
->    KVM: SVM: introduce data structures for nested virt state
->
->   arch/x86/include/asm/kvm_host.h |   1 -
->   arch/x86/include/uapi/asm/kvm.h |  26 +++++++-
->   arch/x86/kvm/svm/nested.c       | 115 +++++++++++++++++---------------
->   arch/x86/kvm/svm/svm.c          |  11 ++-
->   arch/x86/kvm/svm/svm.h          |  28 +++++---
->   5 files changed, 116 insertions(+), 65 deletions(-)
->
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+> > Err, no. Those two are most definitely related. Have you looked at (most
+> > or some or whatever) staging drivers recently? Those contain all kinds
+> > of garbage that might do whatever with your kernel.
+> 
+> No, I stay away :)
+
+:)
+
+> > That's all fine, I just don't think it's appropriate to pretend that
+> > your kernel is now 'tainted' (think about the meaning of that word) when
+> > the firmware of some random device crashed.
+> 
+> If the firmware crash *does* require driver remove / addition again,
+> or a reboot, would you think that this is a situation that merits a taint?
+
+Not really. In my experience, that's more likely a hardware issue (card
+not properly seated, for example) that a bus reset happens to "fix".
+
+> > It's pretty clear, but even then, first of all I doubt this is the case
+> > for many of the places that you've sprinkled the annotation on,
+> 
+> We can remove it, for this driver I can vouch for its location as it did
+> reach a state where I required a reboot. And its not the first time this
+> has happened. This got me thinking about the bigger picture of the lack
+> of proper way to address these cases in the kernel, and how the user is
+> left dumbfounded.
+
+Fair, so the driver is still broken wrt. recovery here. I still don't
+think that's a situation where e.g. the system should say "hey you have
+a taint here, if your graphics go bad now you should not report that
+bug" (which is effectively what the single taint bit does).
+
+> > and secondly it actually hides useful information.
+> 
+> What is it hiding?
+
+Most importantly, which device crashed. Secondarily I'd say how many
+times (*).
+
+The information "firmware crashed" is really only useful in relation to
+the device. If your graphics firmware crashed, yeah, well, you probably
+won't even see this. If your USB wifi firmware crashed? Not really
+interesting, you'll anyway just unplug. In fact it's very hard for a USB
+driver (short of arbitrary memory corruption) to significantly mess up
+the system.
+
+johannes
+
+(*) though if it crashed only once, was that because it was wedged
+enough to be unusable afterwards, or because everything was fine?
+
+
