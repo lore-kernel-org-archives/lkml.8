@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9900EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD2BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF8320715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A42B20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824332;
-	bh=I8yVPvyo6Odn3MxN2GXm8an0PqLnTd5gLYsP5FuJ5KU=;
+	s=default; t=1589824334;
+	bh=48APL4Me6i32PibkpfwGlIUpRfmeApshF9jBQdy6avw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o/1OkuikCsmeGDa0yNJdOjM4U2NPqYft6k+Vk5g2w1HXkJgpbtEqNxABIqzyhDWE6
-	 CD8VsNQyWxlwovI/60a16Mq4z8kzvWc7iTu36Ci7BfNsHLFIOLepXCE5BhjP5hX0yS
-	 xHkImK20D3643kPu62Aj9GvWwCkvgx5UDIHGfIB0=
+	b=u66kOrZchBOw5AJh/hMwkT7xR0h00KqBNPOro3TTmq5SClZd2okBomkhmJMoN8dHY
+	 J3hJ9m5L3aP9SsLBmKvtC7SLbLBz16ctWZpJBMZO8ut8vYwgdlaXC51TMnZb4VrRII
+	 ADpSJxc/lC65Rku1o6GXUZDcEs3C5BWMIw4n6vkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730944AbgERRwL (ORCPT
+        id S1730953AbgERRwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:52:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:52:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730914AbgERRwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:52:02 -0400
+        id S1730931AbgERRwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:52:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 959622083E;
-        Mon, 18 May 2020 17:52:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64F3C20835;
+        Mon, 18 May 2020 17:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824322;
-        bh=I8yVPvyo6Odn3MxN2GXm8an0PqLnTd5gLYsP5FuJ5KU=;
+        s=default; t=1589824326;
+        bh=48APL4Me6i32PibkpfwGlIUpRfmeApshF9jBQdy6avw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nSvxh/yriZUnjq8zvPgHtLMUXCPj6xcVEPHASZ6ovDhWXiF/JgJa+cGaV7grN27KV
-         Lz9GQMrXfeWqiR12kPUBA9IP3O4J8PGMnanlRBHy94Y1TtiqRDuEEjn8PkZ5pEzTWq
-         uAlXLFyEf2c7pNYvdvJfHjoIz9P6CpYx6Dv1t+IY=
+        b=N0MhCDSaV/Bw/MaIwxKN0hnePG8HdbiTo4zGxxE9hCfwEaI41P4j/tdp9Np5kvYJs
+         bixGw5ummocijamHZ6q0OGCHdH6BvjnruuNCVGlcTHp2o2X79PqQwUbWhxi8mipr8p
+         xG547uQCzkREcnl34srGCBCj5KYv9K+Kw08sMLWw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 45/80] gcc-10 warnings: fix low-hanging fruit
-Date:   Mon, 18 May 2020 19:37:03 +0200
-Message-Id: <20200518173459.442921938@linuxfoundation.org>
+Subject: [PATCH 4.19 47/80] Stop the ad-hoc games with -Wno-maybe-initialized
+Date:   Mon, 18 May 2020 19:37:05 +0200
+Message-Id: <20200518173459.930021014@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -61,48 +61,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 9d82973e032e246ff5663c9805fbb5407ae932e3 upstream.
+commit 78a5255ffb6a1af189a83e493d916ba1c54d8c75 upstream.
 
-Due to a bug-report that was compiler-dependent, I updated one of my
-machines to gcc-10.  That shows a lot of new warnings.  Happily they
-seem to be mostly the valid kind, but it's going to cause a round of
-churn for getting rid of them..
+We have some rather random rules about when we accept the
+"maybe-initialized" warnings, and when we don't.
 
-This is the really low-hanging fruit of removing a couple of zero-sized
-arrays in some core code.  We have had a round of these patches before,
-and we'll have many more coming, and there is nothing special about
-these except that they were particularly trivial, and triggered more
-warnings than most.
+For example, we consider it unreliable for gcc versions < 4.9, but also
+if -O3 is enabled, or if optimizing for size.  And then various kernel
+config options disabled it, because they know that they trigger that
+warning by confusing gcc sufficiently (ie PROFILE_ALL_BRANCHES).
+
+And now gcc-10 seems to be introducing a lot of those warnings too, so
+it falls under the same heading as 4.9 did.
+
+At the same time, we have a very straightforward way to _enable_ that
+warning when wanted: use "W=2" to enable more warnings.
+
+So stop playing these ad-hoc games, and just disable that warning by
+default, with the known and straight-forward "if you want to work on the
+extra compiler warnings, use W=123".
+
+Would it be great to have code that is always so obvious that it never
+confuses the compiler whether a variable is used initialized or not?
+Yes, it would.  In a perfect world, the compilers would be smarter, and
+our source code would be simpler.
+
+That's currently not the world we live in, though.
 
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/fs.h  |    2 +-
- include/linux/tty.h |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ Makefile             |    7 +++----
+ init/Kconfig         |   17 -----------------
+ kernel/trace/Kconfig |    1 -
+ 3 files changed, 3 insertions(+), 22 deletions(-)
 
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -934,7 +934,7 @@ struct file_handle {
- 	__u32 handle_bytes;
- 	int handle_type;
- 	/* file identifier */
--	unsigned char f_handle[0];
-+	unsigned char f_handle[];
- };
+--- a/Makefile
++++ b/Makefile
+@@ -662,10 +662,6 @@ else
+ KBUILD_CFLAGS   += -O2
+ endif
  
- static inline struct file *get_file(struct file *f)
---- a/include/linux/tty.h
-+++ b/include/linux/tty.h
-@@ -66,7 +66,7 @@ struct tty_buffer {
- 	int read;
- 	int flags;
- 	/* Data points here */
--	unsigned long data[0];
-+	unsigned long data[];
- };
+-ifdef CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED
+-KBUILD_CFLAGS   += -Wno-maybe-uninitialized
+-endif
+-
+ # Tell gcc to never replace conditional load with a non-conditional one
+ KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
  
- /* Values for .flags field of tty_buffer */
+@@ -796,6 +792,9 @@ KBUILD_CFLAGS += $(call cc-disable-warni
+ # disable stringop warnings in gcc 8+
+ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+ 
++# Enabled with W=2, disabled by default as noisy
++KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
++
+ # disable invalid "can't wrap" optimizations for signed / pointers
+ KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
+ 
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -26,22 +26,6 @@ config CLANG_VERSION
+ config CC_HAS_ASM_GOTO
+ 	def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
+ 
+-config CC_HAS_WARN_MAYBE_UNINITIALIZED
+-	def_bool $(cc-option,-Wmaybe-uninitialized)
+-	help
+-	  GCC >= 4.7 supports this option.
+-
+-config CC_DISABLE_WARN_MAYBE_UNINITIALIZED
+-	bool
+-	depends on CC_HAS_WARN_MAYBE_UNINITIALIZED
+-	default CC_IS_GCC && GCC_VERSION < 40900  # unreliable for GCC < 4.9
+-	help
+-	  GCC's -Wmaybe-uninitialized is not reliable by definition.
+-	  Lots of false positive warnings are produced in some cases.
+-
+-	  If this option is enabled, -Wno-maybe-uninitialzed is passed
+-	  to the compiler to suppress maybe-uninitialized warnings.
+-
+ config CONSTRUCTORS
+ 	bool
+ 	depends on !UML
+@@ -1099,7 +1083,6 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
+ 
+ config CC_OPTIMIZE_FOR_SIZE
+ 	bool "Optimize for size"
+-	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ 	help
+ 	  Enabling this option will pass "-Os" instead of "-O2" to
+ 	  your compiler resulting in a smaller kernel.
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -370,7 +370,6 @@ config PROFILE_ANNOTATED_BRANCHES
+ config PROFILE_ALL_BRANCHES
+ 	bool "Profile all if conditionals" if !FORTIFY_SOURCE
+ 	select TRACE_BRANCH_PROFILING
+-	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ 	help
+ 	  This tracer profiles all branch conditions. Every if ()
+ 	  taken in the kernel is recorded whether it hit or miss.
 
 
