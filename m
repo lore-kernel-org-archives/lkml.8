@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 841F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2EC20849
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA072083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823746;
-	bh=gVrthYkBfN2ySYLVUTOzmheUD2ZPxexmzYV/khAHBVc=;
+	s=default; t=1589823753;
+	bh=nqk65ExJOdZgrlp+sPs18FmX7l3Sc++Un1T815Rqp1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QpkoX3fPcmla+Lxwp6aUjuNiyM4AIWyqxreaK6PC5c7Y2RFtYVEVyKHEG6gE75Kfw
-	 e0udrSTa/7FI0+QJQSdtTxANv8viWSgls1yCQuK9CHjSeE/Q3IYpeWKHcoTQKqQMxc
-	 eh7qmNr+Pbw66zYSSrBAoGyASeN7nQ37ya41hwQc=
+	b=Q/WlKLmgJjDCNFiJU9GK5uti89lodblk4q02kCBRGAjPqdR1cSqkMsu4woQo5VigU
+	 iqX/IaGU5IxPURSBGpu3FqwhMHbvScdMA0dMnCF8wHkWv36nsjNbhZK96wKDXnUMVF
+	 JNn66s0vWnuSK5BVhDGn0QRx547rCOOVZ7tjmt4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbgERRmZ (ORCPT
+        id S1729436AbgERRmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:42:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38988 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:42:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729382AbgERRmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:42:10 -0400
+        id S1729399AbgERRmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:42:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0087920715;
-        Mon, 18 May 2020 17:42:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E4B720853;
+        Mon, 18 May 2020 17:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823729;
-        bh=gVrthYkBfN2ySYLVUTOzmheUD2ZPxexmzYV/khAHBVc=;
+        s=default; t=1589823736;
+        bh=nqk65ExJOdZgrlp+sPs18FmX7l3Sc++Un1T815Rqp1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kOPEvOtYRyG1i5HhCro+HHy4gjSiKw/E6X5jS+xdkF7b+retIa3F6+TxBJxr6SStE
-         9KSZGDMTkJ5or98cvLGoAfgC8gPlxI0s7o4oQy13tC12qTnaHQGdgrwp2vMh04/ipF
-         Z3jwq4IAGNsrIDA681NINBxklO0eZfRv2hjbA88g=
+        b=Qp8YDdwtBbiX/nsVGfOKQA6OT3bHt6T7Kg0iqZQBV0FiDJkD3Q7SxXb9uM/SwxxDo
+         w8kfCdvDZxcR6R3Lewmsez7cz2c3pCwZbjmxlSs5dWFDXOqj+/hqOtSHe7k4mvEaI6
+         q9dn4At74Q86gQGZJ+Ktllr428b5uPyLN0phGXf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 13/90] Revert "ACPI / video: Add force_native quirk for HP Pavilion dv6"
-Date:   Mon, 18 May 2020 19:35:51 +0200
-Message-Id: <20200518173453.920984244@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Johan Hovold <johan@kernel.org>,
+        syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 16/90] USB: serial: garmin_gps: add sanity checking for data length
+Date:   Mon, 18 May 2020 19:35:54 +0200
+Message-Id: <20200518173454.516123435@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -60,61 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit fd25ea29093e275195d0ae8b2573021a1c98959f upstream.
+commit e9b3c610a05c1cdf8e959a6d89c38807ff758ee6 upstream.
 
-Revert commit 6276e53fa8c0 (ACPI / video: Add force_native quirk for
-HP Pavilion dv6).
+We must not process packets shorter than a packet ID
 
-In the commit message for the quirk this revert removes I wrote:
-
-"Note that there are quite a few HP Pavilion dv6 variants, some
-woth ATI and some with NVIDIA hybrid gfx, both seem to need this
-quirk to have working backlight control. There are also some versions
-with only Intel integrated gfx, these may not need this quirk, but it
-should not hurt there."
-
-Unfortunately that seems wrong, I've already received 2 reports of
-this commit causing regressions on some dv6 variants (at least one
-of which actually has a nvidia GPU). So it seems that HP has made a
-mess here by using the same model-name both in marketing and in the
-DMI data for many different variants. Some of which need
-acpi_backlight=native for functional backlight control (as the
-quirk this commit reverts was doing), where as others are broken by
-it. So lets get back to the old sitation so as to avoid regressing
-on models which used to work without any kernel cmdline arguments
-before.
-
-Fixes: 6276e53fa8c0 (ACPI / video: Add force_native quirk for HP Pavilion dv6)
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-and-tested-by: syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/video_detect.c |   11 -----------
- 1 file changed, 11 deletions(-)
+ drivers/usb/serial/garmin_gps.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -314,17 +314,6 @@ static const struct dmi_system_id video_
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Dell System XPS L702X"),
- 		},
- 	},
--	{
--	/* https://bugzilla.redhat.com/show_bug.cgi?id=1204476 */
--	/* https://bugs.launchpad.net/ubuntu/+source/linux-lts-trusty/+bug/1416940 */
--	.callback = video_detect_force_native,
--	.ident = "HP Pavilion dv6",
--	.matches = {
--		DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
--		DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion dv6 Notebook PC"),
--		},
--	},
--
- 	{ },
- };
+--- a/drivers/usb/serial/garmin_gps.c
++++ b/drivers/usb/serial/garmin_gps.c
+@@ -1161,8 +1161,8 @@ static void garmin_read_process(struct g
+ 		   send it directly to the tty port */
+ 		if (garmin_data_p->flags & FLAGS_QUEUING) {
+ 			pkt_add(garmin_data_p, data, data_length);
+-		} else if (bulk_data ||
+-			   getLayerId(data) == GARMIN_LAYERID_APPL) {
++		} else if (bulk_data || (data_length >= sizeof(u32) &&
++				getLayerId(data) == GARMIN_LAYERID_APPL)) {
  
+ 			spin_lock_irqsave(&garmin_data_p->lock, flags);
+ 			garmin_data_p->flags |= APP_RESP_SEEN;
 
 
