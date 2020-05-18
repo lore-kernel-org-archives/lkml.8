@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1388D20671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 946F820671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825152;
-	bh=xQ6rsCzZqQTZ2g9SUkiO7LCrfHXHf9Hr1QRQfB9ELrA=;
+	s=default; t=1589825154;
+	bh=Dn46o8FNGNi9iQGafECaUOunAbyZTI/1mmcR33N+8Ms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mdfDgLMl3NY5cjPrao8r4wPgn/dsvgtEMGx0HeUg8gSo+FdO0YZ0+eBZM7x2y7+CO
-	 KNz+d6OwslF1BGnXXJy5oUfodG+GwbJyAMf6zc4ZlRMhHwLS3biSIT/J5EL03xH0yv
-	 RDb2gdFuiJvCCtnIn1b3So6L7yTu5/50+EkvJ4HU=
+	b=dTOlYalhGqGJonpS1ZDyLwTDFaEfU3lRUJM/Np5H54Bly9YyuRWVwQuQq1AEOiBj0
+	 kbGcwuI+5hlZ2W8oYM8SglxIkzVvbAlDT7rW94yJoB+P8d22MHT4GjX0tF0JWuiCTy
+	 DE3kp/ZCreXBdk5HlqaiHvi6Rnf0HzFszPR8BEfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733079AbgERSFu (ORCPT
+        id S1733080AbgERSFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:05:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53492 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:05:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733030AbgERSFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:05:46 -0400
+        id S1733030AbgERSFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:05:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCEB820715;
-        Mon, 18 May 2020 18:05:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C122820671;
+        Mon, 18 May 2020 18:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825145;
-        bh=xQ6rsCzZqQTZ2g9SUkiO7LCrfHXHf9Hr1QRQfB9ELrA=;
+        s=default; t=1589825150;
+        bh=Dn46o8FNGNi9iQGafECaUOunAbyZTI/1mmcR33N+8Ms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ibv0UFU1Nh2KMTCi0M7sRtNbQHxxjjpSwD5elyTmt09r6GLjr5MlPZzXv6eDIBsZs
-         qVm5Cwa0qLvxu3HzkaiSsCgbSwkSmIVd5coLhSnezm/9QPdaFb9a0JKwz1gZT2rEWN
-         lxe+Px6kFkI9EKYVZozQLFBPwyAocZDwuLTHcC6I=
+        b=zhioVzri1i2pRYrYu3wpHsPPGqnNEpmakgvhhQcAETrvK5a9vg/YTXn9s/7BEXD1D
+         RZNSPjBcOR+yBIXhrtI77msYM/NExfoOMljd5QDq18gUJGhrBuJ52DedKoBAM6yFgy
+         SFfqCSFJfc2eYBZBnIpcL7+x8QCHARYHN0ypDFMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Jones <pjones@redhat.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>
-Subject: [PATCH 5.6 147/194] Make the "Reducing compressed framebufer size" message be DRM_INFO_ONCE()
-Date:   Mon, 18 May 2020 19:37:17 +0200
-Message-Id: <20200518173543.499889150@linuxfoundation.org>
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Stefan Riedmueller <s.riedmueller@phytec.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.6 149/194] ARM: dts: imx27-phytec-phycard-s-rdk: Fix the I2C1 pinctrl entries
+Date:   Mon, 18 May 2020 19:37:19 +0200
+Message-Id: <20200518173543.673488900@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -61,47 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Jones <pjones@redhat.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-commit 82152d424b6cb6fc1ede7d03d69c04e786688740 upstream.
+commit 0caf34350a25907515d929a9c77b9b206aac6d1e upstream.
 
-This was sort of annoying me:
+The I2C2 pins are already used and the following errors are seen:
 
-random:~$ dmesg | tail -1
-[523884.039227] [drm] Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.
-random:~$ dmesg | grep -c "Reducing the compressed"
-47
+imx27-pinctrl 10015000.iomuxc: pin MX27_PAD_I2C2_SDA already requested by 10012000.i2c; cannot claim for 1001d000.i2c
+imx27-pinctrl 10015000.iomuxc: pin-69 (1001d000.i2c) status -22
+imx27-pinctrl 10015000.iomuxc: could not request pin 69 (MX27_PAD_I2C2_SDA) from group i2c2grp  on device 10015000.iomuxc
+imx-i2c 1001d000.i2c: Error applying setting, reverse things back
+imx-i2c: probe of 1001d000.i2c failed with error -22
 
-This patch makes it DRM_INFO_ONCE() just like the similar message
-farther down in that function is pr_info_once().
+Fix it by adding the correct I2C1 IOMUX entries for the pinctrl_i2c1 group.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Peter Jones <pjones@redhat.com>
-Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Closes: https://gitlab.freedesktop.org/drm/intel/-/issues/1745
-Link: https://patchwork.freedesktop.org/patch/msgid/20180706190424.29194-1-pjones@redhat.com
-[vsyrjala: Rebase due to per-device logging]
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-(cherry picked from commit 6b7fc6a3e6af4ff5773949d0fed70d8e7f68d5ce)
-[Rodrigo: port back to DRM_INFO_ONCE]
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: <stable@vger.kernel.org>
+Fixes: 61664d0b432a ("ARM: dts: imx27 phyCARD-S pinctrl")
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/display/intel_fbc.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/i915/display/intel_fbc.c
-+++ b/drivers/gpu/drm/i915/display/intel_fbc.c
-@@ -478,8 +478,7 @@ static int intel_fbc_alloc_cfb(struct dr
- 	if (!ret)
- 		goto err_llb;
- 	else if (ret > 1) {
--		DRM_INFO("Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.\n");
--
-+		DRM_INFO_ONCE("Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.\n");
- 	}
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
+@@ -75,8 +75,8 @@
+ 	imx27-phycard-s-rdk {
+ 		pinctrl_i2c1: i2c1grp {
+ 			fsl,pins = <
+-				MX27_PAD_I2C2_SDA__I2C2_SDA 0x0
+-				MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
++				MX27_PAD_I2C_DATA__I2C_DATA 0x0
++				MX27_PAD_I2C_CLK__I2C_CLK 0x0
+ 			>;
+ 		};
  
- 	fbc->threshold = ret;
 
 
