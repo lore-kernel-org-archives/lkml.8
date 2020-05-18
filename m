@@ -2,135 +2,158 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB33C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E41C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26C24207ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709FF20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbgERKpK (ORCPT
+        id S1726800AbgERKpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:45:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36352 "EHLO mx2.suse.de"
+        Mon, 18 May 2020 06:45:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:37766 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgERKpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:45:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DE449AF98;
-        Mon, 18 May 2020 10:45:09 +0000 (UTC)
-Subject: Re: [PATCH v5 08/10] mmap locking API: add MMAP_LOCK_INITIALIZER
-To:     Michel Lespinasse <walken@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-References: <20200422001422.232330-1-walken@google.com>
- <20200422001422.232330-9-walken@google.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <90cfe0e5-2ec9-3a10-0ce6-245bb456a120@suse.cz>
-Date:   Mon, 18 May 2020 12:45:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726274AbgERKpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 06:45:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52543101E;
+        Mon, 18 May 2020 03:45:37 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBF4B3F52E;
+        Mon, 18 May 2020 03:45:33 -0700 (PDT)
+Date:   Mon, 18 May 2020 11:45:24 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Lecopzer Chen <lecopzer@gmail.com>, alexandru.elisei@arm.com
+Cc:     Sumit Garg <sumit.garg@linaro.org>, julien.thierry.kdev@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jian-Lin Chen <lecopzer.chen@mediatek.com>,
+        alexander.shishkin@linux.intel.com,
+        Catalin Marinas <catalin.marinas@arm.com>, jolsa@redhat.com,
+        acme@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        mingo@redhat.com, linux-mediatek@lists.infradead.org,
+        matthias.bgg@gmail.com, namhyung@kernel.org,
+        Will Deacon <will@kernel.org>, yj.chiang@mediatek.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 0/3] arm64: perf: Add support for Perf NMI interrupts
+Message-ID: <20200518104524.GA1224@C02TD0UTHF1T.local>
+References: <20200516124857.75004-1-lecopzer@gmail.com>
+ <CAFA6WYNwp+_ENiS8QDao5+RXyt5ofJZyq6c5CKG_d0CNEmBNYg@mail.gmail.com>
+ <CANr2M19unLW8n0P2DiOYEZ=GZcaD-L2ygPht_5HNtNZ6e4h6xQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200422001422.232330-9-walken@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANr2M19unLW8n0P2DiOYEZ=GZcaD-L2ygPht_5HNtNZ6e4h6xQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/22/20 2:14 AM, Michel Lespinasse wrote:
-> Define a new initializer for the mmap locking api.
-> Initially this just evaluates to __RWSEM_INITIALIZER as the API
-> is defined as wrappers around rwsem.
+Hi all,
+
+On Mon, May 18, 2020 at 02:26:00PM +0800, Lecopzer Chen wrote:
+> HI Sumit,
 > 
-> Signed-off-by: Michel Lespinasse <walken@google.com>
-
-
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-
-
-Nit below.
-
-> ---
->  arch/x86/kernel/tboot.c    | 2 +-
->  drivers/firmware/efi/efi.c | 2 +-
->  include/linux/mmap_lock.h  | 3 +++
->  mm/init-mm.c               | 2 +-
->  4 files changed, 6 insertions(+), 3 deletions(-)
+> Thanks for your information.
 > 
-> diff --git a/arch/x86/kernel/tboot.c b/arch/x86/kernel/tboot.c
-> index b89f6ac6a0c0..885058325c20 100644
-> --- a/arch/x86/kernel/tboot.c
-> +++ b/arch/x86/kernel/tboot.c
-> @@ -90,7 +90,7 @@ static struct mm_struct tboot_mm = {
->  	.pgd            = swapper_pg_dir,
->  	.mm_users       = ATOMIC_INIT(2),
->  	.mm_count       = ATOMIC_INIT(1),
-> -	.mmap_sem       = __RWSEM_INITIALIZER(init_mm.mmap_sem),
-> +	MMAP_LOCK_INITIALIZER(init_mm)
->  	.page_table_lock =  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
->  	.mmlist         = LIST_HEAD_INIT(init_mm.mmlist),
->  };
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 911a2bd0f6b7..916313ec8acb 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -54,7 +54,7 @@ struct mm_struct efi_mm = {
->  	.mm_rb			= RB_ROOT,
->  	.mm_users		= ATOMIC_INIT(2),
->  	.mm_count		= ATOMIC_INIT(1),
-> -	.mmap_sem		= __RWSEM_INITIALIZER(efi_mm.mmap_sem),
-> +	MMAP_LOCK_INITIALIZER(efi_mm)
->  	.page_table_lock	= __SPIN_LOCK_UNLOCKED(efi_mm.page_table_lock),
->  	.mmlist			= LIST_HEAD_INIT(efi_mm.mmlist),
->  	.cpu_bitmap		= { [BITS_TO_LONGS(NR_CPUS)] = 0},
-> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-> index d1826ce42f00..9e104835a0d1 100644
-> --- a/include/linux/mmap_lock.h
-> +++ b/include/linux/mmap_lock.h
-> @@ -1,6 +1,9 @@
->  #ifndef _LINUX_MMAP_LOCK_H
->  #define _LINUX_MMAP_LOCK_H
->  
-> +#define MMAP_LOCK_INITIALIZER(name) \
-> +	.mmap_sem = __RWSEM_INITIALIZER(name.mmap_sem),
-
-"(name).mmap_sem" is safer in a macro?
-
-> +
->  static inline void mmap_init_lock(struct mm_struct *mm)
->  {
->  	init_rwsem(&mm->mmap_sem);
-> diff --git a/mm/init-mm.c b/mm/init-mm.c
-> index 19603302a77f..fe9c03d8e07b 100644
-> --- a/mm/init-mm.c
-> +++ b/mm/init-mm.c
-> @@ -31,7 +31,7 @@ struct mm_struct init_mm = {
->  	.pgd		= swapper_pg_dir,
->  	.mm_users	= ATOMIC_INIT(2),
->  	.mm_count	= ATOMIC_INIT(1),
-> -	.mmap_sem	= __RWSEM_INITIALIZER(init_mm.mmap_sem),
-> +	MMAP_LOCK_INITIALIZER(init_mm)
->  	.page_table_lock =  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
->  	.arg_lock	=  __SPIN_LOCK_UNLOCKED(init_mm.arg_lock),
->  	.mmlist		= LIST_HEAD_INIT(init_mm.mmlist),
+> I've already implemented IPI (same as you did [1], little difference
+> in detail), hardlockup detector and perf in last year(2019) for
+> debuggability.
+> And now we tend to upstream to reduce kernel maintaining effort.
+> I'm glad if someone in ARM can do this work :)
 > 
+> Hi Julien,
+> 
+> Does any Arm maintainers can proceed this action?
 
+Alexandru (Cc'd) has been rebasing and reworking Julien's patches, which
+is my preferred approach.
+
+I understand that's not quite ready for posting since he's investigating
+some of the nastier subtleties (e.g. mutual exclusion with the NMI), but
+maybe we can put the work-in-progress patches somewhere in the mean
+time.
+
+Alexandru, do you have an idea of what needs to be done, and/or when you
+expect you could post that?
+
+Thanks,
+Mark.
+
+> This is really useful in debugging.
+> Thank you!!
+> 
+> 
+> 
+> [1] https://lkml.org/lkml/2020/4/24/328
+> 
+> 
+> Lecopzer
+> 
+> Sumit Garg <sumit.garg@linaro.org> 於 2020年5月18日 週一 下午1:46寫道：
+> >
+> > + Julien
+> >
+> > Hi Lecopzer,
+> >
+> > On Sat, 16 May 2020 at 18:20, Lecopzer Chen <lecopzer@gmail.com> wrote:
+> > >
+> > > These series implement Perf NMI funxtionality and depends on
+> > > Pseudo NMI [1] which has been upstreamed.
+> > >
+> > > In arm64 with GICv3, Pseudo NMI was implemented for NMI-like interruts.
+> > > That can be extended to Perf NMI which is the prerequisite for hard-lockup
+> > > detector which had already a standard interface inside Linux.
+> > >
+> > > Thus the first step we need to implement perf NMI interface and make sure
+> > > it works fine.
+> > >
+> >
+> > This is something that is already implemented via Julien's patch-set
+> > [1]. Its v4 has been floating since July, 2019 and I couldn't find any
+> > major blocking comments but not sure why things haven't progressed
+> > further.
+> >
+> > Maybe Julien or Arm maintainers can provide updates on existing
+> > patch-set [1] and how we should proceed further with this interesting
+> > feature.
+> >
+> > And regarding hard-lockup detection, I have been able to enable it
+> > based on perf NMI events using Julien's perf patch-set [1]. Have a
+> > look at the patch here [2].
+> >
+> > [1] https://patchwork.kernel.org/cover/11047407/
+> > [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2020-May/732227.html
+> >
+> > -Sumit
+> >
+> > > Perf NMI has been test by dd if=/dev/urandom of=/dev/null like the link [2]
+> > > did.
+> > >
+> > > [1] https://lkml.org/lkml/2019/1/31/535
+> > > [2] https://www.linaro.org/blog/debugging-arm-kernels-using-nmifiq
+> > >
+> > >
+> > > Lecopzer Chen (3):
+> > >   arm_pmu: Add support for perf NMI interrupts registration
+> > >   arm64: perf: Support NMI context for perf event ISR
+> > >   arm64: Kconfig: Add support for the Perf NMI
+> > >
+> > >  arch/arm64/Kconfig             | 10 +++++++
+> > >  arch/arm64/kernel/perf_event.c | 36 ++++++++++++++++++------
+> > >  drivers/perf/arm_pmu.c         | 51 ++++++++++++++++++++++++++++++----
+> > >  include/linux/perf/arm_pmu.h   |  6 ++++
+> > >  4 files changed, 88 insertions(+), 15 deletions(-)
+> > >
+> > > --
+> > > 2.25.1
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
