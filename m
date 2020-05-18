@@ -2,105 +2,100 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C902C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB992C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4621C20756
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68182065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:03:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s37biS52"
+	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="SW4u/tpY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgERPDx (ORCPT
+        id S1728292AbgERPD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 11:03:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34866 "EHLO
+        Mon, 18 May 2020 11:03:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgERPDx (ORCPT
+        with ESMTP id S1726998AbgERPD4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 11:03:53 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15E39C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 08:03:51 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id z15so78915pjb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 08:03:51 -0700 (PDT)
+        Mon, 18 May 2020 11:03:56 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C07D0C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 08:03:56 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id k18so10962003ion.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 08:03:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WgmxNih5o7lZXHfbWl9I3AtHRbIULLMSDkl7rFCTknE=;
-        b=s37biS52LBSY4wjTk2uU75fo73grJe1Bprmn0WzYTdY+9jDKJUKnntDV2RhFYAu/Sw
-         IYtmt4gYUF7Wc2sC3ZWKv8Qjq7ij33/F0YhqVmq2J24OAEZ3GnVJ/PNVvwCUzyvGSnQE
-         6h4tj2fhO7alMmc/2bNlGXAyKFeUmFtYmltJOhp3qJ/yfcQUKXASbXIYGGzwCwGPqTva
-         7DemjyYkUBCQJwHxoy7eVVIGcG9Xbi4aA0tUc+raEElr8dprKQLZ092YUuAXWckSMf+h
-         r82jJexcn2WUIz4Q7f63qmWoeU8VMFzVgrG+QmJCLRpI4J42vjz6jzmFmDLDbkOrINZd
-         DiXA==
+        d=ieee.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zhBCLV6Pq+PIRNumJDFC+hT6dCYyurG69WuSPlFC+DE=;
+        b=SW4u/tpYmJKb5hF00ZiUK7OHKeHyg8BR91taO3uS78PK3g2ArFVd9a62KZv6xuy8ox
+         /kg1mA67VfJUMDPBwmNigfm8eIhITbGuopGqaY1CWn85xlwmQVq71zmFMKFTU6s06wDW
+         ycU30OfwVZ0ye2/wpGID46Ev86K9JMmJHXpTE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WgmxNih5o7lZXHfbWl9I3AtHRbIULLMSDkl7rFCTknE=;
-        b=o9LjCywsxKWU+T7EQ8GNoTg+zVknc2h7xPFa8Zt/dEaymsfTjaOyzvG7p6XP0gbGol
-         +Zbbld1byyDiG9uuRyal93pulwmxXhXlE7FGIU0b50ja1DEEazLhSMoU5VPXp2ldWyws
-         PELzvKnVLOjSZGYgeJqQaGH7uL6i1mWyWAwA0p3SOQsXBgteZC9s4qB1NQs8fbj+aG8v
-         hV4DXXmc5dfkGMq4Se5IX07bJqzGLdha0HDTLW7d+xdgawm3DdRpWwEfQRbyFuJsEFk7
-         zNqUzzNzscQa7yNnYUdnOOJt6P2JqiTZOR5F0OBdocP6NLZejQkj1uLtIwdSIN40hUqC
-         RN7g==
-X-Gm-Message-State: AOAM533yz3fhgCr7tdcECt4nVRs9NstLnXQfYvz+i5g8S/lUA/DEhAMx
-        kVbDURo0++1HE9LGmm+2SnM=
-X-Google-Smtp-Source: ABdhPJy1il1HPxFZ4CMIw6qSCNCAYzwkanG2+QXgzJ9xj6UUukyerk2v7SMZyIwnlULbjAtJNpz1Vg==
-X-Received: by 2002:a17:902:7682:: with SMTP id m2mr10535509pll.281.1589814230632;
-        Mon, 18 May 2020 08:03:50 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:418:e389:dd54:a815:71b4:fdc])
-        by smtp.gmail.com with ESMTPSA id 7sm6329586pfc.203.2020.05.18.08.03.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 08:03:49 -0700 (PDT)
-From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-To:     Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     aishwaryarj100@gmail.com
-Subject: [PATCH] drm/i915/gvt: Use ARRAY_SIZE for vgpu_types
-Date:   Mon, 18 May 2020 20:33:36 +0530
-Message-Id: <20200518150336.15265-1-aishwaryarj100@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zhBCLV6Pq+PIRNumJDFC+hT6dCYyurG69WuSPlFC+DE=;
+        b=DjBi7mFsFW93xRZE25a3FvulmirdPcxibuji3/CR/IX9qG5Mhgrxp4xr+wc68axlZI
+         AL2FuiuSURDh+AbbPQM+fxjThDhOVaoIHl7bHOWhBiOxI3gp5dOgc9K2L8sLanekPXB+
+         hAddpRpjFyTLNuYtdpNbzi845oZ/qL3wNxHth5gl9C6li1nH68XeaxApXsFgO76iBiRW
+         +dNFwds2vuRFM6vNh2y+5xe0JEuSfTfcxINb/Qof2DoUMXh+IOVnypnxdNWVvQgAVyZH
+         Uot7kAgKDfT4ectVvhEQjd1d+9/0jAemCRrssW4tmMeCT9ijn4AICvnj+rxMpnyTqvZ6
+         vXMw==
+X-Gm-Message-State: AOAM533QgdS6w6fBnzwkktQhincbv/y8chWJ1tIFWLB7xGEMrcqfG/AI
+        a105a5JaP+qF8Ipg945sHJA7YA==
+X-Google-Smtp-Source: ABdhPJxXUsQQZxuy+jef26vC22p6/tcVRbzM2T2as9hfXdqTCjcvfVhSyuoK9CHzA97x4Kv81uabHg==
+X-Received: by 2002:a02:a895:: with SMTP id l21mr15553885jam.82.1589814234911;
+        Mon, 18 May 2020 08:03:54 -0700 (PDT)
+Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id q4sm4383395ilk.12.2020.05.18.08.03.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 08:03:54 -0700 (PDT)
+Subject: Re: [PATCH] drivers: ipa: use devm_kzalloc for simplicity
+To:     David Miller <davem@davemloft.net>, kuba@kernel.org
+Cc:     wenhu.wang@vivo.com, elder@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@vivo.com
+References: <20200514035520.2162-1-wenhu.wang@vivo.com>
+ <20200514101516.0b2ccda2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200514.124700.630104670938763588.davem@davemloft.net>
+From:   Alex Elder <elder@ieee.org>
+Message-ID: <a13b6985-98d6-5996-1ef7-6d64cdd75c15@ieee.org>
+Date:   Mon, 18 May 2020 10:03:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200514.124700.630104670938763588.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prefer ARRAY_SIZE instead of using sizeof
+On 5/14/20 2:47 PM, David Miller wrote:
+> From: Jakub Kicinski <kuba@kernel.org>
+> Date: Thu, 14 May 2020 10:15:16 -0700
+> 
+>> On Wed, 13 May 2020 20:55:20 -0700 Wang Wenhu wrote:
+>>> Make a substitution of kzalloc with devm_kzalloc to simplify the
+>>> ipa_probe() process.
+>>>
+>>> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+>>
+>> The code is perfectly fine as is. What problem are you trying to solve?
+> 
+> I agree, these kinds of transformations are kind of excessive.
 
-Fixes coccicheck warning: Use ARRAY_SIZE
+I have considered using the devm_*() functions, but if I were to
+make such a switch it would be done comprehensively, throughout
+the driver.  It is not something I plan to do in the near term
+though.
 
-Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
----
- drivers/gpu/drm/i915/gvt/vgpu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/i915/gvt/vgpu.c b/drivers/gpu/drm/i915/gvt/vgpu.c
-index 1d5ff88078bd..7d361623ff67 100644
---- a/drivers/gpu/drm/i915/gvt/vgpu.c
-+++ b/drivers/gpu/drm/i915/gvt/vgpu.c
-@@ -124,7 +124,7 @@ int intel_gvt_init_vgpu_types(struct intel_gvt *gvt)
- 	 */
- 	low_avail = gvt_aperture_sz(gvt) - HOST_LOW_GM_SIZE;
- 	high_avail = gvt_hidden_sz(gvt) - HOST_HIGH_GM_SIZE;
--	num_types = sizeof(vgpu_types) / sizeof(vgpu_types[0]);
-+	num_types = ARRAY_SIZE(vgpu_types);
- 
- 	gvt->types = kcalloc(num_types, sizeof(struct intel_vgpu_type),
- 			     GFP_KERNEL);
--- 
-2.17.1
-
+					-Alex
