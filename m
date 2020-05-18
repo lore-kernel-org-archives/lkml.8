@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59313C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27B55207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DEC1207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824759;
-	bh=UbfeksTSL+z0wNvTmx3BLuXXAbmKMJLCP1x1BcvqVSQ=;
+	s=default; t=1589824762;
+	bh=eV3kUzzlf5OSTxkiuVstu95fzxA6qQ/NqCtoRjvFgUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S1oGHiN845pOdpLOS2mpP8hLVOB0hLLUiSd98UTIbPZ4wGp015UrRp085bFt2j2fr
-	 K9qaAVFts/z2OcV47diCBtJ3jXSVBqstOp1Fnjc6tpr/rBkreMg/QpjKW+AsHDa4gF
-	 +Izeb2SJ173Jzfv2TtVHeN4lGpzdw0ErHiwWpMHs=
+	b=GALEjRpsoKmnO3s4zQpOSnnHmSfJOog/j7TInic6LH48/OtWukWIEvogI64m5ZCbs
+	 6ztWdq3dI4hDQU02UlWREHoM2StLRtRpkfYkXGuM0b1pRkcay2JiuFdvUIir1c6+Cx
+	 /oJ77cEeoGU53cuNC1yMDmEVraAF9wnkGV57WzNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732026AbgERR7S (ORCPT
+        id S1731048AbgERR7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:59:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:59:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732006AbgERR7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:59:10 -0400
+        id S1732014AbgERR7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:59:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C518207C4;
-        Mon, 18 May 2020 17:59:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F458207C4;
+        Mon, 18 May 2020 17:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824749;
-        bh=UbfeksTSL+z0wNvTmx3BLuXXAbmKMJLCP1x1BcvqVSQ=;
+        s=default; t=1589824754;
+        bh=eV3kUzzlf5OSTxkiuVstu95fzxA6qQ/NqCtoRjvFgUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gT3y2HTirBqKkytZTpdn1XHumiQFvNGO4nrW6baskChWlfWlOlpgxvlz006ky9D2F
-         n0czwt4CEFuPMlR61+NiXf0cZy1RiBMTyHIpSZMO8iWlG8+PPG7IytYZ5g25tmDNcM
-         kcNAwie1TQTtf+Gn8KG8oBnqmWhB1mS3rXNGGsvk=
+        b=Uym2KRsHpfJH/l52ORPpwCaKzCm17ERxvRj+u2EeTM3rAys5zwJtR3WQF+OGclJu/
+         ZNmFmx97MtPoPlGkbCZ/fTTNIKRCbKiV5KsGOC+lXk+jCKvQ2646tkZ05cWb5SAAjz
+         1kyts8NnNi2eVFufm3myp10n/8Fl7EnMiGP7S/8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 119/147] powerpc/32s: Fix build failure with CONFIG_PPC_KUAP_DEBUG
-Date:   Mon, 18 May 2020 19:37:22 +0200
-Message-Id: <20200518173527.836940374@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 5.4 138/147] ARM: dts: r8a73a4: Add missing CMT1 interrupts
+Date:   Mon, 18 May 2020 19:37:41 +0200
+Message-Id: <20200518173530.326943987@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -59,35 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit 4833ce06e6855d526234618b746ffb71d6612c9a upstream.
+commit 0f739fdfe9e5ce668bd6d3210f310df282321837 upstream.
 
-gpr2 is not a parametre of kuap_check(), it doesn't exist.
+The R-Mobile APE6 Compare Match Timer 1 generates 8 interrupts, one for
+each channel, but currently only 1 is described.
+Fix this by adding the missing interrupts.
 
-Use gpr instead.
-
-Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/ea599546f2a7771bde551393889e44e6b2632332.1587368807.git.christophe.leroy@c-s.fr
+Fixes: f7b65230019b9dac ("ARM: shmobile: r8a73a4: Add CMT1 node")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20200408090926.25201-1-geert+renesas@glider.be
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/book3s/32/kup.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a73a4.dtsi |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/include/asm/book3s/32/kup.h
-+++ b/arch/powerpc/include/asm/book3s/32/kup.h
-@@ -75,7 +75,7 @@
- 
- .macro kuap_check	current, gpr
- #ifdef CONFIG_PPC_KUAP_DEBUG
--	lwz	\gpr2, KUAP(thread)
-+	lwz	\gpr, KUAP(thread)
- 999:	twnei	\gpr, 0
- 	EMIT_BUG_ENTRY 999b, __FILE__, __LINE__, (BUGFLAG_WARNING | BUGFLAG_ONCE)
- #endif
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -131,7 +131,14 @@
+ 	cmt1: timer@e6130000 {
+ 		compatible = "renesas,r8a73a4-cmt1", "renesas,rcar-gen2-cmt1";
+ 		reg = <0 0xe6130000 0 0x1004>;
+-		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
++		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A73A4_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&pd_c5>;
 
 
