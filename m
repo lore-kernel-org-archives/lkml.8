@@ -2,200 +2,96 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9165C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A8FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF7BC207D3
+	by mail.kernel.org (Postfix) with ESMTP id EBB7C20715
 	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825844;
-	bh=LMPH2QjOI+Enc5cMTVOmYGkwoFRvNBy3QoLbbmwcozk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i4iOmUyEPOJanKE5xeDGpn2hqIKb0mAAPY+Mv9t+wIZ6LGvlNVLxJHaLJx0i2M1DH
-	 Bzr7jtxK28DLpl2Ss0CjuLIXnamNApX5IufsHnEphNllNVk4dikNx6ctyoHZeA5Vxs
-	 pkyFjTgoAZWgbqy9KWJxnev+0D8thnFSmE+bXTgc=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="MYFCMeDk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387726AbgERSRW (ORCPT
+        id S1731626AbgERR7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:17:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731778AbgERR5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:57:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0382720715;
-        Mon, 18 May 2020 17:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824642;
-        bh=LMPH2QjOI+Enc5cMTVOmYGkwoFRvNBy3QoLbbmwcozk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FjP40WLsNlfzDC8Tfu17c3ciDhypdWIapZj8WqfmCfwhT3+j/mPZJRV1NGkEX4UTl
-         +y0n6gc7mYhgenprwf0upwXm4cJukBdUmM5KipwfKYa8e+xFn1JGa3g/25famAYMR5
-         9Y3Lk/XfsAPbCuWfYEm2xWQQ5oXGb9RAU07o8XKM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 094/147] net/rds: Use ERR_PTR for rds_message_alloc_sgs()
-Date:   Mon, 18 May 2020 19:36:57 +0200
-Message-Id: <20200518173525.256011622@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
-References: <20200518173513.009514388@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 18 May 2020 13:59:41 -0400
+Received: from rcdn-iport-8.cisco.com ([173.37.86.79]:28453 "EHLO
+        rcdn-iport-8.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731609AbgERR7e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:59:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=1409; q=dns/txt; s=iport;
+  t=1589824773; x=1591034373;
+  h=from:to:cc:subject:date:message-id;
+  bh=I6Ye1oWv20B/Y6eYK4Iqy3OEerd2+jAvxiUKGYznuqo=;
+  b=MYFCMeDkjwhy+ggODO8sP8T2AQ7PgXmhypyokvTpyshWPHyB1JsIqlQJ
+   d35Uk3T0qJRmdhchagZdepHNn94I/ivf0RKPfnDIjzpg0WZu2CnGBtlXR
+   F1R7DngPWhZnHwyvnUU1l71h63RMnQcNe/KoNNOislgn7xHUjzL+SJ9DZ
+   Q=;
+X-IronPort-AV: E=Sophos;i="5.73,407,1583193600"; 
+   d="scan'208";a="768458453"
+Received: from rcdn-core-10.cisco.com ([173.37.93.146])
+  by rcdn-iport-8.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 18 May 2020 17:59:32 +0000
+Received: from zorba.cisco.com ([10.24.1.223])
+        by rcdn-core-10.cisco.com (8.15.2/8.15.2) with ESMTP id 04IHxUGL000659;
+        Mon, 18 May 2020 17:59:32 GMT
+From:   Daniel Walker <danielwa@cisco.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jinhua Wu <jinhwu@cisco.com>, xe-linux-external@cisco.com,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] mtd: spi-nor: intel-spi: fix forced writable option
+Date:   Mon, 18 May 2020 10:59:30 -0700
+Message-Id: <20200518175930.10948-2-danielwa@cisco.com>
+X-Mailer: git-send-email 2.17.1
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 10.24.1.223, [10.24.1.223]
+X-Outbound-Node: rcdn-core-10.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+This option currently doesn't work as expected. If the BIOS has this
+flash as read-only there is no way to change this thru the driver.
+There is a parameter which allows the flash to become writable with the
+"writable" option to the module, but it does nothing if the BIOS has it
+set to read-only.
 
-commit 7dba92037baf3fa00b4880a31fd532542264994c upstream.
+I would expect this option would make the flash writable regardless of
+the BIOS settings. This patch changes this option so the BIOS setting
+doesn't stop the writable option from enabling read write on the flash.
 
-Returning the error code via a 'int *ret' when the function returns a
-pointer is very un-kernely and causes gcc 10's static analysis to choke:
+Original patch by Jinhua Wu <jinhwu@cisco.com>
 
-net/rds/message.c: In function ‘rds_message_map_pages’:
-net/rds/message.c:358:10: warning: ‘ret’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  358 |   return ERR_PTR(ret);
-
-Use a typical ERR_PTR return instead.
-
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Jinhua Wu <jinhwu@cisco.com>
+Cc: xe-linux-external@cisco.com
+Signed-off-by: Daniel Walker <danielwa@cisco.com>
 ---
- net/rds/message.c |   19 ++++++-------------
- net/rds/rdma.c    |   12 ++++++++----
- net/rds/rds.h     |    3 +--
- net/rds/send.c    |    6 ++++--
- 4 files changed, 19 insertions(+), 21 deletions(-)
+ drivers/mtd/spi-nor/controllers/intel-spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/rds/message.c
-+++ b/net/rds/message.c
-@@ -308,26 +308,20 @@ out:
- /*
-  * RDS ops use this to grab SG entries from the rm's sg pool.
-  */
--struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents,
--					  int *ret)
-+struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents)
- {
- 	struct scatterlist *sg_first = (struct scatterlist *) &rm[1];
- 	struct scatterlist *sg_ret;
+diff --git a/drivers/mtd/spi-nor/controllers/intel-spi.c b/drivers/mtd/spi-nor/controllers/intel-spi.c
+index e5a3d51a2e4d..68a5877bfc0b 100644
+--- a/drivers/mtd/spi-nor/controllers/intel-spi.c
++++ b/drivers/mtd/spi-nor/controllers/intel-spi.c
+@@ -954,7 +954,7 @@ struct intel_spi *intel_spi_probe(struct device *dev,
+ 	intel_spi_fill_partition(ispi, &part);
  
--	if (WARN_ON(!ret))
--		return NULL;
--
- 	if (nents <= 0) {
- 		pr_warn("rds: alloc sgs failed! nents <= 0\n");
--		*ret = -EINVAL;
--		return NULL;
-+		return ERR_PTR(-EINVAL);
- 	}
+ 	/* Prevent writes if not explicitly enabled */
+-	if (!ispi->writeable || !writeable)
++	if (!ispi->writeable && !writeable)
+ 		ispi->nor.mtd.flags &= ~MTD_WRITEABLE;
  
- 	if (rm->m_used_sgs + nents > rm->m_total_sgs) {
- 		pr_warn("rds: alloc sgs failed! total %d used %d nents %d\n",
- 			rm->m_total_sgs, rm->m_used_sgs, nents);
--		*ret = -ENOMEM;
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 	}
- 
- 	sg_ret = &sg_first[rm->m_used_sgs];
-@@ -343,7 +337,6 @@ struct rds_message *rds_message_map_page
- 	unsigned int i;
- 	int num_sgs = DIV_ROUND_UP(total_len, PAGE_SIZE);
- 	int extra_bytes = num_sgs * sizeof(struct scatterlist);
--	int ret;
- 
- 	rm = rds_message_alloc(extra_bytes, GFP_NOWAIT);
- 	if (!rm)
-@@ -352,10 +345,10 @@ struct rds_message *rds_message_map_page
- 	set_bit(RDS_MSG_PAGEVEC, &rm->m_flags);
- 	rm->m_inc.i_hdr.h_len = cpu_to_be32(total_len);
- 	rm->data.op_nents = DIV_ROUND_UP(total_len, PAGE_SIZE);
--	rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs, &ret);
--	if (!rm->data.op_sg) {
-+	rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs);
-+	if (IS_ERR(rm->data.op_sg)) {
- 		rds_message_put(rm);
--		return ERR_PTR(ret);
-+		return ERR_CAST(rm->data.op_sg);
- 	}
- 
- 	for (i = 0; i < rm->data.op_nents; ++i) {
---- a/net/rds/rdma.c
-+++ b/net/rds/rdma.c
-@@ -624,9 +624,11 @@ int rds_cmsg_rdma_args(struct rds_sock *
- 	op->op_active = 1;
- 	op->op_recverr = rs->rs_recverr;
- 	WARN_ON(!nr_pages);
--	op->op_sg = rds_message_alloc_sgs(rm, nr_pages, &ret);
--	if (!op->op_sg)
-+	op->op_sg = rds_message_alloc_sgs(rm, nr_pages);
-+	if (IS_ERR(op->op_sg)) {
-+		ret = PTR_ERR(op->op_sg);
- 		goto out_pages;
-+	}
- 
- 	if (op->op_notify || op->op_recverr) {
- 		/* We allocate an uninitialized notifier here, because
-@@ -828,9 +830,11 @@ int rds_cmsg_atomic(struct rds_sock *rs,
- 	rm->atomic.op_silent = !!(args->flags & RDS_RDMA_SILENT);
- 	rm->atomic.op_active = 1;
- 	rm->atomic.op_recverr = rs->rs_recverr;
--	rm->atomic.op_sg = rds_message_alloc_sgs(rm, 1, &ret);
--	if (!rm->atomic.op_sg)
-+	rm->atomic.op_sg = rds_message_alloc_sgs(rm, 1);
-+	if (IS_ERR(rm->atomic.op_sg)) {
-+		ret = PTR_ERR(rm->atomic.op_sg);
- 		goto err;
-+	}
- 
- 	/* verify 8 byte-aligned */
- 	if (args->local_addr & 0x7) {
---- a/net/rds/rds.h
-+++ b/net/rds/rds.h
-@@ -849,8 +849,7 @@ rds_conn_connecting(struct rds_connectio
- 
- /* message.c */
- struct rds_message *rds_message_alloc(unsigned int nents, gfp_t gfp);
--struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents,
--					  int *ret);
-+struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents);
- int rds_message_copy_from_user(struct rds_message *rm, struct iov_iter *from,
- 			       bool zcopy);
- struct rds_message *rds_message_map_pages(unsigned long *page_addrs, unsigned int total_len);
---- a/net/rds/send.c
-+++ b/net/rds/send.c
-@@ -1274,9 +1274,11 @@ int rds_sendmsg(struct socket *sock, str
- 
- 	/* Attach data to the rm */
- 	if (payload_len) {
--		rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs, &ret);
--		if (!rm->data.op_sg)
-+		rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs);
-+		if (IS_ERR(rm->data.op_sg)) {
-+			ret = PTR_ERR(rm->data.op_sg);
- 			goto out;
-+		}
- 		ret = rds_message_copy_from_user(rm, &msg->msg_iter, zcopy);
- 		if (ret)
- 			goto out;
-
+ 	ret = mtd_device_register(&ispi->nor.mtd, &part, 1);
+-- 
+2.17.1
 
