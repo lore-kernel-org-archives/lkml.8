@@ -2,53 +2,55 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F51CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D680A207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D92207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824521;
-	bh=OePKM7A1K0XYiRWplDYUiamyPrsd/Yopn1WWNiCHw9c=;
+	s=default; t=1589824525;
+	bh=8ZRbF1oT0PlniE7k0j5hKHHVmF3lXbnS8elI06OuwuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0l/T6DuOn4X/Q0Sxpck1QxG6io68bnbBKr9EXcbJAJrVfK0HZ15mlp9hw72U90eTv
-	 eULgzW1tklwHHlsD4kga0Dp0KgkLkaKWnHwAbXFJCQcAO4CaMybLa4GaGA9n2MwsNY
-	 lvH21yTZanMv1JajzgcLHXisd1SqBL6GUwLZflKM=
+	b=kDA8fj+VfMC/1Z6ssvcmA5CZDiqg3j3WAKe22i/QWoVMJ1bbTn7wB7k5vJwMU78cX
+	 gmU7qak8mecbQ6cSYFkZFo+F/F+38MqcbJcp8kpQ16QwBqVBwE/0RiDO8QZN3MEj+G
+	 HMAy5uelw9I3+Me6QVK+83cFDOnXeHeAIVYru76g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731430AbgERRzV (ORCPT
+        id S1730935AbgERRzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60550 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:55:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729932AbgERRzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:55:15 -0400
+        id S1730610AbgERRzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:55:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4071205CB;
-        Mon, 18 May 2020 17:55:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 095FB20674;
+        Mon, 18 May 2020 17:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824515;
-        bh=OePKM7A1K0XYiRWplDYUiamyPrsd/Yopn1WWNiCHw9c=;
+        s=default; t=1589824520;
+        bh=8ZRbF1oT0PlniE7k0j5hKHHVmF3lXbnS8elI06OuwuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NlD2D42vER26Jtiv4QYge1DMt8RHifueg3QnDtijSKd46mgKEyhh6sONrmDGcz5uy
-         H3jLxo0tM9kdXKzHvQdDCkMfMu6mJr8tuU/G76Cocvtdib5jqXiclA87oEJfsfeDIw
-         cyFM9VL/oHEo/RyVVF5T+XpyBybIy/9rJczvKCdA=
+        b=z3VZYLjoXf8SqIYnsV2CxhKo8il1Cxkydsika/i1i7raEKjkxa5lptB8KUtWLRMKq
+         CLhZ9OqTMr66Pbhfp1Yv7QKXUyxrt1WUVbqfh6uT+KxDnIMzCdqfkyzjs6Gif3C9bf
+         EbaJcU21HMs7gYFn1zgD0utcc4E2hC8Zha3defhQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 009/147] net: moxa: Fix a potential double free_irq()
-Date:   Mon, 18 May 2020 19:35:32 +0200
-Message-Id: <20200518173514.563323808@linuxfoundation.org>
+Subject: [PATCH 5.4 037/147] riscv: fix vdso build with lld
+Date:   Mon, 18 May 2020 19:36:00 +0200
+Message-Id: <20200518173518.716945487@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -61,33 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Ilie Halip <ilie.halip@gmail.com>
 
-[ Upstream commit ee8d2267f0e39a1bfd95532da3a6405004114b27 ]
+[ Upstream commit 3c1918c8f54166598195d938564072664a8275b1 ]
 
-Should an irq requested with 'devm_request_irq' be released explicitly,
-it should be done by 'devm_free_irq()', not 'free_irq()'.
+When building with the LLVM linker this error occurrs:
+    LD      arch/riscv/kernel/vdso/vdso-syms.o
+  ld.lld: error: no input files
 
-Fixes: 6c821bd9edc9 ("net: Add MOXA ART SoCs ethernet driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This happens because the lld treats -R as an alias to -rpath, as opposed
+to ld where -R means --just-symbols.
+
+Use the long option name for compatibility between the two.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/805
+Reported-by: Dmitry Golovin <dima@golovin.in>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/moxa/moxart_ether.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/kernel/vdso/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/moxa/moxart_ether.c b/drivers/net/ethernet/moxa/moxart_ether.c
-index e1651756bf9da..f70bb81e1ed65 100644
---- a/drivers/net/ethernet/moxa/moxart_ether.c
-+++ b/drivers/net/ethernet/moxa/moxart_ether.c
-@@ -564,7 +564,7 @@ static int moxart_remove(struct platform_device *pdev)
- 	struct net_device *ndev = platform_get_drvdata(pdev);
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index 33b16f4212f7a..a4ee3a0e7d20d 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -33,15 +33,15 @@ $(obj)/vdso.so.dbg: $(src)/vdso.lds $(obj-vdso) FORCE
+ 	$(call if_changed,vdsold)
  
- 	unregister_netdev(ndev);
--	free_irq(ndev->irq, ndev);
-+	devm_free_irq(&pdev->dev, ndev->irq, ndev);
- 	moxart_mac_free_memory(ndev);
- 	free_netdev(ndev);
+ # We also create a special relocatable object that should mirror the symbol
+-# table and layout of the linked DSO.  With ld -R we can then refer to
+-# these symbols in the kernel code rather than hand-coded addresses.
++# table and layout of the linked DSO. With ld --just-symbols we can then
++# refer to these symbols in the kernel code rather than hand-coded addresses.
+ 
+ SYSCFLAGS_vdso.so.dbg = -shared -s -Wl,-soname=linux-vdso.so.1 \
+ 	-Wl,--build-id -Wl,--hash-style=both
+ $(obj)/vdso-dummy.o: $(src)/vdso.lds $(obj)/rt_sigreturn.o FORCE
+ 	$(call if_changed,vdsold)
+ 
+-LDFLAGS_vdso-syms.o := -r -R
++LDFLAGS_vdso-syms.o := -r --just-symbols
+ $(obj)/vdso-syms.o: $(obj)/vdso-dummy.o FORCE
+ 	$(call if_changed,ld)
  
 -- 
 2.20.1
