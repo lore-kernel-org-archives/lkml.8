@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FCDC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4755B207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F6E20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824087;
-	bh=AeFZBRmeTTtLuC6Tx5BC9x0nD9peBw6WD9MVHRwM2IU=;
+	s=default; t=1589824090;
+	bh=wUVPPEjiIhHY7brZale1h2jyk+zGoCYkcSBldVnpos4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SxIvAlIqCiRzKfsGMylDLrqeHjrdyPK+JKzX8F2zo0il2ridexn8xDC1jM+08GnKv
-	 E1UHIu/RkVMVoXZa/DDR419/tx5D05S9gOSQ+ECij7T16uEW72hETRQJRMD5YSlJmh
-	 EA+H13y4anf2DqbpZmS/Q9IhQranbTnko8n/RDV8=
+	b=EXsWIOr6RAthh5FD49jIWZQabjKO/RT6aW2oEGxWUX+6EWcilYeHyZDaO1JOj27s1
+	 ED+Q9l6CE20/tB4Hz8Z9uWKE7iPaQkxFB+E6GSZ2lRA2RSCfKJxZRznzJlpg9tvVVn
+	 nupxsIoHdgYJQCcVp1W+VN9rD8F5Av+OGiUk6YpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbgERRsG (ORCPT
+        id S1730331AbgERRsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:48:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48628 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:48:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730307AbgERRsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:48:00 -0400
+        id S1730313AbgERRsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:48:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BD0B20715;
-        Mon, 18 May 2020 17:47:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 134DA207C4;
+        Mon, 18 May 2020 17:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824080;
-        bh=AeFZBRmeTTtLuC6Tx5BC9x0nD9peBw6WD9MVHRwM2IU=;
+        s=default; t=1589824082;
+        bh=wUVPPEjiIhHY7brZale1h2jyk+zGoCYkcSBldVnpos4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hwvI5tt5XChSKyMNe7iYcQbvbdOjveV2yqMAPnzrdH6DK/nB3HvhsX9jh3zDTI+/7
-         sABhigvOfymLoxgmyjy0huIvuf+gJ33s0VVLA6W5HBBberh+g6dOjsfzGyBz+Xb1Tj
-         dgGVUGzl+9hxcSUwFp5hAFkV5PHq1jRFxVEwTp08=
+        b=GTqKJ6xNo5AiIHClwIxU6aVHCL2HTuX71tP8FXcR8XDHMa5f6BDP4kZYTTlqcIeMk
+         Z12zbJ8W7X6jzjN2h1+uck5t1+lTa9s84tkh5oxpwCLCvU9iuk9fUJAMMyfUxE44Qf
+         kZbY/P9hG1mullGhrUx34FgjKJL0raI2h9CYHLDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Corey Minyard <cminyard@mvista.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 063/114] ipmi: Fix NULL pointer dereference in ssif_probe
-Date:   Mon, 18 May 2020 19:36:35 +0200
-Message-Id: <20200518173514.489706001@linuxfoundation.org>
+Subject: [PATCH 4.14 064/114] pinctrl: baytrail: Enable pin configuration setting for GPIO chip
+Date:   Mon, 18 May 2020 19:36:36 +0200
+Message-Id: <20200518173514.693315129@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -61,40 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit a8627cda7cfffe1792c199660c2b4f03ba2bd97b ]
+[ Upstream commit ccd025eaddaeb99e982029446197c544252108e2 ]
 
-There is a potential execution path in which function ssif_info_find()
-returns NULL, hence there is a NULL pointer dereference when accessing
-pointer *addr_info*
+It appears that pin configuration for GPIO chip hasn't been enabled yet
+due to absence of ->set_config() callback.
 
-Fix this by null checking *addr_info* before dereferencing it.
+Enable it here for Intel Baytrail.
 
-Addresses-Coverity-ID: 1473145 ("Explicit null dereferenced")
-Fixes: e333054a91d1 ("ipmi: Fix I2C client removal in the SSIF driver")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Fixes: c501d0b149de ("pinctrl: baytrail: Add pin control operations")
+Depends-on: 2956b5d94a76 ("pinctrl / gpio: Introduce .set_config() callback for GPIO chips")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_ssif.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-index 0146bc3252c5a..cf87bfe971e6b 100644
---- a/drivers/char/ipmi/ipmi_ssif.c
-+++ b/drivers/char/ipmi/ipmi_ssif.c
-@@ -1731,7 +1731,9 @@ static int ssif_probe(struct i2c_client *client, const struct i2c_device_id *id)
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index 4fb3e44f91331..2ea4bb9ce6e16 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -1503,6 +1503,7 @@ static const struct gpio_chip byt_gpio_chip = {
+ 	.direction_output	= byt_gpio_direction_output,
+ 	.get			= byt_gpio_get,
+ 	.set			= byt_gpio_set,
++	.set_config		= gpiochip_generic_config,
+ 	.dbg_show		= byt_gpio_dbg_show,
+ };
  
-  out:
- 	if (rv) {
--		addr_info->client = NULL;
-+		if (addr_info)
-+			addr_info->client = NULL;
-+
- 		dev_err(&client->dev, "Unable to start IPMI SSIF: %d\n", rv);
- 		kfree(ssif_info);
- 	}
 -- 
 2.20.1
 
