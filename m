@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC06C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1B1207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7A4207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824360;
-	bh=Je14zzXCFDmRtOIvyBQvBqQRd/NXT8DHGgDIWTJdP9s=;
+	s=default; t=1589824364;
+	bh=Q6OxYPg+HEkGz2LIWB5H4R2fxd0AQ+iGVhEsHiX43Pk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2OtAe78t3J01MyZQZTCVUJabjI6Bv0khKHwpz2rCkoB2O/hBDhh5/zdwtTfb9A686
-	 NVQ8wi1cz87zhZiwWxgtPZenHwr9iH5UKCNUAkfPgYhOKmNEDefvuuYeSwXhD83CzD
-	 zf/kMYPrWBJfrjihXQMEZ8LXvuNiVeVfEizf50+I=
+	b=Oxuc/HQUSRwcZrXcf+g/q+am4qL6OpM4TNhjQllJM0UCrBENV7IguYTOL5QuftjqX
+	 KqC9EmCeGo6oC3aC8QKR2wt8CLiXO6wJsMR8dFB/x3k+5eorq0s6rSt5/DHWOYj7Ip
+	 rr/3z08aUCnZVORsWWRaFYW8ShGGC8p60CO/PreI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731019AbgERRwj (ORCPT
+        id S1731026AbgERRwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:52:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55908 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:52:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731000AbgERRwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:52:35 -0400
+        id S1730986AbgERRwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:52:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADF0420674;
-        Mon, 18 May 2020 17:52:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AE5F20715;
+        Mon, 18 May 2020 17:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824354;
-        bh=Je14zzXCFDmRtOIvyBQvBqQRd/NXT8DHGgDIWTJdP9s=;
+        s=default; t=1589824356;
+        bh=Q6OxYPg+HEkGz2LIWB5H4R2fxd0AQ+iGVhEsHiX43Pk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZUjqKOUi1Flt7E/GtSSyD7UZFIzdUt1V7zhtIoggRmlQu2kwLLIGn/ecy/8IeU+D8
-         EWtNGUt9lvrdQHKKaggSp5JJJ4JJxoWKQedNYZDPnbjYy9ae9QZCJSy94e7odd6ST2
-         JJrmddDQe2R+xB9H5yatweYRPYVgGNAs0Jb61cu0=
+        b=WlHQj6qE1iVYmd1gTu6D1qlzVr76YnHW/oy8PT5qON+D74maPoF3+o40fnjmPjW24
+         scYBfwdPxnsmz01Az2ZAAHtjnEAYUt1L88zpjQ1Nc9BQmzuNxBYLrAx5fkBpGtIv7o
+         5odfmNbUFolMKcz206eYg1m8URAbYxUMpoqD90+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
-        Peter Chen <peter.chen@nxp.com>, Li Jun <jun.li@nxp.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 57/80] usb: host: xhci-plat: keep runtime active when removing host
-Date:   Mon, 18 May 2020 19:37:15 +0200
-Message-Id: <20200518173501.940945361@linuxfoundation.org>
+        stable@vger.kernel.org, Kyungtae Kim <kt0755@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 4.19 58/80] USB: gadget: fix illegal array access in binding with UDC
+Date:   Mon, 18 May 2020 19:37:16 +0200
+Message-Id: <20200518173502.171120453@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -60,135 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Jun <jun.li@nxp.com>
+From: Kyungtae Kim <kt0755@gmail.com>
 
-commit 1449cb2c2253d37d998c3714aa9b95416d16d379 upstream.
+commit 15753588bcd4bbffae1cca33c8ced5722477fe1f upstream.
 
-While removing the host (e.g. for USB role switch from host to device),
-if runtime pm is enabled by user, below oops occurs on dwc3 and cdns3
-platforms.
-Keeping the xhci-plat device active during host removal, and disabling
-runtime pm before calling pm_runtime_set_suspended() fixes them.
+FuzzUSB (a variant of syzkaller) found an illegal array access
+using an incorrect index while binding a gadget with UDC.
 
-oops1:
-Unable to handle kernel NULL pointer dereference at virtual address
-0000000000000240
-Internal error: Oops: 96000004 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.4.3-00107-g64d454a-dirty
-Hardware name: FSL i.MX8MP EVK (DT)
-Workqueue: pm pm_runtime_work
-pstate: 60000005 (nZCv daif -PAN -UAO)
-pc : xhci_suspend+0x34/0x698
-lr : xhci_plat_runtime_suspend+0x2c/0x38
-sp : ffff800011ddbbc0
-Call trace:
- xhci_suspend+0x34/0x698
- xhci_plat_runtime_suspend+0x2c/0x38
- pm_generic_runtime_suspend+0x28/0x40
- __rpm_callback+0xd8/0x138
- rpm_callback+0x24/0x98
- rpm_suspend+0xe0/0x448
- rpm_idle+0x124/0x140
- pm_runtime_work+0xa0/0xf8
- process_one_work+0x1dc/0x370
- worker_thread+0x48/0x468
- kthread+0xf0/0x120
- ret_from_fork+0x10/0x1c
+Reference: https://www.spinics.net/lists/linux-usb/msg194331.html
 
-oops2:
-usb 2-1: USB disconnect, device number 2
-xhci-hcd xhci-hcd.1.auto: remove, state 4
-usb usb2: USB disconnect, device number 1
-xhci-hcd xhci-hcd.1.auto: USB bus 2 deregistered
-xhci-hcd xhci-hcd.1.auto: remove, state 4
-usb usb1: USB disconnect, device number 1
-Unable to handle kernel NULL pointer dereference at virtual address
-0000000000000138
-Internal error: Oops: 96000004 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 2 PID: 7 Comm: kworker/u8:0 Not tainted 5.6.0-rc4-next-20200304-03578
-Hardware name: Freescale i.MX8QXP MEK (DT)
-Workqueue: 1-0050 tcpm_state_machine_work
-pstate: 20000005 (nzCv daif -PAN -UAO)
-pc : xhci_free_dev+0x214/0x270
-lr : xhci_plat_runtime_resume+0x78/0x88
-sp : ffff80001006b5b0
-Call trace:
- xhci_free_dev+0x214/0x270
- xhci_plat_runtime_resume+0x78/0x88
- pm_generic_runtime_resume+0x30/0x48
- __rpm_callback+0x90/0x148
- rpm_callback+0x28/0x88
- rpm_resume+0x568/0x758
- rpm_resume+0x260/0x758
- rpm_resume+0x260/0x758
- __pm_runtime_resume+0x40/0x88
- device_release_driver_internal+0xa0/0x1c8
- device_release_driver+0x1c/0x28
- bus_remove_device+0xd4/0x158
- device_del+0x15c/0x3a0
- usb_disable_device+0xb0/0x268
- usb_disconnect+0xcc/0x300
- usb_remove_hcd+0xf4/0x1dc
- xhci_plat_remove+0x78/0xe0
- platform_drv_remove+0x30/0x50
- device_release_driver_internal+0xfc/0x1c8
- device_release_driver+0x1c/0x28
- bus_remove_device+0xd4/0x158
- device_del+0x15c/0x3a0
- platform_device_del.part.0+0x20/0x90
- platform_device_unregister+0x28/0x40
- cdns3_host_exit+0x20/0x40
- cdns3_role_stop+0x60/0x90
- cdns3_role_set+0x64/0xd8
- usb_role_switch_set_role.part.0+0x3c/0x68
- usb_role_switch_set_role+0x20/0x30
- tcpm_mux_set+0x60/0xf8
- tcpm_reset_port+0xa4/0xf0
- tcpm_detach.part.0+0x28/0x50
- tcpm_state_machine_work+0x12ac/0x2360
- process_one_work+0x1c8/0x470
- worker_thread+0x50/0x428
- kthread+0xfc/0x128
- ret_from_fork+0x10/0x18
-Code: c8037c02 35ffffa3 17ffe7c3 f9800011 (c85f7c01)
----[ end trace 45b1a173d2679e44 ]---
+This bug occurs when a size variable used for a buffer
+is misused to access its strcpy-ed buffer.
+Given a buffer along with its size variable (taken from user input),
+from which, a new buffer is created using kstrdup().
+Due to the original buffer containing 0 value in the middle,
+the size of the kstrdup-ed buffer becomes smaller than that of the original.
+So accessing the kstrdup-ed buffer with the same size variable
+triggers memory access violation.
 
-[minor commit message cleanup  -Mathias]
-Cc: Baolin Wang <baolin.wang@linaro.org>
-Cc: <stable@vger.kernel.org>
-Fixes: b0c69b4bace3 ("usb: host: plat: Enable xHCI plat runtime PM")
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Tested-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Li Jun <jun.li@nxp.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200514110432.25564-3-mathias.nyman@linux.intel.com
+The fix makes sure no zero value in the buffer,
+by comparing the strlen() of the orignal buffer with the size variable,
+so that the access to the kstrdup-ed buffer is safe.
+
+BUG: KASAN: slab-out-of-bounds in gadget_dev_desc_UDC_store+0x1ba/0x200
+drivers/usb/gadget/configfs.c:266
+Read of size 1 at addr ffff88806a55dd7e by task syz-executor.0/17208
+
+CPU: 2 PID: 17208 Comm: syz-executor.0 Not tainted 5.6.8 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
+ __kasan_report+0x131/0x1b0 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+ gadget_dev_desc_UDC_store+0x1ba/0x200 drivers/usb/gadget/configfs.c:266
+ flush_write_buffer fs/configfs/file.c:251 [inline]
+ configfs_write_file+0x2f1/0x4c0 fs/configfs/file.c:283
+ __vfs_write+0x85/0x110 fs/read_write.c:494
+ vfs_write+0x1cd/0x510 fs/read_write.c:558
+ ksys_write+0x18a/0x220 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+ do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Signed-off-by: Kyungtae Kim <kt0755@gmail.com>
+Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200510054326.GA19198@pizza01
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/usb/host/xhci-plat.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -361,6 +361,7 @@ static int xhci_plat_remove(struct platf
- 	struct clk *reg_clk = xhci->reg_clk;
- 	struct usb_hcd *shared_hcd = xhci->shared_hcd;
+---
+ drivers/usb/gadget/configfs.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/drivers/usb/gadget/configfs.c
++++ b/drivers/usb/gadget/configfs.c
+@@ -260,6 +260,9 @@ static ssize_t gadget_dev_desc_UDC_store
+ 	char *name;
+ 	int ret;
  
-+	pm_runtime_get_sync(&dev->dev);
- 	xhci->xhc_state |= XHCI_STATE_REMOVING;
- 
- 	usb_remove_hcd(shared_hcd);
-@@ -374,8 +375,9 @@ static int xhci_plat_remove(struct platf
- 	clk_disable_unprepare(reg_clk);
- 	usb_put_hcd(hcd);
- 
--	pm_runtime_set_suspended(&dev->dev);
- 	pm_runtime_disable(&dev->dev);
-+	pm_runtime_put_noidle(&dev->dev);
-+	pm_runtime_set_suspended(&dev->dev);
- 
- 	return 0;
- }
++	if (strlen(page) < len)
++		return -EOVERFLOW;
++
+ 	name = kstrdup(page, GFP_KERNEL);
+ 	if (!name)
+ 		return -ENOMEM;
 
 
