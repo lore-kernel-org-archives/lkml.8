@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01146C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCB7420885
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D6620853
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825274;
-	bh=CIq2PPOSmWi4JHR64jSM3ji9I2BJ5a3qOEkHQhHiRQk=;
+	s=default; t=1589825277;
+	bh=LKxni0uILG5TbrYILoYC0DaokGze+8/lhCaMHSWGj5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m071Uf8CLMjiJEeZik0xm2SBeB3NWlVbmcndIhP8RTAUSuX7H3iQJCOy9dyGNKG8H
-	 Mg9zHwA2ulDYxlqkO9jIUptgmVJ2AvdnQ/P1k+JstmxEyqCaDpu74n/Jjm2uXPqPJf
-	 XgAH2sJ36AADUgel2obUJ6QS9RCHyu4oX7iBcLpg=
+	b=XvDE1Dwe60V3OizM0mI882UWuJX/46X96xyrZCrLL2HugeoFtFVkvtODmHj2ezIkv
+	 bjaA1IYFmqKOnVM9kyUkgZFcCzveXBx6eTkQhe9JvRNmeylgZGBnBFNDXRC9YFhaqo
+	 ElgybVLbClZvmf5a3ZfGCu6JxznXM73JUwedmfhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387448AbgERSHx (ORCPT
+        id S1732271AbgERSH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56870 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:07:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733068AbgERSHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:07:45 -0400
+        id S2387436AbgERSHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:07:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B8C220826;
-        Mon, 18 May 2020 18:07:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A906220C09;
+        Mon, 18 May 2020 18:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825264;
-        bh=CIq2PPOSmWi4JHR64jSM3ji9I2BJ5a3qOEkHQhHiRQk=;
+        s=default; t=1589825267;
+        bh=LKxni0uILG5TbrYILoYC0DaokGze+8/lhCaMHSWGj5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O89FJJM1xFLlekOzaFNnGuHf7QbkZgxeeD2LztbcPwcjvkN0OBmR5ztbOMgHELBTv
-         QlJ9UjQW4TY5QH4idvShkwPDny8R8jhVcKhkmFs0kdDbgTiNZs7Wg4/RX0jgrggS7M
-         s0HH7QzdRlE6Zjh+fRePZCGoD5/usVVGUf8m4iVc=
+        b=1PyirHsl7TmhFkNWdiy7zr5JVGKHYThIXfQlu1yVlkVld7tuns3gLQ4d9B70r+64y
+         9EclEndWW8wFEg1ZlSF3wUq+LiLSBWu/zuv6d8Qyk9jBIGqPDSisM53jdCyYKeIRhg
+         OXmhlUKEoowcYQBhKMLK0A/dyPAW3TIbmhdaLeHU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergei Trofimovich <slyfox@gentoo.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thomas Backlund <tmb@mageia.org>
-Subject: [PATCH 5.6 194/194] Makefile: disallow data races on gcc-10 as well
-Date:   Mon, 18 May 2020 19:38:04 +0200
-Message-Id: <20200518173547.533880996@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.6 165/194] usb: gadget: tegra-xudc: Fix idle suspend/resume
+Date:   Mon, 18 May 2020 19:37:35 +0200
+Message-Id: <20200518173544.955691616@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -61,34 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Trofimovich <slyfox@gentoo.org>
+From: Thierry Reding <treding@nvidia.com>
 
-commit b1112139a103b4b1101d0d2d72931f2d33d8c978 upstream.
+commit 0534d40160cb9505073b0ecf5e7210daee319a66 upstream.
 
-gcc-10 will rename --param=allow-store-data-races=0
-to -fno-allow-store-data-races.
+When the XUDC device is idle (i.e. powergated), care must be taken not
+to access any registers because that would lead to a crash.
 
-The flag change happened at https://gcc.gnu.org/PR92046.
+Move the call to tegra_xudc_device_mode_off() into the same conditional
+as the tegra_xudc_powergate() call to make sure we only force device
+mode off if the XUDC is actually powered up.
 
-Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
-Acked-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Thomas Backlund <tmb@mageia.org>
+Fixes: 49db427232fe ("usb: gadget: Add UDC driver for tegra XUSB device mode controller")
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/udc/tegra-xudc.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -710,6 +710,7 @@ endif
+--- a/drivers/usb/gadget/udc/tegra-xudc.c
++++ b/drivers/usb/gadget/udc/tegra-xudc.c
+@@ -3740,11 +3740,11 @@ static int __maybe_unused tegra_xudc_sus
  
- # Tell gcc to never replace conditional load with a non-conditional one
- KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
-+KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
+ 	flush_work(&xudc->usb_role_sw_work);
  
- include scripts/Makefile.kcov
- include scripts/Makefile.gcc-plugins
+-	/* Forcibly disconnect before powergating. */
+-	tegra_xudc_device_mode_off(xudc);
+-
+-	if (!pm_runtime_status_suspended(dev))
++	if (!pm_runtime_status_suspended(dev)) {
++		/* Forcibly disconnect before powergating. */
++		tegra_xudc_device_mode_off(xudc);
+ 		tegra_xudc_powergate(xudc);
++	}
+ 
+ 	pm_runtime_disable(dev);
+ 
 
 
