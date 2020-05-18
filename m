@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C80C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3555C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80C37207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A66120715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824405;
-	bh=a57QUVjycIWqq5gybYpQ5AcfJtRPK/9jBiOO2JvtkoM=;
+	s=default; t=1589824408;
+	bh=MRU6LmWYH/xu+X9ErmmYzmBSvSzzZcPmnRYIzzuimTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0w1fFFkiM0XUTlQSyZ9VOF3TNzwUxY1V6eu+ZDB3skwxC+nOiuTtW4jxZBofY19WK
-	 uPegYwC/y4ukuhKPbyR5HZwYFOGaCD7SzIfF+p+wfWYdzvNODGGVRAaMj92eTcRHJm
-	 6HtXUarUpCkUFkztZTioAzVLFNfNYmGH4vBs23zI=
+	b=Yp/YIfTuesPV1FDmUZlwJ8uK5edvdT8vk6tiNo3HvZ8g15ZI1NYYweoed6Jkljgrh
+	 yIIwFQu/dyy2KQRrPwVrxAqRYG1SmdNECLEc4nD922nhW+orKNQBRjqW+4SQAbumb0
+	 iMpK5s3W+se3Yo4hstxQLpQU/XXaGoO3JEo8dIQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbgERRxY (ORCPT
+        id S1730662AbgERRx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:53:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57218 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:53:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731130AbgERRxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:53:21 -0400
+        id S1730630AbgERRxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:53:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F80120674;
-        Mon, 18 May 2020 17:53:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7A5520715;
+        Mon, 18 May 2020 17:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824400;
-        bh=a57QUVjycIWqq5gybYpQ5AcfJtRPK/9jBiOO2JvtkoM=;
+        s=default; t=1589824403;
+        bh=MRU6LmWYH/xu+X9ErmmYzmBSvSzzZcPmnRYIzzuimTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOsOFAvP1fdAwgNYgcbyvNvSOifbuqAp9h+ZG+7FmVXHy5p2M5f73rOgYxu/HrHQ2
-         P3gaP1AtGBqqxDePIwiymLtvg5MeLvKQ1yKU2Oi3WXZxYBjgEmSBf9CcPoKapGl8PF
-         96xk6wKnSS0awrAxfytm/5UQryF3JegAs+MBskc0=
+        b=ME5vt+cee16wrXkUeAyT2lgkWcjz5nVAl4BfMFIZJzFF9f6HUU0vZTS3na3HXXMBD
+         HPdBXHDn/RRjBvoldVGSJrnOzui6cX25OpfUB3FV3eNgLnhkOJZ1/otl/2Ws72HR1U
+         7d7I651RyrMv5IeJYLge+aw17UpmtqNRhYzkeT38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ulrich Hecht <uli+renesas@fpond.eu>
-Subject: [PATCH 4.19 78/80] ARM: dts: r8a7740: Add missing extal2 to CPG node
-Date:   Mon, 18 May 2020 19:37:36 +0200
-Message-Id: <20200518173506.359601234@linuxfoundation.org>
+        stable@vger.kernel.org, Jue Wang <juew@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Peter Shier <pshier@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 79/80] KVM: x86: Fix off-by-one error in kvm_vcpu_ioctl_x86_setup_mce
+Date:   Mon, 18 May 2020 19:37:37 +0200
+Message-Id: <20200518173506.580069423@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -60,38 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Jim Mattson <jmattson@google.com>
 
-commit e47cb97f153193d4b41ca8d48127da14513d54c7 upstream.
+commit c4e0e4ab4cf3ec2b3f0b628ead108d677644ebd9 upstream.
 
-The Clock Pulse Generator (CPG) device node lacks the extal2 clock.
-This may lead to a failure registering the "r" clock, or to a wrong
-parent for the "usb24s" clock, depending on MD_CK2 pin configuration and
-boot loader CPG_USBCKCR register configuration.
+Bank_num is a one-based count of banks, not a zero-based index. It
+overflows the allocated space only when strictly greater than
+KVM_MAX_MCE_BANKS.
 
-This went unnoticed, as this does not affect the single upstream board
-configuration, which relies on the first clock input only.
-
-Fixes: d9ffd583bf345e2e ("ARM: shmobile: r8a7740: add SoC clocks to DTS")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-Link: https://lore.kernel.org/r/20200508095918.6061-1-geert+renesas@glider.be
+Fixes: a9e38c3e01ad ("KVM: x86: Catch potential overrun in MCE setup")
+Signed-off-by: Jue Wang <juew@google.com>
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+Message-Id: <20200511225616.19557-1-jmattson@google.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/r8a7740.dtsi |    2 +-
+ arch/x86/kvm/x86.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/r8a7740.dtsi
-+++ b/arch/arm/boot/dts/r8a7740.dtsi
-@@ -479,7 +479,7 @@
- 		cpg_clocks: cpg_clocks@e6150000 {
- 			compatible = "renesas,r8a7740-cpg-clocks";
- 			reg = <0xe6150000 0x10000>;
--			clocks = <&extal1_clk>, <&extalr_clk>;
-+			clocks = <&extal1_clk>, <&extal2_clk>, <&extalr_clk>;
- 			#clock-cells = <1>;
- 			clock-output-names = "system", "pllc0", "pllc1",
- 					     "pllc2", "r",
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3423,7 +3423,7 @@ static int kvm_vcpu_ioctl_x86_setup_mce(
+ 	unsigned bank_num = mcg_cap & 0xff, bank;
+ 
+ 	r = -EINVAL;
+-	if (!bank_num || bank_num >= KVM_MAX_MCE_BANKS)
++	if (!bank_num || bank_num > KVM_MAX_MCE_BANKS)
+ 		goto out;
+ 	if (mcg_cap & ~(kvm_mce_cap_supported | 0xff | 0xff0000))
+ 		goto out;
 
 
