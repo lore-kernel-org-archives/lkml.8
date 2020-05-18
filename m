@@ -2,59 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46789C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21454C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 296C720643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03D6120643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826111;
-	bh=JLWxNKeoW+Xt08Zdz0NK/R0f/qbmQqADXwS63pO5RSY=;
+	s=default; t=1589826118;
+	bh=+6HXk2UMA27rJGUNFJRM/kYWivwQLBdXHPemxk9PlsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hMALmy9ytiiBXXWACGIas54u/V6UPvwQsnruXTBwCLYlE8KxE1hAsyKuBhuJlhtDk
-	 +feTWGrTLJn8rVHdEW3PEX1Pz4cFUP9Lvw770SJViV32ZXPIi/+b43PvWn5iaIqiTY
-	 jZheNr3NBuGI9SU8kjvt/dvQHsp9mItg2psyZ28k=
+	b=CmsD10ugUSul87oTvSh6Asc1yqNUnSBK2mYJI+XWWtVR+5SMiIUUJBYSAZNe6sxA3
+	 QKFm3KzM5u94j1Ie749y1CTqWqx4+O1zNRaqdOEL1839eapJlmSjfgjpNerryP5tvf
+	 URk8htZpEN+VAyQL5xtBit8b0g+pP8s6LJRnovpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbgERRv3 (ORCPT
+        id S2387821AbgERSV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:51:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54038 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:21:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730330AbgERRvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:51:23 -0400
+        id S1728824AbgERRvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:51:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1EE320674;
-        Mon, 18 May 2020 17:51:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F33EF20835;
+        Mon, 18 May 2020 17:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824282;
-        bh=JLWxNKeoW+Xt08Zdz0NK/R0f/qbmQqADXwS63pO5RSY=;
+        s=default; t=1589824272;
+        bh=+6HXk2UMA27rJGUNFJRM/kYWivwQLBdXHPemxk9PlsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BV2R2bLytS67bL2chRm9w/6iJsSMwHHqZyHI25sF0Xm3c6fGQXov6c9kU3YNBjPT/
-         OXBFChb7VUPzHx6QFZar7a8FK5Fk6UONDPfT18dG+1opVYuX6ULi8RKI2XLv/3R44Q
-         Xco6wq+59SizlbWGCC8TuMWtdDQdysaEhk3Lr6o8=
+        b=i0Iwm86ICY1e1Ao4JLW0svFL5Ya2TWDs5/i8Zk/5GwPWNSID8o2QG3SoAHFe1bVqn
+         nCXaLF+YJFfGJZad2+xD1HRZ8r8BXs6ZKvOsSEsroWqXOfez5DfjNDffGEB56P4QPi
+         X+8mlAfII54L1ujd5Kc6VsS3VirPnRoFpDv4NMFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com,
-        syzbot+c2fb6f9ddcea95ba49b5@syzkaller.appspotmail.com,
-        Jarod Wilson <jarod@redhat.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 09/80] net: fix a potential recursive NETDEV_FEAT_CHANGE
-Date:   Mon, 18 May 2020 19:36:27 +0200
-Message-Id: <20200518173452.081921019@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 05/80] drop_monitor: work around gcc-10 stringop-overflow warning
+Date:   Mon, 18 May 2020 19:36:23 +0200
+Message-Id: <20200518173451.203122210@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -67,66 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit dd912306ff008891c82cd9f63e8181e47a9cb2fb ]
+[ Upstream commit dc30b4059f6e2abf3712ab537c8718562b21c45d ]
 
-syzbot managed to trigger a recursive NETDEV_FEAT_CHANGE event
-between bonding master and slave. I managed to find a reproducer
-for this:
+The current gcc-10 snapshot produces a false-positive warning:
 
-  ip li set bond0 up
-  ifenslave bond0 eth0
-  brctl addbr br0
-  ethtool -K eth0 lro off
-  brctl addif br0 bond0
-  ip li set br0 up
+net/core/drop_monitor.c: In function 'trace_drop_common.constprop':
+cc1: error: writing 8 bytes into a region of size 0 [-Werror=stringop-overflow=]
+In file included from net/core/drop_monitor.c:23:
+include/uapi/linux/net_dropmon.h:36:8: note: at offset 0 to object 'entries' with size 4 declared here
+   36 |  __u32 entries;
+      |        ^~~~~~~
 
-When a NETDEV_FEAT_CHANGE event is triggered on a bonding slave,
-it captures this and calls bond_compute_features() to fixup its
-master's and other slaves' features. However, when syncing with
-its lower devices by netdev_sync_lower_features() this event is
-triggered again on slaves when the LRO feature fails to change,
-so it goes back and forth recursively until the kernel stack is
-exhausted.
+I reported this in the gcc bugzilla, but in case it does not get
+fixed in the release, work around it by using a temporary variable.
 
-Commit 17b85d29e82c intentionally lets __netdev_update_features()
-return -1 for such a failure case, so we have to just rely on
-the existing check inside netdev_sync_lower_features() and skip
-NETDEV_FEAT_CHANGE event only for this specific failure case.
-
-Fixes: fd867d51f889 ("net/core: generic support for disabling netdev features down stack")
-Reported-by: syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com
-Reported-by: syzbot+c2fb6f9ddcea95ba49b5@syzkaller.appspotmail.com
-Cc: Jarod Wilson <jarod@redhat.com>
-Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Reviewed-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Fixes: 9a8afc8d3962 ("Network Drop Monitor: Adding drop monitor implementation & Netlink protocol")
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94881
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/core/drop_monitor.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -8259,11 +8259,13 @@ static void netdev_sync_lower_features(s
- 			netdev_dbg(upper, "Disabling feature %pNF on lower dev %s.\n",
- 				   &feature, lower->name);
- 			lower->wanted_features &= ~feature;
--			netdev_update_features(lower);
-+			__netdev_update_features(lower);
- 
- 			if (unlikely(lower->features & feature))
- 				netdev_WARN(upper, "failed to disable %pNF on %s!\n",
- 					    &feature, lower->name);
-+			else
-+				netdev_features_change(lower);
+diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
+index c7785efeea577..3978a5e8d261c 100644
+--- a/net/core/drop_monitor.c
++++ b/net/core/drop_monitor.c
+@@ -154,6 +154,7 @@ static void sched_send_work(struct timer_list *t)
+ static void trace_drop_common(struct sk_buff *skb, void *location)
+ {
+ 	struct net_dm_alert_msg *msg;
++	struct net_dm_drop_point *point;
+ 	struct nlmsghdr *nlh;
+ 	struct nlattr *nla;
+ 	int i;
+@@ -172,11 +173,13 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+ 	nlh = (struct nlmsghdr *)dskb->data;
+ 	nla = genlmsg_data(nlmsg_data(nlh));
+ 	msg = nla_data(nla);
++	point = msg->points;
+ 	for (i = 0; i < msg->entries; i++) {
+-		if (!memcmp(&location, msg->points[i].pc, sizeof(void *))) {
+-			msg->points[i].count++;
++		if (!memcmp(&location, &point->pc, sizeof(void *))) {
++			point->count++;
+ 			goto out;
  		}
++		point++;
  	}
- }
+ 	if (msg->entries == dm_hit_limit)
+ 		goto out;
+@@ -185,8 +188,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+ 	 */
+ 	__nla_reserve_nohdr(dskb, sizeof(struct net_dm_drop_point));
+ 	nla->nla_len += NLA_ALIGN(sizeof(struct net_dm_drop_point));
+-	memcpy(msg->points[msg->entries].pc, &location, sizeof(void *));
+-	msg->points[msg->entries].count = 1;
++	memcpy(point->pc, &location, sizeof(void *));
++	point->count = 1;
+ 	msg->entries++;
+ 
+ 	if (!timer_pending(&data->send_timer)) {
+-- 
+2.20.1
+
 
 
