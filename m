@@ -2,163 +2,84 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0249FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D43C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFD6F20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:29:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y0r0iTQ1"
+	by mail.kernel.org (Postfix) with ESMTP id 566F320643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgERM3V (ORCPT
+        id S1727815AbgERM3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:29:21 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:45518 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbgERM3U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:29:20 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04ICTHob006645;
-        Mon, 18 May 2020 07:29:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589804957;
-        bh=Cc2QsaFW8ZZmz0AJhXL7MMRK4fot/Bb5Y6em3UaqVZ4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=y0r0iTQ1qHl3z4w9XR0RvLYlubNn3J+QZSxhBwMb/3bUT5CqiqmKECmPk5RB6lPCl
-         eHVkpNRBgP/ILW045AeDpSKK/zFJJ0a8jAUHeFLPhzHfOwDIc6HHcluWwpGdN6w2jS
-         Jmw1+JeXvlPxdVf4kCStyjgWV0LKPWkn7OXYqHWE=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04ICTHXh005732
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 May 2020 07:29:17 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 18
- May 2020 07:29:17 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 18 May 2020 07:29:17 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04ICTEuT114526;
-        Mon, 18 May 2020 07:29:15 -0500
-Subject: Re: [PATCH] phy: cadence: sierra: Fix for USB3 U1/U2 state
-To:     Sanket Parmar <sparmar@cadence.com>, <kishon@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <vkoul@kernel.org>,
-        <sjakhade@cadence.com>, <kurahul@cadence.com>,
-        <pawell@cadence.com>, <jpawar@cadence.com>, <nsekhar@ti.com>
-References: <1589804053-14302-1-git-send-email-sparmar@cadence.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <9c5b4f54-18bc-97d6-6baf-68f007303b17@ti.com>
-Date:   Mon, 18 May 2020 15:29:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 08:29:50 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38482 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726739AbgERM3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:29:50 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3DD1DE0E47021E1364E8;
+        Mon, 18 May 2020 20:29:49 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.25) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 18 May 2020
+ 20:29:41 +0800
+Subject: Re: [RFC PATCH v3 1/2] arm64: tlb: Detect the ARMv8.4 TLBI RANGE
+ feature
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <will@kernel.org>, <catalin.marinas@arm.com>,
+        <suzuki.poulose@arm.com>, <maz@kernel.org>, <steven.price@arm.com>,
+        <guohanjun@huawei.com>, <olof@lixom.net>,
+        <linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <xiexiangyou@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <prime.zeng@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>, <linux-arm-kernel@lists.infradead.org>
+References: <20200414112835.1121-1-yezhenyu2@huawei.com>
+ <20200414112835.1121-2-yezhenyu2@huawei.com>
+ <20200505101405.GB82424@C02TD0UTHF1T.local>
+ <cb9d32b6-a9d8-3737-e69d-df4191b7afa9@huawei.com>
+ <4d8cb48c-4f47-d966-f29b-3343bd966c5f@arm.com>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <9189159f-0df8-ef9a-5216-adc030856439@huawei.com>
+Date:   Mon, 18 May 2020 20:29:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <1589804053-14302-1-git-send-email-sparmar@cadence.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <4d8cb48c-4f47-d966-f29b-3343bd966c5f@arm.com>
+Content-Type: text/plain; charset="gbk"
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Anshuman,
 
-
-On 18/05/2020 15:14, Sanket Parmar wrote:
-> Updated values of USB3 related Sierra PHY registers.
-> This change fixes USB3 device disconnect issue observed
-> while enternig U1/U2 state.
+On 2020/5/18 12:22, Anshuman Khandual wrote:
+>>>>  static const struct arm64_ftr_bits ftr_id_aa64isar0[] = {
+>>>>  	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_RNDR_SHIFT, 4, 0),
+>>>> +	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_TLBI_RANGE_SHIFT, 4, 0),
 > 
-> Signed-off-by: Sanket Parmar <sparmar@cadence.com>
-
-Reviewed-by: Roger Quadros <rogerq@ti.com>
-
-> ---
->   drivers/phy/cadence/phy-cadence-sierra.c | 27 ++++++++++++++-------------
->   1 file changed, 14 insertions(+), 13 deletions(-)
+> Hello Zhenyu,
 > 
-> diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
-> index a5c08e5..faed652 100644
-> --- a/drivers/phy/cadence/phy-cadence-sierra.c
-> +++ b/drivers/phy/cadence/phy-cadence-sierra.c
-> @@ -685,10 +685,10 @@ static struct cdns_reg_pairs cdns_usb_cmn_regs_ext_ssc[] = {
->   static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
->   	{0xFE0A, SIERRA_DET_STANDEC_A_PREG},
->   	{0x000F, SIERRA_DET_STANDEC_B_PREG},
-> -	{0x00A5, SIERRA_DET_STANDEC_C_PREG},
-> +	{0x55A5, SIERRA_DET_STANDEC_C_PREG},
->   	{0x69ad, SIERRA_DET_STANDEC_D_PREG},
->   	{0x0241, SIERRA_DET_STANDEC_E_PREG},
-> -	{0x0010, SIERRA_PSM_LANECAL_DLY_A1_RESETS_PREG},
-> +	{0x0110, SIERRA_PSM_LANECAL_DLY_A1_RESETS_PREG},
->   	{0x0014, SIERRA_PSM_A0IN_TMR_PREG},
->   	{0xCF00, SIERRA_PSM_DIAG_PREG},
->   	{0x001F, SIERRA_PSC_TX_A0_PREG},
-> @@ -696,7 +696,7 @@ static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
->   	{0x0003, SIERRA_PSC_TX_A2_PREG},
->   	{0x0003, SIERRA_PSC_TX_A3_PREG},
->   	{0x0FFF, SIERRA_PSC_RX_A0_PREG},
-> -	{0x0619, SIERRA_PSC_RX_A1_PREG},
-> +	{0x0003, SIERRA_PSC_RX_A1_PREG},
->   	{0x0003, SIERRA_PSC_RX_A2_PREG},
->   	{0x0001, SIERRA_PSC_RX_A3_PREG},
->   	{0x0001, SIERRA_PLLCTRL_SUBRATE_PREG},
-> @@ -705,19 +705,19 @@ static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
->   	{0x00CA, SIERRA_CLKPATH_BIASTRIM_PREG},
->   	{0x2512, SIERRA_DFE_BIASTRIM_PREG},
->   	{0x0000, SIERRA_DRVCTRL_ATTEN_PREG},
-> -	{0x873E, SIERRA_CLKPATHCTRL_TMR_PREG},
-> -	{0x03CF, SIERRA_RX_CREQ_FLTR_A_MODE1_PREG},
-> -	{0x01CE, SIERRA_RX_CREQ_FLTR_A_MODE0_PREG},
-> +	{0x823E, SIERRA_CLKPATHCTRL_TMR_PREG},
-> +	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE1_PREG},
-> +	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE0_PREG},
->   	{0x7B3C, SIERRA_CREQ_CCLKDET_MODE01_PREG},
-> -	{0x033F, SIERRA_RX_CTLE_MAINTENANCE_PREG},
-> +	{0x023C, SIERRA_RX_CTLE_MAINTENANCE_PREG},
->   	{0x3232, SIERRA_CREQ_FSMCLK_SEL_PREG},
->   	{0x0000, SIERRA_CREQ_EQ_CTRL_PREG},
-> -	{0x8000, SIERRA_CREQ_SPARE_PREG},
-> +	{0x0000, SIERRA_CREQ_SPARE_PREG},
->   	{0xCC44, SIERRA_CREQ_EQ_OPEN_EYE_THRESH_PREG},
-> -	{0x8453, SIERRA_CTLELUT_CTRL_PREG},
-> -	{0x4110, SIERRA_DFE_ECMP_RATESEL_PREG},
-> -	{0x4110, SIERRA_DFE_SMP_RATESEL_PREG},
-> -	{0x0002, SIERRA_DEQ_PHALIGN_CTRL},
-> +	{0x8452, SIERRA_CTLELUT_CTRL_PREG},
-> +	{0x4121, SIERRA_DFE_ECMP_RATESEL_PREG},
-> +	{0x4121, SIERRA_DFE_SMP_RATESEL_PREG},
-> +	{0x0003, SIERRA_DEQ_PHALIGN_CTRL},
->   	{0x3200, SIERRA_DEQ_CONCUR_CTRL1_PREG},
->   	{0x5064, SIERRA_DEQ_CONCUR_CTRL2_PREG},
->   	{0x0030, SIERRA_DEQ_EPIPWR_CTRL2_PREG},
-> @@ -725,7 +725,7 @@ static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
->   	{0x5A5A, SIERRA_DEQ_ERRCMP_CTRL_PREG},
->   	{0x02F5, SIERRA_DEQ_OFFSET_CTRL_PREG},
->   	{0x02F5, SIERRA_DEQ_GAIN_CTRL_PREG},
-> -	{0x9A8A, SIERRA_DEQ_VGATUNE_CTRL_PREG},
-> +	{0x9999, SIERRA_DEQ_VGATUNE_CTRL_PREG},
->   	{0x0014, SIERRA_DEQ_GLUT0},
->   	{0x0014, SIERRA_DEQ_GLUT1},
->   	{0x0014, SIERRA_DEQ_GLUT2},
-> @@ -772,6 +772,7 @@ static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
->   	{0x000F, SIERRA_LFPSFILT_NS_PREG},
->   	{0x0009, SIERRA_LFPSFILT_RD_PREG},
->   	{0x0001, SIERRA_LFPSFILT_MP_PREG},
-> +	{0x6013, SIERRA_SIGDET_SUPPORT_PREG},
->   	{0x8013, SIERRA_SDFILT_H2L_A_PREG},
->   	{0x8009, SIERRA_SDFILT_L2H_PREG},
->   	{0x0024, SIERRA_RXBUFFER_CTLECTRL_PREG},
+> This is already being added through another patch [1] in a series [2] which primarily
+> has cpufeature changes. I will soon update the series making this feature FTR_HIDDEN.
+> 
+> [1] https://patchwork.kernel.org/patch/11523881/
+> [2] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=281211
+> 
+> I am planning to respin the series (V4) based on arm64 tree (for-next/cpufeature). So
+> could you please rebase this patch (probably dropping cpufeature related changes) on
+> upcoming V4, so that all the changes will be based on arm64 tree (for-next/cpufeature).
+> 
+> - Anshuman
 > 
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+OK, I will rebase my patch based on your V4.
+
+Zhenyu
+
