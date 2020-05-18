@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AA1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4DFE207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99C5207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823505;
-	bh=Dxtp7wZr+KCgB4BFiDjfvZsiwpeRcjrdT8Aibw8qr8g=;
+	s=default; t=1589823509;
+	bh=swodPM4ofA4LWEg+ihmFAkOFJBSXFCaaWYhER0DkMDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AWzpeSUWULeJbFdayE0ia+k1atnVURPixsYITv3/EuDT7tkMh3B71/rp+ukfv2IcN
-	 NDLIMRWxX5l+o0dsOiX1Nj3WnMqFKbUnPONCtTrczP0guJOqkFEonMdk+Yq3doTTFd
-	 MD2K0oC4ENRZlaE5/XkRa0iTLiytkT7tfR1m9F7o=
+	b=iz1wtxCHSkp9t6ojiPhafvTo8QgwETAGhaKScM7Tm0+EXostQaYFzDHlo4t/ydpLJ
+	 wTTKH2mERo8lcMZoaxg/70Y+P3kB+VLJMLCoQ8Hl56BakUp2XmbBUhJqwvbcowQEZ0
+	 tXv0CMGPEqh35oTN1dCG7i6CW0wPelvTJAPpaciQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgERRiY (ORCPT
+        id S1728495AbgERRi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:38:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60678 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:38:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727938AbgERRiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:38:24 -0400
+        id S1727938AbgERRi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:38:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66BEA207C4;
-        Mon, 18 May 2020 17:38:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4DDF207C4;
+        Mon, 18 May 2020 17:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823503;
-        bh=Dxtp7wZr+KCgB4BFiDjfvZsiwpeRcjrdT8Aibw8qr8g=;
+        s=default; t=1589823506;
+        bh=swodPM4ofA4LWEg+ihmFAkOFJBSXFCaaWYhER0DkMDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f2KHnhImzOxtrmEHoHNu1R2n2kKR9zJGMpJMLxcKwIvPyMV5lJSk0w1N1tYTen9zE
-         bFANAeY3LMXBxVSCwN8qX+vPjHHWHsKuBSK454XhgzdqgR26u4SqQ1CEqcvAdu7svk
-         oWDSgSqlJ6cDVmtivxTaZ+de5dt4yrzQV1sadx1g=
+        b=On7XOPUDoBNiIHkbYQML1bIjiRTj1kyH6w82y8WLEd20RximjRz6enqIf2i0lfBeA
+         dmmrXjcNRVl33gO0rix/qr3rwyRP488G9Ge+jG94YkJYPL1hCVxr8fvmPgc8EcxtBy
+         bBY20sB9kdjDxRNY7BAwRNHI0UWIGc9a885lCfmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Jolly <Kangie@footclan.ninja>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 01/86] USB: serial: qcserial: Add DW5816e support
-Date:   Mon, 18 May 2020 19:35:32 +0200
-Message-Id: <20200518173450.580450409@linuxfoundation.org>
+        stable@vger.kernel.org, "kernelci.org bot" <bot@kernelci.org>,
+        Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 02/86] Revert "net: phy: Avoid polling PHY with PHY_IGNORE_INTERRUPTS"
+Date:   Mon, 18 May 2020 19:35:33 +0200
+Message-Id: <20200518173450.765036296@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,30 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Jolly <Kangie@footclan.ninja>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 78d6de3cfbd342918d31cf68d0d2eda401338aef upstream.
+This reverts commit 0d1951fa23ba0d35a4c5498ff28d1c5206d6fcdd which was
+commit d5c3d84657db57bd23ecd58b97f1c99dd42a7b80 upstream.
 
-Add support for Dell Wireless 5816e to drivers/usb/serial/qcserial.c
+Guillaume reports that this patch breaks booting on
+at91-sama5d4_xplained, so revert it for now.
 
-Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Reported-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/qcserial.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/phy/phy.c |   15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
---- a/drivers/usb/serial/qcserial.c
-+++ b/drivers/usb/serial/qcserial.c
-@@ -177,6 +177,7 @@ static const struct usb_device_id id_tab
- 	{DEVICE_SWI(0x413c, 0x81b3)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card (rev3) */
- 	{DEVICE_SWI(0x413c, 0x81b5)},	/* Dell Wireless 5811e QDL */
- 	{DEVICE_SWI(0x413c, 0x81b6)},	/* Dell Wireless 5811e QDL */
-+	{DEVICE_SWI(0x413c, 0x81cc)},	/* Dell Wireless 5816e */
- 	{DEVICE_SWI(0x413c, 0x81cf)},   /* Dell Wireless 5819 */
- 	{DEVICE_SWI(0x413c, 0x81d0)},   /* Dell Wireless 5819 */
- 	{DEVICE_SWI(0x413c, 0x81d1)},   /* Dell Wireless 5818 */
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -916,10 +916,10 @@ void phy_state_machine(struct work_struc
+ 		phydev->adjust_link(phydev->attached_dev);
+ 		break;
+ 	case PHY_RUNNING:
+-		/* Only register a CHANGE if we are polling and link changed
+-		 * since latest checking.
++		/* Only register a CHANGE if we are polling or ignoring
++		 * interrupts and link changed since latest checking.
+ 		 */
+-		if (phydev->irq == PHY_POLL) {
++		if (!phy_interrupt_is_valid(phydev)) {
+ 			old_link = phydev->link;
+ 			err = phy_read_status(phydev);
+ 			if (err)
+@@ -1019,13 +1019,8 @@ void phy_state_machine(struct work_struc
+ 	dev_dbg(&phydev->dev, "PHY state change %s -> %s\n",
+ 		phy_state_to_str(old_state), phy_state_to_str(phydev->state));
+ 
+-	/* Only re-schedule a PHY state machine change if we are polling the
+-	 * PHY, if PHY_IGNORE_INTERRUPT is set, then we will be moving
+-	 * between states from phy_mac_interrupt()
+-	 */
+-	if (phydev->irq == PHY_POLL)
+-		queue_delayed_work(system_power_efficient_wq, &phydev->state_queue,
+-				   PHY_STATE_TIME * HZ);
++	queue_delayed_work(system_power_efficient_wq, &phydev->state_queue,
++			   PHY_STATE_TIME * HZ);
+ }
+ 
+ void phy_mac_interrupt(struct phy_device *phydev, int new_link)
 
 
