@@ -2,123 +2,97 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC6CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F496C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86D83207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:00:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589806844;
-	bh=ptRx364m99gLe8b4PaIDcBg1wnlIqZ8QZv5aW8MUiz8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hKGsMfTZa+CxrG01VGAucilusO3QIEq9kZjGIuPmdL4AJcDLXMp34RcOzi25AYcey
-	 jP+l/LzMphKrAoqIuhcZ2CjyYzGRbirT4dEYWptAbc1v0380jySAVdb0gyFrEL8xvd
-	 8WyiHi4I04thyKPn6YU3wCju2acgCA6CdKT0QFmY=
+	by mail.kernel.org (Postfix) with ESMTP id 19CBC207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgERNAo (ORCPT
+        id S1727098AbgERNBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:00:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbgERNAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:00:43 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31E71207D3;
-        Mon, 18 May 2020 13:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589806842;
-        bh=ptRx364m99gLe8b4PaIDcBg1wnlIqZ8QZv5aW8MUiz8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uQzpbw6R9xMhb5YxMbk+I5cOwk4cKSqiUvPIAPk2g2tn7hxb6qM7jfsQuxZssQb1a
-         hfZSCeSH6jLbjicpFxDTPaELYYSymjlg9sBJW17riIRjSiRtzxwlF/6Ft5xZ2+UF5A
-         mM01N8gkmEJ73LftdVnTgDRKvrQao8c184wQabzQ=
-Date:   Mon, 18 May 2020 14:00:40 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Eddie James <eajames@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Raymond Tan <raymond.tan@intel.com>,
-        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 13/19] spi: dw: Move Non-DMA code to the DW PCIe-SPI
- driver
-Message-ID: <20200518130039.GG8699@sirena.org.uk>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-14-Sergey.Semin@baikalelectronics.ru>
- <20200515145153.GJ1634618@smile.fi.intel.com>
- <20200516201724.7q5uhxmzpr6xjooj@mobilestation>
- <20200518125850.jnhaqlr2ticu3ivs@mobilestation>
+        Mon, 18 May 2020 09:01:03 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:44414 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgERNBC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 09:01:02 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jafO5-0005ha-50; Mon, 18 May 2020 07:00:57 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jafO3-0003dN-W5; Mon, 18 May 2020 07:00:56 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot <syzbot+c1af344512918c61362c@syzkaller.appspotmail.com>,
+        jmorris@namei.org, linux-next@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <87lfltcbc4.fsf@x220.int.ebiederm.org>
+        <20200518111716.2896385-1-gladkov.alexey@gmail.com>
+        <871rnh78di.fsf@x220.int.ebiederm.org>
+        <20200518125648.robgr7mud7esao2o@comp-core-i7-2640m-0182e6>
+Date:   Mon, 18 May 2020 07:57:16 -0500
+In-Reply-To: <20200518125648.robgr7mud7esao2o@comp-core-i7-2640m-0182e6>
+        (Alexey Gladkov's message of "Mon, 18 May 2020 14:56:48 +0200")
+Message-ID: <87pnb15rkj.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vSsTm1kUtxIHoa7M"
-Content-Disposition: inline
-In-Reply-To: <20200518125850.jnhaqlr2ticu3ivs@mobilestation>
-X-Cookie: If in doubt, mumble.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-XM-SPF: eid=1jafO3-0003dN-W5;;;mid=<87pnb15rkj.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+7voJjdUzm6K/RfqhwLgvU8mZCtMfUl1k=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2] proc: proc_pid_ns takes super_block as an argument
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Alexey Gladkov <gladkov.alexey@gmail.com> writes:
 
---vSsTm1kUtxIHoa7M
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Mon, May 18, 2020 at 07:08:57AM -0500, Eric W. Biederman wrote:
+>> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+>> 
+>> > The proc_pid_ns() can be used for both inode and dentry. To avoid making
+>> > two identical functions, change the argument type of the proc_pid_ns().
+>> >
+>> > Link: https://lore.kernel.org/lkml/c3461e26-1407-2262-c709-dac0df3da2d0@i-love.sakura.ne.jp/
+>> > Reported-by: syzbot+c1af344512918c61362c@syzkaller.appspotmail.com
+>> > Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+>> 
+>> So overall this looks good.
+>> 
+>> However, the description leaves a little bit to be desired as it does
+>> not describe why it is bad to use dentry->d_sb.  A fixes tag would be
+>> nice if for no other reason than to help anyone who decides to backport
+>> this.
+>
+> OK. I will add it.
 
-On Mon, May 18, 2020 at 03:58:50PM +0300, Serge Semin wrote:
-> On Sat, May 16, 2020 at 11:17:25PM +0300, Serge Semin wrote:
+Thank you.  It really helps to have the full description of why in
+the commit comments.
 
-> > Only if we rename the spi-dw.c to spi-dw-core.c. Such modification will break all
-> > the pending patches merging. Mark, are you ok with this?
+>> And can you please compile test this?
+>> 
+>> There is a very silly typo in proc that keeps this from compiling.
+>
+> I compiled the kernel with this patch and ran the kernel, but accidentally
+> did not check children_seq_show(). Sorry.
 
-> Mark, could give me your comment regarding this renaming? Are you ok with this?
+Yes, children_seq_show is behind a sneaky CONFIG option.
 
-Either way is fine for me.
-
---vSsTm1kUtxIHoa7M
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7ChvcACgkQJNaLcl1U
-h9AEsAf+Mvi0DahdPQXvlc5p6J2WfVIC/Nfkr+2hZJdtns7zXQVZpaIxk+465AR5
-6GHgGMkKnqIjRRx3MuoHR4CHa8+JX9F0yfxl53XICxtFoCbT7gjOmHEtwylQf7pY
-hx3jpxE58Eeu8QhelS7udCNBSOq+wHu250YLde1MzGEoHUUdsYCIvmDCfsY3/2bU
-REDvwVOdRHapxoBbg9TXAVww9Py7J++EBbYW9SLwqUGz1r8rZN4Hu9MasIDTzt4w
-+aBUrl9JoIRjL/ll6uIgj87+vkl2qelmTQVKEl/dbkhMCfjCii60gucyjvMi0Dte
-yrd7rPguLhaezc9A+kHaMjJua6jW0w==
-=TYaY
------END PGP SIGNATURE-----
-
---vSsTm1kUtxIHoa7M--
+Eric
