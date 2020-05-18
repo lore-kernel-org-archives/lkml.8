@@ -2,111 +2,188 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBAAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A56F22065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155352065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:59:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MULmkb7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgERL5d (ORCPT
+        id S1727034AbgERL7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:57:33 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:48601 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgERL5c (ORCPT
+        Mon, 18 May 2020 07:59:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbgERL7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:57:32 -0400
-Received: from mail-qv1-f44.google.com ([209.85.219.44]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M1q4e-1jcqFm3dlY-002J7X; Mon, 18 May 2020 13:57:31 +0200
-Received: by mail-qv1-f44.google.com with SMTP id r3so4535612qve.1;
-        Mon, 18 May 2020 04:57:30 -0700 (PDT)
-X-Gm-Message-State: AOAM531FwLcGxSgowINhwEXZGqrWN32MzxhrMcq20nhgg8uxpL1KgD1J
-        tJmhrt3znUP7YWVKGntf1Y4yaCOdgkRq8Kc5cK0=
-X-Google-Smtp-Source: ABdhPJyUnKr4SHUFnJe9QsFvJhBBCNQyLNfjUzwAzO8o0fxqdsPeqZBhu6yQh15LV+E3iObLKOIbnTvte/PqUNqOYLg=
-X-Received: by 2002:a05:6214:1392:: with SMTP id g18mr14567610qvz.210.1589803049670;
- Mon, 18 May 2020 04:57:29 -0700 (PDT)
+        Mon, 18 May 2020 07:59:22 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8917C061A0C;
+        Mon, 18 May 2020 04:59:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xQHGR34Vxc0nHTxCLtZHa0MSq+HYVOsVZrpYxr/SvNA=; b=MULmkb7vDN4xSvMBHhCvTm4ZO+
+        zp27RmBhA+ovcozX2ib0ljHRAJXdPC8ORH+hRPR/423fGfP/PrnbyGmXUwRXNEbsi4GLIkJ8iadTf
+        l7otTrMcuP+dLA6YfHArOtzbBXmZ4ZBhA6GrofVFrLijvBAW8NVWBvbBcTp3CdM6U5eOt2kg1t+JH
+        d4E2bKFlDOPddCr7Gagst2myRo73jpVphVVw3Y55n2zuVO7e3GDSCvHFHqMpQs0ekG+FHOziBqtz9
+        IjlQ2VuaftFlhFYJ+SJXXyebhJoQluOWLOnR772CmwxfWHNDa5ZdvtuF7Fp9veJ7jUjj5bulCFrKS
+        5CnyuDhg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jaeQJ-0002pe-1N; Mon, 18 May 2020 11:59:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AD3A83011F0;
+        Mon, 18 May 2020 13:59:08 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 984892B3D079C; Mon, 18 May 2020 13:59:08 +0200 (CEST)
+Date:   Mon, 18 May 2020 13:59:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>, ak@linux.intel.com,
+        wei.w.wang@intel.com
+Subject: Re: [PATCH v11 05/11] perf/x86: Keep LBR stack unchanged in host
+ context for guest LBR event
+Message-ID: <20200518115908.GE277222@hirez.programming.kicks-ass.net>
+References: <20200514083054.62538-1-like.xu@linux.intel.com>
+ <20200514083054.62538-6-like.xu@linux.intel.com>
 MIME-Version: 1.0
-References: <20200515105537.4876-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <202005152142.AWvx4xc5%lkp@intel.com> <CAHp75Ven9q-6dDYtP_uXigeS_r2uvpUZVR5Mh0RdEd36MbTG+Q@mail.gmail.com>
- <CAK8P3a3RKJo-C5=19oAppx212s7T8NdnKJVmkj+h=34a8aKMNA@mail.gmail.com>
- <5180e734-ff56-db5a-ab49-8a55cfa2f2c0@linux.intel.com> <CAHp75Ve_XjvvGBEQyhy=qVVJMFS+18j3aKxNxSQpGK5qJmzfBg@mail.gmail.com>
-In-Reply-To: <CAHp75Ve_XjvvGBEQyhy=qVVJMFS+18j3aKxNxSQpGK5qJmzfBg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 18 May 2020 13:57:13 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
-Message-ID: <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>, kbuild-all@lists.01.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh R <vigneshr@ti.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        masonccyang@mxic.com.tw
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:aZXMNFxuDqcW7d7dZw64Yqx3tjdzNwT7mq238HcffP43zUt83W1
- d/0DZtOgO3kcF/I9ZugCeXHx9Mr+BnLdHmnagJOE4hHuVTBMxw7e0TSSvRrjGKYCm2/sXce
- BWyeM/sbmKx+rfCKtUZ8GMyPW9MmohWrrTVOD1DrWfg7lukuBLHzN2KJ68jsMVKs894lauB
- 7tl13swvaq4lZnT4y6ChA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:37csoL6+g6A=:yBbzYVNceE2ZVVkrL0BrYB
- DnIBwi3YLiDby6nRphphY39aXjhnijUSCVtVwrikSx+oy+IN4KbGmhhpNVnpSv73J811pybfS
- tPKgD7XMNzUdVKDe6VmRk5Atl/OcpRnzwvJFxSzA640V2uAf9wrUYUG7H36a1AUL9+Z/d6Er0
- OU2G+wxpLzRXhk2ow0HTg6A2QgNFisrf4+12O3pQb/WsN8y0CQMoJpIciel4TRLbyVQuZwRGW
- PU4v5qZqlSQQOQmf3zfV7vh8id76S22HccCLNWCD2GmHZgV3ew7XYbM80dvdKzgr3lXJ/mx6B
- JZ4wbO1DnjE2BzBWqee+/LMSmtOvhWG1izRAJvr55b5/peh1dCDnLBwE6bt4Ra3S7e/ccI5yE
- P2q1Tn8vnHI3zQbKCYhNAhdzMvJKUEN8mvh7bqTdr7rLf529xjr9YUmqU858SFRTavR4LhRrv
- 6K4RndzgkDhIXs+as3TWsEKNq34C+4Qrbxlyoz0LW1yNJIvrDr0HVjwE3M5cL89hi3zMBRedP
- 6gh5M3hOYc+jMPg8w4sEJBXSzwSe1guj1yJW0+TwxdppWakyLf0YPaEZbLAPf4Njv1r21cfpE
- ltaxHeFvKLnKb+bM1K108GXsOHF7E8kLHuRlMtZsC0mkRRYejnxGFvNRrX2SNaG5oU09VqXUR
- ifylmLXr9ag9PJBUSmi0fXQLiz17L3QcjoA9bcf9GeUuoZlRMQIYJe/md+VAV2xukfUiRTXqj
- tdBkRNfpwyzWwoeoiU6fOVWK49CQ47GtLBhBSwHqso7BPvsbZDb8vg2lVQdm5qmED9A+QR/Yn
- zfcfylmN7M7OJKDTQNwk1zHUQDbGM3C8SpnGKOSYfyRl+ygoYE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514083054.62538-6-like.xu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 1:43 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, May 18, 2020 at 2:39 PM Ramuthevar, Vadivel MuruganX
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> > On 15/5/2020 10:30 pm, Arnd Bergmann wrote:
-> > > On Fri, May 15, 2020 at 4:25 PM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > >> On Fri, May 15, 2020 at 4:48 PM kbuild test robot <lkp@intel.com> wrote:
->
-> > > iowrite_be32() is the correct way to store word into a big-endian mmio register,
-> > > if that is the intention here.
-> > Thank you for suggestions to use iowrite32be(), it suits exactly.
->
-> Can you before doing this comment what is the real intention here?
->
-> And note, if you are going to use iowrite*() / ioread*() in one place,
-> you will probably need to replace all of the read*() / write*() to
-> respective io* API.
 
-The way that ioread/iowrite are defined, they are required to be a superset
-of what readl/writel do and can take __iomem pointers from either
-ioremap() or ioport_map()/pci_iomap() style mappings, while readl/writel
-are only required to work with ioremap().
 
-There is no technical requirement to stick to one set or the other for
-ioremap(), but the overhead of ioread/iowrite is also small enough
-that it generally does not hurt.
+Subject: perf/x86: Keep LBR stack unchanged in host context for guest LBR event
+From: Like Xu <like.xu@linux.intel.com>
+Date: Thu, 14 May 2020 16:30:48 +0800
 
-       Arnd
+From: Like Xu <like.xu@linux.intel.com>
+
+When a guest wants to use the LBR stack, its hypervisor creates a guest
+LBR event and let host perf schedules it. A new 'int guest_lbr_enabled'
+field in the 'struct cpu_hw_events', is marked as true when perf adds
+a guest LBR event and marked as false on deletion.
+
+The LBR stack msrs are accessible to the guest when its guest LBR event
+is scheduled in by the perf subsystem. Before scheduling this event out,
+we should avoid host changes on IA32_DEBUGCTLMSR or LBR_SELECT.
+Otherwise, some unexpected branch operations may interfere with guest
+behavior, pollute LBR records, and even cause host branch data leakage.
+In addition, the intel_pmu_lbr_read() on the host is also avoidable.
+
+To ensure that guest LBR records are not lost during the context switch,
+the BRANCH_CALL_STACK flag should be configured in the 'branch_sample_type'
+for any guest LBR event because the callstack mode could save/restore guest
+unread LBR records with the help of intel_pmu_lbr_sched_task() naturally.
+
+However, the regular host LBR perf event doesn't save/restore LBR_SELECT,
+because it's configured in the LBR_enable() based on branch_sample_type.
+So when a guest LBR is running, the guest LBR_SELECT may changes for its
+own use and we have to support LBR_SELECT save/restore to ensure what the
+guest LBR_SELECT value doesn't get lost during the context switching.
+
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
+Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200514083054.62538-6-like.xu@linux.intel.com
+---
+ arch/x86/events/intel/lbr.c  |   16 ++++++++++++++--
+ arch/x86/events/perf_event.h |    3 +++
+ 2 files changed, 17 insertions(+), 2 deletions(-)
+
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -383,6 +383,9 @@ static void __intel_pmu_lbr_restore(stru
+ 
+ 	wrmsrl(x86_pmu.lbr_tos, tos);
+ 	task_ctx->lbr_stack_state = LBR_NONE;
++
++	if (cpuc->lbr_select)
++		wrmsrl(MSR_LBR_SELECT, task_ctx->lbr_sel);
+ }
+ 
+ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
+@@ -415,6 +418,9 @@ static void __intel_pmu_lbr_save(struct
+ 
+ 	cpuc->last_task_ctx = task_ctx;
+ 	cpuc->last_log_id = ++task_ctx->log_id;
++
++	if (cpuc->lbr_select)
++		rdmsrl(MSR_LBR_SELECT, task_ctx->lbr_sel);
+ }
+ 
+ void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
+@@ -485,6 +491,9 @@ void intel_pmu_lbr_add(struct perf_event
+ 	if (!x86_pmu.lbr_nr)
+ 		return;
+ 
++	if (event->hw.flags & PERF_X86_EVENT_LBR_SELECT)
++		cpuc->lbr_select = 1;
++
+ 	cpuc->br_sel = event->hw.branch_reg.reg;
+ 
+ 	if (branch_user_callstack(cpuc->br_sel) && event->ctx->task_ctx_data) {
+@@ -532,6 +541,9 @@ void intel_pmu_lbr_del(struct perf_event
+ 		task_ctx->lbr_callstack_users--;
+ 	}
+ 
++	if (event->hw.flags & PERF_X86_EVENT_LBR_SELECT)
++		cpuc->lbr_select = 0;
++
+ 	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
+ 		cpuc->lbr_pebs_users--;
+ 	cpuc->lbr_users--;
+@@ -1365,5 +1377,5 @@ int x86_perf_get_lbr(struct x86_pmu_lbr
+ EXPORT_SYMBOL_GPL(x86_perf_get_lbr);
+ 
+ struct event_constraint vlbr_constraint =
+-	FIXED_EVENT_CONSTRAINT(INTEL_FIXED_VLBR_EVENT,
+-			       (INTEL_PMC_IDX_FIXED_VLBR - INTEL_PMC_IDX_FIXED));
++	__EVENT_CONSTRAINT(INTEL_FIXED_VLBR_EVENT, (1ULL << INTEL_PMC_IDX_FIXED_VLBR),
++			  FIXED_EVENT_FLAGS, 1, 0, PERF_X86_EVENT_LBR_SELECT);
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -78,6 +78,7 @@ static inline bool constraint_match(stru
+ #define PERF_X86_EVENT_LARGE_PEBS	0x0400 /* use large PEBS */
+ #define PERF_X86_EVENT_PEBS_VIA_PT	0x0800 /* use PT buffer for PEBS */
+ #define PERF_X86_EVENT_PAIR		0x1000 /* Large Increment per Cycle */
++#define PERF_X86_EVENT_LBR_SELECT	0x2000 /* Save/Restore MSR_LBR_SELECT */
+ 
+ struct amd_nb {
+ 	int nb_id;  /* NorthBridge id */
+@@ -237,6 +238,7 @@ struct cpu_hw_events {
+ 	u64				br_sel;
+ 	struct x86_perf_task_context	*last_task_ctx;
+ 	int				last_log_id;
++	int				lbr_select;
+ 
+ 	/*
+ 	 * Intel host/guest exclude bits
+@@ -722,6 +724,7 @@ struct x86_perf_task_context {
+ 	u64 lbr_from[MAX_LBR_ENTRIES];
+ 	u64 lbr_to[MAX_LBR_ENTRIES];
+ 	u64 lbr_info[MAX_LBR_ENTRIES];
++	u64 lbr_sel;
+ 	int tos;
+ 	int valid_lbrs;
+ 	int lbr_callstack_users;
