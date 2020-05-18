@@ -2,133 +2,119 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA94C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB121C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDEEA207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE43207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:15:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589829325;
+	bh=X4wI/Pi/dLltPRB3hRK89e/zukj0Cxkq+d6hZJCpsKE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F46NoCg3iCKTJK8N3y+4OVCOc8n3LoYB1dAyMg2FIlloJAAqNYkDWMpvAFL1096k7
+	 fKUWP+qWLO/7Wtzje+SESqPULtfPwz7FNOirc7zMPotkRV9eRxxl3LRBshWL8PUd6w
+	 sAMTCszmOLsb3HS88ND1jnwHhXbm4pY6aVjC/JBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgERTOg (ORCPT
+        id S1727802AbgERTPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 15:14:36 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15528 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726640AbgERTOf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 15:14:35 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IJ1m61077558;
-        Mon, 18 May 2020 15:13:56 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 312cayku13-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 15:13:56 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04IJ1u8g078009;
-        Mon, 18 May 2020 15:13:55 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 312cayku0f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 15:13:55 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04IJ9JjX006711;
-        Mon, 18 May 2020 19:13:54 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma02dal.us.ibm.com with ESMTP id 313wha9uep-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 19:13:54 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04IJCrYY49676774
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 19:12:53 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A19BC6055;
-        Mon, 18 May 2020 19:12:53 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E92FDC6057;
-        Mon, 18 May 2020 19:12:48 +0000 (GMT)
-Received: from oc3272150783.ibm.com (unknown [9.160.104.35])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Mon, 18 May 2020 19:12:48 +0000 (GMT)
-Date:   Mon, 18 May 2020 14:12:42 -0500
-From:   "Paul A. Clarke" <pc@us.ibm.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: metric expressions including metrics?
-Message-ID: <20200518191242.GA27634@oc3272150783.ibm.com>
+        Mon, 18 May 2020 15:15:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727775AbgERTPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 15:15:24 -0400
+Received: from kernel.org (unknown [87.71.47.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAEBF20657;
+        Mon, 18 May 2020 19:15:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589829323;
+        bh=X4wI/Pi/dLltPRB3hRK89e/zukj0Cxkq+d6hZJCpsKE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QIXEkXTPPBw8odzrRPOyh3N+C+/qFTle9rnvWhLNBfYyZqoZ1OsMotaU9sGT7ts5e
+         55eoYfM8ShDjgphigStUlJ1rVHt56ggoETpiuVbuJhezYqZfr5wLoCH6yt0D8osuo/
+         R7P9YfzIsnePtT84bcMsh9qXUYuQbOhimpjdjXwY=
+Date:   Mon, 18 May 2020 22:15:11 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org, elver@google.com, tglx@linutronix.de,
+        paulmck@kernel.org, mingo@kernel.org, peterz@infradead.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v5 04/18] sparc32: mm: Reduce allocation size for PMD and
+ PTE tables
+Message-ID: <20200518191511.GD1118872@kernel.org>
+References: <20200511204150.27858-1-will@kernel.org>
+ <20200511204150.27858-5-will@kernel.org>
+ <20200517000050.GA87467@roeck-us.net>
+ <20200517000750.GA157503@roeck-us.net>
+ <20200518083715.GA31383@willie-the-truck>
+ <418aa44b-6fb3-c3d8-a920-1a26e5edec62@roeck-us.net>
+ <20200518142310.GC1118872@kernel.org>
+ <b171fbbd-f5b2-ac17-24e5-7188f6ce80f0@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-18_06:2020-05-15,2020-05-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 mlxscore=0 suspectscore=0 spamscore=0 impostorscore=0
- malwarescore=0 adultscore=0 bulkscore=0 clxscore=1011 mlxlogscore=999
- priorityscore=1501 cotscore=-2147483648 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005180157
+In-Reply-To: <b171fbbd-f5b2-ac17-24e5-7188f6ce80f0@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm curious how hard it would be to define metrics using other metrics,
-in the metrics definition files.
+On Mon, May 18, 2020 at 11:09:46AM -0700, Guenter Roeck wrote:
+> On 5/18/20 7:23 AM, Mike Rapoport wrote:
+> 
+> Below is another set of bisect results, from next-20200518. It points to one
+> of your commits. This is for microblaze (big endian) boot failures.
 
-Currently, to my understanding, every metric definition must be an
-expresssion based solely on arithmetic combinations of hardware events.
+The microblaze one was easy, as for sparc32 I still have no clue for the
+root cause :(
 
-Some metrics are hierarchical in nature such that a higher-level metric
-can be defined as an arithmetic expression of two other metrics, e.g.
+Andrew, can you please fold it into "mm: pgtable: add shortcuts for
+accessing kernel PMD and PTE"? 
 
-cache_miss_cycles_per_instruction =
-  data_cache_miss_cycles_per_instruction +
-  instruction_cache_miss_cycles_per_instruction
+From 167250de28aa526342641b2647294a755d234090 Mon Sep 17 00:00:00 2001
+From: Mike Rapoport <rppt@linux.ibm.com>
+Date: Mon, 18 May 2020 22:08:10 +0300
+Subject: [PATCH] microblaze: fix page table traversal in setup_rt_frame()
 
-This would need to be defined something like:
-dcache_miss_cpi = "dcache_miss_cycles / instructions"
-icache_miss_cpi = "icache_miss_cycles / instructions"
-cache_miss_cpi = "(dcache_miss_cycles + icache_miss_cycles) / instructions"
+The replacement of long folded page table traversal with the direct access
+to PMD entry wrongly used the kernel page table in setup_rt_frame()
+function instead of the process (current->mm) page table.
 
-Could the latter definition be simplified to:
-cache_miss_cpi = "dcache_miss_cpi + icache_miss_cpi"
+Fix it.
 
-With multi-level caches and NUMA hierarchies, some of these higher-level
-metrics can involve a lot of hardware events.
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ arch/microblaze/kernel/signal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Given the recent activity in this area, I'm curious if this has been
-considered and already on a wish/to-do list, or found onerous.
+diff --git a/arch/microblaze/kernel/signal.c b/arch/microblaze/kernel/signal.c
+index 28b1ec4b4e79..bdd6d0c86e16 100644
+--- a/arch/microblaze/kernel/signal.c
++++ b/arch/microblaze/kernel/signal.c
+@@ -194,7 +194,7 @@ static int setup_rt_frame(struct ksignal *ksig, sigset_t *set,
+ 
+ 	address = ((unsigned long)frame->tramp);
+ #ifdef CONFIG_MMU
+-	pmdp = pmd_off_k(address);
++	pmdp = pmd_off(current->mm, address);
+ 
+ 	preempt_disable();
+ 	ptep = pte_offset_map(pmdp, address);
+-- 
+2.26.2
 
-Regards,
-Paul Clarke
+
+> Guenter
+> 
+> ---
+
+-- 
+Sincerely yours,
+Mike.
