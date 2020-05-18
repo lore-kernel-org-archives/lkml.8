@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC9DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97370C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4062A20829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F568207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824080;
-	bh=q2u77E1FPverEm4DQR/iNwj9letvCXzBK1lryef+zLU=;
+	s=default; t=1589824084;
+	bh=qulwPbZkzE4NFTAAUi2Qdb36dRGHKbHi3E8aGXOWyBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bEuWpYh1U9/RW/Q/0/sl+2cjOUpAvfXby71XxQPNVHQBCyDSfo2tYVGg9Zz+GLc3c
-	 pYSAymadDOSwn7aw72b7Jmcng2f68R7thJV4M5xzcfdWhspQWUWlCpdv509B5Ot5hz
-	 PkwtooNNb6p2ihGsjcMG6nFg7kItEDa1JEfRxXG4=
+	b=YRvwwBCMwcgo1QtM9B5t2mS78GtRu//HC2BsVfKs0CQL5WjbGJP4nTwK92qNDeN+F
+	 P9TOvcO1OZljls+fZG9B1wvrRxihWWdyc+SNQmazthkha0HWOut7daQbeyUSGSjyGH
+	 HE3ZYYlcy3icsjQvQDGr4FpTLS+G12Plno+Lx+04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbgERRr6 (ORCPT
+        id S1729148AbgERRsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:47:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48516 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:48:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729787AbgERRr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:47:56 -0400
+        id S1730303AbgERRr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:47:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7D3C20671;
-        Mon, 18 May 2020 17:47:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3630420671;
+        Mon, 18 May 2020 17:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824075;
-        bh=q2u77E1FPverEm4DQR/iNwj9letvCXzBK1lryef+zLU=;
+        s=default; t=1589824077;
+        bh=qulwPbZkzE4NFTAAUi2Qdb36dRGHKbHi3E8aGXOWyBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rngIOEl/ijhS48fBeegIqrHMxMlaldKnhdoZD0dEHe/yc1PYCYaKAQtMsxW02U67Y
-         +hJJ07KbSk7RupSQSl6PHIBNTrnn/UL83yL1GtCuNWOFHHV7G2mH7wf0Bj0npxaaaL
-         wn4dHK8VNW/mEX+Dd/LgSUgRx9Q6mWdb6wUckeDU=
+        b=kkux48fqKuoTGh/ndKiTmx973F92g+k/Uk3bXTIZzHs0dzxxxYXx06vsES+fuw7Yg
+         T9UJvCCEZDWP8VPt7C+lY3da6YLE6nWGxuIb7bO+futcp8yyBG67JJfd0JITlkdMCl
+         V1WUXHVOGHhUqhDqF9MTbxIupBjb2TzqxHqQChBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 061/114] ALSA: hda/realtek - Fix S3 pop noise on Dell Wyse
-Date:   Mon, 18 May 2020 19:36:33 +0200
-Message-Id: <20200518173514.133775689@linuxfoundation.org>
+        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 062/114] x86/entry/64: Fix unwind hints in register clearing code
+Date:   Mon, 18 May 2020 19:36:34 +0200
+Message-Id: <20200518173514.308786054@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -60,70 +66,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit 52e4e36807aeac1cdd07b14e509c8a64101e1a09 ]
+[ Upstream commit 06a9750edcffa808494d56da939085c35904e618 ]
 
-Commit 317d9313925c ("ALSA: hda/realtek - Set default power save node to
-0") makes the ALC225 have pop noise on S3 resume and cold boot.
+The PUSH_AND_CLEAR_REGS macro zeroes each register immediately after
+pushing it.  If an NMI or exception hits after a register is cleared,
+but before the UNWIND_HINT_REGS annotation, the ORC unwinder will
+wrongly think the previous value of the register was zero.  This can
+confuse the unwinding process and cause it to exit early.
 
-The previous fix enable power save node universally for ALC225, however
-it makes some ALC225 systems unable to produce any sound.
+Because ORC is simpler than DWARF, there are a limited number of unwind
+annotation states, so it's not possible to add an individual unwind hint
+after each push/clear combination.  Instead, the register clearing
+instructions need to be consolidated and moved to after the
+UNWIND_HINT_REGS annotation.
 
-So let's only enable power save node for the affected Dell Wyse
-platform.
-
-Fixes: 317d9313925c ("ALSA: hda/realtek - Set default power save node to 0")
-BugLink: https://bugs.launchpad.net/bugs/1866357
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Link: https://lore.kernel.org/r/20200503152449.22761-2-kai.heng.feng@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 3f01daecd545 ("x86/entry/64: Introduce the PUSH_AND_CLEAN_REGS macro")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Jones <dsj@fb.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lore.kernel.org/r/68fd3d0bc92ae2d62ff7879d15d3684217d51f08.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/x86/entry/calling.h | 38 +++++++++++++++++++++-----------------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index b2aec97414fb8..d578f6594223f 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5354,6 +5354,15 @@ static void alc233_alc662_fixup_lenovo_dual_codecs(struct hda_codec *codec,
- 	}
- }
+diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
+index 557c1bdda311b..1dbc62a96b859 100644
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -98,13 +98,6 @@ For 32-bit we have the following conventions - kernel is built with
+ #define SIZEOF_PTREGS	21*8
  
-+static void alc225_fixup_s3_pop_noise(struct hda_codec *codec,
-+				      const struct hda_fixup *fix, int action)
-+{
-+	if (action != HDA_FIXUP_ACT_PRE_PROBE)
-+		return;
+ .macro PUSH_AND_CLEAR_REGS rdx=%rdx rax=%rax save_ret=0
+-	/*
+-	 * Push registers and sanitize registers of values that a
+-	 * speculation attack might otherwise want to exploit. The
+-	 * lower registers are likely clobbered well before they
+-	 * could be put to use in a speculative execution gadget.
+-	 * Interleave XOR with PUSH for better uop scheduling:
+-	 */
+ 	.if \save_ret
+ 	pushq	%rsi		/* pt_regs->si */
+ 	movq	8(%rsp), %rsi	/* temporarily store the return address in %rsi */
+@@ -117,29 +110,40 @@ For 32-bit we have the following conventions - kernel is built with
+ 	pushq   %rcx		/* pt_regs->cx */
+ 	pushq   \rax		/* pt_regs->ax */
+ 	pushq   %r8		/* pt_regs->r8 */
+-	xorl	%r8d, %r8d	/* nospec   r8 */
+ 	pushq   %r9		/* pt_regs->r9 */
+-	xorl	%r9d, %r9d	/* nospec   r9 */
+ 	pushq   %r10		/* pt_regs->r10 */
+-	xorl	%r10d, %r10d	/* nospec   r10 */
+ 	pushq   %r11		/* pt_regs->r11 */
+-	xorl	%r11d, %r11d	/* nospec   r11*/
+ 	pushq	%rbx		/* pt_regs->rbx */
+-	xorl    %ebx, %ebx	/* nospec   rbx*/
+ 	pushq	%rbp		/* pt_regs->rbp */
+-	xorl    %ebp, %ebp	/* nospec   rbp*/
+ 	pushq	%r12		/* pt_regs->r12 */
+-	xorl	%r12d, %r12d	/* nospec   r12*/
+ 	pushq	%r13		/* pt_regs->r13 */
+-	xorl	%r13d, %r13d	/* nospec   r13*/
+ 	pushq	%r14		/* pt_regs->r14 */
+-	xorl	%r14d, %r14d	/* nospec   r14*/
+ 	pushq	%r15		/* pt_regs->r15 */
+-	xorl	%r15d, %r15d	/* nospec   r15*/
+ 	UNWIND_HINT_REGS
 +
-+	codec->power_save_node = 1;
-+}
+ 	.if \save_ret
+ 	pushq	%rsi		/* return address on top of stack */
+ 	.endif
 +
- /* Forcibly assign NID 0x03 to HP/LO while NID 0x02 to SPK for EQ */
- static void alc274_fixup_bind_dacs(struct hda_codec *codec,
- 				    const struct hda_fixup *fix, int action)
-@@ -5507,6 +5516,7 @@ enum {
- 	ALC233_FIXUP_LENOVO_MULTI_CODECS,
- 	ALC294_FIXUP_LENOVO_MIC_LOCATION,
- 	ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE,
-+	ALC225_FIXUP_S3_POP_NOISE,
- 	ALC700_FIXUP_INTEL_REFERENCE,
- 	ALC274_FIXUP_DELL_BIND_DACS,
- 	ALC274_FIXUP_DELL_AIO_LINEOUT_VERB,
-@@ -6339,6 +6349,12 @@ static const struct hda_fixup alc269_fixups[] = {
- 			{ }
- 		},
- 		.chained = true,
-+		.chain_id = ALC225_FIXUP_S3_POP_NOISE
-+	},
-+	[ALC225_FIXUP_S3_POP_NOISE] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc225_fixup_s3_pop_noise,
-+		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
- 	},
- 	[ALC700_FIXUP_INTEL_REFERENCE] = {
++	/*
++	 * Sanitize registers of values that a speculation attack might
++	 * otherwise want to exploit. The lower registers are likely clobbered
++	 * well before they could be put to use in a speculative execution
++	 * gadget.
++	 */
++	xorl	%edx,  %edx	/* nospec dx  */
++	xorl	%ecx,  %ecx	/* nospec cx  */
++	xorl	%r8d,  %r8d	/* nospec r8  */
++	xorl	%r9d,  %r9d	/* nospec r9  */
++	xorl	%r10d, %r10d	/* nospec r10 */
++	xorl	%r11d, %r11d	/* nospec r11 */
++	xorl	%ebx,  %ebx	/* nospec rbx */
++	xorl	%ebp,  %ebp	/* nospec rbp */
++	xorl	%r12d, %r12d	/* nospec r12 */
++	xorl	%r13d, %r13d	/* nospec r13 */
++	xorl	%r14d, %r14d	/* nospec r14 */
++	xorl	%r15d, %r15d	/* nospec r15 */
++
+ .endm
+ 
+ .macro POP_REGS pop_rdi=1 skip_r11rcx=0
 -- 
 2.20.1
 
