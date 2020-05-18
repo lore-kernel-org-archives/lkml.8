@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F617C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30F8320835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456CE2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824180;
-	bh=/HHfS83NJSn6uRGGuNfIQL/iOaixrXdIqnZA9Wc/srM=;
+	s=default; t=1589824182;
+	bh=2qitLLezr2UjIB2vLsXLPOmzr97R3cyIBcTQTL+j+xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nfAlJNbto07Pr76oupu6C+uC8vJDOB/98dWPmf9INjFdsDG4Zg1fdpdvV9E/Q0bq8
-	 7/aLCpBDjW19KGalbyB/nZs5rO/3LXp3Xq5s7FL5L9Lh5/7vM2e/jflcJPOis6oMoH
-	 hjdbxPzpjsqd9AEB0RBPPyfh+QiFPJnmJybhPI98=
+	b=Dw5xQ/k1kCfNihEc52X234Hc4Lrn06XA6lv1L8Opy/r+ZnyAez8bhaVMv4KwP6Z3Y
+	 GmFGMsvvmg99tVOOKRYUg3M00lOfWlcva/ZYqKIt1mMmR1QizrH4f2b4zt1T7LYjT3
+	 Pp1+zk2TyXmMrQ4b3NmdTXf8s5ypGV78Md3unR48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730562AbgERRtj (ORCPT
+        id S1730554AbgERRth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:49:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51220 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:49:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730543AbgERRtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:49:33 -0400
+        id S1729029AbgERRtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:49:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60DDC20657;
-        Mon, 18 May 2020 17:49:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C976320657;
+        Mon, 18 May 2020 17:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824172;
-        bh=/HHfS83NJSn6uRGGuNfIQL/iOaixrXdIqnZA9Wc/srM=;
+        s=default; t=1589824175;
+        bh=2qitLLezr2UjIB2vLsXLPOmzr97R3cyIBcTQTL+j+xg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IMBIf8Q5sXATUsLOQdHmAYSQIuh5uRYXD+OCoKlJ8oRz7/3jx6TW4AqQSAE4fWiE5
-         FVG8Utt18od6rvTnEePUmL8Zao0jm5IJIb8Z4pV0CcPtmkubL8zKQJQRVP9dohfA4X
-         K4Q20PWtESK0o4EKfGmFOhfx0Z9cNkc8LW8tMcsY=
+        b=gWy+gCZjG3l6rxBk16FAhpGhMdDVSxOBU6OG46qFOydY55ySdf0nJVqLZCA8krNoB
+         ofNX+fCnJegvFYMG/1t5VHD+G//qRSmD0Le4zqVRUlu9jL+LJvWjrVw0BJw1TvfexO
+         BULywGBYUPKGUtgsgbE0DAp12SUJtifKNfgqZVCU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sriharsha Allenki <sallenki@codeaurora.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.14 100/114] usb: xhci: Fix NULL pointer dereference when enqueuing trbs from urb sg list
-Date:   Mon, 18 May 2020 19:37:12 +0200
-Message-Id: <20200518173519.621240196@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 4.14 101/114] x86/unwind/orc: Fix error handling in __unwind_start()
+Date:   Mon, 18 May 2020 19:37:13 +0200
+Message-Id: <20200518173519.747046062@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -60,74 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sriharsha Allenki <sallenki@codeaurora.org>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 3c6f8cb92c9178fc0c66b580ea3df1fa3ac1155a upstream.
+commit 71c95825289f585014fe9741b051d32a7a916680 upstream.
 
-On platforms with IOMMU enabled, multiple SGs can be coalesced into one
-by the IOMMU driver. In that case the SG list processing as part of the
-completion of a urb on a bulk endpoint can result into a NULL pointer
-dereference with the below stack dump.
+The unwind_state 'error' field is used to inform the reliable unwinding
+code that the stack trace can't be trusted.  Set this field for all
+errors in __unwind_start().
 
-<6> Unable to handle kernel NULL pointer dereference at virtual address 0000000c
-<6> pgd = c0004000
-<6> [0000000c] *pgd=00000000
-<6> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-<2> PC is at xhci_queue_bulk_tx+0x454/0x80c
-<2> LR is at xhci_queue_bulk_tx+0x44c/0x80c
-<2> pc : [<c08907c4>]    lr : [<c08907bc>]    psr: 000000d3
-<2> sp : ca337c80  ip : 00000000  fp : ffffffff
-<2> r10: 00000000  r9 : 50037000  r8 : 00004000
-<2> r7 : 00000000  r6 : 00004000  r5 : 00000000  r4 : 00000000
-<2> r3 : 00000000  r2 : 00000082  r1 : c2c1a200  r0 : 00000000
-<2> Flags: nzcv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
-<2> Control: 10c0383d  Table: b412c06a  DAC: 00000051
-<6> Process usb-storage (pid: 5961, stack limit = 0xca336210)
-<snip>
-<2> [<c08907c4>] (xhci_queue_bulk_tx)
-<2> [<c0881b3c>] (xhci_urb_enqueue)
-<2> [<c0831068>] (usb_hcd_submit_urb)
-<2> [<c08350b4>] (usb_sg_wait)
-<2> [<c089f384>] (usb_stor_bulk_transfer_sglist)
-<2> [<c089f2c0>] (usb_stor_bulk_srb)
-<2> [<c089fe38>] (usb_stor_Bulk_transport)
-<2> [<c089f468>] (usb_stor_invoke_transport)
-<2> [<c08a11b4>] (usb_stor_control_thread)
-<2> [<c014a534>] (kthread)
+Also, move the zeroing out of the unwind_state struct to before the ORC
+table initialization check, to prevent the caller from reading
+uninitialized data if the ORC table is corrupted.
 
-The above NULL pointer dereference is the result of block_len and the
-sent_len set to zero after the first SG of the list when IOMMU driver
-is enabled. Because of this the loop of processing the SGs has run
-more than num_sgs which resulted in a sg_next on the last SG of the
-list which has SG_END set.
-
-Fix this by check for the sg before any attributes of the sg are
-accessed.
-
-[modified reason for null pointer dereference in commit message subject -Mathias]
-Fixes: f9c589e142d04 ("xhci: TD-fragment, align the unsplittable case with a bounce buffer")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200514110432.25564-2-mathias.nyman@linux.intel.com
+Fixes: af085d9084b4 ("stacktrace/x86: add function for detecting reliable stack traces")
+Fixes: d3a09104018c ("x86/unwinder/orc: Dont bail on stack overflow")
+Fixes: 98d0c8ebf77e ("x86/unwind/orc: Prevent unwinding before ORC initialization")
+Reported-by: Pavel Machek <pavel@denx.de>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/d6ac7215a84ca92b895fdd2e1aa546729417e6e6.1589487277.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-ring.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/unwind_orc.c |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -3403,8 +3403,8 @@ int xhci_queue_bulk_tx(struct xhci_hcd *
- 			/* New sg entry */
- 			--num_sgs;
- 			sent_len -= block_len;
--			if (num_sgs != 0) {
--				sg = sg_next(sg);
-+			sg = sg_next(sg);
-+			if (num_sgs != 0 && sg) {
- 				block_len = sg_dma_len(sg);
- 				addr = (u64) sg_dma_address(sg);
- 				addr += sent_len;
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -505,23 +505,23 @@ EXPORT_SYMBOL_GPL(unwind_next_frame);
+ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+ 		    struct pt_regs *regs, unsigned long *first_frame)
+ {
+-	if (!orc_init)
+-		goto done;
+-
+ 	memset(state, 0, sizeof(*state));
+ 	state->task = task;
+ 
++	if (!orc_init)
++		goto err;
++
+ 	/*
+ 	 * Refuse to unwind the stack of a task while it's executing on another
+ 	 * CPU.  This check is racy, but that's ok: the unwinder has other
+ 	 * checks to prevent it from going off the rails.
+ 	 */
+ 	if (task_on_another_cpu(task))
+-		goto done;
++		goto err;
+ 
+ 	if (regs) {
+ 		if (user_mode(regs))
+-			goto done;
++			goto the_end;
+ 
+ 		state->ip = regs->ip;
+ 		state->sp = kernel_stack_pointer(regs);
+@@ -554,6 +554,7 @@ void __unwind_start(struct unwind_state
+ 		 * generate some kind of backtrace if this happens.
+ 		 */
+ 		void *next_page = (void *)PAGE_ALIGN((unsigned long)state->sp);
++		state->error = true;
+ 		if (get_stack_info(next_page, state->task, &state->stack_info,
+ 				   &state->stack_mask))
+ 			return;
+@@ -579,8 +580,9 @@ void __unwind_start(struct unwind_state
+ 
+ 	return;
+ 
+-done:
++err:
++	state->error = true;
++the_end:
+ 	state->stack_info.type = STACK_TYPE_UNKNOWN;
+-	return;
+ }
+ EXPORT_SYMBOL_GPL(__unwind_start);
 
 
