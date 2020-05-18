@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF130C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3029C20829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 854EE2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826521;
-	bh=92C6p6tlwbBMVt5XS+W92fxk5AXDJDTfJrbzkbFQ0D8=;
+	s=default; t=1589826524;
+	bh=vNZivytMBWAhlteQOYiqnhPyfZQnjhltAJXHLe92+kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EeXnwCuPQDqn/zyNeawg+3ovd81Pe5LLNSc24yISl88w1ch6bV2pp1O2yp3a2SSfR
-	 cY3bq7hDzCurjmsZb+dfHylvASghCccLjipRMprLmpLCyJftCyfAxqw/NLcl9sdTSF
-	 uQoDCzxxa9zTPa1M8kzsF8UU7J5lqmfHZzbqTAIw=
+	b=FKXC0mk1MocEWuLyrlEjc+gYCg8MkfQeZm6SS+JKP7V3sT7yS7cahCTTh3X6mh4x3
+	 iHUYlGTdPksIr2tOiaIZxX3Qk+eqTKI/CiX9gB+VsnUF2TwpdW5c2U6qzntWDZK5AV
+	 KYzTmUYkqEHDbH/4+/HkfOpwzIC6jHlk9vffeERg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387996AbgERS2j (ORCPT
+        id S1729426AbgERRm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:28:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39696 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:42:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729448AbgERRmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:42:36 -0400
+        id S1729395AbgERRmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:42:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C868320715;
-        Mon, 18 May 2020 17:42:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B234A20829;
+        Mon, 18 May 2020 17:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823756;
-        bh=92C6p6tlwbBMVt5XS+W92fxk5AXDJDTfJrbzkbFQ0D8=;
+        s=default; t=1589823734;
+        bh=vNZivytMBWAhlteQOYiqnhPyfZQnjhltAJXHLe92+kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PjyqmiU8iJm+kQtk8g2XYxZiqXDlGTOtlN/KEyQHMq5VieT5STm9FL4k6AwLqI6Hv
-         d1aFxYvY7ckmLp7kF4wCQmGFHayK8NZFYLsDQYyV6Mk6pSwDVGuKU0StFZINCi3C2o
-         17zOftUZPdlfBvj1qpHPC2KasOSN6IyOpl+ZJWX8=
+        b=dBgjhSb77buorO/GYujykAfiRmBtjz7Z9RlEbbJDiL5MQlzWszqZ3hgNVi9dOEg9I
+         pHyfuEWF+Rf7CsEqPxB5kKDo0fAtyuJH/LUmPjdjgFHytEtw6w1mqA3XDfjLnBKfLL
+         ky/e8GVCU7mA/NqAZSQYlPl0ii0wLPlhtcgvxM7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 03/90] fq_codel: fix TCA_FQ_CODEL_DROP_BATCH_SIZE sanity checks
-Date:   Mon, 18 May 2020 19:35:41 +0200
-Message-Id: <20200518173451.710909306@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        =?UTF-8?q?Julian=20Gro=C3=9F?= <julian.g@posteo.de>
+Subject: [PATCH 4.9 15/90] USB: uas: add quirk for LaCie 2Big Quadra
+Date:   Mon, 18 May 2020 19:35:53 +0200
+Message-Id: <20200518173454.305084631@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -60,32 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 14695212d4cd8b0c997f6121b6df8520038ce076 ]
+commit 9f04db234af691007bb785342a06abab5fb34474 upstream.
 
-My intent was to not let users set a zero drop_batch_size,
-it seems I once again messed with min()/max().
+This device needs US_FL_NO_REPORT_OPCODES to avoid going
+through prolonged error handling on enumeration.
 
-Fixes: 9d18562a2278 ("fq_codel: add batch ability to fq_codel_drop()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: Julian Groß <julian.g@posteo.de>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200429155218.7308-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/sch_fq_codel.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sched/sch_fq_codel.c
-+++ b/net/sched/sch_fq_codel.c
-@@ -428,7 +428,7 @@ static int fq_codel_change(struct Qdisc
- 		q->quantum = max(256U, nla_get_u32(tb[TCA_FQ_CODEL_QUANTUM]));
+---
+ drivers/usb/storage/unusual_uas.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -41,6 +41,13 @@
+  * and don't forget to CC: the USB development list <linux-usb@vger.kernel.org>
+  */
  
- 	if (tb[TCA_FQ_CODEL_DROP_BATCH_SIZE])
--		q->drop_batch_size = min(1U, nla_get_u32(tb[TCA_FQ_CODEL_DROP_BATCH_SIZE]));
-+		q->drop_batch_size = max(1U, nla_get_u32(tb[TCA_FQ_CODEL_DROP_BATCH_SIZE]));
- 
- 	if (tb[TCA_FQ_CODEL_MEMORY_LIMIT])
- 		q->memory_limit = min(1U << 31, nla_get_u32(tb[TCA_FQ_CODEL_MEMORY_LIMIT]));
++/* Reported-by: Julian Groß <julian.g@posteo.de> */
++UNUSUAL_DEV(0x059f, 0x105f, 0x0000, 0x9999,
++		"LaCie",
++		"2Big Quadra USB3",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_NO_REPORT_OPCODES),
++
+ /*
+  * Apricorn USB3 dongle sometimes returns "USBSUSBSUSBS" in response to SCSI
+  * commands in UAS mode.  Observed with the 1.28 firmware; are there others?
 
 
