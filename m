@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8277C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EEEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD2582081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8834207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbgERSxz (ORCPT
+        id S1729947AbgERSyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:53:55 -0400
-Received: from mga14.intel.com ([192.55.52.115]:62847 "EHLO mga14.intel.com"
+        Mon, 18 May 2020 14:54:05 -0400
+Received: from mga12.intel.com ([192.55.52.136]:45466 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728402AbgERSxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:53:54 -0400
-IronPort-SDR: q0jUD/OXjGupPiz85M8+KOdNyqD5ejQneUZ45UUZiaIIk3a8so1zovxv4u3gohRqgmTZW45601
- n1+05FKaONbA==
+        id S1729913AbgERSyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:54:04 -0400
+IronPort-SDR: 4rA7Ni4me6qOl1zHyxku8e/QWEQb+8kxbCufWJA+ZZ7HdrV88ZwiaAAyi/yNOkW7s2vMkIUG+h
+ +pHaoQMUS1xg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:53:52 -0700
-IronPort-SDR: 2Dohkz6To4PRv8j710FsqBF2+CmtR4djVHcnH3XjbHrsZl97EkcbadFDqUnYWntE/4n6hR83Ke
- XCLNKeIfcUJw==
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:54:04 -0700
+IronPort-SDR: 3MUwujKUlwB4ZaHdE/YL026V2VXsr8wSgxrLI7OqCYf8K3l/ny3CPY4hmoL0fMpSJ4V4Fyr5em
+ PqaGgGiPdYdg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="465860931"
+   d="scan'208";a="308187851"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga006.fm.intel.com with ESMTP; 18 May 2020 11:53:51 -0700
-Subject: [PATCH v2 5/9] dmaengine: idxd: move submission to sbitmap_queue
+  by FMSMGA003.fm.intel.com with ESMTP; 18 May 2020 11:54:03 -0700
+Subject: [PATCH v2 7/9] dmaengine: idxd: clean up descriptors with fault
+ error
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, hpa@zytor.com, bhelgaas@google.com,
@@ -41,8 +42,8 @@ Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         x86@kernel.org, dan.j.williams@intel.com, ashok.raj@intel.com,
         fenghua.yu@intel.com, tony.luck@intel.com, jing.lin@intel.com,
         sanjay.k.kumar@intel.com, dave.hansen@intel.com
-Date:   Mon, 18 May 2020 11:53:51 -0700
-Message-ID: <158982803103.37989.17841991953662562685.stgit@djiang5-desk3.ch.intel.com>
+Date:   Mon, 18 May 2020 11:54:03 -0700
+Message-ID: <158982804328.37989.12023460033817186208.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
 References: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/unknown-version
@@ -54,268 +55,274 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kill the percpu-rwsem for work submission in favor of an sbitmap_queue.
+Add code to "complete" a descriptor when the descriptor or its completion
+address hit a fault error when SVA mode is being used. This error can be
+triggered due to bad programming by the user. A lock is introduced in order
+to protect the descriptor completion lists since the fault handler will run
+from the system work queue after being scheduled in the interrupt handler.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/dma/Kconfig       |    2 +
- drivers/dma/idxd/device.c |   14 ++++-----
- drivers/dma/idxd/idxd.h   |    6 +---
- drivers/dma/idxd/init.c   |   20 ------------
- drivers/dma/idxd/submit.c |   74 +++++++++++++++++++++++----------------------
- 5 files changed, 46 insertions(+), 70 deletions(-)
+ drivers/dma/idxd/idxd.h |    5 ++
+ drivers/dma/idxd/init.c |    1 
+ drivers/dma/idxd/irq.c  |  143 +++++++++++++++++++++++++++++++++++++++++++----
+ 3 files changed, 137 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 037ada9cc056..e817781b656a 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -284,8 +284,8 @@ config INTEL_IDMA64
- config INTEL_IDXD
- 	tristate "Intel Data Accelerators support"
- 	depends on PCI && X86_64
-+	depends on SBITMAP
- 	select DMA_ENGINE
--	select SBITMAP
- 	help
- 	  Enable support for the Intel(R) data accelerators present
- 	  in Intel Xeon CPU.
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 8fe344412bd9..95b8820ef087 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -160,16 +160,14 @@ static int alloc_descs(struct idxd_wq *wq, int num)
- int idxd_wq_alloc_resources(struct idxd_wq *wq)
- {
- 	struct idxd_device *idxd = wq->idxd;
--	struct idxd_group *group = wq->group;
- 	struct device *dev = &idxd->pdev->dev;
- 	int rc, num_descs, i;
- 
- 	if (wq->type != IDXD_WQT_KERNEL)
- 		return 0;
- 
--	num_descs = wq->size +
--		idxd->hw.gen_cap.max_descs_per_engine * group->num_engines;
--	wq->num_descs = num_descs;
-+	wq->num_descs = wq->size;
-+	num_descs = wq->size;
- 
- 	rc = alloc_hw_descs(wq, num_descs);
- 	if (rc < 0)
-@@ -187,8 +185,8 @@ int idxd_wq_alloc_resources(struct idxd_wq *wq)
- 	if (rc < 0)
- 		goto fail_alloc_descs;
- 
--	rc = sbitmap_init_node(&wq->sbmap, num_descs, -1, GFP_KERNEL,
--			       dev_to_node(dev));
-+	rc = sbitmap_queue_init_node(&wq->sbq, num_descs, -1, false, GFP_KERNEL,
-+				     dev_to_node(dev));
- 	if (rc < 0)
- 		goto fail_sbitmap_init;
- 
-@@ -201,7 +199,7 @@ int idxd_wq_alloc_resources(struct idxd_wq *wq)
- 			sizeof(struct dsa_completion_record) * i;
- 		desc->id = i;
- 		desc->wq = wq;
--
-+		desc->cpu = -1;
- 		dma_async_tx_descriptor_init(&desc->txd, &wq->dma_chan);
- 		desc->txd.tx_submit = idxd_dma_tx_submit;
- 	}
-@@ -227,7 +225,7 @@ void idxd_wq_free_resources(struct idxd_wq *wq)
- 	free_hw_descs(wq);
- 	free_descs(wq);
- 	dma_free_coherent(dev, wq->compls_size, wq->compls, wq->compls_addr);
--	sbitmap_free(&wq->sbmap);
-+	sbitmap_queue_free(&wq->sbq);
- }
- 
- int idxd_wq_enable(struct idxd_wq *wq)
 diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 013d68d42bc4..0769354df4cf 100644
+index 41b973e3b781..885f1f95a64e 100644
 --- a/drivers/dma/idxd/idxd.h
 +++ b/drivers/dma/idxd/idxd.h
-@@ -104,7 +104,6 @@ struct idxd_wq {
- 	enum idxd_wq_state state;
- 	unsigned long flags;
- 	union wqcfg wqcfg;
--	atomic_t dq_count;	/* dedicated queue flow control */
- 	u32 vec_ptr;		/* interrupt steering */
- 	struct dsa_hw_desc **hw_descs;
- 	int num_descs;
-@@ -112,10 +111,8 @@ struct idxd_wq {
- 	dma_addr_t compls_addr;
- 	int compls_size;
- 	struct idxd_desc **descs;
--	struct sbitmap sbmap;
-+	struct sbitmap_queue sbq;
- 	struct dma_chan dma_chan;
--	struct percpu_rw_semaphore submit_lock;
--	wait_queue_head_t submit_waitq;
- 	char name[WQ_NAME_SIZE + 1];
- };
- 
-@@ -205,6 +202,7 @@ struct idxd_desc {
- 	struct llist_node llnode;
- 	struct list_head list;
+@@ -34,6 +34,11 @@ struct idxd_irq_entry {
  	int id;
-+	int cpu;
- 	struct idxd_wq *wq;
+ 	struct llist_head pending_llist;
+ 	struct list_head work_list;
++	/*
++	 * Lock to protect access between irq thread process descriptor
++	 * and irq thread processing error descriptor.
++	 */
++	spinlock_t list_lock;
  };
  
+ struct idxd_group {
 diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 51cdf77038dc..c7c61974f20f 100644
+index 60da12fdd8c1..7884522ca418 100644
 --- a/drivers/dma/idxd/init.c
 +++ b/drivers/dma/idxd/init.c
-@@ -141,17 +141,6 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
- 	return rc;
- }
- 
--static void idxd_wqs_free_lock(struct idxd_device *idxd)
--{
--	int i;
--
--	for (i = 0; i < idxd->max_wqs; i++) {
--		struct idxd_wq *wq = &idxd->wqs[i];
--
--		percpu_free_rwsem(&wq->submit_lock);
--	}
--}
--
- static int idxd_setup_internals(struct idxd_device *idxd)
- {
- 	struct device *dev = &idxd->pdev->dev;
-@@ -182,19 +171,11 @@ static int idxd_setup_internals(struct idxd_device *idxd)
- 
- 	for (i = 0; i < idxd->max_wqs; i++) {
- 		struct idxd_wq *wq = &idxd->wqs[i];
--		int rc;
- 
- 		wq->id = i;
- 		wq->idxd = idxd;
- 		mutex_init(&wq->wq_lock);
--		atomic_set(&wq->dq_count, 0);
--		init_waitqueue_head(&wq->submit_waitq);
- 		wq->idxd_cdev.minor = -1;
--		rc = percpu_init_rwsem(&wq->submit_lock);
--		if (rc < 0) {
--			idxd_wqs_free_lock(idxd);
--			return rc;
--		}
+@@ -94,6 +94,7 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
+ 	for (i = 0; i < msixcnt; i++) {
+ 		idxd->irq_entries[i].id = i;
+ 		idxd->irq_entries[i].idxd = idxd;
++		spin_lock_init(&idxd->irq_entries[i].list_lock);
  	}
  
- 	for (i = 0; i < idxd->max_engines; i++) {
-@@ -464,7 +445,6 @@ static void idxd_remove(struct pci_dev *pdev)
- 	dev_dbg(&pdev->dev, "%s called\n", __func__);
- 	idxd_cleanup_sysfs(idxd);
- 	idxd_shutdown(pdev);
--	idxd_wqs_free_lock(idxd);
- 	mutex_lock(&idxd_idr_lock);
- 	idr_remove(&idxd_idrs[idxd->type], idxd->id);
- 	mutex_unlock(&idxd_idr_lock);
-diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
-index 45a0c5869a0a..156a1ee233aa 100644
---- a/drivers/dma/idxd/submit.c
-+++ b/drivers/dma/idxd/submit.c
-@@ -8,61 +8,61 @@
+ 	msix = &idxd->msix_entries[0];
+diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+index 6052765ca3c8..db64bb82f17c 100644
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -11,6 +11,24 @@
  #include "idxd.h"
  #include "registers.h"
  
--struct idxd_desc *idxd_alloc_desc(struct idxd_wq *wq, enum idxd_op_type optype)
-+static struct idxd_desc *__get_desc(struct idxd_wq *wq, int idx, int cpu)
- {
- 	struct idxd_desc *desc;
--	int idx;
++enum irq_work_type {
++	IRQ_WORK_NORMAL = 0,
++	IRQ_WORK_PROCESS_FAULT,
++};
 +
-+	desc = wq->descs[idx];
-+	memset(desc->hw, 0, sizeof(struct dsa_hw_desc));
-+	memset(desc->completion, 0, sizeof(struct dsa_completion_record));
-+	desc->cpu = cpu;
-+	return desc;
++struct idxd_fault {
++	struct work_struct work;
++	u64 addr;
++	struct idxd_device *idxd;
++};
++
++static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
++				 enum irq_work_type wtype,
++				 int *processed, u64 data);
++static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
++				     enum irq_work_type wtype,
++				     int *processed, u64 data);
++
+ void idxd_device_wqs_clear_state(struct idxd_device *idxd)
+ {
+ 	int i;
+@@ -56,6 +74,46 @@ static void idxd_device_reinit(struct work_struct *work)
+ 	idxd_device_wqs_clear_state(idxd);
+ }
+ 
++static void idxd_device_fault_work(struct work_struct *work)
++{
++	struct idxd_fault *fault = container_of(work, struct idxd_fault, work);
++	struct idxd_irq_entry *ie;
++	int i;
++	int processed;
++	int irqcnt = fault->idxd->num_wq_irqs + 1;
++
++	for (i = 1; i < irqcnt; i++) {
++		ie = &fault->idxd->irq_entries[i];
++		irq_process_work_list(ie, IRQ_WORK_PROCESS_FAULT,
++				      &processed, fault->addr);
++		if (processed)
++			break;
++
++		irq_process_pending_llist(ie, IRQ_WORK_PROCESS_FAULT,
++					  &processed, fault->addr);
++		if (processed)
++			break;
++	}
++
++	kfree(fault);
 +}
 +
-+struct idxd_desc *idxd_alloc_desc(struct idxd_wq *wq, enum idxd_op_type optype)
++static int idxd_device_schedule_fault_process(struct idxd_device *idxd,
++					      u64 fault_addr)
 +{
-+	int cpu, idx;
- 	struct idxd_device *idxd = wq->idxd;
-+	DEFINE_SBQ_WAIT(wait);
-+	struct sbq_wait_state *ws;
-+	struct sbitmap_queue *sbq;
- 
- 	if (idxd->state != IDXD_DEV_ENABLED)
- 		return ERR_PTR(-EIO);
- 
--	if (optype == IDXD_OP_BLOCK)
--		percpu_down_read(&wq->submit_lock);
--	else if (!percpu_down_read_trylock(&wq->submit_lock))
--		return ERR_PTR(-EBUSY);
--
--	if (!atomic_add_unless(&wq->dq_count, 1, wq->size)) {
--		int rc;
--
--		if (optype == IDXD_OP_NONBLOCK) {
--			percpu_up_read(&wq->submit_lock);
-+	sbq = &wq->sbq;
-+	idx = sbitmap_queue_get(sbq, &cpu);
-+	if (idx < 0) {
-+		if (optype == IDXD_OP_NONBLOCK)
- 			return ERR_PTR(-EAGAIN);
--		}
--
--		percpu_up_read(&wq->submit_lock);
--		percpu_down_write(&wq->submit_lock);
--		rc = wait_event_interruptible(wq->submit_waitq,
--					      atomic_add_unless(&wq->dq_count,
--								1, wq->size) ||
--					       idxd->state != IDXD_DEV_ENABLED);
--		percpu_up_write(&wq->submit_lock);
--		if (rc < 0)
--			return ERR_PTR(-EINTR);
--		if (idxd->state != IDXD_DEV_ENABLED)
--			return ERR_PTR(-EIO);
- 	} else {
--		percpu_up_read(&wq->submit_lock);
-+		return __get_desc(wq, idx, cpu);
- 	}
- 
--	idx = sbitmap_get(&wq->sbmap, 0, false);
--	if (idx < 0) {
--		atomic_dec(&wq->dq_count);
--		return ERR_PTR(-EAGAIN);
-+	ws = &sbq->ws[0];
-+	for (;;) {
-+		sbitmap_prepare_to_wait(sbq, ws, &wait, TASK_INTERRUPTIBLE);
-+		if (signal_pending_state(TASK_INTERRUPTIBLE, current))
-+			break;
-+		idx = sbitmap_queue_get(sbq, &cpu);
-+		if (idx > 0)
-+			break;
-+		schedule();
- 	}
- 
--	desc = wq->descs[idx];
--	memset(desc->hw, 0, sizeof(struct dsa_hw_desc));
--	memset(desc->completion, 0, sizeof(struct dsa_completion_record));
--	return desc;
-+	sbitmap_finish_wait(sbq, ws, &wait);
-+	if (idx < 0)
-+		return ERR_PTR(-EAGAIN);
++	struct idxd_fault *fault;
 +
-+	return __get_desc(wq, idx, cpu);
- }
- 
- void idxd_free_desc(struct idxd_wq *wq, struct idxd_desc *desc)
++	fault = kmalloc(sizeof(*fault), GFP_ATOMIC);
++	if (!fault)
++		return -ENOMEM;
++
++	fault->addr = fault_addr;
++	fault->idxd = idxd;
++	INIT_WORK(&fault->work, idxd_device_fault_work);
++	queue_work(idxd->wq, &fault->work);
++	return 0;
++}
++
+ irqreturn_t idxd_irq_handler(int vec, void *data)
  {
--	atomic_dec(&wq->dq_count);
-+	int cpu = desc->cpu;
+ 	struct idxd_irq_entry *irq_entry = data;
+@@ -137,6 +195,16 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
+ 	if (!err)
+ 		return IRQ_HANDLED;
  
--	sbitmap_clear_bit(&wq->sbmap, desc->id);
--	wake_up(&wq->submit_waitq);
-+	desc->cpu = -1;
-+	sbitmap_queue_clear(&wq->sbq, desc->id, cpu);
++	/*
++	 * This case should rarely happen and typically is due to software
++	 * programming error by the driver.
++	 */
++	if (idxd->sw_err.valid &&
++	    idxd->sw_err.desc_valid &&
++	    idxd->sw_err.fault_addr)
++		idxd_device_schedule_fault_process(idxd,
++						   idxd->sw_err.fault_addr);
++
+ 	gensts.bits = ioread32(idxd->reg_base + IDXD_GENSTATS_OFFSET);
+ 	if (gensts.state == IDXD_DEVICE_STATE_HALT) {
+ 		idxd->state = IDXD_DEV_HALTED;
+@@ -163,57 +231,106 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
+ 	return IRQ_HANDLED;
  }
  
- int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
++static bool process_fault(struct idxd_desc *desc, u64 fault_addr)
++{
++	if ((u64)desc->hw == fault_addr ||
++	    (u64)desc->completion == fault_addr) {
++		idxd_dma_complete_txd(desc, IDXD_COMPLETE_DEV_FAIL);
++		return true;
++	}
++
++	return false;
++}
++
++static bool complete_desc(struct idxd_desc *desc)
++{
++	if (desc->completion->status) {
++		idxd_dma_complete_txd(desc, IDXD_COMPLETE_NORMAL);
++		return true;
++	}
++
++	return false;
++}
++
+ static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
+-				     int *processed)
++				     enum irq_work_type wtype,
++				     int *processed, u64 data)
+ {
+ 	struct idxd_desc *desc, *t;
+ 	struct llist_node *head;
+ 	int queued = 0;
++	bool completed = false;
++	unsigned long flags;
+ 
+ 	*processed = 0;
+ 	head = llist_del_all(&irq_entry->pending_llist);
+ 	if (!head)
+-		return 0;
++		goto out;
+ 
+ 	llist_for_each_entry_safe(desc, t, head, llnode) {
+-		if (desc->completion->status) {
+-			idxd_dma_complete_txd(desc, IDXD_COMPLETE_NORMAL);
++		if (wtype == IRQ_WORK_NORMAL)
++			completed = complete_desc(desc);
++		else if (wtype == IRQ_WORK_PROCESS_FAULT)
++			completed = process_fault(desc, data);
++
++		if (completed) {
+ 			idxd_free_desc(desc->wq, desc);
+ 			(*processed)++;
++			if (wtype == IRQ_WORK_PROCESS_FAULT)
++				break;
+ 		} else {
+-			list_add_tail(&desc->list, &irq_entry->work_list);
++			spin_lock_irqsave(&irq_entry->list_lock, flags);
++			list_add_tail(&desc->list,
++				      &irq_entry->work_list);
++			spin_unlock_irqrestore(&irq_entry->list_lock, flags);
+ 			queued++;
+ 		}
+ 	}
+ 
++ out:
+ 	return queued;
+ }
+ 
+ static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
+-				 int *processed)
++				 enum irq_work_type wtype,
++				 int *processed, u64 data)
+ {
+ 	struct list_head *node, *next;
+ 	int queued = 0;
++	bool completed = false;
++	unsigned long flags;
+ 
+ 	*processed = 0;
++	spin_lock_irqsave(&irq_entry->list_lock, flags);
+ 	if (list_empty(&irq_entry->work_list))
+-		return 0;
++		goto out;
+ 
+ 	list_for_each_safe(node, next, &irq_entry->work_list) {
+ 		struct idxd_desc *desc =
+ 			container_of(node, struct idxd_desc, list);
+ 
+-		if (desc->completion->status) {
++		spin_unlock_irqrestore(&irq_entry->list_lock, flags);
++		if (wtype == IRQ_WORK_NORMAL)
++			completed = complete_desc(desc);
++		else if (wtype == IRQ_WORK_PROCESS_FAULT)
++			completed = process_fault(desc, data);
++
++		if (completed) {
++			spin_lock_irqsave(&irq_entry->list_lock, flags);
+ 			list_del(&desc->list);
+-			/* process and callback */
+-			idxd_dma_complete_txd(desc, IDXD_COMPLETE_NORMAL);
++			spin_unlock_irqrestore(&irq_entry->list_lock, flags);
+ 			idxd_free_desc(desc->wq, desc);
+ 			(*processed)++;
++			if (wtype == IRQ_WORK_PROCESS_FAULT)
++				break;
+ 		} else {
+ 			queued++;
+ 		}
++		spin_lock_irqsave(&irq_entry->list_lock, flags);
+ 	}
+ 
++ out:
++	spin_unlock_irqrestore(&irq_entry->list_lock, flags);
+ 	return queued;
+ }
+ 
+@@ -241,12 +358,14 @@ static int idxd_desc_process(struct idxd_irq_entry *irq_entry)
+ 	 * 5. Repeat until no more descriptors.
+ 	 */
+ 	do {
+-		rc = irq_process_work_list(irq_entry, &processed);
++		rc = irq_process_work_list(irq_entry, IRQ_WORK_NORMAL,
++					   &processed, 0);
+ 		total += processed;
+ 		if (rc != 0)
+ 			continue;
+ 
+-		rc = irq_process_pending_llist(irq_entry, &processed);
++		rc = irq_process_pending_llist(irq_entry, IRQ_WORK_NORMAL,
++					       &processed, 0);
+ 		total += processed;
+ 	} while (rc != 0);
+ 
 
