@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D682EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE07C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3102207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B430207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824816;
-	bh=3x6xQBKul6lic3SYWWK86gh27r2mBGPwt15bnf9Gi+Q=;
+	s=default; t=1589824821;
+	bh=zLUCqSvC236bu0DFeMlfYuTWti5TF2S5odgN6soGDug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lEh9c0lSGjK4r/TddaM2p4djHRe5+7RGVFfoCtp28VWWRXUPaZSKotlro206RnMOV
-	 GKGTg79t2zfvwwhNl4wKcKRpydjPC53TDYp1r9xJ14FSkNkX+GHoBOwMd+z8tb8bD/
-	 UhHwYv08ooiM0SSejYjzd/e9446QmPJlJ0zF/i9c=
+	b=HKQ8k7dkAgmHrTEEkL3AzDnchHFbKSillymIS2OoqYKZ+pKxH5Dzu91Jk4KuFAaPP
+	 74sVL0C9wJ5Czu1SXr5ePxO0JMq6Dumqaynok4asZFl0dznibeqkC7RRlEOenJURrP
+	 Gun3RP7IUySUnmyDLreK9I0xCPwPoYHyg2gx7S/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732192AbgERSAP (ORCPT
+        id S1732200AbgERSAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:00:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41162 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:00:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732177AbgERSAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:00:05 -0400
+        id S1732186AbgERSAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:00:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0FC2207D3;
-        Mon, 18 May 2020 18:00:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8163D20715;
+        Mon, 18 May 2020 18:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824804;
-        bh=3x6xQBKul6lic3SYWWK86gh27r2mBGPwt15bnf9Gi+Q=;
+        s=default; t=1589824814;
+        bh=zLUCqSvC236bu0DFeMlfYuTWti5TF2S5odgN6soGDug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NLSKhV+2yVJSepnoj82d1Hg3uu7rKAcCPrHM6sktkQVlFhDwFToEyr3oLKLiCdJhE
-         NnWLzLkBrvhtDr1rUFU0P+Sy+RaWsZiZLM3Tyiqu5jOdwvP0CEdCgbTzGwRgey4Jc8
-         V9RWuO7wTTXioDC9zZso3/vHos95mwF/cZrXfznM=
+        b=k/EAtyqCRiHnXkAOsgr9kaVrXZAe+gwdLDVkEWyj/4fhstn+5TKBe1lJkDMcE+vmO
+         kF2SlbWNVPeOm8k6DkdbxcFAtWjWrhBAczTm4Q3HY++df6MTI14uW32Pc+4ThmWlLa
+         K+RLhKfksFYdQ4s2QooVoqlKVNB6UlANOO8HGx6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 011/194] KVM: arm: vgic-v2: Only use the virtual state when userspace accesses pending bits
-Date:   Mon, 18 May 2020 19:35:01 +0200
-Message-Id: <20200518173532.573433551@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 015/194] net/sonic: Fix a resource leak in an error handling path in jazz_sonic_probe()
+Date:   Mon, 18 May 2020 19:35:05 +0200
+Message-Id: <20200518173532.876685769@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,208 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit ba1ed9e17b581c9a204ec1d72d40472dd8557edd ]
+[ Upstream commit 10e3cc180e64385edc9890c6855acf5ed9ca1339 ]
 
-There is no point in accessing the HW when writing to any of the
-ISPENDR/ICPENDR registers from userspace, as only the guest should
-be allowed to change the HW state.
+A call to 'dma_alloc_coherent()' is hidden in 'sonic_alloc_descriptors()',
+called from 'sonic_probe1()'.
 
-Introduce new userspace-specific accessors that deal solely with
-the virtual state. Note that the API differs from that of GICv3,
-where userspace exclusively uses ISPENDR to set the state. Too
-bad we can't reuse it.
+This is correctly freed in the remove function, but not in the error
+handling path of the probe function.
+Fix it and add the missing 'dma_free_coherent()' call.
 
-Fixes: 82e40f558de56 ("KVM: arm/arm64: vgic-v2: Handle SGI bits in GICD_I{S,C}PENDR0 as WI")
-Reviewed-by: James Morse <james.morse@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+While at it, rename a label in order to be slightly more informative.
+
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/vgic/vgic-mmio-v2.c |  6 ++-
- virt/kvm/arm/vgic/vgic-mmio.c    | 87 ++++++++++++++++++++++++--------
- virt/kvm/arm/vgic/vgic-mmio.h    |  8 +++
- 3 files changed, 77 insertions(+), 24 deletions(-)
+ drivers/net/ethernet/natsemi/jazzsonic.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/virt/kvm/arm/vgic/vgic-mmio-v2.c b/virt/kvm/arm/vgic/vgic-mmio-v2.c
-index d63881f60e1a5..7b288eb391b84 100644
---- a/virt/kvm/arm/vgic/vgic-mmio-v2.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio-v2.c
-@@ -415,10 +415,12 @@ static const struct vgic_register_region vgic_v2_dist_registers[] = {
- 		vgic_mmio_read_enable, vgic_mmio_write_cenable, NULL, NULL, 1,
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ(GIC_DIST_PENDING_SET,
--		vgic_mmio_read_pending, vgic_mmio_write_spending, NULL, NULL, 1,
-+		vgic_mmio_read_pending, vgic_mmio_write_spending,
-+		NULL, vgic_uaccess_write_spending, 1,
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ(GIC_DIST_PENDING_CLEAR,
--		vgic_mmio_read_pending, vgic_mmio_write_cpending, NULL, NULL, 1,
-+		vgic_mmio_read_pending, vgic_mmio_write_cpending,
-+		NULL, vgic_uaccess_write_cpending, 1,
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ(GIC_DIST_ACTIVE_SET,
- 		vgic_mmio_read_active, vgic_mmio_write_sactive,
-diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
-index f659654b09a83..b6824bba8248b 100644
---- a/virt/kvm/arm/vgic/vgic-mmio.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio.c
-@@ -179,17 +179,6 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *vcpu,
- 	return value;
- }
+diff --git a/drivers/net/ethernet/natsemi/jazzsonic.c b/drivers/net/ethernet/natsemi/jazzsonic.c
+index 51fa82b429a3c..40970352d2082 100644
+--- a/drivers/net/ethernet/natsemi/jazzsonic.c
++++ b/drivers/net/ethernet/natsemi/jazzsonic.c
+@@ -235,11 +235,13 @@ static int jazz_sonic_probe(struct platform_device *pdev)
  
--/* Must be called with irq->irq_lock held */
--static void vgic_hw_irq_spending(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
--				 bool is_uaccess)
--{
--	if (is_uaccess)
--		return;
--
--	irq->pending_latch = true;
--	vgic_irq_set_phys_active(irq, true);
--}
--
- static bool is_vgic_v2_sgi(struct kvm_vcpu *vcpu, struct vgic_irq *irq)
- {
- 	return (vgic_irq_is_sgi(irq->intid) &&
-@@ -200,7 +189,6 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
- 			      gpa_t addr, unsigned int len,
- 			      unsigned long val)
- {
--	bool is_uaccess = !kvm_get_running_vcpu();
- 	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
- 	int i;
- 	unsigned long flags;
-@@ -215,22 +203,49 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
- 		}
+ 	err = register_netdev(dev);
+ 	if (err)
+-		goto out1;
++		goto undo_probe1;
  
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-+
-+		irq->pending_latch = true;
- 		if (irq->hw)
--			vgic_hw_irq_spending(vcpu, irq, is_uaccess);
--		else
--			irq->pending_latch = true;
-+			vgic_irq_set_phys_active(irq, true);
-+
- 		vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
- 		vgic_put_irq(vcpu->kvm, irq);
- 	}
- }
+ 	return 0;
  
--/* Must be called with irq->irq_lock held */
--static void vgic_hw_irq_cpending(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
--				 bool is_uaccess)
-+int vgic_uaccess_write_spending(struct kvm_vcpu *vcpu,
-+				gpa_t addr, unsigned int len,
-+				unsigned long val)
- {
--	if (is_uaccess)
--		return;
-+	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
-+	int i;
-+	unsigned long flags;
-+
-+	for_each_set_bit(i, &val, len * 8) {
-+		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
-+
-+		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-+		irq->pending_latch = true;
-+
-+		/*
-+		 * GICv2 SGIs are terribly broken. We can't restore
-+		 * the source of the interrupt, so just pick the vcpu
-+		 * itself as the source...
-+		 */
-+		if (is_vgic_v2_sgi(vcpu, irq))
-+			irq->source |= BIT(vcpu->vcpu_id);
-+
-+		vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-+
-+		vgic_put_irq(vcpu->kvm, irq);
-+	}
- 
-+	return 0;
-+}
-+
-+/* Must be called with irq->irq_lock held */
-+static void vgic_hw_irq_cpending(struct kvm_vcpu *vcpu, struct vgic_irq *irq)
-+{
- 	irq->pending_latch = false;
- 
- 	/*
-@@ -253,7 +268,6 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
- 			      gpa_t addr, unsigned int len,
- 			      unsigned long val)
- {
--	bool is_uaccess = !kvm_get_running_vcpu();
- 	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
- 	int i;
- 	unsigned long flags;
-@@ -270,7 +284,7 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
- 
- 		if (irq->hw)
--			vgic_hw_irq_cpending(vcpu, irq, is_uaccess);
-+			vgic_hw_irq_cpending(vcpu, irq);
- 		else
- 			irq->pending_latch = false;
- 
-@@ -279,6 +293,35 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
- 	}
- }
- 
-+int vgic_uaccess_write_cpending(struct kvm_vcpu *vcpu,
-+				gpa_t addr, unsigned int len,
-+				unsigned long val)
-+{
-+	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
-+	int i;
-+	unsigned long flags;
-+
-+	for_each_set_bit(i, &val, len * 8) {
-+		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
-+
-+		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-+		/*
-+		 * More fun with GICv2 SGIs! If we're clearing one of them
-+		 * from userspace, which source vcpu to clear? Let's not
-+		 * even think of it, and blow the whole set.
-+		 */
-+		if (is_vgic_v2_sgi(vcpu, irq))
-+			irq->source = 0;
-+
-+		irq->pending_latch = false;
-+
-+		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-+
-+		vgic_put_irq(vcpu->kvm, irq);
-+	}
-+
-+	return 0;
-+}
- 
- /*
-  * If we are fiddling with an IRQ's active state, we have to make sure the IRQ
-diff --git a/virt/kvm/arm/vgic/vgic-mmio.h b/virt/kvm/arm/vgic/vgic-mmio.h
-index 30713a44e3faa..b127f889113ed 100644
---- a/virt/kvm/arm/vgic/vgic-mmio.h
-+++ b/virt/kvm/arm/vgic/vgic-mmio.h
-@@ -149,6 +149,14 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
- 			      gpa_t addr, unsigned int len,
- 			      unsigned long val);
- 
-+int vgic_uaccess_write_spending(struct kvm_vcpu *vcpu,
-+				gpa_t addr, unsigned int len,
-+				unsigned long val);
-+
-+int vgic_uaccess_write_cpending(struct kvm_vcpu *vcpu,
-+				gpa_t addr, unsigned int len,
-+				unsigned long val);
-+
- unsigned long vgic_mmio_read_active(struct kvm_vcpu *vcpu,
- 				    gpa_t addr, unsigned int len);
- 
+-out1:
++undo_probe1:
++	dma_free_coherent(lp->device, SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
++			  lp->descriptors, lp->descriptors_laddr);
+ 	release_mem_region(dev->base_addr, SONIC_MEM_SIZE);
+ out:
+ 	free_netdev(dev);
 -- 
 2.20.1
 
