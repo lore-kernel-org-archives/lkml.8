@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73513C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2FDB20826
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E8120715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825253;
-	bh=GnCW7mSOCGz0pmBLR1C3H7STub9TUkxiDKSawdq/atY=;
+	s=default; t=1589825254;
+	bh=aEbCs/ehsd1uykQYJPlIZO/uC6PeDCBHQ8EMD2l9lFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lJULkvKsgSzdQLxwS4+rDEMK441DfBdZOhXfGYIqoWJIt/MD50YJ6nFOYSNpCc2aM
-	 FlwKh+DIjHl/GVW7zZrDeQAhDrsOAC9HN7BGgE1X5mmCB/77JoheX/PmS6cfZPYiKb
-	 OoeUjRJBf2Fk4dEJn+AmOzPGTHKlnJYGbzEGZkjU=
+	b=ZBMxvfnFSORNiSfFS/kj22oKWDKBrleNDGKSef4Jxzk1dXuocCjXVfGAe4tvx9RHz
+	 g6EUAz27wJlNq0KF3YExH7MiZOkpxJG5dBYsfgggBKax8IiRBnNdEBJvbbQ2YahEZ1
+	 thpuPRrfY0XxWqm/HidEiBGkJOslHSd9UUExn9Sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731119AbgERSHd (ORCPT
+        id S1733048AbgERSFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:07:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56190 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:05:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733292AbgERSHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:07:25 -0400
+        id S1729470AbgERSFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:05:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5066620853;
-        Mon, 18 May 2020 18:07:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D41120671;
+        Mon, 18 May 2020 18:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825244;
-        bh=GnCW7mSOCGz0pmBLR1C3H7STub9TUkxiDKSawdq/atY=;
+        s=default; t=1589825132;
+        bh=aEbCs/ehsd1uykQYJPlIZO/uC6PeDCBHQ8EMD2l9lFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QXGRpvKHVQTHlz1uIt3nSJkRM5WbqKEF4zhFqobf+hSla+tQb/jPQ1CcCNiH+V8a6
-         EDDV4bl/BGpCK7wf2WtzzPAMInn63QRYL1xUl9w/QTCAJDorE/ZsXrGH8dSyS+dYt8
-         G9nvsj1o8f6CanV6CLvsNfq3psVqVgc5wwWovOzM=
+        b=Gc4qRFWqVvLTB/CpRNx2jyqWugkZj5aiwcsMzOwkhm2HPswUykrzVu/5+zYRVTCBP
+         1NYhApjCdQGf49MJ/tIkIlC3U3NyN5hyggZ84zFAVOFg09fyhqL7b4r6PF1CgZwtjk
+         ILlSlcjkmTPlz8lKw5mjMTGjlRUh71Nxgvcpsqtg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.6 187/194] RDMA/uverbs: Do not discard the IB_EVENT_DEVICE_FATAL event
-Date:   Mon, 18 May 2020 19:37:57 +0200
-Message-Id: <20200518173547.023218812@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Hardik Gajjar <hgajjar@de.adit-jv.com>,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: [PATCH 5.6 142/194] usb: core: hub: limit HUB_QUIRK_DISABLE_AUTOSUSPEND to USB5534B
+Date:   Mon, 18 May 2020 19:37:12 +0200
+Message-Id: <20200518173543.121249652@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,106 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-commit c485b19d52c4ba269dfd027945dee81755fdd530 upstream.
+commit 76e1ef1d81a4129d7e2fb8c48c83b166d1c8e040 upstream.
 
-The commit below moved all of the destruction to the disassociate step and
-cleaned up the event channel during destroy_uobj.
+On Tue, May 12, 2020 at 09:36:07PM +0800, Kai-Heng Feng wrote [1]:
+> This patch prevents my Raven Ridge xHCI from getting runtime suspend.
 
-However, when ib_uverbs_free_hw_resources() pushes IB_EVENT_DEVICE_FATAL
-and then immediately goes to destroy all uobjects this causes
-ib_uverbs_free_event_queue() to discard the queued event if userspace
-hasn't already read() it.
+The problem described in v5.6 commit 1208f9e1d758c9 ("USB: hub: Fix the
+broken detection of USB3 device in SMSC hub") applies solely to the
+USB5534B hub [2] present on the Kingfisher Infotainment Carrier Board,
+manufactured by Shimafuji Electric Inc [3].
 
-Unlike all other event queues async FD needs to defer the
-ib_uverbs_free_event_queue() until FD release. This still unregisters the
-handler from the IB device during disassociation.
+Despite that, the aforementioned commit applied the quirk to _all_ hubs
+carrying vendor ID 0x424 (i.e. SMSC), of which there are more [4] than
+initially expected. Consequently, the quirk is now enabled on platforms
+carrying SMSC/Microchip hub models which potentially don't exhibit the
+original issue.
 
-Fixes: 3e032c0e92aa ("RDMA/core: Make ib_uverbs_async_event_file into a uobject")
-Link: https://lore.kernel.org/r/20200507063348.98713-2-leon@kernel.org
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+To avoid reports like [1], further limit the quirk's scope to
+USB5534B [2], by employing both Vendor and Product ID checks.
+
+Tested on H3ULCB + Kingfisher rev. M05.
+
+[1] https://lore.kernel.org/linux-renesas-soc/73933975-6F0E-40F5-9584-D2B8F615C0F3@canonical.com/
+[2] https://www.microchip.com/wwwproducts/en/USB5534B
+[3] http://www.shimafuji.co.jp/wp/wp-content/uploads/2018/08/SBEV-RCAR-KF-M06Board_HWSpecificationEN_Rev130.pdf
+[4] https://devicehunt.com/search/type/usb/vendor/0424/device/any
+
+Fixes: 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
+Cc: stable@vger.kernel.org # v4.14+
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Hardik Gajjar <hgajjar@de.adit-jv.com>
+Cc: linux-renesas-soc@vger.kernel.org
+Cc: linux-usb@vger.kernel.org
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200514220246.13290-1-erosca@de.adit-jv.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/rdma_core.c                 |    3 +-
- drivers/infiniband/core/uverbs.h                    |    1 
- drivers/infiniband/core/uverbs_main.c               |    2 -
- drivers/infiniband/core/uverbs_std_types_async_fd.c |   26 +++++++++++++++++++-
- 4 files changed, 29 insertions(+), 3 deletions(-)
+ drivers/usb/core/hub.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/rdma_core.c
-+++ b/drivers/infiniband/core/rdma_core.c
-@@ -459,7 +459,8 @@ alloc_begin_fd_uobject(const struct uver
- 	struct ib_uobject *uobj;
- 	struct file *filp;
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -39,6 +39,7 @@
  
--	if (WARN_ON(fd_type->fops->release != &uverbs_uobject_fd_release))
-+	if (WARN_ON(fd_type->fops->release != &uverbs_uobject_fd_release &&
-+		    fd_type->fops->release != &uverbs_async_event_release))
- 		return ERR_PTR(-EINVAL);
+ #define USB_VENDOR_GENESYS_LOGIC		0x05e3
+ #define USB_VENDOR_SMSC				0x0424
++#define USB_PRODUCT_USB5534B			0x5534
+ #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
+ #define HUB_QUIRK_DISABLE_AUTOSUSPEND		0x02
  
- 	new_fd = get_unused_fd_flags(O_CLOEXEC);
---- a/drivers/infiniband/core/uverbs.h
-+++ b/drivers/infiniband/core/uverbs.h
-@@ -219,6 +219,7 @@ void ib_uverbs_init_event_queue(struct i
- void ib_uverbs_init_async_event_file(struct ib_uverbs_async_event_file *ev_file);
- void ib_uverbs_free_event_queue(struct ib_uverbs_event_queue *event_queue);
- void ib_uverbs_flow_resources_free(struct ib_uflow_resources *uflow_res);
-+int uverbs_async_event_release(struct inode *inode, struct file *filp);
- 
- int ib_alloc_ucontext(struct uverbs_attr_bundle *attrs);
- int ib_init_ucontext(struct uverbs_attr_bundle *attrs);
---- a/drivers/infiniband/core/uverbs_main.c
-+++ b/drivers/infiniband/core/uverbs_main.c
-@@ -346,7 +346,7 @@ const struct file_operations uverbs_asyn
- 	.owner	 = THIS_MODULE,
- 	.read	 = ib_uverbs_async_event_read,
- 	.poll    = ib_uverbs_async_event_poll,
--	.release = uverbs_uobject_fd_release,
-+	.release = uverbs_async_event_release,
- 	.fasync  = ib_uverbs_async_event_fasync,
- 	.llseek	 = no_llseek,
- };
---- a/drivers/infiniband/core/uverbs_std_types_async_fd.c
-+++ b/drivers/infiniband/core/uverbs_std_types_async_fd.c
-@@ -26,10 +26,34 @@ static int uverbs_async_event_destroy_uo
- 		container_of(uobj, struct ib_uverbs_async_event_file, uobj);
- 
- 	ib_unregister_event_handler(&event_file->event_handler);
--	ib_uverbs_free_event_queue(&event_file->ev_queue);
- 	return 0;
+@@ -5621,8 +5622,11 @@ out_hdev_lock:
  }
  
-+int uverbs_async_event_release(struct inode *inode, struct file *filp)
-+{
-+	struct ib_uverbs_async_event_file *event_file;
-+	struct ib_uobject *uobj = filp->private_data;
-+	int ret;
-+
-+	if (!uobj)
-+		return uverbs_uobject_fd_release(inode, filp);
-+
-+	event_file =
-+		container_of(uobj, struct ib_uverbs_async_event_file, uobj);
-+
-+	/*
-+	 * The async event FD has to deliver IB_EVENT_DEVICE_FATAL even after
-+	 * disassociation, so cleaning the event list must only happen after
-+	 * release. The user knows it has reached the end of the event stream
-+	 * when it sees IB_EVENT_DEVICE_FATAL.
-+	 */
-+	uverbs_uobject_get(uobj);
-+	ret = uverbs_uobject_fd_release(inode, filp);
-+	ib_uverbs_free_event_queue(&event_file->ev_queue);
-+	uverbs_uobject_put(uobj);
-+	return ret;
-+}
-+
- DECLARE_UVERBS_NAMED_METHOD(
- 	UVERBS_METHOD_ASYNC_EVENT_ALLOC,
- 	UVERBS_ATTR_FD(UVERBS_ATTR_ASYNC_EVENT_ALLOC_FD_HANDLE,
+ static const struct usb_device_id hub_id_table[] = {
+-    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR | USB_DEVICE_ID_MATCH_INT_CLASS,
++    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
++                   | USB_DEVICE_ID_MATCH_PRODUCT
++                   | USB_DEVICE_ID_MATCH_INT_CLASS,
+       .idVendor = USB_VENDOR_SMSC,
++      .idProduct = USB_PRODUCT_USB5534B,
+       .bInterfaceClass = USB_CLASS_HUB,
+       .driver_info = HUB_QUIRK_DISABLE_AUTOSUSPEND},
+     { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
 
 
