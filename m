@@ -2,179 +2,93 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A60C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98859C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF153207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 673D720715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:10:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="L0r4h8l3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gAXE4XpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgERVJq (ORCPT
+        id S1728085AbgERVKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 17:09:46 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:19808 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726250AbgERVJp (ORCPT
+        Mon, 18 May 2020 17:10:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgERVKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 17:09:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589836184; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Re0ZEHG/1Qk293ExAqf/tCdY7EItDCGUUL1ATY2RE5A=;
- b=L0r4h8l3mVufNYn93ioibCUM7VHIAr2iTWfpkI96zuUWwp1vCTyczsQRGvbQJiCf5Dv7nyWh
- eHIWJE3yeWLZEsO+GPqYT0v8y6yQ4DkVQa0K7tTT2MQtA1H8xnxrNWOO1eHFRssAbSUtKpE7
- Ui9u7rVYPWW4FveM9CIajFcLjS4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec2f996.7f128707f1f0-smtp-out-n05;
- Mon, 18 May 2020 21:09:42 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 15EE3C44788; Mon, 18 May 2020 21:09:42 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: majja)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E3325C433F2;
-        Mon, 18 May 2020 21:09:40 +0000 (UTC)
+        Mon, 18 May 2020 17:10:40 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1EBC05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 14:10:39 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x2so5526663pfx.7
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 14:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=02zTdmWvuhMAmu2ssQyvw6TTLQFpo9NVSwY+R1u73VY=;
+        b=gAXE4XpV+CS3MUzPaSu04TFze1uh9z13q7TUdzdjq1D07GUaXHKHaUQzff7/WhoD6l
+         WxQ0PBeQoQd7DpwoLKG/0/No4/eSeR/EDgWDAJfgU9GbwOZRQRI+DM/veXDczDNtmx5a
+         roH9kSmO5mV1oQYZqA7gfZXVpkGae1YKks7Xo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=02zTdmWvuhMAmu2ssQyvw6TTLQFpo9NVSwY+R1u73VY=;
+        b=lbAXoxIb/ZQCtLstxUOP9pF7kMjsquN17P7Ret88GmQGrOJUO22wIIitngTRMLo9sM
+         EkQcBh9Di4f6hqMenyTF3Et/H4QETSAVernPbepJNBtNKXzwUmKsqe6qU840gAVlM/Cm
+         1sI6BBjrs4fKgdEhbmniuiTniyDZbOe7Zz39iG148KqlySH5sJTHGfK+794Wi0JqFwDz
+         2gAquzqDb4v9tewiKbB8XScSmJ/l9hRaBDOa3Nl+rRYHWIQ/ru+Zut2WwSTbpnuJ6zMj
+         F0mbUH6fCzH+dQAm2ruJdy7mJnOvGLh3rzSxWNXFvXuiC5/I2JXk+HcsK9DDE5EMXz0X
+         HssA==
+X-Gm-Message-State: AOAM533P4efSAoIXwMf4h4Lqq9NQhzWP9BISp2EIpknYKFNHadyepx/w
+        J3cozhTUpu72INq0MPjau9D4sA==
+X-Google-Smtp-Source: ABdhPJwgyL7qadxNPz/Mn0mpWZEUmq5QEMkziZLtBB2Ei8yrQXRte4glp9kkv3QgQOWsAPUrHLt90A==
+X-Received: by 2002:a63:6f4c:: with SMTP id k73mr16449725pgc.241.1589836238493;
+        Mon, 18 May 2020 14:10:38 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o190sm9514518pfb.178.2020.05.18.14.10.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 14:10:37 -0700 (PDT)
+Date:   Mon, 18 May 2020 14:10:36 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Tycho Andersen <tycho@tycho.ws>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Aleksa Sarai <asarai@suse.de>, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
+Message-ID: <202005181405.AF40001D@keescook>
+References: <20200515234005.32370-1-sargun@sargun.me>
+ <202005162344.74A02C2D@keescook>
+ <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
+ <20200517112156.cphs2h33hx2wfcs4@yavin.dot.cyphar.com>
+ <20200517142316.GA1996744@cisco>
+ <20200517143311.fmxaf3pnopuaezl4@wittgenstein>
+ <20200517144603.GD1996744@cisco>
+ <20200517150215.GE1996744@cisco>
+ <202005171428.68F30AA0@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 18 May 2020 14:09:40 -0700
-From:   majja@codeaurora.org
-To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        paul.kocialkowski@bootlin.com, p.zabel@pengutronix.de,
-        ezequiel@collabora.com, jonas@kwiboo.se,
-        boris.brezillon@collabora.com, posciak@chromium.org,
-        ribalda@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, sumitg@nvidia.com
-Subject: Re: [PATCH] media: v4l2-ctrls: Add encoded frame quality controls
-In-Reply-To: <1589836035-16579-1-git-send-email-majja@codeaurora.org>
-References: <1589836035-16579-1-git-send-email-majja@codeaurora.org>
-Message-ID: <11481ef8fcee02aba17ef527c56c78d2@codeaurora.org>
-X-Sender: majja@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202005171428.68F30AA0@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, May 17, 2020 at 02:30:57PM -0700, Kees Cook wrote:
+> Anyway, it's very related to this, so, yeah, probably we need a v2 of the
+> notif API, but I'll try to get all the ideas here collected in one place.
 
-Regarding below patch -
+For future thread archæologists, I put my thoughts here:
+https://lore.kernel.org/lkml/202005181120.971232B7B@keescook/
 
-HEIF/HEIC image encoding uses HEVC/AVC encoders and client can set image 
-quality level using
-V4L2_CID_MPEG_VIDEO_FRAME_QUALITY control.
-
-Reference BITRATE_MODE_CQ at
-https://developer.android.com/reference/android/media/MediaCodecInfo.EncoderCapabilities#BITRATE_MODE_CQ
-
-Regards,
-     Maheshwar.
-
-
-On 2020-05-18 14:07, Maheshwar Ajja wrote:
-> When frame quality control is enabled encoder will choose
-> the appropriate quantization parameter and bitrate to
-> produce the client requested frame quality level.
-> When frame quality control is disabled then frame quality
-> is decided based on appropriate controls (i.e.
-> V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE and/or
-> V4L2_CID_MPEG_VIDEO_BITRATE_MODE)
-> 
-> Signed-off-by: Maheshwar Ajja <majja@codeaurora.org>
-> ---
->  .../userspace-api/media/v4l/ext-ctrls-codec.rst          | 16 
-> ++++++++++++++++
->  drivers/media/v4l2-core/v4l2-ctrls.c                     |  3 +++
->  include/uapi/linux/v4l2-controls.h                       |  2 ++
->  3 files changed, 21 insertions(+)
-> 
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index d0d506a..495b39b 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -1081,6 +1081,22 @@ enum v4l2_mpeg_video_h264_entropy_mode -
->      Macroblock level rate control enable. Applicable to the MPEG4 and
->      H264 encoders.
-> 
-> +``V4L2_CID_MPEG_VIDEO_FRAME_QUALITY_ENABLE (boolean)``
-> +    Encoded frame quality control enable. If this control is enabled 
-> then
-> +    the quality level of the encoded frame is set with control
-> +    ``V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY``. If this control is 
-> disabled
-> +    then the quality level of encoded frame is adjusted with 
-> appropriate
-> +    controls (e.g. ``V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE`` or
-> +    ``V4L2_CID_MPEG_VIDEO_BITRATE_MODE``). Applicable to encoders.
-> +
-> +``V4L2_CID_MPEG_VIDEO_FRAME_QUALITY (integer)``
-> +    Encoded frame quality control. If the control
-> +    ``V4L2_CID_MPEG_VIDEO_FRAME_QUALITY_ENABLE`` is enabled then the
-> +    quality of encoded frame is set with this control. Valid range is 
-> 1 to
-> +    100 where 1 indicates lowest quality and 100 indicates highest 
-> quality.
-> +    Encoder will decide the appropriate quantization parameter and 
-> bitrate
-> +    to produce requested frame quality. Applicable to encoders.
-> +
->  ``V4L2_CID_MPEG_VIDEO_MPEG4_QPEL (boolean)``
->      Quarter pixel motion estimation for MPEG4. Applicable to the MPEG4
->      encoder.
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c
-> b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index 1c617b4..1477198 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -982,6 +982,8 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS:		return "HEVC Slice 
-> Parameters";
->  	case V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE:		return "HEVC Decode 
-> Mode";
->  	case V4L2_CID_MPEG_VIDEO_HEVC_START_CODE:		return "HEVC Start Code";
-> +	case V4L2_CID_MPEG_VIDEO_FRAME_QUALITY_ENABLE:		return "Frame Quality 
-> Enable";
-> +	case V4L2_CID_MPEG_VIDEO_FRAME_QUALITY:			return "Frame Quality";
-> 
->  	/* CAMERA controls */
->  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-> @@ -1178,6 +1180,7 @@ void v4l2_ctrl_fill(u32 id, const char **name,
-> enum v4l2_ctrl_type *type,
->  	case V4L2_CID_FLASH_READY:
->  	case V4L2_CID_MPEG_VIDEO_DECODER_MPEG4_DEBLOCK_FILTER:
->  	case V4L2_CID_MPEG_VIDEO_DECODER_SLICE_INTERFACE:
-> +	case V4L2_CID_MPEG_VIDEO_FRAME_QUALITY_ENABLE:
->  	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
->  	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:
->  	case V4L2_CID_MPEG_VIDEO_H264_8X8_TRANSFORM:
-> diff --git a/include/uapi/linux/v4l2-controls.h
-> b/include/uapi/linux/v4l2-controls.h
-> index 0ba1005..d97a934 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -742,6 +742,8 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field 
-> {
->  #define V4L2_CID_MPEG_VIDEO_HEVC_HIER_CODING_L6_BR	(V4L2_CID_MPEG_BASE 
-> + 642)
->  #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE 
-> + 643)
->  #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE 
-> + 644)
-> +#define V4L2_CID_MPEG_VIDEO_FRAME_QUALITY_ENABLE	(V4L2_CID_MPEG_BASE + 
-> 645)
-> +#define V4L2_CID_MPEG_VIDEO_FRAME_QUALITY		(V4L2_CID_MPEG_BASE + 646)
-> 
->  /*  MPEG-class control IDs specific to the CX2341x driver as defined 
-> by V4L2 */
->  #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
+-- 
+Kees Cook
