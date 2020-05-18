@@ -2,111 +2,132 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6986C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E377C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3A02070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3BD2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PLpI1CnW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y8OzVbBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgERFmq (ORCPT
+        id S1726720AbgERFnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 01:42:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgERFmp (ORCPT
+        Mon, 18 May 2020 01:43:18 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5395 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgERFnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 01:42:45 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D5F8C061A0C;
-        Sun, 17 May 2020 22:42:45 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49QSb56qHjz9sPK;
-        Mon, 18 May 2020 15:42:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589780563;
-        bh=OZXkqJ/Ua5mmXPX03SU7RZ5lmFd03+MILYNEQaoroR0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PLpI1CnWIlGwPqpKU/O+3JguxMENXVN/HQKqPD49/uLcNjLS2dHTa+VtS6aUdIOSL
-         VjFw40Ko+AS2E/qH/wDmLGQYLn2ZqH0hlWOBuJKc9ChM+mwX7YTkbbz8t+H6Kg3xl5
-         y3sx1rsrvOHzsYe2eZ2327FwRWQN2TG2leIPFS3LXN7bqDvExfkrzQGK0fKUXspEs4
-         N9hvwRVVaULYVp8EuTFbjqlvQDhckcWX/iMQGihqdHCvI6cg5ZBX7p9Nby4jDLJFo9
-         VwYBhjC+54mPh7xvUcnp8swn8K9vgRXgAij9lV/X8CkfXL4mLenysOjHvc2f9B30W4
-         Ze8IlHDwJszcA==
-Date:   Mon, 18 May 2020 15:42:40 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qian Cai <cai@lca.pw>, Wanpeng Li <wanpengli@tencent.com>
-Subject: linux-next: manual merge of the kvm tree with the rcu tree
-Message-ID: <20200518154240.777ca18e@canb.auug.org.au>
+        Mon, 18 May 2020 01:43:17 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec220270000>; Sun, 17 May 2020 22:42:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 17 May 2020 22:43:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 17 May 2020 22:43:17 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
+ 2020 05:43:17 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 18 May 2020 05:43:16 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.48.175]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ec220740002>; Sun, 17 May 2020 22:43:16 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+CC:     Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        <etnaviv@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH] drm/etnaviv: convert get_user_pages() --> pin_user_pages()
+Date:   Sun, 17 May 2020 22:43:15 -0700
+Message-ID: <20200518054315.2407093-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Lw2gywd8ZNI=5ZwAIi9Bxji";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589780520; bh=Nw/n11knSNrp8BRVAAf0yZA96pwzBUISJeQpKg/G4dc=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=Y8OzVbBUzW9w/9M2Wg03/k4DFOeTeW4XJIAYKYx24E2BSAh2InaXI3chth31KBebn
+         lUcWz5ZaKYceDrBL1IHvIVaOHxmoBsTn3TEs95oCFOUX9A52yqKzaDww8i029K+b6P
+         Y3FidGcZZpH+C/U79Fownhl7VNNTogejGlc6MgA+i5ajT9RVCnRZ6EfS8op0fmH9sP
+         QIJofhVM9SmAicaoEj7NSfzcb+qYfRLgnm4pCjBy0AbbxSn/MiiwO4VT/jlWmDD99o
+         u4Qf/CI+JzYMdIlhzasehts4HJ3mE1n1X0LU6rlaKtP06hRnCXhHFfDCh88xa5XJff
+         GVW/CDgkRIg3Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Lw2gywd8ZNI=5ZwAIi9Bxji
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This code was using get_user_pages*(), in a "Case 2" scenario
+(DMA/RDMA), using the categorization from [1]. That means that it's
+time to convert the get_user_pages*() + put_page() calls to
+pin_user_pages*() + unpin_user_pages() calls.
 
-Hi all,
+There is some helpful background in [2]: basically, this is a small
+part of fixing a long-standing disconnect between pinning pages, and
+file systems' use of those pages.
 
-Today's linux-next merge of the kvm tree got a conflict in:
+[1] Documentation/core-api/pin_user_pages.rst
 
-  arch/x86/kvm/svm/svm.c
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
 
-between commit:
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
 
-  9f24847d8fdb ("kvm/svm: Disable KCSAN for svm_vcpu_run()")
+Hi,
 
-from the rcu tree and commits:
+Note that I have only compile-tested this patch, although that does
+also include cross-compiling for a few other arches.
 
-  a9ab13ff6e84 ("KVM: X86: Improve latency for single target IPI fastpath")
-  404d5d7bff0d ("KVM: X86: Introduce more exit_fastpath_completion enum val=
-ues")
+thanks,
+John Hubbard
+NVIDIA
 
-from the kvm tree.
+ drivers/gpu/drm/etnaviv/etnaviv_gem.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-
-
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/etnavi=
+v/etnaviv_gem.c
+index dc9ef302f517..0f4578dc169d 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
+@@ -675,10 +675,10 @@ static int etnaviv_gem_userptr_get_pages(struct etnav=
+iv_gem_object *etnaviv_obj)
+ 		uint64_t ptr =3D userptr->ptr + pinned * PAGE_SIZE;
+ 		struct page **pages =3D pvec + pinned;
+=20
+-		ret =3D get_user_pages_fast(ptr, num_pages,
++		ret =3D pin_user_pages_fast(ptr, num_pages,
+ 					  !userptr->ro ? FOLL_WRITE : 0, pages);
+ 		if (ret < 0) {
+-			release_pages(pvec, pinned);
++			unpin_user_pages(pvec, pinned);
+ 			kvfree(pvec);
+ 			return ret;
+ 		}
+@@ -702,7 +702,7 @@ static void etnaviv_gem_userptr_release(struct etnaviv_=
+gem_object *etnaviv_obj)
+ 	if (etnaviv_obj->pages) {
+ 		int npages =3D etnaviv_obj->base.size >> PAGE_SHIFT;
+=20
+-		release_pages(etnaviv_obj->pages, npages);
++		unpin_user_pages(etnaviv_obj->pages, npages);
+ 		kvfree(etnaviv_obj->pages);
+ 	}
+ }
 --=20
-Cheers,
-Stephen Rothwell
+2.26.2
 
---Sig_/Lw2gywd8ZNI=5ZwAIi9Bxji
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7CIFAACgkQAVBC80lX
-0Gx4hwf5ASoL+5CtYpxMRe2Vbi1nhpHDiWzG5EGUnI7uAIdqUgf7W4K36Kp5H2Q4
-H+JYJ7ZfvfNceY0vwZWWd9MwjSmHrLNp2ba/xAb1FKqmVZjEjnyuouzBoJEz+7Lz
-7GAysptpayD7hYDG8oHxtFMOSNOx48VzKBjEgI3B1qRTTiWS5fyLtLOG6zw+vqF3
-sc+j4+Z1OoozhV7zJHbhDnGhTi2ABOUW+xewKrJM49tZgXag/4XFYGivddyyeU2Y
-LooiEU1bHRt3eT/3TzMXRPmYnWdIEgH56tG517KUL2bZ8+SonLwhtO2F5gu0IqbZ
-++Rkq0jBuAGoyPZNp/HQ0FaOEAqiLQ==
-=DYlb
------END PGP SIGNATURE-----
-
---Sig_/Lw2gywd8ZNI=5ZwAIi9Bxji--
